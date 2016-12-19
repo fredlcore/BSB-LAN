@@ -15,8 +15,12 @@
  *       0.6  - 02.02.2015 
  *       0.7  - 06.02.2015 
  *       0.8  - 05.03.2015 
+ *       0.9  - 09.03.2015 
  *
  * Changelog:
+ *       version 0.9
+ *        - added more parameters for ELCO Thision heating system
+ *        - printTelegramm returns value string for further processing
  *       version 0.8
  *        - added parameters for ELCO Thision heating system
  *        - added IPWE extension
@@ -49,6 +53,8 @@
 #include <Ethernet.h>
 #include <Arduino.h>
 #include <util/crc16.h>
+
+//#define THISION
 
 // if set to 1, all messages on the bus are printed to the serial interface
 byte verbose = 0;
@@ -156,6 +162,8 @@ typedef enum{
 /* Parameter types */
 typedef enum{
   VT_TEMP,              // 3 Byte - 1 enable / value/64
+  VT_TEMP_SHORT,        // 2 Byte - 1 enable / value
+  VT_TEMP_SHORT5,       // 2 Byte - 1 enable / value/2
   VT_FP1,               // 3 Byte - 1 enable / value/10
   VT_FP02,              // 3 Byte - 1 enable / value/50
   VT_UINT,              // 3 Byte - 1 enable / value
@@ -163,8 +171,10 @@ typedef enum{
   VT_ONOFF,             //  2 Byte - 1 enable / 0=Aus 1=An (auch 0xff=An)
   VT_YESNO,             //  2 Byte - 1 enable / 0=Nein 1=Ja (auch 0xff=Ja)
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable / 0=Offen 1=Geschlossen
+  VT_SECONDS_WORD,      // 3 Byte - 1 enable / seconds
+  VT_SECONDS_SHORT,     // 2 Byte - 1 enable / seconds
   VT_MINUTES,           // 5 Byte - 1 enable / seconds/60
-  VT_MINUTES_WORD,     // 3 Byte - 1 enable / minutes
+  VT_MINUTES_WORD,      // 3 Byte - 1 enable / minutes
   VT_MINUTES_SHORT,     // 2 Byte - 1 enable / minutes
   VT_HOURS,             // 5 Byte - 1 enable / seconds/3600
   VT_HOURS_WORD,        // 3 Byte - 1 enable / hours
@@ -172,20 +182,24 @@ typedef enum{
   VT_HOUR_MINUTES,      // 3 Byte - 1 enable / h m
   VT_DAYS,              // 2 Byte - 1 enable / day
   VT_MONTHS,            // 2 Byte - 1 enable / months
-  VT_DATETIME,          // 9 Byte - 1 enable / year+1900 month day weekday hour min sec
-  VT_TIMEPROG,          // 12 Byte - 1_ein 1_aus 2_ein 2_aus 3_ein 3_aus (jeweils SS:MM)
-  VT_VACATIONPROG,    // 9 Byte - 1 enable / byte 2/3 month/year
-  VT_SUMMERPERIOD,    // 9 Byte - 1 enable / byte 2/3 month/year
+  VT_DATETIME,          //* 9 Byte - 1 enable / year+1900 month day weekday hour min sec
+  VT_TIMEPROG,          //* 12 Byte - 1_ein 1_aus 2_ein 2_aus 3_ein 3_aus (jeweils SS:MM)
+  VT_VACATIONPROG,    //* 9 Byte - 1 enable / byte 2/3 month/year
+  VT_SUMMERPERIOD,    //* 9 Byte - 1 enable / byte 2/3 month/year
   VT_WEEKDAY,           // 2 Byte - 1 enable / weekday (1=Mo..7=So)
   VT_PERCENT,           // 2 Byte - 1 enable / percent
+  VT_PERCENT_WORD,      // 3 Byte - 1 enable / percent/2
   VT_PRESSURE,          // 2 Byte - 1 enable bar/10.0
   VT_PRESSURE_WORD,     // 3 Byte - 1 enable / bar/10.0
   VT_VOLTAGE,           // 2 Byte - 1 enable / volt (???) unklar, da nur 0.0V verfügbar
+  VT_POWER,             // 5 Byte - 1 enable / value/10 kW
+  VT_POWER_WORD,        // 3 Byte - 1 enable / value/10 kW
+  VT_PROPVAL,           // 3 Byte - 1 enable / value/16
   VT_DWORD,             // 5 Byte - 1 enable / value
   VT_BYTE,              // 2 Byte - 1 enable / value
-  VT_STRING,            // x Byte - 1 enable / string
-  VT_ENUM,              // 2 Byte - 1 enable / value
-  VT_LPBADDR,           // 2 Byte - 1 enable / adr/seg
+  VT_STRING,            //* x Byte - 1 enable / string
+  VT_ENUM,              //* 2 Byte - 1 enable / value
+  VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg
   VT_UNKNOWN
 }vt_type_t;
 
@@ -193,6 +207,13 @@ typedef struct {
   uint32_t cmd;
   uint8_t category;
   uint8_t type;
+/*
+  uint8_t flags; // e.g. FL_ENABLE, FL_RONLY
+  uint8_t divisor;
+  uint8_t precision;
+  uint8_t unit;
+*/
+  
   uint16_t line;
   const char *desc;
   uint16_t enumstr_len;
@@ -894,33 +915,42 @@ const char STR6741[] PROGMEM = "Vorlauftemperatur 2 Alarm";
 const char STR6743[] PROGMEM = "Kesseltemperatur Alarm";
 const char STR6745[] PROGMEM = "Trinkwasserladung Alarm ";
 const char STR6746[] PROGMEM = "Vorlauftemp Kühlen 1 Alarm ";
-/* TODO Thision
+
+#ifdef THISION
 const char STR6800[] PROGMEM = "Historie 1";
 const char STR6805[] PROGMEM = "SW Diagnosecode 1";
 const char STR6810[] PROGMEM = "Historie 2";
 const char STR6815[] PROGMEM = "SW Diagnosecode 2";
-*/
+#else
 const char STR6800[] PROGMEM = "Historie 1 Datum/Zeit";
+const char STR6805[] PROGMEM = "Historie 3 Fehlercode";
+const char STR6810[] PROGMEM = "Historie 6 Datum/Zeit";
+const char STR6815[] PROGMEM = "Historie 8 Fehlercode";
+#endif
+
 const char STR6801[] PROGMEM = "Historie 1 Fehlercode";
 const char STR6802[] PROGMEM = "Historie 2 Datum/Zeit";
 const char STR6803[] PROGMEM = "Historie 2 Fehlercode";
 const char STR6804[] PROGMEM = "Historie 3 Datum/Zeit";
-const char STR6805[] PROGMEM = "Historie 3 Fehlercode";
+
+
 const char STR6806[] PROGMEM = "Historie 4 Datum/Zeit";
 const char STR6807[] PROGMEM = "Historie 4 Fehlercode";
 const char STR6808[] PROGMEM = "Historie 5 Datum/Zeit";
 const char STR6809[] PROGMEM = "Historie 5 Fehlercode";
-const char STR6810[] PROGMEM = "Historie 6 Datum/Zeit";
+
+
 const char STR6811[] PROGMEM = "Historie 6 Fehlercode";
 const char STR6812[] PROGMEM = "Historie 7 Datum/Zeit";
 const char STR6813[] PROGMEM = "Historie 7 Fehlercode";
 const char STR6814[] PROGMEM = "Historie 8 Datum/Zeit";
-const char STR6815[] PROGMEM = "Historie 8 Fehlercode";
+
+
 const char STR6816[] PROGMEM = "Historie 9 Datum/Zeit";
 const char STR6817[] PROGMEM = "Historie 9 Fehlercode";
 const char STR6818[] PROGMEM = "Historie 10 Datum/Zeit";
 const char STR6819[] PROGMEM = "Historie 10 Fehlercode";
-// TODO Thision different numbers
+
 const char STR6820[] PROGMEM = "Historie 3";
 const char STR6825[] PROGMEM = "SW Diagnosecode 3";
 const char STR6830[] PROGMEM = "Historie 4";
@@ -1389,6 +1419,17 @@ const char ENUM5930[] PROGMEM = {
 #define ENUM5932 ENUM5930
 #define ENUM5933 ENUM5930
 
+#ifdef THISION
+const char ENUM5950[] PROGMEM = {
+"\x00 Keine Funktion\0"
+"\x01 Modemfunktion\0"
+"\x02 Modemfunktion invers\0"
+"\x03 Torschleierfunktion\0"
+"\x07 Rückmeldung AbgKlp\0"
+"\x08 Erzeugersperre\0"
+"\x09 Erzeugersperre invers"
+};
+#else
 const char ENUM5950[] PROGMEM = {
 "\x01 BA-Umschaltung HK's + TWW\0"
 "\x02 BA-Umschaltung HK's\0"
@@ -1402,6 +1443,7 @@ const char ENUM5950[] PROGMEM = {
 "\x0a Freigabe Schwimmbad\0"
 "\x0d Wärmeanforderung 10V\0"
 "\x0e Druckmessung 10V"};
+#endif
 
 const char ENUM5951[] PROGMEM = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
 
@@ -2110,13 +2152,13 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x2D3D07C5, CAT_HK1, VT_YESNO, 872, STR872, 0, NULL}, // [0] - Heizkreis 1 - Mit Vorregler/Zubring`pumpe
 {CMD_UNKNOWN, CAT_HK1, VT_UNKNOWN, 882, STR882, 0, NULL}, // Pumpendrehzahl Minimum
 {CMD_UNKNOWN, CAT_HK1, VT_UNKNOWN, 883, STR883, 0, NULL}, // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_HK1, VT_UNKNOWN, 884, STR884, 0, NULL}, // TODO Thision 884 Drehzahlstufe Ausleg'punkt [1-50, 9-13kW=16, 17-25kW=19, 35-50kW=24]
-{CMD_UNKNOWN, CAT_HK1, VT_PERCENT, 885, STR885, 0, NULL}, // TODO Thision 885 Pumpe-PWM Minimum [%] 
-{CMD_UNKNOWN, CAT_HK1, VT_TEMP, 886, STR886, 0, NULL}, // TODO Thision 886 Norm Aussentemperatur [°C]
-{CMD_UNKNOWN, CAT_HK1, VT_TEMP, 887, STR887, 0, NULL}, // TODO Thision 887 Vorlaufsoll NormAussentemp [°C]
-{CMD_UNKNOWN, CAT_HK1, VT_PERCENT, 888, STR888, 0, NULL}, // TODO Thision 888 dt Überhöhungsfaktor [%]
-{CMD_UNKNOWN, CAT_HK1, VT_TEMP, 894, STR894, 0, NULL}, // TODO Thision 894 dt Spreizung Norm Aussent. [°C]
-{CMD_UNKNOWN, CAT_HK1, VT_TEMP, 895, STR895, 0, NULL}, // TODO Thision 895 dt Spreizung Maximum [°C]
+{0x113D2F95, CAT_HK1, VT_BYTE, 884, STR884, 0, NULL}, // TODO Thision 884 Drehzahlstufe Ausleg'punkt [1-50, 9-13kW=16, 17-25kW=19, 35-50kW=24]
+{0x113D304F, CAT_HK1, VT_PERCENT, 885, STR885, 0, NULL}, // TODO Thision 885 Pumpe-PWM Minimum [%] 
+{0x193D2F88, CAT_HK1, VT_TEMP_SHORT, 886, STR886, 0, NULL}, // TODO Thision 886 Norm Aussentemperatur [°C]
+{0x053D3050, CAT_HK1, VT_TEMP_SHORT5, 887, STR887, 0, NULL}, // TODO Thision 887 Vorlaufsoll NormAussentemp [°C]
+{0x253D2FE5, CAT_HK1, VT_PERCENT_WORD, 888, STR888, 0, NULL}, // TODO Thision 888 dt Überhöhungsfaktor [%]
+{0x193D2F8A, CAT_HK1, VT_TEMP_SHORT5, 894, STR894, 0, NULL}, // TODO Thision 894 dt Spreizung Norm Aussent. [°C]
+{0x193D2F8B, CAT_HK1, VT_TEMP, 895, STR895, 0, NULL}, // TODO Thision 895 dt Spreizung Maximum [°C]
 {0x053D07BE, CAT_HK1, VT_ENUM, 900, STR900, sizeof(ENUM900), ENUM900}, // [0] - Heizkreis 1 - Betriebsartumschaltung
 
 // Kühlkreis 1
@@ -2266,13 +2308,13 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE, VT_UNKNOWN, 2150, STR2150, 0, NULL}, // Vorregler/Zubringerpumpe
 
 // Kessel
-{CMD_UNKNOWN, CAT_KESSEL, VT_ONOFF, 2201, STR2201, 0, NULL}, // TODO Thision 2201 Erzeugersperre [Ein/Aus]
+{0x0D3D08D3, CAT_KESSEL, VT_ONOFF, 2201, STR2201, 0, NULL}, // TODO Thision 2201 Erzeugersperre [Ein/Aus]
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2203, STR2203, 0, NULL}, // Freigabe unter Außentemp
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2205, STR2205, 0, NULL}, // Bei Ökobetrieb
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2208, STR2208, 0, NULL}, // Durchladung Pufferspeicher
 {0x0d3d092c, CAT_KESSEL, VT_TEMP, 2210, STR2210, 0, NULL}, // [°C ] - Kessel  - Sollwert Minimum
 {0x0d3d092b, CAT_KESSEL, VT_TEMP, 2212, STR2212, 0, NULL}, // [°C ] - Kessel  - Sollwert maximum
-{CMD_UNKNOWN, CAT_KESSEL, VT_TEMP, 2214, STR2214, 0, NULL}, // TODO Thision 2214 Sollwert Handbetrieb [°C]
+{0x0D3D08EB, CAT_KESSEL, VT_TEMP, 2214, STR2214, 0, NULL}, // TODO Thision 2214 Sollwert Handbetrieb [°C]
 
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2220, STR2220, 0, NULL}, // Freigabeintegral Stufe 2
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2221, STR2221, 0, NULL}, // Rückstellintegral Stufe 2
@@ -2282,15 +2324,15 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2331, STR2331, 0, NULL}, // Leistung Grundstufe
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2340, STR2340, 0, NULL}, // Auto Erz’folge 2 x 1 Kaskade
 
-{CMD_UNKNOWN, CAT_KESSEL, VT_PERCENT, 2440, STR2440, 0, NULL}, // TODO Thision 2440 Gebläse-PWM Hz Maximum [%]
-{CMD_UNKNOWN, CAT_KESSEL, VT_PERCENT, 2442, STR2442, 0, NULL}, // TODO Thision 2442 Gebläse-PWM Reglerverzögerung [%]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2444, STR2444, 0, NULL}, // TODO Thision 2444 Leistung Minimum [kW]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2445, STR2445, 0, NULL}, // TODO Thision 2445 Leistung Nenn [kW]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2451, STR2451, 0, NULL}, // TODO Thision 2451 Brennerpausenzeit Minimum [s]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2459, STR2459, 0, NULL}, // TODO Thision 2459 Sperrzeit dynam Schaltdiff [s]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2471, STR2471, 0, NULL}, // TODO Thision 2471 Pumpennachlaufzeit HK's [min]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2540, STR2540, 0, NULL}, // TODO Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2543, STR2543, 0, NULL}, // TODO Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
+{0x093D2F98, CAT_KESSEL, VT_PERCENT, 2440, STR2440, 0, NULL}, // TODO Thision 2440 Gebläse-PWM Hz Maximum [%]
+{0x193D2FBF, CAT_KESSEL, VT_PERCENT, 2442, STR2442, 0, NULL}, // TODO Thision 2442 Gebläse-PWM Reglerverzögerung [%]
+{0x093D2F99, CAT_KESSEL, VT_POWER_WORD, 2444, STR2444, 0, NULL}, // TODO Thision 2444 Leistung Minimum [kW]
+{0x093D3066, CAT_KESSEL, VT_POWER, 2445, STR2445, 0, NULL}, // TODO Thision 2445 Leistung Nenn [kW]
+{0x093D2F9A, CAT_KESSEL, VT_SECONDS_WORD, 2451, STR2451, 0, NULL}, // TODO Thision 2451 Brennerpausenzeit Minimum [s]
+{0x0D3D2FBA, CAT_KESSEL, VT_SECONDS_SHORT, 2459, STR2459, 0, NULL}, // TODO Thision 2459 Sperrzeit dynam Schaltdiff [s]
+{0x113D3051, CAT_KESSEL, VT_MINUTES_SHORT, 2471, STR2471, 0, NULL}, // TODO Thision 2471 Pumpennachlaufzeit HK's [min]
+{0x113D2FA9, CAT_KESSEL, VT_PROPVAL, 2540, STR2540, 0, NULL}, // TODO Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
+{0x113D2FAA, CAT_KESSEL, VT_PROPVAL, 2543, STR2543, 0, NULL}, // TODO Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
 
 // Wärmpumpe
 {CMD_UNKNOWN, CAT_WAERMEPUMPE, VT_UNKNOWN, 2800, STR2800, 0, NULL}, // Frostschutz Kondens’pumpe
@@ -2458,17 +2500,17 @@ PROGMEM const cmd_t cmdtbl[]={
 
 // Konfiguration
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5700, STR5700, 0, NULL}, // Voreinstellung
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5701, STR5701, 0, NULL}, // TODO Thision 5701 Hydraulisches Schema [2..85 enum?]
+{0x2d3d2fea, CAT_KONFIG, VT_UNKNOWN, 5701, STR5701, 0, NULL}, // TODO Thision 5701 Hydraulisches Schema [2..85 enum?]
 {0x053d04c0, CAT_KONFIG, VT_ONOFF, 5710, STR5710, 0, NULL}, // [0] - Konfiguration - Heizkreis 1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5711, STR5711, 0, NULL}, // Kühlkreis 1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5712, STR5712, 0, NULL}, // Verwendung Mischer 1
 {0x063d04c0, CAT_KONFIG, VT_ONOFF, 5715, STR5715, 0, NULL}, // [0] - Konfiguration - Heizkreis2
 {0x313D071E, CAT_KONFIG, VT_ENUM, 5730, STR5730, sizeof(ENUM5730), ENUM5730}, // [0] - Konfiguration - Trinkwasser-Sensor B3
 {0x253D071C, CAT_KONFIG, VT_ENUM, 5731, STR5731, sizeof(ENUM5731), ENUM5731}, // [0] - Konfiguration - Trinkwasser-Stellglied Q3
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5732, STR5732, 0, NULL}, // TODO Thision 5732 TWW Pumpenpause Umsch UV [s]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5733, STR5733, 0, NULL}, // TODO Thision 5733 TWW Pumpenpause Verzögerung [s]
+{0x113d2fe3, CAT_KONFIG, VT_UNKNOWN, 5732, STR5732, 0, NULL}, // TODO Thision 5732 TWW Pumpenpause Umsch UV [s]
+{0x113d2fe4, CAT_KONFIG, VT_UNKNOWN, 5733, STR5733, 0, NULL}, // TODO Thision 5733 TWW Pumpenpause Verzögerung [s]
 {0x053D0727, CAT_KONFIG, VT_ONOFF, 5736, STR5736, 0, NULL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5761, STR5761, 0, NULL}, // TODO Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
+{0x193d2fdc, CAT_KONFIG, VT_UNKNOWN, 5761, STR5761, 0, NULL}, // TODO Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5770, STR5770, 0, NULL}, // Erzeugertyp
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5772, STR5772, 0, NULL}, // Brenner Vorlaufzeit
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5800, STR5800, 0, NULL}, // Wärmequelle
@@ -2485,14 +2527,14 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5896, STR5896, 0, NULL}, // Relaisausgang QX6
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5908, STR5908, 0, NULL}, // Funktion Ausgang QX3-Mod
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5909, STR5909, 0, NULL}, // Funktion Ausgang QX4-Mod
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5920, STR5920, 0, NULL}, // TODO Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_YESNO, 5921, STR5921, 0, NULL}, // TODO Thision 5921 Default K2 auf K1 [Ja/Nein]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5922, STR5922, sizeof(ENUM5922), ENUM5922}, // TODO Thision 5922 Relaisausgang 1 RelCl [enum: ]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5923, STR5923, sizeof(ENUM5923), ENUM5923}, // TODO Thision 5923 Relaisausgang 2 RelCl [s.o.]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5924, STR5924, sizeof(ENUM5924), ENUM5924}, // TODO Thision 5924 Relaisausgang 3 RelCl [s.o.]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5926, STR5926, sizeof(ENUM5926), ENUM5926}, // TODO Thision 5926 Relaisausgang 1 SolCl [s.o.]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5927, STR5927, sizeof(ENUM5927), ENUM5927}, // TODO Thision 5927 Relaisausgang 2 SolCl [s.o.]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5928, STR5928, sizeof(ENUM5928), ENUM5928}, // TODO Thision 5928 Relaisausgang 3 SolCl [s.o.]
+{0x153d2fcc, CAT_KONFIG, VT_UNKNOWN, 5920, STR5920, 0, NULL}, // TODO Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
+{0x053d3078, CAT_KONFIG, VT_YESNO, 5921, STR5921, 0, NULL}, // TODO Thision 5921 Default K2 auf K1 [Ja/Nein]
+{0x153D2FCF, CAT_KONFIG, VT_ENUM, 5922, STR5922, sizeof(ENUM5922), ENUM5922}, // TODO Thision 5922 Relaisausgang 1 RelCl [enum: ]
+{0x153D2FD0, CAT_KONFIG, VT_ENUM, 5923, STR5923, sizeof(ENUM5923), ENUM5923}, // TODO Thision 5923 Relaisausgang 2 RelCl [s.o.]
+{0x153D2FD1, CAT_KONFIG, VT_ENUM, 5924, STR5924, sizeof(ENUM5924), ENUM5924}, // TODO Thision 5924 Relaisausgang 3 RelCl [s.o.]
+{0x493D3012, CAT_KONFIG, VT_ENUM, 5926, STR5926, sizeof(ENUM5926), ENUM5926}, // TODO Thision 5926 Relaisausgang 1 SolCl [s.o.]
+{0x093D3013, CAT_KONFIG, VT_ENUM, 5927, STR5927, sizeof(ENUM5927), ENUM5927}, // TODO Thision 5927 Relaisausgang 2 SolCl [s.o.]
+{0x093D3014, CAT_KONFIG, VT_ENUM, 5928, STR5928, sizeof(ENUM5928), ENUM5928}, // TODO Thision 5928 Relaisausgang 3 SolCl [s.o.]
 {0x053D0567, CAT_KONFIG, VT_ENUM, 5930, STR5930, sizeof(ENUM5930), ENUM5930}, // [-] - Konfiguration - Fühlereingang BX 1
 {0x053D0568, CAT_KONFIG, VT_ENUM, 5931, STR5931, sizeof(ENUM5931), ENUM5931}, // [-] - Konfiguration - Fühlereingang BX 2
 {0x053D07CA, CAT_KONFIG, VT_ENUM, 5932, STR5932, sizeof(ENUM5932), ENUM5932}, // [-] - Konfiguration - Fühlereingang BX 3
@@ -2505,7 +2547,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D079F, CAT_KONFIG, VT_TEMP, 5954, STR5954, 0, NULL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5955, STR5955, 0, NULL}, // Spannungswert 2 H1
 {0x053D05DC, CAT_KONFIG, VT_PRESSURE, 5956, STR5956, 0, NULL}, // [bar ] - Konfiguration - Druckwer 3.5V H1
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5957, STR5957, sizeof(ENUM5957), ENUM5957}, // TODO Thision 5957 Modemfunktion [enum]
+{0x053D0483, CAT_KONFIG, VT_ENUM, 5957, STR5957, sizeof(ENUM5957), ENUM5957}, // TODO Thision 5957 Modemfunktion [enum]
 {0x073D0807, CAT_KONFIG, VT_ENUM, 5960, STR5960, sizeof(ENUM5960), ENUM5960}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808, CAT_KONFIG, VT_ENUM, 5961, STR5961, sizeof(ENUM5961), ENUM5961}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x2B3D0656, CAT_KONFIG, VT_TEMP, 5962, STR5962, 0, NULL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H3
@@ -2513,15 +2555,11 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x073D079F, CAT_KONFIG, VT_TEMP, 5964, STR5964, 0, NULL}, // [°C ] - Konfiguration - Waermeanforderung 10V H3
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5965, STR5965, 0, NULL}, // Spannungswert 2 H3
 {0x073D05DC, CAT_KONFIG, VT_PRESSURE, 5966, STR5966, 0, NULL}, // [bar ] - Konfiguration - Druckwer 3.5V H3
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5970, STR5970, sizeof(ENUM5970), ENUM5970}, // TODO Thision 5970 Konfig Raumthermostat 1 [enum]
-
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5971, STR5971, sizeof(ENUM5971), ENUM5971}, // TODO Thision 5971 Konfig Raumthermostat 2 [enum: s.o.]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5973, STR5973, sizeof(ENUM5973), ENUM5973}, // TODO Thision 5973 Funktion Eingang RelCl [enum]
-
-/*
-*/
-{CMD_UNKNOWN, CAT_KONFIG, VT_TEMP, 5975, STR5975, 0, NULL}, // TODO Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_ENUM, 5978, STR5978, sizeof(ENUM5978), ENUM5978}, // TODO Thision 5978 Funktion Eingang SolCl [enum]
+{0x2D3D3073, CAT_KONFIG, VT_ENUM, 5970, STR5970, sizeof(ENUM5970), ENUM5970}, // TODO Thision 5970 Konfig Raumthermostat 1 [enum]
+{0x2E3D3073, CAT_KONFIG, VT_ENUM, 5971, STR5971, sizeof(ENUM5971), ENUM5971}, // TODO Thision 5971 Konfig Raumthermostat 2 [enum: s.o.]
+{0x053D3046, CAT_KONFIG, VT_ENUM, 5973, STR5973, sizeof(ENUM5973), ENUM5973}, // TODO Thision 5973 Funktion Eingang RelCl [enum]
+{0x193D2FD2, CAT_KONFIG, VT_TEMP, 5975, STR5975, 0, NULL}, // TODO Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
+{0x093D3054, CAT_KONFIG, VT_ENUM, 5978, STR5978, sizeof(ENUM5978), ENUM5978}, // TODO Thision 5978 Funktion Eingang SolCl [enum]
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5980, STR5980, 0, NULL}, // Funktion Eingang EX1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5981, STR5981, 0, NULL}, // Wirksinn Eingang EX1
 {0x053D07CE, CAT_KONFIG, VT_ENUM, 5982, STR5982, sizeof(ENUM5982), ENUM5982}, // [0] - Konfiguration - Funktion Eingang EX2
@@ -2553,8 +2591,8 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6071, STR6071, 0, NULL}, // Signallogik Ausgang UX
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6072, STR6072, 0, NULL}, // Signal Ausgang UX
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6075, STR6075, 0, NULL}, // Temperaturwert 10V UX
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6089, STR6089, 0, NULL}, // TODO Thision 6089 Mod Pumpe Drehzahlstufen [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6092, STR6092, 0, NULL}, // TODO Thision 6092 Mod Pumpe PWM [?]
+{0x113D2F97, CAT_KONFIG, VT_UNKNOWN, 6089, STR6089, 0, NULL}, // TODO Thision 6089 Mod Pumpe Drehzahlstufen [?]
+{0x113D2FE1, CAT_KONFIG, VT_UNKNOWN, 6092, STR6092, 0, NULL}, // TODO Thision 6092 Mod Pumpe PWM [?]
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6097, STR6097, 0, NULL}, // Fühlertyp Kollektor
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6098, STR6098, 0, NULL}, // Korrektur Kollektorfühler
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6099, STR6099, 0, NULL}, // Korrektur Kollektorfühler 2
@@ -2562,7 +2600,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6101, STR6101, 0, NULL}, // Fühlertyp Abgastemperatur
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6102, STR6102, 0, NULL}, // Korrektur Abgastemp'fühler
 {0x053d0600, CAT_KONFIG, VT_HOURS_SHORT, 6110, STR6110, 0, NULL}, // [h  ] - Konfiguration - Zeitkonstante Gebaeude
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6112, STR6112, 0, NULL}, // TODO Thision 6112 Gradient Raummodell [min/K]
+{0x2D3D05E7, CAT_KONFIG, VT_UNKNOWN, 6112, STR6112, 0, NULL}, // TODO Thision 6112 Gradient Raummodell [min/K]
 {0x053d05fe, CAT_KONFIG, VT_ONOFF, 6120, STR6120, 0, NULL}, // [0] - Konfiguration - Anlagenfrostschutz
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6128, STR6128, 0, NULL}, // Wärm'anfo unter Außentemp
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6129, STR6129, 0, NULL}, // Wärm'anfo über Außentemp
@@ -2581,22 +2619,22 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D0BD2, CAT_KONFIG, VT_DWORD, 6215, STR6215, 0, NULL}, // [0] - Konfiguration - Kontrollnummer Speicher
 {0x053D0BD3, CAT_KONFIG, VT_DWORD, 6217, STR6217, 0, NULL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053d000e, CAT_KONFIG, VT_FP1, 6220, STR6220, 0, NULL}, // [0] - Konfiguration - Software- Version LOGON B
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6221, STR6221, 0, NULL}, // TODO Thision 6221 Entwicklungs-Index [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6225, STR6225, 0, NULL}, // TODO Thision 6225 Gerätefamilie [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6226, STR6226, 0, NULL}, // TODO Thision 6226 Gerätevariante [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6227, STR6227, 0, NULL}, // TODO Thision 6227 Objektverzeichnis-Version [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6240, STR6240, 0, NULL}, // TODO Thision 6240 KonfigRg1 Bit 0-7 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6270, STR6270, 0, NULL}, // TODO Thision 6270 KonfigRg4 Bit 0-7 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6300, STR6300, 0, NULL}, // TODO Thision 6300 KonfigRg7 Bit 0-7 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6310, STR6310, 0, NULL}, // TODO Thision 6310 KonfigRg8 Bit 0-7 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6330, STR6330, 0, NULL}, // TODO Thision 6330 KonfigRg10 Bit 0-7 [?]
+{0x093D3033, CAT_KONFIG, VT_UNKNOWN, 6221, STR6221, 0, NULL}, // TODO Thision 6221 Entwicklungs-Index [?]
+{0x053D0002, CAT_KONFIG, VT_UNKNOWN, 6225, STR6225, 0, NULL}, // TODO Thision 6225 Gerätefamilie [?]
+{0x053D0003, CAT_KONFIG, VT_UNKNOWN, 6226, STR6226, 0, NULL}, // TODO Thision 6226 Gerätevariante [?]
+{0x053D0004, CAT_KONFIG, VT_UNKNOWN, 6227, STR6227, 0, NULL}, // TODO Thision 6227 Objektverzeichnis-Version [?]
+{0x153D2F9E, CAT_KONFIG, VT_UNKNOWN, 6240, STR6240, 0, NULL}, // TODO Thision 6240 KonfigRg1 Bit 0-7 [?]
+{0x153D2FA1, CAT_KONFIG, VT_UNKNOWN, 6270, STR6270, 0, NULL}, // TODO Thision 6270 KonfigRg4 Bit 0-7 [?]
+{0x153D2FA4, CAT_KONFIG, VT_UNKNOWN, 6300, STR6300, 0, NULL}, // TODO Thision 6300 KonfigRg7 Bit 0-7 [?]
+{0x313D2FB7, CAT_KONFIG, VT_UNKNOWN, 6310, STR6310, 0, NULL}, // TODO Thision 6310 KonfigRg8 Bit 0-7 [?]
+{0x0D3D3017, CAT_KONFIG, VT_UNKNOWN, 6330, STR6330, 0, NULL}, // TODO Thision 6330 KonfigRg10 Bit 0-7 [?]
 
 // LPB-System
 {0x053D00C9, CAT_LPB, VT_BYTE, 6600, STR6600, 0, NULL}, // [0] - LPB   - Geraeteadresse
 {0x053D00CA, CAT_LPB, VT_BYTE, 6601, STR6601, 0, NULL}, // [0] - LPB   - Segmentadresse
 {0x053D0071, CAT_LPB, VT_ENUM, 6604, STR6604, sizeof(ENUM6604), ENUM6604}, // [0] - LPB   - Busspeisung Funktion
 {0x053D0072, CAT_LPB, VT_ONOFF, 6605, STR6605, 0, NULL}, // [0] - LPB   - Busspeisung Status
-{CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6606, STR6606, 0, NULL}, // TODO Thision 6606 LPB-Konfig. 0 [?]
+{0x053D3053, CAT_LPB, VT_UNKNOWN, 6606, STR6606, 0, NULL}, // TODO Thision 6606 LPB-Konfig. 0 [?]
 {0x053D006A, CAT_LPB, VT_YESNO, 6610, STR6610, 0, NULL}, // [0] - LPB   - Anzeige Systemmeldungen
 {CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6612, STR6612, 0, NULL}, // Alarmverzögerung
 {0x053D0839, CAT_LPB, VT_ENUM, 6620, STR6620, sizeof(ENUM6620), ENUM6620}, // [  - ] - LPB   - Wirkbereich Umschaltungen
@@ -2611,7 +2649,15 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D009F, CAT_LPB, VT_LPBADDR, 6650, STR6650, 0, NULL}, // [0] - LPB   - Aussentemperatur Lieferant
 
 //Fehler
-{CMD_UNKNOWN, CAT_FEHLER, VT_ERRORCODE, 6705, STR6705, 0, NULL}, // TODO Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
+/*
+1736744 DC 8A 00 0B 06 3D 05 00 99 88 50 
+1736813 DC 80 0A 0E 07 05 3D 00 99 00 00 00 D2 49 
+1736908 DC 8A 00 0B 06 3D 09 30 72 B4 E1 
+1736978 DC 80 0A 0D 07 09 3D 30 72 00 63 8C 35 
+SW Diagnosecode
+(FA Phase Störstellung: 99)
+*/
+{0x053D0099, CAT_FEHLER, VT_ERRORCODE, 6705, STR6705, 0, NULL}, // TODO Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
 {0x053D05D6, CAT_FEHLER, VT_YESNO, 6710, STR6710, 0, NULL}, // [0] - Fehler - Reset Alarmrelais
 {CMD_UNKNOWN, CAT_FEHLER, VT_UNKNOWN, 6711, STR6711, 0, NULL}, // Reset Wärmepumpe
 {0x213D069D, CAT_FEHLER, VT_MINUTES_SHORT, 6740, STR6740, 0, NULL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
@@ -2643,6 +2689,42 @@ PROGMEM const cmd_t cmdtbl[]={
 // TODO Thision 6805 SW Diagnosecode 1
 // TODO Thision 6810 Historie 2
 // TODO Thision 6815 SW Diagnosecode 2
+/*6820:
+1885605 DC 8A 00 0B 06 3D 05 2F F9 F2 2E 
+1885675 DC 80 0A 0D 07 05 3D 2F F9 00 00 DF F1 
+1885763 DC 8A 00 0B 06 3D 05 06 DF 0A F4 
+1885838 DC 80 0A 0D 07 05 3D 06 DF 00 00 2F AE 
+
+6825:
+1962113 DC 8A 00 0B 06 3D 05 2F FB D2 6C 
+1962181 DC 80 0A 0E 07 05 3D 2F FB 00 00 00 0B BE 
+1962276 DC 8A 00 0B 06 3D 05 2F FA C2 4D 
+1962348 DC 80 0A 0D 07 05 3D 2F FA 00 00 86 A1 
+
+6830:
+1993915 DC 8A 00 0B 06 3D 05 2F FD B2 AA 
+1993985 DC 80 0A 0D 07 05 3D 2F FD 00 00 03 31 
+1994077 DC 8A 00 0B 06 3D 05 06 E0 CD 48 
+1994147 DC 80 0A 0D 07 05 3D 06 E0 00 00 C6 3A 
+
+6835:
+2027695 DC 8A 00 0B 06 3D 05 2F FF 92 E8 
+2027767 DC 80 0A 0E 07 05 3D 2F FF 00 00 00 C1 4F 
+2027862 DC 8A 00 0B 06 3D 05 2F FE 82 C9 
+2027933 DC 80 0A 0D 07 05 3D 2F FE 00 00 5A 61 
+
+6840:
+2046715 DC 8A 00 0B 06 3D 05 30 01 8F 74 
+2046798 DC 80 0A 0D 07 05 3D 30 01 00 00 5A 4B 
+2046887 DC 8A 00 0B 06 3D 05 06 E1 DD 69 
+2046965 DC 80 0A 0D 07 05 3D 06 E1 00 00 F1 0A 
+
+6845:
+2061356 DC 8A 00 0B 06 3D 05 30 03 AF 36 
+2061426 DC 80 0A 0E 07 05 3D 30 03 00 00 00 70 93 
+2061524 DC 8A 00 0B 06 3D 05 30 02 BF 17 
+2061593 DC 80 0A 0D 07 05 3D 30 02 00 00 03 1B
+*/
 {CMD_UNKNOWN, CAT_FEHLER, VT_DATETIME, 6820, STR6820, 0, NULL}, // TODO Thision 6820 Historie 3
 {CMD_UNKNOWN, CAT_FEHLER, VT_ERRORCODE, 6825, STR6825, 0, NULL}, // TODO Thision 6825 SW Diagnosecode 3
 {CMD_UNKNOWN, CAT_FEHLER, VT_DATETIME, 6830, STR6830, 0, NULL}, // TODO Thision 6830 Historie 4
@@ -2651,19 +2733,18 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_FEHLER, VT_ERRORCODE, 6845, STR6845, 0, NULL}, // TODO Thision 6845 SW Diagnosecode 5
 
 // Wartung/Sonderbetrieb
-{CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7001, STR7001, 0, NULL}, // TODO Thision 7001 Meldung [?]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_ONOFF, 7007, STR7007, 0, NULL}, // TODO Thision 7007 Anzeige Meldungen [Ein/Aus]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_ONOFF, 7010, STR7010, 0, NULL}, // TODO Thision 7010 Quittierung Meldung [Ein/Aus]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7011, STR7011, 0, NULL}, // TODO Thision 7011 Repetitionszeit Meldung [Tage]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_YESNO, 7012, STR7012, 0, NULL}, // TODO Thision 7012 Reset Meldungen 1-6 [Ja/Nein]
-
+{0x053D0075, CAT_WARTUNG, VT_UNKNOWN, 7001, STR7001, 0, NULL}, // TODO Thision 7001 Meldung [?]
+{0x2D3D2FDA, CAT_WARTUNG, VT_ONOFF, 7007, STR7007, 0, NULL}, // TODO Thision 7007 Anzeige Meldungen [Ein/Aus]
+{0x2D3D2FD9, CAT_WARTUNG, VT_ONOFF, 7010, STR7010, 0, NULL}, // TODO Thision 7010 Quittierung Meldung [Ein/Aus]
+{0x253D2FDD, CAT_WARTUNG, VT_UNKNOWN, 7011, STR7011, 0, NULL}, // TODO Thision 7011 Repetitionszeit Meldung [Tage]
+{0x2D3D2FDA, CAT_WARTUNG, VT_YESNO, 7012, STR7012, 0, NULL}, // TODO Thision 7012 Reset Meldungen 1-6 [Ja/Nein]
 {0x053d03f1, CAT_WARTUNG, VT_HOURS_WORD, 7040, STR7040, 0, NULL}, // [h  ] - Wartung/Service   - Brennerstunden Intervall
 {0x053d03f3, CAT_WARTUNG, VT_HOURS_WORD, 7041, STR7041, 0, NULL}, // [h  ] - Wartung/Service   - Brennerstunden seit Wartung
 {0x053D0C69, CAT_WARTUNG, VT_UINT, 7042, STR7042, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts Intervall
 {0x053D05E0, CAT_WARTUNG, VT_UINT, 7043, STR7043, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts seit Wartung
 {0x053d05e1, CAT_WARTUNG, VT_MONTHS, 7044, STR7044, 0, NULL}, // [Monate ] - Wartung/Service   - Wartungsintervall
 {0x053d05e2, CAT_WARTUNG, VT_MONTHS, 7045, STR7045, 0, NULL}, // [Monate ] - Wartung/Service   - Zeit seit Wartung
-{CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7051, STR7051, 0, NULL}, // TODO Thision 7051 Meldung Ion Strom [?]
+{0x2D3D300C, CAT_WARTUNG, VT_UNKNOWN, 7051, STR7051, 0, NULL}, // TODO Thision 7051 Meldung Ion Strom [?]
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7053, STR7053, 0, NULL}, // Abgastemperaturgrenze
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7054, STR7054, 0, NULL}, // Verzögerung Abgasmeldung
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7070, STR7070, 0, NULL}, // WP Zeitintervall
@@ -2690,9 +2771,9 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053d0075, CAT_WARTUNG, VT_ONOFF, 7140, STR7140, 0, NULL}, // [0] - Wartung/Service   - Handbetrieb
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7141, STR7141, 0, NULL}, // Notbetrieb
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7142, STR7142, 0, NULL}, // Notbetrieb Funktionsstart
-{CMD_UNKNOWN, CAT_WARTUNG, VT_ONOFF, 7143, STR7143, 0, NULL}, // TODO Thision 7143 Reglerstoppfunktion [Ein/Aus]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_PERCENT, 7145, STR7145, 0, NULL}, // TODO Thision 7145 Reglerstopp Sollwert [%]
-{CMD_UNKNOWN, CAT_WARTUNG, VT_ONOFF, 7146, STR7146, 0, NULL}, // TODO Thision 7146 Entlüftungsfunktion [Ein/Aus]
+{0x093D3021, CAT_WARTUNG, VT_ONOFF, 7143, STR7143, 0, NULL}, // TODO Thision 7143 Reglerstoppfunktion [Ein/Aus]
+{0x093D3022, CAT_WARTUNG, VT_PERCENT, 7145, STR7145, 0, NULL}, // TODO Thision 7145 Reglerstopp Sollwert [%]
+{0x113D307C, CAT_WARTUNG, VT_ONOFF, 7146, STR7146, 0, NULL}, // TODO Thision 7146 Entlüftungsfunktion [Ein/Aus]
 {0x053D0528, CAT_WARTUNG, VT_TEMP, 7150, STR7150, 0, NULL}, // [ °C ] - Wartung/Service   - Simulation Aussentemperatur
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7152, STR7152, 0, NULL}, // Abtauen auslösen
 {CMD_UNKNOWN, CAT_WARTUNG, VT_UNKNOWN, 7160, STR7160, 0, NULL}, // Reset Begrenzungszeiten
@@ -2912,10 +2993,10 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8735, STR8735, 0, NULL}, // Drehzahl Heizkreispumpe 1
 {0x2d3d051e, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8740, STR8740, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumtemperatur 1
 {0x2d3d0593, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8741, STR8741, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumsollwert 1
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8742, STR8742, 0, NULL}, // TODO Thision 8742 Raumtemperatur 1 Modell [°C]
+{0x2D3D05E9, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8742, STR8742, 0, NULL}, // TODO Thision 8742 Raumtemperatur 1 Modell [°C]
 {0x213d0518, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8743, STR8743, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 1 Alarm
 {0x213d0667, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8744, STR8744, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 1
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8750, STR8750, 0, NULL}, // TODO Thision 8750 Mod Pumpe Sollwert [%]
+{0x053D04A2, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8750, STR8750, 0, NULL}, // TODO Thision 8750 Mod Pumpe Sollwert [%]
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8751, STR8751, 0, NULL}, // Kühlkreispumpe Q24
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8752, STR8752, 0, NULL}, // Kühlkreismischer Auf Y23
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8753, STR8753, 0, NULL}, // Kühlkreismischer Zu Y24
@@ -2928,7 +3009,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8765, STR8765, 0, NULL}, // Drehzahl Heizkreispumpe 2
 {0x2e3d051e, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8770, STR8770, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumtemperatur 2
 {0x2e3d0593, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8771, STR8771, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumsollwert 2
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8772, STR8772, 0, NULL}, // TODO Thision 8772 Raumtemperatur 2 Modell [°C]
+{0x2E3D05E9, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8772, STR8772, 0, NULL}, // TODO Thision 8772 Raumtemperatur 2 Modell [°C]
 {0x223d0518, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8773, STR8773, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 2
 {0x223d0667, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8774, STR8774, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 2
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8795, STR8795, 0, NULL}, //  Drehzahl Heizkreispumpe P
@@ -3001,7 +3082,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x0d3d2fca, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9524, STR9524, 0, NULL}, //  Solldrehzahl Betrieb Min [rpm]
 {0x0d3d2fcb, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9527, STR9527, 0, NULL}, //  Solldrehzahl Betrieb Max [rpm]
 {0x2d3d304c, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9540, STR9540, 0, NULL}, //  Nachlüftzeit
-{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9550, STR9550, 0, NULL}, // TODO Thision 9550 Gebl'ansteuerung Stillstand [%]
+{0x0D3D304D, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9550, STR9550, 0, NULL}, // TODO Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x253d2fe8, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9560, STR9560, 0, NULL}, //  Gebl'ansteuerung Durchlad [%]
 {0x253d2fe9, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9563, STR9563, 0, NULL}, //  Solldrehzahl Durchladung [rpm]
 
@@ -3427,7 +3508,7 @@ int set(uint16_t line,char *val, bool setcmd){
   return 1;
 }
 
-double query(uint16_t line_start, uint16_t line_end, boolean no_print){
+char* query(uint16_t line_start, uint16_t line_end, boolean no_print){
   byte msg[33];
   byte tx_msg[33];
   uint32_t c;
@@ -3435,7 +3516,7 @@ double query(uint16_t line_start, uint16_t line_end, boolean no_print){
   int i=0;
   int idx=0;
   int retry;
-  double returnval=0.0;
+  char *pvalstr=NULL;
 
   if (!no_print) {
     client.println("<p>");
@@ -3454,7 +3535,7 @@ double query(uint16_t line_start, uint16_t line_end, boolean no_print){
 
             if(verbose) printTelegram(tx_msg);
             
-            printTelegram(msg);
+            pvalstr=printTelegram(msg);
             break;
           }else{
             Serial.println("query failed");
@@ -3482,9 +3563,13 @@ double query(uint16_t line_start, uint16_t line_end, boolean no_print){
     client.println("</p>");
   }
   // TODO: check at least for data length (only used for temperature values)
+  /*
   int data_len=msg[3]-11;
-  returnval = printFIXPOINT(msg,data_len,64.0,1,"");  
-  return returnval;
+  if(data_len==3){
+    returnval = printFIXPOINT(msg,data_len,64.0,1,"");
+  }
+  */
+  return pvalstr;
 }
 
 void loop() {
@@ -3960,7 +4045,7 @@ void _printFIXPOINT(double dval, int precision, const char* postfix){
   }
 }
 
-double printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
+void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
   double dval;
   char *p=outBuf+outBufLen;
 
@@ -3980,7 +4065,28 @@ double printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const 
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
-  return dval;
+}
+
+void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,const char *postfix){
+  double dval;
+  char *p=outBuf+outBufLen;
+
+  if(data_len == 5){
+    if(msg[9]==0){
+      dval=double((long(msg[10])<<24)+(long(msg[11])<<16)+(long(msg[12])<<8)+long(msg[13])) / divider;
+      _printFIXPOINT(dval,precision,postfix);
+    } else {
+      outBufLen+=sprintf(outBuf+outBufLen,"---");
+    }
+    if(postfix!=NULL){
+      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
+    }
+    Serial.print(p);
+  }else{
+    Serial.print(F("FIXPOINT_DWORD len !=5: "));
+    SerialPrintData(msg);
+    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+  }
 }
 
 void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,const char *postfix){
@@ -4159,9 +4265,10 @@ void printLPBAddr(byte *msg,byte data_len){
   }
 }
 
-void printTelegram(byte* msg) {
+char *printTelegram(byte* msg) {
   char gradC[]="&deg;C";
   char perc[]="&#037;";
+  char *pvalstr=NULL;
 
   outBufclear();
 /*
@@ -4243,10 +4350,7 @@ void printTelegram(byte* msg) {
           }
           Serial.print(p);
         }else{
-  /*
-          double dval;
-          long lval;
-  */
+          pvalstr=outBuf+outBufLen;
           switch(pgm_read_byte(&cmdtbl[i].type)){
             case VT_DATETIME: // special
               printDateTime(msg,data_len);
@@ -4257,6 +4361,12 @@ void printTelegram(byte* msg) {
               break;
             case VT_TIMEPROG:
               prinTimeProg(msg,data_len);
+              break;
+            case VT_SECONDS_WORD: //u16 s
+              printWORD(msg,data_len,"s");
+              break;
+            case VT_SECONDS_SHORT: //u8 s
+              printBYTE(msg,data_len,"s");
               break;
             case VT_MINUTES_SHORT: //u8 min
               printBYTE(msg,data_len,"min");
@@ -4282,12 +4392,27 @@ void printTelegram(byte* msg) {
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
               printFIXPOINT(msg,data_len,64.0,1,gradC);
               break;
+            case VT_TEMP_SHORT: // s8
+              printBYTE(msg,data_len,gradC);
+              break;
+            case VT_TEMP_SHORT5: // s8 / 2 
+              printFIXPOINT_BYTE(msg,data_len,2.0,1,gradC);
+              break;
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
               printFIXPOINT(msg,data_len,10.0,1,"bar");
               break;
             case VT_PRESSURE: // u8 / 10.0 bar
               printFIXPOINT_BYTE(msg,data_len,10.0,1,"bar");
               break;
+            case VT_POWER: // u32 / 10.0 kW
+              printFIXPOINT_DWORD(msg,data_len,10.0,1,"kW");
+              break;              
+            case VT_POWER_WORD: // u16 / 10.0 kW
+              printFIXPOINT(msg,data_len,10.0,1,"kW");
+              break;              
+            case VT_PROPVAL: // u16 / 16
+              printFIXPOINT(msg,data_len,16.0,2,"");
+              break;              
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
               printFIXPOINT(msg,data_len,50.0,2,NULL);
               break;
@@ -4424,6 +4549,7 @@ void printTelegram(byte* msg) {
     SerialPrintRAW(msg,msg[3]);
     Serial.println();
   }
+  return pvalstr;
 }
 
 void webPrintHeader(void){
@@ -4475,11 +4601,11 @@ void Ipwe() {
   webPrintHeader();
   int sensor_anz = 6;
   double sensors[sensor_anz];
-  sensors[0] = query(8700,8700,1);
-  sensors[1] = query(8743,8743,1);
-  sensors[2] = query(8314,8314,1);
-  sensors[3] = query(8310,8310,1);
-  sensors[4] = query(8830,8830,1);
+  sensors[0] = strtod(query(8700,8700,1),NULL);
+  sensors[1] = strtod(query(8743,8743,1),NULL);
+  sensors[2] = strtod(query(8314,8314,1),NULL);
+  sensors[3] = strtod(query(8310,8310,1),NULL);
+  sensors[4] = strtod(query(8830,8830,1),NULL);
   sensors[5] = !digitalRead(led0)*99+1;
 
   client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
