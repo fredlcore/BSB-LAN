@@ -17,8 +17,11 @@
  *       0.8  - 05.03.2015 
  *       0.9  - 09.03.2015 
  *       0.10  - 15.03.2015 
+ *       0.11  - 07.04.2015 
  *
  * Changelog:
+ *       version 0.11
+ *        - fixed parameter decoding for ELCO Thision heating system
  *       version 0.10
  *        - added more parameters for ELCO Thision heating system
  *       version 0.9
@@ -48,6 +51,8 @@
  *
  */
 
+//#define  TEMP_SENSORS
+
 #include <avr/pgmspace.h>
 #include "BSBSoftwareSerial.h"
 #include "bsb.h"
@@ -56,6 +61,11 @@
 #include <Ethernet.h>
 #include <Arduino.h>
 #include <util/crc16.h>
+
+#ifdef TEMP_SENSORS
+#include "OneWire.h"
+#include <DallasTemperature.h>
+#endif
 
 //#define THISION
 
@@ -92,6 +102,19 @@ EthernetClient client;
 BSB bus(68,69);
 
 byte led0 = 3, led1 = 4 ; // Pins 3+4 for Relais
+
+#ifdef TEMP_SENSORS
+
+#define TEMPERATURE_PRECISION 9
+
+#define ONE_WIRE_BUS 31
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire(ONE_WIRE_BUS);
+// Pass our oneWire reference to Dallas Temperature.
+DallasTemperature sensors(&oneWire);
+
+int numSensors;
+#endif
 
 /****************************************************/
 /* DEFINITIONS and TYPEDEFS                         */
@@ -165,11 +188,13 @@ typedef enum{
 /* Parameter types */
 typedef enum{
   VT_TEMP,              // 3 Byte - 1 enable / value/64
+  VT_TEMP_WORD,         // 3 Byte - 1 enable / value
   VT_TEMP_SHORT,        // 2 Byte - 1 enable / value
   VT_TEMP_SHORT5,       // 2 Byte - 1 enable / value/2
   VT_FP1,               // 3 Byte - 1 enable / value/10
   VT_FP02,              // 3 Byte - 1 enable / value/50
   VT_UINT,              // 3 Byte - 1 enable / value
+  VT_UINT5,              // 3 Byte - 1 enable / value * 5
   VT_ERRORCODE,         // 3 Byte - 1 enable / value
   VT_ONOFF,             //  2 Byte - 1 enable / 0=Aus 1=An (auch 0xff=An)
   VT_YESNO,             //  2 Byte - 1 enable / 0=Nein 1=Ja (auch 0xff=Ja)
@@ -2321,11 +2346,21 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2208, STR2208, 0, NULL}, // Durchladung Pufferspeicher
 {0x0d3d092c, CAT_KESSEL, VT_TEMP, 2210, STR2210, 0, NULL}, // [°C ] - Kessel  - Sollwert Minimum
 {0x0d3d092b, CAT_KESSEL, VT_TEMP, 2212, STR2212, 0, NULL}, // [°C ] - Kessel  - Sollwert maximum
+#ifdef THISION
+// command with same command id as line 2270
 {0x0D3D08EB, CAT_KESSEL, VT_TEMP, 2214, STR2214, 0, NULL}, // TODO Thision 2214 Sollwert Handbetrieb [°C]
+#else
+{CMD_UNKNOWN, CAT_KESSEL, VT_TEMP, 2214, STR2214, 0, NULL}, // TODO Thision 2214 Sollwert Handbetrieb [°C]
+#endif
 
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2220, STR2220, 0, NULL}, // Freigabeintegral Stufe 2
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2221, STR2221, 0, NULL}, // Rückstellintegral Stufe 2
+#ifdef THISION
+// command not present for THISIOn
+{CMD_UNKNOWN, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
+#else
 {0x0d3d08eb, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
+#endif
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2291, STR2291, 0, NULL}, // Steuerung Bypasspumpe
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2330, STR2330, 0, NULL}, // Leistung Nenn
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2331, STR2331, 0, NULL}, // Leistung Grundstufe
@@ -2446,7 +2481,9 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_FESTSTOFFKESSEL, VT_UNKNOWN, 4133, STR4133, 0, NULL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Vergleichstempertatur
 {CMD_UNKNOWN, CAT_FESTSTOFFKESSEL, VT_UNKNOWN, 4140, STR4140, 0, NULL}, // Pumpennachlaufzeit
 {CMD_UNKNOWN, CAT_FESTSTOFFKESSEL, VT_UNKNOWN, 4141, STR4141, 0, NULL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
-
+/*
+4170 Anlagenfrostschutz Kesselpumpe An/Aus
+*/
 // Pufferspeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4708, STR4708, 0, NULL}, // Zwangsladungsollwert Kühlen
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4709, STR4709, 0, NULL}, // Zwangsladungsoll Heizen Min
@@ -2477,7 +2514,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x253D07C1, CAT_TWSPEICHER, VT_TEMP, 5021, STR5021, 0, NULL}, // [°C ] - Trinkwasser-Speicher      - Umladeüberhöhung
 {0x253D087B, CAT_TWSPEICHER, VT_ENUM, 5022, STR5022, sizeof(ENUM5022), ENUM5022}, // [0] - Trinkwasser-Speicher      - Ladeart
 {CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5050, STR5050, 0, NULL}, // Ladetemperatur Maximum
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5055, STR5055, 0, NULL}, // Rückkühltemperatur
+{0x253D08BD, CAT_TWSPEICHER, VT_TEMP, 5055, STR5055, 0, NULL}, // Rückkühltemperatur
 {0x313D0713, CAT_TWSPEICHER, VT_ONOFF, 5056, STR5056, 0, NULL}, // [0] - Trinkwasser-Speicher      - Rückkühlung Kessel/HK
 {0x313D0714, CAT_TWSPEICHER, VT_ENUM, 5057, STR5057, sizeof(ENUM5057), ENUM5057}, // [0] - Trinkwasser-Speicher      - Rückkühlung Kollektor
 {0x253D0728, CAT_TWSPEICHER, VT_ENUM, 5060, STR5060, sizeof(ENUM5060), ENUM5060}, // [0] - Trinkwasser-Speicher      - Elektroeinsatz Betriebsart
@@ -2547,7 +2584,11 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D07CA, CAT_KONFIG, VT_ENUM, 5932, STR5932, sizeof(ENUM5932), ENUM5932}, // [-] - Konfiguration - Fühlereingang BX 3
 {0x053D07CB, CAT_KONFIG, VT_ENUM, 5933, STR5933, sizeof(ENUM5933), ENUM5933}, // [-] - Konfiguration - Fühlereingang BX 4
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5934, STR5934, 0, NULL}, // Fühlereingang BX5
+#ifdef THISION
+{0x053D3052, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
+#else
 {0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
+#endif
 {0x053D0808, CAT_KONFIG, VT_ENUM, 5951, STR5951, sizeof(ENUM5951), ENUM5951}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x293D0656, CAT_KONFIG, VT_TEMP, 5952, STR5952, 0, NULL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5953, STR5953, 0, NULL}, // Spannungswert 1 H1
@@ -2740,15 +2781,23 @@ SW Diagnosecode
 {CMD_UNKNOWN, CAT_FEHLER, VT_ERRORCODE, 6845, STR6845, 0, NULL}, // TODO Thision 6845 SW Diagnosecode 5
 
 // Wartung/Sonderbetrieb
-{0x053D0075, CAT_WARTUNG, VT_UNKNOWN, 7001, STR7001, 0, NULL}, // TODO Thision 7001 Meldung [?]
+// 7001: 0x053D0075??? 2 byte VT_ENUM aber enum nicht verfügbar
+{0x053D0090, CAT_WARTUNG, VT_BYTE, 7001, STR7001, 0, NULL}, // TODO Thision 7001 Meldung [?]
 {0x2D3D2FDA, CAT_WARTUNG, VT_ONOFF, 7007, STR7007, 0, NULL}, // TODO Thision 7007 Anzeige Meldungen [Ein/Aus]
 {0x2D3D2FD9, CAT_WARTUNG, VT_ONOFF, 7010, STR7010, 0, NULL}, // TODO Thision 7010 Quittierung Meldung [Ein/Aus]
 {0x253D2FDD, CAT_WARTUNG, VT_DAYS_WORD, 7011, STR7011, 0, NULL}, // TODO Thision 7011 Repetitionszeit Meldung [Tage]
 {0x2D3D2FDA, CAT_WARTUNG, VT_YESNO, 7012, STR7012, 0, NULL}, // TODO Thision 7012 Reset Meldungen 1-6 [Ja/Nein]
 {0x053d03f1, CAT_WARTUNG, VT_HOURS_WORD, 7040, STR7040, 0, NULL}, // [h  ] - Wartung/Service   - Brennerstunden Intervall
 {0x053d03f3, CAT_WARTUNG, VT_HOURS_WORD, 7041, STR7041, 0, NULL}, // [h  ] - Wartung/Service   - Brennerstunden seit Wartung
+// 2D 3D 2F D6
+#ifdef THISION
+{0x2D3D2FD6, CAT_WARTUNG, VT_UINT, 7042, STR7042, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts Intervall
+{0x253D2FDF, CAT_WARTUNG, VT_UINT5, 7043, STR7043, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts seit Wartung
+#else
 {0x053D0C69, CAT_WARTUNG, VT_UINT, 7042, STR7042, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts Intervall
 {0x053D05E0, CAT_WARTUNG, VT_UINT, 7043, STR7043, 0, NULL}, // [0] - Wartung/Service   - Brennerstarts seit Wartung
+#endif
+
 {0x053d05e1, CAT_WARTUNG, VT_MONTHS, 7044, STR7044, 0, NULL}, // [Monate ] - Wartung/Service   - Wartungsintervall
 {0x053d05e2, CAT_WARTUNG, VT_MONTHS, 7045, STR7045, 0, NULL}, // [Monate ] - Wartung/Service   - Zeit seit Wartung
 {0x2D3D300C, CAT_WARTUNG, VT_BYTE, 7051, STR7051, 0, NULL}, // TODO Thision 7051 Meldung Ion Strom [?]
@@ -2902,7 +2951,7 @@ SW Diagnosecode
 {0x053D051C, CAT_DIAG_ERZEUGER, VT_TEMP, 8318, STR8318, 0, NULL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
 {0x113D305D, CAT_DIAG_ERZEUGER, VT_PERCENT, 8324, STR8324, 0, NULL}, // TODO Thision Diagnose Erzeuger - Gebläsedrehzahl
 {0x113D305F, CAT_DIAG_ERZEUGER, VT_PERCENT, 8326, STR8326, 0, NULL}, // TODO Thision Brennermodulation 
-{0x113D3063, CAT_DIAG_ERZEUGER, VT_PRESSURE, 8327, STR8327, 0, NULL}, // TODO Thision Wasserdruck
+{0x113D3063, CAT_DIAG_ERZEUGER, VT_PRESSURE_WORD, 8327, STR8327, 0, NULL}, // TODO Thision Wasserdruck
 {0x093D3034, CAT_DIAG_ERZEUGER, VT_BYTE, 8328, STR8328, 0, NULL}, // TODO Thision Betriebsanzeige FA [?] TODO Thision
 {0x153D2FF0, CAT_DIAG_ERZEUGER, VT_CURRENT, 8329, STR8329, 0, NULL}, // TODO Thision Ionisationsstrom [uA?] TODO Thision
 {0x0D3D093B, CAT_DIAG_ERZEUGER, VT_HOURS, 8330, STR8330, 0, NULL}, // [h  ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
@@ -3032,7 +3081,7 @@ SW Diagnosecode
 {0x313d074b, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8831, STR8831, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Trinkwassersollwert
 {0x313d0530, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8832, STR8832, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Trinkwassertemperatur 2
 {0x253D077D, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8835, STR8835, 0, NULL}, // [°C ] - Diagnose Verbraucher  - TWW Zirkulationstemperatur
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8836, STR8836, 0, NULL}, // TWW Ladetemperatur
+{0x253D0B33, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8836, STR8836, 0, NULL}, // TWW Ladetemperatur
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8840, STR8840, 0, NULL}, // Betr’stunden TWW-Pumpe
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8841, STR8841, 0, NULL}, // Startzähler TWW-Pumpe
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8842, STR8842, 0, NULL}, // Betr’stunden Elektro TWW
@@ -3080,17 +3129,17 @@ SW Diagnosecode
 
 // Feuerungsautomat
 {0x2d3d3037, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9500, STR9500, 0, NULL}, //  Vorlüftzeit
-{0x213d3038, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9502, STR9502, 0, NULL}, //  Gebl'ansteuerung Vorlüftung [%]
+{0x213d3038, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9502, STR9502, 0, NULL}, //  Gebl'ansteuerung Vorlüftung [%]
 {0x213d300f, CAT_FEUERUNGSAUTOMAT, VT_SPEED, 9504, STR9504, 0, NULL}, //  Solldrehzahl Vorlüftung [rpm]
-{0x0d3d3048, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9510, STR9510, 0, NULL}, //  Gebl'ansteuerung Zündung [%]
+{0x0d3d3048, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9510, STR9510, 0, NULL}, //  Gebl'ansteuerung Zündung [%]
 {0x0d3d2fc9, CAT_FEUERUNGSAUTOMAT, VT_SPEED, 9512, STR9512, 0, NULL}, //  Solldrehzahl Zündung [rpm]
-{0x0d3d3049, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9520, STR9520, 0, NULL}, //  Gebl'ansteuerung Betrieb. Min [%]
-{0x0d3d304a, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9522, STR9522, 0, NULL}, //  Gebl'ansteuerung Betrieb. Max [%]
+{0x0d3d3049, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9520, STR9520, 0, NULL}, //  Gebl'ansteuerung Betrieb. Min [%]
+{0x0d3d304a, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9522, STR9522, 0, NULL}, //  Gebl'ansteuerung Betrieb. Max [%]
 {0x0d3d2fca, CAT_FEUERUNGSAUTOMAT, VT_SPEED, 9524, STR9524, 0, NULL}, //  Solldrehzahl Betrieb Min [rpm]
 {0x0d3d2fcb, CAT_FEUERUNGSAUTOMAT, VT_SPEED, 9527, STR9527, 0, NULL}, //  Solldrehzahl Betrieb Max [rpm]
 {0x2d3d304c, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN, 9540, STR9540, 0, NULL}, //  Nachlüftzeit
-{0x0D3D304D, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9550, STR9550, 0, NULL}, // TODO Thision 9550 Gebl'ansteuerung Stillstand [%]
-{0x253d2fe8, CAT_FEUERUNGSAUTOMAT, VT_PERCENT, 9560, STR9560, 0, NULL}, //  Gebl'ansteuerung Durchlad [%]
+{0x0D3D304D, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9550, STR9550, 0, NULL}, // TODO Thision 9550 Gebl'ansteuerung Stillstand [%]
+{0x253d2fe8, CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD, 9560, STR9560, 0, NULL}, //  Gebl'ansteuerung Durchlad [%]
 {0x253d2fe9, CAT_FEUERUNGSAUTOMAT, VT_SPEED, 9563, STR9563, 0, NULL}, //  Solldrehzahl Durchladung [rpm]
 
  /*** virtuelle Zeilen ***/
@@ -3145,6 +3194,14 @@ void setup() {
   // start the Ethernet connection and the server:
   Ethernet.begin(mac, ip);
   server.begin();
+
+#ifdef TEMP_SENSORS  
+  // check ds18b20 sensors
+  sensors.begin();
+  numSensors=sensors.getDeviceCount();
+  Serial.print("numSensors: ");
+  Serial.println(numSensors);
+#endif  
 }
 
 int findLine(uint16_t line, uint16_t start_idx, uint32_t *cmd){
@@ -3620,7 +3677,7 @@ void loop() {
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
                 Serial.println(urlString);
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
-
+ 
 // IPWE START
           if (urlString == "/ipwe.cgi") {
             Ipwe();
@@ -3669,6 +3726,12 @@ void loop() {
           webPrintSite();
           break;
         }
+#ifdef TEMP_SENSORS          
+          if (!strcmp(p,"/temp")) {
+            ds18b20();
+            break;
+          }
+#endif         
         // answer to unknown requests
         if(!isdigit(p[1]) && strchr("KSIREVM",p[1])==NULL){
           webPrintHeader();
@@ -3987,13 +4050,13 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
   }
 }
 
-void printWORD(byte *msg,byte data_len,const char *postfix){
+void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
   long lval;
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
     if(msg[9]==0){
-      lval=(long(msg[10])<<8)+long(msg[11]);
+      lval=(long(msg[10])<<8)+long(msg[11]) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -4102,7 +4165,7 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
 
   if(data_len == 2){
     if(msg[9]==0){
-      dval=double(msg[10]) / divider;
+      dval=double((signed char)msg[10]) / divider;
       _printFIXPOINT(dval,precision,postfix);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -4370,7 +4433,7 @@ char *printTelegram(byte* msg) {
               prinTimeProg(msg,data_len);
               break;
             case VT_SECONDS_WORD: //u16 s
-              printWORD(msg,data_len,"s");
+              printWORD(msg,data_len,1,"s");
               break;
             case VT_SECONDS_SHORT: //u8 s
               printBYTE(msg,data_len,"s");
@@ -4379,7 +4442,7 @@ char *printTelegram(byte* msg) {
               printBYTE(msg,data_len,"min");
               break;
             case VT_MINUTES_WORD: //u16 min
-              printWORD(msg,data_len,"min");
+              printWORD(msg,data_len,1,"min");
               break;
             case VT_MINUTES: // u32 min
               printDWORD(msg,data_len,60,"min");
@@ -4388,7 +4451,7 @@ char *printTelegram(byte* msg) {
               printBYTE(msg,data_len,"h");
               break;
             case VT_HOURS_WORD: // u16 h
-              printWORD(msg,data_len,"h");
+              printWORD(msg,data_len,1,"h");
               break;
             case VT_HOURS: // u32 h
               printDWORD(msg,data_len,3600,"h");
@@ -4398,6 +4461,9 @@ char *printTelegram(byte* msg) {
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
               printFIXPOINT(msg,data_len,64.0,1,gradC);
+              break;
+            case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW )
+              printFIXPOINT(msg,data_len,1.0,1,gradC);
               break;
             case VT_TEMP_SHORT: // s8
               printFIXPOINT_BYTE(msg,data_len,1.0,0,gradC);
@@ -4424,7 +4490,7 @@ char *printTelegram(byte* msg) {
               printFIXPOINT(msg,data_len,16.0,2,"");
               break;              
             case VT_GRADIENT: // u16 
-              printWORD(msg,data_len,"min/K");
+              printWORD(msg,data_len,1,"min/K");
               break;                                          
             case VT_SPEED: // u16 
               printFIXPOINT(msg,data_len,0.02,0,"uA");
@@ -4451,7 +4517,7 @@ char *printTelegram(byte* msg) {
               printBYTE(msg,data_len,"Tage");
               break;              
             case VT_DAYS_WORD: // u16 Tage
-              printWORD(msg,data_len,"Tage");
+              printWORD(msg,data_len,1,"Tage");
               break;
             case VT_MONTHS: // u8 Monate
               printBYTE(msg,data_len,"Monate");
@@ -4542,7 +4608,10 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_UINT: //  s16
-              printWORD(msg,data_len,NULL);
+              printWORD(msg,data_len,1,NULL);
+              break;
+            case VT_UINT5: //  s16 * 5
+              printWORD(msg,data_len,5,NULL);
               break;
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 (decoding unklar, da nur 0V gesehen)
               //printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
@@ -4690,3 +4759,29 @@ void Heating(char* status) {
   client.print(status);
   set(700,status,true);    // Zusätzlich (bzw. ggf. alternativ) noch Wechsel zwischen Automatik- und Frostschutzmodus
 } 
+
+#ifdef TEMP_SENSORS
+
+void ds18b20(void) {
+  int i;
+  webPrintHeader();
+  Serial.println("start requestTemperatures");
+  sensors.requestTemperatures(); // Send the command to get temperatures
+  Serial.println("end requestTemperatures");
+  Serial.println("start getTempCByIndex");
+  outBufclear();
+  for(i=0;i<numSensors;i++){
+    float t=sensors.getTempCByIndex(i);
+    Serial.print("temp[");    
+    Serial.print(i);    
+    Serial.print("]: ");    
+    Serial.print(t);    
+    Serial.println();    
+    outBufLen+=sprintf(outBuf+outBufLen,"temp[%d]: ",i);    
+    _printFIXPOINT(t,2,"&deg;C");
+    outBufLen+=sprintf(outBuf+outBufLen,"<br>");    
+  }
+  client.println(outBuf);  
+  webPrintFooter();
+} 
+#endif
