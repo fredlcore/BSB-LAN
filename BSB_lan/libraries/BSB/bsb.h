@@ -46,7 +46,7 @@ public:
 
 private:
   uint8_t myAddr;
-  inline void _send(byte* msg);
+  inline bool _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
 
   BSBSoftwareSerial* serial;

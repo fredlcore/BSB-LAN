@@ -19,8 +19,17 @@
  *       0.10  - 15.03.2015 
  *       0.11  - 07.04.2015 
  *       0.12  - 09.04.2015 
+ *       0.13  - 31.03.2016
  *
  * Changelog:
+ *       version 0.13
+ *        - change resistor value in recieving path from 4k7 to 1k5
+ *        - added values 0x0f and 0x10 to Enum8005
+ *        - fixed strings for Zeitprogramme
+ *        - added timeout for sending a message (1 second)
+ *        - added option T for querying one wire temperature sensors in mixed querys
+ *        - added special handling for Broetje SOB
+ *        - simplified settings
  *       version 0.12
  *        - added ONEWIRE_SENSORS to ipwe
  *        - fixed parameter decoding for ELCO Thision heating system
@@ -54,9 +63,6 @@
  *        - added some images of the BSB adapter
  *
  */
-
-//#define  ONEWIRE_SENSORS
-
 #include <avr/pgmspace.h>
 #include "BSBSoftwareSerial.h"
 #include "bsb.h"
@@ -66,60 +72,86 @@
 #include <Arduino.h>
 #include <util/crc16.h>
 
-#ifdef ONEWIRE_SENSORS
 #include "OneWire.h"
 #include <DallasTemperature.h>
-#endif
+
+/************************************************************************************/
+/************************************************************************************/
+/* Settings -   BEGIN                                                               */
+/************************************************************************************/
+/************************************************************************************/
+/*
+ * if defined the URL has to contain the defined passkey as first element
+ * e.g.
+ * http://192.168.178.88/1234/    - to see the help
+ * http://192.168.178.88/1234/K    - to list all categories
+*/
+
+//#define PASSKEY  "1234"
+
+
+/* select your heating system (default may work for other systems) */
 
 //#define THISION
+//#define BROETJE_SOB
 
-// if set to 1, all messages on the bus are printed to the serial interface
-byte verbose = 0;
-byte monitor = 0;
+/* 
+ * Define the pin for one wire temperature sensors 
+*/
 
-// if enabled the URL has to contain the defined passkey as first element
-// e.g.
-// http://192.168.178.88/1234/    - to see the help
-// http://192.168.178.88/1234/K    - to list all categories
-#define USE_PASSKEY  0
+//#define ONE_WIRE_BUS 31
 
-#define PASSKEY  "1234"
 
-// defines the number of retries for the qery command
-#define QUERY_RETRIES  3
-
-// Adjust the following settings!
-
-// Enter a MAC address and IP address for your controller below.
-// The IP address will be dependent on your local network:
+/*
+ *  Enter a MAC address and IP address for your controller below.
+ *  The IP address will be dependent on your local network:
+*/
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
 
-// Initialize the Ethernet server library
-// with the IP address and port you want to use
-// (port 80 is default for HTTP):
+/*
+ * Initialize the Ethernet server library
+ * with the IP address and port you want to use
+ * (port 80 is default for HTTP):
+*/
 IPAddress ip(192,168,178,88);
-
 EthernetServer server(80);
-EthernetClient client;
 
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
 BSB bus(68,69);
 
+
 byte led0 = 3, led1 = 4 ; // Pins 3+4 for Relais
 
-#ifdef ONEWIRE_SENSORS
+//#define USE_BROADCAST    // experimental don't use it!
+/************************************************************************************/
+/************************************************************************************/
+/* Settings -   END                                                                 */
+/************************************************************************************/
+/************************************************************************************/
 
-#define TEMPERATURE_PRECISION 9
+EthernetClient client;
 
-#define ONE_WIRE_BUS 31
-// Setup a oneWire instance to communicate with any OneWire devices
-OneWire oneWire(ONE_WIRE_BUS);
-// Pass our oneWire reference to Dallas Temperature.
-DallasTemperature sensors(&oneWire);
+#ifdef ONE_WIRE_BUS
+  #define TEMPERATURE_PRECISION 9
+  // Setup a oneWire instance to communicate with any OneWire devices
+  OneWire oneWire(ONE_WIRE_BUS);
+  // Pass our oneWire reference to Dallas Temperature.
+  DallasTemperature sensors(&oneWire);
 
-int numSensors;
+  int numSensors;
 #endif
+
+// variables for handling of broadcast messages
+unsigned long brenner_start=0;
+unsigned long brenner_duration=0;
+
+// if set to 1, all messages on the bus are printed to the serial interface
+byte verbose = 0;
+byte monitor = 0;
+
+// defines the number of retries for the qery command
+#define QUERY_RETRIES  3
 
 /****************************************************/
 /* DEFINITIONS and TYPEDEFS                         */
@@ -356,39 +388,42 @@ const char STR503[] PROGMEM = "Do";
 const char STR504[] PROGMEM = "Fr";
 const char STR505[] PROGMEM = "Sa";
 const char STR506[] PROGMEM = "So";
-
 const char STR516[] PROGMEM = "Standardwerte";
-const char STR520[] PROGMEM = "Vorwahl";
-const char STR521[] PROGMEM = "Mo-So: 1. Phase Ein";
-const char STR522[] PROGMEM = "Mo-So: 1. Phase Aus";
-const char STR523[] PROGMEM = "Mo-So: 2. Phase Ein";
-const char STR524[] PROGMEM = "Mo-So: 2. Phase Aus";
-const char STR525[] PROGMEM = "Mo-So: 3. Phase Ein";
-const char STR526[] PROGMEM = "Mo-So: 3. Phase Aus";
+
+const char STR520[] PROGMEM = "Mo";
+const char STR521[] PROGMEM = "Di";
+const char STR522[] PROGMEM = "Mi";
+const char STR523[] PROGMEM = "Do";
+const char STR524[] PROGMEM = "Fr";
+const char STR525[] PROGMEM = "Sa";
+const char STR526[] PROGMEM = "So";
 const char STR536[] PROGMEM = "Standardwerte";
-const char STR540[] PROGMEM = "Vorwahl";
-const char STR541[] PROGMEM = "Mo-So: 1. Phase Ein";
-const char STR542[] PROGMEM = "Mo-So: 1. Phase Aus";
-const char STR543[] PROGMEM = "Mo-So: 2. Phase Ein";
-const char STR544[] PROGMEM = "Mo-So: 2. Phase Aus";
-const char STR545[] PROGMEM = "Mo-So: 3. Phase Ein";
-const char STR546[] PROGMEM = "Mo-So: 3. Phase Aus";
+
+const char STR540[] PROGMEM = "Mo";
+const char STR541[] PROGMEM = "Di";
+const char STR542[] PROGMEM = "Mi";
+const char STR543[] PROGMEM = "Do";
+const char STR544[] PROGMEM = "Fr";
+const char STR545[] PROGMEM = "Sa";
+const char STR546[] PROGMEM = "So";
 const char STR556[] PROGMEM = "Standardwerte";
-const char STR560[] PROGMEM = "Vorwahl";
-const char STR561[] PROGMEM = "Mo-So: 1. Phase Ein";
-const char STR562[] PROGMEM = "Mo-So: 1. Phase Aus";
-const char STR563[] PROGMEM = "Mo-So: 2. Phase Ein";
-const char STR564[] PROGMEM = "Mo-So: 2. Phase Aus";
-const char STR565[] PROGMEM = "Mo-So: 3. Phase Ein";
-const char STR566[] PROGMEM = "Mo-So: 3. Phase Aus";
+
+const char STR560[] PROGMEM = "Mo";
+const char STR561[] PROGMEM = "Di";
+const char STR562[] PROGMEM = "Mi";
+const char STR563[] PROGMEM = "Do";
+const char STR564[] PROGMEM = "Fr";
+const char STR565[] PROGMEM = "Sa";
+const char STR566[] PROGMEM = "So";
 const char STR576[] PROGMEM = "Standardwerte";
-const char STR600[] PROGMEM = "Vorwahl";
-const char STR601[] PROGMEM = "Mo-So: 1. Phase Ein";
-const char STR602[] PROGMEM = "Mo-So: 1. Phase Aus";
-const char STR603[] PROGMEM = "Mo-So: 2. Phase Ein";
-const char STR604[] PROGMEM = "Mo-So: 2. Phase Aus";
-const char STR605[] PROGMEM = "Mo-So: 3. Phase Ein";
-const char STR606[] PROGMEM = "Mo-So: 3. Phase Aus";
+
+const char STR600[] PROGMEM = "Mo";
+const char STR601[] PROGMEM = "Di";
+const char STR602[] PROGMEM = "Mi";
+const char STR603[] PROGMEM = "Do";
+const char STR604[] PROGMEM = "Fr";
+const char STR605[] PROGMEM = "Sa";
+const char STR606[] PROGMEM = "So";
 const char STR616[] PROGMEM = "Standardwerte";
 
 /* Die Zeilennummern 632-682 entsprechen nicht den Zeilennummern im Bedienteil, sondern wurden künstlich hinzugefügt*/
@@ -810,6 +845,7 @@ const char STR5731[] PROGMEM = "Trinkwasser-Stellglied Q3";
 const char STR5732[] PROGMEM = "TWW Pumpenpause Umsch UV";
 const char STR5733[] PROGMEM = "TWW Pumpenpause Verzögerung";
 const char STR5736[] PROGMEM = "Trinkwasser Trennschaltung";
+const char STR5760[] PROGMEM = "Vorregler/Zubringerpumpe";
 const char STR5761[] PROGMEM = "Zubringerpumpe Q8 Bit 0-3";
 const char STR5770[] PROGMEM = "Erzeugertyp";
 const char STR5772[] PROGMEM = "Brenner Vorlaufzeit";
@@ -825,6 +861,8 @@ const char STR5892[] PROGMEM = "Relaisausgang QX3";
 const char STR5894[] PROGMEM = "Relaisausgang QX4";
 const char STR5895[] PROGMEM = "Relaisausgang QX5";
 const char STR5896[] PROGMEM = "Relaisausgang QX6";
+const char STR5902[] PROGMEM = "Relaisausgang QX21";
+const char STR5904[] PROGMEM = "Relaisausgang QX23";
 const char STR5908[] PROGMEM = "Funktion Ausgang QX3-Mod";
 const char STR5909[] PROGMEM = "Funktion Ausgang QX4-Mod";
 const char STR5920[] PROGMEM = "Relaisausgang K2 LMU-Basis Bit 0-7";
@@ -840,6 +878,8 @@ const char STR5931[] PROGMEM = "Fühlereingang BX 2";
 const char STR5932[] PROGMEM = "Fühlereingang BX 3";
 const char STR5933[] PROGMEM = "Fühlereingang BX 4";
 const char STR5934[] PROGMEM = "Fühlereingang BX5";
+const char STR5941[] PROGMEM = "Fühlereingang BX21";
+const char STR5942[] PROGMEM = "Fühlereingang BX22";
 const char STR5950[] PROGMEM = "Funktion Eingang H1";
 const char STR5951[] PROGMEM = "Wirksinn Kontakt H1";
 const char STR5952[] PROGMEM = "Minimaler Vorlaufsollwert H1";
@@ -848,11 +888,19 @@ const char STR5954[] PROGMEM = "Wärmeanforderung 10V H1";
 const char STR5955[] PROGMEM = "Spannungswert 2 H1";
 const char STR5956[] PROGMEM = "Druckwert 3.5V H1";
 const char STR5957[] PROGMEM = "Modemfunktion";
+#ifdef BROETJE_SOB
+const char STR5960[] PROGMEM = "Funktion Eingang H2";
+const char STR5961[] PROGMEM = "Wirksinn Kontakt H2";
+const char STR5962[] PROGMEM = "Minimaler Vorlaufsollwert H2";
+const char STR5963[] PROGMEM = "Spannungswert 1 H2";
+const char STR5964[] PROGMEM = "Temperaturwert 10V H2";
+#else
 const char STR5960[] PROGMEM = "Funktion Eingang H3";
 const char STR5961[] PROGMEM = "Wirksinn Kontakt H3";
 const char STR5962[] PROGMEM = "Minimaler Vorlaufsollwert H3";
 const char STR5963[] PROGMEM = "Spannungswert 1 H3";
 const char STR5964[] PROGMEM = "Wärmeanforderung 10V H3";
+#endif
 const char STR5965[] PROGMEM = "Spannungswert 2 H3";
 const char STR5966[] PROGMEM = "Druckwert 3.5V H3";
 const char STR5970[] PROGMEM = "Konfig Raumthermostat 1";
@@ -914,8 +962,8 @@ const char STR6138[] PROGMEM = "Luftentfeuchter r. F. SD";
 const char STR6200[] PROGMEM = "Fühler Speichern";
 const char STR6201[] PROGMEM = "Fühler löschen";
 const char STR6205[] PROGMEM = "Parameter zurücksetzen";
-const char STR6212[] PROGMEM = "Kontrollbnummer Erzeuger 1";
-const char STR6213[] PROGMEM = "Kontrollbnummer Erzeuger 2";
+const char STR6212[] PROGMEM = "Kontrollnummer Erzeuger 1";
+const char STR6213[] PROGMEM = "Kontrollnummer Erzeuger 2";
 const char STR6215[] PROGMEM = "Kontrollnummer Speicher";
 const char STR6217[] PROGMEM = "Kontrollnummer Heizkreise";
 const char STR6220[] PROGMEM = "Software- Version LOGON B";
@@ -1354,7 +1402,11 @@ const char ENUM700[] PROGMEM = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduzi
 const char ENUM780[] PROGMEM = {"\x00 Aus\0\x01 Bis Reduziertsollwert\0\x02 Bis Frostschutzsollwert"};
 const char ENUM850[] PROGMEM = {"\x00 Aus\0\x01 Funktionsheizen\0\x02 Belegreifheizen\0\x03 Funktions-/Belegreifheizen\0\x04 Beleg-/Funktionsheizen\0\x05 Manuell"};
 const char ENUM861[] PROGMEM = {"\x00 Aus\0\x01 Heizbetrieb\0\x02 Immer"};
+#ifdef BROETJE_SOB
+const char ENUM900[] PROGMEM = {"\x00 Schutzbetrieb\0\x01 Reduziert\0\x03 Komfort\0\x04 Automatik"};
+#else
 const char ENUM900[] PROGMEM = {"\x00 Keine\0\x01 Schutzbetrieb\0\x02 Reduziert\0\x03 Komfort\0\x04 Automatik"};
+#endif
 
 #define ENUM1080 ENUM780
 #define ENUM1150 ENUM850
@@ -1364,6 +1416,8 @@ const char ENUM1620[] PROGMEM = {"\x00 24h/Tag\0\x01 Zeitprogramme Heizkreise\0\
 const char ENUM1630[] PROGMEM = {"\x00 Absolut\0\x01 Gleitend\0\x02 Kein\0\x03 MK gleitend PK absolut\0\x04 Aus"};
 const char ENUM1640[] PROGMEM = {"\x00 Aus\0\x01 Periodisch\0\x02 Fixer Wochentag"};
 const char ENUM1660[] PROGMEM = {"\x01 Zeitprogramm 3/HKP\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW\0\x04 Zeitprogramm 5"};
+const char ENUM2291[] PROGMEM = {"\x01 Rücklauftemperatur\0\x02 Parallel\0\x03 Brennerbetrieb"};
+const char ENUM5010[] PROGMEM = {"\x00 Einmal/Tag\0\xff Mehrmals/Tag"};
 const char ENUM5022[] PROGMEM = {"\x01 Mit B3\0\x02 Mit B3/B31\0\x03 Mit B3, Legio B3/31"};
 const char ENUM5057[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
 const char ENUM5060[] PROGMEM = {"\x01 Ersatz\0\x02 Sommer\0\x03 Immer"};
@@ -1371,6 +1425,8 @@ const char ENUM5061[] PROGMEM = {"\x01 24H/Tag\0\x02 Trinkwasser Freigabe\0\x03 
 const char ENUM5062[] PROGMEM = {"\x01 Externer Thermostat\0\x02 Trinkwasserfühler"};
 const char ENUM5730[] PROGMEM = {"\x00 Fühler\0\x01 Thermostat"};
 const char ENUM5731[] PROGMEM = {"\x00 kein\0\x01 Ladepumpe\0\x02 Umlenkventil"};
+const char ENUM5760[] PROGMEM = {"\x00 Vor Pufferspeicher\0\x01 Nach Pufferspeicher"};
+const char ENUM5770[] PROGMEM = {"\x01 1-stufig\0\x02 2-stufig\0\x03 Modulierend 3-Punkt"};
 
 const char ENUM5890[] PROGMEM = {
 "\x00 Kein\0"
@@ -1383,7 +1439,7 @@ const char ENUM5890[] PROGMEM = {
 "\x07 Alarmausgang K10\0"
 "\x08 2.Pumpenstufe HK1 Q21\0"
 "\x09 2.Pumpenstufe HK2 Q22\0"
-"\x0a 2.Pumpenstufe HKP Q32\0"
+"\x0a 2.Pumpenstufe HKP Q23\0"
 "\x0b Heizkreispumpe HKP Q20\0"
 "\x0c H2-Pumpe Q18\0"
 "\x0d Zubringerpumpe Q14\0"
@@ -1406,6 +1462,8 @@ const char ENUM5890[] PROGMEM = {
 
 #define ENUM5891 ENUM5890
 #define ENUM5892 ENUM5890
+#define ENUM5902 ENUM5890
+#define ENUM5904 ENUM5890
 
 const char ENUM5922[] PROGMEM = {
 "\x00 Default, Keine Funktion\0"
@@ -1437,6 +1495,7 @@ const char ENUM5930[] PROGMEM = {
 "\x00 Kein\0"
 "\x01 Trinkwasserfühler B31\0"
 "\x02 Kollektorfühler B6\0"
+"\x03 Rücklauffühler B7\0"
 "\x04 TWW Zirkulationsfühler B39\0"
 "\x05 Pufferspeicherfühler B4\0"
 "\x06 Pufferspeicherfühler B41\0"
@@ -1455,6 +1514,8 @@ const char ENUM5930[] PROGMEM = {
 #define ENUM5931 ENUM5930
 #define ENUM5932 ENUM5930
 #define ENUM5933 ENUM5930
+#define ENUM5941 ENUM5930
+#define ENUM5942 ENUM5930
 
 #ifdef THISION
 const char ENUM5950[] PROGMEM = {
@@ -1700,6 +1761,8 @@ const char ENUM8005[] PROGMEM = {
 "\x0c Anfahrentlastung, Teillast\0"
 "\x0d Rückl’begrenzung\0"
 "\x0e Rückl’begrenzung, Teillast\0"
+"\x0f Freigegeben\0"
+"\x10 Freigegeben, Teillast\0"
 "\x11 Nachlauf aktiv\0"
 "\x12 In Betrieb\0"
 "\x13 Freigegeben\0"
@@ -2358,15 +2421,17 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KESSEL, VT_TEMP, 2214, STR2214, 0, NULL}, // TODO Thision 2214 Sollwert Handbetrieb [°C]
 #endif
 
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2220, STR2220, 0, NULL}, // Freigabeintegral Stufe 2
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2221, STR2221, 0, NULL}, // Rückstellintegral Stufe 2
-#ifdef THISION
-// command not present for THISIOn
+{0x0D3D0932, CAT_KESSEL, VT_UINT, 2220, STR2220, 0, NULL}, // Freigabeintegral Stufe 2 °Cmin[0-500]
+{0x0D3D0933, CAT_KESSEL, VT_UINT, 2221, STR2221, 0, NULL}, // Rückstellintegral Stufe 2 °Cmin[0-500]
+#if defined(THISION)
+// command not present for THISION
 {CMD_UNKNOWN, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
+#elif defined(BROETJE_SOB)
+{0x053D0908, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
 #else
 {0x0d3d08eb, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
 #endif
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2291, STR2291, 0, NULL}, // Steuerung Bypasspumpe
+{0x113D0947, CAT_KESSEL, VT_ENUM, 2291, STR2291, sizeof(ENUM2291), ENUM2291}, // Steuerung Bypasspumpe
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2330, STR2330, 0, NULL}, // Leistung Nenn
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2331, STR2331, 0, NULL}, // Leistung Grundstufe
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2340, STR2340, 0, NULL}, // Auto Erz’folge 2 x 1 Kaskade
@@ -2514,11 +2579,11 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4810, STR4810, 0, NULL}, // Durchladung
 
 // Trinkwasserspeicher
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5010, STR5010, 0, NULL}, // Ladung
+{0x253D0737, CAT_TWSPEICHER, VT_ENUM, 5010, STR5010, sizeof(ENUM5010), ENUM5010}, // Ladung
 {0x253d0720, CAT_TWSPEICHER, VT_TEMP, 5020, STR5020, 0, NULL}, // [°C ] - Trinkwasser-Speicher      - Vorlaufsollwertüberhöhung
 {0x253D07C1, CAT_TWSPEICHER, VT_TEMP, 5021, STR5021, 0, NULL}, // [°C ] - Trinkwasser-Speicher      - Umladeüberhöhung
 {0x253D087B, CAT_TWSPEICHER, VT_ENUM, 5022, STR5022, sizeof(ENUM5022), ENUM5022}, // [0] - Trinkwasser-Speicher      - Ladeart
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5050, STR5050, 0, NULL}, // Ladetemperatur Maximum
+{0x253D08A3, CAT_TWSPEICHER, VT_TEMP, 5050, STR5050, 0, NULL}, // Ladetemperatur Maximum
 {0x253D08BD, CAT_TWSPEICHER, VT_TEMP, 5055, STR5055, 0, NULL}, // Rückkühltemperatur
 {0x313D0713, CAT_TWSPEICHER, VT_ONOFF, 5056, STR5056, 0, NULL}, // [0] - Trinkwasser-Speicher      - Rückkühlung Kessel/HK
 {0x313D0714, CAT_TWSPEICHER, VT_ENUM, 5057, STR5057, sizeof(ENUM5057), ENUM5057}, // [0] - Trinkwasser-Speicher      - Rückkühlung Kollektor
@@ -2559,9 +2624,10 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x113d2fe3, CAT_KONFIG, VT_SECONDS_SHORT, 5732, STR5732, 0, NULL}, // TODO Thision 5732 TWW Pumpenpause Umsch UV [s]
 {0x113d2fe4, CAT_KONFIG, VT_SECONDS_SHORT, 5733, STR5733, 0, NULL}, // TODO Thision 5733 TWW Pumpenpause Verzögerung [s]
 {0x053D0727, CAT_KONFIG, VT_ONOFF, 5736, STR5736, 0, NULL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
+{0x053D079C, CAT_KONFIG, VT_ENUM, 5760, STR5760, sizeof(ENUM5760), ENUM5760}, // Vorregler/Zubringerpumpe [Vor Pufferspeicher | Nach Pufferspeicher] (Nach Pufferspeicher)
 {0x193d2fdc, CAT_KONFIG, VT_BYTE, 5761, STR5761, 0, NULL}, // TODO Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5770, STR5770, 0, NULL}, // Erzeugertyp
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5772, STR5772, 0, NULL}, // Brenner Vorlaufzeit
+{0x053D0851, CAT_KONFIG, VT_ENUM, 5770, STR5770, sizeof(ENUM5770), ENUM5770}, // Erzeugertyp
+{0x053D07BF, CAT_KONFIG, VT_SECONDS_SHORT, 5772, STR5772, 0, NULL}, // Brenner Vorlaufzeit
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5800, STR5800, 0, NULL}, // Wärmequelle
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5807, STR5807, 0, NULL}, // Kälteerzeugung
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5810, STR5810, 0, NULL}, // Spreizung HK bei TA –10 °C
@@ -2574,6 +2640,8 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5894, STR5894, 0, NULL}, // Relaisausgang QX4
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5895, STR5895, 0, NULL}, // Relaisausgang QX5
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5896, STR5896, 0, NULL}, // Relaisausgang QX6
+{0x053D0785, CAT_KONFIG, VT_ENUM, 5902, STR5902, sizeof(ENUM5902), ENUM5902}, // Relaisausgang QX21
+{0x053D0787, CAT_KONFIG, VT_ENUM, 5904, STR5904, sizeof(ENUM5904), ENUM5904}, // Relaisausgang QX23
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5908, STR5908, 0, NULL}, // Funktion Ausgang QX3-Mod
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5909, STR5909, 0, NULL}, // Funktion Ausgang QX4-Mod
 {0x153d2fcc, CAT_KONFIG, VT_BYTE, 5920, STR5920, 0, NULL}, // TODO Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
@@ -2589,23 +2657,40 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D07CA, CAT_KONFIG, VT_ENUM, 5932, STR5932, sizeof(ENUM5932), ENUM5932}, // [-] - Konfiguration - Fühlereingang BX 3
 {0x053D07CB, CAT_KONFIG, VT_ENUM, 5933, STR5933, sizeof(ENUM5933), ENUM5933}, // [-] - Konfiguration - Fühlereingang BX 4
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5934, STR5934, 0, NULL}, // Fühlereingang BX5
-#ifdef THISION
+{0x053D077F, CAT_KONFIG, VT_ENUM, 5941, STR5941, sizeof(ENUM5941), ENUM5941}, // Fühlereingang BX21
+{0x053D077F, CAT_KONFIG, VT_ENUM, 5942, STR5942, sizeof(ENUM5942), ENUM5942}, // Fühlereingang BX22
+#if defined(THISION)
 {0x053D3052, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
-#else
+#elif defined (BROETJE_SOB)
 {0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
+#else
+{0x053D0483, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
 #endif
+#ifdef BROETJE_SOB
+{0x053D0487, CAT_KONFIG, VT_ENUM, 5951, STR5951, sizeof(ENUM5951), ENUM5951}, // [0] - Konfiguration - Wirksinn Kontakt H1
+#else
 {0x053D0808, CAT_KONFIG, VT_ENUM, 5951, STR5951, sizeof(ENUM5951), ENUM5951}, // [0] - Konfiguration - Wirksinn Kontakt H1
+#endif
 {0x293D0656, CAT_KONFIG, VT_TEMP, 5952, STR5952, 0, NULL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5953, STR5953, 0, NULL}, // Spannungswert 1 H1
 {0x053D079F, CAT_KONFIG, VT_TEMP, 5954, STR5954, 0, NULL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5955, STR5955, 0, NULL}, // Spannungswert 2 H1
 {0x053D05DC, CAT_KONFIG, VT_PRESSURE, 5956, STR5956, 0, NULL}, // [bar ] - Konfiguration - Druckwer 3.5V H1
+#ifdef BROETJE_SOB // duplicate command id see 5950
+{0x053D0484, CAT_KONFIG, VT_ENUM, 5960, STR5960, sizeof(ENUM5960), ENUM5960}, // [-] - Konfiguration - Funktion Eingang H2
+{0x053D0575, CAT_KONFIG, VT_ENUM, 5961, STR5961, sizeof(ENUM5961), ENUM5961}, // [0] - Konfiguration - Wirksinn Kontakt H2
+{0x2A3D0656, CAT_KONFIG, VT_TEMP, 5962, STR5962, 0, NULL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H2
+{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5963, STR5963, 0, NULL}, // Spannungswert 1 H3
+{0x063D079F, CAT_KONFIG, VT_TEMP, 5964, STR5964, 0, NULL}, // [°C ] - Konfiguration - Temperaturwert 10V H2
+#else
 {0x053D0483, CAT_KONFIG, VT_ENUM, 5957, STR5957, sizeof(ENUM5957), ENUM5957}, // TODO Thision 5957 Modemfunktion [enum]
 {0x073D0807, CAT_KONFIG, VT_ENUM, 5960, STR5960, sizeof(ENUM5960), ENUM5960}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808, CAT_KONFIG, VT_ENUM, 5961, STR5961, sizeof(ENUM5961), ENUM5961}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x2B3D0656, CAT_KONFIG, VT_TEMP, 5962, STR5962, 0, NULL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H3
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5963, STR5963, 0, NULL}, // Spannungswert 1 H3
 {0x073D079F, CAT_KONFIG, VT_TEMP, 5964, STR5964, 0, NULL}, // [°C ] - Konfiguration - Waermeanforderung 10V H3
+#endif
+
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5965, STR5965, 0, NULL}, // Spannungswert 2 H3
 {0x073D05DC, CAT_KONFIG, VT_PRESSURE, 5966, STR5966, 0, NULL}, // [bar ] - Konfiguration - Druckwer 3.5V H3
 {0x2D3D3073, CAT_KONFIG, VT_ENUM, 5970, STR5970, sizeof(ENUM5970), ENUM5970}, // TODO Thision 5970 Konfig Raumthermostat 1 [enum]
@@ -2657,9 +2742,9 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053d05fe, CAT_KONFIG, VT_ONOFF, 6120, STR6120, 0, NULL}, // [0] - Konfiguration - Anlagenfrostschutz
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6128, STR6128, 0, NULL}, // Wärm'anfo unter Außentemp
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6129, STR6129, 0, NULL}, // Wärm'anfo über Außentemp
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6130, STR6130, 0, NULL}, // H1 mit Pufferspeicher
+{0x293D07C6, CAT_KONFIG, VT_YESNO, 6130, STR6130, 0, NULL}, // H1 mit Pufferspeicher
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6131, STR6131, 0, NULL}, // Wärm'anfo bei Ökobetrieb
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6134, STR6134, 0, NULL}, // H2 mit Pufferspeicher
+{0x2A3D07C6, CAT_KONFIG, VT_YESNO, 6134, STR6134, 0, NULL}, // H2 mit Pufferspeicher
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6135, STR6135, 0, NULL}, // Luftentfeuchter
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6136, STR6136, 0, NULL}, // Luftentfeuchter Freigabe
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6137, STR6137, 0, NULL}, // Luftentfeuchter r. F. EIN
@@ -2718,6 +2803,28 @@ SW Diagnosecode
 {0x113D05DE, CAT_FEHLER, VT_MINUTES_SHORT, 6743, STR6743, 0, NULL}, // [min ] - Fehler - Kesseltemperatur Alarm
 {CMD_UNKNOWN, CAT_FEHLER, VT_UNKNOWN, 6745, STR6745, 0, NULL}, // Trinkwasserladung Alarm
 {CMD_UNKNOWN, CAT_FEHLER, VT_UNKNOWN, 6746, STR6746, 0, NULL}, // Vorlauftemp Kühlen 1 Alarm
+#ifdef BROETJE_SOB
+{0x053D06D3, CAT_FEHLER, VT_DATETIME, 6800, STR6800, 0, NULL}, // [  ] - Fehler - Historie 1 Datum/Zeit
+{0x053D06DD, CAT_FEHLER, VT_ERRORCODE, 6801, STR6801, 0, NULL}, // [  ] - Fehler - Historie 1 Fehlercode
+{0x053D06D4, CAT_FEHLER, VT_DATETIME, 6802, STR6802, 0, NULL}, // [  ] - Fehler - Historie 2 Datum/Zeit
+{0x053D06DE, CAT_FEHLER, VT_ERRORCODE, 6803, STR6803, 0, NULL}, // [  ] - Fehler - Historie 2 Fehlercode
+{0x053D06D5, CAT_FEHLER, VT_DATETIME, 6804, STR6804, 0, NULL}, // [  ] - Fehler - Historie 3 Datum/Zeit
+{0x053D06DF, CAT_FEHLER, VT_ERRORCODE, 6805, STR6805, 0, NULL}, // [  ] - Fehler - Historie 3 Fehlercode
+{0x053D06D6, CAT_FEHLER, VT_DATETIME, 6806, STR6806, 0, NULL}, // [  ] - Fehler - Historie 4 Datum/Zeit
+{0x053D06E0, CAT_FEHLER, VT_ERRORCODE, 6807, STR6807, 0, NULL}, // [  ] - Fehler - Historie 4 Fehlercode
+{0x053D06D7, CAT_FEHLER, VT_DATETIME, 6808, STR6808, 0, NULL}, // [  ] - Fehler - Historie 5 Datum/Zeit
+{0x053D06E1, CAT_FEHLER, VT_ERRORCODE, 6809, STR6809, 0, NULL}, // [  ] - Fehler - Historie 5 Fehlercode
+{0x053D06D8, CAT_FEHLER, VT_DATETIME, 6810, STR6810, 0, NULL}, // [  ] - Fehler - Historie 6 Datum/Zeit
+{0x053D06E2, CAT_FEHLER, VT_ERRORCODE, 6811, STR6811, 0, NULL}, // [  ] - Fehler - Historie 6 Fehlercode
+{0x053D06D9, CAT_FEHLER, VT_DATETIME, 6812, STR6812, 0, NULL}, // [  ] - Fehler - Historie 7 Datum/Zeit
+{0x053D06E3, CAT_FEHLER, VT_ERRORCODE, 6813, STR6813, 0, NULL}, // [  ] - Fehler - Historie 7 Fehlercode
+{0x053D06DA, CAT_FEHLER, VT_DATETIME, 6814, STR6814, 0, NULL}, // [  ] - Fehler - Historie 8 Datum/Zeit
+{0x053D06E4, CAT_FEHLER, VT_ERRORCODE, 6815, STR6815, 0, NULL}, // [  ] - Fehler - Historie 8 Fehlercode
+{0x053D06DB, CAT_FEHLER, VT_DATETIME, 6816, STR6816, 0, NULL}, // [  ] - Fehler - Historie 9 Datum/Zeit
+{0x053D06E5, CAT_FEHLER, VT_ERRORCODE, 6817, STR6817, 0, NULL}, // [  ] - Fehler - Historie 9 Fehlercode
+{0x053D06DC, CAT_FEHLER, VT_DATETIME, 6818, STR6818, 0, NULL}, // [  ] - Fehler - Historie 10 Datum/Zeit
+{0x053D06E6, CAT_FEHLER, VT_ERRORCODE, 6819, STR6819, 0, NULL}, // [  ] - Fehler - Historie 10 Fehlercode
+#else
 {0x053D06D3, CAT_FEHLER, VT_DATETIME, 6800, STR6800, 0, NULL}, // [  ] - Fehler - Historie 1 Datum/Zeit
 {0x053D0814, CAT_FEHLER, VT_ERRORCODE, 6801, STR6801, 0, NULL}, // [  ] - Fehler - Historie 1 Fehlercode
 {0x053D06D4, CAT_FEHLER, VT_DATETIME, 6802, STR6802, 0, NULL}, // [  ] - Fehler - Historie 2 Datum/Zeit
@@ -2738,6 +2845,7 @@ SW Diagnosecode
 {0x053D081C, CAT_FEHLER, VT_ERRORCODE, 6817, STR6817, 0, NULL}, // [  ] - Fehler - Historie 9 Fehlercode
 {0x053D06DC, CAT_FEHLER, VT_DATETIME, 6818, STR6818, 0, NULL}, // [  ] - Fehler - Historie 10 Datum/Zeit
 {0x053D081D, CAT_FEHLER, VT_ERRORCODE, 6819, STR6819, 0, NULL}, // [  ] - Fehler - Historie 10 Fehlercode
+#endif
 // TODO Thision 6800 Historie 1
 // TODO Thision 6805 SW Diagnosecode 1
 // TODO Thision 6810 Historie 2
@@ -2867,9 +2975,13 @@ SW Diagnosecode
 {0x053D079A, CAT_IOTEST, VT_TEMP, 7832, STR7832, 0, NULL}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 2
 {0x053D079B, CAT_IOTEST, VT_TEMP, 7833, STR7833, 0, NULL}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 2
 {0x053D082F, CAT_IOTEST, VT_VOLTAGE, 7840, STR7840, 0, NULL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
+#ifdef BROETJE_SOB
+{0x053D045D, CAT_IOTEST, VT_CLOSEDOPEN, 7841, STR7841, 0, NULL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
+#else
 {0x053D0809, CAT_IOTEST, VT_CLOSEDOPEN, 7841, STR7841, 0, NULL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
-{CMD_UNKNOWN, CAT_IOTEST, VT_VOLTAGE, 7845, STR7845, 0, NULL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
-{CMD_UNKNOWN, CAT_IOTEST, VT_CLOSEDOPEN, 7846, STR7846, 0, NULL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+#endif
+{0x053D057A, CAT_IOTEST, VT_VOLTAGE, 7845, STR7845, 0, NULL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
+{0x053D078F, CAT_IOTEST, VT_CLOSEDOPEN, 7846, STR7846, 0, NULL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x073D082F, CAT_IOTEST, VT_VOLTAGE, 7854, STR7854, 0, NULL}, // Spannungssignal H3
 {0x073D0809, CAT_IOTEST, VT_CLOSEDOPEN, 7855, STR7855, 0, NULL}, // Kontaktzustand H3
 {0x053D03F6, CAT_IOTEST, VT_VOLTAGE, 7870, STR7870, 0, NULL}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
@@ -3111,8 +3223,12 @@ SW Diagnosecode
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8983, STR8983, 0, NULL}, // Pufferspeichertemperatur 3
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8990, STR8990, 0, NULL}, // Betr’stunden Elektro Puffer
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8991, STR8991, 0, NULL}, // Startzähler Elektro Puffer
+#ifdef BROETJE_SOB
+{0x053D0576, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9000, STR9000, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert H1
+#else
 {0x053D080C, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9000, STR9000, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert H1
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9001, STR9001, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert H2
+#endif
+{0x053D0577, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9001, STR9001, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert H2
 {0x073D080C, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9004, STR9004, 0, NULL}, // Vorlaufsollwert H3
 {0x053D0805, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9005, STR9005, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H1
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006, STR9006, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H2
@@ -3200,7 +3316,7 @@ void setup() {
   Ethernet.begin(mac, ip);
   server.begin();
 
-#ifdef ONEWIRE_SENSORS  
+#ifdef ONE_WIRE_BUS  
   // check ds18b20 sensors
   sensors.begin();
   numSensors=sensors.getDeviceCount();
@@ -3654,9 +3770,37 @@ void loop() {
     bus.Monitor();
   }else{
     // listen for incoming messages
+//#define USE_BROADCAST    
+#ifdef USE_BROADCAST
+      if (bus.GetMessage(msg)){     
+         if(verbose) printTelegram(msg);   
+         if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
+           printTelegram(msg);
+           uint32_t cmd;
+           cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+           if(cmd==0x05000213){ // Brenner Status
+             Serial.print(F("INF: Brennerstatus: "));
+             Serial.println(msg[9]);
+             
+             if(msg[9]==0x04){  // brenner on: TODO check if there is a difference between brennerstufe 1 and 2
+               brenner_start=millis();               
+             }else{             // brenner off
+               unsigned long brenner_end;
+               brenner_end=millis();
+               if(brenner_end >= brenner_start){
+                 brenner_duration+=brenner_end-brenner_start;
+               }else{
+                 brenner_duration+=0xffffffff-brenner_start+brenner_end;               
+               }               
+             }             
+           }           
+         }
+      }
+#else    
     if(verbose){
       if (bus.GetMessage(msg)) printTelegram(msg);
     }
+#endif    
   }
   
   // listen for incoming clients
@@ -3711,7 +3855,7 @@ void loop() {
 // IPWE END
 
         char *p=cLineBuffer;
-#if USE_PASSKEY
+#ifdef PASSKEY
         // check for valid passkey
         p=strchr(cLineBuffer+1,'/');
         if(p==NULL){
@@ -3731,14 +3875,16 @@ void loop() {
           webPrintSite();
           break;
         }
-#ifdef ONEWIRE_SENSORS          
+#ifdef ONE_WIRE_BUS          
           if (!strcmp(p,"/temp")) {
+            webPrintHeader();            
             ds18b20();
+            webPrintFooter();
             break;
           }
 #endif         
         // answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVM",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVMTB",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -3830,6 +3976,22 @@ void loop() {
           webPrintFooter();
           break;
         }
+        // reset brenner duration
+        if(p[1]=='B' && p[2]=='0'){
+          //list categories
+          webPrintHeader();
+          client.println(F("brenner duration is set to zero<br>"));
+          brenner_duration=0;          
+          webPrintFooter();
+          break;
+        }
+        // query brenner duration
+        if(p[1]=='B'){
+          webPrintHeader();
+          client.println(brenner_duration);
+          webPrintFooter();
+          break;
+        }
         // list enum values
         if(p[1]=='E'){
           webPrintHeader();
@@ -3905,50 +4067,56 @@ void loop() {
         int end=-1;
         range = strtok(p,"/");
         while(range!=0){
-          if(range[0]=='K'){
-            uint8_t cat,search_cat;
-            uint16_t line;
-            int i;
-            uint32_t c;
-            i=0;
-            start=-1;
-            end=-1;
-            search_cat=atoi(&range[1]);
-            c=pgm_read_dword(&cmdtbl[i].cmd);
-            while(c!=CMD_END){
-              cat=pgm_read_byte(&cmdtbl[i].category);
-              if(cat==search_cat){
-                if(start<0){
-                  line=pgm_read_word(&cmdtbl[i].line);
-                  start=line;
-                }
-              }else{
-                if(start>=0){
-                  line=pgm_read_word(&cmdtbl[i-1].line);
-                  end=line;
-                  break;
-                }
-              }
-              i++;
-              c=pgm_read_dword(&cmdtbl[i].cmd);
-            }
-            if(end<start){
-              end=start;
-            }
+          if(range[0]=='T'){
+#ifdef ONE_WIRE_BUS          
+            ds18b20();
+#endif            
           }else{
-            // split range
-            line_start=range;
-            line_end=strchr(range,'-');
-            if(line_end==NULL){
-              line_end=line_start;
+            if(range[0]=='K'){
+              uint8_t cat,search_cat;
+              uint16_t line;
+              int i;
+              uint32_t c;
+              i=0;
+              start=-1;
+              end=-1;
+              search_cat=atoi(&range[1]);
+              c=pgm_read_dword(&cmdtbl[i].cmd);
+              while(c!=CMD_END){
+                cat=pgm_read_byte(&cmdtbl[i].category);
+                if(cat==search_cat){
+                  if(start<0){
+                    line=pgm_read_word(&cmdtbl[i].line);
+                    start=line;
+                  }
+                }else{
+                  if(start>=0){
+                    line=pgm_read_word(&cmdtbl[i-1].line);
+                    end=line;
+                    break;
+                  }
+                }
+                i++;
+                c=pgm_read_dword(&cmdtbl[i].cmd);
+              }
+              if(end<start){
+                end=start;
+              }
             }else{
-              *line_end='\0';
-              line_end++;
+              // split range
+              line_start=range;
+              line_end=strchr(range,'-');
+              if(line_end==NULL){
+                line_end=line_start;
+              }else{
+                *line_end='\0';
+                line_end++;
+              }
+              start=atoi(line_start);
+              end=atoi(line_end);
             }
-            start=atoi(line_start);
-            end=atoi(line_end);
+            query(start,end,0);
           }
-          query(start,end,0);
 
           range = strtok(NULL,"/");
         }
@@ -4687,8 +4855,9 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Rx</td> <td>query reset value for line x</td></tr>"));
   client.print(F(" <tr><td>/Vn</td> <td>set verbosity level for serial output</td></tr>"));
   client.print(F(" <tr><td>/Mn</td> <td>activate/deactivate monitor functionality (n=0 disable, n=1 enable)</td></tr>"));
+  client.print(F(" <tr><td>/T</td> <td>query values of connected ds18b20 temperature sensors (optional)</td></tr>"));
   client.print(F(" </table>"));
-  client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999</p>"));
+  client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999/T</p>"));
   webPrintFooter();
 }
 
@@ -4715,7 +4884,7 @@ void Ipwe() {
     client.print(ipwe_sensors[i]);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
-#ifdef ONEWIRE_SENSORS
+#ifdef ONE_WIRE_BUS
   // output of one wire sensors
   sensors.requestTemperatures(); 
   for(i=0;i<numSensors;i++){
@@ -4781,11 +4950,11 @@ void Heating(char* status) {
   set(700,status,true);    // Zusätzlich (bzw. ggf. alternativ) noch Wechsel zwischen Automatik- und Frostschutzmodus
 } 
 
-#ifdef ONEWIRE_SENSORS
+#ifdef ONE_WIRE_BUS
 
 void ds18b20(void) {
   int i;
-  webPrintHeader();
+  //webPrintHeader();
   Serial.println("start requestTemperatures");
   sensors.requestTemperatures(); // Send the command to get temperatures
   Serial.println("end requestTemperatures");
@@ -4803,6 +4972,6 @@ void ds18b20(void) {
     outBufLen+=sprintf(outBuf+outBufLen,"<br>");    
   }
   client.println(outBuf);  
-  webPrintFooter();
+  //webPrintFooter();
 } 
 #endif
