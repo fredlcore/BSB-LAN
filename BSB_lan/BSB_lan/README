@@ -104,6 +104,12 @@ Interface:
         The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally printed in raw hex format.
         The verbose output only affects the serial console of the mega2560. The html output is kept unchanged.
 
+      activate bus monitor
+        http://<ip-of-server>/M<n>
+        When setting it to 1 all bytes on the bus monitored. Telegrams are recognized by a character break condition.
+        Every Telegramm is printed in hex format to serial output with a timestamp in milliseconds.
+        The monitor output only affects the serial console of the mega2560. The html output is kept unchanged.
+
 Open issues
       - Add more command ids to the table.
           Only the known command ids from the threads listed above and the testet boiler system (ELCO) are content of the table.
@@ -125,27 +131,3 @@ Open issues
       - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
       - Add support of error messages send by the boiler system
-
-
-
-Extension: TODO
-
-    Room temperature sensor simulation:
-    
-    affected parameters
-    - 710 - HK1 - Komfortsollwert
-    - 750 - HK1 - Raumeinfluss
-    - 700 - HK1 - Betriebsart (0=Schutzbetrieb, 1=Automatik, 2=Reduziert, 3=Komfort)
-    - INF 10000=Raumtemperatur
-    - 8740 Diagnose Verbraucher - Raumtemperatur 1
-    - 8741 Diagnose Verbraucher - Raumsollwert 1
-
-    To simulate a room temperature sensor the temperature has to be sent in a regular interval (<10min).
-    Additionally the boiler can be switched off, when no heating is requested.
-    When using the PID20 module from fhem, we can try the following approach:
-    - loop over all PID20 devices
-    - skip all devices which are not the state processing
-    - skip all devices with an actuation less than 10 percent
-    - get the max desired temperature for all not skipped devices
-    - get the greatest difference from desired and measured temperature for all not skipped devices
-    - calculate a virtual min measured temperature using this difference
