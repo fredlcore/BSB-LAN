@@ -34,11 +34,7 @@ Target System:
       Missing command ids have to be added in the cmdtbl.
       Until now it is not clear to me, what the differences between the LPB and BSB protocols are. The physical specifications
       are the same. But may be they differe on the protocol level. Until now I have only connected the system to the BSB.
-
-Software:
-      The software is intended to be build with the command line tool ino. If you want to use the arduino sdk you may have to change the
-      folder structure.
-      
+    
 BEFORE BUILDING the software you have to adapt some parameters in BSB_lan.ino:
       - MAC address of your ethernet shield. It can be normally found on a label at the shield:
         byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
@@ -50,7 +46,9 @@ BEFORE BUILDING the software you have to adapt some parameters in BSB_lan.ino:
         BSB bus(68,69);
       - (optional) Activate the usage of the passkey functionality (see below)
         #define USE_PASSKEY  1
-
+      - (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)
+        BSB bus(68,69,<my_addr>);
+        
 Interface:
       A simple syntax description is content of the website displayed when the server is accessed by its simple URL withou any parameters.
       e.g. http://<ip-of-server>
@@ -127,3 +125,27 @@ Open issues
       - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
       - Add support of error messages send by the boiler system
+
+
+
+Extension: TODO
+
+    Room temperature sensor simulation:
+    
+    affected parameters
+    - 710 - HK1 - Komfortsollwert
+    - 750 - HK1 - Raumeinfluss
+    - 700 - HK1 - Betriebsart (0=Schutzbetrieb, 1=Automatik, 2=Reduziert, 3=Komfort)
+    - INF 10000=Raumtemperatur
+    - 8740 Diagnose Verbraucher - Raumtemperatur 1
+    - 8741 Diagnose Verbraucher - Raumsollwert 1
+
+    To simulate a room temperature sensor the temperature has to be sent in a regular interval (<10min).
+    Additionally the boiler can be switched off, when no heating is requested.
+    When using the PID20 module from fhem, we can try the following approach:
+    - loop over all PID20 devices
+    - skip all devices which are not the state processing
+    - skip all devices with an actuation less than 10 percent
+    - get the max desired temperature for all not skipped devices
+    - get the greatest difference from desired and measured temperature for all not skipped devices
+    - calculate a virtual min measured temperature using this difference

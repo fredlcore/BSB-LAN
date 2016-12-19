@@ -10,10 +10,14 @@
  * see README file for more information
  *
  * Version:
- *       0.1  - 21.01.2015  - initial version
+ *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
+ *       0.6  - 02.02.2015 
  *
  * Changelog:
+ *       version 0.6
+ *        - renamed SoftwareSerial to BSBSoftwareSerial
+ *        - changed folder structure to enable simple build with arduino sdk
  *       version 0.5
  *        - bugfixes
  *        - added documentation (README)
@@ -30,7 +34,7 @@
  */
 
 #include <avr/pgmspace.h>
-#include "SoftwareSerial.h"
+#include "BSBSoftwareSerial.h"
 #include "bsb.h"
 
 #include <SPI.h>

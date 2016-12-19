@@ -29,8 +29,8 @@ The latest version of this library can always be found at
 http://arduiniana.org.
 */
 
-#ifndef SoftwareSerial_h
-#define SoftwareSerial_h
+#ifndef BSBSoftwareSerial_h
+#define BSBSoftwareSerial_h
 
 #include <inttypes.h>
 #include <Stream.h>
@@ -51,7 +51,7 @@ http://arduiniana.org.
 #define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
 
-class SoftwareSerial : public Stream
+class BSBSoftwareSerial : public Stream
 {
 private:
   // per object data
@@ -73,7 +73,7 @@ private:
   static char _receive_buffer[_SS_MAX_RX_BUFF]; 
   static volatile uint8_t _receive_buffer_tail;
   static volatile uint8_t _receive_buffer_head;
-  static SoftwareSerial *active_object;
+  static BSBSoftwareSerial *active_object;
 
   // private methods
   void recv();
@@ -86,8 +86,8 @@ private:
 
 public:
   // public methods
-  SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
-  ~SoftwareSerial();
+  BSBSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false);
+  ~BSBSoftwareSerial();
   void begin(long speed);
   bool listen();
   void end();

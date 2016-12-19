@@ -10,7 +10,7 @@
 
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr) {
-  serial = new SoftwareSerial(rx, tx, true);
+  serial = new BSBSoftwareSerial(rx, tx, true);
 
   serial->begin(4800);
   serial->listen();

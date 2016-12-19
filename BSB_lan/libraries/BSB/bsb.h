@@ -8,7 +8,7 @@
 #include "WProgram.h"
 #endif
 
-#include "SoftwareSerial.h"
+#include "BSBSoftwareSerial.h"
 #include "util/crc16.h"
 
 // See this page for further details:
@@ -48,7 +48,7 @@ private:
   inline void _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
 
-  SoftwareSerial* serial;
+  BSBSoftwareSerial* serial;
 };
 
 #endif
