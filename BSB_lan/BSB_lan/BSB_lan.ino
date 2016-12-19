@@ -20,8 +20,12 @@
  *       0.11  - 07.04.2015 
  *       0.12  - 09.04.2015 
  *       0.13  - 31.03.2016
+ *       0.14  - 04.04.2016
  *
  * Changelog:
+ *       version 0.14
+ *        - minor bugfixes for Broetje SOB
+ *        - extended broadcast handling (experimental)
  *       version 0.13
  *        - change resistor value in recieving path from 4k7 to 1k5
  *        - added values 0x0f and 0x10 to Enum8005
@@ -30,7 +34,7 @@
  *        - added option T for querying one wire temperature sensors in mixed querys
  *        - added special handling for Broetje SOB
  *        - simplified settings
- *       version 0.12
+ *       version 0.121
  *        - added ONEWIRE_SENSORS to ipwe
  *        - fixed parameter decoding for ELCO Thision heating system
  *       version 0.11
@@ -123,7 +127,9 @@ BSB bus(68,69);
 
 byte led0 = 3, led1 = 4 ; // Pins 3+4 for Relais
 
-//#define USE_BROADCAST    // experimental don't use it!
+// EXPERIMENTAL:
+// If defined the heating burner on time is accumulated using broadcast messages sent from the heating system.
+//#define USE_BROADCAST
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */
@@ -145,6 +151,7 @@ EthernetClient client;
 // variables for handling of broadcast messages
 unsigned long brenner_start=0;
 unsigned long brenner_duration=0;
+unsigned long brenner_count=0;
 
 // if set to 1, all messages on the bus are printed to the serial interface
 byte verbose = 0;
@@ -1416,7 +1423,7 @@ const char ENUM1620[] PROGMEM = {"\x00 24h/Tag\0\x01 Zeitprogramme Heizkreise\0\
 const char ENUM1630[] PROGMEM = {"\x00 Absolut\0\x01 Gleitend\0\x02 Kein\0\x03 MK gleitend PK absolut\0\x04 Aus"};
 const char ENUM1640[] PROGMEM = {"\x00 Aus\0\x01 Periodisch\0\x02 Fixer Wochentag"};
 const char ENUM1660[] PROGMEM = {"\x01 Zeitprogramm 3/HKP\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW\0\x04 Zeitprogramm 5"};
-const char ENUM2291[] PROGMEM = {"\x01 Rücklauftemperatur\0\x02 Parallel\0\x03 Brennerbetrieb"};
+const char ENUM2291[] PROGMEM = {"\x00 Parallel Brennerbetrieb\0\x01 Rücklauftemperatur"};
 const char ENUM5010[] PROGMEM = {"\x00 Einmal/Tag\0\xff Mehrmals/Tag"};
 const char ENUM5022[] PROGMEM = {"\x01 Mit B3\0\x02 Mit B3/B31\0\x03 Mit B3, Legio B3/31"};
 const char ENUM5057[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
@@ -1517,7 +1524,7 @@ const char ENUM5930[] PROGMEM = {
 #define ENUM5941 ENUM5930
 #define ENUM5942 ENUM5930
 
-#ifdef THISION
+#if defined(THISION)
 const char ENUM5950[] PROGMEM = {
 "\x00 Keine Funktion\0"
 "\x01 Modemfunktion\0"
@@ -1526,6 +1533,18 @@ const char ENUM5950[] PROGMEM = {
 "\x07 Rückmeldung AbgKlp\0"
 "\x08 Erzeugersperre\0"
 "\x09 Erzeugersperre invers"
+};
+#elif defined (BROETJE_SOB)
+const char ENUM5950[] PROGMEM = {
+"\x01 BA-Umschaltung HK's + TWW\0"
+"\x02 BA-Umschaltung HK's\0"
+"\x03 BA-Umschaltung HK1\0"
+"\x04 BA-Umschaltung HK2\0"
+"\x05 BA-Umschaltung HKP\0"
+"\x06 Erzeugersperre\0"
+"\x07 Fehler- / Alarmmeldung\0"
+"\x08 Minimaler Vorlaufsollwert\0"
+"\x09 Wärmeanforderung 10V\0"
 };
 #else
 const char ENUM5950[] PROGMEM = {
@@ -2658,13 +2677,13 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D07CB, CAT_KONFIG, VT_ENUM, 5933, STR5933, sizeof(ENUM5933), ENUM5933}, // [-] - Konfiguration - Fühlereingang BX 4
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5934, STR5934, 0, NULL}, // Fühlereingang BX5
 {0x053D077F, CAT_KONFIG, VT_ENUM, 5941, STR5941, sizeof(ENUM5941), ENUM5941}, // Fühlereingang BX21
-{0x053D077F, CAT_KONFIG, VT_ENUM, 5942, STR5942, sizeof(ENUM5942), ENUM5942}, // Fühlereingang BX22
+{0x053D0784, CAT_KONFIG, VT_ENUM, 5942, STR5942, sizeof(ENUM5942), ENUM5942}, // Fühlereingang BX22
 #if defined(THISION)
 {0x053D3052, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
 #elif defined (BROETJE_SOB)
-{0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
-#else
 {0x053D0483, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
+#else
+{0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
 #endif
 #ifdef BROETJE_SOB
 {0x053D0487, CAT_KONFIG, VT_ENUM, 5951, STR5951, sizeof(ENUM5951), ENUM5951}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -2805,25 +2824,25 @@ SW Diagnosecode
 {CMD_UNKNOWN, CAT_FEHLER, VT_UNKNOWN, 6746, STR6746, 0, NULL}, // Vorlauftemp Kühlen 1 Alarm
 #ifdef BROETJE_SOB
 {0x053D06D3, CAT_FEHLER, VT_DATETIME, 6800, STR6800, 0, NULL}, // [  ] - Fehler - Historie 1 Datum/Zeit
-{0x053D06DD, CAT_FEHLER, VT_ERRORCODE, 6801, STR6801, 0, NULL}, // [  ] - Fehler - Historie 1 Fehlercode
+{0x053D06DD, CAT_FEHLER, VT_ENUM, 6801, STR6801, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 1 Fehlercode
 {0x053D06D4, CAT_FEHLER, VT_DATETIME, 6802, STR6802, 0, NULL}, // [  ] - Fehler - Historie 2 Datum/Zeit
-{0x053D06DE, CAT_FEHLER, VT_ERRORCODE, 6803, STR6803, 0, NULL}, // [  ] - Fehler - Historie 2 Fehlercode
+{0x053D06DE, CAT_FEHLER, VT_ENUM, 6803, STR6803, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 2 Fehlercode
 {0x053D06D5, CAT_FEHLER, VT_DATETIME, 6804, STR6804, 0, NULL}, // [  ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06DF, CAT_FEHLER, VT_ERRORCODE, 6805, STR6805, 0, NULL}, // [  ] - Fehler - Historie 3 Fehlercode
+{0x053D06DF, CAT_FEHLER, VT_ENUM, 6805, STR6805, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 3 Fehlercode
 {0x053D06D6, CAT_FEHLER, VT_DATETIME, 6806, STR6806, 0, NULL}, // [  ] - Fehler - Historie 4 Datum/Zeit
-{0x053D06E0, CAT_FEHLER, VT_ERRORCODE, 6807, STR6807, 0, NULL}, // [  ] - Fehler - Historie 4 Fehlercode
+{0x053D06E0, CAT_FEHLER, VT_ENUM, 6807, STR6807, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 4 Fehlercode
 {0x053D06D7, CAT_FEHLER, VT_DATETIME, 6808, STR6808, 0, NULL}, // [  ] - Fehler - Historie 5 Datum/Zeit
-{0x053D06E1, CAT_FEHLER, VT_ERRORCODE, 6809, STR6809, 0, NULL}, // [  ] - Fehler - Historie 5 Fehlercode
+{0x053D06E1, CAT_FEHLER, VT_ENUM, 6809, STR6809, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 5 Fehlercode
 {0x053D06D8, CAT_FEHLER, VT_DATETIME, 6810, STR6810, 0, NULL}, // [  ] - Fehler - Historie 6 Datum/Zeit
-{0x053D06E2, CAT_FEHLER, VT_ERRORCODE, 6811, STR6811, 0, NULL}, // [  ] - Fehler - Historie 6 Fehlercode
+{0x053D06E2, CAT_FEHLER, VT_ENUM, 6811, STR6811, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 6 Fehlercode
 {0x053D06D9, CAT_FEHLER, VT_DATETIME, 6812, STR6812, 0, NULL}, // [  ] - Fehler - Historie 7 Datum/Zeit
-{0x053D06E3, CAT_FEHLER, VT_ERRORCODE, 6813, STR6813, 0, NULL}, // [  ] - Fehler - Historie 7 Fehlercode
+{0x053D06E3, CAT_FEHLER, VT_ENUM, 6813, STR6813, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 7 Fehlercode
 {0x053D06DA, CAT_FEHLER, VT_DATETIME, 6814, STR6814, 0, NULL}, // [  ] - Fehler - Historie 8 Datum/Zeit
-{0x053D06E4, CAT_FEHLER, VT_ERRORCODE, 6815, STR6815, 0, NULL}, // [  ] - Fehler - Historie 8 Fehlercode
+{0x053D06E4, CAT_FEHLER, VT_ENUM, 6815, STR6815, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 8 Fehlercode
 {0x053D06DB, CAT_FEHLER, VT_DATETIME, 6816, STR6816, 0, NULL}, // [  ] - Fehler - Historie 9 Datum/Zeit
-{0x053D06E5, CAT_FEHLER, VT_ERRORCODE, 6817, STR6817, 0, NULL}, // [  ] - Fehler - Historie 9 Fehlercode
+{0x053D06E5, CAT_FEHLER, VT_ENUM, 6817, STR6817, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 9 Fehlercode
 {0x053D06DC, CAT_FEHLER, VT_DATETIME, 6818, STR6818, 0, NULL}, // [  ] - Fehler - Historie 10 Datum/Zeit
-{0x053D06E6, CAT_FEHLER, VT_ERRORCODE, 6819, STR6819, 0, NULL}, // [  ] - Fehler - Historie 10 Fehlercode
+{0x053D06E6, CAT_FEHLER, VT_ENUM, 6819, STR6819, sizeof(ENUM_ERROR), ENUM_ERROR}, // [  ] - Fehler - Historie 10 Fehlercode
 #else
 {0x053D06D3, CAT_FEHLER, VT_DATETIME, 6800, STR6800, 0, NULL}, // [  ] - Fehler - Historie 1 Datum/Zeit
 {0x053D0814, CAT_FEHLER, VT_ERRORCODE, 6801, STR6801, 0, NULL}, // [  ] - Fehler - Historie 1 Fehlercode
@@ -3770,7 +3789,6 @@ void loop() {
     bus.Monitor();
   }else{
     // listen for incoming messages
-//#define USE_BROADCAST    
 #ifdef USE_BROADCAST
       if (bus.GetMessage(msg)){     
          if(verbose) printTelegram(msg);   
@@ -3782,16 +3800,22 @@ void loop() {
              Serial.print(F("INF: Brennerstatus: "));
              Serial.println(msg[9]);
              
-             if(msg[9]==0x04){  // brenner on: TODO check if there is a difference between brennerstufe 1 and 2
-               brenner_start=millis();               
+             if(msg[9]==0x04){  // brenner on
+               if(brenner_start==0){
+                  brenner_start=millis();   
+                  brenner_count++;            
+               }
              }else{             // brenner off
-               unsigned long brenner_end;
-               brenner_end=millis();
-               if(brenner_end >= brenner_start){
-                 brenner_duration+=brenner_end-brenner_start;
-               }else{
-                 brenner_duration+=0xffffffff-brenner_start+brenner_end;               
-               }               
+               if(brenner_start!=0){
+                 unsigned long brenner_end;
+                 brenner_end=millis();
+                 if(brenner_end >= brenner_start){
+                   brenner_duration+=(brenner_end-brenner_start)/1000;
+                 }else{
+                   brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;               
+                 }
+                 brenner_start=0;               
+               }
              }             
            }           
          }
@@ -3982,13 +4006,19 @@ void loop() {
           webPrintHeader();
           client.println(F("brenner duration is set to zero<br>"));
           brenner_duration=0;          
+          brenner_count=0;          
           webPrintFooter();
           break;
         }
         // query brenner duration
         if(p[1]=='B'){
           webPrintHeader();
-          client.println(brenner_duration);
+          client.print(F("Brenner Laufzeit: "));
+          client.print(brenner_duration);
+          client.println("<br>");
+          client.print(F("Brenner Takte: "));
+          client.print(brenner_count);
+          client.println("<br>");
           webPrintFooter();
           break;
         }
@@ -4856,6 +4886,10 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Vn</td> <td>set verbosity level for serial output</td></tr>"));
   client.print(F(" <tr><td>/Mn</td> <td>activate/deactivate monitor functionality (n=0 disable, n=1 enable)</td></tr>"));
   client.print(F(" <tr><td>/T</td> <td>query values of connected ds18b20 temperature sensors (optional)</td></tr>"));
+#ifdef USE_BROADCAST
+  client.print(F(" <tr><td>/B</td> <td>query accumulated duration of burner on status captured from broadcast messages</td></tr>"));
+  client.print(F(" <tr><td>/B0</td> <td>reset accumulated duration of burner on status captured from broadcast messages</td></tr>"));
+#endif  
   client.print(F(" </table>"));
   client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999/T</p>"));
   webPrintFooter();
