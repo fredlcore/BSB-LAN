@@ -21,8 +21,11 @@
  *       0.12  - 09.04.2015 
  *       0.13  - 31.03.2016
  *       0.14  - 04.04.2016
+ *       0.15  - 21.04.2016
  *
  * Changelog:
+ *       version 0.15
+ *        - added Solar and Pufferspeicher from Elco Logon B & Logon B MM
  *       version 0.14
  *        - minor bugfixes for Broetje SOB
  *        - extended broadcast handling (experimental)
@@ -670,6 +673,7 @@ const char STR2065[] PROGMEM = "Ladevorrang Solar ";
 const char STR2070[] PROGMEM = "Schwimmbadtemp Maximum";
 const char STR2080[] PROGMEM = "Mit Solareinbindung";
 const char STR2150[] PROGMEM = "Vorregler/Zubringerpumpe";
+const char STR2200[] PROGMEM = "Betriebsart";
 const char STR2201[] PROGMEM = "Erzeugersperre";
 const char STR2203[] PROGMEM = "Freigabe unter Außentemp";
 const char STR2205[] PROGMEM = "Bei Ökobetrieb";
@@ -800,6 +804,7 @@ const char STR4722[] PROGMEM = "Temp`diff Puffer/Heizkreis";
 const char STR4724[] PROGMEM = "Min Speichertemp Heizbetrieb";
 const char STR4739[] PROGMEM = "Schichtschutz";
 const char STR4750[] PROGMEM = "Ladetemperatur Maximum";
+const char STR4751[] PROGMEM = "Speichertemperatur Maximum";
 const char STR4755[] PROGMEM = "Rückkühltemperatur";
 const char STR4756[] PROGMEM = "Rückkühlung TWW/HK`s";
 const char STR4757[] PROGMEM = "Rückkühlung Kollektor";
@@ -811,6 +816,7 @@ const char STR4791[] PROGMEM = "Temp'diff AUS Rückl'umlenk";
 const char STR4795[] PROGMEM = "Vergleichstemp Rückl'umlenk";
 const char STR4796[] PROGMEM = "Wirksinn Rücklaufumlenkung";
 const char STR4810[] PROGMEM = "Durchladung";
+const char STR4813[] PROGMEM = "Durchladefühler";
 const char STR5010[] PROGMEM = "Ladung";
 const char STR5020[] PROGMEM = "Vorlaufsollwertüberhöhung";
 const char STR5021[] PROGMEM = "Umladeüberhöhung";
@@ -975,6 +981,7 @@ const char STR6215[] PROGMEM = "Kontrollnummer Speicher";
 const char STR6217[] PROGMEM = "Kontrollnummer Heizkreise";
 const char STR6220[] PROGMEM = "Software- Version LOGON B";
 const char STR6221[] PROGMEM = "Entwicklungs-Index";
+const char STR6222[] PROGMEM = "Gerätebetriebsstunden";
 const char STR6225[] PROGMEM = "Gerätefamilie";
 const char STR6226[] PROGMEM = "Gerätevariante";
 const char STR6227[] PROGMEM = "Objektverzeichnis-Version";
@@ -1423,17 +1430,31 @@ const char ENUM1620[] PROGMEM = {"\x00 24h/Tag\0\x01 Zeitprogramme Heizkreise\0\
 const char ENUM1630[] PROGMEM = {"\x00 Absolut\0\x01 Gleitend\0\x02 Kein\0\x03 MK gleitend PK absolut\0\x04 Aus"};
 const char ENUM1640[] PROGMEM = {"\x00 Aus\0\x01 Periodisch\0\x02 Fixer Wochentag"};
 const char ENUM1660[] PROGMEM = {"\x01 Zeitprogramm 3/HKP\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW\0\x04 Zeitprogramm 5"};
+const char ENUM2200[] PROGMEM = {"\x00 Dauerbetrieb\0\x01 Automatik\0\x02 Auto, verlängerte Laufzeit"};
+const char ENUM2205[] PROGMEM = {"\x00 Aus\0\x01 Ein Trinkwasser\0\x02 Ein"};
 const char ENUM2291[] PROGMEM = {"\x00 Parallel Brennerbetrieb\0\x01 Rücklauftemperatur"};
+const char ENUM3822[] PROGMEM = {"\x00 Kein\0\x01 Trinkwasserspeicher\0\x02 Pufferspeicher"};
+const char ENUM3880[] PROGMEM = {"\x01 Kein\0\x02 Ethylenglykol\0\x03 Propylenglykol\0\x04 Ethylen- und Propylenglykol"};
+const char ENUM4720[] PROGMEM = {"\x00 Keine\0\x01 Mit B4\0\x02 Mit B4 und B42/41"};
+const char ENUM4757[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
+const char ENUM4795[] PROGMEM = {"\x01 Mit B4\0\x02 Mit B41\0\x03 Mit B42"};
+const char ENUM4796[] PROGMEM = {"\x01 Temperaturabsenkung\0\x02 Temperaturanhebung"};
+const char ENUM4810[] PROGMEM = {"\x00 Aus\0\x01 Heizbetrieb\0\x02 Immer"};
+const char ENUM4813[] PROGMEM = {"\x01 Mit B4\0\x02 Mit B42/B41"};
 const char ENUM5010[] PROGMEM = {"\x00 Einmal/Tag\0\xff Mehrmals/Tag"};
 const char ENUM5022[] PROGMEM = {"\x01 Mit B3\0\x02 Mit B3/B31\0\x03 Mit B3, Legio B3/31"};
 const char ENUM5057[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
 const char ENUM5060[] PROGMEM = {"\x01 Ersatz\0\x02 Sommer\0\x03 Immer"};
 const char ENUM5061[] PROGMEM = {"\x01 24H/Tag\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW"};
 const char ENUM5062[] PROGMEM = {"\x01 Externer Thermostat\0\x02 Trinkwasserfühler"};
+const char ENUM5130[] PROGMEM = {"\x00 Immer\0\x01 Warmwasser Freigabe"};
+const char ENUM5131[] PROGMEM = {"\x00 Trinkwasserfühler B3\0\x01 Trinkwasserfühler B31"};
 const char ENUM5730[] PROGMEM = {"\x00 Fühler\0\x01 Thermostat"};
 const char ENUM5731[] PROGMEM = {"\x00 kein\0\x01 Ladepumpe\0\x02 Umlenkventil"};
 const char ENUM5760[] PROGMEM = {"\x00 Vor Pufferspeicher\0\x01 Nach Pufferspeicher"};
 const char ENUM5770[] PROGMEM = {"\x01 1-stufig\0\x02 2-stufig\0\x03 Modulierend 3-Punkt"};
+const char ENUM5840[] PROGMEM = {"\x00 Ladepumpe\0\x01 Umlenkventil"};
+const char ENUM5841[] PROGMEM = {"\x00 Gemeinsam\0\x01 Trinkwasserspeicher\0\x02 Pufferspeicher"};
 
 const char ENUM5890[] PROGMEM = {
 "\x00 Kein\0"
@@ -1469,8 +1490,10 @@ const char ENUM5890[] PROGMEM = {
 
 #define ENUM5891 ENUM5890
 #define ENUM5892 ENUM5890
+#define ENUM5894 ENUM5890
 #define ENUM5902 ENUM5890
 #define ENUM5904 ENUM5890
+#define ENUM5908 ENUM5890
 
 const char ENUM5922[] PROGMEM = {
 "\x00 Default, Keine Funktion\0"
@@ -1629,6 +1652,15 @@ const char ENUM6020[] PROGMEM = {
 "\x08 Rücklaufregler Kaskade"};
 
 #define ENUM6021 ENUM6020
+#define ENUM6046 ENUM5950
+#define ENUM6047 ENUM5951
+const char ENUM6070[] PROGMEM = {"\x00 Kesselsollwert\0\x01 Leistungsanforderung\0\x02 Wärmeanforderung"};
+
+const char ENUM6131[] PROGMEM = {
+"\x00 Aus\0"
+"\x01 Ein Trinkwasser\0"
+"\x02 Ein"
+};
 
 const char ENUM6604[] PROGMEM = {
 "\x00 Aus\0"
@@ -1643,6 +1675,7 @@ const char ENUM6620[] PROGMEM = {
 const char ENUM6621[] PROGMEM = {
 "\x00 Lokal\0"
 "\x01 Zentral"
+"\xff Zentral"
 };
 
 const char ENUM6625[] PROGMEM = {
@@ -1657,7 +1690,11 @@ const char ENUM6640[] PROGMEM = {
 "\x02 Slave mit Fernverstellung\0"
 "\x03 Master"
 };
-
+const char ENUM6670[] PROGMEM = {
+"\x00 Kesselsollwert\0"
+"\x01 Leistungsanforderung\0"
+"\x02 Wärmeanforderung\0"
+};
 const char ENUM7700[] PROGMEM = {
 "\x00 Kein Test\0"
 "\x01 Alles aus\0"
@@ -2427,10 +2464,11 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE, VT_UNKNOWN, 2150, STR2150, 0, NULL}, // Vorregler/Zubringerpumpe
 
 // Kessel
+{0x0d3d0949, CAT_KESSEL, VT_ENUM, 2200, STR2200, sizeof(ENUM2200), ENUM2200}, // TODO Thision 2201 Erzeugersperre [Ein/Aus]
 {0x0D3D08D3, CAT_KESSEL, VT_ONOFF, 2201, STR2201, 0, NULL}, // TODO Thision 2201 Erzeugersperre [Ein/Aus]
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2203, STR2203, 0, NULL}, // Freigabe unter Außentemp
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2205, STR2205, 0, NULL}, // Bei Ökobetrieb
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2208, STR2208, 0, NULL}, // Durchladung Pufferspeicher
+{0x113d04d3, CAT_KESSEL, VT_TEMP, 2203, STR2203, 0, NULL}, // Freigabe unter Außentemp
+{0x053d0d16, CAT_KESSEL, VT_ENUM, 2205, STR2205, sizeof(ENUM2205), ENUM2205}, // Bei Ökobetrieb
+{0x113d0b50, CAT_KESSEL, VT_ONOFF, 2208, STR2208, 0, NULL}, // Durchladung Pufferspeicher (EIN/AUS)
 {0x0d3d092c, CAT_KESSEL, VT_TEMP, 2210, STR2210, 0, NULL}, // [°C ] - Kessel  - Sollwert Minimum
 {0x0d3d092b, CAT_KESSEL, VT_TEMP, 2212, STR2212, 0, NULL}, // [°C ] - Kessel  - Sollwert maximum
 #ifdef THISION
@@ -2451,8 +2489,8 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x0d3d08eb, CAT_KESSEL, VT_TEMP, 2270, STR2270, 0, NULL}, // [°C ] - Kessel  - Rücklaufsollwert Minimum
 #endif
 {0x113D0947, CAT_KESSEL, VT_ENUM, 2291, STR2291, sizeof(ENUM2291), ENUM2291}, // Steuerung Bypasspumpe
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2330, STR2330, 0, NULL}, // Leistung Nenn
-{CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2331, STR2331, 0, NULL}, // Leistung Grundstufe
+{0x053d2ef0, CAT_KESSEL, VT_POWER_WORD, 2330, STR2330, 0, NULL}, // Leistung Nenn
+{0x053d2f70, CAT_KESSEL, VT_POWER_WORD, 2331, STR2331, 0, NULL}, // Leistung Grundstufe
 {CMD_UNKNOWN, CAT_KESSEL, VT_UNKNOWN, 2340, STR2340, 0, NULL}, // Auto Erz’folge 2 x 1 Kaskade
 
 {0x093D2F98, CAT_KESSEL, VT_PERCENT, 2440, STR2440, 0, NULL}, // TODO Thision 2440 Gebläse-PWM Hz Maximum [%]
@@ -2534,33 +2572,33 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_ZUSATZERZEUGER, VT_UNKNOWN, 3723, STR3723, 0, NULL}, // Sperrzeit
 
 // Solar
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3810, STR3810, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Temperaturdifferenz Ein
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3811, STR3811, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Temperaturdifferenz Aus
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3812, STR3812, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Ladetemp Min TWW-Speicher
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3813, STR3813, 0, NULL}, // Temp’diff EIN Puffer
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3814, STR3814, 0, NULL}, // Temp’diff AUS Puffer
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3815, STR3815, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Ladetemp Min Puffer
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3816, STR3816, 0, NULL}, // Temp'differenz EIN Sch'bad
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3817, STR3817, 0, NULL}, // Temp'differenz AUS Sch'bad
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3818, STR3818, 0, NULL}, // Ladetemp Min Schwimmbad
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3822, STR3822, 0, NULL}, // Ladevorrang Speicher
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3825, STR3825, 0, NULL}, // Ladezeit relativer Vorrang
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3826, STR3826, 0, NULL}, // Wartezeit relativer Vorrang
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3827, STR3827, 0, NULL}, // Wartezeit Parallelbetrieb
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3828, STR3828, 0, NULL}, // Verzögerung Sekundärpumpe
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3830, STR3830, 0, NULL}, // [min ] - Solar (nur wenn aktiviert)  - Kollektorstartfunktion
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3831, STR3831, 0, NULL}, // [ sec ] - Solar (nur wenn aktiviert)  - Mindestlaufzeit Kollek`pumpe
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3832, STR3832, 0, NULL}, // Kollektorstartfunktion Ein
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3833, STR3833, 0, NULL}, // Kollektorstartfunktion Aus
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3834, STR3834, 0, NULL}, // Kollektorstartfkt Gradient
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3840, STR3840, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Kollektor Frostschutz
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3850, STR3850, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Kollektorüberhitzschutz
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3860, STR3860, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Verdampfung Waermetaeger
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3870, STR3870, 0, NULL}, // Pumpendrehzahl Minimum
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3871, STR3871, 0, NULL}, // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3880, STR3880, 0, NULL}, // Frostschutzmittel
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3881, STR3881, 0, NULL}, // Frost'mittel Konzentration
-{CMD_UNKNOWN, CAT_SOLAR, VT_UNKNOWN, 3884, STR3884, 0, NULL}, // Pumpendurchfluss
+{0x493d085d, CAT_SOLAR, VT_TEMP, 3810, STR3810, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Temperaturdifferenz Ein
+{0x493d085c, CAT_SOLAR, VT_TEMP, 3811, STR3811, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Temperaturdifferenz Aus
+{0x493d085a, CAT_SOLAR, VT_TEMP, 3812, STR3812, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Ladetemp Min TWW-Speicher
+{0x493d0adc, CAT_SOLAR, VT_TEMP, 3813, STR3813, 0, NULL}, // Temp’diff EIN Puffer
+{0x493d0add, CAT_SOLAR, VT_TEMP, 3814, STR3814, 0, NULL}, // Temp’diff AUS Puffer
+{0x493d0a07, CAT_SOLAR, VT_TEMP, 3815, STR3815, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Ladetemp Min Puffer
+{0x493d0ade, CAT_SOLAR, VT_TEMP, 3816, STR3816, 0, NULL}, // Temp'differenz EIN Sch'bad
+{0x493d0adf, CAT_SOLAR, VT_TEMP, 3817, STR3817, 0, NULL}, // Temp'differenz AUS Sch'bad
+{0x493d0ae7, CAT_SOLAR, VT_TEMP, 3818, STR3818, 0, NULL}, // Ladetemp Min Schwimmbad
+{0x493d0ae3, CAT_SOLAR, VT_ENUM, 3822, STR3822, sizeof(ENUM3822), ENUM3822}, // Ladevorrang Speicher
+{0x493d0ae0, CAT_SOLAR, VT_MINUTES_SHORT, 3825, STR3825, 0, NULL}, // Ladezeit relativer Vorrang
+{0x493d0ae1, CAT_SOLAR, VT_MINUTES_SHORT, 3826, STR3826, 0, NULL}, // Wartezeit relativer Vorrang
+{0x493d0ae2, CAT_SOLAR, VT_MINUTES_SHORT, 3827, STR3827, 0, NULL}, // Wartezeit Parallelbetrieb
+{0x493d0aee, CAT_SOLAR, VT_MINUTES_WORD, 3828, STR3828, 0, NULL}, // Verzögerung Sekundärpumpe
+{0x493d0716, CAT_SOLAR, VT_MINUTES_SHORT, 3830, STR3830, 0, NULL}, // [min ] - Solar (nur wenn aktiviert)  - Kollektorstartfunktion
+{0x493d0719, CAT_SOLAR, VT_MINUTES_SHORT, 3831, STR3831, 0, NULL}, // [ sec ] - Solar (nur wenn aktiviert)  - Mindestlaufzeit Kollek`pumpe
+{0x493d0ae4, CAT_SOLAR, VT_HOUR_MINUTES, 3832, STR3832, 0, NULL}, // Kollektorstartfunktion Ein
+{0x493d0ae5, CAT_SOLAR, VT_HOUR_MINUTES, 3833, STR3833, 0, NULL}, // Kollektorstartfunktion Aus
+{0x493d0b12, CAT_SOLAR, VT_MINUTES_SHORT, 3834, STR3834, 0, NULL}, // Kollektorstartfkt Gradient
+{0x493d0860, CAT_SOLAR, VT_TEMP, 3840, STR3840, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Kollektor Frostschutz
+{0x493d0865, CAT_SOLAR, VT_TEMP, 3850, STR3850, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Kollektorüberhitzschutz
+{0x493d0551, CAT_SOLAR, VT_TEMP, 3860, STR3860, 0, NULL}, // [°C ] - Solar (nur wenn aktiviert)  - Verdampfung Waermetaeger
+{0x493d04b1, CAT_SOLAR, VT_PERCENT, 3870, STR3870, 0, NULL}, // Pumpendrehzahl Minimum
+{0x493d04b0, CAT_SOLAR, VT_PERCENT, 3871, STR3871, 0, NULL}, // Pumpendrehzahl Maximum
+{0x493d0509, CAT_SOLAR, VT_ENUM, 3880, STR3880, sizeof(ENUM3880), ENUM3880}, // Frostschutzmittel
+{0x493d050a, CAT_SOLAR, VT_PERCENT, 3881, STR3881, 0, NULL}, // Frost'mittel Konzentration
+{0x493d050c, CAT_SOLAR, VT_UINT, 3884, STR3884, 0, NULL}, // Pumpendurchfluss
 
 // Feststoffkessel
 {CMD_UNKNOWN, CAT_FESTSTOFFKESSEL, VT_UNKNOWN, 4102, STR4102, 0, NULL}, // [0] - Feststoffkessel (nur wenn aktiviert) - Sperrt andere Erzeuger
@@ -2579,23 +2617,25 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4710, STR4710, 0, NULL}, // Zwangsladungsoll Heizen Max
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4711, STR4711, 0, NULL}, // Zwangsladung Zeitpunkt
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4712, STR4712, 0, NULL}, // Zwangsladung Dauer Max
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4720, STR4720, 0, NULL}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Auto Erzeugersperre
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4721, STR4721, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Auto Erzeugersperre SD
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4722, STR4722, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Temp`diff Puffer/Heizkreis
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4724, STR4724, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Min Speichertemp Heizbetrieb
+{0x053d0455, CAT_PUFFERSPEICHER, VT_ENUM, 4720, STR4720, sizeof(ENUM4720), ENUM4720}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Auto Erzeugersperre
+{0x053d0858, CAT_PUFFERSPEICHER, VT_TEMP, 4721, STR4721, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Auto Erzeugersperre SD
+{0x053d0857, CAT_PUFFERSPEICHER, VT_TEMP, 4722, STR4722, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Temp`diff Puffer/Heizkreis
+{0x053d0a10, CAT_PUFFERSPEICHER, VT_TEMP, 4724, STR4724, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Min Speichertemp Heizbetrieb
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4739, STR4739, 0, NULL}, // Schichtschutz
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4750, STR4750, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Ladetemperatur Maximum
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4755, STR4755, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Rückkühltemperatur
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4756, STR4756, 0, NULL}, // [-] - Pufferspeicher (nur wenn aktiviert)  - Rückkühlung TWW/HK`s
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4757, STR4757, 0, NULL}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Rückkühlung Kollektor
+{0x053d08a9, CAT_PUFFERSPEICHER, VT_TEMP, 4750, STR4750, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Ladetemperatur Maximum
+{0x053d08a8, CAT_PUFFERSPEICHER, VT_TEMP, 4751, STR4751, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Speichertemperatur Maximum}
+{0x053d0a0d, CAT_PUFFERSPEICHER, VT_TEMP, 4755, STR4755, 0, NULL}, // [°C ] - Pufferspeicher (nur wenn aktiviert)  - Rückkühltemperatur
+{0x053d0a0a, CAT_PUFFERSPEICHER, VT_ONOFF, 4756, STR4756, 0, NULL}, // [-] - Pufferspeicher (nur wenn aktiviert)  - Rückkühlung TWW/HK`s
+{0x053d0a0b, CAT_PUFFERSPEICHER, VT_ENUM, 4757, STR4757, sizeof(ENUM4757), ENUM4757}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Rückkühlung Kollektor
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4760, STR4760, 0, NULL}, // Ladefühler Elektroeinsatz
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4761, STR4761, 0, NULL}, // Zwangsladung mit Elektro
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4783, STR4783, 0, NULL}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Mit Solareinbindung
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4790, STR4790, 0, NULL}, // Temp'diff EIN Rückl'umlenk
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4791, STR4791, 0, NULL}, // Temp'diff AUS Rückl'umlenk
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4795, STR4795, 0, NULL}, // Vergleichstemp Rückl'umlenk
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4796, STR4796, 0, NULL}, // Wirksinn Rücklaufumlenkung
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER, VT_UNKNOWN, 4810, STR4810, 0, NULL}, // Durchladung
+{0x053d0a12, CAT_PUFFERSPEICHER, VT_YESNO, 4783, STR4783, 0, NULL}, // [0] - Pufferspeicher (nur wenn aktiviert)  - Mit Solareinbindung
+{0x053d08ad, CAT_PUFFERSPEICHER, VT_TEMP, 4790, STR4790, 0, NULL}, // Temp'diff EIN Rückl'umlenk
+{0x053d08ae, CAT_PUFFERSPEICHER, VT_TEMP, 4791, STR4791, 0, NULL}, // Temp'diff AUS Rückl'umlenk
+{0x053d0638, CAT_PUFFERSPEICHER, VT_ENUM, 4795, STR4795, sizeof(ENUM4795), ENUM4795}, // Vergleichstemp Rückl'umlenk
+{0x053d085f, CAT_PUFFERSPEICHER, VT_ENUM, 4796, STR4796, sizeof(ENUM4796), ENUM4796}, // Wirksinn Rücklaufumlenkung
+{0x193d0b87, CAT_PUFFERSPEICHER, VT_ENUM, 4810, STR4810, sizeof(ENUM4810), ENUM4810}, // Durchladung
+{0x193d0b88, CAT_PUFFERSPEICHER, VT_ENUM, 4813, STR4813, sizeof(ENUM4813), ENUM4813}, // Durchladung
 
 // Trinkwasserspeicher
 {0x253D0737, CAT_TWSPEICHER, VT_ENUM, 5010, STR5010, sizeof(ENUM5010), ENUM5010}, // Ladung
@@ -2613,10 +2653,10 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x313D07C2, CAT_TWSPEICHER, VT_YESNO, 5090, STR5090, 0, NULL}, // [0] - Trinkwasser-Speicher      - Mit Pufferspeicher
 {0x313D07C3, CAT_TWSPEICHER, VT_YESNO, 5092, STR5092, 0, NULL}, // [  - ] - Trinkwasser-Speicher      - Mit Vorregler/Zubring`pumpe
 {0x253D0A11, CAT_TWSPEICHER, VT_YESNO, 5093, STR5093, 0, NULL}, // [-] - Trinkwasser-Speicher      - Mit Solareinbindung
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5101, STR5101, 0, NULL}, // Pumpendrehzahl Minimum
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5102, STR5102, 0, NULL}, // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5130, STR5130, 0, NULL}, // Umladestrategie
-{CMD_UNKNOWN, CAT_TWSPEICHER, VT_UNKNOWN, 5131, STR5131, 0, NULL}, // Vergleichstemp Umladung
+{0x253d08a1, CAT_TWSPEICHER, VT_PERCENT, 5101, STR5101, 0, NULL}, // Pumpendrehzahl Minimum %
+{0x253d08a2, CAT_TWSPEICHER, VT_PERCENT, 5102, STR5102, 0, NULL}, // Pumpendrehzahl Maximum %
+{0x253d0b53, CAT_TWSPEICHER, VT_ENUM, 5130, STR5130, sizeof(ENUM5130), ENUM5130}, // Umladestrategie
+{0x253d0879, CAT_TWSPEICHER, VT_ENUM, 5131, STR5131, sizeof(ENUM5131), ENUM5131}, // Vergleichstemp Umladung
 
 // Trinkwasser Durchl'erhitzer
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER, VT_TEMP, 5400, STR5400, 0, NULL},// TODO Thision 5400 Komfortsollwert [°C]
@@ -2650,18 +2690,18 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5800, STR5800, 0, NULL}, // Wärmequelle
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5807, STR5807, 0, NULL}, // Kälteerzeugung
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5810, STR5810, 0, NULL}, // Spreizung HK bei TA –10 °C
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5840, STR5840, 0, NULL}, // Solarstellglied
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5841, STR5841, 0, NULL}, // Externer Solartauscher
+{0x053d0827, CAT_KONFIG, VT_ENUM, 5840, STR5840, sizeof(ENUM5840), ENUM5840}, // Solarstellglied
+{0x053d0829, CAT_KONFIG, VT_ENUM, 5841, STR5841, sizeof(ENUM5841), ENUM5841}, // Externer Solartauscher
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5870, STR5870, 0, NULL}, // Kombispeicher
 {0x053D0497, CAT_KONFIG, VT_ENUM, 5890, STR5890, sizeof(ENUM5890), ENUM5890}, // [-] - Konfiguration - Relaisausgang QX1
 {0x053D0498, CAT_KONFIG, VT_ENUM, 5891, STR5891, sizeof(ENUM5891), ENUM5891}, // [-] - Konfiguration - Relaisausgang QX2
 {0x053D0587, CAT_KONFIG, VT_ENUM, 5892, STR5892, sizeof(ENUM5892), ENUM5892}, // [-] - Konfiguration - Relaisausgang QX3
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5894, STR5894, 0, NULL}, // Relaisausgang QX4
+{0x053d0588, CAT_KONFIG, VT_ENUM, 5894, STR5894, sizeof(ENUM5894), ENUM5894}, // Relaisausgang QX4
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5895, STR5895, 0, NULL}, // Relaisausgang QX5
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5896, STR5896, 0, NULL}, // Relaisausgang QX6
 {0x053D0785, CAT_KONFIG, VT_ENUM, 5902, STR5902, sizeof(ENUM5902), ENUM5902}, // Relaisausgang QX21
 {0x053D0787, CAT_KONFIG, VT_ENUM, 5904, STR5904, sizeof(ENUM5904), ENUM5904}, // Relaisausgang QX23
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5908, STR5908, 0, NULL}, // Funktion Ausgang QX3-Mod
+{0x053d04a0, CAT_KONFIG, VT_ENUM, 5908, STR5908, sizeof(ENUM5908), ENUM5908}, // Funktion Ausgang QX3-Mod
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5909, STR5909, 0, NULL}, // Funktion Ausgang QX4-Mod
 {0x153d2fcc, CAT_KONFIG, VT_BYTE, 5920, STR5920, 0, NULL}, // TODO Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
 {0x053d3078, CAT_KONFIG, VT_YESNO, 5921, STR5921, 0, NULL}, // TODO Thision 5921 Default K2 auf K1 [Ja/Nein]
@@ -2683,7 +2723,7 @@ PROGMEM const cmd_t cmdtbl[]={
 #elif defined (BROETJE_SOB)
 {0x053D0483, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
 #else
-{0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0807, CAT_KONFIG, VT_ENUM, 5950, STR5950, sizeof(ENUM5950), ENUM5950}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 #endif
 #ifdef BROETJE_SOB
 {0x053D0487, CAT_KONFIG, VT_ENUM, 5951, STR5951, sizeof(ENUM5951), ENUM5951}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -2735,34 +2775,34 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6030, STR6030, 0, NULL}, // Relaisausgang QX21
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6031, STR6031, 0, NULL}, // Relaisausgang QX22
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6032, STR6032, 0, NULL}, // Relaisausgang QX23
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6040, STR6040, 0, NULL}, // Fühlereingang BX21
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6041, STR6041, 0, NULL}, // Fühlereingang BX22
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6046, STR6046, 0, NULL}, // Funktion Eingang H2
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6047, STR6047, 0, NULL}, // Wirksinn Kontakt H2
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6048, STR6048, 0, NULL}, // Minimaler Vorlaufsollwert H2
+{0x053D077F, CAT_KONFIG, VT_TEMP, 6040, STR6040, 0, NULL}, // Fühlereingang BX21
+{0x053D0784, CAT_KONFIG, VT_TEMP, 6041, STR6041, 0, NULL}, // Fühlereingang BX22
+{0x063d0807, CAT_KONFIG, VT_ENUM, 6046, STR6046, sizeof(ENUM6046), ENUM6046}, // Funktion Eingang H2
+{0x063d0808, CAT_KONFIG, VT_ENUM, 6047, STR6047, sizeof(ENUM6047), ENUM6047}, // Wirksinn Kontakt H2 | Arbeitskontakt
+{0x2a3d0656, CAT_KONFIG, VT_TEMP, 6048, STR6048, 0, NULL}, // Minimaler Vorlaufsollwert H2
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6049, STR6049, 0, NULL}, // Spannungswert 1 H2
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6050, STR6050, 0, NULL}, // Temperaturwert 10V H2
+{0x063d079f, CAT_KONFIG, VT_TEMP, 6050, STR6050, 0, NULL}, // Temperaturwert 10V H2
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6051, STR6051, 0, NULL}, // Spannungswert 2 H2
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6052, STR6052, 0, NULL}, // Funktionswert 2 H2
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6070, STR6070, 0, NULL}, // Funktion Ausgang UX
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6071, STR6071, 0, NULL}, // Signallogik Ausgang UX
+{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6052, STR6052, 0, NULL}, // Funktionswert 2 H2 BAR
+{0x053d045a, CAT_KONFIG, VT_ENUM, 6070, STR6070, sizeof(ENUM6070), ENUM6070}, // Funktion Ausgang UX
+{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6071, STR6071, 0, NULL}, // Signallogik Ausgang UX Standard | Invertiert
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6072, STR6072, 0, NULL}, // Signal Ausgang UX
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6075, STR6075, 0, NULL}, // Temperaturwert 10V UX
+{0x053d042b, CAT_KONFIG, VT_TEMP, 6075, STR6075, 0, NULL}, // Temperaturwert 10V UX
 {0x113D2F97, CAT_KONFIG, VT_BYTE, 6089, STR6089, 0, NULL}, // TODO Thision 6089 Mod Pumpe Drehzahlstufen [?]
 {0x113D2FE1, CAT_KONFIG, VT_PERCENT, 6092, STR6092, 0, NULL}, // TODO Thision 6092 Mod Pumpe PWM [?]
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6097, STR6097, 0, NULL}, // Fühlertyp Kollektor
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6098, STR6098, 0, NULL}, // Korrektur Kollektorfühler
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6099, STR6099, 0, NULL}, // Korrektur Kollektorfühler 2
+{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6097, STR6097, 0, NULL}, // Fühlertyp Kollektor NTC|PT1000
+{0x053d08b6, CAT_KONFIG, VT_TEMP, 6098, STR6098, 0, NULL}, // Korrektur Kollektorfühler
+{0x053d08b7, CAT_KONFIG, VT_TEMP, 6099, STR6099, 0, NULL}, // Korrektur Kollektorfühler 2
 {0x053D05F1, CAT_KONFIG, VT_TEMP, 6100, STR6100, 0, NULL}, // [°C ] - Konfiguration - korrektur Aussenfühler
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6101, STR6101, 0, NULL}, // Fühlertyp Abgastemperatur
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6102, STR6102, 0, NULL}, // Korrektur Abgastemp'fühler
+{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6101, STR6101, 0, NULL}, // Fühlertyp Abgastemperatur NTC | PT1000
+{0x053d08e7, CAT_KONFIG, VT_TEMP, 6102, STR6102, 0, NULL}, // Korrektur Abgastemp'fühler
 {0x053d0600, CAT_KONFIG, VT_HOURS_SHORT, 6110, STR6110, 0, NULL}, // [h  ] - Konfiguration - Zeitkonstante Gebaeude
 {0x2D3D05E7, CAT_KONFIG, VT_GRADIENT, 6112, STR6112, 0, NULL}, // TODO Thision 6112 Gradient Raummodell [min/K]
 {0x053d05fe, CAT_KONFIG, VT_ONOFF, 6120, STR6120, 0, NULL}, // [0] - Konfiguration - Anlagenfrostschutz
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6128, STR6128, 0, NULL}, // Wärm'anfo unter Außentemp
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6129, STR6129, 0, NULL}, // Wärm'anfo über Außentemp
+{0x053d0b5c, CAT_KONFIG, VT_TEMP, 6128, STR6128, 0, NULL}, // Wärm'anfo unter Außentemp
+{0x053d0b5b, CAT_KONFIG, VT_TEMP, 6129, STR6129, 0, NULL}, // Wärm'anfo über Außentemp
 {0x293D07C6, CAT_KONFIG, VT_YESNO, 6130, STR6130, 0, NULL}, // H1 mit Pufferspeicher
-{CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6131, STR6131, 0, NULL}, // Wärm'anfo bei Ökobetrieb
+{0x053d0d17, CAT_KONFIG, VT_ENUM, 6131, STR6131, sizeof(ENUM6131), ENUM6131}, // Wärm'anfo bei Ökobetrieb AUS| EIN Trinkwasser | ein
 {0x2A3D07C6, CAT_KONFIG, VT_YESNO, 6134, STR6134, 0, NULL}, // H2 mit Pufferspeicher
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6135, STR6135, 0, NULL}, // Luftentfeuchter
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 6136, STR6136, 0, NULL}, // Luftentfeuchter Freigabe
@@ -2777,6 +2817,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D0BD3, CAT_KONFIG, VT_DWORD, 6217, STR6217, 0, NULL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053d000e, CAT_KONFIG, VT_FP1, 6220, STR6220, 0, NULL}, // [0] - Konfiguration - Software- Version LOGON B
 {0x093D3033, CAT_KONFIG, VT_BYTE, 6221, STR6221, 0, NULL}, // TODO Thision 6221 Entwicklungs-Index [?]
+{0x053d0011, CAT_KONFIG, VT_HOURS, 6222, STR6222, 0, NULL}, // Gerätebetriebsstunden
 {0x053D0002, CAT_KONFIG, VT_UINT, 6225, STR6225, 0, NULL}, // TODO Thision 6225 Gerätefamilie [?]
 {0x053D0003, CAT_KONFIG, VT_UINT, 6226, STR6226, 0, NULL}, // TODO Thision 6226 Gerätevariante [?]
 {0x053D0004, CAT_KONFIG, VT_FP1, 6227, STR6227, 0, NULL}, // TODO Thision 6227 Objektverzeichnis-Version [?]
@@ -2793,7 +2834,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D0072, CAT_LPB, VT_ONOFF, 6605, STR6605, 0, NULL}, // [0] - LPB   - Busspeisung Status
 {0x053D3053, CAT_LPB, VT_BYTE, 6606, STR6606, 0, NULL}, // TODO Thision 6606 LPB-Konfig. 0 [?]
 {0x053D006A, CAT_LPB, VT_YESNO, 6610, STR6610, 0, NULL}, // [0] - LPB   - Anzeige Systemmeldungen
-{CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6612, STR6612, 0, NULL}, // Alarmverzögerung
+{0x053D08D2, CAT_LPB, VT_MINUTES_SHORT, 6612, STR6612, 0, NULL}, // Alarmverzögerung
 {0x053D0839, CAT_LPB, VT_ENUM, 6620, STR6620, sizeof(ENUM6620), ENUM6620}, // [  - ] - LPB   - Wirkbereich Umschaltungen
 {0x2D3D0611, CAT_LPB, VT_ENUM, 6621, STR6621, sizeof(ENUM6621), ENUM6621}, // [0] - LPB   - Sommerumschaltung
 {CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6623, STR6623, 0, NULL}, // Betriebsartumschaltung
@@ -2802,7 +2843,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6627, STR6627, 0, NULL}, // Kälteanforderung
 {CMD_UNKNOWN, CAT_LPB, VT_UNKNOWN, 6632, STR6632, 0, NULL}, // TA'grenze ext Erz beachten
 {0x053D006D, CAT_LPB, VT_ENUM, 6640, STR6640, sizeof(ENUM6640), ENUM6640}, // [0] - LPB   - Uhrbetrieb
-// Codierung unklar: 15.01 -> HEIZ->DISP ANS 6650 Aussentemperatur Lieferant 00 F0 ???
+// Codierung unklar: 15.01 -> HEIZ->DISP ANS 6650 Aussentemperatur Lieferant 00 F0 ??? 00.01 = 00 00 ???
 {0x053D009F, CAT_LPB, VT_LPBADDR, 6650, STR6650, 0, NULL}, // [0] - LPB   - Aussentemperatur Lieferant
 
 //Fehler
@@ -2969,10 +3010,10 @@ SW Diagnosecode
 
 // Ein-/Ausgangstest
 {0x053D0073, CAT_IOTEST, VT_ENUM, 7700, STR7700, sizeof(ENUM7700), ENUM7700}, // [0] - Ein-/Ausgangstest - Relaistest
-{CMD_UNKNOWN, CAT_IOTEST, VT_UNKNOWN, 7705, STR7705, 0, NULL}, // Mod'sollwert QX3 Relaistest
-{CMD_UNKNOWN, CAT_IOTEST, VT_UNKNOWN, 7708, STR7708, 0, NULL}, // Modulationssignal QX3
-{CMD_UNKNOWN, CAT_IOTEST, VT_UNKNOWN, 7710, STR7710, 0, NULL}, // Ausgangstest UX
-{CMD_UNKNOWN, CAT_IOTEST, VT_UNKNOWN, 7711, STR7711, 0, NULL}, // Spannungssignal UX
+{0x053d040c, CAT_IOTEST, VT_PERCENT, 7705, STR7705, 0, NULL}, // Mod'sollwert QX3 Relaistest
+{0x053d04a2, CAT_IOTEST, VT_PERCENT, 7708, STR7708, 0, NULL}, // Modulationssignal QX3
+{0x053d040e, CAT_IOTEST, VT_VOLTAGE, 7710, STR7710, 0, NULL}, // Ausgangstest UX
+{0x053d0821, CAT_IOTEST, VT_VOLTAGE, 7711, STR7711, 0, NULL}, // Spannungssignal UX
 {CMD_UNKNOWN, CAT_IOTEST, VT_UNKNOWN, 7714, STR7714, 0, NULL}, // PWM-Signal P1
 {0x053D0470, CAT_IOTEST, VT_TEMP, 7730, STR7730, 0, NULL}, // [°C ] - Ein-/Ausgangstest - Aussentemperatur B9
 {0x053D08C5, CAT_IOTEST, VT_TEMP, 7732, STR7732, 0, NULL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
@@ -3077,10 +3118,10 @@ SW Diagnosecode
 //Diagnose Erzeuger
 {0x053D09A0, CAT_DIAG_ERZEUGER, VT_ONOFF, 8300, STR8300, 0, NULL}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
 {0x053D09A1, CAT_DIAG_ERZEUGER, VT_ONOFF, 8301, STR8301, 0, NULL}, // [0] - Diagnose Erzeuger - 2. Brennerstufe T8
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8308, STR8308, 0, NULL}, // Drehzahl Kesselpumpe
+{0x053d0826, CAT_DIAG_ERZEUGER, VT_PERCENT, 8308, STR8308, 0, NULL}, // Drehzahl Kesselpumpe
 {0x0d3d0519, CAT_DIAG_ERZEUGER, VT_TEMP, 8310, STR8310, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0d3d0923, CAT_DIAG_ERZEUGER, VT_TEMP, 8311, STR8311, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8312, STR8312, 0, NULL}, // Kesselschaltpunkt
+{0x053d0b26, CAT_DIAG_ERZEUGER, VT_TEMP, 8312, STR8312, 0, NULL}, // Kesselschaltpunkt
 {0x113d051a, CAT_DIAG_ERZEUGER, VT_TEMP, 8314, STR8314, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8315, STR8315, 0, NULL}, // Kesselrücklaufsollwert
 {0x053D051D, CAT_DIAG_ERZEUGER, VT_TEMP, 8316, STR8316, 0, NULL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
@@ -3144,31 +3185,31 @@ SW Diagnosecode
 {CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8482, STR8482, 0, NULL}, // Restzeit Abtaustabilisierung
 {CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8485, STR8485, 0, NULL}, // Anzahl Abtauversuche
 {CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8487, STR8487, 0, NULL}, // Status Abtauen WP
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8505, STR8505, 0, NULL}, // Drehzahl Kollektorpumpe 1
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8506, STR8506, 0, NULL}, // Drehzahl Solarpump ext.Tau
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8507, STR8507, 0, NULL}, // Drehzahl Solarpumpe Puffer
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8508, STR8508, 0, NULL}, // Drehzahl Solarpump Sch'bad
+{0x493d04ce, CAT_DIAG_ERZEUGER, VT_PERCENT, 8505, STR8505, 0, NULL}, // Drehzahl Kollektorpumpe 1
+{0x053d0825, CAT_DIAG_ERZEUGER, VT_PERCENT, 8506, STR8506, 0, NULL}, // Drehzahl Solarpump ext.Tau
+{0x053d0823, CAT_DIAG_ERZEUGER, VT_PERCENT, 8507, STR8507, 0, NULL}, // Drehzahl Solarpumpe Puffer
+{0x053d0824, CAT_DIAG_ERZEUGER, VT_PERCENT, 8508, STR8508, 0, NULL}, // Drehzahl Solarpump Sch'bad
 {0x493d052a, CAT_DIAG_ERZEUGER, VT_TEMP, 8510, STR8510, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
 {0x493D053F, CAT_DIAG_ERZEUGER, VT_TEMP, 8511, STR8511, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Max
 {0x493D0718, CAT_DIAG_ERZEUGER, VT_TEMP, 8512, STR8512, 0, NULL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1Min
 {0x493D053B, CAT_DIAG_ERZEUGER, VT_TEMP, 8513, STR8513, 0, NULL}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/TWW
 {0x493D053C, CAT_DIAG_ERZEUGER, VT_TEMP, 8514, STR8514, 0, NULL}, // [°C ] - Diagnose Erzeuger - dt Kollektor 1/Puffer
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8515, STR8515, 0, NULL}, // dT Kollektor 1 / Schwimmbad
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8519, STR8519, 0, NULL}, // Solarvorlauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8520, STR8520, 0, NULL}, // Solarrücklauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8526, STR8526, 0, NULL}, // Tagesertrag Solarenergie
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8527, STR8527, 0, NULL}, // Gesamtertrag Solarenergie
+{0x493d042e, CAT_DIAG_ERZEUGER, VT_TEMP, 8515, STR8515, 0, NULL}, // dT Kollektor 1 / Schwimmbad
+{0x493d050e, CAT_DIAG_ERZEUGER, VT_TEMP, 8519, STR8519, 0, NULL}, // Solarvorlauftemperatur
+{0x493d050f, CAT_DIAG_ERZEUGER, VT_TEMP, 8520, STR8520, 0, NULL}, // Solarrücklauftemperatur
+{0x493d0599, CAT_DIAG_ERZEUGER, VT_POWER_WORD, 8526, STR8526, 0, NULL}, // Tagesertrag Solarenergie
+{0x493d0598, CAT_DIAG_ERZEUGER, VT_POWER, 8527, STR8527, 0, NULL}, // Gesamtertrag Solarenergie
 {0x493d0893, CAT_DIAG_ERZEUGER, VT_HOURS, 8530, STR8530, 0, NULL}, // [h  ] - Diagnose Erzeuger - Betr`stunden Solarertrag
 {0x493D0717, CAT_DIAG_ERZEUGER, VT_HOURS, 8531, STR8531, 0, NULL}, // [h  ] - Diagnose Erzeuger - Betr`stunden Kollektor`überhitz
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8543, STR8543, 0, NULL}, // Drehzahl Kollektorpumpe 2
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8547, STR8547, 0, NULL}, // Kollektortemperatur 2
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8548, STR8548, 0, NULL}, // Kollektortemperatur 2 Max
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8549, STR8549, 0, NULL}, // Kollektortemperatur 2 Min
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8550, STR8550, 0, NULL}, // dT Kollektor 2 / TWW
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8551, STR8551, 0, NULL}, // dT Kollektor 2 / Puffer
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8552, STR8552, 0, NULL}, // dT Kollektor 2 / Schwimmbad
+{0x053d0822, CAT_DIAG_ERZEUGER, VT_PERCENT, 8543, STR8543, 0, NULL}, // Drehzahl Kollektorpumpe 
+{0x493d052b, CAT_DIAG_ERZEUGER, VT_TEMP, 8547, STR8547, 0, NULL}, // Kollektortemperatur 2
+{0x493d0540, CAT_DIAG_ERZEUGER, VT_TEMP, 8548, STR8548, 0, NULL}, // Kollektortemperatur 2 Max
+{0x493d0adb, CAT_DIAG_ERZEUGER, VT_TEMP, 8549, STR8549, 0, NULL}, // Kollektortemperatur 2 Min
+{0x493d053d, CAT_DIAG_ERZEUGER, VT_TEMP, 8550, STR8550, 0, NULL}, // dT Kollektor 2 / TWW
+{0x493d053e, CAT_DIAG_ERZEUGER, VT_TEMP, 8551, STR8551, 0, NULL}, // dT Kollektor 2 / Puffer
+{0x513d052e, CAT_DIAG_ERZEUGER, VT_TEMP, 8552, STR8552, 0, NULL}, // dT Kollektor 2 / Schwimmbad
 {0x513D052E, CAT_DIAG_ERZEUGER, VT_TEMP, 8560, STR8560, 0, NULL}, // [°C ] - Diagnose Erzeuger - Feststoffkesseltemperatur
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER, VT_UNKNOWN, 8570, STR8570, 0, NULL}, // Betr'std Feststoffkessel
+{0x513d0892, CAT_DIAG_ERZEUGER, VT_HOURS, 8570, STR8570, 0, NULL}, // Betr'std Feststoffkessel
 
 // Diagnose Verbraucher
 {0x053d0521, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8700, STR8700, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Aussentemperatur
@@ -3182,7 +3223,7 @@ SW Diagnosecode
 {0x053D09A5, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8730, STR8730, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreispumpe Q2
 {0x053D09A6, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8731, STR8731, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreismischer Auf Y1
 {0x053D09A7, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8732, STR8732, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreismischer Zu Y2
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8735, STR8735, 0, NULL}, // Drehzahl Heizkreispumpe 1
+{0x213d04a7, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8735, STR8735, 0, NULL}, // Drehzahl Heizkreispumpe 1
 {0x2d3d051e, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8740, STR8740, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumtemperatur 1
 {0x2d3d0593, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8741, STR8741, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumsollwert 1
 {0x2D3D05E9, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8742, STR8742, 0, NULL}, // TODO Thision 8742 Raumtemperatur 1 Modell [°C]
@@ -3198,20 +3239,20 @@ SW Diagnosecode
 {0x053D09A8, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8760, STR8760, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreispumpe Q6
 {0x053D09A9, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8761, STR8761, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreismischer Auf Y5
 {0x053D09AA, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8762, STR8762, 0, NULL}, // [0] - Diagnose Verbraucher  - Heizkreismischer Zu Y6
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8765, STR8765, 0, NULL}, // Drehzahl Heizkreispumpe 2
+{0x223d04a7, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8765, STR8765, 0, NULL}, // Drehzahl Heizkreispumpe 2
 {0x2e3d051e, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8770, STR8770, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumtemperatur 2
 {0x2e3d0593, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8771, STR8771, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumsollwert 2
 {0x2E3D05E9, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8772, STR8772, 0, NULL}, // TODO Thision 8772 Raumtemperatur 2 Modell [°C]
 {0x223d0518, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8773, STR8773, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 2
 {0x223d0667, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8774, STR8774, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 2
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8795, STR8795, 0, NULL}, //  Drehzahl Heizkreispumpe P
+{0x233d04a7, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8795, STR8795, 0, NULL}, //  Drehzahl Heizkreispumpe P
 {0x2F3D051E, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8800, STR8800, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumtemperatur P
 {0x2F3D0593, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8801, STR8801, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Raumsollwert P
 {0x233D0667, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8803, STR8803, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsol wert P
 {0x053D09A3, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 8820, STR8820, 0, NULL}, // [0] - Diagnose Verbraucher  - Trinkwasserpumpe Q3
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8821, STR8821, 0, NULL}, // Elektroeinsatz TWW K6
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8825, STR8825, 0, NULL}, // Drehzahl Trinkwasserpumpe
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8826, STR8826, 0, NULL}, // Drehzahl TWW Zw'kreispumpe
+{0x253d04a4, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8825, STR8825, 0, NULL}, // Drehzahl Trinkwasserpumpe
+{0x253d0b27, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8826, STR8826, 0, NULL}, // Drehzahl TWW Zw'kreispumpe
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8827, STR8827, 0, NULL}, // Drehzahl Dl'erhitzerpumpe
 {0x313d052f, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8830, STR8830, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Trinkwassertemperatur 1
 {0x313d074b, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8831, STR8831, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Trinkwassersollwert
@@ -3222,24 +3263,24 @@ SW Diagnosecode
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8841, STR8841, 0, NULL}, // Startzähler TWW-Pumpe
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8842, STR8842, 0, NULL}, // Betr’stunden Elektro TWW
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8843, STR8843, 0, NULL}, // Startzähler Elektro TWW
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8850, STR8850, 0, NULL}, // TWW Vorreglertemperatur
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8851, STR8851, 0, NULL}, // TWW Vorreglersollwert
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8852, STR8852, 0, NULL}, // TWW Durchl'erhitzertemp
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8853, STR8853, 0, NULL}, // TWW Durchl'erhitzersollwert
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8900, STR8900, 0, NULL}, // Schwimmbadtemperatur
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8901, STR8901, 0, NULL}, // Schwimmbadsollwert
+{0x253d0b18, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8850, STR8850, 0, NULL}, // TWW Vorreglertemperatur
+{0x253d0b36, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8851, STR8851, 0, NULL}, // TWW Vorreglersollwert
+{0x313d0b24, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8852, STR8852, 0, NULL}, // TWW Durchl'erhitzertemp
+{0x313d0b37, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8853, STR8853, 0, NULL}, // TWW Durchl'erhitzersollwert
+{0x053d0af9, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8900, STR8900, 0, NULL}, // Schwimmbadtemperatur
+{0x053d0af2, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8901, STR8901, 0, NULL}, // Schwimmbadsollwert
 {0x053D08C7, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8930, STR8930, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorreglertemperatur
 {0x053D08C8, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8931, STR8931, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorreglersollwert
 {0x053D051F, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8950, STR8950, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Schienenvorlauftemperatur
 {0x053D0783, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8951, STR8951, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Schienenvorlaufsollwert
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8952, STR8952, 0, NULL}, // Schienenrücklauftemperatur
+{0x053d0af8, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8952, STR8952, 0, NULL}, // Schienenrücklauftemperatur
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8957, STR8957, 0, NULL}, // Schienenvorl'sollwert Kälte
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8962, STR8962, 0, NULL}, // Leistungssollwert Schiene
+{0x053d0b61, CAT_DIAG_VERBRAUCHER, VT_PERCENT, 8962, STR8962, 0, NULL}, // Leistungssollwert Schiene
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8970, STR8970, 0, NULL}, // Elektroeinsatz Puffer
 {0x053d0534, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8980, STR8980, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Pufferspeichertemperatur 1
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8981, STR8981, 0, NULL}, // Pufferspeichersollwert
+{0x053d0883, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8981, STR8981, 0, NULL}, // Pufferspeichersollwert
 {0x053D0535, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8982, STR8982, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Pufferspeichertemperatur 2
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8983, STR8983, 0, NULL}, // Pufferspeichertemperatur 3
+{0x053d0536, CAT_DIAG_VERBRAUCHER, VT_TEMP, 8983, STR8983, 0, NULL}, // Pufferspeichertemperatur 3
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8990, STR8990, 0, NULL}, // Betr’stunden Elektro Puffer
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 8991, STR8991, 0, NULL}, // Startzähler Elektro Puffer
 #ifdef BROETJE_SOB
@@ -3250,13 +3291,13 @@ SW Diagnosecode
 {0x053D0577, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9001, STR9001, 0, NULL}, // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert H2
 {0x073D080C, CAT_DIAG_VERBRAUCHER, VT_TEMP, 9004, STR9004, 0, NULL}, // Vorlaufsollwert H3
 {0x053D0805, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9005, STR9005, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H1
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006, STR9006, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H2
+{0x063d0805, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006, STR9006, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H2
 {0x073D0805, CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9009, STR9009, 0, NULL}, // [bar ] - Diagnose Verbraucher  - Wasserdruck H3
 {0x053D09BA, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 9031, STR9031, 0, NULL}, // [0] - Diagnose Verbraucher  - Relaisausgang QX1
 {0x053D09BB, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 9032, STR9032, 0, NULL}, // [0] - Diagnose Verbraucher  - Relaisausgang QX2
 {0x053D09BC, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 9033, STR9033, 0, NULL}, // [0] - Diagnose Verbraucher  - Relaisausgang QX3
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 9034, STR9034, 0, NULL}, // Relaisausgang QX4
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 9035, STR9035, 0, NULL}, // Relaisausgang QX5
+{0x053d09bd, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 9034, STR9034, 0, NULL}, // Relaisausgang QX4
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_ONOFF, 9035, STR9035, 0, NULL}, // Relaisausgang QX5
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 9036, STR9036, 0, NULL}, // Relaisausgang QX6
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 9037, STR9037, 0, NULL}, // Relaisausgang QX7
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN, 9038, STR9038, 0, NULL}, // Relaisausgang QX8
@@ -3571,7 +3612,7 @@ int set(uint16_t line,char *val, bool setcmd){
       //S0=dd.mm.yyyy_mm:hh:ss
       // date and time are transmitted as INF message by the display unit
       // DISP->ALL  INF    0 Uhrzeit und Datum -  Datum/Zeit: 30.01.2015 23:17:00
-	  // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
+      // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
       int d,m,y,min,hour,sec;
       if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec))
         return 0;
@@ -4000,28 +4041,6 @@ void loop() {
           webPrintFooter();
           break;
         }
-        // reset brenner duration
-        if(p[1]=='B' && p[2]=='0'){
-          //list categories
-          webPrintHeader();
-          client.println(F("brenner duration is set to zero<br>"));
-          brenner_duration=0;          
-          brenner_count=0;          
-          webPrintFooter();
-          break;
-        }
-        // query brenner duration
-        if(p[1]=='B'){
-          webPrintHeader();
-          client.print(F("Brenner Laufzeit: "));
-          client.print(brenner_duration);
-          client.println("<br>");
-          client.print(F("Brenner Takte: "));
-          client.print(brenner_count);
-          client.println("<br>");
-          webPrintFooter();
-          break;
-        }
         // list enum values
         if(p[1]=='E'){
           webPrintHeader();
@@ -4101,6 +4120,20 @@ void loop() {
 #ifdef ONE_WIRE_BUS          
             ds18b20();
 #endif            
+          }else if(range[0]=='B'){            
+            if(range[1]=='0'){ // reset brenner duration
+              client.println(F("brenner duration is set to zero<br>"));
+              brenner_duration=0;          
+              brenner_count=0;          
+            }else{            
+              // query brenner duration
+              client.print(F("Brenner Laufzeit: "));
+              client.print(brenner_duration);
+              client.println("<br>");
+              client.print(F("Brenner Takte: "));
+              client.print(brenner_count);
+              client.println("<br>");
+            }          
           }else{
             if(range[0]=='K'){
               uint8_t cat,search_cat;
