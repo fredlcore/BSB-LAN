@@ -45,7 +45,7 @@ BEFORE BUILDING the software you have to adapt some parameters in BSB_lan.ino:
       - Pin assigment of the BSB adapter
         BSB bus(68,69);
       - (optional) Activate the usage of the passkey functionality (see below)
-        #define USE_PASSKEY  1
+        #define PASSKEY  "1234"
       - (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)
         BSB bus(68,69,<my_addr>);
         

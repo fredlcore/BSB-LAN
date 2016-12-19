@@ -157,7 +157,7 @@ uint16_t BSB::CRC (byte* buffer, uint8_t length) {
 }
 
 // Low-Level sending of message to bus
-inline void BSB::_send(byte* msg) {
+inline bool BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
   byte i;
   byte data;
@@ -179,10 +179,12 @@ Er wartet 10/4800 Sek ab, lauscht und schaut ob der Bus in dieser Zeit
 von jemand anderem benutzt wird. Sprich ob der Bus in dieser Zeit mal
 auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 */
-
+  unsigned long timeoutabort = millis() + 1000;
 retry:
   {
-    //i=3;
+    if(millis() > timeoutabort){
+      return false;
+    }
     unsigned long timeout = millis() + 3;//((1/480)*1000);
     while (millis() < timeout) {
       if ( serial->rx_pin_read()) // inverse logic
@@ -217,6 +219,7 @@ und Stop Bit.
     }
   }
   sei();
+  return true;
 }
 
 bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
@@ -240,7 +243,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   for (i=0; i < param_len; i++)
     tx_msg[9+i] = param[i];
   
-  _send(tx_msg);
+  if(!_send(tx_msg)) return false;
 
   if(!wait_for_reply) return true;
 
