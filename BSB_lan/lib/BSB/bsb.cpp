@@ -73,16 +73,18 @@ bool BSB::GetMessage(byte* msg) {
 #endif
         // Break if message seems to be completely received (i==msg.length)
         if (i > 3){
-	      if ( msg[3] > 32 ) // check for maximum message length
-			break;
+          if ( msg[3] > 32 ) // check for maximum message length
+            break;
           if (i >= msg[3])
             break;
-		}
+        }
         // Delay until we got next byte
         if (serial->available() == 0) {
           timeout = 30;
-          while ((timeout > 0) && (serial->available() == 0))
+          while ((timeout > 0) && (serial->available() == 0)){
             delayMicroseconds(15);
+            timeout--;
+          }
         }
 
         // Break if next byte signals next message (0x23 ^ 0xFF == 0xDC)
@@ -146,15 +148,14 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 
 retry:
   {
-  //i=3;
-  unsigned long timeout = millis() + 3;//((1/480)*1000);
-  while (millis() < timeout) {
-    if ( serial->rx_pin_read()) // inverse logic
-    {
-      goto retry;
-//      else return;
+    //i=3;
+    unsigned long timeout = millis() + 3;//((1/480)*1000);
+    while (millis() < timeout) {
+      if ( serial->rx_pin_read()) // inverse logic
+      {
+        goto retry;
+      }
     }
-  }
   }
   //Serial.println("bus free");
 
@@ -184,77 +185,44 @@ und Stop Bit.
   sei();
 }
 
-// High-level sending to bus
-bool BSB::send(byte TYPE, byte A1, byte A2, byte A3, byte A4, byte LEN, byte* DATA) {
-  byte msg[LEN + 11];
+bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
+  byte i;
 
-  msg[3] = LEN + 11;
-  msg[4] = TYPE;
-
+  // first two bytes are swapped
+  byte A2 = (cmd & 0xff000000) >> 24;
+  byte A1 = (cmd & 0x00ff0000) >> 16;
+  byte A3 = (cmd & 0x0000ff00) >> 8;
+  byte A4 = (cmd & 0x000000ff);
+  
+  tx_msg[3] = param_len + 11;
+  tx_msg[4] = type;
   // Adress
-  msg[5] = A1;
-  msg[6] = A2;
-  msg[7] = A3;
-  msg[8] = A4;
+  tx_msg[5] = A1;
+  tx_msg[6] = A2;
+  tx_msg[7] = A3;
+  tx_msg[8] = A4;
 
   // Value
-  for (byte i=0; i < LEN; i++)
-	msg[9+i] = DATA[i];
-	
-  _send(msg);
-  return true;
-}
+  for (i=0; i < param_len; i++)
+    tx_msg[9+i] = param[i];
+  
+  _send(tx_msg);
 
-///////////////////////////////////////////////////////////////////////////////
-bool BSB::Query(uint32_t cmd, byte* msg){
-	byte i=15;
-	// first two bytes are swapped
-	byte A2 = (cmd & 0xff000000) >> 24;
-	byte A1 = (cmd & 0x00ff0000) >> 16;
-	byte A3 = (cmd & 0x0000ff00) >> 8;
-	byte A4 = (cmd & 0x000000ff);
-		
-	send (0x06, A1, A2, A3, A4);	
-	unsigned long timeout = millis() + 1000;
-	while ((i > 0) && (millis() < timeout)) {
-		if (GetMessage(msg)) {
-			i--;
-			if ((msg[2] == myAddr) && (msg[5] == A2) && (msg[6] == A1) && (msg[7] == A3) && (msg[8] == A4)) {
-				return true;
-			}
-		}
-		else {
-			delayMicroseconds(205);
-		}
-	}
-	
-	return false;
-}
+  if(!wait_for_reply) return true;
 
+  i=15;
 
-bool BSB::Set(uint32_t cmd, byte* param, byte param_len, byte* msg) {
-	byte i=15;
-
-	// first two bytes are swapped
-	byte A2 = (cmd & 0xff000000) >> 24;
-	byte A1 = (cmd & 0x00ff0000) >> 16;
-	byte A3 = (cmd & 0x0000ff00) >> 8;
-	byte A4 = (cmd & 0x000000ff);
-
-	if(!send (0x03, A1, A2, A3, A4, param_len, param))
-		return false;
-	unsigned long timeout = millis() + 1000;
-	while ((i > 0) && (millis() < timeout)) {
-		if (GetMessage(msg)) {
-			i--;
-			if ((msg[2] == myAddr) && (msg[5] == A2) && (msg[6] == A1) && (msg[7] == A3) && (msg[8] == A4)) {
-				return true;
-			}
-		}
-		else {
-			delayMicroseconds(205);
-		}
-	}
-	Serial.println("set timeout");
-	return false;
+  unsigned long timeout = millis() + 1000;
+  while ((i > 0) && (millis() < timeout)) {
+    if (GetMessage(rx_msg)) {
+      i--;
+      if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
+        return true;
+      }
+    }
+    else {
+      delayMicroseconds(205);
+    }
+  }
+  return false;
 }

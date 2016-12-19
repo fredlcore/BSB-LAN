@@ -40,11 +40,8 @@ public:
   BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x06 );
   bool GetMessage(byte* msg);
   void print(byte* msg);
-  bool send(byte TYPE, byte A1, byte A2, byte A3, byte A4, byte LEN=0, byte* DATA=0);
-  
-  // Generic Get and Set
-  bool Query(uint32_t cmd, byte* msg);
-  bool Set(uint32_t cmd, byte* param, byte param_len, byte* msg);
+
+  bool Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
 
 private:
   uint8_t myAddr;
@@ -55,4 +52,3 @@ private:
 };
 
 #endif
-
