@@ -35,6 +35,40 @@ void BSB::print(byte* msg) {
 
 
 // Receives a message and stores it to buffer
+void BSB::Monitor() {
+  unsigned long int ts;
+  byte read;
+    
+  if (serial->available() > 0) {
+    // get timestamp
+    ts=millis();
+    // output
+    Serial.print(ts);
+    Serial.print(" ");
+    while (serial->available() > 0) {
+      
+      // Read serial data...
+      read = serial->read() ^ 0xFF;
+      // output
+      if(read<16){  
+        Serial.print("0");
+      }
+      Serial.print(read, HEX);
+      Serial.print(" ");
+      // if no inout available -> wait
+      if (serial->available() == 0) {
+        unsigned long timeout = millis() + 3;// > ((11/4800)*1000);
+        while (millis() < timeout) {
+          delayMicroseconds(15);
+        }
+      }
+      // if still no input available telegramm has finished
+      if (serial->available() == 0) break;
+    }
+    Serial.println();
+  }
+}
+
 bool BSB::GetMessage(byte* msg) {
   byte i=0,timeout;
   byte read;

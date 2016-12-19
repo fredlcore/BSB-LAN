@@ -13,8 +13,11 @@
  *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
  *       0.6  - 02.02.2015 
+ *       0.7  - 06.02.2015 
  *
  * Changelog:
+ *       version 0.7
+ *        - added bus monitor functionality
  *       version 0.6
  *        - renamed SoftwareSerial to BSBSoftwareSerial
  *        - changed folder structure to enable simple build with arduino sdk
@@ -44,6 +47,7 @@
 
 // if set to 1, all messages on the bus are printed to the serial interface
 byte verbose = 0;
+byte monitor = 0;
 
 // if enabled the URL has to contain the defined passkey as first element
 // e.g.
@@ -3206,9 +3210,14 @@ void loop() {
   char cLineBuffer[MaxArrayElement];
   byte bPlaceInBuffer;
 
-  // listen for incoming messages
-  if(verbose){
-    if (bus.GetMessage(msg)) printTelegram(msg);
+  // monitor bus
+  if(monitor){
+    bus.Monitor();
+  }else{
+    // listen for incoming messages
+    if(verbose){
+      if (bus.GetMessage(msg)) printTelegram(msg);
+    }
   }
   
   // listen for incoming clients
@@ -3256,16 +3265,36 @@ void loop() {
           break;
         }
         // answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREV",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVM",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
         }
-        //
+        // setting verbosity level
         if(p[1]=='V'){
           p+=2;
           verbose=atoi(p);
           webPrintHeader();
+          if(verbose>0){
+            client.println(F("verbose mode activated<br>"));
+          }else{
+            client.println(F("verbose mode deactivated<br>"));
+          }
+          client.println(F("only serial output is affected"));
+          webPrintFooter();
+          break;
+        }
+        // switching monitor on/off
+        if(p[1]=='M'){
+          p+=2;
+          monitor=atoi(p);
+          webPrintHeader();
+          if(monitor>0){
+            client.println(F("monitor activated<br>"));
+          }else{
+            client.println(F("monitor deactivated<br>"));
+          }
+          client.println(F("only serial output is affected"));
           webPrintFooter();
           break;
         }
@@ -4108,6 +4137,7 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Ex</td> <td>list enum values for line x</td></tr>"));
   client.print(F(" <tr><td>/Rx</td> <td>query reset value for line x</td></tr>"));
   client.print(F(" <tr><td>/Vn</td> <td>set verbosity level for serial output</td></tr>"));
+  client.print(F(" <tr><td>/Mn</td> <td>activate/deactivate monitor functionality (n=0 disable, n=1 enable)</td></tr>"));
   client.print(F(" </table>"));
   client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999</p>"));
   webPrintFooter();
