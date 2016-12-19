@@ -1,0 +1,151 @@
+BSB Boiler-System-Bus LAN Interface
+
+ATTENION:
+      There is no waranty that this system will not damage your heating system!
+
+Author: Gero Schumacher (gero.schumacher@gmail.com)
+      Based on the code and work from many other developers (see Info section below). Many thanks!
+
+License:
+      You are free to use this software on your own risk. Please take care of the licenses of the used libraries and software.
+
+Info:
+      http://www.mikrocontroller.net/topic/218643
+      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol
+      http://forum.fhem.de/index.php/topic,29762.0.html
+      systemhandbuch_isr.pdf
+
+Host System:
+      The software is designed to run on an arduino mega2560 board with ethernet shield.
+      Because there are different pin assignments for different ethernet shields, you
+      may have to connect the BSB adapter to different pins and to change the pin assigment
+      in the software.
+      The software is tested with the following components:      
+      - SainSmart MEGA2560 R3 Development Board
+      - SainSmart Ethernet Schild Für Arduino UNO MEGA Duemilanove*Neu Version W5100*
+      - BSB-Interface (see BSB_adapter.pdf)
+      For this configuration pin A14 (68) ist used as RX and pin A15 (69) is used as TX:
+
+      BSB bus(68,69);
+      
+Target System:
+      Tested with: Elco Straton oil fired condensing boiler.
+      Communication should be possible with all systems that support the BSB interface.
+      Missing command ids have to be added in the cmdtbl.
+      Until now it is not clear to me, what the differences between the LPB and BSB protocols are. The physical specifications
+      are the same. But may be they differe on the protocol level. Until now I have only connected the system to the BSB.
+    
+BEFORE BUILDING the software you have to adapt some parameters in BSB_lan.ino:
+      - MAC address of your ethernet shield. It can be normally found on a label at the shield:
+        byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
+      - Ethernet address
+        IPAddress ip(192,168,178,88);
+      - Ethernet port
+        EthernetServer server(80);
+      - Pin assigment of the BSB adapter
+        BSB bus(68,69);
+      - (optional) Activate the usage of the passkey functionality (see below)
+        #define USE_PASSKEY  1
+      - (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)
+        BSB bus(68,69,<my_addr>);
+        
+Interface:
+      A simple syntax description is content of the website displayed when the server is accessed by its simple URL withou any parameters.
+      e.g. http://<ip-of-server>
+      To protect the system for unwanted access you can enable the passkey feature (very simple and not really secure!).
+      If the passkey feature is enabled (see below), the URL has to contain the defined passkey as first element
+      e.g. http://<ip-of-server>/<passkey>/    - to see the help
+      The urls in the below examples have to be exented, if the passeky feature is turned on.
+      All parameters are accessed by line numbers. A nearly complete description can be found in systemhandbuch_isr.pdf.
+      Some lines are 'virtual', i.e. they were added to simplify the access to complex settings like time programms.
+      The parameters are grouped in categories according to the submenu items when accessing your boiler system from the display.
+
+      List all categories:
+      http://<ip-of-server>/K
+        This command does not communicate with the boiler system. It is a software internal feature.
+
+
+      List all enum values for parameter x
+      http://<ip-of-server>/E<x>
+        This command does not communicate with the boiler system. It is a software internal feature.
+        The command is only available for parameters of the type VT_ENUM.
+
+      Query all values from category x: 
+        http://<ip-of-server>/K<x>
+
+      Query value for line x
+        http://<ip-of-server>/<x>
+
+      Query value for a range of lines (from line x up to line y)
+        http://<ip-of-server>/<x>-<y>
+
+      Multiple queries can be concatenated
+        e.g. http://<ip-of-server>/K11/8000/8003/8005/8300/8301/8730-8732/8820
+
+      Query for the reset value of parameter x
+        http://<ip-of-server>/R<x>
+        In the display there is a reset option for some parameters. A reset is performed by asking the boiler for the reset value
+        and setting it afterwards.
+
+      Set value v for parameter x
+        http://<ip-of-server>/S<x>=<v>
+        Attention: This feature is not extensively tested. So be careful what are you doing and do it on your own risk.
+        The format of the value depends on its type. Some parameters can be disabled. To set a parameter to 'disable', just send an empty value
+        http://<ip-of-server>/S<x>=
+        The description of the value formats will be added here. Until then have a look at the source code (function set).
+          
+      Send INF message for parameter x with value v
+        http://<ip-of-server>/I<x>=<v>
+        Some values cannot be set directly. The heating system is informed by a TPYE_INF message. E.g. the room temperature
+        e.g. http://<ip-of-server>/I10000=19.5  // room temperature is 19.5 degree.
+
+      Set verbosity level n
+        http://<ip-of-server>/V<n>
+        The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally printed in raw hex format.
+        The verbose output only affects the serial console of the mega2560. The html output is kept unchanged.
+
+Open issues
+      - Add more command ids to the table.
+          Only the known command ids from the threads listed above and the testet boiler system (ELCO) are content of the table.
+          Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the sytem via
+          the display.
+          Cause we want to provide a general working system for all boiler configurations working with BSB. Any help and feedback is appreciated!
+          
+      - Test and complete the set funcionality
+          With the current implementation a lot of values can be already set. But there is still some testing needed and some parameter types have to be added.
+
+      - Introduce valid ranges for parameters
+          To make the access safer when setting values for parameters, the valid ranges should be added to the command table
+
+      - Add read-only flag for parameters
+          To make the access safer add a flag for parameters, that can be read only.
+
+      - Test and maybe extend the system to work with LPB instead of BSB.
+
+      - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
+
+      - Add support of error messages send by the boiler system
+
+
+
+Extension: TODO
+
+    Room temperature sensor simulation:
+    
+    affected parameters
+    - 710 - HK1 - Komfortsollwert
+    - 750 - HK1 - Raumeinfluss
+    - 700 - HK1 - Betriebsart (0=Schutzbetrieb, 1=Automatik, 2=Reduziert, 3=Komfort)
+    - INF 10000=Raumtemperatur
+    - 8740 Diagnose Verbraucher - Raumtemperatur 1
+    - 8741 Diagnose Verbraucher - Raumsollwert 1
+
+    To simulate a room temperature sensor the temperature has to be sent in a regular interval (<10min).
+    Additionally the boiler can be switched off, when no heating is requested.
+    When using the PID20 module from fhem, we can try the following approach:
+    - loop over all PID20 devices
+    - skip all devices which are not the state processing
+    - skip all devices with an actuation less than 10 percent
+    - get the max desired temperature for all not skipped devices
+    - get the greatest difference from desired and measured temperature for all not skipped devices
+    - calculate a virtual min measured temperature using this difference
