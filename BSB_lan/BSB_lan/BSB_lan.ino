@@ -18,8 +18,12 @@
  *       0.9  - 09.03.2015 
  *       0.10  - 15.03.2015 
  *       0.11  - 07.04.2015 
+ *       0.12  - 09.04.2015 
  *
  * Changelog:
+ *       version 0.12
+ *        - added ONEWIRE_SENSORS to ipwe
+ *        - fixed parameter decoding for ELCO Thision heating system
  *       version 0.11
  *        - fixed parameter decoding for ELCO Thision heating system
  *       version 0.10
@@ -51,7 +55,7 @@
  *
  */
 
-//#define  TEMP_SENSORS
+//#define  ONEWIRE_SENSORS
 
 #include <avr/pgmspace.h>
 #include "BSBSoftwareSerial.h"
@@ -62,7 +66,7 @@
 #include <Arduino.h>
 #include <util/crc16.h>
 
-#ifdef TEMP_SENSORS
+#ifdef ONEWIRE_SENSORS
 #include "OneWire.h"
 #include <DallasTemperature.h>
 #endif
@@ -94,6 +98,7 @@ byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
 // with the IP address and port you want to use
 // (port 80 is default for HTTP):
 IPAddress ip(192,168,178,88);
+
 EthernetServer server(80);
 EthernetClient client;
 
@@ -103,7 +108,7 @@ BSB bus(68,69);
 
 byte led0 = 3, led1 = 4 ; // Pins 3+4 for Relais
 
-#ifdef TEMP_SENSORS
+#ifdef ONEWIRE_SENSORS
 
 #define TEMPERATURE_PRECISION 9
 
@@ -2606,7 +2611,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x2D3D3073, CAT_KONFIG, VT_ENUM, 5970, STR5970, sizeof(ENUM5970), ENUM5970}, // TODO Thision 5970 Konfig Raumthermostat 1 [enum]
 {0x2E3D3073, CAT_KONFIG, VT_ENUM, 5971, STR5971, sizeof(ENUM5971), ENUM5971}, // TODO Thision 5971 Konfig Raumthermostat 2 [enum: s.o.]
 {0x053D3046, CAT_KONFIG, VT_ENUM, 5973, STR5973, sizeof(ENUM5973), ENUM5973}, // TODO Thision 5973 Funktion Eingang RelCl [enum]
-{0x193D2FD2, CAT_KONFIG, VT_TEMP, 5975, STR5975, 0, NULL}, // TODO Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
+{0x193D2FD2, CAT_KONFIG, VT_TEMP_WORD, 5975, STR5975, 0, NULL}, // TODO Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
 {0x093D3054, CAT_KONFIG, VT_ENUM, 5978, STR5978, sizeof(ENUM5978), ENUM5978}, // TODO Thision 5978 Funktion Eingang SolCl [enum]
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5980, STR5980, 0, NULL}, // Funktion Eingang EX1
 {CMD_UNKNOWN, CAT_KONFIG, VT_UNKNOWN, 5981, STR5981, 0, NULL}, // Wirksinn Eingang EX1
@@ -3195,7 +3200,7 @@ void setup() {
   Ethernet.begin(mac, ip);
   server.begin();
 
-#ifdef TEMP_SENSORS  
+#ifdef ONEWIRE_SENSORS  
   // check ds18b20 sensors
   sensors.begin();
   numSensors=sensors.getDeviceCount();
@@ -3726,7 +3731,7 @@ void loop() {
           webPrintSite();
           break;
         }
-#ifdef TEMP_SENSORS          
+#ifdef ONEWIRE_SENSORS          
           if (!strcmp(p,"/temp")) {
             ds18b20();
             break;
@@ -4691,24 +4696,40 @@ void webPrintSite() {
 void Ipwe() {
   webPrintHeader();
   int sensor_anz = 6;
-  double sensors[sensor_anz];
-  sensors[0] = strtod(query(8700,8700,1),NULL);
-  sensors[1] = strtod(query(8743,8743,1),NULL);
-  sensors[2] = strtod(query(8314,8314,1),NULL);
-  sensors[3] = strtod(query(8310,8310,1),NULL);
-  sensors[4] = strtod(query(8830,8830,1),NULL);
-  sensors[5] = !digitalRead(led0)*99+1;
+  int i;
+  double ipwe_sensors[sensor_anz];
+  ipwe_sensors[0] = strtod(query(8700,8700,1),NULL);
+  ipwe_sensors[1] = strtod(query(8743,8743,1),NULL);
+  ipwe_sensors[2] = strtod(query(8314,8314,1),NULL);
+  ipwe_sensors[3] = strtod(query(8310,8310,1),NULL);
+  ipwe_sensors[4] = strtod(query(8830,8830,1),NULL);
+  ipwe_sensors[5] = !digitalRead(led0)*99+1;
 
   client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (int i=0; i < sensor_anz; i++) {
+  for (i=0; i < sensor_anz; i++) {
     client.print(F("<tr><td>T<br></td><td>"));
     client.print(i+1);
     client.print(F("<br></td><td>T"));
     client.print(i+1);
     client.print(F("<br></td><td>"));
-    client.print(sensors[i]);
+    client.print(ipwe_sensors[i]);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
+#ifdef ONEWIRE_SENSORS
+  // output of one wire sensors
+  sensors.requestTemperatures(); 
+  for(i=0;i<numSensors;i++){
+    float t=sensors.getTempCByIndex(i);
+
+    client.print(F("<tr><td>T<br></td><td>"));
+    client.print(sensor_anz+i+1);
+    client.print(F("<br></td><td>T"));
+    client.print(sensor_anz+i+1);
+    client.print(F("<br></td><td>"));
+    client.print(t);
+    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  }
+#endif  
   client.print(F("</tbody></table></form>"));
   webPrintFooter();
 }
@@ -4760,7 +4781,7 @@ void Heating(char* status) {
   set(700,status,true);    // Zusätzlich (bzw. ggf. alternativ) noch Wechsel zwischen Automatik- und Frostschutzmodus
 } 
 
-#ifdef TEMP_SENSORS
+#ifdef ONEWIRE_SENSORS
 
 void ds18b20(void) {
   int i;
