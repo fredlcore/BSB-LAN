@@ -24,11 +24,14 @@
  *       0.15  - 21.04.2016
  *       0.15a - 25.07.2016
  *       0.16  - 20.11.2016
- *	 0.17  - 20.12.2016
+ *       0.17  - 20.12.2016
+ *       0.17a - 20.12.2016
  *
  * Changelog:
- *	 version 0.17
- *	  - merged v0.16 with FHEM user miwi's changes 
+ *       version 0.17a
+ *        - minor errors corrected
+ *       version 0.17
+ *	      - merged v0.16 with FHEM user miwi's changes 
  *       version 0.16
  *        - removed IPWE and EthRly interface
  *        - added GPIO interface
@@ -1683,7 +1686,7 @@ const char ENUM4133[] PROGMEM = { // Numerical values are hypothetical
 "\x00 ?Trinkwasserfühler B3\0"
 "\x01 ?Trinkwasserfühler B31\0"
 "\x02 ?Pufferspeicherfühler B4\0"
-"\x03 ?Pufferspeicherfühler B41\0
+"\x03 ?Pufferspeicherfühler B41\0"
 "\x04 ?Vorlaufsollwert\0"
 "\x05 ?Sollwert Minimum"
 };
@@ -2160,12 +2163,12 @@ const char ENUM6621[] PROGMEM = {
 };
 
 const char ENUM6623[] PROGMEM = { // numerical values are hypothetical
-"\x00 ?Lokal\0\"
+"\x00 ?Lokal\0"
 "\x01 ?Zentral"
 };  
 
 const char ENUM6624[] PROGMEM = { // numerical values are hypothetical
-"\x00 ?Lokal\0\"
+"\x00 ?Lokal\0"
 "\x01 ?Segment"
 };  
 
@@ -2691,7 +2694,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                  NULL},      // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 // nur Bedienteil -> keine Kommunikation über BSB
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sixeof(ENUM20),   ENUM20},      // [0] - Bedieneinheit - Sprachauswahl
+{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sizeof(ENUM20),   ENUM20},      // [0] - Bedieneinheit - Sprachauswahl
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          22,    STR22,    sizeof(ENUM22),   ENUM22},      // [0] - Bedieneinheit - Info
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          23,    STR23,    sizeof(ENUM23),   ENUM23},      // Fehleranzeige Code | Code und Text
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       25,    STR25,    0,                  NULL},      // Anzeigekontrast
@@ -5832,7 +5835,7 @@ void Ipwe() {
   ipwe_sensors[2] = strtod(query(8314,8314,1),NULL);  // backflux temperature
   ipwe_sensors[3] = strtod(query(8310,8310,1),NULL);  // furnace temperature
   ipwe_sensors[4] = strtod(query(8830,8830,1),NULL);  // potable water temperature
-  ipwe_sensors[5] = !digitalRead(led_pin[0])*99+1;          // heater ON/OFF
+//  ipwe_sensors[5] = !digitalRead(led_pin[0])*99+1;          // heater ON/OFF
 
   client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   for (i=0; i < sensor_anz; i++) {
@@ -6308,10 +6311,12 @@ void setup() {
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
 
+/*
   for(byte i=0;i<MAX_LED_IDX;i++){
     digitalWrite(led_pin[i], HIGH);
     pinMode(led_pin[i], OUTPUT);
   }
+*/
 
   // enable w5100 SPI
   pinMode(10,OUTPUT);
