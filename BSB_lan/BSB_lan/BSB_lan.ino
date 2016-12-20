@@ -23,8 +23,14 @@
  *       0.14  - 04.04.2016
  *       0.15  - 21.04.2016
  *       0.15a - 25.07.2016
+ *       0.16  - 20.11.2016
  *
  * Changelog:
+ *       version 0.16
+ *        - removed IPWE and EthRly interface
+ *        - added GPIO interface
+ *        - merged parameters from J.Weber
+ *        - resolved duplicate command IDs
  *       version 0.15a
  *        - collated the commands from a Python project and this project,
  *          merged the two versions, corrected obvious errors.
@@ -135,9 +141,6 @@ EthernetServer server(80);
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
 BSB bus(68,69);
-
-
-byte led0 = 3, led1 = 4 ; // Pins 3+4 for Relais
 
 // EXPERIMENTAL:
 // If defined, the heating burner ON time is accumulated using broadcast messages
@@ -593,6 +596,7 @@ const char STR963[] PROGMEM = "Mit Vorregler/Zubring'pumpe";
 const char STR969[] PROGMEM = "Betriebsartumschaltung";
 
 // Einstellungen Heizkreis 2
+const char STR1000[] PROGMEM = "Betriebsart";
 const char STR1010[] PROGMEM = "Komfortsollwert";
 const char STR1011[] PROGMEM = "Komfortsollwert Maximum";
 const char STR1012[] PROGMEM = "Reduziertsollwert";
@@ -1560,6 +1564,8 @@ const char ENUM900[] PROGMEM = {"\x00 Schutzbetrieb\0\x01 Reduziert\0\x03 Komfor
 #else
 const char ENUM900[] PROGMEM = {"\x00 Keine\0\x01 Schutzbetrieb\0\x02 Reduziert\0\x03 Komfort\0\x04 Automatik"};
 #endif
+
+const char ENUM1000[] PROGMEM = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduziert\0\x03 Komfort"};
 
 #define ENUM1080 ENUM780         // Schnellabsenkung
 #define ENUM1132 ENUM832
@@ -2725,7 +2731,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x213d065d,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                  NULL},      // [°C ] - Heizkreis 1 - Mischerüberhöhung
 {CMD_UNKNOWN, CAT_HK1,              VT_ENUM,          832,   STR832,   sizeof(ENUM832),    ENUM832},   //       - Antrieb Typ
 {CMD_UNKNOWN, CAT_HK1,              VT_UNKNOWN,       833,   STR833,   0,                  NULL},      //       - Schaltdifferenz 2-Punkt
-{CMD_UNKNOWN, CAT_HK1,              VT_UNKNOWN,       834,   STR834,   0,                  NULL},      // [ s ] - Antrieb Laufzeit
+{0x213d065a,  CAT_HK1,              VT_SECONDS_WORD,  834,   STR834,   0,                  NULL},      // [ s ] - Antrieb Laufzeit
 {0x2d3d067b,  CAT_HK1,              VT_ENUM,          850,   STR850,   sizeof(ENUM850),    ENUM850},   // [-] - Heizkreis 1 - Estrichfunktion
 {0x2d3d068a,  CAT_HK1,              VT_TEMP,          851,   STR851,   0,                  NULL},      // [°C ] - Heizkreis 1 - Estrich Sollwert manuell
 {CMD_UNKNOWN, CAT_HK1,              VT_TEMP,          856,   STR856,   0,                  NULL},      // [°C ] - Heizkreis 1 - Estrich Tag aktuell
@@ -2772,6 +2778,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KUEHL1,           VT_UNKNOWN,       969,   STR969,   0,                  NULL},      // Betriebsartumschaltung
 
 // Heizkreis 2
+{0x2e3e0574,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),   ENUM1000},  // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
 {0x2e3d058e,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
 // line not in menue!
 /* virtuelle Zeile*/
@@ -2793,23 +2800,23 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x2e3d0609,  CAT_HK2,              VT_MINUTES,       1091,  STR1091,  0,                  NULL},      // [min] - Heizkreis 2 (nur wenn aktiviert) - Ausschalt-Optimierung Max.
 {0x2e3d059e,  CAT_HK2,              VT_TEMP,          1100,  STR1100,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2e3d059d,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
-{CMD_UNKNOWN, CAT_HK2,              VT_ONOFF,         1120,  STR1120,  0,                  NULL},      // [  - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
+{0x223d0674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  0,                  NULL},      // [  - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x223d065d,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {CMD_UNKNOWN, CAT_HK2,              VT_ENUM,          1132,  STR1132,  sizeof(ENUM1132),   ENUM1132},  // Antrieb Typ
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1133,  STR1133,  0,                  NULL},      // Schaltdiffernez 2-Punkt
-{0x223d065a,  CAT_HK2,              VT_UNKNOWN,       1134,  STR1134,  0,                  NULL},      // TODO Thision 1134 Antrieb Laufzeit [s]
+{0x223d065a,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                  NULL},      // TODO Thision 1134 Antrieb Laufzeit [s]
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1135,  STR1135,  0,                  NULL},      // TODO Thision 1135 Mischer P-Band XP [K]
 {0x2e3d067b,  CAT_HK2,              VT_ENUM,          1150,  STR1150,  sizeof(ENUM1150),   ENUM1150},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Estrichfunktion
 {0x2e3d068a,  CAT_HK2,              VT_TEMP,          1151,  STR1151,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Estrich sollwert manuell
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1155,  STR1155,  0,                  NULL},      // TODO Thision 1155 Estrich Sollwert aktuell [Tage]
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1156,  STR1156,  0,                  NULL},      // Estrich Tag aktuell
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1157,  STR1157,  0,                  NULL},      // Estrich Tag erfüllt
-{CMD_UNKNOWN, CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),   ENUM1161},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
-{CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1170,  STR1170,  0,                  NULL},      // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
-{CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1172,  STR1172,  0,                  NULL},      // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
+{0x223d08c9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),   ENUM1161},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
+{0x2e3d07c4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  0,                  NULL},      // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
+{0x2e3d07c5,  CAT_HK2,              VT_YESNO,         1172,  STR1172,  0,                  NULL},      // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1182,  STR1182,  0,                  NULL},      // Pumpendrehzahl Minimum
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1183,  STR1183,  0,                  NULL},      // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),   ENUM1200},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
+{0x063d07be,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),   ENUM1200},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
 
 // Heizkreis 3/P
 {CMD_UNKNOWN, CAT_HKP,              VT_ENUM,          1300,  STR1300,  sizeof(ENUM1300),   ENUM1300},  // Betriebsart
@@ -3131,8 +3138,8 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5700,  STR5700,  0,                  NULL},      // Voreinstellung
 {0x2d3d2fea,  CAT_KONFIG,           VT_BYTE,          5701,  STR5701,  0,                  NULL},      // TODO Thision 5701 Hydraulisches Schema [2..85 enum?]
 {0x053d04c0,  CAT_KONFIG,           VT_ONOFF,         5710,  STR5710,  0,                  NULL},      // [0] - Konfiguration - Heizkreis 1
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5711,  STR5711,  0,                  NULL},      // Kühlkreis 1
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5712,  STR5712,  0,                  NULL},      // Verwendung Mischer 1
+{0x053d0a73,  CAT_KONFIG,           VT_UNKNOWN,       5711,  STR5711,  0,                  NULL},      // Kühlkreis 1
+{0x053d0a77,  CAT_KONFIG,           VT_UNKNOWN,       5712,  STR5712,  0,                  NULL},      // Verwendung Mischer 1
 {0x063d04c0,  CAT_KONFIG,           VT_ONOFF,         5715,  STR5715,  0,                  NULL},      // [0] - Konfiguration - Heizkreis2
 {0x313d071e,  CAT_KONFIG,           VT_ENUM,          5730,  STR5730,  sizeof(ENUM5730),   ENUM5730},  // [0] - Konfiguration - Trinkwasser-Sensor B3
 {0x253d071c,  CAT_KONFIG,           VT_ENUM,          5731,  STR5731,  sizeof(ENUM5731),   ENUM5731},  // [0] - Konfiguration - Trinkwasser-Stellglied Q3
@@ -3257,11 +3264,11 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x063d0808,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),   ENUM6047},  // Wirksinn Kontakt H2 | Arbeitskontakt
 // !FIXME! !AUTOGENERATED! same cmd as 5962
 {0x2a3d0656,  CAT_KONFIG,           VT_TEMP,          6048,  STR6048,  0,                  NULL},      // Minimaler Vorlaufsollwert H2
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6049,  STR6049,  0,                  NULL},      // Spannungswert 1 H2
+{0x063d0b7b,  CAT_KONFIG,           VT_UNKNOWN,       6049,  STR6049,  0,                  NULL},      // Spannungswert 1 H2
 // !FIXME! !AUTOGENERATED! same cmd as 5964
 {0x063d079f,  CAT_KONFIG,           VT_TEMP,          6050,  STR6050,  0,                  NULL},      // Temperaturwert 10V H2
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6051,  STR6051,  0,                  NULL},      // Spannungswert 2 H2
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6052,  STR6052,  0,                  NULL},      // Funktionswert 2 H2 BAR
+{0x063d0b7c,  CAT_KONFIG,           VT_UNKNOWN,       6051,  STR6051,  0,                  NULL},      // Spannungswert 2 H2
+{0x063d0b83,  CAT_KONFIG,           VT_UNKNOWN,       6052,  STR6052,  0,                  NULL},      // Funktionswert 2 H2 BAR
 {0x053d045a,  CAT_KONFIG,           VT_ENUM,          6070,  STR6070,  sizeof(ENUM6070),   ENUM6070},  // Funktion Ausgang UX
 {0x053d045b,  CAT_KONFIG,           VT_ENUM,          6071,  STR6071,  sizeof(ENUM6071),   ENUM6071},  // Signallogik Ausgang UX Standard | Invertiert
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6072,  STR6072,  0,                  NULL},      // Signal Ausgang UX
@@ -3323,10 +3330,10 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053d08d2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                  NULL},      // Alarmverzögerung
 {0x053d0839,  CAT_LPB,              VT_ENUM,          6620,  STR6620,  sizeof(ENUM6620),   ENUM6620},  // [  - ] - LPB   - Wirkbereich Umschaltungen
 {0x2d3d0611,  CAT_LPB,              VT_ENUM,          6621,  STR6621,  sizeof(ENUM6621),   ENUM6621},  // [0] - LPB   - Sommerumschaltung
-{CMD_UNKNOWN, CAT_LPB,              VT_UNKNOWN,       6623,  STR6623,  0,                  NULL},      // Betriebsartumschaltung
+{0x053d0b34,  CAT_LPB,              VT_UNKNOWN,       6623,  STR6623,  0,                  NULL},      // Betriebsartumschaltung
 {CMD_UNKNOWN, CAT_LPB,              VT_UNKNOWN,       6624,  STR6624,  0,                  NULL},      // Manuelle Erzeugersperre
 {0x253d074a,  CAT_LPB,              VT_ENUM,          6625,  STR6625,  sizeof(ENUM6625),   ENUM6625},  // [0] - LPB   - Trinkwasserzuordnung
-{CMD_UNKNOWN, CAT_LPB,              VT_UNKNOWN,       6627,  STR6627,  0,                  NULL},      // Kälteanforderung
+{0x053d0d04,  CAT_LPB,              VT_UNKNOWN,       6627,  STR6627,  0,                  NULL},      // Kälteanforderung
 {CMD_UNKNOWN, CAT_LPB,              VT_UNKNOWN,       6632,  STR6632,  0,                  NULL},      // TA'grenze ext Erz beachten
 {0x053d006d,  CAT_LPB,              VT_ENUM,          6640,  STR6640,  sizeof(ENUM6640),   ENUM6640},  // [0] - LPB   - Uhrbetrieb
 // Codierung unklar: 15.01 -> HEIZ->DISP ANS 6650 Aussentemperatur Lieferant 00 F0 ??? 00.01 = 00 00 ???
@@ -3349,7 +3356,7 @@ SW Diagnosecode
 {0x223d069d,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                  NULL},      // [min ] - Fehler - Vorlauftemperatur 2 Alarm
 {0x113d05de,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                  NULL},      // [min ] - Fehler - Kesseltemperatur Alarm
 {CMD_UNKNOWN, CAT_FEHLER,           VT_UNKNOWN,       6745,  STR6745,  0,                  NULL},      // Trinkwasserladung Alarm
-{CMD_UNKNOWN, CAT_FEHLER,           VT_UNKNOWN,       6746,  STR6746,  0,                  NULL},      // Vorlauftemp Kühlen 1 Alarm
+{0x693d0b67,  CAT_FEHLER,           VT_UNKNOWN,       6746,  STR6746,  0,                  NULL},      // Vorlauftemp Kühlen 1 Alarm
 #ifdef BROETJE_SOB
 {0x053d06d3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                  NULL},      // [  ] - Fehler - Historie 1 Datum/Zeit
 {0x053d06dd,  CAT_FEHLER,           VT_ENUM,          6801,  STR6801,  sizeof(ENUM_ERROR), ENUM_ERROR},// [  ] - Fehler - Historie 1 Fehlercode
@@ -3500,7 +3507,9 @@ SW Diagnosecode
 // Ein-/Ausgangstest
 {0x053d0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),   ENUM7700},  // [0] - Ein-/Ausgangstest - Relaistest
 {0x053d040c,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                  NULL},      // Mod'sollwert QX3 Relaistest
+#ifndef THISION
 {0x053d04a2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                  NULL},      // Modulationssignal QX3
+#endif
 {0x053d040e,  CAT_IOTEST,           VT_VOLTAGE,       7710,  STR7710,  0,                  NULL},      // Ausgangstest UX
 {0x053d0821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                  NULL},      // Spannungssignal UX
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7714,  STR7714,  0,                  NULL},      // PWM-Signal P1
@@ -3551,7 +3560,7 @@ SW Diagnosecode
 {0x053d07a5,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),   ENUM8001},  // [ ] - Status  - Status Heizkreis 2
 {0x053d07a7,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),   ENUM8002},  // [ ] - Status  - Status Heizkreis P
 {0x053d07a1,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),   ENUM8003},  // [] - Status  - Status Trinkwasser
-{CMD_UNKNOWN,  CAT_STATUS,           VT_UNKNOWN,       8004,  STR8004,  0,                  NULL},      // Status Kühlkreis 1
+{0x053d0f73,  CAT_STATUS,           VT_UNKNOWN,       8004,  STR8004,  0,                  NULL},      // Status Kühlkreis 1
 {0x053d07a9,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),   ENUM8005},  // [] - Status  - Status Kessel
 {CMD_UNKNOWN, CAT_STATUS,           VT_UNKNOWN,       8006,  STR8006,  0,                  NULL},      // Status Wärmepumpe
 {0x053d07ad,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),   ENUM8007},  // [] - Status  - Status Solar
@@ -3736,8 +3745,9 @@ SW Diagnosecode
 {0x213d0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 1 Alarm
 {0x213d0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 1
 {0x053d0c7d,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),   ENUM8749},  // Raumthermostat 1
-// !FIXME! !AUTOGENERATED! same cmd as 7708
+#ifdef THISION
 {0x053d04a2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                  NULL},      // TODO Thision 8750 Mod Pumpe Sollwert [%]
+#endif
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8751,  STR8751,  0,                  NULL},      // Kühlkreispumpe Q24
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8752,  STR8752,  0,                  NULL},      // Kühlkreismischer Auf Y23
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8753,  STR8753,  0,                  NULL},      // Kühlkreismischer Zu Y24
@@ -3856,14 +3866,14 @@ SW Diagnosecode
 // Src=06/RGT-1 Dest=00/SSR Type=INF FieldID=3d2d0215 Payload=057900 CRC=0xa0de
 {0x3d2d0215,  CAT_USER_DEFINED,     VT_TEMP,          10109, STR10109, 0,                  NULL},      // INFO Raumtemperatur            adr 06 to 00
 /*
-{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                  NULL},      // INFO Brenner    broadcast 00 to 7F
-{0x0500006c,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                  NULL},      // INFO Datum/Zeit broadcast 0A to 7F
-{0x2d000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                  NULL},      // INFO HK1
-{0x2e000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                  NULL},      // INFO HK2        broadcast 00 to 7F
-{0x053d0099,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                  NULL},      // SW Diagnosecode
-{0x2d3d0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10110, STR10110, 0,                  NULL},      // Setzen RGT HK1
-{0x313d0571,  CAT_USER_DEFINED,     VT_UNKNOWN,       10111, STR10111, 0,                  NULL},      // Trinkwasserbereitung
-{0x2e3e0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                  NULL},      // Heizbetrieb
+*{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                  NULL},      // INFO Brenner    broadcast 00 to 7F
+*{0x0500006c,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                  NULL},      // INFO Datum/Zeit broadcast 0A to 7F
+*{0x2d000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                  NULL},      // INFO HK1
+*{0x2e000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                  NULL},      // INFO HK2        broadcast 00 to 7F
+*{0x053d0099,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                  NULL},      // SW Diagnosecode
+*{0x2d3d0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10110, STR10110, 0,                  NULL},      // Setzen RGT HK1
+*{0x313d0571,  CAT_USER_DEFINED,     VT_UNKNOWN,       10111, STR10111, 0,                  NULL},      // Trinkwasserbereitung
+*{0x2e3e0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                  NULL},      // Heizbetrieb
 */
 
 /*
@@ -3874,7 +3884,7 @@ SW Diagnosecode
 {0xdeadbeef,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                  NULL},      //
 
 
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                  NULL},      
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                  NULL},
 };
 
 /* ******************************************************************
@@ -3936,53 +3946,6 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
 }
 
 
-/** *****************************************************************
- *  Function: setup()
- *  Does:     Sets up the Arduino including its Ethernet shield.
- * Pass parameters:
- *  none
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  numSensors
- *  server instance
- *  sensors instance
- *  Serial instance
- *  Ethernet instance
- * *************************************************************** */
-void setup() {
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
-  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
-  Serial.println(F("READY"));
-  Serial.print(F("free RAM:"));
-  Serial.println(freeRam());
-
-  digitalWrite(led0, HIGH);
-  pinMode(led0, OUTPUT);
-
-  // enable w5100 SPI
-  pinMode(10,OUTPUT);
-  digitalWrite(10,LOW);
-
-  // disable SD Card
-  pinMode(4,OUTPUT);
-  digitalWrite(4,HIGH);
-
-  // start the Ethernet connection and the server:
-  Ethernet.begin(mac, ip);
-  server.begin();
-
-#ifdef ONE_WIRE_BUS
-  // check ds18b20 sensors
-  sensors.begin();
-  numSensors=sensors.getDeviceCount();
-  Serial.print("numSensors: ");
-  Serial.println(numSensors);
-#endif
-}
 
 /** *****************************************************************
  *  Function: findLine()
@@ -4034,955 +3997,6 @@ int findLine(uint16_t line
   return i;
 }
 
-#define MAX_PARAM_LEN 22
-
-/**  *****************************************************************
- *  Function: set()
- *  Does:     This routine does all the work to set up a SET
- *            command for various heater parameters.  As such,
- *            it uses a BIG switch statement to differentiate
- *            between the various parameter types and formats
- *            them according to the rules of the heater mfgr.
- * Pass parameters:
- *  uint16  line     the line number (ProgNr)
- *  char  * val      the value to set
- *  bool setcmd      True:  builds a SET msg;
- *                   False: builds an INF msg
- * Parameters passed back:
- *
- * Function value returned:
- *  0         failure (incomplete input data, ..)
- *
- * Global resources used:
- *  Serial instance
- *  bus    instance
- * *************************************************************** */
-int set(uint16_t line      // the ProgNr of the heater parameter
-      , const char *val          // the value to set
-      , bool setcmd)       // true: SET msg; false: INF msg
-{
-  byte msg[33];            // we know the maximum length
-  byte tx_msg[33];
-  int i;
-  uint32_t c;              // command code
-  uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
-  uint8_t param_len;
-
-  // Search the command table from the start for a matching line nbr.
-  i=findLine(line,0,&c);   // find the ProgNr and get the command code
-  if(i<0) return 0;        // no match
-
-  // Get the parameter type from the table row[i]
-  switch(pgm_read_byte(&cmdtbl[i].type)){
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Temperature values, mult=64
-    case VT_TEMP:
-      {
-      uint16_t t=atof(val)*64.0;
-      if(setcmd){
-        param[0]=0x01;
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{ // INF message type (e.g. for room temperature)
-        param[0]=(t >> 8);
-        param[1]= t & 0xff;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // All per cent values
-    case VT_PERCENT:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=t;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-      }
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // All enumeration (list) types
-    // No input values sanity check
-    case VT_ENUM:          // enumeration types
-    case VT_ONOFF: // 1 = On
-    case VT_CLOSEDOPEN: // 1 = geschlossen
-    case VT_YESNO: // 1 = Ja
-    case VT_WEEKDAY: // (1=Mo..7=So)
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;
-      param[1]=t;
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // 2-byte floating point representation
-    // Example: Kennlinie Steilheit, mult=50
-    // No input values sanity check
-    case VT_FP02:
-      {
-      uint16_t t=atof(val)*50.0;
-      param[0]=0x01;
-      param[1]=(t >> 8);
-      param[2]= t & 0xff;
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Example: pressure value, mult=10
-    // No input values sanity check
-    case VT_PRESSURE:
-      {
-      uint8_t t=atof(val)*10.0;
-      param[0]=0x01;
-      param[1]= t;
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
-    // No input values sanity check
-    case VT_UINT:
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 32-bit unsigned integer representation
-    // Minutes, mult=60
-    // Example: HK1 - Einschaltoptimierung
-    // No input values sanity check
-    case VT_MINUTES:
-      {
-      uint32_t t=atoi(val)*60;
-      param[0]=0x01;
-      param[1]=(t >> 24) & 0xff;
-      param[2]=(t >> 16) & 0xff;
-      param[3]=(t >> 8) & 0xff;
-      param[4]= t & 0xff;
-      param_len=5;
-      }
-      break;
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Hours or minutes
-    // No input values sanity check
-    case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
-    case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8) & 0xff;
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Months or minutes
-    // No input values sanity check
-    case VT_MONTHS: //(Wartungsintervall)
-    case VT_MINUTES_SHORT: // ( Fehler - Alarm)
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]= t;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-      }
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // No input values sanity check
-    case VT_DAYS: // (Legionellenfkt. Periodisch)
-    case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;  //enable
-      param[1]= t;
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // No input values sanity check
-    case VT_HOUR_MINUTES: //TODO test it
-      {
-      if(val[0]!='\0'){
-        uint8_t h=atoi(val);
-        uint8_t m=0;
-        while(*val!='\0' && *val!=':') val++;
-        if(*val==':'){
-          val++;
-          m=atoi(val);
-        }
-        param[0]=0x06;  //enable
-        param[1]= h;
-        param[2]= m;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 32-bit unsigned integer representation
-    case VT_DWORD:
-      {
-      if(val[0]!='\0'){
-        uint32_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 24) & 0xff;
-        param[2]=(t >> 16) & 0xff;
-        param[3]=(t >> 8) & 0xff;
-        param[4]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Example: LPB Geräteadresse / Segmentadresse
-    case VT_BYTE: // TODO test it
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;
-      param[1]=t;
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // Example: (Telefon Kundendienst)
-    case VT_STRING:
-      {
-      strncpy((char *)param,val,MAX_PARAM_LEN);
-      param[MAX_PARAM_LEN-1]='\0';
-      param_len=strlen((char *)param)+1;
-      }
-      break;
-    // ---------------------------------------------
-    // Schedule data
-    case VT_DATETIME: // TODO do we have to send INF or SET command?
-      {
-      //S0=dd.mm.yyyy_mm:hh:ss
-      // date and time are transmitted as INF message by the display unit
-      // DISP->ALL  INF    0 Uhrzeit und Datum -  Datum/Zeit: 30.01.2015 23:17:00
-      // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
-      int d,m,y,min,hour,sec;
-      // The caller MUST provide six values for an event
-      if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec))
-        return 0;
-
-      // Send to the PC hardware serial interface (DEBUG)
-      Serial.print("date time: ");
-      Serial.print(d);
-      Serial.print(".");
-      Serial.print(m);
-      Serial.print(".");
-      Serial.print(y);
-      Serial.print(" ");
-      Serial.print(hour);
-      Serial.print(":");
-      Serial.print(min);
-      Serial.print(":");
-      Serial.println(sec);
-
-      // Set up the command payload
-      //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
-      param[0]=0x01; //???
-      param[1]=y-1900;
-      param[2]=m;
-      param[3]=d;
-      param[4]=dayofweek(d,m,y);
-      param[6]=hour;
-      param[7]=min;
-      param[8]=sec;
-      param_len=9;
-      }
-      break;
-    // ---------------------------------------------
-    // Schedule up to three ON-OFF blocks per day; at least one ON-OFF
-    // block must be defined. Begin and end times are given hour minute.
-    case VT_TIMEPROG: // TODO test it
-      {
-      //S502=05:00-22:00|xx:xx-xx:xx|xx:xx-xx:xx
-      //DISP->HEIZ SET  502 Zeitprogramm Heizkreis 1 -  Mi: 1. 05:00 - 22:00 2. --:-- - --:-- 3. --:-- - --:--
-      //DC 8A 00 17 03 3D 05 0A 8E 05 00 16 00 80 00 00 00 80 00 00 00 08 98
-      // Default values if not requested otherwise
-      int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
-      int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
-      int ret;
-      ret=sscanf(val,"%d:%d-%d:%d|%d:%d-%d:%d|%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
-      // we need at least the first period
-      if(ret<4)      // BEGIN hour/minute and END hour/minute
-        return 0;
-      param[0]=h1s;     // minimum definition
-      param[1]=m1s;
-      param[2]=h1e;
-      param[3]=m1e;
-
-      param[4]=h2s;     // use default values if undefined
-      param[5]=m2s;
-      param[6]=h2e;
-      param[7]=m2e;
-
-      param[8]=h3s;     // use default values if undefined
-      param[9]=m3s;
-      param[10]=h3e;
-      param[11]=m3e;
-      param_len=12;
-      }
-      break;
-    // ---------------------------------------------
-    // Define day/month BEGIN and END dates for vacation periods
-    case VT_VACATIONPROG:
-      //DISP->HEIZ SET      3D0509C6 06 00 02 0A 00 00 00 00 17
-      //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[12],msg[11]);
-      param[1]=0;
-      param[2]=0;
-      param[3]=0;
-      param[4]=0;
-      param[5]=0;
-      param[6]=0;
-      param[7]=0;
-      param[8]=0x17; //?
-      param_len=9;
-      if(val[0]!='\0'){
-          int d,m;
-          if(2!=sscanf(val,"%d.%d.",&d,&m))
-            return 0;      // incomplete input data
-          param[0]=0x06;
-          param[2]=m;
-          param[3]=d;
-      }else{
-          param[0]=0x05;
-      }
-      break;
-    // ---------------------------------------------
-    case VT_SUMMERPERIOD: // TODO do we have to send INF or SET command?
-      {
-    // Sommerzeit scheint im DISP gehandelt zu werden
-    // Bei Anzeige werden keine Werte abgefragt. Bei Änderung wird ein INF geschickt.
-    // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
-    // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
-      int d,m;
-      if(2!=sscanf(val,"%d.%d",&d,&m))
-        return 0;
-      param[0]=0;
-      param[1]=0xff;
-      param[2]=m;
-      param[3]=d;
-      param[4]=0xff;
-      param[5]=0xff;
-      param[6]=0xff;
-      param[7]=0xff;
-      param[8]=0x17; //?
-      param_len=9;
-      }
-      break;
-    // ---------------------------------------------
-    case VT_HOURS: // (read only)
-    case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
-    case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
-    case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
-    case VT_FP1: // read only (SW-Version)
-    case VT_ERRORCODE: // read only
-    case VT_UNKNOWN:
-    default:
-      return 0;
-    break;
-  } // endswitch
-
-  // Send a message to PC hardware serial port
-  Serial.print("setting line: ");
-  Serial.print(line);
-  Serial.print(" val: ");
-  SerialPrintRAW(param,param_len);
-  Serial.println();
-
-  uint8_t t=setcmd?TYPE_SET:TYPE_INF;
-
-  // Send telegram to the bus
-  if(!bus.Send(t           // message type
-             , c           // command code
-             , msg         // receive buffer
-             , tx_msg      // xmit buffer
-             , param       // payload
-             , param_len   // payload length
-             , setcmd))    // wait_for_reply
-  {
-    Serial.println("set failed");
-    return 0;
-  }
-
-  // Decode the xmit telegram and send it to the PC serial interface
-  if(verbose) printTelegram(tx_msg);
-
-  // no answer for TYPE_INF
-  if(t!=TYPE_SET) return 1;
-
-  // Decode the rcv telegram and send it to the PC serial interface
-  printTelegram(msg);
-
-  // Expect an acknowledgement to our SET telegram
-  if(msg[4]!=TYPE_ACK){
-    Serial.println("set failed NACK");
-    return 0;
-  }
-
-  return 1;
-} // --- set() ---
-
-/** *****************************************************************
- *  Function:  query()
- *  Does:      Retrieves parameters from the heater controller.
- *             Addresses the controller parameters by line (ProgNr).
- *             The query() function can interrogate a whole range
- *             of ProgNrs, delimited by line_start and line_end
- *             inclusive.
- *  Pass parameters:
- *   uint16 linestart  begin to retrieve at this RogNr
- *   uint16 lineend    stop at this ProgNr
- *   bool   noprint    True:  do not display results in the web client
- *                     False: display results in the web client
- * Parameters passed back:
- *   none
- * Function value returned:
- *   result string
- * Global resources used:
- *   char outBuf[]
- *   Serial instance
- *   bus    instance
- *   client instance
- * *************************************************************** */
-char* query(uint16_t line_start  // begin at this line (ProgNr)
-          , uint16_t line_end    // end with this line (ProgNr)
-          , boolean no_print)    // display in web client?
-{
-  byte msg[33];      // response buffer
-  byte tx_msg[33];   // xmit buffer
-  uint32_t c;        // command code
-  uint16_t line;     // ProgNr
-  int i=0;
-  int idx=0;
-  int retry;
-  char *pvalstr=NULL;
-
-  if (!no_print) {         // display in web client?
-    client.println("<p>"); // yes, begin HTML paragraph
-  }
-  for(line=line_start;line<=line_end;line++){
-    outBufclear();
-    i=findLine(line,idx,&c);
-
-    if(i>=0){
-      idx=i;
-      //Serial.println("found");
-      if(c!=CMD_UNKNOWN){     // send only valid command codes
-        retry=QUERY_RETRIES;
-        while(retry){
-          if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
-
-            // Decode the xmit telegram and send it to the PC serial interface
-            if(verbose) printTelegram(tx_msg);
-
-            // Decode the rcv telegram and send it to the PC serial interface
-            pvalstr=printTelegram(msg);
-            break;   // success, break out of while loop
-          }else{
-            Serial.println("query failed");
-            retry--;          // decrement number of attempts
-          }
-        } // endwhile, maximum number of retries reached
-        if(retry==0)
-          outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
-      }else{
-        //Serial.println("unknown command");
-        //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
-      } // endelse, valid / invalid command codes
-    }else{
-      //Serial.println("line not found");
-      //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
-    } // endelse, line (ProgNr) found / not found
-    if(outBufLen>0){
-      if (!no_print) {  // display result in web client
-        client.println(outBuf);
-        client.println("<br>");
-      }
-    } // endif, outBufLen > 0
-  } // endfor, for each valid line (ProgNr) command within selected range
-
-  if (!no_print) {      // display in web client?
-    client.println("</p>");   // finish HTML paragraph
-  }
-  // TODO: check at least for data length (only used for temperature values)
-  /*
-  int data_len=msg[3]-11;
-  if(data_len==3){
-    returnval = printFIXPOINT(msg,data_len,64.0,1,"");
-  }
-  */
-  return pvalstr;
-} // --- query() ---
-
-/** *****************************************************************
- *  Function:
- *  Does:
- *  Pass parameters:
- *   none
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   char   outBuf[]
- *   bus    instance
- *   Serial instance
- *   client instance
- *   server instance
- * *************************************************************** */
-void loop() {
-  byte  msg[33];                       // response buffer
-  byte  tx_msg[33];                    // xmit buffer
-  char c;
-  const byte MaxArrayElement=252;
-  char  cLineBuffer[MaxArrayElement];  //
-  byte  bPlaceInBuffer;                // index into buffer
-
-  // Monitor the bus and send incoming data to the PC hardware serial
-  // interface.
-  // Separate telegrams after a pause of more than one character time.
-  if(monitor){
-    bus.Monitor();
-  }else{
-    // Listen for incoming messages, identified them by their magic byte.
-    // Method GetMessage() validates length byte and CRC.
-#ifdef USE_BROADCAST
-      if (bus.GetMessage(msg)) { // message was syntactically correct
-
-         // Decode the rcv telegram and send it to the PC serial interface
-         if(verbose) printTelegram(msg);
-         // Is this a broadcast message?
-         if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
-           // Decode the rcv telegram and send it to the PC serial interface
-           printTelegram(msg);
-           // Filter Brenner Status messages (attention: undocumented enum values)
-           uint32_t cmd;
-           cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-           if(cmd==0x05000213) { // TODO 8009 Brenner Status = 0x053d0f66 ?!
-             Serial.print(F("INF: Brennerstatus: "));
-             Serial.println(msg[9]);      // first payload byte
-
-             if(msg[9]==0x04){  // brenner on  (where is this documented?)
-               if(brenner_start==0){        // has not been timed
-                  brenner_start=millis();   // keep current timestamp
-                  brenner_count++;          // increment number of starts
-               }
-             }else{             // brenner off
-               if(brenner_start!=0){        // start has been timed
-                 unsigned long brenner_end;
-                 brenner_end=millis();      // timestamp the end
-                 if(brenner_end >= brenner_start){
-                   brenner_duration+=(brenner_end-brenner_start)/1000;
-                 }else{ // overflow
-                   brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
-                 }
-                 brenner_start=0;
-               } // endif, a previous start has been timed
-             } // endif, brenner is off
-           } // endif, Status Brenner command code
-         } // endif, broadcasts
-      } // endif, GetMessage() returned True
-
-      // At this point drop possible GetMessage() failures silently
-#else
-    if(verbose){
-      // Decode the rcv telegram and send it to the PC serial interface
-      if (bus.GetMessage(msg)) printTelegram(msg);
-    }
-#endif
-  } // endelse, NOT in monitor mode
-
-  // Listen for incoming clients
-  client = server.available();
-  if (client) {
-   // Read characters from client and assemble them in cLineBuffer
-    bPlaceInBuffer=0;            // index into cLineBuffer
-    while (client.connected()) {
-      if (client.available()) {
-        c = client.read();       // read one character
-        Serial.print(c);         // and send it to hardware UART
-
-        if ((c!='\n') && (c!='\r') && (bPlaceInBuffer<MaxArrayElement)){
-          cLineBuffer[bPlaceInBuffer++]=c;
-          continue;
-        }
-        // Got an EOL character
-        Serial.println();
-
-        // Flush any remaining bytes from the client buffer
-        client.flush();
-        // GET / HTTP/1.1 (anforderung website)
-        // GET /710 HTTP/1.0 (befehlseingabe)
-        String urlString = String(cLineBuffer);
-        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-                Serial.println(urlString);
-        urlString.toCharArray(cLineBuffer, MaxArrayElement);
-
-// IPWE START
-          if (urlString == "/ipwe.cgi") {
-            Ipwe();
-            break;
-          }
-          if (urlString == "/leds.cgi?led=0") {
-            LedsCgi(led0);
-            break;
-          }
-          if (urlString == "/leds.cgi?led=1") {
-            LedsCgi(led1);
-            break;
-          }
-          if (urlString == "/status.xml") {
-            StatusXml();
-            break;
-          }
-          if (urlString == "/heating.cgi?1") {
-            Heating("1");
-            break;
-          }
-          if (urlString == "/heating.cgi?0") {
-            Heating("0");
-            break;
-          }
-// IPWE END
-
-        // Set up a pointer to cLineBuffer
-        char *p=cLineBuffer;
-#ifdef PASSKEY
-        // check for valid passkey
-        p=strchr(cLineBuffer+1,'/');
-        if(p==NULL){    // no match
-          break;
-        }
-        *p='\0';     // mark end of string
-        if(strcmp(cLineBuffer+1, PASSKEY)){
-          Serial.println(F("no matching passkey"));
-          webPrintHeader();
-          webPrintFooter();
-          break;
-        }
-        *p='/';
-#endif
-        // simply print the website
-        if(!strcmp(p,"/")){
-          webPrintSite();
-          break;
-        }
-#ifdef ONE_WIRE_BUS
-          if (!strcmp(p,"/temp")) {
-            webPrintHeader();
-            ds18b20();
-            webPrintFooter();
-            break;
-          }
-#endif
-        // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTB",p[1])==NULL){
-          webPrintHeader();
-          webPrintFooter();
-          break;
-        }
-        // setting verbosity level
-        if(p[1]=='V'){
-          p+=2;
-          verbose=atoi(p);
-          webPrintHeader();
-          if(verbose>0){
-            client.println(F("verbose mode activated<br>"));
-          }else{
-            client.println(F("verbose mode deactivated<br>"));
-          }
-          client.println(F("only serial output is affected"));
-          webPrintFooter();
-          break;
-        }
-        // switching monitor on/off
-        if(p[1]=='M'){
-          p+=2;               // hopefully finds a digit there ...
-          monitor=atoi(p);    // .. to convert
-          webPrintHeader();
-          if(monitor>0){
-            client.println(F("monitor activated<br>"));
-          }else{
-            client.println(F("monitor deactivated<br>"));
-          }
-          client.println(F("only serial output is affected"));
-          webPrintFooter();
-          break;
-        }
-        // Send a SET command or an information message
-        // char * cLineBuffer has the following structure:
-        // p[1]          'S' | 'I'
-        // p[3]          ProgNr (digits, any (!) length)
-        // p[3+length]   '='
-        // p[3+length+1] Value, any (!) length
-        // There is only the buffer size which limits to the
-        // permissible lengths, no sanity checks
-        if ( p[1]=='S'        // SET command
-          || p[1]=='I')       // INF information message
-        {
-          int line;
-          bool setcmd= (p[1]=='S'); // True if SET command
-
-          p+=2;               // third position in cLineBuffer
-          if(!isdigit(*p)){   // now we check for digits - nice
-            webPrintHeader();
-            client.println(F("ERROR: invalid parameter line"));
-            webPrintFooter();
-            break;
-          }
-          line=atoi(p);       // convert until non-digit char is found
-          p=strchr(p,'=');    // search for '=' sign
-          if(p==NULL){        // no match
-            webPrintHeader();
-            client.println(F("ERROR: invalid parameter val"));
-            webPrintFooter();
-            break;
-          }
-          p++;                   // position pointer past the '=' sign
-          Serial.print("set ProgNr ");
-          Serial.print(line);    // the ProgNr
-          Serial.print(" = ");
-          Serial.println(p);     // the value
-
-          // Now send it out to the bus
-          if(!set(line,p,setcmd)){
-            webPrintHeader();
-            client.println(F("ERROR: set failed"));
-            webPrintFooter();
-            break;
-          }
-          if(setcmd){            // was this a SET command?
-            webPrintHeader();
-            // Query controller for this value
-            query(line,line,0);  // read value back
-            webPrintFooter();
-          }else{
-            webPrintHeader();
-            webPrintFooter();
-          }
-          break;
-        }
-        // list categories
-        if(p[1]=='K' && !isdigit(p[2])){
-          //list categories
-          webPrintHeader();
-          int len=sizeof(ENUM_CAT);
-          memcpy_P(buffer, &ENUM_CAT,len);
-          buffer[len]=0;
-          for(int cat=0;cat<CAT_UNKNOWN;cat++){
-            outBufclear();
-            printENUM(buffer,len,cat,1);
-            Serial.println();
-            client.println(outBuf);
-            client.println("<br>");
-          }
-          webPrintFooter();
-          break;
-        }
-        // list enum values
-        if(p[1]=='E'){
-          webPrintHeader();
-          uint16_t line = atoi(&p[2]);
-          int i=findLine(line,0,NULL);
-          if(i>=0){
-            // check type
-            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
-              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
-              buffer[enumstr_len]=0;
-
-              uint16_t val;
-              uint16_t c=0;
-              while(c<enumstr_len){
-                if(buffer[c+1]!=' '){
-                val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
-                c++;
-                }else{
-                val=uint16_t(((uint8_t*)buffer)[c]);
-                }
-                //skip leading space
-                c+=2;
-
-                sprintf(outBuf,"%d - %s",val,&buffer[c]);
-                client.println(outBuf);
-                client.println("<br>");
-
-                while(buffer[c]!=0) c++;
-                c++;
-              }
-            }else{
-              client.println(F("ERROR: wrong type"));
-            }
-          }else{
-            client.println(F("ERROR: line not found"));
-          }
-          webPrintFooter();
-          break;
-        }
-        // query reset value
-        if(p[1]=='R'){
-          uint32_t c;
-          webPrintHeader();
-          uint16_t line = atoi(&p[2]);
-          int i=findLine(line,0,&c);
-          if(i<0){
-            client.println(F("ERROR: line not found"));
-          }else{
-            if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
-              Serial.println("set failed");  // to PC hardware serial I/F
-              client.println(F("ERROR: set failed"));
-            }else{
-
-              // Decode the xmit telegram and send it to the PC serial interface
-              if(verbose) printTelegram(tx_msg);
-
-              // Decode the rcv telegram and send it to the PC serial interface
-              printTelegram(msg);   // send to hardware serial interface
-              if(outBufLen>0){
-                client.println(outBuf);
-                client.println("<br>");
-              }
-            }
-          }
-          webPrintFooter();
-          break;
-        }
-        // print queries
-        webPrintHeader();
-        char* range;
-        char* line_start;
-        char* line_end;
-        int start=-1;
-        int end=-1;
-        range = strtok(p,"/");
-        while(range!=0){
-          if(range[0]=='T'){
-#ifdef ONE_WIRE_BUS
-            ds18b20();
-#endif
-          }else if(range[0]=='B'){
-            if(range[1]=='0'){ // reset furnace duration
-              client.println(F("furnace duration is set to zero<br>"));
-              brenner_duration=0;
-              brenner_count=0;
-            }else{
-              // query brenner duration
-              client.print(F("Brenner Laufzeit: "));
-              client.print(brenner_duration);
-              client.println("<br>");
-              client.print(F("Brenner Takte: "));
-              client.print(brenner_count);
-              client.println("<br>");
-            }
-          }else{
-            if(range[0]=='K'){
-              uint8_t cat,search_cat;
-              uint16_t line;
-              int i;
-              uint32_t c;
-              i=0;
-              start=-1;
-              end=-1;
-              search_cat=atoi(&range[1]);
-              c=pgm_read_dword(&cmdtbl[i].cmd);
-              while(c!=CMD_END){
-                cat=pgm_read_byte(&cmdtbl[i].category);
-                if(cat==search_cat){
-                  if(start<0){
-                    line=pgm_read_word(&cmdtbl[i].line);
-                    start=line;
-                  }
-                }else{
-                  if(start>=0){
-                    line=pgm_read_word(&cmdtbl[i-1].line);
-                    end=line;
-                    break;
-                  }
-                }
-                i++;
-                c=pgm_read_dword(&cmdtbl[i].cmd);
-              }
-              if(end<start){
-                end=start;
-              }
-            }else{
-              // split range
-              line_start=range;
-              line_end=strchr(range,'-');
-              if(line_end==NULL){
-                line_end=line_start;
-              }else{
-                *line_end='\0';
-                line_end++;
-              }
-              start=atoi(line_start);
-              end=atoi(line_end);
-            }
-            query(start,end,0);
-          }
-
-          range = strtok(NULL,"/");
-        } // endwhile
-        webPrintFooter();
-        break;
-      } // endif, client available
-    }
-    // give the web browser time to receive the data
-    delay(1);
-    // close the connection:
-    client.stop();
-  } // endif, client
-} // --- loop () ---
 
 /** *****************************************************************
  *  Function: freeRam()
@@ -6048,167 +5062,539 @@ void webPrintSite() {
   webPrintFooter();
 } // --- webPrintSite() ---
 
-/*************************** IPWE Extension **************************************/
-/** *****************************************************************
- *  Function:  Ipwe()
- *  Does:      Sets up HTML code to display a table with sensor readings.
- *             Queries several controller parameters addressed by their
- *             line (ProgNr) and the LED0 output pin.
- *  Pass parameters:
- *   none
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- *  Global resources used:
- *    numSensors
- *    client object
- *    led0   output pin 3
+
+
+#define MAX_PARAM_LEN 22
+
+/**  *****************************************************************
+ *  Function: set()
+ *  Does:     This routine does all the work to set up a SET
+ *            command for various heater parameters.  As such,
+ *            it uses a BIG switch statement to differentiate
+ *            between the various parameter types and formats
+ *            them according to the rules of the heater mfgr.
+ * Pass parameters:
+ *  uint16  line     the line number (ProgNr)
+ *  char  * val      the value to set
+ *  bool setcmd      True:  builds a SET msg;
+ *                   False: builds an INF msg
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *  0         failure (incomplete input data, ..)
+ *
+ * Global resources used:
+ *  Serial instance
+ *  bus    instance
  * *************************************************************** */
-void Ipwe() {
-  webPrintHeader();
-  int sensor_anz = 6;
+int set(uint16_t line      // the ProgNr of the heater parameter
+      , const char *val          // the value to set
+      , bool setcmd)       // true: SET msg; false: INF msg
+{
+  byte msg[33];            // we know the maximum length
+  byte tx_msg[33];
   int i;
-  double ipwe_sensors[sensor_anz];
-  ipwe_sensors[0] = strtod(query(8700,8700,1),NULL);  // outside temperature
-  ipwe_sensors[1] = strtod(query(8743,8743,1),NULL);  // influx temperature
-  ipwe_sensors[2] = strtod(query(8314,8314,1),NULL);  // backflux temperature
-  ipwe_sensors[3] = strtod(query(8310,8310,1),NULL);  // furnace temperature
-  ipwe_sensors[4] = strtod(query(8830,8830,1),NULL);  // potable water temperature
-  ipwe_sensors[5] = !digitalRead(led0)*99+1;          // heater ON/OFF
+  uint32_t c;              // command code
+  uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
+  uint8_t param_len;
 
-  client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (i=0; i < sensor_anz; i++) {
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(i+1);
-    client.print(F("<br></td><td>T"));
-    client.print(i+1);
-    client.print(F("<br></td><td>"));
-    client.print(ipwe_sensors[i]);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-  }
-#ifdef ONE_WIRE_BUS
-  // output of one wire sensors
-  sensors.requestTemperatures();
-  for(i=0;i<numSensors;i++){
-    float t=sensors.getTempCByIndex(i);
+  // Search the command table from the start for a matching line nbr.
+  i=findLine(line,0,&c);   // find the ProgNr and get the command code
+  if(i<0) return 0;        // no match
 
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(sensor_anz+i+1);
-    client.print(F("<br></td><td>T"));
-    client.print(sensor_anz+i+1);
-    client.print(F("<br></td><td>"));
-    client.print(t);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  // Get the parameter type from the table row[i]
+  switch(pgm_read_byte(&cmdtbl[i].type)){
+    // ---------------------------------------------
+    // 16-bit unsigned integer representation
+    // Temperature values, mult=64
+    case VT_TEMP:
+      {
+      uint16_t t=atof(val)*64.0;
+      if(setcmd){
+        param[0]=0x01;
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{ // INF message type (e.g. for room temperature)
+        param[0]=(t >> 8);
+        param[1]= t & 0xff;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // All per cent values
+    case VT_PERCENT:
+      {
+      if(val[0]!='\0'){
+        uint8_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=t;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+      }
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // All enumeration (list) types
+    // No input values sanity check
+    case VT_ENUM:          // enumeration types
+    case VT_ONOFF: // 1 = On
+    case VT_CLOSEDOPEN: // 1 = geschlossen
+    case VT_YESNO: // 1 = Ja
+    case VT_WEEKDAY: // (1=Mo..7=So)
+      {
+      uint8_t t=atoi(val);
+      param[0]=0x01;
+      param[1]=t;
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // 2-byte floating point representation
+    // Example: Kennlinie Steilheit, mult=50
+    // No input values sanity check
+    case VT_FP02:
+      {
+      uint16_t t=atof(val)*50.0;
+      param[0]=0x01;
+      param[1]=(t >> 8);
+      param[2]= t & 0xff;
+      param_len=3;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // Example: pressure value, mult=10
+    // No input values sanity check
+    case VT_PRESSURE:
+      {
+      uint8_t t=atof(val)*10.0;
+      param[0]=0x01;
+      param[1]= t;
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // 16-bit unsigned integer representation
+    // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
+    // No input values sanity check
+    case VT_UINT:
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+    // ---------------------------------------------
+    // 32-bit unsigned integer representation
+    // Minutes, mult=60
+    // Example: HK1 - Einschaltoptimierung
+    // No input values sanity check
+    case VT_MINUTES:
+      {
+      uint32_t t=atoi(val)*60;
+      param[0]=0x01;
+      param[1]=(t >> 24) & 0xff;
+      param[2]=(t >> 16) & 0xff;
+      param[3]=(t >> 8) & 0xff;
+      param[4]= t & 0xff;
+      param_len=5;
+      }
+      break;
+    // ---------------------------------------------
+    // 16-bit unsigned integer representation
+    // Hours or minutes
+    // No input values sanity check
+    case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
+    case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 8) & 0xff;
+        param[2]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // Months or minutes
+    // No input values sanity check
+    case VT_MONTHS: //(Wartungsintervall)
+    case VT_MINUTES_SHORT: // ( Fehler - Alarm)
+      {
+      if(val[0]!='\0'){
+        uint8_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]= t;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+      }
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // No input values sanity check
+    case VT_DAYS: // (Legionellenfkt. Periodisch)
+    case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
+      {
+      uint8_t t=atoi(val);
+      param[0]=0x01;  //enable
+      param[1]= t;
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // No input values sanity check
+    case VT_HOUR_MINUTES: //TODO test it
+      {
+      if(val[0]!='\0'){
+        uint8_t h=atoi(val);
+        uint8_t m=0;
+        while(*val!='\0' && *val!=':') val++;
+        if(*val==':'){
+          val++;
+          m=atoi(val);
+        }
+        param[0]=0x06;  //enable
+        param[1]= h;
+        param[2]= m;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+    // ---------------------------------------------
+    // 32-bit unsigned integer representation
+    case VT_DWORD:
+      {
+      if(val[0]!='\0'){
+        uint32_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 24) & 0xff;
+        param[2]=(t >> 16) & 0xff;
+        param[3]=(t >> 8) & 0xff;
+        param[4]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+        param[3]=0x00;
+        param[4]=0x00;
+      }
+      param_len=5;
+      }
+      break;
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // Example: LPB Geräteadresse / Segmentadresse
+    case VT_BYTE: // TODO test it
+      {
+      uint8_t t=atoi(val);
+      param[0]=0x01;
+      param[1]=t;
+      param_len=2;
+      }
+      break;
+    // ---------------------------------------------
+    // Example: (Telefon Kundendienst)
+    case VT_STRING:
+      {
+      strncpy((char *)param,val,MAX_PARAM_LEN);
+      param[MAX_PARAM_LEN-1]='\0';
+      param_len=strlen((char *)param)+1;
+      }
+      break;
+    // ---------------------------------------------
+    // Schedule data
+    case VT_DATETIME: // TODO do we have to send INF or SET command?
+      {
+      //S0=dd.mm.yyyy_mm:hh:ss
+      // date and time are transmitted as INF message by the display unit
+      // DISP->ALL  INF    0 Uhrzeit und Datum -  Datum/Zeit: 30.01.2015 23:17:00
+      // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
+      int d,m,y,min,hour,sec;
+      // The caller MUST provide six values for an event
+      if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec))
+        return 0;
+
+      // Send to the PC hardware serial interface (DEBUG)
+      Serial.print("date time: ");
+      Serial.print(d);
+      Serial.print(".");
+      Serial.print(m);
+      Serial.print(".");
+      Serial.print(y);
+      Serial.print(" ");
+      Serial.print(hour);
+      Serial.print(":");
+      Serial.print(min);
+      Serial.print(":");
+      Serial.println(sec);
+
+      // Set up the command payload
+      //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
+      param[0]=0x01; //???
+      param[1]=y-1900;
+      param[2]=m;
+      param[3]=d;
+      param[4]=dayofweek(d,m,y);
+      param[6]=hour;
+      param[7]=min;
+      param[8]=sec;
+      param_len=9;
+      }
+      break;
+    // ---------------------------------------------
+    // Schedule up to three ON-OFF blocks per day; at least one ON-OFF
+    // block must be defined. Begin and end times are given hour minute.
+    case VT_TIMEPROG: // TODO test it
+      {
+      //S502=05:00-22:00|xx:xx-xx:xx|xx:xx-xx:xx
+      //DISP->HEIZ SET  502 Zeitprogramm Heizkreis 1 -  Mi: 1. 05:00 - 22:00 2. --:-- - --:-- 3. --:-- - --:--
+      //DC 8A 00 17 03 3D 05 0A 8E 05 00 16 00 80 00 00 00 80 00 00 00 08 98
+      // Default values if not requested otherwise
+      int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
+      int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
+      int ret;
+      ret=sscanf(val,"%d:%d-%d:%d|%d:%d-%d:%d|%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      // we need at least the first period
+      if(ret<4)      // BEGIN hour/minute and END hour/minute
+        return 0;
+      param[0]=h1s;     // minimum definition
+      param[1]=m1s;
+      param[2]=h1e;
+      param[3]=m1e;
+
+      param[4]=h2s;     // use default values if undefined
+      param[5]=m2s;
+      param[6]=h2e;
+      param[7]=m2e;
+
+      param[8]=h3s;     // use default values if undefined
+      param[9]=m3s;
+      param[10]=h3e;
+      param[11]=m3e;
+      param_len=12;
+      }
+      break;
+    // ---------------------------------------------
+    // Define day/month BEGIN and END dates for vacation periods
+    case VT_VACATIONPROG:
+      //DISP->HEIZ SET      3D0509C6 06 00 02 0A 00 00 00 00 17
+      //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[12],msg[11]);
+      param[1]=0;
+      param[2]=0;
+      param[3]=0;
+      param[4]=0;
+      param[5]=0;
+      param[6]=0;
+      param[7]=0;
+      param[8]=0x17; //?
+      param_len=9;
+      if(val[0]!='\0'){
+          int d,m;
+          if(2!=sscanf(val,"%d.%d.",&d,&m))
+            return 0;      // incomplete input data
+          param[0]=0x06;
+          param[2]=m;
+          param[3]=d;
+      }else{
+          param[0]=0x05;
+      }
+      break;
+    // ---------------------------------------------
+    case VT_SUMMERPERIOD: // TODO do we have to send INF or SET command?
+      {
+    // Sommerzeit scheint im DISP gehandelt zu werden
+    // Bei Anzeige werden keine Werte abgefragt. Bei Änderung wird ein INF geschickt.
+    // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
+    // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
+      int d,m;
+      if(2!=sscanf(val,"%d.%d",&d,&m))
+        return 0;
+      param[0]=0;
+      param[1]=0xff;
+      param[2]=m;
+      param[3]=d;
+      param[4]=0xff;
+      param[5]=0xff;
+      param[6]=0xff;
+      param[7]=0xff;
+      param[8]=0x17; //?
+      param_len=9;
+      }
+      break;
+    // ---------------------------------------------
+    case VT_HOURS: // (read only)
+    case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
+    case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
+    case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
+    case VT_FP1: // read only (SW-Version)
+    case VT_ERRORCODE: // read only
+    case VT_UNKNOWN:
+    default:
+      return 0;
+    break;
+  } // endswitch
+
+  // Send a message to PC hardware serial port
+  Serial.print("setting line: ");
+  Serial.print(line);
+  Serial.print(" val: ");
+  SerialPrintRAW(param,param_len);
+  Serial.println();
+
+  uint8_t t=setcmd?TYPE_SET:TYPE_INF;
+
+  // Send telegram to the bus
+  if(!bus.Send(t           // message type
+             , c           // command code
+             , msg         // receive buffer
+             , tx_msg      // xmit buffer
+             , param       // payload
+             , param_len   // payload length
+             , setcmd))    // wait_for_reply
+  {
+    Serial.println("set failed");
+    return 0;
   }
-#endif
-  client.print(F("</tbody></table></form>"));
-  webPrintFooter();
-} // --- Ipwe() ---
+
+  // Decode the xmit telegram and send it to the PC serial interface
+  if(verbose) printTelegram(tx_msg);
+
+  // no answer for TYPE_INF
+  if(t!=TYPE_SET) return 1;
+
+  // Decode the rcv telegram and send it to the PC serial interface
+  printTelegram(msg);
+
+  // Expect an acknowledgement to our SET telegram
+  if(msg[4]!=TYPE_ACK){
+    Serial.println("set failed NACK");
+    return 0;
+  }
+
+  return 1;
+} // --- set() ---
 
 /** *****************************************************************
- *  Function:  StatusXml()
- *  Does:      Sets up XML code to display Volt, LED0 and LED1 status.
+ *  Function:  query()
+ *  Does:      Retrieves parameters from the heater controller.
+ *             Addresses the controller parameters by line (ProgNr).
+ *             The query() function can interrogate a whole range
+ *             of ProgNrs, delimited by line_start and line_end
+ *             inclusive.
  *  Pass parameters:
+ *   uint16 linestart  begin to retrieve at this RogNr
+ *   uint16 lineend    stop at this ProgNr
+ *   bool   noprint    True:  do not display results in the web client
+ *                     False: display results in the web client
+ * Parameters passed back:
  *   none
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- *  Global resources used:
- *   client object
- *   led0   output pin 3
+ * Function value returned:
+ *   result string
+ * Global resources used:
+ *   char outBuf[]
+ *   Serial instance
+ *   bus    instance
+ *   client instance
  * *************************************************************** */
-// Relais Status
-void StatusXml() {
-  client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html"));
-  client.println();
-  client.print(F("<status><volts>5</volts><led0>"));
-  client.print(!digitalRead(led0));
-  client.print(F("</led0><led1>"));
-  client.print(!digitalRead(led1));
-  client.print(F("</led1></status>"));
-} // --- StatusXml() ---
+char* query(uint16_t line_start  // begin at this line (ProgNr)
+          , uint16_t line_end    // end with this line (ProgNr)
+          , boolean no_print)    // display in web client?
+{
+  byte msg[33];      // response buffer
+  byte tx_msg[33];   // xmit buffer
+  uint32_t c;        // command code
+  uint16_t line;     // ProgNr
+  int i=0;
+  int idx=0;
+  int retry;
+  char *pvalstr=NULL;
 
-/** *****************************************************************
- *  Function:  LedsCgi()
- *  Does:      Toggles one of several outputs between LOW and HIGH.
- *  Pass parameters:
- *   int led   which output to toggle.  No range given or checked.
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- *  Global resources used:
- *    client object
- *    ledx, x=?      one of several output pins
- * *************************************************************** */
-//Switch Relais
-void LedsCgi(int led) {
-  const char* ledstatus;
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
-  client.println("Connnection: close");
-  client.println();
-  // This code implies that HIGH == true and LOW == false
-  if (digitalRead(led) == HIGH)  // output is HIGH
-    digitalWrite(led, LOW);      // toggle
-  else                           // output is LOW
-    digitalWrite(led, HIGH);     // toggle
-  client.print(F("Success! "));  // how would we know?!
-
-  // Read output pin again and display the inverse
-  client.print(!digitalRead(led));
-  if (!digitalRead(led) == LOW) {
-    // output is HIGH
-    ledstatus = "0";    // implies Frostschutz if set() is called
-  } else {
-    // output is LOW
-    ledstatus = "1";    // implies Automatik if set() is called
+  if (!no_print) {         // display in web client?
+    client.println("<p>"); // yes, begin HTML paragraph
   }
-  // Zusätzlich (bzw. ggf. alternativ) noch Wechsel zwischen
-  // Automatik- und Frostschutzmodus
-//  set(700,ledstatus,true);
-} // --- LedsCgi() ---
+  for(line=line_start;line<=line_end;line++){
+    outBufclear();
+    i=findLine(line,idx,&c);
 
-/** *****************************************************************
- *  Function:  Heating()
- *  Does:      Controls a relay to turn the heater on or off.  Sets
- *             Betriebsart HK1 to the ENUM700 value.  Does NOT check
- *             whether status is within ENUM700 constraints.
- *  Pass parameters:
- *   char* status    '1'   Turns heater ON  and sets Automatikbetrieb
- *                   '0'   Turns heater OFF and sets Frostschutzbetrieb
- *        anything else    Turns heater OFF
- *  Parameters passed back:
- *   char* status     unchanged
- *  Function value returned:
- *   none
- *  Global resources used:
- *   client object
- *   led0   output pin 3
- * *************************************************************** */
-//Heizung an-/abschalten
-void Heating(const char* status) {
-  client.println("HTTP/1.1 200 OK");
-  client.println("Content-Type: text/html");
-  client.println("Connnection: close");
-  client.println();
-  if (!strcmp(status,"1")) {
-    digitalWrite(led0, LOW);  // turn heater ON
-  } else {
-    digitalWrite(led0, HIGH); // turn heater OFF
+    if(i>=0){
+      idx=i;
+      //Serial.println("found");
+      if(c!=CMD_UNKNOWN){     // send only valid command codes
+        retry=QUERY_RETRIES;
+        while(retry){
+          if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
+
+            // Decode the xmit telegram and send it to the PC serial interface
+            if(verbose) printTelegram(tx_msg);
+
+            // Decode the rcv telegram and send it to the PC serial interface
+            pvalstr=printTelegram(msg);
+            break;   // success, break out of while loop
+          }else{
+            Serial.println("query failed");
+            retry--;          // decrement number of attempts
+          }
+        } // endwhile, maximum number of retries reached
+        if(retry==0)
+          outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+      }else{
+        //Serial.println("unknown command");
+        //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
+      } // endelse, valid / invalid command codes
+    }else{
+      //Serial.println("line not found");
+      //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
+    } // endelse, line (ProgNr) found / not found
+    if(outBufLen>0){
+      if (!no_print) {  // display result in web client
+        client.println(outBuf);
+        client.println("<br>");
+      }
+    } // endif, outBufLen > 0
+  } // endfor, for each valid line (ProgNr) command within selected range
+
+  if (!no_print) {      // display in web client?
+    client.println("</p>");   // finish HTML paragraph
   }
-  client.print(F("Success! "));  // how would we know?!
-  client.print(status);
-  // Zusätzlich (bzw. ggf. alternativ) noch Wechsel zwischen
-  // Automatik- ('1') und Frostschutzmodus ('0')
-  // Was hilft es, zuerst die Heizung auszuschalten und dann noch eine
-  // Betriebsart zu setzen?
-  // Keine Pruefung, ob 'status' im Wertebereich von ENUM700 liegt!
-  set(700,status,true);    // set Betriebsart HK1
-} // --- Heating() ---
+  // TODO: check at least for data length (only used for temperature values)
+  /*
+  int data_len=msg[3]-11;
+  if(data_len==3){
+    returnval = printFIXPOINT(msg,data_len,64.0,1,"");
+  }
+  */
+  return pvalstr;
+} // --- query() ---
+
+
 
 #ifdef ONE_WIRE_BUS
 
@@ -6251,3 +5637,534 @@ void ds18b20(void) {
   //webPrintFooter();
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
+
+
+/*************************** IPWE Extension **************************************/
+/** *****************************************************************
+ *  Function:  Ipwe()
+ *  Does:      Sets up HTML code to display a table with sensor readings.
+ *             Queries several controller parameters addressed by their
+ *             line (ProgNr) and the LED0 output pin.
+ *  Pass parameters:
+ *   none
+ *  Parameters passed back:
+ *   none
+ *  Function value returned:
+ *   none
+ *  Global resources used:
+ *    numSensors
+ *    client object
+ *    led0   output pin 3
+ * *************************************************************** */
+void Ipwe() {
+  webPrintHeader();
+  int sensor_anz = 6;
+  int i;
+  double ipwe_sensors[sensor_anz];
+  ipwe_sensors[0] = strtod(query(8700,8700,1),NULL);  // outside temperature
+  ipwe_sensors[1] = strtod(query(8743,8743,1),NULL);  // influx temperature
+  ipwe_sensors[2] = strtod(query(8314,8314,1),NULL);  // backflux temperature
+  ipwe_sensors[3] = strtod(query(8310,8310,1),NULL);  // furnace temperature
+  ipwe_sensors[4] = strtod(query(8830,8830,1),NULL);  // potable water temperature
+  ipwe_sensors[5] = !digitalRead(led_pin[0])*99+1;          // heater ON/OFF
+
+  client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  for (i=0; i < sensor_anz; i++) {
+    client.print(F("<tr><td>T<br></td><td>"));
+    client.print(i+1);
+    client.print(F("<br></td><td>T"));
+    client.print(i+1);
+    client.print(F("<br></td><td>"));
+    client.print(ipwe_sensors[i]);
+    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  }
+#ifdef ONE_WIRE_BUS
+  // output of one wire sensors
+  sensors.requestTemperatures();
+  for(i=0;i<numSensors;i++){
+    float t=sensors.getTempCByIndex(i);
+
+    client.print(F("<tr><td>T<br></td><td>"));
+    client.print(sensor_anz+i+1);
+    client.print(F("<br></td><td>T"));
+    client.print(sensor_anz+i+1);
+    client.print(F("<br></td><td>"));
+    client.print(t);
+    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  }
+#endif
+  client.print(F("</tbody></table></form>"));
+  webPrintFooter();
+} // --- Ipwe() ---
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *   none
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   char   outBuf[]
+ *   bus    instance
+ *   Serial instance
+ *   client instance
+ *   server instance
+ * *************************************************************** */
+void loop() {
+  byte  msg[33];                       // response buffer
+  byte  tx_msg[33];                    // xmit buffer
+  char c;
+  const byte MaxArrayElement=252;
+  char  cLineBuffer[MaxArrayElement];  //
+  byte  bPlaceInBuffer;                // index into buffer
+
+  // Monitor the bus and send incoming data to the PC hardware serial
+  // interface.
+  // Separate telegrams after a pause of more than one character time.
+  if(monitor){
+    bus.Monitor();
+  }else{
+    // Listen for incoming messages, identified them by their magic byte.
+    // Method GetMessage() validates length byte and CRC.
+#ifdef USE_BROADCAST
+      if (bus.GetMessage(msg)) { // message was syntactically correct
+
+         // Decode the rcv telegram and send it to the PC serial interface
+         if(verbose) printTelegram(msg);
+         // Is this a broadcast message?
+         if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
+           // Decode the rcv telegram and send it to the PC serial interface
+           printTelegram(msg);
+           // Filter Brenner Status messages (attention: undocumented enum values)
+           uint32_t cmd;
+           cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+           if(cmd==0x05000213) { // TODO 8009 Brenner Status = 0x053d0f66 ?!
+             Serial.print(F("INF: Brennerstatus: "));
+             Serial.println(msg[9]);      // first payload byte
+
+             if(msg[9]==0x04){  // brenner on  (where is this documented?)
+               if(brenner_start==0){        // has not been timed
+                  brenner_start=millis();   // keep current timestamp
+                  brenner_count++;          // increment number of starts
+               }
+             }else{             // brenner off
+               if(brenner_start!=0){        // start has been timed
+                 unsigned long brenner_end;
+                 brenner_end=millis();      // timestamp the end
+                 if(brenner_end >= brenner_start){
+                   brenner_duration+=(brenner_end-brenner_start)/1000;
+                 }else{ // overflow
+                   brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
+                 }
+                 brenner_start=0;
+               } // endif, a previous start has been timed
+             } // endif, brenner is off
+           } // endif, Status Brenner command code
+         } // endif, broadcasts
+      } // endif, GetMessage() returned True
+
+      // At this point drop possible GetMessage() failures silently
+#else
+    if(verbose){
+      // Decode the rcv telegram and send it to the PC serial interface
+      if (bus.GetMessage(msg)) printTelegram(msg);
+    }
+#endif
+  } // endelse, NOT in monitor mode
+
+  // Listen for incoming clients
+  client = server.available();
+  if (client) {
+   // Read characters from client and assemble them in cLineBuffer
+    bPlaceInBuffer=0;            // index into cLineBuffer
+    while (client.connected()) {
+      if (client.available()) {
+        c = client.read();       // read one character
+        Serial.print(c);         // and send it to hardware UART
+
+        if ((c!='\n') && (c!='\r') && (bPlaceInBuffer<MaxArrayElement)){
+          cLineBuffer[bPlaceInBuffer++]=c;
+          continue;
+        }
+        // Got an EOL character
+        Serial.println();
+
+        // Flush any remaining bytes from the client buffer
+        client.flush();
+        // GET / HTTP/1.1 (anforderung website)
+        // GET /710 HTTP/1.0 (befehlseingabe)
+        String urlString = String(cLineBuffer);
+        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
+                Serial.println(urlString);
+        urlString.toCharArray(cLineBuffer, MaxArrayElement);
+
+        // Set up a pointer to cLineBuffer
+        char *p=cLineBuffer;
+#ifdef PASSKEY
+        // check for valid passkey
+        p=strchr(cLineBuffer+1,'/');
+        if(p==NULL){    // no match
+          break;
+        }
+        *p='\0';     // mark end of string
+        if(strcmp(cLineBuffer+1, PASSKEY)){
+          Serial.println(F("no matching passkey"));
+          webPrintHeader();
+          webPrintFooter();
+          break;
+        }
+        *p='/';
+#endif
+        // simply print the website
+        if(!strcmp(p,"/")){
+          webPrintSite();
+          break;
+        }
+#ifdef ONE_WIRE_BUS
+          if (!strcmp(p,"/temp")) {
+            webPrintHeader();
+            ds18b20();
+            webPrintFooter();
+            break;
+          }
+#endif
+        // Answer to unknown requests
+        if(!isdigit(p[1]) && strchr("KSIREVMTBG",p[1])==NULL){
+          webPrintHeader();
+          webPrintFooter();
+          break;
+        }
+        // setting verbosity level
+        if(p[1]=='V'){
+          p+=2;
+          verbose=atoi(p);
+          webPrintHeader();
+          if(verbose>0){
+            client.println(F("verbose mode activated<br>"));
+          }else{
+            client.println(F("verbose mode deactivated<br>"));
+          }
+          client.println(F("only serial output is affected"));
+          webPrintFooter();
+          break;
+        }
+        // switching monitor on/off
+        if(p[1]=='M'){
+          p+=2;               // hopefully finds a digit there ...
+          monitor=atoi(p);    // .. to convert
+          webPrintHeader();
+          if(monitor>0){
+            client.println(F("monitor activated<br>"));
+          }else{
+            client.println(F("monitor deactivated<br>"));
+          }
+          client.println(F("only serial output is affected"));
+          webPrintFooter();
+          break;
+        }
+
+        // Send a SET command or an information message
+        // char * cLineBuffer has the following structure:
+        // p[1]          'S' | 'I'
+        // p[3]          ProgNr (digits, any (!) length)
+        // p[3+length]   '='
+        // p[3+length+1] Value, any (!) length
+        // There is only the buffer size which limits to the
+        // permissible lengths, no sanity checks
+        if ( p[1]=='S'        // SET command
+          || p[1]=='I')       // INF information message
+        {
+          int line;
+          bool setcmd= (p[1]=='S'); // True if SET command
+
+          p+=2;               // third position in cLineBuffer
+          if(!isdigit(*p)){   // now we check for digits - nice
+            webPrintHeader();
+            client.println(F("ERROR: invalid parameter line"));
+            webPrintFooter();
+            break;
+          }
+          line=atoi(p);       // convert until non-digit char is found
+          p=strchr(p,'=');    // search for '=' sign
+          if(p==NULL){        // no match
+            webPrintHeader();
+            client.println(F("ERROR: invalid parameter val"));
+            webPrintFooter();
+            break;
+          }
+          p++;                   // position pointer past the '=' sign
+          Serial.print("set ProgNr ");
+          Serial.print(line);    // the ProgNr
+          Serial.print(" = ");
+          Serial.println(p);     // the value
+
+          // Now send it out to the bus
+          if(!set(line,p,setcmd)){
+            webPrintHeader();
+            client.println(F("ERROR: set failed"));
+            webPrintFooter();
+            break;
+          }
+          if(setcmd){            // was this a SET command?
+            webPrintHeader();
+            // Query controller for this value
+            query(line,line,0);  // read value back
+            webPrintFooter();
+          }else{
+            webPrintHeader();
+            webPrintFooter();
+          }
+          break;
+        }
+        // list categories
+        if(p[1]=='K' && !isdigit(p[2])){
+          //list categories
+          webPrintHeader();
+          int len=sizeof(ENUM_CAT);
+          memcpy_P(buffer, &ENUM_CAT,len);
+          buffer[len]=0;
+          for(int cat=0;cat<CAT_UNKNOWN;cat++){
+            outBufclear();
+            printENUM(buffer,len,cat,1);
+            Serial.println();
+            client.println(outBuf);
+            client.println("<br>");
+          }
+          webPrintFooter();
+          break;
+        }
+        // list enum values
+        if(p[1]=='E'){
+          webPrintHeader();
+          uint16_t line = atoi(&p[2]);
+          int i=findLine(line,0,NULL);
+          if(i>=0){
+            // check type
+            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
+              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
+              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
+              buffer[enumstr_len]=0;
+
+              uint16_t val;
+              uint16_t c=0;
+              while(c<enumstr_len){
+                if(buffer[c+1]!=' '){
+                  val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                  c++;
+                }else{
+                  val=uint16_t(((uint8_t*)buffer)[c]);
+                }
+                //skip leading space
+                c+=2;
+
+                sprintf(outBuf,"%d - %s",val,&buffer[c]);
+                client.println(outBuf);
+                client.println("<br>");
+
+                while(buffer[c]!=0) c++;
+                c++;
+              }
+            }else{
+              client.println(F("ERROR: wrong type"));
+            }
+          }else{
+            client.println(F("ERROR: line not found"));
+          }
+          webPrintFooter();
+          break;
+        }
+        // query reset value
+        if(p[1]=='R'){
+          uint32_t c;
+          webPrintHeader();
+          uint16_t line = atoi(&p[2]);
+          int i=findLine(line,0,&c);
+          if(i<0){
+            client.println(F("ERROR: line not found"));
+          }else{
+            if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
+              Serial.println("set failed");  // to PC hardware serial I/F
+              client.println(F("ERROR: set failed"));
+            }else{
+
+              // Decode the xmit telegram and send it to the PC serial interface
+              if(verbose) printTelegram(tx_msg);
+
+              // Decode the rcv telegram and send it to the PC serial interface
+              printTelegram(msg);   // send to hardware serial interface
+              if(outBufLen>0){
+                client.println(outBuf);
+                client.println("<br>");
+              }
+            }
+          }
+          webPrintFooter();
+          break;
+        }
+        // print queries
+        webPrintHeader();
+        char* range;
+        char* line_start;
+        char* line_end;
+        int start=-1;
+        int end=-1;
+        range = strtok(p,"/");
+        while(range!=0){
+          if(range[0]=='T'){
+#ifdef ONE_WIRE_BUS
+            ds18b20();
+#endif
+          }else if(range[0]=='G'){ // handle gpio command
+            uint8_t val;
+            uint8_t pin;
+            p=range+2;
+            if(!isdigit(*p)){   // now we check for digits
+              client.println(F("ERROR: invalid parameter line"));
+              break;
+            }
+            pin=(uint8_t)atoi(p);       // convert until non-digit char is found
+            p=strchr(p,'=');    // search for '=' sign
+            if(p==NULL){        // no match -> query value
+              val=digitalRead(pin);
+            }else{ // set value
+              p++;
+              if(!strncasecmp(p,"on",2) || !strncasecmp(p,"high",2) || *p=='1'){
+                val=HIGH;
+                digitalWrite(pin, val);
+              }else{
+                val=LOW;
+              }
+              digitalWrite(pin, val);
+              pinMode(pin, OUTPUT); // TODO: does this case a problem if already set as output?
+            }
+            client.print(F("GPIO"));
+            client.print(pin);
+            client.print(F(": "));
+            client.print(val!=LOW?F("HIGH"):F("LOW"));
+          }else if(range[0]=='B'){
+            if(range[1]=='0'){ // reset furnace duration
+              client.println(F("furnace duration is set to zero<br>"));
+              brenner_duration=0;
+              brenner_count=0;
+            }else{
+              // query brenner duration
+              client.print(F("Brenner Laufzeit: "));
+              client.print(brenner_duration);
+              client.println("<br>");
+              client.print(F("Brenner Takte: "));
+              client.print(brenner_count);
+              client.println("<br>");
+            }
+          }else{
+            if(range[0]=='K'){
+              uint8_t cat,search_cat;
+              uint16_t line;
+              int i;
+              uint32_t c;
+              i=0;
+              start=-1;
+              end=-1;
+              search_cat=atoi(&range[1]);
+              c=pgm_read_dword(&cmdtbl[i].cmd);
+              while(c!=CMD_END){
+                cat=pgm_read_byte(&cmdtbl[i].category);
+                if(cat==search_cat){
+                  if(start<0){
+                    line=pgm_read_word(&cmdtbl[i].line);
+                    start=line;
+                  }
+                }else{
+                  if(start>=0){
+                    line=pgm_read_word(&cmdtbl[i-1].line);
+                    end=line;
+                    break;
+                  }
+                }
+                i++;
+                c=pgm_read_dword(&cmdtbl[i].cmd);
+              }
+              if(end<start){
+                end=start;
+              }
+            }else{
+              // split range
+              line_start=range;
+              line_end=strchr(range,'-');
+              if(line_end==NULL){
+                line_end=line_start;
+              }else{
+                *line_end='\0';
+                line_end++;
+              }
+              start=atoi(line_start);
+              end=atoi(line_end);
+            }
+            query(start,end,0);
+          }
+
+          range = strtok(NULL,"/");
+        } // endwhile
+        webPrintFooter();
+        break;
+      } // endif, client available
+    }
+    // give the web browser time to receive the data
+    delay(1);
+    // close the connection:
+    client.stop();
+  } // endif, client
+} // --- loop () ---
+
+/** *****************************************************************
+ *  Function: setup()
+ *  Does:     Sets up the Arduino including its Ethernet shield.
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  numSensors
+ *  server instance
+ *  sensors instance
+ *  Serial instance
+ *  Ethernet instance
+ * *************************************************************** */
+void setup() {
+  // The computer hardware serial interface #0:
+  //   115,800 bps, 8 data bits, no parity
+  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
+  Serial.println(F("READY"));
+  Serial.print(F("free RAM:"));
+  Serial.println(freeRam());
+
+  for(byte i=0;i<MAX_LED_IDX;i++){
+    digitalWrite(led_pin[i], HIGH);
+    pinMode(led_pin[i], OUTPUT);
+  }
+
+  // enable w5100 SPI
+  pinMode(10,OUTPUT);
+  digitalWrite(10,LOW);
+
+  // disable SD Card
+  pinMode(4,OUTPUT);
+  digitalWrite(4,HIGH);
+
+  // start the Ethernet connection and the server:
+  Ethernet.begin(mac, ip);
+  server.begin();
+
+#ifdef ONE_WIRE_BUS
+  // check ds18b20 sensors
+  sensors.begin();
+  numSensors=sensors.getDeviceCount();
+  Serial.print("numSensors: ");
+  Serial.println(numSensors);
+#endif
+}
+
