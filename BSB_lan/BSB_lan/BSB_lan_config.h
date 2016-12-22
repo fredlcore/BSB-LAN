@@ -31,7 +31,6 @@
  *  The IP address will be dependent on your local network:
 */
 byte mac[] = { 0x64, 0x66, 0xB3, 0x2A, 0xA7, 0xC3 };
-byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 /*
  * Initialize the Ethernet server library
@@ -44,6 +43,9 @@ EthernetServer server(80);
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
 BSB bus(68,69);
+
+// Protect these pins from accidental GPIO access
+byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 // EXPERIMENTAL:
 // If defined, the heating burner ON time is accumulated using broadcast messages
