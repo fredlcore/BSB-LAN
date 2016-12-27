@@ -12,7 +12,6 @@
 
 #define PASSKEY  "1234"
 
-
 /* select your heating system (default may work for other systems) */
 
 //#define THISION
@@ -23,8 +22,10 @@
 /*
  * Define the pin for one wire temperature sensors
 */
-//#define ONE_WIRE_BUS 6
+//#define ONE_WIRE_BUS 3
 
+// Activate DHT temperature/humidity sensors
+//#define DHT_BUS 2,3
 
 /*
  *  Enter a MAC address and IP address for your controller below.
@@ -56,6 +57,9 @@ byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 6
 // hardware serial interface
 byte verbose = 0;
 byte monitor = 0;
+
+// Create 24h averages from these parameters
+int avg_parameters[] = {8700, 8326};
 
 // Parameters to be displayed in IPWE extension
 int bsb_parameters[] = {
