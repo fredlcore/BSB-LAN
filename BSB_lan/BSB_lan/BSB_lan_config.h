@@ -59,7 +59,10 @@ byte verbose = 0;
 byte monitor = 0;
 
 // Create 24h averages from these parameters
-int avg_parameters[] = {8700, 8326};
+int avg_parameters[] = {
+  8700,                   // Außentemperatur
+  8326,                   // Brenner-Modulation
+};
 
 // Parameters to be displayed in IPWE extension
 int bsb_parameters[] = {
