@@ -64,6 +64,9 @@ int avg_parameters[] = {
   8326,                   // Brenner-Modulation
 };
 
+// Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
+#define IPWE
+
 // Parameters to be displayed in IPWE extension
 int bsb_parameters[] = {
   8700,                   // Außentemperatur
