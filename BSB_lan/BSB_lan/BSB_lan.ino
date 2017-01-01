@@ -3,7 +3,7 @@
  *
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
- *
+ *n
  * Author: Gero Schumacher (gero.schumacher@gmail.com)
  *        (based on the code and work from many other developers. Many thanks!)
  *
@@ -12,7 +12,7 @@
  * Version:
  *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
- *       0.6  - 02.02.2015
+ *       0.6m  - 02.02.2015
  *       0.7  - 06.02.2015
  *       0.8  - 05.03.2015
  *       0.9  - 09.03.2015
@@ -26,15 +26,26 @@
  *       0.16  - 20.11.2016
  *       0.17  - 20.12.2016
  *       0.17a - 20.12.2016
- *       0.18  - 20.12.2016
+ *       0.18  - 22.12.2016
+ *       0.19  - 01.01.2017
  *
  * Changelog:
+ *       version 0.19
+ *        - added humidity command "H", currently for DHT22 sensors
+ *        - added 24h average command "A", define parameters in BSB_lan_config.h
+ *        - removed trailing whitespace from menu strings
+ *        - fixed command id 0x053D04A2 for THISION heaters
+ *        - included Rob Tillaart's DHT library because there are various libraries implementing the protocol and this one is used in the code for its ability to address multiple sensors with one object.
+ *        - removed /temp URL parameter as it is a duplicate of /T
+ *        - included loop to display DHT22 sensors in IPWE
+ *        - making compiling IPWE extensions optional (#define IPWE)
  *       version 0.18
  *        - split off configuration into bsb_lan_config.h
  *        - split off command definitions into bsb_lan_defs.h
  *        - changed GPIO return values from LOW/HIGH to 1/0
  *        - reactivated and updated IPWE (define parameters in config)
  *        - check for protected pins when accessing GPIO (define in config)
+ *        - added schematics and PCB files to new subfolder "schematics"
  *       version 0.17a
  *        - minor errors corrected
  *       version 0.17
@@ -97,6 +108,7 @@
  *        - added some images of the BSB adapter
  *
  */
+
 #include <avr/pgmspace.h>
 #include "BSBSoftwareSerial.h"
 #include "bsb.h"
@@ -123,6 +135,19 @@ EthernetClient client;
 
   int numSensors;
 #endif
+
+#ifdef DHT_BUS
+  #include "dht.h"
+  int DHT_Pins[] = {DHT_BUS};
+  dht DHT;
+#endif
+
+static unsigned long nextAvgTime = millis();
+int numAverages = sizeof(avg_parameters) / sizeof(int);
+double *avgValues = new double[numAverages];
+double *avgValues_Old = new double[numAverages];
+double *avgValues_Current = new double[numAverages];
+int avgCounter = 1;
 
 // variables for handling of broadcast messages
 unsigned long brenner_start   = 0;
@@ -1296,7 +1321,9 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Mn</td> <td>activate/deactivate monitor functionality (n=0 disable, n=1 enable)</td></tr>"));
   client.print(F(" <tr><td>/Gxx</td> <td>query GPIO pin xx</td></tr>"));
   client.print(F(" <tr><td>/Gxx=y</td> <td>set GPIO pin xx to high(1) or low(0)</td></tr>"));
+  client.print(F(" <tr><td>/A</td> <td>show 24h averages of selected parameters (define in BSB_lan_config.h)</td></tr>"));
   client.print(F(" <tr><td>/T</td> <td>query values of connected ds18b20 temperature sensors (optional)</td></tr>"));
+  client.print(F(" <tr><td>/H</td> <td>query values of connected DHT22 humidity/temperature sensors (optional)</td></tr>"));
 #ifdef USE_BROADCAST
   client.print(F(" <tr><td>/B</td> <td>query accumulated duration of burner on status captured from broadcast messages</td></tr>"));
   client.print(F(" <tr><td>/B0</td> <td>reset accumulated duration of burner on status captured from broadcast messages</td></tr>"));
@@ -1838,7 +1865,70 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
   return pvalstr;
 } // --- query() ---
 
+#ifdef DHT_BUS
 
+/** *****************************************************************
+ *  Function:  dht22()
+ *  Does:      Reads a DHT22 sensor
+ *  Pass parameters:
+ *   none
+ *  Parameters passed back:
+ *   none
+ *  Function value returned:
+ *   none
+ *  Global resources used:
+ *    DHT_Pins  array with pins to use
+ *    outBuf[]
+ *    Serial   the hardware serial interface to a PC
+ *    DHT  class which handles sensors
+ *    client object
+ * *************************************************************** */
+void dht22(void) {
+  int i;
+  Serial.println("start request vales");
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
+  Serial.print("DHT22 sensors: ");
+  Serial.println(numDHTSensors);
+    outBufclear();
+    for(i=0;i<numDHTSensors;i++){
+    int chk = DHT.read22(DHT_Pins[i]);
+    switch (chk) {
+      case DHTLIB_OK:  
+      Serial.print("OK,\t"); 
+      break;
+      case DHTLIB_ERROR_CHECKSUM: 
+      Serial.print("Checksum error,\t"); 
+      break;
+      case DHTLIB_ERROR_TIMEOUT: 
+      Serial.print("Time out error,\t"); 
+      break;
+      default: 
+      Serial.print("Unknown error,\t"); 
+      break;
+    }
+    double hum = DHT.humidity;
+    double temp = DHT.temperature;
+    Serial.println("end request values");
+    Serial.print("temp[");
+    Serial.print(i);
+    Serial.print("]: ");
+    Serial.print(temp);
+    Serial.print(", hum[");
+    Serial.print(i);
+    Serial.print("]: ");
+    Serial.println(hum);
+    if (hum > 0 && hum < 101) {
+      outBufLen+=sprintf(outBuf+outBufLen,"<P>temp[%d]: ",i);
+      _printFIXPOINT(temp,2);
+      outBufLen+=sprintf(outBuf+outBufLen,"<br></P>");
+      outBufLen+=sprintf(outBuf+outBufLen,"<P>hum[%d]: ",i);
+      _printFIXPOINT(hum,2);
+      outBufLen+=sprintf(outBuf+outBufLen,"<br></P>");
+    }
+  }
+  client.println(outBuf);
+}
+#endif  //ifdef DHT_BUS
 
 #ifdef ONE_WIRE_BUS
 
@@ -1882,6 +1972,7 @@ void ds18b20(void) {
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
 
+#ifdef IPWE
 
 /*************************** IPWE Extension **************************************/
 /** *****************************************************************
@@ -1903,16 +1994,20 @@ void ds18b20(void) {
 void Ipwe() {
   webPrintHeader();
   int i;
-  int sensor_anz = sizeof(bsb_parameters) / sizeof(int);
-  double ipwe_sensors[sensor_anz];
-  for (i=0; i < sensor_anz; i++) {
+  int counter = 0;
+  int numIPWESensors = sizeof(bsb_parameters) / sizeof(int);
+  Serial.print("IPWE sensors: ");
+  Serial.println(numIPWESensors);
+  double ipwe_sensors[numIPWESensors];
+  for (i=0; i < numIPWESensors; i++) {
     ipwe_sensors[i] = strtod(query(bsb_parameters[i],bsb_parameters[i],1),NULL);
   }
 
   client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (i=0; i < sensor_anz; i++) {
+  for (i=0; i < numIPWESensors; i++) {
+    counter++;
     client.print(F("<tr><td>T<br></td><td>"));
-    client.print(i+1);
+    client.print(counter);
     client.print(F("<br></td><td>"));
     client.print(lookup_descr(bsb_parameters[i]));
     client.print(F("<br></td><td>"));
@@ -1925,17 +2020,50 @@ void Ipwe() {
   DeviceAddress device_address;
   char device_ascii[17];
   for(i=0;i<numSensors;i++){
-    float t=sensors.getTempCByIndex(i);
+    counter++;
+    double t=sensors.getTempCByIndex(i);
     sensors.getAddress(device_address, i);
     sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 
     client.print(F("<tr><td>T<br></td><td>"));
-    client.print(sensor_anz+i+1);
+    client.print(counter);
     client.print(F("<br></td><td>"));
     client.print(device_ascii);
     client.print(F("<br></td><td>"));
     client.print(t);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    counter++;
+  }
+#endif
+
+#ifdef DHT_BUS
+  // output of DHT sensors
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
+  for(i=0;i<numDHTSensors;i++){
+    double hum = DHT.humidity;
+    double temp = DHT.temperature;
+    if (hum > 0 && hum < 101) {
+      counter++;
+      client.print(F("<tr><td>T<br></td><td>"));
+      client.print(counter);
+      client.print(F("<br></td><td>"));
+      client.print(F("DHT sensor "));
+      client.print(i+1);
+      client.print(F(" temperature"));
+      client.print(F("<br></td><td>"));
+      client.print(temp);
+      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      counter++;
+      client.print(F("<tr><td>T<br></td><td>"));
+      client.print(counter);
+      client.print(F("<br></td><td>"));
+      client.print(F("DHT sensor "));
+      client.print(i+1);
+      client.print(F(" humidity"));
+      client.print(F("<br></td><td>"));
+      client.print(hum);
+      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    }
   }
 #endif
   client.print(F("</tbody></table></form>"));
@@ -1948,7 +2076,7 @@ char *lookup_descr(uint16_t line) {
   return buffer;
 }
 
-// --- Ipwe() ---
+#endif    // --- Ipwe() ---
 
 /** *****************************************************************
  *  Function:
@@ -2055,10 +2183,12 @@ void loop() {
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
 
 // IPWE START
-          if (urlString == "/ipwe.cgi") {
-            Ipwe();
-            break;
-          }
+#ifdef IPWE
+        if (urlString == "/ipwe.cgi") {
+          Ipwe();
+          break;
+        }
+#endif
 // IPWE END
 
         // Set up a pointer to cLineBuffer
@@ -2083,16 +2213,9 @@ void loop() {
           webPrintSite();
           break;
         }
-#ifdef ONE_WIRE_BUS
-          if (!strcmp(p,"/temp")) {
-            webPrintHeader();
-            ds18b20();
-            webPrintFooter();
-            break;
-          }
-#endif
+
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTBG",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVMTBGHA",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -2277,6 +2400,21 @@ void loop() {
 #ifdef ONE_WIRE_BUS
             ds18b20();
 #endif
+          }else if(range[0]=='H'){ // handle humidity command
+#ifdef DHT_BUS
+            dht22();
+#endif
+          }else if(range[0]=='A'){ // handle average command
+            for (int i=0; i<numAverages; i++) {
+              client.print(F("<P>"));
+              client.print(avg_parameters[i]);
+              client.print(F(" Avg"));
+              client.print(lookup_descr(avg_parameters[i]));            
+              client.print(F(": "));
+              double rounded = round(avgValues[i]*10);
+              client.println(rounded/10);
+              client.println(F("<BR></P>"));
+            }
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
             uint8_t pin;
@@ -2386,6 +2524,33 @@ void loop() {
     // close the connection:
     client.stop();
   } // endif, client
+
+// Calculate 24h averages
+  if (nextAvgTime < millis()) {
+    if (avgCounter == 1441) {
+      for (int i=0; i<numAverages; i++) {
+        avgValues_Old[i] = avgValues[i];
+        avgValues_Current[i] = 0;
+      }
+      avgCounter = 1;
+    }
+    for (int i=0; i<numAverages; i++) {
+      double reading = strtod(query(avg_parameters[i],avg_parameters[i],1),NULL);
+      if (isnan(reading)) {} else {
+        avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
+        if (avgValues_Old[i] == -9999) {
+          avgValues[i] = avgValues_Current[i];
+        } else {
+          avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
+        }
+      }
+    }
+    avgCounter++;
+    nextAvgTime = millis() + 60000;
+  }
+
+// end calculate averages
+
 } // --- loop () ---
 
 /** *****************************************************************
@@ -2412,13 +2577,6 @@ void setup() {
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
 
-/*
-  for(byte i=0;i<MAX_LED_IDX;i++){
-    digitalWrite(led_pin[i], HIGH);
-    pinMode(led_pin[i], OUTPUT);
-  }
-*/
-
   // enable w5100 SPI
   pinMode(10,OUTPUT);
   digitalWrite(10,LOW);
@@ -2438,5 +2596,14 @@ void setup() {
   Serial.print("numSensors: ");
   Serial.println(numSensors);
 #endif
+
+// initialize average calculation
+
+  for (int i; i<numAverages; i++) {
+    avgValues[i] = 0;
+    avgValues_Old[i] = -9999;
+    avgValues_Current[i] = 0;
+  }
+
 }
 
