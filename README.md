@@ -5,8 +5,9 @@ This hardware/software combination should in principle work with all BSB-based h
 
 - Elco Straton (oil-fuelled heating system)
 - Elco Thision S (gas-fuelled heating system)
-- Brötje ISR-ZR1 controller
+- Brötje ISR-ZR1 Solar- und Systemregler
 - Brötje WBS 22E (gas-fuelled heating system)
+- Brötje WGB S 17/20 E EcoTherm Plus
 - Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
 
 The forum thread that led to the development of this interface can be found here:
