@@ -35,7 +35,7 @@ Target System:
       Until now it is not clear to me, what the differences between the LPB and BSB protocols are. The physical specifications
       are the same. But may be they differe on the protocol level. Until now I have only connected the system to the BSB.
     
-BEFORE BUILDING the software you have to adapt some parameters in BSB_lan.ino:
+BEFORE BUILDING the software you have to adapt some parameters in BSB_lan_config.h:
       - MAC address of your ethernet shield. It can be normally found on a label at the shield:
         byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
       - Ethernet address
