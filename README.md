@@ -11,8 +11,8 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
 - Brötje NovoCondens BOB 20
 
-Instructions on how to configure etc. can be found in the README ![here](https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan).
-The forum thread that led to the development of this interface can be found ![here](http://forum.fhem.de/index.php?topic=29762.new;topicseen#new)(Forum is in German, but several members speak English)
+Instructions on how to configure etc. can be found in the README ![here](https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan).<BR>
+The forum thread that led to the development of this interface can be found ![here](http://forum.fhem.de/index.php?topic=29762.new;topicseen#new). (Forum is in German, but several members speak English)
 
 Some interface kits from a collective order are still available, fitting directly on the Arduino Mega 2560. Contact bsb (ät) code-it.de if you are interested.
 
