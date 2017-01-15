@@ -1,5 +1,5 @@
 # bsb_lan
-BSB Boiler-System-Bus LAN Interface for Elco Thision, Brötje and similar heating systems
+BSB Boiler-System-Bus LAN Interface based on Arduino Mega 2560 for Elco Thision, Brötje and similar heating systems
 
 This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
 
