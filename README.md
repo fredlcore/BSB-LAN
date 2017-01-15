@@ -16,4 +16,5 @@ http://forum.fhem.de/index.php?topic=29762.new;topicseen#new
 (Forum is in German, but several members speak English)
 
 Some interface kits from a collective order are still available, contact bsb (ät) code-it.de if you are interested.
+
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board.jpg" size="50%">
