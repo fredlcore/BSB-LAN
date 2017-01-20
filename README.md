@@ -11,6 +11,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
 - Brötje NovoCondens BOB 20
 - Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
+- Brötje SensoTherm BSW-K Wärmepumpe
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. 
 
