@@ -26,5 +26,5 @@ BSB-Board plain, with location of CL+ and CL- connectors:
 BSB-Board populated:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board.jpg" size="50%">
 
-BSB-Board on Arduino Mega 2560 and Ethernet Shield:
+BSB-Board and Ethernet Shield plugged into the Arduino Mega 2560:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board%20on%20Arduino%20Mega%202560.jpg" size="50%">
