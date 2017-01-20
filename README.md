@@ -12,6 +12,8 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje NovoCondens BOB 20
 - Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
 
+Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. 
+
 Instructions on how to configure etc. can be found in the README ![here](https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan).<BR>
 The forum thread that led to the development of this interface can be found ![here](http://forum.fhem.de/index.php?topic=29762.new;topicseen#new).<BR>
 (Forum is in German, but several members speak English)
