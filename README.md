@@ -3,6 +3,7 @@ BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet
 
 This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
 
+- Brötje ISR-SSR Solarsystemregler
 - Brötje ISR-ZR1 Solar- und Systemregler
 - Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
 - Brötje NovoCondens BOB 20
