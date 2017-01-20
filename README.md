@@ -3,15 +3,15 @@ BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet
 
 This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
 
-- Elco Straton (oil-fuelled heating system)
-- Elco Thision S (gas-fuelled heating system)
 - Brötje ISR-ZR1 Solar- und Systemregler
-- Brötje WBS 22E (gas-fuelled heating system)
-- Brötje WGB S 17/20 E EcoTherm Plus
 - Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
 - Brötje NovoCondens BOB 20
-- Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
 - Brötje SensoTherm BSW-K Wärmepumpe
+- Brötje WGB S 17/20 E EcoTherm Plus
+- Brötje WBS 22E (gas-fuelled heating system)
+- Elco Straton (oil-fuelled heating system)
+- Elco Thision S (gas-fuelled heating system)
+- Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. 
 
