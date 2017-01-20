@@ -20,7 +20,10 @@ The forum thread that led to the development of this interface can be found ![he
 
 Some interface kits from a collective order are still available, fitting directly on the Arduino Mega 2560. Contact bsb (ät) code-it.de if you are interested (German or English).
 
-BSB-Board:
+BSB-Board plain, with location of CL+ and CL- connectors:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board%20plain.jpg" size="50%">
+
+BSB-Board populated:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board.jpg" size="50%">
 
 BSB-Board on Arduino Mega 2560 and Ethernet Shield:
