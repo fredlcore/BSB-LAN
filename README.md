@@ -14,7 +14,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Elco Thision S (gas-fuelled heating system)
 - Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
 
-Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md">here</A> how to help us.
+Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
 Instructions on how to configure etc. can be found in the README ![here](https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan).<BR>
 The forum thread that led to the development of this interface can be found ![here](http://forum.fhem.de/index.php?topic=29762.new;topicseen#new).<BR>
