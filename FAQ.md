@@ -24,7 +24,7 @@ Byte 3: destination device (same values as source)<BR>
 Byte 4: telegram length (start-of-telegram byte (0xDC) is not counted)<BR>
 Byte 5: message type (0x02 = info, 0x03 = set, 0x04 = ack, 0x05 = nack, 0x06 = query, 0x07 = answer, 0x08 = error)<BR>
 Byte 6-9: Command ID (that's what we're interested in!)<BR>
-Byte 10...: Return values (only in type "answer")<BR>
+Byte 10...: Payload data (optional)<BR>
 Last two bytes: CRC checksum<BR><BR>
 5. The lower data telegram above has the command ID 0x113D3063. Please note that the first two bytes of the command ID are switched in message type "query" (0x06), so make sure you look at the right telegram (type "answer" (0x07), last line in this example).
 6. Look up the "global command table" section in file BSB_lan_defs.h and check whether an entry for this command already exists (search for STRxxxx where xxxx is the parameter number). If it does exist, go on to step 8.
