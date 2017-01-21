@@ -26,7 +26,7 @@ Byte 5: message type (0x02 = info, 0x03 = set, 0x04 = ack, 0x05 = nack, 0x06 = q
 Byte 6-9: Command ID (that's what we're interested in!)<BR>
 Byte 10...: Return values (only in type "answer")<BR>
 Last two bytes: CRC checksum<BR><BR>
-5. The last four lines above have the command ID 0x113D3063. Please note that the first two bytes of the command ID are switched in message type "query" (0x06), so make sure you look at the right telegram (type "answer" (0x07), last line in this example).
+5. The lower data telegram above has the command ID 0x113D3063. Please note that the first two bytes of the command ID are switched in message type "query" (0x06), so make sure you look at the right telegram (type "answer" (0x07), last line in this example).
 6. Look up the "global command table" section in file BSB_lan_defs.h and check whether an entry for this command already exists (search for STRxxxx where xxxx is the parameter number). If it does exist, go on to step 8.
 7. If your parameter is not yet listed in the "global command table", you have to add an entry in the "menu strings" section like this:
 <pre>const char STRxxxx[] PROGMEM = "Parameter_Name_or_Function";</pre>
