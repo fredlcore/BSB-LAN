@@ -19,7 +19,7 @@ DC 80 0A 0E 07 11 3D 30 63 00 00 16 AD 0B
 The first four lines are from the parameter you switched forward to, the last four lines are from the parameter you want to analyze (doing the switching back and forth only makes sure that the last message on the bus is really the parameter you are looking for). Instead of DISP you might see RGT1, depending on what device you are using to select the parameter.
 Each data telegram has the following structure:<BR><BR>
 Byte 1: always 0xDC (start of telegram)<br>
-Byte 2: source device plus 0x80 (0x00 = heating system, 0x06 = room device 1, 0x07 = room device 2, 0x0A = display, 0x7F = all)<BR>
+Byte 2: source device (0x00 = heating system, 0x06 = room device 1, 0x07 = room device 2, 0x0A = display, 0x7F = all) plus 0x80<BR>
 Byte 3: destination device (same values as source)<BR>
 Byte 4: telegram length (start-of-telegram byte (0xDC) is not counted)<BR>
 Byte 5: message type (0x02 = info, 0x03 = set, 0x04 = ack, 0x05 = nack, 0x06 = query, 0x07 = answer, 0x08 = error)<BR>
