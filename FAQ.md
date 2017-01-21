@@ -1,6 +1,6 @@
 <H2>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</H2>
 
-Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC while it is connected to your heating system and follow these steps:
+Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps:
 
 1. Start the Arduino IDE and turn on the serial monitor
 2. Enable logging to the serial console and turn on verbose output with the URL-Parameters /M1 and /V1 respectively on the Arduino, e.g. http://192.168.1.50/1234/M1 and http://192.168.1.50/1234/V1
