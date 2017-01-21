@@ -16,13 +16,13 @@ DC 8A 00 0B 06 3D 11 30 63 5C 33
 HEIZ->DISP ANS      113D3063 00 00 16
 DC 80 0A 0E 07 11 3D 30 63 00 00 16 AD 0B 
 </pre>
-The first four lines are from the parameter you switched forward to, the last four lines are from the parameter you want to analyze (doing the switching back and forth only makes sure that the last message on the bus is really the parameter you are looking for).
+The first four lines are from the parameter you switched forward to, the last four lines are from the parameter you want to analyze (doing the switching back and forth only makes sure that the last message on the bus is really the parameter you are looking for). Instead of DISP you might see RGT1, depending on what device you are using to select the parameter.
 Each data telegram has the following structure:<BR><BR>
-1st byte: always 0xDC (start of telegram)<br>
-2nd byte: source device plus 0x80 (0x00 = heating system, 0x06 = room device 1, 0x07 = room device 2, 0x0A = display, 0x7F = all)<BR>
-3rd byte: destination device (same values as source)<BR>
-4th byte: telegram length (start-of-telegram byte (0xDC) is not counted)<BR>
-5th byte: message type (0x02 = info, 0x03 = set, 0x04 = ack, 0x05 = nack, 0x06 = query, 0x07 = answer, 0x08 = error)<BR>
+Byte 1: always 0xDC (start of telegram)<br>
+Byte 2: source device plus 0x80 (0x00 = heating system, 0x06 = room device 1, 0x07 = room device 2, 0x0A = display, 0x7F = all)<BR>
+Byte 3: destination device (same values as source)<BR>
+Byte 4: telegram length (start-of-telegram byte (0xDC) is not counted)<BR>
+Byte 5: message type (0x02 = info, 0x03 = set, 0x04 = ack, 0x05 = nack, 0x06 = query, 0x07 = answer, 0x08 = error)<BR>
 Byte 6-9: Command ID (that's what we're interested in!)<BR>
 Byte 10...: Return values (only in type "answer")<BR>
 Last two bytes: CRC checksum<BR><BR>
