@@ -12,7 +12,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje WGB S 17/20 E EcoTherm Plus
 - Brötje WBS 22E (gas-fuelled heating system)
 - Elco Straton (oil-fuelled heating system)
-- Elco Thision S (gas-fuelled heating system) - NOT working with older Thision models (without "S")
+- Elco Thision S (gas-fuelled heating system)
 - Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
