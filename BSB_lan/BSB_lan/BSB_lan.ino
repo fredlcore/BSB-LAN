@@ -2599,7 +2599,7 @@ void setup() {
 
 // initialize average calculation
 
-  for (int i; i<numAverages; i++) {
+  for (int i=0; i<numAverages; i++) {
     avgValues[i] = 0;
     avgValues_Old[i] = -9999;
     avgValues_Current[i] = 0;
