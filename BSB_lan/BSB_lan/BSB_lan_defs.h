@@ -1496,14 +1496,17 @@ const char ENUM3544[] PROGMEM = {  // numerical values are hypothetical
 const char ENUM3822[] PROGMEM = {"\x00 Kein\0\x01 Trinkwasserspeicher\0\x02 Pufferspeicher"};
 const char ENUM3880[] PROGMEM = {"\x01 Kein\0\x02 Ethylenglykol\0\x03 Propylenglykol\0\x04 Ethylen- und Propylenglykol"};
 const char ENUM3887[] PROGMEM = {"\x01 Kein\0\x02 kWh\0\x03 Liter"};
-const char ENUM4133[] PROGMEM = { // Numerical values are hypothetical
-"\x00 ?Trinkwasserfühler B3\0"
-"\x01 ?Trinkwasserfühler B31\0"
-"\x02 ?Pufferspeicherfühler B4\0"
-"\x03 ?Pufferspeicherfühler B41\0"
-"\x04 ?Vorlaufsollwert\0"
-"\x05 ?Sollwert Minimum"
+
+//Feststoffkessel
+const char ENUM4133[] PROGMEM = {
+"\x01 Trinkwasserfühler B3\0"
+"\x02 Trinkwasserfühler B31\0"
+"\x03 Pufferspeicherfühler B4\0"
+"\x04 Pufferspeicherfühler B41\0"
+"\x05 Vorlaufsollwert\0"
+"\x06 Sollwert Minimum"
 };
+
 // Pufferspeicher
 const char ENUM4720[] PROGMEM = {"\x00 Keine\0\x01 Mit B4\0\x02 Mit B4 und B42/41"};
 const char ENUM4757[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
@@ -3031,13 +3034,14 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x053D0F93,  CAT_SOLAR,            VT_ENUM,          3887,  STR3887,  sizeof(ENUM3887),   ENUM3887},  // Impulseinheit Ertrag
 
 // Feststoffkessel
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4102,  STR4102,  0,                  NULL},      // [0] - Feststoffkessel (nur wenn aktiviert) - Sperrt andere Erzeuger
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4110,  STR4110,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Sollwert Minimum
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4130,  STR4130,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Ein
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4131,  STR4131,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Aus
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_ENUM,          4133,  STR4133,  sizeof(ENUM4133),   ENUM4133},  // [°C ] - Feststoffkessel (nur wenn aktiviert) - Vergleichstempertatur
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4140,  STR4140,  0,                  NULL},      // Pumpennachlaufzeit
+{0x513D088A,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4102,  STR4102,  0,                  NULL},      // [0] - Feststoffkessel (nur wenn aktiviert) - Sperrt andere Erzeuger
+{0x513D0885,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4110,  STR4110,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Sollwert Minimum
+{0x513D0887,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4130,  STR4130,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Ein
+{0x513D0A04,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4131,  STR4131,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Aus
+{0x513D0A06,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4133,  STR4133,  sizeof(ENUM4133),   ENUM4133},  // [°C ] - Feststoffkessel (nur wenn aktiviert) - Vergleichstempertatur
+{0x513D089D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4140,  STR4140,  0,                  NULL},      // Pumpennachlaufzeit
 {CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4141,  STR4141,  0,                  NULL},      // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
+
 /*
 4170 Anlagenfrostschutz Kesselpumpe An/Aus
 */
