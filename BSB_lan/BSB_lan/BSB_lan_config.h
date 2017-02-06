@@ -15,6 +15,7 @@
 /* select your heating system (default may work for other systems) */
 
 //#define THISION
+//#define FUJITSU          // for FUJITSU Wärmepumpe
 //#define BROETJE_SOB
 //#define PROGNR_5895      // if we know more about this command
 //#define PROGNR_6030      // if we know more about this command
@@ -61,7 +62,7 @@ byte monitor = 0;
 // Create 24h averages from these parameters
 int avg_parameters[] = {
   8700,                   // Außentemperatur
-  8326,                   // Brenner-Modulation
+  8326                    // Brenner-Modulation
 };
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
