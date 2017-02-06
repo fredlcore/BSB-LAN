@@ -3653,7 +3653,7 @@ SW Diagnosecode
 {0x0D3D092A,  CAT_WARTUNG,          VT_ONOFF,         7130,  STR7130,  0,                  NULL},      // [0] - Wartung/Service   - Schornsteinfegerfunktion
 {0x053D0075,  CAT_WARTUNG,          VT_ONOFF,         7140,  STR7140,  0,                  NULL},      // [0] - Wartung/Service   - Handbetrieb
 {0x053D06AD,  CAT_WARTUNG,          VT_ONOFF,         7141,  STR7141,  0,                  NULL},      // Notbetrieb  //FUJITSU
-{0x053D06AE,  CAT_WARTUNG,          VT_MANUAUTO,       7142,  STR7142,  0,                  NULL},      // Notbetrieb Funktionsstart //FUJITSU
+{0x053D06AE,  CAT_WARTUNG,          VT_MANUAUTO,      7142,  STR7142,  0,                  NULL},      // Notbetrieb Funktionsstart //FUJITSU
 {0x093D3021,  CAT_WARTUNG,          VT_ONOFF,         7143,  STR7143,  0,                  NULL},      // TODO Thision 7143 Reglerstoppfunktion [Ein/Aus]
 {0x093D3022,  CAT_WARTUNG,          VT_PERCENT,       7145,  STR7145,  0,                  NULL},      // TODO Thision 7145 Reglerstopp Sollwert [%]
 {0x113D307C,  CAT_WARTUNG,          VT_ONOFF,         7146,  STR7146,  0,                  NULL},      // TODO Thision 7146 Entlüftungsfunktion [Ein/Aus]
