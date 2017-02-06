@@ -6,15 +6,15 @@
 /*
  * if defined the URL has to contain the defined passkey as first element
  * e.g.
- * http://192.168.1.50/1234/     - to view the help
+ * http://192.168.1,50/1234/     - to view the help
  * http://192.168.1.50/1234/K    - to list all categories
 */
 
-#define PASSKEY  "1234"
+#define PASSKEY  "4444"
 
 /* select your heating system (default may work for other systems) */
 
-//#define THISION
+#define THISION
 //#define FUJITSU          // for FUJITSU Wärmepumpe
 //#define BROETJE_SOB
 //#define PROGNR_5895      // if we know more about this command
@@ -26,7 +26,7 @@
 //#define ONE_WIRE_BUS 3
 
 // Activate DHT temperature/humidity sensors
-//#define DHT_BUS 2,3
+#define DHT_BUS 2,3
 
 /*
  *  Enter a MAC address and IP address for your controller below.
@@ -52,7 +52,7 @@ byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 6
 // EXPERIMENTAL:
 // If defined, the heating burner ON time is accumulated using broadcast messages
 // sent from the heating system.
-//#define USE_BROADCAST
+#define USE_BROADCAST
 
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface

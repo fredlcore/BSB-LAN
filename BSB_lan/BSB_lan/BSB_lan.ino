@@ -3,7 +3,7 @@
  *
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
- *n
+ *
  * Author: Gero Schumacher (gero.schumacher@gmail.com)
  *        (based on the code and work from many other developers. Many thanks!)
  *
@@ -12,7 +12,7 @@
  * Version:
  *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
- *       0.6m  - 02.02.2015
+ *       0.6  - 02.02.2015
  *       0.7  - 06.02.2015
  *       0.8  - 05.03.2015
  *       0.9  - 09.03.2015
@@ -28,8 +28,16 @@
  *       0.17a - 20.12.2016
  *       0.18  - 22.12.2016
  *       0.19  - 01.01.2017
+ *       0.20  - 27.01.2017
+ *       0.21  - 06.02.2017
  *
  * Changelog:
+ *       version 0.21
+ *        - added numerous parameters for Fujitsu Wärmepumpe, including new #define FUJITSU directive to activate these parameters due to different parameter numbers
+ *        - minor bugfixes
+ *       version 0.20
+ *        - added more parameters for Feststoffkessel
+ *        - minor bugfixes
  *       version 0.19
  *        - added humidity command "H", currently for DHT22 sensors
  *        - added 24h average command "A", define parameters in BSB_lan_config.h
@@ -118,15 +126,14 @@
 #include <Arduino.h>
 #include <util/crc16.h>
 
-#include "OneWire.h"
-#include <DallasTemperature.h>
-
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
 EthernetClient client;
 
 #ifdef ONE_WIRE_BUS
+  #include "OneWire.h"
+  #include <DallasTemperature.h>
   #define TEMPERATURE_PRECISION 9
   // Setup a oneWire instance to communicate with any OneWire devices
   OneWire oneWire(ONE_WIRE_BUS);
@@ -1114,6 +1121,11 @@ char *printTelegram(byte* msg) {
             case VT_CLOSEDOPEN:
               printCHOICE(msg,data_len,"Offen","Geschlossen");
               break;
+            case VT_MANUAUTO:  //FUJITSU
+              printCHOICE(msg,data_len,"Automatisch","Manuell");
+              break;
+            case VT_BLOCKEDREL:  //FUJITSU
+              printCHOICE(msg,data_len,"Gesperrt","Freigegeben");
             case VT_DAYS: // u8 Tage
               printBYTE(msg,data_len,"Tage");
               break;
@@ -1214,9 +1226,15 @@ char *printTelegram(byte* msg) {
             case VT_UINT5: //  s16 * 5
               printWORD(msg,data_len,5,NULL);
               break;
-            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 (decoding unklar, da nur 0V gesehen)
+            case VT_VOLTAGEFP: // u16 - 0.0 -> 00 00 //FUJITSU
+              printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
+              break;
+            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 (decoding unklar, da nur 0V gesehen, ggf. mergen mit VT_VOLTAGEFP?)
               //printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
               printBYTE(msg,data_len,"Volt");
+              break;
+            case VT_VOLTAGEONOFF:
+              printCHOICE(msg,data_len,"0 Volt","230 Volt");
               break;
             case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
               printLPBAddr(msg,data_len);
@@ -1722,6 +1740,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       break;
     // ---------------------------------------------
     case VT_HOURS: // (read only)
+    case VT_VOLTAGEFP: // read only (Ein-/Ausgangstest)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
     case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
     case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
@@ -2014,6 +2033,21 @@ void Ipwe() {
     client.print(ipwe_sensors[i]);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
+
+  for (int i=0; i<numAverages; i++) {
+    counter++;
+    client.print(F("<tr><td>T<br></td><td>"));
+    client.print(counter);
+    client.print(F("<br></td><td>"));
+    client.print(F("Avg"));
+    client.print(lookup_descr(avg_parameters[i]));            
+    client.print(F("<br></td><td>"));
+    double rounded = round(avgValues[i]*10);
+    client.println(rounded/10);
+// TODO: extract and display unit text from cmdtbl.type
+    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  }
+
 #ifdef ONE_WIRE_BUS
   // output of one wire sensors
   sensors.requestTemperatures();
@@ -2040,6 +2074,7 @@ void Ipwe() {
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
+    int chk = DHT.read22(DHT_Pins[i]);
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
@@ -2054,18 +2089,19 @@ void Ipwe() {
       client.print(temp);
       client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
       counter++;
-      client.print(F("<tr><td>T<br></td><td>"));
+      client.print(F("<tr><td>F<br></td><td>"));
       client.print(counter);
       client.print(F("<br></td><td>"));
       client.print(F("DHT sensor "));
       client.print(i+1);
       client.print(F(" humidity"));
-      client.print(F("<br></td><td>"));
+      client.print(F("<br></td><td>0<br></td><td>"));
       client.print(hum);
-      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      client.print(F("<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 #endif
+
   client.print(F("</tbody></table></form>"));
   webPrintFooter();
 } 
@@ -2413,6 +2449,7 @@ void loop() {
               client.print(F(": "));
               double rounded = round(avgValues[i]*10);
               client.println(rounded/10);
+// TODO: extract and display unit text from cmdtbl.type
               client.println(F("<BR></P>"));
             }
           }else if(range[0]=='G'){ // handle gpio command
