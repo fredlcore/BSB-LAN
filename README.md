@@ -9,6 +9,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje NovoCondens BOB 20
 - Brötje SensoTherm BSW-K Wärmepumpe
 - Brötje WGB-U 15H mit Solareinspeisung für TWW
+- Brötje WGB 15 E (Gas, Pufferspeicher, Solarunterstützung)
 - Brötje WGB S 17/20 E EcoTherm Plus
 - Brötje WBS 22E (gas-fuelled heating system)
 - Elco Straton (oil-fuelled heating system)
