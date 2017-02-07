@@ -1126,6 +1126,7 @@ char *printTelegram(byte* msg) {
               break;
             case VT_BLOCKEDREL:  //FUJITSU
               printCHOICE(msg,data_len,"Gesperrt","Freigegeben");
+              break;
             case VT_DAYS: // u8 Tage
               printBYTE(msg,data_len,"Tage");
               break;
@@ -1170,8 +1171,27 @@ char *printTelegram(byte* msg) {
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
-              }else{
-                Serial.print(F(" VT_ENUM len !=2: "));
+              }else if(data_len == 3) //FUJITSU
+              {
+                 if(msg[9]==0 && msg[10]==0){
+                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
+                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
+                    memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
+                    buffer[len]=0;
+
+                    printENUM(buffer,len,msg[11],1);
+                  }else{
+                    Serial.print(F("no enum str "));
+                    SerialPrintData(msg);
+                    outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
+                  }
+                }else{
+                  Serial.print(F("---"));
+                  outBufLen+=sprintf(outBuf+outBufLen,"---");
+                }
+              }
+              else{
+                Serial.print(F(" VT_ENUM len !=2 && len != 3: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
@@ -1226,12 +1246,9 @@ char *printTelegram(byte* msg) {
             case VT_UINT5: //  s16 * 5
               printWORD(msg,data_len,5,NULL);
               break;
-            case VT_VOLTAGEFP: // u16 - 0.0 -> 00 00 //FUJITSU
+            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
-              break;
-            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 (decoding unklar, da nur 0V gesehen, ggf. mergen mit VT_VOLTAGEFP?)
-              //printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
-              printBYTE(msg,data_len,"Volt");
+ 	      // printBYTE(msg,data_len,"Volt");
               break;
             case VT_VOLTAGEONOFF:
               printCHOICE(msg,data_len,"0 Volt","230 Volt");
@@ -1740,7 +1757,6 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       break;
     // ---------------------------------------------
     case VT_HOURS: // (read only)
-    case VT_VOLTAGEFP: // read only (Ein-/Ausgangstest)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
     case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
     case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
