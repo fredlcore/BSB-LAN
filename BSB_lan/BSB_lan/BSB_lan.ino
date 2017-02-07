@@ -30,8 +30,13 @@
  *       0.19  - 01.01.2017
  *       0.20  - 27.01.2017
  *       0.21  - 06.02.2017
+ *       0.22  - 07.02.2017
  *
  * Changelog:
+ *       version 0.22
+ *        - more FUJITSU parameters
+ *        - (hopefully) correct implementation of VT_VOLTAGE readings
+ *        - minor bugfixes
  *       version 0.21
  *        - added numerous parameters for Fujitsu Wärmepumpe, including new #define FUJITSU directive to activate these parameters due to different parameter numbers
  *        - minor bugfixes
