@@ -5,7 +5,7 @@ Run this command periodically (e.g. via a cron job):
 <pre>
 DATE=`date +%Y%m%d%H%M%S`; wget -qO- http://192.168.1.50/1234/8310/720/710 | egrep "(8310|720|710)" | sed "s/^/$DATE /" >> log.txt
 </pre>
-The resulting log.txt file contains the logged values for parameters 8310, 720 and 710. Just change these parameter numbers in the http-request as well as the egrep command and you are set. 
+The resulting log.txt file of this example contains the logged values for parameters 8310, 720 and 710. Just change these parameter numbers in the http-request as well as the egrep command and you are set. 
 Later on, you can sort the log file based on parameter numbers with the sort command:
 <pre>
 sort -k2 log.txt
