@@ -11,6 +11,30 @@ Later on, you can sort the log file based on parameter numbers with the sort com
 sort -k2 log.txt
 </pre>
 
+<H2>I'm using FHEM and want to process the data from my heating system. How can I do this?</H2>
+
+Please note that FHEM is a complex software and this is not the place to provide basic introductions or instructions. But if you have already configured other devices for FHEM, this will hopefully help you:
+
+To access the web interface of the device, you can use FHEM's HTTPMOD module. Here's an example configuration which you can easily adapt to your own needs and parameters. Of course you need to change the IP address as well as the passcode, too.
+This code polls parameters 8700, 8743 and 8314 every 300 seconds and assigns these to the device "THISION" (the name of my heating system) to the readings "Aussentemperatur", "Vorlauftemperatur" and "Ruecklauftemperatur". It furthermore provides a reading "Istwert" that can be set via FHEM to provide the current room temperature to the heating system (parameter 10000). Finally, it calculates the difference between "Vorlauftemperatur" and "Ruecklauftemperatur" and assigns this difference to the reading "Spreizung".
+
+<pre>
+define THISION HTTPMOD http://192.168.1.50/1234/8700/8743/8314 300
+attr THISION userattr reading0Name reading0Regex reading1Name reading1Regex reading2Name reading2Regex readingOExpr set0Name set0URL
+attr THISION event-on-change-reading .*
+attr THISION reading0Name Aussentemperatur
+attr THISION reading0Regex 8700 .*:[ \t]+([-]?[\d\.]+)
+attr THISION reading1Name Vorlauftemperatur
+attr THISION reading1Regex 8743 .*:[ \t]+([-]?[\d\.]+)
+attr THISION reading2Name Ruecklauftemperatur
+attr THISION reading2Regex 8314 .*:[ \t]+([-]?[\d\.]+)
+attr THISION readingOExpr $val=~s/[\r\n]//g;;$val
+attr THISION set0Name Istwert
+attr THISION set0URL http://192.168.1.50/1234/I10000=$val
+attr THISION timeout 5
+attr THISION userReadings Spreizung { sprintf("%.1f",ReadingsVal("THISION","Vorlauftemperatur",0)-ReadingsVal("THISION","Ruecklauftemperatur",0));; }
+</pre>
+
 <H2>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</H2>
 
 Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps:
