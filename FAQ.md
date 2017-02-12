@@ -37,7 +37,7 @@ attr THISION userReadings Spreizung { sprintf("%.1f",ReadingsVal("THISION","Vorl
 
 <H2>I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</H2>
 
-The following is an example for a FHEM configuration that queries and sets the three relay ports named "Heater", "Fan" and "Bell" attached to GPIO pins 7, 6 and 5 respectively:
+The following is an example for a FHEM configuration that queries and sets the three relay ports named "Heater", "Fan" and "Bell" attached to GPIO pins 7, 6 and 5 respectively (again, adjust IP and passcode accordingly):
 
 <pre>
 define EthRelais HTTPMOD http://192.168.1.50/1234/G05/G06/G07 30
