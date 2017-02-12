@@ -10,11 +10,11 @@
  * http://192.168.1.50/1234/K    - to list all categories
 */
 
-#define PASSKEY  "4444"
+#define PASSKEY  "1234"
 
 /* select your heating system (default may work for other systems) */
 
-#define THISION
+//#define THISION
 //#define FUJITSU          // for FUJITSU Wärmepumpe
 //#define BROETJE_SOB
 //#define PROGNR_5895      // if we know more about this command
