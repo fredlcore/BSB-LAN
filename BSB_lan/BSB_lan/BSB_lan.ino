@@ -31,8 +31,11 @@
  *       0.20  - 27.01.2017
  *       0.21  - 06.02.2017
  *       0.22  - 07.02.2017
+ *       0.23  - 12.02.2017
  *
  * Changelog:
+ *       version 0.23
+ *        - minor bugfix
  *       version 0.22
  *        - more FUJITSU parameters
  *        - (hopefully) correct implementation of VT_VOLTAGE readings
@@ -2127,13 +2130,13 @@ void Ipwe() {
   webPrintFooter();
 } 
 
+#endif    // --- Ipwe() ---
+
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
   strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
   return buffer;
 }
-
-#endif    // --- Ipwe() ---
 
 /** *****************************************************************
  *  Function:
