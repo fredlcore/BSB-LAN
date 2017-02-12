@@ -140,7 +140,8 @@ Adapter:
 
 Ungelöste Probleme
 	- Mehr Befehle (command id) hinzufügen.
-	Nur die bekannten Befehle aus der o.g. Forendiskussion und dem getesteten Heizungssystem 	(ELCO) sind Bestandteil des Programms.
+	Nur die bekannten Befehle aus der o.g. Forendiskussion und dem getesteten Heizungssystem 
+	(ELCO) sind Bestandteil des Programms.
 	Jeder Nutzer eines anderen Heizungssystems kann den Verbositäts-Level auf 1 setzen und die 
 	fehlenden Befehle dekodieren, indem er sie einfach über die integrierte Steuerung aufruft.
 	Unser Ziel ist es, eine generell lauffähiges System zu entwickeln, das herstellerübergreifend 
