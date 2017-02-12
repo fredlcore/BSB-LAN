@@ -35,6 +35,32 @@ attr THISION timeout 5
 attr THISION userReadings Spreizung { sprintf("%.1f",ReadingsVal("THISION","Vorlauftemperatur",0)-ReadingsVal("THISION","Ruecklauftemperatur",0));; }
 </pre>
 
+<H2>I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</H2>
+
+The following is an example for a FHEM configuration that queries and sets the three relay ports named "Heater", "Fan" and "Bell" attached to GPIO pins 7, 6 and 5 respectively:
+
+<pre>
+define EthRelais HTTPMOD http://192.168.1.50/1234/G05/G06/G07 30
+attr EthRelais userattr reading0Name reading0Regex reading1Name reading1Regex reading2Name reading2Regex readingOExpr readingOMap set0Name set0URL set1Name set1URL set2Name set2URL setIMap setParseResponse:0,1 setRegex
+attr EthRelais event-on-change-reading .*
+attr EthRelais reading0Name Heater
+attr EthRelais reading0Regex GPIO7:[ \t](\d)
+attr EthRelais reading1Name Fan
+attr EthRelais reading1Regex GPIO6:[ \t](\d)
+attr EthRelais reading2Name Bell
+attr EthRelais reading2Regex GPIO5:[ \t](\d)
+attr EthRelais room Heizung
+attr EthRelais set0Name Heater
+attr EthRelais set0URL http://192.168.1.50/1234/G07=$val
+attr EthRelais set1Name Fan
+attr EthRelais set1URL http://192.168.1.50/1234/G06=$val
+attr EthRelais set2Name Bell
+attr EthRelais set2URL http://192.168.1.50/1234/G05=$val
+attr EthRelais setParseResponse 1
+attr EthRelais setRegex GPIO[0-9]+:[ \t](\d)
+attr EthRelais timeout 5
+</pre>
+
 <H2>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</H2>
 
 Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps:
