@@ -137,6 +137,26 @@ Adapter:
 	Milisekunden dargestellt.
 	Die Ausgabe der Überwachung betrifft nur die serielle Konsole des Arduino Mega2560. Die html-
 	Ausgabe bleibt unverändert.
+	
+	Setzen/Abfargen der GPIO Pins
+        http://<ip-of-server>/Gxx[=y]
+	Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, um den Pin auf 0 (LOW) oder 1 		(HIGH) zu setzen. Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_config.h unter dem Parameter 		GPIO_exclude gesperrt werden.
+	
+	24h Durchschnittswerte von ausgewählten Parametern anzeigen
+        http://<ip-of-server>/A
+        Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Festlegung dieser Parameter in BSB_lan_config.h in der 		Variable avg_parameters.
+      
+      	Abfrage von ds18b20 Temperatur-Sensoren
+        http://<ip-of-server>/T
+        Gibt die Temperaturwerte von optional angeschlossenen ds18b20 Sensoren zurück.
+        
+      	Abfrage von DHT22 Feuchtigkeits-/Temperatur-Sensoren
+        http://<ip-of-server>/H
+        Gibt die Feuchtigkeits- und Temperaturwerte von optional angeschlossenen DHT22 Sensoren zurück.
+      
+	Akkumulierte Brennerlaufzeit
+        http://<ip-of-server>/B
+        Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den 		Zähler zurück.
 
 Ungelöste Probleme
 	- Mehr Befehle (command id) hinzufügen.
