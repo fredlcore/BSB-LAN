@@ -32,8 +32,12 @@
  *       0.21  - 06.02.2017
  *       0.22  - 07.02.2017
  *       0.23  - 12.02.2017
+ *       0.24  - 14.02.2017
  *
  * Changelog:
+ *       version 0.24
+ *        - updated README with added functions
+ *        - added German translations of FAQ and README, courtesy of Ulf Dieckmann
  *       version 0.23
  *        - minor bugfix
  *       version 0.22
