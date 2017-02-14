@@ -109,6 +109,10 @@ Interface:
         When setting it to 1 all bytes on the bus monitored. Telegrams are recognized by a character break condition.
         Every Telegramm is printed in hex format to serial output with a timestamp in milliseconds.
         The monitor output only affects the serial console of the mega2560. The html output is kept unchanged.
+        
+      set/query GPIO pins
+        http://<ip-of-server>/Gxx[=y]
+        returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 or 1.
 
 Open issues
       - Add more command ids to the table.
