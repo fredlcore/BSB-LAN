@@ -36,6 +36,7 @@
  *
  * Changelog:
  *       version 0.24
+ *        - updated README with added functions
  *        - added German translations of FAQ and README, courtesy of Ulf Dieckmann
  *       version 0.23
  *        - minor bugfix
