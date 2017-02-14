@@ -5,7 +5,7 @@ Führe diesen Befehl periodisch aus (z.B. per cron job):
 <pre>
 DATE=`date +%Y%m%d%H%M%S`; wget -qO- http://192.168.1.50/1234/8310/720/710 | egrep "(8310|720|710)" | sed "s/^/$DATE /" >> log.txt
 </pre>
-Das aus diesem Beispiel resultierende Logfile 'log.txt' enthält die aufgezeichneten Werte der Parameter 8310, 720 und 710. Ändere einfach sowohl die Parameternummern in der http-Abfrage, als auch die des egrep-Befehls (und selbstverständlich die IP-Adresse sowie ggf. den Sicherheitsschlüssel 'passkey').
+Das aus diesem Beispiel resultierende Logfile 'log.txt' enthält die aufgezeichneten Werte der Parameter 8310, 720 und 710. Ändere einfach sowohl die Parameternummern in der http-Abfrage, als auch die des egrep-Befehls (und selbstverständlich die IP-Adresse sowie ggf. den Sicherheitscode (hier: 1234)).
 Später kannst du das Logfile basierend auf den Parameternummern sortieren, nutze hierfür den Befehl 'sort':
 <pre>
 sort -k2 log.txt
