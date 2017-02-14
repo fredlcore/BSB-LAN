@@ -1,4 +1,7 @@
 # bsb_lan
+
+German version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">here</A>.
+
 BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems
 
 This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
