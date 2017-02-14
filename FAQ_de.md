@@ -82,6 +82,7 @@ DC 80 0A 0E 07 11 3D 30 63 00 00 16 AD 0B
 </pre>
 Die ersten vier Zeilen sind von dem Parameter, zu dem hingeschaltet wurde. Die letzten vier Zeilen stammen von dem Parameter, den du analysieren möchtest (das Hin- und Herschalten soll nur sicherstellen, dass die letzte Nachricht auf dem Bus wirklich der Parameter ist, den du suchst). Anstelle von DISP wird eventuell RGT1 angezeigt, dies ist abhängig vom jeweiligen Gerät, mit dem du die Eingaben am Heizungssystem tätigst (integrierte Steuerung oder angeschlossenes Raumgerät/Fernbedienung).
 Jedes Datentelegramm hat die folgende Struktur:<BR><BR>
+<pre>
 Byte 1: immer 0xDC (Beginn des Telegramms)<br>
 Byte 2: Quellgerät (0x00 = Heizungssystem, 0x06 = Raumgerät 1, 0x07 = Raumgerät 2, 0x0A = Display, 0x7F = Broadcast) plus 0x80<BR>
 Byte 3: Zielgerät (gleiche Werte wie bei Quellgerät)<BR>
@@ -90,6 +91,7 @@ Byte 5: Nachrichtentyp (0x02 = Info, 0x03 = Setzen, 0x04 = ack, 0x05 = nack, 0x0
 Byte 6-9: Command ID (-> diese ist es, die wir brauchen!)<BR>
 Byte 10...: Payload data (optional)<BR>
 Letzten zwei Bytes: CRC-Checksumme<BR><BR>
+</pre>
 5. Das untere Datentelegramm im obigen Beispiel hat die Command ID 0x113D3063. Bitte beachte, dass die ersten beiden Bytes der Command ID beim Nachrichtentyp "Abfragen" (0x06) vertauscht sind. Stelle daher bitte sicher, dass du auf das richtige Telegramm siehst (Typ "Antwort" (0x07), die letzte Zeile des o.g. Beispiels).
 6. Suche den Bereich "global command table" in der Datei BSB_lan_defs.h und überprüfe, ob für diesen Befehl bereits ein Eintrag existiert (suche nach STRxxxx , wobei xxxx die Parameternummer darstelt). Fals es ihn bereits gibt, fahre fort mit Schritt 8.
 7. Sollte der Parameter noch nicht in dem "global command table" gelistet sein, musst du einen Eintrag im Bereich "menu strings" wie folgt erstellen:
