@@ -1,5 +1,7 @@
 # bsb_lan
 
+English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">here</A>.
+
 BSB-LAN-Adapter, entwickelt für einen Arduino Mega 2560 samt Ethernet-Shield, um web-basiert die Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme zu erlangen.
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
