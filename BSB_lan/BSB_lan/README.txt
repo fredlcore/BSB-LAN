@@ -104,15 +104,31 @@ Interface:
         The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally printed in raw hex format.
         The verbose output only affects the serial console of the mega2560. The html output is kept unchanged.
 
-      activate bus monitor
+      Activate bus monitor
         http://<ip-of-server>/M<n>
         When setting it to 1 all bytes on the bus monitored. Telegrams are recognized by a character break condition.
         Every Telegramm is printed in hex format to serial output with a timestamp in milliseconds.
         The monitor output only affects the serial console of the mega2560. The html output is kept unchanged.
         
-      set/query GPIO pins
+      Set/query GPIO pins
         http://<ip-of-server>/Gxx[=y]
-        returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 or 1.
+        Returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 (LOW) or 1 (HIGH).
+      
+      Show 24h averages of selected parameters
+        http://<ip-of-server>/A
+        Define parameters you want to have rolling 24h averages in BSB_lan_config.h.
+      
+      Query values of ds18b20 temperature sensors
+        http://<ip-of-server>/T
+        Returns temperature of optionally connected ds18b20 temperature sensors.
+        
+      Query values of DHT22 temperature sensors
+        http://<ip-of-server>/H
+        Returns temperature of optionally connected DHT22 temperature/humidity sensors.
+      
+      Accumulated duration of burner
+        http://<ip-of-server>/B
+        Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
 Open issues
       - Add more command ids to the table.
