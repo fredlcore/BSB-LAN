@@ -1,6 +1,6 @@
 # bsb_lan
 
-German version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">here</A>.
+Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
 BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems
 
