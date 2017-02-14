@@ -112,11 +112,12 @@ Interface:
         
       Set/query GPIO pins
         http://<ip-of-server>/Gxx[=y]
-        Returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 (LOW) or 1 (HIGH).
+        Returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 (LOW) or 1 (HIGH). Reserved pins which 
+        are not allowed to be written can be defined in BSB_lan_config.h in variable GPIO_exclude.
       
       Show 24h averages of selected parameters
         http://<ip-of-server>/A
-        Define parameters you want to have rolling 24h averages in BSB_lan_config.h.
+        Define parameters you want to generate rolling 24h averages from in BSB_lan_config.h in variable avg_parameters.
       
       Query values of ds18b20 temperature sensors
         http://<ip-of-server>/T
