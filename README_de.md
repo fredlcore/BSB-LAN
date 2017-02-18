@@ -1,6 +1,7 @@
 # bsb_lan
 
-English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">here</A>.
+English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">here</A>. 
+Übersetzung EN-DE: Ulf Dieckmann (nach bestem Wissen und Gewissen ;) )
 
 BSB-LAN-Adapter, entwickelt für einen Arduino Mega 2560 samt Ethernet-Shield, um web-basiert die Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme zu erlangen.
 
