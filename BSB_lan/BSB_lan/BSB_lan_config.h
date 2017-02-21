@@ -27,7 +27,7 @@
 //#define ONE_WIRE_BUS 3
 
 // Activate DHT temperature/humidity sensors
-#define DHT_BUS 2,3
+//#define DHT_BUS 2,3
 
 /*
  *  Enter a MAC address and IP address for your controller below.
