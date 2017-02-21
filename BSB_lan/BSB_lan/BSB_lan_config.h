@@ -6,8 +6,9 @@
 /*
  * if defined the URL has to contain the defined passkey as first element
  * e.g.
- * http://192.168.1,50/1234/     - to view the help
- * http://192.168.1.50/1234/K    - to list all categories
+ * http://192.168.1,50/1234/                - to view the help
+ * http://192.168.1.50/1234/K               - to list all categories
+ * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
 */
 
 #define PASSKEY  "1234"
