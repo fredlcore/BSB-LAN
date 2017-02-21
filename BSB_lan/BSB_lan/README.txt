@@ -90,7 +90,8 @@ Interface:
       Set value v for parameter x
         http://<ip-of-server>/S<x>=<v>
         Attention: This feature is not extensively tested. So be careful what are you doing and do it on your own risk.
-        The format of the value depends on its type. Some parameters can be disabled. To set a parameter to 'disable', just send an empty value
+        The format of the value depends on its type. Some parameters can be disabled. To set a parameter to 'disable', just send an
+        empty value
         http://<ip-of-server>/S<x>=
         The description of the value formats will be added here. Until then have a look at the source code (function set).
           
@@ -101,7 +102,8 @@ Interface:
 
       Set verbosity level n
         http://<ip-of-server>/V<n>
-        The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally printed in raw hex format.
+        The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally printed in raw hex 
+        format.
         The verbose output only affects the serial console of the mega2560. The html output is kept unchanged.
 
       Activate bus monitor
@@ -134,12 +136,15 @@ Interface:
 Open issues
       - Add more command ids to the table.
           Only the known command ids from the threads listed above and the testet boiler system (ELCO) are content of the table.
-          Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the sytem via
+          Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the 
+          sytem via
           the display.
-          Cause we want to provide a general working system for all boiler configurations working with BSB. Any help and feedback is appreciated!
+          Cause we want to provide a general working system for all boiler configurations working with BSB. Any help and feedback is 
+          appreciated!
           
       - Test and complete the set funcionality
-          With the current implementation a lot of values can be already set. But there is still some testing needed and some parameter types have to be added.
+          With the current implementation a lot of values can be already set. But there is still some testing needed and some parameter 
+          types have to be added.
 
       - Introduce valid ranges for parameters
           To make the access safer when setting values for parameters, the valid ranges should be added to the command table
