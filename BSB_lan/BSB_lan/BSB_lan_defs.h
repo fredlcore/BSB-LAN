@@ -1105,7 +1105,8 @@ const char STR7975[] PROGMEM = "Fühlertemperatur BX33";  //FUJITSU
 const char STR7976[] PROGMEM = "Fühlertemperatur BX34";  //FUJITSU
 const char STR7977[] PROGMEM = "Fühlertemperatur BX35";  //FUJITSU
 const char STR7978[] PROGMEM = "Fühlertemperatur BX36";  //FUJITSU
-const char STR7996[] PROGMEM = "Zustand Kontakt H33";
+const char STR7996[] PROGMEM = "Zustand Kontakt H33";  //FUJITSU
+const char STR7999[] PROGMEM = "Eingangssignal H33";  //FUJITSU
 
 // Status
 const char STR8000[] PROGMEM = "Status Heizkreis 1";
@@ -2167,7 +2168,6 @@ const char ENUM7119[] PROGMEM = {	// numerical values are hypothetical
 "\x01 ?Freigegeben"
 };
 
-
 // Ein-/Ausgangstest - Relaistest
 const char ENUM7700[] PROGMEM = {
 "\x00 Kein Test\0"
@@ -2191,6 +2191,15 @@ const char ENUM7700[] PROGMEM = {
 "\x12 Relaisausgang QX21 Modul 2\0"
 "\x13 Relaisausgang QX22 Modul 2\0"
 "\x14 Relaisausgang QX23 Modul 2"
+};
+
+//Eingangssignal H33  //FUJITSU
+const char ENUM7999[] PROGMEM = {
+"\x00 Keine\0"
+"\x01 Geschl'(ooo), Offen (---)\0"
+"\x02 ?Puls\0"
+"\x03 ?Frequenz Hz\0"
+"\x04 ?Spannung V"
 };
 
 // Status Heizkreis 1, 2, 3
@@ -2326,8 +2335,13 @@ const char ENUM8005[] PROGMEM = {
 //Status Waermepumpe  //FUJITSU
 const char ENUM8006[] PROGMEM = {
 "\x00 ---\0"
-"\x2e Verdichter ein\0"
-"\x32 Freigegeben, Verd bereit"
+"\x17 Anlagefrostschutz aktiv\0"
+"\x23 Verd'stillstandzeit Min aktiv\0"
+"\x26 Verd'laufzeit Min aktiv\0"
+"\x2e Verdichter 1 Ein\0"
+"\x31 Vorlauf aktiv\0"
+"\x32 Freigegeben, Verd bereit\0"
+"\x7d Abtauen aktiv"
 };
 
 
@@ -3761,6 +3775,7 @@ SW Diagnosecode
 {0x053D126F,  CAT_IOTEST,           VT_TEMP,          7977,  STR7977,  0,                  NULL},      // Fühlertemperatur BX35  //FUJITSU
 {0x053D1270,  CAT_IOTEST,           VT_TEMP,          7978,  STR7978,  0,                  NULL},      // Fühlertemperatur BX36  //FUJITSU
 {0x053D1285,  CAT_IOTEST,           VT_CLOSEDOPEN,    7996,  STR7996,  0,                  NULL},      // Zustand Kontakt H33  //FUJITSU
+{0x053D175F,  CAT_IOTEST,           VT_ENUM,          7999,  STR7999,  sizeof(ENUM7999),   ENUM7999},  // Eingangssignal H33  //FUJITSU
 
 //Status
 {0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),   ENUM8000},  // [ ] - Status  - Status Heizkreis 1
