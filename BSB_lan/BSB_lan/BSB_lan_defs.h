@@ -2415,14 +2415,14 @@ const char ENUM8009[] PROGMEM = {
 "\x00 ?---\0"                 // !TODO! "no text" is only an analogous deduction
 "\x01 ?Störstellung\0"        // !TODO! enum value is hypothetical
 "\x02 ?Startverhinderung\0"   // !TODO! enum value is hypothetical
-"\x04 ?In Betrieb\0"          // !TODO! enum value taken from loop() routine
-"\x05 ?Sicherheitszeit\0"     // !TODO! enum value is hypothetical
-"\x06 ?Vorlüften\0"           // !TODO! enum value is hypothetical
-"\x07 ?Inbetriebsetzung\0"    // !TODO! enum value is hypothetical
-"\x08 ?Nachlüften\0"          // !TODO! enum value is hypothetical
+"\x12 In Betrieb\0"
+"\xD6 Sicherheitszeit\0"
+"\xDA Vorlüften\0"
+"\xD7 Inbetriebsetzung\0"
+"\xD8 Standby\0"
 "\x09 ?Außerbetriebsetzung\0" // !TODO! enum value is hypothetical
-"\x0a ?Heimlauf\0"            // !TODO! enum value is hypothetical
-"\x0b ?Standby\0"             // !TODO! enum value is hypothetical
+"\xD9 Heimlauf\0"
+"\xDB Nachlüften\0"
 };
 
 //Status Pufferspeicher
@@ -2906,14 +2906,14 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_HK1,              VT_ENUM,          880,   STR880,   sizeof(ENUM880), ENUM880},      //       HK1 Pumpe Drehzahlreduktion
 {0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                  NULL},      // Pumpendrehzahl Minimum
 {0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                  NULL},      // Pumpendrehzahl Maximum
-{0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                  NULL},      // TODO Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
-{0x113D304F,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                  NULL},      // TODO Thision 885 Pumpe-PWM Minimum [%]
-{0x193D2F88,  CAT_HK1,              VT_TEMP_SHORT,    886,   STR886,   0,                  NULL},      // TODO Thision 886 Norm Aussentemperatur [°C]
+{0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                  NULL},      // Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
+{0x113D304F,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                  NULL},      // Thision 885 Pumpe-PWM Minimum [%]
+{0x193D2F88,  CAT_HK1,              VT_TEMP_SHORT,    886,   STR886,   0,                  NULL},      // Thision 886 Norm Aussentemperatur [°C]
 {0x053D3050,  CAT_HK1,              VT_TEMP_SHORT5,   887,   STR887,   0,                  NULL},      // TODO Thision 887 Vorlaufsoll NormAussentemp [°C]
-{0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD,  888,   STR888,   0,                  NULL},      // TODO Thision 888 dt Überhöhungsfaktor [%]
+{0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD,  888,   STR888,   0,                  NULL},      // Thision 888 dt Überhöhungsfaktor [%]
 {CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         890,   STR890,   0,                  NULL},      // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
-{0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                  NULL},      // TODO Thision 894 dt Spreizung Norm Aussent. [°C]
-{0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                  NULL},      // TODO Thision 895 dt Spreizung Maximum [°C]
+{0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                  NULL},      // Thision 894 dt Spreizung Norm Aussent. [°C]
+{0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                  NULL},      // Thision 895 dt Spreizung Maximum [°C]
 {0x053D07BE,  CAT_HK1,              VT_ENUM,          900,   STR900,   sizeof(ENUM900),    ENUM900},   // [0] - Heizkreis 1 - Betriebsartumschaltung
 
 // Kühlkreis 1
@@ -2973,7 +2973,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x223D065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {CMD_UNKNOWN, CAT_HK2,              VT_ENUM,          1132,  STR1132,  sizeof(ENUM1132),   ENUM1132},  // Antrieb Typ
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1133,  STR1133,  0,                  NULL},      // Schaltdiffernez 2-Punkt
-{0x223D065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                  NULL},      // TODO Thision 1134 Antrieb Laufzeit [s]
+{0x223D065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                  NULL},      // Thision 1134 Antrieb Laufzeit [s]
 {CMD_UNKNOWN, CAT_HK2,              VT_UNKNOWN,       1135,  STR1135,  0,                  NULL},      // TODO Thision 1135 Mischer P-Band XP [K]
 {0x2E3D067B,  CAT_HK2,              VT_ENUM,          1150,  STR1150,  sizeof(ENUM1150),   ENUM1150},  // [0] - Heizkreis 2 (nur wenn aktiviert) - Estrichfunktion
 {0x2E3D068A,  CAT_HK2,              VT_TEMP,          1151,  STR1151,  0,                  NULL},      // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Estrich sollwert manuell
@@ -3070,8 +3070,8 @@ PROGMEM const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE,   VT_UNKNOWN,       2150,  STR2150,  0,                  NULL},      // Vorregler/Zubringerpumpe
 
 // Kessel
-{0x0D3D0949,  CAT_KESSEL,           VT_ENUM,          2200,  STR2200,  sizeof(ENUM2200),   ENUM2200},  // TODO Thision 2201 Erzeugersperre [Ein/Aus]
-{0x0D3D08D3,  CAT_KESSEL,           VT_ONOFF,         2201,  STR2201,  0,                  NULL},      // TODO Thision 2201 Erzeugersperre [Ein/Aus]
+{0x0D3D0949,  CAT_KESSEL,           VT_ENUM,          2200,  STR2200,  sizeof(ENUM2200),   ENUM2200},  // TDOD Thision 2201 Erzeugersperre [Ein/Aus]
+{0x0D3D08D3,  CAT_KESSEL,           VT_ONOFF,         2201,  STR2201,  0,                  NULL},      // Thision 2201 Erzeugersperre [Ein/Aus]
 {0x113D04D3,  CAT_KESSEL,           VT_TEMP,          2203,  STR2203,  0,                  NULL},      // Freigabe unter Außentemp
 {0x053D0D16,  CAT_KESSEL,           VT_ENUM,          2205,  STR2205,  sizeof(ENUM2205),   ENUM2205},  // Bei Ökobetrieb
 {0x113D0B50,  CAT_KESSEL,           VT_ONOFF,         2208,  STR2208,  0,                  NULL},      // Durchladung Pufferspeicher (EIN/AUS)
@@ -3079,7 +3079,7 @@ PROGMEM const cmd_t cmdtbl[]={
 {0x0D3D092B,  CAT_KESSEL,           VT_TEMP,          2212,  STR2212,  0,                  NULL},      // [°C ] - Kessel  - Sollwert maximum
 #ifdef THISION
 // command with same command id as line 2270
-{0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                  NULL},      // TODO Thision 2214 Sollwert Handbetrieb [°C]
+{0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                  NULL},      // Thision 2214 Sollwert Handbetrieb [°C]
 #else
 {CMD_UNKNOWN, CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                  NULL},      // TODO Thision 2214 Sollwert Handbetrieb [°C]
 #endif
@@ -3849,25 +3849,41 @@ SW Diagnosecode
 {0x053D051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                  NULL},      // [°C ] - Diagnose Erzeuger - Abgastemperatur
 {0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                  NULL},      // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
 {0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_UINT,          8323,  STR8323,  0,                  NULL},      // Gebläsedrehzahl TODO Divisor? - Broetje NovoCondens WOB20-25
-// !FIXME! Python code: 0x093D0E6A, 8324, u'Brennergebläsesollwert'
-{0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                  NULL},      // TODO Thision Diagnose Erzeuger - Gebläsedrehzahl
+#ifdef BROETJE_SOB
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                  NULL},      // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+#else
+{0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                  NULL},      // Thision Diagnose Erzeuger - Gebläsedrehzahl
+#endif
 {0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                  NULL},      // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
-{0x113D305F,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                  NULL},      // TODO Thision Brennermodulation
-{0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                  NULL},      // TODO Thision Wasserdruck
-{0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                  NULL},      // TODO Thision Betriebsanzeige FA [?] TODO Thision
-// !FIXME! Python code: 0x093D0E16, 8329, u'Ionisationsstrom'
-{0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                  NULL},      // TODO Thision Ionisationsstrom [uA?] TODO Thision
+#ifdef BROETJE_SOB
+{0x053D0834,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                  NULL},      // WGBS Brennermodulation
+#else
+{0x113D305F,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                  NULL},      // Thision Brennermodulation
+#endif
+{0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                  NULL},      // Thision Wasserdruck
+{0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                  NULL},      // Thision Betriebsanzeige FA [?]
+#ifdef BROETJE_SOB
+{0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                  NULL},      // WGBS Ionisationsstrom [uA?]
+#else
+{0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                  NULL},      // Thision Ionisationsstrom [uA?]
+#endif
 {0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                  NULL},      // [h  ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
 {0x053D08A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                  NULL},      // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe
 {0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                  NULL},      // [h  ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
 {0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                  NULL},      // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
-{0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                  NULL},      // TODO Thision Betriebsstunden Brenner
-{0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                  NULL},      // TODO Thision Startzähler Brenner
-// !FIXME! Python code: 0x053D2FEB, 8338, u'Betriebsstunden Heizbetrieb'
-{0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                  NULL},      // TODO Thision Betriebsstunden Heizbetrieb
-// !FIXME! Python code: 0x053D2FEC, 8339, u'Betriebsstunden TWW'
-{0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                  NULL},      // TODO Thision Betriebsstunden TWW
-{0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                  NULL},      // TODO Thision Betriebsstunden Zonen
+{0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                  NULL},      // Thision Betriebsstunden Brenner
+{0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                  NULL},      // Thision Startzähler Brenner
+#ifdef BROETJE_SOB
+{0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                  NULL},      // WGBS Betriebsstunden Heizbetrieb
+#else
+{0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                  NULL},      // Thision Betriebsstunden Heizbetrieb
+#endif
+#ifdef BROETJE_SOB
+{0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                  NULL},      // WGBS Betriebsstunden TWW
+#else
+{0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                  NULL},      // Thision Betriebsstunden TWW
+#endif
+{0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                  NULL},      // Thision Betriebsstunden Zonen
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8390,  STR8390,  0,                  NULL},      // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
 
 // Diagnose Erzeuger - Wärmepumpe
@@ -3965,12 +3981,12 @@ SW Diagnosecode
 {0x213D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                  NULL},      // Drehzahl Heizkreispumpe 1
 {0x2D3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Raumtemperatur 1
 {0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Raumsollwert 1
-{0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                  NULL},      // TODO Thision 8742 Raumtemperatur 1 Modell [°C]
+{0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                  NULL},      // Thision 8742 Raumtemperatur 1 Modell [°C]
 {0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 1 Alarm
 {0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 1
 {0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),   ENUM8749},  // Raumthermostat 1
 #ifdef THISION
-{0x053d04a2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                  NULL},      // TODO Thision 8750 Mod Pumpe Sollwert [%]
+{0x053d04a2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                  NULL},      // Thision 8750 Mod Pumpe Sollwert [%]
 #endif
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8751,  STR8751,  0,                  NULL},      // Kühlkreispumpe Q24
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8752,  STR8752,  0,                  NULL},      // Kühlkreismischer Auf Y23
@@ -3984,7 +4000,7 @@ SW Diagnosecode
 {0x223D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8765,  STR8765,  0,                  NULL},      // Drehzahl Heizkreispumpe 2
 {0x2E3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8770,  STR8770,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Raumtemperatur 2
 {0x2E3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8771,  STR8771,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Raumsollwert 2
-{0x2E3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8772,  STR8772,  0,                  NULL},      // TODO Thision 8772 Raumtemperatur 2 Modell [°C]
+{0x2E3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8772,  STR8772,  0,                  NULL},      // Thision 8772 Raumtemperatur 2 Modell [°C]
 {0x223D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8773,  STR8773,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlauftemperatur 2
 {0x223D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8774,  STR8774,  0,                  NULL},      // [°C ] - Diagnose Verbraucher  - Vorlaufsollwert 2
 {0x063D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8779,  STR8779,  sizeof(ENUM8779),   ENUM8779},  // Raumthermostat 2
@@ -4075,7 +4091,7 @@ SW Diagnosecode
 {0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                  NULL},      //  Solldrehzahl Betrieb Min [rpm]
 {0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                  NULL},      //  Solldrehzahl Betrieb Max [rpm]
 {0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9540,  STR9540,  0,                  NULL},      //  Nachlüftzeit
-{0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                  NULL},      // TODO Thision 9550 Gebl'ansteuerung Stillstand [%]
+{0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                  NULL},      // Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                  NULL},      //  Gebl'ansteuerung Durchlad [%]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                  NULL},      //  Solldrehzahl Durchladung [rpm]
 

@@ -11,11 +11,11 @@
  * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
 */
 
-#define PASSKEY  "1234"
+#define PASSKEY  "4444"
 
 /* select your heating system (default may work for other systems) */
 
-//#define THISION
+#define THISION
 //#define FUJITSU          // for FUJITSU Wärmepumpe
 //#define BROETJE_SOB
 //#define PROGNR_5895      // if we know more about this command
@@ -27,7 +27,7 @@
 //#define ONE_WIRE_BUS 3
 
 // Activate DHT temperature/humidity sensors
-//#define DHT_BUS 2,3
+#define DHT_BUS 2,3
 
 /*
  *  Enter a MAC address and IP address for your controller below.
@@ -66,11 +66,22 @@ int avg_parameters[] = {
   8326                    // Brenner-Modulation
 };
 
+/* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
+#define LOGGER
+
+int log_parameters[] = {
+  8700,                   // Außentemperatur
+  8743,                   // Vorlauftemperatur
+  8314                    // Rücklauftemperatur
+};
+
+unsigned long log_interval = 3600;    // logging interval in seconds
+
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 #define IPWE
 
 // Parameters to be displayed in IPWE extension
-int bsb_parameters[] = {
+int ipwe_parameters[] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur

@@ -34,8 +34,12 @@
  *       0.23  - 12.02.2017
  *       0.24  - 14.02.2017
  *       0.25  - 21.02.2017
+ *       0.26  - 27.02.2017
  *
  * Changelog:
+ *       version 0.26
+ *        - added functionality for logging on micro SD card, using the slot of the w5100 Ethernet shield
+ *        - more parameters added (e.g. 8009)
  *       version 0.25
  *        - more FUJITSU parameters added
  *       version 0.24
@@ -146,6 +150,11 @@
 
 EthernetClient client;
 
+#ifdef LOGGER
+  #include <SD.h>
+  File Logfile;
+#endif
+
 #ifdef ONE_WIRE_BUS
   #include "OneWire.h"
   #include <DallasTemperature.h>
@@ -164,7 +173,9 @@ EthernetClient client;
   dht DHT;
 #endif
 
-static unsigned long nextAvgTime = millis();
+static unsigned long lastAvgTime = millis();
+static unsigned long lastLogTime = millis();
+static unsigned long oldmillis = millis();
 int numAverages = sizeof(avg_parameters) / sizeof(int);
 double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
@@ -1378,6 +1389,10 @@ void webPrintSite() {
   client.print(F(" <tr><td>/B</td> <td>query accumulated duration of burner on status captured from broadcast messages</td></tr>"));
   client.print(F(" <tr><td>/B0</td> <td>reset accumulated duration of burner on status captured from broadcast messages</td></tr>"));
 #endif
+#ifdef LOGGER
+  client.print(F(" <tr><td>/D</td> <td>dump logged data from datalog.txt on micro SD card</td></tr>"));
+  client.print(F(" <tr><td>/D0</td> <td>delete datalog.txt on micro SD card</td></tr>"));
+#endif
   client.print(F(" </table>"));
   client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999/T</p>"));
   webPrintFooter();
@@ -2045,12 +2060,12 @@ void Ipwe() {
   webPrintHeader();
   int i;
   int counter = 0;
-  int numIPWESensors = sizeof(bsb_parameters) / sizeof(int);
+  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
   Serial.print("IPWE sensors: ");
   Serial.println(numIPWESensors);
   double ipwe_sensors[numIPWESensors];
   for (i=0; i < numIPWESensors; i++) {
-    ipwe_sensors[i] = strtod(query(bsb_parameters[i],bsb_parameters[i],1),NULL);
+    ipwe_sensors[i] = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
   }
 
   client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
@@ -2059,7 +2074,7 @@ void Ipwe() {
     client.print(F("<tr><td>T<br></td><td>"));
     client.print(counter);
     client.print(F("<br></td><td>"));
-    client.print(lookup_descr(bsb_parameters[i]));
+    client.print(lookup_descr(ipwe_parameters[i]));
     client.print(F("<br></td><td>"));
     client.print(ipwe_sensors[i]);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
@@ -2282,7 +2297,7 @@ void loop() {
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTBGHA",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVMTBGHAD",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -2454,6 +2469,34 @@ void loop() {
           webPrintFooter();
           break;
         }
+          
+#ifdef LOGGER            
+        if(p[1]=='D'){ // access datalog file
+          if (p[2]=='0') {  // remove datalog file
+            webPrintHeader();
+            SD.remove("datalog.txt");
+            client.println(F("datalog.txt removed"));
+            Serial.println(F("datalog.txt removed"));
+            webPrintFooter();
+          } else {  // dump datalog file
+            client.println(F("HTTP/1.1 200 OK"));
+            client.println(F("Content-Type: text/plain"));
+            client.println();
+            File dataFile = SD.open("datalog.txt");
+            // if the file is available, write to it:
+            if (dataFile) {
+              while (dataFile.available()) {
+                char c = dataFile.read();
+                client.write(c);
+                Serial.write(c);
+              }
+              dataFile.close();
+            }
+          }
+          break;
+        }
+#endif            
+
         // print queries
         webPrintHeader();
         char* range;
@@ -2471,7 +2514,7 @@ void loop() {
 #ifdef DHT_BUS
             dht22();
 #endif
-          }else if(range[0]=='A'){ // handle average command
+          }else if(range[0]=='A') { // handle average command
             for (int i=0; i<numAverages; i++) {
               client.print(F("<P>"));
               client.print(avg_parameters[i]);
@@ -2593,8 +2636,40 @@ void loop() {
     client.stop();
   } // endif, client
 
+#ifdef LOGGER
+
+  if (millis() - lastLogTime >= (log_interval * 1000)) {
+
+    int numLogValues = sizeof(log_parameters) / sizeof(int);
+    double log_values[numLogValues];
+    for (int i=0; i < numLogValues; i++) {
+      log_values[i] = strtod(query(log_parameters[i],log_parameters[i],1),NULL);
+    }
+    File dataFile = SD.open("datalog.txt", FILE_WRITE);
+
+    if (dataFile) {
+      for (int i=0; i < numLogValues; i++) {
+        dataFile.print(millis());
+        dataFile.print(F(";"));
+        dataFile.print(log_parameters[i]);
+        dataFile.print(F(";"));
+        dataFile.print(lookup_descr(log_parameters[i]));
+        dataFile.print(F(";"));
+        dataFile.println(log_values[i]);
+      }
+      dataFile.close();
+      // print to the serial port too:
+   } else {
+    // if the file isn't open, pop up an error:
+      client.println(F("error opening datalog.txt"));
+      Serial.println(F("error opening datalog.txt"));
+    }
+    lastLogTime += log_interval * 1000;
+  }
+#endif
+
 // Calculate 24h averages
-  if (nextAvgTime < millis()) {
+  if (millis() - lastAvgTime >= 60000) {
     if (avgCounter == 1441) {
       for (int i=0; i<numAverages; i++) {
         avgValues_Old[i] = avgValues[i];
@@ -2614,7 +2689,7 @@ void loop() {
       }
     }
     avgCounter++;
-    nextAvgTime = millis() + 60000;
+    lastAvgTime += 60000;
   }
 
 // end calculate averages
@@ -2645,6 +2720,15 @@ void setup() {
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
 
+#ifdef LOGGER
+  // disable w5100 while setting up SD
+  pinMode(10,OUTPUT);
+  digitalWrite(10,HIGH);
+  Serial.print("Starting SD..");
+  if(!SD.begin(4)) Serial.println("failed");
+  else Serial.println("ok");
+
+#else
   // enable w5100 SPI
   pinMode(10,OUTPUT);
   digitalWrite(10,LOW);
@@ -2652,9 +2736,13 @@ void setup() {
   // disable SD Card
   pinMode(4,OUTPUT);
   digitalWrite(4,HIGH);
+#endif
 
   // start the Ethernet connection and the server:
   Ethernet.begin(mac, ip);
+#ifdef LOGGER
+  digitalWrite(10,HIGH);
+#endif
   server.begin();
 
 #ifdef ONE_WIRE_BUS
