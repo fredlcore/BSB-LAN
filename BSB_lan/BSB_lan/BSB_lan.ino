@@ -2651,6 +2651,8 @@ void loop() {
       for (int i=0; i < numLogValues; i++) {
         dataFile.print(millis());
         dataFile.print(F(";"));
+        dataFile.print(query(0,0,1)); // get current time from heating system
+        dataFile.print(F(";"));
         dataFile.print(log_parameters[i]);
         dataFile.print(F(";"));
         dataFile.print(lookup_descr(log_parameters[i]));
