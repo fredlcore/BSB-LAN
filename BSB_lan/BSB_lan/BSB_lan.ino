@@ -35,8 +35,16 @@
  *       0.24  - 14.02.2017
  *       0.25  - 21.02.2017
  *       0.26  - 27.02.2017
+ *       0.27  - 01.03.2017
  *
  * Changelog:
+ *       version 0.27
+ *        - adds date field to log file (requires exact time to be sent by heating system)
+ *        - /D0 recreates datalog.txt file with table header
+ *        - added "flags" field to command table structure. Currently, only FL_RONLY is supported to make a parameter read-only
+ *        - added DEFAULT_FLAG in config. Defaults to NULL, i.e. all fields are read/writeable. 
+ *          Setting it to FL_RONLY makes all parameters read-only, e.g. for added level of security. 
+ *          Individual parameters can be set to NULL/FL_RONLY to make only these parameters writable/read-only.
  *       version 0.26
  *        - added functionality for logging on micro SD card, using the slot of the w5100 Ethernet shield
  *        - more parameters added (e.g. 8009)
@@ -175,7 +183,6 @@ EthernetClient client;
 
 static unsigned long lastAvgTime = millis();
 static unsigned long lastLogTime = millis();
-static unsigned long oldmillis = millis();
 int numAverages = sizeof(avg_parameters) / sizeof(int);
 double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
@@ -1798,6 +1805,13 @@ int set(uint16_t line      // the ProgNr of the heater parameter
     break;
   } // endswitch
 
+  // Check for readonly parameter
+
+  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
+    Serial.println(F("Parameter is readonly!"));
+    return 2;   // return value for trying to set a readonly parameter
+  }
+
   // Send a message to PC hardware serial port
   Serial.print("setting line: ");
   Serial.print(line);
@@ -1956,6 +1970,7 @@ void dht22(void) {
   Serial.println(numDHTSensors);
     outBufclear();
     for(i=0;i<numDHTSensors;i++){
+/*
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
       case DHTLIB_OK:  
@@ -1971,6 +1986,7 @@ void dht22(void) {
       Serial.print("Unknown error,\t"); 
       break;
     }
+*/
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     Serial.println("end request values");
@@ -2120,7 +2136,7 @@ void Ipwe() {
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
-    int chk = DHT.read22(DHT_Pins[i]);
+//    int chk = DHT.read22(DHT_Pins[i]);
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
@@ -2367,9 +2383,13 @@ void loop() {
           Serial.println(p);     // the value
 
           // Now send it out to the bus
-          if(!set(line,p,setcmd)){
+          int setresult = set(line,p,setcmd);
+          if(setresult!=1){
             webPrintHeader();
             client.println(F("ERROR: set failed"));
+            if (setresult == 2) {
+              client.println(F(" - parameter is readonly"));
+            }
             webPrintFooter();
             break;
           }
@@ -2475,15 +2495,20 @@ void loop() {
           if (p[2]=='0') {  // remove datalog file
             webPrintHeader();
             SD.remove("datalog.txt");
-            client.println(F("datalog.txt removed"));
-            Serial.println(F("datalog.txt removed"));
+            File dataFile = SD.open("datalog.txt", FILE_WRITE);
+            if (dataFile) {
+              dataFile.println(F("Milliseconds;Date;Parameter;Description;Value"));
+              dataFile.close();
+            }
+            client.println(F("datalog.txt removed and recreated"));
+            Serial.println(F("datalog.txt removed and recreated"));
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
             client.println(F("Content-Type: text/plain"));
             client.println();
             File dataFile = SD.open("datalog.txt");
-            // if the file is available, write to it:
+            // if the file is available, read from it:
             if (dataFile) {
               while (dataFile.available()) {
                 char c = dataFile.read();
