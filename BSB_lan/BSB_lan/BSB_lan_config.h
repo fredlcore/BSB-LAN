@@ -98,6 +98,9 @@ int ipwe_parameters[] = {
 // defines the number of retries for the query command
 #define QUERY_RETRIES  3
 
+// defines default flag for parameters (set to FL_RONLY to make all parameters read-only)
+#define DEFAULT_FLAG  0
+
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */
