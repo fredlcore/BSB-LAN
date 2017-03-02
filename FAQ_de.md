@@ -1,6 +1,25 @@
+<H2>Inhalt</H2>
+<B><A HREF="#gibt-es-einen-einfachen-weg-um-parameter-zu-loggen">Gibt es einen einfachen Weg, um Parameter zu loggen?</A></B><BR>
+<B><A HREF="#ich-nutze-fhem-und-möchte-die-daten-meines-heizungssystems-darin-weiter-verarbeiten-wie-kann-ich-dies-tun">Ich nutze FHEM und möchte die Daten meines Heizungssystems darin weiter verarbeiten. Wie kann ich dies tun?</A></B><BR>
+<B><A HREF="#ich-habe-ein-relaisboard-an-dem-arduino-mega-angeschlossen-wie-kann-ich-die-einzelnen-relais-ansteuern-bzw-deren-zustand-abfragen">Ich habe ein Relaisboard an dem Arduino Mega angeschlossen, wie kann ich die einzelnen Relais ansteuern bzw. deren Zustand abfragen?</A></B><BR>
+<B><A HREF="#mein-heizungssystem-verfügt-über-parameter-die-von-der-software-bisher-nicht-unterstützt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzufügen">Mein Heizungssystem verfügt über Parameter, die von der Software bisher nicht unterstützt werden. Kann ich behilflich sein, diese Parameter hinzuzufügen?</A></B><BR>
+
+
 <H2>Gibt es einen einfachen Weg, um Parameter zu loggen?</H2>
 
-Ja, den gibt es!
+Ja, den gibt es - zum Einen als standalone-Variante, zum Anderen als remote-Variante.
+
+<B>Um den Adapter als standalone-Logger zu nutzen, gehe wie folgt vor:</B>
+
+Stecke eine FAT32-formatierte microSD-Karte in den Speicherkartenplatz des Ethernet-Shields, bevor du den Arduino einschaltest. Einige Geräte erkennen u.U. keine Speicherkarten, die größer als 2GB sind, nutze in dem Fall eine kleinere Karte und formatiere sie mit FAT16.<BR>
+Ändere dann die Datei BSB_lan_config.h und aktiviere das Definement #define LOGGER. Füge dann die zu loggenden Parameter zur Variable log_parameters hinzu und bestimme das Logintervall mit der Variable log_interval.
+
+Wenn du das Setup fertig hast, schalte das System ein und warte auf ankommende Daten. Sämtliche Daten werden auf der Karte in der Datei datalog.txt im CSV-Format gespeichert, und können somit leicht in Excel oder OpenOffice importiert werden.<BR>
+Den Dateiinhalt kannst du mit dem URL-Befehl "/D" einsehen. Um die Datei zurückzusetzen, benutze den Befehl "/D0". Dies sollte ebenfalls bei der ersten Benutzung erfolgen, da hierdurch die Datei mit dem passenden CSV-Header initiiert wird.<BR>
+Bitte beachte, dass der Arduino keine exakte Uhr ist. Auch wenn du bspw. das Intervall auf 60 Sekunden eingestellt hast, weicht die in der Datei dargestellte Zeit (welche von der Heizungssteuerung empfangen wird) möglicherweise davon ab - dies kann bis zu einer Sekunde pro Minute betragen. Sollte eine exakte Logzeit unbedingt erforderlich sein, kannst du die durchschnittliche Zeitabweichung zwischen der Arduino-Zeit und der wirklichen Zeit ermitteln das Log-Interval entsprechend anpassen, und bspw. 59 Sekunden anstatt 60 Sekunden einstellen.
+
+<B>Für das Loggen in der remote-Variante gehe nach folgenden Schritten vor:</B>
+
 Führe diesen Befehl periodisch aus (z.B. per cron job):
 <pre>
 DATE=`date +%Y%m%d%H%M%S`; wget -qO- http://192.168.1.50/1234/8310/720/710 | egrep "(8310|720|710)" | sed "s/^/$DATE /" >> log.txt
