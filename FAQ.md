@@ -1,6 +1,24 @@
+<H2>Contents</H2>
+<B>Is there a simple way to log parameters?</B><BR>
+<B>I'm using FHEM and want to process the data from my heating system. How can I do this?</B><BR>
+<B>I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</B><BR>
+<B>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</B><BR>
+
 <H2>Is there a simple way to log parameters?</H2>
 
-Yes, there is!
+Yes, there is, both standalone and remote:
+
+<B>For standalone usage of the device use the following procedure:</B>
+
+Insert a FAT32-formatted micro SD card in the slot on the Ethernet shield before powering up the device. Some devices might not recognize cards larger than 2GB, in that case use a smaller card and format it with FAT16.<BR>
+Then edit BSB_lan_config.dat and activate the #define LOGGER directive. Then you can add the fields you want to be logged to the variable log_parameters and set the logging period with variable log_interval.
+
+Once the setup is done, power-up the device and wait for data coming in. All data is stored in the file datalog.txt file on the card in CSV file format and can be imported easily in Excel and OpenOffice. <BR>
+You can watch the content of the file with URL command "/D". To reset the file, use command "/D0". This should also be done after first powering up the device because it initializes the file with a proper CSV file-header.<BR>
+Please note that the Arduino is not an exact timepiece, so even though you might set the interval to 60 seconds, the time displayed in the file (taken from the heating system) may differ - this might be up to a second per minute. If exact logging time is essential, find out the average time difference between Arduino time and real time and adjust the logging interval accordingly, e.g. use 59 seconds instead of 60.
+
+<B>For remote logging follow this procedure:</B>
+
 Run this command periodically (e.g. via a cron job):
 <pre>
 DATE=`date +%Y%m%d%H%M%S`; wget -qO- http://192.168.1.50/1234/8310/720/710 | egrep "(8310|720|710)" | sed "s/^/$DATE /" >> log.txt
