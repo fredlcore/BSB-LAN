@@ -133,6 +133,12 @@ Interface:
         http://<ip-of-server>/B
         Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
+      Display log file
+        http://<ip-of-server>/D
+        Shows the content of datalog.txt file on the Ethernet shield's micro SD card slot. Logging parameters needs to be activated
+        by uncommenting the LOGGER directive in BSB_lan_config.h and can be configured with variables log_parameters and log_interval.
+        Use /D0 to reset datalog.txt including writing a proper CSV file header (recommended on first use before logging starts).
+
 Open issues
       - Add more command ids to the table.
           Only the known command ids from the threads listed above and the testet boiler system (ELCO) are content of the table.
@@ -148,9 +154,6 @@ Open issues
 
       - Introduce valid ranges for parameters
           To make the access safer when setting values for parameters, the valid ranges should be added to the command table
-
-      - Add read-only flag for parameters
-          To make the access safer add a flag for parameters, that can be read only.
 
       - Test and maybe extend the system to work with LPB instead of BSB.
 
