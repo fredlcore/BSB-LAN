@@ -4,7 +4,7 @@ Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/
 
 BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems
 
-This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
+This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems, including logging to Micro-SD-card:
 
 - Brötje ISR-SSR Solarsystemregler
 - Brötje ISR-ZR1 Solar- und Systemregler
