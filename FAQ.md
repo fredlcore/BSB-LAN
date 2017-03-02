@@ -1,5 +1,5 @@
 <H2>Contents</H2>
-<B>Is there a simple way to log parameters?</B><BR>
+<B><A HREF="#is-there-a-simple-way-to-log-parameters">Is there a simple way to log parameters?</A></B><BR>
 <B>I'm using FHEM and want to process the data from my heating system. How can I do this?</B><BR>
 <B>I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</B><BR>
 <B>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</B><BR>
