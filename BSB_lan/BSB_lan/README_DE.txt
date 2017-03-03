@@ -138,7 +138,7 @@ Adapter:
 	Die Ausgabe der Überwachung betrifft nur die serielle Konsole des Arduino Mega2560. Die html-
 	Ausgabe bleibt unverändert.
 	
-	Setzen/Abfargen der GPIO Pins
+	Setzen/Abfragen der GPIO Pins
         http://<ip-of-server>/Gxx[=y]
 	Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, um den Pin auf 0 (LOW) oder 1 		(HIGH) zu setzen. Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_config.h unter dem Parameter 		GPIO_exclude gesperrt werden.
 	
@@ -158,6 +158,11 @@ Adapter:
         http://<ip-of-server>/B
         Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den 		Zähler zurück.
 
+Darstellung des Logfiles
+        http://<ip-of-server>/D
+        Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann anhand der Variablen log_parameters und log_interval konfiguriert werden.
+        Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
+
 Ungelöste Probleme
 	- Mehr Befehle (command id) hinzufügen.
 	Nur die bekannten Befehle aus der o.g. Forendiskussion und dem getesteten Heizungssystem 
@@ -175,10 +180,6 @@ Ungelöste Probleme
 	- Zulässige Wertebereiche für Parameter einführen
 	Um den Zugriff sicherer zu machen, wenn Werte für Parameter gesetzt werden, sollten zulässige 
 	Wertebereiche zum command table hinzugefügt werden.
-
-	- Nur-Lesen-Attribute für Parameter hinzufügen
-	Um den Zugriff sicherer zu machen, sollten entsprechende read-only-Attribute für Parameter 
-	hinzugefügt werden.
 
 	- Testen und möglicherweise das System so erweitern, dass es mit dem LPB anstelle des BSB 
 	genutzt werden kann.
