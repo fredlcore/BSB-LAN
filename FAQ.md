@@ -11,7 +11,7 @@ Yes, there is, both standalone and remote:
 <B>For standalone usage of the device use the following procedure:</B>
 
 Insert a FAT32-formatted micro SD card in the slot on the Ethernet shield before powering up the device. Some devices might not recognize cards larger than 2GB, in that case use a smaller card and format it with FAT16.<BR>
-Then edit BSB_lan_config.dat and activate the #define LOGGER directive. Then you can add the fields you want to be logged to the variable log_parameters and set the logging period with variable log_interval.
+Then edit BSB_lan_config.h and activate the #define LOGGER directive. Then you can add the fields you want to be logged to the variable log_parameters and set the logging period with variable log_interval.
 
 Once the setup is done, power-up the device and wait for data coming in. All data is stored in the file datalog.txt file on the card in CSV file format and can be imported easily in Excel and OpenOffice. <BR>
 You can watch the content of the file with URL command "/D". To reset the file, use command "/D0". This should also be done after first powering up the device because it initializes the file with a proper CSV file-header.<BR>
