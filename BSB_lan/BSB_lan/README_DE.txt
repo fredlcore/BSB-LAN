@@ -140,11 +140,14 @@ Adapter:
 	
 	Setzen/Abfragen der GPIO Pins
         http://<ip-of-server>/Gxx[=y]
-	Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, um den Pin auf 0 (LOW) oder 1 		(HIGH) zu setzen. Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_config.h unter dem Parameter 		GPIO_exclude gesperrt werden.
+	Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, 
+	um den Pin auf 0 (LOW) oder 1 (HIGH) zu setzen. Reservierte Pins, die nicht gesetzt werden dürfen, 
+	können in der BSB_lan_config.h unter dem Parameter GPIO_exclude gesperrt werden.
 	
 	24h Durchschnittswerte von ausgewählten Parametern anzeigen
         http://<ip-of-server>/A
-        Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Festlegung dieser Parameter in BSB_lan_config.h in der 		Variable avg_parameters.
+        Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Festlegung dieser Parameter 
+	in BSB_lan_config.h in der Variable avg_parameters.
       
       	Abfrage von ds18b20 Temperatur-Sensoren
         http://<ip-of-server>/T
@@ -156,14 +159,18 @@ Adapter:
       
 	Akkumulierte Brennerlaufzeit
         http://<ip-of-server>/B
-        Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den 		Zähler zurück.
+        Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. 
+	/B0 setzt den Zähler zurück.
 
-Darstellung des Logfiles
+	Darstellung des Logfiles
         http://<ip-of-server>/D
-        Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann anhand der Variablen log_parameters und log_interval konfiguriert werden.
-        Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
+        Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
+	Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann 
+	anhand der Variablen log_parameters und log_interval konfiguriert werden.
+        Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert
+	(dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
 
-Ungelöste Probleme
+	Ungelöste Probleme
 	- Mehr Befehle (command id) hinzufügen.
 	Nur die bekannten Befehle aus der o.g. Forendiskussion und dem getesteten Heizungssystem 
 	(ELCO) sind Bestandteil des Programms.
