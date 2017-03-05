@@ -11,11 +11,11 @@
  * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
 */
 
-#define PASSKEY  "4444"
+#define PASSKEY  "1234"
 
 /* select your heating system (default may work for other systems) */
 
-#define THISION
+//#define THISION
 //#define FUJITSU          // for FUJITSU Wärmepumpe
 //#define BROETJE_SOB
 //#define PROGNR_5895      // if we know more about this command
@@ -73,9 +73,9 @@ int log_parameters[] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
-  20000,                  // Spezialparameter: Brenner-Laufzeit (/B)
-  20001,                  // Spezialparameter: Brenner-Takte (/B)
-  20011,                  // Spezialparameter 20010-20019: DHT22-Sensoren 1-9 (/H)
+//  20000,                  // Spezialparameter: Brenner-Laufzeit (/B)
+//  20001,                  // Spezialparameter: Brenner-Takte (/B)
+//  20011,                  // Spezialparameter 20010-20019: DHT22-Sensoren 1-9 (/H)
 //  20020                   // Spezialparameter 20020-20029: DS18B20-Sensoren 1-9 (/T)
 };
 
