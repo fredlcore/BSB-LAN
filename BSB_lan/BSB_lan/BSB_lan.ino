@@ -1,4 +1,7 @@
+char version[6] = "0.28";
+
 /*
+ * 
  * BSB Boiler-System-Bus LAN Interface
  *
  * ATTENION:
@@ -36,8 +39,13 @@
  *       0.25  - 21.02.2017
  *       0.26  - 27.02.2017
  *       0.27  - 01.03.2017
+ *       0.28  - 05.03.2017
+ *       
  *
  * Changelog:
+ *       version 0.28
+ *        - adds special parameters 20000+ for SD card logging of /B, /T and /H commands (see BSB_lan_config.h for examples)
+ *        - adds version info to BSB_LAN web interface
  *       version 0.27
  *        - adds date field to log file (requires exact time to be sent by heating system)
  *        - /D0 recreates datalog.txt file with table header
@@ -1373,7 +1381,8 @@ void webPrintSite() {
   webPrintHeader();
 
   client.println(F("<p>"));
-  client.print(F("BSB Web"));
+  client.print(F("BSB Web, Version "));
+  client.print(version);
   client.print(F(" ----------</p>"));
   client.print(F(" <p>options:"));
   client.print(F(" <table>"));
@@ -1964,13 +1973,13 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
  * *************************************************************** */
 void dht22(void) {
   int i;
-  Serial.println("start request vales");
+  Serial.println("start request values");
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   Serial.print("DHT22 sensors: ");
   Serial.println(numDHTSensors);
     outBufclear();
     for(i=0;i<numDHTSensors;i++){
-/*
+
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
       case DHTLIB_OK:  
@@ -1986,7 +1995,7 @@ void dht22(void) {
       Serial.print("Unknown error,\t"); 
       break;
     }
-*/
+
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     Serial.println("end request values");
@@ -2136,7 +2145,9 @@ void Ipwe() {
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
-//    int chk = DHT.read22(DHT_Pins[i]);
+    int chk = DHT.read22(DHT_Pins[i]);
+    Serial.println(chk);
+    
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
@@ -2680,12 +2691,63 @@ void loop() {
         dataFile.print(F(";"));
         dataFile.print(log_parameters[i]);
         dataFile.print(F(";"));
-        dataFile.print(lookup_descr(log_parameters[i]));
-        dataFile.print(F(";"));
-        dataFile.println(log_values[i]);
-      }
+        if (log_parameters[i] < 20000) {
+          dataFile.print(lookup_descr(log_parameters[i]));
+          dataFile.print(F(";"));
+          dataFile.println(log_values[i]);
+        } else {
+#ifdef USE_BROADCAST
+          if (log_parameters[i] == 20000) {
+            dataFile.print(F("Brennerlaufzeit"));
+            dataFile.print(F(";"));
+            dataFile.println(brenner_duration);
+          }
+          if (log_parameters[i] == 20001) {
+            dataFile.print(F("Brennertakte"));
+            dataFile.print(F(";"));
+            dataFile.println(brenner_count);
+          }
+#endif
+#ifdef DHT_BUS
+          if (log_parameters[i] >= 20010 && log_parameters[i] < 20020) {
+            int log_sensor = log_parameters[i] - 20010;
+            int chk = DHT.read22(DHT_Pins[log_sensor]);
+            Serial.println(chk);
+            double hum = DHT.humidity;
+            double temp = DHT.temperature;
+            if (hum > 0 && hum < 101) {
+              dataFile.print(F("Temperature "));
+              dataFile.print(log_sensor);
+              dataFile.print(F(";"));
+              dataFile.println(temp);
+
+              dataFile.print(millis());
+              dataFile.print(F(";"));
+              dataFile.print(query(0,0,1)); // get current time from heating system
+              dataFile.print(F(";"));
+              dataFile.print(log_parameters[i]);
+              dataFile.print(F(";"));
+              dataFile.print(F("Humidity "));
+              dataFile.print(log_sensor);
+              dataFile.print(F(";"));
+              dataFile.println(hum);
+             }
+          }
+#endif
+#ifdef ONE_WIRE_BUS
+          if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
+            int log_sensor = log_parameters[i] - 20010;
+            sensors.requestTemperatures(); // Send the command to get temperatures
+            float t=sensors.getTempCByIndex(i);
+            dataFile.print(F("Temperature "));
+            dataFile.print(log_sensor);
+            dataFile.print(F(";"));
+            dataFile.println(t);
+          }
+#endif
+        }
+      } 
       dataFile.close();
-      // print to the serial port too:
    } else {
     // if the file isn't open, pop up an error:
       client.println(F("error opening datalog.txt"));
