@@ -67,7 +67,7 @@ int avg_parameters[] = {
 };
 
 /* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
-#define LOGGER
+// #define LOGGER
 
 int log_parameters[] = {
   8700,                   // Außentemperatur
