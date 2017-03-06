@@ -33,7 +33,7 @@
  *  Enter a MAC address and IP address for your controller below.
  *  The IP address will be dependent on your local network:
 */
-byte mac[] = { 0x64, 0x66, 0xB3, 0x2A, 0xA7, 0xC3 };
+byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 /*
  * Initialize the Ethernet server library
