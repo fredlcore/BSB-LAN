@@ -2736,7 +2736,7 @@ void loop() {
 #endif
 #ifdef ONE_WIRE_BUS
           if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
-            int log_sensor = log_parameters[i] - 20010;
+            int log_sensor = log_parameters[i] - 20020;
             sensors.requestTemperatures(); // Send the command to get temperatures
             float t=sensors.getTempCByIndex(i);
             dataFile.print(F("Temperature "));
