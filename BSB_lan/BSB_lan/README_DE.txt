@@ -145,9 +145,10 @@ Adapter:
 	können in der BSB_lan_config.h unter dem Parameter GPIO_exclude gesperrt werden.
 	
 	24h Durchschnittswerte von ausgewählten Parametern anzeigen
-        http://<ip-of-server>/A
-        Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Festlegung dieser Parameter 
-	in BSB_lan_config.h in der Variable avg_parameters.
+        http://<ip-of-server>/A[=parameter1,...,parameter20]
+        Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Initiale Festlegung dieser Parameter 
+	in BSB_lan_config.h in der Variable avg_parameters, Änderungen zur Laufzeit über "/A=[parameter1],...,[parameter20]",
+	um bis zu 20 Parameter zu definieren.
       
       	Abfrage von ds18b20 Temperatur-Sensoren
         http://<ip-of-server>/T
@@ -161,12 +162,16 @@ Adapter:
         http://<ip-of-server>/B
         Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. 
 	/B0 setzt den Zähler zurück.
+	
+	Konfiguration des Logfiles
+	http://<ip-of-server/L=x[,parameter1,...,parameter20]
+	Setzt während der Laufzeit das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf [parameter1], 
+	[parameter2] etc. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden 
+	und kann initial anhand der Variablen log_parameters und log_interval konfiguriert werden.
 
 	Darstellung des Logfiles
         http://<ip-of-server>/D
-        Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
-	Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann 
-	anhand der Variablen log_parameters und log_interval konfiguriert werden.
+        Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet.
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert
 	(dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
 
