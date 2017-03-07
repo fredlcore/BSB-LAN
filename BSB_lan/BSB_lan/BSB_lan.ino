@@ -1,4 +1,4 @@
-char version[6] = "0.28";
+char version[6] = "0.29";
 
 /*
  * 
@@ -36,13 +36,19 @@ char version[6] = "0.28";
  *       0.22  - 07.02.2017
  *       0.23  - 12.02.2017
  *       0.24  - 14.02.2017
- *       0.25  - 21.02.2017
+ *       0.25  - 21.02.20172
  *       0.26  - 27.02.2017
  *       0.27  - 01.03.2017
  *       0.28  - 05.03.2017
- *       
+ *       0.29  - 06.03.2017
  *
  * Changelog:
+ *       version 0.29
+ *        - adds command /C to display current configuration
+ *        - adds command /L to configure logging interval and parameters
+ *        - adds option for command /A to set 24h average parameters during runtime
+ *        - adds special parameter 20002 for logging /A command (24h averages, only makes sense for long logging intervals)
+ *        - bugfixes for logging DS18B20 sensors
  *       version 0.28
  *        - adds special parameters 20000+ for SD card logging of /B, /T and /H commands (see BSB_lan_config.h for examples)
  *        - adds version info to BSB_LAN web interface
@@ -192,6 +198,8 @@ EthernetClient client;
 static unsigned long lastAvgTime = millis();
 static unsigned long lastLogTime = millis();
 int numAverages = sizeof(avg_parameters) / sizeof(int);
+int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
+int numLogValues = sizeof(log_parameters) / sizeof(int);
 double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
@@ -339,7 +347,7 @@ int freeRam () {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex(byte val) {
-  if (val < 16) Serial.print("0");  // add a leading zero to single-digit values
+  if (val < 16) Serial.print(F("0"));  // add a leading zero to single-digit values
     Serial.print(val, HEX);
 }
 
@@ -358,13 +366,13 @@ void SerialPrintHex(byte val) {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex32(uint32_t val) {
-  if (val <= 0x0fffffff) Serial.print("0");
-  if (val <= 0x00ffffff) Serial.print("0");
-  if (val <= 0x000fffff) Serial.print("0");
-  if (val <= 0x0000ffff) Serial.print("0");
-  if (val <= 0x00000fff) Serial.print("0");
-  if (val <= 0x000000ff) Serial.print("0");
-  if (val <= 0x0000000f) Serial.print("0");
+  if (val <= 0x0fffffff) Serial.print(F("0"));
+  if (val <= 0x00ffffff) Serial.print(F("0"));
+  if (val <= 0x000fffff) Serial.print(F("0"));
+  if (val <= 0x0000ffff) Serial.print(F("0"));
+  if (val <= 0x00000fff) Serial.print(F("0"));
+  if (val <= 0x000000ff) Serial.print(F("0"));
+  if (val <= 0x0000000f) Serial.print(F("0"));
   Serial.print(val, HEX);
 }
 
@@ -390,7 +398,7 @@ void SerialPrintData(byte* msg){
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
     SerialPrintHex(msg[9+i]);
-    Serial.print(" ");
+    Serial.print(F(" "));
   }
 }
 
@@ -414,7 +422,7 @@ void SerialPrintData(byte* msg){
 void SerialPrintRAW(byte* msg, byte len){
   for(int i=0;i<len;i++){
     SerialPrintHex(msg[i]);
-    Serial.print(" ");
+    Serial.print(F(" "));
   }
 }
 
@@ -999,12 +1007,12 @@ char *printTelegram(byte* msg) {
 */
   // source
   SerialPrintAddr(msg[1]); // source address
-  Serial.print("->");
+  Serial.print(F("->"));
   SerialPrintAddr(msg[2]); // destination address
-  Serial.print(" ");
+  Serial.print(F(" "));
   // msg[3] contains the message length, not handled here
   SerialPrintType(msg[4]); // message type, human readable
-  Serial.print(" ");
+  Serial.print(F(" "));
 
   uint32_t cmd;
   if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
@@ -1028,14 +1036,14 @@ char *printTelegram(byte* msg) {
   }
   if(!known){                          // no hex code match
     // Entry in command table is "UNKNOWN" (0x00000000)
-    Serial.print("     ");
+    Serial.print(F("     "));
     SerialPrintHex32(cmd);             // print what we have got
-    Serial.print(" ");
+    Serial.print(F(" "));
   }else{
     // Entry in command table is a documented command code
     uint16_t line=pgm_read_word(&cmdtbl[i].line);
     printLineNumber(line);             // the ProgNr
-    Serial.print(" ");
+    Serial.print(F(" "));
     outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
@@ -1044,7 +1052,7 @@ char *printTelegram(byte* msg) {
     memcpy_P(buffer, &ENUM_CAT,len);
     buffer[len]=0;
     printENUM(buffer,len,cat,0);
-    Serial.print(" - ");
+    Serial.print(F(" - "));
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
     // print menue text
@@ -1253,7 +1261,7 @@ char *printTelegram(byte* msg) {
                   Serial.print((char*)&msg[9]);
                   outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[9]);
                 } else {
-                  Serial.print("-");
+                  Serial.print(F("-"));
                   outBufLen+=sprintf(outBuf+outBufLen,"-");
                 }
               }else{
@@ -1272,7 +1280,7 @@ char *printTelegram(byte* msg) {
                   buffer[len]=0;
                   printENUM(buffer,len,lval,1);
                 } else {
-                  Serial.print("---");
+                  Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
               }else{
@@ -1408,6 +1416,7 @@ void webPrintSite() {
 #ifdef LOGGER
   client.print(F(" <tr><td>/D</td> <td>dump logged data from datalog.txt on micro SD card</td></tr>"));
   client.print(F(" <tr><td>/D0</td> <td>delete datalog.txt on micro SD card</td></tr>"));
+  client.print(F(" <tr><td>/L=x,y,z</td> <td>set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20)</td></tr>"));
 #endif
   client.print(F(" </table>"));
   client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999/T</p>"));
@@ -1695,17 +1704,17 @@ int set(uint16_t line      // the ProgNr of the heater parameter
         return 0;
 
       // Send to the PC hardware serial interface (DEBUG)
-      Serial.print("date time: ");
+      Serial.print(F("date time: "));
       Serial.print(d);
-      Serial.print(".");
+      Serial.print(F("."));
       Serial.print(m);
-      Serial.print(".");
+      Serial.print(F("."));
       Serial.print(y);
-      Serial.print(" ");
+      Serial.print(F(" "));
       Serial.print(hour);
-      Serial.print(":");
+      Serial.print(F(":"));
       Serial.print(min);
-      Serial.print(":");
+      Serial.print(F(":"));
       Serial.println(sec);
 
       // Set up the command payload
@@ -1822,9 +1831,9 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   }
 
   // Send a message to PC hardware serial port
-  Serial.print("setting line: ");
+  Serial.print(F("setting line: "));
   Serial.print(line);
-  Serial.print(" val: ");
+  Serial.print(F(" val: "));
   SerialPrintRAW(param,param_len);
   Serial.println();
 
@@ -1839,7 +1848,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
              , param_len   // payload length
              , setcmd))    // wait_for_reply
   {
-    Serial.println("set failed");
+    Serial.println(F("set failed"));
     return 0;
   }
 
@@ -1854,7 +1863,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
 
   // Expect an acknowledgement to our SET telegram
   if(msg[4]!=TYPE_ACK){
-    Serial.println("set failed NACK");
+    Serial.println(F("set failed NACK"));
     return 0;
   }
 
@@ -1905,7 +1914,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
 
     if(i>=0){
       idx=i;
-      //Serial.println("found");
+      //Serial.println(F("found"));
       if(c!=CMD_UNKNOWN){     // send only valid command codes
         retry=QUERY_RETRIES;
         while(retry){
@@ -1918,18 +1927,18 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             pvalstr=printTelegram(msg);
             break;   // success, break out of while loop
           }else{
-            Serial.println("query failed");
+            Serial.println(F("query failed"));
             retry--;          // decrement number of attempts
           }
         } // endwhile, maximum number of retries reached
         if(retry==0)
           outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
       }else{
-        //Serial.println("unknown command");
+        //Serial.println(F("unknown command"));
         //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
       } // endelse, valid / invalid command codes
     }else{
-      //Serial.println("line not found");
+      //Serial.println(F("line not found"));
       //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
     } // endelse, line (ProgNr) found / not found
     if(outBufLen>0){
@@ -1973,9 +1982,9 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
  * *************************************************************** */
 void dht22(void) {
   int i;
-  Serial.println("start request values");
+  Serial.println(F("start request values"));
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
-  Serial.print("DHT22 sensors: ");
+  Serial.print(F("DHT22 sensors: "));
   Serial.println(numDHTSensors);
     outBufclear();
     for(i=0;i<numDHTSensors;i++){
@@ -1983,29 +1992,29 @@ void dht22(void) {
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
       case DHTLIB_OK:  
-      Serial.print("OK,\t"); 
+      Serial.print(F("OK,\t")); 
       break;
       case DHTLIB_ERROR_CHECKSUM: 
-      Serial.print("Checksum error,\t"); 
+      Serial.print(F("Checksum error,\t")); 
       break;
       case DHTLIB_ERROR_TIMEOUT: 
-      Serial.print("Time out error,\t"); 
+      Serial.print(F("Time out error,\t")); 
       break;
       default: 
-      Serial.print("Unknown error,\t"); 
+      Serial.print(F("Unknown error,\t")); 
       break;
     }
 
     double hum = DHT.humidity;
     double temp = DHT.temperature;
-    Serial.println("end request values");
-    Serial.print("temp[");
+    Serial.println(F("end request values"));
+    Serial.print(F("temp["));
     Serial.print(i);
-    Serial.print("]: ");
+    Serial.print(F("]: "));
     Serial.print(temp);
-    Serial.print(", hum[");
+    Serial.print(F(", hum["));
     Serial.print(i);
-    Serial.print("]: ");
+    Serial.print(F("]: "));
     Serial.println(hum);
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf(outBuf+outBufLen,"<P>temp[%d]: ",i);
@@ -2041,16 +2050,16 @@ void dht22(void) {
 void ds18b20(void) {
   int i;
   //webPrintHeader();
-  Serial.println("start requestTemperatures");
+  Serial.println(F("start requestTemperatures"));
   sensors.requestTemperatures(); // Send the command to get temperatures
-  Serial.println("end requestTemperatures");
-  Serial.println("start getTempCByIndex");
+  Serial.println(F("end requestTemperatures"));
+  Serial.println(F("start getTempCByIndex"));
   outBufclear();
   for(i=0;i<numSensors;i++){
     float t=sensors.getTempCByIndex(i);
-    Serial.print("temp[");
+    Serial.print(F("temp["));
     Serial.print(i);
-    Serial.print("]: ");
+    Serial.print(F("]: "));
     Serial.print(t);
     Serial.println();
     outBufLen+=sprintf(outBuf+outBufLen,"temp[%d]: ",i);
@@ -2086,7 +2095,7 @@ void Ipwe() {
   int i;
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
-  Serial.print("IPWE sensors: ");
+  Serial.print(F("IPWE sensors: "));
   Serial.println(numIPWESensors);
   double ipwe_sensors[numIPWESensors];
   for (i=0; i < numIPWESensors; i++) {
@@ -2324,7 +2333,7 @@ void loop() {
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTBGHAD",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVMTBGHADCL",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -2388,9 +2397,9 @@ void loop() {
             break;
           }
           p++;                   // position pointer past the '=' sign
-          Serial.print("set ProgNr ");
+          Serial.print(F("set ProgNr "));
           Serial.print(line);    // the ProgNr
-          Serial.print(" = ");
+          Serial.print(F(" = "));
           Serial.println(p);     // the value
 
           // Now send it out to the bus
@@ -2482,7 +2491,7 @@ void loop() {
             client.println(F("ERROR: line not found"));
           }else{
             if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
-              Serial.println("set failed");  // to PC hardware serial I/F
+              Serial.println(F("set failed"));  // to PC hardware serial I/F
               client.println(F("ERROR: set failed"));
             }else{
 
@@ -2532,7 +2541,152 @@ void loop() {
           break;
         }
 #endif            
+        if (p[1]=='C'){ // dump configuration
+          webPrintHeader();
+          client.println(F("Configuration<BR><BR>"));
+          client.println(F("Special heating system configuration: "));
+          #ifdef THISION 
+          client.println(F("Thision "));
+          #endif
+          #ifdef FUJITSU
+          client.println(F("Fujitsu "));
+          #endif
+          #ifdef BROETJE_SOB
+          client.println(F("Brötje SOB "));
+          #endif
+          #ifdef PROGNR_5895
+          client.println(F("PROGNR_5895 "));
+          #endif
+          #ifdef PROGNR_6030
+          client.println(F("PROGNR_6030 "));
+          #endif
+          client.println(F("<BR>"));
 
+//          client.println(F("BSB pins: "));
+//          client.println(bus);
+//          client.println(F("<BR><BR>"));
+
+          #ifdef ONE_WIRE_BUS
+          client.println(F("1-Wire bus pins: "));
+          client.println(ONE_WIRE_BUS);
+          client.println(F("<BR>"));
+          #endif
+
+          #ifdef DHT_BUS
+          client.println(F("DHT22 bus pins: "));
+          client.println(DHT_BUS);
+          client.println(F("<BR>"));
+          #endif
+
+          client.println(F("Excluded GPIO pins: "));
+          for (int i=0; i<anz_ex_gpio; i++) {
+            client.print (exclude_GPIO[i]);
+            client.print(F(" "));
+          }
+          client.println(F("<BR>"));
+          
+          client.println(F("MAC address: "));
+          for (int i=0; i<=5; i++) {
+            if (mac[i] < 10) {
+              client.print(F("0"));
+            }
+            client.print(mac[i], HEX);
+            client.print(F(" "));
+          }
+          client.println(F("<BR>"));
+
+          client.println(F("IP address: "));
+          client.println(ip);
+          client.println(F("<BR>"));
+
+          client.print(F("Listening for broadcast telegrams: "));
+          #ifdef USE_BROADCAST
+          client.println(F("yes"));
+          #else
+          client.println(F("no"));
+          #endif
+          client.println(F("<BR><BR>"));
+
+          client.println(F("Calculating 24h averages for the following parameters: <BR>"));
+           for (int i=0; i<numAverages; i++) {
+            if (avg_parameters[i] > 0) {
+              client.print (avg_parameters[i]);
+              client.print(F(" - "));
+              client.print(lookup_descr(avg_parameters[i])); 
+              client.println(F("<BR>"));
+            }
+          }
+          client.println(F("<BR>"));
+
+          #ifdef LOGGER
+          client.print(F("Logging the following parameters every "));
+          client.print(log_interval);
+          client.println(F(" seconds: <BR>"));
+           for (int i=0; i<numLogValues; i++) {
+            if (log_parameters[i] > 0) {
+              client.print (log_parameters[i]);
+              client.print(F(" - "));
+              if (log_parameters[i] < 20000) {
+                client.print(lookup_descr(log_parameters[i])); 
+              } else {
+                if (log_parameters[i] == 20000) {
+                  client.print(F("Brennerlaufzeit"));
+                }
+                if (log_parameters[i] == 20001) {
+                  client.print(F("Brennertakte"));
+                }
+                if (log_parameters[i] == 20002) {
+                  client.print(F("24h averages (see above)"));
+                }
+                if (log_parameters[i] >= 20010 && log_parameters[i] < 20020) {
+                  client.print(F("DHT22-Sensor"));
+                }
+                if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
+                  client.print(F("1-Wire-Sensor"));
+                }
+              }
+              client.println(F("<BR>"));
+            }
+
+          }
+          #endif
+
+          client.println(F("<BR>"));
+          webPrintFooter();
+          break;
+        }
+        if (p[1]=='L' && p[2]=='='){ // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
+          webPrintHeader();
+          char* log_token = strtok(p,"=,");  // drop everything before "="
+          log_token = strtok(NULL, "=,");   // first token: interval
+          if (log_token != 0) {
+            log_interval = atoi(log_token);
+            lastLogTime = millis();
+            client.print(F("New logging interval: "));
+            client.print(log_interval);
+            client.println(F(" seconds<BR>"));
+          }
+          log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
+          int token_counter = 0;
+          if (log_token != 0) {
+            for (int i=0;i<numLogValues;i++) {
+              log_parameters[i] = 0;
+            }
+            client.print(F("New logging parameters: "));
+          }
+          while (log_token!=0) {
+            int log_parameter = atoi(log_token);
+            if (token_counter < numLogValues) {
+              log_parameters[token_counter] = log_parameter; 
+              client.print(log_parameters[token_counter]);
+              client.println(F(" "));
+              token_counter++;
+            }
+            log_token = strtok(NULL,"=,");
+          }
+          webPrintFooter();
+          break;
+        }
         // print queries
         webPrintHeader();
         char* range;
@@ -2551,16 +2705,44 @@ void loop() {
             dht22();
 #endif
           }else if(range[0]=='A') { // handle average command
-            for (int i=0; i<numAverages; i++) {
-              client.print(F("<P>"));
-              client.print(avg_parameters[i]);
-              client.print(F(" Avg"));
-              client.print(lookup_descr(avg_parameters[i]));            
-              client.print(F(": "));
-              double rounded = round(avgValues[i]*10);
-              client.println(rounded/10);
+            if (range[1]=='=') {
+              char* avg_token = strtok(range,"=,");  // drop everything before "="
+              avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
+              int token_counter = 0;
+              if (avg_token != 0) {
+                for (int i=0;i<numAverages;i++) {
+                  avg_parameters[i] = 0;
+                  avgValues[i] = 0;
+                  avgValues_Old[i] = -9999;
+                  avgValues_Current[i] = 0;
+                }
+                avgCounter = 1;
+                client.print(F("New average parameters: "));
+              }
+              while (avg_token!=0) {
+                int avg_parameter = atoi(avg_token);
+                if (token_counter < numAverages) {
+                  avg_parameters[token_counter] = avg_parameter; 
+                  client.print(avg_parameters[token_counter]);
+                  client.println(F(" "));
+                  token_counter++;
+                }
+                avg_token = strtok(NULL,"=,");
+              }
+            } else {
+              for (int i=0; i<numAverages; i++) {
+                if (avg_parameters[i] > 0) {
+                  client.print(F("<P>"));
+                  client.print(avg_parameters[i]);
+                  client.print(F(" Avg"));
+                  client.print(lookup_descr(avg_parameters[i]));            
+                  client.print(F(": "));
+                  double rounded = round(avgValues[i]*10);
+                  client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-              client.println(F("<BR></P>"));
+                  client.println(F("<BR></P>"));
+                }
+              }
             }
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
@@ -2572,7 +2754,6 @@ void loop() {
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
-            int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(int);
             for (int i=0; i < anz_ex_gpio; i++) {
               if (pin==exclude_GPIO[i]) {
                 error = true;
@@ -2675,23 +2856,25 @@ void loop() {
 #ifdef LOGGER
 
   if (millis() - lastLogTime >= (log_interval * 1000)) {
-
-    int numLogValues = sizeof(log_parameters) / sizeof(int);
     double log_values[numLogValues];
     for (int i=0; i < numLogValues; i++) {
-      log_values[i] = strtod(query(log_parameters[i],log_parameters[i],1),NULL);
+      if (log_parameters[i] > 0) {
+        log_values[i] = strtod(query(log_parameters[i],log_parameters[i],1),NULL);
+      }
     }
     File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
-        dataFile.print(millis());
-        dataFile.print(F(";"));
-        dataFile.print(query(0,0,1)); // get current time from heating system
-        dataFile.print(F(";"));
-        dataFile.print(log_parameters[i]);
-        dataFile.print(F(";"));
-        if (log_parameters[i] < 20000) {
+        if (log_parameters[i] > 0 && log_parameters[i] != 20002) {
+          dataFile.print(millis());
+          dataFile.print(F(";"));
+          dataFile.print(query(0,0,1)); // get current time from heating system
+          dataFile.print(F(";"));
+          dataFile.print(log_parameters[i]);
+          dataFile.print(F(";"));
+        }
+        if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
           dataFile.print(lookup_descr(log_parameters[i]));
           dataFile.print(F(";"));
           dataFile.println(log_values[i]);
@@ -2708,6 +2891,24 @@ void loop() {
             dataFile.println(brenner_count);
           }
 #endif
+          if (log_parameters[i] == 20002) {
+            for (int i=0; i<numAverages; i++) {
+              if (avg_parameters[i] > 0) {
+                dataFile.print(millis());
+                dataFile.print(F(";"));
+                dataFile.print(query(0,0,1)); // get current time from heating system
+                dataFile.print(F(";"));
+                dataFile.print(avg_parameters[i]);
+                dataFile.print(F(";"));
+                dataFile.print(F("Avg_"));
+                dataFile.print(lookup_descr(avg_parameters[i]));            
+                dataFile.print(F(";"));
+                double rounded = round(avgValues[i]*10);
+                dataFile.println(rounded/10);
+// TODO: extract and display unit text from cmdtbl.type
+              }
+            }
+          }
 #ifdef DHT_BUS
           if (log_parameters[i] >= 20010 && log_parameters[i] < 20020) {
             int log_sensor = log_parameters[i] - 20010;
@@ -2813,9 +3014,9 @@ void setup() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  Serial.print("Starting SD..");
-  if(!SD.begin(4)) Serial.println("failed");
-  else Serial.println("ok");
+  Serial.print(F("Starting SD.."));
+  if(!SD.begin(4)) Serial.println(F("failed"));
+  else Serial.println(F("ok"));
 
 #else
   // enable w5100 SPI
@@ -2838,7 +3039,7 @@ void setup() {
   // check ds18b20 sensors
   sensors.begin();
   numSensors=sensors.getDeviceCount();
-  Serial.print("numSensors: ");
+  Serial.print(F("numSensors: "));
   Serial.println(numSensors);
 #endif
 
