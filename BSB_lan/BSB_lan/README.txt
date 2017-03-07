@@ -118,8 +118,9 @@ Interface:
         are not allowed to be written can be defined in BSB_lan_config.h in variable GPIO_exclude.
       
       Show 24h averages of selected parameters
-        http://<ip-of-server>/A
-        Define parameters you want to generate rolling 24h averages from in BSB_lan_config.h in variable avg_parameters.
+        http://<ip-of-server>/A[=parameter1,...,parameter20]
+        Initially define parameters you want to generate rolling 24h averages from in BSB_lan_config.h in variable avg_parameters.
+        During runtime, you can use "/A=[parameter1],...,[parameter20]" to set (up to 20) new parameters.
       
       Query values of ds18b20 temperature sensors
         http://<ip-of-server>/T
@@ -133,10 +134,15 @@ Interface:
         http://<ip-of-server>/B
         Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
+      Configure log file
+        http://<ip-of-server>/L=x[,parameter1,...,parameter20]
+        Set logging interval to x seconds and (optionally) set logging parameters to [parameter1], [parameter2] etc. during runtime.
+        Logging parameters needs to be activated by uncommenting the LOGGER directive in BSB_lan_config.h and can be configured 
+        initially with variables log_parameters and log_interval.
+
       Display log file
         http://<ip-of-server>/D
-        Shows the content of datalog.txt file on the Ethernet shield's micro SD card slot. Logging parameters needs to be activated
-        by uncommenting the LOGGER directive in BSB_lan_config.h and can be configured with variables log_parameters and log_interval.
+        Shows the content of datalog.txt file on the Ethernet shield's micro SD card slot. 
         Use /D0 to reset datalog.txt including writing a proper CSV file header (recommended on first use before logging starts).
 
 Open issues
