@@ -1,60 +1,60 @@
 BSB Boiler-System-Bus LAN Interface
 
-ATTENION:
+ATTENION:  
       There is no waranty that this system will not damage your heating system!
 
-Author: Gero Schumacher (gero.schumacher@gmail.com)
+Author: Gero Schumacher (gero.schumacher@gmail.com)  
       Based on the code and work from many other developers (see Info section below). Many thanks!
 
 License:
       You are free to use this software on your own risk. Please take care of the licenses of the used libraries and software.
 
 Info:
-      http://www.mikrocontroller.net/topic/218643
-      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol
-      http://forum.fhem.de/index.php/topic,29762.0.html
+      http://www.mikrocontroller.net/topic/218643  
+      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
+      http://forum.fhem.de/index.php/topic,29762.0.html  
       systemhandbuch_isr.pdf
 
 Host System:
       The software is designed to run on an arduino mega2560 board with ethernet shield.
       Because there are different pin assignments for different ethernet shields, you
       may have to connect the BSB adapter to different pins and to change the pin assigment
-      in the software.
-      The software is tested with the following components:      
-      - SainSmart MEGA2560 R3 Development Board
-      - SainSmart Ethernet Schild Für Arduino UNO MEGA Duemilanove*Neu Version W5100*
-      - BSB-Interface (see BSB_adapter.pdf)
+      in the software.  
+      The software is tested with the following components:        
+      - SainSmart MEGA2560 R3 Development Board  
+      - SainSmart Ethernet Schild Für Arduino UNO MEGA Duemilanove*Neu Version W5100*  
+      - BSB-Interface (see BSB_adapter.pdf)  
       For this configuration pin A14 (68) ist used as RX and pin A15 (69) is used as TX:
 
       BSB bus(68,69);
       
-Target System:
+Target System:  
       Tested with: Elco Straton oil fired condensing boiler.
       Communication should be possible with all systems that support the BSB interface.
       Missing command ids have to be added in the cmdtbl.
       Until now it is not clear to me, what the differences between the LPB and BSB protocols are. The physical specifications
       are the same. But may be they differe on the protocol level. Until now I have only connected the system to the BSB.
     
-BEFORE BUILDING the software you have to adapt some parameters in BSB_lan_config.h:
-      - MAC address of your ethernet shield. It can be normally found on a label at the shield:
-        byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };
-      - Ethernet address
-        IPAddress ip(192,168,178,88);
-      - Ethernet port
-        EthernetServer server(80);
-      - Pin assigment of the BSB adapter
-        BSB bus(68,69);
-      - (optional) Activate the usage of the passkey functionality (see below)
-        #define PASSKEY  "1234"
-      - (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)
-        BSB bus(68,69,<my_addr>);
+BEFORE BUILDING the software you have to adapt some parameters in BSB_lan_config.h:  
+      - MAC address of your ethernet shield. It can be normally found on a label at the shield:  
+        byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };  
+      - Ethernet address  
+        IPAddress ip(192,168,178,88);  
+      - Ethernet port  
+        EthernetServer server(80);  
+      - Pin assigment of the BSB adapter  
+        BSB bus(68,69);  
+      - (optional) Activate the usage of the passkey functionality (see below)  
+        #define PASSKEY  "1234"  
+      - (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)  
+        BSB bus(68,69,<my_addr>);  
         
-Interface:
-      A simple syntax description is content of the website displayed when the server is accessed by its simple URL withou any parameters.
-      e.g. http://<ip-of-server>
+Interface:  
+      A simple syntax description is content of the website displayed when the server is accessed by its simple URL withou any parameters.  
+      e.g. http://<ip-of-server>  
       To protect the system for unwanted access you can enable the passkey feature (very simple and not really secure!).
       If the passkey feature is enabled (see below), the URL has to contain the defined passkey as first element
-      e.g. http://<ip-of-server>/<passkey>/    - to see the help
+      e.g. http://<ip-of-server>/<passkey>/    - to see the help  
       The urls in the below examples have to be exented, if the passeky feature is turned on.
       All parameters are accessed by line numbers. A nearly complete description can be found in systemhandbuch_isr.pdf.
       Some lines are 'virtual', i.e. they were added to simplify the access to complex settings like time programms.
