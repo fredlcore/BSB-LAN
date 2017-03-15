@@ -54,6 +54,8 @@ attr THISION timeout 5
 attr THISION userReadings Spreizung { sprintf("%.1f",ReadingsVal("THISION","Vorlauftemperatur",0)-ReadingsVal("THISION","Ruecklauftemperatur",0));; }
 </pre>
 
+Bitte beachten: Die Regex-Bedingungen müssen vom Beginn des Strings an matchen, also der Parameternummer (wie z.B. 8700), und nicht erst ab einem späteren Teil des Strings.
+
 <H2>Ich habe ein Relaisboard an dem Arduino Mega angeschlossen, wie kann ich die einzelnen Relais ansteuern bzw. deren Zustand abfragen?</H2>
 
 Das Folgende ist ein Beispiel für eine FHEM-Konfiguration, bei dem die drei Relais-Ports namens "Heater", "Fan" und "Bell" abgefragt und gesteuert werden, die an die entsprechenden GPIO-Pins 7, 6 und 5 angeschlossen sind (Achtung: Ändere entsprechend deiner Konfiguration sowohl die IP als auch den optional aktivierbaren Sicherheitsschlüssel 'passkey'!):
