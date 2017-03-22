@@ -1,4 +1,4 @@
-char version[6] = "0.29";
+char version[6] = "0.30";
 
 /*
  * 
@@ -6,12 +6,12 @@ char version[6] = "0.29";
  *
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
- *
+ *i
  * Author: Gero Schumacher (gero.schumacher@gmail.com)
  *        (based on the code and work from many other developers. Many thanks!)
  *
  * see README file for more information
- *
+ *d
  * Version:
  *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
@@ -40,9 +40,16 @@ char version[6] = "0.29";
  *       0.26  - 27.02.2017
  *       0.27  - 01.03.2017
  *       0.28  - 05.03.2017
- *       0.29  - 06.03.2017
+ *       0.29  - 07.03.2017
+ *       0.30  - 22.03.2017
  *
  * Changelog:
+ *       version 0.30
+ *        - Time library by Paul Stoffregen (https://github.com/PaulStoffregen/Time) is now required and included in the library folder.
+ *        - adds logging of raw telegram data to SD card with logging parameter 30000. Logging telegram data is affected by commands /V and /LU
+ *        - adds command /LU=x to log only known (x=0) or unknown (x=1) command IDs when logging telegram data
+ *        - removed define USE_BROADCAST, broadcast data is now always processed
+ *        - new internal functions GetDateTime, TranslateAddr, TranslateType
  *       version 0.29
  *        - adds command /C to display current configuration
  *        - adds command /L to configure logging interval and parameters
@@ -166,6 +173,7 @@ char version[6] = "0.29";
 #include <Ethernet.h>
 #include <Arduino.h>
 #include <util/crc16.h>
+#include <TimeLib.h>
 
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
@@ -194,6 +202,8 @@ EthernetClient client;
   int DHT_Pins[] = {DHT_BUS};
   dht DHT;
 #endif
+
+char date[20];
 
 static unsigned long lastAvgTime = millis();
 static unsigned long lastLogTime = millis();
@@ -332,6 +342,7 @@ int freeRam () {
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 }
 
+
 /** *****************************************************************
  *  Function:  SerialPrintHex()
  *  Does:      Sends the hex representation of one byte to the PC
@@ -348,7 +359,7 @@ int freeRam () {
  * *************************************************************** */
 void SerialPrintHex(byte val) {
   if (val < 16) Serial.print(F("0"));  // add a leading zero to single-digit values
-    Serial.print(val, HEX);
+  Serial.print(val, HEX);
 }
 
 /** *****************************************************************
@@ -427,6 +438,36 @@ void SerialPrintRAW(byte* msg, byte len){
 }
 
 /** *****************************************************************
+ *  Function:  TranslateAddr()
+ *  Does:      Returns human-readable device names
+ *             selected by a device address.
+ *             If the device number is not in the list of known
+ *             addresses, return the number itself.
+ *
+ * Pass parameters:
+ *   byte addr the Int8 address value for which we seek the device
+ *             name; values GT 127 are mapped to 0 <= addr <= 127
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   device string
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+char *TranslateAddr(byte addr, char *device){
+  switch(addr&0x7F){
+    case ADDR_HEIZ: strncpy(device, "HEIZ", 4); break;
+    case ADDR_RGT1: strncpy(device, "RGT1", 4); break;
+    case ADDR_RGT2: strncpy(device, "RGT2", 4); break;
+    case ADDR_DISP: strncpy(device, "DISP", 4); break;
+    case ADDR_ALL: strncpy(device, "ALL ", 4); break;
+    default: sprintf(device, "%02X", addr); break;
+  }
+  device[4] = 0;
+  return device;
+}
+
+/** *****************************************************************
  *  Function:  SerialPrintAddr()
  *  Does:      Sends human-readable device names to the PC hardware
  *             serial interface, selected by a device address.
@@ -452,6 +493,36 @@ void SerialPrintAddr(byte addr){
     case ADDR_ALL: Serial.print(F("ALL ")); break;
     default: SerialPrintHex(addr); break;
   }
+}
+
+/** *****************************************************************
+ *  Function:  TranslateAddr()
+ *  Does:      Returns the message type in human-readable form.
+ *  Pass parameters:
+ *   byte type a number which indicates the type
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   message type
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+char *TranslateType(byte type, char *mtype){
+  switch(type){
+    case TYPE_INF: strncpy(mtype, "INF", 4); break;
+    case TYPE_SET: strncpy(mtype, "SET", 4); break;
+    case TYPE_ACK: strncpy(mtype, "ACK", 4); break;
+    case TYPE_NACK: strncpy(mtype, "NACK", 4); break;
+    case TYPE_QUR: strncpy(mtype, "QUR", 4); break;
+    case TYPE_ANS: strncpy(mtype, "ANS", 4); break;
+    case TYPE_QRV: strncpy(mtype, "QRV", 4); break;
+    case TYPE_ARV: strncpy(mtype, "ARV", 4); break;
+    case TYPE_ERR: strncpy(mtype, "ERR", 4); break;
+    // If no match found: print the hex value
+    default: sprintf(mtype, "%02X", type); break;
+  } // endswitch
+  mtype[4] = 0;
+  return mtype;
 }
 
 /** *****************************************************************
@@ -996,6 +1067,7 @@ char *printTelegram(byte* msg) {
   char *pvalstr=NULL;
 
   outBufclear();
+
 /*
 #if !DEBUG
   // suppress DE telegrams
@@ -1023,7 +1095,7 @@ char *printTelegram(byte* msg) {
 
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
-  int known=0;
+  boolean known=0;
   uint32_t c;     // command code
   c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
@@ -1222,7 +1294,7 @@ char *printTelegram(byte* msg) {
                 }
               }else if(data_len == 3) //FUJITSU
               {
-                 if(msg[9]==0 && msg[10]==0){
+                if(msg[9]==0 && msg[10]==0){
                   if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
                     int len=pgm_read_word(&cmdtbl[i].enumstr_len);
                     memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
@@ -1297,7 +1369,7 @@ char *printTelegram(byte* msg) {
               break;
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
- 	      // printBYTE(msg,data_len,"Volt");
+//              printBYTE(msg,data_len,"Volt");
               break;
             case VT_VOLTAGEONOFF:
               printCHOICE(msg,data_len,"0 Volt","230 Volt");
@@ -1314,8 +1386,8 @@ char *printTelegram(byte* msg) {
         }
       }else{
         SerialPrintData(msg);
-       //Serial.println();
-       // SerialPrintRAW(msg,msg[3]);
+//        Serial.println();
+//        SerialPrintRAW(msg,msg[3]);
         outBufLen+=sprintf(outBuf+outBufLen,"unknown command");
       }
     }
@@ -1398,7 +1470,7 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Kx</td> <td>query all values in category x</td></tr>"));
   client.print(F(" <tr><td>/x</td> <td>query value for line x</td></tr>"));
   client.print(F(" <tr><td>/x-y</td> <td>query all values from line x up to line y</td></tr>"));
-  client.print(F(" <tr><td>/Sx=v</td> <td>set value v for line x and query the new value afterwards (empty string after = disables the value</td></tr>"));
+  client.print(F(" <tr><td>/Sx=v</td> <td>set value v for line x and query the new value afterwards (empty string after = disables the value)</td></tr>"));
   client.print(F(" <tr><td>/Ix=v</td> <td>send INF message for command in line x with value v</td></tr>"));
   client.print(F(" <tr><td>/Ex</td> <td>list enum values for line x</td></tr>"));
   client.print(F(" <tr><td>/Rx</td> <td>query reset value for line x</td></tr>"));
@@ -1407,19 +1479,26 @@ void webPrintSite() {
   client.print(F(" <tr><td>/Gxx</td> <td>query GPIO pin xx</td></tr>"));
   client.print(F(" <tr><td>/Gxx=y</td> <td>set GPIO pin xx to high(1) or low(0)</td></tr>"));
   client.print(F(" <tr><td>/A</td> <td>show 24h averages of selected parameters (define in BSB_lan_config.h)</td></tr>"));
+  client.print(F(" <tr><td>/A=x,y,z</td> <td>change 24h averages parameters to x,y and z (up to 20)</td></tr>"));
+#ifndef ONE_WIRE_BUS
+  client.print(F(" <tr><td></td> <td>activate definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
+#endif
   client.print(F(" <tr><td>/T</td> <td>query values of connected ds18b20 temperature sensors (optional)</td></tr>"));
+#ifndef DHT_BUS
+  client.print(F(" <tr><td></td> <td>activate definement <code>#define DHT_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
+#endif
   client.print(F(" <tr><td>/H</td> <td>query values of connected DHT22 humidity/temperature sensors (optional)</td></tr>"));
-#ifdef USE_BROADCAST
   client.print(F(" <tr><td>/B</td> <td>query accumulated duration of burner on status captured from broadcast messages</td></tr>"));
   client.print(F(" <tr><td>/B0</td> <td>reset accumulated duration of burner on status captured from broadcast messages</td></tr>"));
+#ifndef LOGGER
+  client.print(F(" <tr><td></td> <td>activate definement <code>#define LOGGER</code> in BSB_lan_config.h for the following commands:</td></tr>"));
 #endif
-#ifdef LOGGER
   client.print(F(" <tr><td>/D</td> <td>dump logged data from datalog.txt on micro SD card</td></tr>"));
   client.print(F(" <tr><td>/D0</td> <td>delete datalog.txt on micro SD card</td></tr>"));
   client.print(F(" <tr><td>/L=x,y,z</td> <td>set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20)</td></tr>"));
-#endif
+  client.print(F(" <tr><td>/LU=x</td> <td>when logging bus telegrams (logging parameter 30000), log only unknown command IDs (x=1) or all (x=0) telegramss.</td></tr>"));
   client.print(F(" </table>"));
-  client.print(F(" multiple queries are possible, e.g. /K0/710/8000-8999/T</p>"));
+  client.print(F(" multiple queries are possible, e.g. <code>/K0/710/8000-8999/T</code></p>"));
   webPrintFooter();
 } // --- webPrintSite() ---
 
@@ -1853,13 +1932,21 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   }
 
   // Decode the xmit telegram and send it to the PC serial interface
-  if(verbose) printTelegram(tx_msg);
+  if(verbose) {
+    printTelegram(tx_msg);
+#ifdef LOGGER
+    LogTelegram(tx_msg);
+#endif
+  }
 
   // no answer for TYPE_INF
   if(t!=TYPE_SET) return 1;
 
   // Decode the rcv telegram and send it to the PC serial interface
   printTelegram(msg);
+#ifdef LOGGER
+  LogTelegram(msg);
+#endif
 
   // Expect an acknowledgement to our SET telegram
   if(msg[4]!=TYPE_ACK){
@@ -1921,10 +2008,18 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
           if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
 
             // Decode the xmit telegram and send it to the PC serial interface
-            if(verbose) printTelegram(tx_msg);
+            if(verbose) {
+              printTelegram(tx_msg);
+#ifdef LOGGER
+              LogTelegram(tx_msg);
+#endif
+            }
 
             // Decode the rcv telegram and send it to the PC serial interface
             pvalstr=printTelegram(msg);
+#ifdef LOGGER
+            LogTelegram(msg);
+#endif
             break;   // success, break out of while loop
           }else{
             Serial.println(F("query failed"));
@@ -1961,6 +2056,130 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
   */
   return pvalstr;
 } // --- query() ---
+
+/** *****************************************************************
+ *  Function:  GetDateTime()
+ *  Does:      Returns human-readable date/time string
+ *
+ * Pass parameters:
+ *   date buffer
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   date/time string
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+char *GetDateTime(char date[]){
+  sprintf(date,"%02d.%02d.%d %02d:%02d:%02d",day(),month(),year(),hour(),minute(),second());
+  date[20] = 0;
+  return date;
+}
+
+/** *****************************************************************
+ *  Function:  SetDateTime()
+ *  Does:      Sets date/time based on heating system's clock
+ *
+ * Pass parameters:
+ *   none
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   TimeLib
+ * *************************************************************** */
+void SetDateTime(){
+  byte rx_msg[33];      // response buffer
+  byte tx_msg[33];   // xmit buffer
+  uint32_t c;        // command code
+
+  findLine(0,0,&c);
+  if(c!=CMD_UNKNOWN){     // send only valid command codes
+    if(bus.Send(TYPE_QUR, c, rx_msg, tx_msg)){
+      setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
+    }
+  }
+}
+
+/** *****************************************************************
+ *  Function:  LogTelegram()
+ *  Does:      Logs the telegram content in hex to the SD card,
+ *             starting at position null. It stops
+ *             when it has sent the requested number of message bytes.
+ *  Pass parameters:
+ *   byte *msg pointer to the telegram buffer
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   log_parameters
+ * *************************************************************** */
+#ifdef LOGGER
+void LogTelegram(byte* msg){
+  File dataFile;
+  char device[5];
+  uint32_t cmd;
+  int i=0;        // begin with line 0
+  boolean known=0;
+  uint32_t c;     // command code
+
+  if (log_parameters[0] == 30000) {
+
+    if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+    }else{
+      cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+    }
+    // search for the command code in cmdtbl
+    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
+    while(c!=CMD_END){
+      if(c == cmd){
+        known=1;
+        break;
+      }
+      i++;
+      c=pgm_read_dword(&cmdtbl[i].cmd);
+    }
+
+    if (log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) {
+      dataFile = SD.open("datalog.txt", FILE_WRITE);
+      if (dataFile) {
+        dataFile.print(millis());
+        dataFile.print(F(";"));
+        dataFile.print(GetDateTime(date));
+        dataFile.print(F(";"));
+
+        if(!known){                          // no hex code match
+        // Entry in command table is "UNKNOWN" (0x00000000)
+          dataFile.print("UNKNOWN");
+        }else{
+          // Entry in command table is a documented command code
+          uint16_t line=pgm_read_word(&cmdtbl[i].line);
+          dataFile.print(line);             // the ProgNr
+        }
+        dataFile.print(F(";"));
+        dataFile.print(TranslateAddr(msg[1], device));
+        dataFile.print(F("->"));
+        dataFile.print(TranslateAddr(msg[2], device));
+        dataFile.print(F(" "));
+        dataFile.print(TranslateType(msg[4], device));
+        dataFile.print(F(";"));
+
+        for(int i=0;i<msg[3];i++){
+          if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
+          dataFile.print(msg[i], HEX);
+          dataFile.print(F(" "));
+        }
+     
+        dataFile.println();
+        dataFile.close();
+      }
+    }
+  }
+}
+#endif
 
 #ifdef DHT_BUS
 
@@ -2115,17 +2334,19 @@ void Ipwe() {
   }
 
   for (int i=0; i<numAverages; i++) {
-    counter++;
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(counter);
-    client.print(F("<br></td><td>"));
-    client.print(F("Avg"));
-    client.print(lookup_descr(avg_parameters[i]));            
-    client.print(F("<br></td><td>"));
-    double rounded = round(avgValues[i]*10);
-    client.println(rounded/10);
+    if (avg_parameters[i] > 0) {
+      counter++;
+      client.print(F("<tr><td>T<br></td><td>"));
+      client.print(counter);
+      client.print(F("<br></td><td>"));
+      client.print(F("Avg"));
+      client.print(lookup_descr(avg_parameters[i]));            
+      client.print(F("<br></td><td>"));
+      double rounded = round(avgValues[i]*10);
+      client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    }
   }
 
 #ifdef ONE_WIRE_BUS
@@ -2154,8 +2375,7 @@ void Ipwe() {
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
-    int chk = DHT.read22(DHT_Pins[i]);
-    Serial.println(chk);
+    DHT.read22(DHT_Pins[i]);
     
     double hum = DHT.humidity;
     double temp = DHT.temperature;
@@ -2228,15 +2448,21 @@ void loop() {
   }else{
     // Listen for incoming messages, identified them by their magic byte.
     // Method GetMessage() validates length byte and CRC.
-#ifdef USE_BROADCAST
       if (bus.GetMessage(msg)) { // message was syntactically correct
-
          // Decode the rcv telegram and send it to the PC serial interface
-         if(verbose) printTelegram(msg);
+         if(verbose) {
+          printTelegram(msg);
+#ifdef LOGGER
+          LogTelegram(msg);
+#endif
+         }
          // Is this a broadcast message?
          if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
            // Decode the rcv telegram and send it to the PC serial interface
-           printTelegram(msg);
+           if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
+             printTelegram(msg);
+             LogTelegram(msg);
+           }
            // Filter Brenner Status messages (attention: undocumented enum values)
            uint32_t cmd;
            cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
@@ -2266,12 +2492,15 @@ void loop() {
       } // endif, GetMessage() returned True
 
       // At this point drop possible GetMessage() failures silently
-#else
+/*
     if(verbose){
       // Decode the rcv telegram and send it to the PC serial interface
       if (bus.GetMessage(msg)) printTelegram(msg);
-    }
+#ifdef LOGGER
+      LogTelegram(msg);
 #endif
+    }
+*/
   } // endelse, NOT in monitor mode
 
   // Listen for incoming clients
@@ -2496,10 +2725,18 @@ void loop() {
             }else{
 
               // Decode the xmit telegram and send it to the PC serial interface
-              if(verbose) printTelegram(tx_msg);
+              if(verbose) {
+                printTelegram(tx_msg);
+#ifdef LOGGER
+                LogTelegram(tx_msg);
+#endif
+              }
 
               // Decode the rcv telegram and send it to the PC serial interface
               printTelegram(msg);   // send to hardware serial interface
+#ifdef LOGGER
+              LogTelegram(msg);
+#endif
               if(outBufLen>0){
                 client.println(outBuf);
                 client.println("<br>");
@@ -2533,7 +2770,7 @@ void loop() {
               while (dataFile.available()) {
                 char c = dataFile.read();
                 client.write(c);
-                Serial.write(c);
+//                Serial.write(c);
               }
               dataFile.close();
             }
@@ -2599,14 +2836,6 @@ void loop() {
           client.println(ip);
           client.println(F("<BR>"));
 
-          client.print(F("Listening for broadcast telegrams: "));
-          #ifdef USE_BROADCAST
-          client.println(F("yes"));
-          #else
-          client.println(F("no"));
-          #endif
-          client.println(F("<BR><BR>"));
-
           client.println(F("Calculating 24h averages for the following parameters: <BR>"));
            for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
@@ -2622,7 +2851,7 @@ void loop() {
           client.print(F("Logging the following parameters every "));
           client.print(log_interval);
           client.println(F(" seconds: <BR>"));
-           for (int i=0; i<numLogValues; i++) {
+          for (int i=0; i<numLogValues; i++) {
             if (log_parameters[i] > 0) {
               client.print (log_parameters[i]);
               client.print(F(" - "));
@@ -2644,14 +2873,38 @@ void loop() {
                 if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
                   client.print(F("1-Wire-Sensor"));
                 }
+                if (log_parameters[i] == 30000) {
+                  client.print(F("BSB-Data telegrams (irrespective of interval)<BR>"));
+                  client.print(F("Logging unknown bus telegrams only: "));
+                  if (log_unknown_only) {
+                    client.println(F("yes"));
+                  } else {
+                    client.println(F("no"));
+                  }
+                }
               }
               client.println(F("<BR>"));
             }
-
           }
           #endif
 
           client.println(F("<BR>"));
+          webPrintFooter();
+          break;
+        }
+        if (p[1]=='L' && p[2]=='U' && p[3]=='='){
+          if (p[4]=='1') {
+            log_unknown_only=1;
+          } else {
+            log_unknown_only=0;
+          }
+          webPrintHeader();
+          client.print(F("Logging unknown bus telegrams only: "));
+          if (log_unknown_only) {
+            client.println(F("yes<BR>"));
+          } else {
+            client.println(F("no<BR>"));
+          }
           webPrintFooter();
           break;
         }
@@ -2661,6 +2914,7 @@ void loop() {
           log_token = strtok(NULL, "=,");   // first token: interval
           if (log_token != 0) {
             log_interval = atoi(log_token);
+            if (log_interval < 10) {log_interval = 10;}
             lastLogTime = millis();
             client.print(F("New logging interval: "));
             client.print(log_interval);
@@ -2856,6 +3110,7 @@ void loop() {
 #ifdef LOGGER
 
   if (millis() - lastLogTime >= (log_interval * 1000)) {
+    SetDateTime(); // receive inital date/time from heating system
     double log_values[numLogValues];
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
@@ -2866,10 +3121,10 @@ void loop() {
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0 && log_parameters[i] != 20002) {
+        if (log_parameters[i] > 0 && log_parameters[i] != 20002 && log_parameters[i] != 30000) {
           dataFile.print(millis());
           dataFile.print(F(";"));
-          dataFile.print(query(0,0,1)); // get current time from heating system
+          dataFile.print(GetDateTime(date)); // get current time from heating system
           dataFile.print(F(";"));
           dataFile.print(log_parameters[i]);
           dataFile.print(F(";"));
@@ -2879,7 +3134,6 @@ void loop() {
           dataFile.print(F(";"));
           dataFile.println(log_values[i]);
         } else {
-#ifdef USE_BROADCAST
           if (log_parameters[i] == 20000) {
             dataFile.print(F("Brennerlaufzeit"));
             dataFile.print(F(";"));
@@ -2890,13 +3144,12 @@ void loop() {
             dataFile.print(F(";"));
             dataFile.println(brenner_count);
           }
-#endif
           if (log_parameters[i] == 20002) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
                 dataFile.print(millis());
                 dataFile.print(F(";"));
-                dataFile.print(query(0,0,1)); // get current time from heating system
+                dataFile.print(GetDateTime(date)); // get current time from heating system
                 dataFile.print(F(";"));
                 dataFile.print(avg_parameters[i]);
                 dataFile.print(F(";"));
@@ -2924,7 +3177,7 @@ void loop() {
 
               dataFile.print(millis());
               dataFile.print(F(";"));
-              dataFile.print(query(0,0,1)); // get current time from heating system
+              dataFile.print(GetDateTime(date)); // get current time from heating system
               dataFile.print(F(";"));
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
@@ -2968,20 +3221,24 @@ void loop() {
       avgCounter = 1;
     }
     for (int i=0; i<numAverages; i++) {
-      double reading = strtod(query(avg_parameters[i],avg_parameters[i],1),NULL);
-      if (isnan(reading)) {} else {
-        avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
-        if (avgValues_Old[i] == -9999) {
-          avgValues[i] = avgValues_Current[i];
-        } else {
-          avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
+      if (avg_parameters[i] > 0) {
+        double reading = strtod(query(avg_parameters[i],avg_parameters[i],1),NULL);
+        if (isnan(reading)) {} else {
+          avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
+          if (avgValues_Old[i] == -9999) {
+            avgValues[i] = avgValues_Current[i];
+          } else {
+            avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
+          }
         }
       }
     }
     avgCounter++;
     lastAvgTime += 60000;
-  }
 
+// while we are here, update date/time as well...
+    SetDateTime();      
+  }
 // end calculate averages
 
 } // --- loop () ---
@@ -3051,5 +3308,7 @@ void setup() {
     avgValues_Current[i] = 0;
   }
 
+// receive inital date/time from heating system
+  SetDateTime();
 }
 
