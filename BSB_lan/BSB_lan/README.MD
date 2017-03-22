@@ -105,7 +105,8 @@ Interface:
         http://<ip-of-server>/V<n>
         The default verbosity level is 0. When setting it to 1 the bus is monitored and all data is additionally 
         printed in raw hex format.
-        The verbose output only affects the serial console of the mega2560. The html output is kept unchanged.
+        The verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, 
+        so this can fill up your card pretty fast! The html output is kept unchanged.
 
       Activate bus monitor
         http://<ip-of-server>/M<n>
@@ -114,7 +115,7 @@ Interface:
         The monitor output only affects the serial console of the mega2560. The html output is kept unchanged.
         
       Set/query GPIO pins
-        http://<ip-of-server>/Gxx[=y]
+        http://<ip-of-server>/G<xx>[=<y>]
         Returns the current status of GPIO pin xx (0 or 1). Can be used to set the pin to 0 (LOW) or 1 (HIGH). 
         Reserved pins which are not allowed to be written can be defined in BSB_lan_config.h in variable GPIO_exclude.
       
@@ -137,10 +138,14 @@ Interface:
         Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
       Configure log file
-        http://<ip-of-server>/L=x[,parameter1,...,parameter20]
+        http://<ip-of-server>/L=<x>[,<parameter1>,<...>,<parameter20>]
         Set logging interval to x seconds and (optionally) set logging parameters to [parameter1], [parameter2] etc. 
         during runtime. Logging parameters needs to be activated by uncommenting the LOGGER directive 
         in BSB_lan_config.h and can be configured initially with variables log_parameters and log_interval.
+        
+      Configure logging of bus telegrams
+        http://<ip-of-server>/LU=<x>
+        When logging bus telegrams (logging parameter 30000), log only unknown command IDs (x=1) or all (x=0) telegrams.
 
       Display log file
         http://<ip-of-server>/D
