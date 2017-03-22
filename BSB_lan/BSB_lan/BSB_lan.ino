@@ -2577,7 +2577,7 @@ void loop() {
           }else{
             client.println(F("verbose mode deactivated<br>"));
           }
-          client.println(F("only serial output is affected"));
+          client.println(F("verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, so this can fill up your card pretty fast! The html output is kept unchanged."));
           webPrintFooter();
           break;
         }
