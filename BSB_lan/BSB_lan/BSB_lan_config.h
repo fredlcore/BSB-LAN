@@ -50,11 +50,6 @@ BSB bus(68,69);
 // Protect these pins from accidental GPIO access
 byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
-// EXPERIMENTAL:
-// If defined, the heating burner ON time is accumulated using broadcast messages
-// sent from the heating system.
-#define USE_BROADCAST
-
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface
 byte verbose = 0;
@@ -70,6 +65,7 @@ int avg_parameters[] = {
 // #define LOGGER
 
 int log_parameters[] = {
+//  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -80,6 +76,7 @@ int log_parameters[] = {
 };
 
 unsigned long log_interval = 3600;    // logging interval in seconds
+boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 #define IPWE
