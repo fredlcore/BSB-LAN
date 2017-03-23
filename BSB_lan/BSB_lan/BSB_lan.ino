@@ -2461,7 +2461,9 @@ void loop() {
            // Decode the rcv telegram and send it to the PC serial interface
            if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
              printTelegram(msg);
+#ifdef LOGGER
              LogTelegram(msg);
+#endif
            }
            // Filter Brenner Status messages (attention: undocumented enum values)
            uint32_t cmd;
