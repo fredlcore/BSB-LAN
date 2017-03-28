@@ -56,7 +56,7 @@ byte verbose = 0;
 byte monitor = 0;
 
 // Create 24h averages from these parameters
-int avg_parameters[] = {
+int avg_parameters[20] = {
   8700,                   // Außentemperatur
   8326                    // Brenner-Modulation
 };
@@ -64,7 +64,7 @@ int avg_parameters[] = {
 /* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
 // #define LOGGER
 
-int log_parameters[] = {
+int log_parameters[20] = {
 //  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
