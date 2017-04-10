@@ -86,7 +86,7 @@ attr EthRelais timeout 5
 Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps:
 
 1. Start the Arduino IDE and turn on the serial monitor
-2. Enable logging to the serial console and turn on verbose output with the URL-Parameters /M1 and /V1 respectively on the Arduino, e.g. http://192.168.1.50/1234/M1 and http://192.168.1.50/1234/V1. Alternatively, you can log bus telegrams to SD card by using (only) logging parameter 30000 (see logging section above) and set variable log_unknown_only to 1 (URL command /LU=1) and follow logging entries with URL command /D.
+2. Enable logging to the serial console and turn on verbose output with URL-Parameter /V1 on the Arduino, e.g. http://192.168.1.50/1234/V1. Alternatively, you can log bus telegrams to SD card by using (only) logging parameter 30000 (see logging section above) and set variable log_unknown_only to 1 (URL command /LU=1) and follow logging entries with URL command /D.
 3. On the heating system, switch to the parameter you want to analyze (using the command wheel, arrows or whatever input mode your heating system has).
 4. Wait for "silence" on the bus and then switch forward one parameter and then back again to the parameter you want. You should now have something like this on the log:
 <pre>
