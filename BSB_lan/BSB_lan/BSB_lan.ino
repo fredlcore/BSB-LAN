@@ -1,4 +1,4 @@
-char version[6] = "0.30";
+char version[6] = "0.31";
 
 /*
  * 
@@ -6,7 +6,7 @@ char version[6] = "0.30";
  *
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
- *i
+ *
  * Author: Gero Schumacher (gero.schumacher@gmail.com)
  *        (based on the code and work from many other developers. Many thanks!)
  *
@@ -42,8 +42,19 @@ char version[6] = "0.30";
  *       0.28  - 05.03.2017
  *       0.29  - 07.03.2017
  *       0.30  - 22.03.2017
+ *       0.31  - 
  *
  * Changelog:
+ *       version 0.31
+ *        - increased dumping of logfile by factor 5 / as long as we still have memory left, you can increase logbuflen from 100 to 1000 to increase transfer speed from approx. 16 to 18 kB/s
+ *        - adjusted burner activity monitoring based on broadcast messages for Brötje systems
+ *        - removed definement PROGNR_5895 because so far, it has only disabled an ENUM definition.
+ *        - removed definement PROGNR_6030 because double command ID could be resolved via BROETJE / non-BROETJE definements
+ *        - renamed BROETJE_SOB to BROETJE in order to allow for fine-grained distinction between different BROETJE cases (e.g. 6800ff)
+ *          This means you have to activate TWO definements when using a Brötje system now: The general BROETJE as well as BROETJE_SOB or BROETJE_BSW.
+ *          Have a look at your serial log for parameters 6800 to see which command IDs fit your system and activate one of both accordingly.
+ *        - changed 16-Bit addressing of flash memory to 32-Bit to address crashes due to ever growing PROGMEM tables - now we have lots of air to breathe again for new command IDs :)
+ *        - removed trailing \0 string from several ENUMs that led to wrong ENUM listings. Please keep in mind not to end ENUMs with a trailing \0 !
  *       version 0.30
  *        - Time library by Paul Stoffregen (https://github.com/PaulStoffregen/Time) is now required and included in the library folder.
  *        - adds logging of raw telegram data to SD card with logging parameter 30000. Logging telegram data is affected by commands /V and /LU
@@ -131,7 +142,7 @@ char version[6] = "0.30";
  *        - added option T for querying one wire temperature sensors in mixed querys
  *        - added special handling for Broetje SOB
  *        - simplified settings
- *       version 0.121
+ *       version 0.12
  *        - added ONEWIRE_SENSORS to ipwe
  *        - fixed parameter decoding for ELCO Thision heating system
  *       version 0.11
@@ -231,7 +242,14 @@ char buffer[BUFLEN];
 #define OUTBUF_LEN  300
 char outBuf[OUTBUF_LEN];
 byte outBufLen=0;
-
+/*
+void memcpy_F(void* dst, const __flash void* src, uint16_t size) {
+    uint16_t i;
+    for (i = 0; i < size; i++) {
+        *(uint8_t *) dst++ = *(const __flash uint8_t *) src++;
+    }
+}
+*/
 /**  ****************************************************************
  *  Function: outBufclear()
  *  Does:     Sets ouBufLen = 0 and puts the end-of-string character
@@ -310,9 +328,12 @@ int findLine(uint16_t line
   i=start_idx;
   found=0;
   do{
-    c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
+    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+
+//    c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
     if(c==CMD_END) break;
-    l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
+    l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+//    l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
     if(l==line){
       found=1;
       break;
@@ -861,10 +882,10 @@ void printENUM(char* enumstr,uint16_t enumstr_len,uint16_t search_val, int print
     uint16_t c=0;
     while(c<enumstr_len){
       if((byte)enumstr[c+1]!=' '){
-      val=uint16_t(((uint8_t*)enumstr)[c]) << 8 | uint16_t(((uint8_t*)enumstr)[c+1]);
-      c++;
+        val=uint16_t(((uint8_t*)enumstr)[c]) << 8 | uint16_t(((uint8_t*)enumstr)[c+1]);
+        c++;
       }else{
-      val=uint16_t(((uint8_t*)enumstr)[c]);
+        val=uint16_t(((uint8_t*)enumstr)[c]);
       }
       //skip leading space
       c+=2;
@@ -1097,14 +1118,16 @@ char *printTelegram(byte* msg) {
   int i=0;        // begin with line 0
   boolean known=0;
   uint32_t c;     // command code
-  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
+  c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
     if(c == cmd){
       known=1;
       break;
     }
     i++;
-    c=pgm_read_dword(&cmdtbl[i].cmd);
+    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//    c=pgm_read_dword(&cmdtbl[i].cmd);
   }
   if(!known){                          // no hex code match
     // Entry in command table is "UNKNOWN" (0x00000000)
@@ -1113,13 +1136,15 @@ char *printTelegram(byte* msg) {
     Serial.print(F(" "));
   }else{
     // Entry in command table is a documented command code
-    uint16_t line=pgm_read_word(&cmdtbl[i].line);
+    uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+//    uint16_t line=pgm_read_word(&cmdtbl[i].line);
     printLineNumber(line);             // the ProgNr
     Serial.print(F(" "));
     outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
-    int cat=pgm_read_byte(&cmdtbl[i].category);
+    int cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
+//    int cat=pgm_read_byte(&cmdtbl[i].category);
     int len=sizeof(ENUM_CAT);
     memcpy_P(buffer, &ENUM_CAT,len);
     buffer[len]=0;
@@ -1128,7 +1153,8 @@ char *printTelegram(byte* msg) {
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
     // print menue text
-    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
+    strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+//    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
     outBufLen+=sprintf(outBuf+outBufLen," %s: ",buffer);
     Serial.print(p);
@@ -1150,7 +1176,8 @@ char *printTelegram(byte* msg) {
           Serial.print(p);
         }else{
           pvalstr=outBuf+outBufLen;
-          switch(pgm_read_byte(&cmdtbl[i].type)){
+          switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
+//          switch(pgm_read_byte(&cmdtbl[i].type)){
             case VT_DATETIME: // special
               printDateTime(msg,data_len);
               break;
@@ -1277,9 +1304,12 @@ char *printTelegram(byte* msg) {
             case VT_ENUM: // enum
               if(data_len == 2){
                 if(msg[9]==0){
-                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
-                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
-                    memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
+                  if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
+//                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
+                    int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+//                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
+                    memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
+//                  memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
                     buffer[len]=0;
 
                     printENUM(buffer,len,msg[10],1);
@@ -1295,9 +1325,12 @@ char *printTelegram(byte* msg) {
               }else if(data_len == 3) //FUJITSU
               {
                 if(msg[9]==0 && msg[10]==0){
-                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
-                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
-                    memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
+                  if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
+//                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
+                    int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+//                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
+                    memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
+//                    memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
                     buffer[len]=0;
 
                     printENUM(buffer,len,msg[11],1);
@@ -1543,7 +1576,8 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   if(i<0) return 0;        // no match
 
   // Get the parameter type from the table row[i]
-  switch(pgm_read_byte(&cmdtbl[i].type)){
+  switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
+//  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
     // 16-bit unsigned integer representation
     // Temperature values, mult=64
@@ -1903,8 +1937,8 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   } // endswitch
 
   // Check for readonly parameter
-
-  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
+  if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) == 1) {
+//  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
     Serial.println(F("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
@@ -2133,14 +2167,16 @@ void LogTelegram(byte* msg){
       cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
     }
     // search for the command code in cmdtbl
-    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
+    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
       if(c == cmd){
         known=1;
         break;
       }
       i++;
-      c=pgm_read_dword(&cmdtbl[i].cmd);
+      c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//      c=pgm_read_dword(&cmdtbl[i].cmd);
     }
 
     if (log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) {
@@ -2156,7 +2192,8 @@ void LogTelegram(byte* msg){
           dataFile.print("UNKNOWN");
         }else{
           // Entry in command table is a documented command code
-          uint16_t line=pgm_read_word(&cmdtbl[i].line);
+          uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+//          uint16_t line=pgm_read_word(&cmdtbl[i].line);
           dataFile.print(line);             // the ProgNr
         }
         dataFile.print(F(";"));
@@ -2412,7 +2449,8 @@ void Ipwe() {
 
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
-  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
+  strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+//  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
   return buffer;
 }
 
@@ -2465,14 +2503,22 @@ void loop() {
              LogTelegram(msg);
 #endif
            }
-           // Filter Brenner Status messages (attention: undocumented enum values)
+           // Filter Brenner Status messages (attention: partially undocumented enum values)
            uint32_t cmd;
            cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-           if(cmd==0x05000213) { // TODO 8009 Brenner Status = 0x053d0f66 ?!
+#ifdef THISION
+           if(cmd==0x05000213) {    // Command ID 8009 Brennerstatus Elco
+#else
+           if(cmd==0x053d0f66) {    // Command ID 8009 Brennerstatus Brötje etc.
+#endif
              Serial.print(F("INF: Brennerstatus: "));
              Serial.println(msg[9]);      // first payload byte
 
-             if(msg[9]==0x04){  // brenner on  (where is this documented?)
+#ifdef THISION
+             if(msg[9]==0x04){  // brenner on 
+#else
+             if(msg[9]==0x12){  // brenner on 
+#endif
                if(brenner_start==0){        // has not been timed
                   brenner_start=millis();   // keep current timestamp
                   brenner_count++;          // increment number of starts
@@ -2679,9 +2725,12 @@ void loop() {
           int i=findLine(line,0,NULL);
           if(i>=0){
             // check type
-            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
-              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
+              if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
+//            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
+              uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+//              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
+              memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),enumstr_len);
+//              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
               buffer[enumstr_len]=0;
 
               uint16_t val;
@@ -2766,15 +2815,31 @@ void loop() {
             client.println(F("HTTP/1.1 200 OK"));
             client.println(F("Content-Type: text/plain"));
             client.println();
+
             File dataFile = SD.open("datalog.txt");
             // if the file is available, read from it:
             if (dataFile) {
-              while (dataFile.available()) {
-                char c = dataFile.read();
-                client.write(c);
-//                Serial.write(c);
+
+              unsigned long startdump = millis();
+              int logbuflen = 100;
+              byte loglineBuf[logbuflen];
+              int loglineCount = 0;
+
+              while(dataFile.available()) {
+                loglineBuf[loglineCount] = dataFile.read();
+                loglineCount++;
+
+                if(loglineCount > logbuflen-1) {
+                  client.write(loglineBuf,logbuflen);
+                  loglineCount = 0;
+                }
               }
+              //final packet
+              if(loglineCount > 0) client.write(loglineBuf,loglineCount);           
               dataFile.close();
+
+              Serial.print(F("Duration: "));
+              Serial.println(millis()-startdump);
             }
           }
           break;
@@ -2790,14 +2855,14 @@ void loop() {
           #ifdef FUJITSU
           client.println(F("Fujitsu "));
           #endif
+          #ifdef BROETJE
+          client.println(F("Brötje "));
+          #endif
           #ifdef BROETJE_SOB
           client.println(F("Brötje SOB "));
           #endif
-          #ifdef PROGNR_5895
-          client.println(F("PROGNR_5895 "));
-          #endif
-          #ifdef PROGNR_6030
-          client.println(F("PROGNR_6030 "));
+          #ifdef BROETJE_BSW
+          client.println(F("Brötje BSW "));
           #endif
           client.println(F("<BR>"));
 
@@ -3060,23 +3125,28 @@ void loop() {
               start=-1;
               end=-1;
               search_cat=atoi(&range[1]);
-              c=pgm_read_dword(&cmdtbl[i].cmd);
+              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//              c=pgm_read_dword(&cmdtbl[i].cmd);
               while(c!=CMD_END){
-                cat=pgm_read_byte(&cmdtbl[i].category);
+                cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
+//                cat=pgm_read_byte(&cmdtbl[i].category);
                 if(cat==search_cat){
                   if(start<0){
-                    line=pgm_read_word(&cmdtbl[i].line);
+                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+//                    line=pgm_read_word(&cmdtbl[i].line);
                     start=line;
                   }
                 }else{
                   if(start>=0){
-                    line=pgm_read_word(&cmdtbl[i-1].line);
+                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+//                    line=pgm_read_word(&cmdtbl[i-1].line);
                     end=line;
                     break;
                   }
                 }
                 i++;
-                c=pgm_read_dword(&cmdtbl[i].cmd);
+                c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+//                c=pgm_read_dword(&cmdtbl[i].cmd);
               }
               if(end<start){
                 end=start;
