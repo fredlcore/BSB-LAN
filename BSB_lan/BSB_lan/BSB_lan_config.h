@@ -17,9 +17,9 @@
 
 //#define THISION
 //#define FUJITSU          // for FUJITSU Wärmepumpe
+//#define BROETJE
 //#define BROETJE_SOB
-//#define PROGNR_5895      // if we know more about this command
-//#define PROGNR_6030      // if we know more about this command
+//#define BROETJE_BSW      // so far only for handling parameters 6800-6819
 
 /*
  * Define the pin for one wire temperature sensors
