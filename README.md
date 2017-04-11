@@ -6,23 +6,22 @@ BSB Boiler-System-Bus LAN Interface designed for Arduino Mega 2560 with Ethernet
 
 This hardware/software combination should in principle work with all BSB-based heating systems and has been tested in real life with the following heating systems:
 
-- Brötje ISR-SSR Solarsystemregler
-- Brötje ISR-ZR1 Solar- und Systemregler
+- Brötje ISR-SSR 
+- Brötje ISR-ZR1 
 - Brötje NovoCondens BOB 20 (oil-fired)
 - Brötje NovoCondens SOB 22C (oil-fired)
-- Brötje NovoCondens SOB 26C (oil-fired) [ISR + RVS43.222/100]
-- Brötje SensoTherm BSW-K Wärmepumpe (heat pump)
+- Brötje NovoCondens SOB 26C [ISR + RVS43.222/100] (oil-fired)
+- Brötje SensoTherm BSW-K (heat pump)
 - Brötje WBS 22E (gas-fired)
-- Brötje WGB-U 15H mit Solareinspeisung für TWW (gas-fired)
-- Brötje WGB 15 E (gas-fired) [LMS14]
-- Brötje WGB 15 E (Gas, Pufferspeicher, Solarunterstützung) (gas-fired)
+- Brötje WGB-U 15H (plus solarthermics) (gas-fired)
+- Brötje WGB 15 E [LMS14] (gas-fired)
 - Brötje WGB S 17/20 E EcoTherm Plus (gas-fired)
 - Brötje WGB EVO 20H (gas-fired)
-- Brötje WGB Pro EVO 20C (gas-fired) [LMU75]
+- Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
 - Elco Straton (oil-fired)
-- Elco Straton 21 (oil-fired) [LOGON B G2Z2 + RVS63.283/160]
+- Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (oil-fired)
 - Elco Thision S (gas-fired)
-- Fujitsu Waterstage (WSYK160DC9) Wärmepumpe (heat pump)
+- Fujitsu Waterstage (WSYK160DC9) (heat pump)
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
