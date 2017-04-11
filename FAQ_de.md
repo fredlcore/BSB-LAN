@@ -111,7 +111,7 @@ Byte 5: Nachrichtentyp (0x02 = Info, 0x03 = Setzen, 0x04 = ack, 0x05 = nack, 0x0
 Byte 6-9: Command ID (-> diese ist es, die wir brauchen!)<BR>
 Byte 10...: Payload data (optional)<BR>
 Letzten zwei Bytes: CRC-Checksumme<BR><BR>
-5. Das untere Datentelegramm im obigen Beispiel hat die Command ID 0x113D3063. Bitte beachte, dass die ersten beiden Bytes der Command ID beim Nachrichtentyp "Abfragen" (0x06) vertauscht sind. Stelle daher bitte sicher, dass du auf das richtige Telegramm siehst (Typ "Antwort" (0x07), die letzte Zeile des o.g. Beispiels).
+5. Das untere Datentelegramm im obigen Beispiel hat die Command ID 0x113D3063. Bitte beachte, dass die ersten beiden Bytes der Command ID beim Nachrichtentyp "Abfragen" (0x06) vertauscht sind. Stelle daher bitte sicher, dass du auf das richtige Telegramm siehst (Typ "Antwort" (0x07), die letzte Zeile des o.g. Beispiels). 
 6. Suche den Bereich "global command table" in der Datei BSB_lan_defs.h und überprüfe, ob für diesen Befehl bereits ein Eintrag existiert (suche nach STRxxxx , wobei xxxx die Parameternummer darstelt). Fals es ihn bereits gibt, fahre fort mit Schritt 8.
 7. Sollte der Parameter noch nicht in dem "global command table" gelistet sein, musst du einen Eintrag im Bereich "menu strings" wie folgt erstellen:
 <pre>const char STRxxxx[] PROGMEM = "Parameter_Name_or_Function";</pre>
