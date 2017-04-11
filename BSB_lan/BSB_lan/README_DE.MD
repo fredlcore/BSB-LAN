@@ -115,13 +115,13 @@ Adapter:
         Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Initiale Festlegung dieser Parameter in BSB_lan_config.h in der Variable avg_parameters.
         Während der Laufzeit kann "/A=[parameter1],...,[parameter20]" verwendet werden, um (bis zu 20) neue Parameter zu definieren.
       
-      Abfrage von ds18b20 Temperatur-Sensoren
+      Abfrage von DS18B20 Temperatur-Sensoren
         http://<ip-of-server>/T
-        Returns temperature of optionally connected ds18b20 temperature sensors.
+        Gibt die Temperaturwerte von optional angeschlossenen DS18B20-Sensoren aus.
         
       Abfrage von DHT22 Feuchtigkeits-/Temperatur-Sensoren
         http://<ip-of-server>/H
-        Gibt die Feuchtigkeits-/Temperaturwerte von optional angeschlossenen DHT22 Sensoren zurück.
+        Gibt die Feuchtigkeits-/Temperaturwerte von optional angeschlossenen DHT22-Sensoren aus.
       
       Akkumulierte Brennerlaufzeit
         http://<ip-of-server>/B
@@ -141,7 +141,7 @@ Adapter:
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
 
 Offene Punkte
-- Mehr Befehle (command id) hinzufügen.
+- Mehr Befehle (command ID) hinzufügen.
           Nur die bekannten Befehle aus der o.g. Forendiskussion und dem getesteten Heizungssystem (ELCO) sind Bestandteil des Programms.
           Jeder Nutzer eines anderen Heizungssystems kann den Verbositäts-Level auf 1 setzen und die fehlenden Befehle dekodieren, indem er sie einfach über die integrierte Steuerung aufruft.
           Unser Ziel ist es, eine generell lauffähiges System zu entwickeln, das herstellerübergreifend mit allen Heizungssystemen verwendet werden kann, die einen BSB aufweisen. Jede Hilfe und jede Rückmeldung ist willkommen!
