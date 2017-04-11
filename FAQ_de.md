@@ -12,7 +12,7 @@ Ja, den gibt es - zum Einen als standalone-Variante, zum Anderen als remote-Vari
 <B>Um den Adapter als standalone-Logger zu nutzen, gehe wie folgt vor:</B>
 
 Stecke eine FAT32-formatierte microSD-Karte in den Speicherkartenplatz des Ethernet-Shields, bevor du den Arduino einschaltest. Einige Geräte erkennen u.U. keine Speicherkarten, die größer als 2GB sind, nutze in dem Fall eine kleinere Karte und formatiere sie mit FAT16.<BR>
-Ändere dann die Datei BSB_lan_config.h und ent-kommentiere das Definement #define LOGGER. Füge dann die zu loggenden Parameter zur Variable log_parameters hinzu und bestimme das Logintervall mit der Variable log_interval. Später kann während der Laufzeit sowohl das Intervall als auch die Logging-Parameter mittels des Befehls "/L=[Intervall],[Parameter1],...,[Parameter20]" geändert werden.
+Ändere dann die Datei BSB_lan_config.h und ent-kommentiere das Definement #define LOGGER. Füge dann die zu loggenden Parameter zur Variable log_parameters hinzu und bestimme das Logintervall mit der Variable log_interval. Später können während der Laufzeit sowohl das Intervall als auch die Logging-Parameter mittels des Befehls "/L=[Intervall],[Parameter1],...,[Parameter20]" geändert werden.
 
 Wenn du das Setup fertig hast, schalte das System ein und warte auf ankommende Daten. Sämtliche Daten werden auf der Karte in der Datei datalog.txt im CSV-Format gespeichert, und können somit leicht in Excel oder OpenOffice importiert werden.<BR>
 Den Dateiinhalt kannst du mit dem URL-Befehl "/D" einsehen. Um die Datei zurückzusetzen, benutze den Befehl "/D0". Dies sollte ebenfalls bei der ersten Benutzung erfolgen, da hierdurch die Datei mit dem passenden CSV-Header initiiert wird.<BR>
