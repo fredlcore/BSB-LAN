@@ -13,7 +13,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje NovoCondens SOB 26C [ISR + RVS43.222/100] (oil-fired)
 - Brötje SensoTherm BSW-K (heat pump)
 - Brötje WBS 22E (gas-fired)
-- Brötje WGB-U 15H (plus solarthermics) (gas-fired)
+- Brötje WGB-U 15H (gas-fired)
 - Brötje WGB 15 E [LMS14] (gas-fired)
 - Brötje WGB S 17/20 E EcoTherm Plus (gas-fired)
 - Brötje WGB EVO 20H (gas-fired)
