@@ -8,16 +8,21 @@ This hardware/software combination should in principle work with all BSB-based h
 
 - Brötje ISR-SSR Solarsystemregler
 - Brötje ISR-ZR1 Solar- und Systemregler
-- Brötje NovoCondens SOB 22C / 26C (oil-fuelled heating system)
-- Brötje NovoCondens BOB 20
-- Brötje SensoTherm BSW-K Wärmepumpe
-- Brötje WGB-U 15H mit Solareinspeisung für TWW
-- Brötje WGB 15 E (Gas, Pufferspeicher, Solarunterstützung)
-- Brötje WGB S 17/20 E EcoTherm Plus
-- Brötje WBS 22E (gas-fuelled heating system)
-- Elco Straton (oil-fuelled heating system)
-- Elco Thision S (gas-fuelled heating system)
-- Fujitsu Waterstage (WSYK160DC9) Wärmepumpe
+- Brötje NovoCondens BOB 20 (oil-fired)
+- Brötje NovoCondens SOB 22C (oil-fired)
+- Brötje NovoCondens SOB 26C (oil-fired) [ISR + RVS43.222/100]
+- Brötje SensoTherm BSW-K Wärmepumpe (heat pump)
+- Brötje WBS 22E (gas-fired)
+- Brötje WGB-U 15H mit Solareinspeisung für TWW (gas-fired)
+- Brötje WGB 15 E (gas-fired) [LMS14]
+- Brötje WGB 15 E (Gas, Pufferspeicher, Solarunterstützung) (gas-fired)
+- Brötje WGB S 17/20 E EcoTherm Plus (gas-fired)
+- Brötje WGB EVO 20H (gas-fired)
+- Brötje WGB Pro EVO 20C (gas-fired) [LMU75]
+- Elco Straton (oil-fired)
+- Elco Straton 21 (oil-fired) [LOGON B G2Z2 + RVS63.283/160]
+- Elco Thision S (gas-fired)
+- Fujitsu Waterstage (WSYK160DC9) Wärmepumpe (heat pump)
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
