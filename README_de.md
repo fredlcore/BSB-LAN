@@ -15,6 +15,8 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje WGB-U 15H (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
  - Brötje WGB S 17/20 E EcoTherm Plus (Gasbrenner)
+ - Brötje WGB EVO 20H (Gasbrenner)
+ - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
  - Elco Straton (Ölbrenner)
  - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (Ölbrenner)
  - Elco Thision S (Gasbrenner)
