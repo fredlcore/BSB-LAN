@@ -108,7 +108,7 @@ Adapter:
         Die Ausgabe der Überwachung betrifft nur die serielle Konsole des Arduino Mega2560. Die html-Ausgabe bleibt unverändert.
         
       Setzen/Abfragen der GPIO Pins
-        http://<ip-of-server>/G<xx>[=y]
+        http://<ip-of-server>/G<xx>[=<y>]
         Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, um den Pin auf 0 (LOW) oder 1 (HIGH) zu setzen. 
         Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_config.h unter dem Parameter GPIO_exclude gesperrt werden.
       
