@@ -45,7 +45,9 @@ VOR DEM KOMPILIEREN der Software müssen einige Parameter in der Datei "BSB_lan_
 - (optional) Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
   `#define PASSKEY  "1234"`  
 - (optional) BSB-Adresse (voreingestellt ist 0x06=RGT1, dies kann jedoch bei der Bus-Initialisierung überschrieben werden):  
-  `BSB bus(68,69,<my_addr>);`  
+  `BSB bus(68,69,<my_addr>);`
+  Um den BSB-LAN-Adapter (bei einem bereits vorhandenem Raumgerät RGT1) als RGT2 anzumelden, gib Folgendes ein:
+  `BSB bus(68,69,7);`
         
 Adapter:  
       Eine einfache Syntaxbeschreibung wird auf der Webseite angezeigt, wenn ohne weitere Parameter auf die URL des Servers zugegriffen wird.  
