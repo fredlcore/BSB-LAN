@@ -88,8 +88,8 @@ attr EthRelais timeout 5
 Yes, you can :)! Du brauchst nur deinen mit der Heizungssteuerung verbundenen Arduino mit einem Laptop/PC über USB zu verbinden und den folgenden Schritten zu folgen:
 
 1. Starte die Arduino IDE und öffne den seriellen Monitor (Menü Werkzeuge -> Serieller Monitor bzw. drücke Strg+Umschalt+M).
-2. Aktiviere das Loggen zur seriellen Konsole und die Verbositäts-Ausgabe mit den URL-Parametern /M1 und /V1 ebenso auf dem Arduino, bspw. http://192.168.1.50/1234/M1 und http://192.168.1.50/1234/V1
-3. Schalte bei dem Heizungssystem über die integrierte Steuerung zu dem Parameter, den du analysieren möchtest.
+2. Aktiviere das Loggen zur seriellen Konsole und die Verbositäts-Ausgabe mit den URL-Parametern /M1 und /V1 ebenso auf dem Arduino, bspw. http://192.168.1.50/1234/M1 und http://192.168.1.50/1234/V1. Alternativ dazu kannst du Bus-Telegramme auf die microSD-Karte loggen: Logge dazu (als einzigen!) Parameter 30000 (s. Logging-Abschnitt oben), setze die Variable log_unknown_only auf 1 (URL-Befehl /LU=1) und beobachte die Logeinträge mit dem URL-Befehl /D.
+3. Schalte bei dem Heizungssystem über die integrierte Steuerung zu dem Parameter, den du analysieren möchtest (mittels des Drehrades, der Pfeiltasten bzw. der spezifischen Eingabemöglichkeiten deiner Heizungssteuerung).
 4. Warte auf 'Ruhe' auf dem Bus, dann schalte einen Parameter weiter vor und gleich wieder zurück zu dem Parameter, den du analysieren möchtest. Nun solltest du etwas im Log sehen, was in etwa so aussehen sollte:
 <pre>
 DISP->HEIZ QUR      113D305F
