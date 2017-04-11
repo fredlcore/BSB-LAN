@@ -115,11 +115,11 @@ Adapter:
         Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Initiale Festlegung dieser Parameter in BSB_lan_config.h in der Variable avg_parameters.
         Während der Laufzeit kann "/A=[parameter1],...,[parameter20]" verwendet werden, um (bis zu 20) neue Parameter zu definieren.
       
-      Abfrage von DS18B20 Temperatur-Sensoren
+      Abfrage von DS18B20 Temperatursensoren
         http://<ip-of-server>/T
         Gibt die Temperaturwerte von optional angeschlossenen DS18B20-Sensoren aus.
         
-      Abfrage von DHT22 Feuchtigkeits-/Temperatur-Sensoren
+      Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren
         http://<ip-of-server>/H
         Gibt die Feuchtigkeits-/Temperaturwerte von optional angeschlossenen DHT22-Sensoren aus.
       
