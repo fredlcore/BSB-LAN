@@ -98,7 +98,7 @@ Adapter:
       Setze den Verbositäts-Level auf n
         http://<ip-of-server>/V<n>
         Der voreingestellte Verbositäts-Level ist 0. Wenn er auf 1 gesetzt wird, werden der Bus überwacht und alle Daten zusätzlich im Raw-Hex-Format dargestellt.
-        Der Verbositäts-Level betrifft nur die serielle Konsole des Arduino Mega2560. Die html-Ausgabe bleibt unverändert.
+        Der Verbositäts-Level betrifft sowohl die serielle Konsole des Arduino Mega2560 als auch (optional) das Loggen der Bus-Daten auf die microSD-Karte, so dass die Karte u.U. sehr schnell voll wird! Die html-Ausgabe bleibt unverändert.
 
       Bus-Monitor aktivieren:
         http://<ip-of-server>/M<n>
@@ -106,7 +106,7 @@ Adapter:
         Die Ausgabe der Überwachung betrifft nur die serielle Konsole des Arduino Mega2560. Die html-Ausgabe bleibt unverändert.
         
       Setzen/Abfragen der GPIO Pins
-        http://<ip-of-server>/Gxx[=y]
+        http://<ip-of-server>/G<xx>[=y]
         Gibt den momentanen Status von GPIO Pin xx zurück (0 oder 1). Kann ebenfalls benutzt werden, um den Pin auf 0 (LOW) oder 1 (HIGH) zu setzen. 
         Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_config.h unter dem Parameter GPIO_exclude gesperrt werden.
       
@@ -128,8 +128,12 @@ Adapter:
         Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den Zähler zurück.
 
       Konfiguration des Logfiles
-        http://<ip-of-server>/L=x[,parameter1,...,parameter20]
+        http://<ip-of-server>/L=<x>[,<parameter1>,<...>,<parameter20>]
         Setzt während der Laufzeit das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf [parameter1], [parameter2] etc. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann initial anhand der Variablen log_parameters und log_interval konfiguriert werden.
+
+      Konfiguration des Loggens auf die microSD-Karte
+	http://<ip-of-server>/LU=<x>
+	Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter loggen), logge nur die unbekannten command IDs (x=1) oder alle (x=0) Telegramme.
 
       Darstellung des Logfiles
         http://<ip-of-server>/D
