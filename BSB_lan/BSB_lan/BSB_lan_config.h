@@ -13,6 +13,10 @@
 
 #define PASSKEY  "1234"
 
+/* display web interface in German language; remove definement for English */
+
+#define LANG_DE
+
 /* select your heating system (default may work for other systems) */
 
 //#define THISION
