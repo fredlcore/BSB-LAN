@@ -51,7 +51,7 @@ BEFORE BUILDING the software you have to adapt some parameters in BSB_lan_config
   If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2: `BSB bus(68,69,7);`
 - (optional) You can restrict access to the adapter to read-only, so that you can not set or change certain parameters of the heater itself by accessing it via the adapter. To achieve this, you have to set the flag in the concerning line (#define DEFAULT_FLAG 0) to FL_RONLY:  
   `#define DEFAULT_FLAG FL_RONLY;`
-- (optional) You can set the language of the webinterface of the adapter to english by deactivate the concerning definement:
+- (optional) You can set the language of the webinterface of the adapter to english by deactivating the concerning definement:
   `//#define LANG_DE;`
         
 Interface:  
