@@ -106,7 +106,7 @@ Adapter:
 
       Bus-Monitor aktivieren:
         http://<ip-of-server>/M<n>
-        Wenn er auf 1 gesetzt wird, werden alle Bytes auf dem Bus überwacht. Telegramme werden durch Umbruchzeichen (Anm. d. Übers.: ? - original:"break character condition") als solche erkannt. Jedes Telegramm wird im Hex-Format auf der seriellen Koonsole mit einem Zeitstempel in Milisekunden dargestellt.
+        Wenn er auf 1 gesetzt wird, werden alle Bytes auf dem Bus überwacht. Telegramme werden durch Umbruchzeichen (Anm. d. Übers.: ? - original:"break character condition") als solche erkannt. Jedes Telegramm wird im Hex-Format auf der seriellen Konsole mit einem Zeitstempel in Milisekunden dargestellt.
         Die Ausgabe der Überwachung betrifft nur die serielle Konsole des Arduino Mega2560. Die html-Ausgabe bleibt unverändert.
         
       Setzen/Abfragen der GPIO Pins
@@ -131,13 +131,18 @@ Adapter:
         http://<ip-of-server>/B
         Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den Zähler zurück.
 
-      Konfiguration des Logfiles
-        http://<ip-of-server>/L=<x>[,<parameter1>,<...>,<parameter20>]
-        Setzt während der Laufzeit das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf [parameter1], [parameter2] etc. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann initial anhand der Variablen log_parameters und log_interval konfiguriert werden.
+      Aktivieren/Deaktivieren des Loggens auf die microSD-Karte
+      	Prinzipiell erfolgt das Aktivieren/Deaktivieren der Log-Funktion durch das entsprechende Definement in der config_h vor dem Flashen. Während des Betriebes kann jedoch das Loggen deaktiviert werden, indem man folgende Parameter definiert:
+	http://<ip-of-server>/L=0,0
+	Zum Aktivieren können dann einfach wieder das Intervall und die gewünschten Parameter eingetragen werden (s. Konfiguration des Logfiles).
 
-      Konfiguration des Loggens auf die microSD-Karte
-	http://<ip-of-server>/LU=<x>
-	Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter loggen), logge nur die unbekannten command IDs (x=1) oder alle (x=0) Telegramme.
+      Konfiguration des Logfiles
+      	http://<ip-of-server>/L=<x>[,<parameter1>,<...>,<parameter20>]
+      	Setzt während der Laufzeit das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf [parameter1], [parameter2] etc. Das Logging muss durch das Definement #define LOGGING in der Datei BSB_lan_config.h aktiviert werden und kann initial anhand der Variablen log_parameters und log_interval konfiguriert werden.
+
+      Konfiguration des Loggens von Bus-Telegrammen
+      	http://<ip-of-server>/LU=<x>
+      	Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter loggen), logge nur die unbekannten command IDs (x=1) oder alle (x=0) Telegramme.
 
       Darstellung des Logfiles
         http://<ip-of-server>/D
