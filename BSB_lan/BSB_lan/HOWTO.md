@@ -22,7 +22,7 @@ may have to connect the BSB adapter to different pins and to change the pin assi
 in the software.  
 The software is tested with the following components:        
 - SainSmart MEGA2560 R3 Development Board  
-- SainSmart Ethernet Schild Für Arduino UNO MEGA Duemilanove Neu Version W5100  
+- SainSmart Ethernet Schild für Arduino UNO MEGA Duemilanove Neu Version W5100  
 - BSB-Interface (see BSB_adapter.pdf)  
 For this configuration pin A14 (68) ist used as RX and pin A15 (69) is used as TX:
 
