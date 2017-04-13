@@ -50,7 +50,7 @@ VOR DEM KOMPILIEREN der Software müssen einige Parameter in der Datei "BSB_lan_
   `BSB bus(68,69,7);`  
 - (optional) Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
   `#define DEFAULT_FLAG FL_RONLY;`
-- (optional) Man kann die Sprache des Webinterfaces des Adapters auf deutsch einstellen, indem man das entsprechende Definement aktiviert:  
+- (optional) Man kann die Sprache des Webinterfaces des Adapters auf Deutsch einstellen, indem man das entsprechende Definement aktiviert:  
   `#define LANG_DE;`
         
 Adapter:  
