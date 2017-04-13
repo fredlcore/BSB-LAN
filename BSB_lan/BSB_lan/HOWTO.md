@@ -138,6 +138,11 @@ Interface:
         http://<ip-of-server>/B
         Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
+      Activate/deactivate logging to microSD-card
+      In general, the activation/deactivation of the logging founds place by the definement in the config_h-file. If the function is active, you can deactivate the function during runtime by using the following parameters:
+        http://<ip-of-server>/L=0,0
+        For activation, you can just set a new interval and the desired parameters (see configure log file).
+        
       Configure log file
         http://<ip-of-server>/L=<x>[,<parameter1>,<...>,<parameter20>]
         Set logging interval to x seconds and (optionally) set logging parameters to [parameter1], [parameter2] etc. 
