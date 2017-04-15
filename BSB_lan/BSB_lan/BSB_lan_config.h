@@ -49,6 +49,7 @@ EthernetServer server(80);
 
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
+// use BSB bus(68,69,7) to define device as RGT2
 BSB bus(68,69);
 
 // Protect these pins from accidental GPIO access
