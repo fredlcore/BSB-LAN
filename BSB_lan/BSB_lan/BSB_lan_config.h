@@ -82,6 +82,7 @@ int log_parameters[20] = {
 
 unsigned long log_interval = 3600;    // logging interval in seconds
 boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
+boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 #define IPWE
