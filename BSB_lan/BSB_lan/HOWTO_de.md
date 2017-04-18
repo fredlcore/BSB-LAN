@@ -131,10 +131,10 @@ Adapter:
       
       Akkumulierte Brennerlaufzeit
         http://<ip-of-server>/B
-        Fragt die akkumulierte Brennerlaufzeit (in Sekunden) ab, die von den Broadcast Nachrichten ermittelt wurden. /B0 setzt den Zähler zurück.
+        Fragt sowohl die akkumulierte Brennerlaufzeit (in Sekunden) und die Brennerstarts/-takte, als auch die Anzahl und die Dauer der Ladungen (in Sekunden) des Trinkwasserspeichers ab, die von den Broadcast-Nachrichten ermittelt wurden. /B0 setzt den Zähler zurück.
 
       Aktivieren/Deaktivieren des Loggens auf die microSD-Karte
-      	Prinzipiell erfolgt das Aktivieren/Deaktivieren der Log-Funktion durch das entsprechende Definement in der config_h vor dem Flashen. Während des Betriebes kann jedoch das Loggen deaktiviert werden, indem man folgende Parameter definiert:
+      	Prinzipiell erfolgt das Aktivieren/Deaktivieren der Log-Funktion durch das entsprechende Definement in der Datei BSB_lan_config.h vor dem Flashen. Während des Betriebes kann jedoch das Loggen deaktiviert werden, indem man folgende Parameter definiert:
 	http://<ip-of-server>/L=0,0
 	Zum Aktivieren können dann einfach wieder das Intervall und die gewünschten Parameter eingetragen werden (s. Konfiguration des Logfiles).
 
@@ -145,11 +145,17 @@ Adapter:
       Konfiguration des Loggens von Bus-Telegrammen
       	http://<ip-of-server>/LU=<x>
       	Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter loggen), logge nur die unbekannten command IDs (x=1) oder alle (x=0) Telegramme.
+	http://<ip-of-server>/LB=<x>
+    	Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter loggen), logge nur die Broadcasts (x=1) oder alle (x=0) Telegramme.
 
       Darstellung des Logfiles
         http://<ip-of-server>/D
         Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
+	
+      Resetten des Arduinos
+    	http://<ip-of-server>/X
+    	Reset des Arduinos nach einem Pausieren für 8 Sekunden (#define RESET in BSB_lan_config.h).
 
 Offene Punkte
 - Mehr Befehle (command ID) hinzufügen.
