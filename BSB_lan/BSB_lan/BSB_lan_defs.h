@@ -3983,446 +3983,446 @@ SW Diagnosecode
 {0x053D06E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Wartung/Service - Telefon Kundendienst
 
 // Ein-/Ausgangstest
-{0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG}, // [0] - Ein-/Ausgangstest - Relaistest
-{0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         DEFAULT_FLAG}, // Mod'sollwert QX3 Relaistest
+{0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     FL_RONLY}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_RONLY}, // Mod'sollwert QX3 Relaistest
 #ifndef THISION
-{0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         DEFAULT_FLAG}, // Modulationssignal QX3
+{0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         FL_RONLY}, // Modulationssignal QX3
 #endif
 #ifdef FUJITSU
-{0x053D040E,  CAT_IOTEST,           VT_PERCENT,       7710,  STR7710,  0,                    NULL,         DEFAULT_FLAG}, // Ausgangstest UX1 //FUJITSU
+{0x053D040E,  CAT_IOTEST,           VT_PERCENT,       7710,  STR7710,  0,                    NULL,         FL_RONLY}, // Ausgangstest UX1 //FUJITSU
 #else 
-{0x053D040E,  CAT_IOTEST,           VT_VOLTAGE,       7710,  STR7710,  0,                    NULL,         DEFAULT_FLAG}, // Ausgangstest UX
+{0x053D040E,  CAT_IOTEST,           VT_VOLTAGE,       7710,  STR7710,  0,                    NULL,         FL_RONLY}, // Ausgangstest UX
 #endif
-{0x053D0821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                    NULL,         DEFAULT_FLAG}, // Spannungssignal UX
-{0x073D0B38,  CAT_IOTEST,           VT_PERCENT,       7712,  STR7712,  0,                    NULL,         DEFAULT_FLAG}, // PWM-Signal UX1 //FUJITSU
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7714,  STR7714,  0,                    NULL,         DEFAULT_FLAG}, // PWM-Signal P1
-{0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         DEFAULT_FLAG}, // Ausgangstest UX2 //FUJITSU
-{0x063D04A2,  CAT_IOTEST,           VT_PERCENT,       7719,  STR7719,  0,                    NULL,         DEFAULT_FLAG}, // PWM-Signal UX2 //FUJITSU
-{0x053D0D82,  CAT_IOTEST,           VT_ONOFF,         7722,  STR7722,  0,                    NULL,         DEFAULT_FLAG}, // Kühlbetrieb D2 //FUJITSU
-{0x053D127B,  CAT_IOTEST,           VT_ONOFF,         7723,  STR7723,  0,                    NULL,         DEFAULT_FLAG}, // Wärmepumpe D3 //FUJITSU
-{0x073D040E,  CAT_IOTEST,           VT_PERCENT,       7724,  STR7724,  0,                    NULL,         DEFAULT_FLAG}, // Ausgangstest UX3 //FUJITSU
-{0x073D1238,  CAT_IOTEST,           VT_VOLTAGE,       7725,  STR7725,  0,                    NULL,         DEFAULT_FLAG}, // [V ] - Ein-/Ausgangstest - Spannungssignal U4 (Ux3) //FUJITSU
-{0x053D0470,  CAT_IOTEST,           VT_TEMP,          7730,  STR7730,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Aussentemperatur B9
+{0x053D0821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                    NULL,         FL_RONLY}, // Spannungssignal UX
+{0x073D0B38,  CAT_IOTEST,           VT_PERCENT,       7712,  STR7712,  0,                    NULL,         FL_RONLY}, // PWM-Signal UX1 //FUJITSU
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7714,  STR7714,  0,                    NULL,         FL_RONLY}, // PWM-Signal P1
+{0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         FL_RONLY}, // Ausgangstest UX2 //FUJITSU
+{0x063D04A2,  CAT_IOTEST,           VT_PERCENT,       7719,  STR7719,  0,                    NULL,         FL_RONLY}, // PWM-Signal UX2 //FUJITSU
+{0x053D0D82,  CAT_IOTEST,           VT_ONOFF,         7722,  STR7722,  0,                    NULL,         FL_RONLY}, // Kühlbetrieb D2 //FUJITSU
+{0x053D127B,  CAT_IOTEST,           VT_ONOFF,         7723,  STR7723,  0,                    NULL,         FL_RONLY}, // Wärmepumpe D3 //FUJITSU
+{0x073D040E,  CAT_IOTEST,           VT_PERCENT,       7724,  STR7724,  0,                    NULL,         FL_RONLY}, // Ausgangstest UX3 //FUJITSU
+{0x073D1238,  CAT_IOTEST,           VT_VOLTAGE,       7725,  STR7725,  0,                    NULL,         FL_RONLY}, // [V ] - Ein-/Ausgangstest - Spannungssignal U4 (Ux3) //FUJITSU
+{0x053D0470,  CAT_IOTEST,           VT_TEMP,          7730,  STR7730,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Aussentemperatur B9
 #ifndef FUJITSU
-{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
 #endif
-{0x053D08C6,  CAT_IOTEST,           VT_TEMP,          7734,  STR7734,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Vorlauftemperatur B12
-{0x053D0462,  CAT_IOTEST,           VT_TEMP,          7750,  STR7750,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Trinkwassertemperatur B3
-{0x053D0468,  CAT_IOTEST,           VT_TEMP,          7760,  STR7760,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Kesseltemperatur B2
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7770,  STR7770,  0,                    NULL,         DEFAULT_FLAG}, // Vorlauftemperatur WP B21
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7771,  STR7771,  0,                    NULL,         DEFAULT_FLAG}, // Rücklauftemperatur WP B71
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7772,  STR7772,  0,                    NULL,         DEFAULT_FLAG}, // Heissgastemperatur B81
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7775,  STR7775,  0,                    NULL,         DEFAULT_FLAG}, // Quelle Eintrittstemp B91
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7777,  STR7777,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur B92 B84
+{0x053D08C6,  CAT_IOTEST,           VT_TEMP,          7734,  STR7734,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Vorlauftemperatur B12
+{0x053D0462,  CAT_IOTEST,           VT_TEMP,          7750,  STR7750,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Trinkwassertemperatur B3
+{0x053D0468,  CAT_IOTEST,           VT_TEMP,          7760,  STR7760,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Kesseltemperatur B2
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7770,  STR7770,  0,                    NULL,         FL_RONLY}, // Vorlauftemperatur WP B21
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7771,  STR7771,  0,                    NULL,         FL_RONLY}, // Rücklauftemperatur WP B71
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7772,  STR7772,  0,                    NULL,         FL_RONLY}, // Heissgastemperatur B81
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7775,  STR7775,  0,                    NULL,         FL_RONLY}, // Quelle Eintrittstemp B91
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7777,  STR7777,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur B92 B84
 #ifdef FUJITSU  //FUJITSU
-{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
-{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7821,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
-{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7822,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
-{0x053D0792,  CAT_IOTEST,           VT_TEMP,          7807,  STR7823,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
-{0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7808,  STR7824,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX5 //FUJITSU
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7821,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7822,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0792,  CAT_IOTEST,           VT_TEMP,          7807,  STR7823,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
+{0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7808,  STR7824,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX5 //FUJITSU
 #else
-{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
-{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7821,  STR7821,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
-{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
-{0x053D0792,  CAT_IOTEST,           VT_TEMP,          7823,  STR7823,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
-{0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7824,  STR7824,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX5 //FUJITSU
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7821,  STR7821,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0792,  CAT_IOTEST,           VT_TEMP,          7823,  STR7823,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
+{0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7824,  STR7824,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX5 //FUJITSU
 #endif
-{0x053D1273,  CAT_IOTEST,           VT_TEMP,          7809,  STR7809,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX6 //FUJITSU
+{0x053D1273,  CAT_IOTEST,           VT_TEMP,          7809,  STR7809,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX6 //FUJITSU
 
-{0x053D0793,  CAT_IOTEST,           VT_TEMP,          7830,  STR7830,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 1
-{0x053D0799,  CAT_IOTEST,           VT_TEMP,          7831,  STR7831,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 1
-{0x053D079A,  CAT_IOTEST,           VT_TEMP,          7832,  STR7832,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 2
-{0x053D079B,  CAT_IOTEST,           VT_TEMP,          7833,  STR7833,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 2
-{0x053D082F,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         DEFAULT_FLAG}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
+{0x053D0793,  CAT_IOTEST,           VT_TEMP,          7830,  STR7830,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 1
+{0x053D0799,  CAT_IOTEST,           VT_TEMP,          7831,  STR7831,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 1
+{0x053D079A,  CAT_IOTEST,           VT_TEMP,          7832,  STR7832,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 2
+{0x053D079B,  CAT_IOTEST,           VT_TEMP,          7833,  STR7833,  0,                    NULL,         FL_RONLY}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 2
+{0x053D082F,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 #ifdef BROETJE
-{0x053D045D,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
+{0x053D045D,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 #else
-{0x053D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
+{0x053D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 #endif
-{0x053D057A,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         DEFAULT_FLAG}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
-{0x053D078F,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
-{0x053D0DA5,  CAT_IOTEST,           VT_CLOSEDOPEN,    7847,  STR7847,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Ein-/Ausgangstest - Zustand Kontakt H2, modul 2 //FUJITSU
-{0x073D082F,  CAT_IOTEST,           VT_VOLTAGE,       7854,  STR7854,  0,                    NULL,         DEFAULT_FLAG}, // Spannungssignal H3
-{0x073D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7855,  STR7855,  0,                    NULL,         DEFAULT_FLAG}, // Kontaktzustand H3
-{0x053D03F6,  CAT_IOTEST,           VT_VOLTAGE,       7870,  STR7870,  0,                    NULL,         DEFAULT_FLAG}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
-{0x053D03F5,  CAT_IOTEST,           VT_VOLTAGE,       7881,  STR7881,  0,                    NULL,         DEFAULT_FLAG}, // [V] - Ein-/Ausgangstest - 1. Brennerstufe E1
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7889,  STR7889,  0,                    NULL,         DEFAULT_FLAG}, // Niederdruckwächter E9
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7890,  STR7890,  0,                    NULL,         DEFAULT_FLAG}, // Hochdruckwächter E10
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7891,  STR7891,  0,                    NULL,         DEFAULT_FLAG}, // Wickl’schutz Verdicht 1 E11
-{0x053D03F8,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7911,  STR7911,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 1 //FUJITSU
-{0x053D03FC,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7912,  STR7912,  0,                    NULL,         DEFAULT_FLAG}, // [V] - Ein-/Ausgangstest - Eingang EX2
-{0x053D03FA,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7913,  STR7913,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 3 //FUJITSU
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7914,  STR7914,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 4
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7915,  STR7915,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 5
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7916,  STR7916,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 6
-{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7917,  STR7917,  0,                    NULL,         DEFAULT_FLAG}, // Eingang EX 7
+{0x053D057A,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
+{0x053D078F,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA5,  CAT_IOTEST,           VT_CLOSEDOPEN,    7847,  STR7847,  0,                    NULL,         FL_RONLY}, // [0] - Ein-/Ausgangstest - Zustand Kontakt H2, modul 2 //FUJITSU
+{0x073D082F,  CAT_IOTEST,           VT_VOLTAGE,       7854,  STR7854,  0,                    NULL,         FL_RONLY}, // Spannungssignal H3
+{0x073D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7855,  STR7855,  0,                    NULL,         FL_RONLY}, // Kontaktzustand H3
+{0x053D03F6,  CAT_IOTEST,           VT_VOLTAGE,       7870,  STR7870,  0,                    NULL,         FL_RONLY}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
+{0x053D03F5,  CAT_IOTEST,           VT_VOLTAGE,       7881,  STR7881,  0,                    NULL,         FL_RONLY}, // [V] - Ein-/Ausgangstest - 1. Brennerstufe E1
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7889,  STR7889,  0,                    NULL,         FL_RONLY}, // Niederdruckwächter E9
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7890,  STR7890,  0,                    NULL,         FL_RONLY}, // Hochdruckwächter E10
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7891,  STR7891,  0,                    NULL,         FL_RONLY}, // Wickl’schutz Verdicht 1 E11
+{0x053D03F8,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7911,  STR7911,  0,                    NULL,         FL_RONLY}, // Eingang EX 1 //FUJITSU
+{0x053D03FC,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7912,  STR7912,  0,                    NULL,         FL_RONLY}, // [V] - Ein-/Ausgangstest - Eingang EX2
+{0x053D03FA,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7913,  STR7913,  0,                    NULL,         FL_RONLY}, // Eingang EX 3 //FUJITSU
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7914,  STR7914,  0,                    NULL,         FL_RONLY}, // Eingang EX 4
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7915,  STR7915,  0,                    NULL,         FL_RONLY}, // Eingang EX 5
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7916,  STR7916,  0,                    NULL,         FL_RONLY}, // Eingang EX 6
+{CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7917,  STR7917,  0,                    NULL,         FL_RONLY}, // Eingang EX 7
 #ifdef FUJITSU
-{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7973,  STR7973,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX31 //FUJITSU
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7973,  STR7973,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX31 //FUJITSU
 #endif
-{0x053D1219,  CAT_IOTEST,           VT_TEMP,          7974,  STR7974,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX32 //FUJITSU
-{0x053D121A,  CAT_IOTEST,           VT_TEMP,          7975,  STR7975,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX33 //FUJITSU
-{0x053D121B,  CAT_IOTEST,           VT_TEMP,          7976,  STR7976,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX34 //FUJITSU
-{0x053D126F,  CAT_IOTEST,           VT_TEMP,          7977,  STR7977,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX35 //FUJITSU
-{0x053D1270,  CAT_IOTEST,           VT_TEMP,          7978,  STR7978,  0,                    NULL,         DEFAULT_FLAG}, // Fühlertemperatur BX36 //FUJITSU
-{0x053D1285,  CAT_IOTEST,           VT_CLOSEDOPEN,    7996,  STR7996,  0,                    NULL,         DEFAULT_FLAG}, // Zustand Kontakt H33 //FUJITSU
-{0x053D175F,  CAT_IOTEST,           VT_ENUM,          7999,  STR7999,  sizeof(ENUM7999),     ENUM7999,     DEFAULT_FLAG}, // Eingangssignal H33 //FUJITSU
+{0x053D1219,  CAT_IOTEST,           VT_TEMP,          7974,  STR7974,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX32 //FUJITSU
+{0x053D121A,  CAT_IOTEST,           VT_TEMP,          7975,  STR7975,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX33 //FUJITSU
+{0x053D121B,  CAT_IOTEST,           VT_TEMP,          7976,  STR7976,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX34 //FUJITSU
+{0x053D126F,  CAT_IOTEST,           VT_TEMP,          7977,  STR7977,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX35 //FUJITSU
+{0x053D1270,  CAT_IOTEST,           VT_TEMP,          7978,  STR7978,  0,                    NULL,         FL_RONLY}, // Fühlertemperatur BX36 //FUJITSU
+{0x053D1285,  CAT_IOTEST,           VT_CLOSEDOPEN,    7996,  STR7996,  0,                    NULL,         FL_RONLY}, // Zustand Kontakt H33 //FUJITSU
+{0x053D175F,  CAT_IOTEST,           VT_ENUM,          7999,  STR7999,  sizeof(ENUM7999),     ENUM7999,     FL_RONLY}, // Eingangssignal H33 //FUJITSU
 
 //Status
-{0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     DEFAULT_FLAG}, // [ ] - Status - Status Heizkreis 1
-{0x053D07A5,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),     ENUM8001,     DEFAULT_FLAG}, // [ ] - Status - Status Heizkreis 2
-{0x053D07A7,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),     ENUM8002,     DEFAULT_FLAG}, // [ ] - Status - Status Heizkreis P
-{0x053D07A1,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),     ENUM8003,     DEFAULT_FLAG}, // [] - Status - Status Trinkwasser
-{0x053D0F73,  CAT_STATUS,           VT_ENUM,          8004,  STR8004,  sizeof(ENUM8004),     ENUM8004,     DEFAULT_FLAG}, // Status Kühlkreis 1
-{0x053D07A9,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),     ENUM8005,     DEFAULT_FLAG}, // [] - Status - Status Kessel
-{0x053D17DC,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     DEFAULT_FLAG}, // Status Wärmepumpe //FUJITSU
-{0x053D07AD,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     DEFAULT_FLAG}, // [] - Status - Status Solar
-{0x053D0A08,  CAT_STATUS,           VT_ENUM,          8008,  STR8008,  sizeof(ENUM8008),     ENUM8008,     DEFAULT_FLAG}, // [] - Status - Status Feststoffkessel
+{0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY}, // [ ] - Status - Status Heizkreis 1
+{0x053D07A5,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),     ENUM8001,     FL_RONLY}, // [ ] - Status - Status Heizkreis 2
+{0x053D07A7,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),     ENUM8002,     FL_RONLY}, // [ ] - Status - Status Heizkreis P
+{0x053D07A1,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),     ENUM8003,     FL_RONLY}, // [] - Status - Status Trinkwasser
+{0x053D0F73,  CAT_STATUS,           VT_ENUM,          8004,  STR8004,  sizeof(ENUM8004),     ENUM8004,     FL_RONLY}, // Status Kühlkreis 1
+{0x053D07A9,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),     ENUM8005,     FL_RONLY}, // [] - Status - Status Kessel
+{0x053D17DC,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY}, // Status Wärmepumpe //FUJITSU
+{0x053D07AD,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     FL_RONLY}, // [] - Status - Status Solar
+{0x053D0A08,  CAT_STATUS,           VT_ENUM,          8008,  STR8008,  sizeof(ENUM8008),     ENUM8008,     FL_RONLY}, // [] - Status - Status Feststoffkessel
 #if defined(THISION) || defined(BROETJE_SOB)
 {CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8009,  STR8009,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY},     // [] - Status - Status Brenner Thision / Brötje SOB
 #else
 {0x053D0F66,  CAT_STATUS,           VT_ENUM,          8009,  STR8009,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY},     // [] - Status - Status Brenner Brötje BSW
 #endif
-{0x053D07AB,  CAT_STATUS,           VT_ENUM,          8010,  STR8010,  sizeof(ENUM8010),     ENUM8010,     DEFAULT_FLAG}, // [] - Status - Status Pufferspeicher
-{0x053D0AFC,  CAT_STATUS,           VT_ENUM,          8011,  STR8011,  sizeof(ENUM8011),     ENUM8011,     DEFAULT_FLAG}, // Status Schwimmbad
-{0x053D17E6,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     DEFAULT_FLAG}, // Status Zusatzerzeuger //FUJITSU
-{0x053D17D1,  CAT_STATUS,           VT_ENUM,          8025,  STR8025,  0,                    NULL,         DEFAULT_FLAG}, // Status Kühlkreis 2
-{0x053D06FD,  CAT_STATUS,           VT_DATETIME,      8050,  STR8050,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 1
-{0x053D17EA,  CAT_STATUS,           VT_ENUM,          8051,  STR8051,  sizeof(ENUM8051),     ENUM8051,     DEFAULT_FLAG}, // Statuscode Statushistorie 1
-{0x053D06FE,  CAT_STATUS,           VT_DATETIME,      8052,  STR8052,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 2
-{0x053D17EB,  CAT_STATUS,           VT_ENUM,          8053,  STR8053,  sizeof(ENUM8053),     ENUM8053,     DEFAULT_FLAG}, // Statuscode Statushistorie 2
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8054,  STR8054,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 3
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8055,  STR8055,  sizeof(ENUM8055),     ENUM8055,     DEFAULT_FLAG}, // Statuscode Statushistorie 3
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8056,  STR8056,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 4
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8057,  STR8057,  sizeof(ENUM8057),     ENUM8057,     DEFAULT_FLAG}, // Statuscode Statushistorie 4
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8058,  STR8058,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 5
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8059,  STR8059,  sizeof(ENUM8059),     ENUM8059,     DEFAULT_FLAG}, // Statuscode Statushistorie 5
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8060,  STR8060,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 6
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8061,  STR8061,  sizeof(ENUM8061),     ENUM8061,     DEFAULT_FLAG}, // Statuscode Statushistorie 6
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8062,  STR8062,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 7
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8063,  STR8063,  sizeof(ENUM8063),     ENUM8063,     DEFAULT_FLAG}, // Statuscode Statushistorie 7
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8064,  STR8064,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 8
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8065,  STR8065,  sizeof(ENUM8065),     ENUM8065,     DEFAULT_FLAG}, // Statuscode Statushistorie 8
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8066,  STR8066,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 9
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8067,  STR8067,  sizeof(ENUM8067),     ENUM8067,     DEFAULT_FLAG}, // Statuscode Statushistorie 10
-{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8068,  STR8068,  0,                    NULL,         DEFAULT_FLAG}, // Zeitstempel Statushistorie 10
-{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8069,  STR8069,  sizeof(ENUM8069),     ENUM8069,     DEFAULT_FLAG}, // Statuscode Statushistorie 10
+{0x053D07AB,  CAT_STATUS,           VT_ENUM,          8010,  STR8010,  sizeof(ENUM8010),     ENUM8010,     FL_RONLY}, // [] - Status - Status Pufferspeicher
+{0x053D0AFC,  CAT_STATUS,           VT_ENUM,          8011,  STR8011,  sizeof(ENUM8011),     ENUM8011,     FL_RONLY}, // Status Schwimmbad
+{0x053D17E6,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY}, // Status Zusatzerzeuger //FUJITSU
+{0x053D17D1,  CAT_STATUS,           VT_ENUM,          8025,  STR8025,  0,                    NULL,         FL_RONLY}, // Status Kühlkreis 2
+{0x053D06FD,  CAT_STATUS,           VT_DATETIME,      8050,  STR8050,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 1
+{0x053D17EA,  CAT_STATUS,           VT_ENUM,          8051,  STR8051,  sizeof(ENUM8051),     ENUM8051,     FL_RONLY}, // Statuscode Statushistorie 1
+{0x053D06FE,  CAT_STATUS,           VT_DATETIME,      8052,  STR8052,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 2
+{0x053D17EB,  CAT_STATUS,           VT_ENUM,          8053,  STR8053,  sizeof(ENUM8053),     ENUM8053,     FL_RONLY}, // Statuscode Statushistorie 2
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8054,  STR8054,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 3
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8055,  STR8055,  sizeof(ENUM8055),     ENUM8055,     FL_RONLY}, // Statuscode Statushistorie 3
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8056,  STR8056,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 4
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8057,  STR8057,  sizeof(ENUM8057),     ENUM8057,     FL_RONLY}, // Statuscode Statushistorie 4
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8058,  STR8058,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 5
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8059,  STR8059,  sizeof(ENUM8059),     ENUM8059,     FL_RONLY}, // Statuscode Statushistorie 5
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8060,  STR8060,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 6
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8061,  STR8061,  sizeof(ENUM8061),     ENUM8061,     FL_RONLY}, // Statuscode Statushistorie 6
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8062,  STR8062,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 7
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8063,  STR8063,  sizeof(ENUM8063),     ENUM8063,     FL_RONLY}, // Statuscode Statushistorie 7
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8064,  STR8064,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 8
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8065,  STR8065,  sizeof(ENUM8065),     ENUM8065,     FL_RONLY}, // Statuscode Statushistorie 8
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8066,  STR8066,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 9
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8067,  STR8067,  sizeof(ENUM8067),     ENUM8067,     FL_RONLY}, // Statuscode Statushistorie 10
+{CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8068,  STR8068,  0,                    NULL,         FL_RONLY}, // Zeitstempel Statushistorie 10
+{CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8069,  STR8069,  sizeof(ENUM8069),     ENUM8069,     FL_RONLY}, // Statuscode Statushistorie 10
 
 // Diagnose Kaskade
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8100,  STR8100,  sizeof(ENUM8100),     ENUM8100,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 1
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8102,  STR8102,  sizeof(ENUM8102),     ENUM8102,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 2
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8104,  STR8104,  sizeof(ENUM8104),     ENUM8104,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 3
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8106,  STR8106,  sizeof(ENUM8106),     ENUM8106,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 4
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8108,  STR8108,  sizeof(ENUM8108),     ENUM8108,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 5
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8110,  STR8110,  sizeof(ENUM8110),     ENUM8110,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 6
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8112,  STR8112,  sizeof(ENUM8112),     ENUM8112,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 7
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8114,  STR8114,  sizeof(ENUM8114),     ENUM8114,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 8
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8116,  STR8116,  sizeof(ENUM8116),     ENUM8116,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 9
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8118,  STR8118,  sizeof(ENUM8118),     ENUM8118,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 10
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8120,  STR8120,  sizeof(ENUM8120),     ENUM8120,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 11
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8122,  STR8122,  sizeof(ENUM8122),     ENUM8122,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 12
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8124,  STR8124,  sizeof(ENUM8124),     ENUM8124,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 13
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8126,  STR8126,  sizeof(ENUM8126),     ENUM8126,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 14
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8128,  STR8128,  sizeof(ENUM8128),     ENUM8128,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 15
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8130,  STR8130,  sizeof(ENUM8130),     ENUM8130,     DEFAULT_FLAG}, // Priorität / Status Erzeuger 16
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8138,  STR8138,  0,                    NULL,         DEFAULT_FLAG}, // Kaskadenvorlauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8139,  STR8139,  0,                    NULL,         DEFAULT_FLAG}, // Kaskadenvorlaufsollwert
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8140,  STR8140,  0,                    NULL,         DEFAULT_FLAG}, // Kaskadenrücklauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8141,  STR8141,  0,                    NULL,         DEFAULT_FLAG}, // Kaskadenrücklaufsollwert
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8150,  STR8150,  0,                    NULL,         DEFAULT_FLAG}, // Erz'folge Umschalt aktuell
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8100,  STR8100,  sizeof(ENUM8100),     ENUM8100,     FL_RONLY}, // Priorität / Status Erzeuger 1
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8102,  STR8102,  sizeof(ENUM8102),     ENUM8102,     FL_RONLY}, // Priorität / Status Erzeuger 2
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8104,  STR8104,  sizeof(ENUM8104),     ENUM8104,     FL_RONLY}, // Priorität / Status Erzeuger 3
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8106,  STR8106,  sizeof(ENUM8106),     ENUM8106,     FL_RONLY}, // Priorität / Status Erzeuger 4
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8108,  STR8108,  sizeof(ENUM8108),     ENUM8108,     FL_RONLY}, // Priorität / Status Erzeuger 5
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8110,  STR8110,  sizeof(ENUM8110),     ENUM8110,     FL_RONLY}, // Priorität / Status Erzeuger 6
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8112,  STR8112,  sizeof(ENUM8112),     ENUM8112,     FL_RONLY}, // Priorität / Status Erzeuger 7
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8114,  STR8114,  sizeof(ENUM8114),     ENUM8114,     FL_RONLY}, // Priorität / Status Erzeuger 8
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8116,  STR8116,  sizeof(ENUM8116),     ENUM8116,     FL_RONLY}, // Priorität / Status Erzeuger 9
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8118,  STR8118,  sizeof(ENUM8118),     ENUM8118,     FL_RONLY}, // Priorität / Status Erzeuger 10
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8120,  STR8120,  sizeof(ENUM8120),     ENUM8120,     FL_RONLY}, // Priorität / Status Erzeuger 11
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8122,  STR8122,  sizeof(ENUM8122),     ENUM8122,     FL_RONLY}, // Priorität / Status Erzeuger 12
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8124,  STR8124,  sizeof(ENUM8124),     ENUM8124,     FL_RONLY}, // Priorität / Status Erzeuger 13
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8126,  STR8126,  sizeof(ENUM8126),     ENUM8126,     FL_RONLY}, // Priorität / Status Erzeuger 14
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8128,  STR8128,  sizeof(ENUM8128),     ENUM8128,     FL_RONLY}, // Priorität / Status Erzeuger 15
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8130,  STR8130,  sizeof(ENUM8130),     ENUM8130,     FL_RONLY}, // Priorität / Status Erzeuger 16
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8138,  STR8138,  0,                    NULL,         FL_RONLY}, // Kaskadenvorlauftemperatur
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8139,  STR8139,  0,                    NULL,         FL_RONLY}, // Kaskadenvorlaufsollwert
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8140,  STR8140,  0,                    NULL,         FL_RONLY}, // Kaskadenrücklauftemperatur
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8141,  STR8141,  0,                    NULL,         FL_RONLY}, // Kaskadenrücklaufsollwert
+{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8150,  STR8150,  0,                    NULL,         FL_RONLY}, // Erz'folge Umschalt aktuell
 
 
 //Diagnose Erzeuger
-{0x053D09A0,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8300,  STR8300,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
-{0x053D09A1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8301,  STR8301,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Erzeuger - 2. Brennerstufe T8
-{0x053D09A2,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8304,  STR8304,  sizeof(ENUM8304),     ENUM8304,     DEFAULT_FLAG}, // Kesselpumpe Q1 TODO determine enum values
-{0x053D0826,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8308,  STR8308,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Kesselpumpe
-{0x0D3D0519,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
-{0x0D3D0923,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8311,  STR8311,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
-{0x053D0B26,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8312,  STR8312,  0,                    NULL,         DEFAULT_FLAG}, // Kesselschaltpunkt
-{0x113D051A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
-{0x113D0B64,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8315,  STR8315,  0,                    NULL,         DEFAULT_FLAG}, // Kesselrücklaufsollwert
-{0x053D051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
-{0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
-{0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_UINT,          8323,  STR8323,  0,                    NULL,         DEFAULT_FLAG}, // Gebläsedrehzahl TODO Divisor? - Broetje NovoCondens WOB20-25
+{0x053D09A0,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8300,  STR8300,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
+{0x053D09A1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8301,  STR8301,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Erzeuger - 2. Brennerstufe T8
+{0x053D09A2,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8304,  STR8304,  sizeof(ENUM8304),     ENUM8304,     FL_RONLY}, // Kesselpumpe Q1 TODO determine enum values
+{0x053D0826,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8308,  STR8308,  0,                    NULL,         FL_RONLY}, // Drehzahl Kesselpumpe
+{0x0D3D0519,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0D3D0923,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8311,  STR8311,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
+{0x053D0B26,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8312,  STR8312,  0,                    NULL,         FL_RONLY}, // Kesselschaltpunkt
+{0x113D051A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
+{0x113D0B64,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8315,  STR8315,  0,                    NULL,         FL_RONLY}, // Kesselrücklaufsollwert
+{0x053D051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
+{0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
+{0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_UINT,          8323,  STR8323,  0,                    NULL,         FL_RONLY}, // Gebläsedrehzahl TODO Divisor? - Broetje NovoCondens WOB20-25
 #ifdef BROETJE
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         DEFAULT_FLAG}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 #else
-{0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                    NULL,         DEFAULT_FLAG}, // Thision Diagnose Erzeuger - Gebläsedrehzahl
+{0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                    NULL,         FL_RONLY}, // Thision Diagnose Erzeuger - Gebläsedrehzahl
 #endif
-{0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         DEFAULT_FLAG}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
+{0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         FL_RONLY}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
 #ifdef BROETJE
-{0x053D0834,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         DEFAULT_FLAG}, // WGBS Brennermodulation
+{0x053D0834,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         FL_RONLY}, // WGBS Brennermodulation
 #else
-{0x113D305F,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         DEFAULT_FLAG}, // Thision Brennermodulation
+{0x113D305F,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         FL_RONLY}, // Thision Brennermodulation
 #endif
-{0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         DEFAULT_FLAG}, // Thision Wasserdruck
-{0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                    NULL,         DEFAULT_FLAG}, // Thision Betriebsanzeige FA [?]
+{0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY}, // Thision Wasserdruck
+{0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                    NULL,         FL_RONLY}, // Thision Betriebsanzeige FA [?]
 #ifdef BROETJE
-{0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         DEFAULT_FLAG}, // WGBS Ionisationsstrom [uA?]
+{0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY}, // WGBS Ionisationsstrom [uA?]
 #else
-{0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         DEFAULT_FLAG}, // Thision Ionisationsstrom [uA?]
+{0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY}, // Thision Ionisationsstrom [uA?]
 #endif
-{0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         DEFAULT_FLAG}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
-{0x053D08A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe
-{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         DEFAULT_FLAG}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
-{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
-{0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         DEFAULT_FLAG}, // Thision Betriebsstunden Brenner
-{0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                    NULL,         DEFAULT_FLAG}, // Thision Startzähler Brenner
+{0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         FL_RONLY}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
+{0x053D08A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe
+{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         FL_RONLY}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
+{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
+{0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY}, // Thision Betriebsstunden Brenner
+{0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                    NULL,         FL_RONLY}, // Thision Startzähler Brenner
 #ifdef BROETJE
-{0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         DEFAULT_FLAG}, // WGBS Betriebsstunden Heizbetrieb
+{0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY}, // WGBS Betriebsstunden Heizbetrieb
 #else
-{0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         DEFAULT_FLAG}, // Thision Betriebsstunden Heizbetrieb
+{0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY}, // Thision Betriebsstunden Heizbetrieb
 #endif
 #ifdef BROETJE
-{0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         DEFAULT_FLAG}, // WGBS Betriebsstunden TWW
+{0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY}, // WGBS Betriebsstunden TWW
 #else
-{0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         DEFAULT_FLAG}, // Thision Betriebsstunden TWW
+{0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY}, // Thision Betriebsstunden TWW
 #endif
-{0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         DEFAULT_FLAG}, // Thision Betriebsstunden Zonen
-{0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8390,  STR8390,  0,                    NULL,         DEFAULT_FLAG}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
-{0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8395,  STR8395,  0,                    NULL,         DEFAULT_FLAG}, // Wärmeabgabe in kW // Broetje BSW-K
-{0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         DEFAULT_FLAG}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
-{0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8397,  STR8397,  0,                    NULL,         DEFAULT_FLAG}, // Leistungsaufnahme in kW // Broetje BSW-K
-{0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8398,  STR8398,  0,                    NULL,         DEFAULT_FLAG}, // Leistungszahl
+{0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY}, // Thision Betriebsstunden Zonen
+{0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8390,  STR8390,  0,                    NULL,         FL_RONLY}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
+{0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8395,  STR8395,  0,                    NULL,         FL_RONLY}, // Wärmeabgabe in kW // Broetje BSW-K
+{0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
+{0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8397,  STR8397,  0,                    NULL,         FL_RONLY}, // Leistungsaufnahme in kW // Broetje BSW-K
+{0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8398,  STR8398,  0,                    NULL,         FL_RONLY}, // Leistungszahl
 
 // Diagnose Erzeuger - Wärmepumpe
-{0x053D09B5,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8400,  STR8400,  0,                    NULL,         DEFAULT_FLAG}, // Verdichter 1 K1
-{0x053D09B6,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8401,  STR8401,  0,                    NULL,         DEFAULT_FLAG}, // Verdichter 2 K2
-{0x053D0AD1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8402,  STR8402,  0,                    NULL,         DEFAULT_FLAG}, // Elektroeinsatz 1 Vorlauf //FUJITSU ("Elektrischer Widerstand 1 Ausgang")
-{0x053D09BE,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8403,  STR8403,  0,                    NULL,         DEFAULT_FLAG}, // Elektroeinsatz 2 Vorlauf //FUJITSU
-{0x053D09B8,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8404,  STR8404,  0,                    NULL,         DEFAULT_FLAG}, // Quellenpu Q8 / Ventilat K19
-{0x053D0B35,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8405,  STR8405,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Quellenpumpe
-{0x053D09B9,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8406,  STR8406,  0,                    NULL,         DEFAULT_FLAG}, // Kondensatorpumpe Q9 //FUJITSU
-{0x053D167A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8407,  STR8407,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Kondensatorpumpe
-{0x053D0AB3,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8408,  STR8408,  0,                    NULL,         DEFAULT_FLAG}, // Kühlumlenkventil Quelle
-{0x593D0537,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8410,  STR8410,  0,                    NULL,         DEFAULT_FLAG}, // Rücklauftemperatur WP //FUJITSU
-{0x593D0767,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8411,  STR8411,  0,                    NULL,         DEFAULT_FLAG}, // Sollwert WP //FUJITSU
-{0x593D052D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8412,  STR8412,  0,                    NULL,         DEFAULT_FLAG}, // Vorlauftemperatur WP //FUJITSU
-{0x053D0D2A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8413,  STR8413,  0,                    NULL,         DEFAULT_FLAG}, // Modulation des Kompressors //FUJITSU
+{0x053D09B5,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8400,  STR8400,  0,                    NULL,         FL_RONLY}, // Verdichter 1 K1
+{0x053D09B6,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8401,  STR8401,  0,                    NULL,         FL_RONLY}, // Verdichter 2 K2
+{0x053D0AD1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8402,  STR8402,  0,                    NULL,         FL_RONLY}, // Elektroeinsatz 1 Vorlauf //FUJITSU ("Elektrischer Widerstand 1 Ausgang")
+{0x053D09BE,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8403,  STR8403,  0,                    NULL,         FL_RONLY}, // Elektroeinsatz 2 Vorlauf //FUJITSU
+{0x053D09B8,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8404,  STR8404,  0,                    NULL,         FL_RONLY}, // Quellenpu Q8 / Ventilat K19
+{0x053D0B35,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8405,  STR8405,  0,                    NULL,         FL_RONLY}, // Drehzahl Quellenpumpe
+{0x053D09B9,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8406,  STR8406,  0,                    NULL,         FL_RONLY}, // Kondensatorpumpe Q9 //FUJITSU
+{0x053D167A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8407,  STR8407,  0,                    NULL,         FL_RONLY}, // Drehzahl Kondensatorpumpe
+{0x053D0AB3,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8408,  STR8408,  0,                    NULL,         FL_RONLY}, // Kühlumlenkventil Quelle
+{0x593D0537,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8410,  STR8410,  0,                    NULL,         FL_RONLY}, // Rücklauftemperatur WP //FUJITSU
+{0x593D0767,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8411,  STR8411,  0,                    NULL,         FL_RONLY}, // Sollwert WP //FUJITSU
+{0x593D052D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8412,  STR8412,  0,                    NULL,         FL_RONLY}, // Vorlauftemperatur WP //FUJITSU
+{0x053D0D2A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8413,  STR8413,  0,                    NULL,         FL_RONLY}, // Modulation des Kompressors //FUJITSU
 #ifdef BROETJE
-{0x593D05BF,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8415,  STR8415,  0,                    NULL,         DEFAULT_FLAG}, // Heissgastemperatur 1
+{0x593D05BF,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8415,  STR8415,  0,                    NULL,         FL_RONLY}, // Heissgastemperatur 1
 #endif
 #ifdef FUJITSU
-{0x053D12F4,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8414,  STR8414,  0,                    NULL,         DEFAULT_FLAG}, // Elektro-Vorlauf Modulation //FUJITSU
+{0x053D12F4,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8414,  STR8414,  0,                    NULL,         FL_RONLY}, // Elektro-Vorlauf Modulation //FUJITSU
 #endif
-{0x593D05A8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8416,  STR8416,  0,                    NULL,         DEFAULT_FLAG}, // Heissgastemperatur Max
-{0x593D05C0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8417,  STR8417,  0,                    NULL,         DEFAULT_FLAG}, // Heissgastemperatur 2
-{0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         DEFAULT_FLAG}, // Kältemitteltemperatur flüssig
-{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         DEFAULT_FLAG}, // Kondensatortemperatur
-{0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         DEFAULT_FLAG}, // Temp’spreizung Kondensator //FUJITSU
-{0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         DEFAULT_FLAG}, // Temp’spreizung Verdampfer
-{0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         DEFAULT_FLAG}, // Quelle Eintrittstemperatur
-{0x593D176A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8428,  STR8428,  0,                    NULL,         DEFAULT_FLAG}, // Quelle Eintritt Min
-{0x593D05BA,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8429,  STR8429,  0,                    NULL,         DEFAULT_FLAG}, // Quelle Austrittstemperatur
+{0x593D05A8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8416,  STR8416,  0,                    NULL,         FL_RONLY}, // Heissgastemperatur Max
+{0x593D05C0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8417,  STR8417,  0,                    NULL,         FL_RONLY}, // Heissgastemperatur 2
+{0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         FL_RONLY}, // Kältemitteltemperatur flüssig
+{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY}, // Kondensatortemperatur
+{0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         FL_RONLY}, // Temp’spreizung Kondensator //FUJITSU
+{0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         FL_RONLY}, // Temp’spreizung Verdampfer
+{0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         FL_RONLY}, // Quelle Eintrittstemperatur
+{0x593D176A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8428,  STR8428,  0,                    NULL,         FL_RONLY}, // Quelle Eintritt Min
+{0x593D05BA,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8429,  STR8429,  0,                    NULL,         FL_RONLY}, // Quelle Austrittstemperatur
 // Ausschaltschwelle 0x593D0766
-{0x593D1769,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8430,  STR8430,  0,                    NULL,         DEFAULT_FLAG}, // Quelle Austritt Min
-{0x053D195A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8431,  STR8431,  0,                    NULL,         DEFAULT_FLAG}, // Quellenzw'kreis Vorlauftemp
-{0x053D196D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8434,  STR8434,  0,                    NULL,         DEFAULT_FLAG}, // Sauggastemperatur
-{0x053D163B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8435,  STR8435,  0,                    NULL,         DEFAULT_FLAG}, // Verdampfungstemperatur
-{0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436,  0,                    NULL,         DEFAULT_FLAG}, // Überhitzung oder Überhitzungssollwert
+{0x593D1769,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8430,  STR8430,  0,                    NULL,         FL_RONLY}, // Quelle Austritt Min
+{0x053D195A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8431,  STR8431,  0,                    NULL,         FL_RONLY}, // Quellenzw'kreis Vorlauftemp
+{0x053D196D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8434,  STR8434,  0,                    NULL,         FL_RONLY}, // Sauggastemperatur
+{0x053D163B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8435,  STR8435,  0,                    NULL,         FL_RONLY}, // Verdampfungstemperatur
+{0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436,  0,                    NULL,         FL_RONLY}, // Überhitzung oder Überhitzungssollwert
 // vorheriges könnte auch 1663 sein weil da noch Überhitzungssollwert übermittelt wird
-{0x053D163A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8437,  STR8437,  0,                    NULL,         DEFAULT_FLAG}, // Expansionsventil // kein Funktion
-{0x053D165B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8438,  STR8438,  0,                    NULL,         DEFAULT_FLAG}, // Magnetventil
-{0x593D0BD4,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8440,  STR8440,  0,                    NULL,         DEFAULT_FLAG}, // Rest Stufe 1 Stillst’zeit Min
-{0x593D0BD5,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8441,  STR8441,  0,                    NULL,         DEFAULT_FLAG}, // Rest Stufe 2 Stillst’zeit Min
-{0x593D0BD6,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8442,  STR8442,  0,                    NULL,         DEFAULT_FLAG}, // Rest Stufe 1 Laufzeit Min
-{0x593D0BD7,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8443,  STR8443,  0,                    NULL,         DEFAULT_FLAG}, // Rest Stufe 2 Laufzeit Min
-{0x593D0BCB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8444,  STR8444,  0,                    NULL,         DEFAULT_FLAG}, // Restzeit Begr Quelle TempMin
-{0x593D05C9,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8446,  STR8446,  0,                    NULL,         DEFAULT_FLAG}, // Verdichterfolge // 1- 2 ??
-{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         DEFAULT_FLAG}, // Betr'std erw Verdampf'temp  // RESET ?
-{0x593D189B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8449,  STR8449,  0,                    NULL,         DEFAULT_FLAG}, // Betr'stunden Kältekreis
-{0x593D0897,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8450,  STR8450,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden Verdichter 1 //FUJITSU
-{0x593D089B,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8451,  STR8451,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler Verdichter 1
-{0x593D0898,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8452,  STR8452,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden Verdichter 2
-{0x593D089C,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8453,  STR8453,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler Verdichter 2
-{0x593D06C6,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8454,  STR8454,  0,                    NULL,         DEFAULT_FLAG}, // Sperrdauer WP //FUJITSU
-{0x593D06C1,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8455,  STR8455,  0,                    NULL,         DEFAULT_FLAG}, // Zähler Anzahl Sperren WP //FUJITSU
-{0x593D06C5,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8456,  STR8456,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden Elektro Vorl //FUJITSU
-{0x593D06C0,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8457,  STR8457,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler Elektro Vorlauf //FUJITSU
+{0x053D163A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8437,  STR8437,  0,                    NULL,         FL_RONLY}, // Expansionsventil // kein Funktion
+{0x053D165B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8438,  STR8438,  0,                    NULL,         FL_RONLY}, // Magnetventil
+{0x593D0BD4,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8440,  STR8440,  0,                    NULL,         FL_RONLY}, // Rest Stufe 1 Stillst’zeit Min
+{0x593D0BD5,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8441,  STR8441,  0,                    NULL,         FL_RONLY}, // Rest Stufe 2 Stillst’zeit Min
+{0x593D0BD6,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8442,  STR8442,  0,                    NULL,         FL_RONLY}, // Rest Stufe 1 Laufzeit Min
+{0x593D0BD7,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8443,  STR8443,  0,                    NULL,         FL_RONLY}, // Rest Stufe 2 Laufzeit Min
+{0x593D0BCB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8444,  STR8444,  0,                    NULL,         FL_RONLY}, // Restzeit Begr Quelle TempMin
+{0x593D05C9,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8446,  STR8446,  0,                    NULL,         FL_RONLY}, // Verdichterfolge // 1- 2 ??
+{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         FL_RONLY}, // Betr'std erw Verdampf'temp  // RESET ?
+{0x593D189B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8449,  STR8449,  0,                    NULL,         FL_RONLY}, // Betr'stunden Kältekreis
+{0x593D0897,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8450,  STR8450,  0,                    NULL,         FL_RONLY}, // Betr’stunden Verdichter 1 //FUJITSU
+{0x593D089B,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8451,  STR8451,  0,                    NULL,         FL_RONLY}, // Startzähler Verdichter 1
+{0x593D0898,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8452,  STR8452,  0,                    NULL,         FL_RONLY}, // Betr’stunden Verdichter 2
+{0x593D089C,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8453,  STR8453,  0,                    NULL,         FL_RONLY}, // Startzähler Verdichter 2
+{0x593D06C6,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8454,  STR8454,  0,                    NULL,         FL_RONLY}, // Sperrdauer WP //FUJITSU
+{0x593D06C1,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8455,  STR8455,  0,                    NULL,         FL_RONLY}, // Zähler Anzahl Sperren WP //FUJITSU
+{0x593D06C5,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8456,  STR8456,  0,                    NULL,         FL_RONLY}, // Betr’stunden Elektro Vorl //FUJITSU
+{0x593D06C0,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8457,  STR8457,  0,                    NULL,         FL_RONLY}, // Startzähler Elektro Vorlauf //FUJITSU
 // ab hier zu testen
-{0x053D196E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8458,  STR8458,  0,                    NULL,         DEFAULT_FLAG}, // Status Smart Grid // todo: ENUM ? Keine Funktion
-{0x053D130F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8460,  STR8460,  0,                    NULL,         DEFAULT_FLAG}, // Wärmepumpendurchfluss // todo: l/min  UINT passt nicht
-{0x053D19E6,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8461,  STR8461,  0,                    NULL,         DEFAULT_FLAG}, // Quellendurchfluss // todo: l/min UINT passt nicht
-{0x053D1760,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8462,  STR8462,  0,                    NULL,         DEFAULT_FLAG}, // Sauggasttemperatur EVI
-{0x593D17AD,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8463,  STR8463,  0,                    NULL,         DEFAULT_FLAG}, // Verdampfungstemperatur EVI
+{0x053D196E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8458,  STR8458,  0,                    NULL,         FL_RONLY}, // Status Smart Grid // todo: ENUM ? Keine Funktion
+{0x053D130F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8460,  STR8460,  0,                    NULL,         FL_RONLY}, // Wärmepumpendurchfluss // todo: l/min  UINT passt nicht
+{0x053D19E6,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8461,  STR8461,  0,                    NULL,         FL_RONLY}, // Quellendurchfluss // todo: l/min UINT passt nicht
+{0x053D1760,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8462,  STR8462,  0,                    NULL,         FL_RONLY}, // Sauggasttemperatur EVI
+{0x593D17AD,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8463,  STR8463,  0,                    NULL,         FL_RONLY}, // Verdampfungstemperatur EVI
 // Kommt auch noch ein Telegramm 0x593D1779, könnte Verdampfungsdruck E in bar sein oder vertauscht mit dem oben
-{0x593D17AB,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8464,  STR8464,  0,                    NULL,         DEFAULT_FLAG}, // Überhitzung EVI
+{0x593D17AB,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8464,  STR8464,  0,                    NULL,         FL_RONLY}, // Überhitzung EVI
 // Kommt auch noch ein Telegramm 0x593D17AC, könnte Überhitzungssollwert E in °C sein oder vertauscht mit dem oben
-{0x053D17AA,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8465,  STR8465,  0,                    NULL,         DEFAULT_FLAG}, // Expansionsventil EVI
-{0x053D165C,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8466,  STR8466,  0,                    NULL,         DEFAULT_FLAG}, // Magnetventil EVI // Keine Funktion
-{0x053D165D,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8467,  STR8467,  0,                    NULL,         DEFAULT_FLAG}, // Mag'ventil Einspritzkapillare // todo: ENUM ? Keine Funktion
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8469,  STR8469,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Ventilator
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8470,  STR8470,  0,                    NULL,         DEFAULT_FLAG}, // Ventilator K19
-{0x053D0A02,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8471,  STR8471,  0,                    NULL,         DEFAULT_FLAG}, // Prozessumkehrventil // Keine Funktion
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8475,  STR8475,  0,                    NULL,         DEFAULT_FLAG}, // Verdampfertemperatur
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8477,  STR8477,  0,                    NULL,         DEFAULT_FLAG}, // Temp'diff Abtauen Istwert
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8478,  STR8478,  0,                    NULL,         DEFAULT_FLAG}, // Temp'diff Abtauen Sollwert
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8480,  STR8480,  0,                    NULL,         DEFAULT_FLAG}, // Restzeit Abtausperrung
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8481,  STR8481,  0,                    NULL,         DEFAULT_FLAG}, // Restzeit Zwangsabtauen
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8482,  STR8482,  0,                    NULL,         DEFAULT_FLAG}, // Restzeit Abtaustabilisierung
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8485,  STR8485,  0,                    NULL,         DEFAULT_FLAG}, // Anzahl Abtauversuche
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         DEFAULT_FLAG}, // Status Abtauen WP
+{0x053D17AA,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8465,  STR8465,  0,                    NULL,         FL_RONLY}, // Expansionsventil EVI
+{0x053D165C,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8466,  STR8466,  0,                    NULL,         FL_RONLY}, // Magnetventil EVI // Keine Funktion
+{0x053D165D,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8467,  STR8467,  0,                    NULL,         FL_RONLY}, // Mag'ventil Einspritzkapillare // todo: ENUM ? Keine Funktion
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8469,  STR8469,  0,                    NULL,         FL_RONLY}, // Drehzahl Ventilator
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8470,  STR8470,  0,                    NULL,         FL_RONLY}, // Ventilator K19
+{0x053D0A02,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8471,  STR8471,  0,                    NULL,         FL_RONLY}, // Prozessumkehrventil // Keine Funktion
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8475,  STR8475,  0,                    NULL,         FL_RONLY}, // Verdampfertemperatur
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8477,  STR8477,  0,                    NULL,         FL_RONLY}, // Temp'diff Abtauen Istwert
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8478,  STR8478,  0,                    NULL,         FL_RONLY}, // Temp'diff Abtauen Sollwert
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8480,  STR8480,  0,                    NULL,         FL_RONLY}, // Restzeit Abtausperrung
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8481,  STR8481,  0,                    NULL,         FL_RONLY}, // Restzeit Zwangsabtauen
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8482,  STR8482,  0,                    NULL,         FL_RONLY}, // Restzeit Abtaustabilisierung
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8485,  STR8485,  0,                    NULL,         FL_RONLY}, // Anzahl Abtauversuche
+{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         FL_RONLY}, // Status Abtauen WP
 
 // Diagnose Erzeuger - Solar
-{0x053D09AB,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8499,  STR8499,  0,                    NULL,         DEFAULT_FLAG}, // Kollektorpumpe 1 (Aus) - Broetje NovoCondens WOB20-25
-{0x053D0A89,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8501,  STR8501,  0,                    NULL,         DEFAULT_FLAG}, // Solarstellglied Puffer - Broetje NovoCondens WOB20-25
-{0x053D0A8B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8502,  STR8502,  0,                    NULL,         DEFAULT_FLAG}, // Solarstellglied Schwimmbad - Broetje NovoCondens WOB20-25
-{0x493D04CE,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8505,  STR8505,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Kollektorpumpe 1
-{0x053D0825,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8506,  STR8506,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Solarpump ext.Tau
-{0x053D0823,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8507,  STR8507,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Solarpumpe Puffer
-{0x053D0824,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8508,  STR8508,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Solarpump Sch'bad
-{0x493D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
-{0x493D053F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8511,  STR8511,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Max
-{0x493D0718,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8512,  STR8512,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Min
-{0x493D053B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8513,  STR8513,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/TWW
-{0x493D053C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8514,  STR8514,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/Puffer
-{0x493D042E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8515,  STR8515,  0,                    NULL,         DEFAULT_FLAG}, // dT Kollektor 1 / Schwimmbad
-{0x493D050E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8519,  STR8519,  0,                    NULL,         DEFAULT_FLAG}, // Solarvorlauftemperatur
-{0x493D050F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8520,  STR8520,  0,                    NULL,         DEFAULT_FLAG}, // Solarrücklauftemperatur
-{0x493D0599,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8526,  STR8526,  0,                    NULL,         DEFAULT_FLAG}, // Tagesertrag Solarenergie
-{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_POWER,         8527,  STR8527,  0,                    NULL,         DEFAULT_FLAG}, // Gesamtertrag Solarenergie
-{0x493D0893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         DEFAULT_FLAG}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag
-{0x493D0717,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8531,  STR8531,  0,                    NULL,         DEFAULT_FLAG}, // [h ] - Diagnose Erzeuger - Betr`stunden Kollektor`überhitz
-{0x053D10A5,  CAT_DIAG_ERZEUGER,    VT_UINT,          8532,  STR8532,  0,                    NULL,         DEFAULT_FLAG}, // Betr`stunden Kollektorpumpe - Broetje NovoCondens WOB20-25
-{0x053D0822,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8543,  STR8543,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Kollektorpumpe
-{0x493D052B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8547,  STR8547,  0,                    NULL,         DEFAULT_FLAG}, // Kollektortemperatur 2
-{0x493D0540,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8548,  STR8548,  0,                    NULL,         DEFAULT_FLAG}, // Kollektortemperatur 2 Max
-{0x493D0ADB,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8549,  STR8549,  0,                    NULL,         DEFAULT_FLAG}, // Kollektortemperatur 2 Min
-{0x493D053D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8550,  STR8550,  0,                    NULL,         DEFAULT_FLAG}, // dT Kollektor 2 / TWW
-{0x493D053E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8551,  STR8551,  0,                    NULL,         DEFAULT_FLAG}, // dT Kollektor 2 / Puffer
-{0x493D042F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8552,  STR8552,  0,                    NULL,         DEFAULT_FLAG}, // dT Kollektor 2 / Schwimmbad
-{0x513D052E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8560,  STR8560,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Erzeuger - Feststoffkesseltemperatur
-{0x513D0892,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8570,  STR8570,  0,                    NULL,         DEFAULT_FLAG}, // Betr'std Feststoffkessel
+{0x053D09AB,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8499,  STR8499,  0,                    NULL,         FL_RONLY}, // Kollektorpumpe 1 (Aus) - Broetje NovoCondens WOB20-25
+{0x053D0A89,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8501,  STR8501,  0,                    NULL,         FL_RONLY}, // Solarstellglied Puffer - Broetje NovoCondens WOB20-25
+{0x053D0A8B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8502,  STR8502,  0,                    NULL,         FL_RONLY}, // Solarstellglied Schwimmbad - Broetje NovoCondens WOB20-25
+{0x493D04CE,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8505,  STR8505,  0,                    NULL,         FL_RONLY}, // Drehzahl Kollektorpumpe 1
+{0x053D0825,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8506,  STR8506,  0,                    NULL,         FL_RONLY}, // Drehzahl Solarpump ext.Tau
+{0x053D0823,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8507,  STR8507,  0,                    NULL,         FL_RONLY}, // Drehzahl Solarpumpe Puffer
+{0x053D0824,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8508,  STR8508,  0,                    NULL,         FL_RONLY}, // Drehzahl Solarpump Sch'bad
+{0x493D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
+{0x493D053F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8511,  STR8511,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Max
+{0x493D0718,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8512,  STR8512,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Min
+{0x493D053B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8513,  STR8513,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/TWW
+{0x493D053C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8514,  STR8514,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/Puffer
+{0x493D042E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8515,  STR8515,  0,                    NULL,         FL_RONLY}, // dT Kollektor 1 / Schwimmbad
+{0x493D050E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8519,  STR8519,  0,                    NULL,         FL_RONLY}, // Solarvorlauftemperatur
+{0x493D050F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8520,  STR8520,  0,                    NULL,         FL_RONLY}, // Solarrücklauftemperatur
+{0x493D0599,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8526,  STR8526,  0,                    NULL,         FL_RONLY}, // Tagesertrag Solarenergie
+{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_POWER,         8527,  STR8527,  0,                    NULL,         FL_RONLY}, // Gesamtertrag Solarenergie
+{0x493D0893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         FL_RONLY}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag
+{0x493D0717,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8531,  STR8531,  0,                    NULL,         FL_RONLY}, // [h ] - Diagnose Erzeuger - Betr`stunden Kollektor`überhitz
+{0x053D10A5,  CAT_DIAG_ERZEUGER,    VT_UINT,          8532,  STR8532,  0,                    NULL,         FL_RONLY}, // Betr`stunden Kollektorpumpe - Broetje NovoCondens WOB20-25
+{0x053D0822,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8543,  STR8543,  0,                    NULL,         FL_RONLY}, // Drehzahl Kollektorpumpe
+{0x493D052B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8547,  STR8547,  0,                    NULL,         FL_RONLY}, // Kollektortemperatur 2
+{0x493D0540,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8548,  STR8548,  0,                    NULL,         FL_RONLY}, // Kollektortemperatur 2 Max
+{0x493D0ADB,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8549,  STR8549,  0,                    NULL,         FL_RONLY}, // Kollektortemperatur 2 Min
+{0x493D053D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8550,  STR8550,  0,                    NULL,         FL_RONLY}, // dT Kollektor 2 / TWW
+{0x493D053E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8551,  STR8551,  0,                    NULL,         FL_RONLY}, // dT Kollektor 2 / Puffer
+{0x493D042F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8552,  STR8552,  0,                    NULL,         FL_RONLY}, // dT Kollektor 2 / Schwimmbad
+{0x513D052E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8560,  STR8560,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Erzeuger - Feststoffkesseltemperatur
+{0x513D0892,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8570,  STR8570,  0,                    NULL,         FL_RONLY}, // Betr'std Feststoffkessel
 
 // Diagnose Verbraucher
-{0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
-{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         DEFAULT_FLAG}, // Außentemperatur Minimum
-{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         DEFAULT_FLAG}, // Außentemperatur Maximum
-{0x053D05F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
-{0x053D05F2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8704,  STR8704,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gemischt
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8720,  STR8720,  0,                    NULL,         DEFAULT_FLAG}, // Relative Raumfeuchte
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_TEMP,          8721,  STR8721,  0,                    NULL,         DEFAULT_FLAG}, // Raumtemperatur
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8722,  STR8722,  0,                    NULL,         DEFAULT_FLAG}, // Taupunkttemperatur
-{0x053D09A5,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8730,  STR8730,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q2
-{0x053D09A6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8731,  STR8731,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y1
-{0x053D09A7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8732,  STR8732,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y2
-{0x213D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Heizkreispumpe 1
-{0x2D3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
-{0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1
-{0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                    NULL,         DEFAULT_FLAG}, // Thision 8742 Raumtemperatur 1 Modell [°C]
-{0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1 Alarm
-{0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
-{0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),     ENUM8749,     DEFAULT_FLAG}, // Raumthermostat 1
+{0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         FL_RONLY}, // Außentemperatur Minimum
+{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         FL_RONLY}, // Außentemperatur Maximum
+{0x053D05F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
+{0x053D05F2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8704,  STR8704,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gemischt
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8720,  STR8720,  0,                    NULL,         FL_RONLY}, // Relative Raumfeuchte
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_TEMP,          8721,  STR8721,  0,                    NULL,         FL_RONLY}, // Raumtemperatur
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8722,  STR8722,  0,                    NULL,         FL_RONLY}, // Taupunkttemperatur
+{0x053D09A5,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8730,  STR8730,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q2
+{0x053D09A6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8731,  STR8731,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y1
+{0x053D09A7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8732,  STR8732,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y2
+{0x213D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                    NULL,         FL_RONLY}, // Drehzahl Heizkreispumpe 1
+{0x2D3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
+{0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1
+{0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                    NULL,         FL_RONLY}, // Thision 8742 Raumtemperatur 1 Modell [°C]
+{0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1 Alarm
+{0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
+{0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),     ENUM8749,     FL_RONLY}, // Raumthermostat 1
 #ifdef THISION
-{0x053d04a2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         DEFAULT_FLAG}, // Thision 8750 Mod Pumpe Sollwert [%]
+{0x053d04a2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         FL_RONLY}, // Thision 8750 Mod Pumpe Sollwert [%]
 #endif
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8751,  STR8751,  0,                    NULL,         DEFAULT_FLAG}, // Kühlkreispumpe Q24
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8752,  STR8752,  0,                    NULL,         DEFAULT_FLAG}, // Kühlkreismischer Auf Y23
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8753,  STR8753,  0,                    NULL,         DEFAULT_FLAG}, // Kühlkreismischer Zu Y24
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8754,  STR8754,  0,                    NULL,         DEFAULT_FLAG}, // Umlenkventil Kühlen Y21
-{0x693D0A1D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8756,  STR8756,  0,                    NULL,         DEFAULT_FLAG}, // Vorlauftemperatur Kühlen 1 //FUJITSU
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8757,  STR8757,  0,                    NULL,         DEFAULT_FLAG}, // Vorlaufsollwert Kühlen1
-{0x053D09A8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8760,  STR8760,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q6
-{0x053D09A9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8761,  STR8761,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y5
-{0x053D09AA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8762,  STR8762,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y6
-{0x223D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8765,  STR8765,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Heizkreispumpe 2
-{0x2E3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8770,  STR8770,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 2
-{0x2E3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8771,  STR8771,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumsollwert 2
-{0x2E3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8772,  STR8772,  0,                    NULL,         DEFAULT_FLAG}, // Thision 8772 Raumtemperatur 2 Modell [°C]
-{0x223D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8773,  STR8773,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 2
-{0x223D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8774,  STR8774,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 2
-{0x063D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8779,  STR8779,  sizeof(ENUM8779),     ENUM8779,     DEFAULT_FLAG}, // Raumthermostat 2
-{0x053D09B0,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8790,  STR8790,  0,                    NULL,         DEFAULT_FLAG}, // Heizkreispumpe 3
-{0x053D0AA7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8791,  STR8791,  0,                    NULL,         DEFAULT_FLAG}, // Heizkreismischer 3 Auf
-{0x053D0AA8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8792,  STR8792,  0,                    NULL,         DEFAULT_FLAG}, // Heizkreismischer 3 Zu
-{0x233D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8795,  STR8795,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Heizkreispumpe P
-{0x2F3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8800,  STR8800,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P
-{0x2F3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8801,  STR8801,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumsollwert P
-{0x2F3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8802,  STR8802,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P Modell
-{0x233D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8803,  STR8803,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsol wert P
-{0x053D09A3,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8820,  STR8820,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Trinkwasserpumpe Q3
-{0x053D09AE,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8821,  STR8821,  0,                    NULL,         DEFAULT_FLAG}, // Elektroeinsatz TWW K6 //FUJITSU ("Elektrischer Widerstand TWW")
-{0x253D04A4,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8825,  STR8825,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Trinkwasserpumpe
-{0x253D0B27,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8826,  STR8826,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl TWW Zw'kreispumpe
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8827,  STR8827,  0,                    NULL,         DEFAULT_FLAG}, // Drehzahl Dl'erhitzerpumpe
-{0x313D052F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
-{0x313D074B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8831,  STR8831,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert
-{0x313D0530,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8832,  STR8832,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 2
-{0x253D077D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8835,  STR8835,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - TWW Zirkulationstemperatur
-{0x253D0B33,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         DEFAULT_FLAG}, // TWW Ladetemperatur
-{0x253D06C2,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8840,  STR8840,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden TWW-Pumpe //FUJITSU
-{0x253D06BD,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8841,  STR8841,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler TWW-Pumpe //FUJITSU
-{0x253D06C3,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8842,  STR8842,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden Elektro TWW //FUJITSU
-{0x253D06BE,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8843,  STR8843,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler Elektro TWW //FUJITSU
-{0x253D0B18,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8850,  STR8850,  0,                    NULL,         DEFAULT_FLAG}, // TWW Vorreglertemperatur
-{0x253D0B36,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8851,  STR8851,  0,                    NULL,         DEFAULT_FLAG}, // TWW Vorreglersollwert
-{0x313D0B24,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8852,  STR8852,  0,                    NULL,         DEFAULT_FLAG}, // TWW Durchl'erhitzertemp
-{0x313D0B37,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8853,  STR8853,  0,                    NULL,         DEFAULT_FLAG}, // TWW Durchl'erhitzersollwert
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8751,  STR8751,  0,                    NULL,         FL_RONLY}, // Kühlkreispumpe Q24
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8752,  STR8752,  0,                    NULL,         FL_RONLY}, // Kühlkreismischer Auf Y23
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8753,  STR8753,  0,                    NULL,         FL_RONLY}, // Kühlkreismischer Zu Y24
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8754,  STR8754,  0,                    NULL,         FL_RONLY}, // Umlenkventil Kühlen Y21
+{0x693D0A1D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8756,  STR8756,  0,                    NULL,         FL_RONLY}, // Vorlauftemperatur Kühlen 1 //FUJITSU
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8757,  STR8757,  0,                    NULL,         FL_RONLY}, // Vorlaufsollwert Kühlen1
+{0x053D09A8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8760,  STR8760,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q6
+{0x053D09A9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8761,  STR8761,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y5
+{0x053D09AA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8762,  STR8762,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y6
+{0x223D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8765,  STR8765,  0,                    NULL,         FL_RONLY}, // Drehzahl Heizkreispumpe 2
+{0x2E3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8770,  STR8770,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 2
+{0x2E3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8771,  STR8771,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumsollwert 2
+{0x2E3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8772,  STR8772,  0,                    NULL,         FL_RONLY}, // Thision 8772 Raumtemperatur 2 Modell [°C]
+{0x223D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8773,  STR8773,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 2
+{0x223D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8774,  STR8774,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 2
+{0x063D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8779,  STR8779,  sizeof(ENUM8779),     ENUM8779,     FL_RONLY}, // Raumthermostat 2
+{0x053D09B0,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8790,  STR8790,  0,                    NULL,         FL_RONLY}, // Heizkreispumpe 3
+{0x053D0AA7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8791,  STR8791,  0,                    NULL,         FL_RONLY}, // Heizkreismischer 3 Auf
+{0x053D0AA8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8792,  STR8792,  0,                    NULL,         FL_RONLY}, // Heizkreismischer 3 Zu
+{0x233D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8795,  STR8795,  0,                    NULL,         FL_RONLY}, // Drehzahl Heizkreispumpe P
+{0x2F3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8800,  STR8800,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P
+{0x2F3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8801,  STR8801,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumsollwert P
+{0x2F3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8802,  STR8802,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P Modell
+{0x233D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8803,  STR8803,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsol wert P
+{0x053D09A3,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8820,  STR8820,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Trinkwasserpumpe Q3
+{0x053D09AE,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8821,  STR8821,  0,                    NULL,         FL_RONLY}, // Elektroeinsatz TWW K6 //FUJITSU ("Elektrischer Widerstand TWW")
+{0x253D04A4,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8825,  STR8825,  0,                    NULL,         FL_RONLY}, // Drehzahl Trinkwasserpumpe
+{0x253D0B27,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8826,  STR8826,  0,                    NULL,         FL_RONLY}, // Drehzahl TWW Zw'kreispumpe
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8827,  STR8827,  0,                    NULL,         FL_RONLY}, // Drehzahl Dl'erhitzerpumpe
+{0x313D052F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
+{0x313D074B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8831,  STR8831,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert
+{0x313D0530,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8832,  STR8832,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 2
+{0x253D077D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8835,  STR8835,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - TWW Zirkulationstemperatur
+{0x253D0B33,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY}, // TWW Ladetemperatur
+{0x253D06C2,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8840,  STR8840,  0,                    NULL,         FL_RONLY}, // Betr’stunden TWW-Pumpe //FUJITSU
+{0x253D06BD,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8841,  STR8841,  0,                    NULL,         FL_RONLY}, // Startzähler TWW-Pumpe //FUJITSU
+{0x253D06C3,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8842,  STR8842,  0,                    NULL,         FL_RONLY}, // Betr’stunden Elektro TWW //FUJITSU
+{0x253D06BE,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8843,  STR8843,  0,                    NULL,         FL_RONLY}, // Startzähler Elektro TWW //FUJITSU
+{0x253D0B18,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8850,  STR8850,  0,                    NULL,         FL_RONLY}, // TWW Vorreglertemperatur
+{0x253D0B36,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8851,  STR8851,  0,                    NULL,         FL_RONLY}, // TWW Vorreglersollwert
+{0x313D0B24,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8852,  STR8852,  0,                    NULL,         FL_RONLY}, // TWW Durchl'erhitzertemp
+{0x313D0B37,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8853,  STR8853,  0,                    NULL,         FL_RONLY}, // TWW Durchl'erhitzersollwert
 #ifdef FUJITSU
-{0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8895,  STR8895,  0,                    NULL,         DEFAULT_FLAG}, // Vorlaufsollwert Schwimmbad //FUJITSU
+{0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8895,  STR8895,  0,                    NULL,         FL_RONLY}, // Vorlaufsollwert Schwimmbad //FUJITSU
 #endif
-{0x053D0AF9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8900,  STR8900,  0,                    NULL,         DEFAULT_FLAG}, // Schwimmbadtemperatur
-{0x053D0AF2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8901,  STR8901,  0,                    NULL,         DEFAULT_FLAG}, // Schwimmbadsollwert
-{0x053D08C7,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8930,  STR8930,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorreglertemperatur
-{0x053D08C8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8931,  STR8931,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorreglersollwert
-{0x053D051F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur
-{0x053D0783,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8951,  STR8951,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Schienenvorlaufsollwert
-{0x053D0AF8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         DEFAULT_FLAG}, // Schienenrücklauftemperatur
-{0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         DEFAULT_FLAG}, // Schienenvorl'sollwert Kälte //FUJITSU
-{0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         DEFAULT_FLAG}, // Leistungssollwert Schiene
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         DEFAULT_FLAG}, // Elektroeinsatz Puffer
-{0x053D0534,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8980,  STR8980,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 1
-{0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         DEFAULT_FLAG}, // Pufferspeichersollwert
-{0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
-{0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         DEFAULT_FLAG}, // Pufferspeichertemperatur 3
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8990,  STR8990,  0,                    NULL,         DEFAULT_FLAG}, // Betr’stunden Elektro Puffer
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         DEFAULT_FLAG}, // Startzähler Elektro Puffer
+{0x053D0AF9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8900,  STR8900,  0,                    NULL,         FL_RONLY}, // Schwimmbadtemperatur
+{0x053D0AF2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8901,  STR8901,  0,                    NULL,         FL_RONLY}, // Schwimmbadsollwert
+{0x053D08C7,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8930,  STR8930,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorreglertemperatur
+{0x053D08C8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8931,  STR8931,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorreglersollwert
+{0x053D051F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur
+{0x053D0783,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8951,  STR8951,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Schienenvorlaufsollwert
+{0x053D0AF8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY}, // Schienenrücklauftemperatur
+{0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         FL_RONLY}, // Schienenvorl'sollwert Kälte //FUJITSU
+{0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY}, // Leistungssollwert Schiene
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         FL_RONLY}, // Elektroeinsatz Puffer
+{0x053D0534,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8980,  STR8980,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 1
+{0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY}, // Pufferspeichersollwert
+{0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
+{0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY}, // Pufferspeichertemperatur 3
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8990,  STR8990,  0,                    NULL,         FL_RONLY}, // Betr’stunden Elektro Puffer
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY}, // Startzähler Elektro Puffer
 #ifdef BROETJE
-{0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
+{0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
 #else
-{0x053D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
+{0x053D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
 #endif
-{0x053D0577,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         DEFAULT_FLAG}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
+{0x053D0577,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 #ifndef FUJITSU
-{0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9004,  STR9004,  0,                    NULL,         DEFAULT_FLAG}, // Vorlaufsollwert H3
+{0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9004,  STR9004,  0,                    NULL,         FL_RONLY}, // Vorlaufsollwert H3
 #endif
-{0x053D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9005,  STR9005,  0,                    NULL,         DEFAULT_FLAG}, // [bar ] - Diagnose Verbraucher - Wasserdruck H1
-{0x063D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006,  STR9006,  0,                    NULL,         DEFAULT_FLAG}, // [bar ] - Diagnose Verbraucher - Wasserdruck H2
-{0x073D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9009,  STR9009,  0,                    NULL,         DEFAULT_FLAG}, // [bar ] - Diagnose Verbraucher - Wasserdruck H3
-{0x053D09BA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9031,  STR9031,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX1
-{0x053D09BB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9032,  STR9032,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX2
-{0x053D09BC,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9033,  STR9033,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX3
-{0x053D09BD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9034,  STR9034,  0,                    NULL,         DEFAULT_FLAG}, // Relaisausgang QX4
-{0x053D0ABD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9035,  STR9035,  0,                    NULL,         DEFAULT_FLAG}, // Relaisausgang QX5 //FUJITSU
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9036,  STR9036,  0,                    NULL,         DEFAULT_FLAG}, // Relaisausgang QX6
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9037,  STR9037,  0,                    NULL,         DEFAULT_FLAG}, // Relaisausgang QX7
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9038,  STR9038,  0,                    NULL,         DEFAULT_FLAG}, // Relaisausgang QX8
-{0x053D09F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
-{0x053D09F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
-{0x053D09F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
-{0x053D09F9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9053,  STR9053,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 2
-{0x053D09FA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9054,  STR9054,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 2
-{0x053D09FB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9055,  STR9055,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 2
-{0x053D1225,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9071,  STR9071,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX31 //FUJITSU
-{0x053D1226,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9072,  STR9072,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX32 //FUJITSU
-{0x053D1227,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9073,  STR9073,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX33 //FUJITSU
-{0x053D1228,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9074,  STR9074,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX34 //FUJITSU
-{0x053D1229,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9075,  STR9075,  0,                    NULL,         DEFAULT_FLAG}, // [0] - Diagnose Verbraucher - Relaisausgang QX35 //FUJITSU
+{0x053D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9005,  STR9005,  0,                    NULL,         FL_RONLY}, // [bar ] - Diagnose Verbraucher - Wasserdruck H1
+{0x063D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006,  STR9006,  0,                    NULL,         FL_RONLY}, // [bar ] - Diagnose Verbraucher - Wasserdruck H2
+{0x073D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9009,  STR9009,  0,                    NULL,         FL_RONLY}, // [bar ] - Diagnose Verbraucher - Wasserdruck H3
+{0x053D09BA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9031,  STR9031,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX1
+{0x053D09BB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9032,  STR9032,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX2
+{0x053D09BC,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9033,  STR9033,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX3
+{0x053D09BD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9034,  STR9034,  0,                    NULL,         FL_RONLY}, // Relaisausgang QX4
+{0x053D0ABD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9035,  STR9035,  0,                    NULL,         FL_RONLY}, // Relaisausgang QX5 //FUJITSU
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9036,  STR9036,  0,                    NULL,         FL_RONLY}, // Relaisausgang QX6
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9037,  STR9037,  0,                    NULL,         FL_RONLY}, // Relaisausgang QX7
+{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9038,  STR9038,  0,                    NULL,         FL_RONLY}, // Relaisausgang QX8
+{0x053D09F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
+{0x053D09F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
+{0x053D09F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
+{0x053D09F9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9053,  STR9053,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 2
+{0x053D09FA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9054,  STR9054,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 2
+{0x053D09FB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9055,  STR9055,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 2
+{0x053D1225,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9071,  STR9071,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX31 //FUJITSU
+{0x053D1226,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9072,  STR9072,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX32 //FUJITSU
+{0x053D1227,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9073,  STR9073,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX33 //FUJITSU
+{0x053D1228,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9074,  STR9074,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX34 //FUJITSU
+{0x053D1229,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9075,  STR9075,  0,                    NULL,         FL_RONLY}, // [0] - Diagnose Verbraucher - Relaisausgang QX35 //FUJITSU
 
 // Feuerungsautomat
-{0x2D3D3037,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9500,  STR9500,  0,                    NULL,         DEFAULT_FLAG}, // Vorlüftzeit
-{0x213D3038,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9502,  STR9502,  0,                    NULL,         DEFAULT_FLAG}, // Gebl'ansteuerung Vorlüftung [%]
-{0x213D300F,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9504,  STR9504,  0,                    NULL,         DEFAULT_FLAG}, // Solldrehzahl Vorlüftung [rpm]
-{0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         DEFAULT_FLAG}, // Gebl'ansteuerung Zündung [%]
-{0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         DEFAULT_FLAG}, // Solldrehzahl Zündung [rpm]
-{0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         DEFAULT_FLAG}, // Gebl'ansteuerung Betrieb. Min [%]
-{0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         DEFAULT_FLAG}, // Gebl'ansteuerung Betrieb. Max [%]
-{0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         DEFAULT_FLAG}, // Solldrehzahl Betrieb Min [rpm]
-{0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         DEFAULT_FLAG}, // Solldrehzahl Betrieb Max [rpm]
-{0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9540,  STR9540,  0,                    NULL,         DEFAULT_FLAG}, // Nachlüftzeit
-{0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         DEFAULT_FLAG}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
-{0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         DEFAULT_FLAG}, // Gebl'ansteuerung Durchlad [%]
-{0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         DEFAULT_FLAG}, // Solldrehzahl Durchladung [rpm]
+{0x2D3D3037,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9500,  STR9500,  0,                    NULL,         FL_RONLY}, // Vorlüftzeit
+{0x213D3038,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9502,  STR9502,  0,                    NULL,         FL_RONLY}, // Gebl'ansteuerung Vorlüftung [%]
+{0x213D300F,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9504,  STR9504,  0,                    NULL,         FL_RONLY}, // Solldrehzahl Vorlüftung [rpm]
+{0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         FL_RONLY}, // Gebl'ansteuerung Zündung [%]
+{0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY}, // Solldrehzahl Zündung [rpm]
+{0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         FL_RONLY}, // Gebl'ansteuerung Betrieb. Min [%]
+{0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         FL_RONLY}, // Gebl'ansteuerung Betrieb. Max [%]
+{0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         FL_RONLY}, // Solldrehzahl Betrieb Min [rpm]
+{0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         FL_RONLY}, // Solldrehzahl Betrieb Max [rpm]
+{0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9540,  STR9540,  0,                    NULL,         FL_RONLY}, // Nachlüftzeit
+{0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
+{0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY}, // Gebl'ansteuerung Durchlad [%]
+{0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY}, // Solldrehzahl Durchladung [rpm]
 
  /*** virtuelle Zeilen ***/
 /*
