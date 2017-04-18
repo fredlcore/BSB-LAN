@@ -153,9 +153,9 @@ Adapter:
         Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
 	
-      Resetten des Arduinos
+      Resetten/Restarten des Arduinos
     	http://<ip-of-server>/X
-    	Reset des Arduinos nach einem Pausieren für 8 Sekunden (#define RESET in BSB_lan_config.h).
+    	Reset/Restart des Arduinos nach einem Pausieren für 8 Sekunden (#define RESET in BSB_lan_config.h).
 
 Offene Punkte
 - Mehr Befehle (command ID) hinzufügen.
