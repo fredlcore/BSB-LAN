@@ -143,7 +143,7 @@ Interface:
         Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
 
       Activate/deactivate logging to microSD-card
-      In general, the activation/deactivation of the logging founds place by the definement in the config_h-file. If the function is active, you can deactivate the function during runtime by using the following parameters:
+      In general, the activation/deactivation of the logging founds place by the definement in the BSB_lan_config.h-file. If the function is active, you can deactivate the function during runtime by using the following parameters:
         http://<ip-of-server>/L=0,0
         For activation, you can just set a new interval and the desired parameters (see configure log file).
         
@@ -156,12 +156,18 @@ Interface:
       Configure logging of bus telegrams
         http://<ip-of-server>/LU=<x>
         When logging bus telegrams (logging parameter 30000), log only unknown command IDs (x=1) or all (x=0) telegrams.
+        http://<ip-of-server>/LB=<x>
+        When logging bus telegrams (logging parameter 30000), log only broadcast (x=1) or all (x=0) telegrams.
 
       Display log file
         http://<ip-of-server>/D
         Shows the content of datalog.txt file on the Ethernet shield's micro SD card slot. 
         Use /D0 to reset datalog.txt including writing a proper CSV file header 
         (recommended on first use before logging starts).
+
+      Reset Arduino
+        http://<ip-of-server>/X
+        Resets the Arduino after pausing for 8 seconds (#define RESET in BSB_lan_config.h).
 
 Open issues
 - Add more command ids to the table.
