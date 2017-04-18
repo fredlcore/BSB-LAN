@@ -1,4 +1,4 @@
-char version[6] = "0.31";
+char version[6] = "0.32";
 
 /*
  * 
@@ -10,8 +10,8 @@ char version[6] = "0.31";
  * Author: Gero Schumacher (gero.schumacher@gmail.com)
  *        (based on the code and work from many other developers. Many thanks!)
  *
- * see README file for more information
- *d
+ * see README and HOWTO files for more information
+ *
  * Version:
  *       0.1  - 21.01.2015 - initial version
  *       0.5  - 02.02.2015
@@ -43,8 +43,20 @@ char version[6] = "0.31";
  *       0.29  - 07.03.2017
  *       0.30  - 22.03.2017
  *       0.31  - 10.04.2017
+ *       0.32  - 18.04.2017
  *
  * Changelog:
+ *       version 0.32
+ *        - lots of new parameters suppoerted
+ *        - newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.
+ *        - German webinterface available with definement LANG_DE
+ *        - new URL-command /LB=x to log only broadcast messages (x=1) or all bus messages (x=0)
+ *        - new URL-command /X to reset the Arduino (need to enable RESET definement in BSB_lan_config.h)
+ *        - new logging parameters 20002 and 20003 for hot water loading times and cycles
+ *        - moved DS18B20 logging parameters from 20010-20019 to 20100-20199 and DHT22 logging parameters from 20020-20029 to 20200 to 20299
+ *        - moved average logging parameter from 20002 to 20004
+ *        - set numerous parameters to read-only because that's what they obviously are (K33-36)
+ *        - various bugfixes
  *       version 0.31
  *        - increased dumping of logfile by factor 5 / as long as we still have memory left, you can increase logbuflen from 100 to 1000 to increase transfer speed from approx. 16 to 18 kB/s
  *        - adjusted burner activity monitoring based on broadcast messages for Brötje systems
@@ -68,7 +80,7 @@ char version[6] = "0.31";
  *        - adds special parameter 20002 for logging /A command (24h averages, only makes sense for long logging intervals)
  *        - bugfixes for logging DS18B20 sensors
  *       version 0.28
- *        - adds special parameters 20000+ for SD card logging of /B, /T and /H commands (see BSB_lan_config.h for examples)
+ *        - adds special parameters 20000++ for SD card logging of /B, /T and /H commands (see BSB_lan_config.h for examples)
  *        - adds version info to BSB_LAN web interface
  *       version 0.27
  *        - adds date field to log file (requires exact time to be sent by heating system)
@@ -185,6 +197,7 @@ char version[6] = "0.31";
 #include <Arduino.h>
 #include <util/crc16.h>
 #include <TimeLib.h>
+#include <avr/wdt.h>
 
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
@@ -230,6 +243,9 @@ int avgCounter = 1;
 unsigned long brenner_start   = 0;
 unsigned long brenner_duration= 0;
 unsigned long brenner_count   = 0;
+unsigned long TWW_start   = 0;
+unsigned long TWW_duration= 0;
+unsigned long TWW_count   = 0;
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -242,14 +258,7 @@ char buffer[BUFLEN];
 #define OUTBUF_LEN  300
 char outBuf[OUTBUF_LEN];
 byte outBufLen=0;
-/*
-void memcpy_F(void* dst, const __flash void* src, uint16_t size) {
-    uint16_t i;
-    for (i = 0; i < size; i++) {
-        *(uint8_t *) dst++ = *(const __flash uint8_t *) src++;
-    }
-}
-*/
+
 /**  ****************************************************************
  *  Function: outBufclear()
  *  Does:     Sets ouBufLen = 0 and puts the end-of-string character
@@ -1453,10 +1462,136 @@ void webPrintHeader(void){
   client.println(F("<html>"));
   client.println(F("<head>"));
   client.println(F("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">"));
-  client.println(F("<title>BSB LAN-SERVER</title>"));
+  client.println(F("<title>BSB-LAN Web</title>"));
   client.println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"http://arduino.cc/en/favicon.png\" />"));
+  client.println(F("<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}"));
+  client.println(F("input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>"));
   client.println(F("</head>"));
   client.println(F("<body>"));
+  client.println(F("<script>function set(line,formnr) {"));
+  client.println(F("if (isNaN(document.getElementById('value' + formnr).value) == false) {"));
+  client.println(F("  window.open('S' + line + '=' + document.getElementById('value' + formnr).value,'_self');}"));
+  client.println(F("}</script>"));
+  client.println(F("<font face='Arial'>"));
+  client.print(F("<center><h1><A HREF='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+  client.println(F("'>BSB-LAN Web</A></h1></center>"));
+  client.print(F("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("K'>Heizungsfunktionen"));
+#else
+  client.print(F("K'>Heater functions"));
+#endif
+
+  client.print(F("</a></td><td width=20% align=center>"));
+
+#ifndef ONE_WIRE_BUS
+#ifdef LANG_DE
+  client.print(F("<font color=#000000>DS18B20-Sensoren</font>"));
+#else
+  client.print(F("<font color=#000000>DS18B20 sensors</font>"));
+#endif
+#else
+  client.print(F("<a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("T'>DS18B20-Sensoren</a>"));
+#else
+  client.print(F("T'>DS18B20 sensors</a>"));
+#endif
+#endif
+
+  client.print(F("</td><td width=20% align=center>"));
+
+#ifndef DHT_BUS
+#ifdef LANG_DE
+  client.print(F("<font color=#000000>DHT22-Sensoren</font>"));
+#else
+  client.print(F("<font color=#000000>DHT22 sensors</font>"));
+#endif
+#else
+  client.print(F("<a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("H'>DHT22-Sensoren</a>"));
+#else
+  client.print(F("H'>DHT22 sensors</a>"));
+#endif
+#endif
+
+  client.print(F("</td><td width=20% align=center>"));
+
+#ifndef LOGGER
+#ifdef LANG_DE
+  client.print(F("<font color=#000000>Ausgabe Logdatei</font>"));
+#else
+  client.print(F("<font color=#000000>Dump log file</font>"));
+#endif
+#else
+  client.print(F("<a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("D'>Anzeige Logdatei</a>"));
+#else
+  client.print(F("D'>Dump logfile</a>"));
+#endif
+#endif
+
+  client.print(F("</td></tr><tr bgcolor=#f0f0f0><td width=20% align=center>"));
+
+  client.print(F("<a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("C'>Konfiguration"));
+#else
+  client.print(F("C'>Configuration"));
+#endif
+
+  client.print(F("</a></td><td width=20% align=center><a href='/"));
+
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+#ifdef LANG_DE
+  client.print(F("O'>URL-Befehle"));
+#else
+  client.print(F("O'>URL commands"));
+#endif
+
+  client.print(F("</a></td><td width=20% align=center>"));
+
+  client.print(F("<a href='http://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan/HOWTO"));
+#ifdef LANG_DE
+  client.print(F("_de"));
+#endif
+  client.print(F(".md' target='new'>HowTo</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/FAQ"));
+#ifdef LANG_DE
+  client.print(F("_de"));
+#endif
+  client.println(F(".md' target='_new'>FAQ</a></td>"));
+//  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
+  client.println(F("</tr></table><p></p><table align=center width=80%><tr><td>"));
+
 } // --- webPrintHeader() ---
 
 /** *****************************************************************
@@ -1472,6 +1607,7 @@ void webPrintHeader(void){
  *   client object
  * *************************************************************** */
 void webPrintFooter(void){
+  client.println(F("</td></tr></table>"));
   client.println(F("</body>"));
   client.println(F("</html>"));
   client.println();
@@ -1494,44 +1630,17 @@ void webPrintSite() {
   webPrintHeader();
 
   client.println(F("<p>"));
-  client.print(F("BSB Web, Version "));
+  client.print(F("BSB-LAN Web, Version "));
   client.print(version);
-  client.print(F(" ----------</p>"));
-  client.print(F(" <p>options:"));
-  client.print(F(" <table>"));
-  client.print(F(" <tr><td>/K</td> <td>list available categories</td></tr>"));
-  client.print(F(" <tr><td>/Kx</td> <td>query all values in category x</td></tr>"));
-  client.print(F(" <tr><td>/x</td> <td>query value for line x</td></tr>"));
-  client.print(F(" <tr><td>/x-y</td> <td>query all values from line x up to line y</td></tr>"));
-  client.print(F(" <tr><td>/Sx=v</td> <td>set value v for line x and query the new value afterwards (empty string after = disables the value)</td></tr>"));
-  client.print(F(" <tr><td>/Ix=v</td> <td>send INF message for command in line x with value v</td></tr>"));
-  client.print(F(" <tr><td>/Ex</td> <td>list enum values for line x</td></tr>"));
-  client.print(F(" <tr><td>/Rx</td> <td>query reset value for line x</td></tr>"));
-  client.print(F(" <tr><td>/Vn</td> <td>set verbosity level for serial output</td></tr>"));
-  client.print(F(" <tr><td>/Mn</td> <td>activate/deactivate monitor functionality (n=0 disable, n=1 enable)</td></tr>"));
-  client.print(F(" <tr><td>/Gxx</td> <td>query GPIO pin xx</td></tr>"));
-  client.print(F(" <tr><td>/Gxx=y</td> <td>set GPIO pin xx to high(1) or low(0)</td></tr>"));
-  client.print(F(" <tr><td>/A</td> <td>show 24h averages of selected parameters (define in BSB_lan_config.h)</td></tr>"));
-  client.print(F(" <tr><td>/A=x,y,z</td> <td>change 24h averages parameters to x,y and z (up to 20)</td></tr>"));
-#ifndef ONE_WIRE_BUS
-  client.print(F(" <tr><td></td> <td>activate definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
+#ifdef LANG_DE
+  client.println(F("<p><b>Heizungsfunktionen:</b> Hiermit können Sie die Funktionen Ihres Heizungssystems abfragen bzw. steuern. Die einzelnen Parameter sind in entsprechende Kategorien aufgeteilt, die Sie anklicken können."));
+  client.println(F("<p><b>Konfiguration anzeigen:</b> Hier sehen Sie, mit welchen Werten BSB-LAN konfiguriert ist. Eine Änderung dieser Parameter ist über die erweiterten URL-Befehle möglich."));
+  client.println(F("<p><b>Erweiterte URL-Befehle:</b> Zeigt Ihnen eine Übersicht der Befehle an, die Sie über die direkte Eingabe in der Adresszeile des Browsers absenden können. Diese Befehle sind auch für die Anbindung an Hausautomations-Systeme wie FHEM nötig."));
+#else
+  client.println(F("<p><b>Heater functions:</b> Allows you to query or set parameters of your heating system, sorted in different clickable categories."));
+  client.println(F("<p><b>Show configuration:</b> Displays a list of configuration options. You can change most of these by using the extended URL commands."));
+  client.println(F("<p><b>Advanced URL commands:</b> Displays a list of extended commands which you can access by directly entering them in the browser's address line. These commands are also necessary to link up BSB-LAN to any home automation system such as FHEM."));
 #endif
-  client.print(F(" <tr><td>/T</td> <td>query values of connected ds18b20 temperature sensors (optional)</td></tr>"));
-#ifndef DHT_BUS
-  client.print(F(" <tr><td></td> <td>activate definement <code>#define DHT_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
-#endif
-  client.print(F(" <tr><td>/H</td> <td>query values of connected DHT22 humidity/temperature sensors (optional)</td></tr>"));
-  client.print(F(" <tr><td>/B</td> <td>query accumulated duration of burner on status captured from broadcast messages</td></tr>"));
-  client.print(F(" <tr><td>/B0</td> <td>reset accumulated duration of burner on status captured from broadcast messages</td></tr>"));
-#ifndef LOGGER
-  client.print(F(" <tr><td></td> <td>activate definement <code>#define LOGGER</code> in BSB_lan_config.h for the following commands:</td></tr>"));
-#endif
-  client.print(F(" <tr><td>/D</td> <td>dump logged data from datalog.txt on micro SD card</td></tr>"));
-  client.print(F(" <tr><td>/D0</td> <td>delete datalog.txt on micro SD card</td></tr>"));
-  client.print(F(" <tr><td>/L=x,y,z</td> <td>set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20)</td></tr>"));
-  client.print(F(" <tr><td>/LU=x</td> <td>when logging bus telegrams (logging parameter 30000), log only unknown command IDs (x=1) or all (x=0) telegramss.</td></tr>"));
-  client.print(F(" </table>"));
-  client.print(F(" multiple queries are possible, e.g. <code>/K0/710/8000-8999/T</code></p>"));
   webPrintFooter();
 } // --- webPrintSite() ---
 
@@ -2024,10 +2133,11 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
+  int formnr=0;
   char *pvalstr=NULL;
 
   if (!no_print) {         // display in web client?
-    client.println("<p>"); // yes, begin HTML paragraph
+//    client.println(F("<p><form><table>")); // yes, begin HTML paragraph
   }
   for(line=line_start;line<=line_end;line++){
     outBufclear();
@@ -2072,15 +2182,66 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
     } // endelse, line (ProgNr) found / not found
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
+        formnr++;
+        client.println(F("<tr><td>"));
         client.println(outBuf);
-        client.println("<br>");
+        client.println(F("</td><td>"));
+        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) != FL_RONLY && strlen(pvalstr) > 1) {
+          if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
+            client.print(F("<select id='value"));
+            client.print(formnr);
+            client.println(F("'>"));
+            uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+            memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),enumstr_len);
+            buffer[enumstr_len]=0;
+            uint16_t val;
+            uint16_t c=0;
+            while(c<enumstr_len){
+              if(buffer[c+1]!=' '){
+                val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                c++;
+              }else{
+                val=uint16_t(((uint8_t*)buffer)[c]);
+              }
+              //skip leading space
+              c+=2;
+
+              sprintf(outBuf,"%s",&buffer[c]);
+              client.print(F("<option value='"));
+              client.print(val);
+              if (strtod(pvalstr,NULL) == val) {
+                client.print(F("' SELECTED>"));
+              } else {
+                client.print(F("'>"));
+              }
+              client.print(outBuf);
+              client.println(F("</option>"));
+
+              while(buffer[c]!=0) c++;
+              c++;
+            }
+            client.print(F("</select></td><td><input type=button value='Set' onclick=\"set("));
+            client.print(line);
+            client.print(F(","));
+            client.print(formnr);
+            client.print(F(")\">"));
+          } else {
+            client.print(F("<input type=text id='value"));
+            client.print(formnr);
+            client.print(F("' VALUE='"));
+            client.print(strtod(pvalstr,NULL));
+            client.print(F("'></td><td><input type=button value='Set' onclick=\"set("));
+            client.print(line);
+            client.print(F(","));
+            client.print(formnr);
+            client.print(F(")\">"));
+          }
+        }
+        client.println(F("</td></tr>"));
       }
     } // endif, outBufLen > 0
   } // endfor, for each valid line (ProgNr) command within selected range
 
-  if (!no_print) {      // display in web client?
-    client.println("</p>");   // finish HTML paragraph
-  }
   // TODO: check at least for data length (only used for temperature values)
   /*
   int data_len=msg[3]-11;
@@ -2158,6 +2319,12 @@ void LogTelegram(byte* msg){
   int i=0;        // begin with line 0
   boolean known=0;
   uint32_t c;     // command code
+  uint8_t type=0;
+  uint8_t cmd_type;
+  double divisor=1;
+  uint8_t precision=0;
+  int data_len;
+  double dval;
 
   if (log_parameters[0] == 30000) {
 
@@ -2180,38 +2347,94 @@ void LogTelegram(byte* msg){
     }
 
     if (log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) {
-      dataFile = SD.open("datalog.txt", FILE_WRITE);
-      if (dataFile) {
-        dataFile.print(millis());
-        dataFile.print(F(";"));
-        dataFile.print(GetDateTime(date));
-        dataFile.print(F(";"));
+      if (log_bc_only == 0 || (log_bc_only == 1 && msg[2] == ADDR_ALL)) {
+        dataFile = SD.open("datalog.txt", FILE_WRITE);
+        if (dataFile) {
+          dataFile.print(millis());
+          dataFile.print(F(";"));
+          dataFile.print(GetDateTime(date));
+          dataFile.print(F(";"));
 
-        if(!known){                          // no hex code match
-        // Entry in command table is "UNKNOWN" (0x00000000)
-          dataFile.print("UNKNOWN");
-        }else{
-          // Entry in command table is a documented command code
-          uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-//          uint16_t line=pgm_read_word(&cmdtbl[i].line);
-          dataFile.print(line);             // the ProgNr
-        }
-        dataFile.print(F(";"));
-        dataFile.print(TranslateAddr(msg[1], device));
-        dataFile.print(F("->"));
-        dataFile.print(TranslateAddr(msg[2], device));
-        dataFile.print(F(" "));
-        dataFile.print(TranslateType(msg[4], device));
-        dataFile.print(F(";"));
-
-        for(int i=0;i<msg[3];i++){
-          if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
-          dataFile.print(msg[i], HEX);
+          if(!known){                          // no hex code match
+          // Entry in command table is "UNKNOWN" (0x00000000)
+            dataFile.print(F("UNKNOWN"));
+          }else{
+            // Entry in command table is a documented command code
+            uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+            cmd_type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+//            uint16_t line=pgm_read_word(&cmdtbl[i].line);
+            dataFile.print(line);             // the ProgNr
+          }
+          dataFile.print(F(";"));
+          dataFile.print(TranslateAddr(msg[1], device));
+          dataFile.print(F("->"));
+          dataFile.print(TranslateAddr(msg[2], device));
           dataFile.print(F(" "));
+          dataFile.print(TranslateType(msg[4], device));
+          dataFile.print(F(";"));
+
+          for(int i=0;i<msg[3];i++){
+            if (i > 0) {
+              dataFile.print(F(" "));
+            }
+            if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
+            dataFile.print(msg[i], HEX);
+          }
+
+          // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
+
+          if ((msg[4] == TYPE_INF || msg[4] == TYPE_SET || msg[4] == TYPE_ANS) && msg[3] < 17) {
+            dataFile.print(F(";"));
+            i=0;
+            while(type!=255){
+              if(type == cmd_type){
+                known=1;
+                break;
+              }
+              i++;
+              type=pgm_read_byte_far(pgm_get_far_address(divtbl[0].type) + i * sizeof(divtbl[0]));
+            }
+            data_len=msg[3]-11;
+            dval = 0;
+            divisor=pgm_read_float_far(pgm_get_far_address(divtbl[0].divisor) + i * sizeof(divtbl[0]));
+            precision=pgm_read_byte_far(pgm_get_far_address(divtbl[0].precision) + i * sizeof(divtbl[0]));
+            for (i=0;i<data_len-1;i++) {
+              dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
+            }
+            dval = dval / divisor;
+/*
+            if (precision==0) {
+              dataFile.print(int(round(dval)));
+            } else {
+              char formatstr[6]="%0.0f";
+              formatstr[3]=precision;
+              dataFile.print(printf("%0.1f",dval));
+            }
+*/
+            int a,b,i;
+            if(dval<0){
+              dval*=-1.0;
+            }
+            double rval=10.0;
+            for(i=0;i<precision;i++) rval*=10.0;
+            dval+=5.0/rval;
+            a=(int)(dval);
+            rval/=10.0;
+            b=(int)(dval*rval - a*rval);
+            if(precision==0){
+              dataFile.print(a);
+            }else{
+//              char formatstr[8]="%d.%01d";
+//              formatstr[5]='0'+precision;
+              dataFile.print(a);
+              dataFile.print(",");
+              dataFile.print(b);
+            }
+
+          }
+          dataFile.println();
+          dataFile.close();
         }
-     
-        dataFile.println();
-        dataFile.close();
       }
     }
   }
@@ -2273,15 +2496,15 @@ void dht22(void) {
     Serial.print(F("]: "));
     Serial.println(hum);
     if (hum > 0 && hum < 101) {
-      outBufLen+=sprintf(outBuf+outBufLen,"<P>temp[%d]: ",i);
+      outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>temp[%d]: ",i);
       _printFIXPOINT(temp,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"<br></P>");
-      outBufLen+=sprintf(outBuf+outBufLen,"<P>hum[%d]: ",i);
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr><tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen,"hum[%d]: ",i);
       _printFIXPOINT(hum,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"<br></P>");
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>");
     }
   }
-  client.println(outBuf);
+  client.println(outBuf);  
 }
 #endif  //ifdef DHT_BUS
 
@@ -2404,7 +2627,6 @@ void Ipwe() {
     client.print(F("<br></td><td>"));
     client.print(t);
     client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-    counter++;
   }
 #endif
 
@@ -2506,7 +2728,35 @@ void loop() {
            // Filter Brenner Status messages (attention: partially undocumented enum values)
            uint32_t cmd;
            cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-#ifdef THISION
+
+           if(cmd==0x31000212) {    // Command ID 8009 Brennerstatus Elco
+             Serial.print(F("INF: TWW-Status: "));
+             Serial.println(msg[11]);      // assumed info byte
+
+#if defined(BROETJE_SOB)
+             if(msg[11]==0x4D){  // TWW Ladung on BROETJE_SOB
+#else
+             if(msg[11]==0xCD){  // TWW Ladung on THISION
+#endif
+               if(TWW_start==0){        // has not been timed
+                  TWW_start=millis();   // keep current timestamp
+                  TWW_count++;          // increment number of starts
+               }
+             }else{             // TWW Ladung aus
+               if(TWW_start!=0){        // start has been timed
+                 unsigned long TWW_end;
+                 TWW_end=millis();      // timestamp the end
+                 if(TWW_end >= TWW_start){
+                   TWW_duration+=(TWW_end-TWW_start)/1000;
+                 }else{ // overflow
+                   TWW_duration+=(0xffffffff-TWW_start+TWW_end)/1000;
+                 }
+                 TWW_start=0;
+               } // endif, a previous start has been timed
+             } // endif, TWW is off
+           } // endif, Status TWW command code
+
+#if defined(THISION) || defined(BROETJE_SOB)
            if(cmd==0x05000213) {    // Command ID 8009 Brennerstatus Elco
 #else
            if(cmd==0x053d0f66) {    // Command ID 8009 Brennerstatus Brötje etc.
@@ -2514,7 +2764,7 @@ void loop() {
              Serial.print(F("INF: Brennerstatus: "));
              Serial.println(msg[9]);      // first payload byte
 
-#ifdef THISION
+#if defined(THISION) || defined(BROETJE_SOB)
              if(msg[9]==0x04){  // brenner on 
 #else
              if(msg[9]==0x12){  // brenner on 
@@ -2610,7 +2860,7 @@ void loop() {
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTBGHADCL",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("KSIREVMTBGHADCLOX",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -2621,11 +2871,23 @@ void loop() {
           verbose=atoi(p);
           webPrintHeader();
           if(verbose>0){
-            client.println(F("verbose mode activated<br>"));
+#ifdef LANG_DE
+            client.println(F("Verbositäts-Modus aktiviert!<BR>"));
+#else
+            client.println(F("Verbose mode activated!<BR>"));
+#endif
           }else{
-            client.println(F("verbose mode deactivated<br>"));
+#ifdef LANG_DE
+            client.println(F("Verbositäts-Modus deaktiviert!<BR>"));
+#else
+            client.println(F("Verbose mode deactivated!<BR>"));
+#endif
           }
-          client.println(F("verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, so this can fill up your card pretty fast! The html output is kept unchanged."));
+#ifdef LANG_DE
+          client.println(F("Der Verbositäts-Modus betrifft sowohl die serielle Konsole des Arduino Mega2560 als auch (optional) das Loggen der Bus-Daten auf die microSD-Karte, so dass die Karte u.U. sehr schnell voll wird! Die html-Ausgabe bleibt unverändert."));
+#else
+          client.println(F("Verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, so this can fill up your card pretty fast! The html output is kept unchanged."));
+#endif
           webPrintFooter();
           break;
         }
@@ -2635,11 +2897,23 @@ void loop() {
           monitor=atoi(p);    // .. to convert
           webPrintHeader();
           if(monitor>0){
-            client.println(F("monitor activated<br>"));
+#ifdef LANG_DE
+            client.println(F("Serieller Monitor aktiviert!"));
+#else
+            client.println(F("Serial monitor activated!"));
+#endif
           }else{
-            client.println(F("monitor deactivated<br>"));
+#ifdef LANG_DE
+            client.println(F("Serieller Monitor deaktiviert!"));
+#else
+            client.println(F("Serial monitor deactivated!"));
+#endif
           }
-          client.println(F("only serial output is affected"));
+#ifdef LANG_DE
+	  client.println(F("Nur die serielle Ausgabe ist betroffen."));
+#else
+	  client.println(F("Only serial output is affected."));
+#endif
           webPrintFooter();
           break;
         }
@@ -2661,7 +2935,11 @@ void loop() {
           p+=2;               // third position in cLineBuffer
           if(!isdigit(*p)){   // now we check for digits - nice
             webPrintHeader();
-            client.println(F("ERROR: invalid parameter line"));
+#ifdef LANG_DE
+            client.println(F("FEHLER: Ungültiger Parameter!"));
+#else
+            client.println(F("ERROR: invalid parameter line!"));
+#endif
             webPrintFooter();
             break;
           }
@@ -2669,7 +2947,11 @@ void loop() {
           p=strchr(p,'=');    // search for '=' sign
           if(p==NULL){        // no match
             webPrintHeader();
-            client.println(F("ERROR: invalid parameter val"));
+#ifdef LANG_DE
+            client.println(F("FEHLER: Ungültiger Wert!"));
+#else
+            client.println(F("ERROR: invalid parameter value!"));
+#endif
             webPrintFooter();
             break;
           }
@@ -2683,9 +2965,17 @@ void loop() {
           int setresult = set(line,p,setcmd);
           if(setresult!=1){
             webPrintHeader();
-            client.println(F("ERROR: set failed"));
+#ifdef LANG_DE
+            client.println(F("FEHLER: Setzen fehlgeschlagen!"));
+#else
+            client.println(F("ERROR: set failed!"));
+#endif
             if (setresult == 2) {
+#ifdef LANG_DE
+              client.println(F(" - Parameter ist nur lesbar"));
+#else
               client.println(F(" - parameter is readonly"));
+#endif
             }
             webPrintFooter();
             break;
@@ -2708,12 +2998,35 @@ void loop() {
           int len=sizeof(ENUM_CAT);
           memcpy_P(buffer, &ENUM_CAT,len);
           buffer[len]=0;
+          client.print(F("<a href='/"));
+          #ifdef PASSKEY
+            client.print(PASSKEY);
+            client.print(F("/"));
+          #endif
+          #ifdef LANG_DE
+          client.println(F("B'>Brennerstatistik</A><BR>"));
+          #else
+          client.println(F("B'>Heater statistics</A><BR>"));
+          #endif
+          client.print(F("<a href='/"));
+          #ifdef PASSKEY
+            client.print(PASSKEY);
+            client.print(F("/"));
+          #endif
+          #ifdef LANG_DE
+          client.println(F("A'>24h Durchschnittswerte</A><BR><BR>"));
+          #else
+          client.println(F("A'>24h averages</A><BR><BR>"));
+          #endif
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
             printENUM(buffer,len,cat,1);
             Serial.println();
+            client.print(F("<A HREF='K"));
+            client.print(cat);
+            client.print(F("'>"));
             client.println(outBuf);
-            client.println("<br>");
+            client.println(F("</A><br>"));
           }
           webPrintFooter();
           break;
@@ -2747,16 +3060,24 @@ void loop() {
 
                 sprintf(outBuf,"%d - %s",val,&buffer[c]);
                 client.println(outBuf);
-                client.println("<br>");
+                client.println(F("<br>"));
 
                 while(buffer[c]!=0) c++;
                 c++;
               }
             }else{
-              client.println(F("ERROR: wrong type"));
+#ifdef LANG_DE
+              client.println(F("FEHLER: Falscher Typ!"));
+#else
+              client.println(F("ERROR: wrong type!"));
+#endif
             }
           }else{
-            client.println(F("ERROR: line not found"));
+#ifdef LANG_DE
+            client.println(F("FEHLER: Zeile nicht gefunden!"));
+#else
+	          client.println(F("ERROR: line not found!"));
+#endif
           }
           webPrintFooter();
           break;
@@ -2768,11 +3089,19 @@ void loop() {
           uint16_t line = atoi(&p[2]);
           int i=findLine(line,0,&c);
           if(i<0){
-            client.println(F("ERROR: line not found"));
+#ifdef LANG_DE
+            client.println(F("FEHLER: Zeile nicht gefunden!"));
+#else
+            client.println(F("ERROR: line not found!"));
+#endif
           }else{
             if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
               Serial.println(F("set failed"));  // to PC hardware serial I/F
-              client.println(F("ERROR: set failed"));
+#ifdef LANG_DE
+              client.println(F("FEHLER: Setzen fehlgeschlagen!"));
+#else
+              client.println(F("ERROR: set failed!"));
+#endif
             }else{
 
               // Decode the xmit telegram and send it to the PC serial interface
@@ -2790,10 +3119,141 @@ void loop() {
 #endif
               if(outBufLen>0){
                 client.println(outBuf);
-                client.println("<br>");
+                client.println(F("<br>"));
               }
             }
           }
+          webPrintFooter();
+          break;
+        }
+
+        if(p[1]=='O') {   // display URL command list
+          webPrintHeader();
+#ifdef LANG_DE
+          client.print(F(" <p>Erweiterte Befehle:"));
+          client.print(F(" <table>"));
+          client.println(F(" <tr><td valign=top>/K</td><td>Alle verfügbaren Kategorien auflisten.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Kx</td><td>Alle Werte von Kategorie x abfragen.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/x-y</td><td>Alle Werte eines Zeilenbereichs abfragen (von Zeile x bis Zeile y).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Sx=v</td><td>Setze Wert v (value) für den Parameter x (Leerzeichen nach = deaktiviert den Wert).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Ix=v</td><td>Sende eine INF Nachricht für den Parameter x mit dem Wert v.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Ex</td><td>Alle enum-Werte für Parameter x auflisten.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Rx</td><td>Frage den Reset-Wert für Parameter x ab.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Vn</td><td>Setze den Verbositäts-Level auf n.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Mn</td><td>Bus-Monitor aktivieren/deaktivieren (n=0 deaktivieren, n=1 aktivieren).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Gxx</td><td>Abfragen des GPIO Pins xx.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Gxx=y</td><td>Setzen des GPIO Pins xx auf high (y=1) oder low (y=0).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/A</td><td>24h-Durchschnittswerte von ausgewählten Parametern anzeigen (in BSB_lan_config.h definieren).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/A=x,y,z</td><td>Ändern der 24h-Durchschnittswerte in x,y,z (bis zu 20 Parameter).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/B</td><td>Anzeige der akkumulierten Broadcast-Telegramme zu Brenner- und TWW-Aktivitäten.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/B0</td><td>Zurücksetzen der akkumulierten Broadcast-Telegramme.</td></tr>"));
+#else
+          client.print(F(" <p>Advanced commands:"));
+          client.print(F(" <table>"));
+          client.println(F(" <tr><td valign=top>/K</td><td>List available categories.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Kx</td><td>Query all values in category x.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/x-y</td><td>Query all values from line x up to line y.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Sx=v</td><td>Set value v for line x and query the new value afterwards (empty string after = disables the value).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Ix=v</td><td>Send INF message for command in line x with value v.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Ex</td><td>List enum values for line x.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Rx</td><td>Query reset value for line x.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Vn</td><td>Set verbosity level for serial output to n.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Mn</td><td>Activate/deactivate monitor functionality (n=0 disable, n=1 enable).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Gxx</td><td>Query GPIO pin xx.</td></tr>"));
+          client.println(F(" <tr><td valign=top>/Gxx=y</td><td>Set GPIO pin xx to high (y=1) or low (y=0).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/A</td><td>Show 24h averages of selected parameters (define in BSB_lan_config.h).</td></tr>"));
+          client.println(F(" <tr><td valign=top>/A=x,y,z</td><td>Change 24h averages parameters to x,y,z (up to 20).</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/B</td><td bgcolor=#f0f0f0>Query accumulated broadcast telegrams of burner and hot water activity.</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/B0</td><td bgcolor=#f0f0f0>Reset accumulated broadcast telegrams.</td></tr>"));
+#endif
+
+#ifndef ONE_WIRE_BUS
+#ifdef LANG_DE
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>"));
+#else
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>"));
+#endif  
+#else
+#ifdef LANG_DE
+          client.println(F(" <tr><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>"));
+#else
+          client.println(F(" <tr><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>"));
+#endif
+#endif
+
+#ifndef DHT_BUS
+#ifdef LANG_DE
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define DHT_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>"));
+#else
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define DHT_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>"));
+#endif
+#else
+#ifdef LANG_DE
+          client.println(F("<tr><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>"));
+#else
+          client.println(F("<tr><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>"));
+#endif
+#endif
+
+#ifndef LOGGER
+#ifdef LANG_DE
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define LOGGER</code> in BSB_lan_config.h für die folgenden Befehle:</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>"));
+#else
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define LOGGER</code> in BSB_lan_config.h for the following commands:</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>"));
+          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>"));
+#endif  
+#else
+#ifdef LANG_DE
+          client.println(F("<tr><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
+          client.println(F("<tr><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
+          client.println(F("<tr><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>"));
+          client.println(F("<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>"));
+          client.println(F("<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>"));
+#else
+          client.println(F("<tr><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>"));
+          client.println(F("<tr><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>"));
+          client.println(F("<tr><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>"));
+          client.println(F("<tr><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>"));
+          client.println(F("<tr><td valign=top>/LB=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>"));
+#endif
+#endif
+
+#ifndef RESET
+#ifdef LANG_DE
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define RESET</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>"));
+#else
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define RESET</code> in BSB_lan_config.h for the following command:</td></tr>"));
+          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>"));
+#endif  
+#else
+#ifdef LANG_DE
+          client.println(F(" <tr><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>"));
+#else
+          client.println(F(" <tr><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>"));
+#endif
+#endif
+
+          client.print(F("</table>"));
+
+#ifdef LANG_DE
+          client.println(F("Mehrere Abfragen können miteinander verkettet werden, z.B. <code>/K0/710/8000-8999/T</code></p>"));
+#else
+          client.println(F("Multiple queries are possible, e.g. <code>/K0/710/8000-8999/T</code></p>"));
+#endif
           webPrintFooter();
           break;
         }
@@ -2808,8 +3268,12 @@ void loop() {
               dataFile.println(F("Milliseconds;Date;Parameter;Description;Value"));
               dataFile.close();
             }
-            client.println(F("datalog.txt removed and recreated"));
-            Serial.println(F("datalog.txt removed and recreated"));
+#ifdef LANG_DE
+            client.println(F("Datei datalog.txt entfernt und neu generiert."));
+#else
+            client.println(F("File datalog.txt removed and recreated."));
+#endif
+            Serial.println(F("File datalog.txt removed and recreated."));
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
@@ -2847,8 +3311,13 @@ void loop() {
 #endif            
         if (p[1]=='C'){ // dump configuration
           webPrintHeader();
+#ifdef LANG_DE
+          client.println(F("Konfiguration<BR><BR>"));
+          client.println(F("Heizungstyp-spezifische Konfiguration:"));
+#else
           client.println(F("Configuration<BR><BR>"));
-          client.println(F("Special heating system configuration: "));
+          client.println(F("Special heating system configuration:"));
+#endif
           #ifdef THISION 
           client.println(F("Thision "));
           #endif
@@ -2870,6 +3339,21 @@ void loop() {
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
+#ifdef LANG_DE
+          client.print(F("Monitor Modus: "));
+#else
+          client.print(F("Monitor mode: "));
+#endif
+          client.println(monitor);
+          client.print(F("<BR>"));
+#ifdef LANG_DE
+          client.print(F("Verbositäts-Level: "));
+#else
+          client.print(F("Verbosity level: "));
+#endif
+          client.print(verbose);
+          client.println(F("<BR>"));
+          
           #ifdef ONE_WIRE_BUS
           client.println(F("1-Wire bus pins: "));
           client.println(ONE_WIRE_BUS);
@@ -2899,12 +3383,18 @@ void loop() {
           }
           client.println(F("<BR>"));
 
+/*
           client.println(F("IP address: "));
           client.println(ip);
           client.println(F("<BR>"));
+*/
 
+#ifdef LANG_DE
+          client.println(F("Berechnung von 24h-Mittelwerten für die folgenden Parameter: <BR>"));
+#else
           client.println(F("Calculating 24h averages for the following parameters: <BR>"));
-           for (int i=0; i<numAverages; i++) {
+#endif
+          for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
               client.print (avg_parameters[i]);
               client.print(F(" - "));
@@ -2915,9 +3405,17 @@ void loop() {
           client.println(F("<BR>"));
 
           #ifdef LOGGER
-          client.print(F("Logging the following parameters every "));
+#ifdef LANG_DE
+          client.println(F("Loggen der folgenden Parameter alle "));
+#else
+          client.println(F("Logging the following parameters every "));
+#endif
           client.print(log_interval);
+#ifdef LANG_DE
+          client.println(F(" Sekunden: <BR>"));
+#else
           client.println(F(" seconds: <BR>"));
+#endif
           for (int i=0; i<numLogValues; i++) {
             if (log_parameters[i] > 0) {
               client.print (log_parameters[i]);
@@ -2932,21 +3430,56 @@ void loop() {
                   client.print(F("Brennertakte"));
                 }
                 if (log_parameters[i] == 20002) {
-                  client.print(F("24h averages (see above)"));
+#ifdef LANG_DE
+                  client.println(F("24h-Mittelwerte (s.o.)"));
+#else
+                  client.println(F("24h averages (see above)"));
+#endif
                 }
-                if (log_parameters[i] >= 20010 && log_parameters[i] < 20020) {
+                if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
                   client.print(F("DHT22-Sensor"));
                 }
-                if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
+                if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
                   client.print(F("1-Wire-Sensor"));
                 }
                 if (log_parameters[i] == 30000) {
+#ifdef LANG_DE
+                  client.println(F("BSB-Datentelegramme (unabhängig vom Intervall)<BR>"));
+                  client.println(F("Nur unbekannte Bus-Telegramme loggen: "));
+#else
                   client.print(F("BSB-Data telegrams (irrespective of interval)<BR>"));
                   client.print(F("Logging unknown bus telegrams only: "));
+#endif
                   if (log_unknown_only) {
-                    client.println(F("yes"));
+#ifdef LANG_DE
+                    client.println(F("Ja<BR>"));
+#else
+                    client.println(F("yes<BR>"));
+#endif
                   } else {
-                    client.println(F("no"));
+#ifdef LANG_DE
+                    client.println(F("Nein<BR>"));
+#else
+                    client.println(F("no<BR>"));
+#endif
+                  }
+#ifdef LANG_DE
+                  client.println(F("Nur Broadcast Bus-Telegramme loggen: "));
+#else
+                  client.print(F("Logging broadcast bus telegrams only: "));
+#endif
+                  if (log_bc_only) {
+#ifdef LANG_DE
+                    client.println(F("Ja<BR>"));
+#else
+                    client.println(F("yes<BR>"));
+#endif
+                  } else {
+#ifdef LANG_DE
+                    client.println(F("Nein<BR>"));
+#else
+                    client.println(F("no<BR>"));
+#endif
                   }
                 }
               }
@@ -2959,6 +3492,34 @@ void loop() {
           webPrintFooter();
           break;
         }
+        if (p[1]=='L' && p[2]=='B' && p[3]=='='){
+          if (p[4]=='1') {
+            log_bc_only=1;
+          } else {
+            log_bc_only=0;
+          }
+          webPrintHeader();
+#ifdef LANG_DE
+          client.print(F("Nur Broadcast Bus-Telegramme loggen: "));
+#else
+          client.print(F("Logging broadcast bus telegrams only: "));
+#endif
+          if (log_bc_only) {
+#ifdef LANG_DE
+            client.println(F("Ja<BR>"));
+#else
+            client.println(F("yes<BR>"));
+#endif
+          } else {
+#ifdef LANG_DE
+            client.println(F("Nein<BR>"));
+#else
+            client.println(F("no<BR>"));
+#endif
+          }
+          webPrintFooter();
+          break;
+        }
         if (p[1]=='L' && p[2]=='U' && p[3]=='='){
           if (p[4]=='1') {
             log_unknown_only=1;
@@ -2966,11 +3527,23 @@ void loop() {
             log_unknown_only=0;
           }
           webPrintHeader();
+#ifdef LANG_DE
+          client.print(F("Nur unbekannte Bus-Telegramme loggen: "));
+#else
           client.print(F("Logging unknown bus telegrams only: "));
+#endif
           if (log_unknown_only) {
+#ifdef LANG_DE
+            client.println(F("Ja<BR>"));
+#else
             client.println(F("yes<BR>"));
+#endif
           } else {
+#ifdef LANG_DE
+            client.println(F("Nein<BR>"));
+#else
             client.println(F("no<BR>"));
+#endif
           }
           webPrintFooter();
           break;
@@ -2981,11 +3554,17 @@ void loop() {
           log_token = strtok(NULL, "=,");   // first token: interval
           if (log_token != 0) {
             log_interval = atoi(log_token);
-            if (log_interval < 10) {log_interval = 10;}
+//            if (log_interval < 10) {log_interval = 10;}
             lastLogTime = millis();
+#ifdef LANG_DE
+            client.print(F("Neues Log-Intervall: "));
+            client.print(log_interval);
+            client.println(F(" Sekunden<BR>"));
+#else
             client.print(F("New logging interval: "));
             client.print(log_interval);
             client.println(F(" seconds<BR>"));
+#endif
           }
           log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
           int token_counter = 0;
@@ -2993,7 +3572,11 @@ void loop() {
             for (int i=0;i<numLogValues;i++) {
               log_parameters[i] = 0;
             }
-            client.print(F("New logging parameters: "));
+#ifdef LANG_DE
+            client.println(F("Neue Log-Parameter: "));
+#else
+            client.println(F("New logging parameters: "));
+#endif
           }
           while (log_token!=0) {
             int log_parameter = atoi(log_token);
@@ -3008,6 +3591,22 @@ void loop() {
           webPrintFooter();
           break;
         }
+#ifdef RESET
+        if (p[1]=='X'){           // Reset Arduino
+        webPrintHeader();
+          client.println(F("Reset..."));
+          webPrintFooter();
+          client.stop();
+#ifdef LOGGER
+          File dataFile = SD.open("datalog.txt", FILE_WRITE);
+          if (dataFile) {
+            dataFile.close();
+          }
+#endif
+          asm volatile ("  jmp 0");
+          while (1==1) {}
+        }
+#endif
         // print queries
         webPrintHeader();
         char* range;
@@ -3025,6 +3624,13 @@ void loop() {
 #ifdef DHT_BUS
             dht22();
 #endif
+/*
+#ifdef LANG_DE
+            client.println(F("<a href='javascript:history.back()'>Zur&uuml;ck</a>"));
+#else
+            client.println(F("<a href='javascript:history.back()'>Back</a>"));
+#endif
+*/
           }else if(range[0]=='A') { // handle average command
             if (range[1]=='=') {
               char* avg_token = strtok(range,"=,");  // drop everything before "="
@@ -3038,7 +3644,11 @@ void loop() {
                   avgValues_Current[i] = 0;
                 }
                 avgCounter = 1;
-                client.print(F("New average parameters: "));
+#ifdef LANG_DE
+                client.println(F("Neue Durchschnitts-Parameter: "));
+#else
+                client.println(F("New average parameters: "));
+#endif
               }
               while (avg_token!=0) {
                 int avg_parameter = atoi(avg_token);
@@ -3053,7 +3663,7 @@ void loop() {
             } else {
               for (int i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
-                  client.print(F("<P>"));
+                  client.print(F("<tr><td>"));
                   client.print(avg_parameters[i]);
                   client.print(F(" Avg"));
                   client.print(lookup_descr(avg_parameters[i]));            
@@ -3061,9 +3671,16 @@ void loop() {
                   double rounded = round(avgValues[i]*10);
                   client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-                  client.println(F("<BR></P>"));
+                  client.println(F("</td></tr>"));
                 }
               }
+/*
+#ifdef LANG_DE
+              client.println(F("<a href='javascript:history.back()'>Zur&uuml;ck</a>"));
+#else
+              client.println(F("<a href='javascript:history.back()'>Back</a>"));
+#endif
+*/
             }
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
@@ -3071,7 +3688,11 @@ void loop() {
             bool error = false;
             p=range+1;
             if(!isdigit(*p)){   // now we check for digits
-              client.println(F("ERROR: invalid parameter line"));
+#ifdef LANG_DE
+              client.println(F("FEHLER: Ungültiger Parameter!"));
+#else
+              client.println(F("ERROR: invalid parameter line!"));
+#endif
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
@@ -3081,7 +3702,11 @@ void loop() {
               }
             }
             if (error==true) {
-              client.println(F("ERROR: protected GPIO pin"));
+#ifdef LANG_DE
+              client.println(F("FEHLER: Geschützter GPIO-Pin!"));
+#else
+              client.println(F("ERROR: protected GPIO pin!"));
+#endif
               break;
             }
             p=strchr(p,'=');    // search for '=' sign
@@ -3103,17 +3728,37 @@ void loop() {
             client.print(val!=LOW?F("1"):F("0"));
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
-              client.println(F("furnace duration is set to zero<br>"));
+#ifdef LANG_DE
+              client.println(F("Heizkessel- und TWW-Laufzeit auf null gesetzt.<br>"));
+#else
+              client.println(F("Furnace and hot water duration is set to zero.<br>"));
+#endif
               brenner_duration=0;
               brenner_count=0;
+              TWW_duration=0;
+              TWW_count=0;
             }else{
               // query brenner duration
-              client.print(F("Brenner Laufzeit: "));
+              client.print(F("<tr><td>Brenner Laufzeit: "));
               client.print(brenner_duration);
-              client.println("<br>");
+              client.println(F("</td></tr><tr><td>"));
               client.print(F("Brenner Takte: "));
               client.print(brenner_count);
-              client.println("<br>");
+              client.println(F("</td></tr>"));
+              client.print(F("<tr><td>TWW Laufzeit: "));
+              client.print(TWW_duration);
+              client.println(F("</td></tr><tr><td>"));
+              client.print(F("TWW Takte: "));
+              client.print(TWW_count);
+              client.println(F("</td></tr>"));
+/*
+#ifdef LANG_DE
+              client.println(F("<a href='javascript:history.back()'>Zur&uuml;ck</a>"));
+#else
+              client.println(F("<a href='javascript:history.back()'>Back</a>"));
+#endif
+*/
+
             }
           }else{
             if(range[0]=='K'){
@@ -3138,7 +3783,7 @@ void loop() {
                   }
                 }else{
                   if(start>=0){
-                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + (i-1) * sizeof(cmdtbl[0]));
 //                    line=pgm_read_word(&cmdtbl[i-1].line);
                     end=line;
                     break;
@@ -3169,6 +3814,13 @@ void loop() {
 
           range = strtok(NULL,"/");
         } // endwhile
+/*
+#ifdef LANG_DE
+        client.println(F("</table></form><a href='javascript:history.back()'>Zur&uuml;ck</a></p>"));   // finish HTML paragraph
+#else
+        client.println(F("</table></form><a href='javascript:history.back()'>Back</a></p>"));   // finish HTML paragraph
+#endif
+*/
         webPrintFooter();
         break;
       } // endif, client available
@@ -3181,7 +3833,7 @@ void loop() {
 
 #ifdef LOGGER
 
-  if (millis() - lastLogTime >= (log_interval * 1000)) {
+  if ((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) {
     SetDateTime(); // receive inital date/time from heating system
     double log_values[numLogValues];
     for (int i=0; i < numLogValues; i++) {
@@ -3217,6 +3869,16 @@ void loop() {
             dataFile.println(brenner_count);
           }
           if (log_parameters[i] == 20002) {
+            dataFile.print(F("TWW-Laufzeit"));
+            dataFile.print(F(";"));
+            dataFile.println(TWW_duration);
+          }
+          if (log_parameters[i] == 20003) {
+            dataFile.print(F("TWW-Takte"));
+            dataFile.print(F(";"));
+            dataFile.println(TWW_count);
+          }
+          if (log_parameters[i] == 20004) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
                 dataFile.print(millis());
@@ -3235,8 +3897,8 @@ void loop() {
             }
           }
 #ifdef DHT_BUS
-          if (log_parameters[i] >= 20010 && log_parameters[i] < 20020) {
-            int log_sensor = log_parameters[i] - 20010;
+          if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
+            int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
             Serial.println(chk);
             double hum = DHT.humidity;
@@ -3261,8 +3923,8 @@ void loop() {
           }
 #endif
 #ifdef ONE_WIRE_BUS
-          if (log_parameters[i] >= 20020 && log_parameters[i] < 20030) {
-            int log_sensor = log_parameters[i] - 20020;
+          if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
+            int log_sensor = log_parameters[i] - 20200;
             sensors.requestTemperatures(); // Send the command to get temperatures
             float t=sensors.getTempCByIndex(i);
             dataFile.print(F("Temperature "));
@@ -3276,8 +3938,12 @@ void loop() {
       dataFile.close();
    } else {
     // if the file isn't open, pop up an error:
-      client.println(F("error opening datalog.txt"));
-      Serial.println(F("error opening datalog.txt"));
+#ifdef LANG_DE
+      client.println(F("Fehler beim Öffnen der Datei datalog.txt!"));
+#else
+      client.println(F("Error opening datalog.txt!"));
+       #endif
+      Serial.println(F("Error opening datalog.txt!"));
     }
     lastLogTime += log_interval * 1000;
   }
@@ -3332,6 +3998,7 @@ void loop() {
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
+
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
