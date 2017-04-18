@@ -29,6 +29,9 @@ Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="http
 
 Einige Adapter-Bausätze, die direkt auf einen Arduino Mega2560 passen, sind noch von einer Sammelbestellung her verfügbar. Bei Interesse kontaktiere bitte bsb (ät) code-it.de .
 
+Web-Interface screenshot:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/Web-Interface.png" size="50%">
+
 BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL-:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/schematics/BSB-Board%20plain.jpg" size="50%">
 
