@@ -17,6 +17,10 @@
 
 #define LANG_DE
 
+/* enable /X URL command to reset Arduino - might not work on older boards */
+
+//#define RESET
+
 /* select your heating system (default may work for other systems) */
 
 //#define THISION
