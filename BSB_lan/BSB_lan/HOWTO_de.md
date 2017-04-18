@@ -173,4 +173,4 @@ Offene Punkte
 
 - Dekodieren der DE-Telegramme. Möglicherweise beinhalten sie Statusinformationen, die ohne Abfragen genutzt werden können.
 
-- Unterstützung der vom Heizungssystem aus gesendeten Fehlerberichte hinzufügen
+- Unterstützung der vom Heizungssystem aus gesendeten Fehlerberichte hinzufügen.
