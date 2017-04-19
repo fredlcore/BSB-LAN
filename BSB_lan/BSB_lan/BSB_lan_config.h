@@ -80,8 +80,11 @@ int log_parameters[20] = {
   8314,                   // Rücklauftemperatur
 //  20000,                  // Spezialparameter: Brenner-Laufzeit (/B)
 //  20001,                  // Spezialparameter: Brenner-Takte (/B)
-//  20011,                  // Spezialparameter 20010-20019: DHT22-Sensoren 1-9 (/H)
-//  20020                   // Spezialparameter 20020-20029: DS18B20-Sensoren 1-9 (/T)
+//  20002,                  // Spezialparameter: TWW-Laufzeit (/B)
+//  20003,                  // Spezialparameter: TWW-Takte (/B)
+//  20004,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
+//  20101,                  // Spezialparameter 20100-20099: DHT22-Sensoren 1-100 (/H)
+//  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
 
 unsigned long log_interval = 3600;    // logging interval in seconds
