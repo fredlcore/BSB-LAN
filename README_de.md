@@ -20,6 +20,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Straton (Ölbrenner)
  - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (Ölbrenner)
  - Elco Thision S (Gasbrenner)
+ - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (Gasbrenner)
  - Fujitsu Waterstage (WSYK160DC9) (Wärmepumpe)
 
 Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit dem BSB arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
