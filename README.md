@@ -20,7 +20,7 @@ This hardware/software combination should in principle work with all BSB-based h
 - Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
 - Elco Straton (oil-fired)
 - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (oil-fired)
-- Elco Thision S 17 [AVS37.394/136] (gas-fired)
+- Elco Thision S 17.1 [LMU74.100A136 + AVS37.394/136] (gas-fired)
 - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (gas-fired)
 - Fujitsu Waterstage (WSYK160DC9) (heat pump)
 
