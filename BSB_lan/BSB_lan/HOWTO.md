@@ -24,45 +24,56 @@ The software is tested with the following components:
 - SainSmart MEGA2560 R3 Development Board  
 - SainSmart Ethernet Schild für Arduino UNO MEGA Duemilanove Neu Version W5100  
 - BSB-Interface (see BSB_adapter.pdf)  
-For this configuration pin A14 (68) ist used as RX and pin A15 (69) is used as TX:
-
-`BSB bus(68,69);`
+For this configuration, pin A14 (68) is used as RX and pin A15 (69) is used as TX (see setting parameters below).
       
 Target System:  
-      Tested with: Elco Straton oil fired condensing boiler.
-      Communication should be possible with all systems that support the BSB interface.
-      Missing command ids have to be added in the cmdtbl.
-      Until now it is not clear to me, what the differences between the LPB and BSB protocols are. The physical specifications
-      are the same. But may be they differe on the protocol level. Until now I have only connected the system to the BSB.
-    
-BEFORE BUILDING the software you have to adapt some parameters in BSB_lan_config.h:  
+      Tested with various Elco and Brötje heating systems (see README).
+      Communication should be possible with all systems that support the BSB interface. 
+
+Getting started:
+* Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control).
+* Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
+* Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).
+* Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
+* Configure the IP-address in BSB_lan_config.h according to your network (default 192.168.178.88 will work with standard Fritz!Box routers, but check for address collision).
+* Select "Arduino/Genuino Mega or Mega 2560" under Tools/Board.
+* Select "ATmega 2560" under Tools/Processor.
+* Select "AVRISP mkII" under Tools/Programmer.
+* Select the corresponding USB/serial port under Tools/Port.
+* Upload the sketch to the Arduino under Sketch/Upload.
+* Open http://<ip address from config>/ (or http://<ip address from config>/<passkey>/ when using the passkey function, see below) to see if everything was compiled and uploaded correctly. A simple web-interface should appear.
+
+Optionally configure the following parameters in BSB_lan_config.h:  
 - MAC address of your ethernet shield. It can be normally found on a label at the shield:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
-- Ethernet address  
-  `IPAddress ip(192,168,178,88);`  
+  You only need to change the default when using more than one interface in the same network.
 - Ethernet port  
   `EthernetServer server(80);`  
 - Pin assigment of the BSB adapter  
   `BSB bus(68,69);`  
-- (optional) Activate the usage of the passkey functionality (see below)  
+- Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
-- (optional) BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)  
+- BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)  
   `BSB bus(68,69,<my_addr>);`
   If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2: `BSB bus(68,69,7);`
-- (optional) You can restrict access to the adapter to read-only, so that you can not set or change certain parameters of the heater itself by accessing it via the adapter. To achieve this, you have to set the flag in the concerning line (#define DEFAULT_FLAG 0) to FL_RONLY:  
+- You can restrict access to the adapter to read-only, so that you can not set or change certain parameters of the heater itself by accessing it via the adapter. To achieve this, you have to set the flag in the concerning line (#define DEFAULT_FLAG 0) to FL_RONLY:  
   `#define DEFAULT_FLAG FL_RONLY;`
-- (optional) You can set the language of the webinterface of the adapter to english by deactivating the concerning definement:
+- You can set the language of the webinterface of the adapter to english by deactivating the concerning definement:
   `//#define LANG_DE;`
         
-Interface:  
-      A simple syntax description is content of the website displayed when the server is accessed by its simple URL 
+Web-Interface:  
+      A simple website is displayed when the server is accessed by its simple URL 
       without any parameters.  
       e.g. `http://<ip-of-server>`  
       To protect the system for unwanted access you can enable the passkey feature (very simple and not really secure!).  
       If the passkey feature is enabled (see below), the URL has to contain the defined passkey as first element
-      e.g. `http://<ip-of-server>/<passkey>/`    - to see the help  
+      e.g. `http://<ip-of-server>/<passkey>/`    - to see the help. Don't forget the trailing slash after the passkey! 
       The urls in the below examples have to be exented, if the passeky feature is turned on.  
-      All parameters are accessed by line numbers. A nearly complete description can be found in systemhandbuch_isr.pdf.  
+
+      In addition to the web-interface, all functions can also be directly accessed via URL commands, this is especially useful when 
+      using the device in home automation systems such as FHEM.
+      
+      All heating system parameters are accessed by line numbers. A nearly complete description can be found in systemhandbuch_isr.pdf.  
       Some lines are 'virtual', i.e. they were added to simplify the access to complex settings like time programms.  
       The parameters are grouped in categories according to the submenu items when accessing your boiler system from the display.  
 
@@ -171,8 +182,7 @@ Interface:
 
 Open issues
 - Add more command ids to the table.
-          Only the known command ids from the threads listed above and the testet boiler 
-          system (ELCO) are content of the table.
+          Only the known command ids from the threads listed above and the tested boiler system (ELCO) are contents of the table.
           Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the 
           sytem via
           the display.
@@ -190,4 +200,4 @@ Open issues
 
 - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
-- Add support of error messages send by the boiler system
+- Add support of error messages sent by the boiler system
