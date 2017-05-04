@@ -89,7 +89,7 @@ int ipwe_parameters[] = {
 
 /* enable /X URL command to reset Arduino - might not work on older boards */
 
-#define RESET
+//#define RESET
 
 /*
  *  Enter a MAC address and IP address for your controller below.
@@ -110,7 +110,7 @@ byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 6
 byte verbose = 0;
 byte monitor = 0;
 
-// defines default flag for parameters (set to FL_RONLY to make all parameters read-only)
+// defines default flag for parameters (use "#define DEFAULT_FLAG FL_RONLY" to make all parameters read-only)
 #define DEFAULT_FLAG  0
 
 /************************************************************************************/
