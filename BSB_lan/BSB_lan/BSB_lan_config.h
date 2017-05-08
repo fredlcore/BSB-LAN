@@ -22,9 +22,17 @@
 IPAddress ip(192,168,178,88);
 EthernetServer server(80);
 
-/* select your heating system (default may work for other systems) */
-/* Set device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on*/
-/* You may use other device family numbers to test commands from other heating systems at your own risk */
+/* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
+ * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
+ * trusted_ip to 20.
+*/
+//#define TRUSTED_IP
+uint8_t trusted_ip = 20;
+
+/* select your heating system (default may work for other systems)
+ * Set device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
+ * You may use other device family numbers to test commands from other heating systems at your own risk
+*/
 int device_id = 0;
 
 /* display web interface in German language; remove definement for English */
