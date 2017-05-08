@@ -25,6 +25,7 @@ EthernetServer server(80);
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
  * trusted_ip to 20.
+ * Configured for W5100-based Ethernet Shields. For W5500 types you have to search and replace w5100 with w5500 in the .ino source.
 */
 //#define TRUSTED_IP
 uint8_t trusted_ip = 20;
