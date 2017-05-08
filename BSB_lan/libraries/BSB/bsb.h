@@ -38,7 +38,7 @@ class BSB
 {
 public:
   BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x06 );
-  void Monitor();
+  void Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
 

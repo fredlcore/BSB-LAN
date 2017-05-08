@@ -35,9 +35,10 @@ void BSB::print(byte* msg) {
 
 
 // Receives a message and stores it to buffer
-void BSB::Monitor() {
+void BSB::Monitor(byte* msg) {
   unsigned long int ts;
   byte read;
+  byte i=0;
     
   if (serial->available() > 0) {
     // get timestamp
@@ -49,6 +50,10 @@ void BSB::Monitor() {
       
       // Read serial data...
       read = serial->read() ^ 0xFF;
+
+      msg[i] = read;
+      i++;
+
       // output
       if(read<16){  
         Serial.print("0");
