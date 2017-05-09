@@ -1,4 +1,4 @@
-char version[6] = "0.32";
+char version[] = "0.33";
 
 /*
  * 
@@ -44,8 +44,26 @@ char version[6] = "0.32";
  *       0.30  - 22.03.2017
  *       0.31  - 10.04.2017
  *       0.32  - 18.04.2017
+ *       0.33  - 09.05.2017
  *
  * Changelog:
+ *       version 0.33
+ *        - no more heating system definements anymore due to new autodetect function based on device family (parameter 6225), or set device_id variable to parameter value directly
+ *        - two more security options: TRUSTED_IP to limit access to one IP address only, and HTTP authentication with username and password
+ *        - Average values are saved on SD-card if present and LOGGER definement is activated
+ *        - deactivate logging by setting /L0=0 - this way you can enable LOGGER definement without filling up SD card but still save average values
+ *        - new error codes for THISION
+ *        - added dump of data payload on website for commands of unknown type, greyed out unsopported parameters
+ *        - enable logging of telegrams (log parameter 30000) also in monitor mode (bsb.cpp and bsb.h updated)
+ *        - time from heating system is now retreived periodically from broadcast telegrams, further reducing bus activity
+ *        - new data type vt_temp_short5_us for unsigned one byte temperatures divided by 2 (so far only 887 Vorlaufsoll NormAussentemp)
+ *        - new data type vt_percent5 for unsigned one byte temperatures divided by 2 (so far only 885 Pumpe-PWM Minimum)
+ *        - new data type vt_seconds_word5 for two byte seconds divided by 2 (so far only 2232)
+ *        - new data type vt_seconds_short4 for (signed?) one byte seconds divided by 4 (so far only 2235)
+ *        - new data type vt_seconds_short5 for (signed?) one byte seconds divided by 5 (so far only 9500, 9540)
+ *        - new data type vt_speed2 for two byte rpm (so far only 7050)
+ *        - cleaned up set() function from apparent duplicate cases
+ *        - added cases for vt_temp_word, vt_seconds_word5, vt_temp_short, vt_temp_short5, vt_seconds_short4 to set() function
  *       version 0.32
  *        - lots of new parameters suppoerted
  *        - newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.
@@ -202,7 +220,15 @@ char version[6] = "0.32";
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
+#ifdef TRUSTED_IP
+#include <utility/w5100.h>        // change to w5500.h for W5500 type ethernet shields
+#endif
+
 EthernetClient client;
+
+// char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
+char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
+byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format  
 
 #ifdef LOGGER
   #include <SD.h>
@@ -238,6 +264,8 @@ double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
 int avgCounter = 1;
+
+unsigned long dev_id = 0;
 
 // variables for handling of broadcast messages
 unsigned long brenner_start   = 0;
@@ -344,8 +372,11 @@ int findLine(uint16_t line
     l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
 //    l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
     if(l==line){
-      found=1;
-      break;
+      long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
+      if ((devices & dev_id) == dev_id) {
+        found=1;
+        break;
+      }
     }
     if(l>line){
       break;
@@ -539,6 +570,7 @@ void SerialPrintAddr(byte addr){
  * *************************************************************** */
 char *TranslateType(byte type, char *mtype){
   switch(type){
+    case TYPE_QINF: strncpy(mtype, "QINF", 4); break;
     case TYPE_INF: strncpy(mtype, "INF", 4); break;
     case TYPE_SET: strncpy(mtype, "SET", 4); break;
     case TYPE_ACK: strncpy(mtype, "ACK", 4); break;
@@ -569,6 +601,7 @@ char *TranslateType(byte type, char *mtype){
  * *************************************************************** */
 void SerialPrintType(byte type){
   switch(type){
+    case TYPE_QINF: Serial.print(F("QINF")); break;
     case TYPE_INF: Serial.print(F("INF")); break;
     case TYPE_SET: Serial.print(F("SET")); break;
     case TYPE_ACK: Serial.print(F("ACK")); break;
@@ -602,6 +635,36 @@ void printLineNumber(uint32_t val) {
     char *p=outBuf+outBufLen;
     outBufLen+=sprintf(outBuf+outBufLen,"%4ld",val);
     Serial.print(p);
+}
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
+void printBIT(byte *msg,byte data_len){
+  char *p=outBuf+outBufLen;
+  if(data_len == 2){
+    if(msg[9]==0){
+      for (int i=7;i>=0;i--) {
+        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[10] >> i & 1);
+      }
+    } else {
+      outBufLen+=sprintf(outBuf+outBufLen,"---");
+    }
+    Serial.print(p);
+  }else{
+    Serial.print(F("BYTE len error len!=2: "));
+    SerialPrintData(msg);
+    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+  }
 }
 
 /** *****************************************************************
@@ -653,7 +716,7 @@ void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
 
   if(data_len == 3){
     if(msg[9]==0){
-      lval=(long(msg[10])<<8)+long(msg[11]) * multiplier;
+      lval=((long(msg[10])<<8)+long(msg[11])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -823,6 +886,40 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
   if(data_len == 2){
     if(msg[9]==0){
       dval=double((signed char)msg[10]) / divider;
+      _printFIXPOINT(dval,precision);
+    } else {
+      outBufLen+=sprintf(outBuf+outBufLen,"---");
+    }
+    if(postfix!=NULL){
+      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
+    }
+    Serial.print(p);
+  }else{
+    Serial.print(F("FIXPOINT_BYTE len !=2: "));
+    SerialPrintData(msg);
+    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+  }
+}
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
+void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,const char *postfix){
+  double dval;
+  char *p=outBuf+outBufLen;
+
+  if(data_len == 2){
+    if(msg[9]==0){
+      dval=double(msg[10]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1131,8 +1228,11 @@ char *printTelegram(byte* msg) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
     if(c == cmd){
-      known=1;
-      break;
+      long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
+      if ((devices & dev_id) == dev_id) {
+        known=1;
+        break;
+      }
     }
     i++;
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -1200,8 +1300,14 @@ char *printTelegram(byte* msg) {
             case VT_SECONDS_WORD: //u16 s
               printWORD(msg,data_len,1,"s");
               break;
+            case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
+              printFIXPOINT(msg,data_len,2.0,1,"s");
+              break;
             case VT_SECONDS_SHORT: //u8 s
               printBYTE(msg,data_len,"s");
+              break;
+            case VT_SECONDS_SHORT4: // s8 / 4 (signed)
+              printFIXPOINT_BYTE(msg,data_len,4.0,1,"s");
               break;
             case VT_MINUTES_SHORT: //u8 min
               printBYTE(msg,data_len,"min");
@@ -1233,8 +1339,11 @@ char *printTelegram(byte* msg) {
             case VT_TEMP_SHORT: // s8
               printFIXPOINT_BYTE(msg,data_len,1.0,0,gradC);
               break;
-            case VT_TEMP_SHORT5: // s8 / 2
+            case VT_TEMP_SHORT5: // s8 / 2 (signed)
               printFIXPOINT_BYTE(msg,data_len,2.0,1,gradC);
+              break;
+            case VT_TEMP_SHORT5_US: // s8 / 2 (unsigned)
+              printFIXPOINT_BYTE_US(msg,data_len,2.0,1,gradC);
               break;
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
               printFIXPOINT(msg,data_len,10.0,1,"bar");
@@ -1258,13 +1367,19 @@ char *printTelegram(byte* msg) {
               printWORD(msg,data_len,1,"min/K");
               break;
             case VT_SPEED: // u16
-              printFIXPOINT(msg,data_len,0.02,0,"uA");
+              printFIXPOINT(msg,data_len,0.02,0,"rpm");
+              break;
+            case VT_SPEED2: // u16
+              printFIXPOINT(msg,data_len,1,0,"rpm");
               break;
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
               printFIXPOINT(msg,data_len,50.0,2,NULL);
               break;
             case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
               printFIXPOINT(msg,data_len,10.0,1,NULL);
+              break;
+            case VT_BIT: // u8
+              printBIT(msg,data_len);
               break;
             case VT_BYTE: // u8
               printBYTE(msg,data_len,NULL);
@@ -1311,38 +1426,18 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if(data_len == 2){
-                if(msg[9]==0){
+              if((data_len == 2 && (device_id & DEV_FJ_WSK) != device_id) || (data_len == 3 && (device_id & DEV_FJ_WSK) == device_id)){
+                if((msg[9]==0 && data_len==2) || (msg[9]==0 && msg[10]==0 && data_len==3)){
                   if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
-//                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-//                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
                     memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
-//                  memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
                     buffer[len]=0;
 
-                    printENUM(buffer,len,msg[10],1);
-                  }else{
-                    Serial.print(F("no enum str "));
-                    SerialPrintData(msg);
-                    outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
-                  }
-                }else{
-                  Serial.print(F("---"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"---");
-                }
-              }else if(data_len == 3) //FUJITSU
-              {
-                if(msg[9]==0 && msg[10]==0){
-                  if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
-//                  if(pgm_read_word(&cmdtbl[i].enumstr)!=0){
-                    int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-//                    int len=pgm_read_word(&cmdtbl[i].enumstr_len);
-                    memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
-//                    memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),len);
-                    buffer[len]=0;
-
-                    printENUM(buffer,len,msg[11],1);
+                    if (data_len == 2) {
+                      printENUM(buffer,len,msg[10],1);
+                    } else {                            // Fujitsu: data_len == 3
+                      printENUM(buffer,len,msg[11],1);
+                    }
                   }else{
                     Serial.print(F("no enum str "));
                     SerialPrintData(msg);
@@ -1361,6 +1456,9 @@ char *printTelegram(byte* msg) {
               break;
             case VT_PERCENT: // u8 %
               printBYTE(msg,data_len,perc);
+              break;
+            case VT_PERCENT5: // u8 %
+              printFIXPOINT_BYTE(msg,data_len,2.0,1,perc);
               break;
             case VT_PERCENT_WORD: // u16 / 2 %
               printFIXPOINT(msg,data_len,2.0,1,perc);
@@ -1688,6 +1786,142 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
 //  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // Months or minutes
+    // No input values sanity check
+    case VT_MONTHS: //(Wartungsintervall)
+    case VT_MINUTES_SHORT: // ( Fehler - Alarm)
+    case VT_PERCENT:
+      {
+      if(val[0]!='\0'){
+        uint8_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=t;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+      }
+      param_len=2;
+      }
+      break;
+
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // All enumeration (list) types
+    // No input values sanity check
+    case VT_ENUM:          // enumeration types
+    case VT_ONOFF: // 1 = On                      // TODO: Check if 1=on - my Thision says on = 255
+    case VT_CLOSEDOPEN: // 1 = geschlossen
+    case VT_YESNO: // 1 = Ja
+    case VT_WEEKDAY: // (1=Mo..7=So)
+    case VT_DAYS: // (Legionellenfkt. Periodisch)
+    case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
+    case VT_BIT:
+    case VT_BYTE:
+    case VT_TEMP_SHORT:
+      {
+      uint8_t t=atoi(val);
+      param[0]=0x01;  //enable
+      param[1]= t;
+      param_len=2;
+      }
+      break;
+
+    // ---------------------------------------------
+    // 16-bit unsigned integer representation
+    // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
+    // No input values sanity check
+    case VT_UINT:
+    case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
+    case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+
+    // ---------------------------------------------
+    // 16-bit unsigned integer representation
+    // Temperature values
+    case VT_TEMP_WORD:
+      {
+      uint16_t t=atoi(val);
+      if(val[0]!='\0'){
+        param[0]=0x01;
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }                         // TODO: Do we need a disable section here as well?
+      param_len=3;
+      }
+      break;
+
+    // ---------------------------------------------
+    // 32-bit unsigned integer representation
+    case VT_DWORD:
+      {
+      if(val[0]!='\0'){
+        uint32_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 24) & 0xff;
+        param[2]=(t >> 16) & 0xff;
+        param[3]=(t >> 8) & 0xff;
+        param[4]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+        param[3]=0x00;
+        param[4]=0x00;
+      }
+      param_len=5;
+      }
+      break;
+
+    // ---------------------------------------------
+    // 8-bit unsigned integer representation
+    // No input values sanity check
+    case VT_HOUR_MINUTES: //TODO test it
+      {
+      if(val[0]!='\0'){
+        uint8_t h=atoi(val);
+        uint8_t m=0;
+        while(*val!='\0' && *val!=':') val++;
+        if(*val==':'){
+          val++;
+          m=atoi(val);
+        }
+        param[0]=0x06;  //enable
+        param[1]= h;
+        param[2]= m;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+
+    // ---------------------------------------------
+    // Example: (Telefon Kundendienst)
+    case VT_STRING:
+      {
+      strncpy((char *)param,val,MAX_PARAM_LEN);
+      param[MAX_PARAM_LEN-1]='\0';
+      param_len=strlen((char *)param)+1;
+      }
+      break;
+
+    // ---------------------------------------------
     // 16-bit unsigned integer representation
     // Temperature values, mult=64
     case VT_TEMP:
@@ -1705,38 +1939,19 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       param_len=3;
       }
       break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // All per cent values
-    case VT_PERCENT:
+    case VT_TEMP_SHORT5_US:
+    case VT_TEMP_SHORT5:
+    case VT_PERCENT5:
       {
       if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=t;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
+        uint8_t t=atof(val);
+        param[0]=0x01;  //enable
+        param[1]=t*2;
       }
       param_len=2;
       }
       break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // All enumeration (list) types
-    // No input values sanity check
-    case VT_ENUM:          // enumeration types
-    case VT_ONOFF: // 1 = On
-    case VT_CLOSEDOPEN: // 1 = geschlossen
-    case VT_YESNO: // 1 = Ja
-    case VT_WEEKDAY: // (1=Mo..7=So)
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;
-      param[1]=t;
-      param_len=2;
-      }
-      break;
+
     // ---------------------------------------------
     // 2-byte floating point representation
     // Example: Kennlinie Steilheit, mult=50
@@ -1762,25 +1977,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       param_len=2;
       }
       break;
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
-    // No input values sanity check
-    case VT_UINT:
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
+
     // ---------------------------------------------
     // 32-bit unsigned integer representation
     // Minutes, mult=60
@@ -1797,121 +1994,41 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       param_len=5;
       }
       break;
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Hours or minutes
-    // No input values sanity check
-    case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
-    case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
+
+    case VT_SECONDS_WORD5:
       {
+      uint16_t t=atoi(val)*2;
       if(val[0]!='\0'){
-        uint16_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8) & 0xff;
+        param[0]=0x01;
+        param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
+      }                         // TODO: Do we need a disable section here as well?
       param_len=3;
       }
       break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Months or minutes
-    // No input values sanity check
-    case VT_MONTHS: //(Wartungsintervall)
-    case VT_MINUTES_SHORT: // ( Fehler - Alarm)
+
+    case VT_SECONDS_SHORT4:
       {
       if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]= t;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
+        uint8_t t=atof(val);
+        param[0]=0x01;  //enable
+        param[1]=t*4;
       }
       param_len=2;
       }
       break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // No input values sanity check
-    case VT_DAYS: // (Legionellenfkt. Periodisch)
-    case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
+
+    case VT_SECONDS_SHORT5:
       {
-      uint8_t t=atoi(val);
-      param[0]=0x01;  //enable
-      param[1]= t;
+      if(val[0]!='\0'){
+        uint8_t t=atof(val);
+        param[0]=0x01;  //enable
+        param[1]=t*5;
+      }
       param_len=2;
       }
       break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // No input values sanity check
-    case VT_HOUR_MINUTES: //TODO test it
-      {
-      if(val[0]!='\0'){
-        uint8_t h=atoi(val);
-        uint8_t m=0;
-        while(*val!='\0' && *val!=':') val++;
-        if(*val==':'){
-          val++;
-          m=atoi(val);
-        }
-        param[0]=0x06;  //enable
-        param[1]= h;
-        param[2]= m;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 32-bit unsigned integer representation
-    case VT_DWORD:
-      {
-      if(val[0]!='\0'){
-        uint32_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 24) & 0xff;
-        param[2]=(t >> 16) & 0xff;
-        param[3]=(t >> 8) & 0xff;
-        param[4]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Example: LPB Geräteadresse / Segmentadresse
-    case VT_BYTE: // TODO test it
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;
-      param[1]=t;
-      param_len=2;
-      }
-      break;
-    // ---------------------------------------------
-    // Example: (Telefon Kundendienst)
-    case VT_STRING:
-      {
-      strncpy((char *)param,val,MAX_PARAM_LEN);
-      param[MAX_PARAM_LEN-1]='\0';
-      param_len=strlen((char *)param)+1;
-      }
-      break;
+
     // ---------------------------------------------
     // Schedule data
     case VT_DATETIME: // TODO do we have to send INF or SET command?
@@ -2183,10 +2300,24 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
         formnr++;
-        client.println(F("<tr><td>"));
+        if (msg[4] == TYPE_ERR) {
+          client.println(F("<tr style='color: #7f7f7f'><td>"));
+        } else {
+          client.println(F("<tr><td>"));
+        }
         client.println(outBuf);
+
+        // dump data payload for unknown types
+        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) == VT_UNKNOWN && msg[4] != TYPE_ERR) {
+          int data_len=msg[3]-11;
+          for (i=0;i<=data_len-1;i++) {
+            if (msg[9+i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(msg[9+i], HEX);
+          }
+        }
+
         client.println(F("</td><td>"));
-        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) != FL_RONLY && strlen(pvalstr) > 1) {
+        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) != FL_RONLY && msg[4] != TYPE_ERR && pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) != VT_UNKNOWN) {
           if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
             client.print(F("<select id='value"));
             client.print(formnr);
@@ -2229,7 +2360,11 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             client.print(F("<input type=text id='value"));
             client.print(formnr);
             client.print(F("' VALUE='"));
-            client.print(strtod(pvalstr,NULL));
+            if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) != VT_BIT) {
+              client.print(strtod(pvalstr,NULL));
+            } else {
+              client.print(msg[10]);
+            }
             client.print(F("'></td><td><input type=button value='Set' onclick=\"set("));
             client.print(line);
             client.print(F(","));
@@ -2320,7 +2455,7 @@ void LogTelegram(byte* msg){
   boolean known=0;
   uint32_t c;     // command code
   uint8_t type=0;
-  uint8_t cmd_type;
+  uint8_t cmd_type=0;
   double divisor=1;
   uint8_t precision=0;
   int data_len;
@@ -2338,8 +2473,11 @@ void LogTelegram(byte* msg){
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
       if(c == cmd){
-        known=1;
-        break;
+        long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
+        if ((devices & dev_id) == dev_id) {
+          known=1;
+          break;
+        }
       }
       i++;
       c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -2386,7 +2524,7 @@ void LogTelegram(byte* msg){
           if ((msg[4] == TYPE_INF || msg[4] == TYPE_SET || msg[4] == TYPE_ANS) && msg[3] < 17) {
             dataFile.print(F(";"));
             i=0;
-            while(type!=255){
+            while(type!=VT_UNKNOWN){
               if(type == cmd_type){
                 known=1;
                 break;
@@ -2704,106 +2842,113 @@ void loop() {
   // interface.
   // Separate telegrams after a pause of more than one character time.
   if(monitor){
-    bus.Monitor();
+    bus.Monitor(msg);
+#ifdef LOGGER
+    LogTelegram(msg);
+#endif
   }else{
     // Listen for incoming messages, identified them by their magic byte.
     // Method GetMessage() validates length byte and CRC.
-      if (bus.GetMessage(msg)) { // message was syntactically correct
-         // Decode the rcv telegram and send it to the PC serial interface
-         if(verbose) {
+    if (bus.GetMessage(msg)) { // message was syntactically correct
+       // Decode the rcv telegram and send it to the PC serial interface
+      if(verbose) {
+        printTelegram(msg);
+#ifdef LOGGER
+        LogTelegram(msg);
+#endif
+      }
+      // Is this a broadcast message?
+      if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
+      // Decode the rcv telegram and send it to the PC serial interface
+        if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
           printTelegram(msg);
 #ifdef LOGGER
           LogTelegram(msg);
 #endif
-         }
-         // Is this a broadcast message?
-         if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
-           // Decode the rcv telegram and send it to the PC serial interface
-           if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
-             printTelegram(msg);
-#ifdef LOGGER
-             LogTelegram(msg);
-#endif
-           }
-           // Filter Brenner Status messages (attention: partially undocumented enum values)
-           uint32_t cmd;
-           cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+        }
 
-           if(cmd==0x31000212) {    // Command ID 8009 Brennerstatus Elco
-             Serial.print(F("INF: TWW-Status: "));
-             Serial.println(msg[11]);      // assumed info byte
+        // Filter Brenner Status messages (attention: partially undocumented enum values)
 
-#if defined(BROETJE_SOB)
-             if(msg[11]==0x4D){  // TWW Ladung on BROETJE_SOB
-#else
-             if(msg[11]==0xCD){  // TWW Ladung on THISION
-#endif
-               if(TWW_start==0){        // has not been timed
-                  TWW_start=millis();   // keep current timestamp
-                  TWW_count++;          // increment number of starts
-               }
-             }else{             // TWW Ladung aus
-               if(TWW_start!=0){        // start has been timed
-                 unsigned long TWW_end;
-                 TWW_end=millis();      // timestamp the end
-                 if(TWW_end >= TWW_start){
-                   TWW_duration+=(TWW_end-TWW_start)/1000;
-                 }else{ // overflow
-                   TWW_duration+=(0xffffffff-TWW_start+TWW_end)/1000;
-                 }
-                 TWW_start=0;
-               } // endif, a previous start has been timed
-             } // endif, TWW is off
-           } // endif, Status TWW command code
+        uint32_t cmd;
+        cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
 
-#if defined(THISION) || defined(BROETJE_SOB)
-           if(cmd==0x05000213) {    // Command ID 8009 Brennerstatus Elco
-#else
-           if(cmd==0x053d0f66) {    // Command ID 8009 Brennerstatus Brötje etc.
-#endif
-             Serial.print(F("INF: Brennerstatus: "));
-             Serial.println(msg[9]);      // first payload byte
+        if(cmd==0x0500006C) {   // set Time from BC
+          setTime(msg[14], msg[15], msg[16], msg[12], msg[11], msg[10]+1900);
+        }
 
-#if defined(THISION) || defined(BROETJE_SOB)
-             if(msg[9]==0x04){  // brenner on 
-#else
-             if(msg[9]==0x12){  // brenner on 
-#endif
-               if(brenner_start==0){        // has not been timed
-                  brenner_start=millis();   // keep current timestamp
-                  brenner_count++;          // increment number of starts
-               }
-             }else{             // brenner off
-               if(brenner_start!=0){        // start has been timed
-                 unsigned long brenner_end;
-                 brenner_end=millis();      // timestamp the end
-                 if(brenner_end >= brenner_start){
-                   brenner_duration+=(brenner_end-brenner_start)/1000;
-                 }else{ // overflow
-                   brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
-                 }
-                 brenner_start=0;
-               } // endif, a previous start has been timed
-             } // endif, brenner is off
-           } // endif, Status Brenner command code
-         } // endif, broadcasts
-      } // endif, GetMessage() returned True
+        if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
+          Serial.print(F("INF: TWW-Status: "));
+          Serial.println(msg[11]);      // assumed info byte
 
-      // At this point drop possible GetMessage() failures silently
-/*
-    if(verbose){
-      // Decode the rcv telegram and send it to the PC serial interface
-      if (bus.GetMessage(msg)) printTelegram(msg);
-#ifdef LOGGER
-      LogTelegram(msg);
-#endif
-    }
-*/
+          if( (msg[11]==0x4D && (dev_id & ~DEV_EL_THI) == dev_id) || (msg[11]==0xCD && (dev_id & DEV_EL_THI) == dev_id)) {  // TWW Ladung on BROETJE_SOB and THISION
+            if(TWW_start==0){        // has not been timed
+              TWW_start=millis();   // keep current timestamp
+              TWW_count++;          // increment number of starts
+            }
+          }else{             // TWW Ladung aus
+            if(TWW_start!=0){        // start has been timed
+              unsigned long TWW_end;
+              TWW_end=millis();      // timestamp the end
+              if(TWW_end >= TWW_start){
+                TWW_duration+=(TWW_end-TWW_start)/1000;
+              }else{ // overflow
+                TWW_duration+=(0xffffffff-TWW_start+TWW_end)/1000;
+              }
+                TWW_start=0;
+            } // endif, a previous start has been timed
+          } // endif, TWW is off
+        } // endif, Status TWW command code
+
+        if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
+          Serial.print(F("INF: Brennerstatus: "));
+          Serial.println(msg[9]);      // first payload byte
+
+          if(msg[9]==0x04) {
+            if(brenner_start==0){        // has not been timed
+              brenner_start=millis();   // keep current timestamp
+              brenner_count++;          // increment number of starts
+            }
+          }else{             // brenner off
+            if(brenner_start!=0){        // start has been timed
+              unsigned long brenner_end;
+              brenner_end=millis();      // timestamp the end
+              if(brenner_end >= brenner_start){
+                brenner_duration+=(brenner_end-brenner_start)/1000;
+              }else{ // overflow
+                brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
+              }
+              brenner_start=0;
+            } // endif, a previous start has been timed
+          } // endif, brenner is off
+        } // endif, Status Brenner command code
+      } // endif, broadcasts
+    } // endif, GetMessage() returned True
+
+   // At this point drop possible GetMessage() failures silently
+
   } // endelse, NOT in monitor mode
 
   // Listen for incoming clients
   client = server.available();
   if (client) {
+
+#ifdef TRUSTED_IP
+    int so = client.getSocketNumber();
+    uint8_t remoteIP[4];
+    W5100.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+    if (remoteIP[3] != TRUSTED_IP) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
+      Serial.print(F("Rejected access from "));
+      for (int i=0; i<4; i++) {
+        Serial.print(remoteIP[i]);
+        if (i<3) {
+          Serial.print(F("."));
+        }
+      }
+      Serial.println(F("."));
+      client.stop();
+    }
+#endif
+
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
     while (client.connected()) {
@@ -2817,6 +2962,50 @@ void loop() {
         }
         // Got an EOL character
         Serial.println();
+
+        // perform HTTP-Authentification by reading the remaining client data and look for credentials
+#ifdef USER_PASS_B64
+        char linebuf[80];
+        uint8_t charcount=0;
+        boolean authenticated=false;
+        memset(linebuf,0,sizeof(linebuf));
+        boolean currentLineIsBlank = false;
+        while (client.connected()) {
+          if (client.available()) {
+            char c = client.read();
+            linebuf[charcount]=c;
+            if (charcount<sizeof(linebuf)-1) charcount++;
+            if (c == '\n' && currentLineIsBlank) {
+              break;
+            }
+            if (c == '\n') {
+              // you're starting a new line
+              currentLineIsBlank = true;
+              if (strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
+                authenticated=true;
+              }
+              memset(linebuf,0,sizeof(linebuf));
+              charcount=0;
+            } else if (c != '\r') {
+              // you've gotten a character on the current line
+              currentLineIsBlank = false;
+            }            
+          }
+        }
+        // if no credentials found in HTTP header, send 401 Authorization Required
+        if (!authenticated) {
+          client.println(F("HTTP/1.1 401 Authorization Required"));
+          client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
+          client.println(F("Content-Type: text/html"));
+          client.println(F("Connnection: close"));
+          client.println();
+          client.println(F("<!DOCTYPE HTML>"));
+          client.println(F("<HTML>  <HEAD>   <TITLE>Error</TITLE>"));
+          client.println(F(" </HEAD> <BODY><H1>401 Unauthorized.</H1></BODY> </HTML>"));
+          client.stop();
+        }
+        // otherwise continue like normal
+#endif
 
         // Flush any remaining bytes from the client buffer
         client.flush();
@@ -2860,7 +3049,7 @@ void loop() {
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("KSIREVMTBGHADCLOX",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMORSTVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -3127,6 +3316,45 @@ void loop() {
           break;
         }
 
+#ifdef DEBUG
+        if(p[1]=='Y'){
+          webPrintHeader();
+          uint8_t type = strtol(&p[2],NULL,16);
+          uint32_t c = (uint32_t)strtol(&p[5],NULL,16);
+          if(!bus.Send(type, c, msg, tx_msg)){
+            Serial.println(F("bus send failed"));  // to PC hardware serial I/F
+          }else{
+            // Decode the xmit telegram and send it to the PC serial interface
+            printTelegram(tx_msg);
+#ifdef LOGGER
+            LogTelegram(tx_msg);
+#endif
+          }
+          // Decode the rcv telegram and send it to the PC serial interface
+          printTelegram(msg);   // send to hardware serial interface
+#ifdef LOGGER
+          LogTelegram(msg);
+#endif
+          if(outBufLen>0){
+            client.println(outBuf);
+            client.println(F("<br>"));
+          }
+          for (int i=0;i<tx_msg[3];i++) {
+            if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(tx_msg[i], HEX);
+            client.print(F(" "));
+          }
+          client.println(F("<br>"));
+          for (int i=0;i<msg[3];i++) {
+            if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(msg[i], HEX);
+            client.print(F(" "));
+          }
+          webPrintFooter();
+          break;
+        }
+#endif
+        
         if(p[1]=='O') {   // display URL command list
           webPrintHeader();
 #ifdef LANG_DE
@@ -3308,16 +3536,17 @@ void loop() {
           }
           break;
         }
-#endif            
+#endif
         if (p[1]=='C'){ // dump configuration
           webPrintHeader();
 #ifdef LANG_DE
           client.println(F("Konfiguration<BR><BR>"));
-          client.println(F("Heizungstyp-spezifische Konfiguration:"));
+//          client.println(F("Heizungstyp-spezifische Konfiguration:"));
 #else
           client.println(F("Configuration<BR><BR>"));
-          client.println(F("Special heating system configuration:"));
+//          client.println(F("Special heating system configuration:"));
 #endif
+/*
           #ifdef THISION 
           client.println(F("Thision "));
           #endif
@@ -3334,6 +3563,7 @@ void loop() {
           client.println(F("Brötje BSW "));
           #endif
           client.println(F("<BR>"));
+*/
 
 //          client.println(F("BSB pins: "));
 //          client.println(bus);
@@ -3644,6 +3874,9 @@ void loop() {
                   avgValues_Current[i] = 0;
                 }
                 avgCounter = 1;
+#ifdef LOGGER
+                SD.remove("averages.txt");
+#endif
 #ifdef LANG_DE
                 client.println(F("Neue Durchschnitts-Parameter: "));
 #else
@@ -3834,7 +4067,7 @@ void loop() {
 #ifdef LOGGER
 
   if ((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) {
-    SetDateTime(); // receive inital date/time from heating system
+//    SetDateTime(); // receive inital date/time from heating system
     double log_values[numLogValues];
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
@@ -3971,11 +4204,32 @@ void loop() {
         }
       }
     }
+
     avgCounter++;
     lastAvgTime += 60000;
 
+#ifdef LOGGER
+
+// write averages to SD card to protect from power off
+
+    if (SD.exists("averages.txt")) {
+      SD.remove("averages.txt");
+    }
+    File avgfile = SD.open("averages.txt", FILE_WRITE);
+    if (avgfile) {
+      for (int i=0; i<numAverages; i++) {
+        avgfile.println(avgValues[i]);
+        avgfile.println(avgValues_Old[i]);
+        avgfile.println(avgValues_Current[i]);
+      }
+      avgfile.println(avgCounter);
+      avgfile.close();
+    }
+
+#endif
+
 // while we are here, update date/time as well...
-    SetDateTime();      
+//    SetDateTime();      
   }
 // end calculate averages
 
@@ -3999,6 +4253,9 @@ void loop() {
  * *************************************************************** */
 void setup() {
 
+  uint8_t family=0;
+  boolean known=0;
+  
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
@@ -4047,7 +4304,88 @@ void setup() {
     avgValues_Current[i] = 0;
   }
 
+#ifdef LOGGER
+
+// restore average 
+
+  if (SD.exists("averages.txt")) {
+    File avgfile = SD.open("averages.txt", FILE_READ);
+    if (avgfile) {
+      char c;
+      char num[10];
+      int x;
+      for (int i=0; i<numAverages; i++) {
+        c = avgfile.read();
+        x = 0;
+        while (avgfile.available() && c != '\n') {
+          num[x] = c;
+          x++;
+          c = avgfile.read();
+        }
+        num[x]='\0';
+        avgValues[i] = atof(num);
+
+        c = avgfile.read();
+        x = 0;
+        while (avgfile.available() && c != '\n') {
+          num[x] = c;
+          x++;
+          c = avgfile.read();
+        }
+        num[x]='\0';
+        avgValues_Old[i] = atof(num);
+
+        c = avgfile.read();
+        x = 0;
+        while (avgfile.available() && c != '\n') {
+          num[x] = c;
+          x++;
+          c = avgfile.read();
+        }
+        num[x]='\0';
+        avgValues_Current[i] = atof(num);
+      }
+
+      c = avgfile.read();
+      x = 0;
+      while (avgfile.available() && c != '\n') {
+        num[x] = c;
+        x++;
+        c = avgfile.read();
+      }
+      num[x]='\0';
+      avgCounter = atoi(num);
+    }
+    avgfile.close();
+  }
+
+#endif
+
 // receive inital date/time from heating system
   SetDateTime();
+  
+// receive device_id (Gerätefamilie) from heating system
+  if (device_id < 1) {
+    device_id = strtod(query(6225,6225,1),NULL);
+  }
+  Serial.print(F("Device family: "));
+  Serial.println(device_id);
+  int i=0;
+  family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
+  while(family!=DEV_NONE){
+    if(family == device_id){
+      known=1;
+      break;
+    }
+    i++;
+    family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
+  }
+  if (!known){
+    dev_id=DEV_ALL;
+  } else {
+    dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
+  }
+  Serial.print(F("Device ID: "));
+  Serial.println(dev_id);
 }
 
