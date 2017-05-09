@@ -52,7 +52,6 @@ EthernetServer server(80);
 int device_id = 0;
 
 /* display web interface in German language; remove definement for English */
-
 #define LANG_DE
 
 /*
@@ -112,7 +111,6 @@ int ipwe_parameters[] = {
 #define QUERY_RETRIES  3
 
 /* enable /X URL command to reset Arduino - might not work on older boards */
-
 //#define RESET
 
 /*
