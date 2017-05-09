@@ -40,7 +40,8 @@ EthernetServer server(80);
 /* activate HTTP-Auth authentification to provide username/password based access. No encryption!
  * Default sets username to "atari" and password to "800xl". Visit a website like
  * https://www.base64encode.org/
- * to encode your own username/password combination and replace theYXRhcmk6ODAweGw= string below.
+ * to encode your own username/password combination in the format username:password
+ * and replace the YXRhcmk6ODAweGw= string below accordingly.
 */
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
