@@ -5,16 +5,6 @@
 /************************************************************************************/
 
 /*
- * if PASSKEY is defined, the URL has to contain the defined passkey as first element
- * e.g.
- * http://192.168.1,50/1234/                - to view the main website (don't forget the trailing slash!)
- * http://192.168.1.50/1234/K               - to list all categories
- * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
-*/
-
-#define PASSKEY "1234"
-
-/*
  * Initialize the Ethernet server library
  * with the IP address and port you want to use
  * (port 80 is default for HTTP):
@@ -22,13 +12,37 @@
 IPAddress ip(192,168,178,88);
 EthernetServer server(80);
 
+/* SECURITY OPTIONS
+ * There are several options to control and protect access to your heating system. However, keep  
+ * in mind, that even activating all three options are no guarantee that a versatile intruder with
+ * access to your (W)LAN won't be able to gain access. In any case, no encryption of data streams
+ * is provided from the Arduino itself. Use VPN or a SSL proxy if that is a must for you and connect
+ * the Arduino wired to the VPN server or SSL proxy. On the other hand, someone with this amount
+ * of criminal activity will probably have it easier just to access your heating system face-to-face ;)
+*/
+
+/*
+ * if PASSKEY is defined, the URL has to contain the defined passkey as first element
+ * e.g.
+ * http://192.168.1,50/1234/                - to view the main website (don't forget the trailing slash!)
+ * http://192.168.1.50/1234/K               - to list all categories
+ * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
+*/
+//#define PASSKEY "1234"
+
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
- * trusted_ip to 20.
+ * TRUSTED_IP to 20. 
  * Configured for W5100-based Ethernet Shields. For W5500 types you have to search and replace w5100 with w5500 in the .ino source.
 */
-//#define TRUSTED_IP
-uint8_t trusted_ip = 20;
+//#define TRUSTED_IP 20
+
+/* activate HTTP-Auth authentification to provide username/password based access. No encryption!
+ * Default sets username to "atari" and password to "800xl". Visit a website like
+ * https://www.base64encode.org/
+ * to encode your own username/password combination and replace theYXRhcmk6ODAweGw= string below.
+*/
+//#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
  * Set device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
@@ -119,8 +133,8 @@ byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 6
 byte verbose = 0;
 byte monitor = 0;
 
-// defines default flag for parameters (use "#define DEFAULT_FLAG FL_RONLY" to make all parameters read-only)
-#define DEFAULT_FLAG  0
+// defines default flag for parameters (use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
+#define DEFAULT_FLAG FL_RONLY
 
 /************************************************************************************/
 /************************************************************************************/
