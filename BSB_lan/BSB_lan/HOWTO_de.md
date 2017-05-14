@@ -44,7 +44,7 @@ Erste Schritte:
 Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepasst werden:  
 - Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
-- Ethernet-Adresse (eine Änderung ist nur nötig, wenn mehr als ein Adapter verwendet werden):  
+- IP-Adresse (eine Änderung ist nur nötig, wenn mehr als ein Adapter verwendet werden):  
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
