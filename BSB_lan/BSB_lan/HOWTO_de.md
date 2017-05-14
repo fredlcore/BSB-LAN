@@ -22,45 +22,56 @@ Die Software wurde entwickelt, um auf einem Arduino-Mega2560-Board samt Ethernet
 Die Software wurde mit folgenden Komponenten getestet:        
 - SainSmart MEGA2560 R3 Development Board  
 - SainSmart Ethernet Schild für Arduino UNO MEGA Duemilanove Neu Version W5100  
-- BSB-Interface (see BSB_adapter.pdf)  
-Für diese Konfiguration wird Pin A14 (68) als RX, und Pin A15 (69) als TX genutzt:
-
-`BSB bus(68,69);`
+- BSB-Interface (siehe BSB_adapter.pdf)  
+Für diese Konfiguration wird Pin A14 (68) als RX, und Pin A15 (69) als TX genutzt (s. Parameter weiter unten).
       
 Zielsystem:  
-      Getestet mit: Elco Straton Ölbrenner
+      Getestet mit verschiedenen Elco- und Brötje-Heizungssystemen (s. README).
 	Die Kommunikation sollte prinzipiell mit allen Systemen möglich sein, die einen BSB aufweisen.
-	Fehlende Befehls-IDs müssen in der cmdtbl hinzugefügt werden.
-	Bisher ist mir nicht klar, worin der Unterschied zwischen den LPB- und den BSB-Protokollen besteht. Die technischen Spezifikationen sind die gleichen. Möglicherweise gibt es Unterschiede auf der Protokoll-Ebene. Bisher habe ich den Adapter nur an den BSB angeschlossen.
-    
-VOR DEM KOMPILIEREN der Software müssen einige Parameter in der Datei "BSB_lan_config.h" angepasst werden:  
+
+Erste Schritte:
+- Verbinde die Anschlüsse CL+ und CL- des Adapters mit den entsprechenden Anschlüssen des Heizungssystems (mögliche Bezeichnungen am Heizungsregler sind BSB, FB (Fernbedienung/remote control), CL+/CL-).
+- Downloade und installiere die aktuelle Version der Arduino IDE von https://www.arduino.cc/en/Main/Software (Windows-, Mac- und Linux-Version verfügbar).
+- Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac).
+- Öffne den BSB_lan-sketch mittels eines Doppelklicks auf die Datei BSB_lan.ino im BSB_lan-Ordner. Die dazugehörigen Dateien BSB_lan_config.h und BSB_land_defs.h werden automatisch mit geladen.
+- Konfiguriere die IP-Adresse in BSB_lan_config.h deinem Netzwerk entsprechend (die voreingestellte IP 192.168.178.88 funktioniert mit den meisten Standard-Routern wie bspw. Fitz!Box, aber prüfe, ob die IP bereits anderweitig vergeben ist, damit es nicht zu einer Adressen-Kollision kommt).
+- Wähle "Arduino/Genuino Mega or Mega 2560" unter Tools/Board bzw. Werkzeuge/Board.
+- Wähle "ATmega 2560" unter Tools/Processor bzw. Werkzeuge/Prozessor.
+- Wähle "AVRISP mkII" unter Tools/Programmer bzw. Werkzeuge/Programmer.
+- Lade den Sketch auf den Arduino unter Sketch/Upload bzw. Sketch/Hochladen.
+- Öffne die Seite `http://<IP-Adresse>/` (oder `http://<IP-Adresse>/<passkey>/`, wenn die Passkey-Funktion genutzt wird, s.u.) um zu sehen, ob alles korrekt kompiliert und hochgeladen wurde. Ein einfaches Webinterface sollte erscheinen.
+
+Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepasst werden:  
 - Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
-- Ethernet-Adresse:  
+- Ethernet-Adresse (eine Änderung ist nur nötig, wenn mehr als ein Adapter verwendet werden):  
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
 - Pinbelegung des BSB-Adapters:  
   `BSB bus(68,69);`  
-- (optional) Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
+- Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
   `#define PASSKEY  "1234"`  
-- (optional) BSB-Adresse (voreingestellt ist 0x06=RGT1, dies kann jedoch bei der Bus-Initialisierung überschrieben werden):  
+- BSB-Adresse (voreingestellt ist 0x06=RGT1, dies kann jedoch bei der Bus-Initialisierung überschrieben werden):  
   `BSB bus(68,69,<my_addr>);`
   Um den BSB-LAN-Adapter (bei einem bereits vorhandenem Raumgerät RGT1) als RGT2 anzumelden, gib Folgendes ein:
   `BSB bus(68,69,7);`  
-- (optional) Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
+- Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
   `#define DEFAULT_FLAG FL_RONLY;`
-- (optional) Man kann die Sprache des Webinterfaces des Adapters auf Deutsch einstellen, indem man das entsprechende Definement aktiviert:  
+- Man kann die Sprache des Webinterfaces des Adapters auf Deutsch einstellen, indem man das entsprechende Definement aktiviert:  
   `#define LANG_DE;`
         
-Adapter:  
-      Eine einfache Syntaxbeschreibung wird auf der Webseite angezeigt, wenn ohne weitere Parameter auf die URL des Servers zugegriffen wird.  
+Web-Interface des Adapters:  
+      Eine einfache Webseite wird angezeigt, wenn ohne weitere Parameter auf die URL des Servers zugegriffen wird.  
       Bspw. `http://<ip-of-server>`  
       Um das System vor einem ungewollten Zugriff von aussen zu schützen, kann die Funktion des Sicherheitsschlüssels (PASSKEY) aktiviert werden (sehr einfach und nicht wirklich sicher!).  
       Falls die PASSKEY-Funktion aktiviert ist (s. unten), muss die URL den definierten Schlüssel als erstes Element enthalten,
-      bspw. `http://<ip-of-server>/<passkey>/`    - um die Hilfeseite zu sehen  
+      bspw. `http://<ip-of-server>/<passkey>/`    - um die Hilfeseite zu sehen. Bitte nicht den Slash hinter dem Passkey vergesssen!  
       Die URLs in den folgenden Beispielen müssen um die PASSKEY-Definition erweitert werden, falls die Funktion aktiviert wurde.  
-      Alle Parameter werden anhand ihrer Zeilennummern abgefragt. Eine nahezu vollständige Übersicht findet sich im Systemhandbuch der ISR ("systemhandbuch_isr.pdf").  
+      
+      Zusätzlich zum Web-Interface kann auf alle Funktionen direkt via URL-Befehlen zugegriffen werden. Dies ist nützlich, wenn der Adapter in Verbindung mit Heimautomationssystemen wie bspw. FHEM genutzt wird.
+      
+      Alle Heizungsparameter werden anhand ihrer Zeilennummern abgefragt. Eine nahezu vollständige Übersicht findet sich im Systemhandbuch der ISR ("systemhandbuch_isr.pdf").  
       Einige Zeilen sind 'virtuell' und wurden bspw. hinzugefügt, um den Zugang zu komplexen Einstellungen wie den Tagesprogrammen zu erleichtern.  
       Die Parameter sind in Kategorien unterteilt, die den im Display dargestellten Untermenükategorien entsprechen, wenn auf das Heizungssystem vom integrierten Regler aus zugegriffen wird.  
 
