@@ -41,7 +41,7 @@ Getting started:
 * Select "AVRISP mkII" under Tools/Programmer.
 * Select the corresponding USB/serial port under Tools/Port.
 * Upload the sketch to the Arduino under Sketch/Upload.
-* Open http://<ip address from config>/ (or http://<ip address from config>/<passkey>/ when using the passkey function, see below) to see if everything was compiled and uploaded correctly. A simple web-interface should appear.
+* Open `http://<ip address from config>/` (or `http://<ip address from config>/<passkey>/` when using the passkey function, see below) to see if everything was compiled and uploaded correctly. A simple web-interface should appear.
 
 Optionally configure the following parameters in BSB_lan_config.h:  
 - MAC address of your ethernet shield. It can be normally found on a label at the shield:  
