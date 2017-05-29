@@ -1,6 +1,6 @@
 BSB Boiler-System-Bus LAN Interface
 
-ATTENION:  
+ATTENTION:  
       There is no waranty that this system will not damage your heating system!
 
 Author: Gero Schumacher (gero.schumacher@gmail.com)  
@@ -174,13 +174,6 @@ Web-Interface:
         http://<ip-of-server>/X
         Resets the Arduino after pausing for 8 seconds (#define RESET in BSB_lan_config.h).
 
-Info:  
-      http://www.mikrocontroller.net/topic/218643  
-      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
-      http://forum.fhem.de/index.php/topic,29762.0.html  
-      systemhandbuch_isr.pdf
-
-
 Open issues
 - Add more command ids to the table.
           Only the known command ids from the threads listed above and the tested boiler system (ELCO) are contents of the table.
@@ -202,3 +195,9 @@ Open issues
 - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
 - Add support of error messages sent by the boiler system
+
+Further Info:  
+      http://www.mikrocontroller.net/topic/218643  
+      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
+      http://forum.fhem.de/index.php/topic,29762.0.html  
+      systemhandbuch_isr.pdf
