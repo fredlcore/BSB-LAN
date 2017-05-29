@@ -5,12 +5,37 @@ The latest version of this library may be found at:
   http://www.pjrc.com/teensy/td_libs_OneWire.html
 
 OneWire has been maintained by Paul Stoffregen (paul@pjrc.com) since
-January 2010.  At the time, it was in need of many bug fixes, but had
+January 2010.
+
+DO NOT EMAIL for technical support, especially not for ESP chips!
+All project support questions must be posted on public forums
+relevant to the board or chips used.  If using Arduino, post on
+Arduino's forum.  If using ESP, post on the ESP community forums.
+There is ABSOLUTELY NO TECH SUPPORT BY PRIVATE EMAIL!
+
+Github's issue tracker for OneWire should be used only to report
+specific bugs.  DO NOT request project support via Github.  All
+project and tech support questions must be posted on forums, not
+github issues.  If you experience a problem and you are not
+absolutely sure it's an issue with the library, ask on a forum
+first.  Only use github to report issues after experts have
+confirmed the issue is with OneWire rather than your project.
+
+Back in 2010, OneWire was in need of many bug fixes, but had
 been abandoned the original author (Jim Studt).  None of the known
 contributors were interested in maintaining OneWire.  Paul typically
 works on OneWire every 6 to 12 months.  Patches usually wait that
 long.  If anyone is interested in more actively maintaining OneWire,
-please contact Paul.
+please contact Paul (this is pretty much the only reason to use
+private email about OneWire).
+
+OneWire is now very mature code.  No changes other than adding
+definitions for newer hardware support are anticipated.
+
+Version 2.3:
+  Unknown chip fallback mode, Roger Clark
+  Teensy-LC compatibility, Paul Stoffregen
+  Search bug fix, Love Nystrom
 
 Version 2.2:
   Teensy 3.0 compatibility, Paul Stoffregen, paul@pjrc.com
@@ -339,7 +364,7 @@ void OneWire::target_search(uint8_t family_code)
 // Return TRUE  : device found, ROM number in ROM_NO buffer
 //        FALSE : device not found, end of search
 //
-uint8_t OneWire::search(uint8_t *newAddr)
+uint8_t OneWire::search(uint8_t *newAddr, bool search_mode /* = true */)
 {
    uint8_t id_bit_number;
    uint8_t last_zero, rom_byte_number, search_result;
@@ -368,7 +393,11 @@ uint8_t OneWire::search(uint8_t *newAddr)
       }
 
       // issue the search command
-      write(0xF0);
+      if (search_mode == true) {
+        write(0xF0);   // NORMAL SEARCH
+      } else {
+        write(0xEC);   // CONDITIONAL SEARCH
+      }
 
       // loop to do the search
       do
@@ -452,8 +481,9 @@ uint8_t OneWire::search(uint8_t *newAddr)
       LastDeviceFlag = FALSE;
       LastFamilyDiscrepancy = 0;
       search_result = FALSE;
+   } else {
+      for (int i = 0; i < 8; i++) newAddr[i] = ROM_NO[i];
    }
-   for (int i = 0; i < 8; i++) newAddr[i] = ROM_NO[i];
    return search_result;
   }
 
@@ -509,8 +539,11 @@ uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 {
 	uint8_t crc = 0;
-	
+
 	while (len--) {
+#if defined(__AVR__)
+		crc = _crc_ibutton_update(crc, *addr++);
+#else
 		uint8_t inbyte = *addr++;
 		for (uint8_t i = 8; i; i--) {
 			uint8_t mix = (crc ^ inbyte) & 0x01;
@@ -518,6 +551,7 @@ uint8_t OneWire::crc8(const uint8_t *addr, uint8_t len)
 			if (mix) crc ^= 0x8C;
 			inbyte >>= 1;
 		}
+#endif
 	}
 	return crc;
 }
@@ -532,6 +566,11 @@ bool OneWire::check_crc16(const uint8_t* input, uint16_t len, const uint8_t* inv
 
 uint16_t OneWire::crc16(const uint8_t* input, uint16_t len, uint16_t crc)
 {
+#if defined(__AVR__)
+    for (uint16_t i = 0 ; i < len ; i++) {
+        crc = _crc16_update(crc, input[i]);
+    }
+#else
     static const uint8_t oddparity[16] =
         { 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0 };
 
@@ -550,6 +589,7 @@ uint16_t OneWire::crc16(const uint8_t* input, uint16_t len, uint16_t crc)
       cdata <<= 1;
       crc ^= cdata;
     }
+#endif
     return crc;
 }
 #endif
