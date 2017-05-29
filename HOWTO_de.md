@@ -11,12 +11,6 @@ Autor:	Gero Schumacher (gero.schumacher@gmail.com)
 Lizenz:
 	Es steht dir frei, diese Software auf dein eigenes Risiko hin zu benutzen. Bitte beachte die Lizenzbedingungen der genutzten Bibliotheken und Software.
 
-Info:  
-      http://www.mikrocontroller.net/topic/218643  
-      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
-      http://forum.fhem.de/index.php/topic,29762.0.html  
-      systemhandbuch_isr.pdf
-
 Host System:  
 Die Software wurde entwickelt, um auf einem Arduino-Mega2560-Board samt Ethernet-Shield zu laufen. Da es unterschiedliche Pinbelegungen bei den verschiedenen Ethernet-Shields gibt, ist es u.U. nötig, den BSB-Adapter an andere Pins anzuschließen und die entsprechenden Änderungen bzgl. der Pinbelegung in der Software anzupassen.  
 Die Software wurde mit folgenden Komponenten getestet:        
@@ -185,3 +179,9 @@ Offene Punkte
 - Dekodieren der DE-Telegramme. Möglicherweise beinhalten sie Statusinformationen, die ohne Abfragen genutzt werden können.
 
 - Unterstützung der vom Heizungssystem aus gesendeten Fehlerberichte hinzufügen.
+
+Weiterführende Infos:  
+      http://www.mikrocontroller.net/topic/218643  
+      http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
+      http://forum.fhem.de/index.php/topic,29762.0.html  
+      systemhandbuch_isr.pdf
