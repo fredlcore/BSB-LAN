@@ -1,4 +1,4 @@
-char version[] = "0.33";
+char version[] = "0.34";
 
 /*
  * 
@@ -45,8 +45,17 @@ char version[] = "0.33";
  *       0.31  - 10.04.2017
  *       0.32  - 18.04.2017
  *       0.33  - 09.05.2017
+ *       0.34  - 29.05.2017
  *
  * Changelog:
+ *       version 0.34
+ *        - Webinterface can now display and set vt_bit type parameters in human-readable form
+ *        - added KonfigRGx descriptions; caution: various sources used, no guarantee that descriptions match your individual heating system!
+ *        - vt_bit is generally read-only in the webinterface. To set, use URL command /S with decimal representation of value
+ *        - fixed a bug with vt_seconds_short5, affecting parameters 9500 and 9540.
+ *        - fixed bug regarding Fujitsu's device family (from 127 to 170)
+ *        - moved libraries from folder libraries to src so they can be included without copying them to the Arduino libraries folder
+ *        - modified DallasTemperature.h's include path for OneWire.h
  *       version 0.33
  *        - no more heating system definements anymore due to new autodetect function based on device family (parameter 6225), or set device_id variable to parameter value directly
  *        - two more security options: TRUSTED_IP to limit access to one IP address only, and HTTP authentication with username and password
@@ -56,9 +65,10 @@ char version[] = "0.33";
  *        - added dump of data payload on website for commands of unknown type, greyed out unsopported parameters
  *        - enable logging of telegrams (log parameter 30000) also in monitor mode (bsb.cpp and bsb.h updated)
  *        - time from heating system is now retreived periodically from broadcast telegrams, further reducing bus activity
+ *        - new data type vt_bit for parameters that set individual bits. Display as binary digits, setting still using decimal representation
  *        - new data type vt_temp_short5_us for unsigned one byte temperatures divided by 2 (so far only 887 Vorlaufsoll NormAussentemp)
  *        - new data type vt_percent5 for unsigned one byte temperatures divided by 2 (so far only 885 Pumpe-PWM Minimum)
- *        - new data type vt_seconds_word5 for two byte seconds divided by 2 (so far only 2232)
+ *        - new data type vt_seconds_word5 for two byte seconds divided by 2 (so far only 2232, 9500 and 9540)
  *        - new data type vt_seconds_short4 for (signed?) one byte seconds divided by 4 (so far only 2235)
  *        - new data type vt_seconds_short5 for (signed?) one byte seconds divided by 5 (so far only 9500, 9540)
  *        - new data type vt_speed2 for two byte rpm (so far only 7050)
@@ -206,16 +216,17 @@ char version[] = "0.33";
  *
  */
 
-#include <avr/pgmspace.h>
-#include "BSBSoftwareSerial.h"
-#include "bsb.h"
 
+#include <avr/pgmspace.h>
+#include <avr/wdt.h>
 #include <SPI.h>
 #include <Ethernet.h>
 #include <Arduino.h>
 #include <util/crc16.h>
-#include <TimeLib.h>
-#include <avr/wdt.h>
+
+#include "libraries/Time/TimeLib.h"
+#include "libraries/BSB/BSBSoftwareSerial.h"
+#include "libraries/BSB/bsb.h"
 
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
@@ -236,8 +247,8 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef ONE_WIRE_BUS
-  #include "OneWire.h"
-  #include <DallasTemperature.h>
+  #include "libraries/OneWire/OneWire.h"
+  #include "libraries/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9
   // Setup a oneWire instance to communicate with any OneWire devices
   OneWire oneWire(ONE_WIRE_BUS);
@@ -248,7 +259,7 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef DHT_BUS
-  #include "dht.h"
+  #include "libraries/DHT/dht.h"
   int DHT_Pins[] = {DHT_BUS};
   dht DHT;
 #endif
@@ -1309,6 +1320,9 @@ char *printTelegram(byte* msg) {
             case VT_SECONDS_SHORT4: // s8 / 4 (signed)
               printFIXPOINT_BYTE(msg,data_len,4.0,1,"s");
               break;
+            case VT_SECONDS_SHORT5: // s8 / 5 (signed)
+              printFIXPOINT_BYTE(msg,data_len,5.0,1,"s");
+              break;
             case VT_MINUTES_SHORT: //u8 min
               printBYTE(msg,data_len,"min");
               break;
@@ -1426,7 +1440,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (device_id & DEV_FJ_WSK) != device_id) || (data_len == 3 && (device_id & DEV_FJ_WSK) == device_id)){
+              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && (dev_id & DEV_FJ_WSK) == dev_id)){
                 if((msg[9]==0 && data_len==2) || (msg[9]==0 && msg[10]==0 && data_len==3)){
                   if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
@@ -1566,9 +1580,17 @@ void webPrintHeader(void){
   client.println(F("input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>"));
   client.println(F("</head>"));
   client.println(F("<body>"));
-  client.println(F("<script>function set(line,formnr) {"));
-  client.println(F("if (isNaN(document.getElementById('value' + formnr).value) == false) {"));
-  client.println(F("  window.open('S' + line + '=' + document.getElementById('value' + formnr).value,'_self');}"));
+  client.println(F("<script>function set(line,formnr){"));
+  client.println(F("if(isNaN(document.getElementById('value'+formnr).value)==false){"));
+  client.println(F("window.open('S'+line+'='+document.getElementById('value'+formnr).value,'_self');"));
+  client.println(F("}}"));
+  client.println(F("function setbit(line,formnr){"));
+  client.println(F("var x=document.getElementById('value'+formnr); var value=0;"));
+  client.println(F("for (var i=0; i<x.options.length; i++) {"));
+  client.println(F("if(x.options[i].selected){"));
+  client.println(F("value=value&eval(x.options[i].value);"));
+  client.println(F("}}"));
+  client.println(F("window.open('S'+line+'='+value,'_self');"));
   client.println(F("}</script>"));
   client.println(F("<font face='Arial'>"));
   client.print(F("<center><h1><A HREF='/"));
@@ -2307,8 +2329,13 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         }
         client.println(outBuf);
 
+        uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+        uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+        uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+        uint32_t enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]));
+
         // dump data payload for unknown types
-        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) == VT_UNKNOWN && msg[4] != TYPE_ERR) {
+        if (type == VT_UNKNOWN && msg[4] != TYPE_ERR) {
           int data_len=msg[3]-11;
           for (i=0;i<=data_len-1;i++) {
             if (msg[9+i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
@@ -2317,19 +2344,28 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         }
 
         client.println(F("</td><td>"));
-        if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) != FL_RONLY && msg[4] != TYPE_ERR && pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) != VT_UNKNOWN) {
-          if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
-            client.print(F("<select id='value"));
+        if ((flags != FL_RONLY || (flags==FL_RONLY && type == VT_BIT)) && msg[4] != TYPE_ERR && type != VT_UNKNOWN) {
+          if(type == VT_ENUM || type == VT_BIT) {
+
+            client.print(F("<select "));
+            if (type == VT_BIT) {
+              client.print(F("multiple "));
+            }
+            client.print(F("id='value"));
             client.print(formnr);
             client.println(F("'>"));
-            uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-            memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),enumstr_len);
+            memcpy_PF(buffer, enumstr, enumstr_len);
             buffer[enumstr_len]=0;
             uint16_t val;
             uint16_t c=0;
+            uint8_t bitmask=0;
             while(c<enumstr_len){
-              if(buffer[c+1]!=' '){
+              if(buffer[c+1]!=' ' || buffer[c+2]==' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                 val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                if (type == VT_BIT) {
+                  bitmask = val & 0xff;
+                  val = val >> 8 & 0xff;
+                }
                 c++;
               }else{
                 val=uint16_t(((uint8_t*)buffer)[c]);
@@ -2340,7 +2376,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
               sprintf(outBuf,"%s",&buffer[c]);
               client.print(F("<option value='"));
               client.print(val);
-              if (strtod(pvalstr,NULL) == val) {
+              if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10] & bitmask) == (val & bitmask)) ) {
                 client.print(F("' SELECTED>"));
               } else {
                 client.print(F("'>"));
@@ -2351,20 +2387,23 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
               while(buffer[c]!=0) c++;
               c++;
             }
-            client.print(F("</select></td><td><input type=button value='Set' onclick=\"set("));
-            client.print(line);
-            client.print(F(","));
-            client.print(formnr);
-            client.print(F(")\">"));
+            client.print(F("</select></td><td>"));
+            if (type != VT_BIT) {
+              client.print(F("<input type=button value='Set' onclick=\"set"));
+              if (type == VT_BIT) {
+                client.print(F("bit"));
+              }
+              client.print(F("("));
+              client.print(line);
+              client.print(F(","));
+              client.print(formnr);
+              client.print(F(")\">"));
+            }
           } else {
             client.print(F("<input type=text id='value"));
             client.print(formnr);
             client.print(F("' VALUE='"));
-            if (pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0])) != VT_BIT) {
-              client.print(strtod(pvalstr,NULL));
-            } else {
-              client.print(msg[10]);
-            }
+            client.print(strtod(pvalstr,NULL));
             client.print(F("'></td><td><input type=button value='Set' onclick=\"set("));
             client.print(line);
             client.print(F(","));
@@ -2809,6 +2848,10 @@ void Ipwe() {
 
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
+Serial.print("Line: ");
+Serial.println(line);
+Serial.print("i: ");
+Serial.println(i);
   strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 //  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
   return buffer;
@@ -3569,6 +3612,9 @@ void loop() {
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
+          client.print(F("RAM: "));
+          client.print(freeRam());
+          client.println(F("Bytes <BR>"));
 #ifdef LANG_DE
           client.print(F("Monitor Modus: "));
 #else
