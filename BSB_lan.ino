@@ -224,12 +224,13 @@ char version[] = "0.34";
 #include <Arduino.h>
 #include <util/crc16.h>
 
-#include "libraries/Time/TimeLib.h"
-#include "libraries/BSB/BSBSoftwareSerial.h"
-#include "libraries/BSB/bsb.h"
+#include "src/Time/TimeLib.h"
+#include "src/BSB/BSBSoftwareSerial.h"
+#include "src/BSB/bsb.h"
 
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
+#include "src/d3_js.h"
 
 #ifdef TRUSTED_IP
 #include <utility/w5100.h>        // change to w5500.h for W5500 type ethernet shields
@@ -247,8 +248,8 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef ONE_WIRE_BUS
-  #include "libraries/OneWire/OneWire.h"
-  #include "libraries/DallasTemperature/DallasTemperature.h"
+  #include "src/OneWire/OneWire.h"
+  #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9
   // Setup a oneWire instance to communicate with any OneWire devices
   OneWire oneWire(ONE_WIRE_BUS);
@@ -259,7 +260,7 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef DHT_BUS
-  #include "libraries/DHT/dht.h"
+  #include "src/DHT/dht.h"
   int DHT_Pins[] = {DHT_BUS};
   dht DHT;
 #endif
@@ -1667,9 +1668,9 @@ void webPrintHeader(void){
   client.print(F("/"));
 #endif
 #ifdef LANG_DE
-  client.print(F("D'>Anzeige Logdatei</a>"));
+  client.print(F("DG'>Anzeige Logdatei</a>"));
 #else
-  client.print(F("D'>Dump logfile</a>"));
+  client.print(F("DG'>Display logfile</a>"));
 #endif
 #endif
 
@@ -1700,7 +1701,7 @@ void webPrintHeader(void){
 
   client.print(F("</a></td><td width=20% align=center>"));
 
-  client.print(F("<a href='http://github.com/fredlcore/bsb_lan/blob/master/BSB_lan/BSB_lan/HOWTO"));
+  client.print(F("<a href='http://github.com/fredlcore/bsb_lan/blob/master/HOWTO"));
 #ifdef LANG_DE
   client.print(F("_de"));
 #endif
@@ -3546,6 +3547,13 @@ void loop() {
 #endif
             Serial.println(F("File datalog.txt removed and recreated."));
             webPrintFooter();
+          } else if (p[2]=='G') {
+            webPrintHeader();
+            char c;
+            for (unsigned int x=0;x<graph_html_len;x++) {
+              c = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
+              client.write(c);
+            }
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
             client.println(F("Content-Type: text/plain"));

@@ -4703,3 +4703,4 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
 };
+
