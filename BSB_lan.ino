@@ -3555,6 +3555,7 @@ void loop() {
               c = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
               client.write(c);
             }
+            webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
             client.println(F("Content-Type: text/plain"));
