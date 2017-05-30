@@ -49,6 +49,7 @@ char version[] = "0.34";
  *
  * Changelog:
  *       version 0.34
+ *        - Log data can now be displayed as graph
  *        - Webinterface can now display and set vt_bit type parameters in human-readable form
  *        - added KonfigRGx descriptions; caution: various sources used, no guarantee that descriptions match your individual heating system!
  *        - vt_bit is generally read-only in the webinterface. To set, use URL command /S with decimal representation of value
