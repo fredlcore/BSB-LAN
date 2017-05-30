@@ -3550,6 +3550,7 @@ void loop() {
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
+	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
             char c;
             for (unsigned int x=0;x<graph_html_len;x++) {
               c = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
