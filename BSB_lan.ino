@@ -2850,10 +2850,6 @@ void Ipwe() {
 
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
-Serial.print("Line: ");
-Serial.println(line);
-Serial.print("i: ");
-Serial.println(i);
   strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 //  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
   return buffer;
@@ -3550,7 +3546,7 @@ void loop() {
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
-	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
+      	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
             char c;
             for (unsigned int x=0;x<graph_html_len;x++) {
               c = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
