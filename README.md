@@ -32,8 +32,9 @@ The forum thread that led to the development of this interface can be found <A H
 
 Some interface kits from a collective order are still available, fitting directly on the Arduino Mega 2560. Contact bsb (ät) code-it.de if you are interested (German or English).
 
-Web-Interface screenshot:
+Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface2.png" size="50%">
 
 BSB-Board plain, with location of CL+ and CL- connectors:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
