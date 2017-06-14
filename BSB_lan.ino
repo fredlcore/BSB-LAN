@@ -1,4 +1,4 @@
-char version[] = "0.34";
+char version[] = "0.35";
 
 /*
  * 
@@ -7,7 +7,8 @@ char version[] = "0.34";
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
  *
- * Author: Gero Schumacher (gero.schumacher@gmail.com)
+ * Author: Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
+ *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *        (based on the code and work from many other developers. Many thanks!)
  *
  * see README and HOWTO files for more information
@@ -46,8 +47,15 @@ char version[] = "0.34";
  *       0.32  - 18.04.2017
  *       0.33  - 09.05.2017
  *       0.34  - 29.05.2017
+ *       0.35  - 
  *
  * Changelog:
+ *       version 0.35
+ *        - new category "Sitherm Pro"; caution: category numbers all move up by one, starting from category "Wärmepumpe" (from 20 to 21) onwards.
+ *        - graph display of logging data now comes with crosshair and shows detailed values as tooltip
+ *        - improved SD-card output by factor 3 (from 16 to 45 kbps), switching SD-card library from from SD.h to SdFat.h (https://github.com/greiman/SdFat) brings another 10% performance boost
+ *        - adjusted paths and directory layout of SdFat to enable compiling from sketch directory.
+ *        - new data type vt_sint for signed int data, currently only used in some Sitherm Pro parameters
  *       version 0.34
  *        - Log data can now be displayed as graph
  *        - Webinterface can now display and set vt_bit type parameters in human-readable form
@@ -244,7 +252,9 @@ char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
 byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format  
 
 #ifdef LOGGER
-  #include <SD.h>
+//  #include <SD.h>   // if you run into troubles with SdFat.h, just remove the following two lines and uncomment this line.
+  #include "src/SdFat/SdFat.h"
+  SdFat SD;
   File Logfile;
 #endif
 
@@ -731,6 +741,40 @@ void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
     if(msg[9]==0){
       lval=((long(msg[10])<<8)+long(msg[11])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
+    } else {
+      outBufLen+=sprintf(outBuf+outBufLen,"---");
+    }
+    if(postfix!=NULL){
+      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
+    }
+    Serial.print(p);
+  }else{
+    Serial.print(F("WORD len error len!=3: "));
+    SerialPrintData(msg);
+    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+  }
+}
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
+void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
+  int16_t lval;
+  char *p=outBuf+outBufLen;
+
+  if(data_len == 3){
+    if(msg[9]==0){
+      lval=(((int16_t)(msg[10])<<8) + (int16_t)(msg[11])) * multiplier;
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1523,6 +1567,9 @@ char *printTelegram(byte* msg) {
             case VT_UINT5: //  s16 * 5
               printWORD(msg,data_len,5,NULL);
               break;
+            case VT_SINT: //  s16
+              printSINT(msg,data_len,1,NULL);
+              break;
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
 //              printBYTE(msg,data_len,"Volt");
@@ -1856,6 +1903,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
     // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
     // No input values sanity check
     case VT_UINT:
+    case VT_SINT:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
       {
@@ -1878,7 +1926,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
     // Temperature values
     case VT_TEMP_WORD:
       {
-      uint16_t t=atoi(val);
+      uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
       if(val[0]!='\0'){
         param[0]=0x01;
         param[1]=(t >> 8);
@@ -3536,22 +3584,32 @@ void loop() {
             if (dataFile) {
               dataFile.println(F("Milliseconds;Date;Parameter;Description;Value"));
               dataFile.close();
-            }
 #ifdef LANG_DE
-            client.println(F("Datei datalog.txt entfernt und neu generiert."));
+              client.println(F("Datei datalog.txt entfernt und neu generiert."));
 #else
-            client.println(F("File datalog.txt removed and recreated."));
+              client.println(F("File datalog.txt removed and recreated."));
 #endif
-            Serial.println(F("File datalog.txt removed and recreated."));
+              Serial.println(F("File datalog.txt removed and recreated."));
+            } else {
+              client.println(F("Failed to create datalog.txt."));
+            }
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
       	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
-            char c;
+            int htmlbuflen = 100;
+            byte htmllineBuf[htmlbuflen];
+            int i = 0;
             for (unsigned int x=0;x<graph_html_len;x++) {
-              c = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
-              client.write(c);
+              htmllineBuf[i] = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
+              i++;
+              if (i==htmlbuflen) {
+                i=0;
+                client.write(htmllineBuf, htmlbuflen);
+              }
             }
+            //final packet
+            if (i > 0) client.write(htmllineBuf, i);
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
@@ -3563,25 +3621,23 @@ void loop() {
             if (dataFile) {
 
               unsigned long startdump = millis();
-              int logbuflen = 100;
+              int logbuflen = 512;
               byte loglineBuf[logbuflen];
-              int loglineCount = 0;
+              int chars_read = 0;
 
-              while(dataFile.available()) {
-                loglineBuf[loglineCount] = dataFile.read();
-                loglineCount++;
-
-                if(loglineCount > logbuflen-1) {
-                  client.write(loglineBuf,logbuflen);
-                  loglineCount = 0;
-                }
+              chars_read = dataFile.read(&loglineBuf , logbuflen);
+              while (chars_read == logbuflen) {
+                client.write(loglineBuf,logbuflen);
+                chars_read = dataFile.read(&loglineBuf , logbuflen);
               }
               //final packet
-              if(loglineCount > 0) client.write(loglineBuf,loglineCount);           
+              if (chars_read > 0) client.write(loglineBuf, chars_read);
               dataFile.close();
 
               Serial.print(F("Duration: "));
               Serial.println(millis()-startdump);
+            } else {
+              client.println(F("Failed to open datalog.txt"));
             }
           }
           break;
