@@ -36,9 +36,9 @@ Erste Schritte:
 - Öffne die Seite `http://<IP-Adresse>/` (oder `http://<IP-Adresse>/<passkey>/`, wenn die Passkey-Funktion genutzt wird, s.u.) um zu sehen, ob alles korrekt kompiliert und hochgeladen wurde. Ein einfaches Webinterface sollte erscheinen.
 
 Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepasst werden:  
-- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield:  
+- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield, eine Änderung ist i.d.R. aber nur nötig, wenn mehr als ein Adapter verwendet wird:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
-- IP-Adresse (eine Änderung ist nur nötig, wenn mehr als ein Adapter verwendet werden):  
+- IP-Adresse:  
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
