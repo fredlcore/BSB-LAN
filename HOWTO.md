@@ -41,8 +41,8 @@ Optionally configure the following parameters in BSB_lan_config.h:
 - MAC address of your ethernet shield. It can be normally found on a label at the shield:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
   You only need to change the default MAC-address when using more than one interface in the same network.
-- IP-Address
-  `IPAddress ip(192,168,178,88);`
+- IP-Address  
+  `IPAddress ip(192,168,178,88);`  
 - Ethernet port  
   `EthernetServer server(80);`  
 - Pin assigment of the BSB adapter  
