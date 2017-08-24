@@ -1,4 +1,4 @@
-char version[] = "0.36";
+char version[] = "0.37";
 
 /*
  * 
@@ -227,7 +227,6 @@ char version[] = "0.36";
  *        - added some images of the BSB adapter
  *
  */
-
 
 #include <avr/pgmspace.h>
 #include <avr/wdt.h>
@@ -3409,6 +3408,7 @@ void loop() {
           webPrintHeader();
           uint8_t type = strtol(&p[2],NULL,16);
           uint32_t c = (uint32_t)strtol(&p[5],NULL,16);
+#ifndef LPB     // BSB-Bus
           if(!bus.Send(type, c, msg, tx_msg)){
             Serial.println(F("bus send failed"));  // to PC hardware serial I/F
           }else{
@@ -3438,7 +3438,24 @@ void loop() {
             client.print(msg[i], HEX);
             client.print(F(" "));
           }
-          webPrintFooter();
+#else     // LPB-Bus
+          bus.SendLPB(type, c, msg, tx_msg);
+          bus.printLPB(msg);
+          bus.printLPB(tx_msg);
+
+          for (int i=0;i<=tx_msg[1];i++) {
+            if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(tx_msg[i], HEX);
+            client.print(F(" "));
+          }
+          client.println(F("<br>"));
+          for (int i=0;i<=msg[1];i++) {
+            if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(msg[i], HEX);
+            client.print(F(" "));
+          }
+#endif
+           webPrintFooter();
           break;
         }
 #endif
