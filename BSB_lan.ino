@@ -1,4 +1,4 @@
-char version[] = "0.36";
+char version[] = "0.37";
 
 /*
  * 
@@ -52,7 +52,7 @@ char version[] = "0.36";
  *
  * Changelog:
  *       version 0.36
- *        - bugfix: brought back VT_BIT list of options which were erroneously deleted :(
+ *        - bugfix: brought back VT_BIT list of options which were erroneously deleted :(, fixed/freed several memory issues
  *       version 0.35
  *        - new category "Sitherm Pro"; caution: category numbers all move up by one, starting from category "Wärmepumpe" (from 20 to 21) onwards.
  *        - graph display of logging data now comes with crosshair and shows detailed values as tooltip
