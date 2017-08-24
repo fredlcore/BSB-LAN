@@ -1,4 +1,4 @@
-char version[] = "0.35";
+char version[] = "0.36";
 
 /*
  * 
@@ -9,7 +9,7 @@ char version[] = "0.35";
  *
  * Author: Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
- *        (based on the code and work from many other developers. Many thanks!)
+ *         (based on the code and work from many other developers. Many thanks!)
  *
  * see README and HOWTO files for more information
  *
@@ -48,8 +48,11 @@ char version[] = "0.35";
  *       0.33  - 09.05.2017
  *       0.34  - 29.05.2017
  *       0.35  - 25.06.2017
+ *       0.36  - 23.08.2017
  *
  * Changelog:
+ *       version 0.36
+ *        - bugfix: brought back VT_BIT list of options which were erroneously deleted :(
  *       version 0.35
  *        - new category "Sitherm Pro"; caution: category numbers all move up by one, starting from category "Wärmepumpe" (from 20 to 21) onwards.
  *        - graph display of logging data now comes with crosshair and shows detailed values as tooltip
@@ -1312,7 +1315,8 @@ char *printTelegram(byte* msg) {
     int cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
 //    int cat=pgm_read_byte(&cmdtbl[i].category);
     int len=sizeof(ENUM_CAT);
-    memcpy_P(buffer, &ENUM_CAT,len);
+    memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
+//    memcpy_P(buffer, &ENUM_CAT,len);
     buffer[len]=0;
     printENUM(buffer,len,cat,0);
     Serial.print(F(" - "));
@@ -1472,6 +1476,7 @@ char *printTelegram(byte* msg) {
               if(data_len == 2){
                 if(msg[9]==0){
                   int len=sizeof(ENUM_WEEKDAY);
+//                  memcpy_PF(buffer, pgm_get_far_address(ENUM_WEEKDAY), len);
                   memcpy_P(buffer, &ENUM_WEEKDAY,len);
                   buffer[len]=0;
                   printENUM(buffer,len,msg[10],0);
@@ -1548,6 +1553,7 @@ char *printTelegram(byte* msg) {
                   long lval;
                   lval=(long(msg[10])<<8)+long(msg[11]);
                   int len=sizeof(ENUM_ERROR);
+//                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
                   memcpy_P(buffer, &ENUM_ERROR,len);
                   buffer[len]=0;
                   printENUM(buffer,len,lval,1);
@@ -1603,6 +1609,22 @@ char *printTelegram(byte* msg) {
   return pvalstr;
 }
 
+void printPStr(uint32_t outstr, uint16_t outstr_len) {
+  int htmlbuflen = 100;
+  byte htmllineBuf[htmlbuflen];
+  int i = 0;
+  for (unsigned int x=0;x<outstr_len-1;x++) {
+    htmllineBuf[i] = pgm_read_byte_far(outstr+x);
+    i++;
+    if (i==htmlbuflen) {
+      i=0;
+      client.write(htmllineBuf, htmlbuflen);
+    }
+  }
+  //final packet
+  if (i > 0) client.write(htmllineBuf, i);
+}
+
 /** *****************************************************************
  *  Function:  webPrintHeader()
  *  Does:      Sets up the HTML code to start a web page
@@ -1616,33 +1638,9 @@ char *printTelegram(byte* msg) {
  *   client object
  * *************************************************************** */
 void webPrintHeader(void){
-  client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html"));
-  client.println();
-  client.println(F("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"));
-  client.println(F("<html>"));
-  client.println(F("<head>"));
-  client.println(F("<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">"));
-  client.println(F("<title>BSB-LAN Web</title>"));
-  client.println(F("<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"http://arduino.cc/en/favicon.png\" />"));
-  client.println(F("<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}"));
-  client.println(F("input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>"));
-  client.println(F("</head>"));
-  client.println(F("<body>"));
-  client.println(F("<script>function set(line,formnr){"));
-  client.println(F("if(isNaN(document.getElementById('value'+formnr).value)==false){"));
-  client.println(F("window.open('S'+line+'='+document.getElementById('value'+formnr).value,'_self');"));
-  client.println(F("}}"));
-  client.println(F("function setbit(line,formnr){"));
-  client.println(F("var x=document.getElementById('value'+formnr); var value=0;"));
-  client.println(F("for (var i=0; i<x.options.length; i++) {"));
-  client.println(F("if(x.options[i].selected){"));
-  client.println(F("value=value&eval(x.options[i].value);"));
-  client.println(F("}}"));
-  client.println(F("window.open('S'+line+'='+value,'_self');"));
-  client.println(F("}</script>"));
-  client.println(F("<font face='Arial'>"));
-  client.print(F("<center><h1><A HREF='/"));
+
+  printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+
 #ifdef PASSKEY
   client.print(PASSKEY);
   client.print(F("/"));
@@ -3274,7 +3272,8 @@ void loop() {
           //list categories
           webPrintHeader();
           int len=sizeof(ENUM_CAT);
-          memcpy_P(buffer, &ENUM_CAT,len);
+          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
+//          memcpy_P(buffer, &ENUM_CAT,len);
           buffer[len]=0;
           client.print(F("<a href='/"));
           #ifdef PASSKEY
@@ -3446,43 +3445,8 @@ void loop() {
         
         if(p[1]=='O') {   // display URL command list
           webPrintHeader();
-#ifdef LANG_DE
-          client.print(F(" <p>Erweiterte Befehle:"));
-          client.print(F(" <table>"));
-          client.println(F(" <tr><td valign=top>/K</td><td>Alle verfügbaren Kategorien auflisten.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Kx</td><td>Alle Werte von Kategorie x abfragen.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/x-y</td><td>Alle Werte eines Zeilenbereichs abfragen (von Zeile x bis Zeile y).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Sx=v</td><td>Setze Wert v (value) für den Parameter x (Leerzeichen nach = deaktiviert den Wert).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Ix=v</td><td>Sende eine INF Nachricht für den Parameter x mit dem Wert v.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Ex</td><td>Alle enum-Werte für Parameter x auflisten.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Rx</td><td>Frage den Reset-Wert für Parameter x ab.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Vn</td><td>Setze den Verbositäts-Level auf n.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Mn</td><td>Bus-Monitor aktivieren/deaktivieren (n=0 deaktivieren, n=1 aktivieren).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Gxx</td><td>Abfragen des GPIO Pins xx.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Gxx=y</td><td>Setzen des GPIO Pins xx auf high (y=1) oder low (y=0).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/A</td><td>24h-Durchschnittswerte von ausgewählten Parametern anzeigen (in BSB_lan_config.h definieren).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/A=x,y,z</td><td>Ändern der 24h-Durchschnittswerte in x,y,z (bis zu 20 Parameter).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/B</td><td>Anzeige der akkumulierten Broadcast-Telegramme zu Brenner- und TWW-Aktivitäten.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/B0</td><td>Zurücksetzen der akkumulierten Broadcast-Telegramme.</td></tr>"));
-#else
-          client.print(F(" <p>Advanced commands:"));
-          client.print(F(" <table>"));
-          client.println(F(" <tr><td valign=top>/K</td><td>List available categories.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Kx</td><td>Query all values in category x.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/x-y</td><td>Query all values from line x up to line y.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Sx=v</td><td>Set value v for line x and query the new value afterwards (empty string after = disables the value).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Ix=v</td><td>Send INF message for command in line x with value v.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Ex</td><td>List enum values for line x.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Rx</td><td>Query reset value for line x.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Vn</td><td>Set verbosity level for serial output to n.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Mn</td><td>Activate/deactivate monitor functionality (n=0 disable, n=1 enable).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Gxx</td><td>Query GPIO pin xx.</td></tr>"));
-          client.println(F(" <tr><td valign=top>/Gxx=y</td><td>Set GPIO pin xx to high (y=1) or low (y=0).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/A</td><td>Show 24h averages of selected parameters (define in BSB_lan_config.h).</td></tr>"));
-          client.println(F(" <tr><td valign=top>/A=x,y,z</td><td>Change 24h averages parameters to x,y,z (up to 20).</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/B</td><td bgcolor=#f0f0f0>Query accumulated broadcast telegrams of burner and hot water activity.</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/B0</td><td bgcolor=#f0f0f0>Reset accumulated broadcast telegrams.</td></tr>"));
-#endif
+
+          printPStr(pgm_get_far_address(url_command_html), sizeof(url_command_html));
 
 #ifndef ONE_WIRE_BUS
 #ifdef LANG_DE
@@ -3597,19 +3561,9 @@ void loop() {
           } else if (p[2]=='G') {
             webPrintHeader();
       	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
-            int htmlbuflen = 100;
-            byte htmllineBuf[htmlbuflen];
-            int i = 0;
-            for (unsigned int x=0;x<graph_html_len;x++) {
-              htmllineBuf[i] = pgm_read_byte_far(pgm_get_far_address(graph_html)+x);
-              i++;
-              if (i==htmlbuflen) {
-                i=0;
-                client.write(htmllineBuf, htmlbuflen);
-              }
-            }
-            //final packet
-            if (i > 0) client.write(htmllineBuf, i);
+
+            printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
+
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
