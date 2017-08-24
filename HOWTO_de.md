@@ -26,7 +26,8 @@ Zielsystem:
 Erste Schritte:
 - Verbinde die Anschlüsse CL+ und CL- des Adapters mit den entsprechenden Anschlüssen des Heizungssystems (mögliche Bezeichnungen am Heizungsregler sind BSB, FB (Fernbedienung/remote control), CL+/CL-).
 - Downloade und installiere die aktuelle Version der Arduino IDE von https://www.arduino.cc/en/Main/Software (Windows-, Mac- und Linux-Version verfügbar).
-- Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac).
+- Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac). 
+UPDATE: Ab v0.34 gilt: Wichtigste Änderunge für alle Neuinstallationen ist, dass die Libraries, die nicht standardmäßig bei der Arduino IDE mit dabei sind, nun einfach im Sketch-Verzeichnis bleiben können und von dort eingelesen werden. Ein Kopieren ist nun nicht mehr nötig, was zum einen gerade für Anfänger die Installation erleichtert und alle anderen bei der Aktualisierung von Libraries diese ebenfalls nicht mehr manuell verschieben müsst. Es kann sein, dass das Kompilieren fehl schlägt, wenn die gleiche Library bereits im Standard-Libraries-Verzeichnis der Arduino IDE liegt. In dem Fall müsste die gleichlautende Bibliothek dort (Win: MyDocuments\Arduino\Libraries bzw. Mac: ~/Dokumente/Arduino/Libraries) gelöscht werden.
 - Öffne den BSB_lan-sketch mittels eines Doppelklicks auf die Datei BSB_lan.ino im BSB_lan-Ordner. Die dazugehörigen Dateien BSB_lan_config.h und BSB_land_defs.h werden automatisch mit geladen.
 - Konfiguriere die IP-Adresse in BSB_lan_config.h deinem Netzwerk entsprechend (die voreingestellte IP 192.168.178.88 funktioniert mit den meisten Standard-Routern wie bspw. Fitz!Box, aber prüfe, ob die IP bereits anderweitig vergeben ist, damit es nicht zu einer Adressen-Kollision kommt).
 - Wähle "Arduino/Genuino Mega or Mega 2560" unter Tools/Board bzw. Werkzeuge/Board.
@@ -36,9 +37,9 @@ Erste Schritte:
 - Öffne die Seite `http://<IP-Adresse>/` (oder `http://<IP-Adresse>/<passkey>/`, wenn die Passkey-Funktion genutzt wird, s.u.) um zu sehen, ob alles korrekt kompiliert und hochgeladen wurde. Ein einfaches Webinterface sollte erscheinen.
 
 Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepasst werden:  
-- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield:  
+- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield, eine Änderung ist i.d.R. aber nur nötig, wenn mehr als ein Adapter verwendet wird:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
-- IP-Adresse (eine Änderung ist nur nötig, wenn mehr als ein Adapter verwendet werden):  
+- IP-Adresse:  
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
@@ -51,7 +52,8 @@ Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepas
   Um den BSB-LAN-Adapter (bei einem bereits vorhandenem Raumgerät RGT1) als RGT2 anzumelden, gib Folgendes ein:
   `BSB bus(68,69,7);`  
 - Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
-  `#define DEFAULT_FLAG FL_RONLY;`
+  `#define DEFAULT_FLAG FL_RONLY;` 
+  UPDATE: In der config.h ist nun als Voreinstellung DEFAULT_FLAG auf read-only gesetzt, d.h., dass alle Werte (erst einmal) nur lesbar sind. Wer das ändern will, muss wieder DEFAULT_FLAG auf 0 setzen oder bei den einzelnen Parametern (z.B. 10000 oder 710) in der defs.h den Wert DEFAULT_FLAG durch 0 ersetzen.
 - Man kann die Sprache des Webinterfaces des Adapters auf Deutsch einstellen, indem man das entsprechende Definement aktiviert:  
   `#define LANG_DE;`
         
@@ -62,6 +64,10 @@ Web-Interface des Adapters:
       Falls die PASSKEY-Funktion aktiviert ist (s. unten), muss die URL den definierten Schlüssel als erstes Element enthalten,
       bspw. `http://<ip-of-server>/<passkey>/`    - um die Hilfeseite zu sehen. Bitte nicht den Slash hinter dem Passkey vergesssen!  
       Die URLs in den folgenden Beispielen müssen um die PASSKEY-Definition erweitert werden, falls die Funktion aktiviert wurde.  
+      
+      Darüber hinaus gibt es zwei weitere Sicherheitsfunktionen: TRUSTED_IP und USER_PASS_B64. 
+      TRUSTED_IP kann man auf das letzte Segment einer vertrauenswürdigen IP setzen (z.B. des FHEM-Servers), dann ist der Zugriff nur über die IP mit dieser Endung möglich. 
+      Mit USER_PASS_B64 kann ein in Base64 codierter String nach dem Muster username:passwort als Zugangssperre gesetzt werden. Voreingestellt ist hier der Benutzername "atari" und das Passwort "800xl". 
       
       Zusätzlich zum Web-Interface kann auf alle Funktionen direkt via URL-Befehlen zugegriffen werden. Dies ist nützlich, wenn der Adapter in Verbindung mit Heimautomationssystemen wie bspw. FHEM genutzt wird.
       
@@ -157,6 +163,7 @@ Web-Interface des Adapters:
         http://<ip-of-server>/D
         Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
+	UPDATE: Wer Parameter auf SD-Karte loggt, bekommt nun neben der reinen Textform auch die Möglichkeit, einen Graphen angezeigt zu bekommen (siehe Screenshot im README-File). Dafür muss bei Javascript-Blockern die Domain d3js.org freigegeben werden. Das hat den Grund, dass der Arduino weiterhin nur die CSV-Datei in den Browser schiebt und diese dann mit dem D3 Framework grafisch aufbereitet wird.
 	
       Resetten/Restarten des Arduinos
     	http://<ip-of-server>/X
