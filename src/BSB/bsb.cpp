@@ -132,7 +132,7 @@ bool BSB::GetMessageLPB(byte* msg) {
         if (i > 1){
           if ( msg[1] > 32 ) // check for maximum message length
             break;
-          if (i >= msg[1])
+          if (i > msg[1])
             break;
         }
         // Delay until we got next byte
@@ -150,7 +150,7 @@ bool BSB::GetMessageLPB(byte* msg) {
       }
 
       // We should have read the message completly. Now check and return
-      if (i == msg[1]) {
+      if (i == msg[1]+1) {
         // Seems to have received all data
         if (CRC_LPB(msg, i) == (uint16_t)(msg[i-1]*256+msg[i])) return true;
         else return false;
