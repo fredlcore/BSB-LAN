@@ -95,11 +95,9 @@ void BSB::Monitor(byte* msg) {
 bool BSB::GetMessageLPB(byte* msg) {
   byte i=0,timeout;
   byte read;
-
   while (serial->available() > 0) {
     // Read serial data...
     read = serial->read() ^ 0xFF;
-
 #if DEBUG_LL
     Serial.println();    
     if(read<16){  
@@ -152,7 +150,7 @@ bool BSB::GetMessageLPB(byte* msg) {
       // We should have read the message completly. Now check and return
       if (i == msg[1]+1) {
         // Seems to have received all data
-        if (CRC_LPB(msg, i) == (uint16_t)(msg[i-1]*256+msg[i])) return true;
+        if (CRC_LPB(msg, i-1)-msg[i-2]*256-msg[i-1] == 0) return true;
         else return false;
       }
       else {
@@ -161,7 +159,6 @@ bool BSB::GetMessageLPB(byte* msg) {
       }
     }
   }
-
   // We got no data so:
   return false;
 }
@@ -235,7 +232,7 @@ und Stop Bit.
 */
 
   cli();
-  for (i=0; i < msg[1]; i++) {
+  for (i=0; i <= msg[1]; i++) {
     data = msg[i] ^ 0xFF;
     if (serial->write(data) != 1) {
       // Collision
@@ -273,14 +270,11 @@ bool BSB::SendLPB(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* 
     tx_msg[13+i] = param[i];
   
   if(!_sendLPB(tx_msg)) return false;
-
   if(!wait_for_reply) return true;
-
   i=15;
-
   unsigned long timeout = millis() + 1000;
   while ((i > 0) && (millis() < timeout)) {
-    if (GetMessage(rx_msg)) {
+    if (GetMessageLPB(rx_msg)) {
       i--;
       if ((rx_msg[2] == myAddr) && (rx_msg[9] == A2) && (rx_msg[10] == A1) && (rx_msg[11] == A3) && (rx_msg[12] == A4)) {
         return true;
@@ -305,7 +299,7 @@ bool BSB::GetMessage(byte* msg) {
     read = serial->read() ^ 0xFF;
 
 #if DEBUG_LL
-    Serialln();    
+    Serial.println();    
     if(read<16){  
       Serial.print("0");
     }
@@ -471,7 +465,6 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     tx_msg[9+i] = param[i];
   
   if(!_send(tx_msg)) return false;
-
   if(!wait_for_reply) return true;
 
   i=15;
