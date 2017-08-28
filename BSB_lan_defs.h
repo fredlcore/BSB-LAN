@@ -1711,15 +1711,6 @@ const char STR10111[] PROGMEM = "Trinkwasserbereitung";
 const char STR10112[] PROGMEM = "Heizbetrieb";
 */
 
-// LPB bus commands
-
-#define STR10200 STR0
-#define STR10201 STR5
-#define STR10202 STR6
-#define STR10203 STR8310
-#define STR10204 STR8314
-#define STR10205 STR8700
-
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
 
@@ -3297,6 +3288,7 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 PROGMEM_LATE const cmd_t cmdtbl[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
+{0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ ] - Uhrzeit und Datum
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
@@ -3305,7 +3297,9 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
 // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
 {0x0500009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 // nur Bedienteil -> keine Kommunikation über BSB
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sizeof(ENUM20),       ENUM20,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sprachauswahl
@@ -4446,9 +4440,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D09A2,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8304,  STR8304,  sizeof(ENUM8304),     ENUM8304,     FL_RONLY,     DEV_ALL}, // Kesselpumpe Q1 TODO determine enum values
 {0x053D0826,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8308,  STR8308,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Kesselpumpe
 {0x0D3D0519,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0D3D0923,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8311,  STR8311,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
 {0x053D0B26,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8312,  STR8312,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kesselschaltpunkt
 {0x113D051A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
+{0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {0x113D0B64,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8315,  STR8315,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kesselrücklaufsollwert
 {0x053D051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
 {0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
@@ -4587,6 +4583,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 // Diagnose Verbraucher
 {0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+{0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Minimum
 {0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Maximum
 {0x053D05F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
@@ -4743,15 +4740,6 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x313D0571,  CAT_USER_DEFINED,     VT_UNKNOWN,       10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 {0x2E3E0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 */
-
-// ProgNrs 10200-10899 are for LPB bus commands
-
-{0x0505000B,  CAT_LPB_COMMANDS,     VT_DATETIME,      10200, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ ] - Uhrzeit und Datum
-{0x050504B3,  CAT_LPB_COMMANDS,     VT_SUMMERPERIOD,  10201, STR10201, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x050504B2,  CAT_LPB_COMMANDS,     VT_SUMMERPERIOD,  10202, STR10202, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x0500021D,  CAT_LPB_COMMANDS,     VT_TEMP,          10203, STR10203, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
-{0x0500021E,  CAT_LPB_COMMANDS,     VT_TEMP,          10204, STR10204, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
-{0x0500021F,  CAT_LPB_COMMANDS,     VT_TEMP,          10205, STR10205, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 
 /*
 // ProgNrs 10900 to 10999 can be assigned to unrecognised command codes until
