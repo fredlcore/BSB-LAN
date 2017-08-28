@@ -231,10 +231,15 @@ void BSBSoftwareSerial::recv()
         d |= i;
       else // else clause added to ensure function timing is ~balanced
         d &= noti;
-    }
+    } // endfor, receive 8 data bits
+
+    // Skip the parity bit; we don't care what it is because this routine
+    // is not designed to notify the application of parity errors. (as suggested by miwi)
+    tunedDelay(_rx_delay_intrabit);
+    DebugPulse(_DEBUG_PIN2, 1);
 
     // skip the stop bit
-    tunedDelay(_rx_delay_stopbit *2);
+    tunedDelay(_rx_delay_stopbit);
     DebugPulse(_DEBUG_PIN2, 1);
 
     if (_inverse_logic)

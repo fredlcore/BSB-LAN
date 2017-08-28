@@ -235,6 +235,9 @@ char version[] = "0.37";
 #include <Arduino.h>
 #include <util/crc16.h>
 
+uint8_t len_idx=3;
+uint8_t pl_start=9;
+
 #include "src/Time/TimeLib.h"
 #include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -490,11 +493,15 @@ void SerialPrintHex32(uint32_t val) {
  * *************************************************************** */
 void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
-  int data_len=msg[3]-11;     // get packet length, then subtract
-
+  int data_len;
+  if (bus_type == 1) {
+    data_len=msg[len_idx]-13;     // get packet length, then subtract
+  } else {
+    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  }
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
-    SerialPrintHex(msg[9+i]);
+    SerialPrintHex(msg[pl_start+i]);
     Serial.print(F(" "));
   }
 }
@@ -677,9 +684,9 @@ void printLineNumber(uint32_t val) {
 void printBIT(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
   if(data_len == 2){
-    if(msg[9]==0){
+    if(msg[pl_start]==0){
       for (int i=7;i>=0;i--) {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[10] >> i & 1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1] >> i & 1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -707,8 +714,8 @@ void printBIT(byte *msg,byte data_len){
 void printBYTE(byte *msg,byte data_len,const char *postfix){
   char *p=outBuf+outBufLen;
   if(data_len == 2){
-    if(msg[9]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[10]);
+    if(msg[pl_start]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -740,8 +747,8 @@ void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[9]==0){
-      lval=((long(msg[10])<<8)+long(msg[11])) * multiplier;
+    if(msg[pl_start]==0){
+      lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -774,8 +781,8 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[9]==0){
-      lval=(((int16_t)(msg[10])<<8) + (int16_t)(msg[11])) * multiplier;
+    if(msg[pl_start]==0){
+      lval=(((int16_t)(msg[pl_start+1])<<8) + (int16_t)(msg[pl_start+2])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%d",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -808,8 +815,8 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[9]==0){
-      lval=((long(msg[10])<<24)+(long(msg[11])<<16)+(long(msg[12])<<8)+long(msg[13]))/divider;
+    if(msg[pl_start]==0){
+      lval=((long(msg[pl_start+1])<<24)+(long(msg[pl_start+2])<<16)+(long(msg[pl_start+3])<<8)+long(msg[pl_start+4]))/divider;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -875,8 +882,8 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[9]==0){
-      dval=double((msg[10] << 8) + msg[11]) / divider;
+    if(msg[pl_start]==0){
+      dval=double((msg[pl_start+1] << 8) + msg[pl_start+2]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -909,8 +916,8 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,co
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[9]==0){
-      dval=double((long(msg[10])<<24)+(long(msg[11])<<16)+(long(msg[12])<<8)+long(msg[13])) / divider;
+    if(msg[pl_start]==0){
+      dval=double((long(msg[pl_start+1])<<24)+(long(msg[pl_start+2])<<16)+(long(msg[pl_start+3])<<8)+long(msg[pl_start+4])) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -943,8 +950,8 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[9]==0){
-      dval=double((signed char)msg[10]) / divider;
+    if(msg[pl_start]==0){
+      dval=double((signed char)msg[pl_start+1]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -977,8 +984,8 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[9]==0){
-      dval=double(msg[10]) / divider;
+    if(msg[pl_start]==0){
+      dval=double(msg[pl_start+1]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1010,11 +1017,11 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[9]==0){
-      if(msg[10]==0){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[10],val0);
+    if(msg[pl_start]==0){
+      if(msg[pl_start+1]==0){
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1],val0);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[10],val1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1],val1);
       }
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1090,8 +1097,8 @@ void printDateTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[9]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
+    if(msg[pl_start]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[pl_start+3],msg[pl_start+2],msg[pl_start+1]+1900,msg[pl_start+5],msg[pl_start+6],msg[pl_start+7]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1119,8 +1126,8 @@ void printDate(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[9]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[12],msg[11]);
+    if(msg[pl_start]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[pl_start+3],msg[pl_start+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1149,20 +1156,20 @@ void printTimeProg(byte *msg,byte data_len){
 
   if(data_len == 12){
     outBufLen+=sprintf(outBuf+outBufLen,"1. ");
-    if(msg[9]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[9],msg[10],msg[11],msg[12]);
+    if(msg[pl_start]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start],msg[pl_start+1],msg[pl_start+2],msg[pl_start+3]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 2. ");
-    if(msg[13]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[13],msg[14],msg[15],msg[16]);
+    if(msg[pl_start+4]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start+4],msg[pl_start+5],msg[pl_start+6],msg[pl_start+7]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 3. ");
-    if(msg[17]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[17],msg[18],msg[19],msg[20]);
+    if(msg[pl_start+8]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start+8],msg[pl_start+9],msg[pl_start+10],msg[pl_start+11]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
@@ -1190,8 +1197,8 @@ void printTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[9]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[10],msg[11]);
+    if(msg[pl_start]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[pl_start+1],msg[pl_start+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
@@ -1220,8 +1227,8 @@ void printLPBAddr(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[9]==0){   // payload Int8 value
-    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[10]>>4,(msg[10] & 0x0f)+1);
+    if(msg[pl_start]==0){   // payload Int8 value
+    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[pl_start+1]>>4,(msg[pl_start+1] & 0x0f)+1);
   }else{
     outBufLen+=sprintf(outBuf+outBufLen,"---");
   }
@@ -1264,21 +1271,28 @@ char *printTelegram(byte* msg) {
 #endif
 */
   // source
-  SerialPrintAddr(msg[1]); // source address
+  SerialPrintAddr(msg[1+(bus_type*2)]); // source address
   Serial.print(F("->"));
   SerialPrintAddr(msg[2]); // destination address
   Serial.print(F(" "));
   // msg[3] contains the message length, not handled here
-  SerialPrintType(msg[4]); // message type, human readable
+  SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
   Serial.print(F(" "));
 
   uint32_t cmd;
-  if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
-    cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-  }else{
-    cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+  if (bus_type == 1) {
+    if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[pl_start]<<16 | (uint32_t)msg[pl_start+2] << 8 | (uint32_t)msg[12];
+    }else{
+      cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
+    }
+  } else {
+    if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+    }else{
+      cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+    }
   }
-
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
   boolean known=0;
@@ -1329,17 +1343,22 @@ char *printTelegram(byte* msg) {
     Serial.print(p);
   }
   // decode parameter
-  int data_len=msg[3]-11;
+  int data_len;
+  if (bus_type == 1) {
+    data_len=msg[len_idx]-13;     // get packet length, then subtract
+  } else {
+    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  }
   if(data_len < 0){
     Serial.print(F("len ERROR "));
-    Serial.print(msg[3]);
+    Serial.print(msg[len_idx]);
   }else{
     if(data_len > 0){
       if(known){
-        if(msg[4]==TYPE_ERR){
+        if(msg[4+(bus_type*4)]==TYPE_ERR){
           char *p=outBuf+outBufLen;
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
-          if(msg[9]==0x07){
+          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[pl_start]);
+          if(msg[pl_start]==0x07){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
           Serial.print(p);
@@ -1473,12 +1492,12 @@ char *printTelegram(byte* msg) {
               break;
             case VT_WEEKDAY: // enum
               if(data_len == 2){
-                if(msg[9]==0){
+                if(msg[pl_start]==0){
                   int len=sizeof(ENUM_WEEKDAY);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_WEEKDAY), len);
                   memcpy_P(buffer, &ENUM_WEEKDAY,len);
                   buffer[len]=0;
-                  printENUM(buffer,len,msg[10],0);
+                  printENUM(buffer,len,msg[pl_start+1],0);
                 }else{
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1491,16 +1510,16 @@ char *printTelegram(byte* msg) {
               break;
             case VT_ENUM: // enum
               if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && (dev_id & DEV_FJ_WSK) == dev_id)){
-                if((msg[9]==0 && data_len==2) || (msg[9]==0 && msg[10]==0 && data_len==3)){
+                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
                     memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
                     buffer[len]=0;
 
                     if (data_len == 2) {
-                      printENUM(buffer,len,msg[10],1);
+                      printENUM(buffer,len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
-                      printENUM(buffer,len,msg[11],1);
+                      printENUM(buffer,len,msg[pl_start+2],1);
                     }
                   }else{
                     Serial.print(F("no enum str "));
@@ -1532,10 +1551,10 @@ char *printTelegram(byte* msg) {
               break;
             case VT_STRING: // string
               if(data_len > 0){
-                if(msg[9]!=0){
-                  msg[9 + data_len]='\0'; // write terminating zero
-                  Serial.print((char*)&msg[9]);
-                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[9]);
+                if(msg[pl_start]!=0){
+                  msg[pl_start + data_len]='\0'; // write terminating zero
+                  Serial.print((char*)&msg[pl_start]);
+                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[pl_start]);
                 } else {
                   Serial.print(F("-"));
                   outBufLen+=sprintf(outBuf+outBufLen,"-");
@@ -1548,9 +1567,9 @@ char *printTelegram(byte* msg) {
               break;
             case VT_ERRORCODE: //  s16
               if(data_len == 3){
-                if(msg[9]==0){
+                if(msg[pl_start]==0){
                   long lval;
-                  lval=(long(msg[10])<<8)+long(msg[11]);
+                  lval=(long(msg[pl_start+1])<<8)+long(msg[pl_start+2]);
                   int len=sizeof(ENUM_ERROR);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
                   memcpy_P(buffer, &ENUM_ERROR,len);
@@ -1595,14 +1614,14 @@ char *printTelegram(byte* msg) {
       }else{
         SerialPrintData(msg);
 //        Serial.println();
-//        SerialPrintRAW(msg,msg[3]);
+//        SerialPrintRAW(msg,msg[len_idx]+bus_type);
         outBufLen+=sprintf(outBuf+outBufLen,"unknown command");
       }
     }
   }
   Serial.println();
   if(verbose){
-    SerialPrintRAW(msg,msg[3]);
+    SerialPrintRAW(msg,msg[len_idx]+bus_type);
     Serial.println();
   }
   return pvalstr;
@@ -2278,7 +2297,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
 #endif
 
   // Expect an acknowledgement to our SET telegram
-  if(msg[4]!=TYPE_ACK){
+  if(msg[4+(bus_type*4)]!=TYPE_ACK){      // msg type at 4 (BSB) or 8 (LPB)
     Serial.println(F("set failed NACK"));
     return 0;
   }
@@ -2369,7 +2388,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
         formnr++;
-        if (msg[4] == TYPE_ERR) {
+        if (msg[4+(bus_type*4)] == TYPE_ERR) {
           client.println(F("<tr style='color: #7f7f7f'><td>"));
         } else {
           client.println(F("<tr><td>"));
@@ -2382,11 +2401,16 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         uint32_t enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]));
 
         // dump data payload for unknown types
-        if (type == VT_UNKNOWN && msg[4] != TYPE_ERR) {
-          int data_len=msg[3]-11;
+        if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
+          int data_len;
+          if (bus_type == 1) {
+            data_len=msg[len_idx]-13;     // get packet length, then subtract
+          } else {
+            data_len=msg[len_idx]-11;     // get packet length, then subtract
+          }
           for (i=0;i<=data_len-1;i++) {
-            if (msg[9+i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-            client.print(msg[9+i], HEX);
+            if (msg[pl_start+i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            client.print(msg[pl_start+i], HEX);
           }
         }
 
@@ -2490,6 +2514,52 @@ char *GetDateTime(char date[]){
   sprintf(date,"%02d.%02d.%d %02d:%02d:%02d",day(),month(),year(),hour(),minute(),second());
   date[20] = 0;
   return date;
+}
+
+/** *****************************************************************
+ *  Function:  SetDevId()
+ *  Does:      Sets device_id and dev_id
+ *
+ * Pass parameters:
+ *   none
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+
+void SetDevId() {
+  uint8_t family=0;
+  boolean known=0;
+
+  if (bus_type == 1) {
+    device_id = 1;
+  } else {
+    if (device_id < 1) {
+      device_id = strtod(query(6225,6225,1),NULL);
+    }
+  }
+  int i=0;
+  family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
+  while(family!=DEV_NONE){
+    if(family == device_id){
+      known=1;
+      break;
+    }
+    i++;
+    family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
+  }
+  if (!known){
+    dev_id=DEV_ALL;
+  } else {
+    dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
+  }
+  Serial.print(F("Device family: "));
+  Serial.println(device_id);
+  Serial.print(F("Device ID: "));
+  Serial.println(dev_id);
 }
 
 /** *****************************************************************
@@ -2987,9 +3057,9 @@ void loop() {
 
         if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
           Serial.print(F("INF: Brennerstatus: "));
-          Serial.println(msg[9]);      // first payload byte
+          Serial.println(msg[pl_start]);      // first payload byte
 
-          if(msg[9]==0x04) {
+          if(msg[pl_start]==0x04) {
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
@@ -3135,7 +3205,7 @@ void loop() {
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMORSTVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMOPRSTVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -3441,7 +3511,6 @@ void loop() {
 #else     // LPB-Bus
           bool rc;
           rc=bus.SendLPB(type, c, msg, tx_msg);
-          Serial.println(rc);
           bus.printLPB(tx_msg);
           bus.printLPB(msg);
 
@@ -3651,6 +3720,13 @@ void loop() {
           client.print(F("RAM: "));
           client.print(freeRam());
           client.println(F("Bytes <BR>"));
+          client.print(F("Bus-System: "));
+          if (bus_type == 1) {
+            client.print(F("LPB"));
+          } else {
+            client.print(F("BSB"));
+          }
+          client.println(F("<BR>"));
 #ifdef LANG_DE
           client.print(F("Monitor Modus: "));
 #else
@@ -3903,9 +3979,27 @@ void loop() {
           webPrintFooter();
           break;
         }
+        if (p[1]=='P') {
+          webPrintHeader();
+          client.print(F("Bus-System: "));
+          if (p[2]=='1') {
+            bus_type=bus.setBusType(BUS_LPB);
+            len_idx = 1;
+            pl_start = 13;
+            client.println(F("LPB"));
+          } else {
+            bus_type=bus.setBusType(BUS_BSB);
+            len_idx = 3;
+            pl_start = 9;
+            client.println(F("BSB"));
+          }
+          SetDevId();
+          webPrintFooter();
+          break;
+        }
 #ifdef RESET
         if (p[1]=='X'){           // Reset Arduino
-        webPrintHeader();
+          webPrintHeader();
           client.println(F("Reset..."));
           webPrintFooter();
           client.stop();
@@ -4334,9 +4428,6 @@ void loop() {
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
-
-  uint8_t family=0;
-  boolean known=0;
   
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
@@ -4447,27 +4538,6 @@ void setup() {
   SetDateTime();
   
 // receive device_id (Gerätefamilie) from heating system
-  if (device_id < 1) {
-    device_id = strtod(query(6225,6225,1),NULL);
-  }
-  Serial.print(F("Device family: "));
-  Serial.println(device_id);
-  int i=0;
-  family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
-  while(family!=DEV_NONE){
-    if(family == device_id){
-      known=1;
-      break;
-    }
-    i++;
-    family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
-  }
-  if (!known){
-    dev_id=DEV_ALL;
-  } else {
-    dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
-  }
-  Serial.print(F("Device ID: "));
-  Serial.println(dev_id);
+  SetDevId();
 }
 
