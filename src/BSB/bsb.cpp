@@ -314,9 +314,9 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   // Value
   for (i=0; i < param_len; i++) {
     if (bus_type == 1) {
-      tx_msg[9+i] = param[i];
-    } else {
       tx_msg[13+i] = param[i];
+    } else {
+      tx_msg[9+i] = param[i];
     }
   }
 
