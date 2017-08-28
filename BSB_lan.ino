@@ -1273,7 +1273,7 @@ char *printTelegram(byte* msg) {
   // source
   SerialPrintAddr(msg[1+(bus_type*2)]); // source address
   Serial.print(F("->"));
-  SerialPrintAddr(msg[2]); // destination address
+  SerialPrintAsddr(msg[2]); // destination address
   Serial.print(F(" "));
   // msg[3] contains the message length, not handled here
   SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
