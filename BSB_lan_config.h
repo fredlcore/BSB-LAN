@@ -122,6 +122,7 @@ byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // W5100 ethernet shield uses the following pins: 10, 50-53
 // use BSB bus(68,69,7) to define device as RGT2
 BSB bus(68,69);
+uint8_t bus_type = bus.setBusType(0);  // 0 = BSB, 1 = LPB
 
 // Protect these pins from accidental GPIO access
 byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
