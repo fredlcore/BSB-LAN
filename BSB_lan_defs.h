@@ -108,6 +108,7 @@ typedef enum{
   CAT_DIAG_VERBRAUCHER,
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
+  CAT_LPB_COMMANDS,
   CAT_UNKNOWN
 }category_t;
 
@@ -302,7 +303,8 @@ const char ENUM_CAT[] PROGMEM_LATE = {
 "\x25 Diagnose Verbraucher\0"
 "\x26 Feuerungsautomat\0"
 "\x27 Benutzerdefiniert\0"
-"\x28 unbekannte Kategorie"
+"\x28 LPB-Parameter\0"
+"\x29 unbekannte Kategorie"
 };
 
 
@@ -1708,6 +1710,16 @@ const char STR10110[] PROGMEM = "Setzen RGT HK - 1";
 const char STR10111[] PROGMEM = "Trinkwasserbereitung";
 const char STR10112[] PROGMEM = "Heizbetrieb";
 */
+
+// LPB bus commands
+
+#define STR10200 STR0
+#define STR10201 STR5
+#define STR10202 STR6
+#define STR10203 STR8310
+#define STR10204 STR8314
+#define STR10205 STR8700
+
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
 
@@ -4732,6 +4744,15 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2E3E0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 */
 
+// ProgNrs 10200-10899 are for LPB bus commands
+
+{0x0505000B,  CAT_LPB_COMMANDS,     VT_DATETIME,      10200, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ ] - Uhrzeit und Datum
+{0x050504B3,  CAT_LPB_COMMANDS,     VT_SUMMERPERIOD,  10201, STR10201, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x050504B2,  CAT_LPB_COMMANDS,     VT_SUMMERPERIOD,  10202, STR10202, 0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x0500021D,  CAT_LPB_COMMANDS,     VT_TEMP,          10203, STR10203, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0500021E,  CAT_LPB_COMMANDS,     VT_TEMP,          10204, STR10204, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
+{0x0500021F,  CAT_LPB_COMMANDS,     VT_TEMP,          10205, STR10205, 0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+
 /*
 // ProgNrs 10900 to 10999 can be assigned to unrecognised command codes until
 // we find a better explanation for them. !Assign STR99999 to all of them.!
@@ -4781,6 +4802,7 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/Ix=v</td><td>Sende eine INF Nachricht für den Parameter x mit dem Wert v.</td></tr>\n"
   "<tr><td valign=top>/Ex</td><td>Alle enum-Werte für Parameter x auflisten.</td></tr>\n"
   "<tr><td valign=top>/Rx</td><td>Frage den Reset-Wert für Parameter x ab.</td></tr>\n"
+  "<tr><td valign=top>/Px</td><td>Setzen des Bus-Protokolls (0=BSB, 1=LPB).</td></tr>\n"
   "<tr><td valign=top>/Vn</td><td>Setze den Verbositäts-Level auf n.</td></tr>\n"
   "<tr><td valign=top>/Mn</td><td>Bus-Monitor aktivieren/deaktivieren (n=0 deaktivieren, n=1 aktivieren).</td></tr>\n"
   "<tr><td valign=top>/Gxx</td><td>Abfragen des GPIO Pins xx.</td></tr>\n"
@@ -4799,6 +4821,7 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/Ix=v</td><td>Send INF message for command in line x with value v.</td></tr>\n"
   "<tr><td valign=top>/Ex</td><td>List enum values for line x.</td></tr>\n"
   "<tr><td valign=top>/Rx</td><td>Query reset value for line x.</td></tr>\n"
+  "<tr><td valign=top>/Px</td><td>Set bus protocol (0=BSB, 1=LPB).</td></tr>\n"
   "<tr><td valign=top>/Vn</td><td>Set verbosity level for serial output to n.</td></tr>\n"
   "<tr><td valign=top>/Mn</td><td>Activate/deactivate monitor functionality (n=0 disable, n=1 enable).</td></tr>\n"
   "<tr><td valign=top>/Gxx</td><td>Query GPIO pin xx.</td></tr>\n"
