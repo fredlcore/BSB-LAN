@@ -23,6 +23,9 @@
 #define ADDR_DISP  0x0A
 #define ADDR_ALL   0x7F
 
+#define BUS_BSB 0
+#define BUS_LPB 1
+
 /* special command ids */
 #define CMD_UNKNOWN 0x00000000u
 #define CMD_END     0xffffffffu
@@ -40,7 +43,8 @@
 #define DEV_FJ_WSK  0x00001000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
 #define DEV_ELCO    0x0000000fL   // ELCO devices
 #define DEV_BROETJE 0x000007f0L   // BROETJE devices
-#define DEV_ALL     0xffffffffL
+#define DEV_ALL     0x0fffffffL   // All (BSB) devices
+#define DEV_LPB     0xf0000000L   // All LPB devices
 #define DEV_NONE    0x00000000L
 
 typedef struct {
@@ -49,6 +53,7 @@ typedef struct {
 } device_table;
 
 PROGMEM_LATE const device_table dev_tbl[]={
+{1,   DEV_LPB},
 {97,  DEV_EL_THI},
 {90,  DEV_BR_ISC},
 {96,  DEV_BR_SOB},
@@ -2225,7 +2230,7 @@ const char ENUM6020[] PROGMEM = {
 // The predominant reason why this ProgNr (6030) has been included is the mention of
 // Solarstellglied Puffer and Solarstellglied Schwimmbad. My search for these
 // names lead me here.  It seems that Relaisausgang QX21 is (a) unused and
-// (b) not supported in all installations. <-- WHO WROTE THIS?
+// (b) not supported in all installations. (comment by miwi)
 
 // Konfiguration - Relaisausgang QX21
 // The Broetje System-Handbuch ISR Plus does not document numerical values;
