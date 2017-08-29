@@ -130,7 +130,7 @@ bool BSB::GetMessage(byte* msg) {
         if (i > len_idx){
           if ( msg[len_idx] > 32 ) // check for maximum message length
             break;
-          if (i >= msg[len_idx])
+          if (i >= msg[len_idx]+bus_type)
             break;
         }
         // Delay until we got next byte
@@ -330,7 +330,10 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     if (GetMessage(rx_msg)) {
       i--;
       if (bus_type == 1) {
-        if ((rx_msg[2] == myAddr) && (rx_msg[9] == A2) && (rx_msg[10] == A1) && (rx_msg[11] == A3) && (rx_msg[12] == A4)) {
+	if (rx_msg[2] == myAddr && rx_msg[8]==0x08) {  // TYPE_ERR
+	  return false;
+	}
+        if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
           return true;
 	}
       } else {

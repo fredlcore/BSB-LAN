@@ -495,7 +495,7 @@ void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
   int data_len;
   if (bus_type == 1) {
-    data_len=msg[len_idx]-13;     // get packet length, then subtract
+    data_len=msg[len_idx]-14;     // get packet length, then subtract
   } else {
     data_len=msg[len_idx]-11;     // get packet length, then subtract
   }
@@ -1345,7 +1345,7 @@ char *printTelegram(byte* msg) {
   // decode parameter
   int data_len;
   if (bus_type == 1) {
-    data_len=msg[len_idx]-13;     // get packet length, then subtract
+    data_len=msg[len_idx]-14;     // get packet length, then subtract
   } else {
     data_len=msg[len_idx]-11;     // get packet length, then subtract
   }
@@ -1357,8 +1357,8 @@ char *printTelegram(byte* msg) {
       if(known){
         if(msg[4+(bus_type*4)]==TYPE_ERR){
           char *p=outBuf+outBufLen;
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[pl_start]);
-          if(msg[pl_start]==0x07){
+          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
+          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
           Serial.print(p);
@@ -2371,12 +2371,23 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
 #endif
             break;   // success, break out of while loop
           }else{
-            Serial.println(F("query failed"));
-            retry--;          // decrement number of attempts
+            if (bus_type == 1 && msg[8] == TYPE_ERR) {
+              Serial.print(F("error: "));
+              Serial.print(msg[9]);
+              retry=0;
+            } else {
+              Serial.println(F("query failed"));
+              retry--;          // decrement number of attempts
+            }
           }
         } // endwhile, maximum number of retries reached
-        if(retry==0)
-          outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+        if(retry==0) {
+          if (bus_type == 1 && msg[8] == TYPE_ERR) {
+            outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
+          } else {
+            outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+          }
+        }
       }else{
         //Serial.println(F("unknown command"));
         //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
@@ -2404,7 +2415,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
           int data_len;
           if (bus_type == 1) {
-            data_len=msg[len_idx]-13;     // get packet length, then subtract
+            data_len=msg[len_idx]-14;     // get packet length, then subtract
           } else {
             data_len=msg[len_idx]-11;     // get packet length, then subtract
           }
@@ -2583,7 +2594,11 @@ void SetDateTime(){
   findLine(0,0,&c);
   if(c!=CMD_UNKNOWN){     // send only valid command codes
     if(bus.Send(TYPE_QUR, c, rx_msg, tx_msg)){
-      setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
+      if (bus_type == 1) {
+        setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
+      } else {
+        setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
+      }
     }
   }
 }
@@ -2619,10 +2634,10 @@ void LogTelegram(byte* msg){
 
   if (log_parameters[0] == 30000) {
 
-    if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
-      cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+    if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
     }else{
-      cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+      cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
     }
     // search for the command code in cmdtbl
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -2660,14 +2675,14 @@ void LogTelegram(byte* msg){
             dataFile.print(line);             // the ProgNr
           }
           dataFile.print(F(";"));
-          dataFile.print(TranslateAddr(msg[1], device));
+          dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
           dataFile.print(F("->"));
           dataFile.print(TranslateAddr(msg[2], device));
           dataFile.print(F(" "));
-          dataFile.print(TranslateType(msg[4], device));
+          dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
           dataFile.print(F(";"));
 
-          for(int i=0;i<msg[3];i++){
+          for(int i=0;i<msg[len_idx]+bus_type;i++){
             if (i > 0) {
               dataFile.print(F(" "));
             }
@@ -2677,7 +2692,7 @@ void LogTelegram(byte* msg){
 
           // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
-          if ((msg[4] == TYPE_INF || msg[4] == TYPE_SET || msg[4] == TYPE_ANS) && msg[3] < 17) {
+          if ((msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
             dataFile.print(F(";"));
             i=0;
             while(type!=VT_UNKNOWN){
@@ -2688,12 +2703,20 @@ void LogTelegram(byte* msg){
               i++;
               type=pgm_read_byte_far(pgm_get_far_address(divtbl[0].type) + i * sizeof(divtbl[0]));
             }
-            data_len=msg[3]-11;
+            if (bus_type == 1) {
+              data_len=msg[1]-14;
+            } else {
+              data_len=msg[3]-11;
+            }
             dval = 0;
             divisor=pgm_read_float_far(pgm_get_far_address(divtbl[0].divisor) + i * sizeof(divtbl[0]));
             precision=pgm_read_byte_far(pgm_get_far_address(divtbl[0].precision) + i * sizeof(divtbl[0]));
-            for (i=0;i<data_len-1;i++) {
-              dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
+            for (i=0;i<data_len-1+bus_type;i++) {
+              if (bus_type == 1) {
+                dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
+              } else {
+                dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
+              }
             }
             dval = dval / divisor;
 /*
@@ -3014,7 +3037,7 @@ void loop() {
 #endif
       }
       // Is this a broadcast message?
-      if(msg[2]==ADDR_ALL && msg[4]==TYPE_INF){ // handle broadcast messages
+      if(((msg[2]==ADDR_ALL && bus_type==0) || (msg[2]>=0xF0 && bus_type==1)) && msg[4+(bus_type*4)]==TYPE_INF){ // handle broadcast messages
       // Decode the rcv telegram and send it to the PC serial interface
         if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
           printTelegram(msg);
@@ -3026,10 +3049,10 @@ void loop() {
         // Filter Brenner Status messages (attention: partially undocumented enum values)
 
         uint32_t cmd;
-        cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
+        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
 
-        if(cmd==0x0500006C) {   // set Time from BC
-          setTime(msg[14], msg[15], msg[16], msg[12], msg[11], msg[10]+1900);
+        if((cmd==0x0500006C && bus_type==0) || (cmd=0x0505000B && bus_type==1)) {   // set Time from BC
+          setTime(msg[pl_start+5], msg[pl_start+6], msg[pl_start+7], msg[pl_start+3], msg[pl_start+2], msg[pl_start+1]+1900);
         }
 
         if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
@@ -3477,7 +3500,7 @@ void loop() {
         if(p[1]=='Y'){
           webPrintHeader();
           uint8_t type = strtol(&p[2],NULL,16);
-          uint32_t c = (uint32_t)strtol(&p[5],NULL,16);
+          uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
           if(!bus.Send(type, c, msg, tx_msg)){
             Serial.println(F("bus send failed"));  // to PC hardware serial I/F
           }else{
