@@ -1282,7 +1282,7 @@ char *printTelegram(byte* msg) {
   uint32_t cmd;
   if (bus_type == 1) {
     if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
-      cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[pl_start]<<16 | (uint32_t)msg[pl_start+2] << 8 | (uint32_t)msg[12];
+      cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }else{
       cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }
