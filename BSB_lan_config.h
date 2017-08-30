@@ -46,7 +46,7 @@ EthernetServer server(80);
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
- * Set device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
+ * Set fixed_device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
 int fixed_device_id = 0;
