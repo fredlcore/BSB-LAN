@@ -330,9 +330,11 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     if (GetMessage(rx_msg)) {
       i--;
       if (bus_type == 1) {
+/* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
 	if (rx_msg[2] == myAddr && rx_msg[8]==0x08) {  // TYPE_ERR
 	  return false;
 	}
+*/
         if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
           return true;
 	}

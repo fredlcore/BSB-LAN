@@ -235,9 +235,6 @@ char version[] = "0.37";
 #include <Arduino.h>
 #include <util/crc16.h>
 
-uint8_t len_idx=3;
-uint8_t pl_start=9;
-
 #include "src/Time/TimeLib.h"
 #include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -249,6 +246,8 @@ uint8_t pl_start=9;
 #ifdef TRUSTED_IP
 #include <utility/w5100.h>        // change to w5500.h for W5500 type ethernet shields
 #endif
+
+uint8_t len_idx, pl_start;
 
 EthernetClient client;
 
@@ -1357,8 +1356,10 @@ char *printTelegram(byte* msg) {
       if(known){
         if(msg[4+(bus_type*4)]==TYPE_ERR){
           char *p=outBuf+outBufLen;
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
-          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
+//          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
+//          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
+          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[pl_start]);
+          if(msg[pl_start]==0x07){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
           Serial.print(p);
@@ -2371,14 +2372,8 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
 #endif
             break;   // success, break out of while loop
           }else{
-            if (bus_type == 1 && msg[8] == TYPE_ERR) {
-              Serial.print(F("error: "));
-              Serial.print(msg[9]);
-              retry=0;
-            } else {
-              Serial.println(F("query failed"));
-              retry--;          // decrement number of attempts
-            }
+            Serial.println(F("query failed"));
+            retry--;          // decrement number of attempts
           }
         } // endwhile, maximum number of retries reached
         if(retry==0) {
@@ -2988,8 +2983,12 @@ void Ipwe() {
 
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
-  strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+  if (i<0) {                               // Not found (for this heating system)?
+    strcpy(buffer, "Unknown command");     // Unknown command has line no. 10999
+  } else {
+    strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 //  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
+  }
   return buffer;
 }
 
@@ -3050,8 +3049,7 @@ void loop() {
 
         uint32_t cmd;
         cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
-
-        if((cmd==0x0500006C && bus_type==0) || (cmd=0x0505000B && bus_type==1)) {   // set Time from BC
+        if(cmd==0x0500006C) {   // set Time from BC, same CommandID for BSB and LPB
           setTime(msg[pl_start+5], msg[pl_start+6], msg[pl_start+7], msg[pl_start+3], msg[pl_start+2], msg[pl_start+1]+1900);
         }
 
@@ -4432,7 +4430,15 @@ void loop() {
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
-  
+
+  if (bus_type == 0) {
+    len_idx = 3;
+    pl_start = 9;
+  } else {
+    len_idx = 1;
+    pl_start = 13;
+  }
+
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
