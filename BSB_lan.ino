@@ -248,6 +248,7 @@ char version[] = "0.37";
 #endif
 
 uint8_t len_idx, pl_start;
+int device_id;
 
 EthernetClient client;
 
@@ -2543,8 +2544,10 @@ void SetDevId() {
   if (bus_type == 1) {
     device_id = 1;
   } else {
-    if (device_id < 1) {
+    if (fixed_device_id < 1) {
       device_id = strtod(query(6225,6225,1),NULL);
+    } else {
+      device_id = fixed_device_id;
     }
   }
   int i=0;
@@ -2983,8 +2986,8 @@ void Ipwe() {
 
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
-  if (i<0) {                               // Not found (for this heating system)?
-    strcpy(buffer, "Unknown command");     // Unknown command has line no. 10999
+  if (i<0) {                    // Not found (for this heating system)?
+    strcpy_P(buffer, STR99999); // Unknown command has line no. 10999
   } else {
     strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 //  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
