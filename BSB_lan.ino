@@ -2545,6 +2545,7 @@ void SetDevId() {
     device_id = 1;
   } else {
     if (fixed_device_id < 1) {
+      dev_id = 0;
       device_id = strtod(query(6225,6225,1),NULL);
     } else {
       device_id = fixed_device_id;
