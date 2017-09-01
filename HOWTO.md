@@ -12,7 +12,7 @@ License:
 Host System:  
 The software is designed to run on an arduino mega2560 board with ethernet shield.
 Because there are different pin assignments for different ethernet shields, you
-may have to connect the BSB adapter to different pins and to change the pin assigment
+may have to connect the BSB-LPB adapter to different pins and to change the pin assigment
 in the software.  
 The software is tested with the following components:        
 - SainSmart MEGA2560 R3 Development Board  
@@ -25,7 +25,7 @@ Target System:
       Communication should be possible with all systems that support the BSB interface. 
 
 Getting started:
-* Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control).
+* Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with MB/DB.
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
 * Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
@@ -47,6 +47,8 @@ Optionally configure the following parameters in BSB_lan_config.h:
   `EthernetServer server(80);`  
 - Pin assigment of the BSB adapter  
   `BSB bus(68,69);`  
+- Bus protocol (default is 0 for BSB, change here to 1 for LPB or use URL command /P0 and /P1 to switch accordingly.
+  `uint8_t bus_type = bus.setBusType(0);`
 - Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
 - BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)  
@@ -112,6 +114,9 @@ Web-Interface:
         http://<ip-of-server>/I<x>=<v>
         Some values cannot be set directly. The heating system is informed by a TYPE_INF message, e.g. the room temp:
         http://<ip-of-server>/I10000=19.5  // room temperature is 19.5 degree.
+        
+      Set bus protocol to BSB (x=0) or LPB (x=1)
+        http://<ip-of-server>/P<x>
 
       Set verbosity level n
         http://<ip-of-server>/V<n>
@@ -191,8 +196,6 @@ Open issues
 
 - Introduce valid ranges for parameters
           To make the access safer when setting values for parameters, the valid ranges should be added to the command table
-
-- Test and maybe extend the system to work with LPB instead of BSB.
 
 - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
