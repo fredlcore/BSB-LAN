@@ -235,7 +235,7 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
   unsigned long timeoutabort = millis() + 1000;  // one second timeout
   retry:
   // Select a random wait time between 60 and 79 ms
-  unsigned long waitfree = random(1,20) + 59; // range 60 .. 79 ms
+  unsigned long waitfree = random(1,60) + 25; // range 26 .. 85 ms
   { // block begins
     if(millis() > timeoutabort){  // one second has elapsed
       return false;
