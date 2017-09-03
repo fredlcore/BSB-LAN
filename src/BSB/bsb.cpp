@@ -206,7 +206,7 @@ inline bool BSB::_send(byte* msg) {
 
   if (bus_type == 1) {
     msg[0] = 0x78;
-    msg[2] = 0x00;
+    msg[2] = destAddr;
     msg[3] = myAddr;
   } else {
     msg[0] = 0xDC;

@@ -37,7 +37,7 @@ typedef struct
 class BSB
 {
 public:
-  BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x06 );
+  BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x06, uint8_t d_addr=0x00 );
   void Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
@@ -48,6 +48,7 @@ public:
 
 private:
   uint8_t myAddr;
+  uint8_t destAddr;
   uint8_t bus_type = 0;
   uint8_t len_idx = 3;
   inline bool _send(byte* msg);
