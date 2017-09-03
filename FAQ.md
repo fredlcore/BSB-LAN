@@ -83,7 +83,7 @@ attr EthRelais timeout 5
 
 <H2>My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</H2>
 
-Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps:
+Yes, you can :)! All you need is to connect your Arduino to a Laptop/PC via USB while it is connected to your heating system and follow these steps (for BSB only, LPB requires an OCI700 or OZW672 device to log data. If you have one of those PLEASE get in touch with us):
 
 1. Start the Arduino IDE and turn on the serial monitor
 2. Enable logging to the serial console and turn on verbose output with URL-Parameter /V1 on the Arduino, e.g. http://192.168.1.50/1234/V1. Alternatively, you can log bus telegrams to SD card by using (only) logging parameter 30000 (see logging section above) and set variable log_unknown_only to 1 (URL command /LU=1) and follow logging entries with URL command /D.
