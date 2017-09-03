@@ -11,12 +11,13 @@
 extern int bus_type;
 
 // Constructor
-BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr) {
+BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   serial = new BSBSoftwareSerial(rx, tx, true);
 
   serial->begin(4800);
   serial->listen();
   myAddr=addr;
+  destAddr=d_addr;
 }
 
 uint8_t BSB::setBusType(uint8_t bus_type_val) {
