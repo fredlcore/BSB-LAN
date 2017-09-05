@@ -1,3 +1,13 @@
+// These lines represent all LPB command IDs which only differ from their BSB 
+// counterparts by having "05" in the second byte instead of "3D".
+// Most heating systems will understand both commands which is why these lines 
+// have not been added to BSB_lan_defs.h in order to save flash memory. 
+// However, if one of these commands do not run with the standard 
+// BSB_lan_defs.h, copy the respective line from here into BSB_lan_defs.h. 
+// Make sure that the line here is inserted exactly one line above the same 
+// program number in BSB_lan_defs.h.
+// LPB telegrams logged by miwi with OCI700 on Brötje WOB20C and ISR SSR C.
+
 {0x05050A8C,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      500,   STR500,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm Heizkreis 1 - Vorwahl
 {0x05050A8D,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      501,   STR501,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Ein
 {0x05050A8E,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      502,   STR502,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Aus
