@@ -1,10 +1,10 @@
-# bsb_lan
+# BSB-LPB-LAN
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-BSB-LAN-Adapter - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme, einschließlich Logging-Funktion auf Micro-SD-Karte.
+LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme, einschließlich Logging-Funktion auf Micro-SD-Karte.
 
-Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
+Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
  - Brötje ISR-SSR 
  - Brötje ISR-ZR1 
  - Brötje NovoCondens BOB 20 (Ölbrenner)
@@ -23,7 +23,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (Gasbrenner)
  - Fujitsu Waterstage (WSYK160DC9, RVS21.827/127) (Wärmepumpe)
 
-Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit dem BSB arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
+Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit dem BSB oder dem LPB arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 
 Instruktionen, wie die Software konfiguriert werden muss etc. können dem <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO_de.md">HowTo</A> entnommen werden.<BR>
 Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="https://forum.fhem.de/index.php?topic=29762.new;topicseen#new">hier</A> nachvollzogen werden.<BR>

@@ -12,7 +12,7 @@ Lizenz:
 	Es steht dir frei, diese Software auf dein eigenes Risiko hin zu benutzen. Bitte beachte die Lizenzbedingungen der genutzten Bibliotheken und Software.
 
 Host System:  
-Die Software wurde entwickelt, um auf einem Arduino-Mega2560-Board samt Ethernet-Shield zu laufen. Da es unterschiedliche Pinbelegungen bei den verschiedenen Ethernet-Shields gibt, ist es u.U. nötig, den BSB-Adapter an andere Pins anzuschließen und die entsprechenden Änderungen bzgl. der Pinbelegung in der Software anzupassen.  
+Die Software wurde entwickelt, um auf einem Arduino-Mega2560-Board samt Ethernet-Shield zu laufen. Da es unterschiedliche Pinbelegungen bei den verschiedenen Ethernet-Shields gibt, ist es u.U. nötig, den BSB-LPB-Adapter an andere Pins anzuschließen und die entsprechenden Änderungen bzgl. der Pinbelegung in der Software anzupassen.  
 Die Software wurde mit folgenden Komponenten getestet:        
 - SainSmart MEGA2560 R3 Development Board  
 - SainSmart Ethernet Schild für Arduino UNO MEGA Duemilanove Neu Version W5100  
@@ -24,7 +24,7 @@ Zielsystem:
 	Die Kommunikation sollte prinzipiell mit allen Systemen möglich sein, die einen BSB aufweisen.
 
 Erste Schritte:
-- Verbinde die Anschlüsse CL+ und CL- des Adapters mit den entsprechenden Anschlüssen des Heizungssystems (mögliche Bezeichnungen am Heizungsregler sind BSB, FB (Fernbedienung/remote control), CL+/CL-).
+- Verbinde die Anschlüsse CL+ und CL- des Adapters mit den entsprechenden Anschlüssen des Heizungssystems (mögliche Bezeichnungen am Heizungsregler sind BSB, FB (Fernbedienung/remote control), CL+/CL-). Für den LPB sind DB und MB zu nutzen, wobei DB(+) mit CL+ und MB(-) mit CL- zu verbinden sind.
 - Downloade und installiere die aktuelle Version der Arduino IDE von https://www.arduino.cc/en/Main/Software (Windows-, Mac- und Linux-Version verfügbar).
 - Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac). 
 UPDATE: Ab v0.34 gilt: Wichtigste Änderunge für alle Neuinstallationen ist, dass die Libraries, die nicht standardmäßig bei der Arduino IDE mit dabei sind, nun einfach im Sketch-Verzeichnis bleiben können und von dort eingelesen werden. Ein Kopieren ist nun nicht mehr nötig, was zum einen gerade für Anfänger die Installation erleichtert und alle anderen bei der Aktualisierung von Libraries diese ebenfalls nicht mehr manuell verschieben müsst. Es kann sein, dass das Kompilieren fehl schlägt, wenn die gleiche Library bereits im Standard-Libraries-Verzeichnis der Arduino IDE liegt. In dem Fall müsste die gleichlautende Bibliothek dort (Win: MyDocuments\Arduino\Libraries bzw. Mac: ~/Dokumente/Arduino/Libraries) gelöscht werden.
@@ -45,6 +45,8 @@ Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepas
   `EthernetServer server(80);`  
 - Pinbelegung des BSB-Adapters:  
   `BSB bus(68,69);`  
+- Bus-Protokoll (voreingestellt ist 0 für BSB, für LPB ist 1 einzustellen; mittels der URL-Befehle /P0 und /P1 kann entsprechend umgestellt werden)
+  `uint8_t bus_type = bus.setBusType(0);`
 - Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
   `#define PASSKEY  "1234"`  
 - BSB-Adresse (voreingestellt ist 0x06=RGT1, dies kann jedoch bei der Bus-Initialisierung überschrieben werden):  
@@ -111,6 +113,9 @@ Web-Interface des Adapters:
         http://<ip-of-server>/I<x>=<v>
         Einige Werte können nicht direkt gesetzt werden. Das Heizungssystem wird mit einer TYPE_INF-Nachricht informiert, bspw. die Raumtemperatur:
         http://<ip-of-server>/I10000=19.5  // Raumtemperatur beträgt 19.5°C
+
+	Setze das Bus-Protokoll auf BSB (x=0) oder LPB (x=1)
+	  http://<ip-of-server>/P<x>
 
       Setze den Verbositäts-Level auf n
         http://<ip-of-server>/V<n>
@@ -180,8 +185,6 @@ Offene Punkte
 
 - Zulässige Wertebereiche für Parameter einführen
           Um den Zugriff sicherer zu machen, wenn Werte für Parameter gesetzt werden, sollten zulässige Wertebereiche zum command table hinzugefügt werden.
-
-- Testen und möglicherweise das System so erweitern, dass es mit dem LPB anstelle des BSB genutzt werden kann.
 
 - Dekodieren der DE-Telegramme. Möglicherweise beinhalten sie Statusinformationen, die ohne Abfragen genutzt werden können.
 
