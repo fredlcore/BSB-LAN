@@ -2,7 +2,7 @@
 // counterparts by having "05" in the second byte instead of "3D".
 // Most heating systems will understand both commands which is why these lines 
 // have not been added to BSB_lan_defs.h in order to save flash memory. 
-// However, if one of these commands do not run with the standard 
+// However, if one of these commands does not run with the standard 
 // BSB_lan_defs.h, copy the respective line from here into BSB_lan_defs.h. 
 // Make sure that the line here is inserted exactly one line above the same 
 // program number in BSB_lan_defs.h.
