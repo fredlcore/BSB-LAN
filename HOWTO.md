@@ -25,7 +25,7 @@ Target System:
       Communication should be possible with all systems that support the BSB interface. 
 
 Getting started:
-* Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with MB/DB.
+* Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with DB/MB (connect DB(+) to CL+ and MB(-) to CL-).
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
 * Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
