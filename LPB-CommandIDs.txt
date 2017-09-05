@@ -1,0 +1,444 @@
+{0x05050A8C,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      500,   STR500,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm Heizkreis 1 - Vorwahl
+{0x05050A8D,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      501,   STR501,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Ein
+{0x05050A8E,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      502,   STR502,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Aus
+{0x05050A8F,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      503,   STR503,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Ein
+{0x05050A90,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      504,   STR504,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Aus
+{0x05050A91,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      505,   STR505,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Ein
+{0x05050A92,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      506,   STR506,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Aus
+{0x050505B2,  CAT_ZEITPROG_HK1,     VT_YESNO,         516,   STR516,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm Heizkreis 1 - Standardwerte
+{0x06050A8C,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      520,   STR520,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm Heizkreis 2 - Vorwahl
+{0x06050A8D,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      521,   STR521,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Ein
+{0x06050A8E,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      522,   STR522,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Aus
+{0x06050A8F,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      523,   STR523,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Ein
+{0x06050A90,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      524,   STR524,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Aus
+{0x06050A91,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      525,   STR525,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Ein
+{0x06050A92,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      526,   STR526,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Aus
+{0x060505B2,  CAT_ZEITPROG_HK2,     VT_YESNO,         536,   STR536,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm Heizkreis 2 - Standardwerte
+{0x07050A8C,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      540,   STR540,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm 3 HKP - Vorwahl
+{0x07050A8D,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      541,   STR541,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Ein
+{0x07050A8E,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      542,   STR542,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Aus
+{0x07050A8F,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      543,   STR543,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Ein
+{0x07050A90,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      544,   STR544,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Aus
+{0x07050A91,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      545,   STR545,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Ein
+{0x07050A92,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      546,   STR546,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Aus
+{0x070505B2,  CAT_ZEITPROG_HKP,     VT_YESNO,         556,   STR556,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm 3 HKP - Standardwerte
+{0x05050AA0,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      560,   STR560,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm 4 TWW - Vorwahl
+{0x05050AA1,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      561,   STR561,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Ein
+{0x05050AA2,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      562,   STR562,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Aus
+{0x05050AA3,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      563,   STR563,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Ein
+{0x05050AA4,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      564,   STR564,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Aus
+{0x05050AA5,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      565,   STR565,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Ein
+{0x05050AA6,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      566,   STR566,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Aus
+{0x050505B3,  CAT_ZEITPROG_TWW,     VT_YESNO,         576,   STR576,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Zeitprogramm 4 TWW - Standardwerte
+{0x050509C4,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  632,   STR632,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Beginn Tag/Monat
+{0x050509C5,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  633,   STR633,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Ende Tag/Monat
+{0x050509C6,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  634,   STR634,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 2 Beginn Tag/Monat
+{0x050509C7,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  635,   STR635,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 2 Ende Tag/Monat
+{0x050509C8,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  636,   STR636,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 3 Beginn Tag/Monat
+{0x050509C9,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  637,   STR637,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 3 Ende Tag/Monat
+{0x050509CA,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  638,   STR638,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 4 Beginn Tag/Monat
+{0x050509CB,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  639,   STR639,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 4 Ende Tag/Monat
+{0x050509CC,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  640,   STR640,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 5 Beginn Tag/Monat
+{0x050509CD,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  641,   STR641,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 5 Ende Tag/Monat
+{0x050509CE,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR642,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Beginn Tag/Monat
+{0x050509CF,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR643,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Ende Tag/Monat
+{0x050509D0,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  644,   STR644,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 7 Beginn Tag/Monat
+{0x050509D1,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  645,   STR645,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 7 Ende Tag/Monat
+{0x050509D2,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  646,   STR646,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 8 Beginn Tag/Monat
+{0x050509D3,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  647,   STR647,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 1 - Periode 8 Ende Tag/Monat
+{0x2D0504C2,  CAT_FERIEN_HK1,       VT_ENUM,          648,   STR648,   sizeof(ENUM648),      ENUM648,      DEFAULT_FLAG, DEV_LPB}, // [0] - Ferienheizkreis 1 - Betriebsniveau
+{0x060509C4,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  649,   STR649,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Beginn Tag/Monat
+{0x060509C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  650,   STR650,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Ende Tag/Monat
+{0x060509C6,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  651,   STR651,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Beginn Tag/Monat
+{0x060509C7,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR652,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Ende Tag/Monat
+{0x060509C8,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR653,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Beginn Tag/Monat
+{0x060509C9,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  654,   STR654,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Ende Tag/Monat
+{0x060509CA,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  655,   STR655,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Beginn Tag/Monat
+{0x060509CB,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  656,   STR656,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Ende Tag/Monat
+{0x060509CC,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  657,   STR657,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Beginn Tag/Monat
+{0x060509CD,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  658,   STR658,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Ende Tag/Monat
+{0x060509CE,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  659,   STR659,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Beginn Tag/Monat
+{0x060509CF,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  660,   STR660,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Ende Tag/Monat
+{0x060509D0,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  661,   STR661,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Beginn Tag/Monat
+{0x060509D1,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Ende Tag/Monat
+{0x060509D2,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Beginn Tag/Monat
+{0x060509D3,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  664,   STR664,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Ende Tag/Monat
+{0x2E0504C2,  CAT_FERIEN_HK2,       VT_ENUM,          665,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_LPB}, // [0] - Ferienheizkreis 2 - Betriebsniveau
+{0x2D050574,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
+{0x2D05058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Komfortsollwert
+{0x2D050590,  CAT_HK1,              VT_TEMP,          712,   STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Reduziertsollwert
+{0x2D050592,  CAT_HK1,              VT_TEMP,          714,   STR714,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Frostschutzsollwert
+{0x2D0505F6,  CAT_HK1,              VT_FP02,          720,   STR720,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 1 - Kennlinie Steilheit
+{0x2D050610,  CAT_HK1,              VT_TEMP,          721,   STR721,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Kennlinie Verschiebung
+{0x2D05060B,  CAT_HK1,              VT_ONOFF,         726,   STR726,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [] - Heizkreis 1 - Kennlinie Adaption
+{0x2D0505FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
+{0x2D050640,  CAT_HK1,              VT_TEMP,          732,   STR732,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Tagesheizgrenze
+{0x21050663,  CAT_HK1,              VT_TEMP,          740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
+{0x21050662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
+{0x2D050603,  CAT_HK1,              VT_PERCENT,       750,   STR750,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [% ] - Heizkreis 1 - Raumeinfluss
+{0x2D050614,  CAT_HK1,              VT_TEMP,          760,   STR760,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Raumtemperaturbegrenzung
+{0x2D050602,  CAT_HK1,              VT_TEMP,          770,   STR770,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Schnellaufheizung
+{0x2D0505E8,  CAT_HK1,              VT_ENUM,          780,   STR780,   sizeof(ENUM780),      ENUM780,      DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 1 - Schnellabsenkung
+{0x2D050607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
+{0x2D050609,  CAT_HK1,              VT_MINUTES,       791,   STR791,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [Min ] - Heizkreis 1 - Ausschalt-Optimierung Max.
+{0x2D05059E,  CAT_HK1,              VT_TEMP,          800,   STR800,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Begin
+{0x2D05059D,  CAT_HK1,              VT_TEMP,          801,   STR801,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Ende
+{0x21050674,  CAT_HK1,              VT_ONOFF,         820,   STR820,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ - ] - Heizkreis 1 - Überhitzschutz Pumpenkreis
+{0x2105065D,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Mischerüberhöhung
+{0x2105065A,  CAT_HK1,              VT_SECONDS_WORD,  834,   STR834,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ s ] - Antrieb Laufzeit
+{0x2D05067B,  CAT_HK1,              VT_ENUM,          850,   STR850,   sizeof(ENUM850),      ENUM850,      DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 1 - Estrichfunktion
+{0x2D05068A,  CAT_HK1,              VT_TEMP,          851,   STR851,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Estrich Sollwert manuell
+{0x210508C9,  CAT_HK1,              VT_ENUM,          861,   STR861,   sizeof(ENUM861),      ENUM861,      DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 1 - Übertemperaturabnahme
+{0x2D0507C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 1 - Mit Pufferspeicher
+{0x2D0507C5,  CAT_HK1,              VT_YESNO,         872,   STR872,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 1 - Mit Vorregler/Zubring`pumpe
+{0x210504AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Minimum
+{0x210504AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Maximum
+{0x050507BE,  CAT_HK1,              VT_ENUM,          900,   STR900,   sizeof(ENUM900),      ENUM900,      DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 1 - Betriebsartumschaltung
+{0x2E050574,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),     ENUM1000,     DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
+{0x2E05058E,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
+{0x2E050590,  CAT_HK2,              VT_TEMP,          1012,  STR1012,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziertsollwert
+{0x2E050592,  CAT_HK2,              VT_TEMP,          1014,  STR1014,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Frostschutzsollwert
+{0x2E0505F6,  CAT_HK2,              VT_FP02,          1020,  STR1020,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Steilheit
+{0x2E050610,  CAT_HK2,              VT_TEMP,          1021,  STR1021,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Verschiebung
+{0x2E05060B,  CAT_HK2,              VT_ONOFF,         1026,  STR1026,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Adaption
+{0x2E0505FD,  CAT_HK2,              VT_TEMP,          1030,  STR1030,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Sommer-/ Winterheizgrenze
+{0x2E050640,  CAT_HK2,              VT_TEMP,          1032,  STR1032,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Tagesheizgrenze
+{0x22050663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
+{0x22050662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
+{0x2E050603,  CAT_HK2,              VT_PERCENT,       1050,  STR1050,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [% ] - Heizkreis 2 (nur wenn aktiviert) - Raumeinfluss
+{0x2E050614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
+{0x2E050602,  CAT_HK2,              VT_TEMP,          1070,  STR1070,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Schnellaufheizung
+{0x2E0505E8,  CAT_HK2,              VT_ENUM,          1080,  STR1080,  sizeof(ENUM1080),     ENUM1080,     DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 2 (nur wenn aktiviert) - Schnellabsenkung
+{0x2E050607,  CAT_HK2,              VT_MINUTES,       1090,  STR1090,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Einschalt-Optimierung Max.
+{0x2E050609,  CAT_HK2,              VT_MINUTES,       1091,  STR1091,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Ausschalt-Optimierung Max.
+{0x2E05059E,  CAT_HK2,              VT_TEMP,          1100,  STR1100,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Begin
+{0x2E05059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
+{0x22050674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
+{0x2205065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
+{0x2205065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Thision 1134 Antrieb Laufzeit [s]
+{0x2E05067B,  CAT_HK2,              VT_ENUM,          1150,  STR1150,  sizeof(ENUM1150),     ENUM1150,     DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Estrichfunktion
+{0x2E05068A,  CAT_HK2,              VT_TEMP,          1151,  STR1151,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Estrich sollwert manuell
+{0x220508C9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),     ENUM1161,     DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
+{0x2E0507C4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
+{0x2E0507C5,  CAT_HK2,              VT_YESNO,         1172,  STR1172,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
+{0x220504AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Minimum
+{0x220504AA,  CAT_HK2,              VT_PERCENT,       1183,  STR1183,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Maximum
+{0x060507BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),     ENUM1200,     DEFAULT_FLAG, DEV_LPB}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
+{0x31050571,  CAT_TW,               VT_ONOFF,         1600,  STR1600,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x310506B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser - Nennsollwert
+{0x310506BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser - Reduziertsollwert
+{0x25050722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Freigabe
+{0x31050721,  CAT_TW,               VT_ENUM,          1630,  STR1630,  sizeof(ENUM1630),     ENUM1630,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Ladevorgang
+{0x31050759,  CAT_TW,               VT_ENUM,          1640,  STR1640,  sizeof(ENUM1640),     ENUM1640,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Legionellenfunktion
+{0x31050738,  CAT_TW,               VT_DAYS,          1641,  STR1641,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [Tage ] - Trinkwasser - Legionellenfkt. Periodisch
+{0x3105075E,  CAT_TW,               VT_ENUM,          1642,  STR1642,  sizeof(ENUM_WEEKDAY), ENUM_WEEKDAY, DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Legionellenfkt. Wochentag
+{0x3105075A,  CAT_TW,               VT_HOUR_MINUTES,  1644,  STR1644,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [hh:mm ] - Trinkwasser - Legionellenfkt. Zeitpunkt
+{0x310506BC,  CAT_TW,               VT_TEMP,          1645,  STR1645,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser - Legionellenfkt. Sollwert
+{0x31050496,  CAT_TW,               VT_MINUTES_WORD,  1646,  STR1646,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [min] - Trinkwasser - Legionellenfkt. Verweildauer
+{0x310508AB,  CAT_TW,               VT_ONOFF,         1647,  STR1647,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Legionellenfkt. Zirk`pumpe
+{0x2505072E,  CAT_TW,               VT_ENUM,          1660,  STR1660,  sizeof(ENUM1660),     ENUM1660,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Zirkulationspumpe Freigabe
+{0x25050689,  CAT_TW,               VT_ONOFF,         1661,  STR1661,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser - Zirk`pumpe Taktbetrieb
+{0x2505077E,  CAT_TW,               VT_TEMP,          1663,  STR1663,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser - Zirkulations Sollwert
+{0x0D0508EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                    NULL,         DEFAULT_FLAG, DEV_EL_THI}, // Thision 2214 Sollwert Handbetrieb [°C]
+{0x4905085D,  CAT_SOLAR,            VT_TEMP,          3810,  STR3810,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Temperaturdifferenz Ein
+{0x4905085C,  CAT_SOLAR,            VT_TEMP,          3811,  STR3811,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Temperaturdifferenz Aus
+{0x4905085A,  CAT_SOLAR,            VT_TEMP,          3812,  STR3812,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Ladetemp Min TWW-Speicher
+{0x49050ADC,  CAT_SOLAR,            VT_TEMP,          3813,  STR3813,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp’diff EIN Puffer
+{0x49050ADD,  CAT_SOLAR,            VT_TEMP,          3814,  STR3814,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp’diff AUS Puffer
+{0x49050A07,  CAT_SOLAR,            VT_TEMP,          3815,  STR3815,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Ladetemp Min Puffer
+{0x49050ADE,  CAT_SOLAR,            VT_TEMP,          3816,  STR3816,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp'differenz EIN Sch'bad
+{0x49050ADF,  CAT_SOLAR,            VT_TEMP,          3817,  STR3817,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp'differenz AUS Sch'bad
+{0x49050AE7,  CAT_SOLAR,            VT_TEMP,          3818,  STR3818,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Ladetemp Min Schwimmbad
+{0x49050AE3,  CAT_SOLAR,            VT_ENUM,          3822,  STR3822,  sizeof(ENUM3822),     ENUM3822,     DEFAULT_FLAG, DEV_LPB}, // Ladevorrang Speicher
+{0x49050AE0,  CAT_SOLAR,            VT_MINUTES_SHORT, 3825,  STR3825,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Ladezeit relativer Vorrang
+{0x49050AE1,  CAT_SOLAR,            VT_MINUTES_SHORT, 3826,  STR3826,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Wartezeit relativer Vorrang
+{0x49050AE2,  CAT_SOLAR,            VT_MINUTES_SHORT, 3827,  STR3827,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Wartezeit Parallelbetrieb
+{0x49050AEE,  CAT_SOLAR,            VT_MINUTES_WORD,  3828,  STR3828,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Verzögerung Sekundärpumpe
+{0x49050716,  CAT_SOLAR,            VT_MINUTES_SHORT, 3830,  STR3830,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [min ] - Solar (nur wenn aktiviert) - Kollektorstartfunktion
+{0x49050719,  CAT_SOLAR,            VT_MINUTES_SHORT, 3831,  STR3831,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ sec ] - Solar (nur wenn aktiviert) - Mindestlaufzeit Kollek`pumpe
+{0x49050AE4,  CAT_SOLAR,            VT_HOUR_MINUTES,  3832,  STR3832,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Kollektorstartfunktion Ein
+{0x49050AE5,  CAT_SOLAR,            VT_HOUR_MINUTES,  3833,  STR3833,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Kollektorstartfunktion Aus
+{0x49050B12,  CAT_SOLAR,            VT_MINUTES_SHORT, 3834,  STR3834,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Kollektorstartfkt Gradient
+{0x49050860,  CAT_SOLAR,            VT_TEMP,          3840,  STR3840,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Kollektor Frostschutz
+{0x49050865,  CAT_SOLAR,            VT_TEMP,          3850,  STR3850,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Kollektorüberhitzschutz
+{0x49050551,  CAT_SOLAR,            VT_TEMP,          3860,  STR3860,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Solar (nur wenn aktiviert) - Verdampfung Waermetaeger
+{0x490504B1,  CAT_SOLAR,            VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Minimum
+{0x490504B0,  CAT_SOLAR,            VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Maximum
+{0x49050509,  CAT_SOLAR,            VT_ENUM,          3880,  STR3880,  sizeof(ENUM3880),     ENUM3880,     DEFAULT_FLAG, DEV_LPB}, // Frostschutzmittel
+{0x4905050A,  CAT_SOLAR,            VT_PERCENT,       3881,  STR3881,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Frost'mittel Konzentration
+{0x4905050C,  CAT_SOLAR,            VT_UINT,          3884,  STR3884,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendurchfluss
+{0x05050455,  CAT_PUFFERSPEICHER,   VT_ENUM,          4720,  STR4720,  sizeof(ENUM4720),     ENUM4720,     DEFAULT_FLAG, DEV_LPB}, // [0] - Pufferspeicher (nur wenn aktiviert) - Auto Erzeugersperre
+{0x05050858,  CAT_PUFFERSPEICHER,   VT_TEMP,          4721,  STR4721,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Auto Erzeugersperre SD
+{0x05050857,  CAT_PUFFERSPEICHER,   VT_TEMP,          4722,  STR4722,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Temp`diff Puffer/Heizkreis
+{0x05050A10,  CAT_PUFFERSPEICHER,   VT_TEMP,          4724,  STR4724,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Min Speichertemp Heizbetrieb
+{0x050508A9,  CAT_PUFFERSPEICHER,   VT_TEMP,          4750,  STR4750,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Ladetemperatur Maximum
+{0x05050A0D,  CAT_PUFFERSPEICHER,   VT_TEMP,          4755,  STR4755,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Rückkühltemperatur
+{0x05050A0A,  CAT_PUFFERSPEICHER,   VT_ONOFF,         4756,  STR4756,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [-] - Pufferspeicher (nur wenn aktiviert) - Rückkühlung TWW/HK`s
+{0x05050A0B,  CAT_PUFFERSPEICHER,   VT_ENUM,          4757,  STR4757,  sizeof(ENUM4757),     ENUM4757,     DEFAULT_FLAG, DEV_LPB}, // [0] - Pufferspeicher (nur wenn aktiviert) - Rückkühlung Kollektor
+{0x05050A12,  CAT_PUFFERSPEICHER,   VT_YESNO,         4783,  STR4783,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Pufferspeicher (nur wenn aktiviert) - Mit Solareinbindung
+{0x050508AD,  CAT_PUFFERSPEICHER,   VT_TEMP,          4790,  STR4790,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp'diff EIN Rückl'umlenk
+{0x050508AE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4791,  STR4791,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temp'diff AUS Rückl'umlenk
+{0x05050638,  CAT_PUFFERSPEICHER,   VT_ENUM,          4795,  STR4795,  sizeof(ENUM4795),     ENUM4795,     DEFAULT_FLAG, DEV_LPB}, // Vergleichstemp Rückl'umlenk
+{0x0505085F,  CAT_PUFFERSPEICHER,   VT_ENUM,          4796,  STR4796,  sizeof(ENUM4796),     ENUM4796,     DEFAULT_FLAG, DEV_LPB}, // Wirksinn Rücklaufumlenkung
+{0x19050B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     DEFAULT_FLAG, DEV_LPB}, // Durchladung
+{0x25050737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     DEFAULT_FLAG, DEV_LPB}, // Ladung
+{0x25050720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
+{0x250507C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
+{0x2505087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x250508A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Ladetemperatur Maximum
+{0x250508BD,  CAT_TWSPEICHER,       VT_TEMP,          5055,  STR5055,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Rückkühltemperatur
+{0x31050714,  CAT_TWSPEICHER,       VT_ENUM,          5057,  STR5057,  sizeof(ENUM5057),     ENUM5057,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Rückkühlung Kollektor
+{0x25050728,  CAT_TWSPEICHER,       VT_ENUM,          5060,  STR5060,  sizeof(ENUM5060),     ENUM5060,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Elektroeinsatz Betriebsart
+{0x25050688,  CAT_TWSPEICHER,       VT_ENUM,          5061,  STR5061,  sizeof(ENUM5061),     ENUM5061,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Elektroeinsatz Freigabe
+{0x25050687,  CAT_TWSPEICHER,       VT_ENUM,          5062,  STR5062,  sizeof(ENUM5062),     ENUM5062,     DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Elektroeinsatz Regelung
+{0x250508CB,  CAT_TWSPEICHER,       VT_ONOFF,         5085,  STR5085,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Übertemperaturabnahme
+{0x310507C2,  CAT_TWSPEICHER,       VT_YESNO,         5090,  STR5090,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Trinkwasser-Speicher - Mit Pufferspeicher
+{0x310507C3,  CAT_TWSPEICHER,       VT_YESNO,         5092,  STR5092,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ - ] - Trinkwasser-Speicher - Mit Vorregler/Zubring`pumpe
+{0x25050A11,  CAT_TWSPEICHER,       VT_YESNO,         5093,  STR5093,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [-] - Trinkwasser-Speicher - Mit Solareinbindung
+{0x250508A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Minimum %
+{0x250508A2,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Pumpendrehzahl Maximum %
+{0x25050B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130),     ENUM5130,     DEFAULT_FLAG, DEV_LPB}, // Umladestrategie
+{0x050504C0,  CAT_KONFIG,           VT_ONOFF,         5710,  STR5710,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Heizkreis 1
+{0x060504C0,  CAT_KONFIG,           VT_ONOFF,         5715,  STR5715,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Heizkreis2
+{0x3105071E,  CAT_KONFIG,           VT_ENUM,          5730,  STR5730,  sizeof(ENUM5730),     ENUM5730,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Trinkwasser-Sensor B3
+{0x2505071C,  CAT_KONFIG,           VT_ENUM,          5731,  STR5731,  sizeof(ENUM5731),     ENUM5731,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Trinkwasser-Stellglied Q3
+{0x05050727,  CAT_KONFIG,           VT_ONOFF,         5736,  STR5736,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Trinkwasser Trennschaltung
+{0x05050851,  CAT_KONFIG,           VT_ENUM,          5770,  STR5770,  sizeof(ENUM5770),     ENUM5770,     DEFAULT_FLAG, DEV_LPB}, // Erzeugertyp
+{0x050507BF,  CAT_KONFIG,           VT_SECONDS_SHORT, 5772,  STR5772,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Brenner Vorlaufzeit
+{0x05050827,  CAT_KONFIG,           VT_ENUM,          5840,  STR5840,  sizeof(ENUM5840),     ENUM5840,     DEFAULT_FLAG, DEV_LPB}, // Solarstellglied
+{0x05050829,  CAT_KONFIG,           VT_ENUM,          5841,  STR5841,  sizeof(ENUM5841),     ENUM5841,     DEFAULT_FLAG, DEV_LPB}, // Externer Solartauscher
+{0x05050497,  CAT_KONFIG,           VT_ENUM,          5890,  STR5890,  sizeof(ENUM5890),     ENUM5890,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Relaisausgang QX1
+{0x05050498,  CAT_KONFIG,           VT_ENUM,          5891,  STR5891,  sizeof(ENUM5891),     ENUM5891,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Relaisausgang QX2
+{0x05050587,  CAT_KONFIG,           VT_ENUM,          5892,  STR5892,  sizeof(ENUM5892),     ENUM5892,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Relaisausgang QX3
+{0x05050588,  CAT_KONFIG,           VT_ENUM,          5894,  STR5894,  sizeof(ENUM5894),     ENUM5894,     DEFAULT_FLAG, DEV_LPB}, // Relaisausgang QX4
+{0x05050785,  CAT_KONFIG,           VT_ENUM,          5902,  STR5902,  sizeof(ENUM5902),     ENUM5902,     DEFAULT_FLAG, DEV_LPB}, // Relaisausgang QX21
+{0x05050787,  CAT_KONFIG,           VT_ENUM,          5904,  STR5904,  sizeof(ENUM5904),     ENUM5904,     DEFAULT_FLAG, DEV_LPB}, // Relaisausgang QX23
+{0x050504A0,  CAT_KONFIG,           VT_ENUM,          5908,  STR5908,  sizeof(ENUM5908),     ENUM5908,     DEFAULT_FLAG, DEV_LPB}, // Funktion Ausgang QX3-Mod
+{0x05050567,  CAT_KONFIG,           VT_ENUM,          5930,  STR5930,  sizeof(ENUM5930),     ENUM5930,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX 1
+{0x05050568,  CAT_KONFIG,           VT_ENUM,          5931,  STR5931,  sizeof(ENUM5931),     ENUM5931,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX 2
+{0x050507CA,  CAT_KONFIG,           VT_ENUM,          5932,  STR5932,  sizeof(ENUM5932),     ENUM5932,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX 3
+{0x050507CB,  CAT_KONFIG,           VT_ENUM,          5933,  STR5933,  sizeof(ENUM5933),     ENUM5933,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX 4
+{0x0505077F,  CAT_KONFIG,           VT_ENUM,          5941,  STR5941,  sizeof(ENUM5941),     ENUM5941,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX21
+{0x05050784,  CAT_KONFIG,           VT_ENUM,          5942,  STR5942,  sizeof(ENUM5942),     ENUM5942,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Fühlereingang BX22
+{0x05050807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
+{0x05050808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Wirksinn Kontakt H1
+{0x29050656,  CAT_KONFIG,           VT_TEMP,          5952,  STR5952,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H1
+{0x0505079F,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x07050807,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960,  sizeof(ENUM5960),     ENUM5960,     DEFAULT_FLAG, DEV_LPB}, // [-] - Konfiguration - Funktion Eingang H3
+{0x07050808,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Wirksinn Kontakt H3
+{0x2A050656,  CAT_KONFIG,           VT_TEMP,          5962,  STR5962_2,0,                    NULL,         DEFAULT_FLAG, DEV_BROETJE}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H2
+{0x2B050656,  CAT_KONFIG,           VT_TEMP,          5962,  STR5962,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H3
+{0x0605079F,  CAT_KONFIG,           VT_TEMP,          5964,  STR5964_2,0,                    NULL,         DEFAULT_FLAG, DEV_BROETJE}, // [°C ] - Konfiguration - Temperaturwert 10V H2
+{0x0705079F,  CAT_KONFIG,           VT_TEMP,          5964,  STR5964,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Konfiguration - Waermeanforderung 10V H3
+{0x050507CE,  CAT_KONFIG,           VT_ENUM,          5982,  STR5982,  sizeof(ENUM5980),     ENUM5980,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Funktion Eingang EX2 //FUJITSU
+{0x050507D1,  CAT_KONFIG,           VT_ENUM,          5983,  STR5983,  sizeof(ENUM5983),     ENUM5983,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Wirksinn Eingang EX2
+{0x050507CF,  CAT_KONFIG,           VT_ENUM,          6014,  STR6014,  sizeof(ENUM6014),     ENUM6014,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Funktion Mischergruppe 1
+{0x050507D0,  CAT_KONFIG,           VT_ENUM,          6015,  STR6015,  sizeof(ENUM6015),     ENUM6015,     DEFAULT_FLAG, DEV_LPB}, // Funktion Mischergruppe 2
+{0x05050788,  CAT_KONFIG,           VT_ENUM,          6020,  STR6020,  sizeof(ENUM6020),     ENUM6020,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Funktion Erweiterungsmodul 1
+{0x05050789,  CAT_KONFIG,           VT_ENUM,          6021,  STR6021,  sizeof(ENUM6021),     ENUM6021,     DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Funktion Erweiterungsmodul 2
+{0x05050786,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_LPB}, // Relaisausgang QX22
+{0x06050807,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_LPB}, // Funktion Eingang H2
+{0x06050808,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_LPB}, // Wirksinn Kontakt H2 | Arbeitskontakt
+{0x0505045A,  CAT_KONFIG,           VT_ENUM,          6070,  STR6070,  sizeof(ENUM6070),     ENUM6070,     DEFAULT_FLAG, DEV_LPB}, // Funktion Ausgang UX
+{0x0505045B,  CAT_KONFIG,           VT_ENUM,          6071,  STR6071,  sizeof(ENUM6071),     ENUM6071,     DEFAULT_FLAG, DEV_LPB}, // Signallogik Ausgang UX Standard | Invertiert
+{0x0505042B,  CAT_KONFIG,           VT_TEMP,          6075,  STR6075,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Temperaturwert 10V UX
+{0x0505075D,  CAT_KONFIG,           VT_ENUM,          6097,  STR6097,  sizeof(ENUM6097),     ENUM6097,     DEFAULT_FLAG, DEV_LPB}, // Fühlertyp Kollektor NTC|PT1000
+{0x050508B6,  CAT_KONFIG,           VT_TEMP,          6098,  STR6098,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Korrektur Kollektorfühler
+{0x050508B7,  CAT_KONFIG,           VT_TEMP,          6099,  STR6099,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Korrektur Kollektorfühler 2
+{0x050505F1,  CAT_KONFIG,           VT_TEMP,          6100,  STR6100,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Konfiguration - korrektur Aussenfühler
+{0x050508E6,  CAT_KONFIG,           VT_ENUM,          6101,  STR6101,  sizeof(ENUM6101),     ENUM6101,     DEFAULT_FLAG, DEV_LPB}, // Fühlertyp Abgastemperatur NTC | PT1000
+{0x050508E7,  CAT_KONFIG,           VT_TEMP,          6102,  STR6102,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Korrektur Abgastemp'fühler
+{0x05050600,  CAT_KONFIG,           VT_HOURS_SHORT,   6110,  STR6110,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [h ] - Konfiguration - Zeitkonstante Gebaeude
+{0x050505FE,  CAT_KONFIG,           VT_ONOFF,         6120,  STR6120,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Anlagenfrostschutz
+{0x05050B5C,  CAT_KONFIG,           VT_TEMP,          6128,  STR6128,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Wärm'anfo unter Außentemp
+{0x05050B5B,  CAT_KONFIG,           VT_TEMP,          6129,  STR6129,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Wärm'anfo über Außentemp
+{0x05050D17,  CAT_KONFIG,           VT_ENUM,          6131,  STR6131,  sizeof(ENUM6131),     ENUM6131,     DEFAULT_FLAG, DEV_LPB}, // Wärm'anfo bei Ökobetrieb AUS| EIN Trinkwasser | ein
+{0x050506AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Fühler Speichern
+{0x05050BD0,  CAT_KONFIG,           VT_DWORD,         6212,  STR6212,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Kontrollnummer Erzeuger 1
+{0x05050BD1,  CAT_KONFIG,           VT_DWORD,         6213,  STR6213,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Kontrollnummer Erzeuger 2
+{0x05050BD2,  CAT_KONFIG,           VT_DWORD,         6215,  STR6215,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Kontrollnummer Speicher
+{0x05050BD3,  CAT_KONFIG,           VT_DWORD,         6217,  STR6217,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Kontrollnummer Heizkreise
+{0x0505000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Konfiguration - Software- Version LOGON B
+{0x05050001,  CAT_KONFIG,           VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Geräte-Identifikation
+{0x05050071,  CAT_LPB,              VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Busspeisung Funktion
+{0x05050072,  CAT_LPB,              VT_ONOFF,         6605,  STR6605,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Busspeisung Status
+{0x050508D2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // Alarmverzögerung
+{0x05050839,  CAT_LPB,              VT_ENUM,          6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_LPB}, // [ - ] - LPB - Wirkbereich Umschaltungen
+{0x2D050611,  CAT_LPB,              VT_ENUM,          6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Sommerumschaltung
+{0x05050B34,  CAT_LPB,              VT_ENUM,          6623,  STR6623,  sizeof(ENUM6623),     ENUM6623,     DEFAULT_FLAG, DEV_LPB}, // Betriebsartumschaltung
+{0x2505074A,  CAT_LPB,              VT_ENUM,          6625,  STR6625,  sizeof(ENUM6625),     ENUM6625,     DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Trinkwasserzuordnung
+{0x0505006D,  CAT_LPB,              VT_ENUM,          6640,  STR6640,  sizeof(ENUM6640),     ENUM6640,     DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Uhrbetrieb
+{0x0505009F,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - LPB - Aussentemperatur Lieferant
+{0x050505D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Fehler - Reset Alarmrelais
+{0x2105069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
+{0x2205069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
+{0x110505DE,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [min ] - Fehler - Kesseltemperatur Alarm
+{0x050506D3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 1 Datum/Zeit
+{0x05050814,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 1 Fehlercode
+{0x050506D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 2 Datum/Zeit
+{0x05050815,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 2 Fehlercode
+{0x050506D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 3 Datum/Zeit
+{0x05050816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 3 Fehlercode
+{0x050506D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 4 Datum/Zeit
+{0x05050817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 4 Fehlercode
+{0x050506D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 5 Datum/Zeit
+{0x05050818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 5 Fehlercode
+{0x050506D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 6 Datum/Zeit
+{0x05050819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 6 Fehlercode
+{0x050506D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_BR_SOB}, // [ ] - Fehler - Historie 7 Datum/Zeit
+{0x0505081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 7 Fehlercode
+{0x050506DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_RONLY,     DEV_BR_SOB}, // [ ] - Fehler - Historie 8 Datum/Zeit
+{0x0505081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 8 Fehlercode
+{0x050506DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 9 Datum/Zeit
+{0x0505081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 9 Fehlercode
+{0x050506DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [ ] - Fehler - Historie 10 Datum/Zeit
+{0x0505081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_LPB}, //         [ ] - Fehler - Historie 10 Fehlercode
+{0x050503F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7040,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [h ] - Wartung/Service - Brennerstunden Intervall
+{0x050503F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [h ] - Wartung/Service - Brennerstunden seit Wartung
+{0x05050C69,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Wartung/Service - Brennerstarts Intervall
+{0x050505E0,  CAT_WARTUNG,          VT_UINT,          7043,  STR7043,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_SOB}, // [0] - Wartung/Service - Brennerstarts seit Wartung
+{0x050505E1,  CAT_WARTUNG,          VT_MONTHS,        7044,  STR7044,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [Monate ] - Wartung/Service - Wartungsintervall
+{0x050505E2,  CAT_WARTUNG,          VT_MONTHS,        7045,  STR7045,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [Monate ] - Wartung/Service - Zeit seit Wartung
+{0x0D05092A,  CAT_WARTUNG,          VT_ONOFF,         7130,  STR7130,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Wartung/Service - Schornsteinfegerfunktion
+{0x05050075,  CAT_WARTUNG,          VT_ONOFF,         7140,  STR7140,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Wartung/Service - Handbetrieb
+{0x05050528,  CAT_WARTUNG,          VT_TEMP,          7150,  STR7150,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [ °C ] - Wartung/Service - Simulation Aussentemperatur
+{0x050506E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [0] - Wartung/Service - Telefon Kundendienst
+{0x05050073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     FL_RONLY,     DEV_LPB}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x0505040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Mod'sollwert QX3 Relaistest
+{0x050504A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Modulationssignal QX3
+{0x0505040E,  CAT_IOTEST,           VT_PERCENT,       7710,  STR7710,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // Ausgangstest UX1 //FUJITSU
+{0x05050821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Spannungssignal UX
+{0x05050470,  CAT_IOTEST,           VT_TEMP,          7730,  STR7730,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Aussentemperatur B9
+{0x050508C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x050508C6,  CAT_IOTEST,           VT_TEMP,          7734,  STR7734,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Vorlauftemperatur B12
+{0x05050462,  CAT_IOTEST,           VT_TEMP,          7750,  STR7750,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Trinkwassertemperatur B3
+{0x05050468,  CAT_IOTEST,           VT_TEMP,          7760,  STR7760,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Kesseltemperatur B2
+{0x0505056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x0505056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7821,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
+{0x05050791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x05050792,  CAT_IOTEST,           VT_TEMP,          7807,  STR7823,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
+{0x05050793,  CAT_IOTEST,           VT_TEMP,          7830,  STR7830,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 1
+{0x05050799,  CAT_IOTEST,           VT_TEMP,          7831,  STR7831,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 1
+{0x0505079A,  CAT_IOTEST,           VT_TEMP,          7832,  STR7832,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX21 Modul 2
+{0x0505079B,  CAT_IOTEST,           VT_TEMP,          7833,  STR7833,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Ein-/Ausgangstest - Fühlertemp. BX22 Modul 2
+{0x0505082F,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
+{0x05050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
+{0x0705082F,  CAT_IOTEST,           VT_VOLTAGE,       7854,  STR7854,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Spannungssignal H3
+{0x07050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7855,  STR7855,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kontaktzustand H3
+{0x050503F6,  CAT_IOTEST,           VT_VOLTAGE,       7870,  STR7870,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
+{0x050503FC,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7912,  STR7912,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [V] - Ein-/Ausgangstest - Eingang EX2
+{0x050507A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_LPB}, // [ ] - Status - Status Heizkreis 1
+{0x050507A5,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),     ENUM8001,     FL_RONLY,     DEV_LPB}, // [ ] - Status - Status Heizkreis 2
+{0x050507A7,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),     ENUM8002,     FL_RONLY,     DEV_LPB}, // [ ] - Status - Status Heizkreis P
+{0x050507A1,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),     ENUM8003,     FL_RONLY,     DEV_LPB}, // [] - Status - Status Trinkwasser
+{0x050507A9,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),     ENUM8005,     FL_RONLY,     DEV_LPB}, // [] - Status - Status Kessel
+{0x050507AD,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     FL_RONLY,     DEV_LPB}, // [] - Status - Status Solar
+{0x05050A08,  CAT_STATUS,           VT_ENUM,          8008,  STR8008,  sizeof(ENUM8008),     ENUM8008,     FL_RONLY,     DEV_LPB}, // [] - Status - Status Feststoffkessel
+{0x050507AB,  CAT_STATUS,           VT_ENUM,          8010,  STR8010,  sizeof(ENUM8010),     ENUM8010,     FL_RONLY,     DEV_LPB}, // [] - Status - Status Pufferspeicher
+{0x05050AFC,  CAT_STATUS,           VT_ENUM,          8011,  STR8011,  sizeof(ENUM8011),     ENUM8011,     FL_RONLY,     DEV_LPB}, // Status Schwimmbad
+{0x050509A0,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8300,  STR8300,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
+{0x050509A1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8301,  STR8301,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Erzeuger - 2. Brennerstufe T8
+{0x050509A2,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8304,  STR8304,  sizeof(ENUM8304),     ENUM8304,     FL_RONLY,     DEV_LPB}, // Kesselpumpe Q1 TODO determine enum values
+{0x05050826,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8308,  STR8308,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Kesselpumpe
+{0x0D050519,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0D050923,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8311,  STR8311,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
+{0x05050B26,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8312,  STR8312,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kesselschaltpunkt
+{0x1105051A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
+{0x11050B64,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8315,  STR8315,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kesselrücklaufsollwert
+{0x0505051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
+{0x0505051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
+{0x05050834,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         FL_RONLY,     DEV_BROETJE-DEV_BR_PEV}, // WGBS Brennermodulation
+{0x0D05093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
+{0x050508A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe
+{0x0D05093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
+{0x050508A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
+{0x050509AB,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8499,  STR8499,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kollektorpumpe 1 (Aus) - Broetje NovoCondens WOB20-25
+{0x05050A89,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8501,  STR8501,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Solarstellglied Puffer - Broetje NovoCondens WOB20-25
+{0x05050A8B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8502,  STR8502,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Solarstellglied Schwimmbad - Broetje NovoCondens WOB20-25
+{0x490504CE,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8505,  STR8505,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Kollektorpumpe 1
+{0x05050825,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8506,  STR8506,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Solarpump ext.Tau
+{0x05050823,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8507,  STR8507,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Solarpumpe Puffer
+{0x05050824,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8508,  STR8508,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Solarpump Sch'bad
+{0x4905052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
+{0x4905053F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8511,  STR8511,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Max
+{0x49050718,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8512,  STR8512,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Min
+{0x4905053B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8513,  STR8513,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/TWW
+{0x4905053C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8514,  STR8514,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - dT Kollektor 1/Puffer
+{0x4905042E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8515,  STR8515,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // dT Kollektor 1 / Schwimmbad
+{0x4905050E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8519,  STR8519,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Solarvorlauftemperatur
+{0x4905050F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8520,  STR8520,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Solarrücklauftemperatur
+{0x49050599,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8526,  STR8526,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Tagesertrag Solarenergie
+{0x49050598,  CAT_DIAG_ERZEUGER,    VT_POWER,         8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Gesamtertrag Solarenergie
+{0x49050893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag
+{0x49050717,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8531,  STR8531,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [h ] - Diagnose Erzeuger - Betr`stunden Kollektor`überhitz
+{0x05050822,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8543,  STR8543,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Kollektorpumpe
+{0x4905052B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8547,  STR8547,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kollektortemperatur 2
+{0x49050540,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8548,  STR8548,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kollektortemperatur 2 Max
+{0x49050ADB,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8549,  STR8549,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Kollektortemperatur 2 Min
+{0x4905053D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8550,  STR8550,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // dT Kollektor 2 / TWW
+{0x4905053E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8551,  STR8551,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // dT Kollektor 2 / Puffer
+{0x4905042F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8552,  STR8552,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // dT Kollektor 2 / Schwimmbad
+{0x5105052E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8560,  STR8560,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Erzeuger - Feststoffkesseltemperatur
+{0x51050892,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8570,  STR8570,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Betr'std Feststoffkessel
+{0x05050521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+{0x0505056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Außentemperatur Minimum
+{0x0505056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Außentemperatur Maximum
+{0x050505F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
+{0x050505F2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8704,  STR8704,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gemischt
+{0x050509A5,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8730,  STR8730,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q2
+{0x050509A6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8731,  STR8731,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y1
+{0x050509A7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8732,  STR8732,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y2
+{0x210504A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Heizkreispumpe 1
+{0x2D05051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
+{0x2D050593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1
+{0x21050518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1 Alarm
+{0x21050667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
+{0x050509A8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8760,  STR8760,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreispumpe Q6
+{0x050509A9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8761,  STR8761,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y5
+{0x050509AA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8762,  STR8762,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y6
+{0x220504A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8765,  STR8765,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Heizkreispumpe 2
+{0x2E05051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8770,  STR8770,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 2
+{0x2E050593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8771,  STR8771,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumsollwert 2
+{0x22050518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8773,  STR8773,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 2
+{0x22050667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8774,  STR8774,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 2
+{0x050509B0,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8790,  STR8790,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Heizkreispumpe 3
+{0x230504A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8795,  STR8795,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Heizkreispumpe P
+{0x2F05051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8800,  STR8800,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P
+{0x2F050593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8801,  STR8801,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Raumsollwert P
+{0x23050667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8803,  STR8803,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlaufsol wert P
+{0x050509A3,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8820,  STR8820,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Trinkwasserpumpe Q3
+{0x050509AE,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8821,  STR8821,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Elektroeinsatz TWW K6 //FUJITSU ("Elektrischer Widerstand TWW")
+{0x250504A4,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8825,  STR8825,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl Trinkwasserpumpe
+{0x25050B27,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8826,  STR8826,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Drehzahl TWW Zw'kreispumpe
+{0x3105052F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
+{0x3105074B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8831,  STR8831,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert
+{0x31050530,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8832,  STR8832,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 2
+{0x2505077D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8835,  STR8835,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - TWW Zirkulationstemperatur
+{0x25050B18,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8850,  STR8850,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // TWW Vorreglertemperatur
+{0x25050B36,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8851,  STR8851,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // TWW Vorreglersollwert
+{0x31050B24,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8852,  STR8852,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // TWW Durchl'erhitzertemp
+{0x31050B37,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8853,  STR8853,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // TWW Durchl'erhitzersollwert
+{0x0705080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8895,  STR8895,  0,                    NULL,         FL_RONLY,     DEV_FJ_WSK}, // Vorlaufsollwert Schwimmbad //FUJITSU
+{0x05050AF9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8900,  STR8900,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Schwimmbadtemperatur
+{0x05050AF2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8901,  STR8901,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Schwimmbadsollwert
+{0x050508C7,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8930,  STR8930,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorreglertemperatur
+{0x050508C8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8931,  STR8931,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorreglersollwert
+{0x0505051F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur
+{0x05050783,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8951,  STR8951,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Schienenvorlaufsollwert
+{0x05050AF8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Schienenrücklauftemperatur
+{0x05050B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Leistungssollwert Schiene
+{0x05050534,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8980,  STR8980,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 1
+{0x05050883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Pufferspeichersollwert
+{0x05050535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
+{0x05050536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Pufferspeichertemperatur 3
+{0x0505080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
+{0x050509BA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9031,  STR9031,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX1
+{0x050509BB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9032,  STR9032,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX2
+{0x050509BC,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9033,  STR9033,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX3
+{0x050509BD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9034,  STR9034,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // Relaisausgang QX4
+{0x050509F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
+{0x050509F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
+{0x050509F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
+{0x050509F9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9053,  STR9053,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 2
+{0x050509FA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9054,  STR9054,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 2
+{0x050509FB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9055,  STR9055,  0,                    NULL,         FL_RONLY,     DEV_LPB}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 2
