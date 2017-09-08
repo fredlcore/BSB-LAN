@@ -53,7 +53,7 @@ char version[] = "0.37";
  *
  * Changelog:
  *       version 0.37
- *        - LPB implementation! More than 450 parameters supported! Switch between LPB and BSB with the Px command (0=BSB, 1=LPB), parameter numbers are the same as for BSB.
+ *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
  *        - bugfix: brought back VT_BIT list of options which were erroneously deleted :(, fixed/freed several memory issues
  *       version 0.35
