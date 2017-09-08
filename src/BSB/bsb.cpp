@@ -39,7 +39,7 @@ uint8_t BSB::getBusType() {
 void BSB::print(byte* msg) {
   //if (msg[0] != 0xDC) return;
   byte len = msg[len_idx];
-  //if (len > 30) return;
+ //if (len > 30) return;
   byte data = 0;
 
   for (; len > 0-bus_type; len--) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)

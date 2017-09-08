@@ -49,11 +49,11 @@ char version[] = "0.37";
  *       0.34  - 29.05.2017
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
- *       0.37  - 02.09.2017
+ *       0.37  - 06.09.2017
  *
  * Changelog:
  *       version 0.37
- *        - LPB implementation! Switch between LPB and BSB with the Px command (0=BSB, 1=LPB), parameter numbers are the same as for BSB. So far basic functionality only (setting/reading temperatures and modes).
+ *        - LPB implementation! More than 450 parameters supported! Switch between LPB and BSB with the Px command (0=BSB, 1=LPB), parameter numbers are the same as for BSB.
  *       version 0.36
  *        - bugfix: brought back VT_BIT list of options which were erroneously deleted :(, fixed/freed several memory issues
  *       version 0.35

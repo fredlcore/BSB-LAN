@@ -2622,7 +2622,7 @@ const char ENUM6620[] PROGMEM = {
 // LPB   - Sommerumschaltung
 const char ENUM6621[] PROGMEM = {
 "\x00 Lokal\0"
-"\x01 Zentral"
+"\x01 Zentral\0"
 "\xff Zentral"
 };
 
