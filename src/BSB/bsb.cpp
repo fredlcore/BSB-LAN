@@ -52,7 +52,7 @@ void BSB::print(byte* msg) {
 }
 
 // Receives a message and stores it to buffer
-void BSB::Monitor(byte* msg) {
+boolean BSB::Monitor(byte* msg) {
   unsigned long int ts;
   byte read;
   byte i=0;
@@ -88,7 +88,9 @@ void BSB::Monitor(byte* msg) {
       if (serial->available() == 0) break;
     }
     Serial.println();
+    return true;
   }
+  return false;
 }
 
 bool BSB::GetMessage(byte* msg) {
