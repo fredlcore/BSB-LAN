@@ -38,7 +38,7 @@ class BSB
 {
 public:
   BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x06, uint8_t d_addr=0x00 );
-  void Monitor(byte* msg);
+  boolean Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
   uint8_t setBusType(uint8_t bus_type_val);

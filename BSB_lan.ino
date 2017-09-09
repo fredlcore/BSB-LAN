@@ -1,4 +1,4 @@
-char version[] = "0.37";
+char version[] = "0.38";
 
 /*
  * 
@@ -50,8 +50,11 @@ char version[] = "0.37";
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
+ *       0.38  - 09.09.2017
  *
  * Changelog:
+ *       version 0.38
+ *        - Bugfixing SD-card logging in monitor mode
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
@@ -2658,7 +2661,7 @@ void LogTelegram(byte* msg){
     }
 
     if (log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) {
-      if (log_bc_only == 0 || (log_bc_only == 1 && msg[2] == ADDR_ALL)) {
+      if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus_type==0) || (msg[2]>=0xF0 && bus_type==1)))) {
         dataFile = SD.open("datalog.txt", FILE_WRITE);
         if (dataFile) {
           dataFile.print(millis());
@@ -3027,9 +3030,11 @@ void loop() {
   // interface.
   // Separate telegrams after a pause of more than one character time.
   if(monitor){
-    bus.Monitor(msg);
+    boolean busmsg=bus.Monitor(msg);
 #ifdef LOGGER
-    LogTelegram(msg);
+    if (busmsg==true) {
+      LogTelegram(msg);
+    }
 #endif
   }else{
     // Listen for incoming messages, identified them by their magic byte.
