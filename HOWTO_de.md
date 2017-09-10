@@ -40,7 +40,7 @@ Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepas
 - Konfiguration des Heizungssystems
   `int fixed_device_id = 0`
   Wenn der Wert auf 0 gesetzt ist, ist die automatische Erkennung des angeschlossenen Reglers beim Starten des Arduinos aktiviert. Alternativ kann hier der Wert von Parameter 6225 eingetragen werden.
-  Ein fest eingestellter Wert (laut Ausgabe von Parameter 6225) stellt sicher, dass BSB_LAN auch dann noch korrekt arbeitet, wenn die Heizung erst nach dem Starten des Arduinos eingeschaltet wird (da in dem Fall die automatische Erkennung des angeschlossenen Reglers nicht funktioniert, da ja keine Rückmeldung vom Regler kommen kann). 
+  Ein fest eingestellter Wert (laut Ausgabe von Parameter 6225) stellt sicher, dass BSB_LAN auch dann noch korrekt arbeitet, wenn die Heizung erst nach dem Starten des Arduinos eingeschaltet wird (da in dem Fall die automatische Erkennung des angeschlossenen Reglers nicht funktionieren kann, da ja keine Rückmeldung vom Regler kommt). 
 - Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield, eine Änderung ist i.d.R. aber nur nötig, wenn mehr als ein Adapter verwendet wird:  
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
 - IP-Adresse:  
