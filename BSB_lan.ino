@@ -99,7 +99,7 @@ char version[] = "0.38";
  *        - new URL-command /LB=x to log only broadcast messages (x=1) or all bus messages (x=0)
  *        - new URL-command /X to reset the Arduino (need to enable RESET definement in BSB_lan_config.h)
  *        - new logging parameters 20002 and 20003 for hot water loading times and cycles
- *        - moved DS18B20 logging parameters from 20010-20019 to 20100-20199 and DHT22 logging parameters from 20020-20029 to 20200 to 20299
+ *        - moved DS18B20 logging parameters from 20010-20019 to 20200-20299 and DHT22 logging parameters from 20020-20029 to 20100 to 20199
  *        - moved average logging parameter from 20002 to 20004
  *        - set numerous parameters to read-only because that's what they obviously are (K33-36)
  *        - various bugfixes
@@ -3506,8 +3506,8 @@ void loop() {
           break;
         }
 
-#ifdef DEBUG
         if(p[1]=='Y'){
+#ifdef DEBUG
           webPrintHeader();
           uint8_t type = strtol(&p[2],NULL,16);
           uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
@@ -3541,9 +3541,9 @@ void loop() {
             client.print(F(" "));
           }
           webPrintFooter();
+#endif
           break;
         }
-#endif
         
         if(p[1]=='O') {   // display URL command list
           webPrintHeader();
@@ -4011,8 +4011,8 @@ void loop() {
           webPrintFooter();
           break;
         }
-#ifdef RESET
         if (p[1]=='X'){           // Reset Arduino
+#ifdef RESET
           webPrintHeader();
           client.println(F("Reset..."));
           webPrintFooter();
@@ -4025,8 +4025,9 @@ void loop() {
 #endif
           asm volatile ("  jmp 0");
           while (1==1) {}
-        }
 #endif
+          break;
+        }
         // print queries
         webPrintHeader();
         char* range;
