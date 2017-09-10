@@ -38,7 +38,7 @@ Getting started:
 * Open `http://<ip address from config>/` (or `http://<ip address from config>/<passkey>/` when using the passkey function, see below) to see if everything was compiled and uploaded correctly. A simple web-interface should appear.
 
 Optionally configure the following parameters in BSB_lan_config.h:  
-- Heating system
+- Heating system configuration  
   `int fixed_device_id = 0;`
   Set this to 0 to turn on auto-detection at startup of the Arduino or enter value of parameter 6225 here.
   A fixed value will ensure that BSB_LAN works correctly even if the heating system was turned on after the Arduino (in which case of course BSB_LAN cannot detect the heating system).
