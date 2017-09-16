@@ -81,7 +81,7 @@ int log_parameters[20] = {
 //  20002,                  // Spezialparameter: TWW-Laufzeit (/B)
 //  20003,                  // Spezialparameter: TWW-Takte (/B)
 //  20004,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
-//  20101,                  // Spezialparameter 20100-20099: DHT22-Sensoren 1-100 (/H)
+//  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/H)
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
 
