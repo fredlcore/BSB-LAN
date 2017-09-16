@@ -4350,7 +4350,7 @@ void loop() {
           if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
             int log_sensor = log_parameters[i] - 20200;
             sensors.requestTemperatures(); // Send the command to get temperatures
-            float t=sensors.getTempCByIndex(i);
+            float t=sensors.getTempCByIndex(log_sensor);
             dataFile.print(F("Temperature "));
             dataFile.print(log_sensor);
             dataFile.print(F(";"));
