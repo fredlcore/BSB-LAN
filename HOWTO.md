@@ -55,8 +55,8 @@ Optionally configure the following parameters in BSB_lan_config.h:
   If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2:  
   `BSB bus(68,69,7);`
   
-- Bus protocol
-  `uint8_t bus_type = bus.setBusType(<type>);`
+- Bus protocol  
+  `uint8_t bus_type = bus.setBusType(<type>);`  
   Default is 0 for BSB, change here to 1 for LPB or use URL command /P0 and /P1 to temporarily switch accordingly.  
 - Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
