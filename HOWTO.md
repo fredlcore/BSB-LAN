@@ -55,8 +55,9 @@ Optionally configure the following parameters in BSB_lan_config.h:
   If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2:  
   `BSB bus(68,69,7);`
   
-- Bus protocol (default is 0 for BSB), change here to 1 for LPB or use URL command /P0 and /P1 to switch accordingly.  
-  `uint8_t bus_type = bus.setBusType(0);`
+- Bus protocol
+  `uint8_t bus_type = bus.setBusType(<type>);`
+  Default is 0 for BSB, change here to 1 for LPB or use URL command /P0 and /P1 to temporarily switch accordingly.  
 - Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
 - You can restrict access to the adapter to read-only, so that you can not set or change certain parameters of the heater itself by accessing it via the adapter. To achieve this, you have to set the flag in the concerning line (#define DEFAULT_FLAG 0) to FL_RONLY:  
