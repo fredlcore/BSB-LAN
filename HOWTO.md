@@ -49,9 +49,10 @@ Optionally configure the following parameters in BSB_lan_config.h:
   `IPAddress ip(192,168,178,88);`  
 - Ethernet port  
   `EthernetServer server(80);`  
-- Pin assigment of the BSB adapter  
-  `BSB bus(68,69);`  
-- Bus protocol (default is 0 for BSB, change here to 1 for LPB or use URL command /P0 and /P1 to switch accordingly.
+- Adapter configuration
+  RX-Pin, TX-Pin, own bus address (defaults to 0x06), destination bus address (defaults to 0x00)
+  `BSB bus(68,69);`
+- Bus protocol (default is 0 for BSB), change here to 1 for LPB or use URL command /P0 and /P1 to switch accordingly.
   `uint8_t bus_type = bus.setBusType(0);`
 - Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
@@ -180,6 +181,10 @@ Web-Interface:
         Shows the content of datalog.txt file on the Ethernet shield's micro SD card slot. 
         Use /D0 to reset datalog.txt including writing a proper CSV file header 
         (recommended on first use before logging starts).
+
+      Set bus type (temporarily)
+        http://<ip-of-server>/Px
+        Switches between BSB (x=0) and LPB bus (x=1). Use setBusType config option in BSB_lan_config.h to set bus type permanently.
 
       Reset Arduino
         http://<ip-of-server>/X
