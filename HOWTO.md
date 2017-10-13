@@ -50,15 +50,14 @@ Optionally configure the following parameters in BSB_lan_config.h:
 - Ethernet port  
   `EthernetServer server(80);`  
 - Adapter configuration
-  RX-Pin, TX-Pin, own bus address (defaults to 0x06), destination bus address (defaults to 0x00)
-  `BSB bus(68,69);`
+  RX-Pin, TX-Pin, own bus address (defaults to 0x06=RGT1), destination bus address (defaults to 0x00=heating system)
+  `BSB bus(68,69,<my_addr>,<dest_addr>);`
+  If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2: `BSB bus(68,69,7);`
+  
 - Bus protocol (default is 0 for BSB), change here to 1 for LPB or use URL command /P0 and /P1 to switch accordingly.
   `uint8_t bus_type = bus.setBusType(0);`
 - Activate the usage of the passkey functionality (see below)  
   `#define PASSKEY  "1234"`  
-- BSB address (default is 0x06=RGT1, but can be overwritten in the bus initialization)  
-  `BSB bus(68,69,<my_addr>);`
-  If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2: `BSB bus(68,69,7);`
 - You can restrict access to the adapter to read-only, so that you can not set or change certain parameters of the heater itself by accessing it via the adapter. To achieve this, you have to set the flag in the concerning line (#define DEFAULT_FLAG 0) to FL_RONLY:  
   `#define DEFAULT_FLAG FL_RONLY;`
 - You can set the language of the webinterface of the adapter to english by deactivating the concerning definement:
