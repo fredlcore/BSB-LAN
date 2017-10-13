@@ -41,7 +41,7 @@ Getting started:
 
 Optionally configure the following parameters in BSB_lan_config.h:  
 - Heating system configuration  
-  `int fixed_device_id = 0;  
+  `int fixed_device_id = 0;`  
   Set this to 0 to turn on auto-detection at startup of the Arduino or enter value of parameter 6225 here.
   A fixed value will ensure that BSB_LAN works correctly even if the heating system was turned on after the Arduino (in which case of course BSB_LAN cannot detect the heating system).
 - MAC address of your ethernet shield. It can be normally found on a label at the shield:  
