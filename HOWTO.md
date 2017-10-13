@@ -4,7 +4,7 @@ ATTENTION:
       There is no waranty that this system will not damage your heating system!
 
 Author: Gero Schumacher (gero.schumacher ät gmail.com) (up to version 0.16)  
-        Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)
+        Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)  
       Based on the code and work from many other developers (see Info section below). Many thanks!
 
 License:
