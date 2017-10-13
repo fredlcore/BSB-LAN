@@ -18,8 +18,11 @@
 
 /* telegram addresses */
 #define ADDR_HEIZ  0x00
+#define ADDR_EM1   0x03
+#define ADDR_EM2   0x04
 #define ADDR_RGT1  0x06
 #define ADDR_RGT2  0x07
+#define ADDR_CNTR  0x08
 #define ADDR_DISP  0x0A
 #define ADDR_ALL   0x7F
 
@@ -38,11 +41,13 @@
 #define DEV_BR_PEV  0x00000040L   // Gerätefamilie: 098, Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
 #define DEV_BR_IZ1  0x00000080L   // Gerätefamilie: 107, Brötje ISR-Z1
 #define DEV_BR_BSW  0x00000100L   // Gerätefamilie: 108, Brötje Sensotherm BSW-K
-#define DEV_BR_WGS  0x00000200L   // Gerätefamilie: 162, Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
-#define DEV_BR_WGE  0x00000400L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
-#define DEV_FJ_WSK  0x00001000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
+#define DEV_BR_BOB  0x00000200L   // Gerätefamilie: 138, Brötje BOB
+#define DEV_BR_WGS  0x00000400L   // Gerätefamilie: 162, Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
+#define DEV_BR_WGE  0x00000800L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
+#define DEV_BR_S26  0x00001000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
+#define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
 #define DEV_ELCO    0x0000000fL   // ELCO devices
-#define DEV_BROETJE 0x000007f0L   // BROETJE devices
+#define DEV_BROETJE 0x0000fff0L   // BROETJE devices
 #define DEV_LPB     0x0f000000L   // All LPB devices
 #define DEV_ALL     0xffffffffL   // All (BSB) devices
 #define DEV_NONE    0x00000000L
@@ -54,12 +59,14 @@ typedef struct {
 
 PROGMEM_LATE const device_table dev_tbl[]={
 {1,   DEV_LPB},
+{28,  DEV_BR_S26},
 {97,  DEV_EL_THI},
 {90,  DEV_BR_ISC},
 {96,  DEV_BR_SOB},
 {98,  DEV_BR_PEV},
 {107, DEV_BR_IZ1},
 {108, DEV_BR_BSW},
+{138, DEV_BR_BOB},
 {162, DEV_BR_WGS},
 {163, DEV_BR_WGE},
 {170, DEV_FJ_WSK},
@@ -108,7 +115,6 @@ typedef enum{
   CAT_DIAG_VERBRAUCHER,
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
-  CAT_LPB_COMMANDS,
   CAT_UNKNOWN
 }category_t;
 
@@ -303,8 +309,7 @@ const char ENUM_CAT[] PROGMEM_LATE = {
 "\x25 Diagnose Verbraucher\0"
 "\x26 Feuerungsautomat\0"
 "\x27 Benutzerdefiniert\0"
-"\x28 LPB-Parameter\0"
-"\x29 unbekannte Kategorie"
+"\x28 unbekannte Kategorie"
 };
 
 
