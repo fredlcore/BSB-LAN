@@ -49,8 +49,8 @@ Optionally configure the following parameters in BSB_lan_config.h:
   `IPAddress ip(192,168,178,88);`  
 - Ethernet port  
   `EthernetServer server(80);`  
-- Adapter configuration
-`BSB bus(68,69,<my_addr>,<dest_addr>);`  
+- Adapter configuration  
+  `BSB bus(68,69,<my_addr>,<dest_addr>);`  
   RX-Pin, TX-Pin, own bus address (defaults to 0x06=RGT1), destination bus address (defaults to 0x00=heating system)
   If you already have an RGT1 installed, you can type in the following to address the adapter as RGT2:  
   `BSB bus(68,69,7);`
