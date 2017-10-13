@@ -3,9 +3,10 @@ BSB Boiler-System-Bus LAN Interface
 ATTENTION:  
       There is no waranty that this system will not damage your heating system!
 
-Author: Gero Schumacher (gero.schumacher ät gmail.com) (up to version 0.16)  
-        Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)  
-      Based on the code and work from many other developers (see Info section below). Many thanks!
+Authors:  
+Gero Schumacher (gero.schumacher ät gmail.com) (up to version 0.16)  
+Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)  
+Based on the code and work from many other developers (see Info section below). Many thanks!
 
 License:
       You are free to use this software on your own risk. Please take care of the licenses of the used libraries and software.
