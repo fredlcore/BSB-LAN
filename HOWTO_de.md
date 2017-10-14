@@ -101,8 +101,8 @@ Web-Interface des Adapters:
       Alle Werte eines Zeilenbereichs abfragen (von Zeile x bis Zeile y):
         http://<ip-of-server>/<x>-<y>
 
-      Mehrere Abfragen können miteinander verkettet werden:
-        e.g. http://<ip-of-server>/K11/8000/8003/8005/8300/8301/8730-8732/8820
+      Mehrere Abfragen können miteinander verkettet werden, z.B.:
+        http://<ip-of-server>/K11/8000/8003/8005/8300/8301/8730-8732/8820
 
       Frage den Reset-Wert für Parameter x ab:
         http://<ip-of-server>/R<x>
