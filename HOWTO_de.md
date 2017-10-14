@@ -47,16 +47,15 @@ Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepas
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
-- Pinbelegung des BSB-Adapters:  
-  `BSB bus(68,69);`  
+- Konfiguration des Adapters:  
+  `BSB bus(68,69,<my_addr>,<dest_addr>);`
+  RX-Pin, TX-Pin, eigene Bus-Adresse (voreingestellt auf 0x06=RGT1), Bus-Adresse des Zielsystems (voreingestellt auf 0x00=Heizungsregler). 
+  Wenn bereits ein Raumgerät (RGT1) vorhanden ist, kann bzw. sollte der Adapter als RGT2 angemeldet werden: 
+  `BSB bus(68,69,7);`
 - Bus-Protokoll (voreingestellt ist 0 für BSB, für LPB ist 1 einzustellen; mittels der URL-Befehle /P0 und /P1 kann entsprechend umgestellt werden)
   `uint8_t bus_type = bus.setBusType(0);`
 - Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
   `#define PASSKEY  "1234"`  
-- BSB-Adresse (voreingestellt ist 0x06=RGT1, dies kann jedoch bei der Bus-Initialisierung überschrieben werden):  
-  `BSB bus(68,69,<my_addr>);`
-  Um den BSB-LAN-Adapter (bei einem bereits vorhandenem Raumgerät RGT1) als RGT2 anzumelden, gib Folgendes ein:
-  `BSB bus(68,69,7);`  
 - Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
   `#define DEFAULT_FLAG FL_RONLY;` 
   UPDATE: In der config.h ist nun als Voreinstellung DEFAULT_FLAG auf read-only gesetzt, d.h., dass alle Werte (erst einmal) nur lesbar sind. Wer das ändern will, muss wieder DEFAULT_FLAG auf 0 setzen oder bei den einzelnen Parametern (z.B. 10000 oder 710) in der defs.h den Wert DEFAULT_FLAG durch 0 ersetzen.
@@ -173,6 +172,10 @@ Web-Interface des Adapters:
         Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
         Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).
 	UPDATE: Wer Parameter auf SD-Karte loggt, bekommt nun neben der reinen Textform auch die Möglichkeit, einen Graphen angezeigt zu bekommen (siehe Screenshot im README-File). Dafür muss bei Javascript-Blockern die Domain d3js.org freigegeben werden. Das hat den Grund, dass der Arduino weiterhin nur die CSV-Datei in den Browser schiebt und diese dann mit dem D3 Framework grafisch aufbereitet wird.
+	
+      Bus-typ (BSB oder LPB) vorübergehend ändern:
+        http://<ip-of-server>/P<x>
+	Wechselt zwischen BSB (x=0) und LPB (x=1). Um den Bus-typ dauerhaft festzulegen, sollte die Option setBusType cofig in der Datei BSB_lan_config.h entsprechend angepasst werden.
 	
       Resetten/Restarten des Arduinos
     	http://<ip-of-server>/X
