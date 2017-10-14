@@ -3,7 +3,9 @@ BSB-LAN-Adapter
 ACHTUNG:  
       Es gibt KEINE GARANTIE (oder Gewährleistung jeglicher Art), dass dieser Adapter dein Heizungssystem NICHT beschädigt!
 
-Autor:	Gero Schumacher (gero.schumacher@gmail.com)  
+Autoren:  
+Gero Schumacher (gero.schumacher ät gmail.com) (bis v0.16)  
+Frederik Holst (bsb ät code-it.de) (ab v0.17 aufwärts)  
       Basierend auf dem Code und der Arbeit von vielen anderen Entwicklern (s. Info-Abschnitt weiter unten). Vielen Dank!
 
 Übersetzung EN-DE: Ulf Dieckmann (nach bestem Wissen und Gewissen ;) )
@@ -26,7 +28,7 @@ Zielsystem:
 Erste Schritte:
 - Verbinde die Anschlüsse CL+ und CL- des Adapters mit den entsprechenden Anschlüssen des Heizungssystems (mögliche Bezeichnungen am Heizungsregler sind BSB, FB (Fernbedienung/remote control), CL+/CL-). Für den LPB sind DB und MB zu nutzen, wobei DB(+) mit CL+ und MB(-) mit CL- zu verbinden sind.
 - Downloade und installiere die aktuelle Version der Arduino IDE von https://www.arduino.cc/en/Main/Software (Windows-, Mac- und Linux-Version verfügbar).
-- Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac). 
+- <del>Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac).</del>  
 UPDATE: Ab v0.34 gilt: Wichtigste Änderunge für alle Neuinstallationen ist, dass die Libraries, die nicht standardmäßig bei der Arduino IDE mit dabei sind, nun einfach im Sketch-Verzeichnis bleiben können und von dort eingelesen werden. Ein Kopieren ist nun nicht mehr nötig, was zum einen gerade für Anfänger die Installation erleichtert und alle anderen bei der Aktualisierung von Libraries diese ebenfalls nicht mehr manuell verschieben müsst. Es kann sein, dass das Kompilieren fehl schlägt, wenn die gleiche Library bereits im Standard-Libraries-Verzeichnis der Arduino IDE liegt. In dem Fall müsste die gleichlautende Bibliothek dort (Win: MyDocuments\Arduino\Libraries bzw. Mac: ~/Dokumente/Arduino/Libraries) gelöscht werden.
 - Öffne den BSB_lan-sketch mittels eines Doppelklicks auf die Datei BSB_lan.ino im BSB_lan-Ordner. Die dazugehörigen Dateien BSB_lan_config.h und BSB_land_defs.h werden automatisch mit geladen.
 - Konfiguriere die IP-Adresse in BSB_lan_config.h deinem Netzwerk entsprechend (die voreingestellte IP 192.168.178.88 funktioniert mit den meisten Standard-Routern wie bspw. Fitz!Box, aber prüfe, ob die IP bereits anderweitig vergeben ist, damit es nicht zu einer Adressen-Kollision kommt).
@@ -37,28 +39,29 @@ UPDATE: Ab v0.34 gilt: Wichtigste Änderunge für alle Neuinstallationen ist, da
 - Öffne die Seite `http://<IP-Adresse>/` (oder `http://<IP-Adresse>/<passkey>/`, wenn die Passkey-Funktion genutzt wird, s.u.) um zu sehen, ob alles korrekt kompiliert und hochgeladen wurde. Ein einfaches Webinterface sollte erscheinen.
 
 Optional können die folgenden Parameter in der Datei "BSB_lan_config.h" angepasst werden:
-- Konfiguration des Heizungssystems
-  `int fixed_device_id = 0`
-  Wenn der Wert auf 0 gesetzt ist, ist die automatische Erkennung des angeschlossenen Reglers beim Starten des Arduinos aktiviert. Alternativ kann hier der Wert von Parameter 6225 eingetragen werden.
-  Ein fest eingestellter Wert (laut Ausgabe von Parameter 6225) stellt sicher, dass BSB_LAN auch dann noch korrekt arbeitet, wenn die Heizung erst nach dem Starten des Arduinos eingeschaltet wird (da in dem Fall die automatische Erkennung des angeschlossenen Reglers nicht funktionieren kann, da ja keine Rückmeldung vom Regler kommt). 
-- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield, eine Änderung ist i.d.R. aber nur nötig, wenn mehr als ein Adapter verwendet wird:  
-  `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
+- Konfiguration des Heizungssystems  
+`int fixed_device_id = 0`  
+Wenn der Wert auf 0 gesetzt ist, ist die automatische Erkennung des angeschlossenen Reglers beim Starten des Arduinos aktiviert. Alternativ kann hier der Wert von Parameter 6225 eingetragen werden.  
+Ein fest eingestellter Wert (laut Ausgabe von Parameter 6225) stellt sicher, dass BSB_LAN auch dann noch korrekt arbeitet, wenn die Heizung erst nach dem Starten des Arduinos eingeschaltet wird (da in dem Fall die automatische Erkennung des angeschlossenen Reglers nicht funktionieren kann, da ja keine Rückmeldung vom Regler kommt). 
+- Die MAC-Adresse des Ethernet-Shields. Üblicherweise (jedoch nicht immer) befindet sie sich auf einem Aufkleber auf dem Ethernet-Shield, eine Änderung ist i.d.R. aber nur nötig, wenn mehr als ein Adapter verwendet wird:    
+`byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
 - IP-Adresse:  
   `IPAddress ip(192,168,178,88);`  
 - Ethernet-Port:  
   `EthernetServer server(80);`  
 - Konfiguration des Adapters:  
-  `BSB bus(68,69,<my_addr>,<dest_addr>);`
-  RX-Pin, TX-Pin, eigene Bus-Adresse (voreingestellt auf 0x06=RGT1), Bus-Adresse des Zielsystems (voreingestellt auf 0x00=Heizungsregler). 
-  Wenn bereits ein Raumgerät (RGT1) vorhanden ist, kann bzw. sollte der Adapter als RGT2 angemeldet werden: 
+  `BSB bus(68,69,<my_addr>,<dest_addr>);`  
+  RX-Pin, TX-Pin, eigene Bus-Adresse (voreingestellt auf 0x06=RGT1), Bus-Adresse des Zielsystems (voreingestellt auf 0x00=Heizungsregler).   
+  Wenn bereits ein Raumgerät (RGT1) vorhanden ist, kann bzw. sollte der Adapter als RGT2 angemeldet werden:  
   `BSB bus(68,69,7);`
-- Bus-Protokoll (voreingestellt ist 0 für BSB, für LPB ist 1 einzustellen; mittels der URL-Befehle /P0 und /P1 kann entsprechend umgestellt werden)
-  `uint8_t bus_type = bus.setBusType(0);`
+- Bus-Protokoll   
+`uint8_t bus_type = bus.setBusType(0);`  
+Voreingestellt ist 0 für BSB, für LPB ist 1 einzustellen; mittels der URL-Befehle /P0 und /P1 kann entsprechend umgestellt werden.
 - Man kann die Funktion eines Sicherheitsschlüssels (PASSKEY) aktivieren (s. unten):  
   `#define PASSKEY  "1234"`  
 - Man kann den Zugriff auf den Adapter auf Lesen beschränken, ein Setzen bzw. Verändern von Parametern der Heizungssteuerung per Adapter ist dann nicht mehr möglich. Dazu muss in der betreffenden Zeile (#define DEFAULT_FLAG 0) das Flag auf FL_RONLY gesetzt werden:  
-  `#define DEFAULT_FLAG FL_RONLY;` 
-  UPDATE: In der config.h ist nun als Voreinstellung DEFAULT_FLAG auf read-only gesetzt, d.h., dass alle Werte (erst einmal) nur lesbar sind. Wer das ändern will, muss wieder DEFAULT_FLAG auf 0 setzen oder bei den einzelnen Parametern (z.B. 10000 oder 710) in der defs.h den Wert DEFAULT_FLAG durch 0 ersetzen.
+`#define DEFAULT_FLAG FL_RONLY;`   
+UPDATE: In der config.h ist nun als Voreinstellung DEFAULT_FLAG auf read-only gesetzt, d.h., dass alle Werte (erst einmal) nur lesbar sind. Wer das ändern will, muss wieder DEFAULT_FLAG auf 0 setzen oder bei den einzelnen Parametern (z.B. 10000 oder 710) in der defs.h den Wert DEFAULT_FLAG durch 0 ersetzen.
 - Man kann die Sprache des Webinterfaces des Adapters auf Deutsch einstellen, indem man das entsprechende Definement aktiviert:  
   `#define LANG_DE;`
         
