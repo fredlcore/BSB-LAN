@@ -179,7 +179,7 @@ Web-Interface des Adapters:
 	
       Bus-typ (BSB oder LPB) vorübergehend ändern:
         http://<ip-of-server>/P<x>
-	Wechselt zwischen BSB (x=0) und LPB (x=1). Um den Bus-typ dauerhaft festzulegen, sollte die Option setBusType cofig in der Datei BSB_lan_config.h entsprechend angepasst werden.
+	Wechselt zwischen BSB (x=0) und LPB (x=1). Um den Bus-typ dauerhaft festzulegen, sollte die Option setBusType config in der Datei BSB_lan_config.h entsprechend angepasst werden.
 	
       Resetten/Restarten des Arduinos
     	http://<ip-of-server>/X
