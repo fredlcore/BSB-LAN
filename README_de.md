@@ -37,8 +37,8 @@ Web-Interface screenshots:
 BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL-:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
 
-BSB-Adapterplatine bestückt:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board.jpg" size="50%">
-
 BSB-Adapterplatine und Ethernet-Shield auf dem Arduino Mega2560:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Mega%202560.jpg" size="50%">
+
+BSB-Adapterplatine auf dem Raspberry Pi 2:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Raspberry%20Pi%202.jpg" size="50%">
