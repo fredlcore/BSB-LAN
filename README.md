@@ -39,8 +39,8 @@ Web-Interface screenshots:
 BSB-Board plain, with location of CL+ and CL- connectors:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
 
-BSB-Board populated:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board.jpg" size="50%">
-
 BSB-Board and Ethernet Shield plugged into the Arduino Mega 2560:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Mega%202560.jpg" size="50%">
+
+BSB-Board on Raspberry Pi 2:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Raspberry%20Pi%202.jpg" size="50%">
