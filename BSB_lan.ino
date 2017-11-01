@@ -50,13 +50,14 @@ char version[] = "0.38";
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
- *       0.38  - 
+ *       0.38  - 01.11.2017
  *
  * Changelog:
  *       version 0.38
  *        - Bugfixing SD-card logging in monitor mode
  *        - Added Brötje BOB device family (138)
  *        - Added Brötje SOB26 device family (28)
+ *        - New schematics for Arduino/Raspberry board layout
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
