@@ -50,12 +50,13 @@ char version[] = "0.38";
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
- *       0.38  - 09.09.2017
+ *       0.38  - 
  *
  * Changelog:
  *       version 0.38
  *        - Bugfixing SD-card logging in monitor mode
  *        - Added Brötje BOB device family (138)
+ *        - Added Brötje SOB26 device family (28)
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
@@ -563,6 +564,7 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_RGT2: strncpy(device, "RGT2", 4); break;
     case ADDR_CNTR: strncpy(device, "CNTR", 4); break;
     case ADDR_DISP: strncpy(device, "DISP", 4); break;
+    case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
     case ADDR_ALL: strncpy(device, "ALL ", 4); break;
     default: sprintf(device, "%02X", addr); break;
   }
@@ -595,6 +597,7 @@ void SerialPrintAddr(byte addr){
     case ADDR_RGT1: Serial.print(F("RGT1")); break;
     case ADDR_RGT2: Serial.print(F("RGT2")); break;
     case ADDR_CNTR: Serial.print(F("CNTR")); break;
+    case ADDR_SRVC: Serial.print(F("SRVC")); break;
     case ADDR_DISP: Serial.print(F("DISP")); break;
     case ADDR_ALL: Serial.print(F("ALL ")); break;
     default: SerialPrintHex(addr); break;
@@ -3839,6 +3842,12 @@ void loop() {
                   client.print(F("Brennertakte"));
                 }
                 if (log_parameters[i] == 20002) {
+                  client.print(F("TWW-Laufzeit"));
+                }
+                if (log_parameters[i] == 20003) {
+                  client.print(F("TWW-Takte"));
+                }
+                if (log_parameters[i] == 20004) {
 #ifdef LANG_DE
                   client.println(F("24h-Mittelwerte (s.o.)"));
 #else

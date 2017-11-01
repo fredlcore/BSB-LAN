@@ -24,6 +24,7 @@
 #define ADDR_RGT2  0x07
 #define ADDR_CNTR  0x08
 #define ADDR_DISP  0x0A
+#define ADDR_SRVC  0x0B
 #define ADDR_ALL   0x7F
 
 #define BUS_BSB 0
