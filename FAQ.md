@@ -1,8 +1,17 @@
 <H2>Contents</H2>
+<B><A HREF="#can-i-run-the-software-on-a-raspberry-pi">Can I run the software on a Raspberry Pi??</A></B><BR>
 <B><A HREF="#is-there-a-simple-way-to-log-parameters">Is there a simple way to log parameters?</A></B><BR>
 <B><A HREF="#im-using-fhem-and-want-to-process-the-data-from-my-heating-system-how-can-i-do-this">I'm using FHEM and want to process the data from my heating system. How can I do this?</A></B><BR>
 <B><A HREF="#i-have-a-relay-shield-added-to-the-arduino-mega-how-can-i-setquery-the-individual-relays">I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</A></B><BR>
 <B><A HREF="#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">My heating system has parameters that are not supported in the software yet, can I help adding these parameters?</A></B><BR>
+
+<H2>Can I use the interface board on a Raspberry Pi?</H2>
+
+Yes, by using different pin headers (female instead of male). But please take note that you cannot use the BSB-LPB-LAN software which only runs on Arduino. You would have to use the completely different bsb_gateway software which can be found <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please contact the author of bsb_gateway directly for any support related to it. All information on this website applies to the Arduino version only! No support for bsb_gateway can be given here.
+
+<H2>Can I run the software on a Raspberry Pi?</H2>
+
+No. While you can use the interface board also on a Raspberry Pi 2, you would have to use a completely different software (bsb_gateway) which can be found <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please contact the author of bsb_gateway directly for any support related to it. All information on this website applies to the Arduino version only! No support for bsb_gateway can be given here.
 
 <H2>Is there a simple way to log parameters?</H2>
 
