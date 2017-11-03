@@ -1,9 +1,19 @@
 <H2>Inhalt</H2>
+<B><A HREF="#kann-ich-den-adapter-an-einem-raspberry-pi-nutzen">Kann ich den Adapter an einem Raspberry Pi nutzen?</A></B><BR>
+<B><A HREF="#kann-ich-die-software-auf-einem-raspberry-pi-nutzen">Kann ich die Software auf einem Raspberry Pi nutzen?</A></B><BR>
 <B><A HREF="#gibt-es-einen-einfachen-weg-um-parameter-zu-loggen">Gibt es einen einfachen Weg, um Parameter zu loggen?</A></B><BR>
 <B><A HREF="#ich-nutze-fhem-und-möchte-die-daten-meines-heizungssystems-darin-weiter-verarbeiten-wie-kann-ich-dies-tun">Ich nutze FHEM und möchte die Daten meines Heizungssystems darin weiter verarbeiten. Wie kann ich dies tun?</A></B><BR>
 <B><A HREF="#ich-habe-ein-relaisboard-an-dem-arduino-mega-angeschlossen-wie-kann-ich-die-einzelnen-relais-ansteuern-bzw-deren-zustand-abfragen">Ich habe ein Relaisboard an dem Arduino Mega angeschlossen, wie kann ich die einzelnen Relais ansteuern bzw. deren Zustand abfragen?</A></B><BR>
 <B><A HREF="#mein-heizungssystem-verfügt-über-parameter-die-von-der-software-bisher-nicht-unterstützt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzufügen">Mein Heizungssystem verfügt über Parameter, die von der Software bisher nicht unterstützt werden. Kann ich behilflich sein, diese Parameter hinzuzufügen?</A></B><BR>
 
+
+<H2>Kann ich den Adapter an einem Raspberry Pi nutzen?</H2>
+
+Ja, indem andere Pinheader genutzt werden (weibliche statt männliche). Aber bitte beachte, dass die BSB-LPB-LAN-Software nicht genutzt werden kann, da diese nur auf einem Arduino läuft. Du musst in dem Fall die komplett unterschiedliche bsb_gateway-Software nutzen, die du <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> finden kannst. Für jeglichen Support in Zusammenhang mit der Software kontaktiere bitte direkt den Autor von bsb_gateway. Alle Informationen auf dieser Website betreffen nur die Arduino-Version! Hier kann kein Support für bsb_gateway gegeben werden.
+
+<H2>Kann ich die Software auf einem Raspberry Pi nutzen?</H2>
+
+Nein. Du kannst den Adapter auch an einem Raspberry Pi 2 nutzen, doch musst in dem Fall eine vollkommen andere Software nutzen (bsb_gateway), welche du <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> finden kannst. Für jeglichen Support in Zusammenhang mit der Software kontaktiere bitte direkt den Autor von bsb_gateway. Alle Informationen auf dieser Website betreffen nur die Arduino-Version! Hier kann kein Support für bsb_gateway gegeben werden.
 
 <H2>Gibt es einen einfachen Weg, um Parameter zu loggen?</H2>
 
