@@ -9,7 +9,7 @@
 
 <H2>Kann ich den Adapter an einem Raspberry Pi nutzen?</H2>
 
-Ja, indem andere Pinheader genutzt werden (weibliche statt männliche). Aber bitte beachte, dass die BSB-LPB-LAN-Software nicht genutzt werden kann, da diese nur auf einem Arduino läuft. Du musst in dem Fall die komplett unterschiedliche bsb_gateway-Software nutzen, die du <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> finden kannst. Für jeglichen Support in Zusammenhang mit der Software kontaktiere bitte direkt den Autor von bsb_gateway. Alle Informationen auf dieser Website betreffen nur die Arduino-Version! Hier kann kein Support für bsb_gateway gegeben werden.
+Ja, indem andere Pinheader genutzt werden (weibliche statt männliche). Aber bitte beachte, dass die BSB-LPB-LAN-Software nicht genutzt werden kann, da diese nur auf einem Arduino läuft. Du musst in dem Fall die vollkommen andere bsb_gateway-Software nutzen, die du <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> finden kannst. Für jeglichen Support in Zusammenhang mit der Software kontaktiere bitte direkt den Autor von bsb_gateway. Alle Informationen auf dieser Website betreffen nur die Arduino-Version! Hier kann kein Support für bsb_gateway gegeben werden.
 
 <H2>Kann ich die Software auf einem Raspberry Pi nutzen?</H2>
 
