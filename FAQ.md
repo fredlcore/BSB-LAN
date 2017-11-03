@@ -1,6 +1,6 @@
 <H2>Contents</H2>
-<B><A HREF="#can-i-use-the-interface-board-on-a-raspberry-pi">Can I use the interface board on a Raspberry Pi??</A></B><BR>
-<B><A HREF="#can-i-run-the-software-on-a-raspberry-pi">Can I run the software on a Raspberry Pi??</A></B><BR>
+<B><A HREF="#can-i-use-the-interface-board-on-a-raspberry-pi">Can I use the interface board on a Raspberry Pi?</A></B><BR>
+<B><A HREF="#can-i-run-the-software-on-a-raspberry-pi">Can I run the software on a Raspberry Pi?</A></B><BR>
 <B><A HREF="#is-there-a-simple-way-to-log-parameters">Is there a simple way to log parameters?</A></B><BR>
 <B><A HREF="#im-using-fhem-and-want-to-process-the-data-from-my-heating-system-how-can-i-do-this">I'm using FHEM and want to process the data from my heating system. How can I do this?</A></B><BR>
 <B><A HREF="#i-have-a-relay-shield-added-to-the-arduino-mega-how-can-i-setquery-the-individual-relays">I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</A></B><BR>
