@@ -20,7 +20,9 @@ Die Software wurde mit folgenden Komponenten getestet:
 - SainSmart Ethernet Schild für Arduino UNO MEGA Duemilanove Neu Version W5100  
 - BSB-Interface (siehe BSB_adapter.pdf)  
 Für diese Konfiguration wird Pin A14 (68) als RX, und Pin A15 (69) als TX genutzt (s. Parameter weiter unten).
-      
+
+Der Adapter kann auch an einem Raspberry Pi 2 genutzt werden, jedoch muss in dem Fall eine gänzlich andere Software (bsb_gateway) genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> gefunden werden kann. Für jeglichen Support in Zusammenhang mit der Software kontaktiere bitte direkt den Autor von bsb_gateway. Alle Informationen auf dieser Website betreffen nur die Arduino-Version! Hier kann kein Support für bsb_gateway gegeben werden. 
+
 Zielsystem:  
       Getestet mit verschiedenen Elco- und Brötje-Heizungssystemen (s. README).
 	Die Kommunikation sollte prinzipiell mit allen Systemen möglich sein, die einen BSB aufweisen.
