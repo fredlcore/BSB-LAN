@@ -31,6 +31,7 @@ The forum thread that led to the development of this interface can be found <A H
 (Forum is in German, but several members speak English)
 
 Some interface kits from a collective order are still available, fitting directly on the Arduino Mega 2560 or (with different pin headers) on the Raspberry Pi 2. Contact bsb (ät) code-it.de if you are interested (German or English).
+
 Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the Arduino! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
 
 Web-Interface screenshots:
