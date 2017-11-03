@@ -28,7 +28,8 @@ Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, sp
 Instruktionen, wie die Software konfiguriert werden muss etc. können dem <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO_de.md">HowTo</A> entnommen werden.<BR>
 Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="https://forum.fhem.de/index.php?topic=29762.new;topicseen#new">hier</A> nachvollzogen werden.<BR>
 
-Einige Adapter-Bausätze, die direkt auf einen Arduino Mega2560 passen, sind noch von einer Sammelbestellung her verfügbar. Bei Interesse kontaktiere bitte bsb (ät) code-it.de .
+Einige Adapterbausätze sind noch aus einer Sammelbestellung verfügbar, die direkt auf einen Arduino Mega 2560 oder (mit anderen Pinheadern) auf einen Raspberry Pi 2 passen. Kontaktiere bsb (ät) code-it.de , falls du daran interessiert bist (Deutsch oder Englisch).
+Bitte beachte, dass der Adapter zwar an einem Raspberry Pi genutzt werden kann, die hier angebotene Software jedoch nur auf dem Arduino läuft! Wenn der Adapter an einem Raspberry Pi genutzt werden soll, muss stattdessen die Software bsb_gateway genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> verfügbar ist. Bitte beachte, dass sich die Funktionalität signifikant unterscheidet, und dass du für jegliche Fragen diesbezüglich den Autor von bsb_gateway kontaktieren musst.
 
 Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface.png" size="50%">
