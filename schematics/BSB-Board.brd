@@ -217,6 +217,15 @@ Board layout by Frederik Holst</text>
 CL-</text>
 <text x="13.843" y="32.385" size="1.016" layer="27" rot="R90">DB
 CL+</text>
+<text x="13.335" y="41.021" size="1.016" layer="21" font="vector" ratio="15">C</text>
+<text x="15.875" y="41.021" size="1.016" layer="21" font="vector" ratio="15">B</text>
+<text x="18.542" y="41.021" size="1.016" layer="21" font="vector" ratio="15">E</text>
+<text x="16.129" y="22.987" size="1.016" layer="21" font="vector" ratio="15">C</text>
+<text x="18.669" y="22.987" size="1.016" layer="21" font="vector" ratio="15">B</text>
+<text x="21.336" y="22.987" size="1.016" layer="21" font="vector" ratio="15">E</text>
+<text x="13.335" y="47.371" size="1.016" layer="21" font="vector" ratio="15">C</text>
+<text x="15.875" y="47.371" size="1.016" layer="21" font="vector" ratio="15">B</text>
+<text x="18.542" y="47.371" size="1.016" layer="21" font="vector" ratio="15">E</text>
 </plain>
 <libraries>
 <library name="optocoupler">
@@ -2011,7 +2020,7 @@ design rules under a new name.</description>
 </autorouter>
 <elements>
 <element name="ARD_GND" library="SparkFun-Connectors" package="1X02" value="" x="22.098" y="7.62"/>
-<element name="ARD_SUP" library="SparkFun-Connectors" package="1X02" value="" x="22.098" y="50.8"/>
+<element name="ARD_5V" library="SparkFun-Connectors" package="1X02" value="" x="22.098" y="50.8"/>
 <element name="U1" library="optocoupler" package="DIL06" value="4N25" x="6.223" y="12.446" rot="R270">
 <attribute name="MF" value="" x="6.223" y="12.446" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="4N25-M" x="6.223" y="12.446" size="1.778" layer="27" rot="R270" display="off"/>
@@ -2081,27 +2090,18 @@ design rules under a new name.</description>
 <attribute name="NAME" x="13.716" y="42.418" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="12.446" y="36.068" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="SJ4_RPI" library="jumper" package="SJ" value="Close for RPi" x="2.54" y="46.99" rot="R270"/>
-<element name="SJ3_RPI" library="jumper" package="SJ" value="Close for RPi" x="10.16" y="46.99" rot="R270"/>
+<element name="SJ3_RPI" library="jumper" package="SJ" value="Close for RPi" x="2.54" y="46.99" rot="R270"/>
+<element name="SJ2_RPI" library="jumper" package="SJ" value="Close for RPi" x="10.16" y="46.99" rot="R270"/>
 <element name="SJ1_ARD" library="jumper" package="SJ" value="Close for Arduino" x="21.971" y="46.99" rot="R90"/>
 <element name="RPI_2-12" library="SparkFun-Connectors" package="1X06" value="" x="1.778" y="50.927">
 <attribute name="PROD_ID" value="CONN-08437" x="1.778" y="50.927" size="1.778" layer="27" display="off"/>
 </element>
 <element name="ARD_23-53" library="SparkFun-Connectors" package="1X16" value="" x="24.638" y="10.16" rot="R90"/>
-<element name="ARD_8-15" library="SparkFun-Connectors" package="1X08_ROUND" value="" x="19.558" y="2.54" rot="R180"/>
+<element name="ARD_8-15" library="SparkFun-Connectors" package="1X08_ROUND" value="" x="1.778" y="2.54" rot="MR180"/>
 </elements>
 <signals>
 <signal name="A14-RXD-ARD">
-<contactref element="R11" pad="1"/>
-<contactref element="R12" pad="2"/>
 <contactref element="U1" pad="5"/>
-<wire x1="2.4384" y1="30.1752" x2="2.4384" y2="29.2608" width="0.3048" layer="16"/>
-<wire x1="1.2192" y1="31.3944" x2="2.4384" y2="30.1752" width="0.3048" layer="16"/>
-<wire x1="1.2192" y1="34.7472" x2="1.2192" y2="31.3944" width="0.3048" layer="16"/>
-<wire x1="9.4488" y1="42.9768" x2="1.2192" y2="34.7472" width="0.3048" layer="16"/>
-<wire x1="10.0584" y1="42.9768" x2="9.4488" y2="42.9768" width="0.3048" layer="16"/>
-<wire x1="2.4384" y1="29.2608" x2="2.54" y2="29.21" width="0.3048" layer="16"/>
-<wire x1="10.0584" y1="42.9768" x2="10.16" y2="43.18" width="0.3048" layer="16"/>
 <wire x1="9.7536" y1="13.4112" x2="9.7536" y2="12.4968" width="0.3048" layer="1"/>
 <wire x1="6.7056" y1="16.4592" x2="9.7536" y2="13.4112" width="0.3048" layer="1"/>
 <wire x1="6.7056" y1="21.336" x2="6.7056" y2="16.4592" width="0.3048" layer="1"/>
@@ -2111,8 +2111,16 @@ design rules under a new name.</description>
 <wire x1="1.2192" y1="27.7368" x2="1.2192" y2="26.2128" width="0.3048" layer="1"/>
 <wire x1="2.4384" y1="28.956" x2="1.2192" y2="27.7368" width="0.3048" layer="1"/>
 <wire x1="9.7536" y1="12.4968" x2="10.033" y2="12.446" width="0.3048" layer="1"/>
-<wire x1="2.4384" y1="28.956" x2="2.54" y2="29.21" width="0.3048" layer="1"/>
-<contactref element="ARD_8-15" pad="2"/>
+<contactref element="R11" pad="1"/>
+<contactref element="R12" pad="2"/>
+<contactref element="ARD_8-15" pad="7"/>
+<wire x1="2.4384" y1="30.1752" x2="2.4384" y2="29.2608" width="0.3048" layer="16"/>
+<wire x1="1.2192" y1="31.3944" x2="2.4384" y2="30.1752" width="0.3048" layer="16"/>
+<wire x1="1.2192" y1="34.7472" x2="1.2192" y2="31.3944" width="0.3048" layer="16"/>
+<wire x1="9.4488" y1="42.9768" x2="1.2192" y2="34.7472" width="0.3048" layer="16"/>
+<wire x1="10.0584" y1="42.9768" x2="9.4488" y2="42.9768" width="0.3048" layer="16"/>
+<wire x1="2.4384" y1="29.2608" x2="2.54" y2="29.21" width="0.3048" layer="16"/>
+<wire x1="10.0584" y1="42.9768" x2="10.16" y2="43.18" width="0.3048" layer="16"/>
 <wire x1="16.764" y1="5.7912" x2="16.764" y2="2.7432" width="0.3048" layer="16"/>
 <wire x1="12.8016" y1="9.7536" x2="16.764" y2="5.7912" width="0.3048" layer="16"/>
 <wire x1="12.8016" y1="10.3632" x2="12.8016" y2="9.7536" width="0.3048" layer="16"/>
@@ -2120,6 +2128,7 @@ design rules under a new name.</description>
 <wire x1="10.0584" y1="12.192" x2="10.9728" y2="12.192" width="0.3048" layer="16"/>
 <wire x1="16.764" y1="2.7432" x2="17.018" y2="2.54" width="0.3048" layer="16"/>
 <wire x1="10.0584" y1="12.192" x2="10.033" y2="12.446" width="0.3048" layer="16"/>
+<wire x1="2.4384" y1="28.956" x2="2.54" y2="29.21" width="0.3048" layer="1"/>
 </signal>
 <signal name="A15-TXD-ARD">
 <contactref element="Q11" pad="C"/>
@@ -2128,7 +2137,7 @@ design rules under a new name.</description>
 <wire x1="13.716" y1="39.3192" x2="10.3632" y2="35.9664" width="0.3048" layer="16"/>
 <wire x1="10.3632" y1="34.4424" x2="10.16" y2="34.29" width="0.3048" layer="16"/>
 <wire x1="13.716" y1="39.3192" x2="13.716" y2="39.37" width="0.3048" layer="16"/>
-<contactref element="ARD_8-15" pad="1"/>
+<contactref element="ARD_8-15" pad="8"/>
 <wire x1="19.812" y1="8.8392" x2="19.812" y2="2.7432" width="0.3048" layer="16"/>
 <wire x1="21.6408" y1="10.668" x2="19.812" y2="8.8392" width="0.3048" layer="16"/>
 <wire x1="21.6408" y1="14.0208" x2="21.6408" y2="10.668" width="0.3048" layer="16"/>
@@ -2220,7 +2229,7 @@ design rules under a new name.</description>
 <wire x1="21.336" y1="21.336" x2="18.288" y2="24.384" width="0.3048" layer="1"/>
 <wire x1="21.336" y1="21.336" x2="21.463" y2="21.336" width="0.3048" layer="1"/>
 </signal>
-<signal name="N$11">
+<signal name="ARD_PI_TXD">
 <contactref element="U2" pad="1"/>
 <contactref element="R3" pad="1"/>
 <wire x1="0.6096" y1="25.6032" x2="2.4384" y2="23.7744" width="0.3048" layer="1"/>
@@ -2233,7 +2242,7 @@ design rules under a new name.</description>
 <contactref element="R13" pad="2"/>
 <contactref element="Q11" pad="E"/>
 <contactref element="R11" pad="2"/>
-<contactref element="SJ4_RPI" pad="2"/>
+<contactref element="SJ3_RPI" pad="2"/>
 <contactref element="SJ1_ARD" pad="1"/>
 <wire x1="2.4384" y1="44.8056" x2="2.4384" y2="46.0248" width="0.3048" layer="1"/>
 <wire x1="1.2192" y1="43.5864" x2="2.4384" y2="44.8056" width="0.3048" layer="1"/>
@@ -2263,7 +2272,7 @@ design rules under a new name.</description>
 <contactref element="U2" pad="2"/>
 <contactref element="U1" pad="4"/>
 <contactref element="Q12" pad="E"/>
-<contactref element="SJ3_RPI" pad="2"/>
+<contactref element="SJ2_RPI" pad="2"/>
 <wire x1="2.7432" y1="20.1168" x2="2.7432" y2="21.0312" width="0.3048" layer="1"/>
 <wire x1="6.096" y1="16.764" x2="2.7432" y2="20.1168" width="0.3048" layer="1"/>
 <wire x1="6.096" y1="13.716" x2="6.096" y2="16.764" width="0.3048" layer="1"/>
@@ -2323,7 +2332,7 @@ design rules under a new name.</description>
 <wire x1="9.144" y1="50.9016" x2="9.398" y2="50.927" width="0.3048" layer="16"/>
 </signal>
 <signal name="GPIO18-3V3-PI">
-<contactref element="SJ4_RPI" pad="1"/>
+<contactref element="SJ3_RPI" pad="1"/>
 <contactref element="RPI_2-12" pad="6"/>
 <wire x1="3.3528" y1="47.5488" x2="2.7432" y2="47.5488" width="0.3048" layer="1"/>
 <wire x1="8.8392" y1="42.0624" x2="3.3528" y2="47.5488" width="0.3048" layer="1"/>
@@ -2341,13 +2350,13 @@ design rules under a new name.</description>
 <wire x1="14.6304" y1="50.9016" x2="14.478" y2="50.927" width="0.3048" layer="1"/>
 </signal>
 <signal name="PIN6-GND-PI">
-<contactref element="SJ3_RPI" pad="1"/>
+<contactref element="SJ2_RPI" pad="1"/>
 <contactref element="RPI_2-12" pad="3"/>
 <wire x1="7.0104" y1="50.9016" x2="10.16" y2="47.752" width="0.3048" layer="1"/>
 <wire x1="7.0104" y1="50.9016" x2="6.858" y2="50.927" width="0.3048" layer="1"/>
 </signal>
 <signal name="5V-ARD">
-<contactref element="ARD_SUP" pad="2"/>
+<contactref element="ARD_5V" pad="2"/>
 <contactref element="SJ1_ARD" pad="2"/>
 <wire x1="22.2504" y1="48.4632" x2="22.2504" y2="47.8536" width="0.3048" layer="1"/>
 <wire x1="24.384" y1="50.5968" x2="22.2504" y2="48.4632" width="0.3048" layer="1"/>
