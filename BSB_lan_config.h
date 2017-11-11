@@ -9,6 +9,8 @@
  * with the IP address and port you want to use
  * (port 80 is default for HTTP):
 */
+
+//#define ETHERNET_W5500      // activate for newer Ethernet2-Shields (W5500 instead of W5100) and install Ethernet2 library before compiling
 IPAddress ip(192,168,178,88);
 EthernetServer server(80);
 
