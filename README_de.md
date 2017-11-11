@@ -19,6 +19,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
  - Elco Straton (Ölbrenner)
  - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (Ölbrenner)
+ - Elco Thision S 13 Plus [LMS14.002A167] (Gasbrenner)
  - Elco Thision S 17.1 [LMU74.100A136 + AVS37.394/136] (Gasbrenner)
  - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (Gasbrenner)
  - Elco Aquatop 8es [RVS51.843/169] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
