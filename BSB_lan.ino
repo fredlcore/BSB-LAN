@@ -58,6 +58,7 @@ char version[] = "0.38";
  *        - Added Brötje BOB device family (138)
  *        - Added Brötje SOB26 device family (28)
  *        - Added Elco Aquatop 8es device family (85)
+ *        - Added Elco Thision 13 Plus device family (203)
  *        - New schematics for Arduino/Raspberry board layout
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
@@ -241,7 +242,11 @@ char version[] = "0.38";
 #include <avr/pgmspace.h>
 #include <avr/wdt.h>
 #include <SPI.h>
+#ifndef ETHERNET_W5500
 #include <Ethernet.h>
+#else
+#include <Ethernet2.h>
+#endif
 #include <Arduino.h>
 #include <util/crc16.h>
 
@@ -254,7 +259,11 @@ char version[] = "0.38";
 #include "src/d3_js.h"
 
 #ifdef TRUSTED_IP
-#include <utility/w5100.h>        // change to w5500.h for W5500 type ethernet shields
+#ifndef ETHERNET_W5500
+#include <utility/w5100.h>
+#else
+#include <utility/w5500.h>
+#endif
 #endif
 
 uint8_t len_idx, pl_start;
