@@ -37,6 +37,8 @@
 
 /* heating systems */
 #define DEV_EL_THI  0x00000001L   // Gerätefamilie: 097, Elco Thision S 17.1, Brötje WBS 14D
+#define DEV_EL_AQA  0x00000002L   // Gerätefamilie: 085, Elco Aquatop 8es
+#define DEV_EL_THP  0x00000004L   // Gerätefamilie: 203, Elco Thision 13 Plus
 #define DEV_BR_ISC  0x00000010L   // Gerätefamilie: 090, Brötje ISR SSR C, Logon B 2Z2
 #define DEV_BR_SOB  0x00000020L   // Gerätefamilie: 096, Brötje NovoCondens SOB 22C, 26C    
 #define DEV_BR_PEV  0x00000040L   // Gerätefamilie: 098, Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
@@ -61,6 +63,7 @@ typedef struct {
 PROGMEM_LATE const device_table dev_tbl[]={
 {1,   DEV_LPB},
 {28,  DEV_BR_S26},
+{85,  DEV_EL_AQA},
 {97,  DEV_EL_THI},
 {90,  DEV_BR_ISC},
 {96,  DEV_BR_SOB},
@@ -71,6 +74,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {162, DEV_BR_WGS},
 {163, DEV_BR_WGE},
 {170, DEV_FJ_WSK},
+{203, DEV_EL_THP},
 {255, DEV_NONE},
 };
 
@@ -4797,7 +4801,7 @@ const char header_html[] PROGMEM_LATE =
   "var x=document.getElementById('value'+formnr); var value=0;\n"
   "for (var i=0; i<x.options.length; i++) {\n"
   "if(x.options[i].selected){\n"
-  "value=value&eval(x.options[i].value);\n"
+  "value=value+eval(x.options[i].value);\n"
   "}}\n"
   "window.open('S'+line+'='+value,'_self');\n"
   "}</script>\n"
