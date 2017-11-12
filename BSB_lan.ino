@@ -2011,8 +2011,8 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       if(val[0]!='\0'){
         uint8_t h=atoi(val);
         uint8_t m=0;
-        while(*val!='\0' && *val!=':') val++;
-        if(*val==':'){
+        while(*val!='\0' && *val!=':' && *val!='.') val++;
+        if(*val==':' || *val=='.'){
           val++;
           m=atoi(val);
         }
@@ -2508,6 +2508,12 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             client.print(F("<input type=text id='value"));
             client.print(formnr);
             client.print(F("' VALUE='"));
+
+            char* colon_pos = strchr(pvalstr,':');
+            if (colon_pos>0) {
+              *colon_pos = '.';
+            }
+
             client.print(strtod(pvalstr,NULL));
             client.print(F("'></td><td><input type=button value='Set' onclick=\"set("));
             client.print(line);
