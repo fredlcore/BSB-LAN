@@ -55,6 +55,7 @@ char version[] = "0.38";
  * Changelog:
  *       version 0.38
  *        - Bugfixing SD-card logging in monitor mode
+ *        - Bugfix for setting hour:time parameters via webinterface
  *        - Added Brötje BOB device family (138)
  *        - Added Brötje SOB26 device family (28)
  *        - Added Elco Aquatop 8es device family (85)
