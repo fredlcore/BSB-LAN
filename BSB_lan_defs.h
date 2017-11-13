@@ -49,6 +49,7 @@
 #define DEV_BR_WGE  0x00000800L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
 #define DEV_BR_S26  0x00001000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
 #define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
+#define DEV_WH_WTU  0x00100000L   // Gerätefamilie: 050, Weishaupt
 #define DEV_ELCO    0x0000000fL   // ELCO devices
 #define DEV_BROETJE 0x0000fff0L   // BROETJE devices
 #define DEV_LPB     0x0f000000L   // All LPB devices
@@ -56,7 +57,7 @@
 #define DEV_NONE    0x00000000L
 
 typedef struct {
-  uint8_t    dev_family;            // Gerätefamilie
+  uint8_t    dev_family;             // Gerätefamilie
   uint32_t   dev_bit_id;             // Bitmuster
 } device_table;
 
@@ -64,6 +65,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {1,   DEV_LPB},
 {28,  DEV_BR_S26},
 {85,  DEV_EL_AQA},
+{50,  DEV_WH_WTU},
 {97,  DEV_EL_THI},
 {90,  DEV_BR_ISC},
 {96,  DEV_BR_SOB},
