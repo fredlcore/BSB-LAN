@@ -60,6 +60,7 @@ char version[] = "0.38";
  *        - Added Brötje SOB26 device family (28)
  *        - Added Elco Aquatop 8es device family (85)
  *        - Added Elco Thision 13 Plus device family (203)
+ *        - Added Weishaupt WTU 25-G familiy (50)
  *        - New schematics for Arduino/Raspberry board layout
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
