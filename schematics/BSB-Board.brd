@@ -226,6 +226,7 @@ CL+</text>
 <text x="13.335" y="47.371" size="1.016" layer="21" font="vector" ratio="15">C</text>
 <text x="15.875" y="47.371" size="1.016" layer="21" font="vector" ratio="15">B</text>
 <text x="18.542" y="47.371" size="1.016" layer="21" font="vector" ratio="15">E</text>
+<text x="22.733" y="9.779" size="1.016" layer="21" font="vector" ratio="15" rot="R90">LED-&gt;|</text>
 </plain>
 <libraries>
 <library name="optocoupler">
@@ -2053,7 +2054,7 @@ design rules under a new name.</description>
 <attribute name="SPICEPREFIX" value="R" x="6.35" y="34.29" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="5.3594" y="33.6804" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="D1" library="led" package="LED2X5" value="LED-&gt;|" x="20.193" y="12.446" rot="R90"/>
+<element name="D1" library="led" package="LED2X5" value="" x="20.193" y="12.446" rot="R90"/>
 <element name="CL" library="con-wago-500" package="W237-102" value="" x="19.558" y="30.48" smashed="yes" rot="R270">
 <attribute name="MF" value="" x="19.558" y="30.48" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="237-102" x="19.558" y="30.48" size="1.778" layer="27" rot="R270" display="off"/>
@@ -2066,17 +2067,17 @@ design rules under a new name.</description>
 <attribute name="NAME" x="13.716" y="48.768" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="12.446" y="42.418" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="R12" library="resistor" package="0204/7" value="47k" x="6.35" y="43.18" smashed="yes">
+<element name="R11" library="resistor" package="0204/7" value="47k" x="6.35" y="43.18" smashed="yes">
 <attribute name="NAME" x="3.302" y="44.704" size="1.27" layer="25" ratio="10"/>
 <attribute name="SPICEPREFIX" value="R" x="6.35" y="43.18" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="5.4864" y="42.545" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="R11" library="resistor" package="0204/7" value="4k7" x="6.35" y="29.21" smashed="yes">
+<element name="R4" library="resistor" package="0204/7" value="4k7" x="6.35" y="29.21" smashed="yes">
 <attribute name="NAME" x="3.302" y="30.734" size="1.27" layer="25" ratio="10"/>
 <attribute name="SPICEPREFIX" value="R" x="6.35" y="29.21" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="5.4864" y="28.702" size="1.27" layer="27" ratio="10"/>
 </element>
-<element name="R14" library="resistor" package="0204/7" value="10k" x="6.35" y="38.1" smashed="yes">
+<element name="R12" library="resistor" package="0204/7" value="10k" x="6.35" y="38.1" smashed="yes">
 <attribute name="NAME" x="3.81" y="39.3954" size="0.9906" layer="25" ratio="10"/>
 <attribute name="SPICEPREFIX" value="R" x="6.35" y="38.1" size="1.778" layer="27" display="off"/>
 <attribute name="VALUE" x="5.4864" y="37.4904" size="1.27" layer="27" ratio="10"/>
@@ -2111,8 +2112,8 @@ design rules under a new name.</description>
 <wire x1="1.2192" y1="27.7368" x2="1.2192" y2="26.2128" width="0.3048" layer="1"/>
 <wire x1="2.4384" y1="28.956" x2="1.2192" y2="27.7368" width="0.3048" layer="1"/>
 <wire x1="9.7536" y1="12.4968" x2="10.033" y2="12.446" width="0.3048" layer="1"/>
-<contactref element="R11" pad="1"/>
-<contactref element="R12" pad="2"/>
+<contactref element="R4" pad="1"/>
+<contactref element="R11" pad="2"/>
 <contactref element="ARD_8-15" pad="7"/>
 <wire x1="2.4384" y1="30.1752" x2="2.4384" y2="29.2608" width="0.3048" layer="16"/>
 <wire x1="1.2192" y1="31.3944" x2="2.4384" y2="30.1752" width="0.3048" layer="16"/>
@@ -2241,7 +2242,7 @@ design rules under a new name.</description>
 <signal name="VCC">
 <contactref element="R13" pad="2"/>
 <contactref element="Q11" pad="E"/>
-<contactref element="R11" pad="2"/>
+<contactref element="R4" pad="2"/>
 <contactref element="SJ3_RPI" pad="2"/>
 <contactref element="SJ1_ARD" pad="1"/>
 <wire x1="2.4384" y1="44.8056" x2="2.4384" y2="46.0248" width="0.3048" layer="1"/>
@@ -2312,7 +2313,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$9">
 <contactref element="Q11" pad="B"/>
-<contactref element="R14" pad="2"/>
+<contactref element="R12" pad="2"/>
 <wire x1="12.4968" y1="38.1" x2="10.16" y2="38.1" width="0.3048" layer="1"/>
 <wire x1="13.1064" y1="37.4904" x2="12.4968" y2="38.1" width="0.3048" layer="1"/>
 <wire x1="14.3256" y1="37.4904" x2="13.1064" y2="37.4904" width="0.3048" layer="1"/>
@@ -2320,7 +2321,7 @@ design rules under a new name.</description>
 <wire x1="16.1544" y1="39.3192" x2="16.256" y2="39.37" width="0.3048" layer="1"/>
 </signal>
 <signal name="GPIO14-TXD-PI">
-<contactref element="R14" pad="1"/>
+<contactref element="R12" pad="1"/>
 <contactref element="RPI_2-12" pad="4"/>
 <wire x1="2.4384" y1="39.0144" x2="2.4384" y2="38.1" width="0.3048" layer="16"/>
 <wire x1="1.2192" y1="40.2336" x2="2.4384" y2="39.0144" width="0.3048" layer="16"/>
@@ -2365,7 +2366,7 @@ design rules under a new name.</description>
 </signal>
 <signal name="N$6">
 <contactref element="Q12" pad="B"/>
-<contactref element="R12" pad="1"/>
+<contactref element="R11" pad="1"/>
 <wire x1="8.5344" y1="43.2816" x2="2.7432" y2="43.2816" width="0.3048" layer="16"/>
 <wire x1="9.7536" y1="44.5008" x2="8.5344" y2="43.2816" width="0.3048" layer="16"/>
 <wire x1="12.4968" y1="44.5008" x2="9.7536" y2="44.5008" width="0.3048" layer="16"/>
