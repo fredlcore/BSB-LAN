@@ -11611,12 +11611,12 @@ Standard 8-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <part name="R2" library="resistor" deviceset="R-EU_" device="0204_7" value="1k5"/>
 <part name="R1" library="resistor" deviceset="R-EU_" device="0204_7" value="560k"/>
 <part name="R3" library="resistor" deviceset="R-EU_" device="0204_7" value="300"/>
-<part name="D1" library="led" deviceset="LED" device="SQR2X5" value="LED-&gt;|"/>
+<part name="D1" library="led" deviceset="LED" device="SQR2X5"/>
 <part name="CL" library="con-wago-500" deviceset="W237-102" device=""/>
 <part name="Q12" library="transistor" deviceset="*-NPN-" device="TO92-CBE" technology="BC547" value="BC 547A"/>
-<part name="R12" library="resistor" deviceset="R-EU_" device="0204_7" value="47k"/>
-<part name="R11" library="resistor" deviceset="R-EU_" device="0204_7" value="4k7"/>
-<part name="R14" library="resistor" deviceset="R-EU_" device="0204_7" value="10k"/>
+<part name="R11" library="resistor" deviceset="R-EU_" device="0204_7" value="47k"/>
+<part name="R4" library="resistor" deviceset="R-EU_" device="0204_7" value="4k7"/>
+<part name="R12" library="resistor" deviceset="R-EU_" device="0204_7" value="10k"/>
 <part name="R13" library="resistor" deviceset="R-EU_" device="0204_7" value="10k"/>
 <part name="Q11" library="transistor-neu-to92" deviceset="*-PNP-" device="TO92-CBE" value="BC 557A"/>
 <part name="SJ3_RPI" library="jumper" deviceset="SJ" device="" value="Close for RPi"/>
@@ -11659,9 +11659,9 @@ for Raspberry Pi board</text>
 <instance part="CL" gate="-1" x="104.14" y="154.94" rot="R270"/>
 <instance part="CL" gate="-2" x="109.22" y="154.94" rot="R270"/>
 <instance part="Q12" gate="G$1" x="175.26" y="101.6" rot="MR0"/>
-<instance part="R12" gate="G$1" x="193.04" y="111.76" rot="R90"/>
-<instance part="R11" gate="G$1" x="193.04" y="137.16" rot="R90"/>
-<instance part="R14" gate="G$1" x="182.88" y="144.78"/>
+<instance part="R11" gate="G$1" x="193.04" y="111.76" rot="R90"/>
+<instance part="R4" gate="G$1" x="193.04" y="137.16" rot="R90"/>
+<instance part="R12" gate="G$1" x="182.88" y="144.78"/>
 <instance part="R13" gate="G$1" x="182.88" y="154.94"/>
 <instance part="Q11" gate="G$1" x="198.12" y="144.78"/>
 <instance part="SJ3_RPI" gate="1" x="154.94" y="152.4" smashed="yes">
@@ -11688,8 +11688,8 @@ for Raspberry Pi board</text>
 <wire x1="170.18" y1="101.6" x2="170.18" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="U1" gate="G$1" pin="COL"/>
 <wire x1="167.64" y1="101.6" x2="170.18" y2="101.6" width="0.1524" layer="91"/>
-<pinref part="R11" gate="G$1" pin="1"/>
-<pinref part="R12" gate="G$1" pin="2"/>
+<pinref part="R4" gate="G$1" pin="1"/>
+<pinref part="R11" gate="G$1" pin="2"/>
 <wire x1="193.04" y1="116.84" x2="193.04" y2="124.46" width="0.1524" layer="91"/>
 <pinref part="ARD_8-15" gate="G$1" pin="7"/>
 <wire x1="193.04" y1="124.46" x2="193.04" y2="132.08" width="0.1524" layer="91"/>
@@ -11816,7 +11816,7 @@ for Raspberry Pi board</text>
 <wire x1="187.96" y1="154.94" x2="193.04" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="Q11" gate="G$1" pin="E"/>
 <wire x1="193.04" y1="154.94" x2="200.66" y2="154.94" width="0.1524" layer="91"/>
-<pinref part="R11" gate="G$1" pin="2"/>
+<pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="193.04" y1="142.24" x2="193.04" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="200.66" y1="149.86" x2="200.66" y2="152.4" width="0.1524" layer="91"/>
 <junction x="193.04" y="154.94"/>
@@ -11843,14 +11843,14 @@ for Raspberry Pi board</text>
 <net name="N$9" class="0">
 <segment>
 <pinref part="Q11" gate="G$1" pin="B"/>
-<pinref part="R14" gate="G$1" pin="2"/>
+<pinref part="R12" gate="G$1" pin="2"/>
 <wire x1="195.58" y1="144.78" x2="187.96" y2="144.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GPIO14-TXD-PI" class="0">
 <segment>
 <wire x1="149.86" y1="144.78" x2="149.86" y2="157.48" width="0.1524" layer="91"/>
-<pinref part="R14" gate="G$1" pin="1"/>
+<pinref part="R12" gate="G$1" pin="1"/>
 <wire x1="177.8" y1="144.78" x2="149.86" y2="144.78" width="0.1524" layer="91"/>
 <wire x1="149.86" y1="157.48" x2="142.24" y2="157.48" width="0.1524" layer="91"/>
 <pinref part="RPI_2-12" gate="G$1" pin="4"/>
@@ -11880,7 +11880,7 @@ for Raspberry Pi board</text>
 <net name="N$6" class="0">
 <segment>
 <pinref part="Q12" gate="G$1" pin="B"/>
-<pinref part="R12" gate="G$1" pin="1"/>
+<pinref part="R11" gate="G$1" pin="1"/>
 <wire x1="177.8" y1="101.6" x2="193.04" y2="101.6" width="0.1524" layer="91"/>
 <wire x1="193.04" y1="101.6" x2="193.04" y2="106.68" width="0.1524" layer="91"/>
 </segment>
