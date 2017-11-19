@@ -54,6 +54,7 @@ char version[] = "0.38";
  *
  * Changelog:
  *       version 0.38
+ *        - Including two-stage oil furnaces in logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
  *        - Bugfixing SD-card logging in monitor mode
  *        - Bugfix for setting hour:time parameters via webinterface
  *        - Added Brötje BOB device family (138)
@@ -317,9 +318,13 @@ int avgCounter = 1;
 unsigned long dev_id = 0;
 
 // variables for handling of broadcast messages
+int brenner_stufe = 0;
 unsigned long brenner_start   = 0;
+unsigned long brenner_start_2   = 0;
 unsigned long brenner_duration= 0;
+unsigned long brenner_duration_2= 0;
 unsigned long brenner_count   = 0;
+unsigned long brenner_count_2   = 0;
 unsigned long TWW_start   = 0;
 unsigned long TWW_duration= 0;
 unsigned long TWW_count   = 0;
@@ -3118,24 +3123,68 @@ void loop() {
         } // endif, Status TWW command code
 
         if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
+          unsigned long brenner_end;
+          boolean reset_brenner_timer = 0;
           Serial.print(F("INF: Brennerstatus: "));
           Serial.println(msg[pl_start]);      // first payload byte
 
-          if(msg[pl_start]==0x04) {
+          if(msg[pl_start]==0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
             }
-          }else{             // brenner off
+            if (brenner_stufe == 2) {
+              reset_brenner_timer = 1;
+            }
+            brenner_stufe=1;
+          }
+          if(msg[pl_start]==0x14) {       // Stufe 2 (only oil furnace)
+            if(brenner_start_2==0){        // has not been timed
+              brenner_start_2=millis();   // keep current timestamp
+              brenner_count_2++;          // increment number of starts
+            }
+            if (brenner_stufe == 1) {
+              reset_brenner_timer = 1;
+            }
+            brenner_stufe=2;
+          }
+          if (reset_brenner_timer == 1) {   // Stufenwechsel bei mehrstufigem Ölbrenner
+            brenner_end=millis();      // timestamp the end
+            if (brenner_stufe == 2) {    // Stufe jetzt 2, war also vorher 1
+              if(brenner_end >= brenner_start){
+                brenner_duration+=(brenner_end-brenner_start)/1000;
+              }else{ // overflow
+                brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
+              }
+              brenner_start=0;              
+            }
+            if (brenner_stufe == 1) {   // Stufe jetzt 1, war also vorher 2
+              if(brenner_end >= brenner_start_2){
+                brenner_duration_2+=(brenner_end-brenner_start_2)/1000;
+              }else{ // overflow
+                brenner_duration_2+=(0xffffffff-brenner_start_2+brenner_end)/1000;
+              }
+              brenner_start_2=0;
+            }
+            reset_brenner_timer = 0;
+          }
+          if (msg[pl_start]==0x00) {    // brenner off
+            brenner_end=millis();      // timestamp the end
             if(brenner_start!=0){        // start has been timed
-              unsigned long brenner_end;
-              brenner_end=millis();      // timestamp the end
               if(brenner_end >= brenner_start){
                 brenner_duration+=(brenner_end-brenner_start)/1000;
               }else{ // overflow
                 brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
               }
               brenner_start=0;
+            } // endif, a previous start has been timed
+            if(brenner_start_2!=0){        // start has been timed
+              if(brenner_end >= brenner_start_2){
+                brenner_duration_2+=(brenner_end-brenner_start_2)/1000;
+              }else{ // overflow
+                brenner_duration_2+=(0xffffffff-brenner_start_2+brenner_end)/1000;
+              }
+              brenner_start_2=0;
             } // endif, a previous start has been timed
           } // endif, brenner is off
         } // endif, Status Brenner command code
@@ -4198,11 +4247,17 @@ void loop() {
               TWW_count=0;
             }else{
               // query brenner duration
-              client.print(F("<tr><td>Brenner Laufzeit: "));
+              client.print(F("<tr><td>Brenner Laufzeit Stufe 1: "));
               client.print(brenner_duration);
               client.println(F("</td></tr><tr><td>"));
-              client.print(F("Brenner Takte: "));
+              client.print(F("Brenner Takte Stufe 1: "));
               client.print(brenner_count);
+              client.println(F("</td></tr>"));
+              client.print(F("<tr><td>Brenner Laufzeit Stufe 2: "));
+              client.print(brenner_duration_2);
+              client.println(F("</td></tr><tr><td>"));
+              client.print(F("Brenner Takte Stufe 2: "));
+              client.print(brenner_count_2);
               client.println(F("</td></tr>"));
               client.print(F("<tr><td>TWW Laufzeit: "));
               client.print(TWW_duration);
@@ -4318,26 +4373,36 @@ void loop() {
           dataFile.println(log_values[i]);
         } else {
           if (log_parameters[i] == 20000) {
-            dataFile.print(F("Brennerlaufzeit"));
+            dataFile.print(F("Brennerlaufzeit Stufe 1"));
             dataFile.print(F(";"));
             dataFile.println(brenner_duration);
           }
           if (log_parameters[i] == 20001) {
-            dataFile.print(F("Brennertakte"));
+            dataFile.print(F("Brennertakte Stufe 1"));
             dataFile.print(F(";"));
             dataFile.println(brenner_count);
           }
           if (log_parameters[i] == 20002) {
+            dataFile.print(F("Brennerlaufzeit Stufe 2"));
+            dataFile.print(F(";"));
+            dataFile.println(brenner_duration_2);
+          }
+          if (log_parameters[i] == 20003) {
+            dataFile.print(F("Brennertakte Stufe 2"));
+            dataFile.print(F(";"));
+            dataFile.println(brenner_count_2);
+          }
+          if (log_parameters[i] == 20004) {
             dataFile.print(F("TWW-Laufzeit"));
             dataFile.print(F(";"));
             dataFile.println(TWW_duration);
           }
-          if (log_parameters[i] == 20003) {
+          if (log_parameters[i] == 20005) {
             dataFile.print(F("TWW-Takte"));
             dataFile.print(F(";"));
             dataFile.println(TWW_count);
           }
-          if (log_parameters[i] == 20004) {
+          if (log_parameters[i] == 20006) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
                 dataFile.print(millis());
