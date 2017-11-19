@@ -51,6 +51,7 @@ Optionally configure the following parameters in BSB_lan_config.h:
   You only need to change the default MAC-address when using more than one interface in the same network.
 - IP-Address  
   `define #IPAddr 192,168,178,88`  
+  Note: Use commas instead of dots!  
 - Ethernet port  
   `#define Port 80`  
 - Ethernet2 shield (W5500)  
