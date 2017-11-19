@@ -50,9 +50,12 @@ Optionally configure the following parameters in BSB_lan_config.h:
   `byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xEA };`  
   You only need to change the default MAC-address when using more than one interface in the same network.
 - IP-Address  
-  `IPAddress ip(192,168,178,88);`  
+  `define #IPAddr 192,168,178,88`  
 - Ethernet port  
-  `EthernetServer server(80);`  
+  `#define Port 80`  
+- Ethernet2 shield (W5500)  
+  `#define ETHERNET_W5500`  
+  Additionally, unzip the Ethernet2.zip archive in the "src" subdirectory
 - Adapter configuration  
   `BSB bus(68,69,<my_addr>,<dest_addr>);`  
   RX-Pin, TX-Pin, own bus address (defaults to 0x06=RGT1), destination bus address (defaults to 0x00=heating system)
