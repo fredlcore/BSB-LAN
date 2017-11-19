@@ -4243,6 +4243,8 @@ void loop() {
 #endif
               brenner_duration=0;
               brenner_count=0;
+              brenner_duration_2=0;
+              brenner_count_2=0;
               TWW_duration=0;
               TWW_count=0;
             }else{
