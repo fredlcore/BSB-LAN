@@ -10,9 +10,9 @@
  * (port 80 is default for HTTP):
 */
 
-//#define ETHERNET_W5500      // activate for newer Ethernet2-Shields (W5500 instead of W5100) and install Ethernet2 library before compiling
-IPAddress ip(192,168,178,88);
-EthernetServer server(80);
+//#define ETHERNET_W5500 1   // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
+#define IPAddr 192,168,1,50   // please note the commas instead of dots!!!
+#define Port 80
 
 /* SECURITY OPTIONS
  * There are several options to control and protect access to your heating system. However, keep  
@@ -78,11 +78,13 @@ int log_parameters[20] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
-//  20000,                  // Spezialparameter: Brenner-Laufzeit (/B)
-//  20001,                  // Spezialparameter: Brenner-Takte (/B)
-//  20002,                  // Spezialparameter: TWW-Laufzeit (/B)
-//  20003,                  // Spezialparameter: TWW-Takte (/B)
-//  20004,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
+//  20000,                  // Spezialparameter: Brenner-Laufzeit Stufe 1(/B)
+//  20001,                  // Spezialparameter: Brenner-Takte Stufe 1 (/B)
+//  20002,                  // Spezialparameter: Brenner-Laufzeit Stufe 2(/B)
+//  20003,                  // Spezialparameter: Brenner-Takte Stufe 2 (/B)
+//  20004,                  // Spezialparameter: TWW-Laufzeit (/B)
+//  20005,                  // Spezialparameter: TWW-Takte (/B)
+//  20006,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
 //  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/H)
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
