@@ -50,10 +50,15 @@ char version[] = "0.38";
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
- *       0.38  - 11.11.2017
+ *       0.38  - 19.11.2017
  *
  * Changelog:
  *       version 0.38
+ *        - ATTENTION: New BSB_lan_conifg.h configurations! You need to adjust your configuration when upgrading to this version!
+ *          Webserver port is now defined in #define Port xx
+ *          IP address is now defined in #define IPAddr 88,88,88,88 form - note the commas instead of dots!
+ *          Special log parameters 20002 to 20006 have changed, see BSB_lan_config.h for their new meaning
+ *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_lan_config.h
  *        - Including two-stage oil furnaces in logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
  *        - Bugfixing SD-card logging in monitor mode
  *        - Bugfix for setting hour:time parameters via webinterface
@@ -244,28 +249,33 @@ char version[] = "0.38";
 
 #include <avr/pgmspace.h>
 #include <avr/wdt.h>
+#include <Arduino.h>
+
+#include "src/BSB/BSBSoftwareSerial.h"
+#include "src/BSB/bsb.h"
+#include "BSB_lan_config.h"
+#include "BSB_lan_defs.h"
+
 #include <SPI.h>
 #ifndef ETHERNET_W5500
 #include <Ethernet.h>
 #else
-#include <Ethernet2.h>
+#include "src/Ethernet2/src/Ethernet2.h"
 #endif
-#include <Arduino.h>
 #include <util/crc16.h>
 
 #include "src/Time/TimeLib.h"
-#include "src/BSB/BSBSoftwareSerial.h"
-#include "src/BSB/bsb.h"
 
-#include "BSB_lan_config.h"
-#include "BSB_lan_defs.h"
 #include "src/d3_js.h"
+
+IPAddress ip(IPAddr);
+EthernetServer server(Port);
 
 #ifdef TRUSTED_IP
 #ifndef ETHERNET_W5500
 #include <utility/w5100.h>
 #else
-#include <utility/w5500.h>
+#include "src/Ethernet2/src/utility/w5500.h"
 #endif
 #endif
 
@@ -286,7 +296,7 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef ONE_WIRE_BUS
-  #include "src/OneWire/OneWire.h"
+  #include "src/OneWire/OneWirre.h"
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9
   // Setup a oneWire instance to communicate with any OneWire devices
@@ -3202,7 +3212,11 @@ void loop() {
 #ifdef TRUSTED_IP
     int so = client.getSocketNumber();
     uint8_t remoteIP[4];
+#ifndef ETHERNET_W5500
     W5100.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+#else
+    w5500.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+#endif
     if (remoteIP[3] != TRUSTED_IP) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
       Serial.print(F("Rejected access from "));
       for (int i=0; i<4; i++) {
