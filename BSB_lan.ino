@@ -247,29 +247,24 @@ char version[] = "0.38";
  *
  */
 
-#include <avr/pgmspace.h>
-#include <avr/wdt.h>
-#include <Arduino.h>
-
 #include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
+#include <avr/pgmspace.h>
+#include <avr/wdt.h>
+#include <Arduino.h>
 #include <SPI.h>
+#include <util/crc16.h>
+#include "src/Time/TimeLib.h"
+#include "src/d3_js.h"
+
 #ifndef ETHERNET_W5500
 #include <Ethernet.h>
 #else
 #include "src/Ethernet2/src/Ethernet2.h"
 #endif
-#include <util/crc16.h>
-
-#include "src/Time/TimeLib.h"
-
-#include "src/d3_js.h"
-
-IPAddress ip(IPAddr);
-EthernetServer server(Port);
 
 #ifdef TRUSTED_IP
 #ifndef ETHERNET_W5500
@@ -278,6 +273,9 @@ EthernetServer server(Port);
 #include "src/Ethernet2/src/utility/w5500.h"
 #endif
 #endif
+
+IPAddress ip(IPAddr);
+EthernetServer server(Port);
 
 uint8_t len_idx, pl_start;
 int device_id;
