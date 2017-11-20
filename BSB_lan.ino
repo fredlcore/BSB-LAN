@@ -2465,8 +2465,8 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         }
 
         client.println(F("</td><td>"));
-        if ((flags != FL_RONLY || (flags==FL_RONLY && type == VT_BIT)) && msg[4] != TYPE_ERR && type != VT_UNKNOWN) {
-          if(type == VT_ENUM || type == VT_BIT) {
+        if (msg[4] != TYPE_ERR && type != VT_UNKNOWN) {
+          if(type == VT_ENUM || type == VT_BIT || type == VT_ONOFF) {
 
             client.print(F("<select "));
             if (type == VT_BIT) {
@@ -2475,41 +2475,63 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             client.print(F("id='value"));
             client.print(formnr);
             client.println(F("'>"));
-            memcpy_PF(buffer, enumstr, enumstr_len);
-            buffer[enumstr_len]=0;
-            uint16_t val;
-            uint16_t c=0;
-            uint8_t bitmask=0;
-            while(c<enumstr_len){
-              if(buffer[c+1]!=' ' || buffer[c+2]==' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
-                if (type == VT_BIT) {
-                  bitmask = val & 0xff;
-                  val = val >> 8 & 0xff;
+            if (type == VT_ONOFF) {
+              int val=msg[pl_start+1];
+              client.print(F("<option value='0'"));
+              if (val==0) {
+                client.print(F(" selected"));
+              }
+#ifdef LANG_DE
+              client.println(F(">Aus</option>"));
+#else
+              client.println(F(">Off</option>"));
+#endif
+              client.print(F("<option value='1'"));
+              if (val>0) {
+                client.print(F(" selected"));
+              }
+#ifdef LANG_DE
+              client.println(F(">Ein</option>"));
+#else
+              client.println(F(">On</option>"));
+#endif
+            } else {
+              memcpy_PF(buffer, enumstr, enumstr_len);
+              buffer[enumstr_len]=0;
+              uint16_t val;
+              uint16_t c=0;
+              uint8_t bitmask=0;
+              while(c<enumstr_len){
+                if(buffer[c+1]!=' ' || buffer[c+2]==' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                  val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                  if (type == VT_BIT) {
+                    bitmask = val & 0xff;
+                    val = val >> 8 & 0xff;
+                  }
+                  c++;
+                }else{
+                  val=uint16_t(((uint8_t*)buffer)[c]);
                 }
+                //skip leading space
+                c+=2;
+
+                sprintf(outBuf,"%s",&buffer[c]);
+                client.print(F("<option value='"));
+                client.print(val);
+                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10] & bitmask) == (val & bitmask)) ) {
+                  client.print(F("' SELECTED>"));
+                } else {
+                  client.print(F("'>"));
+                }
+                client.print(outBuf);
+                client.println(F("</option>"));
+  
+                while(buffer[c]!=0) c++;
                 c++;
-              }else{
-                val=uint16_t(((uint8_t*)buffer)[c]);
               }
-              //skip leading space
-              c+=2;
-
-              sprintf(outBuf,"%s",&buffer[c]);
-              client.print(F("<option value='"));
-              client.print(val);
-              if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10] & bitmask) == (val & bitmask)) ) {
-                client.print(F("' SELECTED>"));
-              } else {
-                client.print(F("'>"));
-              }
-              client.print(outBuf);
-              client.println(F("</option>"));
-
-              while(buffer[c]!=0) c++;
-              c++;
             }
             client.print(F("</select></td><td>"));
-            if (type != VT_BIT) {
+            if (flags !=FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set"));
               if (type == VT_BIT) {
                 client.print(F("bit"));
