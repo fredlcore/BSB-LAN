@@ -294,7 +294,7 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 #endif
 
 #ifdef ONE_WIRE_BUS
-  #include "src/OneWire/OneWirre.h"
+  #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9
   // Setup a oneWire instance to communicate with any OneWire devices
