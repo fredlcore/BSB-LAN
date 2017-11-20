@@ -10,7 +10,7 @@
  * (port 80 is default for HTTP):
 */
 
-//#define ETHERNET_W5500 1   // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
+//#define ETHERNET_W5500          // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
 #define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
 #define Port 80
 
@@ -35,7 +35,6 @@
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
  * TRUSTED_IP to 20. 
- * Configured for W5100-based Ethernet Shields. For W5500 types you have to search and replace w5100 with w5500 in the .ino source.
 */
 //#define TRUSTED_IP 20
 
@@ -48,7 +47,8 @@
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
- * Set fixed_device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
+ * Set fixed_device_id to your device family (parameter 6225) here if autodetect does not work or 
+ * heating system is not running when Arduino is powered on.
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
 int fixed_device_id = 0;
