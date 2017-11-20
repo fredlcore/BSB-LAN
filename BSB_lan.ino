@@ -2525,7 +2525,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             client.print(F("' VALUE='"));
 
             char* colon_pos = strchr(pvalstr,':');
-            if (colon_pos>0) {
+            if (colon_pos!=0) {
               *colon_pos = '.';
             }
 
