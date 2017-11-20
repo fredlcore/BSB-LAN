@@ -11,7 +11,7 @@
 */
 
 //#define ETHERNET_W5500 1   // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
-#define IPAddr 192,168,1,50   // please note the commas instead of dots!!!
+#define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
 #define Port 80
 
 /* SECURITY OPTIONS
@@ -26,9 +26,9 @@
 /*
  * if PASSKEY is defined, the URL has to contain the defined passkey as first element
  * e.g.
- * http://192.168.1,50/1234/                - to view the main website (don't forget the trailing slash!)
- * http://192.168.1.50/1234/K               - to list all categories
- * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
+ * http://192.168.178.88/1234/                - to view the main website (don't forget the trailing slash!)
+ * http://192.168.178.88/1234/K               - to list all categories
+ * http://192.168.178.88/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
 */
 //#define PASSKEY "1234"
 
