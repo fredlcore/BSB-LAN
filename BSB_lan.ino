@@ -3916,18 +3916,24 @@ void loop() {
                 client.print(lookup_descr(log_parameters[i])); 
               } else {
                 if (log_parameters[i] == 20000) {
-                  client.print(F("Brennerlaufzeit"));
+                  client.print(F("Brennerlaufzeit Stufe 1"));
                 }
                 if (log_parameters[i] == 20001) {
-                  client.print(F("Brennertakte"));
+                  client.print(F("Brennertakte Stufe 1"));
                 }
                 if (log_parameters[i] == 20002) {
-                  client.print(F("TWW-Laufzeit"));
+                  client.print(F("Brennerlaufzeit Stufe 2"));
                 }
                 if (log_parameters[i] == 20003) {
-                  client.print(F("TWW-Takte"));
+                  client.print(F("Brennertakte Stufe 2"));
                 }
                 if (log_parameters[i] == 20004) {
+                  client.print(F("TWW-Laufzeit"));
+                }
+                if (log_parameters[i] == 20005) {
+                  client.print(F("TWW-Takte"));
+                }
+                if (log_parameters[i] == 20006) {
 #ifdef LANG_DE
                   client.println(F("24h-Mittelwerte (s.o.)"));
 #else
