@@ -58,6 +58,7 @@ char version[] = "0.38";
  *          Webserver port is now defined in #define Port xx
  *          IP address is now defined in #define IPAddr 88,88,88,88 form - note the commas instead of dots!
  *          Special log parameters 20002 to 20006 have changed, see BSB_lan_config.h for their new meaning
+ *        - Added new virtual parameter 701 (Präsenztaste) which enters reduced temperature mode until next timed switch
  *        - Added Brötje BOB device family (138), including many new parameters!
  *        - Added Brötje SOB26 device family (28)
  *        - Added Elco Aquatop 8es device family (85)

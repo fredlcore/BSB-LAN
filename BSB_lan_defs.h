@@ -483,6 +483,7 @@ const char STR668[] PROGMEM = "Betriebsniveau";
 
 // Heizkreis 1
 const char STR700[] PROGMEM = "Betriebsart";
+const char STR701[] PROGMEM = "Präsenztaste";
 const char STR710[] PROGMEM = "Komfortsollwert";
 const char STR711[] PROGMEM = "Komfortsollwert Maximum";
 const char STR712[] PROGMEM = "Reduziertsollwert";
@@ -3550,6 +3551,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Einstellungen Heizkreis 1
 {0x2D3D0574,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL-DEV_LPB}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D050574,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_LPB}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
+{0x2D3D0572,  CAT_HK1,              VT_ONOFF,         701,   STR701,   0,                    0,            DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2D3D058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
 {0x2D05058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_LPB}, // [°C ] - Heizkreis 1 - Komfortsollwert
 //HEIZ->DISP ANS      2D3D05A5 00 08 C0 (35.0°C)
