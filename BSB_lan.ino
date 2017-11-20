@@ -58,16 +58,16 @@ char version[] = "0.38";
  *          Webserver port is now defined in #define Port xx
  *          IP address is now defined in #define IPAddr 88,88,88,88 form - note the commas instead of dots!
  *          Special log parameters 20002 to 20006 have changed, see BSB_lan_config.h for their new meaning
- *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_lan_config.h
- *        - Including two-stage oil furnaces in logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
- *        - Bugfixing SD-card logging in monitor mode
- *        - Bugfix for setting hour:time parameters via webinterface
- *        - Added Brötje BOB device family (138)
+ *        - Added Brötje BOB device family (138), including many new parameters!
  *        - Added Brötje SOB26 device family (28)
  *        - Added Elco Aquatop 8es device family (85)
  *        - Added Elco Thision 13 Plus device family (203)
  *        - Added Weishaupt WTU 25-G familiy (50)
  *        - New schematics for Arduino/Raspberry board layout
+ *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_lan_config.h
+ *        - Including two-stage oil furnaces in logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
+ *        - Bugfixing SD-card logging in monitor mode
+ *        - Bugfix for setting hour:time parameters via webinterface 
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
