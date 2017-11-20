@@ -54,7 +54,7 @@ char version[] = "0.38";
  *
  * Changelog:
  *       version 0.38
- *        - ATTENTION: New BSB_lan_conifg.h configurations! You need to adjust your configuration when upgrading to this version!
+ *        - ATTENTION: New BSB_lan_config.h configurations! You need to adjust your configuration when upgrading to this version!
  *          Webserver port is now defined in #define Port xx
  *          IP address is now defined in #define IPAddr 88,88,88,88 form - note the commas instead of dots!
  *          Special log parameters 20002 to 20006 have changed, see BSB_lan_config.h for their new meaning
@@ -260,17 +260,17 @@ char version[] = "0.38";
 #include "src/Time/TimeLib.h"
 #include "src/d3_js.h"
 
-#ifndef ETHERNET_W5500
-#include <Ethernet.h>
-#else
+#ifdef ETHERNET_W5500
 #include "src/Ethernet2/src/Ethernet2.h"
+#else
+#include <Ethernet.h>
 #endif
 
 #ifdef TRUSTED_IP
-#ifndef ETHERNET_W5500
-#include <utility/w5100.h>
-#else
+#ifdef ETHERNET_W5500
 #include "src/Ethernet2/src/utility/w5500.h"
+#else
+#include <utility/w5100.h>
 #endif
 #endif
 
@@ -3210,10 +3210,10 @@ void loop() {
 #ifdef TRUSTED_IP
     int so = client.getSocketNumber();
     uint8_t remoteIP[4];
-#ifndef ETHERNET_W5500
-    W5100.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
-#else
+#ifdef ETHERNET_W5500
     w5500.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+#else
+    W5100.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
 #endif
     if (remoteIP[3] != TRUSTED_IP) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
       Serial.print(F("Rejected access from "));
