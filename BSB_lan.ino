@@ -280,6 +280,8 @@ EthernetServer server(Port);
 
 uint8_t len_idx, pl_start;
 int device_id;
+uint8_t myAddr = bus.getBusAddr();
+uint8_t destAddr = bus.getBusDest();
 
 EthernetClient client;
 
@@ -1942,7 +1944,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
     // All enumeration (list) types
     // No input values sanity check
     case VT_ENUM:          // enumeration types
-    case VT_ONOFF: // 1 = On                      // TODO: Check if 1=on - my Thision says on = 255
+    case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
     case VT_YESNO: // 1 = Ja
     case VT_WEEKDAY: // (1=Mo..7=So)
@@ -3447,6 +3449,15 @@ void loop() {
             break;
           }
           p++;                   // position pointer past the '=' sign
+          p=strtok(p,"!");
+          char* token = strtok(NULL, "!");
+          if (token != 0) {
+            int d_addr = atoi(token);
+            Serial.print(F("Setting temporary destination to "));
+            Serial.println(d_addr);
+            bus_type=bus.setBusType(bus_type, myAddr, d_addr);
+          }
+          
           Serial.print(F("set ProgNr "));
           Serial.print(line);    // the ProgNr
           Serial.print(F(" = "));
@@ -3480,6 +3491,7 @@ void loop() {
             webPrintHeader();
             webPrintFooter();
           }
+          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
           break;
         }
         // list categories
@@ -3846,13 +3858,21 @@ void loop() {
 
           client.print(F("RAM: "));
           client.print(freeRam());
-          client.println(F("Bytes <BR>"));
+          client.println(F(" Bytes <BR>"));
+
+          myAddr = bus.getBusAddr();
+          destAddr = bus.getBusDest();
           client.print(F("Bus-System: "));
           if (bus_type == 1) {
             client.print(F("LPB"));
           } else {
             client.print(F("BSB"));
           }
+          client.print(F(" ("));
+          client.print(myAddr);
+          client.print(F(", "));
+          client.print(destAddr);
+          client.print(F(")"));
           client.println(F("<BR>"));
 #ifdef LANG_DE
           client.print(F("Monitor Modus: "));
@@ -4120,18 +4140,39 @@ void loop() {
         }
         if (p[1]=='P') {
           webPrintHeader();
+
+          char* token = strtok(p,",");  // drop everything before ","
+          token = strtok(NULL, ",");   // first token: myAddr
+          if (token != 0) {
+            int val = atoi(token);
+            if (val>0) {
+              myAddr = (uint8_t)val;
+            }
+          }
+          token = strtok(NULL, ",");   // second token: destAddr
+          if (token != 0) {
+            int val = atoi(token);
+            destAddr = (uint8_t)val;
+          }
+
           client.print(F("Bus-System: "));
           if (p[2]=='1') {
-            bus_type=bus.setBusType(BUS_LPB);
+            bus_type=bus.setBusType(BUS_LPB, myAddr, destAddr);
             len_idx = 1;
             pl_start = 13;
             client.println(F("LPB"));
           } else {
-            bus_type=bus.setBusType(BUS_BSB);
+            bus_type=bus.setBusType(BUS_BSB, myAddr, destAddr);
             len_idx = 3;
             pl_start = 9;
             client.println(F("BSB"));
           }
+          client.print(F(" ("));
+          client.print(myAddr);
+          client.print(F(", "));
+          client.print(destAddr);
+          client.print(F(")"));
+
           SetDevId();
           webPrintFooter();
           break;

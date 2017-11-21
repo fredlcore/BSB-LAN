@@ -41,8 +41,10 @@ public:
   boolean Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
-  uint8_t setBusType(uint8_t bus_type_val);
+  uint8_t setBusType(uint8_t bus_type_val, uint8_t addr=0xff, uint8_t d_addr=0xff);
   uint8_t getBusType();
+  uint8_t getBusAddr();
+  uint8_t getBusDest();
 
   bool Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
 
