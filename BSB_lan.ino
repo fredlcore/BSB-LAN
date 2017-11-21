@@ -3465,6 +3465,7 @@ void loop() {
 
           // Now send it out to the bus
           int setresult = set(line,p,setcmd);
+          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
           if(setresult!=1){
             webPrintHeader();
 #ifdef LANG_DE
@@ -3491,7 +3492,6 @@ void loop() {
             webPrintHeader();
             webPrintFooter();
           }
-          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
           break;
         }
         // list categories
