@@ -144,6 +144,10 @@ byte monitor = 0;
 // defines default flag for parameters (use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
 #define DEFAULT_FLAG FL_RONLY
 
+// include commands from BSB_lan_custom.h to be executed at the end of each main loop
+//#define CUSTOM_COMMANDS
+
+
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */
