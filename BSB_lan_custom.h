@@ -19,20 +19,20 @@ if (custom_timer > custom_timer_compare+10000) {    // every 10 seconds
     temp[i] = DHT.temperature;
   }
 
-  double abs_inside = 216.7*(hum[0]/100.0*6.112*exp(17.62*temp[0]/(243.12+temp[0]))/(273.15+temp[0]));
-  double abs_outside = 216.7*(hum[1]/100.0*6.112*exp(17.62*temp[1]/(243.12+temp[1]))/(273.15+temp[1]));
+  double abs_hum_inside = 216.7*(hum[0]/100.0*6.112*exp(17.62*temp[0]/(243.12+temp[0]))/(273.15+temp[0]));
+  double abs_hum_outside = 216.7*(hum[1]/100.0*6.112*exp(17.62*temp[1]/(243.12+temp[1]))/(273.15+temp[1]));
   Serial.print(F("Absolute humidity inside: "));
-  Serial.println(abs_inside);
+  Serial.println(abs_hum_inside);
   Serial.print(F("Absolute humidity outside: "));
-  Serial.println(abs_outside);
+  Serial.println(abs_hum_outside);
 
-  if (abs_inside<40 && abs_outside<40) {   // check for valid readings
-    pinMode(6, OUTPUT);
-    if (abs_outside*0.05 < abs_inside) {
+  if (abs_hum_inside<40 && abs_hum_outside<40) {   // check for valid readings
+    pinMode(6, OUTPUT);                            // use GPIO pin for fan
+    if (abs_hum_outside*0.05 < abs_hum_inside) {
       digitalWrite(6, 1);
       Serial.println("Fan on");
     }
-    if (abs_outside >= abs_inside) {
+    if (abs_hum_outside >= abs_hum_inside) {
       digitalWrite(6, 0);
       Serial.println("Fan off");
     }
