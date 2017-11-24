@@ -4311,7 +4311,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x223D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_BOB}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
 {0x233D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6742,  STR6742,  0,                    NULL,         FL_RONLY,     DEV_BR_BOB}, // Vorlauftemperatur Heizkreis 3 Fehler
 {0x113D05DE,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Kesseltemperatur Alarm
-{0x25050B10,  CAT_FEHLER,           VT_MINUTES_SHORT, 6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_BOB}, // Trinkwasserladung Alarm
+{0x25050B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_BOB}, // Trinkwasserladung Alarm
 {0x253D0B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_BR_BOB}, // Trinkwasserladung Alarm
 {0x693D0B67,  CAT_FEHLER,           VT_UNKNOWN,       6746,  STR6746,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemp Kühlen 1 Alarm
 {0x053D06D3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_EL_THI-DEV_BR_PEV}, // [ ] - Fehler - Historie 1 Datum/Zeit
