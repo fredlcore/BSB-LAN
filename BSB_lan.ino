@@ -50,7 +50,7 @@ char version[] = "0.38";
  *       0.35  - 25.06.2017
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
- *       0.38  - 19.11.2017
+ *       0.38  - 22.11.2017
  *
  * Changelog:
  *       version 0.38
@@ -64,9 +64,12 @@ char version[] = "0.38";
  *        - Added Elco Aquatop 8es device family (85)
  *        - Added Elco Thision 13 Plus device family (203)
  *        - Added Weishaupt WTU 25-G familiy (50)
+ *        - Added output for absolute humidity (g/m3) for DHT22 sensors
  *        - New schematics for Arduino/Raspberry board layout
  *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_lan_config.h
- *        - Including two-stage oil furnaces in logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
+ *        - Including two-stage oil furnaces BC-counters and logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
+ *        - Added new options for commands /P and /S to allow specifying a different destination device during runtime
+ *        - Added new configuration definement CUSTOM_COMMANDS which includes BSB_lan_custom.h at the end of each main loop. You may use custom_timer (set to current millis()) and custom_timer_compare to execute only every x milliseconds.
  *        - Bugfixing SD-card logging in monitor mode
  *        - Bugfix for setting hour:time parameters via webinterface 
  *       version 0.37
@@ -318,6 +321,8 @@ char date[20];
 
 static unsigned long lastAvgTime = millis();
 static unsigned long lastLogTime = millis();
+static unsigned long custom_timer = millis();
+unsigned long custom_timer_compare = 0;
 int numAverages = sizeof(avg_parameters) / sizeof(int);
 int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
 int numLogValues = sizeof(log_parameters) / sizeof(int);
@@ -2890,6 +2895,9 @@ void dht22(void) {
       outBufLen+=sprintf(outBuf+outBufLen,"</td></tr><tr><td>");
       outBufLen+=sprintf(outBuf+outBufLen,"hum[%d]: ",i);
       _printFIXPOINT(hum,2);
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr><tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen,"abs_hum[%d]: ",i);
+      _printFIXPOINT((216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
       outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>");
     }
   }
@@ -4607,6 +4615,13 @@ void loop() {
 //    SetDateTime();      
   }
 // end calculate averages
+
+#ifdef CUSTOM_COMMANDS
+{
+custom_timer = millis();
+#include "BSB_lan_custom.h"
+}
+#endif
 
 } // --- loop () ---
 
