@@ -483,7 +483,7 @@ const char STR668[] PROGMEM = "Betriebsniveau";
 
 // Heizkreis 1
 const char STR700[] PROGMEM = "Betriebsart";
-const char STR701[] PROGMEM = "Präsenztaste";
+const char STR701[] PROGMEM = "Präsenztaste (temporäre Abwesenheit)";
 const char STR710[] PROGMEM = "Komfortsollwert";
 const char STR711[] PROGMEM = "Komfortsollwert Maximum";
 const char STR712[] PROGMEM = "Reduziertsollwert";
