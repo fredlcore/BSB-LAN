@@ -2562,11 +2562,14 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             }
 
             client.print(strtod(pvalstr,NULL));
-            client.print(F("'></td><td><input type=button value='Set' onclick=\"set("));
-            client.print(line);
-            client.print(F(","));
-            client.print(formnr);
-            client.print(F(")\">"));
+            client.print(F("'></td><td>"));
+            if (flags !=FL_RONLY) {
+              client.print(F("<input type=button value='Set' onclick=\"set("));
+              client.print(line);
+              client.print(F(","));
+              client.print(formnr);
+              client.print(F(")\">"));
+            }
           }
         }
         client.println(F("</td></tr>"));
