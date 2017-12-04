@@ -137,8 +137,8 @@ typedef enum{
   VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x06 / minutes      Int08S
   VT_MONTHS,            //  2 Byte - 1 enable 0x06 / months       Int08S
   VT_ONOFF,             //  2 Byte - 1 enable 0x01 / 0=Aus  1=An (auch 0xff=An)
-  VT_MANUAUTO,          //  2 Byte - 1 enable 0x01 / 0=Automatisch  1=Manuell //FUJITSU
-  VT_BLOCKEDREL,        //  2 Byte - 1 enable 0x01 / 0=Gesperrt  1=Freigegeben //FUJITSU
+//  VT_MANUAUTO,          //  2 Byte - 1 enable 0x01 / 0=Automatisch  1=Manuell //FUJITSU
+//  VT_BLOCKEDREL,        //  2 Byte - 1 enable 0x01 / 0=Gesperrt  1=Freigegeben //FUJITSU
   VT_PERCENT,           //  2 Byte - 1 enable 0x06 / percent
   VT_PERCENT5,          //  2 Byte - 1 enable 0x01 / value/2
   VT_PRESSURE,          //  2 Byte - 1 enable 0x01 / bar/10.0     READ-ONLY
@@ -222,8 +222,8 @@ PROGMEM_LATE const divisor divtbl[]={
 {VT_MINUTES_SHORT,  1,  0,  NULL},
 {VT_MONTHS,         1,  0,  NULL},
 {VT_ONOFF,          1,  0,  NULL},
-{VT_MANUAUTO,       1,  0,  NULL},
-{VT_BLOCKEDREL,     1,  0,  NULL},
+// {VT_MANUAUTO,       1,  0,  NULL},
+// {VT_BLOCKEDREL,     1,  0,  NULL},
 {VT_PERCENT,        1,  0,  NULL},
 {VT_PERCENT5,       2,  0,  NULL},
 {VT_PRESSURE,       10, 1,  NULL},
@@ -901,7 +901,7 @@ const char STR2916[] PROGMEM = "Sollwert WP Max TWW";
 const char STR2920[] PROGMEM = "Bei EW Sperre";
 const char STR2922[] PROGMEM = "Kondensatorüberhitzungsschutz";
 const char STR2923[] PROGMEM = "Kond'schutz Pufferfühler";
-const char STR2941[] PROGMEM = "Verwendung Uml'ventil Y28";
+const char STR2941[] PROGMEM = "Verwendung Umlenkventil Y28";
 const char STR2951[] PROGMEM = "Abtaufreigabe unterhalb TA";
 const char STR2952[] PROGMEM = "Schaltdifferenz Abtauen";
 const char STR2954[] PROGMEM = "Verdampfertemp Abtau-Ende";
@@ -978,7 +978,7 @@ const char STR4102[] PROGMEM = "Sperrt andere Erzeuger";
 const char STR4110[] PROGMEM = "Sollwert Minimum";
 const char STR4130[] PROGMEM = "Temperaturdifferenz Ein";
 const char STR4131[] PROGMEM = "Temperaturdifferenz Aus";
-const char STR4133[] PROGMEM = "Vergleichstempertatur";
+const char STR4133[] PROGMEM = "Vergleichstemperatur";
 const char STR4140[] PROGMEM = "Pumpennachlaufzeit";
 const char STR4141[] PROGMEM = "Übertemperaturableitung";
 
@@ -1071,12 +1071,14 @@ const char STR5730[] PROGMEM = "Trinkwasser-Sensor B3";
 const char STR5731[] PROGMEM = "Trinkwasser-Stellglied Q3";
 const char STR5732[] PROGMEM = "TWW Pumpenpause Umsch UV";
 const char STR5733[] PROGMEM = "TWW Pumpenpause Verzögerung";
-const char STR5734[] PROGMEM = "Grundposition TWW Uml'ventil";
+const char STR5734[] PROGMEM = "Grundposition TWW Umlenkventil";
 const char STR5736[] PROGMEM = "Trinkwasser Trennschaltung";
+// const char STR5737[] PROGMEM = "Wirksinn TWW Umlenkventil";
 const char STR5760[] PROGMEM = "Vorregler/Zubringerpumpe";
 const char STR5761[] PROGMEM = "Zubringerpumpe Q8 Bit 0-3";
 const char STR5770[] PROGMEM = "Erzeugertyp";
 const char STR5772[] PROGMEM = "Brenner Vorlaufzeit";
+// const char STR5774[] PROGMEM = "Steuerung Kesselpumpe/TWW Umlenkventil";
 const char STR5800[] PROGMEM = "Wärmequelle";
 const char STR5806[] PROGMEM = "Typ Elektroeinsatz Vorlauf";  //FUJITSU
 const char STR5807[] PROGMEM = "Kälteerzeugung";
@@ -1151,11 +1153,16 @@ const char STR6014[] PROGMEM = "Funktion Mischergruppe 1";
 const char STR6015[] PROGMEM = "Funktion Mischergruppe 2";
 const char STR6020[] PROGMEM = "Funktion Erweiterungsmodul 1";
 const char STR6021[] PROGMEM = "Funktion Erweiterungsmodul 2";
-const char STR6030[] PROGMEM = "Relaisausgang QX21";
-const char STR6031[] PROGMEM = "Relaisausgang QX22";
-const char STR6032[] PROGMEM = "Relaisausgang QX23";
-const char STR6040[] PROGMEM = "Fühlereingang BX21";
-const char STR6041[] PROGMEM = "Fühlereingang BX22";
+const char STR6030[] PROGMEM = "Relaisausgang QX21 Modul 1";
+const char STR6031[] PROGMEM = "Relaisausgang QX22 Modul 1";
+const char STR6032[] PROGMEM = "Relaisausgang QX23 Modul 1";
+// const char STR6033[] PROGMEM = "Relaisausgang QX21 Modul 2";
+// const char STR6034[] PROGMEM = "Relaisausgang QX22 Modul 2";
+// const char STR6035[] PROGMEM = "Relaisausgang QX23 Modul 2";
+const char STR6040[] PROGMEM = "Fühlereingang BX21 Modul 1";
+const char STR6041[] PROGMEM = "Fühlereingang BX22 Modul 1";
+// const char STR6042[] PROGMEM = "Fühlereingang BX21 Modul 2";
+// const char STR6043[] PROGMEM = "Fühlereingang BX22 Modul 2";
 const char STR6046[] PROGMEM = "Funktion Eingang H2";
 const char STR6047[] PROGMEM = "Wirksinn Kontakt H2";
 const char STR6048[] PROGMEM = "Minimaler Vorlaufsollwert H2";
@@ -1659,7 +1666,7 @@ const char STR8800[] PROGMEM = "Raumtemperatur P";
 const char STR8801[] PROGMEM = "Raumsollwert P";
 const char STR8802[] PROGMEM = "Raumtemperatur P Modell";
 const char STR8803[] PROGMEM = "Vorlaufsollwert P";
-const char STR8804[] PROGMEM = "Vorlaufsollewrt 3";
+const char STR8804[] PROGMEM = "Vorlaufsollwert 3";
 const char STR8809[] PROGMEM = "Raumthermostat 3";
 const char STR8820[] PROGMEM = "Trinkwasserpumpe Q3";
 const char STR8821[] PROGMEM = "Elektroeinsatz TWW K6";
@@ -1863,6 +1870,11 @@ const char ENUM2727[] PROGMEM = {
 "\x01 Bereich 1\0"
 "\x02 Bereich 2\0"
 "\x03 Bereich 3"
+};
+// ProgNr 2920 "Bei EW Sperre" FUJITSU
+const char ENUM2920[] PROGMEM = {
+"\x00 Gesperrt\0"
+"\x01 Freigegeben"
 };
 // Kaskade
 const char ENUM3510[] PROGMEM = {  // numerical values are hypothetical
@@ -2378,7 +2390,9 @@ const char ENUM6030[] PROGMEM = {
 
 #define ENUM6031 ENUM6030
 #define ENUM6032 ENUM6030
-
+// #define ENUM6033 ENUM6030     // Relaisausgang QX21 Modul 2 / identity with 6030: analogous guess
+// #define ENUM6034 ENUM6030     // Relaisausgang QX22 Modul 2 / identity with 6030: analogous guess
+// #define ENUM6035 ENUM6030     // Relaisausgang QX23 Modul 2 / identity with 6030: analogous guess
 
 // Konfiguration - 6040 Fühlereingang BX21
 const char ENUM6040[] PROGMEM = {
@@ -2402,6 +2416,8 @@ const char ENUM6040[] PROGMEM = {
   "\x11 Solarrücklauffühler B64"
 };
 #define ENUM6041 ENUM6040	// Konfiguration - 6041 Fühlereingang BX22
+// #define ENUM6042 ENUM6040 // Fühlereingang BX21 Modul 2 / identity with 6040: analogous guess
+// #define ENUM6043 ENUM6040 // Fühlereingang BX22 Modul 2 / identity with 6040: analogous guess
 #define ENUM6046 ENUM5950	// Konfiguration - Funktion Eingang H2
 #define ENUM6047 ENUM5951	// Konfiguration - Wirksinn Kontakt H2
 // Konfiguration - 6070 Funktion Ausgang UX
@@ -2758,6 +2774,14 @@ const char ENUM6670[] PROGMEM = {
 "\x00 Kesselsollwert\0"
 "\x01 Leistungsanforderung\0"
 "\x02 Wärmeanforderung"
+};
+
+#define ENUM7119 ENUM2920    // ProgNr 7119 "Ökofunktion" FUJITSU
+
+const char ENUM7131[] PROGMEM = {
+"\x01 Teillast\0"         // ENUM-Wert überprüfen!
+"\x02 Volllast\0"
+"\x03 Maximale Heizlast"  // ENUM-Wert überprüfen!
 };
 
 const char ENUM7142[] PROGMEM = {
@@ -3936,7 +3960,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2912,  STR2912,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
 {0x593D12F3,  CAT_WAERMEPUMPE,      VT_TEMP,          2916,  STR2916,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert WP Max TWW //FUJITSU
-{0x593D0DF3,  CAT_WAERMEPUMPE,      VT_BLOCKEDREL,    2920,  STR2920,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
+{0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2951,  STR2951,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtaufreigabe unterhalb TA
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2952,  STR2952,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz Abtauen
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2954,  STR2954,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdampfertemp Abtau-Ende
@@ -4106,10 +4130,12 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5733 TWW Pumpenpause Verzögerung [s]
 {0x053D0F7B,  CAT_KONFIG,           VT_ENUM,          5734,  STR5734,  sizeof(ENUM5734),     ENUM5734,     FL_RONLY,     DEV_ALL}, // Grundposition TWW Uml'ventil
 {0x053D0727,  CAT_KONFIG,           VT_ONOFF,         5736,  STR5736,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5737,  STR5737,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wirksinn TW Umlenkventil
 {0x053D079C,  CAT_KONFIG,           VT_ENUM,          5760,  STR5760,  sizeof(ENUM5760),     ENUM5760,     DEFAULT_FLAG, DEV_ALL}, // Vorregler/Zubringerpumpe [Vor Pufferspeicher | Nach Pufferspeicher] (Nach Pufferspeicher)
 {0x193D2FDC,  CAT_KONFIG,           VT_BIT,           5761,  STR5761,  sizeof(ENUM5761),     ENUM5761,     DEFAULT_FLAG, DEV_ALL}, // Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
 {0x053D0851,  CAT_KONFIG,           VT_ENUM,          5770,  STR5770,  sizeof(ENUM5770),     ENUM5770,     DEFAULT_FLAG, DEV_ALL}, // Erzeugertyp
 {0x053D07BF,  CAT_KONFIG,           VT_SECONDS_SHORT, 5772,  STR5772,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brenner Vorlaufzeit
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5774,  STR5774,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Steuerung Kesselpumpe/TWW Umlenkventil
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5800,  STR5800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmequelle
 {0x053D1119,  CAT_KONFIG,           VT_ENUM,          5806,  STR5806,  sizeof(ENUM5806),     ENUM5806,     DEFAULT_FLAG, DEV_ALL}, // Typ Elektroeinsatz Vorlauf //FUJITSU
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5807,  STR5807,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kälteerzeugung
@@ -4207,10 +4233,15 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_BROETJE}, // Relaisausgang QX22
 {0x053D0787,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_BROETJE}, // Relaisausgang QX23
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6033,  STR6033,  sizeof(ENUM6033),     ENUM6033,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX21 Modul 2
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6034,  STR6034,  sizeof(ENUM6034),     ENUM6034,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX22 Modul 2
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6035,  STR6035,  sizeof(ENUM6035),     ENUM6035,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX23 Modul 2
 // !FIXME! !AUTOGENERATED! same cmd as 5941
-{0x053D077F,  CAT_KONFIG,           VT_ENUM,          6040,  STR6040,  sizeof(ENUM6040),     ENUM6040,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21
+{0x053D077F,  CAT_KONFIG,           VT_ENUM,          6040,  STR6040,  sizeof(ENUM6040),     ENUM6040,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 1
 // !FIXME! !AUTOGENERATED! same cmd as 5942
-{0x053D0784,  CAT_KONFIG,           VT_ENUM,          6041,  STR6041,  sizeof(ENUM6041),     ENUM6041,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22
+{0x053D0784,  CAT_KONFIG,           VT_ENUM,          6041,  STR6041,  sizeof(ENUM6041),     ENUM6041,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 1
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6042,  STR6042,  sizeof(ENUM6042),     ENUM6042,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 2
+// {CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6043,  STR6043,  sizeof(ENUM6043),     ENUM6043,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 2
 {0x063D0807,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang H2
 {0x063D0808,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 // !FIXME! !AUTOGENERATED! same cmd as 5962
@@ -4253,7 +4284,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0BD0,  CAT_KONFIG,           VT_DWORD,         6212,  STR6212,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Erzeuger 1
 {0x053D0BD1,  CAT_KONFIG,           VT_DWORD,         6213,  STR6213,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Erzeuger 2
 {0x053D0BD2,  CAT_KONFIG,           VT_DWORD,         6215,  STR6215,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Speicher
-// # !FIXME! ProgNr 6217 is listed as 0x053d0bd2 in Python project
+// # !FIXME! ProgNr 6217 is listed as 0x053D0BD2 in Python project
 {0x053D0BD3,  CAT_KONFIG,           VT_DWORD,         6217,  STR6217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053D000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Software- Version LOGON B
 {0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index [?]
@@ -4416,15 +4447,15 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7091,  STR7091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher seit Wartung
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7092,  STR7092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Ladetemp WP Minimum
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7093,  STR7093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt TWW Ladetemperatur WP
-{0x05050D20,  CAT_WARTUNG,          VT_BLOCKEDREL,    7119,  STR7119,  0,                    0,            DEFAULT_FLAG, DEV_ALL-DEV_BR_BOB}, // Ökofunktion
-{0x053D0D20,  CAT_WARTUNG,          VT_BLOCKEDREL,    7119,  STR7119,  0,                    0,            DEFAULT_FLAG, DEV_BR_BOB}, // Ökofunktion
+{0x05050D20,  CAT_WARTUNG,          VT_ENUM,          7119,  STR7119,  sizeof(ENUM7119),     ENUM7119,     DEFAULT_FLAG, DEV_ALL-DEV_BR_BOB}, // Ökofunktion
+{0x053D0D20,  CAT_WARTUNG,          VT_ENUM      ,    7119,  STR7119,  sizeof(ENUM7119),     ENUM7119,     DEFAULT_FLAG, DEV_BR_BOB}, // Ökofunktion
 {0x05050B4E,  CAT_WARTUNG,          VT_ONOFF,         7120,  STR7120,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_BOB}, // Ökobetrieb
 {0x053D0B4E,  CAT_WARTUNG,          VT_ONOFF,         7120,  STR7120,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_BOB}, // Ökobetrieb
 {0x0D3D092A,  CAT_WARTUNG,          VT_ONOFF,         7130,  STR7130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion
-{0x0505058D,  CAT_WARTUNG,          VT_UNKNOWN,       7131,  STR7131,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion Brennerleistung (00 02 = Vollast)
+{0x0505058D,  CAT_WARTUNG,          VT_ENUM,          7131,  STR7131,  sizeof(ENUM7131),     ENUM7131,     DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion Brennerleistung (00 02 = Vollast)
 {0x053D0075,  CAT_WARTUNG,          VT_ONOFF,         7140,  STR7140,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Handbetrieb
 {0x053D06AD,  CAT_WARTUNG,          VT_ONOFF,         7141,  STR7141,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Notbetrieb //FUJITSU
-{0x053D06AE,  CAT_WARTUNG,          VT_MANUAUTO,      7142,  STR7142,  sizeof(ENUM7142),     ENUM7142,     DEFAULT_FLAG, DEV_ALL}, // Notbetrieb Funktionsstart //FUJITSU
+{0x053D06AE,  CAT_WARTUNG,          VT_ENUM,          7142,  STR7142,  sizeof(ENUM7142),     ENUM7142,     DEFAULT_FLAG, DEV_ALL}, // Notbetrieb Funktionsstart //FUJITSU
 {0x093D3021,  CAT_WARTUNG,          VT_ONOFF,         7143,  STR7143,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 7143 Reglerstoppfunktion [Ein/Aus]
 {0x093D3022,  CAT_WARTUNG,          VT_PERCENT,       7145,  STR7145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 7145 Reglerstopp Sollwert [%]
 {0x113D307C,  CAT_WARTUNG,          VT_ONOFF,         7146,  STR7146,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 7146 Entlüftungsfunktion [Ein/Aus]

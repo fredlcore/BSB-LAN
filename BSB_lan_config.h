@@ -10,8 +10,8 @@
  * (port 80 is default for HTTP):
 */
 
-//#define ETHERNET_W5500          // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
-#define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
+//#define ETHERNET_W5500        // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
+#define IPAddr 192,168,1,50   // please note the commas instead of dots!!!
 #define Port 80
 
 /* SECURITY OPTIONS
@@ -26,15 +26,16 @@
 /*
  * if PASSKEY is defined, the URL has to contain the defined passkey as first element
  * e.g.
- * http://192.168.178.88/1234/                - to view the main website (don't forget the trailing slash!)
- * http://192.168.178.88/1234/K               - to list all categories
- * http://192.168.178.88/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
+ * http://192.168.1,50/1234/                - to view the main website (don't forget the trailing slash!)
+ * http://192.168.1.50/1234/K               - to list all categories
+ * http://192.168.1.50/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
 */
-//#define PASSKEY "1234"
+#define PASSKEY "4444"
 
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
  * TRUSTED_IP to 20. 
+ * Configured for W5100-based Ethernet Shields. For W5500 types you have to search and replace w5100 with w5500 in the .ino source.
 */
 //#define TRUSTED_IP 20
 
@@ -47,9 +48,8 @@
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
- * Set fixed_device_id to your device family (parameter 6225) here if autodetect does not work or 
- * heating system is not running when Arduino is powered on.
- * You may use other device family numbers to test commands from other heating systems at your own risk
+ * Set device_id to your device family (parameter 6225) here if autodetect does not work or heating system is not running when Arduino is powered on
+ * You may use other device family numbers to test commands from other heating systems at your own risk 
 */
 int fixed_device_id = 0;
 
@@ -62,7 +62,7 @@ int fixed_device_id = 0;
 //#define ONE_WIRE_BUS 3
 
 // Define the pins for DHT temperature/humidity sensors
-//#define DHT_BUS 2,3
+#define DHT_BUS 2,3
 
 // Create 24h averages from these parameters
 int avg_parameters[20] = {
@@ -74,7 +74,8 @@ int avg_parameters[20] = {
 #define LOGGER
 
 int log_parameters[20] = {
-//  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
+  30000,                  // Logging von unbearbeiteten Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
+/*
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -87,11 +88,12 @@ int log_parameters[20] = {
 //  20006,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
 //  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/H)
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
+*/
 };
 
 unsigned long log_interval = 3600;    // logging interval in seconds
-boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
-boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
+boolean log_unknown_only = 0;         // should we log only unknown commands when logging bus telegrams?
+boolean log_bc_only = 1;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 #define IPWE
@@ -115,7 +117,7 @@ int ipwe_parameters[] = {
 #define QUERY_RETRIES  3
 
 /* enable /X URL command to reset Arduino - might not work on older boards */
-//#define RESET
+#define RESET
 
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
@@ -141,11 +143,17 @@ byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 6
 byte verbose = 0;
 byte monitor = 0;
 
-// defines default flag for parameters (use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
-#define DEFAULT_FLAG FL_RONLY
+// defines default flag for parameters (use "#define DEFAULT_FLAG FL_RONLY" to make all parameters read-only)
+#define DEFAULT_FLAG  0
 
-// include commands from BSB_lan_custom.h to be executed at the end of each main loop
-//#define CUSTOM_COMMANDS
+#define CUSTOM_COMMANDS     // include commands from BSB_lan_custom.h to be executed at the end of each main loop
+#define DEBUG
+
+
+//IPAddress ip(192,168,1,150);
+//byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x91 };
+//uint8_t bus_type = bus.setBusType(1);  // 0 = BSB, 1 = LPB
+//byte verbose = 1;
 
 
 /************************************************************************************/
