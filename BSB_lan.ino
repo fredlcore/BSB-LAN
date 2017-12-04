@@ -1527,12 +1527,14 @@ char *printTelegram(byte* msg) {
             case VT_CLOSEDOPEN:
               printCHOICE(msg,data_len,"Offen","Geschlossen");
               break;
+/*
             case VT_MANUAUTO:  //FUJITSU
               printCHOICE(msg,data_len,"Automatisch","Manuell");
               break;
             case VT_BLOCKEDREL:  //FUJITSU
               printCHOICE(msg,data_len,"Gesperrt","Freigegeben");
               break;
+*/
             case VT_DAYS: // u8 Tage
               printBYTE(msg,data_len,"Tage");
               break;
