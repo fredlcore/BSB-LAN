@@ -5,17 +5,20 @@ English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/
 LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme, einschließlich Logging-Funktion auf Micro-SD-Karte.
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
- - Brötje ISR-SSR 
- - Brötje ISR-ZR1 
- - Brötje NovoCondens BOB 20 (Ölbrenner)
- - Brötje NovoCondens SOB 22C (Ölbrenner)
- - Brötje NovoCondens SOB 26C [ISR + RVS43.222/100] (Ölbrenner)
+ - Brötje ISR-SSR [RVS63.283/100] [RVS63.283/200] (Solar-System-Regler) 
+ - Brötje ISR-ZR1 [RVS46.530/100] (Zonen-Regler)
+ - Brötje L-UB 25C [RVS43.122/100] (Ölbrenner)
+ - Brötje NovoCondens SOB 26 [Eurocontrol KM] {LPB_only} (Ölbrenner)
+ - Brötje NovoCondens SOB 22C [RVS43.222/100] (Ölbrenner)
+ - Brötje NovoCondens SOB 26C [RVS43.222/100] + EWM [RVS75.390/109] (Ölbrenner)
+ - Brötje NovoCondens BOB 20 [RVS43.325/100] (Ölbrenner)
  - Brötje SensoTherm BSW-K (Wärmepumpe)
  - Brötje WBS 22E (Gasbrenner)
  - Brötje WGB-U 15H (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
- - Brötje WGB S 17/20 E EcoTherm Plus (Gasbrenner)
- - Brötje WGB EVO 20H (Gasbrenner)
+ - Brötje WGB 20C [LMU74] (Gasbrenner)
+ - Brötje WGB S 17/20 E EcoTherm Plus [LMS14.001B100] (Gasbrenner)
+ - Brötje WGB EVO 20H [LMS15] (Gasbrenner)
  - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
  - Elco Straton (Ölbrenner)
  - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (Ölbrenner)
@@ -23,7 +26,9 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 17.1 [LMU74.100A136 + AVS37.394/136] (Gasbrenner)
  - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (Gasbrenner)
  - Elco Aquatop 8es [RVS51.843/169] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
- - Fujitsu Waterstage (WSYK160DC9, RVS21.827/127) (Wärmepumpe)
+ - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827/127] (Wärmepumpe)
+ - Siemens RVS63.283/109 (entspr. Brötje SSR)
+ - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220/320] {LPB_only} (Ölbrenner)
 
 Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit dem BSB oder dem LPB arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 
