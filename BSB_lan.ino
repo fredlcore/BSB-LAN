@@ -51,8 +51,11 @@ char version[] = "0.38";
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
+ *       0.39  -
  *
  * Changelog:
+ *       version 0.39
+ *        - Bugfix for logging Brennerlaufzeit Stufe 2
  *       version 0.38
  *        - ATTENTION: New BSB_lan_config.h configurations! You need to adjust your configuration when upgrading to this version!
  *          Webserver port is now defined in #define Port xx
@@ -3216,6 +3219,7 @@ void loop() {
           }
           if (msg[pl_start]==0x00) {    // brenner off
             brenner_end=millis();      // timestamp the end
+            brenner_stufe=0;
             if(brenner_start!=0){        // start has been timed
               if(brenner_end >= brenner_start){
                 brenner_duration+=(brenner_end-brenner_start)/1000;
@@ -4456,7 +4460,7 @@ void loop() {
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0 && log_parameters[i] != 20002 && log_parameters[i] != 30000) {
+        if (log_parameters[i] > 0 && log_parameters[i] != 20006 && log_parameters[i] != 30000) {
           dataFile.print(millis());
           dataFile.print(F(";"));
           dataFile.print(GetDateTime(date)); // get current time from heating system
