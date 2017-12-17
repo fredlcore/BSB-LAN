@@ -2627,16 +2627,16 @@ void SetDevId() {
   uint8_t family=0;
   boolean known=0;
 
-  if (bus_type == 1) {
-    device_id = 1;
+//  if (bus_type == 1) {
+//    device_id = 1;
+//  } else {
+  if (fixed_device_id < 1) {
+    dev_id = 0;
+    device_id = strtod(query(6225,6225,1),NULL);
   } else {
-    if (fixed_device_id < 1) {
-      dev_id = 0;
-      device_id = strtod(query(6225,6225,1),NULL);
-    } else {
-      device_id = fixed_device_id;
-    }
+    device_id = fixed_device_id;
   }
+//  }
   int i=0;
   family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   while(family!=DEV_NONE){
