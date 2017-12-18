@@ -13,6 +13,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje NovoCondens SOB 26C [RVS43.222/100] + EWM [RVS75.390/109] (Ölbrenner)
  - Brötje NovoCondens BOB 20 [RVS43.325/100] (Ölbrenner)
  - Brötje SensoTherm BSW-K (Wärmepumpe)
+ - Brötje BBK 22E [LMS14.001A100] (Gasbrenner)
  - Brötje WBS 22E (Gasbrenner)
  - Brötje WGB-U 15H (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
