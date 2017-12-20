@@ -15,7 +15,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje SensoTherm BSW-K (Wärmepumpe)
  - Brötje BBK 22E [LMS14.001A100] (Gasbrenner)
  - Brötje WBS 22E (Gasbrenner)
- - Brötje WGB-U 15H (Gasbrenner)
+ - Brötje WGB-U 15H [LMS14.001B100] (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
  - Brötje WGB 20C [LMU74] (Gasbrenner)
  - Brötje WGB S 17/20 E EcoTherm Plus [LMS14.001B100] (Gasbrenner)
