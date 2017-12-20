@@ -15,7 +15,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje SensoTherm BSW-K (heat pump)
 - Brötje BBK 22E [LMS14.001A100] (gas-fired)
 - Brötje WBS 22E (gas-fired)
-- Brötje WGB-U 15H (gas-fired)
+- Brötje WGB-U 15H [LMS14.001B100] (gas-fired)
 - Brötje WGB 15 E [LMS14] (gas-fired)
 - Brötje WGB 20C [LMU74] (gas-fired)
 - Brötje WGB S 17/20 E EcoTherm Plus [LMS14.001B100] (gas-fired)
