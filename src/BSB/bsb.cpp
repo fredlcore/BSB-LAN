@@ -140,7 +140,7 @@ Serial.println(read, HEX);
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E))) {
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x23 || read == 0x1D || read == 0x1E))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
 Serial.println("SOF detected");
@@ -270,6 +270,8 @@ inline bool BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
   byte i;
   byte data, len;
+Serial.print("Msg0:");
+Serial.println(msg[0]);
   if (bus_type != 2) {
     len = msg[len_idx];
   } else {

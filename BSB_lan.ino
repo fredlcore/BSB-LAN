@@ -3409,7 +3409,7 @@ void loop() {
           if (msg_cycle > 7) {
             msg_cycle = 0;
           }
-          bus.Send(0, 0, tx_msg, rx_msg);    
+          bus.Send(0, 0, rx_msg, tx_msg);    
           Serial.println(tx_msg[1], HEX);
           Serial.println(millis());
           dumpMsg(tx_msg);
