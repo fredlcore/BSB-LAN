@@ -56,6 +56,7 @@ private:
   inline bool _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
+  uint8_t CRC_PPS (byte* buffer, uint8_t length);
 
   BSBSoftwareSerial* serial;
 };

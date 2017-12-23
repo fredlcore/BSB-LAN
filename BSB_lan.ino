@@ -348,6 +348,36 @@ unsigned long TWW_start   = 0;
 unsigned long TWW_duration= 0;
 unsigned long TWW_count   = 0;
 
+// PPS-bus variables
+uint8_t msg_cycle = 0;
+
+double boiler_set_temp = 19.5;
+double knob_pos = 0.5;
+double room_set_temp = 19.5;
+double room_cur_temp = 10;
+uint8_t mode = 0;
+uint8_t presence = 1;
+
+double outside_temp=0;
+double boiler_temp=0;
+double mixer_flow_temp=0;
+double flow_temp=0;
+double weighted_temp=0;
+byte boiler_active=0;
+uint8_t d=0;
+uint8_t h=0;
+uint8_t m=0;
+uint8_t s=0;
+
+void dumpMsg(byte* msg) {
+  for (int c=0;c<9;c++) {
+    if (msg[c]<16) Serial.print("0");
+    Serial.print(msg[c], HEX);
+    Serial.print(" ");
+  }
+  Serial.println();
+}
+
 /* ******************************************************************
  *      ************** Program code starts here **************
  * *************************************************************** */
@@ -541,8 +571,12 @@ void SerialPrintData(byte* msg){
   int data_len;
   if (bus_type == 1) {
     data_len=msg[len_idx]-14;     // get packet length, then subtract
-  } else {
+  }
+  if (bus_type == 0) {
     data_len=msg[len_idx]-11;     // get packet length, then subtract
+  }
+  if (bus_type == 2) {
+    data_len=9;
   }
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
@@ -3239,6 +3273,207 @@ void loop() {
           } // endif, brenner is off
         } // endif, Status Brenner command code
       } // endif, broadcasts
+
+// PPS-Bus handling
+      if (bus_type == 2) {
+        if (msg[0] == 0x17) { // Send client data
+          Serial.print("DR: ");
+          Serial.println(millis());
+          byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+          byte rx_msg[10] = { 0 };
+          switch (msg_cycle) {
+            case 0:
+              tx_msg[1] = 0x38;
+              tx_msg[7] = 0x53;
+              break;
+            case 1:
+              tx_msg[1] = 0x18; 
+              tx_msg[6] = ((uint16_t)(knob_pos*64) >> 8);
+              tx_msg[7] = ((uint16_t)(knob_pos*64) & 0xFF);
+              break;
+            case 2:
+              tx_msg[1] = 0x28; 
+              tx_msg[6] = ((uint16_t)(room_cur_temp*64) >> 8);
+              tx_msg[7] = ((uint16_t)(room_cur_temp*64) & 0xFF);
+              break;
+            case 3:
+              tx_msg[1] = 0x19; 
+              tx_msg[6] = ((uint16_t)(room_set_temp*64) >> 8);
+              tx_msg[7] = ((uint16_t)(room_set_temp*64) & 0xFF);
+              break;
+            case 4:
+              tx_msg[1] = 0x4E;
+              tx_msg[7] = 0x00;
+              break;
+            case 5:
+              tx_msg[1] = 0x49; 
+              tx_msg[7] = mode;
+              break;
+            case 6:
+              tx_msg[1] = 0x56;
+              tx_msg[7] = 0x00;
+              break;
+            case 7:
+              tx_msg[1] = 0x69;
+              tx_msg[6] = 0x06;     // ???
+              tx_msg[7] = 0x90;     // ???
+              break;
+            case 8:
+              tx_msg[1] = 0x08;
+              tx_msg[6] = 0x04;     // ???
+              tx_msg[7] = 0xE0;     // ???
+              break;
+            case 9:
+              tx_msg[1] = 0x09;
+              tx_msg[6] = 0x04;     // ???
+              tx_msg[7] = 0x40;     // ???
+              break;
+            case 10:
+              tx_msg[1] = 0x0B; 
+              tx_msg[6] = ((uint16_t)(boiler_set_temp*64) >> 8);
+              tx_msg[7] = ((uint16_t)(boiler_set_temp*64) & 0xFF);
+              break;
+            case 11:
+              tx_msg[1] = 0x4C;
+              tx_msg[7] = presence;
+              break;
+            case 12:
+              tx_msg[1] = 0x60;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 13:
+              tx_msg[1] = 0x61;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 14:
+              tx_msg[1] = 0x62;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 15:
+              tx_msg[1] = 0x63;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 16:
+              tx_msg[1] = 0x64;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 17:
+              tx_msg[1] = 0x65;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 18:
+              tx_msg[1] = 0x66;
+              tx_msg[2] = 0x90;
+              tx_msg[3] = 0x90;
+              tx_msg[4] = 0x90;
+              tx_msg[5] = 0x90;
+              tx_msg[6] = 0x90;
+              tx_msg[7] = 0x00;
+              break;
+            case 19:
+              tx_msg[1] = 0x7C;
+              tx_msg[7] = 0x00;     // ???
+              break;
+          }
+          msg_cycle++;
+          if (msg_cycle > 7) {
+            msg_cycle = 0;
+          }
+          bus.Send(0, 0, tx_msg, rx_msg);    
+          Serial.println(tx_msg[1], HEX);
+          Serial.println(millis());
+          dumpMsg(tx_msg);
+        } else {    // parse heating system data
+
+          if (msg[0] == 0x1E) {
+            switch(msg[1]) {
+              case 0x08: msg_cycle = 8; break;
+              case 0x09: msg_cycle = 9; break;
+              case 0x0B: msg_cycle = 10; break;
+              case 0x48: msg_cycle = 1; break;
+              case 0x4C: msg_cycle = 11; break;
+              case 0x4D: msg_cycle = 2; break;
+              case 0x4F: msg_cycle = 3; break;
+              case 0x60: msg_cycle = 12; break;
+              case 0x61: msg_cycle = 13; break;
+              case 0x62: msg_cycle = 14; break;
+              case 0x63: msg_cycle = 15; break;
+              case 0x64: msg_cycle = 16; break;
+              case 0x65: msg_cycle = 17; break;
+              case 0x66: msg_cycle = 18; break;
+              case 0x7C: msg_cycle = 19; break;
+              default: break;
+            }
+          } else {
+        
+            double temp = (double)((msg[6] << 8) + msg[7]) / 64;
+
+            switch (msg[1]) {
+              case 0x4F: msg_cycle = 0; break;
+              
+              case 0x29: outside_temp = temp; break;
+              case 0x2B: boiler_temp = temp; break;
+              case 0x2C: mixer_flow_temp = temp; break;
+              case 0x2E: flow_temp = temp; break;
+              case 0x57: weighted_temp = temp; boiler_active = msg[2]; break;
+              case 0x79: d = msg[4]; h = msg[5]; m = msg[6]; s = msg[7]; break;
+              default:
+                Serial.print("Unknown telegram: ");
+                dumpMsg(msg);
+                break;
+            }
+            Serial.print("Outside Temperature: ");
+            Serial.println(outside_temp);
+            Serial.print("Boiler Temperature: ");
+            Serial.println(boiler_temp);
+            Serial.print("Mixer Flow Temperature: ");
+            Serial.println(mixer_flow_temp);
+            Serial.print("Flow Temperature: ");
+            Serial.println(flow_temp);
+            Serial.print("Weighted Temperature: ");
+            Serial.println(weighted_temp);
+            Serial.print("Boiler active: ");
+            if (boiler_active) {
+              Serial.println("yes");
+            } else {
+              Serial.println("no");
+            }
+            Serial.print("Time: "); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
+          }
+// End PPS-bus handling
+        }
+      }
+
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
@@ -4652,12 +4887,19 @@ custom_timer = millis();
  * *************************************************************** */
 void setup() {
 
-  if (bus_type == 0) {
-    len_idx = 3;
-    pl_start = 9;
-  } else {
-    len_idx = 1;
-    pl_start = 13;
+  switch (bus_type) {
+    case 0:
+      len_idx = 3;
+      pl_start = 9;
+      break;
+    case 1:
+      len_idx = 1;
+      pl_start = 13;
+      break;
+    case 2:
+      len_idx = 9;
+      pl_start = 2;
+      break;
   }
 
   // The computer hardware serial interface #0:
@@ -4666,6 +4908,7 @@ void setup() {
   Serial.println(F("READY"));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
+  Serial.println(ip);
 
 #ifdef LOGGER
   // disable w5100 while setting up SD
@@ -4765,10 +5008,12 @@ void setup() {
 
 #endif
 
+  if (bus_type != 2) {
 // receive inital date/time from heating system
-  SetDateTime();
+    SetDateTime();
   
 // receive device_id (Gerätefamilie) from heating system
-  SetDevId();
+    SetDevId();
+  }
 }
 
