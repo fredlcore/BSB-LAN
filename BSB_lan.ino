@@ -568,7 +568,7 @@ void SerialPrintHex32(uint32_t val) {
  * *************************************************************** */
 void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
-  int data_len;
+  int data_len=0;
   if (bus_type == 1) {
     data_len=msg[len_idx]-14;     // get packet length, then subtract
   }
@@ -3452,23 +3452,23 @@ void loop() {
                 dumpMsg(msg);
                 break;
             }
-            Serial.print("Outside Temperature: ");
+            Serial.print(F("Outside Temperature: "));
             Serial.println(outside_temp);
-            Serial.print("Boiler Temperature: ");
+            Serial.print(F("Boiler Temperature: "));
             Serial.println(boiler_temp);
-            Serial.print("Mixer Flow Temperature: ");
+            Serial.print(F("Mixer Flow Temperature: "));
             Serial.println(mixer_flow_temp);
-            Serial.print("Flow Temperature: ");
+            Serial.print(F("Flow Temperature: "));
             Serial.println(flow_temp);
-            Serial.print("Weighted Temperature: ");
+            Serial.print(F("Weighted Temperature: "));
             Serial.println(weighted_temp);
-            Serial.print("Boiler active: ");
+            Serial.print(F("Boiler active: "));
             if (boiler_active) {
-              Serial.println("yes");
+              Serial.println(F("yes"));
             } else {
-              Serial.println("no");
+              Serial.println(F("no"));
             }
-            Serial.print("Time: "); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
+            Serial.print(F("Time: ")); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
           }
 // End PPS-bus handling
         }

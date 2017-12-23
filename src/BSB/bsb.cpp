@@ -127,6 +127,8 @@ bool BSB::GetMessage(byte* msg) {
     if (bus_type != 2) {
       read = read ^ 0xFF;
     }
+Serial.print("First byte: ");
+Serial.println(read, HEX);
 
 #if DEBUG_LL
     Serial.println();    
@@ -141,8 +143,9 @@ bool BSB::GetMessage(byte* msg) {
     if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
-
+Serial.println("SOF detected");
       if (bus_type == 2 && read == 0x17) {
+Serial.println("0x17 detected");
         return true; // PPS-Bus request byte 0x17 just contains one byte, so return
       }
 
@@ -155,7 +158,10 @@ bool BSB::GetMessage(byte* msg) {
         if (bus_type != 2) {
           read = read ^ 0xFF;
         }
+Serial.print("Reading ");
+Serial.println(i);
         msg[i++] = read;
+Serial.println(read, HEX);
 #if DEBUG_LL
         if(read<16){  
           Serial.print("0");
@@ -191,6 +197,7 @@ bool BSB::GetMessage(byte* msg) {
 
       if (bus_type == 2) {
         if (i == len_idx) {
+Serial.println(F("Msg received"));
           return true; // TODO: add CRC check before returning true/false
         }
       } else {
@@ -206,12 +213,13 @@ bool BSB::GetMessage(byte* msg) {
 	  }
         } else {
           // Length error
+Serial.println(F("Length Error"));
           return false;
         }
       }
     }
   }
-
+Serial.println(F("No data"));
   // We got no data so:
   return false;
 }
