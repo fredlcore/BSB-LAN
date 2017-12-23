@@ -32,6 +32,7 @@ Getting started:
 * Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with DB/MB (connect DB(+) to CL+ and MB(-) to CL-).
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
+* Download the current version of BSB-LAN from https://github.com/fredlcore/bsb_lan and unzip the downloaded file „bsb_lan-master.zip“. Rename the created folder "bsb_lan-master" to „BSB_lan“.
 * Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
 * Configure the IP-address in BSB_lan_config.h according to your network (default 192.168.178.88 will work with standard Fritz!Box routers, but check for address collision).
 * Select "Arduino/Genuino Mega or Mega 2560" under Tools/Board.
@@ -212,9 +213,6 @@ Open issues
           With the current implementation a lot of values can be already set. But there is still some testing needed and some parameter 
           types have to be added.
 
-- Introduce valid ranges for parameters
-          To make the access safer when setting values for parameters, the valid ranges should be added to the command table
-
 - Decode DE telegrams. Maybe they contain some status information and we can use them without querying.
 
 - Add support of error messages sent by the boiler system
@@ -223,4 +221,4 @@ Further Info:
       http://www.mikrocontroller.net/topic/218643  
       http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
       http://forum.fhem.de/index.php/topic,29762.0.html  
-      systemhandbuch_isr.pdf
+      Brötje "Systemhandbuch ISR"

@@ -32,6 +32,7 @@ Erste Schritte:
 - Downloade und installiere die aktuelle Version der Arduino IDE von https://www.arduino.cc/en/Main/Software (Windows-, Mac- und Linux-Version verfügbar).
 - <del>Kopiere die Inhalte des BSB_lan-libraries-Ordners in deinen lokalen Arduino-libraries-Ordner (Eigene Dateien\Arduino\libraries\ unter Windows, ~/Documents/Arduino/libraries auf einem Mac).</del>  
 UPDATE: Ab v0.34 gilt: Wichtigste Änderunge für alle Neuinstallationen ist, dass die Libraries, die nicht standardmäßig bei der Arduino IDE mit dabei sind, nun einfach im Sketch-Verzeichnis bleiben können und von dort eingelesen werden. Ein Kopieren ist nun nicht mehr nötig, was zum einen gerade für Anfänger die Installation erleichtert und alle anderen bei der Aktualisierung von Libraries diese ebenfalls nicht mehr manuell verschieben müsst. Es kann sein, dass das Kompilieren fehl schlägt, wenn die gleiche Library bereits im Standard-Libraries-Verzeichnis der Arduino IDE liegt. In dem Fall müsste die gleichlautende Bibliothek dort (Win: MyDocuments\Arduino\Libraries bzw. Mac: ~/Dokumente/Arduino/Libraries) gelöscht werden.
+- Downloade die aktuelle BSB-LAN-Version von https://github.com/fredlcore/bsb_lan und entpacke die heruntergeladene Datei „bsb_lan-master.zip“. Benenne den nun erstellten Ordner „bsb_lan-master“ in „BSB_lan“ um.
 - Öffne den BSB_lan-sketch mittels eines Doppelklicks auf die Datei BSB_lan.ino im BSB_lan-Ordner. Die dazugehörigen Dateien BSB_lan_config.h und BSB_land_defs.h werden automatisch mit geladen.
 - Konfiguriere die IP-Adresse in BSB_lan_config.h deinem Netzwerk entsprechend (die voreingestellte IP 192.168.178.88 funktioniert mit den meisten Standard-Routern wie bspw. Fitz!Box, aber prüfe, ob die IP bereits anderweitig vergeben ist, damit es nicht zu einer Adressen-Kollision kommt).
 - Wähle "Arduino/Genuino Mega or Mega 2560" unter Tools/Board bzw. Werkzeuge/Board.
@@ -196,9 +197,6 @@ Offene Punkte
 - Testen und Vervollständigen der Funktionalität
           Mit der gegenwärtigen Implementierung können bereits viele Werte gesetzt werden. Jedoch sind noch immer Tests nötig und einige Parameter müssen hinzgefügt werden.
 
-- Zulässige Wertebereiche für Parameter einführen
-          Um den Zugriff sicherer zu machen, wenn Werte für Parameter gesetzt werden, sollten zulässige Wertebereiche zum command table hinzugefügt werden.
-
 - Dekodieren der DE-Telegramme. Möglicherweise beinhalten sie Statusinformationen, die ohne Abfragen genutzt werden können.
 
 - Unterstützung der vom Heizungssystem aus gesendeten Fehlerberichte hinzufügen.
@@ -207,4 +205,4 @@ Weiterführende Infos:
       http://www.mikrocontroller.net/topic/218643  
       http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
       http://forum.fhem.de/index.php/topic,29762.0.html  
-      systemhandbuch_isr.pdf
+      Brötje "Systemhandbuch ISR"
