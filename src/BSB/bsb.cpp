@@ -196,7 +196,7 @@ Serial.println(read, HEX);
       // We should have read the message completely. Now check and return
 
       if (bus_type == 2) {
-        if (i == len_idx) {
+        if (i == len_idx+1) {
 Serial.println(F("Msg received"));
           return true; // TODO: add CRC check before returning true/false
         }
