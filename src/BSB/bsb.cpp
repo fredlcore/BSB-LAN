@@ -25,7 +25,7 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint8_t addr, uint8_t d_addr) {
   switch (bus_type) {
     case 0: len_idx = 3; break;
     case 1: len_idx = 1; break;
-    case 2: len_idx = 9; break;
+    case 2: len_idx = 8; break;
     default: len_idx = 3; break;
   }
   if (addr<0xff) {
@@ -140,7 +140,7 @@ Serial.println(read, HEX);
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E))) {
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x23 || read == 0x1D || read == 0x1E))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
 Serial.println("SOF detected");
@@ -219,7 +219,6 @@ Serial.println(F("Length Error"));
       }
     }
   }
-Serial.println(F("No data"));
   // We got no data so:
   return false;
 }
@@ -274,7 +273,7 @@ inline bool BSB::_send(byte* msg) {
   if (bus_type != 2) {
     len = msg[len_idx];
   } else {
-    len = len_idx-1;
+    len = len_idx;
   }
   switch (bus_type) {
     case 0:
