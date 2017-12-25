@@ -263,6 +263,7 @@ char version[] = "0.38";
 #include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
+#include <EEPROM.h>
 #include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #include "src/d3_js.h"
@@ -350,33 +351,7 @@ unsigned long TWW_count   = 0;
 
 // PPS-bus variables
 uint8_t msg_cycle = 0;
-
-double boiler_set_temp = 19.5;
-double knob_pos = 0.5;
-double room_set_temp = 19.5;
-double room_cur_temp = 10;
-uint8_t mode = 0;
-uint8_t presence = 1;
-
-double outside_temp=0;
-double boiler_temp=0;
-double mixer_flow_temp=0;
-double flow_temp=0;
-double weighted_temp=0;
-byte boiler_active=0;
-uint8_t d=0;
-uint8_t h=0;
-uint8_t m=0;
-uint8_t s=0;
-
-void dumpMsg(byte* msg) {
-  for (int c=0;c<9;c++) {
-    if (msg[c]<16) Serial.print("0");
-    Serial.print(msg[c], HEX);
-    Serial.print(" ");
-  }
-  Serial.println();
-}
+double pps_values[15] = { 0 };
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -1430,11 +1405,15 @@ char *printTelegram(byte* msg) {
     Serial.print(p);
   }
   // decode parameter
-  int data_len;
+  int data_len=0;
+  if (bus_type == 0) {
+    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  }
   if (bus_type == 1) {
     data_len=msg[len_idx]-14;     // get packet length, then subtract
-  } else {
-    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  } 
+  if (bus_type == 2) {
+    data_len = 3;
   }
   if(data_len < 0){
     Serial.print(F("len ERROR "));
@@ -2443,35 +2422,56 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
       idx=i;
       //Serial.println(F("found"));
       if(c!=CMD_UNKNOWN){     // send only valid command codes
-        retry=QUERY_RETRIES;
-        while(retry){
-          if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
+        if (bus_type != 2) {  // bus type is not PPS
+          retry=QUERY_RETRIES;
+          while(retry){
+            if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
 
-            // Decode the xmit telegram and send it to the PC serial interface
-            if(verbose) {
-              printTelegram(tx_msg);
+              // Decode the xmit telegram and send it to the PC serial interface
+              if(verbose) {
+                printTelegram(tx_msg);
 #ifdef LOGGER
-              LogTelegram(tx_msg);
+                LogTelegram(tx_msg);
 #endif
+              }
+
+              // Decode the rcv telegram and send it to the PC serial interface
+              pvalstr=printTelegram(msg);
+#ifdef LOGGER
+              LogTelegram(msg);
+#endif
+              break;   // success, break out of while loop
+            }else{
+              Serial.println(F("query failed"));
+              retry--;          // decrement number of attempts
             }
+          } // endwhile, maximum number of retries reached
+          if(retry==0) {
+            if (bus_type == 1 && msg[8] == TYPE_ERR) {
+              outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
+            } else {
+              outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+            }
+          }
+        } else { // bus type is PPS
 
-            // Decode the rcv telegram and send it to the PC serial interface
-            pvalstr=printTelegram(msg);
-#ifdef LOGGER
-            LogTelegram(msg);
-#endif
-            break;   // success, break out of while loop
-          }else{
-            Serial.println(F("query failed"));
-            retry--;          // decrement number of attempts
-          }
-        } // endwhile, maximum number of retries reached
-        if(retry==0) {
-          if (bus_type == 1 && msg[8] == TYPE_ERR) {
-            outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
+          uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+          uint16_t temp_val;
+          if (type == VT_TEMP) {
+            temp_val = pps_values[(c & 0xFF)] * 64;
           } else {
-            outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+            temp_val = pps_values[(c & 0xFF)];
           }
+
+          msg[4+(bus_type*4)]=TYPE_ANS;
+          msg[pl_start]=0;
+          msg[pl_start+1]=temp_val >> 8;
+          msg[pl_start+2]=temp_val & 0xFF;
+          msg[5] = c >> 24;
+          msg[6] = c >> 16 & 0xFF;
+          msg[7] = c >> 8 & 0xFF;
+          msg[8] = c & 0xFF;
+          pvalstr = printTelegram(msg);
         }
       }else{
         //Serial.println(F("unknown command"));
@@ -2481,6 +2481,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
       //Serial.println(F("line not found"));
       //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
     } // endelse, line (ProgNr) found / not found
+    
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
         formnr++;
@@ -3283,23 +3284,23 @@ void loop() {
           byte rx_msg[10] = { 0 };
           switch (msg_cycle) {
             case 0:
-              tx_msg[1] = 0x38;
+              tx_msg[1] = 0x38; // Typ
               tx_msg[7] = 0x53;
               break;
             case 1:
-              tx_msg[1] = 0x18; 
-              tx_msg[6] = ((uint16_t)(knob_pos*64) >> 8);
-              tx_msg[7] = ((uint16_t)(knob_pos*64) & 0xFF);
+              tx_msg[1] = 0x18; // Position Drehknopf
+              tx_msg[6] = ((uint16_t)(pps_values[4]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[4]*64) & 0xFF);
               break;
             case 2:
-              tx_msg[1] = 0x28; 
-              tx_msg[6] = ((uint16_t)(room_cur_temp*64) >> 8);
-              tx_msg[7] = ((uint16_t)(room_cur_temp*64) & 0xFF);
+              tx_msg[1] = 0x28; // Raumtemperatur Ist
+              tx_msg[6] = ((uint16_t)(pps_values[0]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[0]*64) & 0xFF);
               break;
             case 3:
-              tx_msg[1] = 0x19; 
-              tx_msg[6] = ((uint16_t)(room_set_temp*64) >> 8);
-              tx_msg[7] = ((uint16_t)(room_set_temp*64) & 0xFF);
+              tx_msg[1] = 0x19; // Raumtepmeratur Soll
+              tx_msg[6] = ((uint16_t)(pps_values[1]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[1]*64) & 0xFF);
               break;
             case 4:
               tx_msg[1] = 0x4E;
@@ -3307,7 +3308,7 @@ void loop() {
               break;
             case 5:
               tx_msg[1] = 0x49; 
-              tx_msg[7] = mode;
+              tx_msg[7] = pps_values[10];
               break;
             case 6:
               tx_msg[1] = 0x56;
@@ -3329,13 +3330,13 @@ void loop() {
               tx_msg[7] = 0x40;     // ???
               break;
             case 10:
-              tx_msg[1] = 0x0B; 
-              tx_msg[6] = ((uint16_t)(boiler_set_temp*64) >> 8);
-              tx_msg[7] = ((uint16_t)(boiler_set_temp*64) & 0xFF);
+              tx_msg[1] = 0x0B; // Trinkwassertemperatur Soll
+              tx_msg[6] = ((uint16_t)(pps_values[9]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[9]*64) & 0xFF);
               break;
             case 11:
-              tx_msg[1] = 0x4C;
-              tx_msg[7] = presence;
+              tx_msg[1] = 0x4C; // Präsenz
+              tx_msg[7] = pps_values[11];
               break;
             case 12:
               tx_msg[1] = 0x60;
@@ -3410,9 +3411,7 @@ void loop() {
             msg_cycle = 0;
           }
           bus.Send(0, 0, rx_msg, tx_msg);    
-          Serial.println(tx_msg[1], HEX);
-          Serial.println(millis());
-          dumpMsg(tx_msg);
+
         } else {    // parse heating system data
 
           if (msg[0] == 0x1E) {
@@ -3441,17 +3440,23 @@ void loop() {
             switch (msg[1]) {
               case 0x4F: msg_cycle = 0; break;
               
-              case 0x29: outside_temp = temp; break;
-              case 0x2B: boiler_temp = temp; break;
-              case 0x2C: mixer_flow_temp = temp; break;
-              case 0x2E: flow_temp = temp; break;
-              case 0x57: weighted_temp = temp; boiler_active = msg[2]; break;
-              case 0x79: d = msg[4]; h = msg[5]; m = msg[6]; s = msg[7]; break;
+              case 0x29: pps_values[2] = temp; break; // Außentemperatur
+              case 0x2B: pps_values[8] = temp; break; // Trinkwassertemperatur Ist
+              case 0x2C: pps_values[6] = temp; break; // Mischervorlauftemperatur
+              case 0x2E: pps_values[5] = temp; break; // Vorlauftemperatur
+              case 0x57: pps_values[3] = temp; pps_values[7] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+              case 0x79: setTime(msg[5], msg[6], msg[7], msg[4], 1, 2018); break;  // Datum (msg[4] Wochentag)
               default:
                 Serial.print("Unknown telegram: ");
-                dumpMsg(msg);
+                for (int c=0;c<9;c++) {
+                  if (msg[c]<16) Serial.print("0");
+                  Serial.print(msg[c], HEX);
+                  Serial.print(" ");
+                }
+                Serial.println();
                 break;
             }
+/*
             Serial.print(F("Outside Temperature: "));
             Serial.println(outside_temp);
             Serial.print(F("Boiler Temperature: "));
@@ -3469,6 +3474,7 @@ void loop() {
               Serial.println(F("no"));
             }
             Serial.print(F("Time: ")); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
+*/
           }
 // End PPS-bus handling
         }
@@ -3716,8 +3722,33 @@ void loop() {
           Serial.println(p);     // the value
 
           // Now send it out to the bus
-          int setresult = set(line,p,setcmd);
-          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
+          int setresult = 0;
+          if (bus_type != 2) {
+            setresult = set(line,p,setcmd);
+            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
+          } else {
+            uint32_t c;              // command code
+            // Search the command table from the start for a matching line nbr.
+            int i=findLine(line,0,&c);   // find the ProgNr and get the command code
+            if (i>0) {
+              int cmd_no = c & 0xFF;
+              int i = 0;
+              float f = 0;
+              pps_values[cmd_no] = atof(p);
+              if (cmd_no == 1 || (cmd_no>=9 && cmd_no<=11)) {
+                EEPROM.put(sizeof(float)*i, pps_values[1]);
+                i++;
+                EEPROM.put(sizeof(float)*i, pps_values[9]);
+                i++;
+                EEPROM.put(sizeof(float)*i, pps_values[10]);
+                i++;
+                EEPROM.put(sizeof(float)*i, pps_values[11]);
+              }
+              setresult = 1;
+            } else {
+              setresult = 0;
+            }
+          }
           if(setresult!=1){
             webPrintHeader();
 #ifdef LANG_DE
@@ -4115,10 +4146,10 @@ void loop() {
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
           client.print(F("Bus-System: "));
-          if (bus_type == 1) {
-            client.print(F("LPB"));
-          } else {
-            client.print(F("BSB"));
+          switch (bus_type) {
+            case 0: client.print(F("BSB")); break;
+            case 1: client.print(F("LPB")); break;
+            case 2: client.print(F("PPS")); break;
           }
           client.print(F(" ("));
           client.print(myAddr);
@@ -4408,17 +4439,24 @@ void loop() {
           }
 
           client.print(F("Bus-System: "));
-          if (p[2]=='1') {
-            bus_type=bus.setBusType(BUS_LPB, myAddr, destAddr);
-            len_idx = 1;
-            pl_start = 13;
-            client.println(F("LPB"));
-          } else {
+          if (p[2]=='0') {
             bus_type=bus.setBusType(BUS_BSB, myAddr, destAddr);
             len_idx = 3;
             pl_start = 9;
             client.println(F("BSB"));
           }
+          if (p[2]=='1') {
+            bus_type=bus.setBusType(BUS_LPB, myAddr, destAddr);
+            len_idx = 1;
+            pl_start = 13;
+            client.println(F("LPB"));
+          } 
+          if (p[2]=='2') {
+            bus_type=bus.setBusType(2);
+            len_idx = 1;
+            pl_start = 9;
+            client.println(F("PPS"));
+          } 
           client.print(F(" ("));
           client.print(myAddr);
           client.print(F(", "));
@@ -4909,6 +4947,19 @@ void setup() {
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
   Serial.println(ip);
+
+  float f=0;
+  EEPROM.get(0, f);
+  if (f > 1 && f < 100) {
+    int i=0;
+    EEPROM.get(sizeof(float)*i, pps_values[1]);
+    i++;
+    EEPROM.get(sizeof(float)*i, pps_values[9]);
+    i++;
+    EEPROM.get(sizeof(float)*i, pps_values[10]);
+    i++;
+    EEPROM.get(sizeof(float)*i, pps_values[11]);
+  }
 
 #ifdef LOGGER
   // disable w5100 while setting up SD
