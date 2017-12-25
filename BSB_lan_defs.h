@@ -122,6 +122,7 @@ typedef enum{
   CAT_DIAG_VERBRAUCHER,
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
+  CAT_PPS,
   CAT_UNKNOWN
 }category_t;
 
@@ -316,7 +317,8 @@ const char ENUM_CAT[] PROGMEM_LATE = {
 "\x25 Diagnose Verbraucher\0"
 "\x26 Feuerungsautomat\0"
 "\x27 Benutzerdefiniert\0"
-"\x28 unbekannte Kategorie"
+"\x28 PPS-Bus\0"
+"\x29 unbekannte Kategorie"
 };
 
 
@@ -1764,6 +1766,9 @@ const char STR10110[] PROGMEM = "Setzen RGT HK - 1";
 const char STR10111[] PROGMEM = "Trinkwasserbereitung";
 const char STR10112[] PROGMEM = "Heizbetrieb";
 */
+
+const char STR10504[] PROGMEM = "Position Drehknopf";
+const char STR10506[] PROGMEM = "Mischervorlauftemperatur";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -4925,13 +4930,29 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2E3E0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 */
 
+//PPS-Bus commands
+
+{0x2D000000,  CAT_PPS,              VT_TEMP,          10500, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D000001,  CAT_PPS,              VT_TEMP,          10501, STR8741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D000002,  CAT_PPS,              VT_TEMP,          10502, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
+{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
+{0x2D000004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D000005,  CAT_PPS,              VT_TEMP,          10505, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR10506, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D000007,  CAT_PPS,              VT_UINT,          10507, STR1600,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserbetrieb
+{0x2D000008,  CAT_PPS,              VT_TEMP,          10508, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D000009,  CAT_PPS,              VT_TEMP,          10509, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D00000A,  CAT_PPS,              VT_UINT,          10510, STR700,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D00000B,  CAT_PPS,              VT_UINT,          10511, STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+
+//PPS-Bus commands end
+
 /*
 // ProgNrs 10900 to 10999 can be assigned to unrecognised command codes until
 // we find a better explanation for them. !Assign STR99999 to all of them.!
 */
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
-
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
 };
