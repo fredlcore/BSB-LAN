@@ -354,7 +354,7 @@ unsigned long TWW_count   = 0;
 
 // PPS-bus variables
 uint8_t msg_cycle = 0;
-double pps_values[15] = { 0 };
+double pps_values[PPS_ANZ] = { 0 };
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -3290,26 +3290,28 @@ void loop() {
               break;
             case 1:
               tx_msg[1] = 0x18; // Position Drehknopf
-              tx_msg[6] = ((uint16_t)(pps_values[4]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[4]*64) & 0xFF);
+              tx_msg[6] = ((uint16_t)(pps_values[PPS_PDK]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[PPS_PDK]*64) & 0xFF);
               break;
             case 2:
-              tx_msg[1] = 0x28; // Raumtemperatur Ist
-              tx_msg[6] = ((uint16_t)(pps_values[0]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[0]*64) & 0xFF);
+              if (pps_values[PPS_RTI] > 0) {
+                tx_msg[1] = 0x28; // Raumtemperatur Ist
+                tx_msg[6] = ((uint16_t)(pps_values[PPS_RTI]*64) >> 8);
+                tx_msg[7] = ((uint16_t)(pps_values[PPS_RTI]*64) & 0xFF);
+              }
               break;
             case 3:
               tx_msg[1] = 0x19; // Raumtepmeratur Soll
-              tx_msg[6] = ((uint16_t)(pps_values[1]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[1]*64) & 0xFF);
+              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTS]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTS]*64) & 0xFF);
               break;
             case 4:
               tx_msg[1] = 0x4E;
               tx_msg[7] = 0x00;
               break;
             case 5:
-              tx_msg[1] = 0x49; 
-              tx_msg[7] = pps_values[10];
+              tx_msg[1] = 0x49;     // Betriebsart
+              tx_msg[7] = pps_values[PPS_BA];
               break;
             case 6:
               tx_msg[1] = 0x56;
@@ -3332,12 +3334,12 @@ void loop() {
               break;
             case 10:
               tx_msg[1] = 0x0B; // Trinkwassertemperatur Soll
-              tx_msg[6] = ((uint16_t)(pps_values[9]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[9]*64) & 0xFF);
+              tx_msg[6] = ((uint16_t)(pps_values[PPS_TWS]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[PPS_TWS]*64) & 0xFF);
               break;
             case 11:
               tx_msg[1] = 0x4C; // Präsenz
-              tx_msg[7] = pps_values[11];
+              tx_msg[7] = pps_values[PPS_AW];
               break;
             case 12:
               tx_msg[1] = 0x60;
@@ -3411,8 +3413,9 @@ void loop() {
           if (msg_cycle > 7) {
             msg_cycle = 0;
           }
-          bus.Send(0, 0, rx_msg, tx_msg);    
-
+          if (tx_msg[1] != 0xFF) {
+            bus.Send(0, 0, rx_msg, tx_msg);
+          }
         } else {    // parse heating system data
 
           if (msg[0] == 0x1E) {
@@ -3433,6 +3436,25 @@ void loop() {
               case 0x66: msg_cycle = 18; break;
               case 0x7C: msg_cycle = 19; break;
               default: break;
+
+/*
+Weitere noch zu überprüfende Telegramme:
+https://www.mikrocontroller.net/topic/218643#3517035
+ 17 FD 4A 00 3B 00 0B 0F 00 64
+-> 0x3B = 59 % Brennerleistung
+-> 0x000B = wahrscheinlich Status 11 (es gibt noch 7, 19 usw, sicher bin 
+ich mir da nicht)
+-> 0x0F00 = 3840 / 64 = 60 °C Ist-Kesseltemperatur
+
+1D 0E FF FF FF FF 0F 00 CA
+-> 0x0F00 = 3840 / 64 = 60 °C (Soll Vorlauftemperatur der Heizung)
+
+1D 0C FF FF FF FF 0A 00 D1
+-> 0x0A00 = 2560 / 64 = 40 °C (Soll Boilertemperatur, meine Präsenztaste 
+der Heizung war zur Messzeit auf "AUS" d.h. Heizungstemperatur und 
+Boilertemperatur werden niedriger gehalten)
+*/
+
             }
           } else {
         
@@ -3441,11 +3463,11 @@ void loop() {
             switch (msg[1]) {
               case 0x4F: msg_cycle = 0; break;
               
-              case 0x29: pps_values[2] = temp; break; // Außentemperatur
-              case 0x2B: pps_values[8] = temp; break; // Trinkwassertemperatur Ist
-              case 0x2C: pps_values[6] = temp; break; // Mischervorlauftemperatur
-              case 0x2E: pps_values[5] = temp; break; // Vorlauftemperatur
-              case 0x57: pps_values[3] = temp; pps_values[7] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+              case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
+              case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
+              case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
+              case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
+              case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
               case 0x79: setTime(msg[5], msg[6], msg[7], msg[4], 1, 2018); break;  // Datum (msg[4] Wochentag)
               case 0x48: break;
               case 0x4D: break;
@@ -3729,23 +3751,20 @@ void loop() {
           if (bus_type != 2) {
             setresult = set(line,p,setcmd);
             bus_type=bus.setBusType(bus_type, myAddr, destAddr);
-          } else {
+          } else {  // PPS-Bus Set 
             uint32_t c;              // command code
             // Search the command table from the start for a matching line nbr.
             int i=findLine(line,0,&c);   // find the ProgNr and get the command code
             if (i>0) {
               int cmd_no = c & 0xFF;
-              int i = 0;
-              pps_values[cmd_no] = atof(p);
-              if (cmd_no == 1 || (cmd_no>=9 && cmd_no<=11)) {
-                EEPROM.put(sizeof(float)*i, pps_values[1]);
-                i++;
-                EEPROM.put(sizeof(float)*i, pps_values[9]);
-                i++;
-                EEPROM.put(sizeof(float)*i, pps_values[10]);
-                i++;
-                EEPROM.put(sizeof(float)*i, pps_values[11]);
+              if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_RTS) {
+                Serial.print(F("Writing EEPROM slot "));
+                Serial.print(cmd_no);
+                Serial.print(F(" with value "));
+                Serial.println(atof(p));
+                EEPROM.put(sizeof(float)*cmd_no, atof(p));
               }
+              pps_values[cmd_no] = atof(p);
               setresult = 1;
             } else {
               setresult = 0;
@@ -4960,17 +4979,18 @@ void setup() {
   Serial.println(freeRam());
   Serial.println(ip);
 
-  float f=0;
-  EEPROM.get(0, f);
-  if (f > 1 && f < 100) {
-    int i=0;
-    EEPROM.get(sizeof(float)*i, pps_values[1]);
-    i++;
-    EEPROM.get(sizeof(float)*i, pps_values[9]);
-    i++;
-    EEPROM.get(sizeof(float)*i, pps_values[10]);
-    i++;
-    EEPROM.get(sizeof(float)*i, pps_values[11]);
+  Serial.println(PPS_TWS);
+  Serial.println(PPS_RTS);
+  for (int i=PPS_TWS;i<=PPS_RTS;i++) {
+    float f=0;
+    EEPROM.get(sizeof(float)*i, f);
+    if (f > 1 && f < 100) {
+      Serial.print(F("Reading "));
+      Serial.print(f);
+      Serial.print(F(" from EEPROM slot "));
+      Serial.println(i);
+      pps_values[i] = f;
+    }
   }
 
 #ifdef LOGGER
