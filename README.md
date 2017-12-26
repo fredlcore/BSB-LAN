@@ -2,7 +2,7 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-LAN Interface for Boiler-System-Bus (BSB) and Local Process Bus (LPB) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems, including logging to Micro-SD-card.
+LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and (with just basic functionality) Punkt-zu-Punkt-Schnittstelle (PPS/H-Bus) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems, including logging to Micro-SD-card.
 
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
@@ -30,6 +30,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827/127] (heat pump)
 - Siemens RVS63.283/109 (corresponds to Brötje SSR)
 - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220/320] {LPB_only} (oil-fired)
+- PPS-based heating systems (such as Brötje WGB 15 / WGB 20, Weishaupt WRD 0.2 / 1.1, Sieger TG11 / Siegermatic S42DB, Olymp THR 5-25C, Schäfer Interdomo / DomoCommand DC 225), albeit with just very basic functionality)
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB or LPB bus but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
