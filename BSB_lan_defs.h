@@ -4182,7 +4182,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0784,  CAT_KONFIG,           VT_ENUM,          5942,  STR5942,  sizeof(ENUM5942),     ENUM5942,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Fühlereingang BX22
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_ALL-DEV_EL_THI-DEV_BROETJE}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 {0x053d3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_EL_THI+DEV_BR_PEV}, // [-] - Konfiguration - Funktion Eingang H1
-{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV-DEV_BR_BOB}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_BR_BOB}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -4995,10 +4995,10 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/Ix=v</td><td>Sende eine INF Nachricht für den Parameter x mit dem Wert v.</td></tr>\n"
   "<tr><td valign=top>/Ex</td><td>Alle enum-Werte für Parameter x auflisten.</td></tr>\n"
   "<tr><td valign=top>/Rx</td><td>Frage den Reset-Wert für Parameter x ab.</td></tr>\n"
-  "<tr><td valign=top>/Px</td><td>Setzen des Bus-Protokolls (0=BSB, 1=LPB).</td></tr>\n"
+  "<tr><td valign=top>/Px</td><td>Setzen des Bus-Protokolls (0=BSB, 1=LPB, 2=PPS).</td></tr>\n"
   "<tr><td valign=top>/Vn</td><td>Setze den Verbositäts-Level auf n.</td></tr>\n"
   "<tr><td valign=top>/Mn</td><td>Bus-Monitor aktivieren/deaktivieren (n=0 deaktivieren, n=1 aktivieren).</td></tr>\n"
-  "<tr><td valign=top>/Gxx</td><td>Abfragen des GPIO Pins xx.</td></tr>\n"
+  "<tr><td valign=top>/Gxx[,I]</td><td>Abfragen des GPIO Pins xx [und setzten des Pins auf 'INPUT'].</td></tr>\n"
   "<tr><td valign=top>/Gxx=y</td><td>Setzen des GPIO Pins xx auf high (y=1) oder low (y=0).</td></tr>\n"
   "<tr><td valign=top>/A</td><td>24h-Durchschnittswerte von ausgewählten Parametern anzeigen (in BSB_lan_config.h definieren).</td></tr>\n"
   "<tr><td valign=top>/A=x,y,z</td><td>Ändern der 24h-Durchschnittswerte in x,y,z (bis zu 20 Parameter).</td></tr>\n"
@@ -5014,10 +5014,10 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/Ix=v</td><td>Send INF message for command in line x with value v.</td></tr>\n"
   "<tr><td valign=top>/Ex</td><td>List enum values for line x.</td></tr>\n"
   "<tr><td valign=top>/Rx</td><td>Query reset value for line x.</td></tr>\n"
-  "<tr><td valign=top>/Px</td><td>Set bus protocol (0=BSB, 1=LPB).</td></tr>\n"
+  "<tr><td valign=top>/Px</td><td>Set bus protocol (0=BSB, 1=LPB, 2=PPS).</td></tr>\n"
   "<tr><td valign=top>/Vn</td><td>Set verbosity level for serial output to n.</td></tr>\n"
   "<tr><td valign=top>/Mn</td><td>Activate/deactivate monitor functionality (n=0 disable, n=1 enable).</td></tr>\n"
-  "<tr><td valign=top>/Gxx</td><td>Query GPIO pin xx.</td></tr>\n"
+  "<tr><td valign=top>/Gxx[,I]</td><td>Query GPIO pin xx [and set pin to 'INPUT'].</td></tr>\n"
   "<tr><td valign=top>/Gxx=y</td><td>Set GPIO pin xx to high (y=1) or low (y=0).</td></tr>\n"
   "<tr><td valign=top>/A</td><td>Show 24h averages of selected parameters (define in BSB_lan_config.h).</td></tr>\n"
   "<tr><td valign=top>/A=x,y,z</td><td>Change 24h averages parameters to x,y,z (up to 20).</td></tr>\n"

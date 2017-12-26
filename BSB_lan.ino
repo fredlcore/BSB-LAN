@@ -55,6 +55,9 @@ char version[] = "0.38";
  *
  * Changelog:
  *       version 0.39
+ *        - Implemntation of PPS-Bus protocol. See /K40 for the limited commands available for this bus. Use setBusType(2) to set to PPS upon boot or /P2 to switch temporarily.
+ *        - Set GPIOs to input by using /Gxx,I
+ *        - several new parameters added
  *        - Bugfix for logging Brennerlaufzeit Stufe 2
  *       version 0.38
  *        - ATTENTION: New BSB_lan_config.h configurations! You need to adjust your configuration when upgrading to this version!
@@ -3278,8 +3281,6 @@ void loop() {
 // PPS-Bus handling
       if (bus_type == 2) {
         if (msg[0] == 0x17) { // Send client data
-          Serial.print("DR: ");
-          Serial.println(millis());
           byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
           byte rx_msg[10] = { 0 };
           switch (msg_cycle) {
@@ -3446,6 +3447,8 @@ void loop() {
               case 0x2E: pps_values[5] = temp; break; // Vorlauftemperatur
               case 0x57: pps_values[3] = temp; pps_values[7] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
               case 0x79: setTime(msg[5], msg[6], msg[7], msg[4], 1, 2018); break;  // Datum (msg[4] Wochentag)
+              case 0x48: break;
+              case 0x4D: break;
               default:
                 Serial.print("Unknown telegram: ");
                 for (int c=0;c<9;c++) {
@@ -3733,7 +3736,6 @@ void loop() {
             if (i>0) {
               int cmd_no = c & 0xFF;
               int i = 0;
-              float f = 0;
               pps_values[cmd_no] = atof(p);
               if (cmd_no == 1 || (cmd_no>=9 && cmd_no<=11)) {
                 EEPROM.put(sizeof(float)*i, pps_values[1]);
@@ -4589,8 +4591,18 @@ void loop() {
 #endif
               break;
             }
+            char* dir_token = strtok(p,",");
+            dir_token = strtok(NULL, ",");
             p=strchr(p,'=');    // search for '=' sign
             if(p==NULL){        // no match -> query value
+              if (dir_token!=NULL) {
+                if (*dir_token=='I') {
+                  pinMode(pin, INPUT);
+                  Serial.print(F("Pin "));
+                  Serial.print(pin);
+                  Serial.println(F(" set to input."));
+                }
+              }
               val=digitalRead(pin);
             }else{ // set value
               p++;
