@@ -1767,8 +1767,8 @@ const char STR10111[] PROGMEM = "Trinkwasserbereitung";
 const char STR10112[] PROGMEM = "Heizbetrieb";
 */
 
-const char STR10504[] PROGMEM = "Position Drehknopf";
-const char STR10506[] PROGMEM = "Mischervorlauftemperatur";
+const char STR10503[] PROGMEM = "Mischervorlauftemperatur";
+const char STR10507[] PROGMEM = "Position Drehknopf";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -4932,18 +4932,18 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 //PPS-Bus commands
 
-{0x2D000000,  CAT_PPS,              VT_TEMP,          10500, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
-{0x2D000001,  CAT_PPS,              VT_TEMP,          10501, STR8741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D000002,  CAT_PPS,              VT_TEMP,          10502, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
-{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
-{0x2D000004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D000005,  CAT_PPS,              VT_TEMP,          10505, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR10506, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
-{0x2D000007,  CAT_PPS,              VT_UINT,          10507, STR1600,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserbetrieb
-{0x2D000008,  CAT_PPS,              VT_TEMP,          10508, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D000009,  CAT_PPS,              VT_TEMP,          10509, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
-{0x2D00000A,  CAT_PPS,              VT_UINT,          10510, STR700,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2D00000B,  CAT_PPS,              VT_UINT,          10511, STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D000000,  CAT_PPS,              VT_TEMP,          10500, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
+{0x2D000001,  CAT_PPS,              VT_TEMP,          10501, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
+{0x2D000002,  CAT_PPS,              VT_TEMP,          10502, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR10503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D000004,  CAT_PPS,              VT_UINT,          10504, STR1600,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserbetrieb
+{0x2D000005,  CAT_PPS,              VT_TEMP,          10505, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D000007,  CAT_PPS,              VT_TEMP,          10507, STR10507, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D000008,  CAT_PPS,              VT_UINT,          10508, STR700,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D000009,  CAT_PPS,              VT_UINT,          10509, STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D00000A,  CAT_PPS,              VT_TEMP,          10510, STR8741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D00000B,  CAT_PPS,              VT_TEMP,          10511, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
 
 //PPS-Bus commands end
 
@@ -4956,6 +4956,21 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
 };
+
+#define PPS_AT  0
+#define PPS_ATG 1
+#define PPS_KVT 2
+#define PPS_MVT 3
+#define PPS_TWB 4
+#define PPS_TWI 5
+#define PPS_TWS 6
+#define PPS_PDK 7
+#define PPS_BA  8
+#define PPS_AW  9
+#define PPS_RTS 10
+#define PPS_RTI 11
+
+#define PPS_ANZ 12
 
 const char header_html[] PROGMEM_LATE = 
   "HTTP/1.1 200 OK\n"
