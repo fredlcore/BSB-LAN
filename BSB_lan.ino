@@ -355,6 +355,7 @@ unsigned long TWW_count   = 0;
 // PPS-bus variables
 uint8_t msg_cycle = 0;
 double pps_values[PPS_ANZ] = { 0 };
+// double pps_values[PPS_ANZ] = { 12.4, 9.8, 53.3, 52.2, 0, 43.4, 45.0, 0, 0, 1, 0, 20.0, 19.8 };
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -1081,12 +1082,12 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
 void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
 
-  if(data_len == 2){
+  if(data_len == 2 + (bus_type == 2)){  // data_len = 3 if bus_type = 2
     if(msg[pl_start]==0){
-      if(msg[pl_start+1]==0){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1],val0);
+      if(msg[pl_start+1+(bus_type == 2)]==0){
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == 2)],val0);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1],val1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == 2)],val1);
       }
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1582,7 +1583,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && (dev_id & DEV_FJ_WSK) == dev_id)){
+              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & DEV_FJ_WSK) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
@@ -2527,6 +2528,9 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             client.println(F("'>"));
             if (type == VT_ONOFF) {
               int val=msg[pl_start+1];
+              if (bus_type == 2) {
+                val=msg[pl_start+2];
+              }
               client.print(F("<option value='0'"));
               if (val==0) {
                 client.print(F(" selected"));
@@ -3406,7 +3410,7 @@ void loop() {
               break;
             case 19:
               tx_msg[1] = 0x7C;
-              tx_msg[7] = 0x00;     // ???
+              tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
               break;
           }
           msg_cycle++;
@@ -3461,7 +3465,7 @@ Boilertemperatur werden niedriger gehalten)
             double temp = (double)((msg[6] << 8) + msg[7]) / 64;
 
             switch (msg[1]) {
-              case 0x4F: msg_cycle = 0; break;
+              case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
               
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
@@ -4979,8 +4983,6 @@ void setup() {
   Serial.println(freeRam());
   Serial.println(ip);
 
-  Serial.println(PPS_TWS);
-  Serial.println(PPS_RTS);
   for (int i=PPS_TWS;i<=PPS_RTS;i++) {
     float f=0;
     EEPROM.get(sizeof(float)*i, f);
