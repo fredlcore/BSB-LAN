@@ -40,14 +40,15 @@
 #define DEV_EL_AQA  0x00000002L   // Gerätefamilie: 085, Elco Aquatop 8es
 #define DEV_EL_THP  0x00000004L   // Gerätefamilie: 203, Elco Thision 13 Plus
 #define DEV_BR_ISC  0x00000010L   // Gerätefamilie: 090, Brötje ISR SSR C, Logon B 2Z2
-#define DEV_BR_SOB  0x00000020L   // Gerätefamilie: 096, Brötje NovoCondens SOB 22C, 26C    
-#define DEV_BR_PEV  0x00000040L   // Gerätefamilie: 098, Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
-#define DEV_BR_IZ1  0x00000080L   // Gerätefamilie: 107, Brötje ISR-Z1
-#define DEV_BR_BSW  0x00000100L   // Gerätefamilie: 108, Brötje Sensotherm BSW-K
-#define DEV_BR_BOB  0x00000200L   // Gerätefamilie: 138, Brötje BOB
-#define DEV_BR_WGS  0x00000400L   // Gerätefamilie: 162, Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
-#define DEV_BR_WGE  0x00000800L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
-#define DEV_BR_S26  0x00001000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
+#define DEV_BR_LBU  0x00000020L   // Gerätefamilie: 095, Brötje LogoBloc Unit L-UB 25C
+#define DEV_BR_SOB  0x00000040L   // Gerätefamilie: 096, Brötje NovoCondens SOB 22C, 26C    
+#define DEV_BR_PEV  0x00000080L   // Gerätefamilie: 098, Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
+#define DEV_BR_IZ1  0x00000100L   // Gerätefamilie: 107, Brötje ISR-Z1
+#define DEV_BR_BSW  0x00000200L   // Gerätefamilie: 108, Brötje Sensotherm BSW-K
+#define DEV_BR_BOB  0x00000400L   // Gerätefamilie: 138, Brötje BOB
+#define DEV_BR_WGS  0x00000800L   // Gerätefamilie: 162, Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
+#define DEV_BR_WGE  0x00001000L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
+#define DEV_BR_S26  0x00002000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
 #define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
 #define DEV_WH_WTU  0x00100000L   // Gerätefamilie: 050, Weishaupt
 #define DEV_ELCO    0x0000000fL   // ELCO devices
@@ -68,6 +69,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {50,  DEV_WH_WTU},
 {97,  DEV_EL_THI},
 {90,  DEV_BR_ISC},
+{95,  DEV_BR_LBU},
 {96,  DEV_BR_SOB},
 {98,  DEV_BR_PEV},
 {107, DEV_BR_IZ1},
