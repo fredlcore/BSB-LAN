@@ -3470,6 +3470,8 @@ Boilertemperatur werden niedriger gehalten)
             switch (msg[1]) {
               case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
 
+              case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
+              case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
