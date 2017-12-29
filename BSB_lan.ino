@@ -355,7 +355,6 @@ unsigned long TWW_count   = 0;
 // PPS-bus variables
 uint8_t msg_cycle = 0;
 double pps_values[PPS_ANZ] = { 0 };
-// double pps_values[PPS_ANZ] = { 12.4, 9.8, 53.3, 52.2, 0, 43.4, 45.0, 0, 0, 1, 0, 20.0, 19.8 };
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -2690,6 +2689,10 @@ void SetDevId() {
     family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   }
   if (!known){
+    Serial.print(F("Your device family no. "));
+    Serial.print(device_id);
+    Serial.println(F(" is not yet known to BSB-LAN. Certain parameters will be disabled."));
+    Serial.println(F("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems."));
     dev_id=DEV_ALL;
   } else {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
@@ -3327,14 +3330,14 @@ void loop() {
               tx_msg[7] = 0x90;     // ???
               break;
             case 8:
-              tx_msg[1] = 0x08;
-              tx_msg[6] = 0x04;     // ???
-              tx_msg[7] = 0xE0;     // ???
+              tx_msg[1] = 0x08;     // Raumtemperatur Soll
+              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTS]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTS]*64) & 0xFF);
               break;
             case 9:
-              tx_msg[1] = 0x09;
-              tx_msg[6] = 0x04;     // ???
-              tx_msg[7] = 0x40;     // ???
+              tx_msg[1] = 0x09;     // Raumtemperatur Abwesenheit Soll
+              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTA]*64) >> 8);
+              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTA]*64) & 0xFF);
               break;
             case 10:
               tx_msg[1] = 0x0B; // Trinkwassertemperatur Soll
@@ -3466,7 +3469,8 @@ Boilertemperatur werden niedriger gehalten)
 
             switch (msg[1]) {
               case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
-              
+
+              case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
               case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
