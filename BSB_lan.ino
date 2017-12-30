@@ -3472,6 +3472,8 @@ Boilertemperatur werden niedriger gehalten)
 
               case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
               case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
+              case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
+              case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
