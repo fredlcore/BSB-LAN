@@ -1769,10 +1769,10 @@ const char STR10111[] PROGMEM = "Trinkwasserbereitung";
 const char STR10112[] PROGMEM = "Heizbetrieb";
 */
 
-const char STR10503[] PROGMEM = "Mischervorlauftemperatur";
-const char STR10508[] PROGMEM = "Position Drehknopf";
-const char STR10510[] PROGMEM = "Präsenztaste";
-const char STR10511[] PROGMEM = "Verbleibende Ferientage";
+const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
+const char STR10509[] PROGMEM = "Position Drehknopf";
+const char STR10511[] PROGMEM = "Präsenztaste";
+const char STR10512[] PROGMEM = "Verbleibende Ferientage";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -3268,7 +3268,7 @@ const char ENUM8749[] PROGMEM = {     // numerical values unverified
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
 
 // PPS Betriebsart
-const char ENUM10509[] PROGMEM = {
+const char ENUM10510[] PROGMEM = {
   "\x00 Automatisch\0" 
   "\x01 Manuell\0"
   "\x02 Aus"
@@ -4944,36 +4944,38 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D000000,  CAT_PPS,              VT_TEMP,          10500, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D000001,  CAT_PPS,              VT_TEMP,          10501, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
 {0x2D000002,  CAT_PPS,              VT_TEMP,          10502, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR10503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
-{0x2D000004,  CAT_PPS,              VT_ONOFF,         10504, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
-{0x2D000005,  CAT_PPS,              VT_TEMP,          10505, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D000007,  CAT_PPS,              VT_TEMP,          10507, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
-{0x2D000008,  CAT_PPS,              VT_TEMP,          10508, STR10508, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D000009,  CAT_PPS,              VT_ENUM,          10509, STR700,   sizeof(ENUM10509),    ENUM10509,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2D00000A,  CAT_PPS,              VT_ONOFF,         10510, STR10510, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
-{0x2D00000B,  CAT_PPS,              VT_UINT,          10511, STR10511, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D00000C,  CAT_PPS,              VT_TEMP,          10512, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D00000D,  CAT_PPS,              VT_TEMP,          10513, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D00000E,  CAT_PPS,              VT_TEMP,          10514, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR8331,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
+{0x2D000004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D000005,  CAT_PPS,              VT_ONOFF,         10505, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
+{0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D000007,  CAT_PPS,              VT_TEMP,          10507, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
+{0x2D000008,  CAT_PPS,              VT_TEMP,          10508, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D000009,  CAT_PPS,              VT_TEMP,          10509, STR10509, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D00000A,  CAT_PPS,              VT_ENUM,          10510, STR700,   sizeof(ENUM10510),    ENUM10510,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D00000B,  CAT_PPS,              VT_ONOFF,         10511, STR10511, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D00000C,  CAT_PPS,              VT_UINT,          10512, STR10512, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
+{0x2D00000D,  CAT_PPS,              VT_TEMP,          10513, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D00000E,  CAT_PPS,              VT_TEMP,          10514, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
+{0x2D00000F,  CAT_PPS,              VT_TEMP,          10515, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
 
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
-#define PPS_MVT 3
-#define PPS_TWB 4
-#define PPS_TWI 5
-#define PPS_TWR 6
-#define PPS_TWS 7
-#define PPS_PDK 8
-#define PPS_BA  9
-#define PPS_AW 10
-#define PPS_FDT 11
-#define PPS_RTS 12
-#define PPS_RTA 13
-#define PPS_RTI 14
+#define PPS_KVS 3
+#define PPS_MVT 4
+#define PPS_TWB 5
+#define PPS_TWI 6
+#define PPS_TWR 7
+#define PPS_TWS 8
+#define PPS_PDK 9
+#define PPS_BA  10
+#define PPS_AW  11
+#define PPS_FDT 12
+#define PPS_RTS 13
+#define PPS_RTA 14
+#define PPS_RTI 15
 
-#define PPS_ANZ 15
+#define PPS_ANZ 16
 
 //PPS-Bus commands end
 
