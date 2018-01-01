@@ -11,8 +11,9 @@
 */
 
 //#define ETHERNET_W5500          // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
-#define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
 #define Port 80
+#define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
+//#define GatewayIP 192,168,178,1 // Optional: this is usually your router's IP address. Please note the commas instead of dots!!!
 
 /* SECURITY OPTIONS
  * There are several options to control and protect access to your heating system. However, keep  
@@ -130,15 +131,17 @@ byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // LPB: 
 // - third and fourth parameter set own and destination address (high nibble = segment, low nibble = device minus 1)
 // - defaults to 0x06 for own address and 0x00 for destination address, i.e. segment 0, device 7 for Arduino and segment 0, device 1 for heating system
+// PPS:
+// - third and fourth parameter do not have any effect due to the bus
 BSB bus(68,69);
-uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB
+uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 // Protect these pins from accidental GPIO access
 byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface
-byte verbose = 0;
+byte verbose = 1;
 byte monitor = 0;
 
 // defines default flag for parameters (use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
