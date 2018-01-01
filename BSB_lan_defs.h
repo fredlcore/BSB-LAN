@@ -1464,6 +1464,8 @@ const char STR8067[] PROGMEM = "Statuscode Statushistorie 10";
 const char STR8068[] PROGMEM = "Zeitstempel Statushistorie 10";
 const char STR8069[] PROGMEM = "Statuscode Statushistorie 10";
 
+const char STR8099[] PROGMEM = "Status im Hauptdisplay";
+
 // Diagnose Kaskade
 const char STR8100[] PROGMEM = "Priorität / Status Erzeuger 1";
 const char STR8102[] PROGMEM = "Priorität / Status Erzeuger 2";
@@ -3205,13 +3207,7 @@ const char ENUM8022[] PROGMEM = {
 "\x00 ---"
 };
 
-//Status  //BROETJE_BSW
-const char ENUM8051[] PROGMEM = {
-"\x00 ---\0"
-"\x1d HD bei WP-Betrieb\0"
-"\xB4 Drehstrom asymmetrisch"
-};
-
+#define ENUM8051 ENUM8006               // Status - Status Historie 1 
 #define ENUM8053 ENUM8051               // Status - Status Historie 2 
 #define ENUM8055 ENUM8051               // Status - Status Historie 3
 #define ENUM8057 ENUM8051               // Status - Status Historie 4
@@ -3221,6 +3217,8 @@ const char ENUM8051[] PROGMEM = {
 #define ENUM8065 ENUM8051               // Status - Status Historie 8
 #define ENUM8067 ENUM8051               // Status - Status Historie 9
 #define ENUM8069 ENUM8051               // Status - Status Historie 10
+
+#define ENUM8099 ENUM8006               // Status - Hauptdisplay. Achtung! 8099 kann zukünftig direkt von einem Hersteller vergeben werden, dann muss dieser Parameter "umziehen"...
 
 // Diagnose Kaskade
 const char ENUM8100[] PROGMEM = { // numerical values are hypothetical
@@ -4594,6 +4592,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8067,  STR8067,  sizeof(ENUM8067),     ENUM8067,     FL_RONLY,     DEV_ALL}, // Statuscode Statushistorie 10
 {CMD_UNKNOWN, CAT_STATUS,           VT_DATETIME,      8068,  STR8068,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zeitstempel Statushistorie 10
 {CMD_UNKNOWN, CAT_STATUS,           VT_ENUM,          8069,  STR8069,  sizeof(ENUM8069),     ENUM8069,     FL_RONLY,     DEV_ALL}, // Statuscode Statushistorie 10
+
+{0x053D17DD,  CAT_STATUS,           VT_ENUM,          8099,  STR8099,  sizeof(ENUM8006),     ENUM8099,     FL_RONLY,     DEV_ALL}, // Status Wärmepumpe im Hauptdisplay, virtueller Parameter, BSW-K 
 
 // Diagnose Kaskade
 {CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8100,  STR8100,  sizeof(ENUM8100),     ENUM8100,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 1

@@ -1,4 +1,4 @@
-char version[] = "0.38";
+char version[] = "0.39";
 
 /*
  * 
@@ -51,12 +51,19 @@ char version[] = "0.38";
  *       0.36  - 23.08.2017
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
- *       0.39  -
+ *       0.39  - 02.01.2018
  *
  * Changelog:
  *       version 0.39
- *        - Implemntation of PPS-Bus protocol. See /K40 for the limited commands available for this bus. Use setBusType(2) to set to PPS upon boot or /P2 to switch temporarily.
+ *        - Implemntation of PPS-Bus protocol. 
+ *          See /K40 for the limited commands available for this bus. 
+ *          Use setBusType(2) to set to PPS upon boot or /P2 to switch temporarily.
  *        - Set GPIOs to input by using /Gxx,I
+ *        - Definement "#define CUSTOM_COMMANDS" added. 
+ *          Use this in your configuration to include individual code from "BSB_lan_custom.h"
+ *          (needs to be created by you!) which is executed at the end of each main loop.
+ *          Variables "custom_timer" and "custom_timer_compare" have been added to execute
+ *          code at arbitrary intervals.
  *        - several new parameters added
  *        - Bugfix for logging Brennerlaufzeit Stufe 2
  *       version 0.38
@@ -287,7 +294,9 @@ char version[] = "0.38";
 
 IPAddress ip(IPAddr);
 EthernetServer server(Port);
-
+#ifdef GatewayIP
+IPAddress gateway(GatewayIP);
+#endif
 uint8_t len_idx, pl_start;
 int device_id;
 uint8_t myAddr = bus.getBusAddr();
@@ -1582,7 +1591,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & DEV_FJ_WSK) == dev_id || bus_type == 2))){
+              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW)) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
@@ -3453,13 +3462,6 @@ https://www.mikrocontroller.net/topic/218643#3517035
 ich mir da nicht)
 -> 0x0F00 = 3840 / 64 = 60 °C Ist-Kesseltemperatur
 
-1D 0E FF FF FF FF 0F 00 CA
--> 0x0F00 = 3840 / 64 = 60 °C (Soll Vorlauftemperatur der Heizung)
-
-1D 0C FF FF FF FF 0A 00 D1
--> 0x0A00 = 2560 / 64 = 40 °C (Soll Boilertemperatur, meine Präsenztaste 
-der Heizung war zur Messzeit auf "AUS" d.h. Heizungstemperatur und 
-Boilertemperatur werden niedriger gehalten)
 */
 
             }
@@ -5022,7 +5024,11 @@ void setup() {
 #endif
 
   // start the Ethernet connection and the server:
+#ifdef GatewayIP
+  Ethernet.begin(mac, ip, gateway);
+#else
   Ethernet.begin(mac, ip);
+#endif
 #ifdef LOGGER
   digitalWrite(10,HIGH);
 #endif
