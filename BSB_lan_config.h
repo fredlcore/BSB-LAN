@@ -11,9 +11,9 @@
 */
 
 //#define ETHERNET_W5500          // activate for newer Ethernet2-Shields and unzip Ethernet2.zip (provided in the "src" directory)
+#define Port 80
 #define IPAddr 192,168,178,88   // please note the commas instead of dots!!!
 //#define GatewayIP 192,168,178,1 // Optional: this is usually your router's IP address. Please note the commas instead of dots!!!
-#define Port 80
 
 /* SECURITY OPTIONS
  * There are several options to control and protect access to your heating system. However, keep  
