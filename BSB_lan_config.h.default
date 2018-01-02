@@ -4,6 +4,8 @@
 /************************************************************************************/
 /************************************************************************************/
 
+// Upon first installation, rename this file from BSB_lan_config.h.default to BSB_lan_config.h and adjust settings accordingly
+
 /*
  * Initialize the Ethernet server library
  * with the IP address and port you want to use
