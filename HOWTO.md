@@ -33,6 +33,7 @@ Getting started:
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
 * Download the current version of BSB-LAN from https://github.com/fredlcore/bsb_lan and unzip the downloaded file „bsb_lan-master.zip“. Rename the created folder "bsb_lan-master" to „BSB_lan“.
+* Rename the default <code>BSB_lan_config.h.default</code> to <code>BSB_lan_config.h</code>
 * Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
 * Configure the IP-address in BSB_lan_config.h according to your network (default 192.168.178.88 will work with standard Fritz!Box routers, but check for address collision).
 * Select "Arduino/Genuino Mega or Mega 2560" under Tools/Board.
