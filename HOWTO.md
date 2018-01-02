@@ -104,10 +104,10 @@ This command does not communicate with the boiler system. It is a software inter
 * Query value for line x  
 `http://<ip-of-server>/<x>`  
 
-Query value for a range of lines (from line x up to line y)  
+* Query value for a range of lines (from line x up to line y)  
  `http://<ip-of-server>/<x>-<y>`  
 
-Multiple queries can be concatenated  
+* Multiple queries can be concatenated  
 e.g. `http://<ip-of-server>/K11/8000/8003/8005/8300/8301/8730-8732/8820`  
 
 * Query for the reset value of parameter x  
