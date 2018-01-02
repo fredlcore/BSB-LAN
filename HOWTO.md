@@ -1,6 +1,6 @@
 <H1>BSB Boiler-System-Bus LAN Interface</H1>
 
-<H2>ATTENTION:</H2>  
+<B>ATTENTION:</B>  
       There is no waranty that this system will not damage your heating system!
 
 <B>Authors:</B>  
