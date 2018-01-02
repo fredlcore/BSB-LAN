@@ -3,15 +3,15 @@
 <H2>ATTENTION:</H2>  
       There is no waranty that this system will not damage your heating system!
 
-<H2>Authors:</H2>  
+<B>Authors:</B>  
 Gero Schumacher (gero.schumacher ät gmail.com) (up to version 0.16)  
 Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)  
 Based on the code and work from many other developers (see Info section below). Many thanks!
 
-<H2>License:</H2>
+<B>License:</B>  
       You are free to use this software on your own risk. Please take care of the licenses of the used libraries and software.
 
-<H2>Host System:</H2>  
+<B>Host System:</B>  
 The software is designed to run on an arduino mega2560 board with ethernet shield.
 Because there are different pin assignments for different ethernet shields, you
 may have to connect the BSB-LPB adapter to different pins and to change the pin assigment
@@ -24,11 +24,11 @@ For this configuration, pin A14 (68) is used as RX and pin A15 (69) is used as T
 
 The interface board may also be used with an Raspberry Pi 2, but a completely different software (bsb_gateway) would have to be used which can be found <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please note that you would have to contact the author of bsb_gateway for any support related to that software. All further information on this website relate to the Arduino version only!
       
-<H2>Target System:</H2>  
+<B>Target System:</B>  
       Tested with various Elco and Brötje heating systems (see README).
       Communication should be possible with all systems that support the BSB interface. 
 
-<H2>Getting started:</H2>
+<B>Getting started:</B>
 * Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with DB/MB (connect DB(+) to CL+ and MB(-) to CL-).
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
@@ -75,7 +75,7 @@ Optionally configure the following parameters in BSB_lan_config.h:
 - You can set the language of the webinterface of the adapter to english by deactivating the concerning definement:
   `//#define LANG_DE;`
         
-<H2>Web-Interface:</H2>  
+<B>Web-Interface:</B>  
 A simple website is displayed when the server is accessed by its simple URL without any parameters.  
 e.g. `http://<ip-of-server>`  
 To protect the system from unwanted access you can enable the passkey feature (very simple and not really secure!).  
@@ -200,7 +200,7 @@ The parameters are grouped in categories according to the submenu items when acc
         http://<ip-of-server>/X
         Resets the Arduino after pausing for 8 seconds (#define RESET in BSB_lan_config.h).
 
-<H2>Open issues</H2>
+<B>Open issues</B>
 - Add more command ids to the table.
           Only the known command ids from the threads listed above and the tested boiler system (ELCO) are contents of the table.
           Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the 
@@ -217,7 +217,7 @@ The parameters are grouped in categories according to the submenu items when acc
 
 - Add further support of error messages sent by the boiler system
 
-<H2>Further Info:</H2>  
+<B>Further Info:</B>  
       http://www.mikrocontroller.net/topic/218643  
       http://blog.dest-unreach.be/2012/12/14/reverse-engineering-the-elco-heating-protocol  
       http://forum.fhem.de/index.php/topic,29762.0.html  
