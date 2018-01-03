@@ -1,4 +1,4 @@
-# BSB-LPB-LAN
+# BSB-LPB-PPS-LAN
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
