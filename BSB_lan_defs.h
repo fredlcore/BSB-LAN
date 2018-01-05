@@ -533,6 +533,7 @@ const char STR888[] PROGMEM = "dt Überhöhungsfaktor";
 const char STR890[] PROGMEM = "Vorl'sollwertkorr Drehz'reg HK1";
 const char STR894[] PROGMEM = "dT Spreizung Norm Aussent.";
 const char STR895[] PROGMEM = "dT Spreizung Maximum";
+const char STR898[] PROGMEM = "Betriebsniveauumschaltung";
 const char STR900[] PROGMEM = "Betriebsartumschaltung HK1";
 
 // Einstellungen Kühlkreis 1
@@ -706,7 +707,10 @@ const char STR2234[] PROGMEM = "Klappenantrieb Nach'zeit Tn";
 const char STR2235[] PROGMEM = "Klappenantrieb Vorh'zeit Tv";
 const char STR2240[] PROGMEM = "Schaltdifferenz Kessel";
 const char STR2241[] PROGMEM = "Kessel Brennerlaufzeit Minimum";
+const char STR2243[] PROGMEM = "Brennpausenzeit Minimum";
+const char STR2245[] PROGMEM = "SD Brennerpause";
 const char STR2250[] PROGMEM = "Pumpennachlaufzeit";
+const char STR2253[] PROGMEM = "Pumpennachlaufzeit n. TWW-Betrieb";
 const char STR2260[] PROGMEM = "Anfahrentlast Verbraucher";
 const char STR2261[] PROGMEM = "Anfahrentlast Kesselpumpe";
 const char STR2262[] PROGMEM = "Einschaltoptimierung";
@@ -719,6 +723,8 @@ const char STR2284[] PROGMEM = "Mischer Nachstellzeit Tn";
 const char STR2290[] PROGMEM = "Schaltdiff Bypasspumpe";
 const char STR2291[] PROGMEM = "Steuerung Bypasspumpe";
 const char STR2300[] PROGMEM = "Anl'frostschutz Kess'pumpe";
+const char STR2301[] PROGMEM = "Kesselpumpe bei Erzeugersperre";
+const char STR2305[] PROGMEM = "Wirkung Erzeugersperre";
 const char STR2316[] PROGMEM = "Temperaturhub maximum";
 const char STR2317[] PROGMEM = "Temperaturhub Nenn";
 const char STR2320[] PROGMEM = "Pumpenmodulation";
@@ -726,6 +732,8 @@ const char STR2322[] PROGMEM = "Pumpendrehzahl Minimum";
 const char STR2323[] PROGMEM = "Pumpendrehzahl Maximum";
 const char STR2330[] PROGMEM = "Leistung Nenn";
 const char STR2331[] PROGMEM = "Leistung Grundstufe";
+const char STR2334[] PROGMEM = "Leistung bei Pumpendehz. min";
+const char STR2335[] PROGMEM = "Leistung bei Pumpendehz. max";
 const char STR2340[] PROGMEM = "Auto Erz’folge 2 x 1 Kaskade";
 const char STR2440[] PROGMEM = "Gebläse-PWM Hz Maximum";
 const char STR2441[] PROGMEM = "Gebläsedrehzahl Hz Maximum";
@@ -1018,6 +1026,7 @@ const char STR5019[] PROGMEM = "TWW Nachlad'Überhöh Schichtensp";
 const char STR5020[] PROGMEM = "TWW Vorlaufsollwertüberhöhung";
 const char STR5021[] PROGMEM = "TWW Umladeüberhöhung";
 const char STR5022[] PROGMEM = "TW Nachladeregelung";
+const char STR5022_2[] PROGMEM = "Ladeart";
 const char STR5024[] PROGMEM = "TWW Schaltdifferenz 1 ein";
 const char STR5025[] PROGMEM = "TWW Schaltdifferenz 1 Aus min";
 const char STR5026[] PROGMEM = "TWW Schaltdifferenz 1 Aus max";
@@ -1137,11 +1146,15 @@ const char STR5964[] PROGMEM = "Wärmeanforderung 10V H3";
 const char STR5965[] PROGMEM = "Spannungswert 2 H3";
 const char STR5966[] PROGMEM = "Druckwert 3.5V H2";
 const char STR5970[] PROGMEM = "Konfig Raumthermostat 1";
+const char STR5970_2[] PROGMEM = "Funktion Eingang H4";
 const char STR5971[] PROGMEM = "Konfig Raumthermostat 2";
+const char STR5971_2[] PROGMEM = "Wirksinn Kontakt H4";
 const char STR5973[] PROGMEM = "Funktion Eingang RelCl";
 const char STR5975[] PROGMEM = "Ext. Vorlaufsollwert Maximum";
 const char STR5976[] PROGMEM = "Ext. Leistungsvorg. Schwelle";
+const char STR5977[] PROGMEM = "Funktion Eingang H5";
 const char STR5978[] PROGMEM = "Funktion Eingang SolCl";
+const char STR5978_2[] PROGMEM = "Wirksinn Eingang H5";
 const char STR5980[] PROGMEM = "Funktion Eingang EX1";
 const char STR5981[] PROGMEM = "Wirksinn Eingang EX1";
 const char STR5982[] PROGMEM = "Funktion Eingang EX2";
@@ -1178,6 +1191,7 @@ const char STR6070[] PROGMEM = "Funktion Ausgang UX";
 const char STR6071[] PROGMEM = "Signallogik Ausgang UX";
 const char STR6072[] PROGMEM = "Signal Ausgang UX";
 const char STR6075[] PROGMEM = "Temperaturwert 10V UX";
+const char STR6085[] PROGMEM = "PWM-Ausgang P1";
 const char STR6089[] PROGMEM = "Mod Pumpe Drehzahlstufen";
 const char STR6092[] PROGMEM = "Mod Pumpe PWM";
 const char STR6097[] PROGMEM = "Fühlertyp Kollektor";
@@ -1359,6 +1373,10 @@ const char STR7150[] PROGMEM = "Simulation Aussentemperatur";
 const char STR7152[] PROGMEM = "Abtauen auslösen";
 const char STR7160[] PROGMEM = "Reset Begrenzungszeiten";
 const char STR7170[] PROGMEM = "Telefon Kundendienst";
+const char STR7250[] PROGMEM = "Pstick Pos";
+const char STR7251[] PROGMEM = "Pstick Bez Datensatz";
+const char STR7252[] PROGMEM = "Pstick Befehl";
+const char STR7253[] PROGMEM = "Pstick Fortschritt";
 
 // Ein-/Ausgangstest
 const char STR7700[] PROGMEM = "Relaistest";
@@ -1403,7 +1421,10 @@ const char STR7847[] PROGMEM = "Zustand Kontakt H2, Modul 2";
 const char STR7854[] PROGMEM = "Spannungssignal H3";
 const char STR7855[] PROGMEM = "Kontaktzustand H3";
 const char STR7858[] PROGMEM = "Eingangssignal H3";
+const char STR7860[] PROGMEM = "Kontaktzustand H4";
+const char STR7865[] PROGMEM = "Kontaktzustand H5";
 const char STR7870[] PROGMEM = "Brennerstörung S3";
+const char STR7872[] PROGMEM = "Kontaktzustand H6";
 const char STR7881[] PROGMEM = "1. Brennerstufe E1";
 const char STR7884[] PROGMEM = "STB Fehlermeldung L1";
 const char STR7889[] PROGMEM = "Niederdruckwächter E9";
@@ -1742,16 +1763,23 @@ const char STR9075[] PROGMEM = "Relaisausgang QX35";
 const char STR9500[] PROGMEM = "Vorlüftzeit";
 const char STR9502[] PROGMEM = "Gebl'ansteuerung Vorlüftung";
 const char STR9504[] PROGMEM = "Solldrehzahl Vorlüftung";
+const char STR9504_2[] PROGMEM = "Sollleistung Vorlüftung";
 const char STR9510[] PROGMEM = "Gebl'ansteuerung Zündung";
 const char STR9512[] PROGMEM = "Solldrehzahl Zündung";
+const char STR9512_2[] PROGMEM = "Sollleistung Zündlast";
 const char STR9520[] PROGMEM = "Gebl'ansteuerung Betrieb. Min";
 const char STR9522[] PROGMEM = "Gebl'ansteuerung Betrieb. Max";
 const char STR9524[] PROGMEM = "Solldrehzahl Betrieb Min";
+const char STR9524_2[] PROGMEM = "Sollleistung Teillast";
 const char STR9527[] PROGMEM = "Solldrehzahl Betrieb Max";
+const char STR9529[] PROGMEM = "Sollleistung Volllast";
 const char STR9540[] PROGMEM = "Nachlüftzeit";
 const char STR9550[] PROGMEM = "Gebl'ansteuerung Stillstand";
 const char STR9560[] PROGMEM = "Gebl'ansteuerung Durchlad";
 const char STR9563[] PROGMEM = "Solldrehzahl Durchladung";
+const char STR9626[] PROGMEM = "Gebl'Leist/Drehz Steigerung";
+const char STR9627[] PROGMEM = "Gebl'Leist/Drehl Y-Abschn";
+
 
 /* User-defined command numbers */
 const char STR10000[] PROGMEM = "Raumtemperatur 1";     // same as 10109
@@ -1836,6 +1864,7 @@ const char ENUM832[] PROGMEM = {"\x00 2-Punkt\0\x01 3-Punkt"};
 const char ENUM850[] PROGMEM = {"\x00 Aus\0\x01 Funktionsheizen\0\x02 Belegreifheizen\0\x03 Funktions-/Belegreifheizen\0\x04 Belegreif-/Funktionsheizen\0\x05 Manuell"};
 const char ENUM861[] PROGMEM = {"\x00 Aus\0\x01 Heizbetrieb\0\x02 Immer"};
 const char ENUM880[] PROGMEM = {"\x00 gemäß HK-Betriebsniveau\0\x01 gemäß Kennlinie"};
+const char ENUM898[] PROGMEM = {"\x00 Schutzbetrieb\0\x02 Reduziert\0\x03 Komfort"};
 
 const char ENUM900[] PROGMEM = {"\x00 Keine\0\x01 Schutzbetrieb\0\x02 Reduziert\0\x03 Komfort\0\x04 Automatik"};
 const char ENUM900_2[] PROGMEM = {"\x00 Schutzbetrieb\0\x01 Reduziert\0\x03 Komfort\0\x04 Automatik"};
@@ -1869,12 +1898,29 @@ const char ENUM2200[] PROGMEM = {"\x00 Dauerbetrieb\0\x01 Automatik\0\x02 Auto, 
 const char ENUM2205[] PROGMEM = {"\x00 Aus\0\x01 Ein Trinkwasser\0\x02 Ein"};
 const char ENUM2291[] PROGMEM = {"\x00 Parallel Brennerbetrieb\0\x01 Rücklauftemperatur"};
 
+const char ENUM2305[] PROGMEM = {
+"\x00 Nur Heizbetrieb\0"
+"\x01 Heiz- und Trinkwasserbetrieb"
+};
+
 const char ENUM2320[] PROGMEM = {
 "\x00 Keine\0"
 "\x01 Bedarf\0"
 "\x02 Kesselsollwert\0"
 "\x03 Temperaturhub Nenn\0"
 "\x04 Brennerleistung"
+};
+
+const char ENUM2450[] PROGMEM = {
+"\x00 Aus\0"
+"\x01 Nur Heizbetrieb\0"
+"\x02 Nur Trinkwasserbetrieb\0"
+"\x03 Heiz- und Trinkwasserbetrieb"
+};
+
+const char ENUM2500[] PROGMEM = {
+"\x00 Startverhinderung\0"
+"\x01 Störstellung"
 };
 
 // Sitherm Pro
@@ -1943,6 +1989,7 @@ const char ENUM4813[] PROGMEM = {"\x01 Mit B4\0\x02 Mit B42/B41"};
 // Trinkwasserspeicher
 const char ENUM5010[] PROGMEM = {"\x00 Einmal/Tag\0\xff Mehrmals/Tag"};
 const char ENUM5022[] PROGMEM = {"\x01 Mit B3\0\x02 Mit B3/B31\0\x03 Mit B3, Legio B3/31"};
+const char ENUM5022_2[] PROGMEM = {"\x01 Nachladen\0\x02 Durchladen\0\x03 Durchladen Legio\0\x04 Durchladen 1. Ladung\0\x05 Durchladen Legio und 1. Ladung"};
 const char ENUM5040[] PROGMEM = {"\x00 Aus\0\x01 Immer\0\x02 Automatisch"};
 const char ENUM5057[] PROGMEM = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
 const char ENUM5060[] PROGMEM = {"\x01 Ersatz\0\x02 Sommer\0\x03 Immer"};
@@ -2131,6 +2178,22 @@ const char ENUM5930[] PROGMEM = {
 #define ENUM5941 ENUM5930               // Konfiguration - Fühlereingang BX21
 #define ENUM5942 ENUM5930               // Konfiguration - Fühlereingang BX22
 
+
+// Konfiguration - Funktion Eingang H1 (LOGON B)
+const char ENUM5950[] PROGMEM = {
+"\x01 BA-Umschaltung HK's + TWW\0"
+"\x02 BA-Umschaltung HK's\0"
+"\x03 BA-Umschaltung HK1\0"
+"\x04 BA-Umschaltung HK2\0"
+"\x05 BA-Umschaltung HKP\0"
+"\x06 Erzeugersperre\0"
+"\x07 Fehler- / Alarmmeldung\0"
+"\x08 Minimaler Vorlaufsollwert\0"
+"\x09 Übertemperaturableitung\0"
+"\x0a Freigabe Schwimmbad\0"
+"\x0d Wärmeanforderung 10V\0"
+"\x0e Druckmessung 10V"};
+
 // Konfiguration - Funktion Eingang H1 THISION
 const char ENUM5950_2[] PROGMEM = {
 "\x00 Keine Funktion\0"
@@ -2186,21 +2249,6 @@ const char ENUM5950_4[] PROGMEM = {
 "\x38 Raumtemperatur 10V"
 };
 
-// Konfiguration - Funktion Eingang H1 (LOGON B)
-const char ENUM5950[] PROGMEM = {
-"\x01 BA-Umschaltung HK's + TWW\0"
-"\x02 BA-Umschaltung HK's\0"
-"\x03 BA-Umschaltung HK1\0"
-"\x04 BA-Umschaltung HK2\0"
-"\x05 BA-Umschaltung HKP\0"
-"\x06 Erzeugersperre\0"
-"\x07 Fehler- / Alarmmeldung\0"
-"\x08 Minimaler Vorlaufsollwert\0"
-"\x09 Übertemperaturableitung\0"
-"\x0a Freigabe Schwimmbad\0"
-"\x0d Wärmeanforderung 10V\0"
-"\x0e Druckmessung 10V"};
-
 const char ENUM5951[] PROGMEM = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
 
 // Konfiguration - 5957 BA-Umschaltung HK's+TWW
@@ -2224,7 +2272,10 @@ const char ENUM5970[] PROGMEM = {
 "\x03 Schaltuhr Heizungsanforderung\0"
 "\x04 Schaltuhr TWW Niveau"
 };
+#define ENUM5970_2 ENUM5950_4
+
 #define ENUM5971 ENUM5970               // Thision 5971 Konfig Raumthermostat 2
+#define ENUM5971_2 ENUM5951
 
 // Konfiguration - Thision 5973 Funktion Eingang RelCl
 const char ENUM5973[] PROGMEM = {
@@ -2241,11 +2292,15 @@ const char ENUM5973[] PROGMEM = {
 "\x0b Erzeugersperre Fühler"
 };
 
+#define ENUM5977_2 ENUM5970_2
+
 // Konfiguration - Thision 5978 Funktion Eingang SolCl
 const char ENUM5978[] PROGMEM = {
 "\x00 kein\0"
 "\x0a Kollektor Fühler"
 };
+
+#define ENUM5978_2 ENUM5971_2
 
 // 5980 Konfiguration - Funktion Eingang EX1
 // The System-Handbuch does not document numerical values.
@@ -2431,11 +2486,22 @@ const char ENUM6040[] PROGMEM = {
 // #define ENUM6042 ENUM6040 // Fühlereingang BX21 Modul 2 / identity with 6040: analogous guess
 // #define ENUM6043 ENUM6040 // Fühlereingang BX22 Modul 2 / identity with 6040: analogous guess
 #define ENUM6046 ENUM5950	// Konfiguration - Funktion Eingang H2
+#define ENUM6046_2 ENUM5977_2  // Konfiguration - Funktion Kontakt H2 EM1
 #define ENUM6047 ENUM5951	// Konfiguration - Wirksinn Kontakt H2
+#define ENUM6047_2 ENUM5978_2  // Konfiguration - Wirksinn Eingang H2 EM1
 // Konfiguration - 6070 Funktion Ausgang UX
 const char ENUM6070[] PROGMEM = {"\x00 Kesselsollwert\0\x01 Leistungsanforderung\0\x02 Wärmeanforderung"};
 // Konfiguration - 6071 Signallogik Ausgang UX
 const char ENUM6071[] PROGMEM = {"\x00 Standard\0\x01 Invertiert"};
+
+const char ENUM6085[] PROGMEM = {
+"\x00 Keine\0"
+"\x01 Kesselpumpe Q1\0"
+"\x02 Trinkwasserpumpe Q3\0"
+"\x03 Heizkreispumpe HK1 Q2\0"
+"\x03 Heizkreispumpe HK2 Q6\0"
+"\x04 Heizkreispumpe HK3 Q20"
+};
 
 // Konfiguration - Fühlertyp Kollektor
 const char ENUM6097[] PROGMEM = {"\x01 NTC\0\x02 Pt 1000"};
@@ -2799,6 +2865,12 @@ const char ENUM7131[] PROGMEM = {
 const char ENUM7142[] PROGMEM = {
 "\x01 Manuell\0"
 "\x02 Automatisch"
+};
+
+const char ENUM7252[] PROGMEM = {
+"\x00 Keine Operation\0"
+"\x01 Lesen von Stick\0"
+"\x02 Schreiben auf Stick"
 };
 
 // Ein-/Ausgangstest - Relaistest
@@ -3660,6 +3732,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         890,   STR890,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
 {0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 894 dt Spreizung Norm Aussent. [°C]
 {0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 895 dt Spreizung Maximum [°C]
+{CMD_UNKNOWN, CAT_HK1,              VT_ENUM,          898,   STR898,   sizeof(ENUM898),      ENUM898,      DEFAULT_FLAG, DEV_ALL}, // Betriebsniveauumschaltung
 {0x053D07BE,  CAT_HK1,              VT_ENUM,          900,   STR900,   sizeof(ENUM900),      ENUM900,      DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // [0] - Heizkreis 1 - Betriebsartumschaltung
 {0x053D07BE,  CAT_HK1,              VT_ENUM,          900,   STR900,   sizeof(ENUM900_2),    ENUM900_2,    DEFAULT_FLAG, DEV_BROETJE}, // [0] - Heizkreis 1 - Betriebsartumschaltung
 
@@ -3844,7 +3917,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D08F8,  CAT_KESSEL,           VT_SECONDS_SHORT4,2235,  STR2235,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Klappenantrieb Vorh'zeit Tv
 {0x0D3D0928,  CAT_KESSEL,           VT_TEMP,          2240,  STR2240,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schaltdifferenz Kessel
 {0x0D3D0939,  CAT_KESSEL,           VT_MINUTES_SHORT, 2241,  STR2241,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kessel Brennerlaufzeit Minimum
+{CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2243,  STR2243,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brennpausenzeit Minimum
+{CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2245,  STR2245,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SD Brennerpause
 {0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_SHORT, 2250,  STR2250,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpennachlaufzeit
+{CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2253,  STR2253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpennachlaufzeit n. TWW-Betrieb
 {0x053D08FE,  CAT_KESSEL,           VT_ONOFF,         2260,  STR2260,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anfahrentlast Verbraucher
 {0x113D093A,  CAT_KESSEL,           VT_ONOFF,         2261,  STR2261,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anfahrentlast Kesselpumpe
 {0x053D0437,  CAT_KESSEL,           VT_ONOFF,         2262,  STR2262,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Einschaltoptimierung
@@ -3860,6 +3936,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D0946,  CAT_KESSEL,           VT_TEMP,          2290,  STR2290,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Kessel - Schaltdiff Bypasspumpe
 {0x113D0947,  CAT_KESSEL,           VT_ENUM,          2291,  STR2291,  sizeof(ENUM2291),     ENUM2291,     DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Bypasspumpe
 {0x113D063C,  CAT_KESSEL,           VT_ONOFF,         2300,  STR2300,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kessel - Anl'frostschutz Kess'pumpe (an/aus)
+{CMD_UNKNOWN, CAT_KESSEL,           VT_ONOFF,         2301,  STR2301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kesselpumpe bei Erzeugersperre
+{CMD_UNKNOWN, CAT_KESSEL,           VT_ENUM,          2305,  STR2305,  sizeof(ENUM2305),     ENUM2305,     DEFAULT_FLAG, DEV_ALL}, // Wirkung Erzeugersperre
 {0x113D0B60,  CAT_KESSEL,           VT_TEMP,          2316,  STR2316,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temperaturhub maximum
 {0x053D0F84,  CAT_KESSEL,           VT_TEMP,          2317,  STR2317,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temperaturhub nenn
 {0x053D10F7,  CAT_KESSEL,           VT_ENUM,          2320,  STR2320,  sizeof(ENUM2320),     ENUM2320,     FL_RONLY,     DEV_ALL}, // Pumpenmodulation
@@ -3867,6 +3945,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D0AF0,  CAT_KESSEL,           VT_PERCENT,       2323,  STR2323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pumpendrehzahl maximum (%)
 {0x053D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2330,  STR2330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Nenn
 {0x053D2F70,  CAT_KESSEL,           VT_POWER_WORD,    2331,  STR2331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Grundstufe
+{CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
+{CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2335,  STR2335,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. max
 {CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2340,  STR2340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge 2 x 1 Kaskade
 
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
@@ -3879,9 +3959,9 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D2F99,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS-DEV_BR_WGE}, // Thision 2444 Leistung Minimum [kW]
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS+DEV_BR_WGE}, // Gebläseleistung TWW Max
 {0x093D3066,  CAT_KESSEL,           VT_POWER,         2445,  STR2445,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Thision 2445 Leistung Nenn [kW]
-{0x093D3066,  CAT_KESSEL,           VT_UNKNOWN,       2445,  STR2445_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS}, // Gebl'abschaltung Heizbetrieb
+{0x093D3066,  CAT_KESSEL,           VT_ONOFF,         2445,  STR2445_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS}, // Gebl'abschaltung Heizbetrieb
 {0x053D3076,  CAT_KESSEL,           VT_SECONDS_SHORT, 2446,  STR2446,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brötje 2446 Gebläseabschaltverzögerung
-{0x053D0F7E,  CAT_KESSEL,           VT_UNKNOWN,       2450,  STR2450,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reglerverzögerung
+{0x053D0F7E,  CAT_KESSEL,           VT_ENUM,          2450,  STR2450,  sizeof(ENUM2450),     ENUM2450,     DEFAULT_FLAG, DEV_ALL}, // Reglerverzögerung
 {0x093D2F9A,  CAT_KESSEL,           VT_SECONDS_WORD,  2451,  STR2451,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2451 Brennerpausenzeit Minimum [s]
 {0x113D2F87,  CAT_KESSEL,           VT_TEMP_WORD,     2452,  STR2452,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS-DEV_BR_WGE}, // Brötje 2452 SD Brennerpause
 {0x093D1210,  CAT_KESSEL,           VT_POWER_WORD,    2452,  STR2452_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS+DEV_BR_WGE}, // Reglerverzög' Gebl'leistung
@@ -3900,7 +3980,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D17BC,  CAT_KESSEL,           VT_UNKNOWN,       2470,  STR2470,  0,                    NULL,         FL_RONLY, DEV_ALL}, // 'Parameter' OEM
 {0x113D3051,  CAT_KESSEL,           VT_MINUTES_SHORT, 2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min]
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
-{0x053D0FE9,  CAT_KESSEL,           VT_UNKNOWN,       2500,  STR2500,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
+{0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
 {0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
@@ -4081,7 +4161,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
-{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // [0] - Trinkwasser-Speicher - Ladeart
+{CMD_UNKNOWN, CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_BR_WGS}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_SOB+DEV_BR_WGS+DEV_FJ_WSK}, // TW Schaltdifferenz 1 ein
 {0x213D2F8F,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5024,  STR5024,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_SOB-DEV_BR_WGS-DEV_FJ_WSK}, // Trinkwasser-Speicher Schaltdifferenz
 {0x213D2F90,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5025,  STR5025,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus min
@@ -4218,12 +4299,16 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5965,  STR5965,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 2 H3
 {0x073D05DC,  CAT_KONFIG,           VT_PRESSURE,      5966,  STR5966,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [bar ] - Konfiguration - Druckwer 3.5V H3
-{0x2D3D3073,  CAT_KONFIG,           VT_ENUM,          5970,  STR5970,  sizeof(ENUM5970),     ENUM5970,     DEFAULT_FLAG, DEV_ALL}, // Thision 5970 Konfig Raumthermostat 1 [enum]
-{0x2E3D3073,  CAT_KONFIG,           VT_ENUM,          5971,  STR5971,  sizeof(ENUM5971),     ENUM5971,     DEFAULT_FLAG, DEV_ALL}, // Thision 5971 Konfig Raumthermostat 2 [enum: s.o.]
+{0x2D3D3073,  CAT_KONFIG,           VT_ENUM,          5970,  STR5970,  sizeof(ENUM5970),     ENUM5970,     DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Thision 5970 Konfig Raumthermostat 1 [enum]
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          5970,  STR5970_2,sizeof(ENUM5970_2),   ENUM5970_2,   DEFAULT_FLAG, DEV_BR_WGS}, // [0] - Konfiguration - Funktion Kontakt H4
+{0x2E3D3073,  CAT_KONFIG,           VT_ENUM,          5971,  STR5971,  sizeof(ENUM5971),     ENUM5971,     DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Thision 5971 Konfig Raumthermostat 2 [enum: s.o.]
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          5971,  STR5971_2,sizeof(ENUM5971_2),   ENUM5971_2,   DEFAULT_FLAG, DEV_BR_WGS}, // [0] - Konfiguration - Wirksinn Kontakt H4
 {0x053D3046,  CAT_KONFIG,           VT_ENUM,          5973,  STR5973,  sizeof(ENUM5973),     ENUM5973,     DEFAULT_FLAG, DEV_ALL}, // Thision 5973 Funktion Eingang RelCl [enum]
 {0x193D2FD2,  CAT_KONFIG,           VT_TEMP_WORD,     5975,  STR5975,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
 {0x153D2FD3,  CAT_KONFIG,           VT_PERCENT,       5976,  STR5976,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_PEV}, // WGB Pro EVO 15C Ext. Leistungsvorg. Schwelle [%]
-{0x093D3054,  CAT_KONFIG,           VT_ENUM,          5978,  STR5978,  sizeof(ENUM5978),     ENUM5978,     DEFAULT_FLAG, DEV_ALL}, // Thision 5978 Funktion Eingang SolCl [enum]
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          5977,  STR5977,  sizeof(ENUM5970),     ENUM5970,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Kontakt H5
+{0x093D3054,  CAT_KONFIG,           VT_ENUM,          5978,  STR5978,  sizeof(ENUM5978),     ENUM5978,     DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Thision 5978 Funktion Eingang SolCl [enum]
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          5978,  STR5978_2,sizeof(ENUM5978_2),   ENUM5978_2,   DEFAULT_FLAG, DEV_BR_WGS}, // [0] - Konfiguration - Wirksinn Kontakt H5
 {0x053D09FD,  CAT_KONFIG,           VT_ENUM,          5980,  STR5980,  sizeof(ENUM5980),     ENUM5980,     DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang EX1 //FUJITSU
 {0x053D09FE,  CAT_KONFIG,           VT_ENUM,          5981,  STR5981,  sizeof(ENUM5981),     ENUM5981,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Eingang EX1 //FUJITSU
 {0x053D07CE,  CAT_KONFIG,           VT_ENUM,          5982,  STR5982,  sizeof(ENUM5980),     ENUM5980,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Eingang EX2 //FUJITSU
@@ -4267,6 +4352,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D045B,  CAT_KONFIG,           VT_ENUM,          6071,  STR6071,  sizeof(ENUM6071),     ENUM6071,     DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX Standard | Invertiert
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6072,  STR6072,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX
 {0x053D042B,  CAT_KONFIG,           VT_TEMP,          6075,  STR6075,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturwert 10V UX
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6085,  STR6085,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // PWM-Ausgang P1
 {0x113D2F97,  CAT_KONFIG,           VT_BYTE,          6089,  STR6089,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6089 Mod Pumpe Drehzahlstufen [?]
 {0x113D2FE1,  CAT_KONFIG,           VT_PERCENT,       6092,  STR6092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM [?]
 {0x053D075D,  CAT_KONFIG,           VT_ENUM,          6097,  STR6097,  sizeof(ENUM6097),     ENUM6097,     DEFAULT_FLAG, DEV_ALL}, // Fühlertyp Kollektor NTC|PT1000
@@ -4439,9 +4525,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D10B0,  CAT_WARTUNG,          VT_SPEED2,        7050,  STR7050,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS}, // Gebläsedrehzahl Ion Strom
 {0x2D3D300C,  CAT_WARTUNG,          VT_BYTE,          7051,  STR7051,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 7051 Meldung Ion Strom [?]
 {0x05050B0F,  CAT_WARTUNG,          VT_TEMP   ,       7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_BOB}, // Abgastemperaturgrenze
-{0x053D0B2B,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_BOB}, // Abgastemperaturgrenze
-{0x05050B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_BOB}, // Verzögerung Abgasmeldung
-{0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_BOB}, // Verzögerung Abgasmeldung
+{0x053D0B2B,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
+{0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
 {0x053D05E1,  CAT_WARTUNG,          VT_MONTHS,        7070,  STR7070,  0,                    NULL,         DEFAULT_FLAG, DEV_FJ_WSK}, // WP Zeitintervall //FUJITSU
 {0x053D05E2,  CAT_WARTUNG,          VT_MONTHS,        7071,  STR7071,  0,                    NULL,         DEFAULT_FLAG, DEV_FJ_WSK}, // WP Zeit seit Wartung //FUJITSU
@@ -4477,6 +4562,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7152,  STR7152,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtauen auslösen
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7160,  STR7160,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Begrenzungszeiten
 {0x053D06E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Kundendienst
+{CMD_UNKNOWN, CAT_WARTUNG,          VT_YESNO,         7250,  STR7250,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Pos
+{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7251,  STR7251,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Bez Datensatz
+{CMD_UNKNOWN, CAT_WARTUNG,          VT_ENUM,          7252,  STR7252,  sizeof(ENUM7252),     ENUM7252,     DEFAULT_FLAG, DEV_ALL}, // Pstick Befehl
+{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7253,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt
 
 // Ein-/Ausgangstest
 {0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
@@ -4531,7 +4620,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x073D082F,  CAT_IOTEST,           VT_VOLTAGE,       7854,  STR7854,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Spannungssignal H3
 {0x073D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7855,  STR7855,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kontaktzustand H3
 {0x053D174E,  CAT_IOTEST,           VT_UNKNOWN,       7858,  STR7858,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Eingangssignal H3
+{CMD_UNKNOWN, CAT_IOTEST,           VT_CLOSEDOPEN,    7860,  STR7860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H4
+{CMD_UNKNOWN, CAT_IOTEST,           VT_CLOSEDOPEN,    7865,  STR7865,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H5
 {0x053D03F6,  CAT_IOTEST,           VT_VOLTAGE,       7870,  STR7870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
+{CMD_UNKNOWN, CAT_IOTEST,           VT_CLOSEDOPEN,    7872,  STR7872,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H6
 {0x053D03F5,  CAT_IOTEST,           VT_VOLTAGE,       7881,  STR7881,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [V] - Ein-/Ausgangstest - 1. Brennerstufe E1
 {0x053D03F7,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7884,  STR7884,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // STB Fehlermeldung L1
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7889,  STR7889,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Niederdruckwächter E9
@@ -4791,7 +4883,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1 Alarm
 {0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
 {0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),     ENUM8749,     FL_RONLY,     DEV_ALL}, // Raumthermostat 1
-{0x053d04A2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         FL_RONLY,     DEV_EL_THI+DEV_BR_PEV}, // Thision 8750 Mod Pumpe Sollwert [%]
+{0x053D04A2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         FL_RONLY,     DEV_EL_THI+DEV_BR_PEV}, // Thision 8750 Mod Pumpe Sollwert [%]
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8751,  STR8751,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kühlkreispumpe Q24
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8752,  STR8752,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kühlkreismischer Auf Y23
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8753,  STR8753,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kühlkreismischer Zu Y24
@@ -4891,17 +4983,23 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D10FE,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9500,  STR9500,  0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Vorlüftzeit
 {0x213D3038,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9502,  STR9502,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Vorlüftung [%]
 {0x213D300F,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9504,  STR9504,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Vorlüftung [rpm]
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Vorlüftung
 {0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Zündung [%]
 {0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Zündung [rpm]
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Zündlast
 {0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Min [%]
 {0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Max [%]
 {0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Min [rpm]
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Teillast
 {0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Max [rpm]
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9529,  STR9529,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Vollast
 {0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Nachlüftzeit
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Durchlad [%]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9626,  STR9626,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehz Steigerung
+{CMD_UNKNOWN, CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9627,  STR9627,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehl Y-Abschn
 
  /*** virtuelle Zeilen ***/
 /*
@@ -4921,22 +5019,18 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
 {0x2E3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden)
 {0x2F3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
-// WIE SOLL DIESE RAUMTEMPERATUR UMGERECHNET WERDEN ? Handelt es sich überhaupt um Raumtemperatur?
-// dc 86 00 0e 02 3d 2d 02 15 05 79 00 a0 de
-// Src=06/RGT-1 Dest=00/SSR Type=INF FieldID=3d2d0215 Payload=057900 CRC=0xa0de
-// ANTWORT: Ja, 05 79 ist die Temperatur mit 64 multipliziert, daher Typ VT_TEMP
-{0x3D2D0215,  CAT_USER_DEFINED,     VT_TEMP,          10109, STR10109, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Raumtemperatur adr 06 to 00
+
 // Lines which are now commented out have found an explanation.
 /*
-{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
-{0x0500006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Datum/Zeit broadcast 0A to 7F
-{0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
-{0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
-{0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Zeitprogramm HK1 broadcast 00 to 7F ???
-{0x053D0099,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
-{0x2D3D0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
-{0x313D0571,  CAT_USER_DEFINED,     VT_UNKNOWN,       10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
-{0x2E3E0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
+  {0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
+  {0x0500006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Datum/Zeit broadcast 0A to 7F
+  {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
+  {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
+  {0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Zeitprogramm HK1 broadcast 00 to 7F ???
+  {0x053D0099,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
+  {0x2D3D0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
+  {0x313D0571,  CAT_USER_DEFINED,     VT_UNKNOWN,       10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
+  {0x2E3E0574,  CAT_USER_DEFINED,     VT_UNKNOWN,       10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 */
 
 //PPS-Bus commands
@@ -5053,7 +5147,7 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/Gxx=y</td><td>Set GPIO pin xx to high (y=1) or low (y=0).</td></tr>\n"
   "<tr><td valign=top>/A</td><td>Show 24h averages of selected parameters (define in BSB_lan_config.h).</td></tr>\n"
   "<tr><td valign=top>/A=x,y,z</td><td>Change 24h averages parameters to x,y,z (up to 20).</td></tr>\n"
-  "<tr bgcolor=#f0f0f0><td valign=top>/B</td><td bgcolor=#f0f0f0>Query accumulated broadcast telegrams of burner and hot water activity.</td></tr>\n"
-  "<tr bgcolor=#f0f0f0><td valign=top>/B0</td><td bgcolor=#f0f0f0>Reset accumulated broadcast telegrams.</td></tr>\n";
+  "<tr><td valign=top>/B</td><td>Query accumulated broadcast telegrams of burner and hot water activity.</td></tr>\n"
+  "<tr><td valign=top>/B0</td><td>Reset accumulated broadcast telegrams.</td></tr>\n";
 #endif
 
