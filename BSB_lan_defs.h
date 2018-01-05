@@ -566,6 +566,7 @@ const char STR969[] PROGMEM = "Betriebsartumschaltung";
 
 // Einstellungen Heizkreis 2
 const char STR1000[] PROGMEM = "Betriebsart";
+const char STR1001[] PROGMEM = "Präsenztaste (temporäre Abwesenheit)";
 const char STR1010[] PROGMEM = "Komfortsollwert";
 const char STR1011[] PROGMEM = "Komfortsollwert Maximum";
 const char STR1012[] PROGMEM = "Reduziertsollwert";
