@@ -1,4 +1,4 @@
-char version[] = "0.39";
+char version[] = "0.40";
 
 /*
  * 
@@ -52,8 +52,12 @@ char version[] = "0.39";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
+ *       0.40  - 03.01.2018
  *
  * Changelog:
+ *       version 0.40
+ *        - Removed parameter 10109 because it is the same as 10000
+ *        - Updated analyze.sh
  *       version 0.39
  *        - Implemntation of PPS-Bus protocol. 
  *          See /K40 for the limited commands available for this bus. 
@@ -64,6 +68,7 @@ char version[] = "0.39";
  *          (needs to be created by you!) which is executed at the end of each main loop.
  *          Variables "custom_timer" and "custom_timer_compare" have been added to execute
  *          code at arbitrary intervals.
+ *        - Added LogoBloc Unit L-UB 25C device family (95)
  *        - several new parameters added
  *        - Bugfix for logging Brennerlaufzeit Stufe 2
  *       version 0.38
@@ -3533,11 +3538,14 @@ ich mir da nicht)
     int so = client.getSocketNumber();
     uint8_t remoteIP[4];
 #ifdef ETHERNET_W5500
-    w5500.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+    w5500.readSnDIPR(so, remoteIP);
 #else
-    W5100.readSnDIPR(so, remoteIP);       // change to W5500 here for W5500 type ethernet shields
+    W5100.readSnDIPR(so, remoteIP);
 #endif
-    if (remoteIP[3] != TRUSTED_IP) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
+#ifndef TRUSTED_IP2
+#define TRUSTED_IP2 0
+#endif
+    if (remoteIP[3] != TRUSTED_IP && remoteIP[3] != TRUSTED_IP2) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
       Serial.print(F("Rejected access from "));
       for (int i=0; i<4; i++) {
         Serial.print(remoteIP[i]);

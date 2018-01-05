@@ -40,6 +40,7 @@
  * TRUSTED_IP to 20. 
 */
 //#define TRUSTED_IP 20
+//#define TRUSTED_IP2 30
 
 /* activate HTTP-Auth authentification to provide username/password based access. No encryption!
  * Default sets username to "atari" and password to "800xl". Visit a website like
