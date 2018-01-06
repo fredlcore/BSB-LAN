@@ -52,10 +52,12 @@ char version[] = "0.40";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
- *       0.40  - 03.01.2018
+ *       0.40  - 06.01.2018
  *
  * Changelog:
  *       version 0.40
+ *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
+ *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
  *        - Updated analyze.sh
  *       version 0.39
@@ -3998,96 +4000,7 @@ ich mir da nicht)
         
         if(p[1]=='O') {   // display URL command list
           webPrintHeader();
-
           printPStr(pgm_get_far_address(url_command_html), sizeof(url_command_html));
-
-#ifndef ONE_WIRE_BUS
-#ifdef LANG_DE
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>"));
-#else
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>"));
-#endif  
-#else
-#ifdef LANG_DE
-          client.println(F(" <tr><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>"));
-#else
-          client.println(F(" <tr><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>"));
-#endif
-#endif
-
-#ifndef DHT_BUS
-#ifdef LANG_DE
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define DHT_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>"));
-#else
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define DHT_BUS</code> in BSB_lan_config.h for the following command:</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>"));
-#endif
-#else
-#ifdef LANG_DE
-          client.println(F("<tr><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>"));
-#else
-          client.println(F("<tr><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>"));
-#endif
-#endif
-
-#ifndef LOGGER
-#ifdef LANG_DE
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define LOGGER</code> in BSB_lan_config.h für die folgenden Befehle:</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>"));
-#else
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define LOGGER</code> in BSB_lan_config.h for the following commands:</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>"));
-          client.println(F("<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>"));
-#endif  
-#else
-#ifdef LANG_DE
-          client.println(F("<tr><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
-          client.println(F("<tr><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>"));
-          client.println(F("<tr><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>"));
-          client.println(F("<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>"));
-          client.println(F("<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>"));
-#else
-          client.println(F("<tr><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>"));
-          client.println(F("<tr><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>"));
-          client.println(F("<tr><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>"));
-          client.println(F("<tr><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>"));
-          client.println(F("<tr><td valign=top>/LB=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>"));
-#endif
-#endif
-
-#ifndef RESET
-#ifdef LANG_DE
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define RESET</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>"));
-#else
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define RESET</code> in BSB_lan_config.h for the following command:</td></tr>"));
-          client.println(F(" <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>"));
-#endif  
-#else
-#ifdef LANG_DE
-          client.println(F(" <tr><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>"));
-#else
-          client.println(F(" <tr><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>"));
-#endif
-#endif
-
-          client.print(F("</table>"));
-
-#ifdef LANG_DE
-          client.println(F("Mehrere Abfragen können miteinander verkettet werden, z.B. <code>/K0/710/8000-8999/T</code></p>"));
-#else
-          client.println(F("Multiple queries are possible, e.g. <code>/K0/710/8000-8999/T</code></p>"));
-#endif
           webPrintFooter();
           break;
         }
@@ -4159,24 +4072,6 @@ ich mir da nicht)
           client.println(F("Configuration<BR><BR>"));
 //          client.println(F("Special heating system configuration:"));
 #endif
-/*
-          #ifdef THISION 
-          client.println(F("Thision "));
-          #endif
-          #ifdef FUJITSU
-          client.println(F("Fujitsu "));
-          #endif
-          #ifdef BROETJE
-          client.println(F("Brötje "));
-          #endif
-          #ifdef BROETJE_SOB
-          client.println(F("Brötje SOB "));
-          #endif
-          #ifdef BROETJE_BSW
-          client.println(F("Brötje BSW "));
-          #endif
-          client.println(F("<BR>"));
-*/
 
 //          client.println(F("BSB pins: "));
 //          client.println(bus);
