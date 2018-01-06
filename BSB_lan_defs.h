@@ -502,6 +502,7 @@ const char STR741[] PROGMEM = "Vorlaufsollwert Maximum";
 const char STR742[] PROGMEM = "Vorlaufsollwert Raumthermostat HK1";
 const char STR750[] PROGMEM = "Raumeinfluss";
 const char STR760[] PROGMEM = "Raumtemperaturbegrenzung";
+const char STR761[] PROGMEM = "Heizgrenze Raumregler";
 const char STR770[] PROGMEM = "Schnellaufheizung";
 const char STR780[] PROGMEM = "Schnellabsenkung";
 const char STR790[] PROGMEM = "Einschalt-Optimierung Max.";
@@ -514,12 +515,15 @@ const char STR830[] PROGMEM = "Mischerüberhöhung";
 const char STR832[] PROGMEM = "Antrieb Typ";
 const char STR833[] PROGMEM = "Schaltdifferenz 2-Punkt";
 const char STR834[] PROGMEM = "Antrieb Laufzeit";
+const char STR835[] PROGMEM = "Mischer P-Band Xp";
+const char STR836[] PROGMEM = "Mischer Nachstellzeit Tn";
 const char STR850[] PROGMEM = "Estrichfunktion HK1";
 const char STR851[] PROGMEM = "Estrich Sollwert manuell HK1";
 const char STR855[] PROGMEM = "Vorlauftemp-Sollwert Estrich-Austrocknung HK1";
 const char STR856[] PROGMEM = "Estrich Tag aktuell HK1";
 const char STR857[] PROGMEM = "Estrich Tage erfüllt";
 const char STR861[] PROGMEM = "Übertemperaturabnahme";
+const char STR864[] PROGMEM = "Sperrsignalverstärkung";
 const char STR870[] PROGMEM = "Mit Pufferspeicher";
 const char STR872[] PROGMEM = "Mit Vorregler/Zubring`pumpe";
 const char STR880[] PROGMEM = "HK1 Pumpe Drehzahlreduktion";
@@ -1130,8 +1134,10 @@ const char STR5951[] PROGMEM = "Wirksinn Kontakt H1";
 const char STR5952[] PROGMEM = "Minimaler Vorlaufsollwert H1";
 const char STR5953[] PROGMEM = "Spannungswert 1 H1";
 const char STR5954[] PROGMEM = "Wärmeanforderung 10V H1";
+const char STR5954_2[] PROGMEM = "Funktionswert 1 H1";
 const char STR5955[] PROGMEM = "Spannungswert 2 H1";
 const char STR5956[] PROGMEM = "Druckwert 3.5V H1";
+const char STR5956_2[] PROGMEM = "Funktionswert 2 H1";
 const char STR5957_2[] PROGMEM = "BA-Umschaltung HK\'s+TWW";
 const char STR5960_2[] PROGMEM = "Funktion Eingang H2";
 const char STR5961_2[] PROGMEM = "Wirksinn Kontakt H2";
@@ -2011,6 +2017,13 @@ const char ENUM5711[] PROGMEM = { //FUJITSU
 "\x01 4-Leitersystem\0"
 "\x02 2-Leitersystem"
 };
+
+const char ENUM5712[] PROGMEM = {
+"\x01 Heizen\0"
+"\x02 Kühlen\0"
+"\x03 Heizen+Kühlen"
+};
+
 const char ENUM5730[] PROGMEM = {"\x00 Fühler\0\x01 Thermostat"};
 const char ENUM5731[] PROGMEM = {"\x00 kein\0\x01 Ladepumpe\0\x02 Umlenkventil"};
 const char ENUM5734[] PROGMEM = {"\x00 Letzte Anforderung\0\x01 Heizkreis\0\x02 Trinkwasser"};
@@ -2192,6 +2205,8 @@ const char ENUM5950[] PROGMEM = {
 "\x08 Minimaler Vorlaufsollwert\0"
 "\x09 Übertemperaturableitung\0"
 "\x0a Freigabe Schwimmbad\0"
+"\x0b Taupunktwächter\0"
+"\x0c Vorlaufsollw'anhebung Hygro\0"
 "\x0d Wärmeanforderung 10V\0"
 "\x0e Druckmessung 10V"};
 
@@ -2249,6 +2264,25 @@ const char ENUM5950_4[] PROGMEM = {
 "\x34 Verbraucheranforderung VK2 10V\0"
 "\x38 Raumtemperatur 10V"
 };
+
+const char ENUM5950_5[] PROGMEM = {
+"\x01 BA-Umschaltung HK's + TWW\0"
+"\x02 BA-Umschaltung HK's\0"
+"\x03 BA-Umschaltung HK1\0"
+"\x04 BA-Umschaltung HK2\0"
+"\x05 BA-Umschaltung HKP\0"
+"\x06 Erzeugersperre\0"
+"\x07 Fehler- / Alarmmeldung\0"
+"\x08 Minimaler Vorlaufsollwert\0"
+"\x09 Übertemperaturableitung\0"
+"\x0a Freigabe Schwimmbad\0"
+"\x0b Taupunktwächter\0"
+"\x0c Vorlaufsollw'anhebung Hygro\0"
+"\x0d Kälteanforderung\0"
+"\x0e Wärmeanforderung 10V\0"
+"\x0f Kälteanforderung 10V\0"
+"\x11 Relative Raumfeuchte 10V\0"
+"\x12 Raumtemperatur 10V\0"};
 
 const char ENUM5951[] PROGMEM = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
 
@@ -3701,6 +3735,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1
 {0x2D3D0603,  CAT_HK1,              VT_PERCENT,       750,   STR750,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Raumeinfluss
 {0x2D3D0614,  CAT_HK1,              VT_TEMP,          760,   STR760,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumtemperaturbegrenzung
+{0x053D0C9D,  CAT_HK1,              VT_PERCENT,       761,   STR761,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Heizgrenze Raumregler
 {0x2D3D0602,  CAT_HK1,              VT_TEMP,          770,   STR770,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Schnellaufheizung
 {0x2D3D05E8,  CAT_HK1,              VT_ENUM,          780,   STR780,   sizeof(ENUM780),      ENUM780,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Schnellabsenkung
 {0x2D3D0607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
@@ -3710,9 +3745,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         809,   STR809,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
 {0x213D0674,  CAT_HK1,              VT_ONOFF,         820,   STR820,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Überhitzschutz Pumpenkreis
 {0x213D065D,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischerüberhöhung
-{CMD_UNKNOWN, CAT_HK1,              VT_ENUM,          832,   STR832,   sizeof(ENUM832),      ENUM832,      DEFAULT_FLAG, DEV_ALL}, // - Antrieb Typ
-{CMD_UNKNOWN, CAT_HK1,              VT_TEMP,          833,   STR833,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // - Schaltdifferenz 2-Punkt
+{0x213D0654,  CAT_HK1,              VT_ENUM,          832,   STR832,   sizeof(ENUM832),      ENUM832,      FL_RONLY, DEV_ALL}, // - Antrieb Typ
+{0x213D065C,  CAT_HK1,              VT_TEMP,          833,   STR833,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // - Schaltdifferenz 2-Punkt
 {0x213D065A,  CAT_HK1,              VT_SECONDS_WORD,  834,   STR834,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ s ] - Antrieb Laufzeit
+{0x213D0658,  CAT_HK1,              VT_TEMP,          835,   STR835,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischer P-Band Xp
+{0x213D0659,  CAT_HK1,              VT_SECONDS_WORD,  836,   STR836,   0,                    NULL,         FL_RONLY, DEV_ALL}, // [ s ] - Mischer Nachstellzeit Tn
 {0x2D3D067B,  CAT_HK1,              VT_ENUM,          850,   STR850,   sizeof(ENUM850),      ENUM850,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Estrichfunktion
 {0x2D3D068A,  CAT_HK1,              VT_TEMP,          851,   STR851,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Sollwert manuell
 {0x2D05067D,  CAT_HK1,              VT_UNKNOWN,       855,   STR855,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlauf-Sollwert Estrich Austrocknung
@@ -3720,6 +3757,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D08C9,  CAT_HK1,              VT_ENUM,          861,   STR861,   sizeof(ENUM861),      ENUM861,      DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Übertemperaturabnahme
+{0x213D065E,  CAT_HK1,              VT_PERCENT,       864,   STR864,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2D3D07C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Pufferspeicher
 {0x2D3D07C5,  CAT_HK1,              VT_YESNO,         872,   STR872,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Vorregler/Zubring`pumpe
 {CMD_UNKNOWN, CAT_HK1,              VT_ENUM,          880,   STR880,   sizeof(ENUM880),      ENUM880,      DEFAULT_FLAG, DEV_ALL}, // HK1 Pumpe Drehzahlreduktion
@@ -3768,7 +3806,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Heizkreis 2
 {0x2E3D0574,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),     ENUM1000,     DEFAULT_FLAG, DEV_ALL-DEV_BR_ISC}, // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
 {0x050507BE,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),     ENUM1000,     DEFAULT_FLAG, DEV_BR_ISC}, // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
-{0x2E3D0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2E3E0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2E3D058E,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
 // line not in menue!
 /* virtuelle Zeile*/
@@ -3853,7 +3891,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x313D0571,  CAT_TW,               VT_ONOFF,         1600,  STR1600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
-{0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
+{0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         DEFAULT_FLAG,     DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_ALL-DEV_BR_BSW}, // [0] - Trinkwasser - Freigabe
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_2),   ENUM1620_2,   DEFAULT_FLAG, DEV_BR_BSW}, // [0] - Trinkwasser - Freigabe
 {0x313D0721,  CAT_TW,               VT_ENUM,          1630,  STR1630,  sizeof(ENUM1630),     ENUM1630,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Ladevorgang
@@ -4217,7 +4255,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D3D2FEA,  CAT_KONFIG,           VT_BYTE,          5701,  STR5701,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5701 Hydraulisches Schema [2..85 enum?]
 {0x053D04C0,  CAT_KONFIG,           VT_ONOFF,         5710,  STR5710,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Heizkreis 1
 {0x053D0A73,  CAT_KONFIG,           VT_ENUM,          5711,  STR5711,  sizeof(ENUM5711),     ENUM5711,     DEFAULT_FLAG, DEV_ALL}, // Kühlkreis 1 //FUJITSU
-{0x053D0A77,  CAT_KONFIG,           VT_UNKNOWN,       5712,  STR5712,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verwendung Mischer 1
+{0x053D0A77,  CAT_KONFIG,           VT_ENUM,          5712,  STR5712,  sizeof(ENUM5712),     NULL,         DEFAULT_FLAG, DEV_ALL}, // Verwendung Mischer 1
 {0x063D04C0,  CAT_KONFIG,           VT_ONOFF,         5715,  STR5715,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Heizkreis2
 {0x073D04C0,  CAT_KONFIG,           VT_ONOFF,         5721,  STR5721,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heizkreis 3
 {0x313D071E,  CAT_KONFIG,           VT_ENUM,          5730,  STR5730,  sizeof(ENUM5730),     ENUM5730,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser-Sensor B3
@@ -4272,15 +4310,20 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0784,  CAT_KONFIG,           VT_ENUM,          5942,  STR5942,  sizeof(ENUM5942),     ENUM5942,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Fühlereingang BX22
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_ALL-DEV_EL_THI-DEV_BROETJE+DEV_BR_ISC}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 {0x053d3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_EL_THI+DEV_BR_PEV}, // [-] - Konfiguration - Funktion Eingang H1
-{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV-DEV_BR_BOB-DEV_BR_ISC}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV-DEV_BR_BOB-DEV_BR_ISC-DEV_BR_IZ1}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_BR_BOB}, // [-] - Konfiguration - Funktion Eingang H1
-{0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_ISC}, // [0] - Konfiguration - Wirksinn Kontakt H1
-{0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE+DEV_BR_ISC}, // [0] - Konfiguration - Wirksinn Kontakt H1
+{0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_5),   ENUM5950_5,   DEFAULT_FLAG, DEV_BR_IZ1}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_ISC-DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
+{0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE+DEV_BR_ISC+DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x293D0656,  CAT_KONFIG,           VT_TEMP,          5952,  STR5952,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H1
-{0x053D1128,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 1 H1
-{0x053D079F,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
-{0x053D1129,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 2 H1
-{0x053D05DC,  CAT_KONFIG,           VT_PRESSURE,      5956,  STR5956,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [bar ] - Konfiguration - Druckwert 3.5V H1
+{0x053D1128,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_IZ1}, // Spannungswert 1 H1
+{0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_IZ1}, // Spannungswert 1 H1
+{0x053D079F,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_IZ1}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_IZ1}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D1129,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_IZ1}, // Spannungswert 2 H1
+{0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_IZ1}, // Spannungswert 2 H1
+{0x053D05DC,  CAT_KONFIG,           VT_PRESSURE,      5956,  STR5956,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_IZ1}, // [bar ] - Konfiguration - Druckwert 3.5V H1
+{0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_BR_IZ1}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 
 // !FIXME! !AUTOGENERATED! same cmd as 5950
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957,  sizeof(ENUM5957),     ENUM5957,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // Thision 5957 Modemfunktion
@@ -4327,8 +4370,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0788,  CAT_KONFIG,           VT_ENUM,          6020,  STR6020,  sizeof(ENUM6020),     ENUM6020,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Erweiterungsmodul 1
 {0x053D0789,  CAT_KONFIG,           VT_ENUM,          6021,  STR6021,  sizeof(ENUM6021),     ENUM6021,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Erweiterungsmodul 2
 {0x053D0785,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // Relaisausgang QX21
-{0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_BROETJE}, // Relaisausgang QX21
-{0x053D0786,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // Relaisausgang QX22
+{0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_IZ1}, // Relaisausgang QX21
+{0x053D0786,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE+DEV_BR_IZ1}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_BROETJE}, // Relaisausgang QX22
 {0x053D0787,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_BROETJE}, // Relaisausgang QX23
@@ -5131,7 +5174,7 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/A</td><td>24h-Durchschnittswerte von ausgewählten Parametern anzeigen (in BSB_lan_config.h definieren).</td></tr>\n"
   "<tr><td valign=top>/A=x,y,z</td><td>Ändern der 24h-Durchschnittswerte in x,y,z (bis zu 20 Parameter).</td></tr>\n"
   "<tr><td valign=top>/B</td><td>Anzeige der akkumulierten Broadcast-Telegramme zu Brenner- und TWW-Aktivitäten.</td></tr>\n"
-  "<tr><td valign=top>/B0</td><td>Zurücksetzen der akkumulierten Broadcast-Telegramme.</td></tr>\n";
+  "<tr><td valign=top>/B0</td><td>Zurücksetzen der akkumulierten Broadcast-Telegramme.</td></tr>\n"
 #else
   "<p>Advanced commands:\n"
   "<table>\n"
@@ -5150,6 +5193,95 @@ const char url_command_html[] PROGMEM_LATE =
   "<tr><td valign=top>/A</td><td>Show 24h averages of selected parameters (define in BSB_lan_config.h).</td></tr>\n"
   "<tr><td valign=top>/A=x,y,z</td><td>Change 24h averages parameters to x,y,z (up to 20).</td></tr>\n"
   "<tr><td valign=top>/B</td><td>Query accumulated broadcast telegrams of burner and hot water activity.</td></tr>\n"
-  "<tr><td valign=top>/B0</td><td>Reset accumulated broadcast telegrams.</td></tr>\n";
+  "<tr><td valign=top>/B0</td><td>Reset accumulated broadcast telegrams.</td></tr>\n"
 #endif
+
+#ifndef ONE_WIRE_BUS
+#ifdef LANG_DE
+  " <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>\n"
+  " <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>\n"
+#else
+  " <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define ONE_WIRE_BUS</code> in BSB_lan_config.h for the following command:</td></tr>\n"
+  " <tr bgcolor=#f0f0f0><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>\n"
+#endif  
+#else
+#ifdef LANG_DE
+  " <tr><td valign=top>/T</td><td>Abfrage von angeschlossenen DS18B20 Temperatursensoren (optional).</td></tr>\n"
+#else
+  " <tr><td valign=top>/T</td><td>Query values of connected ds18b20 temperature sensors (optional).</td></tr>\n"
+#endif
+#endif
+
+#ifndef DHT_BUS
+#ifdef LANG_DE
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define DHT_BUS</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>\n"
+#else
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define DHT_BUS</code> in BSB_lan_config.h for the following command:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>\n"
+#endif
+#else
+#ifdef LANG_DE
+  "<tr><td valign=top>/H</td><td>Abfrage von DHT22 Feuchtigkeits-/Temperatursensoren (optional).</td></tr>\n"
+#else
+  "<tr><td valign=top>/H</td><td>Query values of connected DHT22 humidity/temperature sensors (optional).</td></tr>\n"
+#endif
+#endif
+
+#ifndef LOGGER
+#ifdef LANG_DE
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define LOGGER</code> in BSB_lan_config.h für die folgenden Befehle:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/LB=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>\n"
+#else
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define LOGGER</code> in BSB_lan_config.h for the following commands:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/LB=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>\n"
+#endif  
+#else
+#ifdef LANG_DE
+  "<tr><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
+  "<tr><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
+  "<tr><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>\n"
+  "<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>\n"
+  "<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>\n"
+#else
+  "<tr><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>\n"
+  "<tr><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>\n"
+  "<tr><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>\n"
+  "<tr><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>\n"
+  "<tr><td valign=top>/LB=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>\n"
+#endif
+#endif
+
+#ifndef RESET
+#ifdef LANG_DE
+  " <tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define RESET</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>\n"
+  " <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>\n"
+#else
+  " <tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define RESET</code> in BSB_lan_config.h for the following command:</td></tr>\n"
+  " <tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>\n"
+#endif  
+#else
+#ifdef LANG_DE
+  " <tr><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>\n"
+#else
+  " <tr><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>\n"
+#endif
+#endif
+  "</table>\n"
+
+#ifdef LANG_DE
+  "Mehrere Abfragen können miteinander verkettet werden, z.B. <code>/K0/710/8000-8999/T</code></p>\n"
+#else
+  "Multiple queries are possible, e.g. <code>/K0/710/8000-8999/T</code></p>\n"
+#endif
+  "\n";
+
 
