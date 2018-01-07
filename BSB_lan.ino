@@ -283,7 +283,7 @@ char version[] = "0.40";
 #include <EEPROM.h>
 #include <util/crc16.h>
 #include "src/Time/TimeLib.h"
-#include "src/d3_js.h"
+#include "html_strings.h"
 
 #ifdef ETHERNET_W5500
 #include "src/Ethernet2/src/Ethernet2.h"
