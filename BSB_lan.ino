@@ -52,14 +52,16 @@ char version[] = "0.40";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
- *       0.40  - 06.01.2018
+ *       0.40  - 08.01.2018
  *
  * Changelog:
  *       version 0.40
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
+ *        - Added function to check all known CommandIDs on your own heating system. Use /Q after enabling definement "#define DEBUG" in BSB_lan_config.h
  *        - Updated analyze.sh
+ *        - Moved HTML strings to html_strings.h
  *       version 0.39
  *        - Implemntation of PPS-Bus protocol. 
  *          See /K40 for the limited commands available for this bus. 
@@ -1030,9 +1032,9 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
   double dval;
   char *p=outBuf+outBufLen;
 
-  if(data_len == 2){
+  if(data_len == 2 || (data_len == 3 && dev_id == DEV_BR_IZ1)){
     if(msg[pl_start]==0){
-      dval=double((signed char)msg[pl_start+1]) / divider;
+      dval=double((signed char)msg[pl_start+1+(data_len==3)]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -3660,7 +3662,7 @@ ich mir da nicht)
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMOPRSTVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMOPQRSTVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -3956,6 +3958,67 @@ ich mir da nicht)
             }
           }
           webPrintFooter();
+          break;
+        }
+
+        if(p[1]=='Q') {
+#ifdef DEBUG
+          webPrintHeader();
+          uint32_t c;
+          uint16_t l;
+          char* pvalstr=NULL;
+          client.print(F("Gerätefamilie: "));
+          client.println(device_id);
+          client.println(F("<BR>Start Test...<BR>"));
+          for (int j=0;j<10000;j++) {
+            c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + j * sizeof(cmdtbl[0]));
+            if(c==CMD_END) break;
+            l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + j * sizeof(cmdtbl[0]));
+            long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + j * sizeof(cmdtbl[0]));
+            if ((devices & dev_id) != dev_id && c!=CMD_UNKNOWN) {
+              if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
+                Serial.println(F("bus send failed"));  // to PC hardware serial I/F
+              } else {
+                if (msg[4]!=TYPE_ERR) {
+                  // Decode the xmit telegram and send it to the PC serial interface
+                  printTelegram(tx_msg);
+#ifdef LOGGER
+                  LogTelegram(tx_msg);
+#endif
+                  // Decode the rcv telegram and send it to the PC serial interface
+                  pvalstr=printTelegram(msg);   // send to hardware serial interface
+#ifdef LOGGER
+                  LogTelegram(msg);
+#endif
+                  if (pvalstr[0]<1) {
+                    pvalstr=query(l,l, true);
+                    if (pvalstr[0]<1) {
+                      client.print(l);
+                      client.println(F("<BR>"));
+                      if(outBufLen>0){
+                        client.println(outBuf);
+                        client.println(F("<br>"));
+                      }
+                      for (int i=0;i<tx_msg[len_idx]+bus_type;i++) {
+                        if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                        client.print(tx_msg[i], HEX);
+                        client.print(F(" "));
+                      }
+                      client.println(F("<br>"));
+                      for (int i=0;i<msg[len_idx]+bus_type;i++) {
+                        if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                        client.print(msg[i], HEX);
+                        client.print(F(" "));
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          client.println(F("<BR>Test Ende.<BR>"));
+          webPrintFooter();
+#endif
           break;
         }
 
