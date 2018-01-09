@@ -25,14 +25,18 @@ if (custom_timer > custom_timer_compare+10000) {    // every 10 seconds
   Serial.println(abs_hum_inside);
   Serial.print(F("Absolute humidity outside: "));
   Serial.println(abs_hum_outside);
+  Serial.print(F("Temperature inside: "));
+  Serial.println(temp[0]);
+  Serial.print(F("Temperature outside: "));
+  Serial.println(temp[1]);
 
   if (abs_hum_inside<40 && abs_hum_outside<40) {   // check for valid readings
     pinMode(6, OUTPUT);                            // use GPIO pin for fan
-    if (abs_hum_outside*0.05 < abs_hum_inside) {
+    if (abs_hum_outside*0.05 < abs_hum_inside && temp[0]>15) {
       digitalWrite(6, 1);
       Serial.println("Fan on");
     }
-    if (abs_hum_outside >= abs_hum_inside) {
+    if (abs_hum_outside >= abs_hum_inside || temp[0]<14.5) {
       digitalWrite(6, 0);
       Serial.println("Fan off");
     }
