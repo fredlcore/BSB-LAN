@@ -52,10 +52,11 @@ char version[] = "0.40";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
- *       0.40  - 08.01.2018
+ *       0.40  - 09.01.2018
  *
  * Changelog:
  *       version 0.40
+ *        - New virtual parameter 1601 (manual TWW push)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
