@@ -649,6 +649,7 @@ const char STR1500[] PROGMEM = "Betriebsartumschaltung";
 
 // Trinkwasser
 const char STR1600[] PROGMEM = "Trinkwasserbetrieb";
+const char STR1601[] PROGMEM = "Manueller TWW-Push";
 const char STR1610[] PROGMEM = "TWW Nennsollwert";
 const char STR1612[] PROGMEM = "TWW Reduziertsollwert";
 const char STR1614[] PROGMEM = "TWW Nennsollwert Maximum";
@@ -3900,6 +3901,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 // Einstellungen Trinkwasser
 {0x313D0571,  CAT_TW,               VT_ONOFF,         1600,  STR1600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         DEFAULT_FLAG,     DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum

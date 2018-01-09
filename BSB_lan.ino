@@ -3758,8 +3758,8 @@ ich mir da nicht)
             break;
           }
           p++;                   // position pointer past the '=' sign
-          p=strtok(p,"!");
-          char* token = strtok(NULL, "!");
+          char* token = strchr(p, '!');
+          token++;
           if (token != 0) {
             int d_addr = atoi(token);
             Serial.print(F("Setting temporary destination to "));
@@ -3770,7 +3770,7 @@ ich mir da nicht)
           Serial.print(F("set ProgNr "));
           Serial.print(line);    // the ProgNr
           Serial.print(F(" = "));
-          Serial.println(p);     // the value
+          Serial.println(atof(p));     // the value
 
           // Now send it out to the bus
           int setresult = 0;
@@ -4590,8 +4590,9 @@ ich mir da nicht)
 #endif
               break;
             }
-            char* dir_token = strtok(p,",");
-            dir_token = strtok(NULL, ",");
+
+            char* dir_token = strchr(range,',');
+            dir_token++;
             p=strchr(p,'=');    // search for '=' sign
             if(p==NULL){        // no match -> query value
               if (dir_token!=NULL) {
