@@ -153,6 +153,7 @@ byte monitor = 0;
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop
 //#define CUSTOM_COMMANDS
 
+//#define DEBUG
 
 /************************************************************************************/
 /************************************************************************************/
