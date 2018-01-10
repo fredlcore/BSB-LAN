@@ -165,6 +165,7 @@ typedef enum{
   VT_HOURS_WORD,        //  3 Byte - 1 enable 0x06 / hours
   VT_MINUTES_WORD,      //  3 Byte - 1 enable 0x06 / minutes
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
+  VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
@@ -176,6 +177,7 @@ typedef enum{
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
+  VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
@@ -225,8 +227,6 @@ PROGMEM_LATE const divisor divtbl[]={
 {VT_MINUTES_SHORT,  1,  0,  NULL},
 {VT_MONTHS,         1,  0,  NULL},
 {VT_ONOFF,          1,  0,  NULL},
-// {VT_MANUAUTO,       1,  0,  NULL},
-// {VT_BLOCKEDREL,     1,  0,  NULL},
 {VT_PERCENT,        1,  0,  NULL},
 {VT_PERCENT5,       2,  0,  NULL},
 {VT_PRESSURE,       10, 1,  NULL},
@@ -250,6 +250,7 @@ PROGMEM_LATE const divisor divtbl[]={
 {VT_HOURS_WORD,     1,  0,  NULL},
 {VT_MINUTES_WORD,   1,  0,  NULL},
 {VT_PERCENT_WORD,   2,  1,  NULL},
+{VT_PERCENT_100,    100,1,  NULL},
 {VT_POWER_WORD,     10, 1,  NULL},
 {VT_PRESSURE_WORD,  10, 1,  NULL},
 {VT_PROPVAL,        16, 2,  NULL},
@@ -261,6 +262,7 @@ PROGMEM_LATE const divisor divtbl[]={
 {VT_TEMP_WORD,      1,  1,  NULL},
 {VT_UINT,           1,  0,  NULL},
 {VT_UINT5,          0.2,0,  NULL},
+{VT_UINT10,         10, 1,  NULL},
 {VT_SINT,           1,  0,  NULL},
 {VT_DWORD,          1,  0,  NULL},
 {VT_HOURS,          3600,0, NULL},
@@ -2240,6 +2242,7 @@ const char ENUM5950_3[] PROGMEM = {
 
 // Konfiguration - Funktion Eingang H1 Brötje BOB
 const char ENUM5950_4[] PROGMEM = {
+"\x00 Keine\0"
 "\x01 BA-Umschaltung HK's + TWW\0"
 "\x02 BA-Umschaltung TWW\0"
 "\x03 BA-Umschaltung HK's\0"
@@ -2260,8 +2263,10 @@ const char ENUM5950_4[] PROGMEM = {
 "\x12 Raumthermostat HK1\0"
 "\x13 Raumthermostat HK2\0"
 "\x14 Raumthermostat HK3\0"
+"\x16 Trinkwasserthermostat\0"
 "\x17 Zirk'pumpenthermostat\0"
 "\x18 Impulszählung\0"
+"\x1d Startverhinderung"
 "\x1e Kessel-Rückflussthermostat\0"
 "\x32 Durchflussmessung Hz\0"
 "\x33 Verbraucheranforderung VK1 10V\0"
@@ -2537,9 +2542,9 @@ const char ENUM6085[] PROGMEM = {
 "\x00 Keine\0"
 "\x01 Kesselpumpe Q1\0"
 "\x02 Trinkwasserpumpe Q3\0"
-"\x03 Heizkreispumpe HK1 Q2\0"
-"\x03 Heizkreispumpe HK2 Q6\0"
-"\x04 Heizkreispumpe HK3 Q20"
+"\x04 Heizkreispumpe HK1 Q2\0"
+"\x05 Heizkreispumpe HK2 Q6\0"
+"\x06 Heizkreispumpe HK3 Q20"
 };
 
 // Konfiguration - Fühlertyp Kollektor
@@ -4003,8 +4008,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D0AF0,  CAT_KESSEL,           VT_PERCENT,       2323,  STR2323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pumpendrehzahl maximum (%)
 {0x053D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2330,  STR2330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Nenn
 {0x053D2F70,  CAT_KESSEL,           VT_POWER_WORD,    2331,  STR2331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Grundstufe
-{0x053D10F4,  CAT_KESSEL,           VT_SPEED,         2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
-{0x053D10F5,  CAT_KESSEL,           VT_SPEED,         2335,  STR2335,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. max
+{0x053D10F4,  CAT_KESSEL,           VT_PERCENT_100,   2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
+{0x053D10F5,  CAT_KESSEL,           VT_PERCENT_100,   2335,  STR2335,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. max
 {CMD_UNKNOWN, CAT_KESSEL,           VT_UNKNOWN,       2340,  STR2340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge 2 x 1 Kaskade
 
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
@@ -4309,7 +4314,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D058A,  CAT_KONFIG,           VT_UNKNOWN,       5896,  STR5896,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX6
 {0x053D0785,  CAT_KONFIG,           VT_ENUM,          5902,  STR5902,  sizeof(ENUM5902),     ENUM5902,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21
 {0x053D0787,  CAT_KONFIG,           VT_ENUM,          5904,  STR5904,  sizeof(ENUM5904),     ENUM5904,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX23
-{0x053D04A0,  CAT_KONFIG,           VT_ENUM,          5908,  STR5908,  sizeof(ENUM5908),     ENUM5908,     DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX3-Mod
+{0x053D04A0,  CAT_KONFIG,           VT_ENUM,          5908,  STR5908,  sizeof(ENUM5908),     ENUM5908,     DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Funktion Ausgang QX3-Mod
 // provide 5902-5908 for non-Brötje systems
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5909,  STR5909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX4-Mod
 {0x153D2FCC,  CAT_KONFIG,           VT_BIT,           5920,  STR5920,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
@@ -4330,7 +4335,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_ALL-DEV_EL_THI-DEV_BROETJE+DEV_BR_ISC}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 {0x053d3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_EL_THI+DEV_BR_PEV}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV-DEV_BR_BOB-DEV_BR_ISC-DEV_BR_IZ1-DEV_BR_WGS}, // [-] - Konfiguration - Funktion Eingang H1
-{0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_BR_BOB+DEV_BR_WGS+DEV_BR_WGS}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_BR_BOB+DEV_BR_WGS}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_5),   ENUM5950_5,   DEFAULT_FLAG, DEV_BR_IZ1}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_ISC-DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE+DEV_BR_ISC+DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -5073,8 +5078,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Durchlad [%]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
-{0x093D12AF,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9626,  STR9626,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehz Steigerung
-{0x093D12B0,  CAT_FEUERUNGSAUTOMAT, VT_UNKNOWN,       9627,  STR9627,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehl Y-Abschn
+{0x093D12AF,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9626,  STR9626,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehz Steigerung
+{0x093D12B0,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9627,  STR9627,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehl Y-Abschn
 
  /*** virtuelle Zeilen ***/
 /*
