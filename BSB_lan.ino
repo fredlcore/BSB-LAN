@@ -3761,7 +3761,7 @@ ich mir da nicht)
           p++;                   // position pointer past the '=' sign
           char* token = strchr(p, '!');
           token++;
-          if (token != 0) {
+          if (token[0] > 0) {
             int d_addr = atoi(token);
             Serial.print(F("Setting temporary destination to "));
             Serial.println(d_addr);
