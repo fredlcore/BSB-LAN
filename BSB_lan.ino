@@ -1638,6 +1638,9 @@ char *printTelegram(byte* msg) {
             case VT_PERCENT_WORD: // u16 / 2 %
               printFIXPOINT(msg,data_len,2.0,1,perc);
               break;
+            case VT_PERCENT_100: // u16 / 100 %
+              printFIXPOINT(msg,data_len,100.0,1,perc);
+              break;
             case VT_DWORD: // s32
               printDWORD(msg,data_len,1,NULL);
               break;
@@ -1680,8 +1683,11 @@ char *printTelegram(byte* msg) {
             case VT_UINT: //  s16
               printWORD(msg,data_len,1,NULL);
               break;
-            case VT_UINT5: //  s16 * 5
+            case VT_UINT5: //  s16 / 5
               printWORD(msg,data_len,5,NULL);
+              break;
+            case VT_UINT10: //  s16 / 10
+              printWORD(msg,data_len,0.1,NULL);
               break;
             case VT_SINT: //  s16
               printSINT(msg,data_len,1,NULL);
@@ -2029,6 +2035,38 @@ int set(uint16_t line      // the ProgNr of the heater parameter
       }
       break;
 
+    case VT_UINT5:
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val)/5;
+        param[0]=0x06;  //enable
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+
+    case VT_UINT10:
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val)*10;
+        param[0]=0x06;  //enable
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
+      param_len=3;
+      }
+      break;
+
     // ---------------------------------------------
     // 16-bit unsigned integer representation
     // Temperature values
@@ -2129,6 +2167,26 @@ int set(uint16_t line      // the ProgNr of the heater parameter
         param[1]=t*2;
       }
       param_len=2;
+      }
+      break;
+
+    case VT_PERCENT_100:
+      {
+      uint16_t t=atof(val)*100.0;
+      param[0]=0x01;
+      param[1]=(t >> 8);
+      param[2]= t & 0xff;
+      param_len=3;
+      }
+      break;
+
+    case VT_PERCENT_WORD:
+      {
+      uint16_t t=atof(val)*2.0;
+      param[0]=0x01;
+      param[1]=(t >> 8);
+      param[2]= t & 0xff;
+      param_len=3;
       }
       break;
 
