@@ -145,7 +145,7 @@ Reservierte Pins, die nicht gesetzt werden dürfen, können in der BSB_lan_confi
 * 24h Durchschnittswerte von ausgewählten Parametern anzeigen
 `http://<ip-of-server>/A[=parameter1,...,parameter20]`
 Zeigt rollierende 24h Durchschnittswerte ausgewählter Parameter an. Initiale Festlegung dieser Parameter in BSB_lan_config.h in der Variable avg_parameters.
-Während der Laufzeit kann "/A=[parameter1],...,[parameter20]" verwendet werden, um (bis zu 20) neue Parameter zu definieren.
+Während der Laufzeit kann `/A=[parameter1],...,[parameter20]` verwendet werden, um (bis zu 20) neue Parameter zu definieren.
       
 * Abfrage von DS18B20 Temperatursensoren
 `http://<ip-of-server>/T`
@@ -178,8 +178,8 @@ Wenn Bus-Telegramme geloggt werden (Parameter 30000 als einzigen Parameter logge
 * Darstellung des Logfiles
 `http://<ip-of-server>/D`
 Zeigt den Inhalt der Datei datalog.txt, die sich auf der microSD-Karte im Slot des Ethernet-Shields befindet. 
-Mittels /D0 kann die Datei datalog.txt zurückgesetzt werden, ebenso wird eine korrekte CSV-Header-Datei generiert (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).  
-UPDATE: Wer Parameter auf SD-Karte loggt, bekommt nun neben der reinen Textform auch die Möglichkeit, einen Graphen angezeigt zu bekommen (siehe Screenshot im README-File). Dafür muss bei Javascript-Blockern die Domain d3js.org freigegeben werden. Das hat den Grund, dass der Arduino weiterhin nur die CSV-Datei in den Browser schiebt und diese dann mit dem D3 Framework grafisch aufbereitet wird.
+Mittels `/D0` kann die Datei datalog.txt gelöscht und mitsamt einer korrekten CSV-Header-Datei neu erstellt werden (dieser Schritt wird für die erste Benutzung empfohlen, bevor das Loggen startet).  
+UPDATE: Wer Parameter auf SD-Karte loggt, bekommt nun neben der reinen Textform auch die Möglichkeit, einen Graphen angezeigt zu bekommen (siehe Screenshot im README-File). Dafür muss bei Javascript-Blockern die Domain d3js.org freigegeben werden. Das hat den Grund, dass der Arduino weiterhin nur die CSV-Datei in den Browser schiebt und diese dann mit dem D3 Framework grafisch aufbereitet wird. Der Befehl lautet `/DG`.
 	
 * Bus-typ (BSB oder LPB) vorübergehend ändern:
 `http://<ip-of-server>/P<x>`
