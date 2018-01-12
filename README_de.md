@@ -1,37 +1,40 @@
-# BSB-LPB-LAN
+# BSB-LPB-PPS-LAN
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
 LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme, einschließlich Logging-Funktion auf Micro-SD-Karte.
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
- - Brötje ISR-SSR [RVS63.283/100] [RVS63.283/200] (Solar-System-Regler) 
- - Brötje ISR-ZR1 [RVS46.530/100] (Zonen-Regler)
- - Brötje L-UB 25C [RVS43.122/100] (Ölbrenner)
- - Brötje NovoCondens SOB 26 [Eurocontrol KM] {LPB_only} (Ölbrenner)
- - Brötje NovoCondens SOB 22C [RVS43.222/100] (Ölbrenner)
- - Brötje NovoCondens SOB 26C [RVS43.222/100] + EWM [RVS75.390/109] (Ölbrenner)
- - Brötje NovoCondens BOB 20 [RVS43.325/100] (Ölbrenner)
- - Brötje SensoTherm BSW-K (Wärmepumpe)
- - Brötje BBK 22E [LMS14.001A100] (Gasbrenner)
- - Brötje WBS 22E (Gasbrenner)
- - Brötje WGB-U 15H [LMS14.001B100] (Gasbrenner)
+ - Brötje ISR-SSR [RVS63.283] (Solar-System-Regler) 
+ - Brötje ISR-ZR1 [RVS46.530] (Zonen-Regler)
+ - Brötje LogoBloc Unit L-UB 25C [RVS43.122] (Ölbrenner)
+ - Brötje NovoCondens BOB 20 [RVS43.325] (Ölbrenner)
+ - Brötje NovoCondens SOB 26 [RVA63.242] (Ölbrenner) {LPB_only}
+ - Brötje NovoCondens SOB 22C [RVS43.222] (Ölbrenner)
+ - Brötje NovoCondens SOB 26C [RVS43.222] (Ölbrenner) + EWM [RVS75.390]
+ - Brötje SensoTherm BSW-K [RVS61.843] (Wärmepumpe)
+ - Brötje BBK 22E [LMS14] (Gasbrenner)
+ - Brötje BBS Pro Evo 15C [LMU74] (Gasbrenner)
+ - Brötje BBS 15E [LMS14] (Gasbrenner)
+ - Brötje BGB 20E [LMS14] (Gasbrenner)
+ - Brötje WBS 14D [LMU74] (Gasbrenner)
+ - Brötje WBS 22E [LMS14] (Gasbrenner)
+ - Brötje WGB-U 15H [LMS14] (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
  - Brötje WGB 20C [LMU74] (Gasbrenner)
- - Brötje WGB S 17/20 E EcoTherm Plus [LMS14.001B100] (Gasbrenner)
+ - Brötje WGB S 17/20 E EcoTherm Plus [LMS14] (Gasbrenner)
  - Brötje WGB EVO 20H [LMS15] (Gasbrenner)
  - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
- - Elco Straton (Ölbrenner)
- - Elco Straton 21 [LOGON B G2Z2 + RVS63.283/160] (Ölbrenner)
- - Elco Thision S Plus 13 [LMS14.002A167] (Gasbrenner)
- - Elco Thision S 17.1 [LMU74.100A136 + AVS37.394/136] (Gasbrenner)
- - Elco Thision S 25.1 [LOGON B G2Z2 (RSV63.283/360) + LOGON B MM (AVS75.390/260)] (Gasbrenner)
- - Elco Aquatop 8es [RVS51.843/169] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
- - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827/127] (Wärmepumpe)
- - Siemens RVS63.283/109 (entspr. Brötje SSR)
- - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220/320] {LPB_only} (Ölbrenner)
+ - Elco Straton 21 [RVS63.283] (Ölbrenner)
+ - Elco Thision S Plus 13 [LMS14] (Gasbrenner)
+ - Elco Thision S 17.1 [LMU74] (Gasbrenner)
+ - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
+ - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
+ - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
+ - Sieger TG11 [RVP54.100] (Ölbrenner) {PPS_only}
+ - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220] (Ölbrenner) {LPB_only}
 
-Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit dem BSB oder dem LPB arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
+Bitte beachten: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit BSB, LPB oder PPS arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 
 Instruktionen, wie die Software konfiguriert werden muss etc. können dem <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO_de.md">HowTo</A> entnommen werden.<BR>
 Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="https://forum.fhem.de/index.php?topic=29762.new;topicseen#new">hier</A> nachvollzogen werden.<BR>
