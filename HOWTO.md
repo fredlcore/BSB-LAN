@@ -32,7 +32,7 @@ The interface board may also be used with an Raspberry Pi 2, but a completely di
 * Connect the CL+ and CL- connectors of the interface to the corresponding port of your heating system (look out for port names like BSB, FB, CL+/CL-, remote control). For LPB, connect with DB/MB (connect DB(+) to CL+ and MB(-) to CL-).
 * Download and install the most recent version of the Arduino IDE from https://www.arduino.cc/en/Main/Software (Windows, Mac and Linux are available).
 * <del>Copy the contents of the BSB_lan libraries folder into your local Arduino libraries folder (My Documents\Arduino\libraries\ on Windows, ~/Documents/Arduino/libraries on Mac).</del> No longer necessary from version 0.34 onwards.
-* Download the current version of BSB-LAN from https://github.com/fredlcore/bsb_lan and unzip the downloaded file „bsb_lan-master.zip“. Rename the created folder "bsb_lan-master" to „BSB_lan“.
+* Download the current version of BSB-LAN from https://github.com/fredlcore/bsb_lan and unzip the downloaded file „bsb_lan-master.zip“. Rename the created folder <code>bsb_lan-master</code> to <code>BSB_lan</code>.
 * Rename the default <code>BSB_lan_config.h.default</code> to <code>BSB_lan_config.h</code>
 * Open the BSB_lan sketch by double-clicking on the BSB_lan.ino file in the BSB_lan folder. The corresponding BSB_lan_config.h and BSB_lan_defs.h files will be automatically loaded as well.
 * Configure the IP-address in BSB_lan_config.h according to your network (default 192.168.178.88 will work with standard Fritz!Box routers, but check for address collision).
@@ -86,7 +86,7 @@ The urls in the below examples have to be exented, if the passeky feature is tur
 In addition to the web-interface, all functions can also be directly accessed via URL commands, this is especially useful when 
 using the device in home automation systems such as FHEM.
       
-All heating system parameters are accessed by line numbers. A nearly complete description can be found in systemhandbuch_isr.pdf.  
+All heating system parameters are accessed by line numbers. A nearly complete description can be found in the "Brötje Systemhandbuch ISR".  
 Some lines are 'virtual', i.e. they were added to simplify the access to complex settings like time programms.  
 The parameters are grouped in categories according to the submenu items when accessing your boiler system from the display.  
 
@@ -190,7 +190,7 @@ Resets the Arduino after pausing for 8 seconds (#define RESET in BSB_lan_config.
 
 <B>Open issues</B>  
 - Add more command ids to the table.
-          Only the known command ids from the threads listed above and the tested boiler system (ELCO) are contents of the table.
+          Only the known command ids from the threads listed above and the tested boiler systems are contents of the table.
           Any user with a different boiler system can set the verbosity to 1 and decode the missing command ids simply by accessing the 
           sytem via
           the display.
