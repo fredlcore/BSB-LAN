@@ -6,7 +6,7 @@
 <B>Autoren:</B>  
 Gero Schumacher (gero.schumacher ät gmail.com) (bis v0.16)  
 Frederik Holst (bsb ät code-it.de) (ab v0.17 aufwärts)  
-      Basierend auf dem Code und der Arbeit von vielen anderen Entwicklern (s. Info-Abschnitt weiter unten). Vielen Dank!
+      Basierend auf dem Code und der Arbeit von vielen anderen Entwicklern. Vielen Dank!
 
 Übersetzung EN-DE: Ulf Dieckmann
 
