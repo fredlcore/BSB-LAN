@@ -29,7 +29,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Elco Straton 21 [RVS63.283] (oil-fired)
 - Elco Thision S Plus 13 [LMS14] (gas-fired)
 - Elco Thision S 17.1 [LMU74.100] (gas-fired)
-- Elco Thision S 25.1 [RSV63.283] (gas-fired) + LOGON B MM [AVS75.390] 
+- Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
 - Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
 - Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
