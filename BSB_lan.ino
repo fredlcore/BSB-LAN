@@ -357,6 +357,8 @@ double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
 int avgCounter = 1;
 
+uint_farptr_t enumstr_offset = 0;
+
 unsigned long dev_id = 0;
 
 // variables for handling of broadcast messages
@@ -1454,7 +1456,25 @@ char *printTelegram(byte* msg) {
           Serial.print(p);
         }else{
           pvalstr=outBuf+outBufLen;
-          switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
+          uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+          uint8_t div_type=1;
+          uint8_t div_precision=1;
+          float div_divisor=1;
+          int k=0;
+          boolean known=0;
+          while(div_type!=VT_UNKNOWN){
+            if(type == div_type){
+              known=1;
+              break;
+            }
+            k++;
+            div_type=pgm_read_byte_far(pgm_get_far_address(divtbl[0].type) + k * sizeof(divtbl[0]));
+            div_divisor=pgm_read_byte_far(pgm_get_far_address(divtbl[0].divisor) + k * sizeof(divtbl[0]));
+            div_precision=pgm_read_byte_far(pgm_get_far_address(divtbl[0].precision) + k * sizeof(divtbl[0]));
+            
+          }
+
+          switch(type) {
 //          switch(pgm_read_byte(&cmdtbl[i].type)){
             case VT_DATETIME: // special
               printDateTime(msg,data_len);
@@ -1603,9 +1623,9 @@ char *printTelegram(byte* msg) {
             case VT_ENUM: // enum
               if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW)) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
-                  if(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))!=0) {
+                  if(calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-                    memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),len);
+                    memcpy_PF(buffer, calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
                     buffer[len]=0;
 
                     if (data_len == 2) {
@@ -2575,8 +2595,18 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
         uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
         uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-        uint32_t enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]));
+        uint32_t enumstr = calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
 
+/*
+Serial.println(i);
+Serial.println((uint32_t)&ENUM8000, HEX);
+Serial.println(pgm_get_far_address(ENUM8000), HEX);
+Serial.println((uint32_t)&ENUM1200, HEX);
+Serial.println(pgm_get_far_address(ENUM1200), HEX);
+Serial.println(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), HEX);
+Serial.println((pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + 131 * sizeof(cmdtbl[0])) - pgm_get_far_address(ENUM700)), HEX);
+Serial.println(enumstr, HEX);
+*/
         // dump data payload for unknown types
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
           int data_len;
@@ -3935,7 +3965,7 @@ ich mir da nicht)
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
               uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-              memcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])),enumstr_len);
+              memcpy_PF(buffer, calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
               buffer[enumstr_len]=0;
 
@@ -4978,6 +5008,15 @@ custom_timer = millis();
 
 } // --- loop () ---
 
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
+  enum_addr = enum_addr & 0xFFFF;
+  if (enum_addr < enumstr_offset) {
+    enum_addr = enum_addr + 0x10000;
+  }
+  enum_addr = enum_addr + 0x10000;
+  return enum_addr;
+}
+
 /** *****************************************************************
  *  Function: setup()
  *  Does:     Sets up the Arduino including its Ethernet shield.
@@ -5067,6 +5106,23 @@ void setup() {
   Serial.print(F("numSensors: "));
   Serial.println(numSensors);
 #endif
+
+  uint32_t c; 
+  int index_first_enum = 0;
+  int index_last_enum = 0;
+  uint32_t temp_offset1=0;
+  uint32_t temp_offset2=0;
+
+  index_first_enum = findLine(20, 0, &c);
+  index_last_enum = findLine(10510, 0, &c);
+  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
+  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
+
+  if (temp_offset1 > temp_offset2) {
+    enumstr_offset = temp_offset1;
+  } else {
+    enumstr_offset = temp_offset2;
+  }
 
 // initialize average calculation
 
