@@ -63,7 +63,7 @@ attr THISION timeout 5
 attr THISION userReadings Spreizung { sprintf("%.1f",ReadingsVal("THISION","Vorlauftemperatur",0)-ReadingsVal("THISION","Ruecklauftemperatur",0));; }
 </pre>
 
-Please note that the Rexex must match from the beginning of the string, i.e. from the parameter number (such as 8700) and not from somewhere later in that string.
+Please note that the Regex must match from the beginning of the string, i.e. from the parameter number (such as 8700) and not from somewhere later in that string.
 
 <H2>I have a relay shield added to the Arduino Mega, how can I set/query the individual relays?</H2>
 
