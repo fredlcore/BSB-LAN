@@ -3847,7 +3847,7 @@ ich mir da nicht)
           memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
           buffer[len]=0;
-          client.print(F("<tr><td><a href='/"));
+          client.print(F("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
             client.print(F("/"));
@@ -3875,13 +3875,14 @@ ich mir da nicht)
             client.print(F("<tr><td><A HREF='K"));
             client.print(cat);
             client.print(F("'>"));
-            client.println(outBuf);
-            client.println(F("</A></td><td width=70%>"));
+            client.print(outBuf);
+            client.println(F("</A></td><td>"));
             client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
             client.print(F(" - "));
             client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
             client.println(F("</td></tr>"));
           }
+          client.println(F("</table>"));
           webPrintFooter();
           break;
         }
