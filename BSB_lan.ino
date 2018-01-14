@@ -52,7 +52,7 @@ char version[] = "0.40";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
- *       0.40  - 09.01.2018
+ *       0.40  - 12.01.2018
  *
  * Changelog:
  *       version 0.40
@@ -61,7 +61,9 @@ char version[] = "0.40";
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
  *        - Added function to check all known CommandIDs on your own heating system. Use /Q after enabling definement "#define DEBUG" in BSB_lan_config.h
+ *        - Added parameter numbers to category menu
  *        - Updated analyze.sh
+ *        - hopefully fixing the memory issue
  *        - Moved HTML strings to html_strings.h
  *       version 0.39
  *        - Implemntation of PPS-Bus protocol. 
@@ -388,6 +390,8 @@ char buffer[BUFLEN];
 #define OUTBUF_LEN  300
 char outBuf[OUTBUF_LEN];
 byte outBufLen=0;
+
+char div_unit[10];
 
 /**  ****************************************************************
  *  Function: outBufclear()
@@ -1341,8 +1345,6 @@ void printLPBAddr(byte *msg,byte data_len){
  *   outBuf[]
  * *************************************************************** */
 char *printTelegram(byte* msg) {
-  char gradC[]="&deg;C";      // special non-ASCII characters
-  char perc[]="&#037;";
   char *pvalstr=NULL;
 
   outBufclear();
@@ -1459,122 +1461,81 @@ char *printTelegram(byte* msg) {
           uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
           uint8_t div_type=1;
           uint8_t div_precision=1;
-          float div_divisor=1;
+          float div_operand=1;
+          uint8_t div_unit_len=0;
           int k=0;
-          boolean known=0;
           while(div_type!=VT_UNKNOWN){
+            div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+            div_operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + k * sizeof(optbl[0]));
+            div_precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + k * sizeof(optbl[0]));
+            div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+            memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
             if(type == div_type){
-              known=1;
               break;
             }
             k++;
-            div_type=pgm_read_byte_far(pgm_get_far_address(divtbl[0].type) + k * sizeof(divtbl[0]));
-            div_divisor=pgm_read_byte_far(pgm_get_far_address(divtbl[0].divisor) + k * sizeof(divtbl[0]));
-            div_precision=pgm_read_byte_far(pgm_get_far_address(divtbl[0].precision) + k * sizeof(divtbl[0]));
-            
           }
 
           switch(type) {
 //          switch(pgm_read_byte(&cmdtbl[i].type)){
-            case VT_DATETIME: // special
-              printDateTime(msg,data_len);
-              break;
-            case VT_SUMMERPERIOD:
-            case VT_VACATIONPROG:
-              printDate(msg,data_len);
-              break;
-            case VT_TIMEPROG:
-              printTimeProg(msg,data_len);
-              break;
-            case VT_SECONDS_WORD: //u16 s
-              printWORD(msg,data_len,1,"s");
-              break;
-            case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
-              printFIXPOINT(msg,data_len,2.0,1,"s");
-              break;
-            case VT_SECONDS_SHORT: //u8 s
-              printBYTE(msg,data_len,"s");
-              break;
-            case VT_SECONDS_SHORT4: // s8 / 4 (signed)
-              printFIXPOINT_BYTE(msg,data_len,4.0,1,"s");
-              break;
-            case VT_SECONDS_SHORT5: // s8 / 5 (signed)
-              printFIXPOINT_BYTE(msg,data_len,5.0,1,"s");
-              break;
-            case VT_MINUTES_SHORT: //u8 min
-              printBYTE(msg,data_len,"min");
-              break;
-            case VT_MINUTES_WORD: //u16 min
-              printWORD(msg,data_len,1,"min");
-              break;
-            case VT_MINUTES: // u32 min
-              printDWORD(msg,data_len,60,"min");
-              break;
-            case VT_HOURS_SHORT: // u8 h
-              printBYTE(msg,data_len,"h");
-              break;
-            case VT_HOURS_WORD: // u16 h
-              printWORD(msg,data_len,1,"h");
-              break;
-            case VT_HOURS: // u32 h
-              printDWORD(msg,data_len,3600,"h");
-              break;
-            case VT_HOUR_MINUTES: // u8:u8
-              printTime(msg,data_len);
-              break;
-            case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
-              printFIXPOINT(msg,data_len,64.0,1,gradC);
-              break;
-            case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW )
-              printFIXPOINT(msg,data_len,1.0,1,gradC);
-              break;
-            case VT_TEMP_SHORT: // s8
-              printFIXPOINT_BYTE(msg,data_len,1.0,0,gradC);
-              break;
-            case VT_TEMP_SHORT5: // s8 / 2 (signed)
-              printFIXPOINT_BYTE(msg,data_len,2.0,1,gradC);
-              break;
-            case VT_TEMP_SHORT5_US: // s8 / 2 (unsigned)
-              printFIXPOINT_BYTE_US(msg,data_len,2.0,1,gradC);
-              break;
-            case VT_PRESSURE_WORD: // u16 / 10.0 bar
-              printFIXPOINT(msg,data_len,10.0,1,"bar");
-              break;
-            case VT_PRESSURE: // u8 / 10.0 bar
-              printFIXPOINT_BYTE(msg,data_len,10.0,1,"bar");
-              break;
-            case VT_POWER: // u32 / 10.0 kW
-              printFIXPOINT_DWORD(msg,data_len,10.0,1,"kW");
-              break;
-            case VT_POWER_WORD: // u16 / 10.0 kW
-              printFIXPOINT(msg,data_len,10.0,1,"kW");
-              break;
-            case VT_CURRENT: // u16 / 100 uA
-              printFIXPOINT(msg,data_len,100.0,2,"uA");
-              break;
-            case VT_PROPVAL: // u16 / 16
-              printFIXPOINT(msg,data_len,16.0,2,"");
-              break;
-            case VT_GRADIENT: // u16
-              printWORD(msg,data_len,1,"min/K");
-              break;
-            case VT_SPEED: // u16
-              printFIXPOINT(msg,data_len,0.02,0,"rpm");
-              break;
-            case VT_SPEED2: // u16
-              printFIXPOINT(msg,data_len,1,0,"rpm");
-              break;
-            case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
-              printFIXPOINT(msg,data_len,50.0,2,NULL);
-              break;
-            case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
-              printFIXPOINT(msg,data_len,10.0,1,NULL);
-              break;
             case VT_BIT: // u8
               printBIT(msg,data_len);
               break;
+            case VT_MONTHS: // u8 Monate
+            case VT_DAYS: // u8 Tage
+            case VT_HOURS_SHORT: // u8 h
+            case VT_MINUTES_SHORT: //u8 min
+            case VT_SECONDS_SHORT: //u8 s
+            case VT_PERCENT: // u8 %
             case VT_BYTE: // u8
-              printBYTE(msg,data_len,NULL);
+//            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
+              printBYTE(msg,data_len,div_unit);
+              break;
+            case VT_DAYS_WORD: // u16 Tage
+            case VT_HOURS_WORD: // u16 h
+            case VT_MINUTES_WORD: //u16 min
+            case VT_SECONDS_WORD: //u16 s
+            case VT_GRADIENT: // u16
+            case VT_UINT: //  s16
+            case VT_UINT5: //  s16 / 5
+            case VT_UINT10: //  s16 / 10
+              printWORD(msg,data_len,div_operand,div_unit);
+              break;
+            case VT_MINUTES: // u32 min
+            case VT_HOURS: // u32 h
+            case VT_DWORD: // s32
+              printDWORD(msg,data_len,div_operand,div_unit);
+              break;
+            case VT_SINT: //  s16
+              printSINT(msg,data_len,div_operand,div_unit);
+              break;
+            case VT_SECONDS_SHORT4: // s8 / 4 (signed)
+            case VT_SECONDS_SHORT5: // s8 / 5 (signed)
+            case VT_TEMP_SHORT5: // s8 / 2 (signed)
+            case VT_TEMP_SHORT5_US: // s8 / 2 (unsigned)
+            case VT_TEMP_SHORT: // s8
+            case VT_PRESSURE: // u8 / 10.0 bar
+            case VT_PERCENT5: // u8 %
+            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
+              printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
+              break;
+            case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
+            case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW )
+            case VT_PRESSURE_WORD: // u16 / 10.0 bar
+            case VT_POWER_WORD: // u16 / 10.0 kW
+            case VT_CURRENT: // u16 / 100 uA
+            case VT_PROPVAL: // u16 / 16
+            case VT_SPEED: // u16
+            case VT_SPEED2: // u16
+            case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
+            case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
+            case VT_PERCENT_WORD: // u16 / 2 %
+            case VT_PERCENT_100: // u16 / 100 %
+              printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
+              break;
+            case VT_POWER: // u32 / 10.0 kW
+              printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
               printCHOICE(msg,data_len,"Aus","Ein");
@@ -1585,22 +1546,24 @@ char *printTelegram(byte* msg) {
             case VT_CLOSEDOPEN:
               printCHOICE(msg,data_len,"Offen","Geschlossen");
               break;
-/*
-            case VT_MANUAUTO:  //FUJITSU
-              printCHOICE(msg,data_len,"Automatisch","Manuell");
+            case VT_VOLTAGEONOFF:
+              printCHOICE(msg,data_len,"0 Volt","230 Volt");
               break;
-            case VT_BLOCKEDREL:  //FUJITSU
-              printCHOICE(msg,data_len,"Gesperrt","Freigegeben");
+            case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
+              printLPBAddr(msg,data_len);
               break;
-*/
-            case VT_DAYS: // u8 Tage
-              printBYTE(msg,data_len,"Tage");
+            case VT_HOUR_MINUTES: // u8:u8
+              printTime(msg,data_len);
               break;
-            case VT_DAYS_WORD: // u16 Tage
-              printWORD(msg,data_len,1,"Tage");
+            case VT_DATETIME: // special
+              printDateTime(msg,data_len);
               break;
-            case VT_MONTHS: // u8 Monate
-              printBYTE(msg,data_len,"Monate");
+            case VT_SUMMERPERIOD:
+            case VT_VACATIONPROG:
+              printDate(msg,data_len);
+              break;
+            case VT_TIMEPROG:
+              printTimeProg(msg,data_len);
               break;
             case VT_WEEKDAY: // enum
               if(data_len == 2){
@@ -1623,9 +1586,9 @@ char *printTelegram(byte* msg) {
             case VT_ENUM: // enum
               if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW)) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
-                  if(calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
+                  if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-                    memcpy_PF(buffer, calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
+                    memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
                     buffer[len]=0;
 
                     if (data_len == 2) {
@@ -1648,21 +1611,6 @@ char *printTelegram(byte* msg) {
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
-              break;
-            case VT_PERCENT: // u8 %
-              printBYTE(msg,data_len,perc);
-              break;
-            case VT_PERCENT5: // u8 %
-              printFIXPOINT_BYTE(msg,data_len,2.0,1,perc);
-              break;
-            case VT_PERCENT_WORD: // u16 / 2 %
-              printFIXPOINT(msg,data_len,2.0,1,perc);
-              break;
-            case VT_PERCENT_100: // u16 / 100 %
-              printFIXPOINT(msg,data_len,100.0,1,perc);
-              break;
-            case VT_DWORD: // s32
-              printDWORD(msg,data_len,1,NULL);
               break;
             case VT_STRING: // string
               if(data_len > 0){
@@ -1699,28 +1647,6 @@ char *printTelegram(byte* msg) {
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
-              break;
-            case VT_UINT: //  s16
-              printWORD(msg,data_len,1,NULL);
-              break;
-            case VT_UINT5: //  s16 / 5
-              printWORD(msg,data_len,5,NULL);
-              break;
-            case VT_UINT10: //  s16 / 10
-              printWORD(msg,data_len,0.1,NULL);
-              break;
-            case VT_SINT: //  s16
-              printSINT(msg,data_len,1,NULL);
-              break;
-            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
-              printFIXPOINT_BYTE(msg,data_len,10.0,1,"Volt");
-//              printBYTE(msg,data_len,"Volt");
-              break;
-            case VT_VOLTAGEONOFF:
-              printCHOICE(msg,data_len,"0 Volt","230 Volt");
-              break;
-            case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
-              printLPBAddr(msg,data_len);
               break;
             case VT_UNKNOWN:
             default:
@@ -2595,7 +2521,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
         uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
         uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-        uint32_t enumstr = calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
+        uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
 
 /*
 Serial.println(i);
@@ -2603,8 +2529,8 @@ Serial.println((uint32_t)&ENUM8000, HEX);
 Serial.println(pgm_get_far_address(ENUM8000), HEX);
 Serial.println((uint32_t)&ENUM1200, HEX);
 Serial.println(pgm_get_far_address(ENUM1200), HEX);
-Serial.println(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), HEX);
-Serial.println((pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + 131 * sizeof(cmdtbl[0])) - pgm_get_far_address(ENUM700)), HEX);
+Serial.println(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), HEX);
+Serial.println((pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + 131 * sizeof(cmdtbl[0])) - pgm_get_far_address(ENUM700)), HEX);
 Serial.println(enumstr, HEX);
 */
         // dump data payload for unknown types
@@ -2864,7 +2790,7 @@ void LogTelegram(byte* msg){
   uint32_t c;     // command code
   uint8_t type=0;
   uint8_t cmd_type=0;
-  double divisor=1;
+  double operand=1;
   uint8_t precision=0;
   int data_len;
   double dval;
@@ -2938,7 +2864,7 @@ void LogTelegram(byte* msg){
                 break;
               }
               i++;
-              type=pgm_read_byte_far(pgm_get_far_address(divtbl[0].type) + i * sizeof(divtbl[0]));
+              type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + i * sizeof(optbl[0]));
             }
             if (bus_type == 1) {
               data_len=msg[1]-14;
@@ -2946,8 +2872,8 @@ void LogTelegram(byte* msg){
               data_len=msg[3]-11;
             }
             dval = 0;
-            divisor=pgm_read_float_far(pgm_get_far_address(divtbl[0].divisor) + i * sizeof(divtbl[0]));
-            precision=pgm_read_byte_far(pgm_get_far_address(divtbl[0].precision) + i * sizeof(divtbl[0]));
+            operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + i * sizeof(optbl[0]));
+            precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
             for (i=0;i<data_len-1+bus_type;i++) {
               if (bus_type == 1) {
                 dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
@@ -2955,7 +2881,7 @@ void LogTelegram(byte* msg){
                 dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
               }
             }
-            dval = dval / divisor;
+            dval = dval / operand;
 /*
             if (precision==0) {
               dataFile.print(int(round(dval)));
@@ -3921,35 +3847,40 @@ ich mir da nicht)
           memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
           buffer[len]=0;
-          client.print(F("<a href='/"));
+          client.print(F("<tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
             client.print(F("/"));
           #endif
           #ifdef LANG_DE
-          client.println(F("B'>Brennerstatistik</A><BR>"));
+          client.println(F("B'>Brennerstatistik</A><BR></td><td></td></tr>"));
           #else
-          client.println(F("B'>Heater statistics</A><BR>"));
+          client.println(F("B'>Heater statistics  </A></td><td></td></tr>"));
           #endif
-          client.print(F("<a href='/"));
+          client.print(F("<tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
             client.print(F("/"));
           #endif
           #ifdef LANG_DE
-          client.println(F("A'>24h Durchschnittswerte</A><BR><BR>"));
+          client.println(F("A'>24h Durchschnittswerte</A></td><td></td></tr>"));
           #else
-          client.println(F("A'>24h averages</A><BR><BR>"));
+          client.println(F("A'>24h averages</A>/td><td></td></tr>"));
           #endif
+          client.println(F("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"));
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
             printENUM(buffer,len,cat,1);
             Serial.println();
-            client.print(F("<A HREF='K"));
+            client.print(F("<tr><td><A HREF='K"));
             client.print(cat);
             client.print(F("'>"));
             client.println(outBuf);
-            client.println(F("</A><br>"));
+            client.println(F("</A></td><td width=70%>"));
+            client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
+            client.print(F(" - "));
+            client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
+            client.println(F("</td></tr>"));
           }
           webPrintFooter();
           break;
@@ -3965,7 +3896,7 @@ ich mir da nicht)
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
               uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-              memcpy_PF(buffer, calc_enum_offset(pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
+              memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
               buffer[enumstr_len]=0;
 
@@ -5008,12 +4939,25 @@ custom_timer = millis();
 
 } // --- loop () ---
 
+/** *****************************************************************
+ *  Function: calc_enum_offset()
+ *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
+ * Pass parameters:
+ *  enum_addr
+ * Parameters passed back:
+ *  enum_addr
+ * Function value returned:
+ *  24 bit char pointer address
+ * Global resources used:
+ *  enumstr_offset
+ * *************************************************************** */
+ 
 uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
-  enum_addr = enum_addr & 0xFFFF;
-  if (enum_addr < enumstr_offset) {
-    enum_addr = enum_addr + 0x10000;
+  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
+  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
+    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
   }
-  enum_addr = enum_addr + 0x10000;
+  enum_addr = enum_addr + 0x10000;    // as we are well above 64kB with other data, first ENUM data will always be at least between 64 and 128 kB, so add 0x10000 every time.
   return enum_addr;
 }
 
@@ -5106,6 +5050,9 @@ void setup() {
   Serial.print(F("numSensors: "));
   Serial.println(numSensors);
 #endif
+
+// figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and ENUM10510).
+// Then use this as refernce to later determine if a page boundary >64kb has occurred.
 
   uint32_t c; 
   int index_first_enum = 0;
