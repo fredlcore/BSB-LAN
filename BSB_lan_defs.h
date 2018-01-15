@@ -4366,7 +4366,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS}, // Pumpendrehzahl Minimum %
 {0x253D08A2,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Pumpendrehzahl Maximum %
-{0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_BR_WGS}, // Pumpendrehzahl Maximum %
+{0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_BR_WGS}, // Pumpendrehzahl Maximum %
 {0x253D0B19,  CAT_TWSPEICHER,       VT_UNKNOWN,       5103,  STR5103,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_UNKNOWN,       5104,  STR5104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehzahl Nachstellzeit Tn
 {0x253D072C,  CAT_TWSPEICHER,       VT_UNKNOWN,       5120,  STR5120,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mischerüberhöhung
@@ -4451,7 +4451,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_BROETJE-DEV_BR_PEV-DEV_BR_BOB-DEV_BR_ISC-DEV_BR_IZ1-DEV_BR_WGS}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_BR_BOB+DEV_BR_WGS}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_5),   ENUM5950_5,   DEFAULT_FLAG, DEV_BR_IZ1}, // [-] - Konfiguration - Funktion Eingang H1
-{0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_ISC-DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
+{0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BROETJE-DEV_BR_ISC-DEV_BR_IZ1-DEV_BR_WGS}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL-DEV_BROETJE+DEV_BR_ISC+DEV_BR_IZ1}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_BR_WGS}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x293D0656,  CAT_KONFIG,           VT_TEMP,          5952,  STR5952,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H1
@@ -4624,7 +4624,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 
 //Fehler
 {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
-{0x093D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x093D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
 {0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
@@ -5180,12 +5181,12 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x213D300F,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9504,  STR9504,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Solldrehzahl Vorlüftung [rpm]
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Sollleistung Vorlüftung
 {0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Zündung [%]
-{0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Zündung [rpm]
-{0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Zündlast
+{0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Solldrehzahl Zündung [rpm]
+{0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Sollleistung Zündlast
 {0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Min [%]
 {0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Max [%]
-{0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Min [rpm]
-{0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Teillast
+{0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Solldrehzahl Betrieb Min [rpm]
+{0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_BR_WGS}, // Sollleistung Teillast
 {0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Max [rpm]
 {0x093D120E,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9529,  STR9529,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Vollast
 {0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_BR_WGS}, // Nachlüftzeit
