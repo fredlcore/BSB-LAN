@@ -115,10 +115,22 @@ int ipwe_parameters[] = {
   8704                    // Aussentemperatur gemischt
 };
 
+//define MAX_CUL 192,168,178,5    // IP of CUNO/CUNX/modified MAX!Cube
+
+uint32_t max_devices[] = {        // list of MAX! wall/heating thermostats that should be polled
+  0x0B7C62,
+  0x0588F2,
+  0x140566,
+  0x090BB8,
+  0x0748DD,
+  0x090A6C,
+  0x095094
+};
+
 // defines the number of retries for the query command
 #define QUERY_RETRIES  3
 
-/* enable /X URL command to reset Arduino - might not work on older boards */
+/* enable /N URL command to reset Arduino - might not work on older boards */
 //#define RESET
 
 /*
