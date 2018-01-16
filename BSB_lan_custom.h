@@ -6,9 +6,12 @@
  * This code example checks for absolute humidity of an inside as well as 
  * outside DHT22 temperature/humidity sensor and activates a fan on GPIO 6
  * if absolute outside humidity is 5% less than inside.
+ * 
+ * Afterwards, calculate the average of all MAX! wall and heating thermostats 
+ * and send this as the current room temperature to the heating system.
 */
 
-if (custom_timer > custom_timer_compare+10000) {    // every 10 seconds  
+if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds  
   custom_timer_compare = millis();
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   double hum[2]={ 0 };
@@ -40,5 +43,27 @@ if (custom_timer > custom_timer_compare+10000) {    // every 10 seconds
       digitalWrite(6, 0);
       Serial.println("Fan off");
     }
+  }
+
+  int max_avg_count = 0;
+  float max_avg = 0;
+  for (int x=0;x<20;x++) {
+    if (max_temp[x] > 0) {
+      max_avg += (float)(max_temp[x] & 0x1FF) / 10;
+      max_avg_count++;
+      Serial.print(max_devices[x], HEX);
+      Serial.print(F(": "));
+      Serial.println((float)(max_temp[x] & 0x1FF) / 10);
+    }
+  }
+  if (max_avg_count > 0) {
+    Serial.print(F("AvgMax: "));
+    Serial.println(max_avg / max_avg_count);
+
+    char set_temp[6];
+    dtostrf((max_avg/max_avg_count), 1, 1, set_temp);
+//    Serial.print(F("Setting room temperature to "));
+//    Serial.println(set_temp);
+//    set(10000, set_temp, 0);
   }
 }

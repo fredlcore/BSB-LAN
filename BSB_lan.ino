@@ -52,10 +52,12 @@ char version[] = "0.40";
  *       0.37  - 08.09.2017
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
- *       0.40  - 12.01.2018
+ *       0.40  - 16.01.2018
  *
  * Changelog:
  *       version 0.40
+ *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
+ *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
  *        - New virtual parameter 1601 (manual TWW push)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
@@ -315,6 +317,11 @@ uint8_t myAddr = bus.getBusAddr();
 uint8_t destAddr = bus.getBusDest();
 
 EthernetClient client;
+#ifdef MAX_CUL
+EthernetClient max_cul;
+char max_buffer[40];
+uint16_t max_temp[20] = { 0 };
+#endif
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
 char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
@@ -3677,7 +3684,7 @@ ich mir da nicht)
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMOPQRSTVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMNOPQRSTVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -4489,7 +4496,7 @@ ich mir da nicht)
           webPrintFooter();
           break;
         }
-        if (p[1]=='X'){           // Reset Arduino
+        if (p[1]=='N'){           // Reset Arduino
 #ifdef RESET
           webPrintHeader();
           client.println(F("Reset..."));
@@ -4518,6 +4525,25 @@ ich mir da nicht)
           if(range[0]=='T'){
 #ifdef ONE_WIRE_BUS
             ds18b20();
+#endif
+          }else if(range[0]=='X'){ // handle MAX command
+#ifdef MAX_CUL
+            int max_avg_count = 0;
+            float max_avg = 0;
+            for (int x=0;x<20;x++) {
+              if (max_temp[x] > 0) {
+                max_avg += (float)(max_temp[x] & 0x1FF) / 10;
+                max_avg_count++;
+                client.print(max_devices[x], HEX);
+                client.print(F(": "));
+                client.println((float)(max_temp[x] & 0x1FF) / 10);
+                client.println(F("<BR>"));
+              }
+            }
+            if (max_avg_count > 0) {
+              client.print(F("AvgMax: "));
+              client.println(max_avg / max_avg_count);
+            }
 #endif
           }else if(range[0]=='H'){ // handle humidity command
 #ifdef DHT_BUS
@@ -4938,6 +4964,54 @@ custom_timer = millis();
 }
 #endif
 
+#ifdef MAX_CUL
+  byte max_str_index = 0;
+  while (max_cul.available()) {
+    c = max_cul.read();
+//    Serial.print(c);
+    if ((c!='\n') && (c!='\r') && (max_str_index<40)){
+      max_buffer[max_str_index++]=c;
+    } else {
+//      Serial.println();
+      break;
+    }
+  }
+  if (max_str_index > 0) {
+    if (max_buffer[0] == 'Z') {
+      char* max_hex_str = (char*)malloc(7);
+
+      strncpy(max_hex_str, max_buffer+7, 2);
+      max_hex_str[2]='\0';
+      uint8_t max_msg_type = (uint8_t)strtoul(max_hex_str, NULL, 16);
+
+      if (max_msg_type == 0x42 || max_msg_type == 0x60) {
+        strncpy(max_hex_str, max_buffer+9, 6);
+        max_hex_str[6]='\0';
+        uint32_t max_addr = (uint32_t)strtoul(max_hex_str,NULL,16);
+        uint8_t temp_str_offset;
+        switch(max_str_index) {
+          case 35: temp_str_offset = 29; break;
+          case 29: temp_str_offset = 23; break;
+          default: temp_str_offset = 0; break;
+        }
+        int max_idx=0;
+        for (max_idx=0;max_idx<20;max_idx++) {
+          if (max_addr == max_devices[max_idx]) {
+            break;
+          }
+        }
+        strncpy(max_hex_str, max_buffer+temp_str_offset, 4);
+        max_hex_str[4]='\0';
+        max_temp[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
+Serial.println(F("MAX message received: "));
+Serial.println(max_temp[max_idx], HEX);
+Serial.println(((float)(max_temp[max_idx] & 0x1FF)) / 10);
+      }
+      free(max_hex_str);
+    }
+  }
+#endif
+
 } // --- loop () ---
 
 /** *****************************************************************
@@ -5144,5 +5218,14 @@ void setup() {
 // receive device_id (Gerätefamilie) from heating system
     SetDevId();
   }
+
+#ifdef MAX_CUL
+  if (max_cul.connect({MAX_CUL}, 2323)) {
+    Serial.println(F("Connected to max_cul"));
+  } else {
+    Serial.println(F("Connection to max_cul failed"));
+  }
+#endif
+  
 }
 
