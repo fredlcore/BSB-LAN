@@ -52,9 +52,9 @@
 #define DEV_BR_S26  0x00002000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
 #define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
 #define DEV_WH_WTU  0x00100000L   // Gerätefamilie: 050, Weishaupt
+#define DEV_BR_ENT  0x01000000L   // Gerätefamilie: 103, Enertech GB 3025
 #define DEV_ELCO    0x0000000fL   // ELCO devices
 #define DEV_BROETJE 0x0000fff0L   // BROETJE devices
-//#define DEV_LPB     0x0f000000L   // All LPB devices
 #define DEV_ALL     0xffffffffL   // All devices
 #define DEV_NONE    0x00000000L
 
@@ -73,6 +73,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {95,  DEV_BR_LBU},
 {96,  DEV_BR_SOB},
 {98,  DEV_BR_PEV},
+{103, DEV_BR_ENT},
 {107, DEV_BR_IZ1},
 {108, DEV_BR_BSW},
 {138, DEV_BR_BOB},
