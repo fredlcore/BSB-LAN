@@ -345,6 +345,22 @@ const char url_command_html[] PROGMEM_LATE =
 #endif
 #endif
 
+#ifndef MAX_CUL
+#ifdef LANG_DE
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define MAX_CUL</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Abfrage von MAX! Heizkörper-/Wandthermostaten (optional).</td></tr>\n"
+#else
+  "<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define MAX_CUL</code> in BSB_lan_config.h for the following command:</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Query values of MAX! heating/wall thermostats (optional).</td></tr>\n"
+#endif
+#else
+#ifdef LANG_DE
+  "<tr><td valign=top>/X</td><td>Abfrage von MAX! Heizkörper-/Wandthermostaten (optional).</td></tr>\n"
+#else
+  "<tr><td valign=top>/X</td><td>Query values of MAX! heating/wall thermostats (optional).</td></tr>\n"
+#endif
+#endif
+
 #ifndef LOGGER
 #ifdef LANG_DE
   "<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define LOGGER</code> in BSB_lan_config.h für die folgenden Befehle:</td></tr>\n"
@@ -380,10 +396,10 @@ const char url_command_html[] PROGMEM_LATE =
 #ifndef RESET
 #ifdef LANG_DE
   "<tr bgcolor=#f0f0f0><td valign=top></td><td>Aktiviere das Definement <code>#define RESET</code> in BSB_lan_config.h für den folgenden Befehl:</td></tr>\n"
-  "<tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/N</td><td>Reset des Arduino durchführen.</td></tr>\n"
 #else
   "<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define RESET</code> in BSB_lan_config.h for the following command:</td></tr>\n"
-  "<tr bgcolor=#f0f0f0><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>\n"
+  "<tr bgcolor=#f0f0f0><td valign=top>/N</td><td>Execute a reset of the Arduino.</td></tr>\n"
 #endif  
 #else
 #ifdef LANG_DE
