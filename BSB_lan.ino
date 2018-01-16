@@ -59,7 +59,7 @@ char version[] = "0.40";
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
  *        - New virtual parameter 1601 (manual TWW push)
- *        - Added Enetech device family (103)
+ *        - Added Enertech device family (103)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
