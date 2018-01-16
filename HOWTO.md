@@ -155,6 +155,10 @@ Returns temperature of optionally connected ds18b20 temperature sensors.
 `http://<ip-of-server>/H`  
 Returns temperature of optionally connected DHT22 temperature/humidity sensors.
       
+* Query temperatures of MAX! heating/wall thermostats  
+`http://<ip-of-server>/X`  
+Returns temperature of optional MAX! heating/wall thermostats defined in BSB_lan_config.h.
+      
 * Accumulated duration of burner  
 `http://<ip-of-server>/B`   
 Query accumulated duration of burner on status (in seconds) captured from broadcast messages. Use /B0 to reset.
@@ -185,7 +189,7 @@ Use /D0 to reset datalog.txt including writing a proper CSV file header (recomme
 Switches between BSB (x=0), LPB (x=1) and PPS bus (x=2). Use setBusType config option in BSB_lan_config.h to set bus type permanently.
 
 * Reset Arduino  
-`http://<ip-of-server>/X`  
+`http://<ip-of-server>/N`  
 Resets the Arduino after pausing for 8 seconds (#define RESET in BSB_lan_config.h).
 
 <B>Open issues</B>  
