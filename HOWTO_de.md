@@ -188,10 +188,12 @@ Wechselt zwischen BSB (x=0) und LPB (x=1). Um den Bus-typ dauerhaft festzulegen,
 * Resetten/Restarten des Arduinos
 `http://<ip-of-server>/N`
 Reset/Restart des Arduinos nach einem Pausieren für 8 Sekunden (#define RESET in BSB_lan_config.h).
+Dabei wird gleichzeitig auch noch das EEPROM des Arduino mit Nullen überschrieben. Dies hat z.Z. nur Auswirkung für PPS bzw. MAX!-Nutzer. Bei PPS werden damit die zwischengespeicherten Werte gelöscht, bei MAX! die registrierten Geräte (diese müssen sich dann durch einem Druck auf die Anlerntaste neu gegenüber BSB-LAN identifizieren).
 
 * Abfrage von MAX!-Thermostaten
 `http://<ip-of-server>/X`
 Gibt die Temperaturen von optional angeschlossenen MAX!-Thermostaten wieder. Diese sind zuvor in der Datei BSB_lan_config.h zu definieren.
+Bei MAX!-Geräten, die in BSB-LAN aufgenommen werden sollen, muss jeweils einmal die Anlern-Taste gedrückt werden (zu Erkennen an dem anschließenden 30-Sekunden Countdown). Ein bestehendes Pairing zwischen den Geräten und einem Max!Cube bzw. CUL wird dabei nicht gestört und kann parallel betrieben werden.
 
 <B>Offene Punkte</B>
 - Mehr Befehle (command ID) hinzufügen.
