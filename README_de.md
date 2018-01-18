@@ -15,8 +15,8 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje SensoTherm BSW-K [RVS61.843] (Wärmepumpe)
  - Brötje BBK 22E [LMS14] (Gasbrenner)
  - Brötje BBS Pro Evo 15C [LMU74] (Gasbrenner)
- - Brötje BBS 15E [LMS14] (Gasbrenner)
- - Brötje BGB 20E [LMS14] (Gasbrenner)
+ - Brötje EcoCondens BBS 15E [LMS14] (Gasbrenner)
+ - Brötje TrioCondens BGB 20E [LMS14] (Gasbrenner)
  - Brötje WBS 14D [LMU74] (Gasbrenner)
  - Brötje WBS 22E [LMS14] (Gasbrenner)
  - Brötje WGB-U 15H [LMS14] (Gasbrenner)
@@ -30,7 +30,9 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 17.1 [LMU74] (Gasbrenner)
  - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
  - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
+ - CTC 380 IC [RVS43.143] (Ölbrenner)
  - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
+ - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (Wärmepumpe)
  - Sieger TG11 [RVP54.100] (Ölbrenner) {PPS_only}
  - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220] (Ölbrenner) {LPB_only}
 
