@@ -55,7 +55,7 @@
  * heating system is not running when Arduino is powered on.
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
-int fixed_device_id = 0;
+const int fixed_device_id = 0;
 
 /* display web interface in German language; remove definement for English */
 #define LANG_DE
@@ -101,7 +101,7 @@ boolean log_bc_only = 0;              // should we log only broadcast commands (
 #define IPWE
 
 // Parameters to be displayed in IPWE extension
-int ipwe_parameters[] = {
+const int ipwe_parameters[] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -115,16 +115,11 @@ int ipwe_parameters[] = {
   8704                    // Aussentemperatur gemischt
 };
 
-//define MAX_CUL 192,168,178,5    // IP of CUNO/CUNX/modified MAX!Cube
+//define MAX_CUL 192,168,178,5                  // IP of CUNO/CUNX/modified MAX!Cube
 
-uint32_t max_devices[] = {        // list of MAX! wall/heating thermostats that should be polled
-  0x0B7C62,
-  0x0588F2,
-  0x140566,
-  0x090BB8,
-  0x0748DD,
-  0x090A6C,
-  0x095094
+const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating thermostats that should be polled
+  "KEQ0502326"                                  // use MAX! serial numbers here which have to have exactly 10 characters
+  "KEQ0505080"
 };
 
 // defines the number of retries for the query command
@@ -152,7 +147,7 @@ BSB bus(68,69);
 uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 // Protect these pins from accidental GPIO access
-byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+const byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface
