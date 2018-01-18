@@ -186,8 +186,12 @@ UPDATE: Wer Parameter auf SD-Karte loggt, bekommt nun neben der reinen Textform 
 Wechselt zwischen BSB (x=0) und LPB (x=1). Um den Bus-typ dauerhaft festzulegen, sollte die Option setBusType config in der Datei BSB_lan_config.h entsprechend angepasst werden.
 	
 * Resetten/Restarten des Arduinos
-`http://<ip-of-server>/X`
+`http://<ip-of-server>/N`
 Reset/Restart des Arduinos nach einem Pausieren für 8 Sekunden (#define RESET in BSB_lan_config.h).
+
+* Abfrage von MAX!-Thermostaten
+`http://<ip-of-server>/X`
+Gibt die Temperaturen von optional angeschlossenen MAX!-Thermostaten wieder. Diese sind zuvor in der Datei BSB_lan_config.h zu definieren.
 
 <B>Offene Punkte</B>
 - Mehr Befehle (command ID) hinzufügen.
