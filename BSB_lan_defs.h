@@ -51,6 +51,7 @@
 #define DEV_BR_WGE  0x00001000L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
 #define DEV_BR_S26  0x00002000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
 #define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
+#define DEV_FJ_WSP  0x00020000L   // Gerätefamilie: 211, Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteindetifikation: RVS21.831F/127)
 #define DEV_WH_WTU  0x00100000L   // Gerätefamilie: 050, Weishaupt
 #define DEV_BR_ENT  0x01000000L   // Gerätefamilie: 103, Enertech GB 3025
 #define DEV_ELCO    0x0000000fL   // ELCO devices
@@ -81,6 +82,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {163, DEV_BR_WGE},
 {170, DEV_FJ_WSK},
 {203, DEV_EL_THP},
+{211, DEV_FJ_WSP},
 {255, DEV_NONE},
 };
 
@@ -108,6 +110,7 @@ typedef enum{
   CAT_KESSEL,
   CAT_SITHERM,
   CAT_WAERMEPUMPE,
+  CAT_ENERGIEZAEHLER,
   CAT_KASKADE,
   CAT_ZUSATZERZEUGER,
   CAT_SOLAR,
@@ -177,6 +180,8 @@ typedef enum{
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
+  VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
+  VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
@@ -206,6 +211,8 @@ const char U_CURR[] PROGMEM = "&#181;A";
 const char U_BAR[] PROGMEM = "bar";
 const char U_VOLT[] PROGMEM = "V";
 const char U_GRADIENT[] PROGMEM = "min/K";
+const char U_LITERPERHOUR[] PROGMEM = "l/h";
+const char U_LITERPERMIN[] PROGMEM = "l/min";
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -272,6 +279,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_SPEED2,         1.0,  0,  U_RPM, sizeof(U_RPM)},
 {VT_TEMP,           64.0, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,  1,  U_DEG, sizeof(U_DEG)},
+{VT_LITERPERHOUR,   1.0,  0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
+{VT_LITERPERMIN,    10.0, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,  0,  U_NONE, sizeof(U_NONE)},
 {VT_UINT5,          0.2,0,  U_NONE, sizeof(U_NONE)},
 {VT_UINT10,         10.0, 1,  U_NONE, sizeof(U_NONE)},
@@ -315,26 +324,27 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x13 Kessel\0"
 "\x14 Sitherm Pro\0"
 "\x15 Wärmepumpe\0"
-"\x16 Kaskade\0"
-"\x17 Zusatzerzeuger\0"
-"\x18 Solar\0"
-"\x19 Feststoffkessel\0"
-"\x1a Pufferspeicher\0"
-"\x1b Trinkwasserspeicher\0"
-"\x1c Trinkwasser Durchl'erhitzer\0"
-"\x1d Konfiguration\0"
-"\x1e LPB-System\0"
-"\x1f Fehler\0"
-"\x20 Wartung/Sonderbetrieb\0"
-"\x21 Ein-/Ausgangstest\0"
-"\x22 Status\0"
-"\x23 Diagnose Kaskade\0"
-"\x24 Diagnose Erzeuger\0"
-"\x25 Diagnose Verbraucher\0"
-"\x26 Feuerungsautomat\0"
-"\x27 Benutzerdefiniert\0"
-"\x28 PPS-Bus\0"
-"\x29 unbekannte Kategorie"
+"\x16 Energiezähler\0"
+"\x17 Kaskade\0"
+"\x18 Zusatzerzeuger\0"
+"\x19 Solar\0"
+"\x1a Feststoffkessel\0"
+"\x1b Pufferspeicher\0"
+"\x1c Trinkwasserspeicher\0"
+"\x1d Trinkwasser Durchl'erhitzer\0"
+"\x1e Konfiguration\0"
+"\x1f LPB-System\0"
+"\x20 Fehler\0"
+"\x21 Wartung/Sonderbetrieb\0"
+"\x22 Ein-/Ausgangstest\0"
+"\x23 Status\0"
+"\x24 Diagnose Kaskade\0"
+"\x25 Diagnose Erzeuger\0"
+"\x26 Diagnose Verbraucher\0"
+"\x27 Feuerungsautomat\0"
+"\x28 Benutzerdefiniert\0"
+"\x29 PPS-Bus\0"
+"\x30 unbekannte Kategorie"
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = { 
@@ -360,6 +370,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   2200, 2551,
   2700, 2732,
   2785, 3010,
+  3095, 3267,
   3510, 3590,
   3700, 3723,
   3810, 3887,
@@ -1019,6 +1030,83 @@ const char STR3010[] PROGMEM = "Drehz max V'lator/Q'Pump";
 const char STR3011[] PROGMEM = "Drehz min V'lator/Q'Pump";
 const char STR3012[] PROGMEM = "Quelle Aus unter Temp B83";
 const char STR3014[] PROGMEM = "Schaltdifferenz Quelle Aus";
+
+// Energiezähler (Fujitsu Waterstage)
+const char STR3095[] PROGMEM = "Durchflussmessung Wärme";
+const char STR3097[] PROGMEM = "Durchfluss Heizen";
+const char STR3098[] PROGMEM = "Durchfluss Trinkwasser";
+const char STR3100[] PROGMEM = "Impulszählung Energie";
+const char STR3102[] PROGMEM = "Impulseinheit Energie";
+const char STR3103[] PROGMEM = "Impulswert Energie Zähler";
+const char STR3104[] PROGMEM = "Impulswert Energie Nenner";
+const char STR3109[] PROGMEM = "Zählung Intern Elektro Vorl’";
+const char STR3110[] PROGMEM = "Abgegebene Wärme";
+const char STR3113[] PROGMEM = "Eingesetzte Energie";
+const char STR3121[] PROGMEM = "Abgegeb’ Wärme Heizen 1";
+const char STR3122[] PROGMEM = "Abgegeb’ Wärme TWW 1";
+const char STR3123[] PROGMEM = "Abgegeb’ Kälte 1";
+const char STR3124[] PROGMEM = "Einges’ Energie Heizen 1";
+const char STR3125[] PROGMEM = "Einges’ Energie TWW 1";
+const char STR3126[] PROGMEM = "Einges’ Energie Kühlen 1";
+const char STR3128[] PROGMEM = "Abgegeb’ Wärme Heizen 2";
+const char STR3129[] PROGMEM = "Abgegeb’ Wärme TWW 2";
+const char STR3130[] PROGMEM = "Abgegeb’ Kälte 2";
+const char STR3131[] PROGMEM = "Einges’ Energie Heizen 2";
+const char STR3132[] PROGMEM = "Einges’ Energie TWW 2";
+const char STR3133[] PROGMEM = "Einges’ Energie Kühlen 2";
+const char STR3135[] PROGMEM = "Abgegeb’ Wärme Heizen 3";
+const char STR3136[] PROGMEM = "Abgegeb’ Wärme TWW 3";
+const char STR3137[] PROGMEM = "Abgegeb’ Kälte 3";
+const char STR3138[] PROGMEM = "Einges’ Energie Heizen 3";
+const char STR3139[] PROGMEM = "Einges’ Energie TWW 3";
+const char STR3140[] PROGMEM = "Einges’ Energie Kühlen 3";
+const char STR3142[] PROGMEM = "Abgegeb’ Wärme Heizen 4";
+const char STR3143[] PROGMEM = "Abgegeb’ Wärme TWW 4";
+const char STR3144[] PROGMEM = "Abgegeb’ Kälte 4";
+const char STR3145[] PROGMEM = "Einges’ Energie Heizen 4";
+const char STR3146[] PROGMEM = "Einges’ Energie TWW 4";
+const char STR3147[] PROGMEM = "Einges’ Energie Kühlen 4";
+const char STR3149[] PROGMEM = "Abgegeb’ Wärme Heizen 5";
+const char STR3150[] PROGMEM = "Abgegeb’ Wärme TWW 5";
+const char STR3151[] PROGMEM = "Abgegeb’ Kälte 5";
+const char STR3152[] PROGMEM = "Einges’ Energie Heizen 5";
+const char STR3153[] PROGMEM = "Einges’ Energie TWW 5";
+const char STR3154[] PROGMEM = "Einges’ Energie Kühlen 5";
+const char STR3156[] PROGMEM = "Abgegeb’ Wärme Heizen 6";
+const char STR3157[] PROGMEM = "Abgegeb’ Wärme TWW 6";
+const char STR3158[] PROGMEM = "Abgegeb’ Kälte 6";
+const char STR3159[] PROGMEM = "Einges’ Energie Heizen 6";
+const char STR3160[] PROGMEM = "Einges’ Energie TWW 6";
+const char STR3161[] PROGMEM = "Einges’ Energie Kühlen 6";
+const char STR3163[] PROGMEM = "Abgegeb’ Wärme Heizen 7";
+const char STR3164[] PROGMEM = "Abgegeb’ Wärme TWW 7";
+const char STR3165[] PROGMEM = "Abgegeb’ Kälte 7";
+const char STR3166[] PROGMEM = "Einges’ Energie Heizen 7";
+const char STR3167[] PROGMEM = "Einges’ Energie TWW 7";
+const char STR3168[] PROGMEM = "Einges’ Energie Kühlen 7";
+const char STR3170[] PROGMEM = "Abgegeb’ Wärme Heizen 8";
+const char STR3171[] PROGMEM = "Abgegeb’ Wärme TWW 8";
+const char STR3172[] PROGMEM = "Abgegeb’ Kälte 8";
+const char STR3173[] PROGMEM = "Einges’ Energie Heizen 8";
+const char STR3174[] PROGMEM = "Einges’ Energie TWW 8";
+const char STR3175[] PROGMEM = "Einges’ Energie Kühlen 8";
+const char STR3177[] PROGMEM = "Abgegeb’ Wärme Heizen 9";
+const char STR3178[] PROGMEM = "Abgegeb’ Wärme TWW 9";
+const char STR3179[] PROGMEM = "Abgegeb’ Kälte 9";
+const char STR3180[] PROGMEM = "Einges’ Energie Heizen 9";
+const char STR3181[] PROGMEM = "Einges’ Energie TWW 9";
+const char STR3182[] PROGMEM = "Einges’ Energie Kühlen 9";
+const char STR3184[] PROGMEM = "Abgegeb’ Wärme Heizen 10";
+const char STR3185[] PROGMEM = "Abgegeb’ Wärme TWW 10";
+const char STR3186[] PROGMEM = "Abgegeb’ Kälte 10";
+const char STR3187[] PROGMEM = "Einges’ Energie Heizen 10";
+const char STR3188[] PROGMEM = "Einges’ Energie TWW 10";
+const char STR3189[] PROGMEM = "Einges’ Energie Kühlen 10";
+const char STR3190[] PROGMEM = "Reset Stichtagspeicher";
+const char STR3264[] PROGMEM = "Energiepreis HT";
+const char STR3265[] PROGMEM = "Energiepreis NT/SG-Wunsch";
+const char STR3266[] PROGMEM = "Energiepreis SG-Zwang";
+const char STR3267[] PROGMEM = "Energiepreis Alternativ Erz";
 
 // 3500 Kaskade
 const char STR3510[] PROGMEM = "Führungsstrategie";
@@ -2037,6 +2125,53 @@ const char ENUM2727[] PROGMEM_LATEST = {
 const char ENUM2920[] PROGMEM_LATEST = {
 "\x00 Gesperrt\0"
 "\x01 Freigegeben"
+};
+
+// Energiezähler
+
+// "Durchflussmessung Wärme"
+const char ENUM3095[] PROGMEM_LATEST = {
+"\x00 Keine\0"
+"\x01 Mit Eingang H1\0"
+"\x02 Mit Eingang H2 Modul 1\0"
+"\x03 Mit Eingang H2 Modul 2\0"
+"\x04 Mit Eingang H2 Modul 3\0"
+"\x05 Mit Eingang H21 Modul 1\0"
+"\x06 Mit Eingang H21 Modul 2\0"
+"\x07 Mit Eingang H21 Modul 3\0"
+"\x08 Mit Eingang H22 Modul 1\0"
+"\x09 Mit Eingang H22 Modul 2\0"
+"\x0a Mit Eingang H22 Modul 3\0"
+"\x0b Mit Eingang H3\0"
+"\x0c Mit Eingang H31\0"
+"\x0d Mit Eingang H32"
+};
+// "Impulszählung Energie"
+const char ENUM3100[] PROGMEM_LATEST = {
+"\x00 Keine\0"
+"\x01 Mit Eingang H1\0"
+"\x02 Mit Eingang H21 Modul 1\0"
+"\x03 Mit Eingang H21 Modul 2\0"
+"\x04 Mit Eingang H21 Modul 3\0"
+"\x05 Mit Eingang H22 Modul 1\0"
+"\x06 Mit Eingang H22 Modul 2\0"
+"\x07 Mit Eingang H22 Modul 3\0"
+"\x08 Mit Eingang H3\0"
+"\x09 Mit Eingang H31\0"
+"\x0a Mit Eingang H32"
+};
+// "Impulseinheit Energie"
+const char ENUM3102[] PROGMEM_LATEST = {
+"\x00 Keine\0"
+"\x01 kWh\0"
+"\x02 m3"
+};
+// "Zählung Intern Elektro Vorl’"
+const char ENUM3109[] PROGMEM_LATEST = {
+"\x00 Keine\0"
+"\x01 Abgegebene Wärme\0"
+"\x02 Eingesetzte Energie\0"
+"\x03 Beide"
 };
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
@@ -4245,6 +4380,83 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3010,  STR3010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehz max V'lator/Q'Pump
 
+// Energiezähler (Fujitsu Waterstage)
+{0x053D12B7,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3095,  STR3095,  sizeof(ENUM3095),     ENUM3095,     DEFAULT_FLAG, DEV_ALL}, // Durchflussmessung Wärme
+{0x053D108C,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3097,  STR3097,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Heizen
+{0x053D108D,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3098,  STR3098,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Trinkwasser
+{0x053D108E,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3100,  STR3100,  sizeof(ENUM3100),     ENUM3100,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Energie
+{0x053D108F,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3102,  STR3102,  sizeof(ENUM3102),     ENUM3102,     DEFAULT_FLAG, DEV_ALL}, // Impulseinheit Energie
+{0x053D1090,  CAT_ENERGIEZAEHLER,   VT_UINT,          3103,  STR3103,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Zähler
+{0x053D1091,  CAT_ENERGIEZAEHLER,   VT_UINT,          3104,  STR3104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Nenner
+{0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
+{0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
+{0x053D10B4,  CAT_ENERGIEZAEHLER,   VT_STRING,        3113,  STR3113,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingesetzte Energie
+{0x053D1721,  CAT_ENERGIEZAEHLER,   VT_STRING,        3121,  STR3121,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 1
+{0x053D172B,  CAT_ENERGIEZAEHLER,   VT_STRING,        3122,  STR3122,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 1
+{0x053D1983,  CAT_ENERGIEZAEHLER,   VT_STRING,        3123,  STR3123,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 1
+{0x053D1735,  CAT_ENERGIEZAEHLER,   VT_STRING,        3124,  STR3124,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 1
+{0x053D173F,  CAT_ENERGIEZAEHLER,   VT_STRING,        3125,  STR3125,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 1
+{0x053D198D,  CAT_ENERGIEZAEHLER,   VT_STRING,        3126,  STR3126,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 1
+{0x053D1722,  CAT_ENERGIEZAEHLER,   VT_STRING,        3128,  STR3128,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 2
+{0x053D172C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3129,  STR3129,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 2
+{0x053D1984,  CAT_ENERGIEZAEHLER,   VT_STRING,        3130,  STR3130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 2
+{0x053D1736,  CAT_ENERGIEZAEHLER,   VT_STRING,        3131,  STR3131,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 2
+{0x053D1740,  CAT_ENERGIEZAEHLER,   VT_STRING,        3132,  STR3132,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 2
+{0x053D198E,  CAT_ENERGIEZAEHLER,   VT_STRING,        3133,  STR3133,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 2
+{0x053D1723,  CAT_ENERGIEZAEHLER,   VT_STRING,        3135,  STR3135,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 3
+{0x053D172D,  CAT_ENERGIEZAEHLER,   VT_STRING,        3136,  STR3136,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 3
+{0x053D1985,  CAT_ENERGIEZAEHLER,   VT_STRING,        3137,  STR3137,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 3
+{0x053D1737,  CAT_ENERGIEZAEHLER,   VT_STRING,        3138,  STR3138,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 3
+{0x053D1741,  CAT_ENERGIEZAEHLER,   VT_STRING,        3139,  STR3139,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 3
+{0x053D198F,  CAT_ENERGIEZAEHLER,   VT_STRING,        3140,  STR3140,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 3
+{0x053D1724,  CAT_ENERGIEZAEHLER,   VT_STRING,        3142,  STR3142,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 4
+{0x053D172E,  CAT_ENERGIEZAEHLER,   VT_STRING,        3143,  STR3143,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 4
+{0x053D1986,  CAT_ENERGIEZAEHLER,   VT_STRING,        3144,  STR3144,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 4
+{0x053D1738,  CAT_ENERGIEZAEHLER,   VT_STRING,        3145,  STR3145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 4
+{0x053D1742,  CAT_ENERGIEZAEHLER,   VT_STRING,        3146,  STR3146,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 4
+{0x053D1990,  CAT_ENERGIEZAEHLER,   VT_STRING,        3147,  STR3147,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 4
+{0x053D1725,  CAT_ENERGIEZAEHLER,   VT_STRING,        3149,  STR3149,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 5
+{0x053D172F,  CAT_ENERGIEZAEHLER,   VT_STRING,        3150,  STR3150,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 5
+{0x053D1987,  CAT_ENERGIEZAEHLER,   VT_STRING,        3151,  STR3151,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 5
+{0x053D1739,  CAT_ENERGIEZAEHLER,   VT_STRING,        3152,  STR3152,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 5
+{0x053D1743,  CAT_ENERGIEZAEHLER,   VT_STRING,        3153,  STR3153,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 5
+{0x053D1991,  CAT_ENERGIEZAEHLER,   VT_STRING,        3154,  STR3154,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 5
+{0x053D1726,  CAT_ENERGIEZAEHLER,   VT_STRING,        3156,  STR3156,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 6
+{0x053D1730,  CAT_ENERGIEZAEHLER,   VT_STRING,        3157,  STR3157,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 6
+{0x053D1988,  CAT_ENERGIEZAEHLER,   VT_STRING,        3158,  STR3158,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 6
+{0x053D173A,  CAT_ENERGIEZAEHLER,   VT_STRING,        3159,  STR3159,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 6
+{0x053D1744,  CAT_ENERGIEZAEHLER,   VT_STRING,        3160,  STR3160,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 6
+{0x053D1992,  CAT_ENERGIEZAEHLER,   VT_STRING,        3161,  STR3161,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 6
+{0x053D1727,  CAT_ENERGIEZAEHLER,   VT_STRING,        3163,  STR3163,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 7
+{0x053D1731,  CAT_ENERGIEZAEHLER,   VT_STRING,        3164,  STR3164,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 7
+{0x053D1989,  CAT_ENERGIEZAEHLER,   VT_STRING,        3165,  STR3165,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 7
+{0x053D173B,  CAT_ENERGIEZAEHLER,   VT_STRING,        3166,  STR3166,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 7
+{0x053D1745,  CAT_ENERGIEZAEHLER,   VT_STRING,        3167,  STR3167,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 7
+{0x053D1993,  CAT_ENERGIEZAEHLER,   VT_STRING,        3168,  STR3168,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 7
+{0x053D1728,  CAT_ENERGIEZAEHLER,   VT_STRING,        3170,  STR3170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 8
+{0x053D1732,  CAT_ENERGIEZAEHLER,   VT_STRING,        3171,  STR3171,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 8
+{0x053D198A,  CAT_ENERGIEZAEHLER,   VT_STRING,        3172,  STR3172,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 8
+{0x053D173C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3173,  STR3173,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 8
+{0x053D1746,  CAT_ENERGIEZAEHLER,   VT_STRING,        3174,  STR3174,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 8
+{0x053D1994,  CAT_ENERGIEZAEHLER,   VT_STRING,        3175,  STR3175,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 8
+{0x053D1729,  CAT_ENERGIEZAEHLER,   VT_STRING,        3177,  STR3177,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 9
+{0x053D1733,  CAT_ENERGIEZAEHLER,   VT_STRING,        3178,  STR3178,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 9
+{0x053D198B,  CAT_ENERGIEZAEHLER,   VT_STRING,        3179,  STR3179,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 9
+{0x053D173D,  CAT_ENERGIEZAEHLER,   VT_STRING,        3180,  STR3180,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 9
+{0x053D1747,  CAT_ENERGIEZAEHLER,   VT_STRING,        3181,  STR3181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 9
+{0x053D1995,  CAT_ENERGIEZAEHLER,   VT_STRING,        3182,  STR3182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 9
+{0x053D172A,  CAT_ENERGIEZAEHLER,   VT_STRING,        3184,  STR3184,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 10
+{0x053D1734,  CAT_ENERGIEZAEHLER,   VT_STRING,        3185,  STR3185,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 10
+{0x053D198C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3186,  STR3186,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 10
+{0x053D173E,  CAT_ENERGIEZAEHLER,   VT_STRING,        3187,  STR3187,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Heizen 10
+{0x053D1748,  CAT_ENERGIEZAEHLER,   VT_STRING,        3188,  STR3188,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 10
+{0x053D1996,  CAT_ENERGIEZAEHLER,   VT_STRING,        3189,  STR3189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 10
+{0x053D1087,  CAT_ENERGIEZAEHLER,   VT_YESNO,         3190,  STR3190,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Stichtagspeicher
+{0x053D19BA,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3264,  STR3264,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis HT
+{0x053D19BB,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3265,  STR3265,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis NT/SG-Wunsch
+{0x053D19BC,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3266,  STR3266,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis SG-Zwang
+{0x053D19BD,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3267,  STR3267,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis Alternativ Erz";
+
 // Kaskade
 {CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_RONLY, DEV_ALL}, // Führungsstrategie
 {CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3530,  STR3530,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Freigabeintegral Erz’folge
@@ -5003,8 +5215,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x593D06C0,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8457,  STR8457,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Vorlauf //FUJITSU
 // ab hier zu testen
 {0x053D196E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8458,  STR8458,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Status Smart Grid // todo: ENUM ? Keine Funktion
-{0x053D130F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8460,  STR8460,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmepumpendurchfluss // todo: l/min UINT passt nicht
-{0x053D19E6,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8461,  STR8461,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quellendurchfluss // todo: l/min UINT passt nicht
+{0x053D130F,  CAT_DIAG_ERZEUGER,    VT_LITERPERMIN,   8460,  STR8460,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmepumpendurchfluss // FUJITSU
+{0x053D19E6,  CAT_DIAG_ERZEUGER,    VT_LITERPERMIN,   8461,  STR8461,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quellendurchfluss // FUJITSU
 {0x053D1760,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8462,  STR8462,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sauggasttemperatur EVI
 {0x593D17AD,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8463,  STR8463,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfungstemperatur EVI
 // Kommt auch noch ein Telegramm 0x593D1779, könnte Verdampfungsdruck E in bar sein oder vertauscht mit dem oben
