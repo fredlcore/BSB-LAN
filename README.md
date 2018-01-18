@@ -16,8 +16,8 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje SensoTherm BSW-K [RVS61.843] (heat pump)
 - Brötje BBK 22E [LMS14] (gas-fired)
 - Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
-- Brötje BBS 15E [LMS14] (gas-fired)
-- Brötje BGB 20E [LMS14] (gas-fired)
+- Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
+- Brötje TrioCondens BGB 20E [LMS14] (gas-fired)
 - Brötje WBS 14D [LMU74] (gas-fired)
 - Brötje WBS 22E [LMS14] (gas-fired)
 - Brötje WGB-U 15H [LMS14] (gas-fired)
@@ -31,7 +31,9 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Elco Thision S 17.1 [LMU74.100] (gas-fired)
 - Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
 - Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
+- CTC 380 IC [RVS43.143] (oil-fired)
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
+- Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
 - Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
 - Weishaupt WTU-25 G with WRS-CPU B2/E [RVS23.220] (oil-fired) {LPB_only}
 
