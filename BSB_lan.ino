@@ -58,7 +58,9 @@ char version[] = "0.40";
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
+ *        - Added new category "22 - Energiezähler" - please note that all subsequent categories move one up!
  *        - New virtual parameter 1601 (manual TWW push)
+ *        - Added Fujitsu Waterstage WSYP100DG6 device family (211)
  *        - Added Enertech device family (103)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
@@ -320,8 +322,9 @@ uint8_t destAddr = bus.getBusDest();
 EthernetClient client;
 #ifdef MAX_CUL
 EthernetClient max_cul;
-char max_buffer[40];
+char max_buffer[60];
 uint16_t max_temp[20] = { 0 };
+int32_t max_devices[20] = { 0 };
 #endif
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
@@ -1530,6 +1533,8 @@ char *printTelegram(byte* msg) {
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW )
+            case VT_LITERPERHOUR: // u16 / l/h
+            case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
             case VT_CURRENT: // u16 / 100 uA
@@ -3172,6 +3177,65 @@ char *lookup_descr(uint16_t line) {
 }
 
 /** *****************************************************************
+ *  Function: calc_enum_offset()
+ *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
+ * Pass parameters:
+ *  enum_addr
+ * Parameters passed back:
+ *  enum_addr
+ * Function value returned:
+ *  24 bit char pointer address
+ * Global resources used:
+ *  enumstr_offset
+ * *************************************************************** */
+ 
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
+  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
+  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
+    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
+  }
+  enum_addr = enum_addr + 0x10000;    // as we are well above 64kB with other data, first ENUM data will always be at least between 64 and 128 kB, so add 0x10000 every time.
+  return enum_addr;
+}
+
+/** *****************************************************************
+ *  Function: InitMaxDeviceList()
+ *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  max_device_list, max_devices
+ * *************************************************************** */
+
+void InitMaxDeviceList() {
+  
+  char max_id[11] = { 0 };
+  char max_id_eeprom[11] = { 0 };
+  int32_t max_addr = 0;
+  for (uint32_t x=0;x<(sizeof(max_device_list)/10);x++) {
+    for (int y=0;y<10;y++) {
+      max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
+    }
+Serial.println(max_id);
+    for (int z=0;z<20;z++) {
+      EEPROM.get(100 + 15 * z + 4, max_id_eeprom);
+Serial.println(max_id_eeprom);
+      if (!strcmp(max_id, max_id_eeprom)) {
+        EEPROM.get(100 + 15 * z, max_addr);
+        max_devices[x] = max_addr;
+        Serial.println(F("Adding known Max ID to list:"));
+        Serial.println(max_devices[x], HEX);
+        break;
+      }
+    }
+  }
+}
+
+/** *****************************************************************
  *  Function:
  *  Does:
  *  Pass parameters:
@@ -4509,6 +4573,10 @@ ich mir da nicht)
             dataFile.close();
           }
 #endif
+          for (int x=0; EEPROM.length(); x++) {
+            EEPROM.write(x, 0);
+          }
+          Serial.println(F("Cleared EEPROM"));
           asm volatile ("  jmp 0");
           while (1==1) {}
 #endif
@@ -4531,11 +4599,18 @@ ich mir da nicht)
 #ifdef MAX_CUL
             int max_avg_count = 0;
             float max_avg = 0;
+            char max_id[10];
             for (int x=0;x<20;x++) {
               if (max_temp[x] > 0) {
                 max_avg += (float)(max_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
                 client.print(max_devices[x], HEX);
+                client.print(F(" / "));
+                for (int y=0;y<10;y++) {
+                  max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
+                }
+                max_id[10] = '\0';
+                client.print(max_id);
                 client.print(F(": "));
                 client.println((float)(max_temp[x] & 0x1FF) / 10);
                 client.println(F("<BR>"));
@@ -4970,7 +5045,7 @@ custom_timer = millis();
   while (max_cul.available()) {
     c = max_cul.read();
 //    Serial.print(c);
-    if ((c!='\n') && (c!='\r') && (max_str_index<40)){
+    if ((c!='\n') && (c!='\r') && (max_str_index<60)){
       max_buffer[max_str_index++]=c;
     } else {
 //      Serial.println();
@@ -4980,33 +5055,80 @@ custom_timer = millis();
   if (max_str_index > 0) {
     if (max_buffer[0] == 'Z') {
       char* max_hex_str = (char*)malloc(7);
+      char max_id[11] = { 0 };
+      boolean known_addr = false;
+      boolean known_eeprom = false;
 
       strncpy(max_hex_str, max_buffer+7, 2);
       max_hex_str[2]='\0';
       uint8_t max_msg_type = (uint8_t)strtoul(max_hex_str, NULL, 16);
 
-      if (max_msg_type == 0x42 || max_msg_type == 0x60) {
-        strncpy(max_hex_str, max_buffer+9, 6);
-        max_hex_str[6]='\0';
-        uint32_t max_addr = (uint32_t)strtoul(max_hex_str,NULL,16);
+      strncpy(max_hex_str, max_buffer+9, 6);
+      max_hex_str[6]='\0';
+      int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);   // will work only for MAX id < 0x7FFFFFFF
+      int max_idx=0;
+      for (max_idx=0;max_idx<20;max_idx++) {
+        if (max_addr == max_devices[max_idx]) {
+          known_addr = true;
+          break;
+        }
+      }
+
+      if (max_msg_type == 0x00) {     // Device info after pressing pairing button
+        for (int x=0;x<10;x++) {
+          strncpy(max_hex_str, max_buffer+29+(x*2), 2);
+          max_hex_str[2]='\0';
+          max_id[x] = (char)strtoul(max_hex_str,NULL,16);
+        }
+        max_id[10] = '\0';
+        Serial.println(F("MAX device info received: "));
+        Serial.println(max_addr, HEX);
+        Serial.println(max_id);
+
+        int32_t max_addr_temp=0;
+        for (int x=0;x<20;x++) {
+          EEPROM.get(100 + 15 * x, max_addr_temp);
+          if (max_addr_temp == max_addr) {
+            Serial.println(F("Device already in EEPROM"));
+            known_eeprom = true;
+            break;
+          }
+        }
+
+        if (!known_eeprom) {
+          for (int x=0;x<20;x++) {
+            EEPROM.get(100+15*x, max_addr_temp);
+            if (max_addr_temp < 1) {
+              EEPROM.put(100+15*x, max_addr);
+              EEPROM.put(100+15*x+4, max_id);
+/*
+              int32_t temp1;
+              char temp2[11] = { 0 };
+              EEPROM.get(100+15*x, temp1);
+              EEPROM.get(100+15*x+4, temp2);
+              Serial.println(temp1, HEX);
+              Serial.println(temp2);
+*/
+              Serial.println(F("Device stored in EEPROM"));
+              InitMaxDeviceList();
+              break;
+            }
+          }
+        }
+      }
+
+      if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
         uint8_t temp_str_offset;
         switch(max_str_index) {
           case 35: temp_str_offset = 29; break;
           case 29: temp_str_offset = 23; break;
           default: temp_str_offset = 0; break;
         }
-        int max_idx=0;
-        for (max_idx=0;max_idx<20;max_idx++) {
-          if (max_addr == max_devices[max_idx]) {
-            break;
-          }
-        }
         strncpy(max_hex_str, max_buffer+temp_str_offset, 4);
         max_hex_str[4]='\0';
         max_temp[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
-Serial.println(F("MAX message received: "));
-Serial.println(max_temp[max_idx], HEX);
-Serial.println(((float)(max_temp[max_idx] & 0x1FF)) / 10);
+        Serial.println(F("MAX temperature message received: "));
+        Serial.println(((float)(max_temp[max_idx] & 0x1FF)) / 10);
       }
       free(max_hex_str);
     }
@@ -5014,28 +5136,6 @@ Serial.println(((float)(max_temp[max_idx] & 0x1FF)) / 10);
 #endif
 
 } // --- loop () ---
-
-/** *****************************************************************
- *  Function: calc_enum_offset()
- *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
- * Pass parameters:
- *  enum_addr
- * Parameters passed back:
- *  enum_addr
- * Function value returned:
- *  24 bit char pointer address
- * Global resources used:
- *  enumstr_offset
- * *************************************************************** */
- 
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
-  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
-  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
-    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
-  }
-  enum_addr = enum_addr + 0x10000;    // as we are well above 64kB with other data, first ENUM data will always be at least between 64 and 128 kB, so add 0x10000 every time.
-  return enum_addr;
-}
 
 /** *****************************************************************
  *  Function: setup()
@@ -5226,6 +5326,9 @@ void setup() {
   } else {
     Serial.println(F("Connection to max_cul failed"));
   }
+
+  InitMaxDeviceList();
+  
 #endif
   
 }
