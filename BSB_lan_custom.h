@@ -48,12 +48,12 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
   int max_avg_count = 0;
   float max_avg = 0;
   for (int x=0;x<20;x++) {
-    if (max_temp[x] > 0) {
-      max_avg += (float)(max_temp[x] & 0x1FF) / 10;
+    if (max_cur_temp[x] > 0) {
+      max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
       max_avg_count++;
       Serial.print(max_devices[x], HEX);
       Serial.print(F(": "));
-      Serial.println((float)(max_temp[x] & 0x1FF) / 10);
+      Serial.println((float)(max_cur_temp[x] & 0x1FF) / 10);
     }
   }
   if (max_avg_count > 0) {
