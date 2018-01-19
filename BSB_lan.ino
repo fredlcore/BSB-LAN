@@ -1599,7 +1599,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (dev_id & DEV_FJ_WSK) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW)) == dev_id || bus_type == 2))){
+              if((data_len == 2 && (dev_id & DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
