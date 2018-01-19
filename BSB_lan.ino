@@ -319,11 +319,22 @@ int device_id;
 uint8_t myAddr = bus.getBusAddr();
 uint8_t destAddr = bus.getBusDest();
 
+/* buffer to load PROGMEM values in RAM */
+#define BUFLEN 100
+char buffer[BUFLEN] = { 0 };
+
+/* buffer to print output lines*/
+#define OUTBUF_LEN  300
+char outBuf[OUTBUF_LEN] = { 0 };
+byte outBufLen=0;
+
+char div_unit[10];
+
 EthernetClient client;
 #ifdef MAX_CUL
 EthernetClient max_cul;
-char max_buffer[60];
-uint16_t max_temp[20] = { 0 };
+uint16_t max_cur_temp[20] = { 0 };
+uint8_t max_dst_temp[20] = { 0 };
 int32_t max_devices[20] = { 0 };
 #endif
 
@@ -393,16 +404,6 @@ double pps_values[PPS_ANZ] = { 0 };
 /* ******************************************************************
  *      ************** Program code starts here **************
  * *************************************************************** */
-/* buffer to load PROGMEM values in RAM */
-#define BUFLEN 3500
-char buffer[BUFLEN];
-
-/* buffer to print output lines*/
-#define OUTBUF_LEN  300
-char outBuf[OUTBUF_LEN];
-byte outBufLen=0;
-
-char div_unit[10];
 
 /**  ****************************************************************
  *  Function: outBufclear()
@@ -1147,18 +1148,18 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
  * Global resources used:
  *
  * *************************************************************** */
-void printENUM(char* enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
+void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint16_t val;
   char *p=outBuf+outBufLen;
 
-  if(enumstr!=NULL){
+  if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)enumstr[c+1]!=' '){
-        val=uint16_t(((uint8_t*)enumstr)[c]) << 8 | uint16_t(((uint8_t*)enumstr)[c+1]);
+      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+        val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
       }else{
-        val=uint16_t(((uint8_t*)enumstr)[c]);
+        val=uint16_t(pgm_read_byte_far(enumstr+c));
       }
       //skip leading space
       c+=2;
@@ -1166,14 +1167,14 @@ void printENUM(char* enumstr,uint16_t enumstr_len,uint16_t search_val, int print
        // enum value found
        break;
       }
-      while(enumstr[c]!=0) c++;
+      while(pgm_read_byte_far(enumstr+c)!=0) c++;
       c++;
     }
     if(c<enumstr_len){
       if(print_val){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,&enumstr[c]);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,strcpy_PF(buffer, enumstr+c));
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%s",&enumstr[c]);
+        outBufLen+=sprintf(outBuf+outBufLen,"%s",strcpy_PF(buffer, enumstr+c));
       }
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
@@ -1181,6 +1182,7 @@ void printENUM(char* enumstr,uint16_t enumstr_len,uint16_t search_val, int print
     Serial.print(p);
   }
 }
+
 
 /** *****************************************************************
  *  Function:
@@ -1427,10 +1429,10 @@ char *printTelegram(byte* msg) {
     int cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
 //    int cat=pgm_read_byte(&cmdtbl[i].category);
     int len=sizeof(ENUM_CAT);
-    memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
+//    memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //    memcpy_P(buffer, &ENUM_CAT,len);
-    buffer[len]=0;
-    printENUM(buffer,len,cat,0);
+//    buffer[len]=0;
+    printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
     Serial.print(F(" - "));
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
@@ -1438,7 +1440,7 @@ char *printTelegram(byte* msg) {
     strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
-    outBufLen+=sprintf(outBuf+outBufLen," %s: ",buffer);
+    outBufLen+=sprintf(outBuf+outBufLen," %s: ", buffer);
     Serial.print(p);
   }
   // decode parameter
@@ -1583,9 +1585,9 @@ char *printTelegram(byte* msg) {
                 if(msg[pl_start]==0){
                   int len=sizeof(ENUM_WEEKDAY);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_WEEKDAY), len);
-                  memcpy_P(buffer, &ENUM_WEEKDAY,len);
-                  buffer[len]=0;
-                  printENUM(buffer,len,msg[pl_start+1],0);
+//                  memcpy_P(buffer, &ENUM_WEEKDAY,len);
+//                  buffer[len]=0;
+                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[pl_start+1],0);
                 }else{
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1601,13 +1603,13 @@ char *printTelegram(byte* msg) {
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-                    memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
-                    buffer[len]=0;
+//                    memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
+//                    buffer[len]=0;
 
                     if (data_len == 2) {
-                      printENUM(buffer,len,msg[pl_start+1],1);
+                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
-                      printENUM(buffer,len,msg[pl_start+2],1);
+                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len,msg[pl_start+2],1);
                     }
                   }else{
                     Serial.print(F("no enum str "));
@@ -1631,6 +1633,7 @@ char *printTelegram(byte* msg) {
                   msg[pl_start + data_len]='\0'; // write terminating zero
                   Serial.print((char*)&msg[pl_start]);
                   outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[pl_start]);
+                  remove_char(outBuf, '\'');
                 } else {
                   Serial.print(F("-"));
                   outBufLen+=sprintf(outBuf+outBufLen,"-");
@@ -1648,9 +1651,10 @@ char *printTelegram(byte* msg) {
                   lval=(long(msg[pl_start+1])<<8)+long(msg[pl_start+2]);
                   int len=sizeof(ENUM_ERROR);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
-                  memcpy_P(buffer, &ENUM_ERROR,len);
-                  buffer[len]=0;
-                  printENUM(buffer,len,lval,1);
+//                  memcpy_P(buffer, &ENUM_ERROR,len);
+//                  buffer[len]=0;
+//                  printENUM(buffer,len,lval,1);
+                  printENUM(pgm_get_far_address(ENUM_ERROR),len,lval,1);
                 } else {
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -2595,26 +2599,26 @@ Serial.println(enumstr, HEX);
               client.println(F(">On</option>"));
 #endif
             } else {
-              memcpy_PF(buffer, enumstr, enumstr_len);
-              buffer[enumstr_len]=0;
+//              memcpy_PF(buffer, enumstr, enumstr_len);
+//              buffer[enumstr_len]=0;
               uint16_t val;
               uint16_t c=0;
               uint8_t bitmask=0;
               while(c<enumstr_len){
-                if(buffer[c+1]!=' ' || buffer[c+2]==' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                  val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                  val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
                   if (type == VT_BIT) {
                     bitmask = val & 0xff;
                     val = val >> 8 & 0xff;
                   }
                   c++;
                 }else{
-                  val=uint16_t(((uint8_t*)buffer)[c]);
+                  val=uint16_t(pgm_read_byte_far(enumstr+c));
                 }
                 //skip leading space
                 c+=2;
 
-                sprintf(outBuf,"%s",&buffer[c]);
+                sprintf(outBuf,"%s",strcpy_PF(buffer, enumstr+c));
                 client.print(F("<option value='"));
                 client.print(val);
                 if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10] & bitmask) == (val & bitmask)) ) {
@@ -2625,10 +2629,11 @@ Serial.println(enumstr, HEX);
                 client.print(outBuf);
                 client.println(F("</option>"));
   
-                while(buffer[c]!=0) c++;
+                while(pgm_read_byte_far(enumstr+c)!=0) c++;
                 c++;
               }
             }
+
             client.print(F("</select></td><td>"));
             if (flags !=FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set"));
@@ -3177,6 +3182,28 @@ char *lookup_descr(uint16_t line) {
 }
 
 /** *****************************************************************
+ *  Function: remove_char()
+ *  Does:     Removes a character from a given char array
+ * Pass parameters:
+ *  str, c
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  none
+ * *************************************************************** */
+
+void remove_char(char* str, char c) {
+  char *pr = str, *pw = str;
+  while (*pr) {
+    *pw = *pr++;
+    pw += (*pw != c);
+  }
+  *pw = '\0';
+}
+
+/** *****************************************************************
  *  Function: calc_enum_offset()
  *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
  * Pass parameters:
@@ -3211,6 +3238,7 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
  *  max_device_list, max_devices
  * *************************************************************** */
 
+#ifdef MAX_CUL
 void InitMaxDeviceList() {
   
   char max_id[11] = { 0 };
@@ -3220,10 +3248,8 @@ void InitMaxDeviceList() {
     for (int y=0;y<10;y++) {
       max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
     }
-Serial.println(max_id);
     for (int z=0;z<20;z++) {
       EEPROM.get(100 + 15 * z + 4, max_id_eeprom);
-Serial.println(max_id_eeprom);
       if (!strcmp(max_id, max_id_eeprom)) {
         EEPROM.get(100 + 15 * z, max_addr);
         max_devices[x] = max_addr;
@@ -3234,6 +3260,7 @@ Serial.println(max_id_eeprom);
     }
   }
 }
+#endif
 
 /** *****************************************************************
  *  Function:
@@ -3916,9 +3943,9 @@ ich mir da nicht)
           //list categories
           webPrintHeader();
           int len=sizeof(ENUM_CAT);
-          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
+//          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
-          buffer[len]=0;
+//          buffer[len]=0;
           client.print(F("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
@@ -3942,7 +3969,7 @@ ich mir da nicht)
           client.println(F("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"));
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
-            printENUM(buffer,len,cat,1);
+            printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
             Serial.println();
             client.print(F("<tr><td><A HREF='K"));
             client.print(cat);
@@ -3967,31 +3994,33 @@ ich mir da nicht)
             // check type
               if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
+              uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
               uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-              memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
+//              memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
-              buffer[enumstr_len]=0;
+//              buffer[enumstr_len]=0;
 
               uint16_t val;
               uint16_t c=0;
               while(c<enumstr_len){
-                if(buffer[c+1]!=' '){
-                  val=uint16_t(((uint8_t*)buffer)[c]) << 8 | uint16_t(((uint8_t*)buffer)[c+1]);
+                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+                  val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
                   c++;
                 }else{
-                  val=uint16_t(((uint8_t*)buffer)[c]);
+                  val=uint16_t(pgm_read_byte_far(enumstr+c));
                 }
                 //skip leading space
                 c+=2;
 
-                sprintf(outBuf,"%d - %s",val,&buffer[c]);
+                sprintf(outBuf,"%d - %s",val,strcpy_PF(buffer, enumstr+c));
                 client.println(outBuf);
                 client.println(F("<br>"));
 
-                while(buffer[c]!=0) c++;
+                while(pgm_read_byte_far(enumstr+c)!=0) c++;
                 c++;
               }
+            
             }else{
 #ifdef LANG_DE
               client.println(F("FEHLER: Falscher Typ!"));
@@ -4601,18 +4630,20 @@ ich mir da nicht)
             float max_avg = 0;
             char max_id[10];
             for (int x=0;x<20;x++) {
-              if (max_temp[x] > 0) {
-                max_avg += (float)(max_temp[x] & 0x1FF) / 10;
+              if (max_cur_temp[x] > 0) {
+                max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
-                client.print(max_devices[x], HEX);
-                client.print(F(" / "));
                 for (int y=0;y<10;y++) {
                   max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
                 }
                 max_id[10] = '\0';
                 client.print(max_id);
-                client.print(F(": "));
-                client.println((float)(max_temp[x] & 0x1FF) / 10);
+                client.print(F(" ("));
+                client.print(max_devices[x], HEX);
+                client.print(F(") :"));
+                client.print((float)(max_cur_temp[x] & 0x1FF) / 10);
+                client.print(F(" / "));
+                client.println((float)(max_dst_temp[x] / 2));
                 client.println(F("<BR>"));
               }
             }
@@ -5046,24 +5077,24 @@ custom_timer = millis();
     c = max_cul.read();
 //    Serial.print(c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
-      max_buffer[max_str_index++]=c;
+      buffer[max_str_index++]=c;
     } else {
 //      Serial.println();
       break;
     }
   }
   if (max_str_index > 0) {
-    if (max_buffer[0] == 'Z') {
+    if (buffer[0] == 'Z') {
       char* max_hex_str = (char*)malloc(7);
       char max_id[11] = { 0 };
       boolean known_addr = false;
       boolean known_eeprom = false;
 
-      strncpy(max_hex_str, max_buffer+7, 2);
+      strncpy(max_hex_str, buffer+7, 2);
       max_hex_str[2]='\0';
       uint8_t max_msg_type = (uint8_t)strtoul(max_hex_str, NULL, 16);
 
-      strncpy(max_hex_str, max_buffer+9, 6);
+      strncpy(max_hex_str, buffer+9, 6);
       max_hex_str[6]='\0';
       int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);   // will work only for MAX id < 0x7FFFFFFF
       int max_idx=0;
@@ -5076,7 +5107,7 @@ custom_timer = millis();
 
       if (max_msg_type == 0x00) {     // Device info after pressing pairing button
         for (int x=0;x<10;x++) {
-          strncpy(max_hex_str, max_buffer+29+(x*2), 2);
+          strncpy(max_hex_str, buffer+29+(x*2), 2);
           max_hex_str[2]='\0';
           max_id[x] = (char)strtoul(max_hex_str,NULL,16);
         }
@@ -5124,11 +5155,20 @@ custom_timer = millis();
           case 29: temp_str_offset = 23; break;
           default: temp_str_offset = 0; break;
         }
-        strncpy(max_hex_str, max_buffer+temp_str_offset, 4);
+        strncpy(max_hex_str, buffer+temp_str_offset, 4);
         max_hex_str[4]='\0';
-        max_temp[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
+        max_cur_temp[max_idx] = (uint16_t)strtoul(max_hex_str,NULL,16);
+
         Serial.println(F("MAX temperature message received: "));
-        Serial.println(((float)(max_temp[max_idx] & 0x1FF)) / 10);
+        Serial.println(max_addr, HEX);
+        Serial.println(((float)(max_cur_temp[max_idx] & 0x1FF)) / 10);
+
+        if (max_msg_type == 0x42) {
+          strncpy(max_hex_str, buffer+temp_str_offset, 2);
+          max_hex_str[2]='\0';
+          max_dst_temp[max_idx] = ((uint8_t)strtoul(max_hex_str,NULL,16)) & 0xFE;
+          Serial.println((float)(max_dst_temp[max_idx] / 2));
+        }
       }
       free(max_hex_str);
     }
