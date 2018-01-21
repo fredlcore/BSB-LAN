@@ -335,6 +335,7 @@ EthernetClient client;
 EthernetClient max_cul;
 uint16_t max_cur_temp[20] = { 0 };
 uint8_t max_dst_temp[20] = { 0 };
+int8_t max_valve[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int32_t max_devices[20] = { 0 };
 #endif
 
@@ -1599,7 +1600,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (dev_id & DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) == dev_id || bus_type == 2))){
+              if((data_len == 2 && (dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) == dev_id || bus_type == 2))){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
@@ -4640,10 +4641,15 @@ ich mir da nicht)
                 client.print(max_id);
                 client.print(F(" ("));
                 client.print(max_devices[x], HEX);
-                client.print(F(") :"));
-                client.print((float)(max_cur_temp[x] & 0x1FF) / 10);
+                client.print(F("): "));
+                client.print((float)max_cur_temp[x] / 10);
                 client.print(F(" / "));
-                client.println((float)(max_dst_temp[x] / 2));
+                client.print((float)max_dst_temp[x] / 2);
+                if (max_valve[x] > -1) {
+                  client.print(F(" ("));
+                  client.print(max_valve[x]);
+                  client.print(F("%)"));
+                }
                 client.println(F("<BR>"));
               }
             }
@@ -5085,7 +5091,7 @@ custom_timer = millis();
   }
   if (max_str_index > 0) {
     if (buffer[0] == 'Z') {
-      char* max_hex_str = (char*)malloc(7);
+      char* max_hex_str = (char*)malloc(9);
       char max_id[11] = { 0 };
       boolean known_addr = false;
       boolean known_eeprom = false;
@@ -5150,25 +5156,31 @@ custom_timer = millis();
 
       if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
         uint8_t temp_str_offset;
+        uint32_t max_temp_status;
+
         switch(max_str_index) {
-          case 35: temp_str_offset = 29; break;
-          case 29: temp_str_offset = 23; break;
+          case 35: temp_str_offset = 25; break;
+          case 29: temp_str_offset = 21; break;
           default: temp_str_offset = 0; break;
         }
-        strncpy(max_hex_str, buffer+temp_str_offset, 4);
-        max_hex_str[4]='\0';
-        max_cur_temp[max_idx] = (uint16_t)strtoul(max_hex_str,NULL,16);
+        strncpy(max_hex_str, buffer+temp_str_offset, 8);
+        max_hex_str[8]='\0';
+        max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
+        if (max_msg_type == 0x42) {
+          max_cur_temp[max_idx] = (((max_temp_status & 0x800000) >> 15) + ((max_temp_status & 0xFF00) >> 8));
+          max_dst_temp[max_idx] = (max_temp_status & 0x7F0000) >> 16;
+        }
+        if (max_msg_type == 0x60) {
+          max_cur_temp[max_idx] = (max_temp_status & 0x0100) + (max_temp_status & 0xFF);
+          max_dst_temp[max_idx] = (max_temp_status & 0xFF0000) >> 16;
+          max_valve[max_idx] = (max_temp_status & 0xFF000000) >> 24;
+        }
 
         Serial.println(F("MAX temperature message received: "));
         Serial.println(max_addr, HEX);
-        Serial.println(((float)(max_cur_temp[max_idx] & 0x1FF)) / 10);
-
-        if (max_msg_type == 0x42) {
-          strncpy(max_hex_str, buffer+temp_str_offset, 2);
-          max_hex_str[2]='\0';
-          max_dst_temp[max_idx] = ((uint8_t)strtoul(max_hex_str,NULL,16)) & 0xFE;
-          Serial.println((float)(max_dst_temp[max_idx] / 2));
-        }
+        Serial.println(((float)max_cur_temp[max_idx] / 10));
+        Serial.println((float)(max_dst_temp[max_idx] / 2));
+        Serial.println((max_valve[max_idx]));
       }
       free(max_hex_str);
     }
