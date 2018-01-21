@@ -53,11 +53,11 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
       max_avg_count++;
       Serial.print(max_devices[x], HEX);
       Serial.print(F(": "));
-      Serial.print((float)max_cur_temp[x] / 10);
+      Serial.print((float)max_cur_temp[x] / 10);  // Current temperature
       Serial.print(F(" / "));
-      Serial.print((float)max_dst_temp[x] / 2);
+      Serial.print((float)max_dst_temp[x] / 2);   // Desired temperature
       Serial.print(F(" / "));
-      Serial.println(max_valve[x]);
+      Serial.println(max_valve[x]);               // Valve opening in percent
     }
   }
   if (max_avg_count > 0) {
@@ -65,7 +65,7 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
     Serial.println(max_avg / max_avg_count);
 
     char set_temp[6];
-    dtostrf((max_avg/max_avg_count), 1, 1, set_temp);
+    dtostrf((max_avg/max_avg_count), 1, 1, set_temp);   // Send average temperature
 //    Serial.print(F("Setting room temperature to "));
 //    Serial.println(set_temp);
 //    set(10000, set_temp, 0);
