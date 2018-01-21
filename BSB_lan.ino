@@ -4116,6 +4116,7 @@ ich mir da nicht)
                   if (pvalstr[0]<1) {
                     pvalstr=query(l,l, true);
                     if (pvalstr[0]<1) {
+                      client.println(F("<BR>"));
                       client.print(l);
                       client.println(F("<BR>"));
                       if(outBufLen>0){
