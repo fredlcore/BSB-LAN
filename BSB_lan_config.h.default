@@ -115,7 +115,7 @@ const int ipwe_parameters[] = {
   8704                    // Aussentemperatur gemischt
 };
 
-//define MAX_CUL 192,168,178,5                  // IP of CUNO/CUNX/modified MAX!Cube
+//#define MAX_CUL 192,168,178,5                  // IP of CUNO/CUNX/modified MAX!Cube
 
 const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating thermostats that should be polled
   "KEQ0502326"                                  // use MAX! serial numbers here which have to have exactly 10 characters
