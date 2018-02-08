@@ -1,1 +1,0 @@
-PROGMEM_LATE const 

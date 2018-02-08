@@ -4983,6 +4983,7 @@ ich mir da nicht)
               }
             }
           }
+#ifdef MAX_LAN
           if (log_parameters[i] > 20006 && log_parameters[i] < 20010) {
             int max_idx = 0;
             while (max_devices[max_idx] > 0) {
@@ -5015,6 +5016,7 @@ ich mir da nicht)
               max_idx++;
             }
           }
+#endif
 #ifdef DHT_BUS
           if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
             int log_sensor = log_parameters[i] - 20100;

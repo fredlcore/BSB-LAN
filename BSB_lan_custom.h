@@ -44,7 +44,7 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
       Serial.println("Fan off");
     }
   }
-
+#ifdef MAX_LAN
   int max_avg_count = 0;
   float max_avg = 0;
   for (int x=0;x<20;x++) {
@@ -70,4 +70,5 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
 //    Serial.println(set_temp);
 //    set(10000, set_temp, 0);
   }
+#endif
 }
