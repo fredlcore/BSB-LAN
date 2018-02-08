@@ -1,4 +1,4 @@
-char version[] = "0.40";
+char version[] = "0.41";
 
 /*
  * 
@@ -53,15 +53,19 @@ char version[] = "0.40";
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
+ *       0.41  - 22.01.2018
  *
  * Changelog:
+ *       version 0.41
+ *        - Improved graph legend when plotting several parameters
+ *        - Logging of MAX! parameters now possible with logging parameter 20007
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
  *        - Added new category "22 - Energiezähler" - please note that all subsequent categories move one up!
  *        - New virtual parameter 1601 (manual TWW push)
  *        - Added Fujitsu Waterstage WSYP100DG6 device family (211)
- *        - Added Enertech device family (103)
+ *        - Added CTC device family (103)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
  *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
@@ -2997,13 +3001,13 @@ void dht22(void) {
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>temp[%d]: ",i);
       _printFIXPOINT(temp,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr><tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n<tr><td>");
       outBufLen+=sprintf(outBuf+outBufLen,"hum[%d]: ",i);
       _printFIXPOINT(hum,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr><tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n<tr><td>");
       outBufLen+=sprintf(outBuf+outBufLen,"abs_hum[%d]: ",i);
       _printFIXPOINT((216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>");
+      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n");
     }
   }
   client.println(outBuf);  
@@ -4391,6 +4395,15 @@ ich mir da nicht)
                   client.println(F("24h averages (see above)"));
 #endif
                 }
+                if (log_parameters[i] == 20007) {
+                  client.print(F("MAX!-Ist-Temperatur"));
+                }
+                if (log_parameters[i] == 20008) {
+                  client.print(F("MAX!-Soll-Temperatur"));
+                }
+                if (log_parameters[i] == 20009) {
+                  client.print(F("MAX!-Ventilöffnung"));
+                }
                 if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
                   client.print(F("DHT22-Sensor"));
                 }
@@ -4630,7 +4643,7 @@ ich mir da nicht)
 #ifdef MAX_CUL
             int max_avg_count = 0;
             float max_avg = 0;
-            char max_id[10];
+            char max_id[11];
             for (int x=0;x<20;x++) {
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
@@ -4639,6 +4652,7 @@ ich mir da nicht)
                   max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
                 }
                 max_id[10] = '\0';
+                client.print(F("<tr><td>"));
                 client.print(max_id);
                 client.print(F(" ("));
                 client.print(max_devices[x], HEX);
@@ -4651,12 +4665,14 @@ ich mir da nicht)
                   client.print(max_valve[x]);
                   client.print(F("%)"));
                 }
-                client.println(F("<BR>"));
+                client.println(F("</td></tr>"));
               }
             }
             if (max_avg_count > 0) {
+              client.print(F("<tr><td>"));
               client.print(F("AvgMax: "));
-              client.println(max_avg / max_avg_count);
+              client.print(max_avg / max_avg_count);
+              client.println(F("</td></tr>"));
             }
 #endif
           }else if(range[0]=='H'){ // handle humidity command
@@ -4772,8 +4788,8 @@ ich mir da nicht)
               }else{
                 val=LOW;
               }
-              digitalWrite(pin, val);
               pinMode(pin, OUTPUT); // TODO: does this case a problem if already set as output?
+              digitalWrite(pin, val);
             }
             client.print(F("GPIO"));
             client.print(pin);
@@ -4906,7 +4922,7 @@ ich mir da nicht)
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0 && log_parameters[i] != 20006 && log_parameters[i] != 30000) {
+        if (log_parameters[i] > 0 && log_parameters[i] < 20006 && log_parameters[i] > 20009 && log_parameters[i] != 30000) {
           dataFile.print(millis());
           dataFile.print(F(";"));
           dataFile.print(GetDateTime(date)); // get current time from heating system
@@ -4965,6 +4981,38 @@ ich mir da nicht)
                 dataFile.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
               }
+            }
+          }
+          if (log_parameters[i] > 20006 && log_parameters[i] < 20010) {
+            int max_idx = 0;
+            while (max_devices[max_idx] > 0) {
+              if ((log_parameters[i]<20009 && max_dst_temp[max_idx] > 0) || (log_parameters[i]==20009 && max_valve[max_idx] > -1)) {
+                char max_id[11];
+                for (int y=0;y<10;y++) {
+                  max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(max_idx*10)+y);
+                }
+                max_id[10] = '\0';
+
+                dataFile.print(millis());
+                dataFile.print(F(";"));
+                dataFile.print(GetDateTime(date)); // get current time from heating system
+                dataFile.print(F(";"));
+                dataFile.print(log_parameters[i]);
+                dataFile.print(F(";"));
+                switch (log_parameters[i]) {
+                  case 20007: dataFile.print(F("MaxCurTemp_")); break;
+                  case 20008: dataFile.print(F("MaxDstTemp_")); break;
+                  case 20009: dataFile.print(F("MaxValvePc_")); break;
+                }
+                dataFile.print(max_id);
+                dataFile.print(F(";"));
+                switch (log_parameters[i]) {
+                  case 20007: dataFile.println((float)max_cur_temp[max_idx]/10); break;
+                  case 20008: dataFile.println((float)max_dst_temp[max_idx]/2); break;
+                  case 20009: dataFile.println(max_valve[max_idx]); break;
+                }
+              }
+              max_idx++;
             }
           }
 #ifdef DHT_BUS
@@ -5101,9 +5149,13 @@ custom_timer = millis();
       max_hex_str[2]='\0';
       uint8_t max_msg_type = (uint8_t)strtoul(max_hex_str, NULL, 16);
 
-      strncpy(max_hex_str, buffer+9, 6);
+      if (max_msg_type == 0x02) {
+        strncpy(max_hex_str, buffer+15, 6);        
+      } else {
+        strncpy(max_hex_str, buffer+9, 6);
+      }
       max_hex_str[6]='\0';
-      int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);   // will work only for MAX id < 0x7FFFFFFF
+      int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);
       int max_idx=0;
       for (max_idx=0;max_idx<20;max_idx++) {
         if (max_addr == max_devices[max_idx]) {
@@ -5153,6 +5205,15 @@ custom_timer = millis();
             }
           }
         }
+      }
+
+      if (max_msg_type == 0x02) {
+        strncpy(max_hex_str, buffer+27, 2);        
+        max_hex_str[2]='\0';
+        max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
+        Serial.println(F("Valve position from associated thermostat received:"));
+        Serial.println(max_addr, HEX);
+        Serial.println((max_valve[max_idx]));
       }
 
       if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats

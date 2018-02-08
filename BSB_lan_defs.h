@@ -40,7 +40,7 @@
 #define DEV_EL_THI  0x00000001L   // Gerätefamilie: 097, Elco Thision S 17.1, Brötje WBS 14D
 #define DEV_EL_AQA  0x00000002L   // Gerätefamilie: 085, Elco Aquatop 8es
 #define DEV_EL_THP  0x00000004L   // Gerätefamilie: 203, Elco Thision 13 Plus
-#define DEV_BR_ISC  0x00000010L   // Gerätefamilie: 090, Brötje ISR SSR C, Logon B 2Z2
+#define DEV_BR_ISC  0x00000010L   // Gerätefamilie: 090, Brötje ISR SSR C
 #define DEV_BR_LBU  0x00000020L   // Gerätefamilie: 095, Brötje LogoBloc Unit L-UB 25C
 #define DEV_BR_SOB  0x00000040L   // Gerätefamilie: 096, Brötje NovoCondens SOB 22C, 26C    
 #define DEV_BR_PEV  0x00000080L   // Gerätefamilie: 098, Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
@@ -50,10 +50,11 @@
 #define DEV_BR_WGS  0x00000800L   // Gerätefamilie: 162, Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
 #define DEV_BR_WGE  0x00001000L   // Gerätefamilie: 163, Brötje WGB Evo 20 H
 #define DEV_BR_S26  0x00002000L   // Gerätefamilie: 028, Brötje SOB26 / LPB
+#define DEV_BR_ISB  0x00004000L   // Gerätefamilie: 116, Brötije ISR-SSR B
 #define DEV_FJ_WSK  0x00010000L   // Gerätefamilie: 170, Fujitsu Waterstage WSYK160DC9
 #define DEV_FJ_WSP  0x00020000L   // Gerätefamilie: 211, Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteindetifikation: RVS21.831F/127)
 #define DEV_WH_WTU  0x00100000L   // Gerätefamilie: 050, Weishaupt
-#define DEV_BR_ENT  0x01000000L   // Gerätefamilie: 103, Enertech GB 3025
+#define DEV_CT_380  0x01000000L   // Gerätefamilie: 103, CTC 380 IC
 #define DEV_ELCO    0x0000000fL   // ELCO devices
 #define DEV_BROETJE 0x0000fff0L   // BROETJE devices
 #define DEV_ALL     0xffffffffL   // All devices
@@ -74,9 +75,10 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {95,  DEV_BR_LBU},
 {96,  DEV_BR_SOB},
 {98,  DEV_BR_PEV},
-{103, DEV_BR_ENT},
+{103, DEV_CT_380},
 {107, DEV_BR_IZ1},
 {108, DEV_BR_BSW},
+{116, DEV_BR_ISB},
 {138, DEV_BR_BOB},
 {162, DEV_BR_WGS},
 {163, DEV_BR_WGE},
