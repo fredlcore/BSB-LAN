@@ -4983,7 +4983,7 @@ ich mir da nicht)
               }
             }
           }
-#ifdef MAX_LAN
+#ifdef MAX_CUL
           if (log_parameters[i] > 20006 && log_parameters[i] < 20010) {
             int max_idx = 0;
             while (max_devices[max_idx] > 0) {
