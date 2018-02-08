@@ -2,7 +2,7 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and (with just basic functionality) Punkt-zu-Punkt-Schnittstelle (PPS/H-Bus) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems, including logging to Micro-SD-card.
+LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and (with just basic functionality) point-to-point-interface (PPS/H-Bus) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems, including logging to Micro-SD-card.
 
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
@@ -13,6 +13,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje NovoCondens SOB 26 [RVA63.242] (oil-fired) {LPB_only} 
 - Brötje NovoCondens SOB 22C [RVS43.222] (oil-fired)
 - Brötje NovoCondens SOB 26C [RVS43.222] (oil-fired) + EWM [RVS75.390]
+- Brötje NovoCondens WOB 20D [RVS43.325] (oil-fired)
 - Brötje SensoTherm BSW-K [RVS61.843] (heat pump)
 - Brötje BBK 22E [LMS14] (gas-fired)
 - Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
