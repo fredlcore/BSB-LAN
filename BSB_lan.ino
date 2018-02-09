@@ -4106,7 +4106,7 @@ ich mir da nicht)
               if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                 Serial.println(F("bus send failed"));  // to PC hardware serial I/F
               } else {
-                if (msg[4]!=TYPE_ERR) {
+                if (msg[4+(bus_type*4)]!=TYPE_ERR) {
                   // Decode the xmit telegram and send it to the PC serial interface
                   printTelegram(tx_msg);
 #ifdef LOGGER
