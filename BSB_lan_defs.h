@@ -257,7 +257,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_TEMP_SHORT,     1.0,  0,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_SHORT5,    2.0,  1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_SHORT5_US, 2.0,  1,  U_DEG, sizeof(U_DEG)},
-{VT_VOLTAGE,        1.0,  1,  U_VOLT, sizeof(U_VOLT)},
+{VT_VOLTAGE,        10.0, 1,  U_VOLT, sizeof(U_VOLT)},
 {VT_VOLTAGEONOFF,   1.0,  0,  U_NONE, sizeof(U_NONE)},
 {VT_WEEKDAY,        1.0,  0,  U_NONE, sizeof(U_NONE)},
 {VT_YESNO,          1.0,  0,  U_NONE, sizeof(U_NONE)},
