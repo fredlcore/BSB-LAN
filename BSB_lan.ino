@@ -53,12 +53,13 @@ char version[] = "0.41";
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
- *       0.41  - 22.01.2018
+ *       0.41  - 13.02.2018
  *
  * Changelog:
- *       version 0.41
+ *       version 0.41 
  *        - Improved graph legend when plotting several parameters
  *        - Logging of MAX! parameters now possible with logging parameter 20007
+ *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -319,7 +320,6 @@ EthernetServer server(Port);
 IPAddress gateway(GatewayIP);
 #endif
 uint8_t len_idx, pl_start;
-int device_id;
 uint8_t myAddr = bus.getBusAddr();
 uint8_t destAddr = bus.getBusDest();
 
@@ -388,7 +388,8 @@ int avgCounter = 1;
 
 uint_farptr_t enumstr_offset = 0;
 
-unsigned long dev_id = 0;
+uint8_t my_dev_fam = 0;
+uint8_t my_dev_var = 0;
 
 // variables for handling of broadcast messages
 int brenner_stufe = 0;
@@ -468,7 +469,7 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
  *                   Works best if i>0 ;-)
  *  uint32 *cmd      pointer to 32-bit command code variable
  * Parameters passed back:
- *  uint16 *cmd      32-bit command code value filled in
+ *  uint32 *cmd      32-bit command code value filled in
  * Function value returned:
  *  -1        command (ProgNr) not found
  *   i >= 0   success, usable to index the matching table row
@@ -481,7 +482,8 @@ int findLine(uint16_t line
 {
   int found;
   int i;
-  uint32_t c;
+  int save_i;
+  uint32_t c, save_c;
   uint16_t l;
 
   // search for the line in cmdtbl
@@ -495,13 +497,22 @@ int findLine(uint16_t line
     l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
 //    l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
     if(l==line){
-      long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
-      if ((devices & dev_id) == dev_id) {
+      uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+      if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         found=1;
-        break;
+        save_i=i;
+        save_c=c;
+        if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+          break;
+        }
       }
     }
     if(l>line){
+      if (found) {
+        i=save_i;
+        c=save_c;
+      }
       break;
     }
     i++;
@@ -1056,7 +1067,7 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
   double dval;
   char *p=outBuf+outBufLen;
 
-  if(data_len == 2 || (data_len == 3 && dev_id == DEV_BR_IZ1)){
+  if(data_len == 2 || (data_len == 3 && my_dev_fam == 107)){
     if(msg[pl_start]==0){
       dval=double((signed char)msg[pl_start+1+(data_len==3)]) / divider;
       _printFIXPOINT(dval,precision);
@@ -1401,17 +1412,26 @@ char *printTelegram(byte* msg) {
   }
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
+  int save_i=0;
   boolean known=0;
   uint32_t c;     // command code
   c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
 //  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
     if(c == cmd){
-      long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
-      if ((devices & dev_id) == dev_id) {
+      uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+      if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         known=1;
-        break;
+        save_i = i;
+        if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+          break;
+        }
       }
+    }
+    if (known && c!=cmd) {
+      i=save_i;
+      break;
     }
     i++;
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -1604,7 +1624,7 @@ char *printTelegram(byte* msg) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) != dev_id) || (data_len == 3 && ((dev_id & (DEV_FJ_WSK+DEV_BR_BSW+DEV_FJ_WSP)) == dev_id || bus_type == 2))){
+              if((data_len == 2 && (my_dev_fam!=170 || my_dev_fam!=108 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==170 || my_dev_fam==108 || my_dev_fam==211))|| bus_type == 2){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
                   if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
                     int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
@@ -2708,7 +2728,7 @@ char *GetDateTime(char date[]){
 
 /** *****************************************************************
  *  Function:  SetDevId()
- *  Does:      Sets device_id and dev_id
+ *  Does:      Sets my_dev_fam and my_dev_var
  *
  * Pass parameters:
  *   none
@@ -2721,19 +2741,14 @@ char *GetDateTime(char date[]){
  * *************************************************************** */
 
 void SetDevId() {
-  uint8_t family=0;
-  boolean known=0;
-
-//  if (bus_type == 1) {
-//    device_id = 1;
-//  } else {
-  if (fixed_device_id < 1) {
-    dev_id = 0;
-    device_id = strtod(query(6225,6225,1),NULL);
+  if (fixed_device_family < 1) {
+    my_dev_fam = strtod(query(6225,6225,1),NULL);
+    my_dev_var = strtod(query(6226,6226,1),NULL);
   } else {
-    device_id = fixed_device_id;
+    my_dev_fam = fixed_device_family;
+    my_dev_var = fixed_device_variant;
   }
-//  }
+/*
   int i=0;
   family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   while(family!=DEV_NONE){
@@ -2753,10 +2768,11 @@ void SetDevId() {
   } else {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
   }
+*/
   Serial.print(F("Device family: "));
-  Serial.println(device_id);
-  Serial.print(F("Device ID: "));
-  Serial.println(dev_id);
+  Serial.println(my_dev_fam);
+  Serial.print(F("Device variant: "));
+  Serial.println(my_dev_var);
 }
 
 /** *****************************************************************
@@ -2809,6 +2825,7 @@ void LogTelegram(byte* msg){
   char device[5];
   uint32_t cmd;
   int i=0;        // begin with line 0
+  int save_i=0;
   boolean known=0;
   uint32_t c;     // command code
   uint8_t type=0;
@@ -2830,11 +2847,19 @@ void LogTelegram(byte* msg){
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
       if(c == cmd){
-        long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + i * sizeof(cmdtbl[0]));
-        if ((devices & dev_id) == dev_id) {
+        uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
+        uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var ==255)) {
           known=1;
-          break;
+          save_i = i;
+          if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+            break;
+          }
         }
+      }
+      if (known && c!=cmd) {
+        i=save_i;
+        break;
       }
       i++;
       c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -2883,7 +2908,6 @@ void LogTelegram(byte* msg){
             i=0;
             while(type!=VT_UNKNOWN){
               if(type == cmd_type){
-                known=1;
                 break;
               }
               i++;
@@ -2899,9 +2923,9 @@ void LogTelegram(byte* msg){
             precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
             for (i=0;i<data_len-1+bus_type;i++) {
               if (bus_type == 1) {
-                dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
-              } else {
                 dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
+              } else {
+                dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
               }
             }
             dval = dval / operand;
@@ -3334,7 +3358,7 @@ void loop() {
           Serial.print(F("INF: TWW-Status: "));
           Serial.println(msg[11]);      // assumed info byte
 
-          if( (msg[11]==0x4D && (dev_id & ~DEV_EL_THI) == dev_id) || (msg[11]==0xCD && (dev_id & DEV_EL_THI) == dev_id)) {  // TWW Ladung on BROETJE_SOB and THISION
+          if( (msg[11]==0x4D && my_dev_fam != 97) || (msg[11]==0xCD && my_dev_fam == 97)) {  // TWW Ladung on BROETJE_SOB and THISION
             if(TWW_start==0){        // has not been timed
               TWW_start=millis();   // keep current timestamp
               TWW_count++;          // increment number of starts
@@ -4095,14 +4119,20 @@ ich mir da nicht)
           uint16_t l;
           char* pvalstr=NULL;
           client.print(F("Gerätefamilie: "));
-          client.println(device_id);
+          client.println(my_dev_fam);
+          client.print(F("<BR>Gerätevariante: "));
+          client.println(my_dev_var);
           client.println(F("<BR>Start Test...<BR>"));
           for (int j=0;j<10000;j++) {
+            if (pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + j * sizeof(cmdtbl[0])) == c) {
+              continue;
+            }
             c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + j * sizeof(cmdtbl[0]));
             if(c==CMD_END) break;
             l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + j * sizeof(cmdtbl[0]));
-            long devices = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].devices) + j * sizeof(cmdtbl[0]));
-            if ((devices & dev_id) != dev_id && c!=CMD_UNKNOWN) {
+            uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + j * sizeof(cmdtbl[0]));
+            uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + j * sizeof(cmdtbl[0]));
+            if (((dev_fam != my_dev_fam && dev_fam != 255) || (dev_var != my_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
               if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                 Serial.println(F("bus send failed"));  // to PC hardware serial I/F
               } else {
@@ -5355,7 +5385,7 @@ void setup() {
   index_first_enum = findLine(20, 0, &c);
   index_last_enum = findLine(10510, 0, &c);
   temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
-  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
+  temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 
   if (temp_offset1 > temp_offset2) {
     enumstr_offset = temp_offset1;
@@ -5432,7 +5462,7 @@ void setup() {
 // receive inital date/time from heating system
     SetDateTime();
   
-// receive device_id (Gerätefamilie) from heating system
+// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
     SetDevId();
   }
 
