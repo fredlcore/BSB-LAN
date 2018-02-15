@@ -53,12 +53,14 @@ char version[] = "0.41";
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
- *       0.41  - 13.02.2018
+ *       0.41  - 15.02.2018
  *
  * Changelog:
  *       version 0.41 
  *        - Improved graph legend when plotting several parameters
+ *        - Added JSON export with /J=a,b,c,d...
  *        - Logging of MAX! parameters now possible with logging parameter 20007
+ *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
@@ -3023,15 +3025,15 @@ void dht22(void) {
     Serial.print(F("]: "));
     Serial.println(hum);
     if (hum > 0 && hum < 101) {
-      outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>temp[%d]: ",i);
+      outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
       _printFIXPOINT(temp,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n<tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n<tr><td>\n");
       outBufLen+=sprintf(outBuf+outBufLen,"hum[%d]: ",i);
       _printFIXPOINT(hum,2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n<tr><td>");
+      outBufLen+=sprintf(outBuf+outBufLen," &#037;\n</td></tr>\n<tr><td>\n");
       outBufLen+=sprintf(outBuf+outBufLen,"abs_hum[%d]: ",i);
       _printFIXPOINT((216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      outBufLen+=sprintf(outBuf+outBufLen,"</td></tr>\n");
+      outBufLen+=sprintf(outBuf+outBufLen," g/m<sup>3</sup>\n</td></tr>\n");
     }
   }
   client.println(outBuf);  
@@ -3071,9 +3073,10 @@ void ds18b20(void) {
     Serial.print(F("]: "));
     Serial.print(t);
     Serial.println();
-    outBufLen+=sprintf(outBuf+outBufLen,"temp[%d]: ",i);
+
+    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
     _printFIXPOINT(t,2);
-    outBufLen+=sprintf(outBuf+outBufLen,"<br>");
+    outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
   }
   client.println(outBuf);
   //webPrintFooter();
@@ -3100,7 +3103,7 @@ void ds18b20(void) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  webPrintHeader();
+  client.println(F("Content-Type: text/html\n\n"));
   int i;
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
@@ -3194,7 +3197,6 @@ void Ipwe() {
 #endif
 
   client.print(F("</tbody></table></form>"));
-  webPrintFooter();
 } 
 
 #endif    // --- Ipwe() ---
@@ -3805,7 +3807,7 @@ ich mir da nicht)
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIKLMNOPQRSTVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -4115,7 +4117,7 @@ ich mir da nicht)
         if(p[1]=='Q') {
 #ifdef DEBUG
           webPrintHeader();
-          uint32_t c;
+          uint32_t c=0;
           uint16_t l;
           char* pvalstr=NULL;
           client.print(F("Gerätefamilie: "));
@@ -4225,7 +4227,73 @@ ich mir da nicht)
           webPrintFooter();
           break;
         }
-          
+
+        if (p[1]=='J' && p[2]=='=') {
+          client.println(F("HTTP/1.1 200 OK"));
+          client.println(F("Content-Type: application/json"));
+          client.println();
+          client.println(F("["));
+
+          int i=0;
+          uint32_t c=0;
+
+          char* json_token = strtok(p,"=,");  // drop everything before "="
+          json_token= strtok(NULL, "=,");
+          while (json_token!=0) {
+            int json_parameter = atoi(json_token);
+            i=findLine(json_parameter,0,&c);
+            int k=0;
+            uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+            uint8_t div_unit_len=0;
+            uint8_t div_data_type=0;
+            uint8_t div_type=0;
+            while(div_type!=VT_UNKNOWN){
+              div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+              div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
+              div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+              memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+              if(type == div_type){
+                break;
+              }
+              k++;
+            }
+
+            client.println(F("  {"));
+            client.print(F("    \"Parameter\": "));
+            client.print(json_parameter);
+            client.println(F(","));
+
+            client.print(F("    \"Value\": \""));
+            char* ret_val_str = query(json_parameter,json_parameter,1);
+            char* unit_str = strstr(ret_val_str, div_unit);
+            if (unit_str != NULL) {
+              unit_str--;
+              *unit_str = '\0';
+            }
+            client.print(ret_val_str);
+            client.println(F("\","));
+
+            client.print(F("    \"Unit\": \""));
+            client.print(div_unit);
+            client.println(F("\","));
+
+            client.print(F("    \"DataType\": "));
+            client.print(div_data_type);
+            client.println();
+
+            client.print(F("  }"));
+
+            json_token = strtok(NULL,"=,");
+            if (json_token!=0) {
+              client.println(F(","));
+            } else {
+              client.println();
+            }
+          }
+          client.println(F("]"));
+          break;
+        }
+
 #ifdef LOGGER            
         if(p[1]=='D'){ // access datalog file
           if (p[2]=='0') {  // remove datalog file
@@ -4233,7 +4301,7 @@ ich mir da nicht)
             SD.remove("datalog.txt");
             File dataFile = SD.open("datalog.txt", FILE_WRITE);
             if (dataFile) {
-              dataFile.println(F("Milliseconds;Date;Parameter;Description;Value"));
+              dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
               dataFile.close();
 #ifdef LANG_DE
               client.println(F("Datei datalog.txt entfernt und neu generiert."));
@@ -4751,14 +4819,32 @@ ich mir da nicht)
             } else {
               for (int i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
-                  client.print(F("<tr><td>"));
+                  client.print(F("<tr><td>\n"));
                   client.print(avg_parameters[i]);
                   client.print(F(" Avg"));
                   client.print(lookup_descr(avg_parameters[i]));            
                   client.print(F(": "));
                   double rounded = round(avgValues[i]*10);
-                  client.println(rounded/10);
-// TODO: extract and display unit text from cmdtbl.type
+                  client.print(rounded/10);
+                  client.print(F(" "));
+
+                  uint32_t c=0;
+                  int line=findLine(avg_parameters[i],0,&c);
+                  int k=0;
+                  uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+                  uint8_t div_unit_len=0;
+                  uint8_t div_type=0;
+                  while(div_type!=VT_UNKNOWN){
+                    div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+                    div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+                    memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+                    if(type == div_type){
+                      break;
+                    }
+                    k++;
+                  }
+                  client.println(div_unit);
+
                   client.println(F("</td></tr>"));
                 }
               }
@@ -5008,8 +5094,25 @@ ich mir da nicht)
                 dataFile.print(lookup_descr(avg_parameters[i]));            
                 dataFile.print(F(";"));
                 double rounded = round(avgValues[i]*10);
-                dataFile.println(rounded/10);
-// TODO: extract and display unit text from cmdtbl.type
+                dataFile.print(rounded/10);
+                dataFile.print(F(";"));
+
+                uint32_t c=0;
+                int line=findLine(avg_parameters[i],0,&c);
+                int k=0;
+                uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+                uint8_t div_unit_len=0;
+                uint8_t div_type=0;
+                while(div_type!=VT_UNKNOWN){
+                  div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+                  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+                  memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+                  if(type == div_type){
+                    break;
+                  }
+                  k++;
+                }
+                dataFile.println(div_unit);
               }
             }
           }
@@ -5383,7 +5486,7 @@ void setup() {
   uint32_t temp_offset2=0;
 
   index_first_enum = findLine(20, 0, &c);
-  index_last_enum = findLine(10510, 0, &c);
+  index_last_enum = findLine(10510, index_first_enum, &c);
   temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 

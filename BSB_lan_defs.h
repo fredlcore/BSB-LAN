@@ -39,7 +39,7 @@
 /* heating systems */
 
 #define DEV_097_ALL  97,255   // Elco Thision S 17.1, Brötje WBS 14D
-#define DEV_097_100  97,100   // Elco Thision S 17.1, Brötje WBS 14D
+#define DEV_097_100  97,100   // Brötje WGB 20 C
 #define DEV_085_ALL  85,255   // Elco Aquatop 8es
 #define DEV_203_ALL  203,255  // Elco Thision 13 Plus
 #define DEV_090_ALL  90,255    // Brötje ISR SSR C
@@ -236,71 +236,82 @@ typedef struct {
 typedef struct {
   uint8_t   type;             // message type (e.g. VT_TEMP)
   float     operand;          // both for divisors as well as factors (1/divisor)
+  uint8_t   data_type;        // Value, String, Date...
   uint8_t   precision;
   const char   *unit;
   uint8_t unit_len;
 } units;
 
+typedef enum {
+  DT_VALS,    // plain value
+  DT_ENUM,    // value followed by text
+  DT_WDAY,    // weekday
+  DT_HHMM,    // hour:minute
+  DT_DTTM,    // date and time
+  DT_DDMM,    // day and month
+  DT_STRN     // string
+} dt_types_t;
+
 PROGMEM_LATE const units optbl[]={
-{VT_BIT,            1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_BYTE,           1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_CLOSEDOPEN,     1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_DAYS,           1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_ENUM,           1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS_SHORT,    1.0,  0,  U_HOUR, sizeof(U_HOUR)},
-{VT_LPBADDR,        1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_MINUTES_SHORT,  1.0,  0,  U_MIN, sizeof(U_MIN)},
-{VT_MONTHS,         1.0,  0,  U_MONTHS, sizeof(U_MONTHS)},
-{VT_ONOFF,          1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_PERCENT,        1.0,  0,  U_PERC, sizeof(U_PERC)},
-{VT_PERCENT5,       2.0,  0,  U_PERC, sizeof(U_PERC)},
-{VT_PRESSURE,       10.0, 1,  U_BAR, sizeof(U_BAR)},
-{VT_SECONDS_SHORT,  1.0,  0,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_SHORT4, 4.0,  1,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_SHORT5, 5.0,  1,  U_SEC, sizeof(U_SEC)},
-{VT_TEMP_SHORT,     1.0,  0,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT5,    2.0,  1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT5_US, 2.0,  1,  U_DEG, sizeof(U_DEG)},
-{VT_VOLTAGE,        10.0, 1,  U_VOLT, sizeof(U_VOLT)},
-{VT_VOLTAGEONOFF,   1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_WEEKDAY,        1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_YESNO,          1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_CURRENT,        100.0,2,  U_CURR, sizeof(U_CURR)},
-{VT_DAYS_WORD,      1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_ERRORCODE,      1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_FP1,            10.0, 1,  U_NONE, sizeof(U_NONE)},
-{VT_FP02,           50.0, 2,  U_NONE, sizeof(U_NONE)},
-{VT_GRADIENT,       1.0,  0,  U_GRADIENT, sizeof(U_GRADIENT)},
-{VT_HOUR_MINUTES,   1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS_WORD,     1.0,  0,  U_HOUR, sizeof(U_HOUR)},
-{VT_MINUTES_WORD,   1.0,  0,  U_MIN, sizeof(U_MIN)},
-{VT_PERCENT_WORD,   2.0,  1,  U_PERC, sizeof(U_PERC)},
-{VT_PERCENT_100,    100.0,1,  U_PERC, sizeof(U_PERC)},
-{VT_POWER_WORD,     10.0, 1,  U_KW, sizeof(U_KW)},
-{VT_PRESSURE_WORD,  10.0, 1,  U_BAR, sizeof(U_BAR)},
-{VT_PROPVAL,        16.0, 2,  U_NONE, sizeof(U_NONE)},
-{VT_SECONDS_WORD,   1.0,  0,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_WORD5,  2.0,  0,  U_SEC, sizeof(U_SEC)},
-{VT_SPEED,          0.02,0, U_RPM, sizeof(U_RPM)},
-{VT_SPEED2,         1.0,  0,  U_RPM, sizeof(U_RPM)},
-{VT_TEMP,           64.0, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_WORD,      1.0,  1,  U_DEG, sizeof(U_DEG)},
-{VT_LITERPERHOUR,   1.0,  0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
-{VT_LITERPERMIN,    10.0, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
-{VT_UINT,           1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT5,          0.2,0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT10,         10.0, 1,  U_NONE, sizeof(U_NONE)},
-{VT_SINT,           1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_DWORD,          1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS,          3600.0,0, U_HOUR, sizeof(U_HOUR)},
-{VT_MINUTES,        60.0, 0,  U_MIN, sizeof(U_MIN)},
-{VT_POWER,          10.0, 1,  U_KW, sizeof(U_KW)},
-{VT_DATETIME,       1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_SUMMERPERIOD,   1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_VACATIONPROG,   1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_TIMEPROG,       1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_STRING,         1.0,  0,  U_NONE, sizeof(U_NONE)},
-{VT_UNKNOWN,        1.0,  1,  U_NONE, sizeof(U_NONE)},
+{VT_BIT,            1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DAYS,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
+{VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
+{VT_MONTHS,         1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS)},
+{VT_ONOFF,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
+{VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
+{VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
+{VT_SECONDS_SHORT,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
+{VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
+{VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
+{VT_TEMP_SHORT,     1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG)},
+{VT_TEMP_SHORT5,    2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_TEMP_SHORT5_US, 2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_VOLTAGE,        10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
+{VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE)},
+{VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
+{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
+{VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
+{VT_GRADIENT,       1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
+{VT_HOUR_MINUTES,   1.0,    DT_HHMM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_HOURS_WORD,     1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
+{VT_MINUTES_WORD,   1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
+{VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
+{VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
+{VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
+{VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
+{VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
+{VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
+{VT_SPEED,          0.02,   DT_VALS, 0, U_RPM, sizeof(U_RPM)},
+{VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
+{VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
+{VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
+{VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_UINT5,          0.2,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
+{VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_HOURS,          3600.0, DT_VALS,0, U_HOUR, sizeof(U_HOUR)},
+{VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
+{VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_TIMEPROG,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
+{VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 };
 
 /****************************************************/
