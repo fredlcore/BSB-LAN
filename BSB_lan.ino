@@ -3107,7 +3107,10 @@ void ds18b20(void) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  client.println(F("Content-Type: text/html\n\n"));
+  client.println(F("HTTP/1.1 200 OK"));
+  client.println(F("Content-Type: text/html"));
+  client.println();
+
   int i;
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
