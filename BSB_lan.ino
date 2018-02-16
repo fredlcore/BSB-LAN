@@ -4115,7 +4115,7 @@ ich mir da nicht)
         }
 
         if(p[1]=='Q') {
-#ifdef DEBUG
+//#ifdef DEBUG
           webPrintHeader();
           uint32_t c=0;
           uint16_t l;
@@ -4178,7 +4178,7 @@ ich mir da nicht)
           }
           client.println(F("<BR>Test Ende.<BR>"));
           webPrintFooter();
-#endif
+//#endif
           break;
         }
 
