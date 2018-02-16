@@ -1425,13 +1425,15 @@ char *printTelegram(byte* msg) {
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
-        known=1;
-        save_i = i;
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           break;
+        } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
+          known=1;
+          save_i=i;
         }
       }
     }
+
     if (known && c!=cmd) {
       i=save_i;
       break;
@@ -2852,11 +2854,12 @@ void LogTelegram(byte* msg){
       if(c == cmd){
         uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
         uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
-        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var ==255)) {
-          known=1;
-          save_i = i;
+        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
           if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
             break;
+          } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
+            known=1;
+            save_i=i;
           }
         }
       }
