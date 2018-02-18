@@ -62,6 +62,7 @@ char version[] = "0.41";
  *        - Logging of MAX! parameters now possible with logging parameter 20007
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
+ *        - Bugfix in ENUM memory adressing
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -344,6 +345,11 @@ uint8_t max_dst_temp[20] = { 0 };
 int8_t max_valve[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 int32_t max_devices[20] = { 0 };
 #endif
+/*
+int16_t json_parameters[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+double json_values[20] = { 0 };
+uint8_t json_types[20] = { 0 }; 
+*/
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
 char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
@@ -1191,9 +1197,13 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
     }
     if(c<enumstr_len){
       if(print_val){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,strcpy_PF(buffer, enumstr+c));
+        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+        buffer[sizeof(buffer)-1] = 0;
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%s",strcpy_PF(buffer, enumstr+c));
+        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+        buffer[sizeof(buffer)-1] = 0;
+        outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
@@ -1473,6 +1483,7 @@ char *printTelegram(byte* msg) {
     outBufLen+=sprintf(outBuf+outBufLen," %s: ", buffer);
     Serial.print(p);
   }
+
   // decode parameter
   int data_len=0;
   if (bus_type == 0) {
@@ -3773,7 +3784,7 @@ ich mir da nicht)
 #endif
 
         // Flush any remaining bytes from the client buffer
-        client.flush();
+//        client.flush();
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
         String urlString = String(cLineBuffer);
@@ -3784,6 +3795,7 @@ ich mir da nicht)
 // IPWE START
 #ifdef IPWE
         if (urlString == "/ipwe.cgi") {
+          client.flush();
           Ipwe();
           break;
         }
@@ -3801,12 +3813,16 @@ ich mir da nicht)
         *p='\0';     // mark end of string
         if(strcmp(cLineBuffer+1, PASSKEY)){
           Serial.println(F("no matching passkey"));
+          client.flush();
           webPrintHeader();
           webPrintFooter();
           break;
         }
         *p='/';
 #endif
+        if (p[1] != 'J') {
+          client.flush();
+        }
         // simply print the website
         if(!strcmp(p,"/")){
           webPrintSite();
@@ -4235,69 +4251,147 @@ ich mir da nicht)
           break;
         }
 
-        if (p[1]=='J' && p[2]=='=') {
+        if (p[1]=='J') {
           client.println(F("HTTP/1.1 200 OK"));
           client.println(F("Content-Type: application/json"));
           client.println();
           client.println(F("["));
 
           int i=0;
-          uint32_t c=0;
+          uint32_t cmd=0;
+            
+          // Parse potential JSON payload
 
-          char* json_token = strtok(p,"=,");  // drop everything before "="
-          json_token= strtok(NULL, "=,");
-          while (json_token!=0) {
-            int json_parameter = atoi(json_token);
-            i=findLine(json_parameter,0,&c);
-            int k=0;
-            uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
-            uint8_t div_unit_len=0;
-            uint8_t div_data_type=0;
-            uint8_t div_type=0;
-            while(div_type!=VT_UNKNOWN){
-              div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
-              div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
-              div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
-              memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
-              if(type == div_type){
-                break;
-              }
-              k++;
-            }
-
-            client.println(F("  {"));
-            client.print(F("    \"Parameter\": "));
-            client.print(json_parameter);
-            client.println(F(","));
-
-            client.print(F("    \"Value\": \""));
-            char* ret_val_str = query(json_parameter,json_parameter,1);
-            char* unit_str = strstr(ret_val_str, div_unit);
-            if (unit_str != NULL) {
-              unit_str--;
-              *unit_str = '\0';
-            }
-            client.print(ret_val_str);
-            client.println(F("\","));
-
-            client.print(F("    \"Unit\": \""));
-            client.print(div_unit);
-            client.println(F("\","));
-
-            client.print(F("    \"DataType\": "));
-            client.print(div_data_type);
-            client.println();
-
-            client.print(F("  }"));
-
-            json_token = strtok(NULL,"=,");
-            if (json_token!=0) {
-              client.println(F(","));
-            } else {
-              client.println();
+          char json_temp[11];
+          char json_value_string[11];
+          uint8_t j_char_idx = 0;
+          uint16_t json_parameter = 0;
+          double json_value = 0;
+          boolean json_type = 0;
+          boolean p_flag = false;
+          boolean v_flag = false;
+          boolean t_flag = false;
+          boolean output = false;
+          boolean been_here = false;
+          char* json_token = strtok(p, "=,"); // drop everything before "="
+          json_token = strtok(NULL, "=,");
+          if (json_token!=NULL) {
+            client.flush();
+          }
+          while (client.available()) {
+            if (client.read()=='{') {
+              break;
             }
           }
+          while (client.available() || json_token!=NULL) {
+            if (client.available()) {
+              char c = client.read();
+              if (c == 'P') { p_flag = true; }
+              if (c == 'V') { v_flag = true; }
+              if (c == 'T') { t_flag = true; }
+              if (c == '}') { output = true; }
+              if (isdigit(c)) {
+                while (client.available() && j_char_idx < 10 && (isdigit(c) || c=='.')) {
+                  json_temp[j_char_idx] = c;
+                  c = client.read();
+                  j_char_idx++;
+                }
+                json_temp[j_char_idx] = '\0';
+                j_char_idx = 0;
+                if (p_flag == true) {
+                  json_parameter = atoi(json_temp);
+                  p_flag = false;
+                }
+                if (v_flag == true) {
+                  json_value = strtod(json_temp, NULL);
+                  strcpy(json_value_string, json_temp);
+                  v_flag = false;
+                }
+                if (t_flag == true) {
+                  json_type = atoi(json_temp);
+                  t_flag = false;
+                }
+              }
+            } else {
+              json_parameter = atoi(json_token);
+            }
+            if (output || json_token != NULL) {
+              output = false;
+              if (!been_here) {
+                been_here = true;
+              } else {
+                client.println(F(","));
+              }
+              if (p[2]=='Q' || json_token != NULL) {
+                i=findLine(json_parameter,0,&cmd);
+                int k=0;
+                uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+                uint8_t div_unit_len=0;
+                uint8_t div_data_type=0;
+                uint8_t div_type=0;
+                while(div_type!=VT_UNKNOWN){
+                  div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+                  div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
+                  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+                  memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+                  if(type == div_type){
+                    break;
+                  }
+                  k++;
+                }
+
+                client.println(F("  {"));
+                client.print(F("    \"Parameter\": "));
+                client.print(json_parameter);
+                client.println(F(","));
+
+                client.print(F("    \"Value\": \""));
+                char* ret_val_str = query(json_parameter,json_parameter,1);
+                char* unit_str = strstr(ret_val_str, div_unit);
+                if (unit_str != NULL) {
+                  unit_str--;
+                  *unit_str = '\0';
+                }
+                client.print(ret_val_str);
+                client.println(F("\","));
+
+                client.print(F("    \"Unit\": \""));
+                client.print(div_unit);
+                client.println(F("\","));
+
+                client.print(F("    \"DataType\": "));
+                client.print(div_data_type);
+                client.println();
+
+                client.print(F("  }"));
+
+                if (json_token != NULL) {
+                  json_token = strtok(NULL,"=,");
+                }
+              }
+
+              if (p[2]=='S') {
+                Serial.print(F("Setting parameter "));
+                Serial.print(json_parameter);
+                Serial.print(F(" to "));
+                Serial.print(json_value_string);
+                Serial.print(F(" with type "));
+                Serial.println(json_type);
+                int status = set(json_parameter, json_value_string, json_type);
+                client.println(F("  {"));
+                client.print(F("    \"Parameter\": "));
+                client.print(json_parameter);
+                client.println(F(","));
+                client.print(F("    \"Status\": "));
+                client.print(status);
+                client.println();
+                client.print(F("  }"));
+              }
+            }
+          }
+          client.println();
           client.println(F("]"));
+          client.flush();
           break;
         }
 
@@ -5483,7 +5577,7 @@ void setup() {
   Serial.println(numSensors);
 #endif
 
-// figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and ENUM10510).
+// figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and ENUM8779).
 // Then use this as refernce to later determine if a page boundary >64kb has occurred.
 
   uint32_t c; 
@@ -5493,15 +5587,18 @@ void setup() {
   uint32_t temp_offset2=0;
 
   index_first_enum = findLine(20, 0, &c);
-  index_last_enum = findLine(10510, index_first_enum, &c);
+  index_last_enum = findLine(8779, 0, &c);
   temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 
+/*
   if (temp_offset1 > temp_offset2) {
     enumstr_offset = temp_offset1;
   } else {
     enumstr_offset = temp_offset2;
   }
+*/
+  enumstr_offset = temp_offset2;  // It seems that the compiler always starts at the end, so the last ENUM variable is put into (lower) memory first, so this is our point of reference.
 
 // initialize average calculation
 
