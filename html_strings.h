@@ -403,9 +403,9 @@ const char url_command_html[] PROGMEM_LATE =
 #endif  
 #else
 #ifdef LANG_DE
-  "<tr><td valign=top>/X</td><td>Reset des Arduino durchführen.</td></tr>\n"
+  "<tr><td valign=top>/N</td><td>Reset des Arduino durchführen.</td></tr>\n"
 #else
-  "<tr><td valign=top>/X</td><td>Execute a reset of the Arduino.</td></tr>\n"
+  "<tr><td valign=top>/N</td><td>Execute a reset of the Arduino.</td></tr>\n"
 #endif
 #endif
   "</table>\n"
