@@ -2,7 +2,9 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle über Elco Thision, Brötje und baugleiche Heizungssysteme, einschließlich Logging-Funktion auf Micro-SD-Karte.
+LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte.
+
+<b>Ausführliche Informationen zum Adapter und der Software sind im Handbuch zu finden.</b>
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
  - Brötje ISR-SSR [RVS63.283] (Solar-System-Regler) 
@@ -41,7 +43,6 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
 
 Bitte beachte: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit BSB, LPB oder PPS arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 
-Instruktionen, wie die Software konfiguriert werden muss etc. können dem <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO_de.md">HowTo</A> und dem Handbuch entnommen werden.<BR>
 Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="https://forum.fhem.de/index.php?topic=29762.new;topicseen#new">hier</A> nachvollzogen werden.<BR>
 
 Einige Adapterbausätze sind noch aus einer Sammelbestellung verfügbar, die direkt auf einen Arduino Mega 2560 oder (mit anderen Pinheadern) auf einen Raspberry Pi 2 passen. Kontaktiere bsb (ät) code-it.de , falls du daran interessiert bist (Deutsch oder Englisch).
