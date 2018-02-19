@@ -381,12 +381,18 @@ const char url_command_html[] PROGMEM_LATE =
 #ifdef LANG_DE
   "<tr><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
   "<tr><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
+  "<tr><td valign=top>/J=x,y,z</td><td>JSON-Export der Parameter x, y and z.\n"
+  "<tr><td valign=top>/JQ</td><td>Empfängt einen HTTP-POST Request mit der (mehrfach möglichen) Variable \"Parameter\" und gibt die Werte als JSON-Export zurück.\n"
+  "<tr><td valign=top>/JS</td><td>Empfängt einen HTTP-POST Request mit den (mehrfach möglichen) Variablen \"Parameter\", \"Value\" (nur numerisch) und \"Type\" (0=INF, 1=SET) und gibt die Werte als JSON-Export zurück.\n"
   "<tr><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>\n"
   "<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur unbekannte commandIDs (x=1) oder alle Telegramme (x=0).</td></tr>\n"
   "<tr><td valign=top>/LU=x</td><td>Wenn Bus-Telegramme geloggt werden (Logging-Parameter 30000 als einzigen Parameter setzen!), logge nur Broadcast-Telegramme (x=1) oder alle Telegramme (x=0).</td></tr>\n"
 #else
   "<tr><td valign=top>/D</td><td>Dump logged data from datalog.txt on micro SD card.</td></tr>\n"
   "<tr><td valign=top>/D0</td><td>Delete datalog.txt on micro SD card.</td></tr>\n"
+  "<tr><td valign=top>/J=x,y,z</td><td>JSON-Export of parameterx x, y and z.\n"
+  "<tr><td valign=top>/JQ</td><td>Receives a HTTP-POST Request with (multiple occurrances of) variable \"Parameter\" and returns the values as JSON-export.\n"
+  "<tr><td valign=top>/JS</td><td>Receives a HTTP-POST Request with (multiple occurrances of) variables \"Parameter\", \"Value\" (numeric only) and \"Type\" (0=INF, 1=SET) and returns the values as JSON-export.\n"
   "<tr><td valign=top>/L=x,y,z</td><td>Set logging interval to x seconds and (optionally) sets logging parameters to y and z (up to 20). To deactivate logging, you can use L=0,0.</td></tr>\n"
   "<tr><td valign=top>/LU=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only unknown command IDs (x=1) or all (x=0) telegrams.</td></tr>\n"
   "<tr><td valign=top>/LB=x</td><td>When logging bus telegrams (logging parameter 30000 only), log only broadcast telegrams (x=1) or all (x=0) telegrams.</td></tr>\n"
@@ -400,7 +406,7 @@ const char url_command_html[] PROGMEM_LATE =
 #else
   "<tr bgcolor=#f0f0f0><td valign=top></td><td>Activate definement <code>#define RESET</code> in BSB_lan_config.h for the following command:</td></tr>\n"
   "<tr bgcolor=#f0f0f0><td valign=top>/N</td><td>Execute a reset of the Arduino.</td></tr>\n"
-#endif  
+#endif
 #else
 #ifdef LANG_DE
   "<tr><td valign=top>/N</td><td>Reset des Arduino durchführen.</td></tr>\n"
