@@ -53,16 +53,16 @@ char version[] = "0.41";
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
- *       0.41  - 15.02.2018
+ *       0.41  - 18.02.2018
  *
  * Changelog:
  *       version 0.41 
  *        - Improved graph legend when plotting several parameters
- *        - Added JSON export with /J=a,b,c,d...
+ *        - Added JSON export; query with /J=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
- *        - Bugfix in ENUM memory adressing
+ *        - Bugfix ENUM memory adressing
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
