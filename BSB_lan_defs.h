@@ -1498,6 +1498,26 @@ const char STR6840[] PROGMEM = "Historie 5";
 const char STR6841[] PROGMEM = "Fehlercode 5";
 const char STR6845[] PROGMEM = "SW Diagnosecode 5";
 const char STR6846[] PROGMEM = "FA Phase 5";
+const char STR6850[] PROGMEM = "Historie 6";
+const char STR6851[] PROGMEM = "Fehlercode 6";
+const char STR6855[] PROGMEM = "SW Diagnosecode 6";
+const char STR6856[] PROGMEM = "FA Phase 6";
+const char STR6860[] PROGMEM = "Historie 7";
+const char STR6861[] PROGMEM = "Fehlercode 7";
+const char STR6865[] PROGMEM = "SW Diagnosecode 7";
+const char STR6866[] PROGMEM = "FA Phase 7";
+const char STR6870[] PROGMEM = "Historie 8";
+const char STR6871[] PROGMEM = "Fehlercode 8";
+const char STR6875[] PROGMEM = "SW Diagnosecode 8";
+const char STR6876[] PROGMEM = "FA Phase 8";
+const char STR6880[] PROGMEM = "Historie 9";
+const char STR6881[] PROGMEM = "Fehlercode 9";
+const char STR6885[] PROGMEM = "SW Diagnosecode 9";
+const char STR6886[] PROGMEM = "FA Phase 9";
+const char STR6890[] PROGMEM = "Historie 10";
+const char STR6891[] PROGMEM = "Fehlercode 10";
+const char STR6895[] PROGMEM = "SW Diagnosecode 11";
+const char STR6896[] PROGMEM = "FA Phase 12";
 // übrige Fehlerparameter
 const char STR6800[] PROGMEM = "Historie 1 Datum/Zeit";
 const char STR6801[] PROGMEM = "Historie 1 Fehlercode";
@@ -4970,19 +4990,39 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 3
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, //         [ ] - Fehler - Historie 3 Fehlercode
-{0x053D06DF,  CAT_FEHLER,           VT_BYTE,          6821,  STR6821,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 3 (6820 on display, mapped to 6821)
-{0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
-{0x053D2FFA,  CAT_FEHLER,           VT_BYTE,          6826,  STR6826,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
-{0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
-{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,0,                      NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,sizeof(ENUM_ERROR),     ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, //         [ ] - Fehler - Historie 4 Fehlercode
-{0x053D06E0,  CAT_FEHLER,           VT_BYTE,          6831,  STR6831,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 4 (6830 on display, mapped to 6831)
-{0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
-{0x053D2FFE,  CAT_FEHLER,           VT_BYTE,          6836,  STR6836,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
-{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
-{0x053D06E1,  CAT_FEHLER,           VT_BYTE,          6841,  STR6841,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
-{0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
-{0x053D3002,  CAT_FEHLER,           VT_BYTE,          6846,  STR6846,0,                      NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
+{0x053D06DF,  CAT_FEHLER,           VT_BYTE,          6821,  STR6821,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 3 (6820 on display, mapped to 6821)
+{0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
+{0x053D2FFA,  CAT_FEHLER,           VT_BYTE,          6826,  STR6826,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
+{0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
+{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
+{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, //         [ ] - Fehler - Historie 4 Fehlercode
+{0x053D06E0,  CAT_FEHLER,           VT_BYTE,          6831,  STR6831,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 4 (6830 on display, mapped to 6831)
+{0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
+{0x053D2FFE,  CAT_FEHLER,           VT_BYTE,          6836,  STR6836,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
+{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
+{0x053D06E1,  CAT_FEHLER,           VT_BYTE,          6841,  STR6841,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
+{0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
+{0x053D3002,  CAT_FEHLER,           VT_BYTE,          6846,  STR6846,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
+{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6850,  STR6850,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6
+{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6851,  STR6851,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6 Datum/Uhrzeit (6850 on display, mapped to 6851)
+{0x053D3084,  CAT_FEHLER,           VT_ERRORCODE,     6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
+{0x053D3093,  CAT_FEHLER,           VT_BYTE,          6856,  STR6856,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
+{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6860,  STR6860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7
+{0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6861,  STR6861,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7 Datum/Uhrzeit (6860 on display, mapped to 6861)
+{0x053D3085,  CAT_FEHLER,           VT_ERRORCODE,     6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
+{0x053D3094,  CAT_FEHLER,           VT_BYTE,          6866,  STR6866,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
+{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6870,  STR6870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8
+{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6871,  STR6871,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8 Datum/Uhrzeit (6870 on display, mapped to 6871)
+{0x053D3086,  CAT_FEHLER,           VT_ERRORCODE,     6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
+{0x053D3095,  CAT_FEHLER,           VT_BYTE,          6876,  STR6876,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
+{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6880,  STR6880,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9
+{0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6881,  STR6881,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9 Datum/Uhrzeit (6880 on display, mapped to 6881)
+{0x053D3087,  CAT_FEHLER,           VT_ERRORCODE,     6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
+{0x053D3096,  CAT_FEHLER,           VT_BYTE,          6886,  STR6886,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
+{0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6890,  STR6890,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10
+{0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
+{0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
+{0x053D3097,  CAT_FEHLER,           VT_BYTE,          6896,  STR6896,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6895 on display, mapped to 6896)
 
 // Wartung/Sonderbetrieb
 // 7001: 0x053D0075??? 2 byte VT_ENUM aber ENUM nicht verfügbar
