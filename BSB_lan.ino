@@ -507,13 +507,32 @@ int findLine(uint16_t line
     if(l==line){
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+      
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
-          break;
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
+              i++;
+            }
+            found=0;
+            i--;
+          } else {
+            found=1;
+            break;
+          }
         } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
-          found=1;
-          save_i=i;
-          save_c=c;
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
+              i++;
+            }
+            found=0;
+            i--;
+          } else {
+            found=1;
+            save_i=i;
+            save_c=c;
+          }
         }
       }
     }
@@ -1445,6 +1464,7 @@ char *printTelegram(byte* msg) {
             known = false;
             i--;
           } else {
+            known = true;
             break;
           }
         } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
@@ -1456,7 +1476,7 @@ char *printTelegram(byte* msg) {
             known = false;
             i--;
           } else {
-            known=1;
+            known = true;
             save_i=i;
           }
         }
@@ -2523,8 +2543,9 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
 
     if(i>=0){
       idx=i;
+      uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
       //Serial.println(F("found"));
-      if(c!=CMD_UNKNOWN){     // send only valid command codes
+      if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
         if (bus_type != 2) {  // bus type is not PPS
           retry=QUERY_RETRIES;
           while(retry){
