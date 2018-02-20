@@ -4383,10 +4383,6 @@ ich mir da nicht)
                 client.print(F("  \""));
                 client.print(json_parameter);
                 client.println(F("\": {"));
-                client.print(F("    \"Parameter\": "));
-                client.print(json_parameter);
-                client.println(F(","));
-
                 client.print(F("    \"Value\": "));
                 if (div_data_type > 0) {
                   client.print(F("\""));
@@ -4426,10 +4422,9 @@ ich mir da nicht)
                 Serial.print(F(" with type "));
                 Serial.println(json_type);
                 int status = set(json_parameter, json_value_string, json_type);
-                client.println(F("  {"));
-                client.print(F("    \"Parameter\": "));
+                client.print(F("  \""));
                 client.print(json_parameter);
-                client.println(F(","));
+                client.println(F("\": {"));
                 client.print(F("    \"Status\": "));
                 client.print(status);
                 client.println();
