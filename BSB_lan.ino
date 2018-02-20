@@ -1434,12 +1434,31 @@ char *printTelegram(byte* msg) {
     if(c == cmd){
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
-          break;
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            while (c==cmd) {
+              i++;
+              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+            }
+            known = false;
+            i--;
+          } else {
+            break;
+          }
         } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
-          known=1;
-          save_i=i;
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            while (c==cmd) {
+              i++;
+              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+            }
+            known = false;
+            i--;
+          } else {
+            known=1;
+            save_i=i;
+          }
         }
       }
     }
@@ -4255,7 +4274,7 @@ ich mir da nicht)
           client.println(F("HTTP/1.1 200 OK"));
           client.println(F("Content-Type: application/json"));
           client.println();
-          client.println(F("["));
+          client.println(F("{"));
 
           int i=0;
           uint32_t cmd=0;
@@ -4340,20 +4359,31 @@ ich mir da nicht)
                   k++;
                 }
 
-                client.println(F("  {"));
+                client.print(F("  \""));
+                client.print(json_parameter);
+                client.println(F("\": {"));
                 client.print(F("    \"Parameter\": "));
                 client.print(json_parameter);
                 client.println(F(","));
 
-                client.print(F("    \"Value\": \""));
+                client.print(F("    \"Value\": "));
+                if (div_data_type > 0) {
+                  client.print(F("\""));
+                }
                 char* ret_val_str = query(json_parameter,json_parameter,1);
                 char* unit_str = strstr(ret_val_str, div_unit);
                 if (unit_str != NULL) {
                   unit_str--;
                   *unit_str = '\0';
+                } else {
+                  ret_val_str--;
+                  *ret_val_str = '\0';
                 }
                 client.print(ret_val_str);
-                client.println(F("\","));
+                if (div_data_type > 0) {
+                  client.print(F("\""));
+                }
+                client.println(F(","));
 
                 client.print(F("    \"Unit\": \""));
                 client.print(div_unit);
@@ -4390,7 +4420,7 @@ ich mir da nicht)
             }
           }
           client.println();
-          client.println(F("]"));
+          client.println(F("}"));
           client.flush();
           break;
         }
