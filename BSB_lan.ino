@@ -4375,9 +4375,6 @@ ich mir da nicht)
                 if (unit_str != NULL) {
                   unit_str--;
                   *unit_str = '\0';
-                } else {
-                  ret_val_str--;
-                  *ret_val_str = '\0';
                 }
                 client.print(ret_val_str);
                 if (div_data_type > 0) {
