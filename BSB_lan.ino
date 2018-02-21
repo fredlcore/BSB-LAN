@@ -2571,7 +2571,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
             }
           } // endwhile, maximum number of retries reached
           if(retry==0) {
-            if (bus_type == 1 && msg[8] == TYPE_ERR) {
+            if (bus_type == 1 && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
               outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
             } else {
               outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
