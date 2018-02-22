@@ -245,7 +245,8 @@ typedef struct {
 
 typedef enum {
   DT_VALS,    // plain value
-  DT_ENUM,    // value followed by text
+  DT_ENUM,    // value (8/16 Bit) followed by space followed by text
+  DT_BITS,    // bit value followed by bitmask followed by text
   DT_WDAY,    // weekday
   DT_HHMM,    // hour:minute
   DT_DTTM,    // date and time
@@ -254,7 +255,7 @@ typedef enum {
 } dt_types_t;
 
 PROGMEM_LATE const units optbl[]={
-{VT_BIT,            1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_DAYS,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},

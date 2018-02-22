@@ -141,6 +141,8 @@ volatile uint8_t BSBSoftwareSerial::_receive_buffer_head = 0;
 // for debugging or measuring on an oscilloscope.
 inline void DebugPulse(uint8_t pin, uint8_t count)
 {
+  pin=pin;
+  count=count;
 #if _DEBUG
   volatile uint8_t *pport = portOutputRegister(digitalPinToPort(pin));
 
