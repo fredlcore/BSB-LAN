@@ -1495,70 +1495,32 @@ const char STR6830[] PROGMEM = "Historie 4";
 const char STR6831[] PROGMEM = "Fehlercode 4";
 const char STR6835[] PROGMEM = "SW Diagnosecode 4";
 const char STR6836[] PROGMEM = "FA Phase 4";
-const char STR6840[] PROGMEM = "Historie 5";
-const char STR6841[] PROGMEM = "Fehlercode 5";
 const char STR6845[] PROGMEM = "SW Diagnosecode 5";
 const char STR6846[] PROGMEM = "FA Phase 5";
-const char STR6850[] PROGMEM = "Historie 6";
-const char STR6851[] PROGMEM = "Fehlercode 6";
 const char STR6855[] PROGMEM = "SW Diagnosecode 6";
 const char STR6856[] PROGMEM = "FA Phase 6";
-const char STR6860[] PROGMEM = "Historie 7";
-const char STR6861[] PROGMEM = "Fehlercode 7";
 const char STR6865[] PROGMEM = "SW Diagnosecode 7";
 const char STR6866[] PROGMEM = "FA Phase 7";
-const char STR6870[] PROGMEM = "Historie 8";
-const char STR6871[] PROGMEM = "Fehlercode 8";
 const char STR6875[] PROGMEM = "SW Diagnosecode 8";
 const char STR6876[] PROGMEM = "FA Phase 8";
-const char STR6880[] PROGMEM = "Historie 9";
-const char STR6881[] PROGMEM = "Fehlercode 9";
 const char STR6885[] PROGMEM = "SW Diagnosecode 9";
 const char STR6886[] PROGMEM = "FA Phase 9";
-const char STR6890[] PROGMEM = "Historie 10";
-const char STR6891[] PROGMEM = "Fehlercode 10";
 const char STR6895[] PROGMEM = "SW Diagnosecode 10";
 const char STR6896[] PROGMEM = "FA Phase 10";
-const char STR6900[] PROGMEM = "Historie 11";
-const char STR6901[] PROGMEM = "Fehlercode 11";
-const char STR6905[] PROGMEM = "SW Diagnosecode 11";
-const char STR6906[] PROGMEM = "FA Phase 11";
-const char STR6910[] PROGMEM = "Historie 12";
-const char STR6911[] PROGMEM = "Fehlercode 12";
-const char STR6915[] PROGMEM = "SW Diagnosecode 12";
-const char STR6916[] PROGMEM = "FA Phase 12";
-const char STR6920[] PROGMEM = "Historie 13";
-const char STR6921[] PROGMEM = "Fehlercode 13";
-const char STR6925[] PROGMEM = "SW Diagnosecode 13";
-const char STR6296[] PROGMEM = "FA Phase 13";
-const char STR6930[] PROGMEM = "Historie 14";
-const char STR6931[] PROGMEM = "Fehlercode 14";
-const char STR6935[] PROGMEM = "SW Diagnosecode 14";
-const char STR6936[] PROGMEM = "FA Phase 14";
-const char STR6940[] PROGMEM = "Historie 15";
-const char STR6941[] PROGMEM = "Fehlercode 15";
-const char STR6945[] PROGMEM = "SW Diagnosecode 15";
-const char STR6946[] PROGMEM = "FA Phase 15";
-const char STR6950[] PROGMEM = "Historie 16";
-const char STR6951[] PROGMEM = "Fehlercode 16";
-const char STR6955[] PROGMEM = "SW Diagnosecode 16";
-const char STR6956[] PROGMEM = "FA Phase 16";
-const char STR6960[] PROGMEM = "Historie 17";
-const char STR6961[] PROGMEM = "Fehlercode 17";
-const char STR6965[] PROGMEM = "SW Diagnosecode 17";
-const char STR6966[] PROGMEM = "FA Phase 17";
-const char STR6970[] PROGMEM = "Historie 18";
-const char STR6971[] PROGMEM = "Fehlercode 18";
-const char STR6975[] PROGMEM = "SW Diagnosecode 18";
-const char STR6976[] PROGMEM = "FA Phase 18";
-const char STR6980[] PROGMEM = "Historie 19";
-const char STR6981[] PROGMEM = "Fehlercode 19";
-const char STR6985[] PROGMEM = "SW Diagnosecode 19";
-const char STR6986[] PROGMEM = "FA Phase 19";
-const char STR6990[] PROGMEM = "Historie 20";
-const char STR6991[] PROGMEM = "Fehlercode 20";
-const char STR6995[] PROGMEM = "SW Diagnosecode 20";
-const char STR6996[] PROGMEM = "FA Phase 20";
+
+#define STR6840 STR6808
+#define STR6841 STR6809
+#define STR6850 STR6810
+#define STR6851 STR6811
+#define STR6860 STR6812
+#define STR6861 STR6813
+#define STR6870 STR6814
+#define STR6871 STR6815
+#define STR6880 STR6816
+#define STR6881 STR6817
+#define STR6890 STR6818
+#define STR6891 STR6819
+
 // übrige Fehlerparameter
 const char STR6800[] PROGMEM = "Historie 1 Datum/Zeit";
 const char STR6801[] PROGMEM = "Historie 1 Fehlercode";
@@ -4972,8 +4934,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
 {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
 {0x053D0815,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, //         [ ] - Fehler - Historie 2 Fehlercode
+{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06DF,  CAT_FEHLER,           VT_ENUM,          6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
@@ -4993,6 +4955,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D06E1,  CAT_FEHLER,           VT_ENUM,          6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, //         [ ] - Fehler - Historie 5 Fehlercode
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, //         [ ] - Fehler - Historie 5 Fehlercode
+{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
 {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
 {0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 2
 {0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 2
@@ -5000,6 +4963,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, //         [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06E2,  CAT_FEHLER,           VT_ENUM,          6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
 {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, //         [ ] - Fehler - Historie 6 Fehlercode
+{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, //         [ ] - Fehler - Historie 6 Fehlercode
 {0x053D06DE,  CAT_FEHLER,           VT_BYTE,          6811,  STR6811_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehlercode 2 (6810 on display, mapped to 6811)
 {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
 {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
@@ -5012,9 +4976,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
 {0x053D06E4,  CAT_FEHLER,           VT_ENUM,          6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
 {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, //         [ ] - Fehler - Historie 8 Fehlercode
+{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, //         [ ] - Fehler - Historie 8 Fehlercode
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
+{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
 {0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
 {0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
@@ -5066,10 +5032,6 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
 {0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
 {0x053D3097,  CAT_FEHLER,           VT_BYTE,          6896,  STR6896,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
-{0x053D06DD,  CAT_FEHLER,           VT_DATETIME,      6900,  STR6900,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 11
-{0x053D081E,  CAT_FEHLER,           VT_ERRORCODE,     6901,  STR6901,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 11 Datum/Uhrzeit (6900 on display, mapped to 6901)
-{0x053D3089,  CAT_FEHLER,           VT_ERRORCODE,     6905,  STR6905,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 11
-{0x053D3098,  CAT_FEHLER,           VT_BYTE,          6906,  STR6906,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 11 (6905 on display, mapped to 6906)
 
 // Wartung/Sonderbetrieb
 // 7001: 0x053D0075??? 2 byte VT_ENUM aber ENUM nicht verfügbar

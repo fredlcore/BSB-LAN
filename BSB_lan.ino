@@ -512,23 +512,35 @@ int findLine(uint16_t line
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            Serial.println("This is not for us:");
+            Serial.println(i);
+            Serial.println(c, HEX);
             while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
               i++;
             }
             found=0;
             i--;
           } else {
+            Serial.println("This is us:");
+            Serial.println(i);
+            Serial.println(c, HEX);
             found=1;
             break;
           }
         } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+            Serial.println("This is not for us:");
+            Serial.println(i);
+            Serial.println(c, HEX);
             while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
               i++;
             }
             found=0;
             i--;
           } else {
+            Serial.println("This is us:");
+            Serial.println(i);
+            Serial.println(c, HEX);
             found=1;
             save_i=i;
             save_c=c;
@@ -1446,7 +1458,9 @@ char *printTelegram(byte* msg) {
   int i=0;        // begin with line 0
   int save_i=0;
   boolean known=0;
+  uint8_t score = 0;
   uint32_t c;     // command code
+  uint16_t line = 0, match_line = 0;
   c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
 //  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
@@ -1454,41 +1468,54 @@ char *printTelegram(byte* msg) {
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
       uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+      match_line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==cmd) {
-              i++;
-              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-            }
             known = false;
-            i--;
+            score = 5;
           } else {
             known = true;
+            save_i = i;
+            score = 6;
             break;
           }
-        } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==cmd) {
-              i++;
-              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-            }
+        } 
+        if (dev_fam!=my_dev_fam) {
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 1) {
             known = false;
-            i--;
-          } else {
+            score = 1;
+          } else if (score < 2) {
             known = true;
-            save_i=i;
+            save_i = i;
+            score = 2;
+          }
+        }
+        if (dev_fam==my_dev_fam) {
+          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 3) {
+            known = false;
+            score = 3;
+          } else if (score < 4) {
+            known = true;
+            save_i = i;
+            score = 4;
           }
         }
       }
     }
 
+/*
     if (known && c!=cmd) {
       i=save_i;
       break;
     }
+*/
     i++;
+    line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+    if (line > match_line && known == false) {
+      score = 0;
+    }
 //    c=pgm_read_dword(&cmdtbl[i].cmd);
   }
   if(!known){                          // no hex code match
@@ -1497,6 +1524,7 @@ char *printTelegram(byte* msg) {
     SerialPrintHex32(cmd);             // print what we have got
     Serial.print(F(" "));
   }else{
+    i = save_i;
     // Entry in command table is a documented command code
     uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
 //    uint16_t line=pgm_read_word(&cmdtbl[i].line);
