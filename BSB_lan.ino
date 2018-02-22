@@ -2621,16 +2621,6 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
         uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
         uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
 
-/*
-Serial.println(i);
-Serial.println((uint32_t)&ENUM8000, HEX);
-Serial.println(pgm_get_far_address(ENUM8000), HEX);
-Serial.println((uint32_t)&ENUM1200, HEX);
-Serial.println(pgm_get_far_address(ENUM1200), HEX);
-Serial.println(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), HEX);
-Serial.println((pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + 131 * sizeof(cmdtbl[0])) - pgm_get_far_address(ENUM700)), HEX);
-Serial.println(enumstr, HEX);
-*/
         // dump data payload for unknown types
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
           int data_len;
@@ -2686,7 +2676,7 @@ Serial.println(enumstr, HEX);
               uint16_t c=0;
               uint8_t bitmask=0;
               while(c<enumstr_len){
-                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' ' || type == VT_BIT){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                   val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
                   if (type == VT_BIT) {
                     bitmask = val & 0xff;
@@ -4306,15 +4296,18 @@ ich mir da nicht)
           char json_value_string[11];
           uint8_t j_char_idx = 0;
           uint16_t json_parameter = 0;
-          double json_value = 0;
+          double json_value = 0; json_value = json_value;   // to disable irrelevant compiler warning despite variable being used below
           boolean json_type = 0;
           boolean p_flag = false;
           boolean v_flag = false;
           boolean t_flag = false;
           boolean output = false;
           boolean been_here = false;
+          boolean been_here2 = false;
+          int8_t search_cat = -1;
+          int16_t cat_min = -1, cat_max = -1, cat_param=0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
-          json_token = strtok(NULL, "=,");
+          json_token = strtok(NULL, ",");
           if (json_token!=NULL) {
             client.flush();
           }
@@ -4326,9 +4319,9 @@ ich mir da nicht)
           while (client.available() || json_token!=NULL) {
             if (client.available()) {
               char c = client.read();
-              if (c == 'P') { p_flag = true; }
-              if (c == 'V') { v_flag = true; }
-              if (c == 'T') { t_flag = true; }
+              if (c == 'P' || c == 'p') { p_flag = true; }
+              if (c == 'V' || c == 'v') { v_flag = true; }
+              if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
               if (isdigit(c)) {
                 while (client.available() && j_char_idx < 10 && (isdigit(c) || c=='.')) {
@@ -4357,15 +4350,67 @@ ich mir da nicht)
             }
             if (output || json_token != NULL) {
               output = false;
-              if (!been_here) {
+              if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
                 been_here = true;
               } else {
                 client.println(F(","));
               }
-              if (p[2]=='Q' || json_token != NULL) {
+              if (p[2]=='K' && !isdigit(p[4])) {
+                uint16_t x=2;
+                uint8_t cat=0;
+                client.print(F("\"0\": { \"name\": \""));
+                while (x<sizeof(ENUM_CAT)) {
+                  char z = pgm_read_byte_far(pgm_get_far_address(ENUM_CAT)+x);
+                  if (z == '\0') {
+                    cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
+                    cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+                    client.print(F("\", \"min\": "));
+                    client.print(cat_min);
+                    client.print(F(", \"max\": "));
+                    client.print(cat_max);
+                    if (x < sizeof(ENUM_CAT)-1 && cat < 41) {
+                      cat++;
+                      client.println(F(" },"));
+                      client.print(F("\""));
+                      client.print(cat);
+                      client.print(F("\": { \"name\": \""));
+                      x = x + 3;
+                      continue;
+                    } else {
+                      client.print(F(" }"));
+                      json_token = NULL;
+                      break;
+                    }
+                  }
+                  client.print(z);
+                  x++;
+                }
+                json_token = NULL;
+              }
+
+              if (p[2]=='K' && isdigit(p[4])) {
+                cat_param++;
+                if (cat_min<0) {
+                  search_cat = atoi(&p[4]);
+                  cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2) * sizeof(ENUM_CAT_NR[0]));
+                  cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+                  cat_param = cat_min;
+                }
+                if (cat_param <= cat_max) {
+                  json_parameter = cat_param;
+                } else {
+                  json_token = NULL;
+                }
+              }
+
+              if (p[2]=='Q' || (p[2]=='K' && isdigit(p[4]))) {
                 i=findLine(json_parameter,0,&cmd);
+                if (i<0 || cmd == CMD_UNKNOWN) { continue; }
                 int k=0;
                 uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+                uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
+                uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+
                 uint8_t div_unit_len=0;
                 uint8_t div_data_type=0;
                 uint8_t div_type=0;
@@ -4380,38 +4425,71 @@ ich mir da nicht)
                   k++;
                 }
 
-                client.print(F("  \""));
-                client.print(json_parameter);
-                client.println(F("\": {"));
-                client.print(F("    \"Value\": "));
-                if (div_data_type > 0) {
-                  client.print(F("\""));
-                }
                 char* ret_val_str = query(json_parameter,json_parameter,1);
+                if (ret_val_str == NULL) { i=-1; continue; }
                 char* unit_str = strstr(ret_val_str, div_unit);
                 if (unit_str != NULL) {
                   unit_str--;
                   *unit_str = '\0';
                 }
-                client.print(ret_val_str);
-                if (div_data_type > 0) {
-                  client.print(F("\""));
-                }
-                client.println(F(","));
 
-                client.print(F("    \"Unit\": \""));
+                if (!been_here2) {
+                  been_here2=true;
+                } else {
+                  client.println(F(","));
+                }
+
+                client.print(F("  \""));
+                client.print(json_parameter);
+                client.println(F("\": {"));
+                client.print(F("    \"value\": \""));
+                client.print(ret_val_str);
+                client.println(F("\","));
+
+                client.print(F("    \"unit\": \""));
                 client.print(div_unit);
                 client.println(F("\","));
 
-                client.print(F("    \"DataType\": "));
+                client.println(F("    \"possibleValues\": ["));
+                if (enumstr_len > 0) {
+                  uint16_t x = 0;
+                  uint16_t val = 0;
+                  been_here=false;
+                  while (x < enumstr_len) {
+                    if (!been_here) {
+                      been_here = true;
+                    } else {
+                      client.println(F(","));
+                    }
+                    client.print(F("      { \"enumValue\": \"")); 
+                    if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                      val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
+                      x++;
+                    }else{
+                      val=uint16_t(pgm_read_byte_far(enumstr+x));
+                    }
+                    client.print(val);
+                    client.print(F("\", \"desc\": \""));
+                    //skip leading space
+                    x = x + 2;
+                    char z = pgm_read_byte_far(enumstr+x);
+                    while (z != '\0') {
+                      client.print(z);
+                      x++;
+                      z = pgm_read_byte_far(enumstr+x);
+                    }
+                    client.print(F("\" }"));
+                    x++;
+                  }
+                }
+                client.println();
+                client.println(F("    ],"));
+
+                client.print(F("    \"dataType\": "));
                 client.print(div_data_type);
                 client.println();
 
                 client.print(F("  }"));
-
-                if (json_token != NULL) {
-                  json_token = strtok(NULL,"=,");
-                }
               }
 
               if (p[2]=='S') {
@@ -4425,10 +4503,13 @@ ich mir da nicht)
                 client.print(F("  \""));
                 client.print(json_parameter);
                 client.println(F("\": {"));
-                client.print(F("    \"Status\": "));
+                client.print(F("    \"status\": "));
                 client.print(status);
                 client.println();
                 client.print(F("  }"));
+              }
+              if (json_token != NULL && p[2] != 'K' && !isdigit(p[4])) {
+                json_token = strtok(NULL,",");
               }
             }
           }
@@ -5624,17 +5705,36 @@ void setup() {
 // Then use this as refernce to later determine if a page boundary >64kb has occurred.
 
   uint32_t c; 
-  int index_first_enum = 0;
+//  int index_first_enum = 0;
   int index_last_enum = 0;
-  uint32_t temp_offset1=0;
+//  uint32_t temp_offset1=0;
   uint32_t temp_offset2=0;
 
-  index_first_enum = findLine(20, 0, &c);
+//  index_first_enum = findLine(20, 0, &c);
   index_last_enum = findLine(8779, 0, &c);
-  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
+//  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 
+
 /*
+Serial.println((uint32_t)&ENUM20, HEX);
+Serial.println(pgm_get_far_address(ENUM20), HEX);
+Serial.println((uint32_t)&ENUM8779, HEX);
+Serial.println(pgm_get_far_address(ENUM8779), HEX);
+Serial.println(temp_offset1, HEX);
+Serial.println(temp_offset2, HEX);
+
+index_first_enum = 0;
+for (int i=0; i<=10510; i++) {
+  index_first_enum=findLine(i, 0, &c);
+  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
+  if (temp_offset1 > 0 && temp_offset1 < 65535) {
+    Serial.print(i);
+    Serial.print(F("\t"));
+    Serial.println(temp_offset1, HEX);
+  }
+}
+
   if (temp_offset1 > temp_offset2) {
     enumstr_offset = temp_offset1;
   } else {
