@@ -1417,7 +1417,7 @@ void printLPBAddr(byte *msg,byte data_len){
  *   Serial    hardware serial interface to a PC
  *   outBuf[]
  * *************************************************************** */
-char *printTelegram(byte* msg) {
+char *printTelegram(byte* msg, int query_line) {
   char *pvalstr=NULL;
 
   outBufclear();
@@ -1460,11 +1460,13 @@ char *printTelegram(byte* msg) {
   boolean known=0;
   uint8_t score = 0;
   uint32_t c;     // command code
-  uint16_t line = 0, match_line = 0;
+  int line = 0, match_line = 0;
   c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+  line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+
 //  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
-    if(c == cmd){
+    if(c == cmd && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
       uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
@@ -2023,7 +2025,7 @@ void webPrintSite() {
  *  Serial instance
  *  bus    instance
  * *************************************************************** */
-int set(uint16_t line      // the ProgNr of the heater parameter
+int set(int line      // the ProgNr of the heater parameter
       , const char *val          // the value to set
       , bool setcmd)       // true: SET msg; false: INF msg
 {
@@ -2502,7 +2504,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
 
   // Decode the xmit telegram and send it to the PC serial interface
   if(verbose) {
-    printTelegram(tx_msg);
+    printTelegram(tx_msg, line);
 #ifdef LOGGER
     LogTelegram(tx_msg);
 #endif
@@ -2512,7 +2514,7 @@ int set(uint16_t line      // the ProgNr of the heater parameter
   if(t!=TYPE_SET) return 1;
 
   // Decode the rcv telegram and send it to the PC serial interface
-  printTelegram(msg);
+  printTelegram(msg, line);
 #ifdef LOGGER
   LogTelegram(msg);
 #endif
@@ -2548,14 +2550,14 @@ int set(uint16_t line      // the ProgNr of the heater parameter
  *   bus    instance
  *   client instance
  * *************************************************************** */
-char* query(uint16_t line_start  // begin at this line (ProgNr)
-          , uint16_t line_end    // end with this line (ProgNr)
+char* query(int line_start  // begin at this line (ProgNr)
+          , int line_end    // end with this line (ProgNr)
           , boolean no_print)    // display in web client?
 {
   byte msg[33];      // response buffer
   byte tx_msg[33];   // xmit buffer
   uint32_t c;        // command code
-  uint16_t line;     // ProgNr
+  int line;     // ProgNr
   int i=0;
   int idx=0;
   int retry;
@@ -2581,14 +2583,14 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
 
               // Decode the xmit telegram and send it to the PC serial interface
               if(verbose) {
-                printTelegram(tx_msg);
+                printTelegram(tx_msg, line);
 #ifdef LOGGER
                 LogTelegram(tx_msg);
 #endif
               }
 
               // Decode the rcv telegram and send it to the PC serial interface
-              pvalstr=printTelegram(msg);
+              pvalstr=printTelegram(msg, line);
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
@@ -2623,7 +2625,7 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
           msg[6] = c >> 16 & 0xFF;
           msg[7] = c >> 8 & 0xFF;
           msg[8] = c & 0xFF;
-          pvalstr = printTelegram(msg);
+          pvalstr = printTelegram(msg, line);
         }
       }else{
         //Serial.println(F("unknown command"));
@@ -2638,6 +2640,9 @@ char* query(uint16_t line_start  // begin at this line (ProgNr)
       if (!no_print) {  // display result in web client
         formnr++;
         if (msg[4+(bus_type*4)] == TYPE_ERR) {
+#ifdef HIDE_UNKNOWN
+          continue;
+#endif
           client.println(F("<tr style='color: #7f7f7f'><td>"));
         } else {
           client.println(F("<tr><td>"));
@@ -3409,7 +3414,7 @@ void loop() {
     if (bus.GetMessage(msg)) { // message was syntactically correct
        // Decode the rcv telegram and send it to the PC serial interface
       if(verbose) {
-        printTelegram(msg);
+        printTelegram(msg, -1);
 #ifdef LOGGER
         LogTelegram(msg);
 #endif
@@ -3418,7 +3423,7 @@ void loop() {
       if(((msg[2]==ADDR_ALL && bus_type==0) || (msg[2]>=0xF0 && bus_type==1)) && msg[4+(bus_type*4)]==TYPE_INF){ // handle broadcast messages
       // Decode the rcv telegram and send it to the PC serial interface
         if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
-          printTelegram(msg);
+          printTelegram(msg, -1);
 #ifdef LOGGER
           LogTelegram(msg);
 #endif
@@ -4154,7 +4159,7 @@ ich mir da nicht)
         if(p[1]=='R'){
           uint32_t c;
           webPrintHeader();
-          uint16_t line = atoi(&p[2]);
+          int line = atoi(&p[2]);
           int i=findLine(line,0,&c);
           if(i<0){
 #ifdef LANG_DE
@@ -4174,14 +4179,14 @@ ich mir da nicht)
 
               // Decode the xmit telegram and send it to the PC serial interface
               if(verbose) {
-                printTelegram(tx_msg);
+                printTelegram(tx_msg, line);
 #ifdef LOGGER
                 LogTelegram(tx_msg);
 #endif
               }
 
               // Decode the rcv telegram and send it to the PC serial interface
-              printTelegram(msg);   // send to hardware serial interface
+              printTelegram(msg, line);   // send to hardware serial interface
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
@@ -4221,12 +4226,12 @@ ich mir da nicht)
               } else {
                 if (msg[4+(bus_type*4)]!=TYPE_ERR) {
                   // Decode the xmit telegram and send it to the PC serial interface
-                  printTelegram(tx_msg);
+                  printTelegram(tx_msg, -1);
 #ifdef LOGGER
                   LogTelegram(tx_msg);
 #endif
                   // Decode the rcv telegram and send it to the PC serial interface
-                  pvalstr=printTelegram(msg);   // send to hardware serial interface
+                  pvalstr=printTelegram(msg, -1);   // send to hardware serial interface
 #ifdef LOGGER
                   LogTelegram(msg);
 #endif
@@ -4272,13 +4277,13 @@ ich mir da nicht)
             Serial.println(F("bus send failed"));  // to PC hardware serial I/F
           }else{
             // Decode the xmit telegram and send it to the PC serial interface
-            printTelegram(tx_msg);
+            printTelegram(tx_msg, -1);
 #ifdef LOGGER
             LogTelegram(tx_msg);
 #endif
           }
           // Decode the rcv telegram and send it to the PC serial interface
-          printTelegram(msg);   // send to hardware serial interface
+          printTelegram(msg, -1);   // send to hardware serial interface
 #ifdef LOGGER
           LogTelegram(msg);
 #endif
@@ -4323,7 +4328,7 @@ ich mir da nicht)
           char json_temp[11];
           char json_value_string[11];
           uint8_t j_char_idx = 0;
-          uint16_t json_parameter = 0;
+          int json_parameter = 0;
           double json_value = 0; json_value = json_value;   // to disable irrelevant compiler warning despite variable being used below
           boolean json_type = 0;
           boolean p_flag = false;
