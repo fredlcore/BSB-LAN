@@ -5307,7 +5307,24 @@ ich mir da nicht)
         if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
           dataFile.print(lookup_descr(log_parameters[i]));
           dataFile.print(F(";"));
-          dataFile.println(log_values[i]);
+          dataFile.print(log_values[i]);
+          dataFile.print(F(";"));
+          uint32_t c=0;
+          int line=findLine(log_parameters[i],0,&c);
+          int k=0;
+          uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+          uint8_t div_unit_len=0;
+          uint8_t div_type=0;
+          while(div_type!=VT_UNKNOWN){
+            div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+            div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+            memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+            if(type == div_type){
+              break;
+            }
+            k++;
+          }
+          dataFile.println(div_unit);
         } else {
           if (log_parameters[i] == 20000) {
             dataFile.print(F("Brennerlaufzeit Stufe 1"));
