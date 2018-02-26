@@ -18,6 +18,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje BBK 22E [LMS14] (gas-fired)
 - Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
 - Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
+- Brötje EcoCondens BBS EVO 20 G [LMS15] (gas-fired)
 - Brötje TrioCondens BGB 20E [LMS14] (gas-fired)
 - Brötje WBS 14D [LMU74] (gas-fired)
 - Brötje WBS 22E [LMS14] (gas-fired)
