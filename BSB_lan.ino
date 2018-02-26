@@ -5296,7 +5296,7 @@ ich mir da nicht)
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0 && log_parameters[i] < 20006 && log_parameters[i] > 20009 && log_parameters[i] != 30000) {
+        if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
           dataFile.print(millis());
           dataFile.print(F(";"));
           dataFile.print(GetDateTime(date)); // get current time from heating system
