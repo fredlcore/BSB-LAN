@@ -512,35 +512,23 @@ int findLine(uint16_t line
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            Serial.println("This is not for us:");
-            Serial.println(i);
-            Serial.println(c, HEX);
             while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
               i++;
             }
             found=0;
             i--;
           } else {
-            Serial.println("This is us:");
-            Serial.println(i);
-            Serial.println(c, HEX);
             found=1;
             break;
           }
         } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            Serial.println("This is not for us:");
-            Serial.println(i);
-            Serial.println(c, HEX);
             while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
               i++;
             }
             found=0;
             i--;
           } else {
-            Serial.println("This is us:");
-            Serial.println(i);
-            Serial.println(c, HEX);
             found=1;
             save_i=i;
             save_c=c;
@@ -4352,7 +4340,7 @@ ich mir da nicht)
           while (client.available() || json_token!=NULL) {
             if (client.available()) {
               char c = client.read();
-              if (c == 'P' || c == 'p') { p_flag = true; }
+              if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
               if (c == 'V' || c == 'v') { v_flag = true; }
               if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
@@ -4452,6 +4440,7 @@ ich mir da nicht)
                   div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
                   div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
                   memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+
                   if(type == div_type){
                     break;
                   }
@@ -4459,14 +4448,23 @@ ich mir da nicht)
                 }
 
                 char* ret_val_str = query(json_parameter,json_parameter,1);
+                char* unit_str = NULL;
+                char* desc_str = NULL;
                 if (ret_val_str == NULL) { i=-1; continue; }
-                char* unit_str = strstr(ret_val_str, div_unit);
+                if (div_data_type == DT_ENUM) {
+                  unit_str = strstr(ret_val_str, "- ");
+                } else {
+                  unit_str = strstr(ret_val_str, div_unit);
+                }
                 if (unit_str != NULL) {
+                  desc_str = unit_str + 2;
                   unit_str--;
                   *unit_str = '\0';
                 }
 
-                if (!been_here2) {
+                strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+
+                if (!been_here2 || p[2] == 'Q') {
                   been_here2=true;
                 } else {
                   client.println(F(","));
@@ -4475,8 +4473,19 @@ ich mir da nicht)
                 client.print(F("  \""));
                 client.print(json_parameter);
                 client.println(F("\": {"));
+
+                client.print(F("    \"name\": \""));
+                client.print(buffer);
+                client.println(F("\","));
+
                 client.print(F("    \"value\": \""));
                 client.print(ret_val_str);
+                client.println(F("\","));
+
+                client.print(F("    \"desc\": \""));
+                if (div_data_type == DT_ENUM) {
+                  client.print(desc_str);
+                }
                 client.println(F("\","));
 
                 client.print(F("    \"unit\": \""));
@@ -4541,7 +4550,7 @@ ich mir da nicht)
                 client.println();
                 client.print(F("  }"));
               }
-              if (json_token != NULL && p[2] != 'K' && !isdigit(p[4])) {
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
                 json_token = strtok(NULL,",");
               }
             }
