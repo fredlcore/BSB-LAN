@@ -4419,6 +4419,9 @@ ich mir da nicht)
                 }
                 if (cat_param <= cat_max) {
                   json_parameter = cat_param;
+                  if (cat_param == cat_max) {
+                    json_token = NULL;
+                  }
                 } else {
                   json_token = NULL;
                 }
