@@ -4435,36 +4435,6 @@ ich mir da nicht)
                 uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
                 uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
 
-                uint8_t div_unit_len=0;
-                uint8_t div_data_type=0;
-                uint8_t div_type=0;
-                while(div_type!=VT_UNKNOWN){
-                  div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
-                  div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
-                  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
-                  memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
-
-                  if(type == div_type){
-                    break;
-                  }
-                  k++;
-                }
-
-                char* ret_val_str = query(json_parameter,json_parameter,1);
-                char* unit_str = NULL;
-                char* desc_str = NULL;
-                if (ret_val_str == NULL) { i=-1; continue; }
-                if (div_data_type == DT_ENUM) {
-                  unit_str = strstr(ret_val_str, "- ");
-                } else {
-                  unit_str = strstr(ret_val_str, div_unit);
-                }
-                if (unit_str != NULL) {
-                  desc_str = unit_str + 2;
-                  unit_str--;
-                  *unit_str = '\0';
-                }
-
                 strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 
                 if (!been_here2 || p[2] == 'Q') {
@@ -4481,19 +4451,51 @@ ich mir da nicht)
                 client.print(buffer);
                 client.println(F("\","));
 
-                client.print(F("    \"value\": \""));
-                client.print(ret_val_str);
-                client.println(F("\","));
+                uint8_t div_unit_len=0;
+                uint8_t div_data_type=0;
+                uint8_t div_type=0;
+                while(div_type!=VT_UNKNOWN){
+                  div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+                  div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
+                  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+                  memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
 
-                client.print(F("    \"desc\": \""));
-                if (div_data_type == DT_ENUM) {
-                  client.print(desc_str);
+                  if(type == div_type){
+                    break;
+                  }
+                  k++;
                 }
-                client.println(F("\","));
 
-                client.print(F("    \"unit\": \""));
-                client.print(div_unit);
-                client.println(F("\","));
+                if (p[2]=='Q') {
+                  char* ret_val_str = query(json_parameter,json_parameter,1);
+                  char* unit_str = NULL;
+                  char* desc_str = NULL;
+                  if (ret_val_str == NULL) { i=-1; continue; }
+                  if (div_data_type == DT_ENUM) {
+                    unit_str = strstr(ret_val_str, "- ");
+                  } else {
+                    unit_str = strstr(ret_val_str, div_unit);
+                  }
+                  if (unit_str != NULL) {
+                    desc_str = unit_str + 2;
+                    unit_str--;
+                    *unit_str = '\0';
+                  }
+
+                  client.print(F("    \"value\": \""));
+                  client.print(ret_val_str);
+                  client.println(F("\","));
+
+                  client.print(F("    \"unit\": \""));
+                  client.print(div_unit);
+                  client.println(F("\","));
+
+                  client.print(F("    \"desc\": \""));
+                  if (div_data_type == DT_ENUM) {
+                    client.print(desc_str);
+                  }
+                  client.println(F("\","));
+                }
 
                 client.println(F("    \"possibleValues\": ["));
                 if (enumstr_len > 0) {
