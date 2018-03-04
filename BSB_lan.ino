@@ -1,4 +1,4 @@
-char version[] = "0.41";
+ char version[] = "0.41";
 
 /*
  * 
@@ -4370,6 +4370,12 @@ ich mir da nicht)
               json_parameter = atoi(json_token);
             }
             if (output || json_token != NULL) {
+              int temp_i=findLine(json_parameter,0,&cmd);
+              if (p[2] == 'Q' && (temp_i<0 || cmd == CMD_UNKNOWN)) {
+                json_token = strtok(NULL,",");
+                continue;
+              }
+
               output = false;
               if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
                 been_here = true;
@@ -4429,7 +4435,9 @@ ich mir da nicht)
 
               if (p[2]=='Q' || (p[2]=='K' && isdigit(p[4]))) {
                 i=findLine(json_parameter,0,&cmd);
-                if (i<0 || cmd == CMD_UNKNOWN) { continue; }
+                if (i<0 || cmd == CMD_UNKNOWN) {
+                  continue;
+                }
                 int k=0;
                 uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
                 uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
@@ -4497,40 +4505,42 @@ ich mir da nicht)
                   client.println(F("\","));
                 }
 
-                client.println(F("    \"possibleValues\": ["));
-                if (enumstr_len > 0) {
-                  uint16_t x = 0;
-                  uint16_t val = 0;
-                  been_here=false;
-                  while (x < enumstr_len) {
-                    if (!been_here) {
-                      been_here = true;
-                    } else {
-                      client.println(F(","));
-                    }
-                    client.print(F("      { \"enumValue\": \"")); 
-                    if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                      val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
+                if (p[2] != 'Q') {
+                  client.println(F("    \"possibleValues\": ["));
+                  if (enumstr_len > 0) {
+                    uint16_t x = 0;
+                    uint16_t val = 0;
+                    been_here=false;
+                    while (x < enumstr_len) {
+                      if (!been_here) {
+                        been_here = true;
+                      } else {
+                        client.println(F(","));
+                      }
+                      client.print(F("      { \"enumValue\": \"")); 
+                      if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                        val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
+                        x++;
+                      }else{
+                        val=uint16_t(pgm_read_byte_far(enumstr+x));
+                      }
+                      client.print(val);
+                      client.print(F("\", \"desc\": \""));
+                      //skip leading space
+                      x = x + 2;
+                      char z = pgm_read_byte_far(enumstr+x);
+                      while (z != '\0') {
+                        client.print(z);
+                        x++;
+                        z = pgm_read_byte_far(enumstr+x);
+                      }
+                      client.print(F("\" }"));
                       x++;
-                    }else{
-                      val=uint16_t(pgm_read_byte_far(enumstr+x));
                     }
-                    client.print(val);
-                    client.print(F("\", \"desc\": \""));
-                    //skip leading space
-                    x = x + 2;
-                    char z = pgm_read_byte_far(enumstr+x);
-                    while (z != '\0') {
-                      client.print(z);
-                      x++;
-                      z = pgm_read_byte_far(enumstr+x);
-                    }
-                    client.print(F("\" }"));
-                    x++;
                   }
+                  client.println();
+                  client.println(F("    ],"));
                 }
-                client.println();
-                client.println(F("    ],"));
 
                 client.print(F("    \"dataType\": "));
                 client.print(div_data_type);
