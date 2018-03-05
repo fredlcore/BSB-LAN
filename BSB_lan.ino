@@ -4478,7 +4478,7 @@ ich mir da nicht)
                   char* ret_val_str = query(json_parameter,json_parameter,1);
                   char* unit_str = NULL;
                   char* desc_str = NULL;
-                  if (ret_val_str == NULL) { i=-1; continue; }
+//                  if (ret_val_str == NULL) { i=-1; continue; }
                   if (div_data_type == DT_ENUM) {
                     unit_str = strstr(ret_val_str, "- ");
                   } else {
