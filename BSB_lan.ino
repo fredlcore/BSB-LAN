@@ -1594,6 +1594,7 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_MONTHS: // u8 Monate
             case VT_DAYS: // u8 Tage
+            case VT_GRADIENT_SHORT: //u8 min
             case VT_HOURS_SHORT: // u8 h
             case VT_MINUTES_SHORT: //u8 min
             case VT_SECONDS_SHORT: //u8 s
