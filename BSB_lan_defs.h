@@ -145,6 +145,7 @@ typedef enum{
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
   VT_DAYS,              //  2 Byte - 1 enable 0x01 / day          
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
+  VT_GRADIENT_SHORT,    //  2 Byte - 1 enable / value min/K
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
   VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x06 / minutes      Int08S
@@ -260,6 +261,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_DAYS,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
 {VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
 {VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
@@ -4552,7 +4554,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x493D0719,  CAT_SOLAR,            VT_MINUTES_SHORT, 3831,  STR3831,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ sec ] - Solar (nur wenn aktiviert) - Mindestlaufzeit Kollek`pumpe
 {0x493D0AE4,  CAT_SOLAR,            VT_HOUR_MINUTES,  3832,  STR3832,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kollektorstartfunktion Ein
 {0x493D0AE5,  CAT_SOLAR,            VT_HOUR_MINUTES,  3833,  STR3833,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kollektorstartfunktion Aus
-{0x493D0B12,  CAT_SOLAR,            VT_MINUTES_SHORT, 3834,  STR3834,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kollektorstartfkt Gradient
+{0x493D0B12,  CAT_SOLAR,            VT_GRADIENT_SHORT,3834,  STR3834,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kollektorstartfkt Gradient
 {0x493D0860,  CAT_SOLAR,            VT_TEMP,          3840,  STR3840,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Kollektor Frostschutz
 {0x493D0865,  CAT_SOLAR,            VT_TEMP,          3850,  STR3850,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Kollektorüberhitzschutz
 {0x493D0551,  CAT_SOLAR,            VT_TEMP,          3860,  STR3860,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Verdampfung Waermetaeger
@@ -4894,10 +4896,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA1,  CAT_KONFIG,           VT_BIT,           6270,  STR6270,  sizeof(ENUM6270),     ENUM6270,     DEFAULT_FLAG, DEV_ALL}, // Thision 6270 KonfigRg4 Bit 0-7 [?]
-{0x053D11E1,  CAT_KONFIG,           VT_TEMP,          6270,  STR6270_2,0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Überhitzschutztemperatur
-{0x053D11E2,  CAT_KONFIG,           VT_TEMP,          6271,  STR6271,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Schaltdiff
+{0x053D11E1,  CAT_KONFIG,           VT_TEMP,          6270,  STR6270_2,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutztemperatur
+{0x053D11E2,  CAT_KONFIG,           VT_TEMP,          6271,  STR6271,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Schaltdiff
 {0x053D11E0,  CAT_KONFIG,           VT_ENUM,          6272,  STR6272,  sizeof(ENUM6272),     ENUM6272,     DEFAULT_FLAG, DEV_ALL}, // Überhitzschutzfühler
-{0x053D11E3,  CAT_KONFIG,           VT_MINUTES_SHORT, 6273,  STR6273,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Dauer Min.
+{0x053D11E3,  CAT_KONFIG,           VT_MINUTES_SHORT, 6273,  STR6273,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Dauer Min.
 {0x153D2FA2,  CAT_KONFIG,           VT_BIT,           6280,  STR6280,  sizeof(ENUM6280),     ENUM6280,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
