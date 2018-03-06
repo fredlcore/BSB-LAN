@@ -4806,6 +4806,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0789,  CAT_KONFIG,           VT_ENUM,          6021,  STR6021,  sizeof(ENUM6021),     ENUM6021,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Erweiterungsmodul 2
 {0x053D0785,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_096_ALL}, // Relaisausgang QX21
+{0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_162_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX21
 {0x053D0786,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_098_ALL}, // Relaisausgang QX22
@@ -4814,6 +4815,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX22
 {0x053D0787,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_096_ALL}, // Relaisausgang QX23
+{0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_162_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX23
 // {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6033,  STR6033,  sizeof(ENUM6033),     ENUM6033,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX21 Modul 2
 // {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6034,  STR6034,  sizeof(ENUM6034),     ENUM6034,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX22 Modul 2
@@ -5301,6 +5303,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
 {0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebläsedrehzahl TODO Divisor? - Broetje NovoCondens WOB20-25
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
@@ -5313,6 +5316,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Wasserdruck
 {0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsanzeige FA [?]
 {0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Ionisationsstrom [uA?]
+{0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Ionisationsstrom [uA?]
 {0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Ionisationsstrom [uA?]
 {0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Ionisationsstrom [uA?]
 {0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe
@@ -5325,6 +5329,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Betriebsstunden Heizbetrieb
 {0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Heizbetrieb
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Betriebsstunden TWW
+{0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Betriebsstunden TWW
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Betriebsstunden TWW
 {0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden TWW
 {0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Zonen
