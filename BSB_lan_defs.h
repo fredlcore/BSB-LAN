@@ -629,7 +629,7 @@ const char STR890[] PROGMEM = "Vorl'sollwertkorr Drehz'reg HK1";
 const char STR894[] PROGMEM = "dT Spreizung Norm Aussent.";
 const char STR895[] PROGMEM = "dT Spreizung Maximum";
 const char STR898[] PROGMEM = "Betriebsniveauumschaltung";
-const char STR900[] PROGMEM = "Betriebsartumschaltung HK1";
+const char STR900[] PROGMEM = "Betriebsartumschaltung";
 
 // Einstellungen Kühlkreis 1
 const char STR901[] PROGMEM = "Betriebsart";
@@ -912,8 +912,8 @@ const char STR2528[] PROGMEM = "Schaltdiff Leistungsredukt";
 const char STR2531[] PROGMEM = "Auslösetemperatur Wächter";
 const char STR2540[] PROGMEM = "Proportionalbeiwert Kp TWW";
 const char STR2543[] PROGMEM = "Proportionalbeiwert Kp HK's";
-const char STR2550[] PROGMEM = "Parameter";
-const char STR2551[] PROGMEM = "Parameter";
+const char STR2550[] PROGMEM = "Gasenergiezählung";
+const char STR2551[] PROGMEM = "Gasenergiezähl Korrektur";
 const char STR2630[] PROGMEM = "Auto Entlüftungsfunktion";
 const char STR2655[] PROGMEM = "Ein'dauer Entlüftung";
 const char STR2656[] PROGMEM = "Aus'dauer Entlüftung";
@@ -1762,6 +1762,12 @@ const char STR8337[] PROGMEM = "Startzähler Brenner";
 const char STR8338[] PROGMEM = "Betriebsstunden Heizbetrieb";
 const char STR8339[] PROGMEM = "Betriebsstunden TWW";
 const char STR8340[] PROGMEM = "Betriebsstunden Zonen";
+const char STR8378[] PROGMEM = "Gesamt Gasenergie Heizen";
+const char STR8379[] PROGMEM = "Gesamt Gasenergie Trinkwasser";
+const char STR8380[] PROGMEM = "Gesamt Gasenergie";
+const char STR8381[] PROGMEM = "Gesamtenergie Heizen Reset";
+const char STR8382[] PROGMEM = "Gesamtenergie TWW Reset";
+const char STR8383[] PROGMEM = "Gesamtenergie Reset";
 const char STR8390[] PROGMEM = "Phasennummer";
 const char STR8395[] PROGMEM = "Wärmeabgabe";
 const char STR8396[] PROGMEM = "Wärmeaufnahme Quelle";
@@ -4355,7 +4361,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
 {0x113D2FAA,  CAT_KESSEL,           VT_PROPVAL,       2543,  STR2543,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
-{0x053D1A79,  CAT_KESSEL,           VT_UNKNOWN,       2550,  STR2550,  0,                    NULL,         FL_RONLY, DEV_ALL}, // 'Parameter' OEM
+{0x053D1A79,  CAT_KESSEL,           VT_ONOFF,         2550,  STR2550,  0,                    NULL,         FL_RONLY, DEV_ALL}, // 'Parameter' OEM
 {0x053D1A82,  CAT_KESSEL,           VT_UNKNOWN,       2551,  STR2551,  0,                    NULL,         FL_RONLY, DEV_ALL}, // 'Parameter' OEM
 
 //Sitherm Pro
@@ -5330,6 +5336,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Startzähler Brenner
 {0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Betriebsstunden Heizbetrieb
+{0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Betriebsstunden Heizbetrieb
 {0x053D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Betriebsstunden Heizbetrieb
 {0x193D2FEB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8338,  STR8338,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Heizbetrieb
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Betriebsstunden TWW
@@ -5337,6 +5344,12 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Betriebsstunden TWW
 {0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden TWW
 {0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Zonen
+{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8378,  STR8378,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Heizen
+{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8379,  STR8379,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Trinkwasser
+{0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8380,  STR8380,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie
+{0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8381,  STR8381,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Heizen Reset
+{0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8382,  STR8382,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Trinkwasser Reset
+{0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8383,  STR8383,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Reset
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8390,  STR8390,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
 {0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER,         8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
