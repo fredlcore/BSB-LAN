@@ -247,7 +247,10 @@ const char graph_html[] PROGMEM_LATE =
 
 const char header_html[] PROGMEM_LATE = 
   "HTTP/1.1 200 OK\n"
-  "Content-Type: text/html\n\n"
+  "Content-Type: text/html\n"
+  "Cache-Control: no-cache, no-store, must-revalidate\n"
+  "Pragma: no-cache\n"
+  "Expires: 0\n\n"
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">\n"
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
