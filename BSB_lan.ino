@@ -4998,7 +4998,7 @@ ich mir da nicht)
             dataFile.close();
           }
 #endif
-          for (int x=0; EEPROM.length(); x++) {
+          for (int x=0; x<EEPROM.length(); x++) {
             EEPROM.write(x, 0);
           }
           Serial.println(F("Cleared EEPROM"));
