@@ -40,7 +40,7 @@
 /* heating systems */
 
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
-#define DEV_050_ALL  50.255 // Weishaupt
+#define DEV_050_ALL  50,255 // Weishaupt
 #define DEV_085_ALL  85,255   // Elco Aquatop 8es
 #define DEV_090_ALL  90,255    // Brötje ISR SSR C
 #define DEV_095_ALL  95,255 // Brötje LogoBloc Unit L-UB 25C
