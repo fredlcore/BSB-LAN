@@ -53,16 +53,17 @@
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
- *       0.41  - 18.02.2018
+ *       0.41  - 19.03.2018
  *
  * Changelog:
  *       version 0.41 
  *        - Improved graph legend when plotting several parameters
- *        - Added JSON export; query with /J=a,b,c,d... or push queries to /JQ or push set commands to /JS
+ *        - Added JSON export; query with /JQ=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
  *        - Bugfix ENUM memory adressing
+ *        - Bugfix in reset function (/N)
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -1638,6 +1639,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
+            case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_CURRENT: // u16 / 100 uA
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
@@ -1649,6 +1651,7 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_POWER: // u32 / 10.0 kW
+            case VT_ENERGY: // u32 / 10.0 kWh
               printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
@@ -4998,7 +5001,7 @@ ich mir da nicht)
             dataFile.close();
           }
 #endif
-          for (int x=0; x<EEPROM.length(); x++) {
+          for (uint16_t x=0; x<EEPROM.length(); x++) {
             EEPROM.write(x, 0);
           }
           Serial.println(F("Cleared EEPROM"));
