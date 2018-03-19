@@ -178,6 +178,7 @@ typedef enum{
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
+  VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
@@ -196,6 +197,7 @@ typedef enum{
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
+  VT_ENERGY,            //  5 Byte - 1 enable / value/10 kWh
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
   VT_SUMMERPERIOD,      //* 9 Byte - no flag? 1 enable / byte 2/3 month/year
   VT_VACATIONPROG,      //* 9 Byte - 1 enable 0x06 / byte 2/3 month/year
@@ -213,6 +215,7 @@ const char U_DEG[] PROGMEM = "&deg;C";
 const char U_PERC[] PROGMEM = "&#037;";
 const char U_RPM[] PROGMEM = "U/min";
 const char U_KW[] PROGMEM = "kW";
+const char U_KWH[] PROGMEM = "kWh";
 const char U_CURR[] PROGMEM = "&#181;A";
 const char U_BAR[] PROGMEM = "bar";
 const char U_VOLT[] PROGMEM = "V";
@@ -292,6 +295,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
 {VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
@@ -310,6 +314,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS,          3600.0, DT_VALS,0, U_HOUR, sizeof(U_HOUR)},
 {VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
 {VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_ENERGY,         10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
@@ -5464,8 +5469,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x493D050E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8519,  STR8519,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solarvorlauftemperatur
 {0x493D050F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8520,  STR8520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solarrücklauftemperatur
 {0x053D12F6,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8521,  STR8521,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solardurchfluss
-{0x493D0599,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8526,  STR8526,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Tagesertrag Solarenergie
-{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_POWER,         8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamtertrag Solarenergie
+{0x493D0599,  CAT_DIAG_ERZEUGER,    VT_ENERGY_WORD,   8526,  STR8526,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Tagesertrag Solarenergie
+{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamtertrag Solarenergie
 {0x493D0893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag
 {0x493D0717,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8531,  STR8531,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betr`stunden Kollektor`überhitz
 {0x053D10A5,  CAT_DIAG_ERZEUGER,    VT_UINT,          8532,  STR8532,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr`stunden Kollektorpumpe - Broetje NovoCondens WOB20-25
