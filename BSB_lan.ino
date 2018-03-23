@@ -5789,7 +5789,7 @@ void setup() {
   uint32_t temp_offset2=0;
 
 //  index_first_enum = findLine(20, 0, &c);
-  index_last_enum = findLine(8779, 0, &c);
+  index_last_enum = findLine(10510, 0, &c);
 //  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 

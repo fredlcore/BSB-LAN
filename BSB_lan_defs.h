@@ -2546,7 +2546,7 @@ const char ENUM5950_4[] PROGMEM_LATEST = {
 "\x16 Trinkwasserthermostat\0"
 "\x17 Zirk'pumpenthermostat\0"
 "\x18 Impulszählung\0"
-"\x1d Startverhinderung"
+"\x1d Startverhinderung\0"
 "\x1e Kessel-Rückflussthermostat\0"
 "\x32 Durchflussmessung Hz\0"
 "\x33 Verbraucheranforderung VK1 10V\0"
