@@ -8,7 +8,7 @@
 
 <H2>Can I use the interface board on a Raspberry Pi?</H2>
 
-Yes, by using different pin headers (female instead of male). But please take note that you cannot use the BSB-LPB-LAN software which only runs on Arduino. You would have to use the completely different bsb_gateway software which can be found <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please contact the author of bsb_gateway directly for any support related to it. All information on this website applies to the Arduino version only! No support for bsb_gateway can be given here.
+Yes, by using different pin headers (female instead of male). But please take note that you cannot use the BSB-LPB-LAN software which only runs on Arduino. You would have to use the completely different bsb_gateway software for BSB, which can be found <A HREF="https://github.com/loehnertj/bsbgateway">here</A> or the PPS-monitor software for PPS/H-Bus devices, which can be found <A HREF="https://github.com/dspinellis/PPS-monitor">here</A>. Please contact the author of the corresponding software directly for any support related to it. All information on this website applies to the Arduino version only! No support for bsb_gateway or PPS-monitor can be given here.
 
 <H2>Can I run the software on a Raspberry Pi?</H2>
 
