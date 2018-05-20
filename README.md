@@ -6,6 +6,14 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and (with jus
 
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
+- Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
+- Baxi Luna Platinum + [LMS15] (gas-fired) 
+- Brötje BBK 22E [LMS14] (gas-fired)
+- Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
+- Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
+- Brötje EcoCondens BBS 20E [LMS14] (gas-fired)
+- Brötje EcoCondens BBS EVO 20 G [LMS15] (gas-fired)
+- Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
 - Brötje ISR-SSR [RVS63.283]
 - Brötje ISR-ZR1 [RVS46.530]
 - Brötje LogoBloc Unit L-UB 25C [RVS43.122] (oil-fired)
@@ -15,26 +23,24 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje NovoCondens SOB 26C [RVS43.222] (oil-fired) + EWM [RVS75.390]
 - Brötje NovoCondens WOB 20D [RVS43.325] (oil-fired)
 - Brötje SensoTherm BSW-K [RVS61.843] (heat pump)
-- Brötje BBK 22E [LMS14] (gas-fired)
-- Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
-- Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
-- Brötje EcoCondens BBS EVO 20 G [LMS15] (gas-fired)
-- Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
 - Brötje TrioCondens BGB 20E [LMS14] (gas-fired)
 - Brötje WBS 14D [LMU74] (gas-fired)
 - Brötje WBS 22E [LMS14] (gas-fired)
-- Brötje WGB-U 15H [LMS14] (gas-fired)
 - Brötje WGB 15 E [LMS14] (gas-fired)
 - Brötje WGB 20C [LMU74] (gas-fired)
-- Brötje WGB S 17/20 E EcoTherm Plus [LMS14] (gas-fired)
 - Brötje WGB EVO 20H [LMS15] (gas-fired)
 - Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
+- Brötje WGB S 17/20 E EcoTherm Plus [LMS14] (gas-fired)
+- Brötje WGB-U 15H [LMS14] (gas-fired)
+- Brötje WGB-U 15H [LMS14] (gas-fired)
+- CTC 380 IC [RVS43.143] (oil-fired)
+- Elco Aerotop G07-14 [RVS61.843] (heat pump)
+- Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
 - Elco Straton 21 [RVS63.283] (oil-fired)
 - Elco Thision S Plus 13 [LMS14] (gas-fired)
-- Elco Thision S 17.1 [LMU74.100] (gas-fired)
+- Elco Thision S 13.1 [LMU7] (gas-fired)
+- Elco Thision S 17.1 [LMU74.100] & [RVS63.283] (gas-fired)
 - Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
-- Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
-- CTC 380 IC [RVS43.143] (oil-fired)
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
 - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
 - Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
