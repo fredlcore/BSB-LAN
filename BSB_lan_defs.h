@@ -199,6 +199,7 @@ typedef enum{
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
   VT_ENERGY,            //  5 Byte - 1 enable / value/10 kWh
+  VT_ENERGY_1,          //  5 Byte - 1 enable / value/1 kWh
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
   VT_SUMMERPERIOD,      //* 9 Byte - no flag? 1 enable / byte 2/3 month/year
   VT_VACATIONPROG,      //* 9 Byte - 1 enable 0x06 / byte 2/3 month/year
@@ -316,6 +317,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
 {VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
 {VT_ENERGY,         10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
+{VT_ENERGY_1,       1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH)},
 {VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
@@ -5419,9 +5421,9 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Betriebsstunden TWW
 {0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden TWW
 {0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Zonen
-{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8378,  STR8378,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Heizen
-{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8379,  STR8379,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Trinkwasser
-{0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8380,  STR8380,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie
+{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_ENERGY_1,      8378,  STR8378,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Heizen
+{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_ENERGY_1,      8379,  STR8379,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Trinkwasser
+{0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_ENERGY_1,      8380,  STR8380,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie
 {0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8381,  STR8381,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Heizen Reset
 {0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8382,  STR8382,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Trinkwasser Reset
 {0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8383,  STR8383,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Reset
