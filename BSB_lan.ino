@@ -1651,8 +1651,8 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_POWER: // u32 / 10.0 kW
-            case VT_ENERGY: // u32 / 10.0 kWh
-            case VT_ENERGY_1: // u32 / 1.0 kWh
+            case VT_ENERGY10: // u32 / 10.0 kWh
+            case VT_ENERGY: // u32 / 1.0 kWh
               printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
