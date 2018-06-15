@@ -200,6 +200,7 @@ typedef enum{
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
+  VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
   VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
@@ -318,6 +319,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS,          3600.0, DT_VALS,0, U_HOUR, sizeof(U_HOUR)},
 {VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
 {VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
 {VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_ENERGY,         1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH)},
 {VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
@@ -5448,7 +5450,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8382,  STR8382,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Trinkwasser Reset
 {0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8383,  STR8383,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Reset
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8390,  STR8390,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
-{0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER,         8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
+{0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
 {0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungsaufnahme in kW // Broetje BSW-K
 {0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8398,  STR8398,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungszahl
