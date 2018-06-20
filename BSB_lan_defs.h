@@ -196,6 +196,7 @@ typedef enum{
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
+  VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
@@ -305,7 +306,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_SPEED,          0.02,   DT_VALS, 0, U_RPM, sizeof(U_RPM)},
+{VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
@@ -315,8 +316,9 @@ PROGMEM_LATE const units optbl[]={
 {VT_UINT5,          0.2,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE)},
 {VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS,          3600.0, DT_VALS,0, U_HOUR, sizeof(U_HOUR)},
+{VT_HOURS,          3600.0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
 {VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
 {VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
 {VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
