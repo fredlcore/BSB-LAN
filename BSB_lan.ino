@@ -1612,6 +1612,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  s16
             case VT_UINT5: //  s16 / 5
             case VT_UINT10: //  s16 / 10
+            case VT_SINT1000: // s16 / 1000
               printWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_MINUTES: // u32 min
@@ -2137,6 +2138,7 @@ int set(int line      // the ProgNr of the heater parameter
     // 16-bit unsigned integer representation
     // Temperature values
     case VT_TEMP_WORD:
+    case VT_SINT1000:
       {
       uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
       if(val[0]!='\0'){
