@@ -1612,7 +1612,6 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  s16
             case VT_UINT5: //  s16 / 5
             case VT_UINT10: //  s16 / 10
-            case VT_SINT1000: // s16 / 1000
               printWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_MINUTES: // u32 min
@@ -1649,6 +1648,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
+            case VT_SINT1000: // s16 / 1000
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_POWER: // u32 / 10.0 kW
@@ -2138,7 +2138,6 @@ int set(int line      // the ProgNr of the heater parameter
     // 16-bit unsigned integer representation
     // Temperature values
     case VT_TEMP_WORD:
-    case VT_SINT1000:
       {
       uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
       if(val[0]!='\0'){
@@ -2204,6 +2203,22 @@ int set(int line      // the ProgNr of the heater parameter
       strncpy((char *)param,val,MAX_PARAM_LEN);
       param[MAX_PARAM_LEN-1]='\0';
       param_len=strlen((char *)param)+1;
+      }
+      break;
+
+    case VT_SINT1000:
+      {
+      uint16_t t=atof(val)*1000.0;
+      if(setcmd){
+        param[0]=0x01;
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{ // INF message type (e.g. for room temperature)
+        param[0]=(t >> 8);
+        param[1]= t & 0xff;
+        param[2]=0x00;
+      }
+      param_len=3;
       }
       break;
 
