@@ -54,7 +54,8 @@ Please note: General parameters should work on all devices, more specific parame
 
 <B>Attention!</B><BR>
 Some companies which previously used BSB/LPB in their heating systems have now switched to other systems for their lower-cost devices. Examples are Brötje's WLC/WLS/BOK series. These are not compatible with BSB/LPB and only allow very limited parameters to be configured by the user. Even setting fundamental parameters such as the heating curve can only be done by a service technician with a special tool. If you have one of these heating systems, you are so far out of luck to configure and monitor your heating system as it can be done with the more expensive (but BSB/LPB compatible) devices mentioned above among others.
-<BR>
+<BR><BR>
+
 Instructions on how to configure etc. can be found in the <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md">HowTo</A>.<BR>
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
