@@ -49,9 +49,11 @@ This hardware/software combination should in principle work with all BSB- and LP
 
 - PPS-based heating systems (e.g. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11… and such as those using a QAA50 / QAA70 or similar like Brötje WGB 15 / WGB 20, Weishaupt WRD 0.2 / 1.1, Sieger TG11 (with Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (with DomoCommand DC 225)), albeit with just very basic functionality.
 
-
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB, LPB or PPS but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
+<B>Attention!</B><BR>
+Some companies which previously used BSB/LPB in their heating systems have now switched to other systems for their lower-cost devices. Examples are Brötje's WLC/WLS/BOK series. These are not compatible with BSB/LPB and only allow very limited parameters to be configured by the user. Even setting fundamental parameters such as the heating curve can only be done by a service technician with a special tool. If you have one of these heating systems, you are so far out of luck to configure and monitor your heating system as it can be done with the more expensive (but BSB/LPB compatible) devices mentioned above among others.
+<BR>
 Instructions on how to configure etc. can be found in the <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md">HowTo</A>.<BR>
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
