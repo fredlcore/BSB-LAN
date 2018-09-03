@@ -37,6 +37,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje WGB-U 15H [LMS14] (gas-fired)
 - CTC 380 IC [RVS43.143] (oil-fired)
 - Elco Aerotop G07-14 [RVS61.843] (heat pump)
+- Elco Aerotop T10C [RVS61.843] (heat pump)
 - Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
 - Elco Straton 21 [RVS63.283] (oil-fired)
 - Elco Thision S Plus 13 [LMS14] (gas-fired)
