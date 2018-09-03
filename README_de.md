@@ -37,6 +37,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje WGB-U 15H [LMS14] (Gasbrenner)
  - CTC 380 IC [RVS43.143] (Ölbrenner)
  - Elco Aerotop G07-14 [RVS61.843] (Wärmepumpe)
+ - Elco Aerotop T10C [RVS61.843] (Wärmepumpe)
  - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
  - Elco Straton 21 [RVS63.283] (Ölbrenner)
  - Elco Thision S Plus 13 [LMS14] (Gasbrenner)
