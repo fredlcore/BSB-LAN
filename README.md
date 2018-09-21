@@ -13,6 +13,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
 - Brötje EcoCondens BBS 20E [LMS14] (gas-fired)
 - Brötje EcoCondens BBS EVO 20 G [LMS15] (gas-fired)
+- Brötje EcoTherm Kompakt WMS 12 [LMS 15] (gas-fired)
 - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
 - Brötje ISR-SSR [RVS63.283]
 - Brötje ISR-ZR1 [RVS46.530]
