@@ -2045,6 +2045,7 @@ const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
 const char STR10509[] PROGMEM = "Position Drehknopf";
 const char STR10511[] PROGMEM = "Präsenztaste";
 const char STR10512[] PROGMEM = "Verbleibende Ferientage";
+const char STR10513[] PROGMEM = "Modus";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -3690,6 +3691,16 @@ const char ENUM10510[] PROGMEM_LATEST = {
   "\x00 Automatisch\0" 
   "\x01 Manuell\0"
   "\x02 Aus"
+};
+
+const char ENUM10513[] PROGMEM_LATEST = {
+  "\x00 Reduziert\0" 
+  "\x01 Komfort"
+};
+
+const char ENUM10517[] PROGMEM_LATEST = {
+  "\x07 Ein\0" 
+  "\x0D Aus"
 };
 
 /* SPECIAL ENUM tables */
@@ -5776,9 +5787,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D00000A,  CAT_PPS,              VT_ENUM,          10510, STR700,   sizeof(ENUM10510),    ENUM10510,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x2D00000B,  CAT_PPS,              VT_ONOFF,         10511, STR10511, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
 {0x2D00000C,  CAT_PPS,              VT_UINT,          10512, STR10512, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D00000D,  CAT_PPS,              VT_TEMP,          10513, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D00000E,  CAT_PPS,              VT_TEMP,          10514, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D00000F,  CAT_PPS,              VT_TEMP,          10515, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D00000D,  CAT_PPS,              VT_ENUM,          10513, STR10513, sizeof(ENUM10513),    ENUM10513,    DEFAULT_FLAG, DEV_ALL}, // Komfort-/Eco-Modus
+{0x2D00000E,  CAT_PPS,              VT_TEMP,          10514, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D00000F,  CAT_PPS,              VT_TEMP,          10515, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
+{0x2D000010,  CAT_PPS,              VT_TEMP,          10516, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D000011,  CAT_PPS,              VT_UINT,          10517, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 
 #define PPS_AT  0
 #define PPS_ATG 1
@@ -5793,11 +5806,14 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 #define PPS_BA  10
 #define PPS_AW  11
 #define PPS_FDT 12
-#define PPS_RTS 13
-#define PPS_RTA 14
-#define PPS_RTI 15
+#define PPS_MOD 13
+#define PPS_RTS 14
+#define PPS_RTA 15
+#define PPS_RTI 16
+#define PPS_BRS 17
 
-#define PPS_ANZ 16
+#define PPS_ANZ 18
+#define LAST_ENUM 10513
 
 //PPS-Bus commands end
 
