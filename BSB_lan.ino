@@ -58,6 +58,7 @@
  * Changelog:
  *       version 0.41 
  *        - Added further PPS-Bus commands
+ *        - Fixed bug that crashed PPS bus queries
  *        - Improved graph legend when plotting several parameters
  *        - Added JSON export; query with /JQ=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
@@ -5763,6 +5764,13 @@ void setup() {
       Serial.println(i);
       pps_values[i] = f;
     }
+  }
+
+  if (pps_values[PPS_RTS] < 1 || pps_values[PPS_RTS] > 100) {
+    pps_values[PPS_RTS] = 20;
+  }
+  if (pps_values[PPS_RTI] < 1 || pps_values[PPS_RTI] > 100) {
+    pps_values[PPS_RTI] = pps_values[PPS_RTS];
   }
 
 #ifdef LOGGER
