@@ -57,6 +57,7 @@
  *
  * Changelog:
  *       version 0.41 
+ *        - Added further PPS-Bus commands
  *        - Improved graph legend when plotting several parameters
  *        - Added JSON export; query with /JQ=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
@@ -415,6 +416,9 @@ unsigned long TWW_count   = 0;
 // PPS-bus variables
 uint8_t msg_cycle = 0;
 double pps_values[PPS_ANZ] = { 0 };
+#ifndef QAA_TYPE
+#define QAA_TYPE  0x53  //QAA70 as default
+#endif
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -3547,7 +3551,7 @@ void loop() {
           switch (msg_cycle) {
             case 0:
               tx_msg[1] = 0x38; // Typ
-              tx_msg[7] = 0x53;
+              tx_msg[7] = QAA_TYPE;
               break;
             case 1:
               tx_msg[1] = 0x18; // Position Drehknopf
@@ -3679,7 +3683,7 @@ void loop() {
           }
         } else {    // parse heating system data
 
-          if (msg[0] == 0x1E) {
+          if (msg[0] == 0x1E) {   // Anfragen der Therme nach bestimmten Parametern
             switch(msg[1]) {
               case 0x08: msg_cycle = 8; break;
               case 0x09: msg_cycle = 9; break;
@@ -3710,8 +3714,8 @@ ich mir da nicht)
 */
 
             }
-          } else {
-        
+          } else {    // Info-Telegramme von der Therme (0x1D)
+
             double temp = (double)((msg[6] << 8) + msg[7]) / 64;
 
             switch (msg[1]) {
@@ -3726,10 +3730,11 @@ ich mir da nicht)
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
               case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
               case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
+              case 0x4C: pps_values[PPS_MOD] = msg[7]; break; // Komfort-/Eco-Modus
+              case 0x4D: pps_values[PPS_BRS] = msg[7]; break; // Brennerstatus
               case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
               case 0x79: setTime(msg[5], msg[6], msg[7], msg[4], 1, 2018); break;  // Datum (msg[4] Wochentag)
               case 0x48: break;
-              case 0x4D: break;
               default:
                 Serial.print("Unknown telegram: ");
                 for (int c=0;c<9;c++) {
@@ -5807,7 +5812,7 @@ void setup() {
   uint32_t temp_offset2=0;
 
 //  index_first_enum = findLine(20, 0, &c);
-  index_last_enum = findLine(10510, 0, &c);
+  index_last_enum = findLine(LAST_ENUM, 0, &c);
 //  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 
