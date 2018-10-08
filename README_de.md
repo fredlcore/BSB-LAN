@@ -47,6 +47,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
  - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
  - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (Wärmepumpe)
+ - MHG Procon E 25 HS [LMS14] (Gasbrenner)
  - Sieger TG11 [RVP54.100] (Ölbrenner) {PPS_only}
  - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220] (Ölbrenner) {LPB_only}
 
