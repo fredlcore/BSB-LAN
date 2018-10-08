@@ -416,7 +416,7 @@ unsigned long TWW_count   = 0;
 
 // PPS-bus variables
 uint8_t msg_cycle = 0;
-double pps_values[PPS_ANZ] = { 0 };
+uint16_t pps_values[PPS_ANZ] = { 0 };
 #ifndef QAA_TYPE
 #define QAA_TYPE  0x53  //QAA70 as default
 #endif
@@ -2625,11 +2625,11 @@ char* query(int line_start  // begin at this line (ProgNr)
         } else { // bus type is PPS
 
           uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
-          uint16_t temp_val;
-          if (type == VT_TEMP) {
-            temp_val = pps_values[(c & 0xFF)] * 64;
-          } else {
-            temp_val = pps_values[(c & 0xFF)];
+          uint16_t temp_val = 0;
+          switch (type) {
+//            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
+            case VT_HOUR_MINUTES: temp_val = ((pps_values[(c & 0xFF)] / 6) * 256) + ((pps_values[(c & 0xFF)] % 6) * 10); break;
+            default: temp_val = pps_values[(c & 0xFF)]; break;
           }
 
           msg[4+(bus_type*4)]=TYPE_ANS;
@@ -3376,9 +3376,9 @@ void InitMaxDeviceList() {
       max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
     }
     for (int z=0;z<20;z++) {
-      EEPROM.get(100 + 15 * z + 4, max_id_eeprom);
+      EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
       if (!strcmp(max_id, max_id_eeprom)) {
-        EEPROM.get(100 + 15 * z, max_addr);
+        EEPROM.get(500 + 15 * z, max_addr);
         max_devices[x] = max_addr;
         Serial.println(F("Adding known Max ID to list:"));
         Serial.println(max_devices[x], HEX);
@@ -3556,20 +3556,20 @@ void loop() {
               break;
             case 1:
               tx_msg[1] = 0x18; // Position Drehknopf
-              tx_msg[6] = ((uint16_t)(pps_values[PPS_PDK]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[PPS_PDK]*64) & 0xFF);
+              tx_msg[6] = pps_values[PPS_PDK] >> 8;
+              tx_msg[7] = pps_values[PPS_PDK] & 0xFF;
               break;
             case 2:
               if (pps_values[PPS_RTI] > 0) {
                 tx_msg[1] = 0x28; // Raumtemperatur Ist
-                tx_msg[6] = ((uint16_t)(pps_values[PPS_RTI]*64) >> 8);
-                tx_msg[7] = ((uint16_t)(pps_values[PPS_RTI]*64) & 0xFF);
+                tx_msg[6] = pps_values[PPS_RTI] >> 8;
+                tx_msg[7] = pps_values[PPS_RTI] & 0xFF;
               }
               break;
             case 3:
               tx_msg[1] = 0x19; // Raumtepmeratur Soll
-              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTS]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTS]*64) & 0xFF);
+              tx_msg[6] = pps_values[PPS_RTS] >> 8;
+              tx_msg[7] = pps_values[PPS_RTS] & 0xFF;
               break;
             case 4:
               tx_msg[1] = 0x4E;
@@ -3590,18 +3590,18 @@ void loop() {
               break;
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
-              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTS]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTS]*64) & 0xFF);
+              tx_msg[6] = pps_values[PPS_RTS] >> 8;
+              tx_msg[7] = pps_values[PPS_RTS] & 0xFF;
               break;
             case 9:
               tx_msg[1] = 0x09;     // Raumtemperatur Abwesenheit Soll
-              tx_msg[6] = ((uint16_t)(pps_values[PPS_RTA]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[PPS_RTA]*64) & 0xFF);
+              tx_msg[6] = pps_values[PPS_RTA] >> 8;
+              tx_msg[7] = pps_values[PPS_RTA] & 0xFF;
               break;
             case 10:
               tx_msg[1] = 0x0B; // Trinkwassertemperatur Soll
-              tx_msg[6] = ((uint16_t)(pps_values[PPS_TWS]*64) >> 8);
-              tx_msg[7] = ((uint16_t)(pps_values[PPS_TWS]*64) & 0xFF);
+              tx_msg[6] = pps_values[PPS_TWS] >> 8;
+              tx_msg[7] = pps_values[PPS_TWS] & 0xFF;
               break;
             case 11:
               tx_msg[1] = 0x4C; // Präsenz
@@ -3609,66 +3609,66 @@ void loop() {
               break;
             case 12:
               tx_msg[1] = 0x60;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[3] = pps_values[PPS_S13];
+              tx_msg[4] = pps_values[PPS_E12];
+              tx_msg[5] = pps_values[PPS_S12];
+              tx_msg[6] = pps_values[PPS_E11];
+              tx_msg[7] = pps_values[PPS_S11];
               break;
             case 13:
               tx_msg[1] = 0x61;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E23];
+              tx_msg[3] = pps_values[PPS_S23];
+              tx_msg[4] = pps_values[PPS_E22];
+              tx_msg[5] = pps_values[PPS_S22];
+              tx_msg[6] = pps_values[PPS_E21];
+              tx_msg[7] = pps_values[PPS_S21];
               break;
             case 14:
               tx_msg[1] = 0x62;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[3] = pps_values[PPS_S33];
+              tx_msg[4] = pps_values[PPS_E32];
+              tx_msg[5] = pps_values[PPS_S32];
+              tx_msg[6] = pps_values[PPS_E31];
+              tx_msg[7] = pps_values[PPS_S31];
               break;
             case 15:
               tx_msg[1] = 0x63;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[3] = pps_values[PPS_S43];
+              tx_msg[4] = pps_values[PPS_E42];
+              tx_msg[5] = pps_values[PPS_S42];
+              tx_msg[6] = pps_values[PPS_E41];
+              tx_msg[7] = pps_values[PPS_S41];
               break;
             case 16:
               tx_msg[1] = 0x64;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[3] = pps_values[PPS_S53];
+              tx_msg[4] = pps_values[PPS_E52];
+              tx_msg[5] = pps_values[PPS_S52];
+              tx_msg[6] = pps_values[PPS_E51];
+              tx_msg[7] = pps_values[PPS_S51];
               break;
             case 17:
               tx_msg[1] = 0x65;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[3] = pps_values[PPS_S63];
+              tx_msg[4] = pps_values[PPS_E62];
+              tx_msg[5] = pps_values[PPS_S62];
+              tx_msg[6] = pps_values[PPS_E61];
+              tx_msg[7] = pps_values[PPS_S61];
               break;
             case 18:
               tx_msg[1] = 0x66;
-              tx_msg[2] = 0x90;
-              tx_msg[3] = 0x90;
-              tx_msg[4] = 0x90;
-              tx_msg[5] = 0x90;
-              tx_msg[6] = 0x90;
-              tx_msg[7] = 0x00;
+              tx_msg[2] = pps_values[PPS_E73];
+              tx_msg[3] = pps_values[PPS_S73];
+              tx_msg[4] = pps_values[PPS_E72];
+              tx_msg[5] = pps_values[PPS_S72];
+              tx_msg[6] = pps_values[PPS_E71];
+              tx_msg[7] = pps_values[PPS_S71];
               break;
             case 19:
               tx_msg[1] = 0x7C;
@@ -3690,6 +3690,7 @@ void loop() {
               case 0x09: msg_cycle = 9; break;
               case 0x0B: msg_cycle = 10; break;
               case 0x48: msg_cycle = 1; break;
+              case 0x49: msg_cycle = 5; break;
               case 0x4C: msg_cycle = 11; break;
               case 0x4D: msg_cycle = 2; break;
               case 0x4F: msg_cycle = 3; break;
@@ -3701,7 +3702,16 @@ void loop() {
               case 0x65: msg_cycle = 17; break;
               case 0x66: msg_cycle = 18; break;
               case 0x7C: msg_cycle = 19; break;
-              default: break;
+              default:
+                 Serial.print("Unknown request: ");
+                for (int c=0;c<9;c++) {
+                  if (msg[c]<16) Serial.print("0");
+                  Serial.print(msg[c], HEX);
+                  Serial.print(" ");
+                }
+                Serial.println();
+                break;
+
 
 /*
 Weitere noch zu überprüfende Telegramme:
@@ -3717,13 +3727,14 @@ ich mir da nicht)
             }
           } else {    // Info-Telegramme von der Therme (0x1D)
 
-            double temp = (double)((msg[6] << 8) + msg[7]) / 64;
+            uint16_t temp = (msg[6] << 8) + msg[7];
 
             switch (msg[1]) {
               case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
 
               case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
               case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
+              case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
@@ -3734,8 +3745,68 @@ ich mir da nicht)
               case 0x4C: pps_values[PPS_MOD] = msg[7]; break; // Komfort-/Eco-Modus
               case 0x4D: pps_values[PPS_BRS] = msg[7]; break; // Brennerstatus
               case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+              case 0x60: 
+                pps_values[PPS_S11] = msg[7]; 
+                pps_values[PPS_E11] = msg[6]; 
+                pps_values[PPS_S12] = msg[5]; 
+                pps_values[PPS_E12] = msg[4]; 
+                pps_values[PPS_S13] = msg[3]; 
+                pps_values[PPS_E13] = msg[2];
+                break;
+              case 0x61:
+                pps_values[PPS_S21] = msg[7]; 
+                pps_values[PPS_E21] = msg[6]; 
+                pps_values[PPS_S22] = msg[5]; 
+                pps_values[PPS_E22] = msg[4]; 
+                pps_values[PPS_S23] = msg[3]; 
+                pps_values[PPS_E23] = msg[2];
+                break;
+              case 0x62:
+                pps_values[PPS_S31] = msg[7];
+                pps_values[PPS_E31] = msg[6];
+                pps_values[PPS_S32] = msg[5];
+                pps_values[PPS_E32] = msg[4];
+                pps_values[PPS_S33] = msg[3];
+                pps_values[PPS_E33] = msg[2];
+                break;
+              case 0x63:
+                pps_values[PPS_S41] = msg[7];
+                pps_values[PPS_E41] = msg[6];
+                pps_values[PPS_S42] = msg[5];
+                pps_values[PPS_E42] = msg[4];
+                pps_values[PPS_S43] = msg[3];
+                pps_values[PPS_E43] = msg[2];
+                break;
+              case 0x64:
+                pps_values[PPS_S51] = msg[7];
+                pps_values[PPS_E51] = msg[6];
+                pps_values[PPS_S52] = msg[5];
+                pps_values[PPS_E52] = msg[4];
+                pps_values[PPS_S53] = msg[3];
+                pps_values[PPS_E53] = msg[2];
+                break;
+              case 0x65:
+                pps_values[PPS_S61] = msg[7];
+                pps_values[PPS_E61] = msg[6];
+                pps_values[PPS_S62] = msg[5];
+                pps_values[PPS_E62] = msg[4];
+                pps_values[PPS_S63] = msg[3];
+                pps_values[PPS_E63] = msg[2];
+                break;
+              case 0x66:
+                pps_values[PPS_S71] = msg[7];
+                pps_values[PPS_E71] = msg[6];
+                pps_values[PPS_S72] = msg[5];
+                pps_values[PPS_E72] = msg[4];
+                pps_values[PPS_S73] = msg[3];
+                pps_values[PPS_E73] = msg[2];
+                break;
               case 0x79: setTime(msg[5], msg[6], msg[7], msg[4], 1, 2018); break;  // Datum (msg[4] Wochentag)
               case 0x48: break;
+              case 0x1B:                                    // Frostschutz-Temperatur 
+                pps_values[PPS_FRS] = temp;
+                pps_values[PPS_SAB] = (msg[4] << 8) + msg[5];
+                break;
               default:
                 Serial.print("Unknown telegram: ");
                 for (int c=0;c<9;c++) {
@@ -4030,14 +4101,32 @@ ich mir da nicht)
             int i=findLine(line,0,&c);   // find the ProgNr and get the command code
             if (i>0) {
               int cmd_no = c & 0xFF;
-              if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_RTS) {
+              uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+
+              switch (type) {
+                case VT_TEMP: pps_values[cmd_no] = atof(p) * 64; break;
+                case VT_HOUR_MINUTES:
+                {
+                  uint8_t h=atoi(p);
+                  uint8_t m=0;
+                  while(*p!='\0' && *p!=':' && *p!='.') p++;
+                  if(*p==':' || *p=='.'){
+                    p++;
+                    m=atoi(p);
+                  }
+                  pps_values[cmd_no] = h * 6 + m / 10;
+                  break;
+                }
+                default: pps_values[cmd_no] = atoi(p); break;
+              }
+//              if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
+              if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && line >= 10500) {
                 Serial.print(F("Writing EEPROM slot "));
                 Serial.print(cmd_no);
                 Serial.print(F(" with value "));
-                Serial.println(atof(p));
-                EEPROM.put(sizeof(float)*cmd_no, atof(p));
+                Serial.println(pps_values[cmd_no]);
+                EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
               }
-              pps_values[cmd_no] = atof(p);
               setresult = 1;
             } else {
               setresult = 0;
@@ -4866,6 +4955,17 @@ ich mir da nicht)
 
           client.println(F("<BR>"));
           webPrintFooter();
+
+          Serial.println(F("EEPROM dump:"));
+          for (uint16_t x=0; x<EEPROM.length(); x++) {
+            uint8_t i = EEPROM.read(x);
+            if (i < 16) {
+              Serial.print(F("0"));
+            }
+            Serial.print(i, HEX);
+            Serial.print(F(" "));
+          }
+          
           break;
         }
         if (p[1]=='L' && p[2]=='B' && p[3]=='='){
@@ -5639,7 +5739,7 @@ custom_timer = millis();
 
         int32_t max_addr_temp=0;
         for (int x=0;x<20;x++) {
-          EEPROM.get(100 + 15 * x, max_addr_temp);
+          EEPROM.get(500 + 15 * x, max_addr_temp);
           if (max_addr_temp == max_addr) {
             Serial.println(F("Device already in EEPROM"));
             known_eeprom = true;
@@ -5649,15 +5749,15 @@ custom_timer = millis();
 
         if (!known_eeprom) {
           for (int x=0;x<20;x++) {
-            EEPROM.get(100+15*x, max_addr_temp);
+            EEPROM.get(500+15*x, max_addr_temp);
             if (max_addr_temp < 1) {
-              EEPROM.put(100+15*x, max_addr);
-              EEPROM.put(100+15*x+4, max_id);
+              EEPROM.put(500+15*x, max_addr);
+              EEPROM.put(500+15*x+4, max_id);
 /*
               int32_t temp1;
               char temp2[11] = { 0 };
-              EEPROM.get(100+15*x, temp1);
-              EEPROM.get(100+15*x+4, temp2);
+              EEPROM.get(500+15*x, temp1);
+              EEPROM.get(500+15*x+4, temp2);
               Serial.println(temp1, HEX);
               Serial.println(temp2);
 */
@@ -5754,10 +5854,10 @@ void setup() {
   Serial.println(freeRam());
   Serial.println(ip);
 
-  for (int i=PPS_TWS;i<=PPS_RTS;i++) {
-    float f=0;
-    EEPROM.get(sizeof(float)*i, f);
-    if (f > 1 && f < 100) {
+  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
+    uint16_t f=0;
+    EEPROM.get(sizeof(uint16_t)*i, f);
+    if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
       Serial.print(F("Reading "));
       Serial.print(f);
       Serial.print(F(" from EEPROM slot "));
@@ -5766,11 +5866,17 @@ void setup() {
     }
   }
 
-  if (pps_values[PPS_RTS] < 1 || pps_values[PPS_RTS] > 100) {
-    pps_values[PPS_RTS] = 20;
+  if (pps_values[PPS_RTS] / 64 < 1 || pps_values[PPS_RTS] / 64 > 100) {
+    pps_values[PPS_RTS] = 20 * 64;
   }
-  if (pps_values[PPS_RTI] < 1 || pps_values[PPS_RTI] > 100) {
+  if (pps_values[PPS_RTI] / 64 < 1 || pps_values[PPS_RTI] / 64 > 100) {
     pps_values[PPS_RTI] = pps_values[PPS_RTS];
+  }
+  if (pps_values[PPS_TWS] / 64 < 1 || pps_values[PPS_TWS] / 64 > 100) {
+    pps_values[PPS_TWS] = 45 * 64;
+  }
+  if (pps_values[PPS_RTA] / 64 < 1 || pps_values[PPS_RTA] / 64 > 100) {
+    pps_values[PPS_RTA] = pps_values[PPS_RTS]-(5 * 64);
   }
 
 #ifdef LOGGER
