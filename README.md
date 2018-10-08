@@ -47,6 +47,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
 - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
+- MHG Procon E 25 HS [LMS14] (gas-fired)
 - Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
 - Weishaupt WTU-25 G with WRS-CPU B2/E [RVS23.220] (oil-fired) {LPB_only}
 
