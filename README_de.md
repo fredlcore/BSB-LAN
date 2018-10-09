@@ -51,7 +51,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Sieger TG11 [RVP54.100] (Ölbrenner) {PPS_only}
  - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220] (Ölbrenner) {LPB_only}
 
- - PPS-basierte Regler (wie bspw. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11…) bzw. Heizungssysteme, bei denen ein QAA50 / QAA70 zum Einsatz kommt (wie bspw. Brötje WGB 15 / WGB 20, Weishaupt WRD 0.2 / 1.1, Sieger TG11 (mit Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (mit DomoCommand DC 225)), allerdings mit sehr eingeschränkter Funktionalität.
+ - PPS-basierte Regler (wie bspw. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11…) bzw. Heizungssysteme, bei denen ein QAA50 / QAA70 zum Einsatz kommt (wie bspw. Brötje WGB 15 / WGB 20 / Triobloc E23 (Eurocontrol K), Weishaupt WRD 0.2 / 1.1, Sieger TG11 (mit Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (mit DomoCommand DC 225)), allerdings mit PPS-typischer eingeschränkter Funktionalität im Vergleich zu BSB/LPB.
 
 Bitte beachte: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit BSB, LPB oder PPS arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 <BR><BR>
