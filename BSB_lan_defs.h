@@ -57,6 +57,7 @@
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
 #define DEV_170_ALL  170,255 // Fujitsu Waterstage WSYK160DC9
+#define DEV_195_ALL  195,255 // MHG Procon E 25 HS
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
 #define DEV_211_ALL  211,255 // Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteindetifikation: RVS21.831F/127)
@@ -5819,7 +5820,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D000000,  CAT_PPS,              VT_TEMP,          10500, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D000001,  CAT_PPS,              VT_TEMP,          10501, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
 {0x2D000002,  CAT_PPS,              VT_TEMP,          10502, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR8331,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
+{0x2D000003,  CAT_PPS,              VT_TEMP,          10503, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
 {0x2D000004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
 {0x2D000005,  CAT_PPS,              VT_ONOFF,         10505, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
 {0x2D000006,  CAT_PPS,              VT_TEMP,          10506, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist

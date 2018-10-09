@@ -2770,12 +2770,17 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.print(formnr);
             client.print(F("' VALUE='"));
 
+/*
             char* colon_pos = strchr(pvalstr,':');
             if (colon_pos!=0) {
               *colon_pos = '.';
             }
-
-            client.print(strtod(pvalstr,NULL));
+*/
+            if (type == VT_HOUR_MINUTES) {
+              client.print(pvalstr);              
+            } else {
+              client.print(strtod(pvalstr,NULL));
+            }
             client.print(F("'></td><td>"));
             if (flags !=FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set("));
