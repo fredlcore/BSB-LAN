@@ -4142,7 +4142,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD,  888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // dt Überhöhungsfaktor [%]
-{0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG,2 DEV_162_ALL}, // dt Überhöhungsfaktor [%]
+{0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // dt Überhöhungsfaktor [%]
@@ -5921,7 +5921,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D000039,  CAT_PPS,              VT_HOUR_MINUTES,  10557, STR10557, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
 {0x2D00003A,  CAT_PPS,              VT_HOUR_MINUTES,  10558, STR10558, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
 {0x2D00003B,  CAT_PPS,              VT_TEMP,          10559, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
-{0x2D00003C,  CAT_PPS,              VT_TEMP,          10560, STR730,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Sommer-/Winterheizgrenze(?)
+{0x2D00003C,  CAT_PPS,              VT_TEMP,          10560, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
 {0x2D00003D,  CAT_PPS,              VT_UINT,          10561, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 
 #define PPS_AT  0
@@ -5984,7 +5984,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 #define PPS_S73 57
 #define PPS_E73 58
 #define PPS_FRS 59
-#define PPS_SAB 60
+#define PPS_SMX 60
 #define PPS_BRS 61
 
 #define PPS_ANZ 62
