@@ -4403,6 +4403,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_163_ALL}, // Gebl'leistung Startwert DLH
+{0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_195_ALL}, // Gebl'leistung Startwert DLH
 {0x093D2F99,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2444 Leistung Minimum [kW]
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Gebläseleistung TWW Max
