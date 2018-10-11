@@ -3811,7 +3811,7 @@ ich mir da nicht)
               case 0x48: break;
               case 0x1B:                                    // Frostschutz-Temperatur 
                 pps_values[PPS_FRS] = temp;
-                pps_values[PPS_SAB] = (msg[4] << 8) + msg[5];
+                pps_values[PPS_SMX] = (msg[4] << 8) + msg[5];
                 break;
               default:
                 Serial.print("Unknown telegram: ");
@@ -4197,17 +4197,19 @@ ich mir da nicht)
           client.println(F("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"));
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
-            printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
-            Serial.println();
-            client.print(F("<tr><td><A HREF='K"));
-            client.print(cat);
-            client.print(F("'>"));
-            client.print(outBuf);
-            client.println(F("</A></td><td>"));
-            client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
-            client.print(F(" - "));
-            client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
-            client.println(F("</td></tr>"));
+            if ((bus_type != 2) || (bus_type == 2 && cat == CAT_PPS)) {
+              printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
+              Serial.println();
+              client.print(F("<tr><td><A HREF='K"));
+              client.print(cat);
+              client.print(F("'>"));
+              client.print(outBuf);
+              client.println(F("</A></td><td>"));
+              client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
+              client.print(F(" - "));
+              client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
+              client.println(F("</td></tr>"));
+            }
           }
           client.println(F("</table>"));
           webPrintFooter();
