@@ -58,7 +58,12 @@
  * Changelog:
  *       version 0.41 
  *        - Added further PPS-Bus commands
+ *        - Default PPS mode now "listening". 
+ *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening, 
+ *          i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
+ *          You can switch between modes at run-time with URL command /P2,x where x is either 1 (for controlling) or not 1 (for listening only)
  *        - Fixed bug that crashed PPS bus queries
+ *        - Stability improvements for PPS bus
  *        - Improved graph legend when plotting several parameters
  *        - Added JSON export; query with /JQ=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
@@ -1559,6 +1564,7 @@ char *printTelegram(byte* msg, int query_line) {
   if (bus_type == 2) {
     data_len = 3;
   }
+
   if(data_len < 0){
     Serial.print(F("len ERROR "));
     Serial.print(msg[len_idx]);
@@ -1792,7 +1798,11 @@ char *printTelegram(byte* msg, int query_line) {
   }
   Serial.println();
   if(verbose){
-    SerialPrintRAW(msg,msg[len_idx]+bus_type);
+    if (bus_type != 2) {
+      SerialPrintRAW(msg,msg[len_idx]+bus_type);      
+    } else {
+      SerialPrintRAW(msg, 9);
+    }
     Serial.println();
   }
   return pvalstr;
@@ -2039,6 +2049,44 @@ int set(int line      // the ProgNr of the heater parameter
   // Search the command table from the start for a matching line nbr.
   i=findLine(line,0,&c);   // find the ProgNr and get the command code
   if(i<0) return 0;        // no match
+
+  // Check for readonly parameter
+  if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) == 1) {
+//  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
+    Serial.println(F("Parameter is readonly!"));
+    return 2;   // return value for trying to set a readonly parameter
+  }
+
+  if (bus_type == 2) {  // PPS-Bus set parameter
+    int cmd_no = c & 0xFF;
+    uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+
+    switch (type) {
+      case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
+      case VT_HOUR_MINUTES:
+      {
+        uint8_t h=atoi(val);
+        uint8_t m=0;
+        while(*val!='\0' && *val!=':' && *val!='.') val++;
+        if(*val==':' || *val=='.'){
+          val++;
+          m=atoi(val);
+        }
+        pps_values[cmd_no] = h * 6 + m / 10;
+        break;
+      }
+      default: pps_values[cmd_no] = atoi(val); break;
+    }
+//    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
+    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && line >= 10500) {
+      Serial.print(F("Writing EEPROM slot "));
+      Serial.print(cmd_no);
+      Serial.print(F(" with value "));
+      Serial.println(pps_values[cmd_no]);
+      EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
+    }
+    return 1;
+  }
 
   // Get the parameter type from the table row[i]
   switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
@@ -2488,13 +2536,6 @@ int set(int line      // the ProgNr of the heater parameter
       return 0;
     break;
   } // endswitch
-
-  // Check for readonly parameter
-  if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) == 1) {
-//  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
-    Serial.println(F("Parameter is readonly!"));
-    return 2;   // return value for trying to set a readonly parameter
-  }
 
   // Send a message to PC hardware serial port
   Serial.print(F("setting line: "));
@@ -3434,7 +3475,7 @@ void loop() {
     // Method GetMessage() validates length byte and CRC.
     if (bus.GetMessage(msg)) { // message was syntactically correct
        // Decode the rcv telegram and send it to the PC serial interface
-      if(verbose) {
+      if(verbose && bus_type != 2) {  // verbose output for PPS comes later
         printTelegram(msg, -1);
 #ifdef LOGGER
         LogTelegram(msg);
@@ -3685,7 +3726,7 @@ void loop() {
           if (msg_cycle > 7) {
             msg_cycle = 0;
           }
-          if (tx_msg[1] != 0xFF) {
+          if (tx_msg[1] != 0xFF && myAddr == 1) {
             bus.Send(0, 0, rx_msg, tx_msg);
           }
         } else {    // parse heating system data
@@ -3842,11 +3883,19 @@ ich mir da nicht)
             }
             Serial.print(F("Time: ")); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
 */
-          }
-// End PPS-bus handling
-        }
-      }
+          } // End parsing 0x1D heater telegrams
+          
+        } // End parse PPS heating data
 
+        if(verbose) {     // verbose output for PPS after time-critical sending procedure
+          printTelegram(msg, -1);
+#ifdef LOGGER
+          LogTelegram(msg);
+#endif
+        } 
+                
+      } // End PPS-bus handling
+      
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
@@ -4098,46 +4147,9 @@ ich mir da nicht)
 
           // Now send it out to the bus
           int setresult = 0;
-          if (bus_type != 2) {
-            setresult = set(line,p,setcmd);
-            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
-          } else {  // PPS-Bus Set 
-            uint32_t c;              // command code
-            // Search the command table from the start for a matching line nbr.
-            int i=findLine(line,0,&c);   // find the ProgNr and get the command code
-            if (i>0) {
-              int cmd_no = c & 0xFF;
-              uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+          setresult = set(line,p,setcmd);
+          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
 
-              switch (type) {
-                case VT_TEMP: pps_values[cmd_no] = atof(p) * 64; break;
-                case VT_HOUR_MINUTES:
-                {
-                  uint8_t h=atoi(p);
-                  uint8_t m=0;
-                  while(*p!='\0' && *p!=':' && *p!='.') p++;
-                  if(*p==':' || *p=='.'){
-                    p++;
-                    m=atoi(p);
-                  }
-                  pps_values[cmd_no] = h * 6 + m / 10;
-                  break;
-                }
-                default: pps_values[cmd_no] = atoi(p); break;
-              }
-//              if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-              if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && line >= 10500) {
-                Serial.print(F("Writing EEPROM slot "));
-                Serial.print(cmd_no);
-                Serial.print(F(" with value "));
-                Serial.println(pps_values[cmd_no]);
-                EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
-              }
-              setresult = 1;
-            } else {
-              setresult = 0;
-            }
-          }
           if(setresult!=1){
             webPrintHeader();
 #ifdef LANG_DE
@@ -5189,6 +5201,8 @@ ich mir da nicht)
               client.print(F("AvgMax: "));
               client.print(max_avg / max_avg_count);
               client.println(F("</td></tr>"));
+            } else {
+              client.println(F("<tr><td>Noch keine MAX!-Daten empfangen.</td></tr>"));
             }
 #endif
           }else if(range[0]=='H'){ // handle humidity command
