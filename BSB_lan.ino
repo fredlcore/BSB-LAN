@@ -2057,7 +2057,7 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
-  if (bus_type == 2) {  // PPS-Bus set parameter
+  if (bus_type == 2 && line >= 10500) {  // PPS-Bus set parameter
     int cmd_no = c & 0xFF;
     uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
 
@@ -2078,7 +2078,7 @@ int set(int line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && line >= 10500) {
+    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
       Serial.print(F("Writing EEPROM slot "));
       Serial.print(cmd_no);
       Serial.print(F(" with value "));
@@ -4143,8 +4143,8 @@ ich mir da nicht)
           Serial.print(F("set ProgNr "));
           Serial.print(line);    // the ProgNr
           Serial.print(F(" = "));
-          Serial.println(atof(p));     // the value
-
+//          Serial.println(atof(p));     // the value
+          Serial.println(p);     // the value
           // Now send it out to the bus
           int setresult = 0;
           setresult = set(line,p,setcmd);
@@ -5118,7 +5118,7 @@ ich mir da nicht)
             client.println(F("LPB"));
           } 
           if (p[2]=='2') {
-            bus_type=bus.setBusType(2);
+            bus_type=bus.setBusType(BUS_PPS, myAddr);
             len_idx = 1;
             pl_start = 9;
             client.println(F("PPS"));
@@ -5888,18 +5888,22 @@ void setup() {
     }
   }
 
+#ifdef PPS_DEFAULT_TEMP
+
   if (pps_values[PPS_RTS] / 64 < 1 || pps_values[PPS_RTS] / 64 > 100) {
-    pps_values[PPS_RTS] = 20 * 64;
+    pps_values[PPS_RTS] = PPS_DEFAULT_TEMP * 64;
   }
   if (pps_values[PPS_RTI] / 64 < 1 || pps_values[PPS_RTI] / 64 > 100) {
     pps_values[PPS_RTI] = pps_values[PPS_RTS];
   }
   if (pps_values[PPS_TWS] / 64 < 1 || pps_values[PPS_TWS] / 64 > 100) {
-    pps_values[PPS_TWS] = 45 * 64;
+    pps_values[PPS_TWS] = (PPS_DEFAULT_TEMP + 25) * 64;
   }
   if (pps_values[PPS_RTA] / 64 < 1 || pps_values[PPS_RTA] / 64 > 100) {
     pps_values[PPS_RTA] = pps_values[PPS_RTS]-(5 * 64);
   }
+
+#endif
 
 #ifdef LOGGER
   // disable w5100 while setting up SD
