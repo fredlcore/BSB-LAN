@@ -1431,28 +1431,42 @@ char *printTelegram(byte* msg, int query_line) {
   if(msg[4]==TYPE_QUR) return;
 #endif
 */
-  // source
-  SerialPrintAddr(msg[1+(bus_type*2)]); // source address
-  Serial.print(F("->"));
-  SerialPrintAddr(msg[2]); // destination address
-  Serial.print(F(" "));
-  // msg[3] contains the message length, not handled here
-  SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
-  Serial.print(F(" "));
 
-  uint32_t cmd;
-  if (bus_type == 1) {
-    if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
-      cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
-    }else{
-      cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
-    }
+  if (bus_type != 2) {
+    // source
+    SerialPrintAddr(msg[1+(bus_type*2)]); // source address
+    Serial.print(F("->"));
+    SerialPrintAddr(msg[2]); // destination address
+    Serial.print(F(" "));
+    // msg[3] contains the message length, not handled here
+    SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
+    Serial.print(F(" "));
   } else {
+    switch (msg[0]) {
+      case 0x1D: Serial.print(F("INF HEIZ->QAA ")); break;
+      case 0x1E: Serial.print(F("REQ HEIZ->QAA ")); break;
+      case 0x17: Serial.print(F("INF QAA->HEIZ ")); break;
+      default: break;
+    }
+  }
+
+  uint32_t cmd = 0;
+  if (bus_type == BUS_BSB) {
     if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
       cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
     }else{
       cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
     }
+  }
+  if (bus_type == BUS_LPB) {
+    if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
+    }else{
+      cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
+    }
+  }
+  if (bus_type == BUS_PPS) {
+    cmd = 0x2D000000 + query_line - 10500;
   }
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
@@ -2058,7 +2072,7 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
   if (bus_type == 2 && line >= 10500) {  // PPS-Bus set parameter
-    int cmd_no = c & 0xFF;
+    int cmd_no = line - 10500;
     uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
 
     switch (type) {
@@ -2611,8 +2625,8 @@ char* query(int line_start  // begin at this line (ProgNr)
           , int line_end    // end with this line (ProgNr)
           , boolean no_print)    // display in web client?
 {
-  byte msg[33];      // response buffer
-  byte tx_msg[33];   // xmit buffer
+  byte msg[33] = { 0 };      // response buffer
+  byte tx_msg[33] = { 0 };   // xmit buffer
   uint32_t c;        // command code
   int line;     // ProgNr
   int i=0;
@@ -2678,10 +2692,12 @@ char* query(int line_start  // begin at this line (ProgNr)
           msg[pl_start]=0;
           msg[pl_start+1]=temp_val >> 8;
           msg[pl_start+2]=temp_val & 0xFF;
+/*
           msg[5] = c >> 24;
           msg[6] = c >> 16 & 0xFF;
           msg[7] = c >> 8 & 0xFF;
           msg[8] = c & 0xFF;
+*/
           pvalstr = printTelegram(msg, line);
         }
       }else{
@@ -3453,8 +3469,8 @@ void InitMaxDeviceList() {
  *   server instance
  * *************************************************************** */
 void loop() {
-  byte  msg[33];                       // response buffer
-  byte  tx_msg[33];                    // xmit buffer
+  byte  msg[33] = { 0 };                       // response buffer
+  byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c;
   const byte MaxArrayElement=252;
   char  cLineBuffer[MaxArrayElement];  //
@@ -5108,7 +5124,7 @@ ich mir da nicht)
           if (p[2]=='0') {
             bus_type=bus.setBusType(BUS_BSB, myAddr, destAddr);
             len_idx = 3;
-            pl_start = 9;
+            pl_start = 6;
             client.println(F("BSB"));
           }
           if (p[2]=='1') {
@@ -5120,7 +5136,7 @@ ich mir da nicht)
           if (p[2]=='2') {
             bus_type=bus.setBusType(BUS_PPS, myAddr);
             len_idx = 1;
-            pl_start = 9;
+            pl_start = 6;
             client.println(F("PPS"));
           } 
           client.print(F(" ("));
@@ -5714,11 +5730,11 @@ custom_timer = millis();
   byte max_str_index = 0;
   while (max_cul.available()) {
     c = max_cul.read();
-//    Serial.print(c);
+    Serial.print(c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
       buffer[max_str_index++]=c;
     } else {
-//      Serial.println();
+      Serial.println();
       break;
     }
   }
@@ -5732,6 +5748,9 @@ custom_timer = millis();
       strncpy(max_hex_str, buffer+7, 2);
       max_hex_str[2]='\0';
       uint8_t max_msg_type = (uint8_t)strtoul(max_hex_str, NULL, 16);
+      strncpy(max_hex_str, buffer+1, 2);
+      max_hex_str[2]='\0';
+      uint8_t max_msg_len = (uint8_t)strtoul(max_hex_str, NULL, 16);
 
       if (max_msg_type == 0x02) {
         strncpy(max_hex_str, buffer+15, 6);        
@@ -5803,18 +5822,21 @@ custom_timer = millis();
       if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
         uint8_t temp_str_offset;
         uint32_t max_temp_status;
+        uint8_t str_len;
 
-        switch(max_str_index) {
-          case 35: temp_str_offset = 25; break;
-          case 29: temp_str_offset = 21; break;
-          default: temp_str_offset = 0; break;
+        switch(max_msg_len) {
+          case 0x0C: temp_str_offset = 23; str_len = 4; break;
+          case 0x0E: temp_str_offset = 25; str_len = 8; break;
+          default: temp_str_offset = 0; str_len = 8; break;
         }
-        strncpy(max_hex_str, buffer+temp_str_offset, 8);
-        max_hex_str[8]='\0';
+        strncpy(max_hex_str, buffer+temp_str_offset, str_len);
+        max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
+        Serial.println(max_msg_len);
+        Serial.println(max_temp_status, HEX);
         if (max_msg_type == 0x42) {
-          max_cur_temp[max_idx] = (((max_temp_status & 0x800000) >> 15) + ((max_temp_status & 0xFF00) >> 8));
-          max_dst_temp[max_idx] = (max_temp_status & 0x7F0000) >> 16;
+          max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
+          max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
         }
         if (max_msg_type == 0x60) {
           max_cur_temp[max_idx] = (max_temp_status & 0x0100) + (max_temp_status & 0xFF);
@@ -5864,7 +5886,7 @@ void setup() {
       break;
     case 2:
       len_idx = 9;
-      pl_start = 2;
+      pl_start = 6;
       break;
   }
 
