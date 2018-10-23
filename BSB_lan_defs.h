@@ -30,7 +30,7 @@
 
 #define BUS_BSB 0
 #define BUS_LPB 1
-#define BUS_PPS 2
+#define BUS_PPS 2 
 
 /* special command ids */
 #define CMD_UNKNOWN 0x00000000u
