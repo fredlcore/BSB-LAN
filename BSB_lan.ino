@@ -3633,11 +3633,9 @@ void loop() {
               tx_msg[7] = pps_values[PPS_PDK] & 0xFF;
               break;
             case 2:
-              if (pps_values[PPS_RTI] > 0) {
-                tx_msg[1] = 0x28; // Raumtemperatur Ist
-                tx_msg[6] = pps_values[PPS_RTI] >> 8;
-                tx_msg[7] = pps_values[PPS_RTI] & 0xFF;
-              }
+              tx_msg[1] = 0x28; // Raumtemperatur Ist
+              tx_msg[6] = pps_values[PPS_RTI] >> 8;
+              tx_msg[7] = pps_values[PPS_RTI] & 0xFF;
               break;
             case 3:
               tx_msg[1] = 0x19; // Raumtepmeratur Soll
@@ -5947,22 +5945,6 @@ void setup() {
     }
   }
 
-#ifdef PPS_DEFAULT_TEMP
-
-  if (pps_values[PPS_RTS] / 64 < 1 || pps_values[PPS_RTS] / 64 > 100) {
-    pps_values[PPS_RTS] = PPS_DEFAULT_TEMP * 64;
-  }
-  if (pps_values[PPS_RTI] / 64 < 1 || pps_values[PPS_RTI] / 64 > 100) {
-    pps_values[PPS_RTI] = pps_values[PPS_RTS];
-  }
-  if (pps_values[PPS_TWS] / 64 < 1 || pps_values[PPS_TWS] / 64 > 100) {
-    pps_values[PPS_TWS] = (PPS_DEFAULT_TEMP + 25) * 64;
-  }
-  if (pps_values[PPS_RTA] / 64 < 1 || pps_values[PPS_RTA] / 64 > 100) {
-    pps_values[PPS_RTA] = pps_values[PPS_RTS]-(5 * 64);
-  }
-
-#endif
 
 #ifdef LOGGER
   // disable w5100 while setting up SD
