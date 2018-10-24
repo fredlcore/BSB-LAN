@@ -142,7 +142,12 @@ bool BSB::GetMessage(byte* msg) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
       if (bus_type == 2 && read == 0x17) {
-        return true; // PPS-Bus request byte 0x17 just contains one byte, so return
+	uint8_t PPS_write_enabled = myAddr;
+	if (PPS_write_enabled == 1) {
+          return true; // PPS-Bus request byte 0x17 just contains one byte, so return
+	} else {
+	  len_idx = 9;
+	}
       }
 
       // Delay for more data
@@ -190,6 +195,7 @@ bool BSB::GetMessage(byte* msg) {
 
       if (bus_type == 2) {
         if (i == len_idx+1) {
+	  len_idx = 8;
           return true; // TODO: add CRC check before returning true/false
         }
       } else {
