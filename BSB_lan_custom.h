@@ -45,6 +45,8 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
     }
   }
 #ifdef MAX_CUL
+  
+  max_cul.println(F("Zr")); // periodically (re-)activate "Moritz" mode on Cube to receive MAX messages
   int max_avg_count = 0;
   float max_avg = 0;
   for (int x=0;x<20;x++) {
