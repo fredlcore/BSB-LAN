@@ -1442,12 +1442,14 @@ char *printTelegram(byte* msg, int query_line) {
     SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
     Serial.print(F(" "));
   } else {
-    switch (msg[0]) {
-      case 0x1D: Serial.print(F("INF HEIZ->QAA ")); break;
-      case 0x1E: Serial.print(F("REQ HEIZ->QAA ")); break;
-      case 0x17: Serial.print(F("RTS HEIZ->QAA ")); break;
-      case 0xFD: Serial.print(F("ANS QAA->HEIZ ")); break;
-      default: break;
+    if (!monitor) {
+      switch (msg[0]) {
+        case 0x1D: Serial.print(F("INF HEIZ->QAA ")); break;
+        case 0x1E: Serial.print(F("REQ HEIZ->QAA ")); break;
+        case 0x17: Serial.print(F("RTS HEIZ->QAA ")); break;
+        case 0xFD: Serial.print(F("ANS QAA->HEIZ ")); break;
+        default: break;
+      }
     }
   }
 
@@ -1815,7 +1817,9 @@ char *printTelegram(byte* msg, int query_line) {
       }
     }
   }
-  Serial.println();
+  if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
+    Serial.println();
+  }
   if(verbose){
     if (bus_type != BUS_PPS) {
       SerialPrintRAW(msg,msg[len_idx]+bus_type);      
@@ -3488,19 +3492,22 @@ void loop() {
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
   // Separate telegrams after a pause of more than one character time.
+  boolean busmsg = false;
   if(monitor){
-    boolean busmsg=bus.Monitor(msg);
+    busmsg=bus.Monitor(msg);
 #ifdef LOGGER
     if (busmsg==true) {
       LogTelegram(msg);
     }
 #endif
-  }else{
+//  }else{
+  }
+  if (!monitor || busmsg == true) {  
     // Listen for incoming messages, identified them by their magic byte.
     // Method GetMessage() validates length byte and CRC.
-    if (bus.GetMessage(msg)) { // message was syntactically correct
+    if (bus.GetMessage(msg) || busmsg == true) { // message was syntactically correct
        // Decode the rcv telegram and send it to the PC serial interface
-      if(verbose && bus_type != BUS_PPS) {  // verbose output for PPS comes later
+      if(verbose && bus_type != BUS_PPS && !monitor) {  // verbose output for PPS comes later
         printTelegram(msg, -1);
 #ifdef LOGGER
         LogTelegram(msg);
@@ -3509,7 +3516,7 @@ void loop() {
       // Is this a broadcast message?
       if(((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF){ // handle broadcast messages
       // Decode the rcv telegram and send it to the PC serial interface
-        if (!verbose) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
+        if (!verbose && !monitor) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
           printTelegram(msg, -1);
 #ifdef LOGGER
           LogTelegram(msg);
@@ -3755,11 +3762,18 @@ void loop() {
           }
 
           if(verbose) {     // verbose output for PPS after time-critical sending procedure
-            printTelegram(msg, -1);
+            if (!monitor) {
+              printTelegram(msg, -1);
+            } else {
+              Serial.print(millis());
+              Serial.print(F(" "));
+            }
             printTelegram(tx_msg, -1);
 #ifdef LOGGER
-            LogTelegram(msg);
-            LogTelegram(tx_msg);
+            if (!monitor) {
+              LogTelegram(msg);
+              LogTelegram(tx_msg);
+            }
 #endif
           } 
         
@@ -3809,7 +3823,7 @@ ich mir da nicht)
           } else {    // Info-Telegramme von der Therme (0x1D)
 
             uint8_t msg_offset = 0;
-            if (msg[0] == 0x17 && PPS_write_enabled == 1) {
+            if (msg[0] == 0x17 && PPS_write_enabled != 1) {
               msg_offset = 1;
             }
 
@@ -3823,6 +3837,7 @@ ich mir da nicht)
               case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
+              case 0x18: break; // Position Drehknopf
               case 0x19: break; // Raumtemperatur Soll
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
               case 0x28: break; // Raumtemperatur Ist
@@ -3896,6 +3911,7 @@ ich mir da nicht)
                 pps_values[PPS_FRS] = temp;
                 pps_values[PPS_SMX] = (msg[4+msg_offset] << 8) + msg[5+msg_offset];
                 break;
+              case 0x00: break;
               default:
                 Serial.print("Unknown telegram: ");
                 for (int c=0;c<9+msg_offset;c++) {
@@ -3927,7 +3943,7 @@ ich mir da nicht)
 */
           } // End parsing 0x1D heater telegrams
     
-          if(verbose) {     // verbose output for PPS after time-critical sending procedure
+          if(verbose && !monitor) {     // verbose output for PPS after time-critical sending procedure
             printTelegram(msg, -1);
 #ifdef LOGGER
             LogTelegram(msg);
@@ -4839,11 +4855,20 @@ ich mir da nicht)
             case 1: client.print(F("LPB")); break;
             case 2: client.print(F("PPS")); break;
           }
-          client.print(F(" ("));
-          client.print(myAddr);
-          client.print(F(", "));
-          client.print(destAddr);
-          client.print(F(")"));
+          if (bus_type != BUS_PPS) {
+            client.print(F(" ("));
+            client.print(myAddr);
+            client.print(F(", "));
+            client.print(destAddr);
+            client.print(F(")"));
+          } else {
+            uint8_t PPS_write_enabled = myAddr;
+            if (PPS_write_enabled == 1) {
+              client.print(F(" (lesen/schreiben)"));
+            } else {
+              client.print(F(" (nur lesen)"));
+            }
+          }
           client.println(F("<BR>"));
 #ifdef LANG_DE
           client.print(F("Monitor Modus: "));
@@ -5136,9 +5161,7 @@ ich mir da nicht)
           token = strtok(NULL, ",");   // first token: myAddr
           if (token != 0) {
             int val = atoi(token);
-            if (val>0) {
-              myAddr = (uint8_t)val;
-            }
+            myAddr = (uint8_t)val;
           }
           token = strtok(NULL, ",");   // second token: destAddr
           if (token != 0) {
