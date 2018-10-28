@@ -403,7 +403,7 @@ double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
 int avgCounter = 1;
 
-uint_farptr_t enumstr_offset = 0;
+// uint_farptr_t enumstr_offset = 0;
 
 uint8_t my_dev_fam = 0;
 uint8_t my_dev_var = 0;
@@ -1038,10 +1038,12 @@ void _printFIXPOINT(double dval, int precision){
 void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
   double dval;
   char *p=outBuf+outBufLen;
+  uint8_t PPS_write_enabled = myAddr;
+  uint8_t pps_offset = ((PPS_write_enabled == 1 || (PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
 
   if(data_len == 3){
-    if(msg[pl_start]==0){
-      dval=double((msg[pl_start+1] << 8) + msg[pl_start+2]) / divider;
+    if(msg[pl_start]==0 || bus_type == BUS_PPS){
+      dval=double((msg[pl_start+1-pps_offset] << 8) + msg[pl_start+2-pps_offset]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1173,10 +1175,12 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
  * *************************************************************** */
 void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
+  uint8_t PPS_write_enabled = myAddr;
+  uint8_t pps_offset = ((PPS_write_enabled != 1 && msg[0] != 0x17) && bus_type == BUS_PPS);
 
   if(data_len == 2 + (bus_type == BUS_PPS)){  // data_len = 3 if bus_type = PPS
-    if(msg[pl_start]==0){
-      if(msg[pl_start+1+(bus_type == BUS_PPS)]==0){
+    if(msg[pl_start]==0 || bus_type == BUS_PPS){
+      if(msg[pl_start+1+pps_offset]==0){
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == BUS_PPS)],val0);
       }else{
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == BUS_PPS)],val1);
@@ -1468,8 +1472,11 @@ char *printTelegram(byte* msg, int query_line) {
       cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }
   }
+  uint8_t PPS_write_enabled = myAddr;
+  uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && PPS_write_enabled != 1)];
   if (bus_type == BUS_PPS) {
     cmd = 0x2D000000 + query_line - 10500;
+    cmd = cmd + (msg[1] * 0x10000);
   }
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
@@ -1483,7 +1490,7 @@ char *printTelegram(byte* msg, int query_line) {
 
 //  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
-    if(c == cmd && (query_line == -1 || line == query_line)){
+    if((c == cmd || (line >= 10500 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus_type == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
       uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
       uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
@@ -1735,16 +1742,16 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_ENUM: // enum
               if((data_len == 2 && (my_dev_fam!=170 || my_dev_fam!=108 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==170 || my_dev_fam==108 || my_dev_fam==211))|| bus_type == 2){
-                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3)){
-                  if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])))!=0) {
-                    int len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3) || (bus_type == BUS_PPS)) {
+                  uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+                  if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
 //                    buffer[len]=0;
 
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len,msg[pl_start+1],1);
+                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
-                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len,msg[pl_start+2],1);
+                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+2],1);
                     }
                   }else{
                     Serial.print(F("no enum str "));
@@ -2693,14 +2700,16 @@ char* query(int line_start  // begin at this line (ProgNr)
           }
         } else { // bus type is PPS
 
+          uint32_t cmd = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
           uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_HOUR_MINUTES: temp_val = ((pps_values[(c & 0xFF)] / 6) * 256) + ((pps_values[(c & 0xFF)] % 6) * 10); break;
-            default: temp_val = pps_values[(c & 0xFF)]; break;
+            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-10500] / 6) * 256) + ((pps_values[line-10500] % 6) * 10); break;
+            default: temp_val = pps_values[(line-10500)]; break;
           }
 
+          msg[1] = ((cmd & 0x00FF0000) >> 16);
           msg[4+(bus_type*4)]=TYPE_ANS;
           msg[pl_start]=0;
           msg[pl_start+1]=temp_val >> 8;
@@ -2738,7 +2747,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
         uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
         uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-        uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
+        uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
 
         // dump data payload for unknown types
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
@@ -3004,19 +3013,26 @@ void LogTelegram(byte* msg){
   uint8_t precision=0;
   int data_len;
   double dval;
+  uint16_t line = 0;
+  uint8_t PPS_write_enabled = myAddr;
 
   if (log_parameters[0] == 30000) {
 
-    if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
-      cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
-    }else{
-      cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+    if (bus_type != BUS_PPS) {
+      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+        cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+      }else{
+        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+      }
+    } else {
+      cmd=msg[1+(msg[0]==0x17 && PPS_write_enabled != 1)];
     }
     // search for the command code in cmdtbl
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
-      if(c == cmd){
+      line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 10500 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
         uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
         uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
@@ -3051,20 +3067,36 @@ void LogTelegram(byte* msg){
             dataFile.print(F("UNKNOWN"));
           }else{
             // Entry in command table is a documented command code
-            uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+            line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
             cmd_type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
 //            uint16_t line=pgm_read_word(&cmdtbl[i].line);
             dataFile.print(line);             // the ProgNr
           }
-          dataFile.print(F(";"));
-          dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
-          dataFile.print(F("->"));
-          dataFile.print(TranslateAddr(msg[2], device));
-          dataFile.print(F(" "));
-          dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
-          dataFile.print(F(";"));
 
-          for(int i=0;i<msg[len_idx]+bus_type;i++){
+          uint8_t msg_len = 0;
+          if (bus_type != BUS_PPS) {
+            dataFile.print(F(";"));
+            dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
+            dataFile.print(F("->"));
+            dataFile.print(TranslateAddr(msg[2], device));
+            dataFile.print(F(" "));
+            dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
+            dataFile.print(F(";"));
+            msg_len = msg[len_idx]+bus_type;
+          } else {
+            dataFile.print(F(";"));
+            switch (msg[0]) {
+              case 0x1D: dataFile.print(F("HEIZ->QAA INF")); break;
+              case 0x1E: dataFile.print(F("HEIZ->QAA REQ")); break;
+              case 0x17: dataFile.print(F("HEIZ->QAA RTS")); break;
+              case 0xFD: dataFile.print(F("QAA->HEIZ ANS")); break;
+              default: break;
+            }
+            dataFile.print(F(";"));
+            msg_len = 9+(msg[0]==0x17 && PPS_write_enabled != 1);
+          }
+
+          for(int i=0;i<msg_len;i++){
             if (i > 0) {
               dataFile.print(F(" "));
             }
@@ -3074,7 +3106,7 @@ void LogTelegram(byte* msg){
 
           // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
-          if ((msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
+          if (bus_type != BUS_PPS && (msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
             dataFile.print(F(";"));
             i=0;
             while(type!=VT_UNKNOWN){
@@ -3419,12 +3451,27 @@ void remove_char(char* str, char c) {
  *  enumstr_offset
  * *************************************************************** */
  
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr) {
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+  uint_farptr_t page = 0x10000;
+  while (page < 0x40000) {
+    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
+    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 1);
+    uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
+    if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
+      break;
+    }
+    page = page + 0x10000;
+  }
+
+  enum_addr = enum_addr + page;
+
+/*
   enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
   if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
     enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
   }
-  enum_addr = enum_addr + 0x10000;    // as we are well above 64kB with other data, first ENUM data will always be at least between 64 and 128 kB, so add 0x10000 every time.
+  enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
+*/
   return enum_addr;
 }
 
@@ -3654,7 +3701,7 @@ void loop() {
               tx_msg[7] = 0x00;
               break;
             case 5:
-              tx_msg[1] = 0x49;     // Betriebsart
+              tx_msg[1] = 0x49;     // pr
               tx_msg[7] = pps_values[PPS_BA];
               break;
             case 6:
@@ -3805,6 +3852,27 @@ void loop() {
                   Serial.print(" ");
                 }
                 Serial.println();
+#ifdef LOGGER
+/*
+                File dataFile = SD.open("datalog.txt", FILE_WRITE);
+                if (dataFile) {
+                  PPS_write_enabled = myAddr;
+                  dataFile.print(millis());
+                  dataFile.print(F(";"));
+                  dataFile.print(GetDateTime(date));
+                  dataFile.print(F(";Unknown PPS telegram;"));
+                  for(int i=0;i<9+(PPS_write_enabled!=1 && msg[0] == 0x17);i++){
+                    if (i > 0) {
+                      dataFile.print(F(" "));
+                    }
+                    if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
+                    dataFile.print(msg[i], HEX);
+                  }
+                  dataFile.println();
+                }
+                dataFile.close();
+*/
+#endif
                 break;
 
 
@@ -3822,99 +3890,96 @@ ich mir da nicht)
             }
           } else {    // Info-Telegramme von der Therme (0x1D)
 
-            uint8_t msg_offset = 0;
-            if (msg[0] == 0x17 && PPS_write_enabled != 1) {
-              msg_offset = 1;
-            }
+            uint8_t pps_offset = (msg[0] == 0x17 && PPS_write_enabled != 1);
+            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
-            uint16_t temp = (msg[6+msg_offset] << 8) + msg[7+msg_offset];
-
-            switch (msg[1+msg_offset]) {
+            switch (msg[1+pps_offset]) {
               case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
 
               case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
               case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
-              case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
+              case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
               case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
-              case 0x18: break; // Position Drehknopf
-              case 0x19: break; // Raumtemperatur Soll
+              case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
+              case 0x19: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
-              case 0x28: break; // Raumtemperatur Ist
+              case 0x28: pps_values[PPS_RTI] = temp; break; // Raumtemperatur Ist
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
               case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
               case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
               case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
-              case 0x38: break; // QAA type
-              case 0x4C: pps_values[PPS_MOD] = msg[7]; break; // Komfort-/Eco-Modus
-              case 0x4D: pps_values[PPS_BRS] = msg[7]; break; // Brennerstatus
-              case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+              case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
+              case 0x49: pps_values[PPS_BA] = msg[7+pps_offset]; break; // Betriebsart
+              case 0x4C: pps_values[PPS_AW] = msg[7+pps_offset]; break; // Komfort-/Eco-Modus
+              case 0x4D: pps_values[PPS_BRS] = msg[7+pps_offset]; break; // Brennerstatus
+              case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2+pps_offset]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
               case 0x60: 
-                pps_values[PPS_S11] = msg[7+msg_offset]; 
-                pps_values[PPS_E11] = msg[6+msg_offset]; 
-                pps_values[PPS_S12] = msg[5+msg_offset]; 
-                pps_values[PPS_E12] = msg[4+msg_offset]; 
-                pps_values[PPS_S13] = msg[3+msg_offset]; 
-                pps_values[PPS_E13] = msg[2+msg_offset];
+                pps_values[PPS_S11] = msg[7+pps_offset]; 
+                pps_values[PPS_E11] = msg[6+pps_offset]; 
+                pps_values[PPS_S12] = msg[5+pps_offset]; 
+                pps_values[PPS_E12] = msg[4+pps_offset]; 
+                pps_values[PPS_S13] = msg[3+pps_offset]; 
+                pps_values[PPS_E13] = msg[2+pps_offset];
                 break;
               case 0x61:
-                pps_values[PPS_S21] = msg[7+msg_offset]; 
-                pps_values[PPS_E21] = msg[6+msg_offset]; 
-                pps_values[PPS_S22] = msg[5+msg_offset];
-                pps_values[PPS_E22] = msg[4+msg_offset];
-                pps_values[PPS_S23] = msg[3+msg_offset]; 
-                pps_values[PPS_E23] = msg[2+msg_offset];
+                pps_values[PPS_S21] = msg[7+pps_offset]; 
+                pps_values[PPS_E21] = msg[6+pps_offset]; 
+                pps_values[PPS_S22] = msg[5+pps_offset];
+                pps_values[PPS_E22] = msg[4+pps_offset];
+                pps_values[PPS_S23] = msg[3+pps_offset]; 
+                pps_values[PPS_E23] = msg[2+pps_offset];
                 break;
               case 0x62:
-                pps_values[PPS_S31] = msg[7+msg_offset];
-                pps_values[PPS_E31] = msg[6+msg_offset];
-                pps_values[PPS_S32] = msg[5+msg_offset];
-                pps_values[PPS_E32] = msg[4+msg_offset];
-                pps_values[PPS_S33] = msg[3+msg_offset];
-                pps_values[PPS_E33] = msg[2+msg_offset];
+                pps_values[PPS_S31] = msg[7+pps_offset];
+                pps_values[PPS_E31] = msg[6+pps_offset];
+                pps_values[PPS_S32] = msg[5+pps_offset];
+                pps_values[PPS_E32] = msg[4+pps_offset];
+                pps_values[PPS_S33] = msg[3+pps_offset];
+                pps_values[PPS_E33] = msg[2+pps_offset];
                 break;
               case 0x63:
-                pps_values[PPS_S41] = msg[7+msg_offset];
-                pps_values[PPS_E41] = msg[6+msg_offset];
-                pps_values[PPS_S42] = msg[5+msg_offset];
-                pps_values[PPS_E42] = msg[4+msg_offset];
-                pps_values[PPS_S43] = msg[3+msg_offset];
-                pps_values[PPS_E43] = msg[2+msg_offset];
+                pps_values[PPS_S41] = msg[7+pps_offset];
+                pps_values[PPS_E41] = msg[6+pps_offset];
+                pps_values[PPS_S42] = msg[5+pps_offset];
+                pps_values[PPS_E42] = msg[4+pps_offset];
+                pps_values[PPS_S43] = msg[3+pps_offset];
+                pps_values[PPS_E43] = msg[2+pps_offset];
                 break;
               case 0x64:
-                pps_values[PPS_S51] = msg[7+msg_offset];
-                pps_values[PPS_E51] = msg[6+msg_offset];
-                pps_values[PPS_S52] = msg[5+msg_offset];
-                pps_values[PPS_E52] = msg[4+msg_offset];
-                pps_values[PPS_S53] = msg[3+msg_offset];
-                pps_values[PPS_E53] = msg[2+msg_offset];
+                pps_values[PPS_S51] = msg[7+pps_offset];
+                pps_values[PPS_E51] = msg[6+pps_offset];
+                pps_values[PPS_S52] = msg[5+pps_offset];
+                pps_values[PPS_E52] = msg[4+pps_offset];
+                pps_values[PPS_S53] = msg[3+pps_offset];
+                pps_values[PPS_E53] = msg[2+pps_offset];
                 break;
               case 0x65:
-                pps_values[PPS_S61] = msg[7+msg_offset];
-                pps_values[PPS_E61] = msg[6+msg_offset];
-                pps_values[PPS_S62] = msg[5+msg_offset];
-                pps_values[PPS_E62] = msg[4+msg_offset];
-                pps_values[PPS_S63] = msg[3+msg_offset];
-                pps_values[PPS_E63] = msg[2+msg_offset];
+                pps_values[PPS_S61] = msg[7+pps_offset];
+                pps_values[PPS_E61] = msg[6+pps_offset];
+                pps_values[PPS_S62] = msg[5+pps_offset];
+                pps_values[PPS_E62] = msg[4+pps_offset];
+                pps_values[PPS_S63] = msg[3+pps_offset];
+                pps_values[PPS_E63] = msg[2+pps_offset];
                 break;
               case 0x66:
-                pps_values[PPS_S71] = msg[7+msg_offset];
-                pps_values[PPS_E71] = msg[6+msg_offset];
-                pps_values[PPS_S72] = msg[5+msg_offset];
-                pps_values[PPS_E72] = msg[4+msg_offset];
-                pps_values[PPS_S73] = msg[3+msg_offset];
-                pps_values[PPS_E73] = msg[2+msg_offset];
+                pps_values[PPS_S71] = msg[7+pps_offset];
+                pps_values[PPS_E71] = msg[6+pps_offset];
+                pps_values[PPS_S72] = msg[5+pps_offset];
+                pps_values[PPS_E72] = msg[4+pps_offset];
+                pps_values[PPS_S73] = msg[3+pps_offset];
+                pps_values[PPS_E73] = msg[2+pps_offset];
                 break;
-              case 0x79: setTime(msg[5+msg_offset], msg[6+msg_offset], msg[7+msg_offset], msg[4+msg_offset], 1, 2018); break;  // Datum (msg[4] Wochentag)
+              case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); break;  // Datum (msg[4] Wochentag)
               case 0x48: break;
               case 0x1B:                                    // Frostschutz-Temperatur 
                 pps_values[PPS_FRS] = temp;
-                pps_values[PPS_SMX] = (msg[4+msg_offset] << 8) + msg[5+msg_offset];
+                pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
                 break;
               case 0x00: break;
               default:
                 Serial.print("Unknown telegram: ");
-                for (int c=0;c<9+msg_offset;c++) {
+                for (int c=0;c<9+pps_offset;c++) {
                   if (msg[c]<16) Serial.print("0");
                   Serial.print(msg[c], HEX);
                   Serial.print(" ");
@@ -4294,8 +4359,8 @@ ich mir da nicht)
             // check type
               if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
-              uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
               uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+              uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
 //              memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
@@ -4635,8 +4700,8 @@ ich mir da nicht)
                 }
                 int k=0;
                 uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
-                uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])));
                 uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
+                uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
 
                 strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
 
@@ -6006,31 +6071,53 @@ void setup() {
   Serial.println(numSensors);
 #endif
 
-// figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and ENUM8779).
+/*
+// figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and LAST_ENUM_NR).
 // Then use this as refernce to later determine if a page boundary >64kb has occurred.
 
   uint32_t c; 
-//  int index_first_enum = 0;
+  int index_first_enum = 0;
   int index_last_enum = 0;
-//  uint32_t temp_offset1=0;
+  uint32_t temp_offset1=0;
   uint32_t temp_offset2=0;
 
-//  index_first_enum = findLine(20, 0, &c);
-  index_last_enum = findLine(LAST_ENUM, 0, &c);
-//  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
+  index_first_enum = findLine(20, 0, &c);
+  index_last_enum = findLine(LAST_ENUM_NR, 0, &c);
+  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   temp_offset2 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_last_enum * sizeof(cmdtbl[0]));
 
+  if (temp_offset1 > temp_offset2) {
+    enumstr_offset = temp_offset1;
+    enum_page = (pgm_get_far_address(ENUM20) & 0xF0000) - 0x10000;
+  } else {
+    enumstr_offset = temp_offset2;
+    enum_page = (pgm_get_far_address(LAST_ENUM) & 0xF0000) - 0x10000;
+  }
+
+//  enumstr_offset = temp_offset2;  // It seems that the compiler always starts at the end, so the last ENUM variable is put into (lower) memory first, so this is our point of reference.
+*/
 
 /*
+Serial.println(enum_page, HEX);
+Serial.println(temp_offset1, HEX);
+Serial.println(temp_offset2, HEX);
+Serial.println(pgm_get_far_address(LAST_ENUM), HEX);
+Serial.println(pgm_get_far_address(ENUM10513), HEX);
+Serial.println(pgm_get_far_address(ENUM10510), HEX);
+Serial.println(pgm_get_far_address(ENUM8008), HEX);
+Serial.println(pgm_get_far_address(ENUM8007), HEX);
+Serial.println(pgm_get_far_address(ENUM8006), HEX);
+Serial.println(pgm_get_far_address(ENUM20), HEX);
+
 Serial.println((uint32_t)&ENUM20, HEX);
 Serial.println(pgm_get_far_address(ENUM20), HEX);
-Serial.println((uint32_t)&ENUM8779, HEX);
-Serial.println(pgm_get_far_address(ENUM8779), HEX);
-Serial.println(temp_offset1, HEX);
+Serial.println((uint32_t)&LAST_ENUM, HEX);
+Serial.println(pgm_get_far_address(ENUMLASTENUM), HEX);
+//Serial.println(temp_offset1, HEX);
 Serial.println(temp_offset2, HEX);
 
 index_first_enum = 0;
-for (int i=0; i<=10510; i++) {
+for (int i=0; i<=LAST_ENUM_NR; i++) {
   index_first_enum=findLine(i, 0, &c);
   temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   if (temp_offset1 > 0 && temp_offset1 < 65535) {
@@ -6039,14 +6126,7 @@ for (int i=0; i<=10510; i++) {
     Serial.println(temp_offset1, HEX);
   }
 }
-
-  if (temp_offset1 > temp_offset2) {
-    enumstr_offset = temp_offset1;
-  } else {
-    enumstr_offset = temp_offset2;
-  }
 */
-  enumstr_offset = temp_offset2;  // It seems that the compiler always starts at the end, so the last ENUM variable is put into (lower) memory first, so this is our point of reference.
 
 // initialize average calculation
 
