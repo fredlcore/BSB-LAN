@@ -32,6 +32,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje WBS 22E [LMS14] (Gasbrenner)
  - Brötje WGB 15 E [LMS14] (Gasbrenner)
  - Brötje WGB 20C [LMU74] (Gasbrenner)
+ - Brötje WGB-C 20/24H [LMS14] (Gasbrenner)
  - Brötje WGB EVO 20H [LMS15] (Gasbrenner)
  - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
  - Brötje WGB S 17/20 E EcoTherm Plus [LMS14] (Gasbrenner)

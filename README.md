@@ -31,6 +31,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje WBS 22E [LMS14] (gas-fired)
 - Brötje WGB 15 E [LMS14] (gas-fired)
 - Brötje WGB 20C [LMU74] (gas-fired)
+- Brötje WGB-C 20/24H [LMS14] (gas-fired)
 - Brötje WGB EVO 20H [LMS15] (gas-fired)
 - Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
 - Brötje WGB S 17/20 E EcoTherm Plus [LMS14] (gas-fired)
