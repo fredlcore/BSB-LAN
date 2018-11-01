@@ -333,6 +333,7 @@ IPAddress gateway(GatewayIP);
 #endif
 uint8_t len_idx, pl_start;
 uint8_t myAddr = bus.getBusAddr();
+uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
@@ -423,6 +424,7 @@ unsigned long TWW_count   = 0;
 // PPS-bus variables
 uint8_t msg_cycle = 0;
 uint16_t pps_values[PPS_ANZ] = { 0 };
+boolean time_set = false;
 #ifndef QAA_TYPE
 #define QAA_TYPE  0x53  //QAA70 as default
 #endif
@@ -871,9 +873,11 @@ void printBIT(byte *msg,byte data_len){
  * *************************************************************** */
 void printBYTE(byte *msg,byte data_len,const char *postfix){
   char *p=outBuf+outBufLen;
-  if(data_len == 2){
-    if(msg[pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1]);
+  uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1 && bus_type == BUS_PPS);
+
+  if(data_len == 2 || bus_type == BUS_PPS){
+    if(msg[pl_start]==0 || bus_type == BUS_PPS){
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1+pps_offset]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1038,8 +1042,7 @@ void _printFIXPOINT(double dval, int precision){
 void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
   double dval;
   char *p=outBuf+outBufLen;
-  uint8_t PPS_write_enabled = myAddr;
-  uint8_t pps_offset = ((PPS_write_enabled == 1 || (PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
+  uint8_t pps_offset = ((*PPS_write_enabled == 1 || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
 
   if(data_len == 3){
     if(msg[pl_start]==0 || bus_type == BUS_PPS){
@@ -1175,21 +1178,19 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
  * *************************************************************** */
 void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
-  uint8_t PPS_write_enabled = myAddr;
-  uint8_t pps_offset = ((PPS_write_enabled != 1 && msg[0] != 0x17) && bus_type == BUS_PPS);
-
-  if(data_len == 2 + (bus_type == BUS_PPS)){  // data_len = 3 if bus_type = PPS
-    if(msg[pl_start]==0 || bus_type == BUS_PPS){
+  uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus_type == BUS_PPS);
+  if (data_len == 2 || bus_type == BUS_PPS) {
+    if (msg[pl_start]==0 || bus_type == BUS_PPS) {
       if(msg[pl_start+1+pps_offset]==0){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == BUS_PPS)],val0);
-      }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+(bus_type == BUS_PPS)],val1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+pps_offset],val0);
+      } else {
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+pps_offset],val1);
       }
-    }else{
+    } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
     Serial.print(p);
-  }else{
+  } else {
     Serial.print(F("CHOICE len !=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
@@ -1472,8 +1473,7 @@ char *printTelegram(byte* msg, int query_line) {
       cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }
   }
-  uint8_t PPS_write_enabled = myAddr;
-  uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && PPS_write_enabled != 1)];
+  uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && *PPS_write_enabled != 1)];
   if (bus_type == BUS_PPS) {
     cmd = 0x2D000000 + query_line - 10500;
     cmd = cmd + (msg[1] * 0x10000);
@@ -1786,6 +1786,26 @@ char *printTelegram(byte* msg, int query_line) {
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
               break;
+            case VT_PPS_TIME: // PPS: Time and day of week
+            {
+              switch(weekday()) {
+                case 6: outBufLen+=sprintf(outBuf+outBufLen,"Sa"); break;
+                case 0: outBufLen+=sprintf(outBuf+outBufLen,"So"); break;
+                case 1: outBufLen+=sprintf(outBuf+outBufLen,"Mo"); break;
+                case 2: outBufLen+=sprintf(outBuf+outBufLen,"Di"); break;
+                case 3: outBufLen+=sprintf(outBuf+outBufLen,"Mi"); break;
+                case 4: outBufLen+=sprintf(outBuf+outBufLen,"Do"); break;
+                case 5: outBufLen+=sprintf(outBuf+outBufLen,"Fr"); break;
+                default: break;
+              }
+              outBufLen+=sprintf(outBuf+outBufLen,", ");
+              outBufLen+=sprintf(outBuf+outBufLen,"%02d",hour());
+              outBufLen+=sprintf(outBuf+outBufLen,":");
+              outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
+              outBufLen+=sprintf(outBuf+outBufLen,":");
+              outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              break;
+            }
             case VT_ERRORCODE: //  s16
               if(data_len == 3){
                 if(msg[pl_start]==0){
@@ -2705,6 +2725,8 @@ char* query(int line_start  // begin at this line (ProgNr)
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
+            case VT_BYTE: temp_val = pps_values[(line-10500)] * 256; break;
+            case VT_ONOFF: temp_val = pps_values[(line-10500)] * 256; break;
             case VT_HOUR_MINUTES: temp_val = ((pps_values[line-10500] / 6) * 256) + ((pps_values[line-10500] % 6) * 10); break;
             default: temp_val = pps_values[(line-10500)]; break;
           }
@@ -3014,7 +3036,6 @@ void LogTelegram(byte* msg){
   int data_len;
   double dval;
   uint16_t line = 0;
-  uint8_t PPS_write_enabled = myAddr;
 
   if (log_parameters[0] == 30000) {
 
@@ -3025,7 +3046,7 @@ void LogTelegram(byte* msg){
         cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
       }
     } else {
-      cmd=msg[1+(msg[0]==0x17 && PPS_write_enabled != 1)];
+      cmd=msg[1+(msg[0]==0x17 && *PPS_write_enabled != 1)];
     }
     // search for the command code in cmdtbl
     c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
@@ -3093,7 +3114,7 @@ void LogTelegram(byte* msg){
               default: break;
             }
             dataFile.print(F(";"));
-            msg_len = 9+(msg[0]==0x17 && PPS_write_enabled != 1);
+            msg_len = 9+(msg[0]==0x17 && *PPS_write_enabled != 1);
           }
 
           for(int i=0;i<msg_len;i++){
@@ -3672,8 +3693,7 @@ void loop() {
 
 // PPS-Bus handling
       if (bus_type == BUS_PPS) {
-        uint8_t PPS_write_enabled = myAddr;
-        if (msg[0] == 0x17 && PPS_write_enabled == 1) { // Send client data
+        if (msg[0] == 0x17 && *PPS_write_enabled == 1) { // Send client data
           byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
           byte rx_msg[10] = { 0 };
           switch (msg_cycle) {
@@ -3693,8 +3713,8 @@ void loop() {
               break;
             case 3:
               tx_msg[1] = 0x19; // Raumtepmeratur Soll
-              tx_msg[6] = pps_values[PPS_RTS] >> 8;
-              tx_msg[7] = pps_values[PPS_RTS] & 0xFF;
+              tx_msg[6] = pps_values[PPS_RTZ] >> 8;
+              tx_msg[7] = pps_values[PPS_RTZ] & 0xFF;
               break;
             case 4:
               tx_msg[1] = 0x4E;
@@ -3709,10 +3729,37 @@ void loop() {
               tx_msg[7] = 0x00;
               break;
             case 7:
-              tx_msg[1] = 0x69;
-              tx_msg[6] = 0x06;     // ???
-              tx_msg[7] = 0x90;     // ???
-              break;
+            {
+              if (time_set == true) {
+                boolean found = false;
+                boolean active = true;
+                uint16_t current_time = hour() * 6 + minute() / 10;
+                int8_t PPS_weekday = weekday() - 1;
+                uint8_t next_switchday = 0;
+                uint8_t next_switchtime = 0;
+                if (PPS_weekday == 0) PPS_weekday = 7;
+                uint8_t index = PPS_S11 + ((PPS_weekday - 1) * 6);
+                while (!found) {
+                  if (current_time < pps_values[index] || (index >= PPS_S11 + ((PPS_weekday - 1 ) * 6) + 6)  || index < PPS_S11 + ((PPS_weekday - 1) * 6)) {
+                    if (pps_values[index] == 0x90) {
+                      if (PPS_weekday == 7) PPS_weekday = 0;
+                      index = PPS_S11 + PPS_weekday * 6;
+                    }
+                    next_switchtime = pps_values[index];
+                    next_switchday = ((index - PPS_S11) / 6) + 1;
+                    next_switchday = next_switchday + (0x10 * active);
+                    found = true;
+                  } else {
+                    index++;
+                    active = !active;
+                  }
+                  if (index > PPS_E73) index = PPS_S11;
+                }
+                tx_msg[1] = 0x69;
+                tx_msg[6] = next_switchday;     // high nibble: current heating program (0x10 = reduced, 0x00 = comfort), low nibble: day of week
+                tx_msg[7] = next_switchtime;     // next heating program time (encoded as one increment translates to one 10 minute block)
+              }              
+            }
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
               tx_msg[6] = pps_values[PPS_RTS] >> 8;
@@ -3733,6 +3780,11 @@ void loop() {
               tx_msg[7] = pps_values[PPS_AW];
               break;
             case 12:
+              tx_msg[1] = 0x1E; // Trinkwassertemperatur Reduziert Soll
+              tx_msg[6] = pps_values[PPS_TWR] >> 8;
+              tx_msg[7] = pps_values[PPS_TWR] & 0xFF;
+              break;
+            case 13:
               tx_msg[1] = 0x60;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S13];
@@ -3741,7 +3793,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E11];
               tx_msg[7] = pps_values[PPS_S11];
               break;
-            case 13:
+            case 14:
               tx_msg[1] = 0x61;
               tx_msg[2] = pps_values[PPS_E23];
               tx_msg[3] = pps_values[PPS_S23];
@@ -3750,7 +3802,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E21];
               tx_msg[7] = pps_values[PPS_S21];
               break;
-            case 14:
+            case 15:
               tx_msg[1] = 0x62;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S33];
@@ -3759,7 +3811,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E31];
               tx_msg[7] = pps_values[PPS_S31];
               break;
-            case 15:
+            case 16:
               tx_msg[1] = 0x63;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S43];
@@ -3768,7 +3820,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E41];
               tx_msg[7] = pps_values[PPS_S41];
               break;
-            case 16:
+            case 17:
               tx_msg[1] = 0x64;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S53];
@@ -3777,7 +3829,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E51];
               tx_msg[7] = pps_values[PPS_S51];
               break;
-            case 17:
+            case 18:
               tx_msg[1] = 0x65;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S63];
@@ -3786,7 +3838,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E61];
               tx_msg[7] = pps_values[PPS_S61];
               break;
-            case 18:
+            case 19:
               tx_msg[1] = 0x66;
               tx_msg[2] = pps_values[PPS_E73];
               tx_msg[3] = pps_values[PPS_S73];
@@ -3795,16 +3847,22 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E71];
               tx_msg[7] = pps_values[PPS_S71];
               break;
-            case 19:
+            case 20:
               tx_msg[1] = 0x7C;
               tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
               break;
+            case 21:
+              tx_msg[1] = 0x1B;
+              tx_msg[4] = pps_values[PPS_FRS] >> 8;
+              tx_msg[5] = pps_values[PPS_FRS] & 0xFF;
+              tx_msg[6] = pps_values[PPS_SMX] >> 8;
+              tx_msg[7] = pps_values[PPS_SMX] & 0xFF;
           }
           msg_cycle++;
           if (msg_cycle > 7) {
             msg_cycle = 0;
           }
-          if (tx_msg[1] != 0xFF &&  PPS_write_enabled == 1) {
+          if (tx_msg[1] != 0xFF &&  *PPS_write_enabled == 1) {
             bus.Send(0, 0, rx_msg, tx_msg);
           }
 
@@ -3856,12 +3914,11 @@ void loop() {
 /*
                 File dataFile = SD.open("datalog.txt", FILE_WRITE);
                 if (dataFile) {
-                  PPS_write_enabled = myAddr;
                   dataFile.print(millis());
                   dataFile.print(F(";"));
                   dataFile.print(GetDateTime(date));
                   dataFile.print(F(";Unknown PPS telegram;"));
-                  for(int i=0;i<9+(PPS_write_enabled!=1 && msg[0] == 0x17);i++){
+                  for(int i=0;i<9+(*PPS_write_enabled!=1 && msg[0] == 0x17);i++){
                     if (i > 0) {
                       dataFile.print(F(" "));
                     }
@@ -3890,7 +3947,7 @@ ich mir da nicht)
             }
           } else {    // Info-Telegramme von der Therme (0x1D)
 
-            uint8_t pps_offset = (msg[0] == 0x17 && PPS_write_enabled != 1);
+            uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1);
             uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
             switch (msg[1+pps_offset]) {
@@ -3902,7 +3959,7 @@ ich mir da nicht)
               case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
               case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
               case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
-              case 0x19: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
+              case 0x19: pps_values[PPS_RTZ] = temp; break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
               case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
               case 0x28: pps_values[PPS_RTI] = temp; break; // Raumtemperatur Ist
               case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
@@ -3970,7 +4027,8 @@ ich mir da nicht)
                 pps_values[PPS_S73] = msg[3+pps_offset];
                 pps_values[PPS_E73] = msg[2+pps_offset];
                 break;
-              case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); break;  // Datum (msg[4] Wochentag)
+              case 0x69: break;                             // Nächste Schaltzeit
+              case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
               case 0x48: break;
               case 0x1B:                                    // Frostschutz-Temperatur 
                 pps_values[PPS_FRS] = temp;
@@ -4927,8 +4985,7 @@ ich mir da nicht)
             client.print(destAddr);
             client.print(F(")"));
           } else {
-            uint8_t PPS_write_enabled = myAddr;
-            if (PPS_write_enabled == 1) {
+            if (*PPS_write_enabled == 1) {
               client.print(F(" (lesen/schreiben)"));
             } else {
               client.print(F(" (nur lesen)"));
@@ -5260,8 +5317,7 @@ ich mir da nicht)
             client.print(destAddr);
             client.print(F(")"));
           } else {
-            uint8_t PPS_write_enabled = myAddr;
-            if (PPS_write_enabled == 1) {
+            if (*PPS_write_enabled == 1) {
               client.print(F(" (lesen/schreiben)"));
             } else {
               client.print(F(" (nur lesen)"));
