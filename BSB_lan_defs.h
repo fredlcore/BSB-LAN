@@ -2094,6 +2094,8 @@ const char STR10561[] PROGMEM = "Uhrzeit";
 const char STR10562[] PROGMEM = "QAA Modell";
 const char STR10564[] PROGMEM = "Zieltemperatur";
 const char STR10565[] PROGMEM = "Nächstes Schaltprogramm";
+const char STR10566[] PROGMEM = "Manuelles Heizen";
+const char STR10567[] PROGMEM = "Verbindung unterbrochen";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -5860,7 +5862,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 {0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK3/P broadcast 00 to 7F ???
-{0x053D0099,  CAT_USER_DEFINED,     VT_WORD,          10105, STR10105, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
+{0x053D0099,  CAT_USER_DEFINED,     VT_UINT,          10105, STR10105, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
 {0x2D3D0574,  CAT_USER_DEFINED,     VT_BYTE,          10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
 {0x313D0571,  CAT_USER_DEFINED,     VT_BYTE,          10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 {0x2E3E0574,  CAT_USER_DEFINED,     VT_BYTE,          10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
@@ -5874,7 +5876,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D2C0004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
 {0x2D570005,  CAT_PPS,              VT_ONOFF,         10505, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
 {0x2D2B0006,  CAT_PPS,              VT_TEMP,          10506, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0007,  CAT_PPS,              VT_TEMP,          10507, STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Reduziert Soll
+{0x2D1E0007,  CAT_PPS,              VT_TEMP,          10507, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
 {0x2D0B0008,  CAT_PPS,              VT_TEMP,          10508, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
 {0x2D180009,  CAT_PPS,              VT_TEMP,          10509, STR10509, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
 {0x2D49000A,  CAT_PPS,              VT_ENUM,          10510, STR700,   sizeof(ENUM10510),    ENUM10510,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
@@ -5883,8 +5885,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D4C000D,  CAT_PPS,              VT_ENUM,          10513, STR10513, sizeof(ENUM10513),    ENUM10513,    DEFAULT_FLAG, DEV_ALL}, // Komfort-/Eco-Modus
 {0x2D08000E,  CAT_PPS,              VT_TEMP,          10514, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
 {0x2D09000F,  CAT_PPS,              VT_TEMP,          10515, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D1B0010,  CAT_PPS,              VT_TEMP,          10516, STR714,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Frostschutz-Sollwert
-{0x2D1B0011,  CAT_PPS,              VT_TEMP,          10517, STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert-Maximum
+{0x2D1B0010,  CAT_PPS,              VT_TEMP,          10516, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
+{0x2D1B0011,  CAT_PPS,              VT_TEMP,          10517, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
 {0x2D280012,  CAT_PPS,              VT_TEMP,          10518, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
 {0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  10519, STR10519, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
 {0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  10520, STR10520, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
@@ -5929,11 +5931,12 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  10559, STR10559, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
 {0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  10560, STR10560, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
 {0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      10561, STR10561, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
-{0x2D38003E,  CAT_PPS,              VT_ENUM,          10562, STR10562, sizeof(ENUM10562),    ENUM10562,    FL_RONLY, DEV_ALL},     // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
+{0x2D38003E,  CAT_PPS,              VT_ENUM,          10562, STR10562, sizeof(ENUM10562),    ENUM10562,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
 {0x2D4D003F,  CAT_PPS,              VT_BYTE,          10563, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 {0x2D190040,  CAT_PPS,              VT_TEMP,          10564, STR10564, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
-{0x2D690041,  CAT_PPS,              VT_TEMP,          10565, STR10565, 0,                    NULL,         FL_NO_CMD, DEV_ALL},     // Nächstes Heizprogramm
-
+{0x2D690041,  CAT_PPS,              VT_TEMP,          10565, STR10565, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
+{0x2D480042,  CAT_PPS,              VT_ONOFF,         10566, STR10566, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
+{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         10567, STR10567, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
@@ -5999,8 +6002,11 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 #define PPS_QTP 62
 #define PPS_BRS 63
 #define PPS_RTZ 64
+#define PPS_NHP 65
+#define PPS_MOD 66
+#define PPS_CON 67
 
-#define PPS_ANZ 65
+#define PPS_ANZ 68
 #define LAST_ENUM_NR 10562
 #define LAST_ENUM ENUM10562
 
@@ -6013,7 +6019,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       0,     "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       99999, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
 };
 
 

@@ -423,11 +423,9 @@ unsigned long TWW_count   = 0;
 
 // PPS-bus variables
 uint8_t msg_cycle = 0;
+uint8_t saved_msg_cycle = 0;
 uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
-#ifndef QAA_TYPE
-#define QAA_TYPE  0x53  //QAA70 as default
-#endif
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -1042,7 +1040,7 @@ void _printFIXPOINT(double dval, int precision){
 void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
   double dval;
   char *p=outBuf+outBufLen;
-  uint8_t pps_offset = ((*PPS_write_enabled == 1 || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
+  int8_t pps_offset = (((*PPS_write_enabled == 1 && msg[0] != 0x00) || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
 
   if(data_len == 3){
     if(msg[pl_start]==0 || bus_type == BUS_PPS){
@@ -1467,7 +1465,7 @@ char *printTelegram(byte* msg, int query_line) {
     }
   }
   if (bus_type == BUS_LPB) {
-    if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+    if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 9 and 10 are in reversed order
       cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }else{
       cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
@@ -1751,7 +1749,9 @@ char *printTelegram(byte* msg, int query_line) {
                     if (data_len == 2) {
                       printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
-                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+2],1);
+                      int8_t pps_offset = 0;
+                      if (*PPS_write_enabled == 1 && msg[0] != 0x00 && bus_type == BUS_PPS) pps_offset = -1;
+                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+2+pps_offset],1);
                     }
                   }else{
                     Serial.print(F("no enum str "));
@@ -1789,13 +1789,13 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_PPS_TIME: // PPS: Time and day of week
             {
               switch(weekday()) {
-                case 6: outBufLen+=sprintf(outBuf+outBufLen,"Sa"); break;
-                case 0: outBufLen+=sprintf(outBuf+outBufLen,"So"); break;
-                case 1: outBufLen+=sprintf(outBuf+outBufLen,"Mo"); break;
-                case 2: outBufLen+=sprintf(outBuf+outBufLen,"Di"); break;
-                case 3: outBufLen+=sprintf(outBuf+outBufLen,"Mi"); break;
-                case 4: outBufLen+=sprintf(outBuf+outBufLen,"Do"); break;
-                case 5: outBufLen+=sprintf(outBuf+outBufLen,"Fr"); break;
+                case 7: outBufLen+=sprintf(outBuf+outBufLen,"Sa"); break;
+                case 1: outBufLen+=sprintf(outBuf+outBufLen,"So"); break;
+                case 2: outBufLen+=sprintf(outBuf+outBufLen,"Mo"); break;
+                case 3: outBufLen+=sprintf(outBuf+outBufLen,"Di"); break;
+                case 4: outBufLen+=sprintf(outBuf+outBufLen,"Mi"); break;
+                case 5: outBufLen+=sprintf(outBuf+outBufLen,"Do"); break;
+                case 6: outBufLen+=sprintf(outBuf+outBufLen,"Fr"); break;
                 default: break;
               }
               outBufLen+=sprintf(outBuf+outBufLen,", ");
@@ -2733,7 +2733,6 @@ char* query(int line_start  // begin at this line (ProgNr)
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
           msg[4+(bus_type*4)]=TYPE_ANS;
-          msg[pl_start]=0;
           msg[pl_start+1]=temp_val >> 8;
           msg[pl_start+2]=temp_val & 0xFF;
 /*
@@ -3040,7 +3039,7 @@ void LogTelegram(byte* msg){
   if (log_parameters[0] == 30000) {
 
     if (bus_type != BUS_PPS) {
-      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
         cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
       }else{
         cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
@@ -3074,7 +3073,7 @@ void LogTelegram(byte* msg){
 //      c=pgm_read_dword(&cmdtbl[i].cmd);
     }
 
-    if (log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) {
+    if ((log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) && cmd > 0) {
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)))) {
         dataFile = SD.open("datalog.txt", FILE_WRITE);
         if (dataFile) {
@@ -3699,7 +3698,7 @@ void loop() {
           switch (msg_cycle) {
             case 0:
               tx_msg[1] = 0x38; // Typ
-              tx_msg[7] = QAA_TYPE;
+              tx_msg[7] = pps_values[PPS_QTP];
               break;
             case 1:
               tx_msg[1] = 0x18; // Position Drehknopf
@@ -3721,7 +3720,7 @@ void loop() {
               tx_msg[7] = 0x00;
               break;
             case 5:
-              tx_msg[1] = 0x49;     // pr
+              tx_msg[1] = 0x49;     // Präsenz
               tx_msg[7] = pps_values[PPS_BA];
               break;
             case 6:
@@ -3757,8 +3756,9 @@ void loop() {
                 }
                 tx_msg[1] = 0x69;
                 tx_msg[6] = next_switchday;     // high nibble: current heating program (0x10 = reduced, 0x00 = comfort), low nibble: day of week
-                tx_msg[7] = next_switchtime;     // next heating program time (encoded as one increment translates to one 10 minute block)
+                tx_msg[7] = next_switchtime;    // next heating program time (encoded as one increment translates to one 10 minute block)
               }              
+              break;
             }
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
@@ -3852,15 +3852,19 @@ void loop() {
               tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
               break;
             case 21:
-              tx_msg[1] = 0x1B;
-              tx_msg[4] = pps_values[PPS_FRS] >> 8;
-              tx_msg[5] = pps_values[PPS_FRS] & 0xFF;
-              tx_msg[6] = pps_values[PPS_SMX] >> 8;
-              tx_msg[7] = pps_values[PPS_SMX] & 0xFF;
+              tx_msg[1] = 0x1B;                    // Frostschutz- und Maximaltemperatur
+              tx_msg[4] = pps_values[PPS_SMX] >> 8;
+              tx_msg[5] = pps_values[PPS_SMX] & 0xFF;
+              tx_msg[6] = pps_values[PPS_FRS] >> 8;
+              tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
           }
           msg_cycle++;
-          if (msg_cycle > 7) {
+          if (msg_cycle > 21) {
             msg_cycle = 0;
+          }
+          if (saved_msg_cycle > 0) {
+            msg_cycle = saved_msg_cycle;
+            saved_msg_cycle = 0;
           }
           if (tx_msg[1] != 0xFF &&  *PPS_write_enabled == 1) {
             bus.Send(0, 0, rx_msg, tx_msg);
@@ -3885,6 +3889,7 @@ void loop() {
         } else {    // parse heating system data
 
           if (msg[0] == 0x1E) {   // Anfragen der Therme nach bestimmten Parametern
+            saved_msg_cycle = msg_cycle;
             switch(msg[1]) {
               case 0x08: msg_cycle = 8; break;
               case 0x09: msg_cycle = 9; break;
@@ -3894,14 +3899,14 @@ void loop() {
               case 0x4C: msg_cycle = 11; break;
               case 0x4D: msg_cycle = 2; break;
               case 0x4F: msg_cycle = 3; break;
-              case 0x60: msg_cycle = 12; break;
-              case 0x61: msg_cycle = 13; break;
-              case 0x62: msg_cycle = 14; break;
-              case 0x63: msg_cycle = 15; break;
-              case 0x64: msg_cycle = 16; break;
-              case 0x65: msg_cycle = 17; break;
-              case 0x66: msg_cycle = 18; break;
-              case 0x7C: msg_cycle = 19; break;
+              case 0x60: msg_cycle = 13; break;
+              case 0x61: msg_cycle = 14; break;
+              case 0x62: msg_cycle = 15; break;
+              case 0x63: msg_cycle = 16; break;
+              case 0x64: msg_cycle = 17; break;
+              case 0x65: msg_cycle = 18; break;
+              case 0x66: msg_cycle = 19; break;
+              case 0x7C: msg_cycle = 20; break;
               default:
                  Serial.print("Unknown request: ");
                 for (int c=0;c<9;c++) {
@@ -3950,101 +3955,116 @@ ich mir da nicht)
             uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1);
             uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
-            switch (msg[1+pps_offset]) {
-              case 0x4F: msg_cycle = 0; break;  // Gerät an der Therme anmelden
-
-              case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
-              case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
-              case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
-              case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
-              case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
-              case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
-              case 0x19: pps_values[PPS_RTZ] = temp; break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
-              case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
-              case 0x28: pps_values[PPS_RTI] = temp; break; // Raumtemperatur Ist
-              case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
-              case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
-              case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
-              case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
-              case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
-              case 0x49: pps_values[PPS_BA] = msg[7+pps_offset]; break; // Betriebsart
-              case 0x4C: pps_values[PPS_AW] = msg[7+pps_offset]; break; // Komfort-/Eco-Modus
-              case 0x4D: pps_values[PPS_BRS] = msg[7+pps_offset]; break; // Brennerstatus
-              case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2+pps_offset]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
-              case 0x60: 
-                pps_values[PPS_S11] = msg[7+pps_offset]; 
-                pps_values[PPS_E11] = msg[6+pps_offset]; 
-                pps_values[PPS_S12] = msg[5+pps_offset]; 
-                pps_values[PPS_E12] = msg[4+pps_offset]; 
-                pps_values[PPS_S13] = msg[3+pps_offset]; 
-                pps_values[PPS_E13] = msg[2+pps_offset];
+            uint16_t i = sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;
+            while (i > 0 && pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0])) >= 10500) {
+              uint32_t cmd = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+              cmd = (cmd & 0x00FF0000) >> 16;
+              if (cmd == msg[1+pps_offset]) {
                 break;
-              case 0x61:
-                pps_values[PPS_S21] = msg[7+pps_offset]; 
-                pps_values[PPS_E21] = msg[6+pps_offset]; 
-                pps_values[PPS_S22] = msg[5+pps_offset];
-                pps_values[PPS_E22] = msg[4+pps_offset];
-                pps_values[PPS_S23] = msg[3+pps_offset]; 
-                pps_values[PPS_E23] = msg[2+pps_offset];
-                break;
-              case 0x62:
-                pps_values[PPS_S31] = msg[7+pps_offset];
-                pps_values[PPS_E31] = msg[6+pps_offset];
-                pps_values[PPS_S32] = msg[5+pps_offset];
-                pps_values[PPS_E32] = msg[4+pps_offset];
-                pps_values[PPS_S33] = msg[3+pps_offset];
-                pps_values[PPS_E33] = msg[2+pps_offset];
-                break;
-              case 0x63:
-                pps_values[PPS_S41] = msg[7+pps_offset];
-                pps_values[PPS_E41] = msg[6+pps_offset];
-                pps_values[PPS_S42] = msg[5+pps_offset];
-                pps_values[PPS_E42] = msg[4+pps_offset];
-                pps_values[PPS_S43] = msg[3+pps_offset];
-                pps_values[PPS_E43] = msg[2+pps_offset];
-                break;
-              case 0x64:
-                pps_values[PPS_S51] = msg[7+pps_offset];
-                pps_values[PPS_E51] = msg[6+pps_offset];
-                pps_values[PPS_S52] = msg[5+pps_offset];
-                pps_values[PPS_E52] = msg[4+pps_offset];
-                pps_values[PPS_S53] = msg[3+pps_offset];
-                pps_values[PPS_E53] = msg[2+pps_offset];
-                break;
-              case 0x65:
-                pps_values[PPS_S61] = msg[7+pps_offset];
-                pps_values[PPS_E61] = msg[6+pps_offset];
-                pps_values[PPS_S62] = msg[5+pps_offset];
-                pps_values[PPS_E62] = msg[4+pps_offset];
-                pps_values[PPS_S63] = msg[3+pps_offset];
-                pps_values[PPS_E63] = msg[2+pps_offset];
-                break;
-              case 0x66:
-                pps_values[PPS_S71] = msg[7+pps_offset];
-                pps_values[PPS_E71] = msg[6+pps_offset];
-                pps_values[PPS_S72] = msg[5+pps_offset];
-                pps_values[PPS_E72] = msg[4+pps_offset];
-                pps_values[PPS_S73] = msg[3+pps_offset];
-                pps_values[PPS_E73] = msg[2+pps_offset];
-                break;
-              case 0x69: break;                             // Nächste Schaltzeit
-              case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
-              case 0x48: break;
-              case 0x1B:                                    // Frostschutz-Temperatur 
-                pps_values[PPS_FRS] = temp;
-                pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
-                break;
-              case 0x00: break;
-              default:
-                Serial.print("Unknown telegram: ");
-                for (int c=0;c<9+pps_offset;c++) {
-                  if (msg[c]<16) Serial.print("0");
-                  Serial.print(msg[c], HEX);
-                  Serial.print(" ");
-                }
-                Serial.println();
-                break;
+              }
+              i--;
             }
+            uint8_t flags=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+
+            if ((flags & FL_RONLY) == FL_RONLY || *PPS_write_enabled != 1) {
+
+              switch (msg[1+pps_offset]) {
+                case 0x4F: pps_values[PPS_CON] = msg[7+pps_offset]; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+
+                case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
+                case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
+                case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
+                case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
+                case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
+                case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
+                case 0x19: pps_values[PPS_RTZ] = temp; break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
+                case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
+                case 0x28: pps_values[PPS_RTI] = temp; break; // Raumtemperatur Ist
+                case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
+                case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
+                case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
+                case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
+                case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
+                case 0x49: pps_values[PPS_BA] = msg[7+pps_offset]; break; // Betriebsart
+                case 0x4C: pps_values[PPS_AW] = msg[7+pps_offset]; break; // Komfort-/Eco-Modus
+                case 0x4D: pps_values[PPS_BRS] = msg[7+pps_offset]; break; // Brennerstatus
+                case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2+pps_offset]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+                case 0x60: 
+                  pps_values[PPS_S11] = msg[7+pps_offset]; 
+                  pps_values[PPS_E11] = msg[6+pps_offset]; 
+                  pps_values[PPS_S12] = msg[5+pps_offset]; 
+                  pps_values[PPS_E12] = msg[4+pps_offset]; 
+                  pps_values[PPS_S13] = msg[3+pps_offset]; 
+                  pps_values[PPS_E13] = msg[2+pps_offset];
+                  break;
+                case 0x61:
+                  pps_values[PPS_S21] = msg[7+pps_offset]; 
+                  pps_values[PPS_E21] = msg[6+pps_offset]; 
+                  pps_values[PPS_S22] = msg[5+pps_offset];
+                  pps_values[PPS_E22] = msg[4+pps_offset];
+                  pps_values[PPS_S23] = msg[3+pps_offset]; 
+                  pps_values[PPS_E23] = msg[2+pps_offset];
+                  break;
+                case 0x62:
+                  pps_values[PPS_S31] = msg[7+pps_offset];
+                  pps_values[PPS_E31] = msg[6+pps_offset];
+                  pps_values[PPS_S32] = msg[5+pps_offset];
+                  pps_values[PPS_E32] = msg[4+pps_offset];
+                  pps_values[PPS_S33] = msg[3+pps_offset];
+                  pps_values[PPS_E33] = msg[2+pps_offset];
+                  break;
+                case 0x63:
+                  pps_values[PPS_S41] = msg[7+pps_offset];
+                  pps_values[PPS_E41] = msg[6+pps_offset];
+                  pps_values[PPS_S42] = msg[5+pps_offset];
+                  pps_values[PPS_E42] = msg[4+pps_offset];
+                  pps_values[PPS_S43] = msg[3+pps_offset];
+                  pps_values[PPS_E43] = msg[2+pps_offset];
+                  break;
+                case 0x64:
+                  pps_values[PPS_S51] = msg[7+pps_offset];
+                  pps_values[PPS_E51] = msg[6+pps_offset];
+                  pps_values[PPS_S52] = msg[5+pps_offset];
+                  pps_values[PPS_E52] = msg[4+pps_offset];
+                  pps_values[PPS_S53] = msg[3+pps_offset];
+                  pps_values[PPS_E53] = msg[2+pps_offset];
+                  break;
+                case 0x65:
+                  pps_values[PPS_S61] = msg[7+pps_offset];
+                  pps_values[PPS_E61] = msg[6+pps_offset];
+                  pps_values[PPS_S62] = msg[5+pps_offset];
+                  pps_values[PPS_E62] = msg[4+pps_offset];
+                  pps_values[PPS_S63] = msg[3+pps_offset];
+                  pps_values[PPS_E63] = msg[2+pps_offset];
+                  break;
+                case 0x66:
+                  pps_values[PPS_S71] = msg[7+pps_offset];
+                  pps_values[PPS_E71] = msg[6+pps_offset];
+                  pps_values[PPS_S72] = msg[5+pps_offset];
+                  pps_values[PPS_E72] = msg[4+pps_offset];
+                  pps_values[PPS_S73] = msg[3+pps_offset];
+                  pps_values[PPS_E73] = msg[2+pps_offset];
+                  break;
+                case 0x69: break;                             // Nächste Schaltzeit
+                case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x48: pps_values[PPS_MOD] = msg[7+pps_offset]; break;
+                case 0x1B:                                    // Frostschutz-Temperatur 
+                  pps_values[PPS_FRS] = temp;
+                  pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
+                  break;
+                case 0x00: break;
+                default:
+                  Serial.print("Unknown telegram: ");
+                  for (int c=0;c<9+pps_offset;c++) {
+                    if (msg[c]<16) Serial.print("0");
+                    Serial.print(msg[c], HEX);
+                    Serial.print(" ");
+                  }
+                  Serial.println();
+                  break;
+              }
+            }
+
 /*
             Serial.print(F("Outside Temperature: "));
             Serial.println(outside_temp);
@@ -6068,6 +6088,10 @@ void setup() {
       pl_start = 6;
       break;
   }
+#ifdef QAA_TYPE
+  pps_values[PPS_QTP] = QAA_TYPE;  //QAA70 as default
+#endif
+
 
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
