@@ -392,9 +392,9 @@ byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 char date[20];
 
-static unsigned long lastAvgTime = millis();
-static unsigned long lastLogTime = millis();
-static unsigned long custom_timer = millis();
+unsigned long lastAvgTime = millis();
+unsigned long lastLogTime = millis();
+unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 int numAverages = sizeof(avg_parameters) / sizeof(int);
 int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
@@ -2796,10 +2796,8 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.print(formnr);
             client.println(F("'>"));
             if (type == VT_ONOFF) {
-              int val=msg[pl_start+1];
-              if (bus_type == BUS_PPS) {
-                val=msg[pl_start+2];
-              }
+              uint8_t pps_offset = (bus_type == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
+              int val=msg[pl_start+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
                 client.print(F(" selected"));
@@ -3533,6 +3531,33 @@ void InitMaxDeviceList() {
 #endif
 
 /** *****************************************************************
+ *  Function: setPPS()
+ *  Does:     stores a PPS parameter received from the heater
+ * Pass parameters:
+ *  PPS parameter index, value
+ * Parameters passed back:
+ *  value_has_changed
+ * Function value returned:
+ *  1 (value has changed) or 0 (has not changed)
+ * Global resources used:
+ *  pps_values[]
+ * *************************************************************** */
+
+uint16_t setPPS(uint8_t pps_index, uint16_t value) {
+  uint16_t log_parameter = 0;
+  if (pps_values[pps_index] != value) {
+    for (int i=0; i < numLogValues; i++) {
+      if (log_parameters[i] == 10500 + pps_index) {
+        log_parameter = log_parameters[i];
+      }
+    }
+    pps_values[pps_index] = value;
+  }
+  return log_parameter;
+}
+
+
+/** *****************************************************************
  *  Function:
  *  Does:
  *  Pass parameters:
@@ -3555,6 +3580,7 @@ void loop() {
   const byte MaxArrayElement=252;
   char  cLineBuffer[MaxArrayElement];  //
   byte  bPlaceInBuffer;                // index into buffer
+  uint16_t log_now = 0;
 
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
@@ -3969,7 +3995,7 @@ ich mir da nicht)
             if ((flags & FL_RONLY) == FL_RONLY || *PPS_write_enabled != 1) {
 
               switch (msg[1+pps_offset]) {
-                case 0x4F: pps_values[PPS_CON] = msg[7+pps_offset]; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+                case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
                 case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
                 case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
@@ -3977,7 +4003,7 @@ ich mir da nicht)
                 case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
                 case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
                 case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
-                case 0x19: pps_values[PPS_RTZ] = temp; break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
+                case 0x19: log_now = setPPS(PPS_RTZ, temp); break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
                 case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
                 case 0x28: pps_values[PPS_RTI] = temp; break; // Raumtemperatur Ist
                 case 0x29: pps_values[PPS_AT] = temp; break; // Außentemperatur
@@ -3985,10 +4011,10 @@ ich mir da nicht)
                 case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
                 case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
                 case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
-                case 0x49: pps_values[PPS_BA] = msg[7+pps_offset]; break; // Betriebsart
-                case 0x4C: pps_values[PPS_AW] = msg[7+pps_offset]; break; // Komfort-/Eco-Modus
-                case 0x4D: pps_values[PPS_BRS] = msg[7+pps_offset]; break; // Brennerstatus
-                case 0x57: pps_values[PPS_ATG] = temp; pps_values[PPS_TWB] = msg[2+pps_offset]; break; // gemischte Außentemperatur / Trinkwasserbetrieb
+                case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
+                case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
+                case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
+                case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
                 case 0x60: 
                   pps_values[PPS_S11] = msg[7+pps_offset]; 
                   pps_values[PPS_E11] = msg[6+pps_offset]; 
@@ -4047,7 +4073,7 @@ ich mir da nicht)
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
                 case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
-                case 0x48: pps_values[PPS_MOD] = msg[7+pps_offset]; break;
+                case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur 
                   pps_values[PPS_FRS] = temp;
                   pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
@@ -5673,8 +5699,9 @@ ich mir da nicht)
 
 #ifdef LOGGER
 
-  if ((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) {
+  if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
+    log_now = 0;
     double log_values[numLogValues];
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
@@ -5863,7 +5890,7 @@ ich mir da nicht)
        #endif
       Serial.println(F("Error opening datalog.txt!"));
     }
-    lastLogTime += log_interval * 1000;
+    lastLogTime = millis();
   }
 #endif
 
