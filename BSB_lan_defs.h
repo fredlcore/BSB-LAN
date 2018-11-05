@@ -6003,7 +6003,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 #define PPS_BRS 63
 #define PPS_RTZ 64
 #define PPS_NHP 65
-#define PPS_MOD 66
+#define PPS_HP 66
 #define PPS_CON 67
 
 #define PPS_ANZ 68
@@ -6019,7 +6019,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       99999, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
 };
 
 
