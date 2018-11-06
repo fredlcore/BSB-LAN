@@ -2047,7 +2047,6 @@ const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
 const char STR10509[] PROGMEM = "Position Drehknopf";
 const char STR10511[] PROGMEM = "Präsenztaste";
 const char STR10512[] PROGMEM = "Verbleibende Ferientage";
-const char STR10513[] PROGMEM = "Modus";
 const char STR10519[] PROGMEM = "Heizperiode 1 Montag Start";
 const char STR10520[] PROGMEM = "Heizperiode 1 Montag Ende";
 const char STR10521[] PROGMEM = "Heizperiode 2 Montag Start";
@@ -3741,11 +3740,6 @@ const char ENUM10510[] PROGMEM_LATEST = {
   "\x00 Automatisch\0" 
   "\x01 Manuell\0"
   "\x02 Aus"
-};
-
-const char ENUM10513[] PROGMEM_LATEST = {
-  "\x00 Reduziert\0" 
-  "\x01 Komfort"
 };
 
 const char ENUM10562[] PROGMEM_LATEST = {
@@ -5882,7 +5876,6 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x2D49000A,  CAT_PPS,              VT_ENUM,          10510, STR700,   sizeof(ENUM10510),    ENUM10510,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x2D4C000B,  CAT_PPS,              VT_ONOFF,         10511, STR10511, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
 {0x2D7C000C,  CAT_PPS,              VT_BYTE,          10512, STR10512, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D4C000D,  CAT_PPS,              VT_ENUM,          10513, STR10513, sizeof(ENUM10513),    ENUM10513,    DEFAULT_FLAG, DEV_ALL}, // Komfort-/Eco-Modus
 {0x2D08000E,  CAT_PPS,              VT_TEMP,          10514, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
 {0x2D09000F,  CAT_PPS,              VT_TEMP,          10515, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
 {0x2D1B0010,  CAT_PPS,              VT_TEMP,          10516, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
@@ -5950,7 +5943,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 #define PPS_BA  10
 #define PPS_AW  11
 #define PPS_FDT 12
-#define PPS_MOD 13
+#define PPS_MOD 99
 #define PPS_RTS 14
 #define PPS_RTA 15
 #define PPS_FRS 16
