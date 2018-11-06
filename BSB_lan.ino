@@ -312,19 +312,7 @@
 #include "src/Time/TimeLib.h"
 #include "html_strings.h"
 
-#ifdef ETHERNET_W5500
-#include "src/Ethernet2/src/Ethernet2.h"
-#else
 #include <Ethernet.h>
-#endif
-
-#ifdef TRUSTED_IP
-#ifdef ETHERNET_W5500
-#include "src/Ethernet2/src/utility/w5500.h"
-#else
-#include <utility/w5100.h>
-#endif
-#endif
 
 IPAddress ip(IPAddr);
 EthernetServer server(Port);
@@ -3037,7 +3025,7 @@ void LogTelegram(byte* msg){
   if (log_parameters[0] == 30000) {
 
     if (bus_type != BUS_PPS) {
-      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
+      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus_type==BUS_BSB) || (msg[2]<0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
         cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
       }else{
         cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
@@ -4134,16 +4122,10 @@ ich mir da nicht)
   if (client) {
 
 #ifdef TRUSTED_IP
-    int so = client.getSocketNumber();
-    uint8_t remoteIP[4];
-#ifdef ETHERNET_W5500
-    w5500.readSnDIPR(so, remoteIP);
-#else
-    W5100.readSnDIPR(so, remoteIP);
-#endif
 #ifndef TRUSTED_IP2
 #define TRUSTED_IP2 0
 #endif
+    IPAddress remoteIP = client.remoteIP();
     if (remoteIP[3] != TRUSTED_IP && remoteIP[3] != TRUSTED_IP2) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
       Serial.print(F("Rejected access from "));
       for (int i=0; i<4; i++) {
