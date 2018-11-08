@@ -70,6 +70,7 @@
  *        - Added WHG Procon device family (195)
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
+ *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
  *       version 0.40
@@ -414,6 +415,9 @@ uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
+uint8_t current_switchday = 0;
+
+#include "BSB_lan_custom_global.h"
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -3745,7 +3749,7 @@ void loop() {
             {
               if (time_set == true) {
                 boolean found = false;
-                boolean active = true;
+                boolean next_active = true;
                 uint16_t current_time = hour() * 6 + minute() / 10;
                 int8_t PPS_weekday = weekday() - 1;
                 uint8_t next_switchday = 0;
@@ -3760,18 +3764,29 @@ void loop() {
                     }
                     next_switchtime = pps_values[index];
                     next_switchday = ((index - PPS_S11) / 6) + 1;
-                    next_switchday = next_switchday + (0x10 * active);
+                    next_switchday = next_switchday + (0x10 * next_active);
                     found = true;
                   } else {
                     index++;
-                    active = !active;
+                    next_active = !next_active;
                   }
                   if (index > PPS_E73) index = PPS_S11;
                 }
                 tx_msg[1] = 0x69;
                 tx_msg[6] = next_switchday;     // high nibble: current heating program (0x10 = reduced, 0x00 = comfort), low nibble: day of week
                 tx_msg[7] = next_switchtime;    // next heating program time (encoded as one increment translates to one 10 minute block)
-              }              
+
+                if (current_switchday != next_switchday) {    // Set presence parameter to on or off at the beginning of (non-)heating timeslot
+                  pps_values[PPS_AW] = !next_active;
+                  current_switchday = next_switchday;
+                }
+
+                if (pps_values[PPS_AW] == 0) {                 // Set destination temperature (comfort + knob for heating period, otherwise reduced temperature)
+                  pps_values[PPS_RTZ] = pps_values[PPS_RTA];
+                } else {
+                  pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
+                }
+              }
               break;
             }
             case 8:
@@ -6300,6 +6315,8 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
   InitMaxDeviceList();
   
 #endif
-  
+
+#include "BSB_lan_custom_setup.h"
+
 }
 
