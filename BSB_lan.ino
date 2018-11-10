@@ -3716,6 +3716,11 @@ void loop() {
           switch (msg_cycle) {
             case 0:
               tx_msg[1] = 0x38; // Typ
+#ifdef QAA_TYPE
+              if (pps_values[PPS_QTP] == 0) pps_values[PPS_QTP] = QAA_TYPE;
+#else
+              pps_values[PPS_QTP] = 0x83                // QAA70 as default
+#endif
               tx_msg[7] = pps_values[PPS_QTP];
               break;
             case 1:
@@ -6112,10 +6117,6 @@ void setup() {
       pl_start = 6;
       break;
   }
-#ifdef QAA_TYPE
-  pps_values[PPS_QTP] = QAA_TYPE;  //QAA70 as default
-#endif
-
 
   // The computer hardware serial interface #0:
   //   115,800 bps, 8 data bits, no parity
