@@ -2562,7 +2562,8 @@ const char ENUM5890[] PROGMEM_LATEST = {
 "\x1d Wärmeanforderung K27\0"
 "\x21 Heizkreispumpe HK1 Q2\0"
 "\x28 Meldeausgang K35\0"
-"\x29 Betriebsmeldung K36"};
+"\x29 Betriebsmeldung K36"
+};
 
 
 #define ENUM5891 ENUM5890               // Relaisausgang QX2
@@ -2671,7 +2672,8 @@ const char ENUM5930[] PROGMEM_LATEST = {
 "\x0e Schwimmbadfühler B13\0"
 "\x0f Kollektorfühler 2 B61\0"
 "\x10 Solarvorlauffühler B63\0"
-"\x11 Solarrücklauffühler B64"};
+"\x11 Solarrücklauffühler B64"
+};
 
 #define ENUM5931 ENUM5930               // Konfiguration - Fühlereingang BX 2
 #define ENUM5932 ENUM5930               // Konfiguration - Fühlereingang BX 3
@@ -2695,7 +2697,8 @@ const char ENUM5950[] PROGMEM_LATEST = {
 "\x0b Taupunktwächter\0"
 "\x0c Vorlaufsollw'anhebung Hygro\0"
 "\x0d Wärmeanforderung 10V\0"
-"\x0e Druckmessung 10V"};
+"\x0e Druckmessung 10V"
+};
 
 // Konfiguration - Funktion Eingang H1 THISION
 const char ENUM5950_2[] PROGMEM_LATEST = {
@@ -2772,7 +2775,7 @@ const char ENUM5950_5[] PROGMEM_LATEST = {
 "\x0e Wärmeanforderung 10V\0"
 "\x0f Kälteanforderung 10V\0"
 "\x11 Relative Raumfeuchte 10V\0"
-"\x12 Raumtemperatur 10V\0"};
+"\x12 Raumtemperatur 10V"};
 
 const char ENUM5951[] PROGMEM_LATEST = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
 
@@ -4088,7 +4091,7 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 /* global command table */
 /* **********************/
 
-PROGMEM_LATE const cmd_t cmdtbl[]={
+PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ ] - Uhrzeit und Datum
@@ -4107,7 +4110,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
-/*
+
 // nur Bedienteil -> keine Kommunikation über BSB
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sizeof(ENUM20),       ENUM20,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sprachauswahl
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ONOFF,         21,    STR21,    0,                    NULL,         FL_RONLY, DEV_ALL}, // [0] - Bedieneinheit - Anzeige Sonderbetrieb
@@ -4141,7 +4144,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       137,   STR137,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bedieneinheit P Status
 {CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       138,   STR138,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Servicegerät Status
 {CMD_UNKNOWN, CAT_FUNK,             VT_YESNO,         140,   STR140,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Alle Geräte löschen
-*/
+
 
 // Zeitprogramm Heizkreis 1
 // HEIZ->DISP ANS 500 Vorwahl  05 00 15 00 98 00 18 00 98 00 18 00
@@ -4923,8 +4926,10 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D0638,  CAT_PUFFERSPEICHER,   VT_ENUM,          4795,  STR4795,  sizeof(ENUM4795),     ENUM4795,     DEFAULT_FLAG, DEV_ALL}, // Vergleichstemp Rückl'umlenk
 {0x053D085F,  CAT_PUFFERSPEICHER,   VT_ENUM,          4796,  STR4796,  sizeof(ENUM4796),     ENUM4796,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Rücklaufumlenkung
 {0x193D0B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     DEFAULT_FLAG, DEV_ALL}, // Durchladung
-{0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     DEFAULT_FLAG, DEV_ALL}, // Durchladung
+{0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     DEFAULT_FLAG, DEV_ALL}  // Durchladung
+};
 
+PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Trinkwasserspeicher
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     DEFAULT_FLAG, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
@@ -6349,7 +6354,7 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL},        
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}        
 };
 
 
