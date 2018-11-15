@@ -472,6 +472,119 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
    return (((13*month+3)/5 + day + year + year/4 - year/100 + year/400) % 7) + 1;
 }
 
+uint32_t get_cmdtbl_cmd(int i) {
+  uint32_t c = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+//  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
+    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl1[0].cmd) + i * sizeof(cmdtbl1[0]));
+  } else {
+    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));    
+  }
+  return c;
+}
+
+uint16_t get_cmdtbl_line(int i) {
+  uint16_t l = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+//  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
+    l = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].line) + i * sizeof(cmdtbl1[0]));
+  } else {
+    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));    
+  }
+  return l;
+}
+
+uint16_t get_cmdtbl_desc(int i) {
+  uint16_t desc = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
+  } else {
+    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));    
+  }
+  return desc;
+}
+
+uint16_t get_cmdtbl_enumstr(int i) {
+  uint16_t enumstr = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
+  } else {
+    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));    
+  }
+  return enumstr;
+}
+
+uint16_t get_cmdtbl_enumstr_len(int i) {
+  uint16_t enumstr_len = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
+  } else {
+    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));    
+  }
+  return enumstr_len;
+}
+
+
+uint8_t get_cmdtbl_category(int i) {
+  uint8_t cat = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+//   cat=pgm_read_byte(&cmdtbl[i].category);
+    cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].category) + i * sizeof(cmdtbl1[0]));
+  } else {
+    cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
+  }
+  return cat;
+}
+
+uint8_t get_cmdtbl_type(int i) {
+  uint8_t type = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
+  } else {
+    type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
+  }
+  return type;
+}
+
+uint8_t get_cmdtbl_dev_fam(int i) {
+  uint8_t dev_fam = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
+  } else {
+    dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
+  }
+  return dev_fam;
+}
+
+uint8_t get_cmdtbl_dev_var(int i) {
+  uint8_t dev_var = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
+  } else {
+    dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
+  }
+  return dev_var;
+}
+
+uint8_t get_cmdtbl_flags(int i) {
+  uint8_t flags = 0;
+  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  if (i < entries1) {
+    flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
+  } else {
+    flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
+  }
+  return flags;
+}
 
 
 /** *****************************************************************
@@ -505,21 +618,18 @@ int findLine(uint16_t line
   i=start_idx;
   found=0;
   do{
-    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-
-//    c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
+    c=get_cmdtbl_cmd(i);
     if(c==CMD_END) break;
-    l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-//    l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
+    l=get_cmdtbl_line(i);
     if(l==line){
-      uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
-      uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
-      uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+      uint8_t dev_var = get_cmdtbl_dev_var(i);
+      uint8_t dev_flags = get_cmdtbl_flags(i);
       
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
+            while (c==get_cmdtbl_cmd(i)) {
               i++;
             }
             found=0;
@@ -530,7 +640,7 @@ int findLine(uint16_t line
           }
         } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]))) {
+            while (c==get_cmdtbl_cmd(i)) {
               i++;
             }
             found=0;
@@ -1478,16 +1588,15 @@ char *printTelegram(byte* msg, int query_line) {
   uint8_t score = 0;
   uint32_t c;     // command code
   int line = 0, match_line = 0;
-  c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-  line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+  c=get_cmdtbl_cmd(i);
+  line = get_cmdtbl_line(i);
 
-//  c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while(c!=CMD_END){
     if((c == cmd || (line >= 10500 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus_type == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
-      uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
-      uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
-      uint8_t dev_flags = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
-      match_line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+      uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+      uint8_t dev_var = get_cmdtbl_dev_var(i);
+      uint8_t dev_flags = get_cmdtbl_flags(i);
+      match_line = get_cmdtbl_line(i);
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
@@ -1530,12 +1639,11 @@ char *printTelegram(byte* msg, int query_line) {
     }
 */
     i++;
-    line = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+    line = get_cmdtbl_line(i);
+    c=get_cmdtbl_cmd(i);
     if (line > match_line && known == false) {
       score = 0;
     }
-//    c=pgm_read_dword(&cmdtbl[i].cmd);
   }
   if(!known){                          // no hex code match
     // Entry in command table is "UNKNOWN" (0x00000000)
@@ -1547,15 +1655,13 @@ char *printTelegram(byte* msg, int query_line) {
   }else{
     i = save_i;
     // Entry in command table is a documented command code
-    uint16_t line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-//    uint16_t line=pgm_read_word(&cmdtbl[i].line);
+    uint16_t line=get_cmdtbl_line(i);
     printLineNumber(line);             // the ProgNr
     Serial.print(F(" "));
     outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
-    int cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
-//    int cat=pgm_read_byte(&cmdtbl[i].category);
+    int cat=get_cmdtbl_category(i);
     int len=sizeof(ENUM_CAT);
 //    memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //    memcpy_P(buffer, &ENUM_CAT,len);
@@ -1565,7 +1671,7 @@ char *printTelegram(byte* msg, int query_line) {
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
     // print menue text
-    strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+    strcpy_PF(buffer, get_cmdtbl_desc(i));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
     outBufLen+=sprintf(outBuf+outBufLen," %s: ", buffer);
@@ -1601,7 +1707,7 @@ char *printTelegram(byte* msg, int query_line) {
           Serial.print(p);
         }else{
           pvalstr=outBuf+outBufLen;
-          uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+          uint8_t type=get_cmdtbl_type(i);
           uint8_t div_type=1;
           uint8_t div_precision=1;
           float div_operand=1;
@@ -1736,17 +1842,17 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_ENUM: // enum
               if((data_len == 2 && (my_dev_fam!=170 || my_dev_fam!=108 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==170 || my_dev_fam==108 || my_dev_fam==211))|| bus_type == 2){
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3) || (bus_type == BUS_PPS)) {
-                  uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-                  if(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len)!=0) {
-//                    memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),len);
+                  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+                  if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
+//                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);
 //                    buffer[len]=0;
 
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+1],1);
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       int8_t pps_offset = 0;
                       if (*PPS_write_enabled == 1 && msg[0] != 0x00 && bus_type == BUS_PPS) pps_offset = -1;
-                      printENUM(calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len),enumstr_len,msg[pl_start+2+pps_offset],1);
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+2+pps_offset],1);
                     }
                   }else{
                     Serial.print(F("no enum str "));
@@ -2100,7 +2206,7 @@ int set(int line      // the ProgNr of the heater parameter
   if(i<0) return 0;        // no match
 
   // Check for readonly parameter
-  if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0])) == 1) {
+  if(get_cmdtbl_flags(i) == FL_RONLY) {
 //  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
     Serial.println(F("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
@@ -2108,7 +2214,7 @@ int set(int line      // the ProgNr of the heater parameter
 
   if (bus_type == BUS_PPS && line >= 10500) {  // PPS-Bus set parameter
     int cmd_no = line - 10500;
-    uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+    uint8_t type=get_cmdtbl_type(i);
 
     switch (type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
@@ -2138,7 +2244,7 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
   // Get the parameter type from the table row[i]
-  switch(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))) {
+  switch(get_cmdtbl_type(i)) {
 //  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
     // 8-bit unsigned integer representation
@@ -2679,7 +2785,7 @@ char* query(int line_start  // begin at this line (ProgNr)
 
     if(i>=0){
       idx=i;
-      uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+      uint8_t flags = get_cmdtbl_flags(i);
       //Serial.println(F("found"));
       if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
         if (bus_type != BUS_PPS) {  // bus type is not PPS
@@ -2715,8 +2821,8 @@ char* query(int line_start  // begin at this line (ProgNr)
           }
         } else { // bus type is PPS
 
-          uint32_t cmd = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-          uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+          uint32_t cmd = get_cmdtbl_cmd(i);
+          uint8_t type = get_cmdtbl_type(i);
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
@@ -2760,10 +2866,10 @@ char* query(int line_start  // begin at this line (ProgNr)
         }
         client.println(outBuf);
 
-        uint8_t flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
-        uint8_t type = pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
-        uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-        uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
+        uint8_t flags = get_cmdtbl_flags(i);
+        uint8_t type = get_cmdtbl_type(i);
+        uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
+        uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
         // dump data payload for unknown types
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
@@ -3041,13 +3147,13 @@ void LogTelegram(byte* msg){
       cmd=msg[1+(msg[0]==0x17 && *PPS_write_enabled != 1)];
     }
     // search for the command code in cmdtbl
-    c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+    c=get_cmdtbl_cmd(i);
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
-      line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
+      line=get_cmdtbl_line(i);
       if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 10500 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
-        uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + i * sizeof(cmdtbl[0]));
-        uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + i * sizeof(cmdtbl[0]));
+        uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+        uint8_t dev_var = get_cmdtbl_dev_var(i);
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
           if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
             break;
@@ -3062,7 +3168,7 @@ void LogTelegram(byte* msg){
         break;
       }
       i++;
-      c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+      c=get_cmdtbl_cmd(i);
 //      c=pgm_read_dword(&cmdtbl[i].cmd);
     }
 
@@ -3080,8 +3186,8 @@ void LogTelegram(byte* msg){
             dataFile.print(F("UNKNOWN"));
           }else{
             // Entry in command table is a documented command code
-            line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-            cmd_type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
+            line=get_cmdtbl_line(i);
+            cmd_type=get_cmdtbl_type(i);
 //            uint16_t line=pgm_read_word(&cmdtbl[i].line);
             dataFile.print(line);             // the ProgNr
           }
@@ -3423,7 +3529,7 @@ char *lookup_descr(uint16_t line) {
   if (i<0) {                    // Not found (for this heating system)?
     strcpy_P(buffer, STR99999); // Unknown command has line no. 10999
   } else {
-    strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+    strcpy_PF(buffer, get_cmdtbl_desc(i));
 //  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
   }
   return buffer;
@@ -3992,16 +4098,16 @@ ich mir da nicht)
             uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1);
             uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
-            uint16_t i = sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;
-            while (i > 0 && pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0])) >= 10500) {
-              uint32_t cmd = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
+            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
+            while (i > 0 && get_cmdtbl_line(i) >= 10500) {
+              uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
               if (cmd == msg[1+pps_offset]) {
                 break;
               }
               i--;
             }
-            uint8_t flags=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].flags) + i * sizeof(cmdtbl[0]));
+            uint8_t flags=get_cmdtbl_flags(i);
 
             if ((flags & FL_RONLY) == FL_RONLY || *PPS_write_enabled != 1) {
 
@@ -4474,12 +4580,12 @@ ich mir da nicht)
           int i=findLine(line,0,NULL);
           if(i>=0){
             // check type
-              if(pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]))==VT_ENUM) {
+              if(get_cmdtbl_type(i)==VT_ENUM) {
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
-              uint16_t enumstr_len=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-              uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
+              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+              uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-//              memcpy_PF(buffer, calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0]))),enumstr_len);
+//              memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
 //              buffer[enumstr_len]=0;
 
@@ -4577,14 +4683,14 @@ ich mir da nicht)
           client.println(my_dev_var);
           client.println(F("<BR>Start Test...<BR>"));
           for (int j=0;j<10000;j++) {
-            if (pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + j * sizeof(cmdtbl[0])) == c) {
+            if (get_cmdtbl_cmd(j) == c) {
               continue;
             }
-            c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + j * sizeof(cmdtbl[0]));
+            c=get_cmdtbl_cmd(j);
             if(c==CMD_END) break;
-            l=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + j * sizeof(cmdtbl[0]));
-            uint8_t dev_fam = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_fam) + j * sizeof(cmdtbl[0]));
-            uint8_t dev_var = pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].dev_var) + j * sizeof(cmdtbl[0]));
+            l=get_cmdtbl_line(j);
+            uint8_t dev_fam = get_cmdtbl_dev_fam(j);
+            uint8_t dev_var = get_cmdtbl_dev_var(j);
             if (((dev_fam != my_dev_fam && dev_fam != 255) || (dev_var != my_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
               if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                 Serial.println(F("bus send failed"));  // to PC hardware serial I/F
@@ -4816,11 +4922,11 @@ ich mir da nicht)
                   continue;
                 }
                 int k=0;
-                uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + i * sizeof(cmdtbl[0]));
-                uint16_t enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr_len) + i * sizeof(cmdtbl[0]));
-                uint32_t enumstr = calc_enum_offset(pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + i * sizeof(cmdtbl[0])), enumstr_len);
+                uint8_t type=get_cmdtbl_type(i);
+                uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
+                uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
-                strcpy_PF(buffer, pgm_read_word_far(pgm_get_far_address(cmdtbl[0].desc) + i * sizeof(cmdtbl[0])));
+                strcpy_PF(buffer, get_cmdtbl_desc(i));
 
                 if (!been_here2 || p[2] == 'Q') {
                   been_here2=true;
@@ -5517,7 +5623,7 @@ ich mir da nicht)
                   uint32_t c=0;
                   int line=findLine(avg_parameters[i],0,&c);
                   int k=0;
-                  uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+                  uint8_t type=get_cmdtbl_type(line);
                   uint8_t div_unit_len=0;
                   uint8_t div_type=0;
                   while(div_type!=VT_UNKNOWN){
@@ -5649,28 +5755,23 @@ ich mir da nicht)
               start=-1;
               end=-1;
               search_cat=atoi(&range[1]);
-              c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-//              c=pgm_read_dword(&cmdtbl[i].cmd);
+              c=get_cmdtbl_cmd(i);
               while(c!=CMD_END){
-                cat=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].category) + i * sizeof(cmdtbl[0]));
-//                cat=pgm_read_byte(&cmdtbl[i].category);
+                cat=get_cmdtbl_category(i);
                 if(cat==search_cat){
                   if(start<0){
-                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + i * sizeof(cmdtbl[0]));
-//                    line=pgm_read_word(&cmdtbl[i].line);
+                    line=get_cmdtbl_line(i);
                     start=line;
                   }
                 }else{
                   if(start>=0){
-                    line=pgm_read_word_far(pgm_get_far_address(cmdtbl[0].line) + (i-1) * sizeof(cmdtbl[0]));
-//                    line=pgm_read_word(&cmdtbl[i-1].line);
+                    line=get_cmdtbl_line(i-1);
                     end=line;
                     break;
                   }
                 }
                 i++;
-                c=pgm_read_dword_far(pgm_get_far_address(cmdtbl[0].cmd) + i * sizeof(cmdtbl[0]));
-//                c=pgm_read_dword(&cmdtbl[i].cmd);
+                c=get_cmdtbl_cmd(i);
               }
               if(end<start){
                 end=start;
@@ -5741,7 +5842,7 @@ ich mir da nicht)
           uint32_t c=0;
           int line=findLine(log_parameters[i],0,&c);
           int k=0;
-          uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+          uint8_t type=get_cmdtbl_type(line);
           uint8_t div_unit_len=0;
           uint8_t div_type=0;
           while(div_type!=VT_UNKNOWN){
@@ -5804,7 +5905,7 @@ ich mir da nicht)
                 uint32_t c=0;
                 int line=findLine(avg_parameters[i],0,&c);
                 int k=0;
-                uint8_t type=pgm_read_byte_far(pgm_get_far_address(cmdtbl[0].type) + line * sizeof(cmdtbl[0]));
+                uint8_t type=get_cmdtbl_type(line);
                 uint8_t div_unit_len=0;
                 uint8_t div_type=0;
                 while(div_type!=VT_UNKNOWN){
@@ -6133,8 +6234,10 @@ void setup() {
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
   Serial.println(F("READY"));
-  Serial.print(F("Size of cmdtbl: "));
-  Serial.println(sizeof(cmdtbl));
+  Serial.print(F("Size of cmdtbl1: "));
+  Serial.println(sizeof(cmdtbl1));
+  Serial.print(F("Size of cmdtbl2: "));
+  Serial.println(sizeof(cmdtbl2));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
   Serial.println(ip);
