@@ -57,6 +57,8 @@
  *
  * Changelog:
  *       version 0.41 
+ *        - Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!
+ *        - Lots of new parameters coming from device family 123, please run /Q to see if some parameters also work for your heater!
  *        - Added further PPS-Bus commands
  *        - Default PPS mode now "listening". 
  *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening, 
@@ -73,6 +75,7 @@
  *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
+ *        - Added favicon.ico
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -4236,6 +4239,14 @@ ich mir da nicht)
 #endif
 // IPWE END
 
+        if (urlString == "/favicon.ico") {
+          client.println(F("HTTP/1.1 200 OK"));
+          client.println(F("Content-Type: image/x-icon"));
+          client.println();
+          printPStr(pgm_get_far_address(favicon), sizeof(favicon));
+          break;
+        }
+
         // Set up a pointer to cLineBuffer
         char *p=cLineBuffer;
 #ifdef PASSKEY
@@ -4761,7 +4772,7 @@ ich mir da nicht)
                     client.print(cat_min);
                     client.print(F(", \"max\": "));
                     client.print(cat_max);
-                    if (x < sizeof(ENUM_CAT)-1 && cat < 41) {
+                    if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
                       cat++;
                       client.println(F(" },"));
                       client.print(F("\""));
@@ -5376,10 +5387,10 @@ ich mir da nicht)
           webPrintFooter();
           break;
         }
-        if (p[1]=='N'){           // Reset Arduino
+        if (p[1]=='N'){           // Reset Arduino and clear EEPROM
 #ifdef RESET
           webPrintHeader();
-          client.println(F("Reset..."));
+          client.println(F("Clearing EEPROM (affects MAX! devices and PPS-Bus settings) and restarting Arduino..."));
           webPrintFooter();
           client.stop();
 #ifdef LOGGER
@@ -6122,6 +6133,8 @@ void setup() {
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
   Serial.println(F("READY"));
+  Serial.print(F("Size of cmdtbl: "));
+  Serial.println(sizeof(cmdtbl));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
   Serial.println(ip);
