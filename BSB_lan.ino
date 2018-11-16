@@ -3842,7 +3842,7 @@ void loop() {
 #ifdef QAA_TYPE
               if (pps_values[PPS_QTP] == 0) pps_values[PPS_QTP] = QAA_TYPE;
 #else
-              pps_values[PPS_QTP] = 0x83                // QAA70 as default
+              pps_values[PPS_QTP] = 0x83;                // QAA70 as default
 #endif
               tx_msg[7] = pps_values[PPS_QTP];
               break;
