@@ -76,6 +76,7 @@
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
  *        - Added favicon.ico
+ *        - Split of cmdtbl into cmdtbl1 and cmdtbl2 due to Arduino's(?) limit of 32kB size of struct, opening up more space for new parameters.
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -4098,7 +4099,7 @@ ich mir da nicht)
             uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1);
             uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
-            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
+            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) - 1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
             while (i > 0 && get_cmdtbl_line(i) >= 10500) {
               uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
