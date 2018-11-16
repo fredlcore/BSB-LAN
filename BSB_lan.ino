@@ -73,6 +73,7 @@
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
  *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
+ *        - Increased performance for querying several parameters at once (similar to category query)
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
  *        - Added favicon.ico
@@ -475,7 +476,7 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
 
 uint32_t get_cmdtbl_cmd(int i) {
   uint32_t c = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl1[0].cmd) + i * sizeof(cmdtbl1[0]));
@@ -487,7 +488,7 @@ uint32_t get_cmdtbl_cmd(int i) {
 
 uint16_t get_cmdtbl_line(int i) {
   uint16_t l = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].line) + i * sizeof(cmdtbl1[0]));
@@ -499,7 +500,7 @@ uint16_t get_cmdtbl_line(int i) {
 
 uint16_t get_cmdtbl_desc(int i) {
   uint16_t desc = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -510,7 +511,7 @@ uint16_t get_cmdtbl_desc(int i) {
 
 uint16_t get_cmdtbl_enumstr(int i) {
   uint16_t enumstr = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -521,7 +522,7 @@ uint16_t get_cmdtbl_enumstr(int i) {
 
 uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -533,7 +534,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
 
 uint8_t get_cmdtbl_category(int i) {
   uint8_t cat = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].category) + i * sizeof(cmdtbl1[0]));
@@ -545,7 +546,7 @@ uint8_t get_cmdtbl_category(int i) {
 
 uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -556,7 +557,7 @@ uint8_t get_cmdtbl_type(int i) {
 
 uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -567,7 +568,7 @@ uint8_t get_cmdtbl_dev_fam(int i) {
 
 uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -578,7 +579,7 @@ uint8_t get_cmdtbl_dev_var(int i) {
 
 uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
-  uint16_t entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
   } else {
@@ -610,13 +611,25 @@ int findLine(uint16_t line
            , uint32_t *cmd)      // 32-bit command code
 {
   int found;
-  int i;
+  int i = 0;
   int save_i;
   uint32_t c, save_c;
   uint16_t l;
 
   // search for the line in cmdtbl
-  i=start_idx;
+  if (start_idx == 0) {
+    if (get_cmdtbl_line(i) < line) {
+      while (i+100 < (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0])-1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0])-1)) {
+        if (get_cmdtbl_line(i+100) < line) {
+          i = i + 100;
+        } else {
+          break;
+        }
+      }
+    }
+  } else {
+    i=start_idx;
+  }
   found=0;
   do{
     c=get_cmdtbl_cmd(i);
@@ -663,7 +676,7 @@ int findLine(uint16_t line
     }
     i++;
   }while(1);
-
+Serial.println(c, HEX);
   if(!found){
     return -1;
   }
