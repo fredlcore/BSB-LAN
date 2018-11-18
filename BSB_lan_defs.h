@@ -178,7 +178,7 @@ typedef enum{
   VT_FP1,               //  3 Byte - 1 enable / value/10 READ-ONLY
   VT_FP02,              //  3 Byte - 1 enable 0x01 / value/50
   VT_GRADIENT,          //  3 Byte - 1 enable / value min/K
-  VT_HOUR_MINUTES,      //  3 Byte - 1 enable 0x06 / hm mm
+  VT_HOUR_MINUTES,      //  3 Byte - 1 enable 0x06 / hh mm
   VT_HOURS_WORD,        //  3 Byte - 1 enable 0x06 / hours
   VT_MINUTES_WORD,      //  3 Byte - 1 enable 0x06 / minutes
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
@@ -189,6 +189,7 @@ typedef enum{
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
+  VT_ADA_TIME           //  3 Byte - 1 enable / seconds / 100
   VT_SPEED,             //  3 Byte - 1 enable / value * 50 rpm
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
   VT_TEMP,              //  3 Byte - 1 enable / value/64
@@ -311,6 +312,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
+{VT_ADA_TIME,       100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
