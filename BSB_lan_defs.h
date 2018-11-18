@@ -4690,7 +4690,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1A11,  CAT_SITHERM,           VT_BYTE,         2741,  STR2741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ADA Punkt Nr
 {0x093D1A13,  CAT_SITHERM,           VT_CURRENT,      2742,  STR2742,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Filterwert
 {0x093D1A14,  CAT_SITHERM,           VT_CURRENT,      2743,  STR2743,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Korrektur
-{0x093D1A15,  CAT_SITHERM,           VT_UNKNOWN,      2744,  STR2744,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA vergangene Zeit
+{0x093D1A15,  CAT_SITHERM,           VT_ADA_TIME,     2744,  STR2744,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA vergangene Zeit
 {0x093D1A12,  CAT_SITHERM,           VT_CURRENT,      2745,  STR2745,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Ergebnis // todo dies ist eigentlich Teil 2 von Parameter 2741. 2741 legt den ADA Punkt fest (1...7), dessen Wert dann unter dieser 0xID abgefragt werden kann.
 {0x093D1A16,  CAT_SITHERM,           VT_ENUM,         2749,  STR2749,  sizeof(ENUM2749),     ENUM2749,     DEFAULT_FLAG, DEV_ALL}, // Reset Drifttest
 {0x093D0F63,  CAT_SITHERM,           VT_BYTE,         2750,  STR2750,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anstehende Drifttests
