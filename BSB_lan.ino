@@ -1021,17 +1021,13 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
  * Global resources used:
  *
  * *************************************************************** */
-void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
+void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
   long lval;
   char *p=outBuf+outBufLen;
 
-  if(data_len == 3 || data_len == 5){
+  if(data_len == 3){
     if(msg[pl_start]==0){
-      if (data_len == 3) {
-        lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) * multiplier;
-      } else {
-        lval=((long(msg[pl_start+3])<<8)+long(msg[pl_start+4])) * multiplier;
-      }
+      lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) / divisor;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1165,9 +1161,13 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
   char *p=outBuf+outBufLen;
   int8_t pps_offset = (((*PPS_write_enabled == 1 && msg[0] != 0x00) || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
 
-  if(data_len == 3){
+  if(data_len == 3 || data_len == 5){
     if(msg[pl_start]==0 || bus_type == BUS_PPS){
-      dval=double((msg[pl_start+1-pps_offset] << 8) + msg[pl_start+2-pps_offset]) / divider;
+      if (data_len == 3) {
+        dval=double((msg[pl_start+1-pps_offset] << 8) + msg[pl_start+2-pps_offset]) / divider;
+      } else {
+        dval=double((msg[pl_start+3-pps_offset] << 8) + msg[pl_start+4-pps_offset]) / divider;
+      }
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1767,12 +1767,13 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  s16
             case VT_UINT5: //  s16 / 5
             case VT_UINT10: //  s16 / 10
-            case VT_UINT100: //  s16 / 100
-              printWORD(msg,data_len,div_operand,div_unit);
+//              printWORD(msg,data_len,div_operand,div_unit);
+              printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
             case VT_DWORD: // s32
+            case VT_UINT100:  // u32 / 100
               printDWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_SINT: //  s16
@@ -2362,26 +2363,6 @@ int set(int line      // the ProgNr of the heater parameter
       }
       break;
 
-    case VT_UINT100:
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val)*100;
-        param[0]=0x06;  //enable
-        param[1]=0;
-        param[2]=0;
-        param[3]=(t >> 8);
-        param[4]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0;
-        param[2]=0;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
-      }
-      break;
-
     // ---------------------------------------------
     // 16-bit unsigned integer representation
     // Temperature values
@@ -2403,6 +2384,26 @@ int set(int line      // the ProgNr of the heater parameter
       {
       if(val[0]!='\0'){
         uint32_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]=(t >> 24) & 0xff;
+        param[2]=(t >> 16) & 0xff;
+        param[3]=(t >> 8) & 0xff;
+        param[4]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+        param[3]=0x00;
+        param[4]=0x00;
+      }
+      param_len=5;
+      }
+      break;
+
+    case VT_UINT100:
+      {
+      if(val[0]!='\0'){
+        uint32_t t=atoi(val) * 100;
         param[0]=0x06;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
