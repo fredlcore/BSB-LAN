@@ -1025,9 +1025,13 @@ void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
   long lval;
   char *p=outBuf+outBufLen;
 
-  if(data_len == 3){
+  if(data_len == 3 || data_len == 5){
     if(msg[pl_start]==0){
-      lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) * multiplier;
+      if (data_lemn == 3) {
+        lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) * multiplier;
+      } else {
+        lval=((long(msg[pl_start+3])<<8)+long(msg[pl_start+4])) * multiplier;
+      }
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1763,6 +1767,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  s16
             case VT_UINT5: //  s16 / 5
             case VT_UINT10: //  s16 / 10
+            case VT_UINT100: //  s16 / 100
               printWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_MINUTES: // u32 min
@@ -2354,6 +2359,26 @@ int set(int line      // the ProgNr of the heater parameter
         param[2]=0x00;
       }
       param_len=3;
+      }
+      break;
+
+    case VT_UINT100:
+      {
+      if(val[0]!='\0'){
+        uint16_t t=atoi(val)*100;
+        param[0]=0x06;  //enable
+        param[1]=0;
+        param[2]=0;
+        param[3]=(t >> 8);
+        param[4]= t & 0xff;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0;
+        param[2]=0;
+        param[3]=0x00;
+        param[4]=0x00;
+      }
+      param_len=5;
       }
       break;
 
@@ -6450,4 +6475,3 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 #include "BSB_lan_custom_setup.h"
 
 }
-
