@@ -1,4 +1,4 @@
-/****************************************************/
+_/****************************************************/
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
@@ -189,7 +189,6 @@ typedef enum{
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
-  VT_ADA_TIME,          //  3 Byte - 1 enable / seconds / 100
   VT_SPEED,             //  3 Byte - 1 enable / value * 50 rpm
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
   VT_TEMP,              //  3 Byte - 1 enable / value/64
@@ -199,6 +198,7 @@ typedef enum{
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
+  VT_UINT100,           //  3 Byte - 1 enable / value / 100
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_PPS_TIME,          //  4 Byte
@@ -312,7 +312,6 @@ PROGMEM_LATE const units optbl[]={
 {VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_ADA_TIME,       100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
@@ -321,7 +320,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_UINT5,          0.2,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
+{VT_UINT10,         0.1,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
+{VT_UINT100,        0.01,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE)},
 {VT_PPS_TIME,       1.0,    DT_DWHM, 0,  U_NONE, sizeof(U_NONE)},
@@ -4690,7 +4690,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1A11,  CAT_SITHERM,           VT_BYTE,         2741,  STR2741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ADA Punkt Nr
 {0x093D1A13,  CAT_SITHERM,           VT_CURRENT,      2742,  STR2742,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Filterwert
 {0x093D1A14,  CAT_SITHERM,           VT_CURRENT,      2743,  STR2743,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Korrektur
-{0x093D1A15,  CAT_SITHERM,           VT_ADA_TIME,     2744,  STR2744,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA vergangene Zeit
+{0x093D1A15,  CAT_SITHERM,           VT_UINT100,      2744,  STR2744,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA vergangene Zeit
 {0x093D1A12,  CAT_SITHERM,           VT_CURRENT,      2745,  STR2745,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Ergebnis // todo dies ist eigentlich Teil 2 von Parameter 2741. 2741 legt den ADA Punkt fest (1...7), dessen Wert dann unter dieser 0xID abgefragt werden kann.
 {0x093D1A16,  CAT_SITHERM,           VT_ENUM,         2749,  STR2749,  sizeof(ENUM2749),     ENUM2749,     DEFAULT_FLAG, DEV_ALL}, // Reset Drifttest
 {0x093D0F63,  CAT_SITHERM,           VT_BYTE,         2750,  STR2750,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anstehende Drifttests
@@ -6358,5 +6358,3 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}        
 };
-
-
