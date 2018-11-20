@@ -1027,7 +1027,7 @@ void printWORD(byte *msg,byte data_len, long multiplier, const char *postfix){
 
   if(data_len == 3 || data_len == 5){
     if(msg[pl_start]==0){
-      if (data_lemn == 3) {
+      if (data_len == 3) {
         lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) * multiplier;
       } else {
         lval=((long(msg[pl_start+3])<<8)+long(msg[pl_start+4])) * multiplier;
