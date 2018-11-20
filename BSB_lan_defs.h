@@ -198,7 +198,6 @@ typedef enum{
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
-  VT_UINT100,           //  3 Byte - 1 enable / value / 100
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_PPS_TIME,          //  4 Byte
@@ -209,6 +208,7 @@ typedef enum{
   VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
   VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
+  VT_UINT100,           //  5 Byte - 1 enable / value / 100
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
   VT_SUMMERPERIOD,      //* 9 Byte - no flag? 1 enable / byte 2/3 month/year
   VT_VACATIONPROG,      //* 9 Byte - 1 enable 0x06 / byte 2/3 month/year
@@ -319,9 +319,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT5,          0.2,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT10,         0.1,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
-{VT_UINT100,        0.01,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
+{VT_UINT5,          5.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE)},
 {VT_PPS_TIME,       1.0,    DT_DWHM, 0,  U_NONE, sizeof(U_NONE)},
@@ -332,6 +331,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
 {VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_ENERGY,         1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH)},
+{VT_UINT100,        100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
