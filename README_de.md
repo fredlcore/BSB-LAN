@@ -2,7 +2,7 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-LAN-Adapter für den Boiler-System-Bus (BSB) und den Local Process Bus (LPB) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte.
+LAN-Adapter für den Boiler-System-Bus (BSB), den Local Process Bus (LPB) und die Punkt-zu-Punkt-Schnittstelle (PPS) - entwickelt für einen Arduino Mega 2560 mit Ethernet-Shield zur web-basierten Kontrolle von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte.
 
 <b>Ausführliche Informationen zum Adapter und der Software sind im Handbuch zu finden.</b>
 
