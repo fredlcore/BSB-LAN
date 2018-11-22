@@ -2121,14 +2121,10 @@ const char STR10001[] PROGMEM = "Raumtemperatur 2";
 const char STR10002[] PROGMEM = "Raumtemperatur P";
 
 const char STR10100[] PROGMEM = "INFO Brenner";
-const char STR10101[] PROGMEM = "INFO Datum und Zeit";
+const char STR10101[] PROGMEM = "INFO Trinkwasserbereitung";
 const char STR10102[] PROGMEM = "INFO HK1 - TBD";
 const char STR10103[] PROGMEM = "INFO HK2 - TBD";
 const char STR10104[] PROGMEM = "INFO HK3/P - TBD";
-const char STR10105[] PROGMEM = "SW Diagnosecode";
-const char STR10110[] PROGMEM = "Setzen RGT HK - 1";
-const char STR10111[] PROGMEM = "Trinkwasserbereitung";
-const char STR10112[] PROGMEM = "Heizbetrieb";
 
 const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
 const char STR10509[] PROGMEM = "Position Drehknopf";
@@ -6198,7 +6194,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // Lines below seem to have found an explanation.
 {0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
-{0x0500006C,  CAT_USER_DEFINED,     VT_DATETIME,      10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Datum/Zeit broadcast 0A to 7F
+{0x31000212,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 {0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK3/P broadcast 00 to 7F ???
