@@ -1951,7 +1951,10 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_UNKNOWN:
             default:
               SerialPrintData(msg);
-              outBufLen+=sprintf(outBuf+outBufLen,"unknown type");
+              for (int i=0; i < data_len; i++) {
+                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[pl_start+i]);
+              }
+              outBufLen+=sprintf(outBuf+outBufLen," - unknown type");
               break;
           }
         }
@@ -2911,6 +2914,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
         uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
+/*
         // dump data payload for unknown types
         if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
           int data_len;
@@ -2924,7 +2928,7 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.print(msg[pl_start+i], HEX);
           }
         }
-
+*/
         client.println(F("</td><td>"));
         if (msg[4] != TYPE_ERR && type != VT_UNKNOWN) {
           if(type == VT_ENUM || type == VT_BIT || type == VT_ONOFF) {
@@ -5856,12 +5860,6 @@ ich mir da nicht)
   if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
     log_now = 0;
-    double log_values[numLogValues];
-    for (int i=0; i < numLogValues; i++) {
-      if (log_parameters[i] > 0) {
-        log_values[i] = strtod(query(log_parameters[i],log_parameters[i],1),NULL);
-      }
-    }
     File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
     if (dataFile) {
@@ -5877,7 +5875,7 @@ ich mir da nicht)
         if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
           dataFile.print(lookup_descr(log_parameters[i]));
           dataFile.print(F(";"));
-          dataFile.print(log_values[i]);
+          dataFile.print(strtok(query(log_parameters[i],log_parameters[i],1)," "));
           dataFile.print(F(";"));
           uint32_t c=0;
           int line=findLine(log_parameters[i],0,&c);
