@@ -1773,7 +1773,6 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
             case VT_DWORD: // s32
-            case VT_UINT100:  // u32 / 100
               printDWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_SINT: //  s16
@@ -1787,6 +1786,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_PRESSURE: // u8 / 10.0 bar
             case VT_PERCENT5: // u8 %
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
+            case VT_UINT100:  // u32 / 100
               printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
@@ -1861,7 +1861,7 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_ENUM: // enum
               if((data_len == 2 && (my_dev_fam!=170 || my_dev_fam!=108 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==108 || my_dev_fam==123 || my_dev_fam==170 ||  my_dev_fam==211))|| bus_type == 2){
-                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && msg[pl_start+1]==0 && data_len==3) || (bus_type == BUS_PPS)) {
+                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);

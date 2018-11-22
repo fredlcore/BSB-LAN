@@ -3921,7 +3921,9 @@ const char ENUM8100[] PROGMEM_LATEST = { // numerical values are hypothetical
 const char ENUM8304[] PROGMEM_LATEST = {
   "\x00 Aus\0"    // precision guesswork
   "\x01 Ein\0"    // precision guesswork
-  "\xff Ein"    // vom LCD abgelesen (Python code)
+  "\xff Ein\0"    // vom LCD abgelesen (Python code)
+  "0x00\0xff Ein\0"
+  "0x01\0x00 Keine Funktion"
 };
 
 // Diagnose Verbraucher 8749 Raumthermostat 1
@@ -5625,9 +5627,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D93,  CAT_MODULE,           VT_ENUM,          7386,  STR7386,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang H2 Modul 2
 {0x053D0DCA,  CAT_MODULE,           VT_ENUM,          7387,  STR7387,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Kontakt H2 Modul 2
 {0x053D15BE,  CAT_MODULE,           VT_ENUM,          7396,  STR7396,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_ALL}, // Funktion Eing' H21 Modul 2
-{0x053D15D3,  CAT_MODULE,           VT_UINT10,        7399,  STR7399,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 1 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
+{0x053D15D3,  CAT_MODULE,           VT_VOLTAGE,       7399,  STR7399,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 1 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
 {0x053D15DF,  CAT_MODULE,           VT_UINT,          7400,  STR7400,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Funkt'wert 1 H21 Modul 2
-{0x053D15D9,  CAT_MODULE,           VT_UINT10,        7401,  STR7401,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 2 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
+{0x053D15D9,  CAT_MODULE,           VT_VOLTAGE,       7401,  STR7401,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 2 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
 {0x053D15E5,  CAT_MODULE,           VT_UINT,          7402,  STR7402,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Funkt'wert 2 H21 Modul 2
 {0x053D15CD,  CAT_MODULE,           VT_ENUM,          7423,  STR7423,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // Fkt Ausg' UX21 Modul 2
 {0x053D15EB,  CAT_MODULE,           VT_ENUM,          7425,  STR7425,  sizeof(ENUM7425),     ENUM7425,     DEFAULT_FLAG, DEV_ALL}, // Signal Ausg' UX21 Modul 2
@@ -6196,14 +6198,14 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // Lines below seem to have found an explanation.
 {0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
-{0x0500006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Datum/Zeit broadcast 0A to 7F
+{0x0500006C,  CAT_USER_DEFINED,     VT_DATETIME,      10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Datum/Zeit broadcast 0A to 7F
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 {0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK3/P broadcast 00 to 7F ???
-{0x053D0099,  CAT_USER_DEFINED,     VT_UINT,          10105, STR10105, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
-{0x2D3D0574,  CAT_USER_DEFINED,     VT_BYTE,          10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
-{0x313D0571,  CAT_USER_DEFINED,     VT_BYTE,          10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
-{0x2E3E0574,  CAT_USER_DEFINED,     VT_BYTE,          10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
+//{0x053D0099,  CAT_USER_DEFINED,     VT_UINT,          10105, STR10105, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
+//{0x2D3D0574,  CAT_USER_DEFINED,     VT_BYTE,          10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
+//{0x313D0571,  CAT_USER_DEFINED,     VT_BYTE,          10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
+//{0x2E3E0574,  CAT_USER_DEFINED,     VT_BYTE,          10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 
 //PPS-Bus commands
 
