@@ -3918,8 +3918,8 @@ const char ENUM8304[] PROGMEM_LATEST = {
   "\x00 Aus\0"    // precision guesswork
   "\x01 Ein\0"    // precision guesswork
   "\xff Ein\0"    // vom LCD abgelesen (Python code)
-  "0x00\0xff Ein\0"
-  "0x01\0x00 Keine Funktion"
+  "\x00\xff Ein\0"
+  "\x01\x00 Keine Funktion"
 };
 
 // Diagnose Verbraucher 8749 Raumthermostat 1
