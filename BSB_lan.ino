@@ -1860,8 +1860,8 @@ char *printTelegram(byte* msg, int query_line) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (my_dev_fam!=170 || my_dev_fam!=108 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==108 || my_dev_fam==170 ||  my_dev_fam==211))|| bus_type == 2){
-                if((data_len==2) || (data_len==3) || (bus_type == BUS_PPS)) {
+              if((data_len == 2 && (my_dev_fam!=108 || my_dev_fam!=123 || my_dev_fam!=170 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==108 || my_dev_fam==123 || my_dev_fam==170 ||  my_dev_fam==211))|| bus_type == 2){
+                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);
@@ -1883,8 +1883,7 @@ char *printTelegram(byte* msg, int query_line) {
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
-              }
-              else{
+              } else {
                 Serial.print(F(" VT_ENUM len !=2 && len != 3: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
