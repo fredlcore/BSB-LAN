@@ -3918,7 +3918,6 @@ const char ENUM8304[] PROGMEM_LATEST = {
   "\x00 Aus\0"    // precision guesswork
   "\x01 Ein\0"    // precision guesswork
   "\xff Ein\0"    // vom LCD abgelesen (Python code)
-  "\x00\xff Ein\0"
   "\x01\x00 Keine Funktion"
 };
 
