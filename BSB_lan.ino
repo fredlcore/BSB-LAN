@@ -676,7 +676,7 @@ int findLine(uint16_t line
     }
     i++;
   }while(1);
-Serial.println(c, HEX);
+
   if(!found){
     return -1;
   }
