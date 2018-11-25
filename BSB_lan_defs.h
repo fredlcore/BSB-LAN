@@ -1886,7 +1886,7 @@ const char STR8380[] PROGMEM = "Gesamt Gasenergie";
 const char STR8381[] PROGMEM = "Gesamtenergie Heizen Reset";
 const char STR8382[] PROGMEM = "Gesamtenergie TWW Reset";
 const char STR8383[] PROGMEM = "Gesamtenergie Reset";
-const char STR8390[] PROGMEM = "Phasennummer";
+const char STR8390[] PROGMEM = "Aktuelle Phasennummer";
 const char STR8395[] PROGMEM = "Wärmeabgabe";
 const char STR8396[] PROGMEM = "Wärmeaufnahme Quelle";
 const char STR8397[] PROGMEM = "Leistungsaufnahme";
@@ -5793,7 +5793,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x06050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x06050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
-{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -5840,11 +5839,16 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 //Status
 {0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1
+{0x053D07A4,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1  // gleiche Funktion in eigener CommamndID
 {0x053D07A5,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),     ENUM8001,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 2
+{0x053D07A6,  CAT_STATUS,           VT_ENUM,          8001,  STR8001,  sizeof(ENUM8001),     ENUM8001,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 2  // gleiche Funktion in eigener CommamndID
 {0x053D07A7,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),     ENUM8002,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis P
+{0x053D07A8,  CAT_STATUS,           VT_ENUM,          8002,  STR8002,  sizeof(ENUM8002),     ENUM8002,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis P  // gleiche Funktion in eigener CommamndID
 {0x053D07A1,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),     ENUM8003,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Trinkwasser
+{0x053D07A2,  CAT_STATUS,           VT_ENUM,          8003,  STR8003,  sizeof(ENUM8003),     ENUM8003,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Trinkwasser  // gleiche Funktion in eigener CommamndID
 {0x053D0F73,  CAT_STATUS,           VT_ENUM,          8004,  STR8004,  sizeof(ENUM8004),     ENUM8004,     FL_RONLY,     DEV_ALL}, // Status Kühlkreis 1
 {0x053D07A9,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),     ENUM8005,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Kessel
+{0x053D07AA,  CAT_STATUS,           VT_ENUM,          8005,  STR8005,  sizeof(ENUM8005),     ENUM8005,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Kessel
 {0x053D17DC,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY,     DEV_ALL}, // Status Wärmepumpe //FUJITSU
 {0x053D07AD,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Solar
 {0x053D0A08,  CAT_STATUS,           VT_ENUM,          8008,  STR8008,  sizeof(ENUM8008),     ENUM8008,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Feststoffkessel
