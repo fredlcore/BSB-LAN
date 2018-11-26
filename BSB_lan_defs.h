@@ -2139,6 +2139,8 @@ const char STR10102[] PROGMEM = "INFO HK1 - TBD";
 const char STR10103[] PROGMEM = "INFO HK2 - TBD";
 const char STR10104[] PROGMEM = "INFO HK3/P - TBD";
 
+const char STR10200[] PROGMEM = "Unknown command";
+
 const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
 const char STR10509[] PROGMEM = "Position Drehknopf";
 const char STR10511[] PROGMEM = "Präsenztaste";
@@ -4150,6 +4152,8 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
+{0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
+{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL}, // [ ] - Uhrzeit und Datum
@@ -6290,6 +6294,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // Lines below seem to have found an explanation.
 {0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
+{0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x31000212,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
@@ -6298,6 +6303,37 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 //{0x2D3D0574,  CAT_USER_DEFINED,     VT_BYTE,          10110, STR10110, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Setzen RGT HK1
 //{0x313D0571,  CAT_USER_DEFINED,     VT_BYTE,          10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 //{0x2E3E0574,  CAT_USER_DEFINED,     VT_BYTE,          10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
+
+{0x053D0011,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 53 FD 02 63 (seems to be subset of follwing Command ID)
+{0x053D0064,  CAT_USER_DEFINED,     VT_UNKNOWN,       10201, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 61 00 88 00 04 53 FD 02 63
+{0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 41 30 30 36 31 30 33 00 (ASCII: A006103 - some kind of device serial number?)
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10203, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D006B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D009A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00 00 00 00 00 00 00 00 00 00 00
+{0x053D009B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10207, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D009C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00 00 00 00 00 00 00 00 00
+{0x053D009D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 FF 0A 19 FF FF FF FF 16
+{0x053D009E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 FF 03 19 FF FF FF FF 16
+{0x053D04B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10211, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 FF 0A 19 FF FF FF FF 16
+{0x053D04B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10212, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 FF 03 19 FF FF FF FF 16
+{0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10213, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D04C3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10214, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10215, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 23
+{0x053D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10216, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 02
+{0x053D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10217, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 03
+{0x053D05A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10218, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10219, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D0951,  CAT_USER_DEFINED,     VT_UNKNOWN,       10220, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 1E 00
+{0x053D3052,  CAT_USER_DEFINED,     VT_UNKNOWN,       10221, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 01
+{0x053D306A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10222, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 FF
+{0x053D306B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10223, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D306C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10224, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D306D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10225, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D306F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10226, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D3070,  CAT_USER_DEFINED,     VT_UNKNOWN,       10227, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+{0x053D3071,  CAT_USER_DEFINED,     VT_UNKNOWN,       10228, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on Thision S 17.1: 00 00
+
 
 //PPS-Bus commands
 

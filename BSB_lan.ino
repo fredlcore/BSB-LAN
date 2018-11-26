@@ -4810,12 +4810,14 @@ ich mir da nicht)
             client.print(tx_msg[i], HEX);
             client.print(F(" "));
           }
+          client.println();
           client.println(F("<br>"));
           for (int i=0;i<msg[len_idx]+bus_type;i++) {
             if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
             client.print(msg[i], HEX);
             client.print(F(" "));
           }
+          client.println();
           webPrintFooter();
 #endif
           break;
