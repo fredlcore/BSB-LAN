@@ -27,8 +27,8 @@ my $counter = 0;
 my $ID = 0;
 my ($match, $answer);
 my $retries = 0;
-$baseID * $baseID * 0xFF000000 + 3D0000;
-
+$baseID = $baseID * 0x1000000 + 0x3D0000;
+print $baseID;
 local $/ = undef;
 open DEFS, "BSB_lan_defs.h";
 my $defs = <DEFS>;
