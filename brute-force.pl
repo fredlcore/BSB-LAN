@@ -21,14 +21,14 @@ use strict;
 # Set $URL to point to your BSB-LAN installation, including an active passkey.
 
 my $URL = "http://192.168.1.50/4444";
-my $baseID = 0x05;
+my $baseID = 0x09;
 
 my $counter = 0;
 my $ID = 0;
 my ($match, $answer);
 my $retries = 0;
 $baseID = $baseID * 0x1000000 + 0x3D0000;
-print $baseID;
+
 local $/ = undef;
 open DEFS, "BSB_lan_defs.h";
 my $defs = <DEFS>;
