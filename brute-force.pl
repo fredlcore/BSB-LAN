@@ -13,7 +13,7 @@ use strict;
 # before running tests. Some of them are specific to certain features (such
 # as solar or cooling), so it won't make sense for you to test this group.
 # 
-# Log output will be (overwritten) into brute-force-log.txt
+# Log output will be appended to brute-force-log.txt
 # Please note that BSB_lan_defs.h has to be in the same folder as this script.
 # Testing one major category will take approx. 18 hours, more if you increase
 # the delay between queries via the sleep command (now at 1/4 second).
@@ -34,7 +34,7 @@ open DEFS, "BSB_lan_defs.h";
 my $defs = <DEFS>;
 close DEFS;
 
-open LOG, ">./brute-force-log.txt";
+open LOG, ">>./brute-force-log.txt";
 
 for ($counter; $counter < 65536; $counter++) {
   $retries = 0;
