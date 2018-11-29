@@ -961,10 +961,10 @@ void printLineNumber(uint32_t val) {
  * *************************************************************** */
 void printBIT(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
-  if(data_len == 2){
-    if(msg[pl_start]==0){
+  if(data_len == 2 || data_len == 3){
+    if(msg[pl_start]==0 || data_len == 3){
       for (int i=7;i>=0;i--) {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1] >> i & 1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1+data_len-2] >> i & 1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -2913,6 +2913,12 @@ char* query(int line_start  // begin at this line (ProgNr)
         uint8_t type = get_cmdtbl_type(i);
         uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
         uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+        int data_len;
+        if (bus_type == BUS_LPB) {
+          data_len=msg[len_idx]-14;     // get packet length, then subtract
+        } else {
+          data_len=msg[len_idx]-11;     // get packet length, then subtract
+        }
 
 /*
         // dump data payload for unknown types
@@ -2984,7 +2990,7 @@ char* query(int line_start  // begin at this line (ProgNr)
                 sprintf(outBuf,"%s",strcpy_PF(buffer, enumstr+c));
                 client.print(F("<option value='"));
                 client.print(val);
-                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10] & bitmask) == (val & bitmask)) ) {
+                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10+data_len-2] & bitmask) == (val & bitmask)) ) {
                   client.print(F("' SELECTED>"));
                 } else {
                   client.print(F("'>"));
@@ -3618,7 +3624,7 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
     uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
-    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 1);
+    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
     uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
     if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
       break;
