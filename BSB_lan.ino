@@ -7,7 +7,7 @@
  * ATTENION:
  *       There is no waranty that this system will not damage your heating system!
  *
- * Author: Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
+ * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *         (based on the code and work from many other developers. Many thanks!)
  *
@@ -73,6 +73,7 @@
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
  *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
+ *        - Marked all (known) OEM parameters with flag FL_OEM. OEM parameters are set by default as read-only. To make them writeable, change FL_OEM from 5 to 4 in BSB_lan_defs.h
  *        - Increased performance for querying several parameters at once (similar to category query)
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
@@ -2228,7 +2229,7 @@ int set(int line      // the ProgNr of the heater parameter
   if(i<0) return 0;        // no match
 
   // Check for readonly parameter
-  if(get_cmdtbl_flags(i) == FL_RONLY) {
+  if((get_cmdtbl_flags(i) & FL_RONLY) == FL_RONLY) {
 //  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
     Serial.println(F("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
@@ -2997,7 +2998,7 @@ char* query(int line_start  // begin at this line (ProgNr)
             }
 
             client.print(F("</select></td><td>"));
-            if (flags !=FL_RONLY) {
+            if ((flags & FL_RONLY) != FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set"));
               if (type == VT_BIT) {
                 client.print(F("bit"));
@@ -3025,7 +3026,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               client.print(strtod(pvalstr,NULL));
             }
             client.print(F("'></td><td>"));
-            if (flags !=FL_RONLY) {
+            if ((flags & FL_RONLY) != FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set("));
               client.print(line);
               client.print(F(","));
