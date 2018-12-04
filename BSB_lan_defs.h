@@ -435,7 +435,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8700, 9075,
   9500, 9627,
   10000, 10199,
-  10500, 10515
+  11000, 11067
 };
 
  /* Menue Strings */
@@ -2180,58 +2180,58 @@ const char STR10104[] PROGMEM = "INFO HK3/P - TBD";
 
 const char STR10200[] PROGMEM = "Unknown command";
 
-const char STR10504[] PROGMEM = "Mischervorlauftemperatur";
-const char STR10509[] PROGMEM = "Position Drehknopf";
-const char STR10511[] PROGMEM = "Präsenztaste";
-const char STR10512[] PROGMEM = "Verbleibende Ferientage";
-const char STR10519[] PROGMEM = "Heizperiode 1 Montag Start";
-const char STR10520[] PROGMEM = "Heizperiode 1 Montag Ende";
-const char STR10521[] PROGMEM = "Heizperiode 2 Montag Start";
-const char STR10522[] PROGMEM = "Heizperiode 2 Montag Ende";
-const char STR10523[] PROGMEM = "Heizperiode 3 Montag Start";
-const char STR10524[] PROGMEM = "Heizperiode 3 Montag Ende";
-const char STR10525[] PROGMEM = "Heizperiode 1 Dienstag Start";
-const char STR10526[] PROGMEM = "Heizperiode 1 Dienstag Ende";
-const char STR10527[] PROGMEM = "Heizperiode 2 Dienstag Start";
-const char STR10528[] PROGMEM = "Heizperiode 2 Dienstag Ende";
-const char STR10529[] PROGMEM = "Heizperiode 3 Dienstag Start";
-const char STR10530[] PROGMEM = "Heizperiode 3 Dienstag Ende";
-const char STR10531[] PROGMEM = "Heizperiode 1 Mittwoch Start";
-const char STR10532[] PROGMEM = "Heizperiode 1 Mittwoch Ende";
-const char STR10533[] PROGMEM = "Heizperiode 2 Mittwoch Start";
-const char STR10534[] PROGMEM = "Heizperiode 2 Mittwoch Ende";
-const char STR10535[] PROGMEM = "Heizperiode 3 Mittwoch Start";
-const char STR10536[] PROGMEM = "Heizperiode 3 Mittwoch Ende";
-const char STR10537[] PROGMEM = "Heizperiode 1 Donnerstag Start";
-const char STR10538[] PROGMEM = "Heizperiode 1 Donnerstag Ende";
-const char STR10539[] PROGMEM = "Heizperiode 2 Donnerstag Start";
-const char STR10540[] PROGMEM = "Heizperiode 2 Donnerstag Ende";
-const char STR10541[] PROGMEM = "Heizperiode 3 Donnerstag Start";
-const char STR10542[] PROGMEM = "Heizperiode 3 Donnerstag Ende";
-const char STR10543[] PROGMEM = "Heizperiode 1 Freitag Start";
-const char STR10544[] PROGMEM = "Heizperiode 1 Freitag Ende";
-const char STR10545[] PROGMEM = "Heizperiode 2 Freitag Start";
-const char STR10546[] PROGMEM = "Heizperiode 2 Freitag Ende";
-const char STR10547[] PROGMEM = "Heizperiode 3 Freitag Start";
-const char STR10548[] PROGMEM = "Heizperiode 3 Freitag Ende";
-const char STR10549[] PROGMEM = "Heizperiode 1 Samstag Start";
-const char STR10550[] PROGMEM = "Heizperiode 1 Samstag Ende";
-const char STR10551[] PROGMEM = "Heizperiode 2 Samstag Start";
-const char STR10552[] PROGMEM = "Heizperiode 2 Samstag Ende";
-const char STR10553[] PROGMEM = "Heizperiode 3 Samstag Start";
-const char STR10554[] PROGMEM = "Heizperiode 3 Samstag Ende";
-const char STR10555[] PROGMEM = "Heizperiode 1 Sonntag Start";
-const char STR10556[] PROGMEM = "Heizperiode 1 Sonntag Ende";
-const char STR10557[] PROGMEM = "Heizperiode 2 Sonntag Start";
-const char STR10558[] PROGMEM = "Heizperiode 2 Sonntag Ende";
-const char STR10559[] PROGMEM = "Heizperiode 3 Sonntag Start";
-const char STR10560[] PROGMEM = "Heizperiode 3 Sonntag Ende";
-const char STR10561[] PROGMEM = "Uhrzeit";
-const char STR10562[] PROGMEM = "QAA Modell";
-const char STR10564[] PROGMEM = "Zieltemperatur";
-const char STR10565[] PROGMEM = "Nächstes Schaltprogramm";
-const char STR10566[] PROGMEM = "Manuelles Heizen";
-const char STR10567[] PROGMEM = "Verbindung unterbrochen";
+const char STR11004[] PROGMEM = "Mischervorlauftemperatur";
+const char STR11009[] PROGMEM = "Position Drehknopf";
+const char STR11011[] PROGMEM = "Präsenztaste";
+const char STR11012[] PROGMEM = "Verbleibende Ferientage";
+const char STR11019[] PROGMEM = "Heizperiode 1 Montag Start";
+const char STR11020[] PROGMEM = "Heizperiode 1 Montag Ende";
+const char STR11021[] PROGMEM = "Heizperiode 2 Montag Start";
+const char STR11022[] PROGMEM = "Heizperiode 2 Montag Ende";
+const char STR11023[] PROGMEM = "Heizperiode 3 Montag Start";
+const char STR11024[] PROGMEM = "Heizperiode 3 Montag Ende";
+const char STR11025[] PROGMEM = "Heizperiode 1 Dienstag Start";
+const char STR11026[] PROGMEM = "Heizperiode 1 Dienstag Ende";
+const char STR11027[] PROGMEM = "Heizperiode 2 Dienstag Start";
+const char STR11028[] PROGMEM = "Heizperiode 2 Dienstag Ende";
+const char STR11029[] PROGMEM = "Heizperiode 3 Dienstag Start";
+const char STR11030[] PROGMEM = "Heizperiode 3 Dienstag Ende";
+const char STR11031[] PROGMEM = "Heizperiode 1 Mittwoch Start";
+const char STR11032[] PROGMEM = "Heizperiode 1 Mittwoch Ende";
+const char STR11033[] PROGMEM = "Heizperiode 2 Mittwoch Start";
+const char STR11034[] PROGMEM = "Heizperiode 2 Mittwoch Ende";
+const char STR11035[] PROGMEM = "Heizperiode 3 Mittwoch Start";
+const char STR11036[] PROGMEM = "Heizperiode 3 Mittwoch Ende";
+const char STR11037[] PROGMEM = "Heizperiode 1 Donnerstag Start";
+const char STR11038[] PROGMEM = "Heizperiode 1 Donnerstag Ende";
+const char STR11039[] PROGMEM = "Heizperiode 2 Donnerstag Start";
+const char STR11040[] PROGMEM = "Heizperiode 2 Donnerstag Ende";
+const char STR11041[] PROGMEM = "Heizperiode 3 Donnerstag Start";
+const char STR11042[] PROGMEM = "Heizperiode 3 Donnerstag Ende";
+const char STR11043[] PROGMEM = "Heizperiode 1 Freitag Start";
+const char STR11044[] PROGMEM = "Heizperiode 1 Freitag Ende";
+const char STR11045[] PROGMEM = "Heizperiode 2 Freitag Start";
+const char STR11046[] PROGMEM = "Heizperiode 2 Freitag Ende";
+const char STR11047[] PROGMEM = "Heizperiode 3 Freitag Start";
+const char STR11048[] PROGMEM = "Heizperiode 3 Freitag Ende";
+const char STR11049[] PROGMEM = "Heizperiode 1 Samstag Start";
+const char STR11050[] PROGMEM = "Heizperiode 1 Samstag Ende";
+const char STR11051[] PROGMEM = "Heizperiode 2 Samstag Start";
+const char STR11052[] PROGMEM = "Heizperiode 2 Samstag Ende";
+const char STR11053[] PROGMEM = "Heizperiode 3 Samstag Start";
+const char STR11054[] PROGMEM = "Heizperiode 3 Samstag Ende";
+const char STR11055[] PROGMEM = "Heizperiode 1 Sonntag Start";
+const char STR11056[] PROGMEM = "Heizperiode 1 Sonntag Ende";
+const char STR11057[] PROGMEM = "Heizperiode 2 Sonntag Start";
+const char STR11058[] PROGMEM = "Heizperiode 2 Sonntag Ende";
+const char STR11059[] PROGMEM = "Heizperiode 3 Sonntag Start";
+const char STR11060[] PROGMEM = "Heizperiode 3 Sonntag Ende";
+const char STR11061[] PROGMEM = "Uhrzeit";
+const char STR11062[] PROGMEM = "QAA Modell";
+const char STR11064[] PROGMEM = "Zieltemperatur";
+const char STR11065[] PROGMEM = "Nächstes Schaltprogramm";
+const char STR11066[] PROGMEM = "Manuelles Heizen";
+const char STR11067[] PROGMEM = "Verbindung unterbrochen";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -4036,13 +4036,13 @@ const char ENUM8749[] PROGMEM_LATEST = {     // numerical values unverified
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
 
 // PPS Betriebsart
-const char ENUM10510[] PROGMEM_LATEST = {
+const char ENUM11010[] PROGMEM_LATEST = {
   "\x00 Automatisch\0" 
   "\x01 Manuell\0"
   "\x02 Aus"
 };
 
-const char ENUM10562[] PROGMEM_LATEST = {
+const char ENUM11062[] PROGMEM_LATEST = {
   "\x52 QAA 50\0" 
   "\x53 QAA 70"
 };
@@ -4443,7 +4443,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D04AD,  CAT_HK1,              VT_ENUM,          880,   STR880,   sizeof(ENUM880),      ENUM880,      DEFAULT_FLAG, DEV_ALL}, // HK1 Pumpe Drehzahlreduktion
 {0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum // todo die ID gibt es, aber sie gehoert nicht zu diesem Parameter
 {0x053D115E,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
-{0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum // todo die ID gibt es, aber sie gehoert nicht zu diesem Parameter
+{0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum 
 {0x053D115F,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Maximum
 {0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
 {0x113D304F,  CAT_HK1,              VT_PERCENT5,      885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
@@ -4583,6 +4583,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D0571,  CAT_TW,               VT_ONOFF,         1600,  STR1600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
@@ -6012,7 +6013,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D051C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8318,  STR8318,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur Maximum
 {0x053D130E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8319,  STR8319,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Teil 2 zu 8310 an Brötje WMS 24 "Regeltemperatur"
 {0x053D130D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8320,  STR8320,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Teil 2 zu 8311 an Brötje WMS 24 "Regelsollwert"
-{0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebläsedrehzahl TODO Divisor? - Broetje NovoCondens WOB20-25
+{0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebläsedrehzahl - Broetje NovoCondens WOB20-25
+{0x113D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
@@ -6374,8 +6376,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Lines below seem to have found an explanation.
 {0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
-{0x31000212,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
-{0x313D0212,  CAT_USER_DEFINED,     VT_UNKNOWN,       10101, STR10101, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
@@ -6387,25 +6387,51 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 //{0x313D0571,  CAT_USER_DEFINED,     VT_BYTE,          10111, STR10111, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserbereitung
 //{0x2E3E0574,  CAT_USER_DEFINED,     VT_BYTE,          10112, STR10112, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heizbetrieb
 
-{0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID)
-{0x053D0064,  CAT_USER_DEFINED,     VT_UNKNOWN,       10201, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 61 00 88 00 04 53 FD 02 63
-{0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 (ASCII: A006103 - some kind of device serial number?)
-{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10203, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x053D0006,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
+{0x053D0007,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
+{0x053D000C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
+{0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
+{0x053D0064,  CAT_USER_DEFINED,     VT_UNKNOWN,       10201, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 61 00 88 00 04 53 FD 02 63 / on RVS43.222: 00 0A 00 00 7A A6
+{0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00
+{0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 (ASCII: "A006103" - some kind of device serial number?) / on RVS43.222: 41 30 30 36 30 5A 32 00 (ASCII: "A0060Z2")
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10203, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00
 {0x053D006B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x053D0094,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 (ASCII: "00")
+{0x053D0095,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 33 32 31 37 34 32 00 00 00 00 00 00 00 00 00 00 (ASCII: "321742")
+{0x053D0096,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 {0x053D009A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00
 {0x053D009B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10207, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x053D009C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00
 {0x053D009D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16
 {0x053D009E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16
+{0x053D021D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 0D F6
+{0x053D021F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 5D
+{0x053D03F9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
+{0x053D0416,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
+{0x053D045F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0461,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0465,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0466,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D046D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D046F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 03 E8    // dec. 1000
+{0x053D0471,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0473,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 03 E8    // dec. 1000
+{0x053D047F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 FF FF 00 00 00 00 00 00 00 00 00 00
+{0x053D0489,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 00 00
 {0x053D04B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10211, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16
 {0x053D04B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10212, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16
 {0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10213, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x053D04C3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10214, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x053D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10215, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 23
-{0x053D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10216, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
+{0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64
+{0x053D058D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
+{0x053D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10215, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 23 / on RVS43.222: 01 1E
+{0x053D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10216, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 / on RVS43.222: 01 05
 {0x053D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10217, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03
 {0x053D05A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10218, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x053D061F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
+{0x053D063E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10219, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x053D0951,  CAT_USER_DEFINED,     VT_UNKNOWN,       10220, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E 00
 {0x053D3052,  CAT_USER_DEFINED,     VT_UNKNOWN,       10221, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
@@ -6482,10 +6508,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D3040,  CAT_USER_DEFINED,     VT_UNKNOWN,       10286, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 {0x093D3041,  CAT_USER_DEFINED,     VT_UNKNOWN,       10287, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
 {0x093D3047,  CAT_USER_DEFINED,     VT_UNKNOWN,       10288, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 5E
-{0x093D3055,  CAT_USER_DEFINED,     VT_UNKNOWN,       10289, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 E8   // dec. 1000
+{0x093D3055,  CAT_USER_DEFINED,     VT_UNKNOWN,       10289, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 E8    // dec. 1000
 {0x093D3056,  CAT_USER_DEFINED,     VT_UNKNOWN,       10290, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x093D3057,  CAT_USER_DEFINED,     VT_UNKNOWN,       10291, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 09 C4   // dec. 2500
-{0x093D3058,  CAT_USER_DEFINED,     VT_UNKNOWN,       10292, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05 DC   // dec. 1500
+{0x093D3057,  CAT_USER_DEFINED,     VT_UNKNOWN,       10291, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 09 C4    // dec. 2500
+{0x093D3058,  CAT_USER_DEFINED,     VT_UNKNOWN,       10292, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05 DC    // dec. 1500
 
 // no Command IDs found via brute force for major group 0x59 on LMU74.100A136
 
@@ -6499,76 +6525,214 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x493D0864,  CAT_USER_DEFINED,     VT_UNKNOWN,       10299, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
 {0x493D306E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10299, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 
+{0x113D0CC3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x113D2FE2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 54
+{0x113D304B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 05
+{0x113D3059,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+{0x113D305A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 4B
+{0x113D305B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+{0x113D305C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 4B
+{0x113D305E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 1A
+{0x113D3061,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 58
+{0x113D3062,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 B8
+{0x113D3068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x113D3069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FA
+{0x113D3079,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E
+{0x113D307A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E
+{0x113D307B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03
+
+{0x063D0000,  CAT_USER_DEFINED,     VT_UNKNOWN,       10302, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 27 00
+{0x063D0001,  CAT_USER_DEFINED,     VT_UNKNOWN,       10303, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 4C 4D 55 37 00 00 00 00 00 00 00 00 00 00 00 00 01
+{0x063D0002,  CAT_USER_DEFINED,     VT_UNKNOWN,       10304, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 61
+{0x063D0003,  CAT_USER_DEFINED,     VT_UNKNOWN,       10305, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 88
+{0x063D0004,  CAT_USER_DEFINED,     VT_UNKNOWN,       10306, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 04
+{0x063D000B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10307, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 76 0B 1E 05 0D 28 22 00
+{0x063D000E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10308, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 70
+{0x063D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10309, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63
+{0x063D0064,  CAT_USER_DEFINED,     VT_UNKNOWN,       10310, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 61 00 88 00 04 53 FD 02 63
+{0x063D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10311, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00
+{0x063D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10312, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D006B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10313, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10314, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 76 0B 1E 05 0D 29 1A 00
+{0x063D0075,  CAT_USER_DEFINED,     VT_UNKNOWN,       10315, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D0090,  CAT_USER_DEFINED,     VT_UNKNOWN,       10316, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10317, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D0099,  CAT_USER_DEFINED,     VT_UNKNOWN,       10318, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+{0x063D009A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10319, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00
+{0x063D009B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10320, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D009C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10321, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00
+{0x063D009D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10322, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16
+{0x063D009E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10323, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16
+{0x063D00C9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10324, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
+{0x063D00CA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10325, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10326, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 04 00 00 19
+{0x063D03F1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10327, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+{0x063D03F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10328, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 27 10
+{0x063D0483,  CAT_USER_DEFINED,     VT_UNKNOWN,       10329, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
+{0x063D04B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10330, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16
+{0x063D04B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10331, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16
+{0x063D04B8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10332, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D04C3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10333, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10334, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 01 00 00
+{0x063D051F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10335, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 01 00 00
+{0x063D0521,  CAT_USER_DEFINED,     VT_UNKNOWN,       10336, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 41
+{0x063D0534,  CAT_USER_DEFINED,     VT_UNKNOWN,       10337, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 01 00 00
+{0x063D05B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10338, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10339, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 23
+{0x063D05D9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10340, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 04
+{0x063D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10341, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
+{0x063D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10342, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03
+{0x063D05E1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10343, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D05E2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10344, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D05F0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10345, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 EE
+{0x063D05F2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10346, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 23
+{0x063D05FE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10347, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
+{0x063D0600,  CAT_USER_DEFINED,     VT_UNKNOWN,       10348, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05
+{0x063D06A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10349, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D06DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10350, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 99
+{0x063D06DE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10351, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 A0
+{0x063D06DF,  CAT_USER_DEFINED,     VT_UNKNOWN,       10352, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 99
+{0x063D06E0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10353, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 85
+{0x063D06E1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10354, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07A1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10355, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 63
+{0x063D07A2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10356, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 63
+{0x063D07A3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10357, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 72
+{0x063D07A4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10358, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 72
+{0x063D07A5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10359, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07A6,  CAT_USER_DEFINED,     VT_UNKNOWN,       10360, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10361, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07AA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10362, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07AD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10363, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D07AE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10364, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10365, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D0857,  CAT_USER_DEFINED,     VT_UNKNOWN,       10366, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 80
+{0x063D0858,  CAT_USER_DEFINED,     VT_UNKNOWN,       10367, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 C0
+{0x063D0951,  CAT_USER_DEFINED,     VT_UNKNOWN,       10368, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E 00
+{0x063D0AA0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10369, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10370, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10371, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10372, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10373, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10374, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D0AA6,  CAT_USER_DEFINED,     VT_UNKNOWN,       10375, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 06 00 16 00 98 00 18 00 98 00 18 00
+{0x063D2FF1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10376, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
+{0x063D2FF2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10377, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D2FF3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10378, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 03
+{0x063D2FF5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10379, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
+{0x063D2FF6,  CAT_USER_DEFINED,     VT_UNKNOWN,       10380, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05
+{0x063D2FF7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10381, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 1A
+{0x063D2FF9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10382, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05
+{0x063D2FFA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10383, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D2FFB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10384, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 03
+{0x063D2FFD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10385, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
+{0x063D2FFE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10386, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0E
+{0x063D2FFF,  CAT_USER_DEFINED,     VT_UNKNOWN,       10387, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 66
+{0x063D3001,  CAT_USER_DEFINED,     VT_UNKNOWN,       10388, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D3002,  CAT_USER_DEFINED,     VT_UNKNOWN,       10389, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D3003,  CAT_USER_DEFINED,     VT_UNKNOWN,       10390, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+{0x063D3046,  CAT_USER_DEFINED,     VT_UNKNOWN,       10391, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 04
+{0x063D3050,  CAT_USER_DEFINED,     VT_UNKNOWN,       10392, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 96
+{0x063D3052,  CAT_USER_DEFINED,     VT_UNKNOWN,       10393, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
+{0x063D3053,  CAT_USER_DEFINED,     VT_UNKNOWN,       10394, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 BE
+{0x063D306A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10395, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
+{0x063D306B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10396, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D306C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10397, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D306D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10398, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D306F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10399, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
+{0x063D3070,  CAT_USER_DEFINED,     VT_UNKNOWN,       10400, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D3071,  CAT_USER_DEFINED,     VT_UNKNOWN,       10401, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D3076,  CAT_USER_DEFINED,     VT_UNKNOWN,       10402, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x063D3078,  CAT_USER_DEFINED,     VT_UNKNOWN,       10403, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+
+{0x213D063A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10404, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x213D0666,  CAT_USER_DEFINED,     VT_UNKNOWN,       10405, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 F0
+{0x213D066A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10406, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x213D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10407, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x213D066C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10408, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x213D0684,  CAT_USER_DEFINED,     VT_UNKNOWN,       10409, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40
+{0x213D2FAE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10410, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05
+{0x213D3044,  CAT_USER_DEFINED,     VT_UNKNOWN,       10411, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 06
+{0x213D3075,  CAT_USER_DEFINED,     VT_UNKNOWN,       10412, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
+
+{0x0D3D2F9C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10413, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0A
+{0x0D3D2FB8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10414, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 0A
+{0x0D3D2FB9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10415, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 05
+{0x0D3D2FBB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10416, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 55
+{0x0D3D300A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10417, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 11
+{0x0D3D304E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10418, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
+{0x0D3D3060,  CAT_USER_DEFINED,     VT_UNKNOWN,       10419, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+{0x0D3D3067,  CAT_USER_DEFINED,     VT_UNKNOWN,       10420, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
+
 
 //PPS-Bus commands
 
-{0x2D290000,  CAT_PPS,              VT_TEMP,          10500, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
-{0x2D570001,  CAT_PPS,              VT_TEMP,          10501, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
-{0x2D2E0002,  CAT_PPS,              VT_TEMP,          10502, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D0E0003,  CAT_PPS,              VT_TEMP,          10503, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
-{0x2D2C0004,  CAT_PPS,              VT_TEMP,          10504, STR10504, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
-{0x2D570005,  CAT_PPS,              VT_ONOFF,         10505, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
-{0x2D2B0006,  CAT_PPS,              VT_TEMP,          10506, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0007,  CAT_PPS,              VT_TEMP,          10507, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0008,  CAT_PPS,              VT_TEMP,          10508, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
-{0x2D180009,  CAT_PPS,              VT_TEMP,          10509, STR10509, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D49000A,  CAT_PPS,              VT_ENUM,          10510, STR700,   sizeof(ENUM10510),    ENUM10510,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         10511, STR10511, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
-{0x2D7C000C,  CAT_PPS,              VT_BYTE,          10512, STR10512, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D08000E,  CAT_PPS,              VT_TEMP,          10514, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D09000F,  CAT_PPS,              VT_TEMP,          10515, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D1B0010,  CAT_PPS,              VT_TEMP,          10516, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
-{0x2D1B0011,  CAT_PPS,              VT_TEMP,          10517, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
-{0x2D280012,  CAT_PPS,              VT_TEMP,          10518, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
-{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  10519, STR10519, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
-{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  10520, STR10520, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
-{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  10521, STR10521, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
-{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  10522, STR10522, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
-{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  10523, STR10523, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
-{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  10524, STR10524, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
-{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  10525, STR10525, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
-{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  10526, STR10526, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
-{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  10527, STR10527, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
-{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  10528, STR10528, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
-{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  10529, STR10529, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
-{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  10530, STR10530, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
-{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  10531, STR10531, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
-{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  10532, STR10532, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
-{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  10533, STR10533, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
-{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  10534, STR10534, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
-{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  10535, STR10535, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
-{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  10536, STR10536, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
-{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  10537, STR10537, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
-{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  10538, STR10538, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
-{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  10539, STR10539, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
-{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  10540, STR10540, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
-{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  10541, STR10541, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
-{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  10542, STR10542, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
-{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  10543, STR10543, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
-{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  10544, STR10544, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
-{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  10545, STR10545, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
-{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  10546, STR10546, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
-{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  10547, STR10547, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
-{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  10548, STR10548, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
-{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  10549, STR10549, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
-{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  10550, STR10550, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
-{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  10551, STR10551, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
-{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  10552, STR10552, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
-{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  10553, STR10553, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
-{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  10554, STR10554, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
-{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  10555, STR10555, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
-{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  10556, STR10556, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
-{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  10557, STR10557, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
-{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  10558, STR10558, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
-{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  10559, STR10559, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
-{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  10560, STR10560, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
-{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      10561, STR10561, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
-{0x2D38003E,  CAT_PPS,              VT_ENUM,          10562, STR10562, sizeof(ENUM10562),    ENUM10562,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
-{0x2D4D003F,  CAT_PPS,              VT_BYTE,          10563, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
-{0x2D190040,  CAT_PPS,              VT_TEMP,          10564, STR10564, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
-{0x2D690041,  CAT_PPS,              VT_TEMP,          10565, STR10565, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
-{0x2D480042,  CAT_PPS,              VT_ONOFF,         10566, STR10566, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
-{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         10567, STR10567, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
+{0x2D290000,  CAT_PPS,              VT_TEMP,          11000, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
+{0x2D570001,  CAT_PPS,              VT_TEMP,          11001, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
+{0x2D2E0002,  CAT_PPS,              VT_TEMP,          11002, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D0E0003,  CAT_PPS,              VT_TEMP,          11003, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
+{0x2D2C0004,  CAT_PPS,              VT_TEMP,          11004, STR11004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D570005,  CAT_PPS,              VT_ONOFF,         11005, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
+{0x2D2B0006,  CAT_PPS,              VT_TEMP,          11006, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D1E0007,  CAT_PPS,              VT_TEMP,          11007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
+{0x2D0B0008,  CAT_PPS,              VT_TEMP,          11008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D180009,  CAT_PPS,              VT_TEMP,          11009, STR11009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D49000A,  CAT_PPS,              VT_ENUM,          11010, STR700,   sizeof(ENUM11010),    ENUM11010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         11011, STR11011, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D7C000C,  CAT_PPS,              VT_BYTE,          11012, STR11012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
+{0x2D08000E,  CAT_PPS,              VT_TEMP,          11014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D09000F,  CAT_PPS,              VT_TEMP,          11015, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
+{0x2D1B0010,  CAT_PPS,              VT_TEMP,          11016, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
+{0x2D1B0011,  CAT_PPS,              VT_TEMP,          11017, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
+{0x2D280012,  CAT_PPS,              VT_TEMP,          11018, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  11019, STR11019, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
+{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  11020, STR11020, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
+{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  11021, STR11021, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
+{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  11022, STR11022, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
+{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  11023, STR11023, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
+{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  11024, STR11024, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
+{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  11025, STR11025, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
+{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  11026, STR11026, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
+{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  11027, STR11027, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
+{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  11028, STR11028, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
+{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  11029, STR11029, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
+{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  11030, STR11030, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
+{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  11031, STR11031, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
+{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  11032, STR11032, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
+{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  11033, STR11033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
+{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  11034, STR11034, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
+{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  11035, STR11035, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
+{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  11036, STR11036, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
+{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  11037, STR11037, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
+{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  11038, STR11038, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
+{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  11039, STR11039, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
+{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  11040, STR11040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
+{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  11041, STR11041, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
+{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  11042, STR11042, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
+{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  11043, STR11043, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
+{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  11044, STR11044, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
+{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  11045, STR11045, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
+{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  11046, STR11046, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
+{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  11047, STR11047, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
+{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  11048, STR11048, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
+{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  11049, STR11049, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
+{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  11050, STR11050, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
+{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  11051, STR11051, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
+{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  11052, STR11052, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
+{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  11053, STR11053, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
+{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  11054, STR11054, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
+{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  11055, STR11055, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
+{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  11056, STR11056, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
+{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  11057, STR11057, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
+{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  11058, STR11058, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
+{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  11059, STR11059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
+{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  11060, STR11060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
+{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      11061, STR11061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
+{0x2D38003E,  CAT_PPS,              VT_ENUM,          11062, STR11062, sizeof(ENUM11062),    ENUM11062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
+{0x2D4D003F,  CAT_PPS,              VT_BYTE,          11063, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
+{0x2D190040,  CAT_PPS,              VT_TEMP,          11064, STR11064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
+{0x2D690041,  CAT_PPS,              VT_TEMP,          11065, STR11065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
+{0x2D480042,  CAT_PPS,              VT_ONOFF,         11066, STR11066, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
+{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         11067, STR11067, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
@@ -6639,8 +6803,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 #define PPS_CON 67
 
 #define PPS_ANZ 68
-#define LAST_ENUM_NR 10562
-#define LAST_ENUM ENUM10562
+#define LAST_ENUM_NR 11062
+#define LAST_ENUM ENUM11062
 
 //PPS-Bus commands end
 
@@ -6649,7 +6813,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // we find a better explanation for them. !Assign STR99999 to all of them.!
 */
 // Placeholder to keep the compiler happy with STR99999:
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       10999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}        
 };
