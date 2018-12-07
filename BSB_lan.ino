@@ -323,7 +323,9 @@
 #include "html_strings.h"
 
 #include <Ethernet.h>
+#ifdef WIFI
 #include "src/WiFiEsp/src/WiFiEsp.h"
+#endif
 
 IPAddress ip(IPAddr);
 #ifdef WIFI
@@ -446,6 +448,66 @@ uint8_t current_switchday = 0;
 /* ******************************************************************
  *      ************** Program code starts here **************
  * *************************************************************** */
+
+#ifdef WATCH_SOCKETS
+
+byte socketStat[MAX_SOCK_NUM];
+unsigned long connectTime[MAX_SOCK_NUM];
+
+#include <utility/w5100.h>
+#include <utility/socket.h>
+
+void ShowSockStatus()
+{
+  for (int i = 0; i < MAX_SOCK_NUM; i++) {
+    Serial.print(F("Socket#"));
+    Serial.print(i);
+    uint8_t s = W5100.readSnSR(i);
+    socketStat[i] = s;
+    Serial.print(F(":0x"));
+    Serial.print(s,16);
+    Serial.print(F(" "));
+    Serial.print(W5100.readSnPORT(i));
+    Serial.print(F(" D:"));
+    uint8_t dip[4];
+    W5100.readSnDIPR(i, dip);
+    for (int j=0; j<4; j++) {
+      Serial.print(dip[j],10);
+      if (j<3) Serial.print(".");
+    }
+    Serial.print(F("("));
+    Serial.print(W5100.readSnDPORT(i));
+    Serial.println(F(")"));
+  }
+}
+
+void checkSockStatus()
+{
+  unsigned long thisTime = millis();
+
+  for (int i = 0; i < MAX_SOCK_NUM; i++) {
+    uint8_t s = W5100.readSnSR(i);
+
+    if((s == 0x17) || (s == 0x1C)) {
+        if(thisTime - connectTime[i] > 30000UL) {
+          Serial.print(F("\r\nSocket frozen: "));
+          Serial.println(i);
+/*
+  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+  W5100.execCmdSn(s, Sock_CLOSE);
+  W5100.writeSnIR(s, 0xFF);
+  SPI.endTransaction();
+*/
+          close(i);
+        }
+    }
+    else connectTime[i] = thisTime;
+
+    socketStat[i] = W5100.readSnSR(i);
+  }
+}
+
+#endif
 
 /**  ****************************************************************
  *  Function: outBufclear()
@@ -6118,8 +6180,13 @@ ich mir da nicht)
 
 #endif
 
+#ifdef WATCH_SOCKETS
+    ShowSockStatus();
+    checkSockStatus();
+#endif
+
 // while we are here, update date/time as well...
-//    SetDateTime();      
+//    SetDateTime();
   }
 // end calculate averages
 
@@ -6261,6 +6328,7 @@ custom_timer = millis();
 
 } // --- loop () ---
 
+#ifdef WIFI
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
@@ -6278,6 +6346,7 @@ void printWifiStatus()
   Serial.print(rssi);
   Serial.println(" dBm");
 }
+#endif
 
 /** *****************************************************************
  *  Function: setup()
