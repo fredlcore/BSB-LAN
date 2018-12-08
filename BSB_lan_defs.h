@@ -2,6 +2,13 @@
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
+/* 
+ * TODO: If someone has some time to spare, replace multiple occasions of the same string with #define STRXXX STRYYY
+ * where YYY is the first occasion and XXX one of the subsequent occasions.
+ * To get a full list of string doublettes, use this command chain:
+ * cat BSB_lan_defs.h | grep "const char STR" | sed -e 's/.* = \(.*\);/\1/g;' | sort | uniq -c | sort | grep -v "^.*1 \""
+*/
+
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
 #define PROGMEM_LATEST __attribute__ (( __section__(".fini1") ))
 
