@@ -78,6 +78,7 @@
  *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
  *        - Marked all (known) OEM parameters with flag FL_OEM. OEM parameters are set by default as read-only. To make them writeable, change FL_OEM from 5 to 4 in BSB_lan_defs.h
  *        - Increased performance for querying several parameters at once (similar to category query)
+ *        - Added config option to define subnet.
  *        - Bugfix ENUM memory adressing
  *        - Bugfix in reset function (/N)
  *        - Added favicon.ico
@@ -335,6 +336,9 @@ EthernetServer server(Port);
 #endif
 #ifdef GatewayIP
 IPAddress gateway(GatewayIP);
+#endif
+#ifdef SubnetIP
+IPAddress subnet(SubnetIP);
 #endif
 uint8_t len_idx, pl_start;
 uint8_t myAddr = bus.getBusAddr();
@@ -6466,8 +6470,12 @@ void setup() {
 
   // start the Ethernet connection and the server:
 #ifndef WIFI
-#ifdef GatewayIP
-  Ethernet.begin(mac, ip, gateway);
+#ifdef GatewayIP        // assume that DNS is equal to gateway
+#ifdef SubnetIP
+  Ethernet.begin(mac, ip, gateway, gateway, subnet);
+#else
+  Ethernet.begin(mac, ip, gateway, gateway);
+#endif
 #else
   Ethernet.begin(mac, ip);
 #endif 
