@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 
-# This script calls BSB-LAN and queries all possible cominations within one
+# This script calls BSB-LAN and queries all possible combinations within one
 # major command area (defined in the fist byte of $baseID. The second byte
 # seems to be static or irrelevant and is mostly used as 3D which is why it is
 # hardcoded here.
@@ -18,7 +18,8 @@ use strict;
 # Testing one major category will take approx. 18 hours, more if you increase
 # the delay between queries via the sleep command (now at 1/4 second).
 
-# Set $URL to point to your BSB-LAN installation, including an active passkey.
+# Set $URL to point to your BSB-LAN installation, including (optional) passkey.
+# Note: No trailing slash!
 
 my $URL = "http://192.168.1.50/4444";
 my $baseID = 0x05;
@@ -44,7 +45,7 @@ for ($counter; $counter < 65536; $counter++) {
     while ($answer le " " && $retries < 3) {
       print "$ID\n";
       $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC 80 0."`;
-      if ($answer !~ /DC 80 0. 0C 08/ && $answer gt " ") {
+      if ($answer !~ /DC 80 0. 0C 08/ && $answer !~ /DC 80 0A/ && $answer gt " ") {
         print LOG "$ID\n";
         print LOG $answer . "\n";
         print "$answer" . "\n";
