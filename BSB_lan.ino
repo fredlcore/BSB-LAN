@@ -62,7 +62,8 @@
  *          Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.
  *        - Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!
  *        - Lots of new parameters coming from device family 123, please run /Q to see if some parameters also work for your heater!
- *        - Added further PPS-Bus commands
+ *        - Lots of new yet unknown parameters through brute force querying :) (parameter numbers 10200 and above)
+ *        - Added further PPS-Bus commands, moved parameter numbers to 11000 and above
  *        - Default PPS mode now "listening". 
  *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening, 
  *          i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
