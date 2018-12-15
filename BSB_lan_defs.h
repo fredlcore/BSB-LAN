@@ -441,7 +441,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8300, 8570,
   8700, 9075,
   9500, 9627,
-  10000, 10199,
+  10000, 10999,
   11000, 11067
 };
 
@@ -2320,6 +2320,7 @@ const char ENUM1000[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x0
 const char ENUM1300[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduziert\0\x03 Komfort"};
 #define ENUM1350 ENUM850
 #define ENUM1380 ENUM780
+#define ENUM1450 ENUM850
 
 #define ENUM1461 ENUM861         // Uebertemperaturabnahme HK P/3
 #define ENUM1500 ENUM900         // Betriebsartumschaltung HK P/3
@@ -6438,15 +6439,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D04B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10233, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16 / same on RVS43.222
 {0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10234, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D04C3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10235, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
-{0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10236, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00 / same on RVS43.222
-{0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10237, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64 / same on RVS43.222
-{0x053D058D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10238, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 / same on RVS43.222
+{0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10236, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
+{0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10237, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64
+{0x053D058D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10238, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10239, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 23 / on RVS43.222: 01 1E
 {0x053D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10240, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 / on RVS43.222: 01 05
 {0x053D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10241, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 / same on RVS43.222
 {0x053D05A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10242, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
-{0x053D061F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10243, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 / same on RVS43.222
-{0x053D063E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10244, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 / same on RVS43.222
+{0x053D061F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10243, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
+{0x053D063E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10244, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D0655,  CAT_USER_DEFINED,     VT_UNKNOWN,       10245, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D06A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10246, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D06AA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10247, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
@@ -6505,12 +6506,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // 0x063D....
 
-{0x063D000B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10300, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 76 0B 1E 05 0D 28 22 00 / on RVS43.222:  00 76 0C 02 07 14 2A 28 00
-{0x063D006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10301, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 76 0B 1E 05 0D 29 1A 00 / on RVS43.222:  00 76 0C 02 07 14 2B 1D 00
-{0x063D063E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10302, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x063D0799,  CAT_USER_DEFINED,     VT_UNKNOWN,       10303, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 06 B3
 {0x063D306F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10304, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
 /*
+0x063D000B and 0x053D000B have same payload
+0x063D006C and 0x053D006C have same payload
 0x063D0000 and 0x053D0000 have same payload
 0x063D0001 and 0x053D0001 have same payload
 0x063D0002 and 0x053D0002 have same payload
@@ -6618,6 +6618,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x063D05FE and 0x053D05FE have same payload
 0x063D0600 and 0x053D0600 have same payload
 0x063D061F and 0x053D061F have same payload
+0x063D063E and 0x053D063E have same payload
 0x063D0655 and 0x053D0655 have same payload
 0x063D06A9 and 0x053D06A9 have same payload
 0x063D06AA and 0x053D06AA have same payload
@@ -6785,9 +6786,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 */
 
 // 0x073D....
-
-{0x073D006C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10305, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 76 0C 01 06 16 38 2F 00 / on RVS43.222:  00 76 0C 04 02 10 3A 02 00
-{0x073D04A2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10306, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 10
 /*
 0x073D0000 and 0x053D0000 have same payload
 0x073D0001 and 0x053D0001 have same payload
@@ -6807,6 +6805,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x073D0069 and 0x053D0069 have same payload
 0x073D006A and 0x053D006A have same payload
 0x073D006B and 0x053D006B have same payload
+0x073D006C and 0x053D006C have same payload
 0x073D006D and 0x053D006D have same payload
 0x073D0071 and 0x053D0071 have same payload
 0x073D0072 and 0x053D0072 have same payload
