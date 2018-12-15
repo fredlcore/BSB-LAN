@@ -1868,12 +1868,14 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_SHORT4: // s8 / 4 (signed)
             case VT_SECONDS_SHORT5: // s8 / 5 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
-            case VT_TEMP_SHORT5_US: // s8 / 2 (unsigned)
             case VT_TEMP_SHORT: // s8
+              printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
+              break;
             case VT_PRESSURE: // u8 / 10.0 bar
             case VT_PERCENT5: // u8 %
-            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
-              printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
+            case VT_TEMP_SHORT5_US: // u8 / 2 (unsigned)
+            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
+              printFIXPOINT_BYTE_US(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
