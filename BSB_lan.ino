@@ -423,6 +423,7 @@ double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
 int avgCounter = 1;
+int loopCount = 0;
 
 // uint_farptr_t enumstr_offset = 0;
 
@@ -4405,10 +4406,12 @@ ich mir da nicht)
     }
 #endif
 
+    loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
     while (client.connected()) {
       if (client.available()) {
+        loopCount = 0;
         c = client.read();       // read one character
         Serial.print(c);         // and send it to hardware UART
 
@@ -5943,6 +5946,14 @@ ich mir da nicht)
         webPrintFooter();
         break;
       } // endif, client available
+
+      delay(1);
+      loopCount++;
+      if(loopCount > 1000) {
+        client.stop();
+        Serial.println("\r\nTimeout");
+      }
+
     }
     // give the web browser time to receive the data
     delay(1);
@@ -6468,9 +6479,6 @@ void setup() {
   digitalWrite(4,HIGH);
 #endif
 
-  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
-  delay(3000);
-
   // start the Ethernet connection and the server:
 #ifndef WIFI
 #ifdef GatewayIP        // assume that DNS is equal to gateway
@@ -6487,6 +6495,10 @@ void setup() {
 #ifdef LOGGER
   digitalWrite(10,HIGH);
 #endif
+
+  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  delay(3000);
+
   server.begin();
 
 #ifdef ONE_WIRE_BUS
@@ -6561,6 +6573,14 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
     avgValues_Old[i] = -9999;
     avgValues_Current[i] = 0;
   }
+
+#ifdef WATCH_SOCKETS
+  unsigned long thisTime = millis();
+
+  for(int i=0;i<MAX_SOCK_NUM;i++) {
+    connectTime[i] = thisTime;
+  }
+#endif
 
 #ifdef LOGGER
 
