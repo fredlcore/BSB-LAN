@@ -300,6 +300,7 @@ inline bool BSB::_send(byte* msg) {
       msg[len] = crc;
     }
   }
+
 #if DEBUG_LL  
   print(msg);
 #endif  
