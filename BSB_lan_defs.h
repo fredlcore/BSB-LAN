@@ -50,6 +50,7 @@
 
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
 #define DEV_050_ALL  50,255 // Weishaupt
+#define DEV_64_ALL   64,255   // Brötje WGB 2 (über OCI420)
 #define DEV_085_ALL  85,255   // Elco Aquatop 8es
 #define DEV_090_ALL  90,255    // RVS43.222 SSR C
 #define DEV_095_ALL  95,255 // Brötje LogoBloc Unit L-UB 25C
@@ -2284,6 +2285,16 @@ const char ENUM47[] PROGMEM_LATEST = {  // NovoCondens WOB20C / WOB25C
 // Nur am Raumgerät sichtbar, numerical values are hypothetical
 const char ENUM48[] PROGMEM_LATEST = {"\x00 ?Keine\0\x01 ?Heizkreis 1\0\x02 ?Heizkreis 2\0\x03 ?Gemeinsam"};
 
+const char ENUM130[] PROGMEM_LATEST = {"\x00 Fehlt\0\x01 In Betrieb\0\x02 ?Kein Empfang\0\x03 ?Batt. wechseln"};
+#define ENUM131 ENUM130
+#define ENUM132 ENUM130
+#define ENUM133 ENUM130
+#define ENUM134 ENUM130
+#define ENUM135 ENUM130
+#define ENUM136 ENUM130
+#define ENUM137 ENUM130
+#define ENUM138 ENUM130
+
 /*
 const char ENUM648[] PROGMEM_LATEST = {"\x00 Frostschutz\0\x01 Reduziert"};
 #define ENUM658 ENUM648
@@ -3401,10 +3412,10 @@ const char ENUM6606[] PROGMEM_LATEST = {
 "\x00\x03 Uhrzeitlieferant Autonom\0"
 "\x01\x03 Uhrzeitlieferant Slave ohne Fernstellung\0"
 "\x02\x03 Uhrzeitlieferant Systemzeit Master\0"
-"\x00\x04 Status Busspannung aus\0"
-"\x04\x04 Status Busspannung ein\0"
-"\x00\x08 Verteilte Busspannung aus\0"
-"\x08\x08 Verteilte Busspannung Automatik\0"
+"\x00\x04 Verteilte Busspeisung aus\0"
+"\x04\x04 Verteilte Busspeisung Automatik\0"
+"\x00\x08 Status Bussppeisung aus\0"
+"\x08\x08 Status Busspeisung ein\0"
 "\x00\x10 Ereignisverhalten nicht erlaubt\0"
 "\x10\x10 Ereignisverhalten erlaubt\0"
 "\x00\x60 Brauchwasserzuordnung Eigener Regler\0"
@@ -4252,16 +4263,16 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Funk
 {CMD_UNKNOWN, CAT_FUNK,             VT_YESNO,         120,   STR120,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Binding
 {CMD_UNKNOWN, CAT_FUNK,             VT_ONOFF,         121,   STR121,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Testmode
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       130,   STR130,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumgerät 1 Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       131,   STR131,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumgerät 2 Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       132,   STR132,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumgerät P Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       133,   STR133,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außenfühler P Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       134,   STR134,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Repeater P Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       135,   STR135,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bedieneinheit 1 Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       136,   STR136,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bedieneinheit 2 Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       137,   STR137,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bedieneinheit P Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_UNKNOWN,       138,   STR138,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Servicegerät Status
-{CMD_UNKNOWN, CAT_FUNK,             VT_YESNO,         140,   STR140,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Alle Geräte löschen
+{0x053D0966,  CAT_FUNK,             VT_ENUM,          130,   STR130,   sizeof(ENUM130),      ENUM130,      DEFAULT_FLAG, DEV_ALL}, // Raumgerät 1 Status
+{0x053D0967,  CAT_FUNK,             VT_ENUM,          131,   STR131,   sizeof(ENUM131),      ENUM131,      DEFAULT_FLAG, DEV_ALL}, // Raumgerät 2 Status
+{0x053D0968,  CAT_FUNK,             VT_ENUM,          132,   STR132,   sizeof(ENUM132),      ENUM132,      DEFAULT_FLAG, DEV_ALL}, // Raumgerät P Status
+{0x053D096E,  CAT_FUNK,             VT_ENUM,          133,   STR133,   sizeof(ENUM133),      ENUM133,      DEFAULT_FLAG, DEV_ALL}, // Außenfühler P Status
+{0x053D0993,  CAT_FUNK,             VT_ENUM,          134,   STR134,   sizeof(ENUM134),      ENUM134,      DEFAULT_FLAG, DEV_ALL}, // Repeater P Status
+{0x053D096A,  CAT_FUNK,             VT_ENUM,          135,   STR135,   sizeof(ENUM135),      ENUM135,      DEFAULT_FLAG, DEV_ALL}, // Bediengerät 1 Status
+{0x053D096C,  CAT_FUNK,             VT_ENUM,          136,   STR136,   sizeof(ENUM136),      ENUM136,      DEFAULT_FLAG, DEV_ALL}, // Bediengerät 1 Status
+{0x053D096D,  CAT_FUNK,             VT_ENUM,          137,   STR137,   sizeof(ENUM137),      ENUM137,      DEFAULT_FLAG, DEV_ALL}, // Bediengerät P Status
+{0x053D096B,  CAT_FUNK,             VT_ENUM,          138,   STR138,   sizeof(ENUM138),      ENUM138,      DEFAULT_FLAG, DEV_ALL}, // Servicegerät Status
+{0x053D05E4,  CAT_FUNK,             VT_YESNO,         140,   STR140,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Alle Geräte löschen
 
 
 // Zeitprogramm Heizkreis 1
@@ -6472,13 +6483,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0959,  CAT_USER_DEFINED,     VT_UNKNOWN,       10266, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 14
 {0x053D095A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10267, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 05
 {0x053D0960,  CAT_USER_DEFINED,     VT_UNKNOWN,       10268, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D0966,  CAT_USER_DEFINED,     VT_UNKNOWN,       10269, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D0967,  CAT_USER_DEFINED,     VT_UNKNOWN,       10270, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D096A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10271, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D096B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10272, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D096E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10273, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D0992,  CAT_USER_DEFINED,     VT_UNKNOWN,       10274, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D0993,  CAT_USER_DEFINED,     VT_UNKNOWN,       10275, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09A4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10276, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09AC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10277, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09AD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10278, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
@@ -6611,7 +6616,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x063D05E0 and 0x053D05E0 have same payload
 0x063D05E1 and 0x053D05E1 have same payload
 0x063D05E2 and 0x053D05E2 have same payload
-0x063D05E4 and 0x053D05E4 have same payload
 0x063D05F0 and 0x053D05F0 have same payload
 0x063D05F1 and 0x053D05F1 have same payload
 0x063D05F2 and 0x053D05F2 have same payload
@@ -6704,13 +6708,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x063D0959 and 0x053D0959 have same payload
 0x063D095A and 0x053D095A have same payload
 0x063D0960 and 0x053D0960 have same payload
-0x063D0966 and 0x053D0966 have same payload
-0x063D0967 and 0x053D0967 have same payload
-0x063D096A and 0x053D096A have same payload
-0x063D096B and 0x053D096B have same payload
-0x063D096E and 0x053D096E have same payload
 0x063D0992 and 0x053D0992 have same payload
-0x063D0993 and 0x053D0993 have same payload
 0x063D09A0 and 0x053D09A0 have same payload
 0x063D09A1 and 0x053D09A1 have same payload
 0x063D09A2 and 0x053D09A2 have same payload
@@ -6889,7 +6887,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x073D05E0 and 0x053D05E0 have same payload
 0x073D05E1 and 0x053D05E1 have same payload
 0x073D05E2 and 0x053D05E2 have same payload
-0x073D05E4 and 0x053D05E4 have same payload
 0x073D05F0 and 0x053D05F0 have same payload
 0x073D05F1 and 0x053D05F1 have same payload
 0x073D05F2 and 0x053D05F2 have same payload
@@ -6985,13 +6982,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x073D0959 and 0x053D0959 have same payload
 0x073D095A and 0x053D095A have same payload
 0x073D0960 and 0x053D0960 have same payload
-0x073D0966 and 0x053D0966 have same payload
-0x073D0967 and 0x053D0967 have same payload
-0x073D096A and 0x053D096A have same payload
-0x073D096B and 0x053D096B have same payload
-0x073D096E and 0x053D096E have same payload
 0x073D0992 and 0x053D0992 have same payload
-0x073D0993 and 0x053D0993 have same payload
 0x073D09A0 and 0x053D09A0 have same payload
 0x073D09A1 and 0x053D09A1 have same payload
 0x073D09A2 and 0x053D09A2 have same payload
