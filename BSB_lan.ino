@@ -1955,7 +1955,6 @@ char *printTelegram(byte* msg, int query_line) {
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);
 //                    buffer[len]=0;
-
                     if (data_len == 2) {
                       printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+1],1);
                     } else {                            // Fujitsu: data_len == 3
@@ -3024,7 +3023,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         }
 */
         client.println(F("</td><td>"));
-        if (msg[4] != TYPE_ERR && type != VT_UNKNOWN) {
+        if (msg[4+(bus_type*4)] != TYPE_ERR && type != VT_UNKNOWN) {
           if(type == VT_ENUM || type == VT_BIT || type == VT_ONOFF) {
 
             client.print(F("<select "));
@@ -3078,7 +3077,7 @@ char* query(int line_start  // begin at this line (ProgNr)
                 sprintf(outBuf,"%s",strcpy_PF(buffer, enumstr+c));
                 client.print(F("<option value='"));
                 client.print(val);
-                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10+data_len-2] & bitmask) == (val & bitmask)) ) {
+                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10+(bus_type*3)+data_len-2] & bitmask) == (val & bitmask)) ) {
                   client.print(F("' SELECTED>"));
                 } else {
                   client.print(F("'>"));
@@ -3709,11 +3708,13 @@ void remove_char(char* str, char c) {
  * *************************************************************** */
  
 uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
     uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
     uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
     uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
+    
     if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
       break;
     }
@@ -5602,7 +5603,7 @@ ich mir da nicht)
           if (p[2]=='0') {
             bus_type=bus.setBusType(BUS_BSB, myAddr, destAddr);
             len_idx = 3;
-            pl_start = 6;
+            pl_start = 9;
             client.println(F("BSB"));
           }
           if (p[2]=='1') {
@@ -5613,10 +5614,10 @@ ich mir da nicht)
           } 
           if (p[2]=='2') {
             bus_type=bus.setBusType(BUS_PPS, myAddr);
-            len_idx = 1;
+            len_idx = 9;
             pl_start = 6;
             client.println(F("PPS"));
-          } 
+          }           
           if (bus_type != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
