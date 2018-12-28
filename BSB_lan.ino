@@ -6497,9 +6497,14 @@ void setup() {
   digitalWrite(10,HIGH);
 #endif
 
-  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
-  delay(3000);
-
+  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));  // ...and flash the LED during that time...
+  pinMode(LED_BUILTIN, OUTPUT);
+  for (int i=0; i<3; i++) {
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(500);                       // wait for a second
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(500);                       // wait for a second
+  }
   server.begin();
 
 #ifdef ONE_WIRE_BUS
