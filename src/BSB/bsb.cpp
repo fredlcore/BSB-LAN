@@ -346,6 +346,19 @@ Danach folgen nach gleichem Muster die folgenden Bits, Bit 7..0, Parity
 und Stop Bit.
 */
 
+/* 
+FH 27.12.2018: Wer auch immer das obige geschrieben hat, es macht bezogen auf
+den nachfolgenden Code keinen Sinn: 
+1. Es wird hier nicht bitweise gesendet, sondern ein ganzes Byte an
+BSBSoftwareSerial::write übergeben. Dort wird dann unabhängig davon, ob der 
+Bus frei ist oder nicht, dieses komplette Byte inkl. Start-, Stop- und Parity-
+Bytes gesendet.
+2. BSBSoftwareSerial::write gibt immer 1 zurück, außer wenn _tx_delay == 0 ist.
+Diese Variable wird aber nur einmalig bei Aufruf von BSBSoftwareSerial::begin
+gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
+So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
+*/
+
   cli();
   if (bus_type != 2) {
     for (i=0; i < msg[len_idx]+bus_type; i++) {	// same msg length difference as above
@@ -418,9 +431,12 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 
   i=15;
 
-  unsigned long timeout = millis() + 1000;
+  unsigned long timeout = millis() + 3000;
   while ((i > 0) && (millis() < timeout)) {
     if (GetMessage(rx_msg)) {
+      Serial.print(F("Duration: "));
+      Serial.println(3000-(timeout-millis()));
+
       i--;
       if (bus_type == 1) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
@@ -441,5 +457,6 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       delayMicroseconds(205);
     }
   }
+  Serial.println(F("Timeout waiting for answer..."));
   return false;
 }
