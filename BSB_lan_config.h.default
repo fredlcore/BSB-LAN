@@ -67,7 +67,7 @@ const int fixed_device_variant = 0;
 #define LANG_DE
 
 // Hide unknown parameters from web display (parameters will still be queried!)
-#define HIDE_UNKNOWN
+//#define HIDE_UNKNOWN
 
 /*
  * Define the pin for one wire temperature sensors
