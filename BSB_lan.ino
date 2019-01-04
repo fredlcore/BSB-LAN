@@ -2726,7 +2726,7 @@ int set(int line      // the ProgNr of the heater parameter
       param[5]=hour;
       param[6]=min;
       param[7]=sec;
-      param[8]=sec;
+      param[8]=0;
       param_len=9;
       }
       break;
