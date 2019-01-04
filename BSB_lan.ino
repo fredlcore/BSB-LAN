@@ -2718,13 +2718,14 @@ int set(int line      // the ProgNr of the heater parameter
 
       // Set up the command payload
       //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
-      param[0]=0x01; //???
+      param[0]=0x01;
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
       param[4]=dayofweek(d,m,y);
-      param[6]=hour;
-      param[7]=min;
+      param[5]=hour;
+      param[6]=min;
+      param[7]=sec;
       param[8]=sec;
       param_len=9;
       }
@@ -2741,7 +2742,7 @@ int set(int line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      ret=sscanf(val,"%d:%d-%d:%d|%d:%d-%d:%d|%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
       if(ret<4)      // BEGIN hour/minute and END hour/minute
         return 0;
