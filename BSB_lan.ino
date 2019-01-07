@@ -2735,7 +2735,7 @@ int set(int line      // the ProgNr of the heater parameter
     // block must be defined. Begin and end times are given hour minute.
     case VT_TIMEPROG: // TODO test it
       {
-      //S502=05:00-22:00|xx:xx-xx:xx|xx:xx-xx:xx
+      //S502=05:00-22:00_xx:xx-xx:xx_xx:xx-xx:xx
       //DISP->HEIZ SET  502 Zeitprogramm Heizkreis 1 -  Mi: 1. 05:00 - 22:00 2. --:-- - --:-- 3. --:-- - --:--
       //DC 8A 00 17 03 3D 05 0A 8E 05 00 16 00 80 00 00 00 80 00 00 00 08 98
       // Default values if not requested otherwise
@@ -4087,7 +4087,7 @@ void loop() {
               break;
             case 15:
               tx_msg[1] = 0x62;
-              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[2] = pps_values[PPS_E33];
               tx_msg[3] = pps_values[PPS_S33];
               tx_msg[4] = pps_values[PPS_E32];
               tx_msg[5] = pps_values[PPS_S32];
@@ -4096,7 +4096,7 @@ void loop() {
               break;
             case 16:
               tx_msg[1] = 0x63;
-              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[2] = pps_values[PPS_E43];
               tx_msg[3] = pps_values[PPS_S43];
               tx_msg[4] = pps_values[PPS_E42];
               tx_msg[5] = pps_values[PPS_S42];
@@ -4105,7 +4105,7 @@ void loop() {
               break;
             case 17:
               tx_msg[1] = 0x64;
-              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[2] = pps_values[PPS_E53];
               tx_msg[3] = pps_values[PPS_S53];
               tx_msg[4] = pps_values[PPS_E52];
               tx_msg[5] = pps_values[PPS_S52];
@@ -4114,7 +4114,7 @@ void loop() {
               break;
             case 18:
               tx_msg[1] = 0x65;
-              tx_msg[2] = pps_values[PPS_E13];
+              tx_msg[2] = pps_values[PPS_E63];
               tx_msg[3] = pps_values[PPS_S63];
               tx_msg[4] = pps_values[PPS_E62];
               tx_msg[5] = pps_values[PPS_S62];
