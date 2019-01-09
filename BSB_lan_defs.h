@@ -1559,6 +1559,7 @@ const char STR6631[] PROGMEM = "Externe Erzeuger bei Ökobetrieb";
 const char STR6632[] PROGMEM = "TA'grenze ext Erz beachten";
 const char STR6640[] PROGMEM = "Uhrbetrieb";
 const char STR6650[] PROGMEM = "Aussentemperatur Lieferant";
+const char STR6699[] PROGMEM = "Software Version Einschub";
 
 // Fehler
 const char STR6705[] PROGMEM = "SW Diagnosecode";
@@ -2259,15 +2260,10 @@ const char ENUM20[] PROGMEM_LATEST = { // numerical values are hypothetical
 "\x08 ?Ceski"
 };
 // numerical values are hypothetical
-const char ENUM22[] PROGMEM_LATEST = {"\x00 ?Temporär\0\x01 ?Permanent"};
+const char ENUM22[] PROGMEM_LATEST = {"\x01 Temporär\0\x02 Permanent"};
 const char ENUM23[] PROGMEM_LATEST = {"\x00 ?Code\0\x01 ?Code und Text"};
-const char ENUM29[] PROGMEM_LATEST = {"\x00 ?°C,bar\0\x01 ?°F,PSI"};
-const char ENUM42[] PROGMEM_LATEST = {	// numerical values are hypothetical
-"\x00 ?Heizkreis 1\0"
-"\x01 ?Heizkreis 1 und 2\0"
-"\x02 ?Heizkreis 1 und P\0"
-"\x03 ?Alle Heizkreise"
-};
+const char ENUM28[] PROGMEM_LATEST = {"\x01 Speichern automatisch\0\x02 Speichern mit Bestätigung"};
+const char ENUM29[] PROGMEM_LATEST = {"\x01 °C,bar\0\x02 °F,PSI"};
 const char ENUM40[] PROGMEM_LATEST = {
 "\x00 ?Raumgerät 1\0"
 "\x01 ?Raumgerät 2\0"
@@ -2276,8 +2272,14 @@ const char ENUM40[] PROGMEM_LATEST = {
 "\x04 ?Bediengerät 2\0"
 "\x05 Servicegerät"
 };
-const char ENUM44[] PROGMEM_LATEST = {"\x00 ?Gemeinsam mit HK1\0\x01 ?Unabhängig"};
-const char ENUM46[] PROGMEM_LATEST = {"\x00 ?Gemeinsam mit HK1\0\x01 ?Unabhängig"};
+const char ENUM42[] PROGMEM_LATEST = {	// numerical values are hypothetical
+"\x00 ?Heizkreis 1\0"
+"\x01 ?Heizkreis 1 und 2\0"
+"\x02 ?Heizkreis 1 und P\0"
+"\x03 ?Alle Heizkreise"
+};
+const char ENUM44[] PROGMEM_LATEST = {"\x01 Gemeinsam mit HK1\0\x02 Unabhängig"};
+#define ENUM46 ENUM44
 const char ENUM47[] PROGMEM_LATEST = {  // NovoCondens WOB20C / WOB25C
 "\x01 ?Heizkreis 1\0"
 "\x02 ?Für alle zugeord'Heizkreise"
@@ -2336,6 +2338,12 @@ const char ENUM1300[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x0
 #define ENUM1461 ENUM861         // Uebertemperaturabnahme HK P/3
 #define ENUM1500 ENUM900         // Betriebsartumschaltung HK P/3
 #define ENUM1500_2 ENUM900_2         // Betriebsartumschaltung HK P/3
+
+const char ENUM1600[] PROGMEM_LATEST = {
+"\x00 Aus\0"
+"\x01 Ein\0"
+"\x02 Eco"
+};
 
 const char ENUM1602[] PROGMEM_LATEST = {
 "\x00\x02 TWW-Push nicht aktiv\0"
@@ -4135,7 +4143,7 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xb1 Kritische untere Druckgrenze 2 (unterschritten)\0"
 "\xb2 Temperaturwächter Heizkreis 1\0"
 "\xb3 Temperaturwächter Heizkreis 2\0"
-"\xb7 Gerät im Parametriermodus 2\0"
+"\xb7 Gerät im Parametriermodus\0"
 "\xcf Störung Kühlkreis\0"
 "\xd9 Fühler- / Sensorfehler Sammelmeldung\0"
 "\xda Drucküberwachung Sammelmeldung\0"
@@ -4266,24 +4274,24 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 
 // nur Bedienteil -> keine Kommunikation über BSB
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sizeof(ENUM20),       ENUM20,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sprachauswahl
+{0x053D0BC3,  CAT_BEDIENEINHEIT,    VT_ENUM,          20,    STR20,    sizeof(ENUM20),       ENUM20,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sprachauswahl
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ONOFF,         21,    STR21,    0,                    NULL,         FL_RONLY, DEV_ALL}, // [0] - Bedieneinheit - Anzeige Sonderbetrieb
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          22,    STR22,    sizeof(ENUM22),       ENUM22,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Info
+{0x053D0BCA,  CAT_BEDIENEINHEIT,    VT_ENUM,          22,    STR22,    sizeof(ENUM22),       ENUM22,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Info
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          23,    STR23,    sizeof(ENUM23),       ENUM23,       DEFAULT_FLAG, DEV_ALL}, // Fehleranzeige Code | Code und Text
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       25,    STR25,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzeigekontrast
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ONOFF,         26,    STR26,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sperre Bedienung
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ONOFF,         27,    STR27,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sperre Programmierung
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       28,    STR28,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedieneinheit Direktverstellung
+{0x053D0BB9,  CAT_BEDIENEINHEIT,    VT_ONOFF,         26,    STR26,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sperre Bedienung
+{0x053D0BC8,  CAT_BEDIENEINHEIT,    VT_ONOFF,         27,    STR27,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Sperre Programmierung
+{0x053D0BC8,  CAT_BEDIENEINHEIT,    VT_ENUM,          28,    STR28,    sizeof(ENUM28),       ENUM28,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedieneinheit Direktverstellung
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          29,    STR29,    sizeof(ENUM29),       ENUM29,       DEFAULT_FLAG, DEV_ALL}, // [0] - Einheiten °C,bar oder °F,PSI
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_YESNO,         30,    STR30,    0,                    NULL,         FL_RONLY, DEV_ALL}, // Bedieneinheit Grundeinstellung sichern
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_YESNO,         31,    STR31,    0,                    NULL,         FL_RONLY, DEV_ALL}, // Bedieneinheit Grundeinstellung aktivieren
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          40,    STR40,    sizeof(ENUM40),       ENUM40,       DEFAULT_FLAG, DEV_ALL}, // Einsatz als
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          42,    STR42,    sizeof(ENUM42),       ENUM42,       DEFAULT_FLAG, DEV_ALL}, // Zuordnung Raumgerät 1
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          44,    STR44,    sizeof(ENUM44),       ENUM44,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedienung HK 2
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          46,    STR46,    sizeof(ENUM46),       ENUM46,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedienung HK P
+{0x053D0BC5,  CAT_BEDIENEINHEIT,    VT_ENUM,          44,    STR44,    sizeof(ENUM44),       ENUM44,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedienung HK 2
+{0x05050BC6,  CAT_BEDIENEINHEIT,    VT_ENUM,          46,    STR46,    sizeof(ENUM46),       ENUM46,       DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Bedienung HK P
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          48,    STR48,    sizeof(ENUM48),       ENUM48,       DEFAULT_FLAG, DEV_ALL}, // Wirkung Präsenztaste
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       54,    STR54,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Raumfühler
-{CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       70,    STR70,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Geraete-Version Bedienteil
+{0x053D000E,  CAT_BEDIENEINHEIT,    VT_FP1,           70,    STR70,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Geraete-Version Bedienteil
 
 // Funk
 {CMD_UNKNOWN, CAT_FUNK,             VT_YESNO,         120,   STR120,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Binding
@@ -4629,7 +4637,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500_2),   ENUM1500_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 
 // Einstellungen Trinkwasser
-{0x313D0571,  CAT_TW,               VT_ONOFF,         1600,  STR1600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
@@ -5526,6 +5534,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D006D,  CAT_LPB,              VT_ENUM,          6640,  STR6640,  sizeof(ENUM6640),     ENUM6640,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Uhrbetrieb
 // Codierung unklar: 15.01 -> HEIZ->DISP ANS 6650 Aussentemperatur Lieferant 00 F0 ??? 00.01 = 00 00 ???
 {0x053D009F,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Aussentemperatur Lieferant
+{0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Aussentemperatur Lieferant
+{0x413D000E,  CAT_LPB,              VT_UNKNOWN,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
+
 
 //Fehler
 {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
