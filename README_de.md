@@ -16,7 +16,6 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje EcoCondens BBS 20E [LMS14] (Gasbrenner)
  - Brötje EcoCondens BBS 28C [LMU7] (Gasbrenner)
  - Brötje EcoCondens BBS EVO 20G [LMS15] (Gasbrenner)
- - Brötje EcoCondens BBS 28C [LMU7] (Gasbrenner)
  - Brötje EcoTherm Kompakt WMS 12 [LMS 15] (Gasbrenner)
  - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (Gasbrenner)
  - Brötje ISR-SSR [RVS63.283] (Solar-System-Regler) 
@@ -27,8 +26,8 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje NovoCondens SOB 22C [RVS43.222] (Ölbrenner)
  - Brötje NovoCondens SOB 26C [RVS43.222] (Ölbrenner) + EWM [RVS75.390]
  - Brötje NovoCondens WOB 20D [RVS43.325] (Ölbrenner)
- - Brötje SensoTherm BLW 12 B [RVS21.825] (Wärmepumpe)
- - Brötje SensoTherm BLW 15 B [RVS21.825] (Wärmepumpe)
+ - Brötje SensoTherm BLW 12B [RVS21.825] (Wärmepumpe)
+ - Brötje SensoTherm BLW 15B [RVS21.825] (Wärmepumpe)
  - Brötje SensoTherm BSW-K [RVS61.843] (Wärmepumpe)
  - Brötje TrioCondens BGB 20E [LMS14] (Gasbrenner)
  - Brötje WBS 14D [LMU74] (Gasbrenner)
