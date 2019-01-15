@@ -322,6 +322,7 @@
 #include <EEPROM.h>
 #include <util/crc16.h>
 #include "src/Time/TimeLib.h"
+#include "src/PubSubClient/src/PubSubClient.h"
 #include "html_strings.h"
 
 #include <Ethernet.h>
@@ -340,6 +341,9 @@ IPAddress gateway(GatewayIP);
 #endif
 #ifdef SubnetIP
 IPAddress subnet(SubnetIP);
+#endif
+#ifdef MQTTBrokerIP
+IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
 uint8_t len_idx, pl_start;
 uint8_t myAddr = bus.getBusAddr();
@@ -369,6 +373,8 @@ WiFiEspClient max_cul;
 #else
 EthernetClient max_cul;
 #endif
+
+PubSubClient MQTTClient(client);
 
 uint16_t max_cur_temp[20] = { 0 };
 uint8_t max_dst_temp[20] = { 0 };
@@ -414,6 +420,7 @@ char date[20];
 
 unsigned long lastAvgTime = millis();
 unsigned long lastLogTime = millis();
+unsigned long lastMQTTTime = millis();
 unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 int numAverages = sizeof(avg_parameters) / sizeof(int);
@@ -1868,6 +1875,7 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_SECONDS_SHORT4: // s8 / 4 (signed)
             case VT_SECONDS_SHORT5: // s8 / 5 (signed)
+            case VT_TEMP_SHORT64: // s8 / 64 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
             case VT_TEMP_SHORT: // s8
               printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
@@ -1880,7 +1888,8 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
-            case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW )
+            case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
+            case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_LITERPERHOUR: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
@@ -1892,6 +1901,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_SPEED2: // u16
             case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
+            case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
             case VT_SINT1000: // s16 / 1000
@@ -2014,11 +2024,15 @@ char *printTelegram(byte* msg, int query_line) {
               outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
               break;
             }
-            case VT_ERRORCODE: //  s16
-              if(data_len == 3){
+            case VT_ERRORCODE: //  u16 or u8 (via OCI420)
+              if(data_len == 3 || data_len == 2) {
                 if(msg[pl_start]==0){
                   long lval;
-                  lval=(long(msg[pl_start+1])<<8)+long(msg[pl_start+2]);
+                  if (data_len == 3) {
+                    lval=(long(msg[pl_start+1])<<8)+long(msg[pl_start+2]);
+                  } else {
+                    lval=long(msg[pl_start+1]);
+                  }
                   int len=sizeof(ENUM_ERROR);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
 //                  memcpy_P(buffer, &ENUM_ERROR,len);
@@ -2404,6 +2418,7 @@ int set(int line      // the ProgNr of the heater parameter
     // No input values sanity check
     case VT_UINT:
     case VT_SINT:
+    case VT_PERCENT_WORD1:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
       {
@@ -2591,6 +2606,16 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=2;
       }
       break;
+    case VT_TEMP_SHORT64:
+      {
+      if(val[0]!='\0'){
+        uint8_t t=atof(val);
+        param[0]=0x01;  //enable
+        param[1]=t*64;
+      }
+      param_len=2;
+      }
+      break;
 
     case VT_PERCENT_100:
       {
@@ -2656,6 +2681,7 @@ int set(int line      // the ProgNr of the heater parameter
       break;
 
     case VT_SECONDS_WORD5:
+    case VT_TEMP_WORD5_US:
       {
       uint16_t t=atoi(val)*2;
       if(val[0]!='\0'){
@@ -4834,6 +4860,7 @@ ich mir da nicht)
             uint8_t dev_fam = get_cmdtbl_dev_fam(j);
             uint8_t dev_var = get_cmdtbl_dev_var(j);
             if (((dev_fam != my_dev_fam && dev_fam != 255) || (dev_var != my_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
+              Serial.println(c, HEX);
               if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                 Serial.println(F("bus send failed"));  // to PC hardware serial I/F
               } else {
@@ -5550,6 +5577,7 @@ ich mir da nicht)
             log_interval = atoi(log_token);
 //            if (log_interval < 10) {log_interval = 10;}
             lastLogTime = millis();
+            lastMQTTTime = millis();
 #ifdef LANG_DE
             client.print(F("Neues Log-Intervall: "));
             client.print(log_interval);
@@ -5963,10 +5991,47 @@ ich mir da nicht)
     client.stop();
   } // endif, client
 
+#ifdef MQTTBrokerIP
+  if (((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
+    for (int i=0; i < numLogValues; i++) {
+      if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
+        if (!MQTTClient.connected()) {
+          MQTTClient.setServer(MQTTBroker, 1883);
+          int retries = 0;
+Serial.println(F("Connecting to MQTT broker..."));
+          while (!MQTTClient.connected() && retries < 3) {
+            MQTTClient.connect("BSB-LAN");
+            retries++;
+            if (!MQTTClient.connected()) {
+              delay(1000);
+Serial.println(F("Retrying after 1s..."));
+            }
+          }
+        }
+        if (MQTTClient.connected()) {
+Serial.println(F("Pushing to MQTT broker..."));
+          String MQTTPayload = "";
+          MQTTPayload.concat(F("{\""));
+          MQTTPayload.concat(lookup_descr(log_parameters[i]));
+          MQTTPayload.concat(F("\":\""));
+          MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
+          MQTTPayload.concat(F("\"}"));
+
+          MQTTClient.publish("BSB-LAN", MQTTPayload.c_str());
+          MQTTClient.disconnect();
+        }
+      }
+    }
+    lastMQTTTime = millis();
+  }
+#endif
+
+
 #ifdef LOGGER
 
   if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
+
     log_now = 0;
     File dataFile = SD.open("datalog.txt", FILE_WRITE);
 
@@ -6499,6 +6564,7 @@ void setup() {
 #endif
 
   Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));  // ...and flash the LED during that time...
+
   pinMode(LED_BUILTIN, OUTPUT);
   for (int i=0; i<3; i++) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
