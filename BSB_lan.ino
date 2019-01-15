@@ -367,7 +367,6 @@ WiFiEspClient client;
 EthernetClient client;
 #endif
 
-#ifdef MAX_CUL
 #ifdef WIFI
 WiFiEspClient max_cul;
 #else
@@ -376,6 +375,7 @@ EthernetClient max_cul;
 
 PubSubClient MQTTClient(client);
 
+#ifdef MAX_CUL
 uint16_t max_cur_temp[20] = { 0 };
 uint8_t max_dst_temp[20] = { 0 };
 int8_t max_valve[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
