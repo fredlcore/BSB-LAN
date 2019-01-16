@@ -4353,48 +4353,79 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // 8C = Mo .. 92 = So
 // virtuelle Zeilen
 {0x053D0A8C,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      500,   STR500,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm Heizkreis 1 - Vorwahl
+{0x213D0A8C,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      500,   STR500,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm Heizkreis 1 - Vorwahl - logged on OCI700 via LPB
 {0x053D0A8D,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      501,   STR501,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Ein
+{0x213D0A8D,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      501,   STR501,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Ein - logged on OCI700 via LPB
 {0x053D0A8E,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      502,   STR502,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Aus
+{0x213D0A8E,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      502,   STR502,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 1. Phase Aus - logged on OCI700 via LPB
 {0x053D0A8F,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      503,   STR503,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Ein
+{0x213D0A8F,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      503,   STR503,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Ein - logged on OCI700 via LPB
 {0x053D0A90,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      504,   STR504,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Aus
+{0x213D0A90,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      504,   STR504,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 2. Phase Aus - logged on OCI700 via LPB
 {0x053D0A91,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      505,   STR505,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Ein
+{0x213D0A91,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      505,   STR505,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Ein - logged on OCI700 via LPB
 {0x053D0A92,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      506,   STR506,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Aus
+{0x213D0A92,  CAT_ZEITPROG_HK1,     VT_TIMEPROG,      506,   STR506,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 1 - Mo-So: 3. Phase Aus - logged on OCI700 via LPB
 {0x053D05B2,  CAT_ZEITPROG_HK1,     VT_YESNO,         516,   STR516,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm Heizkreis 1 - Standardwerte
 {0x213D05B2,  CAT_ZEITPROG_HK1,     VT_YESNO,         516,   STR516,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm Heizkreis 1 - Standardwerte - logged on OCI700 via LPB
 // Zeitprogramm Heizkreis 2
 // virtuelle Zeilen
 {0x063D0A8C,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      520,   STR520,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm Heizkreis 2 - Vorwahl
+{0x223D0A8C,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      520,   STR520,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm Heizkreis 2 - Vorwahl - logged on OCI700 via LPB
 {0x063D0A8D,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      521,   STR521,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Ein
+{0x223D0A8D,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      521,   STR521,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Ein - logged on OCI700 via LPB
 {0x063D0A8E,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      522,   STR522,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Aus
+{0x223D0A8E,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      522,   STR522,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 1. Phase Aus - logged on OCI700 via LPB
 {0x063D0A8F,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      523,   STR523,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Ein
+{0x223D0A8F,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      523,   STR523,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Ein - logged on OCI700 via LPB
 {0x063D0A90,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      524,   STR524,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Aus
+{0x223D0A90,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      524,   STR524,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 2. Phase Aus - logged on OCI700 via LPB
 {0x063D0A91,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      525,   STR525,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Ein
+{0x223D0A91,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      525,   STR525,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Ein - logged on OCI700 via LPB
 {0x063D0A92,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      526,   STR526,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Aus
+{0x223D0A92,  CAT_ZEITPROG_HK2,     VT_TIMEPROG,      526,   STR526,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm Heizkreis 2 - Mo-So: 3. Phase Aus - logged on OCI700 via LPB
 // Thision 535 Tag kopieren auf
 {0x063D05B2,  CAT_ZEITPROG_HK2,     VT_YESNO,         536,   STR536,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm Heizkreis 2 - Standardwerte
+{0x223D05B2,  CAT_ZEITPROG_HK2,     VT_YESNO,         536,   STR536,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm Heizkreis 2 - Standardwerte - logged on OCI700 via LPB
 
 // Zeitprogramm 3/HKP
 // virtuelle Zeilen
 {0x073D0A8C,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      540,   STR540,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 3 HKP - Vorwahl
+{0x053D0A8C,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      540,   STR540,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm 3 HKP - Vorwahl - logged on OCI700 via LPB
 {0x073D0A8D,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      541,   STR541,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Ein
+{0x053D0A8D,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      541,   STR541,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Ein - logged on OCI700 via LPB
 {0x073D0A8E,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      542,   STR542,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Aus
+{0x053D0A8E,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      542,   STR542,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 1. Phase Aus - logged on OCI700 via LPB
 {0x073D0A8F,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      543,   STR543,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Ein
+{0x053D0A8F,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      543,   STR543,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Ein - logged on OCI700 via LPB
 {0x073D0A90,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      544,   STR544,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Aus
+{0x053D0A90,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      544,   STR544,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 2. Phase Aus - logged on OCI700 via LPB
 {0x073D0A91,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      545,   STR545,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Ein
+{0x053D0A91,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      545,   STR545,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Ein - logged on OCI700 via LPB
 {0x073D0A92,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      546,   STR546,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Aus
+{0x053D0A92,  CAT_ZEITPROG_HKP,     VT_TIMEPROG,      546,   STR546,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 3 HKP - Mo-So: 3. Phase Aus - logged on OCI700 via LPB
 // Thision 555 Tag kopieren auf
 {0x073D05B2,  CAT_ZEITPROG_HKP,     VT_YESNO,         556,   STR556,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 3 HKP - Standardwerte
+{0x053D05B2,  CAT_ZEITPROG_HKP,     VT_YESNO,         556,   STR556,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm 3 HKP - Standardwerte - logged on OCI700 via LPB
 
 // Zeitprogramm 4/TWW
 {0x053D0AA0,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      560,   STR560,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 4 TWW - Vorwahl
+{0x253D0AA0,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      560,   STR560,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm 4 TWW - Vorwahl - logged on OCI700 via LPB
 {0x053D0AA1,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      561,   STR561,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Ein
+{0x253D0AA1,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      561,   STR561,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Ein - logged on OCI700 via LPB
 {0x053D0AA2,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      562,   STR562,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Aus
+{0x253D0AA2,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      562,   STR562,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 1. Phase Aus - logged on OCI700 via LPB
 {0x053D0AA3,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      563,   STR563,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Ein
+{0x253D0AA3,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      563,   STR563,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Ein - logged on OCI700 via LPB
 {0x053D0AA4,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      564,   STR564,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Aus
+{0x253D0AA4,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      564,   STR564,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 2. Phase Aus - logged on OCI700 via LPB
 {0x053D0AA5,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      565,   STR565,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Ein
+{0x253D0AA5,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      565,   STR565,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Ein - logged on OCI700 via LPB
 {0x053D0AA6,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      566,   STR566,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Aus
+{0x253D0AA6,  CAT_ZEITPROG_TWW,     VT_TIMEPROG,      566,   STR566,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [hh:mm ] - Zeitprogramm 4 TWW - Mo-So: 3. Phase Aus - logged on OCI700 via LPB
 // Thision 575 Tag kopieren auf
 {0x053D05B3,  CAT_ZEITPROG_TWW,     VT_YESNO,         576,   STR576,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 4 TWW - Standardwerte
+{0x253D05B3,  CAT_ZEITPROG_TWW,     VT_YESNO,         576,   STR576,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Zeitprogramm 4 TWW - Standardwerte
 
 // Zeitprogramm 5
 // {0x053D0AB3,  CAT_ZEITPROG_5,       VT_TIMEPROG,      600,   STR600,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 5 - Vorwahl / TODO: check hypothetical CommandID
@@ -4436,7 +4467,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D09CC,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  640,   STR640,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 5 Beginn Tag/Monat
 {0x053D09CD,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  641,   STR641,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 5 Ende Tag/Monat
 {0x053D09CE,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR642,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Beginn Tag/Monat
+{0x213D09C4,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR642,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Beginn Tag/Monat - logged on OCI700 via LPB
 {0x053D09CF,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR643,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Ende Tag/Monat
+{0x213D09C5,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR643,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Ende Tag/Monat - logged on OCI700 via LPB
 {0x053D09D0,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  644,   STR644,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 7 Beginn Tag/Monat
 {0x053D09D1,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  645,   STR645,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 7 Ende Tag/Monat
 {0x053D09D2,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  646,   STR646,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 8 Beginn Tag/Monat
@@ -4448,7 +4481,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  650,   STR650,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Ende Tag/Monat
 {0x063D09C6,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  651,   STR651,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Beginn Tag/Monat
 {0x063D09C7,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR652,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Ende Tag/Monat
+{0x220509C4,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR652,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Ende Tag/Monat - logged on OCI700 via LPB
 {0x063D09C8,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR653,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Beginn Tag/Monat
+{0x220509C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR653,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Beginn Tag/Monat - logged on OCI700 via LPB
 {0x063D09C9,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  654,   STR654,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Ende Tag/Monat
 {0x063D09CA,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  655,   STR655,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Beginn Tag/Monat
 {0x063D09CB,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  656,   STR656,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Ende Tag/Monat
@@ -5872,7 +5907,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D3D2FDA,  CAT_WARTUNG,          VT_YESNO,         7012,  STR7012,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 7012 Reset Meldungen 1-6 [Ja/Nein]
 {0x053D03F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden Intervall
 {0x053D03F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung
-{0x250503F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB
+{0x250503F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB
 {0x2E052FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall - logged on OCI700 via LPB
 {0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_098_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
 {0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
@@ -7536,38 +7571,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // CommandIDs logged from OCI700/ACS700 diagnosis tool
 
 {0x113D0C86,  CAT_USER_DEFINED,     VT_UNKNOWN,       10538, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D09C4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10546, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D09C5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10547, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A8C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10548, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A8D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10549, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A8E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10550, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A8F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10551, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A90,  CAT_USER_DEFINED,     VT_UNKNOWN,       10552, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A91,  CAT_USER_DEFINED,     VT_UNKNOWN,       10553, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x213D0A92,  CAT_USER_DEFINED,     VT_UNKNOWN,       10554, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D05B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10555, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D09C4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10556, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D09C5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10557, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A8C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10558, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A8D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10559, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A8E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10560, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A8F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10561, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A90,  CAT_USER_DEFINED,     VT_UNKNOWN,       10562, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A91,  CAT_USER_DEFINED,     VT_UNKNOWN,       10563, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D0A92,  CAT_USER_DEFINED,     VT_UNKNOWN,       10564, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x223D3015,  CAT_USER_DEFINED,     VT_UNKNOWN,       10566, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D03F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10567, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D05B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10569, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10572, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10573, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10574, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10575, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10576, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10577, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x253D0AA6,  CAT_USER_DEFINED,     VT_UNKNOWN,       10578, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x2E3D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10584, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x393D05FD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10592, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
-{0x3D3D0215,  CAT_USER_DEFINED,     VT_UNKNOWN,       10600, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x413D021F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10601, STR10200, 0,                    NULL,         FL_RONLY, DEV_NONE}, // logged from ACS700 diagnosis software, but (seemingly) not working
 
 
