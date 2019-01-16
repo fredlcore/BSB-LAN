@@ -110,6 +110,8 @@ boolean log_bc_only = 0;              // should we log only broadcast commands (
 //#define MQTTBrokerIP 192,168,1,20	// Please use commas insteaf of dots!!!
 //#define MQTTUsername "User" // Set username for MQTT broker here or comment out if no username/password is used.
 //#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
+//#define MQTTTopicPrefix "BSB-LAN" // Choose the "topic" for MQTT messages here
+
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 #define IPWE
