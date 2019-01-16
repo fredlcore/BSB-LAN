@@ -6030,7 +6030,11 @@ ich mir da nicht)
           MQTTPayload.concat(F("\"}"));
 */
 
+#ifdef MQTTTopicPrefix
+          String MQTTTopic = MQTTTopicPrefix;
+#else
           String MQTTTopic = "BSB-LAN/";
+#endif
           MQTTTopic.concat(String(log_parameters[i]));
 
           MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
