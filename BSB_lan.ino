@@ -5992,6 +5992,18 @@ ich mir da nicht)
   } // endif, client
 
 #ifdef MQTTBrokerIP
+
+#ifdef MQTTUsername
+  const char MQTTUser[] = MQTTUsername;
+#else
+  const char MQTTUser = NULL;
+#endif
+#ifdef MQTTPassword
+  const char MQTTPass[] = MQTTPassword;
+#else
+  const char MQTTPass = NULL;
+#endif
+
   if (((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
@@ -6000,7 +6012,7 @@ ich mir da nicht)
           int retries = 0;
 Serial.println(F("Connecting to MQTT broker..."));
           while (!MQTTClient.connected() && retries < 3) {
-            MQTTClient.connect("BSB-LAN");
+            MQTTClient.connect("BSB-LAN", MQTTUser, MQTTPass);
             retries++;
             if (!MQTTClient.connected()) {
               delay(1000);
@@ -6010,14 +6022,19 @@ Serial.println(F("Retrying after 1s..."));
         }
         if (MQTTClient.connected()) {
 Serial.println(F("Pushing to MQTT broker..."));
+/*
           String MQTTPayload = "";
           MQTTPayload.concat(F("{\""));
           MQTTPayload.concat(lookup_descr(log_parameters[i]));
           MQTTPayload.concat(F("\":\""));
           MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
           MQTTPayload.concat(F("\"}"));
+*/
 
-          MQTTClient.publish("BSB-LAN", MQTTPayload.c_str());
+          String MQTTTopic = "BSB-LAN/";
+          MQTTTopic.concat(lookup_descr(log_parameters[i]));
+
+          MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
           MQTTClient.disconnect();
         }
       }
