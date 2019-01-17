@@ -458,6 +458,12 @@ uint8_t current_switchday = 0;
 
 #include "BSB_lan_custom_global.h"
 
+/* forward declarations */
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len);
+void remove_char(char* str, char c);
+void LogTelegram(byte* msg);
+char *lookup_descr(uint16_t line);
+
 /* ******************************************************************
  *      ************** Program code starts here **************
  * *************************************************************** */
@@ -5995,12 +6001,12 @@ ich mir da nicht)
 #ifdef MQTTBrokerIP
 
 #ifdef MQTTUsername
-  const char* MQTTUser[] = MQTTUsername;
+  const char MQTTUser[] = MQTTUsername;
 #else
   const char* MQTTUser = NULL;
 #endif
 #ifdef MQTTPassword
-  const char* MQTTPass[] = MQTTPassword;
+  const char MQTTPass[] = MQTTPassword;
 #else
   const char* MQTTPass = NULL;
 #endif
