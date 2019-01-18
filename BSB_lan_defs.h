@@ -1551,6 +1551,10 @@ const char STR6229[] PROGMEM = "Hersteller-ID (letzten vier Bytes)";
 const char STR6230[] PROGMEM = "KonfigRg0 Bit 0-7";
 const char STR6230_2[] PROGMEM = "Konfiguration - Info 1 OEM";
 const char STR6231[] PROGMEM = "Konfiguration - Info 2 OEM";
+const char STR6232[] PROGMEM = "Zugangscode Inbetriebnahme?";
+const char STR6233[] PROGMEM = "Zugangscode Fachmannebene ?";
+const char STR6234[] PROGMEM = "Zugangscode OEM?";
+const char STR6235[] PROGMEM = "Zugangscode OEM2?";
 const char STR6240[] PROGMEM = "KonfigRg1 Bit 0-7";
 const char STR6250[] PROGMEM = "KonfigRg2 Bit 0-7";
 const char STR6260[] PROGMEM = "KonfigRg3 Bit 0-7";
@@ -5018,6 +5022,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2846,  STR2846,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heissgastemp Max
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2852,  STR2852,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung beim Start
 {0x593D0495,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2862,  STR2862,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Stufe/Mod //FUJITSU
+{0x593D0BA2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2870,  STR2870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Max.
+{0x593D0BA3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2871,  STR2871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Min.
 {0x593D14B4,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtermod Laufzeit //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2880,  STR2880,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
@@ -5636,6 +5642,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1195,  CAT_KONFIG,           VT_UINT,          6231,  STR6231,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Konfiguration - Info 2 OEM
+{0x053D1770,  CAT_KONFIG,           VT_DWORD,         6232,  STR6232,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Inbetriebssetzung?
+{0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
+{0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
+{0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
