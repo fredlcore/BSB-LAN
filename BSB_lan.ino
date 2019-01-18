@@ -5137,12 +5137,16 @@ ich mir da nicht)
 
                 if (p[2]=='Q') {
                   char* ret_val_str = query(json_parameter,json_parameter,1);
-                  char* unit_str = NULL;
+                  char* s = NULL;
                   char* desc_str = NULL;
 //                  if (ret_val_str == NULL) { i=-1; continue; }
                   if (div_data_type == DT_ENUM) {
                     unit_str = strstr(ret_val_str, "- ");
                   } else {
+                    if (div_unit[0] == '\0') {
+                      div_unit[0] = ' ';
+                      div_unit[1] = '\0';
+                    }
                     unit_str = strstr(ret_val_str, div_unit);
                   }
                   if (unit_str != NULL) {
