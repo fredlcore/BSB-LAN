@@ -57,6 +57,7 @@
  *
  * Changelog:
  *       version 0.41 
+ *        - Added export to MQTT broker, use log_parameters[] in BSB_lan_config.h to define parameters and activate MQTTBrokerIP definement.
  *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino. 
  *          The ESP8266 has to be flashed with the AT firmware from Espressif to work.
  *          Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.
@@ -73,6 +74,7 @@
  *        - Improved graph legend when plotting several parameters
  *        - Added JSON export; query with /JQ=a,b,c,d... or push queries to /JQ or push set commands to /JS
  *        - Logging of MAX! parameters now possible with logging parameter 20007
+ *        - Added Waterstage WP device family (119)
  *        - Added WHG Procon device family (195)
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
