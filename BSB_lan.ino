@@ -6042,6 +6042,7 @@ ich mir da nicht)
 
 #ifdef MQTTTopicPrefix
           String MQTTTopic = MQTTTopicPrefix;
+          MQTTTopic.concat(F("/"));
 #else
           String MQTTTopic = "BSB-LAN/";
 #endif
