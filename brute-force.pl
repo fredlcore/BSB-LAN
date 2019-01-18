@@ -7,8 +7,9 @@ use strict;
 # hardcoded here.
 # To query other major command areas, change the 0x05... in $baseID to 
 # 0x2D (HK1), 0x31 (TWW) or others and report the results back to us.
-# Following major IDs exit: 05, 06, 07, 09, 0D, 11, 15, 19, 21, 22, 25, 29, 
-# 2A, 2B, 2D, 2E, 2F, 31, 49, 51, 59, 65, 69
+# Following major IDs are know to exist, but there may be more in rather
+# special settings: 05, 06, 07, 09, 0D, 11, 15, 19, 21, 22, 25, 29, 2A, 2B, 2D,
+# 2E, 2F, 31, 49, 51, 59, 65, 69
 # Check in BSB_lan_defs.h first if a major group does apply to your heater
 # before running tests. Some of them are specific to certain features (such
 # as solar or cooling), so it won't make sense for you to test this group.
@@ -44,8 +45,8 @@ for ($counter; $counter < 65536; $counter++) {
   if ($defs !~ /$ID/) {
     while ($answer le " " && $retries < 3) {
       print "$ID\n";
-      $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC 80 0."`;
-      if ($answer !~ /DC 80 0. 0C 08/ && $answer !~ /DC 80 0A/ && $answer gt " ") {
+      $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC 8. 0."`;
+      if ($answer !~ /DC 80 0. 0C 08/ && $answer !~ /DC 8. 0A/ && $answer gt " ") {
         print LOG "$ID\n";
         print LOG $answer . "\n";
         print "$answer" . "\n";
