@@ -26,10 +26,11 @@ my $URL = "http://192.168.1.50/4444";
 my $baseID = 0x05;
 
 my $counter = 0;
+my $counter_padded = 0;
 my $ID = 0;
 my ($match, $answer);
 my $retries = 0;
-$baseID = $baseID * 0x1000000 + 0x3D0000;
+$ID = $baseID * 0x1000000 + 0x3D0000;
 
 local $/ = undef;
 open DEFS, "BSB_lan_defs.h";
@@ -41,8 +42,9 @@ open LOG, ">>./brute-force-log.txt";
 for ($counter; $counter < 65536; $counter++) {
   $retries = 0;
   $answer = "";
-  $ID = sprintf("%08X", $baseID + $counter);
-  if ($defs !~ /$ID/) {
+  $ID = sprintf("%08X", $baseID * 0x1000000 + 0x3D0000 + $counter);
+  $counter_padded = sprintf("%04X", $counter);
+  if ($defs !~ /$baseID..$counter_padded/) {
     while ($answer le " " && $retries < 3) {
       print "$ID\n";
       $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC 8. 0."`;
