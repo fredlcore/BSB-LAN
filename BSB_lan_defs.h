@@ -1405,7 +1405,9 @@ const char STR5840[] PROGMEM = "Solarstellglied";
 const char STR5841[] PROGMEM = "Externer Solartauscher";
 const char STR5870[] PROGMEM = "Kombispeicher";
 const char STR5890[] PROGMEM = "Relaisausgang QX1";
+const char STR5890_2[] PROGMEM = "Pumpenfunktion Ausgang K6";
 const char STR5891[] PROGMEM = "Relaisausgang QX2";
+const char STR5891_2[] PROGMEM = "Pumpenfunktion Ausgang K7";
 const char STR5892[] PROGMEM = "Relaisausgang QX3";
 const char STR5894[] PROGMEM = "Relaisausgang QX4";
 const char STR5895[] PROGMEM = "Relaisausgang QX5";
@@ -1439,6 +1441,7 @@ const char STR5955[] PROGMEM = "Spannungswert 2 H1";
 const char STR5956[] PROGMEM = "Druckwert 3.5V H1";
 const char STR5956_2[] PROGMEM = "Funktionswert 2 H1";
 const char STR5957_2[] PROGMEM = "BA-Umschaltung HK\'s+TWW";
+#define STR5957_3 STR5950
 const char STR5960_2[] PROGMEM = "Funktion Eingang H2";
 const char STR5961_2[] PROGMEM = "Wirksinn Kontakt H2";
 const char STR5962_2[] PROGMEM = "Minimaler Vorlaufsollwert H2";
@@ -2678,7 +2681,15 @@ const char ENUM5761[] PROGMEM_LATEST = {
 "\x08\x08 TWW mit Zubringerpumpe"
 };
 
-const char ENUM5770[] PROGMEM_LATEST = {"\x01 1-stufig\0\x02 2-stufig\0\x03 Modulierend 3-Punkt"};
+const char ENUM5770[] PROGMEM_LATEST = {
+"\x00 Kein Erzeuger oder PPS-BMU\0"
+"\x01 1-stufig\0"
+"\x02 2-stufig\0"
+"\x03 Modulierend 3-Punkt Luftklappenantrieb\0"
+"\x04 Modulierend 2-Punkt Luftklappenantrieb\0"
+"\x05 Kaskade (zwei 1-stufige Brenner)"
+};
+
 const char ENUM5774[] PROGMEM_LATEST = {
   "\x00 Alle Anforderungen\0"
   "\xFF Nur Anforderung HK1/TWW"};
@@ -2728,6 +2739,20 @@ const char ENUM5890[] PROGMEM_LATEST = {
 "\x29 Betriebsmeldung K36"
 };
 
+const char ENUM5890_2[] PROGMEM_LATEST = {
+"\x00 Keine Funktion\0"
+"\x01 Heizkreispumpe 2\0"
+"\x02 Zubringerpumpe nach BW\0"
+"\x03 Zubringerpumpe vor BW\0"
+"\x04 Zubringerpumpe bei ext. Anforderung\0"
+"\x05 Brauchwasser-Zirkulationspumpe\0"
+"\x06 Brauchwasser-Elektroeinsatz\0"
+"\x07 Solar-Pumpe\0"
+"\x08 H1 Pumpe\0"
+"\x09 Kesselpumpe\0"
+"\x0a Kessel-Bypasspumpe\0"
+"\x0b Alarmausgang"
+};
 
 #define ENUM5891 ENUM5890               // Relaisausgang QX2
 #define ENUM5892 ENUM5890               // Relaisausgang QX3
@@ -2947,7 +2972,7 @@ const char ENUM5950_6[] PROGMEM_LATEST = {
 "\x01 BA-Umschaltung alle HK\0"
 "\x02 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
 "\x03 Wärmeerzeuger-Sperre\0"
-"\x04 Wärmeanforderung 0-10V "
+"\x04 Wärmeanforderung 0-10V"
 };
 
 const char ENUM5951[] PROGMEM_LATEST = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
@@ -2960,8 +2985,24 @@ const char ENUM5957[] PROGMEM_LATEST = {
   "\x04 in Heizkreis 2"
 };
 
+const char ENUM5957_2[] PROGMEM_LATEST = {
+  "\x00 in allen Heizkreisen und Trinkwasser\0"
+  "\x01 in allen Heizkreisen\0"
+  "\x02 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
+  "\x03 Wärmeerzeuger-Sperre\0"
+  "\x04 Wärmeanforderung 0...10 V"
+};
+
 #define ENUM5960 ENUM5950               // Konfiguration - Funktion Eingang H3
 #define ENUM5960_2 ENUM5950_2           // Konfiguration - Funktion Eingang H3
+
+const char ENUM5960_3[] PROGMEM_LATEST = {
+"\x00 Brauchwassertemperatur-Fühler 2\0"
+"\x01 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
+"\x02 Wärmeerzeuger-Sperre\0"
+"\x03 Puffertemperatur-Fühler 2\0"
+};
+
 #define ENUM5961 ENUM5951               // Konfiguration - Wirksinn Kontakt H3 
 #define ENUM5961_2 ENUM5951             // Konfiguration - Wirksinn Kontakt H3 
 
@@ -3663,6 +3704,19 @@ const char ENUM7700[] PROGMEM_LATEST = {
 "\x12 Relaisausgang QX21 Modul 2\0"
 "\x13 Relaisausgang QX22 Modul 2\0"
 "\x14 Relaisausgang QX23 Modul 2"
+};
+
+const char ENUM7700_2[] PROGMEM_LATEST = {
+"\x00 Regelbetrieb nach Betriebszustand\0"
+"\x01 Alle Ausgänge AUS\0"
+"\x02 Brennerstufe 1 EIN K4\0"
+"\x03 Brenerstufe 1 und 2 EIN K4 / K5\0"
+"\x04 Brauchwasser-Ladepumpe EIN Q3 / Y3\0"
+"\x05 Heizkreispumpe 1 / Q2\0"
+"\x06 Mischer 1 auf Y1\0"
+"\x07 Mischer 2 zu Y2\0"
+"\x08 Multifunktionaler Ausgang EIN K6\0"
+"\x09 Multifunktionaler Ausgang EIN K7"
 };
 
 //Eingangssignal H33  //FUJITSU
@@ -5398,7 +5452,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0829,  CAT_KONFIG,           VT_ENUM,          5841,  STR5841,  sizeof(ENUM5841),     ENUM5841,     DEFAULT_FLAG, DEV_ALL}, // Externer Solartauscher
 {0x253D071B,  CAT_KONFIG,           VT_YESNO,         5870,  STR5870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kombispeicher
 {0x053D0497,  CAT_KONFIG,           VT_ENUM,          5890,  STR5890,  sizeof(ENUM5890),     ENUM5890,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Relaisausgang QX1
+{0x053D0497,  CAT_KONFIG,           VT_ENUM,          5890,  STR5890_2,sizeof(ENUM5890_2),   ENUM5890_2,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Relaisausgang QX1
 {0x053D0498,  CAT_KONFIG,           VT_ENUM,          5891,  STR5891,  sizeof(ENUM5891),     ENUM5891,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Relaisausgang QX2
+{0x053D0498,  CAT_KONFIG,           VT_ENUM,          5891,  STR5891_2,  sizeof(ENUM5891),   ENUM5891,     DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Relaisausgang QX2
 {0x053D0587,  CAT_KONFIG,           VT_ENUM,          5892,  STR5892,  sizeof(ENUM5892),     ENUM5892,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Relaisausgang QX3
 {0x053D0588,  CAT_KONFIG,           VT_ENUM,          5894,  STR5894,  sizeof(ENUM5894),     ENUM5894,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX4
 {0x053D0589,  CAT_KONFIG,           VT_UNKNOWN,       5895,  STR5895,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX5
@@ -5495,9 +5551,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957,  sizeof(ENUM5957),     ENUM5957,     DEFAULT_FLAG, DEV_ALL}, // Thision 5957 Modemfunktion
 // Python code defines 0x053D0483 5957 as "BA-Umschaltung HK's+TWW" <- that's one of the selectable parameter options only!
 // !FIXME! !AUTOGENERATED! same cmd as 5950
+{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_3,sizeof(ENUM5957_2),   ENUM5957_2,   DEFAULT_FLAG, DEV_076_ALL}, // BA-Umschaltung HK's+TWW
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_2,sizeof(ENUM5957),     ENUM5957,     DEFAULT_FLAG, DEV_096_ALL}, // BA-Umschaltung HK's+TWW
 {0x073D0807,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960,  sizeof(ENUM5960),     ENUM5960,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Funktion Eingang H3
-{0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_2),   ENUM5960_2,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H3
+{0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_2),   ENUM5960_2,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x053D0575,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961_2,sizeof(ENUM5961_2),   ENUM5961_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
@@ -6104,7 +6161,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D15EE,  CAT_MODULE,           VT_ENUM,          7432,  STR7432,  sizeof(ENUM7425),     ENUM7425,     DEFAULT_FLAG, DEV_ALL}, // Signal Ausg' UX22 Modul 2
 
 // Ein-/Ausgangstest
-{0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG, DEV_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700_2),   ENUM7700_2,   DEFAULT_FLAG, DEV_076_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Mod'sollwert QX3 Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // Mod'sollwert QX3 Relaistest
 {0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Modulationssignal QX3
