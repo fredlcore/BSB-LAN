@@ -8,9 +8,6 @@ Gero Schumacher (gero.schumacher ät gmail.com) (up to version 0.16)
 Frederik Holst (bsb ät code-it.de) (from version 0.17 onwards)  
 Based on the code and work from many other developers. Many thanks!
 
-<B>License:</B>  
-      You are free to use this software on your own risk. Please take care of the licenses of the used libraries and software.
-
 <B>Host System:</B>  
 The software is designed to run on an arduino mega2560 board with ethernet shield.
 Because there are different pin assignments for different ethernet shields, you
