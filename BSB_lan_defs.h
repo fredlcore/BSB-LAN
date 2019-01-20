@@ -455,8 +455,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8300, 8570,
   8700, 9075,
   9500, 9627,
-  10000, 10999,
-  11000, 11067
+  10000, 14999,
+  15000, 15067
 };
 
  /* Menue Strings */
@@ -2261,58 +2261,58 @@ const char STR10104[] PROGMEM = "INFO HK3/P - TBD";
 
 const char STR10200[] PROGMEM = "Unknown command";
 
-const char STR11004[] PROGMEM = "Mischervorlauftemperatur";
-const char STR11009[] PROGMEM = "Position Drehknopf";
-const char STR11011[] PROGMEM = "Präsenztaste";
-const char STR11012[] PROGMEM = "Verbleibende Ferientage";
-const char STR11019[] PROGMEM = "Heizperiode 1 Montag Start";
-const char STR11020[] PROGMEM = "Heizperiode 1 Montag Ende";
-const char STR11021[] PROGMEM = "Heizperiode 2 Montag Start";
-const char STR11022[] PROGMEM = "Heizperiode 2 Montag Ende";
-const char STR11023[] PROGMEM = "Heizperiode 3 Montag Start";
-const char STR11024[] PROGMEM = "Heizperiode 3 Montag Ende";
-const char STR11025[] PROGMEM = "Heizperiode 1 Dienstag Start";
-const char STR11026[] PROGMEM = "Heizperiode 1 Dienstag Ende";
-const char STR11027[] PROGMEM = "Heizperiode 2 Dienstag Start";
-const char STR11028[] PROGMEM = "Heizperiode 2 Dienstag Ende";
-const char STR11029[] PROGMEM = "Heizperiode 3 Dienstag Start";
-const char STR11030[] PROGMEM = "Heizperiode 3 Dienstag Ende";
-const char STR11031[] PROGMEM = "Heizperiode 1 Mittwoch Start";
-const char STR11032[] PROGMEM = "Heizperiode 1 Mittwoch Ende";
-const char STR11033[] PROGMEM = "Heizperiode 2 Mittwoch Start";
-const char STR11034[] PROGMEM = "Heizperiode 2 Mittwoch Ende";
-const char STR11035[] PROGMEM = "Heizperiode 3 Mittwoch Start";
-const char STR11036[] PROGMEM = "Heizperiode 3 Mittwoch Ende";
-const char STR11037[] PROGMEM = "Heizperiode 1 Donnerstag Start";
-const char STR11038[] PROGMEM = "Heizperiode 1 Donnerstag Ende";
-const char STR11039[] PROGMEM = "Heizperiode 2 Donnerstag Start";
-const char STR11040[] PROGMEM = "Heizperiode 2 Donnerstag Ende";
-const char STR11041[] PROGMEM = "Heizperiode 3 Donnerstag Start";
-const char STR11042[] PROGMEM = "Heizperiode 3 Donnerstag Ende";
-const char STR11043[] PROGMEM = "Heizperiode 1 Freitag Start";
-const char STR11044[] PROGMEM = "Heizperiode 1 Freitag Ende";
-const char STR11045[] PROGMEM = "Heizperiode 2 Freitag Start";
-const char STR11046[] PROGMEM = "Heizperiode 2 Freitag Ende";
-const char STR11047[] PROGMEM = "Heizperiode 3 Freitag Start";
-const char STR11048[] PROGMEM = "Heizperiode 3 Freitag Ende";
-const char STR11049[] PROGMEM = "Heizperiode 1 Samstag Start";
-const char STR11050[] PROGMEM = "Heizperiode 1 Samstag Ende";
-const char STR11051[] PROGMEM = "Heizperiode 2 Samstag Start";
-const char STR11052[] PROGMEM = "Heizperiode 2 Samstag Ende";
-const char STR11053[] PROGMEM = "Heizperiode 3 Samstag Start";
-const char STR11054[] PROGMEM = "Heizperiode 3 Samstag Ende";
-const char STR11055[] PROGMEM = "Heizperiode 1 Sonntag Start";
-const char STR11056[] PROGMEM = "Heizperiode 1 Sonntag Ende";
-const char STR11057[] PROGMEM = "Heizperiode 2 Sonntag Start";
-const char STR11058[] PROGMEM = "Heizperiode 2 Sonntag Ende";
-const char STR11059[] PROGMEM = "Heizperiode 3 Sonntag Start";
-const char STR11060[] PROGMEM = "Heizperiode 3 Sonntag Ende";
-const char STR11061[] PROGMEM = "Uhrzeit";
-const char STR11062[] PROGMEM = "QAA Modell";
-const char STR11064[] PROGMEM = "Zieltemperatur";
-const char STR11065[] PROGMEM = "Nächstes Schaltprogramm";
-const char STR11066[] PROGMEM = "Manuelles Heizen";
-const char STR11067[] PROGMEM = "Verbindung unterbrochen";
+const char STR15004[] PROGMEM = "Mischervorlauftemperatur";
+const char STR15009[] PROGMEM = "Position Drehknopf";
+const char STR15011[] PROGMEM = "Präsenztaste";
+const char STR15012[] PROGMEM = "Verbleibende Ferientage";
+const char STR15019[] PROGMEM = "Heizperiode 1 Montag Start";
+const char STR15020[] PROGMEM = "Heizperiode 1 Montag Ende";
+const char STR15021[] PROGMEM = "Heizperiode 2 Montag Start";
+const char STR15022[] PROGMEM = "Heizperiode 2 Montag Ende";
+const char STR15023[] PROGMEM = "Heizperiode 3 Montag Start";
+const char STR15024[] PROGMEM = "Heizperiode 3 Montag Ende";
+const char STR15025[] PROGMEM = "Heizperiode 1 Dienstag Start";
+const char STR15026[] PROGMEM = "Heizperiode 1 Dienstag Ende";
+const char STR15027[] PROGMEM = "Heizperiode 2 Dienstag Start";
+const char STR15028[] PROGMEM = "Heizperiode 2 Dienstag Ende";
+const char STR15029[] PROGMEM = "Heizperiode 3 Dienstag Start";
+const char STR15030[] PROGMEM = "Heizperiode 3 Dienstag Ende";
+const char STR15031[] PROGMEM = "Heizperiode 1 Mittwoch Start";
+const char STR15032[] PROGMEM = "Heizperiode 1 Mittwoch Ende";
+const char STR15033[] PROGMEM = "Heizperiode 2 Mittwoch Start";
+const char STR15034[] PROGMEM = "Heizperiode 2 Mittwoch Ende";
+const char STR15035[] PROGMEM = "Heizperiode 3 Mittwoch Start";
+const char STR15036[] PROGMEM = "Heizperiode 3 Mittwoch Ende";
+const char STR15037[] PROGMEM = "Heizperiode 1 Donnerstag Start";
+const char STR15038[] PROGMEM = "Heizperiode 1 Donnerstag Ende";
+const char STR15039[] PROGMEM = "Heizperiode 2 Donnerstag Start";
+const char STR15040[] PROGMEM = "Heizperiode 2 Donnerstag Ende";
+const char STR15041[] PROGMEM = "Heizperiode 3 Donnerstag Start";
+const char STR15042[] PROGMEM = "Heizperiode 3 Donnerstag Ende";
+const char STR15043[] PROGMEM = "Heizperiode 1 Freitag Start";
+const char STR15044[] PROGMEM = "Heizperiode 1 Freitag Ende";
+const char STR15045[] PROGMEM = "Heizperiode 2 Freitag Start";
+const char STR15046[] PROGMEM = "Heizperiode 2 Freitag Ende";
+const char STR15047[] PROGMEM = "Heizperiode 3 Freitag Start";
+const char STR15048[] PROGMEM = "Heizperiode 3 Freitag Ende";
+const char STR15049[] PROGMEM = "Heizperiode 1 Samstag Start";
+const char STR15050[] PROGMEM = "Heizperiode 1 Samstag Ende";
+const char STR15051[] PROGMEM = "Heizperiode 2 Samstag Start";
+const char STR15052[] PROGMEM = "Heizperiode 2 Samstag Ende";
+const char STR15053[] PROGMEM = "Heizperiode 3 Samstag Start";
+const char STR15054[] PROGMEM = "Heizperiode 3 Samstag Ende";
+const char STR15055[] PROGMEM = "Heizperiode 1 Sonntag Start";
+const char STR15056[] PROGMEM = "Heizperiode 1 Sonntag Ende";
+const char STR15057[] PROGMEM = "Heizperiode 2 Sonntag Start";
+const char STR15058[] PROGMEM = "Heizperiode 2 Sonntag Ende";
+const char STR15059[] PROGMEM = "Heizperiode 3 Sonntag Start";
+const char STR15060[] PROGMEM = "Heizperiode 3 Sonntag Ende";
+const char STR15061[] PROGMEM = "Uhrzeit";
+const char STR15062[] PROGMEM = "QAA Modell";
+const char STR15064[] PROGMEM = "Zieltemperatur";
+const char STR15065[] PROGMEM = "Nächstes Schaltprogramm";
+const char STR15066[] PROGMEM = "Manuelles Heizen";
+const char STR15067[] PROGMEM = "Verbindung unterbrochen";
 
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = "UNKNOWN command code";
@@ -7759,73 +7759,73 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 //PPS-Bus commands
 
-{0x2D290000,  CAT_PPS,              VT_TEMP,          11000, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
-{0x2D570001,  CAT_PPS,              VT_TEMP,          11001, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
-{0x2D2E0002,  CAT_PPS,              VT_TEMP,          11002, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D0E0003,  CAT_PPS,              VT_TEMP,          11003, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
-{0x2D2C0004,  CAT_PPS,              VT_TEMP,          11004, STR11004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
-{0x2D570005,  CAT_PPS,              VT_ONOFF,         11005, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
-{0x2D2B0006,  CAT_PPS,              VT_TEMP,          11006, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0007,  CAT_PPS,              VT_TEMP,          11007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0008,  CAT_PPS,              VT_TEMP,          11008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
-{0x2D180009,  CAT_PPS,              VT_TEMP,          11009, STR11009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D49000A,  CAT_PPS,              VT_ENUM,          11010, STR700,   sizeof(ENUM11010),    ENUM11010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         11011, STR11011, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
-{0x2D7C000C,  CAT_PPS,              VT_BYTE,          11012, STR11012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D08000E,  CAT_PPS,              VT_TEMP,          11014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D09000F,  CAT_PPS,              VT_TEMP,          11015, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D1B0010,  CAT_PPS,              VT_TEMP,          11016, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
-{0x2D1B0011,  CAT_PPS,              VT_TEMP,          11017, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
-{0x2D280012,  CAT_PPS,              VT_TEMP,          11018, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
-{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  11019, STR11019, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
-{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  11020, STR11020, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
-{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  11021, STR11021, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
-{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  11022, STR11022, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
-{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  11023, STR11023, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
-{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  11024, STR11024, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
-{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  11025, STR11025, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
-{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  11026, STR11026, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
-{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  11027, STR11027, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
-{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  11028, STR11028, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
-{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  11029, STR11029, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
-{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  11030, STR11030, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
-{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  11031, STR11031, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
-{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  11032, STR11032, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
-{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  11033, STR11033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
-{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  11034, STR11034, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
-{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  11035, STR11035, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
-{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  11036, STR11036, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
-{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  11037, STR11037, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
-{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  11038, STR11038, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
-{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  11039, STR11039, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
-{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  11040, STR11040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
-{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  11041, STR11041, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
-{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  11042, STR11042, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
-{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  11043, STR11043, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
-{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  11044, STR11044, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
-{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  11045, STR11045, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
-{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  11046, STR11046, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
-{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  11047, STR11047, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
-{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  11048, STR11048, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
-{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  11049, STR11049, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
-{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  11050, STR11050, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
-{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  11051, STR11051, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
-{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  11052, STR11052, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
-{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  11053, STR11053, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
-{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  11054, STR11054, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
-{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  11055, STR11055, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
-{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  11056, STR11056, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
-{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  11057, STR11057, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
-{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  11058, STR11058, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
-{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  11059, STR11059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
-{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  11060, STR11060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
-{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      11061, STR11061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
-{0x2D38003E,  CAT_PPS,              VT_ENUM,          11062, STR11062, sizeof(ENUM11062),    ENUM11062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
-{0x2D4D003F,  CAT_PPS,              VT_BYTE,          11063, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
-{0x2D190040,  CAT_PPS,              VT_TEMP,          11064, STR11064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
-{0x2D690041,  CAT_PPS,              VT_TEMP,          11065, STR11065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
-{0x2D480042,  CAT_PPS,              VT_ONOFF,         11066, STR11066, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
-{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         11067, STR11067, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
+{0x2D290000,  CAT_PPS,              VT_TEMP,          15000, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
+{0x2D570001,  CAT_PPS,              VT_TEMP,          15001, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
+{0x2D2E0002,  CAT_PPS,              VT_TEMP,          15002, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D0E0003,  CAT_PPS,              VT_TEMP,          15003, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
+{0x2D2C0004,  CAT_PPS,              VT_TEMP,          15004, STR15004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D570005,  CAT_PPS,              VT_ONOFF,         15005, STR5010,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwasserladung
+{0x2D2B0006,  CAT_PPS,              VT_TEMP,          15006, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D1E0007,  CAT_PPS,              VT_TEMP,          15007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
+{0x2D0B0008,  CAT_PPS,              VT_TEMP,          15008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D180009,  CAT_PPS,              VT_TEMP,          15009, STR15009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D49000A,  CAT_PPS,              VT_ENUM,          15010, STR700,   sizeof(ENUM11010),    ENUM11010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         15011, STR15011, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D7C000C,  CAT_PPS,              VT_BYTE,          15012, STR15012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
+{0x2D08000E,  CAT_PPS,              VT_TEMP,          15014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D09000F,  CAT_PPS,              VT_TEMP,          15015, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
+{0x2D1B0010,  CAT_PPS,              VT_TEMP,          15016, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
+{0x2D1B0011,  CAT_PPS,              VT_TEMP,          15017, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
+{0x2D280012,  CAT_PPS,              VT_TEMP,          15018, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  15019, STR15019, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
+{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  15020, STR15020, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
+{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  15021, STR15021, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
+{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  15022, STR15022, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
+{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  15023, STR15023, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
+{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  15024, STR15024, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
+{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  15025, STR15025, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
+{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  15026, STR15026, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
+{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  15027, STR15027, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
+{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  15028, STR15028, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
+{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  15029, STR15029, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
+{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  15030, STR15030, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
+{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  15031, STR15031, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
+{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  15032, STR15032, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
+{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  15033, STR15033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
+{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  15034, STR15034, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
+{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  15035, STR15035, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
+{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  15036, STR15036, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
+{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  15037, STR15037, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
+{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  15038, STR15038, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
+{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  15039, STR15039, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
+{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  15040, STR15040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
+{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  15041, STR15041, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
+{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  15042, STR15042, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
+{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  15043, STR15043, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
+{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  15044, STR15044, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
+{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  15045, STR15045, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
+{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  15046, STR15046, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
+{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  15047, STR15047, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
+{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  15048, STR15048, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
+{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  15049, STR15049, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
+{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  15050, STR15050, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
+{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  15051, STR15051, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
+{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  15052, STR15052, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
+{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  15053, STR15053, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
+{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  15054, STR15054, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
+{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  15055, STR15055, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
+{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  15056, STR15056, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
+{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  15057, STR15057, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
+{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  15058, STR15058, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
+{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  15059, STR15059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
+{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
+{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      15061, STR15061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
+{0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM11062),    ENUM11062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
+{0x2D4D003F,  CAT_PPS,              VT_BYTE,          15063, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
+{0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
+{0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
+{0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
+{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         15067, STR15067, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
