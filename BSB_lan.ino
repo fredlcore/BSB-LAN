@@ -460,12 +460,6 @@ uint8_t current_switchday = 0;
 
 #include "BSB_lan_custom_global.h"
 
-/* forward declarations */
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len);
-void remove_char(char* str, char c);
-void LogTelegram(byte* msg);
-char *lookup_descr(uint16_t line);
-
 /* ******************************************************************
  *      ************** Program code starts here **************
  * *************************************************************** */
@@ -476,7 +470,7 @@ byte socketStat[MAX_SOCK_NUM];
 unsigned long connectTime[MAX_SOCK_NUM];
 
 #include <utility/w5100.h>
-#include <utility/socket.h>
+//#include <utility/socket.h>
 
 void ShowSockStatus()
 {
@@ -509,17 +503,17 @@ void checkSockStatus()
   for (int i = 0; i < MAX_SOCK_NUM; i++) {
     uint8_t s = W5100.readSnSR(i);
 
-    if((s == 0x17) || (s == 0x1C)) {
+    if((s == 0x14) || (s == 0x1C)) {
         if(thisTime - connectTime[i] > 30000UL) {
           Serial.print(F("\r\nSocket frozen: "));
           Serial.println(i);
-/*
-  SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-  W5100.execCmdSn(s, Sock_CLOSE);
-  W5100.writeSnIR(s, 0xFF);
-  SPI.endTransaction();
-*/
-          close(i);
+
+          SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
+          W5100.execCmdSn(s, Sock_CLOSE);
+          SPI.endTransaction();
+
+          Serial.println(F("Socket freed."));
+          ShowSockStatus();
         }
     }
     else connectTime[i] = thisTime;
@@ -529,6 +523,44 @@ void checkSockStatus()
 }
 
 #endif
+
+/** *****************************************************************
+ *  Function: calc_enum_offset()
+ *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
+ * Pass parameters:
+ *  enum_addr
+ * Parameters passed back:
+ *  enum_addr
+ * Function value returned:
+ *  24 bit char pointer address
+ * Global resources used:
+ *  enumstr_offset
+ * *************************************************************** */
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+
+  uint_farptr_t page = 0x10000;
+  while (page < 0x40000) {
+    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
+    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
+    uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
+    
+    if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
+      break;
+    }
+    page = page + 0x10000;
+  }
+
+  enum_addr = enum_addr + page;
+
+/*
+  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
+  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
+    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
+  }
+  enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
+*/
+  return enum_addr;
+}
 
 /**  ****************************************************************
  *  Function: outBufclear()
@@ -1631,6 +1663,29 @@ void printLPBAddr(byte *msg,byte data_len){
   }
 }
 
+
+/** *****************************************************************
+ *  Function: remove_char()
+ *  Does:     Removes a character from a given char array
+ * Pass parameters:
+ *  str, c
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  none
+ * *************************************************************** */
+
+void remove_char(char* str, char c) {
+  char *pr = str, *pw = str;
+  while (*pr) {
+    *pw = *pr++;
+    pw += (*pw != c);
+  }
+  *pw = '\0';
+} 
+
 /** *****************************************************************
  *  Function:  printTelegram()
  *  Does:      Send the decoded telegram content to the hardware
@@ -1698,7 +1753,7 @@ char *printTelegram(byte* msg, int query_line) {
   }
   uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && *PPS_write_enabled != 1)];
   if (bus_type == BUS_PPS) {
-    cmd = 0x2D000000 + query_line - 11000;
+    cmd = 0x2D000000 + query_line - 15000;
     cmd = cmd + (msg[1] * 0x10000);
   }
   // search for the command code in cmdtbl
@@ -2297,7 +2352,210 @@ void webPrintSite() {
   webPrintFooter();
 } // --- webPrintSite() ---
 
+/** *****************************************************************
+ *  Function:  GetDateTime()
+ *  Does:      Returns human-readable date/time string
+ *
+ * Pass parameters:
+ *   date buffer
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   date/time string
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+char *GetDateTime(char date[]){
+  sprintf(date,"%02d.%02d.%d %02d:%02d:%02d",day(),month(),year(),hour(),minute(),second());
+  date[20] = 0;
+  return date;
+}
 
+/** *****************************************************************
+ *  Function:  LogTelegram()
+ *  Does:      Logs the telegram content in hex to the SD card,
+ *             starting at position null. It stops
+ *             when it has sent the requested number of message bytes.
+ *  Pass parameters:
+ *   byte *msg pointer to the telegram buffer
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   log_parameters
+ * *************************************************************** */
+#ifdef LOGGER
+void LogTelegram(byte* msg){
+  File dataFile;
+  char device[5];
+  uint32_t cmd;
+  int i=0;        // begin with line 0
+  int save_i=0;
+  boolean known=0;
+  uint32_t c;     // command code
+  uint8_t type=0;
+  uint8_t cmd_type=0;
+  double operand=1;
+  uint8_t precision=0;
+  int data_len;
+  double dval;
+  uint16_t line = 0;
+
+  if (log_parameters[0] == 30000) {
+
+    if (bus_type != BUS_PPS) {
+      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus_type==BUS_BSB) || (msg[2]<0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
+        cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+      }else{
+        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+      }
+    } else {
+      cmd=msg[1+(msg[0]==0x17 && *PPS_write_enabled != 1)];
+    }
+    // search for the command code in cmdtbl
+    c=get_cmdtbl_cmd(i);
+//    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
+    while(c!=CMD_END){
+      line=get_cmdtbl_line(i);
+      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 11000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
+        uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+        uint8_t dev_var = get_cmdtbl_dev_var(i);
+        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
+          if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+            break;
+          } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
+            known=1;
+            save_i=i;
+          }
+        }
+      }
+      if (known && c!=cmd) {
+        i=save_i;
+        break;
+      }
+      i++;
+      c=get_cmdtbl_cmd(i);
+//      c=pgm_read_dword(&cmdtbl[i].cmd);
+    }
+
+    if ((log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) && cmd > 0) {
+      if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)))) {
+        dataFile = SD.open("datalog.txt", FILE_WRITE);
+        if (dataFile) {
+          dataFile.print(millis());
+          dataFile.print(F(";"));
+          dataFile.print(GetDateTime(date));
+          dataFile.print(F(";"));
+
+          if(!known){                          // no hex code match
+          // Entry in command table is "UNKNOWN" (0x00000000)
+            dataFile.print(F("UNKNOWN"));
+          }else{
+            // Entry in command table is a documented command code
+            line=get_cmdtbl_line(i);
+            cmd_type=get_cmdtbl_type(i);
+//            uint16_t line=pgm_read_word(&cmdtbl[i].line);
+            dataFile.print(line);             // the ProgNr
+          }
+
+          uint8_t msg_len = 0;
+          if (bus_type != BUS_PPS) {
+            dataFile.print(F(";"));
+            dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
+            dataFile.print(F("->"));
+            dataFile.print(TranslateAddr(msg[2], device));
+            dataFile.print(F(" "));
+            dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
+            dataFile.print(F(";"));
+            msg_len = msg[len_idx]+bus_type;
+          } else {
+            dataFile.print(F(";"));
+            switch (msg[0]) {
+              case 0x1D: dataFile.print(F("HEIZ->QAA INF")); break;
+              case 0x1E: dataFile.print(F("HEIZ->QAA REQ")); break;
+              case 0x17: dataFile.print(F("HEIZ->QAA RTS")); break;
+              case 0xFD: dataFile.print(F("QAA->HEIZ ANS")); break;
+              default: break;
+            }
+            dataFile.print(F(";"));
+            msg_len = 9+(msg[0]==0x17 && *PPS_write_enabled != 1);
+          }
+
+          for(int i=0;i<msg_len;i++){
+            if (i > 0) {
+              dataFile.print(F(" "));
+            }
+            if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
+            dataFile.print(msg[i], HEX);
+          }
+
+          // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
+
+          if (bus_type != BUS_PPS && (msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
+            dataFile.print(F(";"));
+            i=0;
+            while(type!=VT_UNKNOWN){
+              if(type == cmd_type){
+                break;
+              }
+              i++;
+              type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + i * sizeof(optbl[0]));
+            }
+            if (bus_type == BUS_LPB) {
+              data_len=msg[1]-14;
+            } else {
+              data_len=msg[3]-11;
+            }
+            dval = 0;
+            operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + i * sizeof(optbl[0]));
+            precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
+            for (i=0;i<data_len-1+bus_type;i++) {
+              if (bus_type == BUS_LPB) {
+                dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
+              } else {
+                dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
+              }
+            }
+            dval = dval / operand;
+/*
+            if (precision==0) {
+              dataFile.print(int(round(dval)));
+            } else {
+              char formatstr[6]="%0.0f";
+              formatstr[3]=precision;
+              dataFile.print(printf("%0.1f",dval));
+            }
+*/
+            int a,b,i;
+            if(dval<0){
+              dval*=-1.0;
+            }
+            double rval=10.0;
+            for(i=0;i<precision;i++) rval*=10.0;
+            dval+=5.0/rval;
+            a=(int)(dval);
+            rval/=10.0;
+            b=(int)(dval*rval - a*rval);
+            if(precision==0){
+              dataFile.print(a);
+            }else{
+//              char formatstr[8]="%d.%01d";
+//              formatstr[5]='0'+precision;
+              dataFile.print(a);
+              dataFile.print(",");
+              dataFile.print(b);
+            }
+
+          }
+          dataFile.println();
+          dataFile.close();
+        }
+      }
+    }
+  }
+}
+#endif
 
 #define MAX_PARAM_LEN 22
 
@@ -3179,25 +3437,6 @@ char* query(int line_start  // begin at this line (ProgNr)
 } // --- query() ---
 
 /** *****************************************************************
- *  Function:  GetDateTime()
- *  Does:      Returns human-readable date/time string
- *
- * Pass parameters:
- *   date buffer
- * Parameters passed back:
- *   none
- * Function value returned:
- *   date/time string
- * Global resources used:
- *   none
- * *************************************************************** */
-char *GetDateTime(char date[]){
-  sprintf(date,"%02d.%02d.%d %02d:%02d:%02d",day(),month(),year(),hour(),minute(),second());
-  date[20] = 0;
-  return date;
-}
-
-/** *****************************************************************
  *  Function:  SetDevId()
  *  Does:      Sets my_dev_fam and my_dev_var
  *
@@ -3275,192 +3514,6 @@ void SetDateTime(){
     }
   }
 }
-
-/** *****************************************************************
- *  Function:  LogTelegram()
- *  Does:      Logs the telegram content in hex to the SD card,
- *             starting at position null. It stops
- *             when it has sent the requested number of message bytes.
- *  Pass parameters:
- *   byte *msg pointer to the telegram buffer
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   log_parameters
- * *************************************************************** */
-#ifdef LOGGER
-void LogTelegram(byte* msg){
-  File dataFile;
-  char device[5];
-  uint32_t cmd;
-  int i=0;        // begin with line 0
-  int save_i=0;
-  boolean known=0;
-  uint32_t c;     // command code
-  uint8_t type=0;
-  uint8_t cmd_type=0;
-  double operand=1;
-  uint8_t precision=0;
-  int data_len;
-  double dval;
-  uint16_t line = 0;
-
-  if (log_parameters[0] == 30000) {
-
-    if (bus_type != BUS_PPS) {
-      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus_type==BUS_BSB) || (msg[2]<0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
-        cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
-      }else{
-        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
-      }
-    } else {
-      cmd=msg[1+(msg[0]==0x17 && *PPS_write_enabled != 1)];
-    }
-    // search for the command code in cmdtbl
-    c=get_cmdtbl_cmd(i);
-//    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
-    while(c!=CMD_END){
-      line=get_cmdtbl_line(i);
-      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 11000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
-        uint8_t dev_fam = get_cmdtbl_dev_fam(i);
-        uint8_t dev_var = get_cmdtbl_dev_var(i);
-        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
-          if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
-            break;
-          } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
-            known=1;
-            save_i=i;
-          }
-        }
-      }
-      if (known && c!=cmd) {
-        i=save_i;
-        break;
-      }
-      i++;
-      c=get_cmdtbl_cmd(i);
-//      c=pgm_read_dword(&cmdtbl[i].cmd);
-    }
-
-    if ((log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) && cmd > 0) {
-      if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)))) {
-        dataFile = SD.open("datalog.txt", FILE_WRITE);
-        if (dataFile) {
-          dataFile.print(millis());
-          dataFile.print(F(";"));
-          dataFile.print(GetDateTime(date));
-          dataFile.print(F(";"));
-
-          if(!known){                          // no hex code match
-          // Entry in command table is "UNKNOWN" (0x00000000)
-            dataFile.print(F("UNKNOWN"));
-          }else{
-            // Entry in command table is a documented command code
-            line=get_cmdtbl_line(i);
-            cmd_type=get_cmdtbl_type(i);
-//            uint16_t line=pgm_read_word(&cmdtbl[i].line);
-            dataFile.print(line);             // the ProgNr
-          }
-
-          uint8_t msg_len = 0;
-          if (bus_type != BUS_PPS) {
-            dataFile.print(F(";"));
-            dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
-            dataFile.print(F("->"));
-            dataFile.print(TranslateAddr(msg[2], device));
-            dataFile.print(F(" "));
-            dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
-            dataFile.print(F(";"));
-            msg_len = msg[len_idx]+bus_type;
-          } else {
-            dataFile.print(F(";"));
-            switch (msg[0]) {
-              case 0x1D: dataFile.print(F("HEIZ->QAA INF")); break;
-              case 0x1E: dataFile.print(F("HEIZ->QAA REQ")); break;
-              case 0x17: dataFile.print(F("HEIZ->QAA RTS")); break;
-              case 0xFD: dataFile.print(F("QAA->HEIZ ANS")); break;
-              default: break;
-            }
-            dataFile.print(F(";"));
-            msg_len = 9+(msg[0]==0x17 && *PPS_write_enabled != 1);
-          }
-
-          for(int i=0;i<msg_len;i++){
-            if (i > 0) {
-              dataFile.print(F(" "));
-            }
-            if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
-            dataFile.print(msg[i], HEX);
-          }
-
-          // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
-
-          if (bus_type != BUS_PPS && (msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
-            dataFile.print(F(";"));
-            i=0;
-            while(type!=VT_UNKNOWN){
-              if(type == cmd_type){
-                break;
-              }
-              i++;
-              type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + i * sizeof(optbl[0]));
-            }
-            if (bus_type == BUS_LPB) {
-              data_len=msg[1]-14;
-            } else {
-              data_len=msg[3]-11;
-            }
-            dval = 0;
-            operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + i * sizeof(optbl[0]));
-            precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
-            for (i=0;i<data_len-1+bus_type;i++) {
-              if (bus_type == BUS_LPB) {
-                dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
-              } else {
-                dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
-              }
-            }
-            dval = dval / operand;
-/*
-            if (precision==0) {
-              dataFile.print(int(round(dval)));
-            } else {
-              char formatstr[6]="%0.0f";
-              formatstr[3]=precision;
-              dataFile.print(printf("%0.1f",dval));
-            }
-*/
-            int a,b,i;
-            if(dval<0){
-              dval*=-1.0;
-            }
-            double rval=10.0;
-            for(i=0;i<precision;i++) rval*=10.0;
-            dval+=5.0/rval;
-            a=(int)(dval);
-            rval/=10.0;
-            b=(int)(dval*rval - a*rval);
-            if(precision==0){
-              dataFile.print(a);
-            }else{
-//              char formatstr[8]="%d.%01d";
-//              formatstr[5]='0'+precision;
-              dataFile.print(a);
-              dataFile.print(",");
-              dataFile.print(b);
-            }
-
-          }
-          dataFile.println();
-          dataFile.close();
-        }
-      }
-    }
-  }
-}
-#endif
 
 #ifdef DHT_BUS
 
@@ -3574,6 +3627,17 @@ void ds18b20(void) {
   //webPrintFooter();
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
+
+char *lookup_descr(uint16_t line) {
+  int i=findLine(line,0,NULL);
+  if (i<0) {                    // Not found (for this heating system)?
+    strcpy_P(buffer, STR99999); // Unknown command has line no. 10999
+  } else {
+    strcpy_PF(buffer, get_cmdtbl_desc(i));
+//  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
+  }
+  return buffer;
+}
 
 #ifdef IPWE
 
@@ -3695,78 +3759,6 @@ void Ipwe() {
 } 
 
 #endif    // --- Ipwe() ---
-
-char *lookup_descr(uint16_t line) {
-  int i=findLine(line,0,NULL);
-  if (i<0) {                    // Not found (for this heating system)?
-    strcpy_P(buffer, STR99999); // Unknown command has line no. 10999
-  } else {
-    strcpy_PF(buffer, get_cmdtbl_desc(i));
-//  strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
-  }
-  return buffer;
-}
-
-/** *****************************************************************
- *  Function: remove_char()
- *  Does:     Removes a character from a given char array
- * Pass parameters:
- *  str, c
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  none
- * *************************************************************** */
-
-void remove_char(char* str, char c) {
-  char *pr = str, *pw = str;
-  while (*pr) {
-    *pw = *pr++;
-    pw += (*pw != c);
-  }
-  *pw = '\0';
-}
-
-/** *****************************************************************
- *  Function: calc_enum_offset()
- *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
- * Pass parameters:
- *  enum_addr
- * Parameters passed back:
- *  enum_addr
- * Function value returned:
- *  24 bit char pointer address
- * Global resources used:
- *  enumstr_offset
- * *************************************************************** */
- 
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
-
-  uint_farptr_t page = 0x10000;
-  while (page < 0x40000) {
-    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
-    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
-    uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
-    
-    if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
-      break;
-    }
-    page = page + 0x10000;
-  }
-
-  enum_addr = enum_addr + page;
-
-/*
-  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
-  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
-    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
-  }
-  enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
-*/
-  return enum_addr;
-}
 
 /** *****************************************************************
  *  Function: InitMaxDeviceList()
