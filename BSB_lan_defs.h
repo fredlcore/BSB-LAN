@@ -2947,7 +2947,7 @@ const char ENUM5950_6[] PROGMEM_LATEST = {
 "\x01 BA-Umschaltung alle HK\0"
 "\x02 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
 "\x03 Wärmeerzeuger-Sperre\0"
-"\x04 Wärmeanforderung 0-10V"
+"\x04 Wärmeanforderung 0-10V "
 };
 
 const char ENUM5951[] PROGMEM_LATEST = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
