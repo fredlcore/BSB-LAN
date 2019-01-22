@@ -4201,13 +4201,13 @@ const char ENUM8749[] PROGMEM_LATEST = {     // numerical values unverified
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
 
 // PPS Betriebsart
-const char ENUM11010[] PROGMEM_LATEST = {
+const char ENUM15010[] PROGMEM_LATEST = {
   "\x00 Automatisch\0"
   "\x01 Manuell\0"
   "\x02 Aus"
 };
 
-const char ENUM11062[] PROGMEM_LATEST = {
+const char ENUM15062[] PROGMEM_LATEST = {
   "\x52 QAA 50\0"
   "\x53 QAA 70"
 };
@@ -7769,7 +7769,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D1E0007,  CAT_PPS,              VT_TEMP,          15007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
 {0x2D0B0008,  CAT_PPS,              VT_TEMP,          15008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
 {0x2D180009,  CAT_PPS,              VT_TEMP,          15009, STR15009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D49000A,  CAT_PPS,              VT_ENUM,          15010, STR700,   sizeof(ENUM11010),    ENUM11010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D49000A,  CAT_PPS,              VT_ENUM,          15010, STR700,   sizeof(ENUM15010),    ENUM15010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x2D4C000B,  CAT_PPS,              VT_ONOFF,         15011, STR15011, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
 {0x2D7C000C,  CAT_PPS,              VT_BYTE,          15012, STR15012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
 {0x2D08000E,  CAT_PPS,              VT_TEMP,          15014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
@@ -7820,7 +7820,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  15059, STR15059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
 {0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
 {0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      15061, STR15061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
-{0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM11062),    ENUM11062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
+{0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM15062),    ENUM15062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
 {0x2D4D003F,  CAT_PPS,              VT_BYTE,          15063, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 {0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
 {0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
@@ -7896,8 +7896,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 #define PPS_CON 67
 
 #define PPS_ANZ 68
-#define LAST_ENUM_NR 11062
-#define LAST_ENUM ENUM11062
+#define LAST_ENUM_NR 15062
+#define LAST_ENUM ENUM15062
 
 //PPS-Bus commands end
 

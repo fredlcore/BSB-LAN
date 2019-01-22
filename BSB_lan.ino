@@ -64,7 +64,7 @@
  *        - Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!
  *        - Lots of new parameters coming from device family 123, please run /Q to see if some parameters also work for your heater!
  *        - Lots of new yet unknown parameters through brute force querying :) (parameter numbers 10200 and above)
- *        - Added further PPS-Bus commands, moved parameter numbers to 11000 and above
+ *        - Added further PPS-Bus commands, moved parameter numbers to 15000 and above
  *        - Default PPS mode now "listening". 
  *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening, 
  *          i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
@@ -1767,7 +1767,7 @@ char *printTelegram(byte* msg, int query_line) {
   line = get_cmdtbl_line(i);
 
   while(c!=CMD_END){
-    if((c == cmd || (line >= 11000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus_type == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
+    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus_type == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -2418,7 +2418,7 @@ void LogTelegram(byte* msg){
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
       line=get_cmdtbl_line(i);
-      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 11000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
+      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
@@ -2602,8 +2602,8 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
-  if (bus_type == BUS_PPS && line >= 11000) {  // PPS-Bus set parameter
-    int cmd_no = line - 11000;
+  if (bus_type == BUS_PPS && line >= 15000) {  // PPS-Bus set parameter
+    int cmd_no = line - 15000;
     uint8_t type=get_cmdtbl_type(i);
 
     switch (type) {
@@ -3249,10 +3249,10 @@ char* query(int line_start  // begin at this line (ProgNr)
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-11000)] * 256; break;
-            case VT_ONOFF: temp_val = pps_values[(line-11000)] * 256; break;
-            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-11000] / 6) * 256) + ((pps_values[line-11000] % 6) * 10); break;
-            default: temp_val = pps_values[(line-11000)]; break;
+            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_ONOFF: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
+            default: temp_val = pps_values[(line-15000)]; break;
           }
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
@@ -3814,7 +3814,7 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
     for (int i=0; i < numLogValues; i++) {
-      if (log_parameters[i] == 11000 + pps_index) {
+      if (log_parameters[i] == 15000 + pps_index) {
         log_parameter = log_parameters[i];
       }
     }
@@ -4265,7 +4265,7 @@ ich mir da nicht)
             uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
 
             uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) - 1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
-            while (i > 0 && get_cmdtbl_line(i) >= 11000) {
+            while (i > 0 && get_cmdtbl_line(i) >= 15000) {
               uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
               if (cmd == msg[1+pps_offset]) {
