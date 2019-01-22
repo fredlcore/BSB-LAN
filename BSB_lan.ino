@@ -332,7 +332,9 @@
 #include "src/WiFiEsp/src/WiFiEsp.h"
 #endif
 
+#ifdef IPAddr
 IPAddress ip(IPAddr);
+#endif
 #ifdef WIFI
 WiFiEspServer server(Port);
 #else
@@ -6501,6 +6503,13 @@ void setup() {
   Serial.println(sizeof(cmdtbl2));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
+#ifndef IPAddr
+#ifdef WIFI
+  IPAddress ip = WiFi.localIP();
+#else
+  IPAddress ip = Ethernet.localIP();
+#endif
+#endif
   Serial.println(ip);
 
 #ifdef WIFI
