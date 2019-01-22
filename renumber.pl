@@ -1,6 +1,9 @@
 #!/usr/bin/perl
 
-open (IN, "BSB_lan_defs.h");
+# Reads BSB_lan_defs.h-style file from first command-line parameter and 
+# renumbers entries, starting from $startID.
+
+open (IN, $ARGV[0]);
 
 $startID = 10200;
 
