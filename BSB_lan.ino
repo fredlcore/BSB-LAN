@@ -1,7 +1,7 @@
  char version[] = "0.41";
 
 /*
- *
+ * 
  * BSB Boiler-System-Bus LAN Interface
  *
  * ATTENION:
@@ -56,17 +56,17 @@
  *       0.41  - 19.03.2018
  *
  * Changelog:
- *       version 0.41
+ *       version 0.41 
  *        - Added export to MQTT broker, use log_parameters[] in BSB_lan_config.h to define parameters and activate MQTTBrokerIP definement.
- *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino.
+ *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino. 
  *          The ESP8266 has to be flashed with the AT firmware from Espressif to work.
  *          Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.
  *        - Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!
  *        - Lots of new parameters coming from device family 123, please run /Q to see if some parameters also work for your heater!
  *        - Lots of new yet unknown parameters through brute force querying :) (parameter numbers 10200 and above)
  *        - Added further PPS-Bus commands, moved parameter numbers to 11000 and above
- *        - Default PPS mode now "listening".
- *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening,
+ *        - Default PPS mode now "listening". 
+ *          Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening, 
  *          i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
  *          You can switch between modes at run-time with URL command /P2,x where x is either 1 (for controlling) or not 1 (for listening only)
  *        - Fixed bug that crashed PPS bus queries
@@ -102,11 +102,11 @@
  *        - hopefully fixing the memory issue
  *        - Moved HTML strings to html_strings.h
  *       version 0.39
- *        - Implemntation of PPS-Bus protocol.
- *          See /K40 for the limited commands available for this bus.
+ *        - Implemntation of PPS-Bus protocol. 
+ *          See /K40 for the limited commands available for this bus. 
  *          Use setBusType(2) to set to PPS upon boot or /P2 to switch temporarily.
  *        - Set GPIOs to input by using /Gxx,I
- *        - Definement "#define CUSTOM_COMMANDS" added.
+ *        - Definement "#define CUSTOM_COMMANDS" added. 
  *          Use this in your configuration to include individual code from "BSB_lan_custom.h"
  *          (needs to be created by you!) which is executed at the end of each main loop.
  *          Variables "custom_timer" and "custom_timer_compare" have been added to execute
@@ -132,7 +132,7 @@
  *        - Added new options for commands /P and /S to allow specifying a different destination device during runtime
  *        - Added new configuration definement CUSTOM_COMMANDS which includes BSB_lan_custom.h at the end of each main loop. You may use custom_timer (set to current millis()) and custom_timer_compare to execute only every x milliseconds.
  *        - Bugfixing SD-card logging in monitor mode
- *        - Bugfix for setting hour:time parameters via webinterface
+ *        - Bugfix for setting hour:time parameters via webinterface 
  *       version 0.37
  *        - LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the Px command (0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.
  *       version 0.36
@@ -210,8 +210,8 @@
  *        - adds date field to log file (requires exact time to be sent by heating system)
  *        - /D0 recreates datalog.txt file with table header
  *        - added "flags" field to command table structure. Currently, only FL_RONLY is supported to make a parameter read-only
- *        - added DEFAULT_FLAG in config. Defaults to NULL, i.e. all fields are read/writeable.
- *          Setting it to FL_RONLY makes all parameters read-only, e.g. for added level of security.
+ *        - added DEFAULT_FLAG in config. Defaults to NULL, i.e. all fields are read/writeable. 
+ *          Setting it to FL_RONLY makes all parameters read-only, e.g. for added level of security. 
  *          Individual parameters can be set to NULL/FL_RONLY to make only these parameters writable/read-only.
  *       version 0.26
  *        - added functionality for logging on micro SD card, using the slot of the w5100 Ethernet shield
@@ -252,7 +252,7 @@
  *       version 0.17a
  *        - minor errors corrected
  *       version 0.17
- *	      - merged v0.16 with FHEM user miwi's changes
+ *	      - merged v0.16 with FHEM user miwi's changes 
  *       version 0.16
  *        - removed IPWE and EthRly interface
  *        - added GPIO interface
@@ -386,12 +386,12 @@ int32_t max_devices[20] = { 0 };
 /*
 int16_t json_parameters[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 double json_values[20] = { 0 };
-uint8_t json_types[20] = { 0 };
+uint8_t json_types[20] = { 0 }; 
 */
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
 // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
-// byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
+// byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format  
 
 #ifdef LOGGER
 //  #include <SD.h>   // if you run into troubles with SdFat.h, just remove the following two lines and uncomment this line.
@@ -543,7 +543,7 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
     uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
     uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
     uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
-
+    
     if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
       break;
     }
@@ -615,7 +615,7 @@ uint32_t get_cmdtbl_cmd(int i) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl1[0].cmd) + i * sizeof(cmdtbl1[0]));
   } else {
-    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
+    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));    
   }
   return c;
 }
@@ -627,7 +627,7 @@ uint16_t get_cmdtbl_line(int i) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].line) + i * sizeof(cmdtbl1[0]));
   } else {
-    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
+    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));    
   }
   return l;
 }
@@ -638,7 +638,7 @@ uint16_t get_cmdtbl_desc(int i) {
   if (i < entries1) {
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
   } else {
-    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
+    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));    
   }
   return desc;
 }
@@ -649,7 +649,7 @@ uint16_t get_cmdtbl_enumstr(int i) {
   if (i < entries1) {
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
   } else {
-    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));    
   }
   return enumstr;
 }
@@ -660,7 +660,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
   if (i < entries1) {
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
   } else {
-    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));    
   }
   return enumstr_len;
 }
@@ -773,7 +773,7 @@ int findLine(uint16_t line
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
-
+      
       if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
@@ -1684,7 +1684,7 @@ void remove_char(char* str, char c) {
     pw += (*pw != c);
   }
   *pw = '\0';
-}
+} 
 
 /** *****************************************************************
  *  Function:  printTelegram()
@@ -1783,7 +1783,7 @@ char *printTelegram(byte* msg, int query_line) {
             score = 6;
             break;
           }
-        }
+        } 
         if (dev_fam!=my_dev_fam) {
           if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 1) {
             known = false;
@@ -1860,7 +1860,7 @@ char *printTelegram(byte* msg, int query_line) {
   }
   if (bus_type == BUS_LPB) {
     data_len=msg[len_idx]-14;     // get packet length, then subtract
-  }
+  } 
   if (bus_type == BUS_PPS) {
     data_len = 3;
   }
@@ -2124,7 +2124,7 @@ char *printTelegram(byte* msg, int query_line) {
         }
       }else{
         if (bus_type != BUS_PPS) {
-          SerialPrintData(msg);
+          SerialPrintData(msg);        
         }
 //        Serial.println();
 //        SerialPrintRAW(msg,msg[len_idx]+bus_type);
@@ -2137,7 +2137,7 @@ char *printTelegram(byte* msg, int query_line) {
   }
   if(verbose){
     if (bus_type != BUS_PPS) {
-      SerialPrintRAW(msg,msg[len_idx]+bus_type);
+      SerialPrintRAW(msg,msg[len_idx]+bus_type);      
     } else {
       if (msg[0] == 0x17) {
         SerialPrintRAW(msg, 10);
@@ -3275,7 +3275,7 @@ char* query(int line_start  // begin at this line (ProgNr)
       //Serial.println(F("line not found"));
       //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
     } // endelse, line (ProgNr) found / not found
-
+    
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
         formnr++;
@@ -3377,7 +3377,7 @@ char* query(int line_start  // begin at this line (ProgNr)
                 }
                 client.print(outBuf);
                 client.println(F("</option>"));
-
+  
                 while(pgm_read_byte_far(enumstr+c)!=0) c++;
                 c++;
               }
@@ -3407,7 +3407,7 @@ char* query(int line_start  // begin at this line (ProgNr)
             }
 */
             if (type == VT_HOUR_MINUTES) {
-              client.print(pvalstr);
+              client.print(pvalstr);              
             } else {
               client.print(strtod(pvalstr,NULL));
             }
@@ -3544,17 +3544,17 @@ void dht22(void) {
 
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
-      case DHTLIB_OK:
-      Serial.print(F("OK,\t"));
+      case DHTLIB_OK:  
+      Serial.print(F("OK,\t")); 
       break;
-      case DHTLIB_ERROR_CHECKSUM:
-      Serial.print(F("Checksum error,\t"));
+      case DHTLIB_ERROR_CHECKSUM: 
+      Serial.print(F("Checksum error,\t")); 
       break;
-      case DHTLIB_ERROR_TIMEOUT:
-      Serial.print(F("Time out error,\t"));
+      case DHTLIB_ERROR_TIMEOUT: 
+      Serial.print(F("Time out error,\t")); 
       break;
-      default:
-      Serial.print(F("Unknown error,\t"));
+      default: 
+      Serial.print(F("Unknown error,\t")); 
       break;
     }
 
@@ -3581,7 +3581,7 @@ void dht22(void) {
       outBufLen+=sprintf(outBuf+outBufLen," g/m<sup>3</sup>\n</td></tr>\n");
     }
   }
-  client.println(outBuf);
+  client.println(outBuf);  
 }
 #endif  //ifdef DHT_BUS
 
@@ -3692,7 +3692,7 @@ void Ipwe() {
       client.print(counter);
       client.print(F("<br></td><td>"));
       client.print(F("Avg"));
-      client.print(lookup_descr(avg_parameters[i]));
+      client.print(lookup_descr(avg_parameters[i]));            
       client.print(F("<br></td><td>"));
       double rounded = round(avgValues[i]*10);
       client.println(rounded/10);
@@ -3727,7 +3727,7 @@ void Ipwe() {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
     DHT.read22(DHT_Pins[i]);
-
+    
     double hum = DHT.humidity;
     double temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
@@ -3756,7 +3756,7 @@ void Ipwe() {
 #endif
 
   client.print(F("</tbody></table></form>"));
-}
+} 
 
 #endif    // --- Ipwe() ---
 
@@ -3775,7 +3775,7 @@ void Ipwe() {
 
 #ifdef MAX_CUL
 void InitMaxDeviceList() {
-
+  
   char max_id[11] = { 0 };
   char max_id_eeprom[11] = { 0 };
   int32_t max_addr = 0;
@@ -3862,7 +3862,7 @@ void loop() {
 #endif
 //  }else{
   }
-  if (!monitor || busmsg == true) {
+  if (!monitor || busmsg == true) {  
     // Listen for incoming messages, identified them by their magic byte.
     // Method GetMessage() validates length byte and CRC.
     if (bus.GetMessage(msg) || busmsg == true) { // message was syntactically correct
@@ -3948,7 +3948,7 @@ void loop() {
               }else{ // overflow
                 brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
               }
-              brenner_start=0;
+              brenner_start=0;              
             }
             if (brenner_stufe == 1) {   // Stufe jetzt 1, war also vorher 2
               if(brenner_end >= brenner_start_2){
@@ -4193,8 +4193,8 @@ void loop() {
               LogTelegram(tx_msg);
             }
 #endif
-          }
-
+          } 
+        
         } else {    // parse heating system data
 
           if (msg[0] == 0x1E) {   // Anfragen der Therme nach bestimmten Parametern
@@ -4252,7 +4252,7 @@ Weitere noch zu überprüfende Telegramme:
 https://www.mikrocontroller.net/topic/218643#3517035
  17 FD 4A 00 3B 00 0B 0F 00 64
 -> 0x3B = 59 % Brennerleistung
--> 0x000B = wahrscheinlich Status 11 (es gibt noch 7, 19 usw, sicher bin
+-> 0x000B = wahrscheinlich Status 11 (es gibt noch 7, 19 usw, sicher bin 
 ich mir da nicht)
 -> 0x0F00 = 3840 / 64 = 60 °C Ist-Kesseltemperatur
 
@@ -4298,20 +4298,20 @@ ich mir da nicht)
                 case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
                 case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
                 case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
-                case 0x60:
-                  pps_values[PPS_S11] = msg[7+pps_offset];
-                  pps_values[PPS_E11] = msg[6+pps_offset];
-                  pps_values[PPS_S12] = msg[5+pps_offset];
-                  pps_values[PPS_E12] = msg[4+pps_offset];
-                  pps_values[PPS_S13] = msg[3+pps_offset];
+                case 0x60: 
+                  pps_values[PPS_S11] = msg[7+pps_offset]; 
+                  pps_values[PPS_E11] = msg[6+pps_offset]; 
+                  pps_values[PPS_S12] = msg[5+pps_offset]; 
+                  pps_values[PPS_E12] = msg[4+pps_offset]; 
+                  pps_values[PPS_S13] = msg[3+pps_offset]; 
                   pps_values[PPS_E13] = msg[2+pps_offset];
                   break;
                 case 0x61:
-                  pps_values[PPS_S21] = msg[7+pps_offset];
-                  pps_values[PPS_E21] = msg[6+pps_offset];
+                  pps_values[PPS_S21] = msg[7+pps_offset]; 
+                  pps_values[PPS_E21] = msg[6+pps_offset]; 
                   pps_values[PPS_S22] = msg[5+pps_offset];
                   pps_values[PPS_E22] = msg[4+pps_offset];
-                  pps_values[PPS_S23] = msg[3+pps_offset];
+                  pps_values[PPS_S23] = msg[3+pps_offset]; 
                   pps_values[PPS_E23] = msg[2+pps_offset];
                   break;
                 case 0x62:
@@ -4357,7 +4357,7 @@ ich mir da nicht)
                 case 0x69: break;                             // Nächste Schaltzeit
                 case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
-                case 0x1B:                                    // Frostschutz-Temperatur
+                case 0x1B:                                    // Frostschutz-Temperatur 
                   pps_values[PPS_FRS] = temp;
                   pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
                   break;
@@ -4394,18 +4394,18 @@ ich mir da nicht)
             Serial.print(F("Time: ")); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
 */
           } // End parsing 0x1D heater telegrams
-
+    
           if(verbose && !monitor) {     // verbose output for PPS after time-critical sending procedure
             printTelegram(msg, -1);
 #ifdef LOGGER
             LogTelegram(msg);
 #endif
-          }
-
+          } 
+                
         } // End parse PPS heating data
 
       } // End PPS-bus handling
-
+      
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
@@ -4476,7 +4476,7 @@ ich mir da nicht)
             } else if (c != '\r') {
               // you've gotten a character on the current line
               currentLineIsBlank = false;
-            }
+            }            
           }
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
@@ -4599,9 +4599,9 @@ ich mir da nicht)
 #endif
           }
 #ifdef LANG_DE
-    client.println(F("Nur die serielle Ausgabe ist betroffen."));
+	  client.println(F("Nur die serielle Ausgabe ist betroffen."));
 #else
-    client.println(F("Only serial output is affected."));
+	  client.println(F("Only serial output is affected."));
 #endif
           webPrintFooter();
           break;
@@ -4653,7 +4653,7 @@ ich mir da nicht)
             Serial.println(d_addr);
             bus_type=bus.setBusType(bus_type, myAddr, d_addr);
           }
-
+          
           Serial.print(F("set ProgNr "));
           Serial.print(line);    // the ProgNr
           Serial.print(F(" = "));
@@ -4776,7 +4776,7 @@ ich mir da nicht)
                 while(pgm_read_byte_far(enumstr+c)!=0) c++;
                 c++;
               }
-
+            
             }else{
 #ifdef LANG_DE
               client.println(F("FEHLER: Falscher Typ!"));
@@ -4788,7 +4788,7 @@ ich mir da nicht)
 #ifdef LANG_DE
             client.println(F("FEHLER: Zeile nicht gefunden!"));
 #else
-            client.println(F("ERROR: line not found!"));
+	          client.println(F("ERROR: line not found!"));
 #endif
           }
           webPrintFooter();
@@ -4949,7 +4949,7 @@ ich mir da nicht)
 #endif
           break;
         }
-
+        
         if(p[1]=='O') {   // display URL command list
           webPrintHeader();
           printPStr(pgm_get_far_address(url_command_html), sizeof(url_command_html));
@@ -4965,7 +4965,7 @@ ich mir da nicht)
 
           int i=0;
           uint32_t cmd=0;
-
+            
           // Parse potential JSON payload
 
           char json_temp[11];
@@ -5176,7 +5176,7 @@ ich mir da nicht)
                       } else {
                         client.println(F(","));
                       }
-                      client.print(F("      { \"enumValue\": \""));
+                      client.print(F("      { \"enumValue\": \"")); 
                       if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                         val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
                         x++;
@@ -5235,7 +5235,7 @@ ich mir da nicht)
           break;
         }
 
-#ifdef LOGGER
+#ifdef LOGGER            
         if(p[1]=='D'){ // access datalog file
           if (p[2]=='0') {  // remove datalog file
             webPrintHeader();
@@ -5256,7 +5256,7 @@ ich mir da nicht)
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
-            client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
+      	    client.println(F("<A HREF='D'>Download Data</A><div align=center></div>"));
 
             printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
 
@@ -5347,7 +5347,7 @@ ich mir da nicht)
 #endif
           client.print(verbose);
           client.println(F("<BR>"));
-
+          
           #ifdef ONE_WIRE_BUS
           client.println(F("1-Wire bus pins: "));
           client.println(ONE_WIRE_BUS);
@@ -5366,7 +5366,7 @@ ich mir da nicht)
             client.print(F(" "));
           }
           client.println(F("<BR>"));
-
+          
           client.println(F("MAC address: "));
           for (int i=0; i<=5; i++) {
             if (mac[i] < 10) {
@@ -5392,7 +5392,7 @@ ich mir da nicht)
             if (avg_parameters[i] > 0) {
               client.print (avg_parameters[i]);
               client.print(F(" - "));
-              client.print(lookup_descr(avg_parameters[i]));
+              client.print(lookup_descr(avg_parameters[i])); 
               client.println(F("<BR>"));
             }
           }
@@ -5415,7 +5415,7 @@ ich mir da nicht)
               client.print (log_parameters[i]);
               client.print(F(" - "));
               if (log_parameters[i] < 20000) {
-                client.print(lookup_descr(log_parameters[i]));
+                client.print(lookup_descr(log_parameters[i])); 
               } else {
                 if (log_parameters[i] == 20000) {
                   client.print(F("Brennerlaufzeit Stufe 1"));
@@ -5515,7 +5515,7 @@ ich mir da nicht)
             Serial.print(i, HEX);
             Serial.print(F(" "));
           }
-
+          
           break;
         }
         if (p[1]=='L' && p[2]=='B' && p[3]=='='){
@@ -5608,7 +5608,7 @@ ich mir da nicht)
           while (log_token!=0) {
             int log_parameter = atoi(log_token);
             if (token_counter < numLogValues) {
-              log_parameters[token_counter] = log_parameter;
+              log_parameters[token_counter] = log_parameter; 
               client.print(log_parameters[token_counter]);
               client.println(F(" "));
               token_counter++;
@@ -5645,13 +5645,13 @@ ich mir da nicht)
             len_idx = 1;
             pl_start = 13;
             client.println(F("LPB"));
-          }
+          } 
           if (p[2]=='2') {
             bus_type=bus.setBusType(BUS_PPS, myAddr);
             len_idx = 9;
             pl_start = 6;
             client.println(F("PPS"));
-          }
+          }           
           if (bus_type != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
@@ -5778,7 +5778,7 @@ ich mir da nicht)
               while (avg_token!=0) {
                 int avg_parameter = atoi(avg_token);
                 if (token_counter < numAverages) {
-                  avg_parameters[token_counter] = avg_parameter;
+                  avg_parameters[token_counter] = avg_parameter; 
                   client.print(avg_parameters[token_counter]);
                   client.println(F(" "));
                   token_counter++;
@@ -5791,7 +5791,7 @@ ich mir da nicht)
                   client.print(F("<tr><td>\n"));
                   client.print(avg_parameters[i]);
                   client.print(F(" Avg"));
-                  client.print(lookup_descr(avg_parameters[i]));
+                  client.print(lookup_descr(avg_parameters[i]));            
                   client.print(F(": "));
                   double rounded = round(avgValues[i]*10);
                   client.print(rounded/10);
@@ -6132,7 +6132,7 @@ ich mir da nicht)
                 dataFile.print(avg_parameters[i]);
                 dataFile.print(F(";"));
                 dataFile.print(F("Avg_"));
-                dataFile.print(lookup_descr(avg_parameters[i]));
+                dataFile.print(lookup_descr(avg_parameters[i]));            
                 dataFile.print(F(";"));
                 double rounded = round(avgValues[i]*10);
                 dataFile.print(rounded/10);
@@ -6229,7 +6229,7 @@ ich mir da nicht)
           }
 #endif
         }
-      }
+      } 
       dataFile.close();
    } else {
     // if the file isn't open, pop up an error:
@@ -6334,7 +6334,7 @@ custom_timer = millis();
       uint8_t max_msg_len = (uint8_t)strtoul(max_hex_str, NULL, 16);
 
       if (max_msg_type == 0x02) {
-        strncpy(max_hex_str, buffer+15, 6);
+        strncpy(max_hex_str, buffer+15, 6);        
       } else {
         strncpy(max_hex_str, buffer+9, 6);
       }
@@ -6392,7 +6392,7 @@ custom_timer = millis();
       }
 
       if (max_msg_type == 0x02) {
-        strncpy(max_hex_str, buffer+27, 2);
+        strncpy(max_hex_str, buffer+27, 2);        
         max_hex_str[2]='\0';
         max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
         Serial.println(F("Valve position from associated thermostat received:"));
@@ -6536,7 +6536,7 @@ void setup() {
 
   // you're connected now, so print out the data
   Serial.println("You're connected to the network");
-
+  
   printWifiStatus();
 #endif
 
@@ -6581,7 +6581,7 @@ void setup() {
 #endif
 #else
   Ethernet.begin(mac, ip);
-#endif
+#endif 
 #endif
 
 #ifdef LOGGER
@@ -6611,7 +6611,7 @@ void setup() {
 // figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and LAST_ENUM_NR).
 // Then use this as refernce to later determine if a page boundary >64kb has occurred.
 
-  uint32_t c;
+  uint32_t c; 
   int index_first_enum = 0;
   int index_last_enum = 0;
   uint32_t temp_offset1=0;
@@ -6682,7 +6682,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 
 #ifdef LOGGER
 
-// restore average
+// restore average 
 
   if (SD.exists("averages.txt")) {
     File avgfile = SD.open("averages.txt", FILE_READ);
@@ -6740,7 +6740,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
   if (bus_type != BUS_PPS) {
 // receive inital date/time from heating system
     SetDateTime();
-
+  
 // receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
     SetDevId();
   }
@@ -6753,7 +6753,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
   }
 
   InitMaxDeviceList();
-
+  
 #endif
 
 #include "BSB_lan_custom_setup.h"
