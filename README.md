@@ -6,6 +6,8 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
+<B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.
+
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
 - Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
@@ -67,8 +69,6 @@ Some companies which previously used BSB/LPB in their heating systems have now s
 Instructions on how to configure etc. can be found in the <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md">HowTo</A>.<BR>
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
-
-Some interface kits from a collective order are still available, fitting directly on the Arduino Mega 2560 or (with different pin headers) on the Raspberry Pi 2. Contact bsb (ät) code-it.de if you are interested (German or English).
 
 Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the Arduino! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
 

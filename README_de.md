@@ -6,6 +6,8 @@ LAN-Adapter für den Boiler-System-Bus (BSB), den Local Process Bus (LPB) und di
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
 
+<B>Bausätze erhältlich!<B> Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Mega 2560 erhältlich, bei Interesse bitte e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).
+
 <b>Ausführliche Informationen zum Adapter und der Software sind im Handbuch zu finden.</b>
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
@@ -66,8 +68,7 @@ Einige Hersteller, die vormals auf BSB/LPB gesetzt haben, sind bei "günstigeren
 <BR><BR>
 Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="https://forum.fhem.de/index.php?topic=29762.new;topicseen#new">hier</A> nachvollzogen werden.<BR>
 
-Einige Adapterbausätze sind noch aus einer Sammelbestellung verfügbar, die direkt auf einen Arduino Mega 2560 oder (mit anderen Pinheadern) auf einen Raspberry Pi 2 passen. Kontaktiere bsb (ät) code-it.de , falls du daran interessiert bist (Deutsch oder Englisch).
-Bitte beachte, dass der Adapter zwar an einem Raspberry Pi genutzt werden kann, die hier angebotene Software jedoch nur auf dem Arduino läuft! Wenn der Adapter an einem Raspberry Pi genutzt werden soll, muss stattdessen die Software bsb_gateway genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> verfügbar ist. Bitte beachte, dass sich die Funktionalität signifikant unterscheidet, und dass du für jegliche Fragen diesbezüglich den Autor von bsb_gateway kontaktieren musst.
+Bitte beachte, dass der Adapter zwar an einem Raspberry Pi genutzt werden kann, die hier angebotene Software jedoch nur auf dem Arduino läuft! Wenn der Adapter an einem Raspberry Pi genutzt werden soll, muss stattdessen die Software bsb_gateway genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> verfügbar ist. Bitte beachte, dass die Funktionalität am Raspberry deutlich weniger umfangreich ist, und dass Du für jegliche Fragen diesbezüglich den Autor von bsb_gateway kontaktieren musst.
 
 Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface.png" size="50%">
