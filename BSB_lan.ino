@@ -2756,7 +2756,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_DWORD:
       {
       if(val[0]!='\0'){
-        uint32_t t=atoi(val);
+        uint32_t t = (uint32_t)strtoul(val, NULL, 10);
         param[0]=0x06;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
