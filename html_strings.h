@@ -269,14 +269,13 @@ const char header_html[] PROGMEM_LATE =
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
   "<title>BSB-LAN Web</title>\n"
-  "<link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"http://arduino.cc/en/favicon.png\" />\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
   "</head><body>\n"
   "<script>function set(line,formnr){\n"
   "var value = document.getElementById('value'+formnr).value.replace(\":\", \".\");\n"
   "if(isNaN(value)==false){\n"
-  "window.open('S'+line+'='+document.getElementById('value'+formnr).value,'_self');\n"
+  "window.open(document.getElementById('main_link').href+'S'+line+'='+document.getElementById('value'+formnr).value,'_self');\n"
   "}}\n"
   "function setbit(line,formnr){\n"
   "var x=document.getElementById('value'+formnr); var value=0;\n"
@@ -284,10 +283,10 @@ const char header_html[] PROGMEM_LATE =
   "if(x.options[i].selected){\n"
   "value=value+eval(x.options[i].value);\n"
   "}}\n"
-  "window.open('S'+line+'='+value,'_self');\n"
+  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
   "}</script>\n"
   "<font face='Arial'>\n"
-  "<center><h1><A HREF='/";
+  "<center><h1><A ID=main_link HREF='/";
 
 const char url_command_html[] PROGMEM_LATE =
 
