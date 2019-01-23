@@ -276,7 +276,7 @@ const char header_html[] PROGMEM_LATE =
   "<script>function set(line,formnr){\n"
   "var value = document.getElementById('value'+formnr).value.replace(\":\", \".\");\n"
   "if(isNaN(value)==false){\n"
-  "window.open('/S'+line+'='+document.getElementById('value'+formnr).value,'_self');\n"
+  "window.open('S'+line+'='+document.getElementById('value'+formnr).value,'_self');\n"
   "}}\n"
   "function setbit(line,formnr){\n"
   "var x=document.getElementById('value'+formnr); var value=0;\n"
