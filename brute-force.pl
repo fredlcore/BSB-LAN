@@ -51,6 +51,7 @@ if ($bus ne "BSB" && $bus ne "LPB") {
 my $heater = `wget -q -O - $URL/JQ=6224 | grep "value"`;
 $heater =~ /.*: "(.*)"/;
 $heater = $1;
+$heater =~ s/\//-/g;
 print "Running scan on $bus for Command ID range ";
 printf("%02X", $baseID);
 print " on $heater...\n";
