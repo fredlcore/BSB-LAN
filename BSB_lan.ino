@@ -511,7 +511,7 @@ void checkSockStatus()
           Serial.println(i);
 
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-          W5100.execCmdSn(s, Sock_CLOSE);
+          W5100.execCmdSn(s, Sock_DISCON);
           SPI.endTransaction();
 
           Serial.println(F("Socket freed."));
@@ -3198,7 +3198,6 @@ char* query(int line_start  // begin at this line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
-  int formnr=0;
   char *pvalstr=NULL;
 
   if (!no_print) {         // display in web client?
@@ -3280,7 +3279,6 @@ char* query(int line_start  // begin at this line (ProgNr)
     
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
-        formnr++;
         if (msg[4+(bus_type*4)] == TYPE_ERR) {
 #ifdef HIDE_UNKNOWN
           continue;
@@ -3326,7 +3324,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               client.print(F("multiple "));
             }
             client.print(F("id='value"));
-            client.print(formnr);
+            client.print(line);
             client.println(F("'>"));
             if (type == VT_ONOFF) {
               uint8_t pps_offset = (bus_type == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
@@ -3393,13 +3391,11 @@ char* query(int line_start  // begin at this line (ProgNr)
               }
               client.print(F("("));
               client.print(line);
-              client.print(F(","));
-              client.print(formnr);
               client.print(F(")\">"));
             }
           } else {
             client.print(F("<input type=text id='value"));
-            client.print(formnr);
+            client.print(line);
             client.print(F("' VALUE='"));
 
 /*
@@ -3417,8 +3413,6 @@ char* query(int line_start  // begin at this line (ProgNr)
             if ((flags & FL_RONLY) != FL_RONLY) {
               client.print(F("<input type=button value='Set' onclick=\"set("));
               client.print(line);
-              client.print(F(","));
-              client.print(formnr);
               client.print(F(")\">"));
             }
           }
