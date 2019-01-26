@@ -8,7 +8,7 @@ LAN-Adapter für den Boiler-System-Bus (BSB), den Local Process Bus (LPB) und di
 
 <B>Bausätze erhältlich!</B> Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Mega 2560 erhältlich, bei Interesse bitte e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).
 
-<b>Ausführliche Informationen zum Adapter und der Software sind im Handbuch zu finden.</b>
+<b>Ausführliche Informationen zum Adapter und der Software sind im [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN) zu finden.</b>
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
  - Atlantic Alféa Extensa + [RVS21.831F] (Wärmepumpe)
@@ -32,6 +32,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje NovoCondens WOB 20D [RVS43.325] (Ölbrenner)
  - Brötje SensoTherm BLW 12B [RVS21.825] (Wärmepumpe)
  - Brötje SensoTherm BLW 15B [RVS21.825] (Wärmepumpe)
+ - Brötje SensoTherm BSW 10E [RVS61.843] (Wärmepumpe)
  - Brötje SensoTherm BSW-K [RVS61.843] (Wärmepumpe)
  - Brötje TrioCondens BGB 20E [LMS14] (Gasbrenner)
  - Brötje WBS 14D [LMU74] (Gasbrenner)
@@ -41,10 +42,12 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje WGB 20C [LMU74] (Gasbrenner)
  - Brötje WGB-C 20/24H [LMS14] (Gasbrenner)
  - Brötje WGB EVO 20H [LMS15] (Gasbrenner)
+ - Brötje WGB EVO 15I [LMS15] (Gasbrenner)
  - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
  - Brötje WGB S 17/20E EcoTherm Plus [LMS14] (Gasbrenner)
  - Brötje WGB-U 15H [LMS14] (Gasbrenner)
  - CTC 380 IC [RVS43.143] (Ölbrenner)
+ - Deville 9981 [RVA53.140] (Ölbrenner) {PPS_only}
  - Elco Aerotop G07-14 [RVS61.843] (Wärmepumpe)
  - Elco Aerotop T10C [RVS61.843] (Wärmepumpe)
  - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
@@ -53,6 +56,8 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 13.1 [LMU7] (Gasbrenner)
  - Elco Thision S 17.1 [LMU74] & [RVS63.283] (Gasbrenner)
  - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
+ - Fröling Rendagas Plus [RVA63.244] (Gasbrenner) {LPB_only}
+ - Fujitsu Waterstage WSHA 050 DA [RVS41.813] (Wärmepumpe)
  - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
  - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (Wärmepumpe)
  - MHG Procon E 25 HS [LMS14] (Gasbrenner)
