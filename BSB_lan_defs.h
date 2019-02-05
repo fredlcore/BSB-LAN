@@ -4390,6 +4390,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
+{0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ ] - Uhrzeit und Datum
@@ -4404,9 +4405,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
 // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
 {0x0500009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
@@ -4666,6 +4669,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D067C,  CAT_HK1,              VT_DAYS,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich-Austrocknung Tag
 {0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
 {0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D08C9,  CAT_HK1,              VT_ENUM,          861,   STR861,   sizeof(ENUM861),      ENUM861,      DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Übertemperaturabnahme
 {0x213D065E,  CAT_HK1,              VT_PERCENT,       864,   STR864,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
@@ -4771,6 +4775,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D067C,  CAT_HK2,              VT_DAYS,          1156,  STR1156,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag aktuell
 {0x2E3D0DF2,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag erfüllt
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_107_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
+{0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 
 {0x223D08C9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),     ENUM1161,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
 {0x2E3D07C4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
@@ -5500,6 +5505,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_205_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_211_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_5),   ENUM5950_5,   DEFAULT_FLAG, DEV_107_ALL}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_028_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_076_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0487,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_096_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0808,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -5559,6 +5565,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_3,sizeof(ENUM5957_2),   ENUM5957_2,   DEFAULT_FLAG, DEV_076_ALL}, // BA-Umschaltung HK's+TWW
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_2,sizeof(ENUM5957),     ENUM5957,     DEFAULT_FLAG, DEV_096_ALL}, // BA-Umschaltung HK's+TWW
 {0x073D0807,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960,  sizeof(ENUM5960),     ENUM5960,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Funktion Eingang H3
+{0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_028_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_2),   ENUM5960_2,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
@@ -5782,6 +5789,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // LPB-System
 {0x053D00C9,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
+{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [0] - LPB - Geraeteadresse
@@ -5805,6 +5813,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D006D,  CAT_LPB,              VT_ENUM,          6640,  STR6640,  sizeof(ENUM6640),     ENUM6640,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Uhrbetrieb
 // Codierung unklar: 15.01 -> HEIZ->DISP ANS 6650 Aussentemperatur Lieferant 00 F0 ??? 00.01 = 00 00 ???
 {0x053D009F,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Aussentemperatur Lieferant
+{0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [0] - LPB - Aussentemperatur Lieferant - logged on OCI700 via LPB
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - LPB - Aussentemperatur Lieferant - logged on OCI700 via LPB
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x413D000E,  CAT_LPB,              VT_FP1    ,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
@@ -6409,6 +6418,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D0C86,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8321,  STR8321,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Virtual parameter logged on OCI420 via ACS700 diagnosis software: Aktuelle Regeldifferenz
 {0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebläsedrehzahl - Broetje NovoCondens WOB20-25
 {0x113D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1 - logged on OCI700 via LPB
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl - Elco Thision S 17.1
@@ -6560,6 +6570,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0823,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8507,  STR8507,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Solarpumpe Puffer
 {0x053D0824,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8508,  STR8508,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Solarpump Sch'bad
 {0x493D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
+{0x053D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 - logged on OCI700 via LPB
 {0x053D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 - logged on OCI700 via LPB
 {0x053D052A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8510,  STR8510,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1
 {0x493D053F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8511,  STR8511,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kollektortemperatur 1 Max
