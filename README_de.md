@@ -16,6 +16,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje BBK 22E [LMS14] (Gasbrenner)
  - Brötje BBK 22F [LMS14] (Gasbrenner)
  - Brötje BBS Pro Evo 15C [LMU74] (Gasbrenner)
+ - Brötje BSK 20 [LMS14] (Gasbrenner)
  - Brötje EcoCondens BBS 15E [LMS14] (Gasbrenner)
  - Brötje EcoCondens BBS 20E [LMS14] (Gasbrenner)
  - Brötje EcoCondens BBS 28C [LMU7] (Gasbrenner)
@@ -49,6 +50,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - CTC 380 IC [RVS43.143] (Ölbrenner)
  - Deville 9981 [RVA53.140] (Ölbrenner) {PPS_only}
  - Elco Aerotop G07-14 [RVS61.843] (Wärmepumpe)
+ - Elco Aerotop T07-16 [RVS61.843] (Wärmepumpe)
  - Elco Aerotop T10C [RVS61.843] (Wärmepumpe)
  - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
  - Elco Straton 21 [RVS63.283] (Ölbrenner)
