@@ -28,10 +28,10 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint8_t addr, uint8_t d_addr) {
     case 2: len_idx = 8; break;
     default: len_idx = 3; break;
   }
-  if (addr<0xff) {
+  if (addr<=0xff) {
     myAddr = addr;
   }
-  if (d_addr<0xff) {
+  if (d_addr<=0xff) {
     destAddr = d_addr;
   }
   Serial.print(F("My address: "));
