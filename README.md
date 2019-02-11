@@ -15,6 +15,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje BBK 22E [LMS14] (gas-fired)
 - Brötje BBK 22F [LMS14] (gas-fired)
 - Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
+- Brötje BSK 20 [LMS14] (gas-fired)
 - Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
 - Brötje EcoCondens BBS 20E [LMS14] (gas-fired)
 - Brötje EcoCondens BBS 28C [LMU7] (gas-fired)
@@ -48,6 +49,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - CTC 380 IC [RVS43.143] (oil-fired)
 - Deville 9981 [RVA53.140] (oil-fired) {PPS_only}
 - Elco Aerotop G07-14 [RVS61.843] (heat pump)
+- Elco Aerotop T07-16 [RVS61.843] (heat pump)
 - Elco Aerotop T10C [RVS61.843] (heat pump)
 - Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
 - Elco Straton 21 [RVS63.283] (oil-fired)
