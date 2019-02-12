@@ -20,7 +20,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   destAddr=d_addr;
 }
 
-uint8_t BSB::setBusType(uint8_t bus_type_val, uint8_t addr, uint8_t d_addr) {
+uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   bus_type = bus_type_val;
   switch (bus_type) {
     case 0: len_idx = 3; break;
@@ -29,10 +29,10 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint8_t addr, uint8_t d_addr) {
     default: len_idx = 3; break;
   }
   if (addr<=0xff) {
-    myAddr = addr;
+    myAddr = addr & 0xFF;
   }
   if (d_addr<=0xff) {
-    destAddr = d_addr;
+    destAddr = d_addr & 0xFF;
   }
   Serial.print(F("My address: "));
   Serial.println(myAddr);

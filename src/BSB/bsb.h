@@ -41,7 +41,7 @@ public:
   boolean Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
-  uint8_t setBusType(uint8_t bus_type_val, uint8_t addr=0xff, uint8_t d_addr=0xff);
+  uint8_t setBusType(uint8_t bus_type_val, uint16_t addr=0x100, uint16_t d_addr=0x100);
   uint8_t getBusType();
   uint8_t getBusAddr();
   uint8_t getBusDest();
