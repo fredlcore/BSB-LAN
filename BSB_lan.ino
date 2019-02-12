@@ -479,7 +479,9 @@ void ShowSockStatus()
   for (int i = 0; i < MAX_SOCK_NUM; i++) {
     Serial.print(F("Socket#"));
     Serial.print(i);
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     uint8_t s = W5100.readSnSR(i);
+    SPI.endTransaction();
     socketStat[i] = s;
     Serial.print(F(":0x"));
     Serial.print(s,16);
@@ -487,13 +489,17 @@ void ShowSockStatus()
     Serial.print(W5100.readSnPORT(i));
     Serial.print(F(" D:"));
     uint8_t dip[4];
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     W5100.readSnDIPR(i, dip);
+    SPI.endTransaction();
     for (int j=0; j<4; j++) {
       Serial.print(dip[j],10);
       if (j<3) Serial.print(".");
     }
     Serial.print(F("("));
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     Serial.print(W5100.readSnDPORT(i));
+    SPI.endTransaction();
     Serial.println(F(")"));
   }
 }
@@ -503,7 +509,9 @@ void checkSockStatus()
   unsigned long thisTime = millis();
 
   for (int i = 0; i < MAX_SOCK_NUM; i++) {
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     uint8_t s = W5100.readSnSR(i);
+    SPI.endTransaction();
 
     if((s == 0x14) || (s == 0x1C)) {
         if(thisTime - connectTime[i] > 30000UL) {
@@ -520,7 +528,9 @@ void checkSockStatus()
     }
     else connectTime[i] = thisTime;
 
+    SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     socketStat[i] = W5100.readSnSR(i);
+    SPI.endTransaction();
   }
 }
 
@@ -4014,7 +4024,7 @@ void loop() {
               tx_msg[7] = 0x00;
               break;
             case 5:
-              tx_msg[1] = 0x49;     // Präsenz
+              tx_msg[1] = 0x49;     // Betriebsart
               tx_msg[7] = pps_values[PPS_BA];
               break;
             case 6:
@@ -4838,6 +4848,54 @@ ich mir da nicht)
         if(p[1]=='Q') {
 //#ifdef DEBUG
           webPrintHeader();
+
+          client.print(F("Available device addresses:<BR>"));
+          if (bus_type == 0) {
+            bus.setBusType(bus_type, myAddr, 0x7F);
+          }
+          if (bus_type == 1) {
+            bus.setBusType(bus_type, myAddr, 0xFF);
+          }
+
+          if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg)) {
+            uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+            unsigned long startquery = millis();
+            while (millis() < startquery + 10000) {
+              if (bus.GetMessage(msg)) {
+                uint8_t found_id = 0;
+                boolean found = false;
+                if (bus_type == 0) {
+                  found_id = msg[1] & 0x7F;
+                }
+                if (bus_type == 1) {
+                  found_id = msg[3];
+                }
+                for (int i=0;i<10;i++) {
+                  if (found_ids[i] == found_id) {
+                    found = true;
+                    break;
+                  }
+                  if (found_ids[i] == 0xFF) {
+                    found_ids[i] = found_id;
+                    break;
+                  }
+                }
+                if (!found) {
+                  client.print(F("Device address found: "));
+                  client.print(found_id);
+                  client.println(F("<BR>"));
+                }
+              }
+              delay(1);
+            }
+          } else {
+            client.println(F("Device query failed!<BR>"));
+          }
+          bus.setBusType(bus_type, myAddr, destAddr);
+          client.print(F("Running test with destination device address "));
+          client.print(destAddr);
+          client.println(F(":<BR>"));
+
           uint32_t c=0;
           uint16_t l;
           char* pvalstr=NULL;
