@@ -625,6 +625,7 @@ const char STR668[] PROGMEM = "Betriebsniveau";
 // Heizkreis 1
 const char STR700[] PROGMEM = "Betriebsart";
 const char STR701[] PROGMEM = "Präsenztaste (temporäre Abwesenheit)";
+const char STR709[] PROGMEM = "Komfortsollwert Minimum";
 const char STR710[] PROGMEM = "Komfortsollwert";
 const char STR711[] PROGMEM = "Komfortsollwert Maximum";
 const char STR712[] PROGMEM = "Reduziertsollwert";
@@ -4405,10 +4406,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
 // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
 {0x0500009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x050504B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
@@ -4628,12 +4629,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Einstellungen Heizkreis 1
 {0x2D3D0574,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D3D0572,  CAT_HK1,              VT_ONOFF,         701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x393D2F80,  CAT_HK1,              VT_TEMP_SHORT5,   709,   STR709,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Min
 {0x2D3D058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
 //HEIZ->DISP ANS      2D3D05A5 00 08 C0 (35.0°C)
 // line not in menue!
 // virtuelle Zeile
 
 {0x2D3D05A5,  CAT_HK1,              VT_TEMP,          711,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max
+{0x393D2F81,  CAT_HK1,              VT_TEMP_SHORT5,   711,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max
 {0x2D3D0590,  CAT_HK1,              VT_TEMP,          712,   STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziertsollwert
 {0x2D3D0592,  CAT_HK1,              VT_TEMP,          714,   STR714,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Frostschutzsollwert
 {0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
@@ -5743,7 +5746,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Software- Version LOGON B
 {0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
-{0x051A0000,  CAT_KONFIG,           VT_UNKNOWN,       6223,  STR6223,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Unbekannte Geräteabfrage
+{0x053D0000,  CAT_KONFIG,           VT_UNKNOWN,       6223,  STR6223,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Unbekannte Geräteabfrage
 {0x053D0001,  CAT_KONFIG,           VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
 {0x053D0002,  CAT_KONFIG,           VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6225 Gerätefamilie [?]
 {0x053D0003,  CAT_KONFIG,           VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6226 Gerätevariante [?]
@@ -6425,6 +6428,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1 - logged on OCI700 via LPB
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl - Elco Thision S 17.1
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
@@ -6878,7 +6882,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D047F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10227, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 FF FF 00 00 00 00 00 00 00 00 00 00
 {0x053D0489,  CAT_USER_DEFINED,     VT_UNKNOWN,       10228, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 00 00
 {0x053D04B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10229, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16 / same on RVS43.222
-{0x053D04B3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10230, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16 / same on RVS43.222
 {0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10231, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10233, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10234, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64
