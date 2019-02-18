@@ -4410,7 +4410,7 @@ const char ENUM_SWCODE[] PROGMEM_LATEST = {
 "\x02\x6d Vorlauftemperaturalarm HK 1\0"
 "\x02\x6e Vorlauftemperaturalarm HK 2\0"
 "\x02\x7d Sollwert Handbetrieb über bzw. unter max. Kessel- bzw. min. Kesseltemperatur\0"
-}
+};
 
 // Wartungs-Codes
 const char ENUM_WARTUNG[] PROGMEM_LATEST = {
