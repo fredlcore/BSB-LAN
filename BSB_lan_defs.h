@@ -4242,12 +4242,15 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\x48 Pufferspeichertemperatur 3 Fühlerfehler\0"
 "\x49 Kollektortemperatur 1 Fühlerfehler\0"
 "\x4a Kollektortemperatur 2 Fühlerfehler\0"
+"\x4d Kollektortemperatur 1 Fühlerfehler\0"
 "\x51 LPB-Kurzschluss\0"
 "\x52 LPB-Adresskollision\0"
 "\x53 BSB-Draht Kurzschluss\0"
 "\x54 BSB-Adresskollision\0"
 "\x55 BSB-Funk Kommunikationsfehler\0"
 "\x5b EEPROM-Fehler bei Verriegelungsinformation\0"
+"\x5c Hardwarefehler in der Elektronik\0"
+"\x5f Ungültige Uhrzeit\0"
 "\x62 Erweiterungsmodul 1 Fehler (Sammelfehler)\0"
 "\x63 Erweiterungsmodul 2 Fehler (Sammelfehler)\0"
 "\x64 Zwei Uhrzeitmaster (LPB)\0"
@@ -4264,13 +4267,19 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\x7e Trinkwasser-Ladeüberwachung\0"
 "\x7f Legionellentemperatur nicht erreicht\0"
 "\x80 Flammenausfall in Betrieb\0"
+"\x81 Drehzahlgrenze verletzt\0"
 "\x83 Brennerstörung\0"
-"\x84 Gasdruckwächter- oder Luftdruckwächterfehler\0"
-"\x85 Sicherheitszeit überschritt\0"
+"\x84 Gasdruckwächter- oder Luftdruckwächterfehler / offen\0"
+"\x85 Keine Flammenbildung nach Ablauf der Sicherheitszeit\0"
+"\x8c Unzulässige LPB-Segment- oder -Gerätenummer\0"
 "\x92 Konfigurationsfehler Sammelmeldung\0"
+"\x94 Inkompatibilität LPB-Interface/Grundgerät\0"
 "\x97 Interner Fehler\0"
 "\x98 Parametrierungsfehler\0"
+"\x99 Entriegelungstaste wurde betätigt\0"
+"\x9a Temperaturwarnung\0"
 "\xa0 Gebläsefehler\0"
+"\xa1 Maximale Gebläsedrehzahl überschritten\0"
 "\xa2 Luftdruckwächter schließt nicht\0"
 "\xab Alarmkontakt 1 (H1 oder H4) aktiv\0"
 "\xac Alarmkontakt 2 (EM1, EM2 oder EM3) oder H5 aktiv\0"
@@ -4280,7 +4289,12 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xb1 Kritische untere Druckgrenze 2 (unterschritten)\0"
 "\xb2 Temperaturwächter Heizkreis 1\0"
 "\xb3 Temperaturwächter Heizkreis 2\0"
+"\xb4 Kaminkehrerfunktion ist aktiv\0"
+"\xb5 Reglerstoppfunktion ist aktiv\0"
+"\xb6 Drifttest aktiv (keine Störung!)\0"
 "\xb7 Gerät im Parametriermodus\0"
+"\xb8 Modemfunktion ist aktiviert\0"
+"\xb9 Estrichtrocknungsfunktion aktiviert\0"
 "\xcf Störung Kühlkreis\0"
 "\xd9 Fühler- / Sensorfehler Sammelmeldung\0"
 "\xda Drucküberwachung Sammelmeldung\0"
@@ -4341,6 +4355,62 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\x01\xab Konfiguration Abgasklappe\0"
 "\x01\xb0 Funktionserde X17 nicht angeschlossen"
 };
+
+const char ENUM_SWCODE[] PROGMEM_LATEST = {
+"\x11 STB Unterbruch\0"
+"\x53 Erlaubtes Drehzahlband für Zündlast wurde bei Inbetriebsetzung nicht erreicht.\0"
+"\x5f Drehzahlnachstellung überprüfen, vorgeschriebenes Band wird nicht erreicht.\0"
+"\x60 Fremdlicht (unzulässiges Flammensignal) während Heimlauf oder Standby\0"
+"\x61 Fremdlicht (unzulässiges Flammensignal)\0"
+"\x69 Gerät befindet sich in Programmierstellung (PC-Tool)\0"
+"\x6e Maximale Gebläsedrehzahl überschritten\0"
+"\x73 STB Abschaltetemperatur überschritten (el. STB)\0"
+"\x81 Unterbruch (STB oder intern; z.B. durch Ventilkurzschluss)\0"
+"\xa2 ungültige AD-Konfiguration in KonfigRg3\0"
+"\xa8 Kaminkehrerfunktion aktiv\0"
+"\xa9 Reglerstoppfunktion aktiv\0"
+"\xaa Entriegelungstaste ist dauernd betätig\0"
+"\x01\x03 Entriegelungstaste wurde betätigt\0"
+"\x01\x19 Gebläsedrehzahl überschritten\0"
+"\x01\x20 Gebläsedrehzahl unterschritten\0"
+"\x01\x45 ungültiges Schema in hydraulischen System oder interner Fehler\0"
+"\x01\xa6 el. STB hat ausgelöst (Nacherwärmung)\0"
+"\x01\xaa Kesseltemperatur steigt schneller als erlaubt\0"
+"\x01\xb1 Delta-T ist größer als Auslegungsspreizung dTkTrSTB + 16K\0"
+"\x01\xc5 ungültige Konfiguration des Umsteuerventils in KonfigRg4\0"
+"\x01\xc7 Hydraulik-Schema enthält keinen Heizkreis 1\0"
+"\x01\xc8 Hydraulik-Schema enthält keinen Heizkreis 2\0"
+"\x01\xc9 Hydraulik-Schema enthält keine  Zone\0"
+"\x01\xca Eingetragene Anforderung ist für BW nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
+"\x01\xcb Eingetragene Anforderung ist für HK1 nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
+"\x01\xcc Eingetragene Anforderung ist für HK2 nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
+"\x01\xcd Eingetragene Anforderung ist für Zone nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
+"\x01\xd6 el. STB hat ausgelöst (Nacherwärmung)\0"
+"\x01\xe3 Hydraulik-Schema enthält keine Zone.\0"
+"\x01\xef Angeschlossenes LPB-ClipIn defekt\0"
+"\x01\xf1 Parametrieranforderung über LPB-Bus\0"
+"\x02\x04 Mischer ClipIn defekt\0"
+"\x02\x06 Kurzschluss am LPB-Bus oder keine Busspeisung\0"
+"\x02\x07 Adresskollision auf dem LPB-Bus\0"
+"\x02\x08 Zwei Uhrzeitmaster Systemfehler\0"
+"\x02\x09 Unzulässige LPB-Segment- oder -Gerätenummer\0"
+"\x02\x1b Ein QAA und ein OCI als Zeitmaster\0"
+"\x02\x24 Eingang ClipIn falsch programmiert bzw. nicht möglich\0"
+"\x02\x26 Hydr. Weiche kann bei diesem Schema nicht bedient werden (Regelung/Pumpe)"
+"\x02\x28 Relais-ClipIn defekt\0"
+"\x02\x30 Brennerbetriebsstunden seit letzter Wartung überschritten\0"
+"\x02\x31 Inbetriebssetzung seit letzter Wartung überschritten\0"
+"\x02\x32 Monate seit letzter Wartung überschritten\0"
+"\x02\x33 Flammenionisationsstrom-Grenze überschritten\0"
+"\x02\x3d Störung der Abgasklappensteuerung: Rückmeldung defekt\0"
+"\x02\x5a Modemfunktion ist aktivier\0"
+"\x02\x5f Solar-ClipIn defekt\0"
+"\x02\x60 Estrichtrocknungsfunktion aktiv\0"
+"\x02\x6c Drifttest aktiv (keine Störung!)\0"
+"\x02\x6d Vorlauftemperaturalarm HK 1\0"
+"\x02\x6e Vorlauftemperaturalarm HK 2\0"
+"\x02\x7d Sollwert Handbetrieb über bzw. unter max. Kessel- bzw. min. Kesseltemperatur\0"
+}
 
 // Wartungs-Codes
 const char ENUM_WARTUNG[] PROGMEM_LATEST = {
@@ -5829,8 +5899,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 //Fehler
 {0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
 {0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
-{0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
-{0x093D3008,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
+{0x053D0099,  CAT_FEHLER,           VT_ENUM,          6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
+{0x093D3008,  CAT_FEHLER,           VT_ENUM,          6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
 {0x093D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
@@ -5864,7 +5934,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06DF,  CAT_FEHLER,           VT_ENUM,          6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+{0x053D06DF,  CAT_FEHLER,           VT_ENUM,          6805,  STR6805,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
@@ -5919,7 +5989,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
 {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
 {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D06E4,  CAT_FEHLER,           VT_ENUM,          6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+{0x053D06E4,  CAT_FEHLER,           VT_ENUM,          6815,  STR6815,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2 - logged on OCI700 via LPB
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
 {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
@@ -5957,7 +6027,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x393D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x0D3D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
+{0x053D2FFB,  CAT_FEHLER,           VT_ENUM,          6825,  STR6825,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
 {0x053D2FFB,  CAT_FEHLER,           VT_UINT,          6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 3
 {0x053D2FFA,  CAT_FEHLER,           VT_BYTE,          6826,  STR6826,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
 // 4
@@ -5969,7 +6039,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
+{0x053D2FFF,  CAT_FEHLER,           VT_ENUM,          6835,  STR6835,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
 {0x053D2FFF,  CAT_FEHLER,           VT_UINT,          6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 4
 {0x053D2FFE,  CAT_FEHLER,           VT_BYTE,          6836,  STR6836,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
 // 5
@@ -5982,37 +6052,37 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
 {0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
+{0x053D3003,  CAT_FEHLER,           VT_ENUM,          6845,  STR6845,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
 {0x053D3003,  CAT_FEHLER,           VT_UINT,          6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 5
 {0x053D3002,  CAT_FEHLER,           VT_BYTE,          6846,  STR6846,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
 // 6
 {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6850,  STR6850,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6
 {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6851,  STR6851,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6 Datum/Uhrzeit (6850 on display, mapped to 6851)
-{0x053D3084,  CAT_FEHLER,           VT_ERRORCODE,     6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
+{0x053D3084,  CAT_FEHLER,           VT_ENUM,          6855,  STR6855,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
 {0x053D3084,  CAT_FEHLER,           VT_UINT,          6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 6
 {0x053D3093,  CAT_FEHLER,           VT_BYTE,          6856,  STR6856,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
 // 7
 {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6860,  STR6860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7
 {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6861,  STR6861,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7 Datum/Uhrzeit (6860 on display, mapped to 6861)
-{0x053D3085,  CAT_FEHLER,           VT_ERRORCODE,     6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
+{0x053D3085,  CAT_FEHLER,           VT_ENUM,          6865,  STR6865,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
 {0x053D3085,  CAT_FEHLER,           VT_UINT,          6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 7
 {0x053D3094,  CAT_FEHLER,           VT_BYTE,          6866,  STR6866,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
 // 8
 {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6870,  STR6870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8
 {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6871,  STR6871,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8 Datum/Uhrzeit (6870 on display, mapped to 6871)
-{0x053D3086,  CAT_FEHLER,           VT_ERRORCODE,     6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
+{0x053D3086,  CAT_FEHLER,           VT_ENUM,          6875,  STR6875,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
 {0x053D3086,  CAT_FEHLER,           VT_UINT,          6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 8
 {0x053D3095,  CAT_FEHLER,           VT_BYTE,          6876,  STR6876,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
 // 9
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6880,  STR6880,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9
 {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6881,  STR6881,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9 Datum/Uhrzeit (6880 on display, mapped to 6881)
-{0x053D3087,  CAT_FEHLER,           VT_ERRORCODE,     6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
+{0x053D3087,  CAT_FEHLER,           VT_ENUM,          6885,  STR6885,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
 {0x053D3087,  CAT_FEHLER,           VT_UINT,          6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 9
 {0x053D3096,  CAT_FEHLER,           VT_BYTE,          6886,  STR6886,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
 // 10
 {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6890,  STR6890,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10
 {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
-{0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
+{0x053D3088,  CAT_FEHLER,           VT_ENUM,          6895,  STR6895,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
 {0x053D3088,  CAT_FEHLER,           VT_UINT,          6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 10
 {0x053D3097,  CAT_FEHLER,           VT_BYTE,          6896,  STR6896,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
 // 11
