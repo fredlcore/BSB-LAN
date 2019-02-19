@@ -2034,7 +2034,7 @@ char *printTelegram(byte* msg, int query_line) {
               }
               break;
             case VT_ENUM: // enum
-              if((data_len == 2 && (my_dev_fam!=108 || my_dev_fam==123 || my_dev_fam!=170 || my_dev_fam!=211)) || (data_len == 3 && (my_dev_fam==108 || my_dev_fam==123 || my_dev_fam==170 ||  my_dev_fam==211))|| bus_type == 2){
+              if(data_len == 2 || data_len == 3 || bus_type == 2) {
                 if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
@@ -2108,12 +2108,19 @@ char *printTelegram(byte* msg, int query_line) {
                   } else {
                     lval=long(msg[pl_start+1]);
                   }
-                  int len=sizeof(ENUM_ERROR);
+                  uint16_t len=0;
+                  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+                  if(enumstr_len!=0) {
+                    len=enumstr_len;
+                    printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
+                  } else {
+                    len=sizeof(ENUM_ERROR);
+                    printENUM(pgm_get_far_address(ENUM_ERROR),len,lval,1);
+                  }
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
 //                  memcpy_P(buffer, &ENUM_ERROR,len);
 //                  buffer[len]=0;
 //                  printENUM(buffer,len,lval,1);
-                  printENUM(pgm_get_far_address(ENUM_ERROR),len,lval,1);
                 } else {
                   Serial.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
