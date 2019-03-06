@@ -12,6 +12,7 @@ LAN-Adapter für den Boiler-System-Bus (BSB), den Local Process Bus (LPB) und di
 
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt. Unter realen Umständen erwies sich die Kombination auf folgenden Systemen als lauffähig:
  - Atlantic Alféa Extensa + [RVS21.831F] (Wärmepumpe)
+ - Austria Email LWPK 8 [RVS21.831] (Wärmepumpe)
  - Baxi Luna Platinum + [LMS15] (Gasbrenner) 
  - Brötje BBK 22E [LMS14] (Gasbrenner)
  - Brötje BBK 22F [LMS14] (Gasbrenner)
@@ -23,6 +24,8 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje EcoCondens BBS EVO 20G [LMS15] (Gasbrenner)
  - Brötje EcoTherm Kompakt WMS 12 [LMS 15] (Gasbrenner)
  - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (Gasbrenner)
+ - Brötje EcoTherm Plus BBS2N.28 [LMU 64] (Gasbrenner) (mittels OCI420 via LPB!)
+ - Brötje EcoTherm Plus WGB2N.20 [LMU 64] (Gasbrenner) (mittels OCI420 via LPB!)
  - Brötje ISR-SSR [RVS63.283] (Solar-System-Regler) 
  - Brötje ISR-ZR1 [RVS46.530] (Zonen-Regler)
  - Brötje LogoBloc Unit L-UB 25C [RVS43.122] (Ölbrenner)
@@ -59,6 +62,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Elco Thision S 17.1 [LMU74] & [RVS63.283] (Gasbrenner)
  - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
  - Fröling Rendagas Plus [RVA63.244] (Gasbrenner) {LPB_only}
+ - Fujitsu Waterstage Comfort 10 [RVS21.827] (Wärmepumpe)
  - Fujitsu Waterstage WSHA 050 DA [RVS41.813] (Wärmepumpe)
  - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
  - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (Wärmepumpe)
