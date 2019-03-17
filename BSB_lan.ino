@@ -5020,7 +5020,7 @@ ich mir da nicht)
 
         if (p[1]=='J') {
           client.println(F("HTTP/1.1 200 OK"));
-          client.println(F("Content-Type: application/json"));
+          client.println(F("Content-Type: application/json; charset=utf-8"));
           client.println();
           client.println(F("{"));
 
@@ -5197,17 +5197,39 @@ ich mir da nicht)
 //                  if (ret_val_str == NULL) { i=-1; continue; }
                   if (div_data_type == DT_ENUM) {
                     unit_str = strstr(ret_val_str, "- ");
-                  } else {
-                    if (div_unit[0] == '\0') {
-                      div_unit[0] = ' ';
-                      div_unit[1] = '\0';
+                    if (unit_str != NULL) {
+                      desc_str = unit_str + 2;
+                      // Terminate the value string one character before the found "- " string.
+                      // -> the space between the value and "-" gets overwritten by "\0".
+                      *(unit_str - 1) = '\0';
+                      // Also terminate the unit string (there is no unit in ENUMs).
+                      // -> the "-" gets overwritten by "\0"
+                      *unit_str = '\0';
                     }
+                  // If the unit just contains "\0", so the unit is U_NONE (this is also the case for
+                  // VT_STRING, which has a unit, but it is already included at the end of the string).
+                  } else if (div_unit_len <= 1) {
+                    unit_str = strstr(ret_val_str, " ");
+                    if (unit_str != NULL) {
+                      // Terminate the value sring at the position of the found space.
+                      *unit_str = '\0';
+                      // If there is no unit at the end of the string, after an increment the pointer
+                      // will point to the terminator of the original "ret_val_str" string.
+                      // If there is a unit at the end of the string (for VT_STRING), after an increment
+                      // the pointer will point to the first character of the unit in "ret_val_str".
+                      unit_str++;
+                    }
+                  // For all other values, where a unit string is given in "optbl[]", we use the one from the
+                  // string "ret_val_str". Instead we could also set the pointer to the address of "div_unit".
+                  } else {
                     unit_str = strstr(ret_val_str, div_unit);
-                  }
-                  if (unit_str != NULL) {
-                    desc_str = unit_str + 2;
-                    unit_str--;
-                    *unit_str = '\0';
+                    if (unit_str != NULL) {
+                      // Terminate the value string 1 char before the found "div_unit" string.
+                      // -> the space between the value and the unit gets overwritten by "\0".
+                      *(unit_str - 1) = '\0';
+                      // There is no need to do anything with the pointer unit_str,
+                      // as it already points to the unit in "ret_val_str".
+                    }
                   }
 
                   client.print(F("    \"value\": \""));
@@ -5215,7 +5237,7 @@ ich mir da nicht)
                   client.println(F("\","));
 
                   client.print(F("    \"unit\": \""));
-                  client.print(div_unit);
+                  client.print(unit_str);
                   client.println(F("\","));
 
                   client.print(F("    \"desc\": \""));
