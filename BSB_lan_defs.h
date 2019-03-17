@@ -192,6 +192,7 @@ typedef enum{
   VT_FP1,               //  3 Byte - 1 enable / value/10 READ-ONLY
   VT_FP02,              //  3 Byte - 1 enable 0x01 / value/50
   VT_GRADIENT,          //  3 Byte - 1 enable / value min/K
+  VT_INTEGRAL,          //  3 Byte - 1 enable / value Kmin
   VT_HOUR_MINUTES,      //  3 Byte - 1 enable 0x06 / hh mm
   VT_HOURS_WORD,        //  3 Byte - 1 enable 0x06 / hours
   VT_MINUTES_WORD,      //  3 Byte - 1 enable 0x06 / minutes
@@ -201,6 +202,7 @@ typedef enum{
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
   VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
+  VT_ENERGY_CONTENT,    //  3 Byte - 1 enable / value/10 kWh/m³
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
@@ -244,11 +246,13 @@ const char U_PERC[] PROGMEM = "&#037;";
 const char U_RPM[] PROGMEM = "U/min";
 const char U_KW[] PROGMEM = "kW";
 const char U_KWH[] PROGMEM = "kWh";
+const char U_KWHM3[] PROGMEM = "kWh/m³";
 const char U_CURR[] PROGMEM = "&#181;A";
 const char U_BAR[] PROGMEM = "bar";
 const char U_VOLT[] PROGMEM = "V";
 const char U_GRADIENT[] PROGMEM = "min/K";
 const char U_GRADIENTKS[] PROGMEM = "K/s";
+const char U_INTEGRAL[] PROGMEM = "Kmin";
 const char U_LITERPERHOUR[] PROGMEM = "l/h";
 const char U_LITERPERMIN[] PROGMEM = "l/min";
 const char U_NONE[] PROGMEM = "";
@@ -321,6 +325,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_GRADIENT,       1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
+{VT_INTEGRAL,       1.0,    DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL)},
 {VT_HOUR_MINUTES,   1.0,    DT_HHMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_HOURS_WORD,     1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
 {VT_MINUTES_WORD,   1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
@@ -330,6 +335,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
 {VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
+{VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3)},
 {VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
 {VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
@@ -635,6 +641,7 @@ const char STR721[] PROGMEM = "Kennlinie Verschiebung";
 const char STR726[] PROGMEM = "Kennlinie Adaption";
 const char STR730[] PROGMEM = "Sommer-/ Winterheizgrenze";
 const char STR732[] PROGMEM = "Tagesheizgrenze";
+const char STR733[] PROGMEM = "Verlängerung Tagesheizgrenze";
 const char STR740[] PROGMEM = "Vorlaufsollwert Minimum";
 const char STR741[] PROGMEM = "Vorlaufsollwert Maximum";
 const char STR742[] PROGMEM = "Vorlaufsollwert Raumthermostat HK1";
@@ -646,9 +653,11 @@ const char STR770[] PROGMEM = "Schnellaufheizung";
 const char STR780[] PROGMEM = "Schnellabsenkung";
 const char STR790[] PROGMEM = "Einschalt-Optimierung Max.";
 const char STR791[] PROGMEM = "Ausschalt-Optimierung Max.";
+const char STR794[] PROGMEM = "Aufheizgradient";
 const char STR800[] PROGMEM = "Reduziert-Anhebung Beginn";
 const char STR801[] PROGMEM = "Reduziert-Anhebung Ende";
 const char STR809[] PROGMEM = "Pumpendauerlauf HK1";
+const char STR810[] PROGMEM = "Anl'frostschutz HK-Pumpe";
 const char STR820[] PROGMEM = "Überhitzschutz Pumpenkreis";
 const char STR830[] PROGMEM = "Mischerüberhöhung";
 const char STR831[] PROGMEM = "Mischerunterkühlung";
@@ -684,12 +693,15 @@ const char STR900[] PROGMEM = "Betriebsartumschaltung";
 // Einstellungen Kühlkreis 1
 const char STR901[] PROGMEM = "Betriebsart";
 const char STR902[] PROGMEM = "Komfortsollwert";
+const char STR903[] PROGMEM = "Reduziertsollwert";
 const char STR904[] PROGMEM = "Schutzsollwert";
+const char STR905[] PROGMEM = "Komfortsollwert Minimum";
 const char STR907[] PROGMEM = "Freigabe";
 const char STR908[] PROGMEM = "Vorlaufsollwert bei TA 25 °C";
 const char STR909[] PROGMEM = "Vorlaufsollwert bei TA 35 °C";
 const char STR912[] PROGMEM = "Kühlgrenze bei TA";
 const char STR913[] PROGMEM = "Sperrdauer nach Heizende";
+const char STR914[] PROGMEM = "Tageskühlgrenze";
 const char STR918[] PROGMEM = "Sommerkomp Beginn bei TA";
 const char STR919[] PROGMEM = "Sommerkomp Ende bei TA";
 const char STR920[] PROGMEM = "Sommerkomp Sollw’anhebung";
@@ -697,6 +709,8 @@ const char STR923[] PROGMEM = "Vorlaufsollwert Min bei TA 25 °C";
 const char STR924[] PROGMEM = "Vorlaufsollwert Min bei TA 35 °C";
 const char STR928[] PROGMEM = "Raumeinfluss";
 const char STR932[] PROGMEM = "Raumtemperaturbegrenzung";
+const char STR933[] PROGMEM = "Kühlgrenze Raumregler";
+const char STR937[] PROGMEM = "Anl'frostschutz KK-Pumpe";
 const char STR938[] PROGMEM = "Mischerunterkühlung";
 const char STR939[] PROGMEM = "Antrieb Typ";
 const char STR940[] PROGMEM = "Schaltdifferenz 2-Punkt";
@@ -1009,6 +1023,10 @@ const char STR2752[] PROGMEM = "ADA Zeitintervall 2";
 const char STR2753[] PROGMEM = "ADA Zeitintervall 3";
 
 // Wärmepumpe
+const char STR2776[] PROGMEM = "Pump'drehzahl Min bei TWW";
+const char STR2777[] PROGMEM = "Pump'drehzahl Max bei TWW";
+const char STR2778[] PROGMEM = "Pump'drehzahl Min bei Kühlbetrieb";
+const char STR2779[] PROGMEM = "Pump'drehzahl Max bei Kühlbetrieb";
 const char STR2785[] PROGMEM = "Max Kondensationstemp";
 const char STR2786[] PROGMEM = "Max Kondensationstemp SD";
 const char STR2787[] PROGMEM = "Max Kondens'temp Reduktion";
@@ -1128,6 +1146,10 @@ const char STR3012[] PROGMEM = "Quelle Aus unter Temp B83";
 const char STR3014[] PROGMEM = "Schaltdifferenz Quelle Aus";
 
 // Energiezähler (Fujitsu Waterstage)
+const char STR3090[] PROGMEM = "Impulszählung Wärme";
+const char STR3092[] PROGMEM = "Impulseinheit Wärme";
+const char STR3093[] PROGMEM = "Impulseinheit Wärme Zähler";
+const char STR3094[] PROGMEM = "Impulseinheit Wärme Nenner";
 const char STR3095[] PROGMEM = "Durchflussmessung Wärme";
 const char STR3097[] PROGMEM = "Durchfluss Heizen";
 const char STR3098[] PROGMEM = "Durchfluss Trinkwasser";
@@ -1135,9 +1157,13 @@ const char STR3100[] PROGMEM = "Impulszählung Energie";
 const char STR3102[] PROGMEM = "Impulseinheit Energie";
 const char STR3103[] PROGMEM = "Impulswert Energie Zähler";
 const char STR3104[] PROGMEM = "Impulswert Energie Nenner";
+const char STR3106[] PROGMEM = "Mittlerer Gasenergieinhalt";
+const char STR3108[] PROGMEM = "Elektrische Quellenleistung";
 const char STR3109[] PROGMEM = "Zählung Intern Elektro Vorl’";
 const char STR3110[] PROGMEM = "Abgegebene Wärme";
 const char STR3113[] PROGMEM = "Eingesetzte Energie";
+const char STR3116[] PROGMEM = "Arbeitszahl";
+const char STR3119[] PROGMEM = "Stichtag Jahresarbeitszahl Tag / Monat";
 const char STR3121[] PROGMEM = "Abgegeb’ Wärme Heizen 1";
 const char STR3122[] PROGMEM = "Abgegeb’ Wärme TWW 1";
 const char STR3123[] PROGMEM = "Abgegeb’ Kälte 1";
@@ -1199,6 +1225,7 @@ const char STR3187[] PROGMEM = "Einges’ Energie Heizen 10";
 const char STR3188[] PROGMEM = "Einges’ Energie TWW 10";
 const char STR3189[] PROGMEM = "Einges’ Energie Kühlen 10";
 const char STR3190[] PROGMEM = "Reset Stichtagspeicher";
+const char STR3192[] PROGMEM = "Zählung intern Elektro TWW";
 const char STR3264[] PROGMEM = "Energiepreis HT";
 const char STR3265[] PROGMEM = "Energiepreis NT/SG-Wunsch";
 const char STR3266[] PROGMEM = "Energiepreis SG-Zwang";
@@ -1394,6 +1421,7 @@ const char STR5733[] PROGMEM = "TWW Pumpenpause Verzögerung";
 const char STR5734[] PROGMEM = "Grundposition TWW Umlenkventil";
 const char STR5736[] PROGMEM = "Trinkwasser Trennschaltung";
 // const char STR5737[] PROGMEM = "Wirksinn TWW Umlenkventil";
+const char STR5740[] PROGMEM = "Leistung Elektro TWW K6";
 const char STR5760[] PROGMEM = "Vorregler/Zubringerpumpe";
 const char STR5761[] PROGMEM = "Zubringerpumpe Q8 Bit 0-3";
 const char STR5770[] PROGMEM = "Erzeugertyp";
@@ -1403,6 +1431,8 @@ const char STR5800[] PROGMEM = "Wärmequelle";
 const char STR5806[] PROGMEM = "Typ Elektroeinsatz Vorlauf";  //FUJITSU
 const char STR5807[] PROGMEM = "Kälteerzeugung";
 const char STR5810[] PROGMEM = "Spreizung HK bei TA –10 °C";
+const char STR5811[] PROGMEM = "Leistung Elektro 1 Vorl' K25";
+const char STR5813[] PROGMEM = "Leistung Elektro 2 Vorl' K26";
 const char STR5840[] PROGMEM = "Solarstellglied";
 const char STR5841[] PROGMEM = "Externer Solartauscher";
 const char STR5870[] PROGMEM = "Kombispeicher";
@@ -1534,6 +1564,7 @@ const char STR6138[] PROGMEM = "Luftentfeuchter r. F. SD";
 const char STR6140[] PROGMEM = "Wasserdruck Maximum";
 const char STR6141[] PROGMEM = "Wasserdruck Minimum";
 const char STR6142[] PROGMEM = "Wasserdruck kritisch Min";
+const char STR6148[] PROGMEM = "Statische Drucküberwachung 1";
 const char STR6150[] PROGMEM = "Wasserdruck 2 Maximum";
 const char STR6151[] PROGMEM = "Wasserdruck 2 Minimum";
 const char STR6152[] PROGMEM = "Wasserdruck 2 kritisch Min";
@@ -1556,7 +1587,8 @@ const char STR6224[] PROGMEM = "Geräte-Identifikation";
 const char STR6225[] PROGMEM = "Gerätefamilie";
 const char STR6226[] PROGMEM = "Gerätevariante";
 const char STR6227[] PROGMEM = "Objektverzeichnis-Version";
-const char STR6229[] PROGMEM = "Hersteller-ID (letzten vier Bytes)";
+const char STR6228[] PROGMEM = "Bootloader-Version";
+const char STR6229[] PROGMEM = "EEPROM-Version";
 const char STR6230[] PROGMEM = "KonfigRg0 Bit 0-7";
 const char STR6230_2[] PROGMEM = "Konfiguration - Info 1 OEM";
 const char STR6231[] PROGMEM = "Konfiguration - Info 2 OEM";
@@ -1564,6 +1596,7 @@ const char STR6232[] PROGMEM = "Zugangscode Inbetriebnahme?";
 const char STR6233[] PROGMEM = "Zugangscode Fachmannebene ?";
 const char STR6234[] PROGMEM = "Zugangscode OEM?";
 const char STR6235[] PROGMEM = "Zugangscode OEM2?";
+const char STR6236[] PROGMEM = "Hersteller-ID (letzten vier Bytes)";
 const char STR6240[] PROGMEM = "KonfigRg1 Bit 0-7";
 const char STR6250[] PROGMEM = "KonfigRg2 Bit 0-7";
 const char STR6260[] PROGMEM = "KonfigRg3 Bit 0-7";
@@ -1575,6 +1608,7 @@ const char STR6273[] PROGMEM = "Überhitzschutz Dauer Min.";
 const char STR6280[] PROGMEM = "KonfigRg5 Bit 0-7";
 const char STR6290[] PROGMEM = "KonfigRg6 Bit 0-7";
 const char STR6300[] PROGMEM = "KonfigRg7 Bit 0-7";
+const char STR6300_2[] PROGMEM = "Info 1 OEM";
 const char STR6310[] PROGMEM = "KonfigRg8 Bit 0-7";
 const char STR6330[] PROGMEM = "KonfigRg10 Bit 0-7";
 const char STR6375[] PROGMEM = "Relaisausgang QX35";  //FUJITSU
@@ -2536,6 +2570,10 @@ const char ENUM2749[] PROGMEM_LATEST = {
 "\x02 Gebrauchte Elektrode"
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
+const char ENUM2880[] PROGMEM_LATEST = {
+"\x02 Ergänzungsbetrieb HK"
+};
+
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
 const char ENUM2920[] PROGMEM_LATEST = {
 "\x00 Gesperrt\0"
@@ -2545,6 +2583,14 @@ const char ENUM2920[] PROGMEM_LATEST = {
 // Energiezähler
 
 // "Durchflussmessung Wärme"
+const char ENUM3090[] PROGMEM_LATEST = {
+"\x00 Keine (Mit Eingang)"
+};
+
+const char ENUM3092[] PROGMEM_LATEST = {
+"\x00 kWh"
+};
+
 const char ENUM3095[] PROGMEM_LATEST = {
 "\x00 Keine\0"
 "\x01 Mit Eingang H1\0"
@@ -2588,6 +2634,11 @@ const char ENUM3109[] PROGMEM_LATEST = {
 "\x02 Eingesetzte Energie\0"
 "\x03 Beide"
 };
+
+const char ENUM3192[] PROGMEM_LATEST = {
+"\x03 Beide"
+};
+
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
 "\x00 ?Spät ein, früh aus\0"
@@ -2669,6 +2720,12 @@ const char ENUM5712[] PROGMEM_LATEST = {
 "\x01 Heizen\0"
 "\x02 Kühlen\0"
 "\x03 Heizen+Kühlen"
+};
+
+const char ENUM5715[] PROGMEM_LATEST = {
+"\x00 Aus\0"
+"\x01 Leitersystem Kühlen\0"
+"\x03 2-Leitersystem Kühlen"
 };
 
 const char ENUM5730[] PROGMEM_LATEST = {"\x00 Fühler\0\x01 Thermostat"};
@@ -3005,6 +3062,10 @@ const char ENUM5960_3[] PROGMEM_LATEST = {
 "\x03 Puffertemperatur-Fühler 2\0"
 };
 
+const char ENUM5960_4[] PROGMEM_LATEST = {
+"\x00 Analog H1"
+};
+
 #define ENUM5961 ENUM5951               // Konfiguration - Wirksinn Kontakt H3
 #define ENUM5961_2 ENUM5951             // Konfiguration - Wirksinn Kontakt H3
 
@@ -3264,6 +3325,10 @@ const char ENUM6136[] PROGMEM_LATEST = {
 "\x01 24/Tag\0"
 "\x02 Zeitprogramm Heizkreis\0"
 "\x03 Zeitprogramm 5"
+};
+
+const char ENUM6148[] PROGMEM_LATEST = {
+"\x00 Keine"
 };
 
 
@@ -4717,6 +4782,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D05FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
 {0x393D05FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
 {0x2D3D0640,  CAT_HK1,              VT_TEMP,          732,   STR732,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Tagesheizgrenze
+{0x053D1214,  CAT_HK1,              VT_YESNO,         733,   STR733,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Verlängerung Tagesheizgrenze
 {0x213D0663,  CAT_HK1,              VT_TEMP,          740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
 {0x213D0662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
 {0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1
@@ -4728,9 +4794,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D05E8,  CAT_HK1,              VT_ENUM,          780,   STR780,   sizeof(ENUM780),      ENUM780,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Schnellabsenkung
 {0x2D3D0607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
 {0x2D3D0609,  CAT_HK1,              VT_MINUTES,       791,   STR791,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Ausschalt-Optimierung Max.
+{0x2D3D0609,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
 {0x2D3D059E,  CAT_HK1,              VT_TEMP,          800,   STR800,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Begin
 {0x2D3D059D,  CAT_HK1,              VT_TEMP,          801,   STR801,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Ende
 {CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         809,   STR809,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
+{0x213D063A,  CAT_HK1,              VT_YESNO,         810,   STR810,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
 {0x213D0674,  CAT_HK1,              VT_ONOFF,         820,   STR820,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Überhitzschutz Pumpenkreis
 {0x213D065D,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischerüberhöhung
 {0x213D0654,  CAT_HK1,              VT_ENUM,          832,   STR832,   sizeof(ENUM832),      ENUM832,      FL_RONLY, DEV_ALL}, // - Antrieb Typ
@@ -4741,11 +4809,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D067B,  CAT_HK1,              VT_ENUM,          850,   STR850,   sizeof(ENUM850),      ENUM850,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Estrichfunktion
 {0x2D3D068A,  CAT_HK1,              VT_TEMP,          851,   STR851,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Sollwert manuell
 {0x2D3D067D,  CAT_HK1,              VT_TEMP,       	  855,   STR855,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlauf-Sollwert Estrich Austrocknung
-{0x2D3D067C,  CAT_HK1,              VT_DAYS,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich-Austrocknung Tag
-{0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
-{0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt
-{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
-{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
+{0x2D3D067C,  CAT_HK1,              VT_DAYS,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tag ] - Heizkreis 1 - Estrich-Austrocknung Tag
+{0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tag ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
+{0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
 {0x213D08C9,  CAT_HK1,              VT_ENUM,          861,   STR861,   sizeof(ENUM861),      ENUM861,      DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Übertemperaturabnahme
 {0x213D065E,  CAT_HK1,              VT_PERCENT,       864,   STR864,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2D3D07C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Pufferspeicher
@@ -4779,12 +4848,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Kühlkreis 1
 {0x653D0A26,  CAT_KUEHL1,           VT_UNKNOWN,       901,   STR901,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x653D0A1A,  CAT_KUEHL1,           VT_TEMP,          902,   STR902,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Komfortsollwert
+{0x653D1943,  CAT_KUEHL1,           VT_TEMP,          903,   STR903,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reduziertsollwert
 {0x653D0A80,  CAT_KUEHL1,           VT_TEMP,          904,   STR904,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Schutzsollwert Kühlkreis 1
+{0x653D1944,  CAT_KUEHL1,           VT_TEMP,          905,   STR905,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Komfortsollwert Minimum
 {CMD_UNKNOWN, CAT_KUEHL1,           VT_UNKNOWN,       907,   STR907,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe
 {0x653D0A20,  CAT_KUEHL1,           VT_TEMP,          908,   STR908,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert bei TA 25 °C
 {0x653D0A21,  CAT_KUEHL1,           VT_TEMP,          909,   STR909,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert bei TA 35 °C
 {0x653D0A22,  CAT_KUEHL1,           VT_TEMP,          912,   STR912,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kühlgrenze bei TA
 {0x693D0A75,  CAT_KUEHL1,           VT_HOURS_SHORT,   913,   STR913,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrdauer nach Heizende
+{0x653D1940,  CAT_KUEHL1,           VT_TEMP,          914,   STR914,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Tageskühlgrenze
 {0x653D0A25,  CAT_KUEHL1,           VT_TEMP,          918,   STR918,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sommerkomp Beginn bei TA
 {0x653D0A24,  CAT_KUEHL1,           VT_TEMP,          919,   STR919,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sommerkomp Ende bei TA
 {0x653D0A1B,  CAT_KUEHL1,           VT_TEMP,          920,   STR920,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sommerkomp Sollw’anhebung
@@ -4792,6 +4864,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x653D0A1F,  CAT_KUEHL1,           VT_TEMP,          924,   STR924,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Min bei TA 35 °C
 {0x653D0A27,  CAT_KUEHL1,           VT_PERCENT,       928,   STR928,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumeinfluss
 {0x653D0A23,  CAT_KUEHL1,           VT_TEMP,          932,   STR932,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperaturbegrenzung
+{0x653D0B6F,  CAT_KUEHL1,           VT_PERCENT,       933,   STR933,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kühlgrenze Raumregler
+{0x693D0A70,  CAT_KUEHL1,           VT_ONOFF,         937,   STR937,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anl'frostschutz KK-Pumpe
 {0x693D0B65,  CAT_KUEHL1,           VT_TEMP,          938,   STR938,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mischerunterkühlung
 {CMD_UNKNOWN, CAT_KUEHL1,           VT_UNKNOWN,       939,   STR939,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Typ
 {CMD_UNKNOWN, CAT_KUEHL1,           VT_UNKNOWN,       940,   STR940,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz 2-Punkt
@@ -4901,6 +4975,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Einstellungen Trinkwasser
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
@@ -5143,6 +5218,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1A19,  CAT_SITHERM,           VT_HOURS_WORD,   2753,  STR2753,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Zeitintervall 3
 
 // Wärmepumpe
+{0x593D1AB2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2776,  STR2776,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min bei TWW
+{0x593D1AB3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2777,  STR2777,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max bei TWW
+{0x593D1AB4,  CAT_WAERMEPUMPE,      VT_PERCENT,       2778,  STR2778,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min Kühlbetr
+{0x593D1AB5,  CAT_WAERMEPUMPE,      VT_PERCENT,       2779,  STR2779,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max Kühlbetr 
+
 //OEM
 {0x593D186C,  CAT_WAERMEPUMPE,      VT_TEMP,          2785,  STR2785,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Max Kondensationstemp
 {0x593D186E,  CAT_WAERMEPUMPE,      VT_TEMP,          2786,  STR2786,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Max Kondensationstemp SD
@@ -5184,13 +5264,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2846,  STR2846,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heissgastemp Max
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2852,  STR2852,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung beim Start
 {0x593D0495,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2862,  STR2862,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Stufe/Mod //FUJITSU
+{0x593D0493,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2863,  STR2863,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr Stufe2/Mod
+{0x593D0494,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2864,  STR2864,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr Stufe2/Mod
 {0x593D0BA2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2870,  STR2870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Max.
 {0x593D0BA3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2871,  STR2871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Min.
 {0x593D14B4,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtermod Laufzeit //FUJITSU
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Verdichtermod Laufzeit
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Verdichtermod Laufzeit
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2880,  STR2880,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
+{0x053D0D00,  CAT_WAERMEPUMPE,      VT_ENUM,          2880,  STR2880,  sizeof(ENUM2880),     ENUM2880,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
+{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D02,  CAT_WAERMEPUMPE,      VT_UINT,          2882,  STR2882,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr. Elektro-Vorl °Cmin[0-500] //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
 {0x593D0D2E,  CAT_WAERMEPUMPE,      VT_TEMP,          2884,  STR2884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freig Elektro-Vorl unter TA //FUJITSU
@@ -5216,6 +5298,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3010,  STR3010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehz max V'lator/Q'Pump
 
 // Energiezähler (Fujitsu Waterstage)
+{0x053D1088,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3090,  STR3090,  sizeof(ENUM3090),     ENUM3090,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Wärme
+{0x053D1089,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3092,  STR3092,  sizeof(ENUM3092),     ENUM3092,     DEFAULT_FLAG, DEV_ALL}, // Impulseinheit Wärme
+{0x053D108A,  CAT_ENERGIEZAEHLER,   VT_UINT,          3093,  STR3093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Wärme Zähler
+{0x053D108B,  CAT_ENERGIEZAEHLER,   VT_UINT,          3094,  STR3094,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Wärme Nenner
 {0x053D12B7,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3095,  STR3095,  sizeof(ENUM3095),     ENUM3095,     DEFAULT_FLAG, DEV_ALL}, // Durchflussmessung Wärme
 {0x053D108C,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3097,  STR3097,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Heizen
 {0x053D108D,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3098,  STR3098,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Trinkwasser
@@ -5223,9 +5309,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D108F,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3102,  STR3102,  sizeof(ENUM3102),     ENUM3102,     DEFAULT_FLAG, DEV_ALL}, // Impulseinheit Energie
 {0x053D1090,  CAT_ENERGIEZAEHLER,   VT_UINT,          3103,  STR3103,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Zähler
 {0x053D1091,  CAT_ENERGIEZAEHLER,   VT_UINT,          3104,  STR3104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Nenner
+{0x053D1092,  CAT_ENERGIEZAEHLER,   VT_ENERGY_CONTENT,3106,  STR3106,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mittlerer Gasenergieinhalt
+{0x053D1092,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektrische Quellenleistung
 {0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
 {0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
 {0x053D10B4,  CAT_ENERGIEZAEHLER,   VT_STRING,        3113,  STR3113,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingesetzte Energie
+{0x053D1083,  CAT_ENERGIEZAEHLER,   VT_UINT100,       3116,  STR3116,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Arbeitszahl
+{0x053D1080,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3119,  STR3119,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Stichtag Jahresarbeitszahl Tag / Monat // 30.06. wird als 00 FF 06 1E FF FF FF FF 17 codiert, 3.+4. Byte enthalten Monat und Tag
 {0x053D1721,  CAT_ENERGIEZAEHLER,   VT_STRING,        3121,  STR3121,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme Heizen 1
 {0x053D172B,  CAT_ENERGIEZAEHLER,   VT_STRING,        3122,  STR3122,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Wärme TWW 1
 {0x053D1983,  CAT_ENERGIEZAEHLER,   VT_STRING,        3123,  STR3123,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegeb’ Kälte 1
@@ -5287,6 +5377,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1748,  CAT_ENERGIEZAEHLER,   VT_STRING,        3188,  STR3188,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie TWW 10
 {0x053D1996,  CAT_ENERGIEZAEHLER,   VT_STRING,        3189,  STR3189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 10
 {0x053D1087,  CAT_ENERGIEZAEHLER,   VT_YESNO,         3190,  STR3190,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Stichtagspeicher
+{0x053D12C0,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3192,  STR3192,  sizeof(ENUM3192),     ENUM3192,     DEFAULT_FLAG, DEV_ALL}, // Zählung intern Elektro TWW
 {0x053D19BA,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3264,  STR3264,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis HT
 {0x053D19BB,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3265,  STR3265,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis NT/SG-Wunsch
 {0x053D19BC,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3266,  STR3266,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis SG-Zwang
@@ -5518,6 +5609,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0F7B,  CAT_KONFIG,           VT_ENUM,          5734,  STR5734,  sizeof(ENUM5734),     ENUM5734,     FL_RONLY,     DEV_ALL}, // Grundposition TWW Uml'ventil
 {0x053D0727,  CAT_KONFIG,           VT_ONOFF,         5736,  STR5736,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
 // {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5737,  STR5737,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wirksinn TW Umlenkventil
+{0x053D12BC,  CAT_KONFIG,           VT_ENERGY_WORD,   5740,  STR5740,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro TWW K6
 {0x053D079C,  CAT_KONFIG,           VT_ENUM,          5760,  STR5760,  sizeof(ENUM5760),     ENUM5760,     DEFAULT_FLAG, DEV_ALL}, // Vorregler/Zubringerpumpe [Vor Pufferspeicher | Nach Pufferspeicher] (Nach Pufferspeicher)
 {0x193D2FDC,  CAT_KONFIG,           VT_BIT,           5761,  STR5761,  sizeof(ENUM5761),     ENUM5761,     DEFAULT_FLAG, DEV_ALL}, // Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
 {0x053D0851,  CAT_KONFIG,           VT_ENUM,          5770,  STR5770,  sizeof(ENUM5770),     ENUM5770,     DEFAULT_FLAG, DEV_ALL}, // Erzeugertyp
@@ -5527,6 +5619,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1119,  CAT_KONFIG,           VT_ENUM,          5806,  STR5806,  sizeof(ENUM5806),     ENUM5806,     DEFAULT_FLAG, DEV_ALL}, // Typ Elektroeinsatz Vorlauf //FUJITSU
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5807,  STR5807,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kälteerzeugung
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5810,  STR5810,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreizung HK bei TA –10 °C
+{0x053D12B9,  CAT_KONFIG,           VT_ENERGY_WORD,   5811,  STR5811,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro 1 Vorl' K25
+{0x053D12B9,  CAT_KONFIG,           VT_ENERGY_WORD,   5813,  STR5813,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro 2 Vorl' K26
 // TODO  Note: There is only one configuration parameter 5840 "Solarstellglied" but
 // a)  two diagnostic reports 8501, 8502 for "Solarstellglied Puffer" and "Solarstellglied Schwimmbad",
 // b1) two relay configuration options 5890 QX1  "Solarstellglied Puffer" and "Solarstellglied Schwimmbad" OR
@@ -5644,6 +5738,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_028_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_2),   ENUM5960_2,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H3
+{0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_4),   ENUM5960_4,   DEFAULT_FLAG, DEV_211_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x053D0575,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961_2,sizeof(ENUM5961_2),   ENUM5961_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 // !FIXME! ProgNr 5962 is listed as 0x073d0656 in Python project
@@ -5795,9 +5890,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D25,  CAT_KONFIG,           VT_ENUM,          6136,  STR6136,  sizeof(ENUM6136),     ENUM6136,     DEFAULT_FLAG, DEV_ALL}, // Luftentfeuchter Freigabe
 {0x053D0D23,  CAT_KONFIG,           VT_PERCENT,       6137,  STR6137,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Luftentfeuchter r. F. EIN
 {0x053D0D24,  CAT_KONFIG,           VT_PERCENT,       6138,  STR6138,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Luftentfeuchter r. F. SD
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6140,  STR6140,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck Maximum
+{0x3D05D800,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck Maximum
 {0x053D05D9,  CAT_KONFIG,           VT_PRESSURE,      6141,  STR6141,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck minimum
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck kritisch Min
+{0x3D05DA00,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck kritisch Min
+{0x053D12E5,  CAT_KONFIG,           VT_ENUM,          6148,  STR6148,  sizeof(ENUM6148),     ENUM6148,     DEFAULT_FLAG, DEV_ALL}, // Statische Drucküberwach' 1
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6150,  STR6150,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 Maximum
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6151,  STR6151,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 Minimum
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6152,  STR6152,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 kritisch Min
@@ -5815,14 +5911,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0BD3,  CAT_KONFIG,           VT_DWORD,         6217,  STR6217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053D000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Software- Version LOGON B
 {0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index [?]
+{0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
 {0x053D0000,  CAT_KONFIG,           VT_UNKNOWN,       6223,  STR6223,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Unbekannte Geräteabfrage
 {0x053D0001,  CAT_KONFIG,           VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
 {0x053D0002,  CAT_KONFIG,           VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6225 Gerätefamilie [?]
 {0x053D0003,  CAT_KONFIG,           VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6226 Gerätevariante [?]
 {0x053D0004,  CAT_KONFIG,           VT_FP1,           6227,  STR6227,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6227 Objektverzeichnis-Version [?]
-{0x05050064,  CAT_KONFIG,           VT_UNKNOWN,       6228,  STR6229,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
-{0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6229,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
+{0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
+{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
@@ -5831,6 +5928,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
 {0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
 {0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
+{0x05050064,  CAT_KONFIG,           VT_UNKNOWN,       6236,  STR6236,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
+{0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6237,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
@@ -5842,6 +5941,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FA2,  CAT_KONFIG,           VT_BIT,           6280,  STR6280,  sizeof(ENUM6280),     ENUM6280,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Info 1 OEM
 {0x313D2FB7,  CAT_KONFIG,           VT_BIT,           6310,  STR6310,  sizeof(ENUM6310),     ENUM6310,     DEFAULT_FLAG, DEV_ALL}, // Thision 6310 KonfigRg8 Bit 0-7 [?]
 {0x0D3D3017,  CAT_KONFIG,           VT_BIT,           6330,  STR6330,  sizeof(ENUM6330),     ENUM6330,     DEFAULT_FLAG, DEV_ALL}, // Thision 6330 KonfigRg10 Bit 0-7 [?]
 {0x053D1224,  CAT_KONFIG,           VT_ENUM,          6375,  STR6375,  sizeof(ENUM6375),     ENUM6375,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX35 //FUJITSU
@@ -7651,7 +7751,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // 0x213D....
 
 {0x213D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10378, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 08 02
-{0x213D063A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10380, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222:  00 01
 {0x213D064F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10381, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x213D0666,  CAT_USER_DEFINED,     VT_UNKNOWN,       10382, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 F0 / on RVS43.222:  00 78
 {0x213D066A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10383, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
