@@ -11,6 +11,7 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
 - Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
+- Austria Email LWPK 8 [RVS21.831] (heat pump)
 - Baxi Luna Platinum + [LMS15] (gas-fired) 
 - Brötje BBK 22E [LMS14] (gas-fired)
 - Brötje BBK 22F [LMS14] (gas-fired)
@@ -22,6 +23,8 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Brötje EcoCondens BBS EVO 20G [LMS15] (gas-fired)
 - Brötje EcoTherm Kompakt WMS 12 [LMS 15] (gas-fired)
 - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
+- Brötje EcoTherm Plus BBS2N.28 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
+- Brötje EcoTherm Plus WGB2N.20 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
 - Brötje ISR-SSR [RVS63.283]
 - Brötje ISR-ZR1 [RVS46.530]
 - Brötje LogoBloc Unit L-UB 25C [RVS43.122] (oil-fired)
@@ -58,6 +61,7 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Elco Thision S 17.1 [LMU74.100] & [RVS63.283] (gas-fired)
 - Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
 - Fröling Rendagas Plus [RVA63.244] (gas-fired)
+- Fujitsu Waterstage Comfort 10 [RVS21.827] (heat pump)
 - Fujitsu Waterstage WSHA 050 DA [RVS41.813] (heat pump)
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
 - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
