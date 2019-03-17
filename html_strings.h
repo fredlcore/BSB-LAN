@@ -398,7 +398,7 @@ const char url_command_html[] PROGMEM_LATE =
 #ifdef LANG_DE
   "<tr><td valign=top>/D</td><td>Darstellung des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
   "<tr><td valign=top>/D0</td><td>Löschen bzw. Zurücksetzen des Logfiles datalog.txt auf der microSD-Karte.</td></tr>\n"
-  "<tr><td valign=top>/J=x,y,z</td><td>JSON-Export der Parameter x, y and z.\n"
+  "<tr><td valign=top>/JQ=x,y,z</td><td>JSON-Export der Parameter x, y and z.\n"
   "<tr><td valign=top>/JQ</td><td>Empfängt einen HTTP-POST Request mit der (mehrfach möglichen) Variable \"Parameter\" und gibt die Werte als JSON-Export zurück.\n"
   "<tr><td valign=top>/JS</td><td>Empfängt einen HTTP-POST Request mit den (mehrfach möglichen) Variablen \"Parameter\", \"Value\" (nur numerisch) und \"Type\" (0=INF, 1=SET) und gibt die Werte als JSON-Export zurück.\n"
   "<tr><td valign=top>/L=x,y,z</td><td>Setzt das Logging-Intervall auf x Sekunden und (optional) die Logging-Parameter auf y und z (bis zu 20 Parameter). Um das Loggen zu deaktivieren, kann L=0,0 genutzt werden.</td></tr>\n"
