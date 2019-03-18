@@ -24,7 +24,6 @@
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Abfrage von Parameter \<x\>, \<y\> und \<z\>  
 |  /JS=\<x\>,\<y\>,\<z\>      | JSON: Setzen von Parameter \<x\> mit Wert \<y\> mittels Sende-Typ \<z\><br>(Dabei gilt: \<y\> = numerisch: AN = 1, AUS = 0; Temp. 20°C = 20;<br>bei mehreren Funktionsoptionen: Jeweilige Option = jeweilige Nummer;<br>\<z\> = 0 (für INF) oder 1 (für SET))  
 |  /K                   | Alle Regler-Kategorien auflisten  
-|  /K                   | Alle Regler-Kategorien auflisten  
 |  /K\<x\>              | Alle Parameter und Werte von Regler-Kategorie \<x\> abfragen  
 |  /L=0,0               | Loggen auf microSD-Karte temporär deaktivieren  
 |  /L=\<x\>,\<y1\>,\<y2\>,\<y3\>       | Log-Intervall auf \<x\> Sekunden setzen, mit (optional) Log-Parameter \<y1\>,\<y2\>,\<y3\>  
