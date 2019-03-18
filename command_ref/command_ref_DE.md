@@ -21,7 +21,7 @@
 |  /I\<x\>=\<y\>        | INF-Nachricht an Parameter \<x\> mit Wert \<y\> senden  
 |  /K                   | Alle Regler-Kategorien auflisten  
 |  /K\<x\>              | Alle Parameter und Werte von Regler-Kategorie \<x\> abfragen  
-|  /L=0,0               | Loggen auf microSD-Karte deaktivieren  
+|  /L=0,0               | Loggen auf microSD-Karte temporär deaktivieren  
 |  /L=\<x\>,\<y\>       | Log-Intervall auf \<x\> Sekunden setzen, mit (optional) Log-Parameter \<y\>  
 |  /LB=\<x\>            | Loggen von Bus-Telegrammen: Nur Broadcasts (\<x\>=1) oder alle (\<x\>=0)  
 |  /LU=\<x\>            | Loggen von Bus-Telegrammen: Nur unbekannte (\<x\>=1) oder alle (\<x\>=0)  
