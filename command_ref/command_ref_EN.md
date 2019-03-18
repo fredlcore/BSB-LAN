@@ -22,7 +22,7 @@
 |  /JK=\<x\>        	| JSON: query category \<x\>  
 |  /JK=ALL        	| JSON: query all categories (including min. & max.)  
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: query parameter \<x\>, \<y\> and \<z\>  
-|  /JS=\<x\>,\<y\>,\<z\>      | JSON: set parameter \<x\> with value \<y\> by send-type \<z\> (Herefore: \<y\> = numeric: ON = 1, OFF = 0; Temp. 20°C = 20; if more than one option is available: respective option = respective number; \<z\> = 0 (for INF) or 1 (for SET))  
+|  /JS=\<x\>,\<y\>,\<z\>      | JSON: set parameter \<x\> with value \<y\> by send-type \<z\><br>(Herefore: \<y\> = numeric: ON = 1, OFF = 0; Temp. 20°C = 20\;<br>if more than one option is available: respective option = respective number\;<br>\<z\> = 0 (for INF) or 1 (for SET))  
 |  /K                   | list all categories  
 |  /K\<x\>              | query all parameters and values of category \<x\>  
 |  /L=0,0               | deactivate logging to microSD-card temporary  
