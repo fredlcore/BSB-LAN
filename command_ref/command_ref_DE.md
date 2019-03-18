@@ -7,8 +7,8 @@
 |  /\<x\>-\<y\>         | Werte/Einstellungen der Parameter \<x\> bis \<y\> anzeigen  
 |  /A                   | Anzeigen der 24h-Durchschnittswerte  
 |  /A=\<x\>,\<y\>       | Ändern der 24h-Durchschnittswertberechnung in Parameter \<x\>, \<y\>  
-|  /B                   | Anzeige akkumulierter Brennerlaufzeiten (in Sek.) & -takte (plus TWW)  
-|  /B0                  | Zurücksetzen des Zählers Brennerlaufzeiten & -takte  
+|  /B                   | Anzeige akkumulierter Brennerlaufzeiten (in Sek.) und -takte (inkl. TWW)  
+|  /B0                  | Zurücksetzen des Zählers Brennerlaufzeiten und -takte  
 |  /C                   | Anzeige der Konfiguration von BSB-LAN  
 |  /D                   | Anzeige der Logdatei der microSD-Karte  
 |  /DG                  | Grafische Anzeige der Logdatei der microSD-Karte  
@@ -33,7 +33,6 @@
 |  /M\<x\>              | Monitor-Modus aktivieren (\<x\> = 1) oder deaktivieren (\<x\> = 0)  
 |  /N                   | Reset und Neustart des Arduino (Dauer ca. 15Sek)  
 |  /NE                  | Reset und Neustart des Arduino (Dauer ca. 15Sek) und lösche EEPROM  
-|  /O                   | Übersicht der URL-Befehle  
 |  /P\<x\>              | Busprotokoll / Bustyp setzen: \<x\> = 0 → BSB \| 1 → LPB \| 2 → PPS  
 |  /P\<x\>,\<s\>,\<d\>  | Busprotokoll/-typ \<x\>, eigene Adresse \<s\>, Zieladresse \<d\> setzen  
 |  /Q                   | Test auf nicht-freigegebene reglerspezifische Parameter  
