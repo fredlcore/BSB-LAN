@@ -27,7 +27,7 @@
 |  /K                   | Alle Regler-Kategorien auflisten  
 |  /K\<x\>              | Alle Parameter und Werte von Regler-Kategorie \<x\> abfragen  
 |  /L=0,0               | Loggen auf microSD-Karte temporär deaktivieren  
-|  /L=\<x\>,\<y\>       | Log-Intervall auf \<x\> Sekunden setzen, mit (optional) Log-Parameter \<y\>  
+|  /L=\<x\>,\<y1\>,\<y2\>,\<y3\>       | Log-Intervall auf \<x\> Sekunden setzen, mit (optional) Log-Parameter \<y1\>,\<y2\>,\<y3\>  
 |  /LB=\<x\>            | Loggen von Bus-Telegrammen: Nur Broadcasts (\<x\>=1) oder alle (\<x\>=0)  
 |  /LU=\<x\>            | Loggen von Bus-Telegrammen: Nur unbekannte (\<x\>=1) oder alle (\<x\>=0)  
 |  /M\<x\>              | Monitor-Modus aktivieren (\<x\> = 1) oder deaktivieren (\<x\> = 0)  
