@@ -22,8 +22,8 @@
 |  /JK=\<x\>        	| JSON: Abfrage der verfügbaren Parameter der Kategorie \<x\>  
 |  /JK=ALL          	| JSON: Auflistung aller Kategorien samt zugehörigen Parameternummern  
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Abfrage von Parameter \<x\>, \<y\> und \<z\>  
-|  /JQ                  | → mit JSON-Struktur (s. [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST Request: Abfrage von Parametern
-|  /JS                  | → mit JSON-Struktur (s. [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST Request: Setzen von Parametern
+|  /JQ                  | *→ mit JSON-Struktur (s. [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST Request:* Abfrage von Parametern
+|  /JS                  | *→ mit JSON-Struktur (s. [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST Request:* Setzen von Parametern
 |  /K                   | Alle Regler-Kategorien auflisten  
 |  /K\<x\>              | Alle Parameter und Werte von Regler-Kategorie \<x\> abfragen  
 |  /L=0,0               | Loggen auf microSD-Karte temporär deaktivieren  
