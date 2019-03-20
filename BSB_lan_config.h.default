@@ -63,7 +63,13 @@ char pass[] = "Your_WiFi_password_goes_here";        // your network password
 const int fixed_device_family = 0;
 const int fixed_device_variant = 0;
 
-/* display web interface in German language; remove definement for English */
+/* Select language; so far German is the most complete, with English following.
+ * Available languages are: Czech (CZ), German (DE), Danish (DK), English (EN), Spanish (ES), Finnish (FI),
+ * French (FR), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SE), Slovenian (SI) and
+ * Turkish (TR).
+ * Incomplete languages will automagically be filled up with English translations first, and if no English translation
+ * is available, fallback will take place to German. 
+*/
 #define LANG_DE
 
 // Hide unknown parameters from web display (parameters will still be queried!)
