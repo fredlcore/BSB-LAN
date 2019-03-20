@@ -2,12 +2,16 @@
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
-/*
- * TODO: If someone has some time to spare, replace multiple occasions of the same string with #define STRXXX STRYYY
- * where YYY is the first occasion and XXX one of the subsequent occasions.
- * To get a full list of string doublettes, use this command chain:
- * cat BSB_lan_defs.h | grep "const char STR" | sed -e 's/.* = \(.*\);/\1/g;' | sort | uniq -c | sort | grep -v "^.*1 \""
-*/
+#include "localization/LANG_DE.h"
+#include "localization/UNDEF_LANG_EN.h"
+#include "localization/LANG_EN.h"
+#define xstr(x) #x
+#define str(x) xstr(x)
+#define sub(x) x
+#define FILE1 str(sub(localization/UNDEF_LANG_)LANG.h)
+#define FILE2 str(sub(localization/LANG_)LANG.h)
+#include FILE1
+#include FILE2
 
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
 #define PROGMEM_LATEST __attribute__ (( __section__(".fini1") ))
@@ -374,50 +378,50 @@ PROGMEM_LATE const units optbl[]={
 /****************************************************/
 // Menue Kategorien
 const char ENUM_CAT[] PROGMEM_LATEST = {
-"\x00 Uhrzeit und Datum\0"
-"\x01 Bedieneinheit\0"
-"\x02 Funk\0"
-"\x03 Zeitprogramm Heizkreis 1\0"
-"\x04 Zeitprogramm Heizkreis 2\0"
-"\x05 Zeitprogramm 3/HKP\0"
-"\x06 Zeitprogramm 4\0"
-"\x07 Zeitprogramm 5\0"
-"\x08 Ferien Heizkreis 1\0"
-"\x09 Ferien Heizkreis 2\0"
-"\x0a Ferien Heizkreis P\0"
-"\x0b Heizkreis 1\0"
-"\x0c Kühlkreis 1\0"
-"\x0d Heizkreis 2\0"
-"\x0e Heizkreis 3/P\0"
-"\x0f Trinkwasser\0"
-"\x10 Hx-Pumpe\0"
-"\x11 Schwimmbad\0"
-"\x12 Vorregler/Zubringerpumpe\0"
-"\x13 Kessel\0"
-"\x14 Sitherm Pro\0"
-"\x15 Wärmepumpe\0"
-"\x16 Energiezähler\0"
-"\x17 Kaskade\0"
-"\x18 Zusatzerzeuger\0"
-"\x19 Solar\0"
-"\x1a Feststoffkessel\0"
-"\x1b Pufferspeicher\0"
-"\x1c Trinkwasserspeicher\0"
-"\x1d Trinkwasser Durchl'erhitzer\0"
-"\x1e Konfiguration\0"
-"\x1f LPB-System\0"
-"\x20 Fehler\0"
-"\x21 Wartung/Sonderbetrieb\0"
-"\x22 Konfiguration Erweiterungsmodule\0"
-"\x23 Ein-/Ausgangstest\0"
-"\x24 Status\0"
-"\x25 Diagnose Kaskade\0"
-"\x26 Diagnose Erzeuger\0"
-"\x27 Diagnose Verbraucher\0"
-"\x28 Feuerungsautomat\0"
-"\x29 Benutzerdefiniert\0"
-"\x2a PPS-Bus\0"
-"\x2b unbekannte Kategorie"
+"\x00" ENUM_CAT_00_TEXT "\0"
+"\x01" ENUM_CAT_01_TEXT "\0"
+"\x02" ENUM_CAT_02_TEXT "\0"
+"\x03" ENUM_CAT_03_TEXT "\0"
+"\x04" ENUM_CAT_04_TEXT "\0"
+"\x05" ENUM_CAT_05_TEXT "\0"
+"\x06" ENUM_CAT_06_TEXT "\0"
+"\x07" ENUM_CAT_07_TEXT "\0"
+"\x08" ENUM_CAT_08_TEXT "\0"
+"\x09" ENUM_CAT_09_TEXT "\0"
+"\x0a" ENUM_CAT_0a_TEXT "\0"
+"\x0b" ENUM_CAT_0b_TEXT "\0"
+"\x0c" ENUM_CAT_0c_TEXT "\0"
+"\x0d" ENUM_CAT_0d_TEXT "\0"
+"\x0e" ENUM_CAT_0e_TEXT "\0"
+"\x0f" ENUM_CAT_0f_TEXT "\0"
+"\x10" ENUM_CAT_10_TEXT "\0"
+"\x11" ENUM_CAT_11_TEXT "\0"
+"\x12" ENUM_CAT_12_TEXT "\0"
+"\x13" ENUM_CAT_13_TEXT "\0"
+"\x14" ENUM_CAT_14_TEXT "\0"
+"\x15" ENUM_CAT_15_TEXT "\0"
+"\x16" ENUM_CAT_16_TEXT "\0"
+"\x17" ENUM_CAT_17_TEXT "\0"
+"\x18" ENUM_CAT_18_TEXT "\0"
+"\x19" ENUM_CAT_19_TEXT "\0"
+"\x1a" ENUM_CAT_1a_TEXT "\0"
+"\x1b" ENUM_CAT_1b_TEXT "\0"
+"\x1c" ENUM_CAT_1c_TEXT "\0"
+"\x1d" ENUM_CAT_1d_TEXT "\0"
+"\x1e" ENUM_CAT_1e_TEXT "\0"
+"\x1f" ENUM_CAT_1f_TEXT "\0"
+"\x20" ENUM_CAT_20_TEXT "\0"
+"\x21" ENUM_CAT_21_TEXT "\0"
+"\x22" ENUM_CAT_22_TEXT "\0"
+"\x23" ENUM_CAT_23_TEXT "\0"
+"\x24" ENUM_CAT_24_TEXT "\0"
+"\x25" ENUM_CAT_25_TEXT "\0"
+"\x26" ENUM_CAT_26_TEXT "\0"
+"\x27" ENUM_CAT_27_TEXT "\0"
+"\x28" ENUM_CAT_28_TEXT "\0"
+"\x29" ENUM_CAT_29_TEXT "\0"
+"\x2a" ENUM_CAT_2a_TEXT "\0"
+"\x2b" ENUM_CAT_2b_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -467,115 +471,107 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
 };
 
  /* Menue Strings */
-const char STR0[]   PROGMEM = "Datum/Zeit";
-const char STR1[]   PROGMEM = "Stunden/Minuten";
-const char STR2[]   PROGMEM = "Tag/Monat";
-const char STR3[]   PROGMEM = "Jahr";
-const char STR5[]   PROGMEM = "Sommerzeitbeginn Tag/Monat";
-const char STR6[]   PROGMEM = "Sommerzeitende Tag/Monat";
-const char STR20[]  PROGMEM = "Sprachauswahl";
-const char STR21[]  PROGMEM = "Anzeige Sonderbetrieb";
-const char STR22[]  PROGMEM = "Info";
-const char STR23[]  PROGMEM = "Fehleranzeige";
-const char STR25[]  PROGMEM = "Anzeigekontrast";
-const char STR26[]  PROGMEM = "Sperre Bedienung";
-const char STR27[]  PROGMEM = "Sperre Programmierung";
-const char STR28[]  PROGMEM = "Bedieneinheit Direktverstellung";
-const char STR29[]  PROGMEM = "Einheiten";
-const char STR30[]  PROGMEM = "Bedieneinheit Grundeinstellung sichern";
-const char STR31[]  PROGMEM = "Bedieneinheit Grundeinstellung aktivieren";
-const char STR40[]  PROGMEM = "Einsatz als";
-const char STR42[]  PROGMEM = "Zuordnung Raumgerät 1";
-const char STR44[]  PROGMEM = "Bedienung HK 2";
-const char STR46[]  PROGMEM = "Bedienung HK P";
-const char STR48[]  PROGMEM = "Wirkung Präsenztaste";
-const char STR54[]  PROGMEM = "Korrektur Raumfühler";
-const char STR70[]  PROGMEM = "Geräte-Version Bedienteil";
-const char STR120[] PROGMEM = "Binding";
-const char STR121[] PROGMEM = "Testmode";
-const char STR130[] PROGMEM = "Raumgerät 1 Status";
-const char STR131[] PROGMEM = "Raumgerät 2 Status";
-const char STR132[] PROGMEM = "Raumgerät P Status";
-const char STR133[] PROGMEM = "Außenfühler P Status";
-const char STR134[] PROGMEM = "Repeater P Status";
-const char STR135[] PROGMEM = "Bedieneinheit 1 Status";
-const char STR136[] PROGMEM = "Bedieneinheit 2 Status";
-const char STR137[] PROGMEM = "Bedieneinheit P Status";
-const char STR138[] PROGMEM = "Servicegerät Status";
-const char STR140[] PROGMEM = "Alle Geräte löschen";
-/*
-const char STR500[] PROGMEM = "Vorwahl";
-const char STR501[] PROGMEM = "Mo-So: 1. Phase Ein";
-const char STR502[] PROGMEM = "Mo-So: 1. Phase Aus";
-const char STR503[] PROGMEM = "Mo-So: 2. Phase Ein";
-const char STR504[] PROGMEM = "Mo-So: 2. Phase Aus";
-const char STR505[] PROGMEM = "Mo-So: 3. Phase Ein";
-const char STR506[] PROGMEM = "Mo-So: 3. Phase Aus";
-*/
-const char STR500[] PROGMEM = "Mo";
-const char STR501[] PROGMEM = "Di";
-const char STR502[] PROGMEM = "Mi";
-const char STR503[] PROGMEM = "Do";
-const char STR504[] PROGMEM = "Fr";
-const char STR505[] PROGMEM = "Sa";
-const char STR506[] PROGMEM = "So";
-const char STR516[] PROGMEM = "Standardwerte";
+const char STR0[] PROGMEM = STR0_TEXT;
+const char STR1[] PROGMEM = STR1_TEXT;
+const char STR2[] PROGMEM = STR2_TEXT;
+const char STR3[] PROGMEM = STR3_TEXT;
+const char STR5[] PROGMEM = STR5_TEXT;
+const char STR6[] PROGMEM = STR6_TEXT;
+const char STR20[] PROGMEM = STR20_TEXT;
+const char STR21[] PROGMEM = STR21_TEXT;
+const char STR22[] PROGMEM = STR22_TEXT;
+const char STR23[] PROGMEM = STR23_TEXT;
+const char STR25[] PROGMEM = STR25_TEXT;
+const char STR26[] PROGMEM = STR26_TEXT;
+const char STR27[] PROGMEM = STR27_TEXT;
+const char STR28[] PROGMEM = STR28_TEXT;
+const char STR29[] PROGMEM = STR29_TEXT;
+const char STR30[] PROGMEM = STR30_TEXT;
+const char STR31[] PROGMEM = STR31_TEXT;
+const char STR40[] PROGMEM = STR40_TEXT;
+const char STR42[] PROGMEM = STR42_TEXT;
+const char STR44[] PROGMEM = STR44_TEXT;
+const char STR46[] PROGMEM = STR46_TEXT;
+const char STR48[] PROGMEM = STR48_TEXT;
+const char STR54[] PROGMEM = STR54_TEXT;
+const char STR70[] PROGMEM = STR70_TEXT;
+const char STR120[] PROGMEM = STR120_TEXT;
+const char STR121[] PROGMEM = STR121_TEXT;
+const char STR130[] PROGMEM = STR130_TEXT;
+const char STR131[] PROGMEM = STR131_TEXT;
+const char STR132[] PROGMEM = STR132_TEXT;
+const char STR133[] PROGMEM = STR133_TEXT;
+const char STR134[] PROGMEM = STR134_TEXT;
+const char STR135[] PROGMEM = STR135_TEXT;
+const char STR136[] PROGMEM = STR136_TEXT;
+const char STR137[] PROGMEM = STR137_TEXT;
+const char STR138[] PROGMEM = STR138_TEXT;
+const char STR140[] PROGMEM = STR140_TEXT;
+const char STR500[] PROGMEM = STR500_TEXT;
+const char STR501[] PROGMEM = STR501_TEXT;
+const char STR502[] PROGMEM = STR502_TEXT;
+const char STR503[] PROGMEM = STR503_TEXT;
+const char STR504[] PROGMEM = STR504_TEXT;
+const char STR505[] PROGMEM = STR505_TEXT;
+const char STR506[] PROGMEM = STR506_TEXT;
 
-const char STR520[] PROGMEM = "Mo";
-const char STR521[] PROGMEM = "Di";
-const char STR522[] PROGMEM = "Mi";
-const char STR523[] PROGMEM = "Do";
-const char STR524[] PROGMEM = "Fr";
-const char STR525[] PROGMEM = "Sa";
-const char STR526[] PROGMEM = "So";
-const char STR536[] PROGMEM = "Standardwerte";
+const char STR516[] PROGMEM = STR516_TEXT;
 
-const char STR540[] PROGMEM = "Mo";
-const char STR541[] PROGMEM = "Di";
-const char STR542[] PROGMEM = "Mi";
-const char STR543[] PROGMEM = "Do";
-const char STR544[] PROGMEM = "Fr";
-const char STR545[] PROGMEM = "Sa";
-const char STR546[] PROGMEM = "So";
-const char STR556[] PROGMEM = "Standardwerte";
+#define STR520 STR500
+#define STR521 STR501
+#define STR522 STR502
+#define STR523 STR503
+#define STR524 STR504
+#define STR525 STR505
+#define STR526 STR506
+#define STR536 STR516
 
-const char STR560[] PROGMEM = "Mo";
-const char STR561[] PROGMEM = "Di";
-const char STR562[] PROGMEM = "Mi";
-const char STR563[] PROGMEM = "Do";
-const char STR564[] PROGMEM = "Fr";
-const char STR565[] PROGMEM = "Sa";
-const char STR566[] PROGMEM = "So";
-const char STR576[] PROGMEM = "Standardwerte";
+#define STR540 STR500
+#define STR541 STR501
+#define STR542 STR502
+#define STR543 STR503
+#define STR544 STR504
+#define STR545 STR505
+#define STR546 STR506
+#define STR556 STR516
 
-const char STR600[] PROGMEM = "Mo";
-const char STR601[] PROGMEM = "Di";
-const char STR602[] PROGMEM = "Mi";
-const char STR603[] PROGMEM = "Do";
-const char STR604[] PROGMEM = "Fr";
-const char STR605[] PROGMEM = "Sa";
-const char STR606[] PROGMEM = "So";
-const char STR616[] PROGMEM = "Standardwerte";
+#define STR560 STR500
+#define STR561 STR501
+#define STR562 STR502
+#define STR563 STR503
+#define STR564 STR504
+#define STR565 STR505
+#define STR566 STR506
+#define STR576 STR516
+
+#define STR600 STR500
+#define STR601 STR501
+#define STR602 STR502
+#define STR603 STR503
+#define STR604 STR504
+#define STR605 STR505
+#define STR606 STR506
+#define STR616 STR516
 
 /* Die Zeilennummern 632-682 entsprechen nicht den Zeilennummern im Bedienteil,
  * sondern wurden künstlich hinzugefügt */
-const char STR632[] PROGMEM = "Periode 1 Beginn Tag/Monat";
-const char STR633[] PROGMEM = "Periode 1 Ende Tag/Monat";
-const char STR634[] PROGMEM = "Periode 2 Beginn Tag/Monat";
-const char STR635[] PROGMEM = "Periode 2 Ende Tag/Monat";
-const char STR636[] PROGMEM = "Periode 3 Beginn Tag/Monat";
-const char STR637[] PROGMEM = "Periode 3 Ende Tag/Monat";
-const char STR638[] PROGMEM = "Periode 4 Beginn Tag/Monat";
-const char STR639[] PROGMEM = "Periode 4 Ende Tag/Monat";
-const char STR640[] PROGMEM = "Periode 5 Beginn Tag/Monat";
-const char STR641[] PROGMEM = "Periode 5 Ende Tag/Monat";
-const char STR642[] PROGMEM = "Periode 6 Beginn Tag/Monat";
-const char STR643[] PROGMEM = "Periode 6 Ende Tag/Monat";
-const char STR644[] PROGMEM = "Periode 7 Beginn Tag/Monat";
-const char STR645[] PROGMEM = "Periode 7 Ende Tag/Monat";
-const char STR646[] PROGMEM = "Periode 8 Beginn Tag/Monat";
-const char STR647[] PROGMEM = "Periode 8 Ende Tag/Monat";
-const char STR648[] PROGMEM = "Betriebsniveau Ferien";
+const char STR632[] PROGMEM = STR632_TEXT;
+const char STR633[] PROGMEM = STR633_TEXT;
+const char STR634[] PROGMEM = STR634_TEXT;
+const char STR635[] PROGMEM = STR635_TEXT;
+const char STR636[] PROGMEM = STR636_TEXT;
+const char STR637[] PROGMEM = STR637_TEXT;
+const char STR638[] PROGMEM = STR638_TEXT;
+const char STR639[] PROGMEM = STR639_TEXT;
+const char STR640[] PROGMEM = STR640_TEXT;
+const char STR641[] PROGMEM = STR641_TEXT;
+const char STR642[] PROGMEM = STR642_TEXT;
+const char STR643[] PROGMEM = STR643_TEXT;
+const char STR644[] PROGMEM = STR644_TEXT;
+const char STR645[] PROGMEM = STR645_TEXT;
+const char STR646[] PROGMEM = STR646_TEXT;
+const char STR647[] PROGMEM = STR647_TEXT;
+const char STR648[] PROGMEM = STR648_TEXT;
 
 #define STR649 STR632
 #define STR650 STR633
@@ -614,143 +610,143 @@ const char STR648[] PROGMEM = "Betriebsniveau Ferien";
 #define STR682 STR648
 
 /*
-const char STR641[] PROGMEM = "Vorwahl";
-const char STR642[] PROGMEM = "Beginn Tag/Monat";
-const char STR643[] PROGMEM = "Ende Tag/Monat";
-const char STR648[] PROGMEM = "Betriebsniveau";
-const char STR651[] PROGMEM = "Vorwahl";
-const char STR652[] PROGMEM = "Beginn Tag/Monat";
-const char STR653[] PROGMEM = "Ende Tag/Monat";
-const char STR658[] PROGMEM = "Betriebsniveau";
-const char STR661[] PROGMEM = "Vorwahl";
-const char STR662[] PROGMEM = "Beginn Tag/Monat";
-const char STR663[] PROGMEM = "Ende Tag/Monat";
-const char STR668[] PROGMEM = "Betriebsniveau";
+#define STR641 STR500
+#define STR642 STR642
+#define STR643 STR643
+#define STR648 STR648
+#define STR651 STR500
+#define STR652 STR642
+#define STR653 STR643
+#define STR658 STR648
+#define STR661 STR500
+#define STR662 STR642
+#define STR663 STR643
+#define STR668 STR648
 */
 
 // Heizkreis 1
-const char STR700[] PROGMEM = "Betriebsart";
-const char STR701[] PROGMEM = "Präsenztaste (temporäre Abwesenheit)";
-const char STR709[] PROGMEM = "Komfortsollwert Minimum";
-const char STR710[] PROGMEM = "Komfortsollwert";
-const char STR711[] PROGMEM = "Komfortsollwert Maximum";
-const char STR712[] PROGMEM = "Reduziertsollwert";
-const char STR714[] PROGMEM = "Frostschutzsollwert";
-const char STR720[] PROGMEM = "Kennlinie Steilheit";
-const char STR721[] PROGMEM = "Kennlinie Verschiebung";
-const char STR726[] PROGMEM = "Kennlinie Adaption";
-const char STR730[] PROGMEM = "Sommer-/ Winterheizgrenze";
-const char STR732[] PROGMEM = "Tagesheizgrenze";
-const char STR733[] PROGMEM = "Verlängerung Tagesheizgrenze";
-const char STR740[] PROGMEM = "Vorlaufsollwert Minimum";
-const char STR741[] PROGMEM = "Vorlaufsollwert Maximum";
-const char STR742[] PROGMEM = "Vorlaufsollwert Raumthermostat HK1";
-const char STR744[] PROGMEM = "Soll Einschaltverh R'stat";
-const char STR750[] PROGMEM = "Raumeinfluss";
-const char STR760[] PROGMEM = "Raumtemperaturbegrenzung";
-const char STR761[] PROGMEM = "Heizgrenze Raumregler";
-const char STR770[] PROGMEM = "Schnellaufheizung";
-const char STR780[] PROGMEM = "Schnellabsenkung";
-const char STR790[] PROGMEM = "Einschalt-Optimierung Max.";
-const char STR791[] PROGMEM = "Ausschalt-Optimierung Max.";
-const char STR794[] PROGMEM = "Aufheizgradient";
-const char STR800[] PROGMEM = "Reduziert-Anhebung Beginn";
-const char STR801[] PROGMEM = "Reduziert-Anhebung Ende";
-const char STR809[] PROGMEM = "Pumpendauerlauf HK1";
-const char STR810[] PROGMEM = "Anl'frostschutz HK-Pumpe";
-const char STR820[] PROGMEM = "Überhitzschutz Pumpenkreis";
-const char STR830[] PROGMEM = "Mischerüberhöhung";
-const char STR831[] PROGMEM = "Mischerunterkühlung";
-const char STR832[] PROGMEM = "Antrieb Typ";
-const char STR833[] PROGMEM = "Schaltdifferenz 2-Punkt";
-const char STR834[] PROGMEM = "Antrieb Laufzeit";
-const char STR835[] PROGMEM = "Mischer P-Band Xp";
-const char STR836[] PROGMEM = "Mischer Nachstellzeit Tn";
-const char STR850[] PROGMEM = "Estrichfunktion HK1";
-const char STR851[] PROGMEM = "Estrich Sollwert manuell HK1";
-const char STR855[] PROGMEM = "Vorlauftemp-Sollwert Estrich-Austrocknung HK1";
-const char STR856[] PROGMEM = "Estrich Tag aktuell HK1";
-const char STR857[] PROGMEM = "Estrich Tage erfüllt";
-const char STR861[] PROGMEM = "Übertemperaturabnahme";
-const char STR864[] PROGMEM = "Sperrsignalverstärkung";
-const char STR870[] PROGMEM = "Mit Pufferspeicher";
-const char STR872[] PROGMEM = "Mit Vorregler/Zubring`pumpe";
-const char STR880[] PROGMEM = "HK1 Pumpe Drehzahlreduktion";
-const char STR882[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR883[] PROGMEM = "Pumpendrehzahl Maximum";
-const char STR884[] PROGMEM = "Drehzahlstufe Ausleg'punkt";
-const char STR885[] PROGMEM = "Pumpe-PWM Minimum";
-const char STR886[] PROGMEM = "Norm Aussentemperatur";
-const char STR887[] PROGMEM = "Vorlaufsoll NormAussentemp";
-const char STR888[] PROGMEM = "dt Überhöhungsfaktor";
-const char STR888_2[] PROGMEM = "Kennliniekorr bei 50% Drehz";
-const char STR890[] PROGMEM = "Vorl'sollwertkorr Drehz'reg HK1";
-const char STR894[] PROGMEM = "dT Spreizung Norm Aussent.";
-const char STR895[] PROGMEM = "dT Spreizung Maximum";
-const char STR898[] PROGMEM = "Betriebsniveauumschaltung";
-const char STR900[] PROGMEM = "Betriebsartumschaltung";
+const char STR700[] PROGMEM = STR700_TEXT;
+const char STR701[] PROGMEM = STR701_TEXT;
+const char STR709[] PROGMEM = STR709_TEXT;
+const char STR710[] PROGMEM = STR710_TEXT;
+const char STR711[] PROGMEM = STR711_TEXT;
+const char STR712[] PROGMEM = STR712_TEXT;
+const char STR714[] PROGMEM = STR714_TEXT;
+const char STR720[] PROGMEM = STR720_TEXT;
+const char STR721[] PROGMEM = STR721_TEXT;
+const char STR726[] PROGMEM = STR726_TEXT;
+const char STR730[] PROGMEM = STR730_TEXT;
+const char STR732[] PROGMEM = STR732_TEXT;
+const char STR733[] PROGMEM = STR733_TEXT;
+const char STR740[] PROGMEM = STR740_TEXT;
+const char STR741[] PROGMEM = STR741_TEXT;
+const char STR742[] PROGMEM = STR742_TEXT;
+const char STR744[] PROGMEM = STR744_TEXT;
+const char STR750[] PROGMEM = STR750_TEXT;
+const char STR760[] PROGMEM = STR760_TEXT;
+const char STR761[] PROGMEM = STR761_TEXT;
+const char STR770[] PROGMEM = STR770_TEXT;
+const char STR780[] PROGMEM = STR780_TEXT;
+const char STR790[] PROGMEM = STR790_TEXT;
+const char STR791[] PROGMEM = STR791_TEXT;
+const char STR794[] PROGMEM = STR794_TEXT;
+const char STR800[] PROGMEM = STR800_TEXT;
+const char STR801[] PROGMEM = STR801_TEXT;
+const char STR809[] PROGMEM = STR809_TEXT;
+const char STR810[] PROGMEM = STR810_TEXT;
+const char STR820[] PROGMEM = STR820_TEXT;
+const char STR830[] PROGMEM = STR830_TEXT;
+const char STR831[] PROGMEM = STR831_TEXT;
+const char STR832[] PROGMEM = STR832_TEXT;
+const char STR833[] PROGMEM = STR833_TEXT;
+const char STR834[] PROGMEM = STR834_TEXT;
+const char STR835[] PROGMEM = STR835_TEXT;
+const char STR836[] PROGMEM = STR836_TEXT;
+const char STR850[] PROGMEM = STR850_TEXT;
+const char STR851[] PROGMEM = STR851_TEXT;
+const char STR855[] PROGMEM = STR855_TEXT;
+const char STR856[] PROGMEM = STR856_TEXT;
+const char STR857[] PROGMEM = STR857_TEXT;
+const char STR861[] PROGMEM = STR861_TEXT;
+const char STR864[] PROGMEM = STR864_TEXT;
+const char STR870[] PROGMEM = STR870_TEXT;
+const char STR872[] PROGMEM = STR872_TEXT;
+const char STR880[] PROGMEM = STR880_TEXT;
+const char STR882[] PROGMEM = STR882_TEXT;
+const char STR883[] PROGMEM = STR883_TEXT;
+const char STR884[] PROGMEM = STR884_TEXT;
+const char STR885[] PROGMEM = STR885_TEXT;
+const char STR886[] PROGMEM = STR886_TEXT;
+const char STR887[] PROGMEM = STR887_TEXT;
+const char STR888[] PROGMEM = STR888_TEXT;
+const char STR888_2[] PROGMEM = STR888_2_TEXT;
+const char STR890[] PROGMEM = STR890_TEXT;
+const char STR894[] PROGMEM = STR894_TEXT;
+const char STR895[] PROGMEM = STR895_TEXT;
+const char STR898[] PROGMEM = STR898_TEXT;
+const char STR900[] PROGMEM = STR900_TEXT;
 
 // Einstellungen Kühlkreis 1
-const char STR901[] PROGMEM = "Betriebsart";
-const char STR902[] PROGMEM = "Komfortsollwert";
-const char STR903[] PROGMEM = "Reduziertsollwert";
-const char STR904[] PROGMEM = "Schutzsollwert";
-const char STR905[] PROGMEM = "Komfortsollwert Minimum";
-const char STR907[] PROGMEM = "Freigabe";
-const char STR908[] PROGMEM = "Vorlaufsollwert bei TA 25 °C";
-const char STR909[] PROGMEM = "Vorlaufsollwert bei TA 35 °C";
-const char STR912[] PROGMEM = "Kühlgrenze bei TA";
-const char STR913[] PROGMEM = "Sperrdauer nach Heizende";
-const char STR914[] PROGMEM = "Tageskühlgrenze";
-const char STR918[] PROGMEM = "Sommerkomp Beginn bei TA";
-const char STR919[] PROGMEM = "Sommerkomp Ende bei TA";
-const char STR920[] PROGMEM = "Sommerkomp Sollw’anhebung";
-const char STR923[] PROGMEM = "Vorlaufsollwert Min bei TA 25 °C";
-const char STR924[] PROGMEM = "Vorlaufsollwert Min bei TA 35 °C";
-const char STR928[] PROGMEM = "Raumeinfluss";
-const char STR932[] PROGMEM = "Raumtemperaturbegrenzung";
-const char STR933[] PROGMEM = "Kühlgrenze Raumregler";
-const char STR937[] PROGMEM = "Anl'frostschutz KK-Pumpe";
-const char STR938[] PROGMEM = "Mischerunterkühlung";
-const char STR939[] PROGMEM = "Antrieb Typ";
-const char STR940[] PROGMEM = "Schaltdifferenz 2-Punkt";
+#define STR901 STR700
+#define STR902 STR710
+#define STR903 STR712
+const char STR904[] PROGMEM = STR904_TEXT;
+#define STR905 STR709
+const char STR907[] PROGMEM = STR907_TEXT;
+const char STR908[] PROGMEM = STR908_TEXT;
+const char STR909[] PROGMEM = STR909_TEXT;
+const char STR912[] PROGMEM = STR912_TEXT;
+const char STR913[] PROGMEM = STR913_TEXT;
+const char STR914[] PROGMEM = STR914_TEXT;
+const char STR918[] PROGMEM = STR918_TEXT;
+const char STR919[] PROGMEM = STR919_TEXT;
+const char STR920[] PROGMEM = STR920_TEXT;
+const char STR923[] PROGMEM = STR923_TEXT;
+const char STR924[] PROGMEM = STR924_TEXT;
+#define STR928 STR750
+#define STR932 STR760
+const char STR933[] PROGMEM = STR933_TEXT;
+const char STR937[] PROGMEM = STR937_TEXT;
+#define STR938 STR831
+#define STR939 STR832
+#define STR940 STR833
 #define STR941 STR834
 #define STR942 STR835
 #define STR943 STR836
-const char STR945[] PROGMEM = "Mischventil im Heizbetrieb";
-const char STR946[] PROGMEM = "Sperrdauer Taupunktwächt";
-const char STR947[] PROGMEM = "Vorlaufsollw’anhebung Hygro";
-const char STR948[] PROGMEM = "Vorl'anhebung Beginn bei r. F.";
-const char STR950[] PROGMEM = "Vorlauftemp'diff Taupunkt";
-const char STR962[] PROGMEM = "Mit Pufferspeicher";
-const char STR963[] PROGMEM = "Mit Vorregler/Zubring'pumpe";
-const char STR969[] PROGMEM = "Betriebsartumschaltung";
+const char STR945[] PROGMEM = STR945_TEXT;
+const char STR946[] PROGMEM = STR946_TEXT;
+const char STR947[] PROGMEM = STR947_TEXT;
+const char STR948[] PROGMEM = STR948_TEXT;
+const char STR950[] PROGMEM = STR950_TEXT;
+#define STR962 STR870
+const char STR963[] PROGMEM = STR963_TEXT;
+#define STR969 STR900
 
 // Einstellungen Heizkreis 2
-const char STR1000[] PROGMEM = "Betriebsart";
+#define STR1000 STR700
 #define STR1001 STR710
-const char STR1010[] PROGMEM = "Komfortsollwert";
-const char STR1011[] PROGMEM = "Komfortsollwert Maximum";
-const char STR1012[] PROGMEM = "Reduziertsollwert";
-const char STR1014[] PROGMEM = "Frostschutzsollwert";
-const char STR1020[] PROGMEM = "Kennlinie Steilheit";
-const char STR1021[] PROGMEM = "Kennlinie Verschiebung";
-const char STR1026[] PROGMEM = "Kennlinie Adaption";
-const char STR1030[] PROGMEM = "Sommer-/Winterheizgrenze";
-const char STR1032[] PROGMEM = "Tagesheizgrenze";
-const char STR1040[] PROGMEM = "Vorlaufsollwert Minimum";
-const char STR1041[] PROGMEM = "Vorlaufsollwert Maximum";
-const char STR1042[] PROGMEM = "Vorlaufsollwert Raumthermostat";
-const char STR1050[] PROGMEM = "Raumeinfluss";
-const char STR1060[] PROGMEM = "Raumtemperaturbegrenzung";
-const char STR1070[] PROGMEM = "Schnellaufheizung";
-const char STR1080[] PROGMEM = "Schnellabsenkung";
-const char STR1090[] PROGMEM = "Einschalt-Optimierung Max.";
-const char STR1091[] PROGMEM = "Ausschalt-Optimierung Max.";
-const char STR1100[] PROGMEM = "Reduziert-Anhebung Begin";
-const char STR1101[] PROGMEM = "Reduziert-Anhebung Ende";
-const char STR1109[] PROGMEM = "Pumpendauerlauf HK2";
-const char STR1120[] PROGMEM = "Überhitzschutz Pumpenkreis";
+#define STR1010 STR710
+#define STR1011 STR711
+#define STR1012 STR712
+#define STR1014 STR714
+#define STR1020 STR720
+#define STR1021 STR721
+#define STR1026 STR726
+const char STR1030[] PROGMEM = STR1030_TEXT;
+#define STR1032 STR732
+#define STR1040 STR740
+#define STR1041 STR741
+const char STR1042[] PROGMEM = STR1042_TEXT;
+#define STR1050 STR750
+#define STR1060 STR760
+#define STR1070 STR770
+#define STR1080 STR780
+#define STR1090 STR790
+#define STR1091 STR791
+const char STR1100[] PROGMEM = STR1100_TEXT;
+#define STR1101 STR801
+const char STR1109[] PROGMEM = STR1109_TEXT;
+#define STR1120 STR820
 #define STR1130 STR830
 #define STR1131 STR831
 #define STR1132 STR832
@@ -758,108 +754,108 @@ const char STR1120[] PROGMEM = "Überhitzschutz Pumpenkreis";
 #define STR1134 STR834
 #define STR1135 STR835
 #define STR1136 STR836
-const char STR1150[] PROGMEM = "Estrichfunktion";
-const char STR1151[] PROGMEM = "Estrich Sollwert manuell";
-const char STR1155[] PROGMEM = "Estrich Sollwert aktuell";
-const char STR1156[] PROGMEM = "Estrich Tag aktuell";
-const char STR1157[] PROGMEM = "Estrich Tag erfüllt";
-const char STR1161[] PROGMEM = "Übertemperaturabnahme";
-const char STR1170[] PROGMEM = "Mit Pufferspeicher";
-const char STR1172[] PROGMEM = "Mit Vorregler/Zubring`pumpe";
-const char STR1180[] PROGMEM = "HK2 Pumpe Drehzahlreduktion";
-const char STR1182[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR1183[] PROGMEM = "Pumpendrehzahl Maximum";
-const char STR1200[] PROGMEM = "Betriebsartumschaltung";
+const char STR1150[] PROGMEM = STR1150_TEXT;
+const char STR1151[] PROGMEM = STR1151_TEXT;
+const char STR1155[] PROGMEM = STR1155_TEXT;
+const char STR1156[] PROGMEM = STR1156_TEXT;
+const char STR1157[] PROGMEM = STR1157_TEXT;
+#define STR1161 STR861
+#define STR1170 STR870
+#define STR1172 STR872
+const char STR1180[] PROGMEM = STR1180_TEXT;
+#define STR1182 STR882
+#define STR1183 STR883
+#define STR1200 STR900
 
 // Heizkreis 3/P
-const char STR1300[] PROGMEM = "Betriebsart";
+#define STR1300 STR700
 #define STR1301 STR701
-const char STR1310[] PROGMEM = "Komfortsollwert";
-const char STR1311[] PROGMEM = "Komfortsollwert Maximum";
-const char STR1312[] PROGMEM = "Reduziertsollwert";
-const char STR1314[] PROGMEM = "Frostschutzsollwert";
-const char STR1320[] PROGMEM = "Kennlinie Steilheit";
-const char STR1321[] PROGMEM = "Kennlinie Verschiebung";
-const char STR1326[] PROGMEM = "Kennlinie Adaption";
-const char STR1330[] PROGMEM = "Sommer-/ Winterheizgrenze";
-const char STR1332[] PROGMEM = "Tagesheizgrenze";
-const char STR1340[] PROGMEM = "Vorlaufsollwert Minimum";
-const char STR1341[] PROGMEM = "Vorlaufsollwert Maximum";
-const char STR1350[] PROGMEM = "Raumeinfluss";
-const char STR1360[] PROGMEM = "Raumtemperaturbegrenzung";
-const char STR1370[] PROGMEM = "Schnellaufheizung";
-const char STR1380[] PROGMEM = "Schnellabsenkung";
-const char STR1390[] PROGMEM = "Einschalt-Optimierung Max.";
-const char STR1391[] PROGMEM = "Ausschalt-Optimierung Max.";
-const char STR1400[] PROGMEM = "Reduziert-Anhebung Begin";
-const char STR1401[] PROGMEM = "Reduziert-Anhebung Ende";
-const char STR1420[] PROGMEM = "Überhitzschutz Pumpenkreis";
+#define STR1310 STR710
+#define STR1311 STR711
+#define STR1312 STR712
+#define STR1314 STR714
+#define STR1320 STR720
+#define STR1321 STR721
+#define STR1326 STR726
+#define STR1330 STR730
+#define STR1332 STR732
+#define STR1340 STR740
+#define STR1341 STR741
+#define STR1350 STR750
+#define STR1360 STR760
+#define STR1370 STR770
+#define STR1380 STR780
+#define STR1390 STR790
+#define STR1391 STR791
+#define STR1400 STR1100
+#define STR1401 STR801
+#define STR1420 STR820
 #define STR1430 STR830
 #define STR1431 STR831
 #define STR1432 STR832
 #define STR1433 STR833
 #define STR1434 STR834
-const char STR1450[] PROGMEM = "Estrichfunktion";
-const char STR1451[] PROGMEM = "Estrich sollwert manuell";
-const char STR1455[] PROGMEM = "Estrich Sollwert aktuell";
-const char STR1456[] PROGMEM = "Estrich Tag aktuell";
-const char STR1457[] PROGMEM = "Estrich Tag erfüllt";
-const char STR1461[] PROGMEM = "Übertemperaturabnahme";
-const char STR1470[] PROGMEM = "Mit Pufferspeicher";
-const char STR1472[] PROGMEM = "Mit Vorregler/Zubring`pumpe";
-const char STR1482[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR1483[] PROGMEM = "Pumpendrehzahl Maximum";
-const char STR1500[] PROGMEM = "Betriebsartumschaltung";
+#define STR1450 STR1150
+#define STR1451 STR1151
+#define STR1455 STR1155
+#define STR1456 STR1156
+#define STR1457 STR1157
+#define STR1461 STR861
+#define STR1470 STR870
+#define STR1472 STR872
+#define STR1482 STR882
+#define STR1483 STR883
+#define STR1500 STR900
 
 // Trinkwasser
-const char STR1600[] PROGMEM = "Trinkwasserbetrieb";
-const char STR1601[] PROGMEM = "Manueller TWW-Push";
-const char STR1602[] PROGMEM = "TWW Status";
-const char STR1610[] PROGMEM = "TWW Nennsollwert";
-const char STR1612[] PROGMEM = "TWW Reduziertsollwert";
-const char STR1614[] PROGMEM = "TWW Nennsollwert Maximum";
-const char STR1620[] PROGMEM = "TWW Freigabe";
-const char STR1630[] PROGMEM = "TWW Ladevorrang";
-const char STR1640[] PROGMEM = "Legionellenfunktion";
-const char STR1641[] PROGMEM = "Legionellenfkt. Periodizität";
-const char STR1642[] PROGMEM = "Legionellenfkt. Wochentag";
-const char STR1644[] PROGMEM = "Legionellenfkt. Zeitpunkt";
-const char STR1645[] PROGMEM = "Legionellenfkt. Sollwert";
-const char STR1646[] PROGMEM = "Legionellenfkt. Verweildauer";
-const char STR1647[] PROGMEM = "Legionellenfkt. Zirk`pumpe";
-const char STR1660[] PROGMEM = "Zirkulationspumpe Freigabe";
-const char STR1661[] PROGMEM = "Zirk`pumpe Taktbetrieb";
-const char STR1663[] PROGMEM = "Zirkulations Sollwert";
-const char STR1680[] PROGMEM = "Trinkwasser Betriebsartumschaltung";
+const char STR1600[] PROGMEM = STR1600_TEXT;
+const char STR1601[] PROGMEM = STR1601_TEXT;
+const char STR1602[] PROGMEM = STR1602_TEXT;
+const char STR1610[] PROGMEM = STR1610_TEXT;
+const char STR1612[] PROGMEM = STR1612_TEXT;
+const char STR1614[] PROGMEM = STR1614_TEXT;
+const char STR1620[] PROGMEM = STR1620_TEXT;
+const char STR1630[] PROGMEM = STR1630_TEXT;
+const char STR1640[] PROGMEM = STR1640_TEXT;
+const char STR1641[] PROGMEM = STR1641_TEXT;
+const char STR1642[] PROGMEM = STR1642_TEXT;
+const char STR1644[] PROGMEM = STR1644_TEXT;
+const char STR1645[] PROGMEM = STR1645_TEXT;
+const char STR1646[] PROGMEM = STR1646_TEXT;
+const char STR1647[] PROGMEM = STR1647_TEXT;
+const char STR1660[] PROGMEM = STR1660_TEXT;
+const char STR1661[] PROGMEM = STR1661_TEXT;
+const char STR1663[] PROGMEM = STR1663_TEXT;
+const char STR1680[] PROGMEM = STR1680_TEXT;
 
 // Hx Pumpe
-const char STR2008[] PROGMEM = "H1 TWW-Ladevorrang";
-const char STR2010[] PROGMEM = "H1 Übertemperaturabnahme";
-const char STR2012[] PROGMEM = "H1 mit Pufferspeicher";
-const char STR2014[] PROGMEM = "H1 Vorregler/Zubring`pumpe";
-const char STR2015[] PROGMEM = "H1 Kälteanforderung";
-const char STR2033[] PROGMEM = "H2 TWW-Ladevorrang";
-const char STR2035[] PROGMEM = "H2 Übertemperaturabnahme";
-const char STR2037[] PROGMEM = "H2 mit Pufferspeicher";
-const char STR2039[] PROGMEM = "H2 Vorregler / Zubring'pumpe";
-const char STR2040[] PROGMEM = "H2 Kälteanforderung";
-const char STR2044[] PROGMEM = "H3 TWW-Ladevorrang";
-const char STR2046[] PROGMEM = "H3 Übertemperaturabnahme";
-const char STR2048[] PROGMEM = "H3 mit Pufferspeicher";
-const char STR2050[] PROGMEM = "H3 Vorregler/Zubring`pumpe";
-const char STR2051[] PROGMEM = "H3 Kälteanforderung";
+const char STR2008[] PROGMEM = STR2008_TEXT;
+const char STR2010[] PROGMEM = STR2010_TEXT;
+const char STR2012[] PROGMEM = STR2012_TEXT;
+const char STR2014[] PROGMEM = STR2014_TEXT;
+const char STR2015[] PROGMEM = STR2015_TEXT;
+const char STR2033[] PROGMEM = STR2033_TEXT;
+const char STR2035[] PROGMEM = STR2035_TEXT;
+const char STR2037[] PROGMEM = STR2037_TEXT;
+const char STR2039[] PROGMEM = STR2039_TEXT;
+const char STR2040[] PROGMEM = STR2040_TEXT;
+const char STR2044[] PROGMEM = STR2044_TEXT;
+const char STR2046[] PROGMEM = STR2046_TEXT;
+const char STR2048[] PROGMEM = STR2048_TEXT;
+const char STR2050[] PROGMEM = STR2050_TEXT;
+const char STR2051[] PROGMEM = STR2051_TEXT;
 
 // Schwimmbad
-const char STR2055[] PROGMEM = "Sollwert Solarbeheizung";
-const char STR2056[] PROGMEM = "Sollwert Erzeugerbeheizung";
-const char STR2065[] PROGMEM = "Ladevorrang Solar";
-const char STR2070[] PROGMEM = "Schwimmbadtemp Maximum";
-const char STR2080[] PROGMEM = "Mit Solareinbindung";
+const char STR2055[] PROGMEM = STR2055_TEXT;
+const char STR2056[] PROGMEM = STR2056_TEXT;
+const char STR2065[] PROGMEM = STR2065_TEXT;
+const char STR2070[] PROGMEM = STR2070_TEXT;
+const char STR2080[] PROGMEM = STR2080_TEXT;
 
 // Vorregler/Zubringerpumpe
-const char STR2110[] PROGMEM = "Vorlaufsollwert Minimum";
-const char STR2111[] PROGMEM = "Vorlaufsollwert Maximum";
-const char STR2112[] PROGMEM = "Vorlaufsollwert Kühlen Min";
+#define STR2110 STR740
+#define STR2111 STR741
+const char STR2112[] PROGMEM = STR2112_TEXT;
 #define STR2130 STR830
 #define STR2131 STR831
 #define STR2132 STR832
@@ -867,506 +863,505 @@ const char STR2112[] PROGMEM = "Vorlaufsollwert Kühlen Min";
 #define STR2134 STR834
 #define STR2135 STR835
 #define STR2136 STR836
-const char STR2150[] PROGMEM = "Vorregler/Zubringerpumpe";
+const char STR2150[] PROGMEM = STR2150_TEXT;
 
 // Kessel
-const char STR2200[] PROGMEM = "Betriebsart";
-const char STR2201[] PROGMEM = "Erzeugersperre";
-const char STR2203[] PROGMEM = "Freigabe unter Außentemp";
-const char STR2204[] PROGMEM = "Freigabe über Außentemp";
-const char STR2205[] PROGMEM = "Bei Ökobetrieb";
-const char STR2206[] PROGMEM = "Betrieb/Standby";
-const char STR2208[] PROGMEM = "Durchladung Pufferspeicher";
-const char STR2210[] PROGMEM = "Sollwert Minimum";
-const char STR2211[] PROGMEM = "Sollwert Minimum OEM";
-const char STR2212[] PROGMEM = "Sollwert Maximum";
-const char STR2213[] PROGMEM = "Sollwert Maximum OEM";
-const char STR2214[] PROGMEM = "Sollwert Handbetrieb";
-const char STR2220[] PROGMEM = "Freigabeintegral Stufe 2";
-const char STR2221[] PROGMEM = "Rückstellintegral Stufe 2";
-const char STR2222[] PROGMEM = "Zwangseinschaltung Stufe 2";
-const char STR2232[] PROGMEM = "Klappenantrieb Laufzeit";
-const char STR2233[] PROGMEM = "Klappenantrieb P-Band Xp";
-const char STR2234[] PROGMEM = "Klappenantrieb Nach'zeit Tn";
-const char STR2235[] PROGMEM = "Klappenantrieb Vorh'zeit Tv";
-const char STR2240[] PROGMEM = "Schaltdifferenz Kessel";
-const char STR2241[] PROGMEM = "Kessel Brennerlaufzeit Minimum";
-const char STR2243[] PROGMEM = "Brennpausenzeit Minimum";
-const char STR2245[] PROGMEM = "SD Brennerpause";
-const char STR2250[] PROGMEM = "Pumpennachlaufzeit";
-const char STR2253[] PROGMEM = "Pumpennachlaufzeit n. TWW-Betrieb";
-const char STR2260[] PROGMEM = "Anfahrentlast Verbraucher";
-const char STR2261[] PROGMEM = "Anfahrentlast Kesselpumpe";
-const char STR2262[] PROGMEM = "Einschaltoptimierung";
-const char STR2270[] PROGMEM = "Rücklaufsollwert Minimum";
-const char STR2271[] PROGMEM = "Rücklaufsollwert Min OEM";
-const char STR2272[] PROGMEM = "Rückl'einfluss Verbraucher";
+#define STR2200 STR700
+const char STR2201[] PROGMEM = STR2201_TEXT;
+const char STR2203[] PROGMEM = STR2203_TEXT;
+const char STR2204[] PROGMEM = STR2204_TEXT;
+const char STR2205[] PROGMEM = STR2205_TEXT;
+const char STR2206[] PROGMEM = STR2206_TEXT;
+const char STR2208[] PROGMEM = STR2208_TEXT;
+const char STR2210[] PROGMEM = STR2210_TEXT;
+const char STR2211[] PROGMEM = STR2211_TEXT;
+const char STR2212[] PROGMEM = STR2212_TEXT;
+const char STR2213[] PROGMEM = STR2213_TEXT;
+const char STR2214[] PROGMEM = STR2214_TEXT;
+const char STR2220[] PROGMEM = STR2220_TEXT;
+const char STR2221[] PROGMEM = STR2221_TEXT;
+const char STR2222[] PROGMEM = STR2222_TEXT;
+const char STR2232[] PROGMEM = STR2232_TEXT;
+const char STR2233[] PROGMEM = STR2233_TEXT;
+const char STR2234[] PROGMEM = STR2234_TEXT;
+const char STR2235[] PROGMEM = STR2235_TEXT;
+const char STR2240[] PROGMEM = STR2240_TEXT;
+const char STR2241[] PROGMEM = STR2241_TEXT;
+const char STR2243[] PROGMEM = STR2243_TEXT;
+const char STR2245[] PROGMEM = STR2245_TEXT;
+const char STR2250[] PROGMEM = STR2250_TEXT;
+const char STR2253[] PROGMEM = STR2253_TEXT;
+const char STR2260[] PROGMEM = STR2260_TEXT;
+const char STR2261[] PROGMEM = STR2261_TEXT;
+const char STR2262[] PROGMEM = STR2262_TEXT;
+const char STR2270[] PROGMEM = STR2270_TEXT;
+const char STR2271[] PROGMEM = STR2271_TEXT;
+const char STR2272[] PROGMEM = STR2272_TEXT;
 #define STR2282 STR834
 #define STR2283 STR835
 #define STR2284 STR836
-const char STR2285[] PROGMEM = "Mischer Vorhaltezeit Tv";
-const char STR2290[] PROGMEM = "Schaltdiff Bypasspumpe";
-const char STR2291[] PROGMEM = "Steuerung Bypasspumpe";
-const char STR2300[] PROGMEM = "Anl'frostschutz Kess'pumpe";
-const char STR2301[] PROGMEM = "Kesselpumpe bei Erzeugersperre";
-const char STR2305[] PROGMEM = "Wirkung Erzeugersperre";
-const char STR2310[] PROGMEM = "TR-Funktion";
-const char STR2315[] PROGMEM = "Temperaturhub Minimum";
-const char STR2316[] PROGMEM = "Temperaturhub Maximum";
-const char STR2317[] PROGMEM = "Temperaturhub Nenn";
-const char STR2320[] PROGMEM = "Pumpenmodulation";
-const char STR2322[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR2323[] PROGMEM = "Pumpendrehzahl Maximum";
-const char STR2324[] PROGMEM = "Drehzahl P-Band Xp";
-const char STR2325[] PROGMEM = "Drehzahl Nachstellzeit Tn";
-const char STR2326[] PROGMEM = "Drehzahl Vorhaltezeit Tv";
-const char STR2330[] PROGMEM = "Leistung Nenn";
-const char STR2331[] PROGMEM = "Leistung Grundstufe";
-const char STR2334[] PROGMEM = "Leistung bei Pumpendehz. min";
-const char STR2335[] PROGMEM = "Leistung bei Pumpendehz. max";
-const char STR2340[] PROGMEM = "Auto Erz’folge 2 x 1 Kaskade";
-const char STR2440[] PROGMEM = "Gebläse-PWM Hz Maximum";
-const char STR2441[] PROGMEM = "Gebläsedrehzahl Hz Maximum";
-const char STR2441_2[] PROGMEM = "Gebläseleistung Heizen Max";
-const char STR2442[] PROGMEM = "Gebläse-PWM Reglerverzögerung";
-const char STR2442_2[] PROGMEM = "Gebl'leistung Durchladen Max";
-const char STR2443[] PROGMEM = "Gebläse-PWM Startwert DLH";
-const char STR2443_2[] PROGMEM = "Gebl'leistung Startwert DLH";
-const char STR2444[] PROGMEM = "Leistung Minimum";
-const char STR2444_2[] PROGMEM = "Gebläseleistung TWW Max";
-const char STR2445[] PROGMEM = "Nennleistung Kessel";
-const char STR2445_2[] PROGMEM = "Gebl'abschaltung Heizbetrieb";
-const char STR2446[] PROGMEM = "Gebläseabschaltverzögerung";
-const char STR2450[] PROGMEM = "Reglerverzögerung";
-const char STR2451[] PROGMEM = "Brennerpausenzeit Minimum";
-const char STR2452[] PROGMEM = "SD Brennerpause";
-const char STR2452_2[] PROGMEM = "Reglerverzög' Gebl'leistung";
-const char STR2453[] PROGMEM = "Reglerverzögerung Dauer";
-const char STR2454[] PROGMEM = "Schaltdifferenz Ein HK's";
-const char STR2455[] PROGMEM = "Schaltdiff Aus Min HK's";
-const char STR2456[] PROGMEM = "Schaltdiff Aus Max HK's";
-const char STR2457[] PROGMEM = "Einschwingzeit HK's";
-const char STR2459[] PROGMEM = "Sperrzeit dynam Schaltdiff";
-const char STR2460[] PROGMEM = "Schaltdiff Ein TWW";
-const char STR2461[] PROGMEM = "Schaltdiff Aus Min TWW";
-const char STR2462[] PROGMEM = "Schaltdiff Aus Max TWW";
-const char STR2463[] PROGMEM = "Einschwingzeit TWW";
-const char STR2464[] PROGMEM = "Dyn SD bei Sollwertänderung";
-const char STR2465[] PROGMEM = "Min Sollwertänderung dyn SD";
-const char STR2466[] PROGMEM = "Dyn SD bei Wechsel HK/TWW";
-const char STR2467[] PROGMEM = "Dyn SD bei Brenner ein";
-const char STR2470[] PROGMEM = "Verz' Wärmeanfo Sonderbet";
-const char STR2471[] PROGMEM = "Pumpennachlaufzeit HK's";
-const char STR2472[] PROGMEM = "Pumpennachlauftemp TWW";
-const char STR2473[] PROGMEM = "Abgastemp Leistungsredukt";
-const char STR2474[] PROGMEM = "Abgastemp Abschaltgrenze";
-const char STR2476[] PROGMEM = "Abgasüberwach' Abschaltung";
-const char STR2477[] PROGMEM = "Abgasüberw Startverhin'zeit";
-const char STR2478[] PROGMEM = "Parameter";
-const char STR2479[] PROGMEM = "Parameter";
-const char STR2480[] PROGMEM = "Statisch' Drucküberw' Absch'";
-const char STR2490[] PROGMEM = "Dynam' Drucküberw Abschalt";
-const char STR2491[] PROGMEM = "Dyn Überw Druckdiff Min";
-const char STR2492[] PROGMEM = "Dyn Überw Druckdiff Max";
-const char STR2494[] PROGMEM = "Dyn Überw Druckanhebung";
-const char STR2495[] PROGMEM = "Dyn Drucküberw Überw'zeit";
-const char STR2496[] PROGMEM = "Dyn Drucküberw Zeitkonst";
-const char STR2500[] PROGMEM = "Druckschalter Abschaltung";
-const char STR2502[] PROGMEM = "Durchfl'schalter Abschaltung";
-const char STR2504[] PROGMEM = "Min Einschaltzeit Schalter";
-const char STR2510[] PROGMEM = "Schnellabschaltung Temp'grad";
-const char STR2511[] PROGMEM = "Schnellabschalt Überw'zeit";
-const char STR2512[] PROGMEM = "Schnellabschalt Überw' RT";
-const char STR2521[] PROGMEM = "Frostschutz Einschalttemp";
-const char STR2522[] PROGMEM = "Frostschutz Ausschalttemp";
-const char STR2527[] PROGMEM = "Kesseltemp Leistungsredukt";
-const char STR2528[] PROGMEM = "Schaltdiff Leistungsredukt";
-const char STR2531[] PROGMEM = "Auslösetemperatur Wächter";
-const char STR2540[] PROGMEM = "Proportionalbeiwert Kp TWW";
-const char STR2543[] PROGMEM = "Proportionalbeiwert Kp HK's";
-const char STR2550[] PROGMEM = "Gasenergiezählung";
-const char STR2551[] PROGMEM = "Gasenergiezähl Korrektur";
-const char STR2630[] PROGMEM = "Auto Entlüftungsfunktion";
-const char STR2655[] PROGMEM = "Ein'dauer Entlüftung";
-const char STR2656[] PROGMEM = "Aus'dauer Entlüftung";
-const char STR2657[] PROGMEM = "Anzahl Wiederholungen";
-const char STR2662[] PROGMEM = "Entlüft'dauer Heizkreis";
-const char STR2663[] PROGMEM = "Entlüft'dauer Trinkwasser";
-const char STR2670[] PROGMEM = "Parameter";
+const char STR2285[] PROGMEM = STR2285_TEXT;
+const char STR2290[] PROGMEM = STR2290_TEXT;
+const char STR2291[] PROGMEM = STR2291_TEXT;
+const char STR2300[] PROGMEM = STR2300_TEXT;
+const char STR2301[] PROGMEM = STR2301_TEXT;
+const char STR2305[] PROGMEM = STR2305_TEXT;
+const char STR2310[] PROGMEM = STR2310_TEXT;
+const char STR2315[] PROGMEM = STR2315_TEXT;
+const char STR2316[] PROGMEM = STR2316_TEXT;
+const char STR2317[] PROGMEM = STR2317_TEXT;
+const char STR2320[] PROGMEM = STR2320_TEXT;
+#define STR2322 STR882
+#define STR2323 STR883
+const char STR2324[] PROGMEM = STR2324_TEXT;
+const char STR2325[] PROGMEM = STR2325_TEXT;
+const char STR2326[] PROGMEM = STR2326_TEXT;
+const char STR2330[] PROGMEM = STR2330_TEXT;
+const char STR2331[] PROGMEM = STR2331_TEXT;
+const char STR2334[] PROGMEM = STR2334_TEXT;
+const char STR2335[] PROGMEM = STR2335_TEXT;
+const char STR2340[] PROGMEM = STR2340_TEXT;
+const char STR2440[] PROGMEM = STR2440_TEXT;
+const char STR2441[] PROGMEM = STR2441_TEXT;
+const char STR2441_2[] PROGMEM = STR2441_2_TEXT;
+const char STR2442[] PROGMEM = STR2442_TEXT;
+const char STR2442_2[] PROGMEM = STR2442_2_TEXT;
+const char STR2443[] PROGMEM = STR2443_TEXT;
+const char STR2443_2[] PROGMEM = STR2443_2_TEXT;
+const char STR2444[] PROGMEM = STR2444_TEXT;
+const char STR2444_2[] PROGMEM = STR2444_2_TEXT;
+const char STR2445[] PROGMEM = STR2445_TEXT;
+const char STR2445_2[] PROGMEM = STR2445_2_TEXT;
+const char STR2446[] PROGMEM = STR2446_TEXT;
+const char STR2450[] PROGMEM = STR2450_TEXT;
+const char STR2451[] PROGMEM = STR2451_TEXT;
+#define STR2452 STR2245
+const char STR2452_2[] PROGMEM = STR2452_2_TEXT;
+const char STR2453[] PROGMEM = STR2453_TEXT;
+const char STR2454[] PROGMEM = STR2454_TEXT;
+const char STR2455[] PROGMEM = STR2455_TEXT;
+const char STR2456[] PROGMEM = STR2456_TEXT;
+const char STR2457[] PROGMEM = STR2457_TEXT;
+const char STR2459[] PROGMEM = STR2459_TEXT;
+const char STR2460[] PROGMEM = STR2460_TEXT;
+const char STR2461[] PROGMEM = STR2461_TEXT;
+const char STR2462[] PROGMEM = STR2462_TEXT;
+const char STR2463[] PROGMEM = STR2463_TEXT;
+const char STR2464[] PROGMEM = STR2464_TEXT;
+const char STR2465[] PROGMEM = STR2465_TEXT;
+const char STR2466[] PROGMEM = STR2466_TEXT;
+const char STR2467[] PROGMEM = STR2467_TEXT;
+const char STR2470[] PROGMEM = STR2470_TEXT;
+const char STR2471[] PROGMEM = STR2471_TEXT;
+const char STR2472[] PROGMEM = STR2472_TEXT;
+const char STR2473[] PROGMEM = STR2473_TEXT;
+const char STR2474[] PROGMEM = STR2474_TEXT;
+const char STR2476[] PROGMEM = STR2476_TEXT;
+const char STR2477[] PROGMEM = STR2477_TEXT;
+const char STR2478[] PROGMEM = STR2478_TEXT;
+#define STR2479 STR2478
+const char STR2480[] PROGMEM = STR2480_TEXT;
+const char STR2490[] PROGMEM = STR2490_TEXT;
+const char STR2491[] PROGMEM = STR2491_TEXT;
+const char STR2492[] PROGMEM = STR2492_TEXT;
+const char STR2494[] PROGMEM = STR2494_TEXT;
+const char STR2495[] PROGMEM = STR2495_TEXT;
+const char STR2496[] PROGMEM = STR2496_TEXT;
+const char STR2500[] PROGMEM = STR2500_TEXT;
+const char STR2502[] PROGMEM = STR2502_TEXT;
+const char STR2504[] PROGMEM = STR2504_TEXT;
+const char STR2510[] PROGMEM = STR2510_TEXT;
+const char STR2511[] PROGMEM = STR2511_TEXT;
+const char STR2512[] PROGMEM = STR2512_TEXT;
+const char STR2521[] PROGMEM = STR2521_TEXT;
+const char STR2522[] PROGMEM = STR2522_TEXT;
+const char STR2527[] PROGMEM = STR2527_TEXT;
+const char STR2528[] PROGMEM = STR2528_TEXT;
+const char STR2531[] PROGMEM = STR2531_TEXT;
+const char STR2540[] PROGMEM = STR2540_TEXT;
+const char STR2543[] PROGMEM = STR2543_TEXT;
+const char STR2550[] PROGMEM = STR2550_TEXT;
+const char STR2551[] PROGMEM = STR2551_TEXT;
+const char STR2630[] PROGMEM = STR2630_TEXT;
+const char STR2655[] PROGMEM = STR2655_TEXT;
+const char STR2656[] PROGMEM = STR2656_TEXT;
+const char STR2657[] PROGMEM = STR2657_TEXT;
+const char STR2662[] PROGMEM = STR2662_TEXT;
+const char STR2663[] PROGMEM = STR2663_TEXT;
+#define STR2670 STR2478
 
 //Sitherm Pro
-const char STR2700[] PROGMEM = "Ergebnis letzter Drifttest";
-const char STR2700_2[] PROGMEM = "Ion'strom gefiltert";
-const char STR2702[] PROGMEM = "Auslösen neuer Drifttest";
-const char STR2702_2[] PROGMEM = "Position Schrittmotor";
-const char STR2703[] PROGMEM = "Reset Drifttest";
-const char STR2703_2[] PROGMEM = "Lernwert Gasqualität";
-const char STR2704[] PROGMEM = "Untergrenze Drifttest Störung";
-const char STR2705[] PROGMEM = "Obergrenze Drifttest Störung";
-const char STR2705_2[] PROGMEM = "R-Wert";
-const char STR2706[] PROGMEM = "Betriebsphase";
-const char STR2720[] PROGMEM = "Freigabe Einstellung Gasart";
-const char STR2721[] PROGMEM = "Gasart";
-const char STR2727[] PROGMEM = "Zünd und Überwach'bereich";
-const char STR2730[] PROGMEM = "Ionisationsstrom";
-const char STR2731[] PROGMEM = "Position Schrittmotor";
-const char STR2732[] PROGMEM = "Lernwert Gasqualität";
-const char STR2741[] PROGMEM = "ADA Punkt Nr";
-const char STR2742[] PROGMEM = "ADA Filterwert";
-const char STR2743[] PROGMEM = "ADA Korrektur";
-const char STR2744[] PROGMEM = "ADA vergangene Zeit";
-const char STR2745[] PROGMEM = "ADA Ergebnis";
-const char STR2749[] PROGMEM = "Reset Drifttest";
-const char STR2750[] PROGMEM = "Anstehende Drifttests";
-const char STR2751[] PROGMEM = "ADA Zeitintervall 1";
-const char STR2752[] PROGMEM = "ADA Zeitintervall 2";
-const char STR2753[] PROGMEM = "ADA Zeitintervall 3";
+const char STR2700[] PROGMEM = STR2700_TEXT;
+const char STR2700_2[] PROGMEM = STR2700_2_TEXT;
+const char STR2702[] PROGMEM = STR2702_TEXT;
+const char STR2702_2[] PROGMEM = STR2702_2_TEXT;
+const char STR2703[] PROGMEM = STR2703_TEXT;
+const char STR2703_2[] PROGMEM = STR2703_2_TEXT;
+const char STR2704[] PROGMEM = STR2704_TEXT;
+const char STR2705[] PROGMEM = STR2705_TEXT;
+const char STR2705_2[] PROGMEM = STR2705_2_TEXT;
+const char STR2706[] PROGMEM = STR2706_TEXT;
+const char STR2720[] PROGMEM = STR2720_TEXT;
+const char STR2721[] PROGMEM = STR2721_TEXT;
+const char STR2727[] PROGMEM = STR2727_TEXT;
+const char STR2730[] PROGMEM = STR2730_TEXT;
+#define STR2731 STR2702_2
+#define STR2732 STR2703_2
+const char STR2741[] PROGMEM = STR2741_TEXT;
+const char STR2742[] PROGMEM = STR2742_TEXT;
+const char STR2743[] PROGMEM = STR2743_TEXT;
+const char STR2744[] PROGMEM = STR2744_TEXT;
+const char STR2745[] PROGMEM = STR2745_TEXT;
+#define STR2749 STR2703
+const char STR2750[] PROGMEM = STR2750_TEXT;
+const char STR2751[] PROGMEM = STR2751_TEXT;
+const char STR2752[] PROGMEM = STR2752_TEXT;
+const char STR2753[] PROGMEM = STR2753_TEXT;
 
 // Wärmepumpe
-const char STR2776[] PROGMEM = "Pump'drehzahl Min bei TWW";
-const char STR2777[] PROGMEM = "Pump'drehzahl Max bei TWW";
-const char STR2778[] PROGMEM = "Pump'drehzahl Min bei Kühlbetrieb";
-const char STR2779[] PROGMEM = "Pump'drehzahl Max bei Kühlbetrieb";
-const char STR2785[] PROGMEM = "Max Kondensationstemp";
-const char STR2786[] PROGMEM = "Max Kondensationstemp SD";
-const char STR2787[] PROGMEM = "Max Kondens'temp Reduktion";
-const char STR2789[] PROGMEM = "Kondensatorpumpe bei TWW";
-const char STR2790[] PROGMEM = "Modulation Kondens'pumpe"; //Temp'spreizung Kondensator
-const char STR2792[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR2793[] PROGMEM = "Pumpendrehzahl Maximum";
+const char STR2776[] PROGMEM = STR2776_TEXT;
+const char STR2777[] PROGMEM = STR2777_TEXT;
+const char STR2778[] PROGMEM = STR2778_TEXT;
+const char STR2779[] PROGMEM = STR2779_TEXT;
+const char STR2785[] PROGMEM = STR2785_TEXT;
+const char STR2786[] PROGMEM = STR2786_TEXT;
+const char STR2787[] PROGMEM = STR2787_TEXT;
+const char STR2789[] PROGMEM = STR2789_TEXT;
+const char STR2790[] PROGMEM = STR2790_TEXT;
+#define STR2792 STR882
+#define STR2793 STR883
 #define STR2794 STR2324
 #define STR2795 STR2325
 #define STR2796 STR2326
-const char STR2799[] PROGMEM = "Pumpensollw'reduktion";
-const char STR2800[] PROGMEM = "Frostschutz Kondens’pumpe";
-const char STR2801[] PROGMEM = "Steuerung Kondens’pumpe";
-const char STR2802[] PROGMEM = "Vorlaufzeit Kondens’pumpe";
-const char STR2803[] PROGMEM = "Nachlaufzeit Kondens’pumpe";
-const char STR2804[] PROGMEM = "Max Temp'spreizung Konden";
-const char STR2805[] PROGMEM = "Soll Temp’Spreizung Kond";
-const char STR2806[] PROGMEM = "Max Abweich Spreiz Kondens";
-const char STR2807[] PROGMEM = "Min Kondens'spreizung TWW";
-const char STR2809[] PROGMEM = "Temperatur Frost-Alarm";
-const char STR2810[] PROGMEM = "Kondensatorfrostschutz";
-const char STR2811[] PROGMEM = "Nachlauf Kond'frostschutz";
-const char STR2814[] PROGMEM = "Quellentemperatur Maximum";
-const char STR2815[] PROGMEM = "Quellentemp Min Wasser";
-const char STR2816[] PROGMEM = "Quellentemp Min Sole";
-const char STR2817[] PROGMEM = "Schaltdiff Quellenschutz";
-const char STR2818[] PROGMEM = "Erhöhung Quellenschutztemp Min Estrich";
-const char STR2819[] PROGMEM = "Vorlaufzeit Quelle";
-const char STR2820[] PROGMEM = "Nachlaufzeit Quelle";
-const char STR2821[] PROGMEM = "Quellen-Anlaufzeit Maximum";
-const char STR2822[] PROGMEM = "Zeit Begr Quellentemp Min Sole";
-const char STR2823[] PROGMEM = "Soll Temp'spreizungn Verda";
-const char STR2824[] PROGMEM = "Max Abweich Spreiz Verda";
-const char STR2825[] PROGMEM = "Min Verdampf'temperatur";
-const char STR2826[] PROGMEM = "Max Verdampf'temperatur";
-const char STR2827[] PROGMEM = "Zeit Begr Quellentemp";
-const char STR2829[] PROGMEM = "Erw Bereich min Verda'temp";
-const char STR2830[] PROGMEM = "Max Dauer erw Verda'temp";
-const char STR2835[] PROGMEM = "Wiederein'sperre Verdichter";
-const char STR2836[] PROGMEM = "Beginn Ausschalttemp'absenk";
-const char STR2837[] PROGMEM = "Ausschalttemp Max abgesenkt";
-const char STR2838[] PROGMEM = "Stabil'zeit Prozessumkehr";
-const char STR2839[] PROGMEM = "Stabil'zeit Umschalt TWW/HK";
-const char STR2840[] PROGMEM = "Schaltdiff Rücklauftemp";
-const char STR2841[] PROGMEM = "Verd'laufzeit min einhalten";
-const char STR2842[] PROGMEM = "Verdichterlaufzeit Minimum";
-const char STR2843[] PROGMEM = "Verdichtersillstandszeit Min";
-const char STR2844[] PROGMEM = "Ausschalttemp. max";
-const char STR2845[] PROGMEM = "Reduktion Ausschaltemp Max";
-const char STR2846[] PROGMEM = "Heissgastemp Max";
-const char STR2847[] PROGMEM = "Schaltdiff Heissgastemp Max";
-const char STR2848[] PROGMEM = "Reduktion Heissgastemp Max";
-const char STR2849[] PROGMEM = "Sollwert Heissgastemperatur";
-const char STR2850[] PROGMEM = "SD Sollwert Heissgastemp";
-const char STR2851[] PROGMEM = "Wirksinn Sollw Heissgastemp";
-const char STR2852[] PROGMEM = "ND-Verzögerung beim Start";
-const char STR2853[] PROGMEM = "ND-Verzögerung im Betrieb";
-const char STR2854[] PROGMEM = "ND-Überwachung";
-const char STR2860[] PROGMEM = "Sperre Stufe 2 bei TWW";
-const char STR2861[] PROGMEM = "Freigabe Stufe 2 unter TA";
-const char STR2862[] PROGMEM = "Sperrzeit Stufe/Mod";
-const char STR2863[] PROGMEM = "Freigabeintegr Stufe2/Mod";
-const char STR2864[] PROGMEM = "Rückstellintegr Stufe2/Mod";
-const char STR2865[] PROGMEM = "Verdichterfolge Umschaltung";
-const char STR2867[] PROGMEM = "Leistung Optimum";
-const char STR2868[] PROGMEM = "Leistung Nenn";
-const char STR2870[] PROGMEM = "Verdichtermodulation Max";
-const char STR2871[] PROGMEM = "Verdichtermodulation Min";
-const char STR2873[] PROGMEM = "Verdichtermod Laufzeit";
-const char STR2874[] PROGMEM = "Verdichtermod P-Band Xp";
-const char STR2875[] PROGMEM = "Verdichtermod Nach'zeit Tn";
-const char STR2878[] PROGMEM = "PWM Periode Digital Scroll";
-const char STR2879[] PROGMEM = "Verdichtermod Laufzeit Zu";
-const char STR2880[] PROGMEM = "Verwendung Elektro-Vorlauf";
-const char STR2881[] PROGMEM = "Sperrzeit Elektro-Vorlauf";
-const char STR2882[] PROGMEM = "Freigabeintegr. Elektro-Vorl";
-const char STR2883[] PROGMEM = "Rückstellintegr. Elektro-Vorl";
-const char STR2884[] PROGMEM = "Freig Elektro-Vorl unter TA";
-const char STR2886[] PROGMEM = "Kompensation Wärmedefizit";
-const char STR2889[] PROGMEM = "Dauer Fehlerwiederholung";
-const char STR2893[] PROGMEM = "Anzahl TWW-Ladeversuche";
-const char STR2894[] PROGMEM = "Verzögerung Drehstr'fehler";
-const char STR2895[] PROGMEM = "Verzögerung Ström'wächter";
-const char STR2896[] PROGMEM = "Ström'wächter Quelle aktiv";
-const char STR2898[] PROGMEM = "Min Fluss Str'wächter Quelle";
-const char STR2899[] PROGMEM = "Min Fluss Str'wächter Verbr";
-const char STR2903[] PROGMEM = "Freigabestrategie";
-const char STR2904[] PROGMEM = "Freigabe Leistungszahl";
-const char STR2908[] PROGMEM = "TA Grrenzen bei TWW";
-const char STR2909[] PROGMEM = "Freigabe unter Aussentemp";
-const char STR2910[] PROGMEM = "Freigabe oberhalb TA";
-const char STR2911[] PROGMEM = "Für Pufferzwangsladung";
-const char STR2912[] PROGMEM = "Durchladung Pufferspeicher";
-const char STR2916[] PROGMEM = "Sollwert WP Max TWW";
-const char STR2920[] PROGMEM = "Bei EW Sperre";
-const char STR2922[] PROGMEM = "Kondensatorüberhitzungsschutz";
-const char STR2923[] PROGMEM = "Kond'schutz Pufferfühler";
-const char STR2941[] PROGMEM = "Verwendung Umlenkventil Y28";
-const char STR2951[] PROGMEM = "Abtaufreigabe unterhalb TA";
-const char STR2952[] PROGMEM = "Schaltdifferenz Abtauen";
-const char STR2954[] PROGMEM = "Verdampfertemp Abtau-Ende";
-const char STR2963[] PROGMEM = "Dauer bis Zwangsabtauen";
-const char STR2964[] PROGMEM = "Abtaudauer Maximal";
-const char STR2965[] PROGMEM = "Abtropfdauer Verdampfer";
-const char STR2966[] PROGMEM = "Abkühldauer Verdampfer";
-const char STR2970[] PROGMEM = "Ausschalttemp Minimum";
-const char STR3000[] PROGMEM = "Ausschalttemp Max Kühlen";
-const char STR3002[] PROGMEM = "Quellentemp min Kühlbetrieb";
-const char STR3004[] PROGMEM = "SD Umschalt Kühlen Pas/Akt";
-const char STR3006[] PROGMEM = "Während Verdichterbetrieb";
-const char STR3007[] PROGMEM = "Im passiven Kühlbetrieb";
-const char STR3008[] PROGMEM = "Spreizung Konden Kühlbetr";
-const char STR3009[] PROGMEM = "Modulation V'lator/Q'pump";
-const char STR3010[] PROGMEM = "Drehz max V'lator/Q'Pump";
-const char STR3011[] PROGMEM = "Drehz min V'lator/Q'Pump";
-const char STR3012[] PROGMEM = "Quelle Aus unter Temp B83";
-const char STR3014[] PROGMEM = "Schaltdifferenz Quelle Aus";
+const char STR2799[] PROGMEM = STR2799_TEXT;
+const char STR2800[] PROGMEM = STR2800_TEXT;
+const char STR2801[] PROGMEM = STR2801_TEXT;
+const char STR2802[] PROGMEM = STR2802_TEXT;
+const char STR2803[] PROGMEM = STR2803_TEXT;
+const char STR2804[] PROGMEM = STR2804_TEXT;
+const char STR2805[] PROGMEM = STR2805_TEXT;
+const char STR2806[] PROGMEM = STR2806_TEXT;
+const char STR2807[] PROGMEM = STR2807_TEXT;
+const char STR2809[] PROGMEM = STR2809_TEXT;
+const char STR2810[] PROGMEM = STR2810_TEXT;
+const char STR2811[] PROGMEM = STR2811_TEXT;
+const char STR2814[] PROGMEM = STR2814_TEXT;
+const char STR2815[] PROGMEM = STR2815_TEXT;
+const char STR2816[] PROGMEM = STR2816_TEXT;
+const char STR2817[] PROGMEM = STR2817_TEXT;
+const char STR2818[] PROGMEM = STR2818_TEXT;
+const char STR2819[] PROGMEM = STR2819_TEXT;
+const char STR2820[] PROGMEM = STR2820_TEXT;
+const char STR2821[] PROGMEM = STR2821_TEXT;
+const char STR2822[] PROGMEM = STR2822_TEXT;
+const char STR2823[] PROGMEM = STR2823_TEXT;
+const char STR2824[] PROGMEM = STR2824_TEXT;
+const char STR2825[] PROGMEM = STR2825_TEXT;
+const char STR2826[] PROGMEM = STR2826_TEXT;
+const char STR2827[] PROGMEM = STR2827_TEXT;
+const char STR2829[] PROGMEM = STR2829_TEXT;
+const char STR2830[] PROGMEM = STR2830_TEXT;
+const char STR2835[] PROGMEM = STR2835_TEXT;
+const char STR2836[] PROGMEM = STR2836_TEXT;
+const char STR2837[] PROGMEM = STR2837_TEXT;
+const char STR2838[] PROGMEM = STR2838_TEXT;
+const char STR2839[] PROGMEM = STR2839_TEXT;
+const char STR2840[] PROGMEM = STR2840_TEXT;
+const char STR2841[] PROGMEM = STR2841_TEXT;
+const char STR2842[] PROGMEM = STR2842_TEXT;
+const char STR2843[] PROGMEM = STR2843_TEXT;
+const char STR2844[] PROGMEM = STR2844_TEXT;
+const char STR2845[] PROGMEM = STR2845_TEXT;
+const char STR2846[] PROGMEM = STR2846_TEXT;
+const char STR2847[] PROGMEM = STR2847_TEXT;
+const char STR2848[] PROGMEM = STR2848_TEXT;
+const char STR2849[] PROGMEM = STR2849_TEXT;
+const char STR2850[] PROGMEM = STR2850_TEXT;
+const char STR2851[] PROGMEM = STR2851_TEXT;
+const char STR2852[] PROGMEM = STR2852_TEXT;
+const char STR2853[] PROGMEM = STR2853_TEXT;
+const char STR2854[] PROGMEM = STR2854_TEXT;
+const char STR2860[] PROGMEM = STR2860_TEXT;
+const char STR2861[] PROGMEM = STR2861_TEXT;
+const char STR2862[] PROGMEM = STR2862_TEXT;
+const char STR2863[] PROGMEM = STR2863_TEXT;
+const char STR2864[] PROGMEM = STR2864_TEXT;
+const char STR2865[] PROGMEM = STR2865_TEXT;
+const char STR2867[] PROGMEM = STR2867_TEXT;
+#define STR2868 STR2330
+const char STR2870[] PROGMEM = STR2870_TEXT;
+const char STR2871[] PROGMEM = STR2871_TEXT;
+const char STR2873[] PROGMEM = STR2873_TEXT;
+const char STR2874[] PROGMEM = STR2874_TEXT;
+const char STR2875[] PROGMEM = STR2875_TEXT;
+const char STR2878[] PROGMEM = STR2878_TEXT;
+const char STR2879[] PROGMEM = STR2879_TEXT;
+const char STR2880[] PROGMEM = STR2880_TEXT;
+const char STR2881[] PROGMEM = STR2881_TEXT;
+const char STR2882[] PROGMEM = STR2882_TEXT;
+const char STR2883[] PROGMEM = STR2883_TEXT;
+const char STR2884[] PROGMEM = STR2884_TEXT;
+const char STR2886[] PROGMEM = STR2886_TEXT;
+const char STR2889[] PROGMEM = STR2889_TEXT;
+const char STR2893[] PROGMEM = STR2893_TEXT;
+const char STR2894[] PROGMEM = STR2894_TEXT;
+const char STR2895[] PROGMEM = STR2895_TEXT;
+const char STR2896[] PROGMEM = STR2896_TEXT;
+const char STR2898[] PROGMEM = STR2898_TEXT;
+const char STR2899[] PROGMEM = STR2899_TEXT;
+const char STR2903[] PROGMEM = STR2903_TEXT;
+const char STR2904[] PROGMEM = STR2904_TEXT;
+const char STR2908[] PROGMEM = STR2908_TEXT;
+#define STR2909 STR2203
+const char STR2910[] PROGMEM = STR2910_TEXT;
+const char STR2911[] PROGMEM = STR2911_TEXT;
+#define STR2912 STR2208
+const char STR2916[] PROGMEM = STR2916_TEXT;
+const char STR2920[] PROGMEM = STR2920_TEXT;
+const char STR2922[] PROGMEM = STR2922_TEXT;
+const char STR2923[] PROGMEM = STR2923_TEXT;
+const char STR2941[] PROGMEM = STR2941_TEXT;
+const char STR2951[] PROGMEM = STR2951_TEXT;
+const char STR2952[] PROGMEM = STR2952_TEXT;
+const char STR2954[] PROGMEM = STR2954_TEXT;
+const char STR2963[] PROGMEM = STR2963_TEXT;
+const char STR2964[] PROGMEM = STR2964_TEXT;
+const char STR2965[] PROGMEM = STR2965_TEXT;
+const char STR2966[] PROGMEM = STR2966_TEXT;
+const char STR2970[] PROGMEM = STR2970_TEXT;
+const char STR3000[] PROGMEM = STR3000_TEXT;
+const char STR3002[] PROGMEM = STR3002_TEXT;
+const char STR3004[] PROGMEM = STR3004_TEXT;
+const char STR3006[] PROGMEM = STR3006_TEXT;
+const char STR3007[] PROGMEM = STR3007_TEXT;
+const char STR3008[] PROGMEM = STR3008_TEXT;
+const char STR3009[] PROGMEM = STR3009_TEXT;
+const char STR3010[] PROGMEM = STR3010_TEXT;
+const char STR3011[] PROGMEM = STR3011_TEXT;
+const char STR3012[] PROGMEM = STR3012_TEXT;
+const char STR3014[] PROGMEM = STR3014_TEXT;
 
 // Energiezähler (Fujitsu Waterstage)
-const char STR3090[] PROGMEM = "Impulszählung Wärme";
-const char STR3092[] PROGMEM = "Impulseinheit Wärme";
-const char STR3093[] PROGMEM = "Impulseinheit Wärme Zähler";
-const char STR3094[] PROGMEM = "Impulseinheit Wärme Nenner";
-const char STR3095[] PROGMEM = "Durchflussmessung Wärme";
-const char STR3097[] PROGMEM = "Durchfluss Heizen";
-const char STR3098[] PROGMEM = "Durchfluss Trinkwasser";
-const char STR3100[] PROGMEM = "Impulszählung Energie";
-const char STR3102[] PROGMEM = "Impulseinheit Energie";
-const char STR3103[] PROGMEM = "Impulswert Energie Zähler";
-const char STR3104[] PROGMEM = "Impulswert Energie Nenner";
-const char STR3106[] PROGMEM = "Mittlerer Gasenergieinhalt";
-const char STR3108[] PROGMEM = "Elektrische Quellenleistung";
-const char STR3109[] PROGMEM = "Zählung Intern Elektro Vorl’";
-const char STR3110[] PROGMEM = "Abgegebene Wärme";
-const char STR3113[] PROGMEM = "Eingesetzte Energie";
-const char STR3116[] PROGMEM = "Arbeitszahl";
-const char STR3119[] PROGMEM = "Stichtag Jahresarbeitszahl Tag / Monat";
-const char STR3121[] PROGMEM = "Abgegeb’ Wärme Heizen 1";
-const char STR3122[] PROGMEM = "Abgegeb’ Wärme TWW 1";
-const char STR3123[] PROGMEM = "Abgegeb’ Kälte 1";
-const char STR3124[] PROGMEM = "Einges’ Energie Heizen 1";
-const char STR3125[] PROGMEM = "Einges’ Energie TWW 1";
-const char STR3126[] PROGMEM = "Einges’ Energie Kühlen 1";
-const char STR3128[] PROGMEM = "Abgegeb’ Wärme Heizen 2";
-const char STR3129[] PROGMEM = "Abgegeb’ Wärme TWW 2";
-const char STR3130[] PROGMEM = "Abgegeb’ Kälte 2";
-const char STR3131[] PROGMEM = "Einges’ Energie Heizen 2";
-const char STR3132[] PROGMEM = "Einges’ Energie TWW 2";
-const char STR3133[] PROGMEM = "Einges’ Energie Kühlen 2";
-const char STR3135[] PROGMEM = "Abgegeb’ Wärme Heizen 3";
-const char STR3136[] PROGMEM = "Abgegeb’ Wärme TWW 3";
-const char STR3137[] PROGMEM = "Abgegeb’ Kälte 3";
-const char STR3138[] PROGMEM = "Einges’ Energie Heizen 3";
-const char STR3139[] PROGMEM = "Einges’ Energie TWW 3";
-const char STR3140[] PROGMEM = "Einges’ Energie Kühlen 3";
-const char STR3142[] PROGMEM = "Abgegeb’ Wärme Heizen 4";
-const char STR3143[] PROGMEM = "Abgegeb’ Wärme TWW 4";
-const char STR3144[] PROGMEM = "Abgegeb’ Kälte 4";
-const char STR3145[] PROGMEM = "Einges’ Energie Heizen 4";
-const char STR3146[] PROGMEM = "Einges’ Energie TWW 4";
-const char STR3147[] PROGMEM = "Einges’ Energie Kühlen 4";
-const char STR3149[] PROGMEM = "Abgegeb’ Wärme Heizen 5";
-const char STR3150[] PROGMEM = "Abgegeb’ Wärme TWW 5";
-const char STR3151[] PROGMEM = "Abgegeb’ Kälte 5";
-const char STR3152[] PROGMEM = "Einges’ Energie Heizen 5";
-const char STR3153[] PROGMEM = "Einges’ Energie TWW 5";
-const char STR3154[] PROGMEM = "Einges’ Energie Kühlen 5";
-const char STR3156[] PROGMEM = "Abgegeb’ Wärme Heizen 6";
-const char STR3157[] PROGMEM = "Abgegeb’ Wärme TWW 6";
-const char STR3158[] PROGMEM = "Abgegeb’ Kälte 6";
-const char STR3159[] PROGMEM = "Einges’ Energie Heizen 6";
-const char STR3160[] PROGMEM = "Einges’ Energie TWW 6";
-const char STR3161[] PROGMEM = "Einges’ Energie Kühlen 6";
-const char STR3163[] PROGMEM = "Abgegeb’ Wärme Heizen 7";
-const char STR3164[] PROGMEM = "Abgegeb’ Wärme TWW 7";
-const char STR3165[] PROGMEM = "Abgegeb’ Kälte 7";
-const char STR3166[] PROGMEM = "Einges’ Energie Heizen 7";
-const char STR3167[] PROGMEM = "Einges’ Energie TWW 7";
-const char STR3168[] PROGMEM = "Einges’ Energie Kühlen 7";
-const char STR3170[] PROGMEM = "Abgegeb’ Wärme Heizen 8";
-const char STR3171[] PROGMEM = "Abgegeb’ Wärme TWW 8";
-const char STR3172[] PROGMEM = "Abgegeb’ Kälte 8";
-const char STR3173[] PROGMEM = "Einges’ Energie Heizen 8";
-const char STR3174[] PROGMEM = "Einges’ Energie TWW 8";
-const char STR3175[] PROGMEM = "Einges’ Energie Kühlen 8";
-const char STR3177[] PROGMEM = "Abgegeb’ Wärme Heizen 9";
-const char STR3178[] PROGMEM = "Abgegeb’ Wärme TWW 9";
-const char STR3179[] PROGMEM = "Abgegeb’ Kälte 9";
-const char STR3180[] PROGMEM = "Einges’ Energie Heizen 9";
-const char STR3181[] PROGMEM = "Einges’ Energie TWW 9";
-const char STR3182[] PROGMEM = "Einges’ Energie Kühlen 9";
-const char STR3184[] PROGMEM = "Abgegeb’ Wärme Heizen 10";
-const char STR3185[] PROGMEM = "Abgegeb’ Wärme TWW 10";
-const char STR3186[] PROGMEM = "Abgegeb’ Kälte 10";
-const char STR3187[] PROGMEM = "Einges’ Energie Heizen 10";
-const char STR3188[] PROGMEM = "Einges’ Energie TWW 10";
-const char STR3189[] PROGMEM = "Einges’ Energie Kühlen 10";
-const char STR3190[] PROGMEM = "Reset Stichtagspeicher";
-const char STR3192[] PROGMEM = "Zählung intern Elektro TWW";
-const char STR3264[] PROGMEM = "Energiepreis HT";
-const char STR3265[] PROGMEM = "Energiepreis NT/SG-Wunsch";
-const char STR3266[] PROGMEM = "Energiepreis SG-Zwang";
-const char STR3267[] PROGMEM = "Energiepreis Alternativ Erz";
+const char STR3090[] PROGMEM = STR3090_TEXT;
+const char STR3092[] PROGMEM = STR3092_TEXT;
+const char STR3093[] PROGMEM = STR3093_TEXT;
+const char STR3094[] PROGMEM = STR3094_TEXT;
+const char STR3095[] PROGMEM = STR3095_TEXT;
+const char STR3097[] PROGMEM = STR3097_TEXT;
+const char STR3098[] PROGMEM = STR3098_TEXT;
+const char STR3100[] PROGMEM = STR3100_TEXT;
+const char STR3102[] PROGMEM = STR3102_TEXT;
+const char STR3103[] PROGMEM = STR3103_TEXT;
+const char STR3104[] PROGMEM = STR3104_TEXT;
+const char STR3106[] PROGMEM = STR3106_TEXT;
+const char STR3108[] PROGMEM = STR3108_TEXT;
+const char STR3109[] PROGMEM = STR3109_TEXT;
+const char STR3110[] PROGMEM = STR3110_TEXT;
+const char STR3113[] PROGMEM = STR3113_TEXT;
+const char STR3116[] PROGMEM = STR3116_TEXT;
+const char STR3119[] PROGMEM = STR3119_TEXT;
+const char STR3121[] PROGMEM = STR3121_TEXT;
+const char STR3122[] PROGMEM = STR3122_TEXT;
+const char STR3123[] PROGMEM = STR3123_TEXT;
+const char STR3124[] PROGMEM = STR3124_TEXT;
+const char STR3125[] PROGMEM = STR3125_TEXT;
+const char STR3126[] PROGMEM = STR3126_TEXT;
+const char STR3128[] PROGMEM = STR3128_TEXT;
+const char STR3129[] PROGMEM = STR3129_TEXT;
+const char STR3130[] PROGMEM = STR3130_TEXT;
+const char STR3131[] PROGMEM = STR3131_TEXT;
+const char STR3132[] PROGMEM = STR3132_TEXT;
+const char STR3133[] PROGMEM = STR3133_TEXT;
+const char STR3135[] PROGMEM = STR3135_TEXT;
+const char STR3136[] PROGMEM = STR3136_TEXT;
+const char STR3137[] PROGMEM = STR3137_TEXT;
+const char STR3138[] PROGMEM = STR3138_TEXT;
+const char STR3139[] PROGMEM = STR3139_TEXT;
+const char STR3140[] PROGMEM = STR3140_TEXT;
+const char STR3142[] PROGMEM = STR3142_TEXT;
+const char STR3143[] PROGMEM = STR3143_TEXT;
+const char STR3144[] PROGMEM = STR3144_TEXT;
+const char STR3145[] PROGMEM = STR3145_TEXT;
+const char STR3146[] PROGMEM = STR3146_TEXT;
+const char STR3147[] PROGMEM = STR3147_TEXT;
+const char STR3149[] PROGMEM = STR3149_TEXT;
+const char STR3150[] PROGMEM = STR3150_TEXT;
+const char STR3151[] PROGMEM = STR3151_TEXT;
+const char STR3152[] PROGMEM = STR3152_TEXT;
+const char STR3153[] PROGMEM = STR3153_TEXT;
+const char STR3154[] PROGMEM = STR3154_TEXT;
+const char STR3156[] PROGMEM = STR3156_TEXT;
+const char STR3157[] PROGMEM = STR3157_TEXT;
+const char STR3158[] PROGMEM = STR3158_TEXT;
+const char STR3159[] PROGMEM = STR3159_TEXT;
+const char STR3160[] PROGMEM = STR3160_TEXT;
+const char STR3161[] PROGMEM = STR3161_TEXT;
+const char STR3163[] PROGMEM = STR3163_TEXT;
+const char STR3164[] PROGMEM = STR3164_TEXT;
+const char STR3165[] PROGMEM = STR3165_TEXT;
+const char STR3166[] PROGMEM = STR3166_TEXT;
+const char STR3167[] PROGMEM = STR3167_TEXT;
+const char STR3168[] PROGMEM = STR3168_TEXT;
+const char STR3170[] PROGMEM = STR3170_TEXT;
+const char STR3171[] PROGMEM = STR3171_TEXT;
+const char STR3172[] PROGMEM = STR3172_TEXT;
+const char STR3173[] PROGMEM = STR3173_TEXT;
+const char STR3174[] PROGMEM = STR3174_TEXT;
+const char STR3175[] PROGMEM = STR3175_TEXT;
+const char STR3177[] PROGMEM = STR3177_TEXT;
+const char STR3178[] PROGMEM = STR3178_TEXT;
+const char STR3179[] PROGMEM = STR3179_TEXT;
+const char STR3180[] PROGMEM = STR3180_TEXT;
+const char STR3181[] PROGMEM = STR3181_TEXT;
+const char STR3182[] PROGMEM = STR3182_TEXT;
+const char STR3184[] PROGMEM = STR3184_TEXT;
+const char STR3185[] PROGMEM = STR3185_TEXT;
+const char STR3186[] PROGMEM = STR3186_TEXT;
+const char STR3187[] PROGMEM = STR3187_TEXT;
+const char STR3188[] PROGMEM = STR3188_TEXT;
+const char STR3189[] PROGMEM = STR3189_TEXT;
+const char STR3190[] PROGMEM = STR3190_TEXT;
+const char STR3192[] PROGMEM = STR3192_TEXT;
+const char STR3264[] PROGMEM = STR3264_TEXT;
+const char STR3265[] PROGMEM = STR3265_TEXT;
+const char STR3266[] PROGMEM = STR3266_TEXT;
+const char STR3267[] PROGMEM = STR3267_TEXT;
 
 // 3500 Kaskade
-const char STR3510[] PROGMEM = "Führungsstrategie";
-const char STR3511[] PROGMEM = "Leistungsband Minimum";
-const char STR3512[] PROGMEM = "Leistungsband Maximum";
-const char STR3530[] PROGMEM = "Freigabeintegral Erz’folge";
-const char STR3531[] PROGMEM = "Rückstellintegral Erz’folge";
-const char STR3532[] PROGMEM = "Wiedereinschaltsperre";
-const char STR3533[] PROGMEM = "Zuschaltverzögerung";
-const char STR3534[] PROGMEM = "Zwangszeit Grundstufe";
-const char STR3540[] PROGMEM = "Auto Erz’folge Umschaltung";
-const char STR3541[] PROGMEM = "Auto Erz’folge Ausgrenzung";
-const char STR3544[] PROGMEM = "Führender Erzeuger";
-const char STR3550[] PROGMEM = "Anfahrentlast Kaskad'pumpe";
-const char STR3560[] PROGMEM = "Rücklaufsollwert Minimum";
-const char STR3561[] PROGMEM = "Rücklaufsollwert Min OEM";
-const char STR3562[] PROGMEM = "Rückl'einfluss Verbraucher";
+const char STR3510[] PROGMEM = STR3510_TEXT;
+const char STR3511[] PROGMEM = STR3511_TEXT;
+const char STR3512[] PROGMEM = STR3512_TEXT;
+const char STR3530[] PROGMEM = STR3530_TEXT;
+const char STR3531[] PROGMEM = STR3531_TEXT;
+const char STR3532[] PROGMEM = STR3532_TEXT;
+const char STR3533[] PROGMEM = STR3533_TEXT;
+const char STR3534[] PROGMEM = STR3534_TEXT;
+const char STR3540[] PROGMEM = STR3540_TEXT;
+const char STR3541[] PROGMEM = STR3541_TEXT;
+const char STR3544[] PROGMEM = STR3544_TEXT;
+const char STR3550[] PROGMEM = STR3550_TEXT;
+#define STR3560 STR2270
+#define STR3561 STR2271
+#define STR3562 STR2272
 #define STR3570 STR834
 #define STR3571 STR835
 #define STR3572 STR836
-const char STR3590[] PROGMEM = "Temp’spreizung Minimum";
+const char STR3590[] PROGMEM = STR3590_TEXT;
 
 // 3700 Zusatzerzeuger
-const char STR3700[] PROGMEM = "Freigabe unter Außentemp";
-const char STR3701[] PROGMEM = "Freigabe über Außentemp";
-const char STR3705[] PROGMEM = "Nachlaufzeit";
-const char STR3720[] PROGMEM = "Schaltintegral";
-const char STR3722[] PROGMEM = "Schaltdifferenz Aus";
-const char STR3723[] PROGMEM = "Sperrzeit";
+#define STR3700 STR2203
+#define STR3701 STR2204
+const char STR3705[] PROGMEM = STR3705_TEXT;
+const char STR3720[] PROGMEM = STR3720_TEXT;
+const char STR3722[] PROGMEM = STR3722_TEXT;
+const char STR3723[] PROGMEM = STR3723_TEXT;
 
 // 3800 Solar
-const char STR3810[] PROGMEM = "Temperaturdifferenz Ein";
-const char STR3811[] PROGMEM = "Temperaturdifferenz Aus";
-const char STR3812[] PROGMEM = "Ladetemp Min TWW-Speicher";
-const char STR3813[] PROGMEM = "Temp’diff EIN Puffer";
-const char STR3814[] PROGMEM = "Temp’diff AUS Puffer";
-const char STR3815[] PROGMEM = "Ladetemp Min Puffer";
-const char STR3816[] PROGMEM = "Temp'differenz EIN Sch'bad";
-const char STR3817[] PROGMEM = "Temp'differenz AUS Sch'bad";
-const char STR3818[] PROGMEM = "Ladetemp Min Schwimmbad";
-const char STR3822[] PROGMEM = "Ladevorrang Speicher";
-const char STR3825[] PROGMEM = "Ladezeit relativer Vorrang";
-const char STR3826[] PROGMEM = "Wartezeit relativer Vorrang";
-const char STR3827[] PROGMEM = "Wartezeit Parallelbetrieb";
-const char STR3828[] PROGMEM = "Verzögerung Sekundärpumpe";
-const char STR3830[] PROGMEM = "Kollektorstartfunktion";
-const char STR3831[] PROGMEM = "Mindestlaufzeit Kollek`pumpe";
-const char STR3832[] PROGMEM = "Kollektorstartfunktion Ein";
-const char STR3833[] PROGMEM = "Kollektorstartfunktion Aus";
-const char STR3834[] PROGMEM = "Kollektorstartfkt Gradient";
-const char STR3840[] PROGMEM = "Kollektor Frostschutz";
-const char STR3850[] PROGMEM = "Kollektorüberhitzschutz";
-const char STR3860[] PROGMEM = "Verdampfung Wärmeträger";
-const char STR3870[] PROGMEM = "Pumpendrehzahl Minimum";
-const char STR3871[] PROGMEM = "Pumpendrehzahl Maximum";
+const char STR3810[] PROGMEM = STR3810_TEXT;
+const char STR3811[] PROGMEM = STR3811_TEXT;
+const char STR3812[] PROGMEM = STR3812_TEXT;
+const char STR3813[] PROGMEM = STR3813_TEXT;
+const char STR3814[] PROGMEM = STR3814_TEXT;
+const char STR3815[] PROGMEM = STR3815_TEXT;
+const char STR3816[] PROGMEM = STR3816_TEXT;
+const char STR3817[] PROGMEM = STR3817_TEXT;
+const char STR3818[] PROGMEM = STR3818_TEXT;
+const char STR3822[] PROGMEM = STR3822_TEXT;
+const char STR3825[] PROGMEM = STR3825_TEXT;
+const char STR3826[] PROGMEM = STR3826_TEXT;
+const char STR3827[] PROGMEM = STR3827_TEXT;
+const char STR3828[] PROGMEM = STR3828_TEXT;
+const char STR3830[] PROGMEM = STR3830_TEXT;
+const char STR3831[] PROGMEM = STR3831_TEXT;
+const char STR3832[] PROGMEM = STR3832_TEXT;
+const char STR3833[] PROGMEM = STR3833_TEXT;
+const char STR3834[] PROGMEM = STR3834_TEXT;
+const char STR3840[] PROGMEM = STR3840_TEXT;
+const char STR3850[] PROGMEM = STR3850_TEXT;
+const char STR3860[] PROGMEM = STR3860_TEXT;
+#define STR3870 STR882
+#define STR3871 STR883
 #define STR3872 STR835
 #define STR3873 STR836
-const char STR3880[] PROGMEM = "Frostschutzmittel";
-const char STR3881[] PROGMEM = "Frost'mittel Konzentration";
-const char STR3884[] PROGMEM = "Pumpendurchfluss";
-const char STR3887[] PROGMEM = "Impulseinheit Ertrag";
+const char STR3880[] PROGMEM = STR3880_TEXT;
+const char STR3881[] PROGMEM = STR3881_TEXT;
+const char STR3884[] PROGMEM = STR3884_TEXT;
+const char STR3887[] PROGMEM = STR3887_TEXT;
 
 // 4100 Feststoffkessel
-const char STR4102[] PROGMEM = "Sperrt andere Erzeuger";
-const char STR4110[] PROGMEM = "Sollwert Minimum";
-const char STR4112[] PROGMEM = "Sollwert Maximum";
-const char STR4130[] PROGMEM = "Temperaturdifferenz Ein";
-const char STR4131[] PROGMEM = "Temperaturdifferenz Aus";
-const char STR4133[] PROGMEM = "Vergleichstemperatur";
-const char STR4140[] PROGMEM = "Pumpennachlaufzeit";
-const char STR4141[] PROGMEM = "Übertemperaturableitung";
-const char STR4170[] PROGMEM = "Anl'frostschutz Kess'pumpe";
-
+const char STR4102[] PROGMEM = STR4102_TEXT;
+#define STR4110 STR2210
+#define STR4112 STR2212
+#define STR4130 STR3810
+#define STR4131 STR3811
+const char STR4133[] PROGMEM = STR4133_TEXT;
+#define STR4140 STR2250
+const char STR4141[] PROGMEM = STR4141_TEXT;
+#define STR4170 STR2300
 
 // 4700 Pufferspeicher
-const char STR4708[] PROGMEM = "Zwangsladungsollwert Kühlen";
-const char STR4709[] PROGMEM = "Zwangsladungsoll Heizen Min";
-const char STR4710[] PROGMEM = "Zwangsladungsoll Heizen Max";
-const char STR4711[] PROGMEM = "Zwangsladung Zeitpunkt";
-const char STR4712[] PROGMEM = "Zwangsladung Dauer Max";
-const char STR4720[] PROGMEM = "Auto Erzeugersperre";
-const char STR4721[] PROGMEM = "Auto Erzeugersperre SD";
-const char STR4722[] PROGMEM = "Temp`diff Puffer/Heizkreis";
-const char STR4724[] PROGMEM = "Min Speichertemp Heizbetrieb";
-const char STR4739[] PROGMEM = "Schichtschutz";
-const char STR4740[] PROGMEM = "Schichtschutz Tempdiff Max";
-const char STR4743[] PROGMEM = "Schichtschutz Vor’schauzeit";
-const char STR4744[] PROGMEM = "Schichtschutz Nachstellzeit";
-const char STR4746[] PROGMEM = "Trinkwasserschutz Kombi";
-const char STR4750[] PROGMEM = "Ladetemperatur Maximum";
-const char STR4751[] PROGMEM = "Speichertemperatur Maximum";
-const char STR4755[] PROGMEM = "Rückkühltemperatur";
-const char STR4756[] PROGMEM = "Rückkühlung TWW/HK`s";
-const char STR4757[] PROGMEM = "Rückkühlung Kollektor";
-const char STR4760[] PROGMEM = "Ladefühler Elektroeinsatz";
-const char STR4761[] PROGMEM = "Zwangsladung mit Elektro";
-const char STR4783[] PROGMEM = "Mit Solareinbindung";
-const char STR4790[] PROGMEM = "Temp'diff EIN Rückl'umlenk";
-const char STR4791[] PROGMEM = "Temp'diff AUS Rückl'umlenk";
-const char STR4795[] PROGMEM = "Vergleichstemp Rückl'umlenk";
-const char STR4796[] PROGMEM = "Wirksinn Rücklaufumlenkung";
-const char STR4810[] PROGMEM = "Durchladung Puffersp";
-const char STR4811[] PROGMEM = "Durchladetemperatur Minimum";
-const char STR4813[] PROGMEM = "Durchladefühler";
+const char STR4708[] PROGMEM = STR4708_TEXT;
+const char STR4709[] PROGMEM = STR4709_TEXT;
+const char STR4710[] PROGMEM = STR4710_TEXT;
+const char STR4711[] PROGMEM = STR4711_TEXT;
+const char STR4712[] PROGMEM = STR4712_TEXT;
+const char STR4720[] PROGMEM = STR4720_TEXT;
+const char STR4721[] PROGMEM = STR4721_TEXT;
+const char STR4722[] PROGMEM = STR4722_TEXT;
+const char STR4724[] PROGMEM = STR4724_TEXT;
+const char STR4739[] PROGMEM = STR4739_TEXT;
+const char STR4740[] PROGMEM = STR4740_TEXT;
+const char STR4743[] PROGMEM = STR4743_TEXT;
+const char STR4744[] PROGMEM = STR4744_TEXT;
+const char STR4746[] PROGMEM = STR4746_TEXT;
+const char STR4750[] PROGMEM = STR4750_TEXT;
+const char STR4751[] PROGMEM = STR4751_TEXT;
+const char STR4755[] PROGMEM = STR4755_TEXT;
+const char STR4756[] PROGMEM = STR4756_TEXT;
+const char STR4757[] PROGMEM = STR4757_TEXT;
+const char STR4760[] PROGMEM = STR4760_TEXT;
+const char STR4761[] PROGMEM = STR4761_TEXT;
+#define STR4783 STR2080
+const char STR4790[] PROGMEM = STR4790_TEXT;
+const char STR4791[] PROGMEM = STR4791_TEXT;
+const char STR4795[] PROGMEM = STR4795_TEXT;
+const char STR4796[] PROGMEM = STR4796_TEXT;
+#define STR4810 STR2208
+const char STR4811[] PROGMEM = STR4811_TEXT;
+const char STR4813[] PROGMEM = STR4813_TEXT;
 // 5000 Trinkwasserspeicher
-const char STR5010[] PROGMEM = "Trinkwasserladung";
-const char STR5011[] PROGMEM = "Trinkwasser-Speicher Ladevorlegungszeit";
-const char STR5019[] PROGMEM = "TWW Nachlad'Überhöh Schichtensp";
-const char STR5020[] PROGMEM = "TWW Vorlaufsollwertüberhöhung";
-const char STR5021[] PROGMEM = "TWW Umladeüberhöhung";
-const char STR5022[] PROGMEM = "TW Nachladeregelung";
-const char STR5022_2[] PROGMEM = "Ladeart";
-const char STR5024[] PROGMEM = "TWW Schaltdifferenz 1 ein";
-const char STR5025[] PROGMEM = "TWW Schaltdifferenz 1 Aus min";
-const char STR5026[] PROGMEM = "TWW Schaltdifferenz 1 Aus max";
-const char STR5027[] PROGMEM = "TWW Schaltdifferenz 2 Ein";
-const char STR5028[] PROGMEM = "TWW Schaltdifferenz 2 Aus min";
-const char STR5029[] PROGMEM = "TWW Schaltdifferenz 2 Aus max";
-const char STR5030[] PROGMEM = "TWW Ladezeitbegrenzung";
-const char STR5040[] PROGMEM = "TWW Entladeschutz";
-const char STR5050[] PROGMEM = "TWW Ladetemperatur Maximum";
-const char STR5051[] PROGMEM = "TWW Speichertemperatur Maximum";
-const char STR5055[] PROGMEM = "TWW Rückkühltemperatur";
-const char STR5056[] PROGMEM = "TWW Rückkühlung Kessel/HK";
-const char STR5057[] PROGMEM = "TWW Rückkühlung Kollektor";
-const char STR5060[] PROGMEM = "TWW Elektroeinsatz Betriebsart";
-const char STR5061[] PROGMEM = "TWW Elektroeinsatz Freigabe";
-const char STR5062[] PROGMEM = "TWW Elektroeinsatz Regelung";
-const char STR5070[] PROGMEM = "TWW Automatischer Push";
-const char STR5071[] PROGMEM = "TWW Ladevorrangzeit Push";
-const char STR5085[] PROGMEM = "TWW Übertemperaturabnahme";
-const char STR5090[] PROGMEM = "TWW Mit Pufferspeicher";
-const char STR5092[] PROGMEM = "TWW Mit Vorregler/Zubring`pumpe";
-const char STR5093[] PROGMEM = "TWW Mit Solareinbindung";
-const char STR5100[] PROGMEM = "TWW Pumpe-PWM Durchladung";
-const char STR5101[] PROGMEM = "TWW Pumpendrehzahl Minimum";
-const char STR5102[] PROGMEM = "TWW Pumpendrehzahl Maximum";
+const char STR5010[] PROGMEM = STR5010_TEXT;
+const char STR5011[] PROGMEM = STR5011_TEXT;
+const char STR5019[] PROGMEM = STR5019_TEXT;
+const char STR5020[] PROGMEM = STR5020_TEXT;
+const char STR5021[] PROGMEM = STR5021_TEXT;
+const char STR5022[] PROGMEM = STR5022_TEXT;
+const char STR5022_2[] PROGMEM = STR5022_2_TEXT;
+const char STR5024[] PROGMEM = STR5024_TEXT;
+const char STR5025[] PROGMEM = STR5025_TEXT;
+const char STR5026[] PROGMEM = STR5026_TEXT;
+const char STR5027[] PROGMEM = STR5027_TEXT;
+const char STR5028[] PROGMEM = STR5028_TEXT;
+const char STR5029[] PROGMEM = STR5029_TEXT;
+const char STR5030[] PROGMEM = STR5030_TEXT;
+const char STR5040[] PROGMEM = STR5040_TEXT;
+const char STR5050[] PROGMEM = STR5050_TEXT;
+const char STR5051[] PROGMEM = STR5051_TEXT;
+const char STR5055[] PROGMEM = STR5055_TEXT;
+const char STR5056[] PROGMEM = STR5056_TEXT;
+const char STR5057[] PROGMEM = STR5057_TEXT;
+const char STR5060[] PROGMEM = STR5060_TEXT;
+const char STR5061[] PROGMEM = STR5061_TEXT;
+const char STR5062[] PROGMEM = STR5062_TEXT;
+const char STR5070[] PROGMEM = STR5070_TEXT;
+const char STR5071[] PROGMEM = STR5071_TEXT;
+const char STR5085[] PROGMEM = STR5085_TEXT;
+const char STR5090[] PROGMEM = STR5090_TEXT;
+const char STR5092[] PROGMEM = STR5092_TEXT;
+const char STR5093[] PROGMEM = STR5093_TEXT;
+const char STR5100[] PROGMEM = STR5100_TEXT;
+const char STR5101[] PROGMEM = STR5101_TEXT;
+const char STR5102[] PROGMEM = STR5102_TEXT;
 #define STR5103 STR2324
 #define STR5104 STR2325
 #define STR5105 STR2326
@@ -1374,350 +1369,350 @@ const char STR5102[] PROGMEM = "TWW Pumpendrehzahl Maximum";
 #define STR5124 STR834
 #define STR5125 STR835
 #define STR5126 STR836
-const char STR5130[] PROGMEM = "TWW Umladestrategie";
-const char STR5131[] PROGMEM = "Vergleichstemp Umladung";
+const char STR5130[] PROGMEM = STR5130_TEXT;
+const char STR5131[] PROGMEM = STR5131_TEXT;
 
 // 5400 Trinkwasser Durchlauferhitzer
-const char STR5400[] PROGMEM = "Komfortsollwert";
-const char STR5406[] PROGMEM = "Min Sollw'diff zu Speich'temp";
-const char STR5420[] PROGMEM = "Vorlauf-Sollwertüberhöhung";
-const char STR5430[] PROGMEM = "Einschaltdifferenz im BW-Betrieb (Fühler 1)";
-const char STR5431[] PROGMEM = "Min. Ausschaltdifferenz im BW-Betrieb (Fühler 1)";
-const char STR5432[] PROGMEM = "Max. Ausschaltdifferenz im BW-Betrieb (Fühler 1)";
-const char STR5433[] PROGMEM = "Einschaltdifferenz im BW-Betrieb (Fühler 2)";
-const char STR5434[] PROGMEM = "Min. Ausschaltdifferenz im BW-Betrieb (Fühler 2)";
-const char STR5435[] PROGMEM = "Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2)";
-const char STR5450[] PROGMEM = "Schwelle zum Beenden einer Bw-Zapfung bei DLH";
-const char STR5451[] PROGMEM = "Schwelle für Bw-Zapfung bei DLH in Komfort";
-const char STR5452[] PROGMEM = "Schwelle für Bw-Zapfung bei Dlh in Heizbetrieb";
-const char STR5453[] PROGMEM = "Sollwertkorrektur bei Komfortregelung mit 40°C";
-const char STR5454[] PROGMEM = "Sollwertkorrektur bei Komfortregelung mit 60°C";
-const char STR5455[] PROGMEM = "Sollwertkorrektur bei Auslaufregelung mit 40°C";
-const char STR5456[] PROGMEM = "Sollwertkorrektur bei Auslaufregelung mit 60°C";
-const char STR5480[] PROGMEM = "Komfortzeit ohne Hz-Anforderung";
-const char STR5481[] PROGMEM = "Komfortzeit mit Hz-Anforderung";
-const char STR5482[] PROGMEM = "Zeit TWW-FlowSwitch geschlossen";
-const char STR5483[] PROGMEM = "Zeit TWW-Komfort FlowSwitch geschlossen";
-const char STR5486[] PROGMEM = "Reglerverzögerung bei Takten in DLH Auslaufbetr.";
-const char STR5487[] PROGMEM = "Pumpennachlauf Komf in Sek.";
-const char STR5488[] PROGMEM = "Pumpennachlauf Komf in Min.";
-const char STR5530[] PROGMEM = "Pumpendrehzahl Minimum";
+#define STR5400 STR710
+const char STR5406[] PROGMEM = STR5406_TEXT;
+const char STR5420[] PROGMEM = STR5420_TEXT;
+const char STR5430[] PROGMEM = STR5430_TEXT;
+const char STR5431[] PROGMEM = STR5431_TEXT;
+const char STR5432[] PROGMEM = STR5432_TEXT;
+const char STR5433[] PROGMEM = STR5433_TEXT;
+const char STR5434[] PROGMEM = STR5434_TEXT;
+const char STR5435[] PROGMEM = STR5435_TEXT;
+const char STR5450[] PROGMEM = STR5450_TEXT;
+const char STR5451[] PROGMEM = STR5451_TEXT;
+const char STR5452[] PROGMEM = STR5452_TEXT;
+const char STR5453[] PROGMEM = STR5453_TEXT;
+const char STR5454[] PROGMEM = STR5454_TEXT;
+const char STR5455[] PROGMEM = STR5455_TEXT;
+const char STR5456[] PROGMEM = STR5456_TEXT;
+const char STR5480[] PROGMEM = STR5480_TEXT;
+const char STR5481[] PROGMEM = STR5481_TEXT;
+const char STR5482[] PROGMEM = STR5482_TEXT;
+const char STR5483[] PROGMEM = STR5483_TEXT;
+const char STR5486[] PROGMEM = STR5486_TEXT;
+const char STR5487[] PROGMEM = STR5487_TEXT;
+const char STR5488[] PROGMEM = STR5488_TEXT;
+#define STR5530 STR882
 #define STR5544 STR834
 #define STR5545 STR835
 #define STR5546 STR836
 #define STR5547 STR2285
 // Konfiguration
-const char STR5700[] PROGMEM = "Voreinstellung";
-const char STR5701[] PROGMEM = "Hydraulisches Schema";
-const char STR5710[] PROGMEM = "Heizkreis 1";
-const char STR5711[] PROGMEM = "Kühlkreis 1";
-const char STR5712[] PROGMEM = "Verwendung Mischer 1";
-const char STR5715[] PROGMEM = "Heizkreis 2";
-const char STR5721[] PROGMEM = "Heizkreis 3";
-const char STR5730[] PROGMEM = "Trinkwasser-Sensor B3";
-const char STR5731[] PROGMEM = "Trinkwasser-Stellglied Q3";
-const char STR5732[] PROGMEM = "TWW Pumpenpause Umsch UV";
-const char STR5733[] PROGMEM = "TWW Pumpenpause Verzögerung";
-const char STR5734[] PROGMEM = "Grundposition TWW Umlenkventil";
-const char STR5736[] PROGMEM = "Trinkwasser Trennschaltung";
+const char STR5700[] PROGMEM = STR5700_TEXT;
+const char STR5701[] PROGMEM = STR5701_TEXT;
+const char STR5710[] PROGMEM = STR5710_TEXT;
+const char STR5711[] PROGMEM = STR5711_TEXT;
+const char STR5712[] PROGMEM = STR5712_TEXT;
+const char STR5715[] PROGMEM = STR5715_TEXT;
+const char STR5721[] PROGMEM = STR5721_TEXT;
+const char STR5730[] PROGMEM = STR5730_TEXT;
+const char STR5731[] PROGMEM = STR5731_TEXT;
+const char STR5732[] PROGMEM = STR5732_TEXT;
+const char STR5733[] PROGMEM = STR5733_TEXT;
+const char STR5734[] PROGMEM = STR5734_TEXT;
+const char STR5736[] PROGMEM = STR5736_TEXT;
 // const char STR5737[] PROGMEM = "Wirksinn TWW Umlenkventil";
-const char STR5740[] PROGMEM = "Leistung Elektro TWW K6";
-const char STR5760[] PROGMEM = "Vorregler/Zubringerpumpe";
-const char STR5761[] PROGMEM = "Zubringerpumpe Q8 Bit 0-3";
-const char STR5770[] PROGMEM = "Erzeugertyp";
-const char STR5772[] PROGMEM = "Brenner Vorlaufzeit";
-const char STR5774[] PROGMEM = "Steuerung Kesselpumpe/TWW Umlenkventil";
-const char STR5800[] PROGMEM = "Wärmequelle";
-const char STR5806[] PROGMEM = "Typ Elektroeinsatz Vorlauf";  //FUJITSU
-const char STR5807[] PROGMEM = "Kälteerzeugung";
-const char STR5810[] PROGMEM = "Spreizung HK bei TA –10 °C";
-const char STR5811[] PROGMEM = "Leistung Elektro 1 Vorl' K25";
-const char STR5813[] PROGMEM = "Leistung Elektro 2 Vorl' K26";
-const char STR5840[] PROGMEM = "Solarstellglied";
-const char STR5841[] PROGMEM = "Externer Solartauscher";
-const char STR5870[] PROGMEM = "Kombispeicher";
-const char STR5890[] PROGMEM = "Relaisausgang QX1";
-const char STR5890_2[] PROGMEM = "Pumpenfunktion Ausgang K6";
-const char STR5891[] PROGMEM = "Relaisausgang QX2";
-const char STR5891_2[] PROGMEM = "Pumpenfunktion Ausgang K7";
-const char STR5892[] PROGMEM = "Relaisausgang QX3";
-const char STR5894[] PROGMEM = "Relaisausgang QX4";
-const char STR5895[] PROGMEM = "Relaisausgang QX5";
-const char STR5896[] PROGMEM = "Relaisausgang QX6";
-const char STR5902[] PROGMEM = "Relaisausgang QX21";
-const char STR5904[] PROGMEM = "Relaisausgang QX23";
-const char STR5908[] PROGMEM = "Funktion Ausgang QX3-Mod";
-const char STR5909[] PROGMEM = "Funktion Ausgang QX4-Mod";
-const char STR5920[] PROGMEM = "Programmierbarer Ausgang K2";
-const char STR5921[] PROGMEM = "Default K2 auf K1";
-const char STR5922[] PROGMEM = "Relaisausgang 1 RelCl";
-const char STR5923[] PROGMEM = "Relaisausgang 2 RelCl";
-const char STR5924[] PROGMEM = "Relaisausgang 3 RelCl";
-const char STR5926[] PROGMEM = "Relaisausgang 1 SolCl";
-const char STR5927[] PROGMEM = "Relaisausgang 2 SolCl";
-const char STR5928[] PROGMEM = "Relaisausgang 3 SolCl";
-const char STR5930[] PROGMEM = "Fühlereingang BX 1";
-const char STR5931[] PROGMEM = "Fühlereingang BX 2";
-const char STR5932[] PROGMEM = "Fühlereingang BX 3";
-const char STR5933[] PROGMEM = "Fühlereingang BX 4";
-const char STR5934[] PROGMEM = "Fühlereingang BX5";
-const char STR5941[] PROGMEM = "Fühlereingang BX21";
-const char STR5942[] PROGMEM = "Fühlereingang BX22";
-const char STR5950[] PROGMEM = "Funktion Eingang H1";
-const char STR5951[] PROGMEM = "Wirksinn Kontakt H1";
-const char STR5952[] PROGMEM = "Minimaler Vorlaufsollwert H1";
-const char STR5953[] PROGMEM = "Spannungswert 1 H1";
-const char STR5954[] PROGMEM = "Wärmeanforderung 10V H1";
-const char STR5954_2[] PROGMEM = "Funktionswert 1 H1";
-const char STR5955[] PROGMEM = "Spannungswert 2 H1";
-const char STR5956[] PROGMEM = "Druckwert 3.5V H1";
-const char STR5956_2[] PROGMEM = "Funktionswert 2 H1";
-const char STR5957_2[] PROGMEM = "BA-Umschaltung HK\'s+TWW";
+const char STR5740[] PROGMEM = STR5740_TEXT;
+#define STR5760 STR2150
+const char STR5761[] PROGMEM = STR5761_TEXT;
+const char STR5770[] PROGMEM = STR5770_TEXT;
+const char STR5772[] PROGMEM = STR5772_TEXT;
+const char STR5774[] PROGMEM = STR5774_TEXT;
+const char STR5800[] PROGMEM = STR5800_TEXT;
+const char STR5806[] PROGMEM = STR5806_TEXT;
+const char STR5807[] PROGMEM = STR5807_TEXT;
+const char STR5810[] PROGMEM = STR5810_TEXT;
+const char STR5811[] PROGMEM = STR5811_TEXT;
+const char STR5813[] PROGMEM = STR5813_TEXT;
+const char STR5840[] PROGMEM = STR5840_TEXT;
+const char STR5841[] PROGMEM = STR5841_TEXT;
+const char STR5870[] PROGMEM = STR5870_TEXT;
+const char STR5890[] PROGMEM = STR5890_TEXT;
+const char STR5890_2[] PROGMEM = STR5890_2_TEXT;
+const char STR5891[] PROGMEM = STR5891_TEXT;
+const char STR5891_2[] PROGMEM = STR5891_2_TEXT;
+const char STR5892[] PROGMEM = STR5892_TEXT;
+const char STR5894[] PROGMEM = STR5894_TEXT;
+const char STR5895[] PROGMEM = STR5895_TEXT;
+const char STR5896[] PROGMEM = STR5896_TEXT;
+const char STR5902[] PROGMEM = STR5902_TEXT;
+const char STR5904[] PROGMEM = STR5904_TEXT;
+const char STR5908[] PROGMEM = STR5908_TEXT;
+const char STR5909[] PROGMEM = STR5909_TEXT;
+const char STR5920[] PROGMEM = STR5920_TEXT;
+const char STR5921[] PROGMEM = STR5921_TEXT;
+const char STR5922[] PROGMEM = STR5922_TEXT;
+const char STR5923[] PROGMEM = STR5923_TEXT;
+const char STR5924[] PROGMEM = STR5924_TEXT;
+const char STR5926[] PROGMEM = STR5926_TEXT;
+const char STR5927[] PROGMEM = STR5927_TEXT;
+const char STR5928[] PROGMEM = STR5928_TEXT;
+const char STR5930[] PROGMEM = STR5930_TEXT;
+const char STR5931[] PROGMEM = STR5931_TEXT;
+const char STR5932[] PROGMEM = STR5932_TEXT;
+const char STR5933[] PROGMEM = STR5933_TEXT;
+const char STR5934[] PROGMEM = STR5934_TEXT;
+const char STR5941[] PROGMEM = STR5941_TEXT;
+const char STR5942[] PROGMEM = STR5942_TEXT;
+const char STR5950[] PROGMEM = STR5950_TEXT;
+const char STR5951[] PROGMEM = STR5951_TEXT;
+const char STR5952[] PROGMEM = STR5952_TEXT;
+const char STR5953[] PROGMEM = STR5953_TEXT;
+const char STR5954[] PROGMEM = STR5954_TEXT;
+const char STR5954_2[] PROGMEM = STR5954_2_TEXT;
+const char STR5955[] PROGMEM = STR5955_TEXT;
+const char STR5956[] PROGMEM = STR5956_TEXT;
+const char STR5956_2[] PROGMEM = STR5956_2_TEXT;
+const char STR5957_2[] PROGMEM = STR5957_2_TEXT;
 #define STR5957_3 STR5950
-const char STR5960_2[] PROGMEM = "Funktion Eingang H2";
-const char STR5961_2[] PROGMEM = "Wirksinn Kontakt H2";
-const char STR5962_2[] PROGMEM = "Minimaler Vorlaufsollwert H2";
-const char STR5963_2[] PROGMEM = "Spannungswert 1 H2";
-const char STR5964_2[] PROGMEM = "Temperaturwert 10V H2";
-const char STR5957[] PROGMEM = "Modemfunktion";
-const char STR5960[] PROGMEM = "Funktion Eingang H3";
-const char STR5961[] PROGMEM = "Wirksinn Kontakt H3";
-const char STR5962[] PROGMEM = "Minimaler Vorlaufsollwert H3";
-const char STR5963[] PROGMEM = "Spannungswert 1 H3";
-const char STR5964[] PROGMEM = "Wärmeanforderung 10V H3";
-const char STR5965[] PROGMEM = "Spannungswert 2 H3";
-const char STR5966[] PROGMEM = "Druckwert 3.5V H2";
-const char STR5970[] PROGMEM = "Konfig Raumthermostat 1";
-const char STR5970_2[] PROGMEM = "Funktion Eingang H4";
-const char STR5971[] PROGMEM = "Konfig Raumthermostat 2";
-const char STR5971_2[] PROGMEM = "Wirksinn Kontakt H4";
-const char STR5973[] PROGMEM = "Funktion Eingang RelCl";
-const char STR5975[] PROGMEM = "Ext. Vorlaufsollwert Maximum";
-const char STR5976[] PROGMEM = "Ext. Leistungsvorg. Schwelle";
-const char STR5977[] PROGMEM = "Funktion Eingang H5";
-const char STR5978[] PROGMEM = "Funktion Eingang SolCl";
-const char STR5978_2[] PROGMEM = "Wirksinn Eingang H5";
-const char STR5980[] PROGMEM = "Funktion Eingang EX1";
-const char STR5981[] PROGMEM = "Wirksinn Eingang EX1";
-const char STR5982[] PROGMEM = "Funktion Eingang EX2";
-const char STR5983[] PROGMEM = "Wirksinn Eingang EX2";
-const char STR5984[] PROGMEM = "Funktion Eingang EX3";
-const char STR5985[] PROGMEM = "Wirksinn Eingang EX3";
-const char STR5986[] PROGMEM = "Funktion Eingang EX4";
-const char STR5987[] PROGMEM = "Wirksinn Eingang EX4";
-const char STR5988[] PROGMEM = "Funktion Eingang EX5";
-const char STR5989[] PROGMEM = "Wirksinn Eingang EX5";
-const char STR5990[] PROGMEM = "Funktion Eingang EX6";
-const char STR5992[] PROGMEM = "Funktion Eingang EX7";
-const char STR6014[] PROGMEM = "Funktion Mischergruppe 1";
-const char STR6015[] PROGMEM = "Funktion Mischergruppe 2";
-const char STR6020[] PROGMEM = "Funktion Erweiterungsmodul 1";
-const char STR6021[] PROGMEM = "Funktion Erweiterungsmodul 2";
-const char STR6030[] PROGMEM = "Relaisausgang QX21 Modul 1";
-const char STR6031[] PROGMEM = "Relaisausgang QX22 Modul 1";
-const char STR6032[] PROGMEM = "Relaisausgang QX23 Modul 1";
-// const char STR6033[] PROGMEM = "Relaisausgang QX21 Modul 2";
-// const char STR6034[] PROGMEM = "Relaisausgang QX22 Modul 2";
-// const char STR6035[] PROGMEM = "Relaisausgang QX23 Modul 2";
-const char STR6040[] PROGMEM = "Fühlereingang BX21 Modul 1";
-const char STR6041[] PROGMEM = "Fühlereingang BX22 Modul 1";
-const char STR6042[] PROGMEM = "Fühlereingang BX21 Modul 2";
-const char STR6043[] PROGMEM = "Fühlereingang BX22 Modul 2";
-const char STR6046[] PROGMEM = "Funktion Eingang H2";
-const char STR6047[] PROGMEM = "Wirksinn Kontakt H2";
-const char STR6048[] PROGMEM = "Minimaler Vorlaufsollwert H2";
-const char STR6048_2[] PROGMEM = "Funktionswert Kontakt H2";
-const char STR6049[] PROGMEM = "Spannungswert 1 H2";
-const char STR6050[] PROGMEM = "Temperaturwert 10V H2";
-const char STR6050_2[] PROGMEM = "Funktionswert 1 H2";
-const char STR6051[] PROGMEM = "Spannungswert 2 H2";
-const char STR6052[] PROGMEM = "Funktionswert 2 H2";
-const char STR6070[] PROGMEM = "Funktion Ausgang UX";
-const char STR6071[] PROGMEM = "Signallogik Ausgang UX";
-const char STR6072[] PROGMEM = "Signal Ausgang UX";
-const char STR6075[] PROGMEM = "Temperaturwert 10V UX";
-const char STR6085[] PROGMEM = "PWM-Ausgang P1";
-const char STR6089[] PROGMEM = "Mod Pumpe Drehzahlstufen";
-const char STR6092[] PROGMEM = "Mod Pumpe PWM";
-const char STR6097[] PROGMEM = "Fühlertyp Kollektor";
-const char STR6098[] PROGMEM = "Korrektur Kollektorfühler";
-const char STR6099[] PROGMEM = "Korrektur Kollektorfühler 2";
-const char STR6100[] PROGMEM = "Korrektur Aussenfühler";
-const char STR6101[] PROGMEM = "Fühlertyp Abgastemperatur";
-const char STR6102[] PROGMEM = "Korrektur Abgastemp'fühler";
-const char STR6110[] PROGMEM = "Zeitkonstante Gebäude";
-const char STR6112[] PROGMEM = "Gradient Raummodell";
-const char STR6116[] PROGMEM = "Zeitkonstante Sollw’führung";
-const char STR6117[] PROGMEM = "Zentrale Sollwertfuehrung";
-const char STR6118[] PROGMEM = "Sollwertabfall Verzögerung";
-const char STR6120[] PROGMEM = "Anlagenfrostschutz";
-const char STR6127[] PROGMEM = "Pumpen/Ventilkick Dauer";
-const char STR6128[] PROGMEM = "Wärm'anfo unter Außentemp";
-const char STR6129[] PROGMEM = "Wärm'anfo über Außentemp";
-const char STR6130[] PROGMEM = "H1 mit Pufferspeicher";
-const char STR6131[] PROGMEM = "Wärm'anfo bei Ökobetrieb";
-const char STR6134[] PROGMEM = "H2 mit Pufferspeicher";
-const char STR6135[] PROGMEM = "Luftentfeuchter";
-const char STR6136[] PROGMEM = "Luftentfeuchter Freigabe";
-const char STR6137[] PROGMEM = "Luftentfeuchter r. F. EIN";
-const char STR6138[] PROGMEM = "Luftentfeuchter r. F. SD";
-const char STR6140[] PROGMEM = "Wasserdruck Maximum";
-const char STR6141[] PROGMEM = "Wasserdruck Minimum";
-const char STR6142[] PROGMEM = "Wasserdruck kritisch Min";
-const char STR6148[] PROGMEM = "Statische Drucküberwachung 1";
-const char STR6150[] PROGMEM = "Wasserdruck 2 Maximum";
-const char STR6151[] PROGMEM = "Wasserdruck 2 Minimum";
-const char STR6152[] PROGMEM = "Wasserdruck 2 kritisch Min";
-const char STR6180[] PROGMEM = "Wasserdruck 3 Maximum";
-const char STR6181[] PROGMEM = "Wasserdruck 3 Minimum";
-const char STR6182[] PROGMEM = "Wasserdruck 3 kritisch Min";
-const char STR6200[] PROGMEM = "Fühler Speichern";
-const char STR6201[] PROGMEM = "Fühler löschen";
-const char STR6204[] PROGMEM = "Parameter speichern";
-const char STR6205[] PROGMEM = "Parameter zurücksetzen";
-const char STR6212[] PROGMEM = "Kontrollnummer Erzeuger 1";
-const char STR6213[] PROGMEM = "Kontrollnummer Erzeuger 2";
-const char STR6215[] PROGMEM = "Kontrollnummer Speicher";
-const char STR6217[] PROGMEM = "Kontrollnummer Heizkreise";
-const char STR6220[] PROGMEM = "Software-Version";
-const char STR6221[] PROGMEM = "Entwicklungs-Index";
-const char STR6222[] PROGMEM = "Gerätebetriebsstunden";
-const char STR6223[] PROGMEM = "Bisher unbekannte Geräteabfrage";
-const char STR6224[] PROGMEM = "Geräte-Identifikation";
-const char STR6225[] PROGMEM = "Gerätefamilie";
-const char STR6226[] PROGMEM = "Gerätevariante";
-const char STR6227[] PROGMEM = "Objektverzeichnis-Version";
-const char STR6228[] PROGMEM = "Bootloader-Version";
-const char STR6229[] PROGMEM = "EEPROM-Version";
-const char STR6230[] PROGMEM = "KonfigRg0 Bit 0-7";
-const char STR6230_2[] PROGMEM = "Konfiguration - Info 1 OEM";
-const char STR6231[] PROGMEM = "Konfiguration - Info 2 OEM";
-const char STR6232[] PROGMEM = "Zugangscode Inbetriebnahme?";
-const char STR6233[] PROGMEM = "Zugangscode Fachmannebene ?";
-const char STR6234[] PROGMEM = "Zugangscode OEM?";
-const char STR6235[] PROGMEM = "Zugangscode OEM2?";
-const char STR6236[] PROGMEM = "Hersteller-ID (letzten vier Bytes)";
-const char STR6240[] PROGMEM = "KonfigRg1 Bit 0-7";
-const char STR6250[] PROGMEM = "KonfigRg2 Bit 0-7";
-const char STR6260[] PROGMEM = "KonfigRg3 Bit 0-7";
-const char STR6270[] PROGMEM = "KonfigRg4 Bit 0-7";
-const char STR6270_2[] PROGMEM = "Überhitzschutztemperatur";
-const char STR6271[] PROGMEM = "Überhitzschutz Schaltdiff";
-const char STR6272[] PROGMEM = "Überhitzschutzfühler";
-const char STR6273[] PROGMEM = "Überhitzschutz Dauer Min.";
-const char STR6280[] PROGMEM = "KonfigRg5 Bit 0-7";
-const char STR6290[] PROGMEM = "KonfigRg6 Bit 0-7";
-const char STR6300[] PROGMEM = "KonfigRg7 Bit 0-7";
-const char STR6300_2[] PROGMEM = "Info 1 OEM";
-const char STR6310[] PROGMEM = "KonfigRg8 Bit 0-7";
-const char STR6330[] PROGMEM = "KonfigRg10 Bit 0-7";
-const char STR6375[] PROGMEM = "Relaisausgang QX35";  //FUJITSU
-const char STR6420[] PROGMEM = "Funktion Eingang H33";  //FUJITSU
-const char STR6421[] PROGMEM = "Wirksinn Kontakt H33";  //FUJITSU
+const char STR5960_2[] PROGMEM = STR5960_2_TEXT;
+const char STR5961_2[] PROGMEM = STR5961_2_TEXT;
+const char STR5962_2[] PROGMEM = STR5962_2_TEXT;
+const char STR5963_2[] PROGMEM = STR5963_2_TEXT;
+const char STR5964_2[] PROGMEM = STR5964_2_TEXT;
+const char STR5957[] PROGMEM = STR5957_TEXT;
+const char STR5960[] PROGMEM = STR5960_TEXT;
+const char STR5961[] PROGMEM = STR5961_TEXT;
+const char STR5962[] PROGMEM = STR5962_TEXT;
+const char STR5963[] PROGMEM = STR5963_TEXT;
+const char STR5964[] PROGMEM = STR5964_TEXT;
+const char STR5965[] PROGMEM = STR5965_TEXT;
+const char STR5966[] PROGMEM = STR5966_TEXT;
+const char STR5970[] PROGMEM = STR5970_TEXT;
+const char STR5970_2[] PROGMEM = STR5970_2_TEXT;
+const char STR5971[] PROGMEM = STR5971_TEXT;
+const char STR5971_2[] PROGMEM = STR5971_2_TEXT;
+const char STR5973[] PROGMEM = STR5973_TEXT;
+const char STR5975[] PROGMEM = STR5975_TEXT;
+const char STR5976[] PROGMEM = STR5976_TEXT;
+const char STR5977[] PROGMEM = STR5977_TEXT;
+const char STR5978[] PROGMEM = STR5978_TEXT;
+const char STR5978_2[] PROGMEM = STR5978_2_TEXT;
+const char STR5980[] PROGMEM = STR5980_TEXT;
+const char STR5981[] PROGMEM = STR5981_TEXT;
+const char STR5982[] PROGMEM = STR5982_TEXT;
+const char STR5983[] PROGMEM = STR5983_TEXT;
+const char STR5984[] PROGMEM = STR5984_TEXT;
+const char STR5985[] PROGMEM = STR5985_TEXT;
+const char STR5986[] PROGMEM = STR5986_TEXT;
+const char STR5987[] PROGMEM = STR5987_TEXT;
+const char STR5988[] PROGMEM = STR5988_TEXT;
+const char STR5989[] PROGMEM = STR5989_TEXT;
+const char STR5990[] PROGMEM = STR5990_TEXT;
+const char STR5992[] PROGMEM = STR5992_TEXT;
+const char STR6014[] PROGMEM = STR6014_TEXT;
+const char STR6015[] PROGMEM = STR6015_TEXT;
+const char STR6020[] PROGMEM = STR6020_TEXT;
+const char STR6021[] PROGMEM = STR6021_TEXT;
+const char STR6030[] PROGMEM = STR6030_TEXT;
+const char STR6031[] PROGMEM = STR6031_TEXT;
+const char STR6032[] PROGMEM = STR6032_TEXT;
+const char STR6033[] PROGMEM = STR6033_TEXT;
+const char STR6034[] PROGMEM = STR6034_TEXT;
+const char STR6035[] PROGMEM = STR6035_TEXT;
+const char STR6040[] PROGMEM = STR6040_TEXT;
+const char STR6041[] PROGMEM = STR6041_TEXT;
+const char STR6042[] PROGMEM = STR6042_TEXT;
+const char STR6043[] PROGMEM = STR6043_TEXT;
+#define STR6046 STR5960_2
+#define STR6047 STR5961_2
+#define STR6048 STR5962_2
+const char STR6048_2[] PROGMEM = STR6048_2_TEXT;
+#define STR6049 STR5963_2
+#define STR6050 STR5964_2
+const char STR6050_2[] PROGMEM = STR6050_2_TEXT;
+const char STR6051[] PROGMEM = STR6051_TEXT;
+const char STR6052[] PROGMEM = STR6052_TEXT;
+const char STR6070[] PROGMEM = STR6070_TEXT;
+const char STR6071[] PROGMEM = STR6071_TEXT;
+const char STR6072[] PROGMEM = STR6072_TEXT;
+const char STR6075[] PROGMEM = STR6075_TEXT;
+const char STR6085[] PROGMEM = STR6085_TEXT;
+const char STR6089[] PROGMEM = STR6089_TEXT;
+const char STR6092[] PROGMEM = STR6092_TEXT;
+const char STR6097[] PROGMEM = STR6097_TEXT;
+const char STR6098[] PROGMEM = STR6098_TEXT;
+const char STR6099[] PROGMEM = STR6099_TEXT;
+const char STR6100[] PROGMEM = STR6100_TEXT;
+const char STR6101[] PROGMEM = STR6101_TEXT;
+const char STR6102[] PROGMEM = STR6102_TEXT;
+const char STR6110[] PROGMEM = STR6110_TEXT;
+const char STR6112[] PROGMEM = STR6112_TEXT;
+const char STR6116[] PROGMEM = STR6116_TEXT;
+const char STR6117[] PROGMEM = STR6117_TEXT;
+const char STR6118[] PROGMEM = STR6118_TEXT;
+const char STR6120[] PROGMEM = STR6120_TEXT;
+const char STR6127[] PROGMEM = STR6127_TEXT;
+const char STR6128[] PROGMEM = STR6128_TEXT;
+const char STR6129[] PROGMEM = STR6129_TEXT;
+#define STR6130 STR2012
+const char STR6131[] PROGMEM = STR6131_TEXT;
+#define STR6134 STR2037
+const char STR6135[] PROGMEM = STR6135_TEXT;
+const char STR6136[] PROGMEM = STR6136_TEXT;
+const char STR6137[] PROGMEM = STR6137_TEXT;
+const char STR6138[] PROGMEM = STR6138_TEXT;
+const char STR6140[] PROGMEM = STR6140_TEXT;
+const char STR6141[] PROGMEM = STR6141_TEXT;
+const char STR6142[] PROGMEM = STR6142_TEXT;
+const char STR6148[] PROGMEM = STR6148_TEXT;
+const char STR6150[] PROGMEM = STR6150_TEXT;
+const char STR6151[] PROGMEM = STR6151_TEXT;
+const char STR6152[] PROGMEM = STR6152_TEXT;
+const char STR6180[] PROGMEM = STR6180_TEXT;
+const char STR6181[] PROGMEM = STR6181_TEXT;
+const char STR6182[] PROGMEM = STR6182_TEXT;
+const char STR6200[] PROGMEM = STR6200_TEXT;
+const char STR6201[] PROGMEM = STR6201_TEXT;
+const char STR6204[] PROGMEM = STR6204_TEXT;
+const char STR6205[] PROGMEM = STR6205_TEXT;
+const char STR6212[] PROGMEM = STR6212_TEXT;
+const char STR6213[] PROGMEM = STR6213_TEXT;
+const char STR6215[] PROGMEM = STR6215_TEXT;
+const char STR6217[] PROGMEM = STR6217_TEXT;
+const char STR6220[] PROGMEM = STR6220_TEXT;
+const char STR6221[] PROGMEM = STR6221_TEXT;
+const char STR6222[] PROGMEM = STR6222_TEXT;
+const char STR6223[] PROGMEM = STR6223_TEXT;
+const char STR6224[] PROGMEM = STR6224_TEXT;
+const char STR6225[] PROGMEM = STR6225_TEXT;
+const char STR6226[] PROGMEM = STR6226_TEXT;
+const char STR6227[] PROGMEM = STR6227_TEXT;
+const char STR6228[] PROGMEM = STR6228_TEXT;
+const char STR6229[] PROGMEM = STR6229_TEXT;
+const char STR6230[] PROGMEM = STR6230_TEXT;
+const char STR6230_2[] PROGMEM = STR6230_2_TEXT;
+const char STR6231[] PROGMEM = STR6231_TEXT;
+const char STR6232[] PROGMEM = STR6232_TEXT;
+const char STR6233[] PROGMEM = STR6233_TEXT;
+const char STR6234[] PROGMEM = STR6234_TEXT;
+const char STR6235[] PROGMEM = STR6235_TEXT;
+const char STR6236[] PROGMEM = STR6236_TEXT;
+const char STR6240[] PROGMEM = STR6240_TEXT;
+const char STR6250[] PROGMEM = STR6250_TEXT;
+const char STR6260[] PROGMEM = STR6260_TEXT;
+const char STR6270[] PROGMEM = STR6270_TEXT;
+const char STR6270_2[] PROGMEM = STR6270_2_TEXT;
+const char STR6271[] PROGMEM = STR6271_TEXT;
+const char STR6272[] PROGMEM = STR6272_TEXT;
+const char STR6273[] PROGMEM = STR6273_TEXT;
+const char STR6280[] PROGMEM = STR6280_TEXT;
+const char STR6290[] PROGMEM = STR6290_TEXT;
+const char STR6300[] PROGMEM = STR6300_TEXT;
+const char STR6300_2[] PROGMEM = STR6300_2_TEXT;
+const char STR6310[] PROGMEM = STR6310_TEXT;
+const char STR6330[] PROGMEM = STR6330_TEXT;
+const char STR6375[] PROGMEM = STR6375_TEXT;
+const char STR6420[] PROGMEM = STR6420_TEXT;
+const char STR6421[] PROGMEM = STR6421_TEXT;
 
-const char STR6486[] PROGMEM = "Teilschema Heizkreis 1";
-const char STR6487[] PROGMEM = "Teilschema Kühlkreis 1";
-const char STR6488[] PROGMEM = "Teilschema Heizkreis 2";
-const char STR6489[] PROGMEM = "Teilschema Heizkreis 3/P";
-const char STR6490[] PROGMEM = "Teilschema Trinkwasserspeicher";
-const char STR6491[] PROGMEM = "Teilschema Umformer";
-const char STR6492[] PROGMEM = "Teilschema H1";
-const char STR6493[] PROGMEM = "Teilschema H2";
-const char STR6494[] PROGMEM = "Teilschema Feststoffkessel";
-const char STR6495[] PROGMEM = "Teilschema Oel-/Gasheizkessel";
-const char STR6496[] PROGMEM = "Teilschema Schwimmbad";
-const char STR6497[] PROGMEM = "Teilschema Trinkwasser Durchlauferhitzer";
-const char STR6498[] PROGMEM = "Teilschema Sonnenkollektor";
+const char STR6486[] PROGMEM = STR6486_TEXT;
+const char STR6487[] PROGMEM = STR6487_TEXT;
+const char STR6488[] PROGMEM = STR6488_TEXT;
+const char STR6489[] PROGMEM = STR6489_TEXT;
+const char STR6490[] PROGMEM = STR6490_TEXT;
+const char STR6491[] PROGMEM = STR6491_TEXT;
+const char STR6492[] PROGMEM = STR6492_TEXT;
+const char STR6493[] PROGMEM = STR6493_TEXT;
+const char STR6494[] PROGMEM = STR6494_TEXT;
+const char STR6495[] PROGMEM = STR6495_TEXT;
+const char STR6496[] PROGMEM = STR6496_TEXT;
+const char STR6497[] PROGMEM = STR6497_TEXT;
+const char STR6498[] PROGMEM = STR6498_TEXT;
 
 
 // LPB-System
-const char STR6600[] PROGMEM = "Geräteadresse";
-const char STR6601[] PROGMEM = "Segmentadresse";
-const char STR6604[] PROGMEM = "Busspeisung Funktion";
-const char STR6605[] PROGMEM = "Busspeisung Status";
-const char STR6606[] PROGMEM = "LPB-Konfig. 0";
-const char STR6610[] PROGMEM = "Anzeige Systemmeldungen";
-const char STR6612[] PROGMEM = "Alarmverzögerung";
-const char STR6620[] PROGMEM = "Wirkbereich Umschaltungen";
-const char STR6621[] PROGMEM = "Sommerumschaltung";
-const char STR6623[] PROGMEM = "Betriebsartumschaltung";
-const char STR6624[] PROGMEM = "Manuelle Erzeugersperre";
-const char STR6625[] PROGMEM = "Trinkwasserzuordnung";
-const char STR6627[] PROGMEM = "Kälteanforderung";
-const char STR6630[] PROGMEM = "Kaskadenmaster";
-const char STR6631[] PROGMEM = "Externe Erzeuger bei Ökobetrieb";
-const char STR6632[] PROGMEM = "TA'grenze ext Erz beachten";
-const char STR6640[] PROGMEM = "Uhrbetrieb";
-const char STR6650[] PROGMEM = "Aussentemperatur Lieferant";
-const char STR6699[] PROGMEM = "Software Version Einschub";
+const char STR6600[] PROGMEM = STR6600_TEXT;
+const char STR6601[] PROGMEM = STR6601_TEXT;
+const char STR6604[] PROGMEM = STR6604_TEXT;
+const char STR6605[] PROGMEM = STR6605_TEXT;
+const char STR6606[] PROGMEM = STR6606_TEXT;
+const char STR6610[] PROGMEM = STR6610_TEXT;
+const char STR6612[] PROGMEM = STR6612_TEXT;
+const char STR6620[] PROGMEM = STR6620_TEXT;
+const char STR6621[] PROGMEM = STR6621_TEXT;
+#define STR6623 STR900
+const char STR6624[] PROGMEM = STR6624_TEXT;
+const char STR6625[] PROGMEM = STR6625_TEXT;
+const char STR6627[] PROGMEM = STR6627_TEXT;
+const char STR6630[] PROGMEM = STR6630_TEXT;
+const char STR6631[] PROGMEM = STR6631_TEXT;
+const char STR6632[] PROGMEM = STR6632_TEXT;
+const char STR6640[] PROGMEM = STR6640_TEXT;
+const char STR6650[] PROGMEM = STR6650_TEXT;
+const char STR6699[] PROGMEM = STR6699_TEXT;
 
 // Fehler
-const char STR6705[] PROGMEM = "SW Diagnosecode";
-const char STR6706[] PROGMEM = "FA Phase Störstellung";
-const char STR6710[] PROGMEM = "Reset Alarmrelais";
-const char STR6711[] PROGMEM = "Reset Wärmepumpe";
-const char STR6740[] PROGMEM = "Vorlauftemperatur 1 Alarm";
-const char STR6741[] PROGMEM = "Vorlauftemperatur 2 Alarm";
-const char STR6742[] PROGMEM = "Vorlauftemperatur 3 Alarm";
-const char STR6743[] PROGMEM = "Kesseltemperatur Alarm";
-const char STR6745[] PROGMEM = "Trinkwasserladung Alarm";
-const char STR6746[] PROGMEM = "Vorlauftemp Kühlen 1 Alarm";
-const char STR6747[] PROGMEM = "Vorlauftemp Kühlen 2 Alarm";
+const char STR6705[] PROGMEM = STR6705_TEXT;
+const char STR6706[] PROGMEM = STR6706_TEXT;
+const char STR6710[] PROGMEM = STR6710_TEXT;
+const char STR6711[] PROGMEM = STR6711_TEXT;
+const char STR6740[] PROGMEM = STR6740_TEXT;
+const char STR6741[] PROGMEM = STR6741_TEXT;
+const char STR6742[] PROGMEM = STR6742_TEXT;
+const char STR6743[] PROGMEM = STR6743_TEXT;
+const char STR6745[] PROGMEM = STR6745_TEXT;
+const char STR6746[] PROGMEM = STR6746_TEXT;
+const char STR6747[] PROGMEM = STR6747_TEXT;
 
 // THISION Fehlerparameter
-const char STR6800_2[] PROGMEM = "Historie 1";
-const char STR6801_2[] PROGMEM = "Historie 1 Fehlermeldung";
-const char STR6805_2[] PROGMEM = "SW Diagnosecode 1";
-const char STR6806_2[] PROGMEM = "FA Phase 1";
-const char STR6810_2[] PROGMEM = "Historie 2";
-const char STR6811_2[] PROGMEM = "Fehlercode 2";
-const char STR6813_2[] PROGMEM = "Historie 2 Fehlermeldung";
-const char STR6815_2[] PROGMEM = "SW Diagnosecode 2";
-const char STR6816_2[] PROGMEM = "FA Phase 2";
-const char STR6820_2[] PROGMEM = "Historie 3";
-const char STR6821[] PROGMEM = "Fehlercode 3";
-const char STR6823_2[] PROGMEM = "Historie 3 Fehlermeldung";
-const char STR6825[] PROGMEM = "SW Diagnosecode 3";
-const char STR6826[] PROGMEM = "FA Phase 3";
-const char STR6830[] PROGMEM = "Historie 4";
-const char STR6831[] PROGMEM = "Fehlercode 4";
-const char STR6833_2[] PROGMEM = "Historie 4 Fehlermeldung";
-const char STR6835[] PROGMEM = "SW Diagnosecode 4";
-const char STR6836[] PROGMEM = "FA Phase 4";
-const char STR6840_2[] PROGMEM = "Historie 5";
-const char STR6843_2[] PROGMEM = "Historie 5 Fehlermeldung";
-const char STR6845[] PROGMEM = "SW Diagnosecode 5";
-const char STR6846[] PROGMEM = "FA Phase 5";
-const char STR6855[] PROGMEM = "SW Diagnosecode 6";
-const char STR6856[] PROGMEM = "FA Phase 6";
-const char STR6865[] PROGMEM = "SW Diagnosecode 7";
-const char STR6866[] PROGMEM = "FA Phase 7";
-const char STR6875[] PROGMEM = "SW Diagnosecode 8";
-const char STR6876[] PROGMEM = "FA Phase 8";
-const char STR6885[] PROGMEM = "SW Diagnosecode 9";
-const char STR6886[] PROGMEM = "FA Phase 9";
-const char STR6895[] PROGMEM = "SW Diagnosecode 10";
-const char STR6896[] PROGMEM = "FA Phase 10";
-const char STR6905[] PROGMEM = "SW Diagnosecode 11";
-const char STR6906[] PROGMEM = "FA Phase 11";
-const char STR6915[] PROGMEM = "SW Diagnosecode 12";
-const char STR6916[] PROGMEM = "FA Phase 12";
-const char STR6925[] PROGMEM = "SW Diagnosecode 13";
-const char STR6926[] PROGMEM = "FA Phase 13";
-const char STR6935[] PROGMEM = "SW Diagnosecode 14";
-const char STR6936[] PROGMEM = "FA Phase 14";
-const char STR6945[] PROGMEM = "SW Diagnosecode 15";
-const char STR6946[] PROGMEM = "FA Phase 15";
-const char STR6955[] PROGMEM = "SW Diagnosecode 16";
-const char STR6956[] PROGMEM = "FA Phase 16";
-const char STR6965[] PROGMEM = "SW Diagnosecode 17";
-const char STR6966[] PROGMEM = "FA Phase 17";
-const char STR6975[] PROGMEM = "SW Diagnosecode 18";
-const char STR6976[] PROGMEM = "FA Phase 18";
-const char STR6985[] PROGMEM = "SW Diagnosecode 19";
-const char STR6986[] PROGMEM = "FA Phase 19";
-const char STR6995[] PROGMEM = "SW Diagnosecode 20";
-const char STR6996[] PROGMEM = "FA Phase 20";
+const char STR6800_2[] PROGMEM = STR6800_2_TEXT;
+const char STR6801_2[] PROGMEM = STR6801_2_TEXT;
+const char STR6805_2[] PROGMEM = STR6805_2_TEXT;
+const char STR6806_2[] PROGMEM = STR6806_2_TEXT;
+const char STR6810_2[] PROGMEM = STR6810_2_TEXT;
+const char STR6811_2[] PROGMEM = STR6811_2_TEXT;
+const char STR6813_2[] PROGMEM = STR6813_2_TEXT;
+const char STR6815_2[] PROGMEM = STR6815_2_TEXT;
+const char STR6816_2[] PROGMEM = STR6816_2_TEXT;
+const char STR6820_2[] PROGMEM = STR6820_2_TEXT;
+const char STR6821[] PROGMEM = STR6821_TEXT;
+const char STR6823_2[] PROGMEM = STR6823_2_TEXT;
+const char STR6825[] PROGMEM = STR6825_TEXT;
+const char STR6826[] PROGMEM = STR6826_TEXT;
+const char STR6830[] PROGMEM = STR6830_TEXT;
+const char STR6831[] PROGMEM = STR6831_TEXT;
+const char STR6833_2[] PROGMEM = STR6833_2_TEXT;
+const char STR6835[] PROGMEM = STR6835_TEXT;
+const char STR6836[] PROGMEM = STR6836_TEXT;
+const char STR6840_2[] PROGMEM = STR6840_2_TEXT;
+const char STR6843_2[] PROGMEM = STR6843_2_TEXT;
+const char STR6845[] PROGMEM = STR6845_TEXT;
+const char STR6846[] PROGMEM = STR6846_TEXT;
+const char STR6855[] PROGMEM = STR6855_TEXT;
+const char STR6856[] PROGMEM = STR6856_TEXT;
+const char STR6865[] PROGMEM = STR6865_TEXT;
+const char STR6866[] PROGMEM = STR6866_TEXT;
+const char STR6875[] PROGMEM = STR6875_TEXT;
+const char STR6876[] PROGMEM = STR6876_TEXT;
+const char STR6885[] PROGMEM = STR6885_TEXT;
+const char STR6886[] PROGMEM = STR6886_TEXT;
+const char STR6895[] PROGMEM = STR6895_TEXT;
+const char STR6896[] PROGMEM = STR6896_TEXT;
+const char STR6905[] PROGMEM = STR6905_TEXT;
+const char STR6906[] PROGMEM = STR6906_TEXT;
+const char STR6915[] PROGMEM = STR6915_TEXT;
+const char STR6916[] PROGMEM = STR6916_TEXT;
+const char STR6925[] PROGMEM = STR6925_TEXT;
+const char STR6926[] PROGMEM = STR6926_TEXT;
+const char STR6935[] PROGMEM = STR6935_TEXT;
+const char STR6936[] PROGMEM = STR6936_TEXT;
+const char STR6945[] PROGMEM = STR6945_TEXT;
+const char STR6946[] PROGMEM = STR6946_TEXT;
+const char STR6955[] PROGMEM = STR6955_TEXT;
+const char STR6956[] PROGMEM = STR6956_TEXT;
+const char STR6965[] PROGMEM = STR6965_TEXT;
+const char STR6966[] PROGMEM = STR6966_TEXT;
+const char STR6975[] PROGMEM = STR6975_TEXT;
+const char STR6976[] PROGMEM = STR6976_TEXT;
+const char STR6985[] PROGMEM = STR6985_TEXT;
+const char STR6986[] PROGMEM = STR6986_TEXT;
+const char STR6995[] PROGMEM = STR6995_TEXT;
+const char STR6996[] PROGMEM = STR6996_TEXT;
 
 #define STR6803_2 STR6801_2
 #define STR6813_2 STR6810_2
@@ -1738,663 +1733,1198 @@ const char STR6996[] PROGMEM = "FA Phase 20";
 #define STR6891 STR6819
 
 // übrige Fehlerparameter
-const char STR6800[] PROGMEM = "Historie 1 Datum/Zeit";
-const char STR6801[] PROGMEM = "Historie 1 Fehlercode";
-const char STR6802[] PROGMEM = "Historie 2 Datum/Zeit";
-const char STR6803[] PROGMEM = "Historie 2 Fehlercode";
-const char STR6804[] PROGMEM = "Historie 3 Datum/Zeit";
-const char STR6805[] PROGMEM = "Historie 3 Fehlercode";
-const char STR6806[] PROGMEM = "Historie 4 Datum/Zeit";
-const char STR6807[] PROGMEM = "Historie 4 Fehlercode";
-const char STR6808[] PROGMEM = "Historie 5 Datum/Zeit";
-const char STR6809[] PROGMEM = "Historie 5 Fehlercode";
-const char STR6810[] PROGMEM = "Historie 6 Datum/Zeit";
-const char STR6811[] PROGMEM = "Historie 6 Fehlercode";
-const char STR6812[] PROGMEM = "Historie 7 Datum/Zeit";
-const char STR6813[] PROGMEM = "Historie 7 Fehlercode";
-const char STR6814[] PROGMEM = "Historie 8 Datum/Zeit";
-const char STR6815[] PROGMEM = "Historie 8 Fehlercode";
-const char STR6816[] PROGMEM = "Historie 9 Datum/Zeit";
-const char STR6817[] PROGMEM = "Historie 9 Fehlercode";
-const char STR6818[] PROGMEM = "Historie 10 Datum/Zeit";
-const char STR6819[] PROGMEM = "Historie 10 Fehlercode";
-const char STR6900[] PROGMEM = "Historie 11 Datum/Zeit";
-const char STR6901[] PROGMEM = "Historie 11 Fehlercode";
-const char STR6910[] PROGMEM = "Historie 12 Datum/Zeit";
-const char STR6911[] PROGMEM = "Historie 12 Fehlercode";
-const char STR6920[] PROGMEM = "Historie 13 Datum/Zeit";
-const char STR6921[] PROGMEM = "Historie 13 Fehlercode";
-const char STR6930[] PROGMEM = "Historie 14 Datum/Zeit";
-const char STR6931[] PROGMEM = "Historie 14 Fehlercode";
-const char STR6940[] PROGMEM = "Historie 15 Datum/Zeit";
-const char STR6941[] PROGMEM = "Historie 15 Fehlercode";
-const char STR6950[] PROGMEM = "Historie 16 Datum/Zeit";
-const char STR6951[] PROGMEM = "Historie 16 Fehlercode";
-const char STR6960[] PROGMEM = "Historie 17 Datum/Zeit";
-const char STR6961[] PROGMEM = "Historie 17 Fehlercode";
-const char STR6970[] PROGMEM = "Historie 18 Datum/Zeit";
-const char STR6971[] PROGMEM = "Historie 18 Fehlercode";
-const char STR6980[] PROGMEM = "Historie 19 Datum/Zeit";
-const char STR6981[] PROGMEM = "Historie 19 Fehlercode";
-const char STR6990[] PROGMEM = "Historie 20 Datum/Zeit";
-const char STR6991[] PROGMEM = "Historie 20 Fehlercode";
-const char STR6820[] PROGMEM = "Reset Historie";
+const char STR6800[] PROGMEM = STR6800_TEXT;
+const char STR6801[] PROGMEM = STR6801_TEXT;
+const char STR6802[] PROGMEM = STR6802_TEXT;
+const char STR6803[] PROGMEM = STR6803_TEXT;
+const char STR6804[] PROGMEM = STR6804_TEXT;
+const char STR6805[] PROGMEM = STR6805_TEXT;
+const char STR6806[] PROGMEM = STR6806_TEXT;
+const char STR6807[] PROGMEM = STR6807_TEXT;
+const char STR6808[] PROGMEM = STR6808_TEXT;
+const char STR6809[] PROGMEM = STR6809_TEXT;
+const char STR6810[] PROGMEM = STR6810_TEXT;
+const char STR6811[] PROGMEM = STR6811_TEXT;
+const char STR6812[] PROGMEM = STR6812_TEXT;
+const char STR6813[] PROGMEM = STR6813_TEXT;
+const char STR6814[] PROGMEM = STR6814_TEXT;
+const char STR6815[] PROGMEM = STR6815_TEXT;
+const char STR6816[] PROGMEM = STR6816_TEXT;
+const char STR6817[] PROGMEM = STR6817_TEXT;
+const char STR6818[] PROGMEM = STR6818_TEXT;
+const char STR6819[] PROGMEM = STR6819_TEXT;
+const char STR6900[] PROGMEM = STR6900_TEXT;
+const char STR6901[] PROGMEM = STR6901_TEXT;
+const char STR6910[] PROGMEM = STR6910_TEXT;
+const char STR6911[] PROGMEM = STR6911_TEXT;
+const char STR6920[] PROGMEM = STR6920_TEXT;
+const char STR6921[] PROGMEM = STR6921_TEXT;
+const char STR6930[] PROGMEM = STR6930_TEXT;
+const char STR6931[] PROGMEM = STR6931_TEXT;
+const char STR6940[] PROGMEM = STR6940_TEXT;
+const char STR6941[] PROGMEM = STR6941_TEXT;
+const char STR6950[] PROGMEM = STR6950_TEXT;
+const char STR6951[] PROGMEM = STR6951_TEXT;
+const char STR6960[] PROGMEM = STR6960_TEXT;
+const char STR6961[] PROGMEM = STR6961_TEXT;
+const char STR6970[] PROGMEM = STR6970_TEXT;
+const char STR6971[] PROGMEM = STR6971_TEXT;
+const char STR6980[] PROGMEM = STR6980_TEXT;
+const char STR6981[] PROGMEM = STR6981_TEXT;
+const char STR6990[] PROGMEM = STR6990_TEXT;
+const char STR6991[] PROGMEM = STR6991_TEXT;
+const char STR6820[] PROGMEM = STR6820_TEXT;
 
 // Wartung / Sonderbetrieb
-const char STR7001[] PROGMEM = "Meldung";
-const char STR7007[] PROGMEM = "Anzeige Meldungen";
-const char STR7010[] PROGMEM = "Quittierung Meldung";
-const char STR7011[] PROGMEM = "Repetitionszeit Meldung";
-const char STR7012[] PROGMEM = "Reset Meldungen 1-6";
-const char STR7040[] PROGMEM = "Brennerstunden Intervall";
-const char STR7041[] PROGMEM = "Brennerstunden seit Wartung";
-const char STR7042[] PROGMEM = "Brennerstarts Intervall";
-const char STR7043[] PROGMEM = "Brennerstarts seit Wartung";
-const char STR7044[] PROGMEM = "Wartungsintervall";
-const char STR7045[] PROGMEM = "Zeit seit Wartung";
-const char STR7050[] PROGMEM = "Gebläsedrehzahl Ion Strom";
-const char STR7051[] PROGMEM = "Meldung Ion Strom";
-const char STR7053[] PROGMEM = "Abgastemperaturgrenze";
-const char STR7054[] PROGMEM = "Verzögerung Abgasmeldung";
-const char STR7056[] PROGMEM = "TWW Verbrühungsgefahr";
-const char STR7070[] PROGMEM = "WP Zeitintervall";
-const char STR7071[] PROGMEM = "WP Zeit seit Wartung";
-const char STR7072[] PROGMEM = "Max Starts Verd1 / Betr’Std";
-const char STR7073[] PROGMEM = "Akt Starts Verd1 / Betr’Std";
-const char STR7074[] PROGMEM = "Max Starts Verd2 / Betr’Std";
-const char STR7075[] PROGMEM = "Akt Starts Verd2 / Betr’Std";
-const char STR7076[] PROGMEM = "Spreiz Kondens Max / Wo";
-const char STR7077[] PROGMEM = "Akt Spreiz Kondens Max / Wo";
-const char STR7078[] PROGMEM = "Spreiz Kondens Min / Wo";
-const char STR7079[] PROGMEM = "Akt Spreiz Kondens Min / Wo";
-const char STR7080[] PROGMEM = "Spreiz Verdampfer Max / Wo";
-const char STR7081[] PROGMEM = "Akt Spreiz Verdampfer Max / Wo";
-const char STR7082[] PROGMEM = "Spreiz Verdampfer Min / Wo";
-const char STR7083[] PROGMEM = "Akt Spreiz Verdampfer Min / Wo";
-const char STR7090[] PROGMEM = "TWW Speicher Zeitintervall";
-const char STR7091[] PROGMEM = "TWW Speicher seit Wartung";
-const char STR7092[] PROGMEM = "TWW Ladetemp WP Minimum";
-const char STR7093[] PROGMEM = "Akt TWW Ladetemperatur WP";
-const char STR7119[] PROGMEM = "Ökofunktion";
-const char STR7120[] PROGMEM = "Ökobetrieb";
-const char STR7130[] PROGMEM = "Schornsteinfegerfunktion";
-const char STR7131[] PROGMEM = "Schornsteinfegerfunktion Brennerleistung";
-const char STR7140[] PROGMEM = "Handbetrieb";
-const char STR7141[] PROGMEM = "Notbetrieb";
-const char STR7142[] PROGMEM = "Notbetrieb Funktionsstart";
-const char STR7143[] PROGMEM = "Reglerstoppfunktion";
-const char STR7145[] PROGMEM = "Reglerstopp Sollwert";
-const char STR7146[] PROGMEM = "Entlüftungsfunktion";
-const char STR7147[] PROGMEM = "Entlüftungsart";
-const char STR7150[] PROGMEM = "Simulation Aussentemperatur";
-const char STR7152[] PROGMEM = "Abtauen auslösen";
-const char STR7160[] PROGMEM = "Reset Begrenzungszeiten";
-const char STR7166[] PROGMEM = "Inbetriebnahmefunktion";
-const char STR7170[] PROGMEM = "Telefon Kundendienst";
-const char STR7181[] PROGMEM = "Telefon Zuständigkeit 1";
-const char STR7183[] PROGMEM = "Telefon Zuständigkeit 2";
-const char STR7250[] PROGMEM = "Pstick Pos";
-const char STR7251[] PROGMEM = "Pstick Bez Datensatz";
-const char STR7252[] PROGMEM = "Pstick Befehl";
-const char STR7253[] PROGMEM = "Pstick Fortschritt";
+const char STR7001[] PROGMEM = STR7001_TEXT;
+const char STR7007[] PROGMEM = STR7007_TEXT;
+const char STR7010[] PROGMEM = STR7010_TEXT;
+const char STR7011[] PROGMEM = STR7011_TEXT;
+const char STR7012[] PROGMEM = STR7012_TEXT;
+const char STR7040[] PROGMEM = STR7040_TEXT;
+const char STR7041[] PROGMEM = STR7041_TEXT;
+const char STR7042[] PROGMEM = STR7042_TEXT;
+const char STR7043[] PROGMEM = STR7043_TEXT;
+const char STR7044[] PROGMEM = STR7044_TEXT;
+const char STR7045[] PROGMEM = STR7045_TEXT;
+const char STR7050[] PROGMEM = STR7050_TEXT;
+const char STR7051[] PROGMEM = STR7051_TEXT;
+const char STR7053[] PROGMEM = STR7053_TEXT;
+const char STR7054[] PROGMEM = STR7054_TEXT;
+const char STR7056[] PROGMEM = STR7056_TEXT;
+const char STR7070[] PROGMEM = STR7070_TEXT;
+const char STR7071[] PROGMEM = STR7071_TEXT;
+const char STR7072[] PROGMEM = STR7072_TEXT;
+const char STR7073[] PROGMEM = STR7073_TEXT;
+const char STR7074[] PROGMEM = STR7074_TEXT;
+const char STR7075[] PROGMEM = STR7075_TEXT;
+const char STR7076[] PROGMEM = STR7076_TEXT;
+const char STR7077[] PROGMEM = STR7077_TEXT;
+const char STR7078[] PROGMEM = STR7078_TEXT;
+const char STR7079[] PROGMEM = STR7079_TEXT;
+const char STR7080[] PROGMEM = STR7080_TEXT;
+const char STR7081[] PROGMEM = STR7081_TEXT;
+const char STR7082[] PROGMEM = STR7082_TEXT;
+const char STR7083[] PROGMEM = STR7083_TEXT;
+const char STR7090[] PROGMEM = STR7090_TEXT;
+const char STR7091[] PROGMEM = STR7091_TEXT;
+const char STR7092[] PROGMEM = STR7092_TEXT;
+const char STR7093[] PROGMEM = STR7093_TEXT;
+const char STR7119[] PROGMEM = STR7119_TEXT;
+const char STR7120[] PROGMEM = STR7120_TEXT;
+const char STR7130[] PROGMEM = STR7130_TEXT;
+const char STR7131[] PROGMEM = STR7131_TEXT;
+const char STR7140[] PROGMEM = STR7140_TEXT;
+const char STR7141[] PROGMEM = STR7141_TEXT;
+const char STR7142[] PROGMEM = STR7142_TEXT;
+const char STR7143[] PROGMEM = STR7143_TEXT;
+const char STR7145[] PROGMEM = STR7145_TEXT;
+const char STR7146[] PROGMEM = STR7146_TEXT;
+const char STR7147[] PROGMEM = STR7147_TEXT;
+const char STR7150[] PROGMEM = STR7150_TEXT;
+const char STR7152[] PROGMEM = STR7152_TEXT;
+const char STR7160[] PROGMEM = STR7160_TEXT;
+const char STR7166[] PROGMEM = STR7166_TEXT;
+const char STR7170[] PROGMEM = STR7170_TEXT;
+const char STR7181[] PROGMEM = STR7181_TEXT;
+const char STR7183[] PROGMEM = STR7183_TEXT;
+const char STR7250[] PROGMEM = STR7250_TEXT;
+const char STR7251[] PROGMEM = STR7251_TEXT;
+const char STR7252[] PROGMEM = STR7252_TEXT;
+const char STR7253[] PROGMEM = STR7253_TEXT;
 
 // Konfiguration Erweit'module
-const char STR7311[] PROGMEM = "Funktion Eingang H2 Modul 1";
-const char STR7376[] PROGMEM = "Relaisausgang QX21 Modul 2";
-const char STR7377[] PROGMEM = "Relaisausgang QX22 Modul 2";
-const char STR7378[] PROGMEM = "Relaisausgang QX23 Modul 2";
-const char STR7386[] PROGMEM = "Funktion Eingang H2 Modul 2";
-const char STR7387[] PROGMEM = "Wirksinn Kontakt H2 Modul 2";
-const char STR7396[] PROGMEM = "Funktion Eing' H21 Modul 2";
-const char STR7399[] PROGMEM = "Eingangswert 1 H21 Modul 2";
-const char STR7400[] PROGMEM = "Funkt'wert 1 H21 Modul 2";
-const char STR7401[] PROGMEM = "Eingangswert 2 H21 Modul 2";
-const char STR7402[] PROGMEM = "Funkt'wert 2 H21 Modul 2";
-const char STR7423[] PROGMEM = "Fkt Ausg' UX21 Modul 2";
-const char STR7425[] PROGMEM = "Signal Ausg' UX21 Modul 2";
-const char STR7430[] PROGMEM = "Fkt Ausg' UX22 Modul 2";
-const char STR7432[] PROGMEM = "Signal Ausg' UX22 Modul 2";
+const char STR7311[] PROGMEM = STR7311_TEXT;
+#define STR7376 STR6033
+#define STR7377 STR6034
+#define STR7378 STR6035
+const char STR7386[] PROGMEM = STR7386_TEXT;
+const char STR7387[] PROGMEM = STR7387_TEXT;
+const char STR7396[] PROGMEM = STR7396_TEXT;
+const char STR7399[] PROGMEM = STR7399_TEXT;
+const char STR7400[] PROGMEM = STR7400_TEXT;
+const char STR7401[] PROGMEM = STR7401_TEXT;
+const char STR7402[] PROGMEM = STR7402_TEXT;
+const char STR7423[] PROGMEM = STR7423_TEXT;
+const char STR7425[] PROGMEM = STR7425_TEXT;
+const char STR7430[] PROGMEM = STR7430_TEXT;
+const char STR7432[] PROGMEM = STR7432_TEXT;
 
 // Ein-/Ausgangstest
-const char STR7700[] PROGMEM = "Relaistest";
-const char STR7705[] PROGMEM = "Mod'sollwert QX3 Relaistest";
-const char STR7708[] PROGMEM = "Modulationssignal QX3";
-const char STR7710[] PROGMEM = "Ausgangstest UX1";
-const char STR7711[] PROGMEM = "Spannungssignal UX1";
-const char STR7712[] PROGMEM = "PWM-Signal UX1"; //FUJITSU
-const char STR7713[] PROGMEM = "Ausgangstest P1";
-const char STR7714[] PROGMEM = "PWM-Signal P1";
-const char STR7716[] PROGMEM = "Ausgangstest UX2";  //FUJITSU
-const char STR7719[] PROGMEM = "PWM-Signal UX2"; //FUJITSU
-const char STR7720[] PROGMEM = "Ausgangstest Digital";
-const char STR7721[] PROGMEM = "Digitalausgang D01";
-const char STR7722[] PROGMEM = "Kühlbetrieb D2"; //FUJITSU
-const char STR7723[] PROGMEM = "Wärmepumpe D3"; //FUJITSU
-const char STR7724[] PROGMEM = "Ausgangstest UX3"; //FUJITSU
-const char STR7725[] PROGMEM = "Spannungssignal U4 (Ux3)"; //FUJITSU
-const char STR7730[] PROGMEM = "Aussentemperatur B9";
-const char STR7732[] PROGMEM = "Vorlauftemperatur B1";
-const char STR7734[] PROGMEM = "Vorlauftemperatur B12";
-const char STR7750[] PROGMEM = "Trinkwassertemperatur B3";
-const char STR7760[] PROGMEM = "Kesseltemperatur B2";
-const char STR7770[] PROGMEM = "Vorlauftemperatur WP B21";
-const char STR7771[] PROGMEM = "Rücklauftemperatur WP B71";
-const char STR7772[] PROGMEM = "Heissgastemperatur B81";
-const char STR7775[] PROGMEM = "Quelle Eintrittstemp B91";
-const char STR7777[] PROGMEM = "Fühlertemperatur B92, B84";
-const char STR7784[] PROGMEM = "Ausgangstest UX21 Modul 2";
-const char STR7785[] PROGMEM = "Ausg'signal UX21 Modul 2";
-const char STR7785_2[] PROGMEM = "Ausg'signal UX21 Modul 2 PWM %";
-const char STR7786[] PROGMEM = "Ausgangstest UX22 Modul 2";
-const char STR7787[] PROGMEM = "Ausg'signal UX22 Modul 2";
-const char STR7787_2[] PROGMEM = "Ausg'signal UX22 Modul 2 PWM %";
-const char STR7809[] PROGMEM = "Fühlertemperatur BX6";  //FUJITSU
-const char STR7820[] PROGMEM = "Fühlertemperatur BX1";
-const char STR7821[] PROGMEM = "Fühlertemperatur BX2";
-const char STR7822[] PROGMEM = "Fühlertemperatur BX3";
-const char STR7823[] PROGMEM = "Fühlertemperatur BX4";
-const char STR7824[] PROGMEM = "Fühlertemperatur BX5";
-const char STR7830[] PROGMEM = "Fühlertemp. BX21 Modul 1";
-const char STR7831[] PROGMEM = "Fühlertemp. BX22 Modul 1";
-const char STR7832[] PROGMEM = "Fühlertemp. BX21 Modul 2";
-const char STR7833[] PROGMEM = "Fühlertemp. BX22 Modul 2";
-const char STR7840[] PROGMEM = "Spannungssignal H1";
-const char STR7841[] PROGMEM = "Kontaktzustand H1";
-const char STR7844[] PROGMEM = "Eingangssignal H1";
-const char STR7845[] PROGMEM = "Spannungssignal H2";
-const char STR7846[] PROGMEM = "Kontaktzustand H2";
-const char STR7847[] PROGMEM = "Zustand Kontakt H2, Modul 2";
-const char STR7848[] PROGMEM = "Kontaktzustand H2 modul 2";
-const char STR7849[] PROGMEM = "Kontaktzustand H2 modul 2 - Parameter";
-const char STR7854[] PROGMEM = "Spannungssignal H3";
-const char STR7855[] PROGMEM = "Kontaktzustand H3";
-const char STR7858[] PROGMEM = "Eingangssignal H3";
-const char STR7860[] PROGMEM = "Kontaktzustand H4";
-const char STR7865[] PROGMEM = "Kontaktzustand H5";
-const char STR7870[] PROGMEM = "Brennerstörung S3";
-const char STR7872[] PROGMEM = "Kontaktzustand H6";
-const char STR7881[] PROGMEM = "1. Brennerstufe E1";
-const char STR7884[] PROGMEM = "STB Fehlermeldung L1";
-const char STR7889[] PROGMEM = "Niederdruckwächter E9";
-const char STR7890[] PROGMEM = "Hochdruckwächter E10";
-const char STR7891[] PROGMEM = "Wickl’schutz Verdicht 1 E11";
-const char STR7911[] PROGMEM = "Eingang EX1";
-const char STR7912[] PROGMEM = "Eingang EX2";
-const char STR7913[] PROGMEM = "Eingang EX3";
-const char STR7914[] PROGMEM = "Eingang EX4";
-const char STR7915[] PROGMEM = "Eingang EX5";
-const char STR7916[] PROGMEM = "Eingang EX6";
-const char STR7917[] PROGMEM = "Eingang EX7";
-const char STR7950[] PROGMEM = "Eingang EX01 Modul 1";
-const char STR7951[] PROGMEM = "Eingang EX01 Modul 2";
-const char STR7952[] PROGMEM = "Eingang EX01 Modul 3";
-const char STR7973[] PROGMEM = "Fühlertemperatur BX31";  //FUJITSU
-const char STR7974[] PROGMEM = "Fühlertemperatur BX32";  //FUJITSU
-const char STR7975[] PROGMEM = "Fühlertemperatur BX33";  //FUJITSU
-const char STR7976[] PROGMEM = "Fühlertemperatur BX34";  //FUJITSU
-const char STR7977[] PROGMEM = "Fühlertemperatur BX35";  //FUJITSU
-const char STR7978[] PROGMEM = "Fühlertemperatur BX36";  //FUJITSU
-const char STR7996[] PROGMEM = "Zustand Kontakt H33";  //FUJITSU
-const char STR7999[] PROGMEM = "Eingangssignal H33";  //FUJITSU
+const char STR7700[] PROGMEM = STR7700_TEXT;
+const char STR7705[] PROGMEM = STR7705_TEXT;
+const char STR7708[] PROGMEM = STR7708_TEXT;
+const char STR7710[] PROGMEM = STR7710_TEXT;
+const char STR7711[] PROGMEM = STR7711_TEXT;
+const char STR7712[] PROGMEM = STR7712_TEXT;
+const char STR7713[] PROGMEM = STR7713_TEXT;
+const char STR7714[] PROGMEM = STR7714_TEXT;
+const char STR7716[] PROGMEM = STR7716_TEXT;
+const char STR7719[] PROGMEM = STR7719_TEXT;
+const char STR7720[] PROGMEM = STR7720_TEXT;
+const char STR7721[] PROGMEM = STR7721_TEXT;
+const char STR7722[] PROGMEM = STR7722_TEXT;
+const char STR7723[] PROGMEM = STR7723_TEXT;
+const char STR7724[] PROGMEM = STR7724_TEXT;
+const char STR7725[] PROGMEM = STR7725_TEXT;
+const char STR7730[] PROGMEM = STR7730_TEXT;
+const char STR7732[] PROGMEM = STR7732_TEXT;
+const char STR7734[] PROGMEM = STR7734_TEXT;
+const char STR7750[] PROGMEM = STR7750_TEXT;
+const char STR7760[] PROGMEM = STR7760_TEXT;
+const char STR7770[] PROGMEM = STR7770_TEXT;
+const char STR7771[] PROGMEM = STR7771_TEXT;
+const char STR7772[] PROGMEM = STR7772_TEXT;
+const char STR7775[] PROGMEM = STR7775_TEXT;
+const char STR7777[] PROGMEM = STR7777_TEXT;
+const char STR7784[] PROGMEM = STR7784_TEXT;
+const char STR7785[] PROGMEM = STR7785_TEXT;
+const char STR7785_2[] PROGMEM = STR7785_2_TEXT;
+const char STR7786[] PROGMEM = STR7786_TEXT;
+const char STR7787[] PROGMEM = STR7787_TEXT;
+const char STR7787_2[] PROGMEM = STR7787_2_TEXT;
+const char STR7809[] PROGMEM = STR7809_TEXT;
+const char STR7820[] PROGMEM = STR7820_TEXT;
+const char STR7821[] PROGMEM = STR7821_TEXT;
+const char STR7822[] PROGMEM = STR7822_TEXT;
+const char STR7823[] PROGMEM = STR7823_TEXT;
+const char STR7824[] PROGMEM = STR7824_TEXT;
+const char STR7830[] PROGMEM = STR7830_TEXT;
+const char STR7831[] PROGMEM = STR7831_TEXT;
+const char STR7832[] PROGMEM = STR7832_TEXT;
+const char STR7833[] PROGMEM = STR7833_TEXT;
+const char STR7840[] PROGMEM = STR7840_TEXT;
+const char STR7841[] PROGMEM = STR7841_TEXT;
+const char STR7844[] PROGMEM = STR7844_TEXT;
+const char STR7845[] PROGMEM = STR7845_TEXT;
+const char STR7846[] PROGMEM = STR7846_TEXT;
+const char STR7847[] PROGMEM = STR7847_TEXT;
+const char STR7848[] PROGMEM = STR7848_TEXT;
+const char STR7849[] PROGMEM = STR7849_TEXT;
+const char STR7854[] PROGMEM = STR7854_TEXT;
+const char STR7855[] PROGMEM = STR7855_TEXT;
+const char STR7858[] PROGMEM = STR7858_TEXT;
+const char STR7860[] PROGMEM = STR7860_TEXT;
+const char STR7865[] PROGMEM = STR7865_TEXT;
+const char STR7870[] PROGMEM = STR7870_TEXT;
+const char STR7872[] PROGMEM = STR7872_TEXT;
+const char STR7881[] PROGMEM = STR7881_TEXT;
+const char STR7884[] PROGMEM = STR7884_TEXT;
+const char STR7889[] PROGMEM = STR7889_TEXT;
+const char STR7890[] PROGMEM = STR7890_TEXT;
+const char STR7891[] PROGMEM = STR7891_TEXT;
+const char STR7911[] PROGMEM = STR7911_TEXT;
+const char STR7912[] PROGMEM = STR7912_TEXT;
+const char STR7913[] PROGMEM = STR7913_TEXT;
+const char STR7914[] PROGMEM = STR7914_TEXT;
+const char STR7915[] PROGMEM = STR7915_TEXT;
+const char STR7916[] PROGMEM = STR7916_TEXT;
+const char STR7917[] PROGMEM = STR7917_TEXT;
+const char STR7950[] PROGMEM = STR7950_TEXT;
+const char STR7951[] PROGMEM = STR7951_TEXT;
+const char STR7952[] PROGMEM = STR7952_TEXT;
+const char STR7973[] PROGMEM = STR7973_TEXT;
+const char STR7974[] PROGMEM = STR7974_TEXT;
+const char STR7975[] PROGMEM = STR7975_TEXT;
+const char STR7976[] PROGMEM = STR7976_TEXT;
+const char STR7977[] PROGMEM = STR7977_TEXT;
+const char STR7978[] PROGMEM = STR7978_TEXT;
+const char STR7996[] PROGMEM = STR7996_TEXT;
+const char STR7999[] PROGMEM = STR7999_TEXT;
 
 // Status
-const char STR8000[] PROGMEM = "Status Heizkreis 1";
-const char STR8001[] PROGMEM = "Status Heizkreis 2";
-const char STR8002[] PROGMEM = "Status Heizkreis P";
-const char STR8003[] PROGMEM = "Status Trinkwasser";
-const char STR8004[] PROGMEM = "Status Kühlkreis 1";
-const char STR8005[] PROGMEM = "Status Kessel";
-const char STR8006[] PROGMEM = "Status Wärmepumpe";
-const char STR8007[] PROGMEM = "Status Solar";
-const char STR8008[] PROGMEM = "Status Feststoffkessel";
-const char STR8009[] PROGMEM = "Status Brenner";
-const char STR8010[] PROGMEM = "Status Pufferspeicher";
-const char STR8011[] PROGMEM = "Status Schwimmbad";
-const char STR8022[] PROGMEM = "Status Zusatzerzeuger";
-const char STR8023[] PROGMEM = "Status Sitherm Pro";
-const char STR8025[] PROGMEM = "Status Kühlkreis 2";
-const char STR8050[] PROGMEM = "Zeitstempel Statushistorie 1";
-const char STR8051[] PROGMEM = "Statuscode Statushistorie 1";
-const char STR8052[] PROGMEM = "Zeitstempel Statushistorie 2";
-const char STR8053[] PROGMEM = "Statuscode Statushistorie 2";
-const char STR8054[] PROGMEM = "Zeitstempel Statushistorie 3";
-const char STR8055[] PROGMEM = "Statuscode Statushistorie 3";
-const char STR8056[] PROGMEM = "Zeitstempel Statushistorie 4";
-const char STR8057[] PROGMEM = "Statuscode Statushistorie 4";
-const char STR8058[] PROGMEM = "Zeitstempel Statushistorie 5";
-const char STR8059[] PROGMEM = "Statuscode Statushistorie 5";
-const char STR8060[] PROGMEM = "Zeitstempel Statushistorie 6";
-const char STR8061[] PROGMEM = "Statuscode Statushistorie 6";
-const char STR8062[] PROGMEM = "Zeitstempel Statushistorie 7";
-const char STR8063[] PROGMEM = "Statuscode Statushistorie 7";
-const char STR8064[] PROGMEM = "Zeitstempel Statushistorie 8";
-const char STR8065[] PROGMEM = "Statuscode Statushistorie 8";
-const char STR8066[] PROGMEM = "Zeitstempel Statushistorie 9";
-const char STR8067[] PROGMEM = "Statuscode Statushistorie 10";
-const char STR8068[] PROGMEM = "Zeitstempel Statushistorie 10";
-const char STR8069[] PROGMEM = "Statuscode Statushistorie 10";
+const char STR8000[] PROGMEM = STR8000_TEXT;
+const char STR8001[] PROGMEM = STR8001_TEXT;
+const char STR8002[] PROGMEM = STR8002_TEXT;
+const char STR8003[] PROGMEM = STR8003_TEXT;
+const char STR8004[] PROGMEM = STR8004_TEXT;
+const char STR8005[] PROGMEM = STR8005_TEXT;
+const char STR8006[] PROGMEM = STR8006_TEXT;
+const char STR8007[] PROGMEM = STR8007_TEXT;
+const char STR8008[] PROGMEM = STR8008_TEXT;
+const char STR8009[] PROGMEM = STR8009_TEXT;
+const char STR8010[] PROGMEM = STR8010_TEXT;
+const char STR8011[] PROGMEM = STR8011_TEXT;
+const char STR8022[] PROGMEM = STR8022_TEXT;
+const char STR8023[] PROGMEM = STR8023_TEXT;
+const char STR8025[] PROGMEM = STR8025_TEXT;
+const char STR8050[] PROGMEM = STR8050_TEXT;
+const char STR8051[] PROGMEM = STR8051_TEXT;
+const char STR8052[] PROGMEM = STR8052_TEXT;
+const char STR8053[] PROGMEM = STR8053_TEXT;
+const char STR8054[] PROGMEM = STR8054_TEXT;
+const char STR8055[] PROGMEM = STR8055_TEXT;
+const char STR8056[] PROGMEM = STR8056_TEXT;
+const char STR8057[] PROGMEM = STR8057_TEXT;
+const char STR8058[] PROGMEM = STR8058_TEXT;
+const char STR8059[] PROGMEM = STR8059_TEXT;
+const char STR8060[] PROGMEM = STR8060_TEXT;
+const char STR8061[] PROGMEM = STR8061_TEXT;
+const char STR8062[] PROGMEM = STR8062_TEXT;
+const char STR8063[] PROGMEM = STR8063_TEXT;
+const char STR8064[] PROGMEM = STR8064_TEXT;
+const char STR8065[] PROGMEM = STR8065_TEXT;
+const char STR8066[] PROGMEM = STR8066_TEXT;
+const char STR8067[] PROGMEM = STR8067_TEXT;
+const char STR8068[] PROGMEM = STR8068_TEXT;
+#define STR8069 STR8067
 
-const char STR8099[] PROGMEM = "Status im Hauptdisplay";
+const char STR8099[] PROGMEM = STR8099_TEXT;
 
 // Diagnose Kaskade
-const char STR8100[] PROGMEM = "Priorität / Status Erzeuger 1";
-const char STR8102[] PROGMEM = "Priorität / Status Erzeuger 2";
-const char STR8104[] PROGMEM = "Priorität / Status Erzeuger 3";
-const char STR8106[] PROGMEM = "Priorität / Status Erzeuger 4";
-const char STR8108[] PROGMEM = "Priorität / Status Erzeuger 5";
-const char STR8110[] PROGMEM = "Priorität / Status Erzeuger 6";
-const char STR8112[] PROGMEM = "Priorität / Status Erzeuger 7";
-const char STR8114[] PROGMEM = "Priorität / Status Erzeuger 8";
-const char STR8116[] PROGMEM = "Priorität / Status Erzeuger 9";
-const char STR8118[] PROGMEM = "Priorität / Status Erzeuger 10";
-const char STR8120[] PROGMEM = "Priorität / Status Erzeuger 11";
-const char STR8122[] PROGMEM = "Priorität / Status Erzeuger 12";
-const char STR8124[] PROGMEM = "Priorität / Status Erzeuger 13";
-const char STR8126[] PROGMEM = "Priorität / Status Erzeuger 14";
-const char STR8128[] PROGMEM = "Priorität / Status Erzeuger 15";
-const char STR8130[] PROGMEM = "Priorität / Status Erzeuger 16";
-const char STR8138[] PROGMEM = "Kaskadenvorlauftemperatur";
-const char STR8139[] PROGMEM = "Kaskadenvorlaufsollwert";
-const char STR8140[] PROGMEM = "Kaskadenrücklauftemperatur";
-const char STR8141[] PROGMEM = "Kaskadenrücklaufsollwert";
-const char STR8150[] PROGMEM = "Erz'folge Umschalt aktuell";
-const char STR8199[] PROGMEM = "Kaskaden Zustand";
+const char STR8100[] PROGMEM = STR8100_TEXT;
+const char STR8102[] PROGMEM = STR8102_TEXT;
+const char STR8104[] PROGMEM = STR8104_TEXT;
+const char STR8106[] PROGMEM = STR8106_TEXT;
+const char STR8108[] PROGMEM = STR8108_TEXT;
+const char STR8110[] PROGMEM = STR8110_TEXT;
+const char STR8112[] PROGMEM = STR8112_TEXT;
+const char STR8114[] PROGMEM = STR8114_TEXT;
+const char STR8116[] PROGMEM = STR8116_TEXT;
+const char STR8118[] PROGMEM = STR8118_TEXT;
+const char STR8120[] PROGMEM = STR8120_TEXT;
+const char STR8122[] PROGMEM = STR8122_TEXT;
+const char STR8124[] PROGMEM = STR8124_TEXT;
+const char STR8126[] PROGMEM = STR8126_TEXT;
+const char STR8128[] PROGMEM = STR8128_TEXT;
+const char STR8130[] PROGMEM = STR8130_TEXT;
+const char STR8138[] PROGMEM = STR8138_TEXT;
+const char STR8139[] PROGMEM = STR8139_TEXT;
+const char STR8140[] PROGMEM = STR8140_TEXT;
+const char STR8141[] PROGMEM = STR8141_TEXT;
+const char STR8150[] PROGMEM = STR8150_TEXT;
+const char STR8199[] PROGMEM = STR8199_TEXT;
 
 // 8300 Diagnose Erzeuger
-const char STR8300[] PROGMEM = "1. Brennerstufe T2";
-const char STR8301[] PROGMEM = "2. Brennerstufe T8";
-const char STR8302[] PROGMEM = "Zustand Brennerklappe Auf";
-const char STR8303[] PROGMEM = "Zustand Brennerklappe Zu";
-const char STR8304[] PROGMEM = "Kesselpumpe Q1";
-const char STR8308[] PROGMEM = "Drehzahl Kesselpumpe";
-const char STR8310[] PROGMEM = "Kesseltemperatur";
-const char STR8311[] PROGMEM = "Kesselsollwert";
-const char STR8312[] PROGMEM = "Kesselschaltpunkt";
-const char STR8313[] PROGMEM = "Regelfühler";
-const char STR8314[] PROGMEM = "Kesselrücklauftemperatur Ist";
-const char STR8315[] PROGMEM = "Kesselrücklauftemperatur Soll";
-const char STR8316[] PROGMEM = "Abgastemperatur Istwert";
-const char STR8318[] PROGMEM = "Abgastemperatur Maximum";
-const char STR8319[] PROGMEM = "Regeltemperatur";
-const char STR8320[] PROGMEM = "Regelsollwert";
-const char STR8321[] PROGMEM = "Aktuelle Regeldifferenz";
-const char STR8323[] PROGMEM = "Gebläsedrehzahl";
-const char STR8324[] PROGMEM = "Brennergebläsesollwert";
-const char STR8325[] PROGMEM = "PWM Drehzahlregler (Proz)";
-const char STR8325_2[] PROGMEM = "Aktuelle Gebläseansteuerung";
-const char STR8326[] PROGMEM = "Brennermodulation";
-const char STR8327[] PROGMEM = "Wasserdruck";
-const char STR8328[] PROGMEM = "Betriebsanzeige FA";
-const char STR8329[] PROGMEM = "Ionisationsstrom";
-const char STR8330[] PROGMEM = "Betriebsstunden 1.Stufe";
-const char STR8331[] PROGMEM = "Startzähler 1.Stufe";
-const char STR8332[] PROGMEM = "Betriebsstunden 2.Stufe";
-const char STR8333[] PROGMEM = "Startzähler 2.Stufe";
-const char STR8336[] PROGMEM = "Betriebsstunden Brenner";
-const char STR8337[] PROGMEM = "Startzähler Brenner";
-const char STR8338[] PROGMEM = "Betriebsstunden Heizbetrieb";
-const char STR8339[] PROGMEM = "Betriebsstunden TWW";
-const char STR8340[] PROGMEM = "Betriebsstunden ext. Wärmeanforderung";
-const char STR8378[] PROGMEM = "Gesamt Gasenergie Heizen";
-const char STR8379[] PROGMEM = "Gesamt Gasenergie Trinkwasser";
-const char STR8380[] PROGMEM = "Gesamt Gasenergie";
-const char STR8381[] PROGMEM = "Gasenergie Heizen Reset";
-const char STR8382[] PROGMEM = "Gasenergie TWW Reset";
-const char STR8383[] PROGMEM = "Gasenergie";
-const char STR8390[] PROGMEM = "Aktuelle Phasennummer";
-const char STR8395[] PROGMEM = "Wärmeabgabe";
-const char STR8396[] PROGMEM = "Wärmeaufnahme Quelle";
-const char STR8397[] PROGMEM = "Leistungsaufnahme";
-const char STR8398[] PROGMEM = "Leistungszahl";
-const char STR8400[] PROGMEM = "Verdichter 1 K1";
-const char STR8401[] PROGMEM = "Verdichter 2 K2";
-const char STR8402[] PROGMEM = "Elektroeinsatz 1 Vorlauf";
-const char STR8403[] PROGMEM = "Elektroeinsatz 2 Vorlauf";
-const char STR8404[] PROGMEM = "Quellenpu Q8 / Ventilat K19";
-const char STR8405[] PROGMEM = "Drehzahl Quellenpumpe";
-const char STR8406[] PROGMEM = "Kondensatorpumpe Q9";
-const char STR8407[] PROGMEM = "Drehzahl Kondensatorpumpe";
-const char STR8408[] PROGMEM = "Kühlumlenkventil Quelle";
-const char STR8410[] PROGMEM = "Rücklauftemperatur WP";
-const char STR8411[] PROGMEM = "Sollwert WP";
-const char STR8412[] PROGMEM = "Vorlauftemperatur WP";
-const char STR8413[] PROGMEM = "Modulation des Kompressors";
-const char STR8414[] PROGMEM = "Elektro-Vorlauf Modulation";
-const char STR8415[] PROGMEM = "Heissgastemperatur 1";
-const char STR8416[] PROGMEM = "Heissgastemperatur Max";
-const char STR8417[] PROGMEM = "Heissgastemperatur 2";
-const char STR8420[] PROGMEM = "Kältemitteltemperatur flüssig";
-const char STR8423[] PROGMEM = "Kondensatortemperatur";
-const char STR8425[] PROGMEM = "Temp’spreizung Kondensator";
-const char STR8426[] PROGMEM = "Temp’spreizung Verdampfer";
-const char STR8427[] PROGMEM = "Quelle Eintrittstemperatur";
-const char STR8428[] PROGMEM = "Quelle Eintritt Min";
-const char STR8429[] PROGMEM = "Quelle Austrittstemperatur";
-const char STR8430[] PROGMEM = "Quelle Austritt Min";
-const char STR8431[] PROGMEM = "Quellenzw'kreis Vorlauftemp";
-const char STR8434[] PROGMEM = "Sauggastemperatur";
-const char STR8435[] PROGMEM = "Verdampfungstemperatur";
-const char STR8436[] PROGMEM = "Überhitzung oder Überhitzungssollwert";
+const char STR8300[] PROGMEM = STR8300_TEXT;
+const char STR8301[] PROGMEM = STR8301_TEXT;
+const char STR8302[] PROGMEM = STR8302_TEXT;
+const char STR8303[] PROGMEM = STR8303_TEXT;
+const char STR8304[] PROGMEM = STR8304_TEXT;
+const char STR8308[] PROGMEM = STR8308_TEXT;
+const char STR8310[] PROGMEM = STR8310_TEXT;
+const char STR8311[] PROGMEM = STR8311_TEXT;
+const char STR8312[] PROGMEM = STR8312_TEXT;
+const char STR8313[] PROGMEM = STR8313_TEXT;
+const char STR8314[] PROGMEM = STR8314_TEXT;
+const char STR8315[] PROGMEM = STR8315_TEXT;
+const char STR8316[] PROGMEM = STR8316_TEXT;
+const char STR8318[] PROGMEM = STR8318_TEXT;
+const char STR8319[] PROGMEM = STR8319_TEXT;
+const char STR8320[] PROGMEM = STR8320_TEXT;
+const char STR8321[] PROGMEM = STR8321_TEXT;
+const char STR8323[] PROGMEM = STR8323_TEXT;
+const char STR8324[] PROGMEM = STR8324_TEXT;
+const char STR8325[] PROGMEM = STR8325_TEXT;
+const char STR8325_2[] PROGMEM = STR8325_2_TEXT;
+const char STR8326[] PROGMEM = STR8326_TEXT;
+const char STR8327[] PROGMEM = STR8327_TEXT;
+const char STR8328[] PROGMEM = STR8328_TEXT;
+#define STR8329 STR2730
+const char STR8330[] PROGMEM = STR8330_TEXT;
+const char STR8331[] PROGMEM = STR8331_TEXT;
+const char STR8332[] PROGMEM = STR8332_TEXT;
+const char STR8333[] PROGMEM = STR8333_TEXT;
+const char STR8336[] PROGMEM = STR8336_TEXT;
+const char STR8337[] PROGMEM = STR8337_TEXT;
+const char STR8338[] PROGMEM = STR8338_TEXT;
+const char STR8339[] PROGMEM = STR8339_TEXT;
+const char STR8340[] PROGMEM = STR8340_TEXT;
+const char STR8378[] PROGMEM = STR8378_TEXT;
+const char STR8379[] PROGMEM = STR8379_TEXT;
+const char STR8380[] PROGMEM = STR8380_TEXT;
+const char STR8381[] PROGMEM = STR8381_TEXT;
+const char STR8382[] PROGMEM = STR8382_TEXT;
+const char STR8383[] PROGMEM = STR8383_TEXT;
+const char STR8390[] PROGMEM = STR8390_TEXT;
+const char STR8395[] PROGMEM = STR8395_TEXT;
+const char STR8396[] PROGMEM = STR8396_TEXT;
+const char STR8397[] PROGMEM = STR8397_TEXT;
+const char STR8398[] PROGMEM = STR8398_TEXT;
+const char STR8400[] PROGMEM = STR8400_TEXT;
+const char STR8401[] PROGMEM = STR8401_TEXT;
+const char STR8402[] PROGMEM = STR8402_TEXT;
+const char STR8403[] PROGMEM = STR8403_TEXT;
+const char STR8404[] PROGMEM = STR8404_TEXT;
+const char STR8405[] PROGMEM = STR8405_TEXT;
+const char STR8406[] PROGMEM = STR8406_TEXT;
+const char STR8407[] PROGMEM = STR8407_TEXT;
+const char STR8408[] PROGMEM = STR8408_TEXT;
+const char STR8410[] PROGMEM = STR8410_TEXT;
+const char STR8411[] PROGMEM = STR8411_TEXT;
+const char STR8412[] PROGMEM = STR8412_TEXT;
+const char STR8413[] PROGMEM = STR8413_TEXT;
+const char STR8414[] PROGMEM = STR8414_TEXT;
+const char STR8415[] PROGMEM = STR8415_TEXT;
+const char STR8416[] PROGMEM = STR8416_TEXT;
+const char STR8417[] PROGMEM = STR8417_TEXT;
+const char STR8420[] PROGMEM = STR8420_TEXT;
+const char STR8423[] PROGMEM = STR8423_TEXT;
+const char STR8425[] PROGMEM = STR8425_TEXT;
+const char STR8426[] PROGMEM = STR8426_TEXT;
+const char STR8427[] PROGMEM = STR8427_TEXT;
+const char STR8428[] PROGMEM = STR8428_TEXT;
+const char STR8429[] PROGMEM = STR8429_TEXT;
+const char STR8430[] PROGMEM = STR8430_TEXT;
+const char STR8431[] PROGMEM = STR8431_TEXT;
+const char STR8434[] PROGMEM = STR8434_TEXT;
+const char STR8435[] PROGMEM = STR8435_TEXT;
+const char STR8436[] PROGMEM = STR8436_TEXT;
 // vorheriges könnte auch 1663 sein weil da noch Überhitzungssollwert übermittelt wird
-const char STR8437[] PROGMEM = "Expansionsventil"; // kein Funktion
-const char STR8438[] PROGMEM = "Magnetventil";
-const char STR8440[] PROGMEM = "Rest Stufe 1 Stillst’zeit Min";
-const char STR8441[] PROGMEM = "Rest Stufe 2 Stillst’zeit Min";
-const char STR8442[] PROGMEM = "Rest Stufe 1 Laufzeit Min";
-const char STR8443[] PROGMEM = "Rest Stufe 2 Laufzeit Min";
-const char STR8444[] PROGMEM = "Restzeit Begr Quelle TempMin";
-const char STR8446[] PROGMEM = "Verdichterfolge";
-const char STR8448[] PROGMEM = "Betr'std erw Verdampf'temp";
-const char STR8449[] PROGMEM = "Betr'stunden Kältekreis";
-const char STR8450[] PROGMEM = "Betr’stunden Verdichter 1";
-const char STR8451[] PROGMEM = "Startzähler Verdichter 1";
-const char STR8452[] PROGMEM = "Betr’stunden Verdichter 2";
-const char STR8453[] PROGMEM = "Startzähler Verdichter 2";
-const char STR8454[] PROGMEM = "Sperrdauer WP";
-const char STR8455[] PROGMEM = "Zähler Anzahl Sperren WP";
-const char STR8456[] PROGMEM = "Betr’stunden Elektro Vorl";
-const char STR8457[] PROGMEM = "Startzähler Elektro Vorlauf";
-const char STR8458[] PROGMEM = "Status Smart Grid"; // Keine Funktion
-const char STR8460[] PROGMEM = "Wärmepumpendurchfluss"; // l/min
-const char STR8461[] PROGMEM = "Quellendurchfluss"; // l/min
-const char STR8462[] PROGMEM = "Sauggasttemperatur EVI";
-const char STR8463[] PROGMEM = "Verdampfungstemperatur EVI";
+const char STR8437[] PROGMEM = STR8437_TEXT;
+const char STR8438[] PROGMEM = STR8438_TEXT;
+const char STR8440[] PROGMEM = STR8440_TEXT;
+const char STR8441[] PROGMEM = STR8441_TEXT;
+const char STR8442[] PROGMEM = STR8442_TEXT;
+const char STR8443[] PROGMEM = STR8443_TEXT;
+const char STR8444[] PROGMEM = STR8444_TEXT;
+const char STR8446[] PROGMEM = STR8446_TEXT;
+const char STR8448[] PROGMEM = STR8448_TEXT;
+const char STR8449[] PROGMEM = STR8449_TEXT;
+const char STR8450[] PROGMEM = STR8450_TEXT;
+const char STR8451[] PROGMEM = STR8451_TEXT;
+const char STR8452[] PROGMEM = STR8452_TEXT;
+const char STR8453[] PROGMEM = STR8453_TEXT;
+const char STR8454[] PROGMEM = STR8454_TEXT;
+const char STR8455[] PROGMEM = STR8455_TEXT;
+const char STR8456[] PROGMEM = STR8456_TEXT;
+const char STR8457[] PROGMEM = STR8457_TEXT;
+const char STR8458[] PROGMEM = STR8458_TEXT;
+const char STR8460[] PROGMEM = STR8460_TEXT;
+const char STR8461[] PROGMEM = STR8461_TEXT;
+const char STR8462[] PROGMEM = STR8462_TEXT;
+const char STR8463[] PROGMEM = STR8463_TEXT;
 // Kommt auch noch ein Telegramm 0x593D1779, könnte Verdampfungsdruck E in bar sein oder vertauscht mit dem oben
-const char STR8464[] PROGMEM = "Überhitzung EVI";
+const char STR8464[] PROGMEM = STR8464_TEXT;
 // Kommt auch noch ein Telegramm 0x593D17AC, könnte Überhitzungssollwert E in °C sein oder vertauscht mit dem oben
-const char STR8465[] PROGMEM = "Expansionsventil EVI";
-const char STR8466[] PROGMEM = "Magnetventil EVI"; // Keine Funktion
-const char STR8467[] PROGMEM = "Mag'ventil Einspritzkapillare"; // Keine Funktion
-const char STR8469[] PROGMEM = "Drehzahl Ventilator";
-const char STR8470[] PROGMEM = "Ventilator K19";
-const char STR8471[] PROGMEM = "Prozessumkehrventil";
-const char STR8475[] PROGMEM = "Verdampfertemperatur";
-const char STR8477[] PROGMEM = "Temp'diff Abtauen Istwert";
-const char STR8478[] PROGMEM = "Temp'diff Abtauen Sollwert";
-const char STR8480[] PROGMEM = "Restzeit Abtausperrung";
-const char STR8481[] PROGMEM = "Restzeit Zwangsabtauen";
-const char STR8482[] PROGMEM = "Restzeit Abtaustabilisierung";
-const char STR8485[] PROGMEM = "Anzahl Abtauversuche";
-const char STR8487[] PROGMEM = "Status Abtauen WP";
+const char STR8465[] PROGMEM = STR8465_TEXT;
+const char STR8466[] PROGMEM = STR8466_TEXT;
+const char STR8467[] PROGMEM = STR8467_TEXT;
+const char STR8469[] PROGMEM = STR8469_TEXT;
+const char STR8470[] PROGMEM = STR8470_TEXT;
+const char STR8471[] PROGMEM = STR8471_TEXT;
+const char STR8475[] PROGMEM = STR8475_TEXT;
+const char STR8477[] PROGMEM = STR8477_TEXT;
+const char STR8478[] PROGMEM = STR8478_TEXT;
+const char STR8480[] PROGMEM = STR8480_TEXT;
+const char STR8481[] PROGMEM = STR8481_TEXT;
+const char STR8482[] PROGMEM = STR8482_TEXT;
+const char STR8485[] PROGMEM = STR8485_TEXT;
+const char STR8487[] PROGMEM = STR8487_TEXT;
 // Diagnose Erzeuger - Solar
-const char STR8499[] PROGMEM = "Zustand Kollektorpumpe (Q5)";
-const char STR8499_2[] PROGMEM = "Kollektorpumpe 1";
-const char STR8501[] PROGMEM = "Solarstellglied Puffer";
-const char STR8502[] PROGMEM = "Solarstellglied Schwimmbad";
-const char STR8505[] PROGMEM = "Drehzahl Kollektorpumpe 1";
-const char STR8506[] PROGMEM = "Drehzahl Solarpump ext.Tau";
-const char STR8507[] PROGMEM = "Drehzahl Solarpumpe Puffer";
-const char STR8508[] PROGMEM = "Drehzahl Solarpump Sch'bad";
-const char STR8510[] PROGMEM = "Kollektortemperatur 1";
-const char STR8511[] PROGMEM = "Kollektortemperatur 1 Max";
-const char STR8512[] PROGMEM = "Kollektortemperatur 1 Min";
-const char STR8513[] PROGMEM = "dT Kollektor 1/TWW";
-const char STR8513_2[] PROGMEM = "dT Kollektor 1/Tauscher 1";
-const char STR8514[] PROGMEM = "dT Kollektor 1/Puffer";
-const char STR8515[] PROGMEM = "dT Kollektor 1/Schwimmbad";
-const char STR8519[] PROGMEM = "Solarvorlauftemperatur";
-const char STR8520[] PROGMEM = "Solarrücklauftemperatur";
-const char STR8521[] PROGMEM = "Solardurchfluss";
-const char STR8526[] PROGMEM = "Tagesertrag Solarenergie";
-const char STR8527[] PROGMEM = "Gesamtertrag Solarenergie";
-const char STR8530[] PROGMEM = "Betr`stunden Solarertrag";
-const char STR8531[] PROGMEM = "Betr`stunden Kollektor`überhitz";
-const char STR8532[] PROGMEM = "Betr`stunden Kollektorpumpe";
-const char STR8543[] PROGMEM = "Drehzahl Kollektorpumpe 2";
-const char STR8547[] PROGMEM = "Kollektortemperatur 2";
-const char STR8548[] PROGMEM = "Kollektortemperatur 2 Max";
-const char STR8549[] PROGMEM = "Kollektortemperatur 2 Min";
-const char STR8550[] PROGMEM = "dT Kollektor 2 / TWW";
-const char STR8551[] PROGMEM = "dT Kollektor 2 / Puffer";
-const char STR8552[] PROGMEM = "dT Kollektor 2 / Schwimmbad";
-const char STR8559[] PROGMEM = "Feststoffkesselsollwert"; // !!! TODO: Parameternummer unklar !!!
-const char STR8560[] PROGMEM = "Feststoffkesseltemperatur";
-const char STR8568[] PROGMEM = "Drehzahl Festst'pumpe";
-const char STR8570[] PROGMEM = "Betr'std Feststoffkessel";
+const char STR8499[] PROGMEM = STR8499_TEXT;
+const char STR8499_2[] PROGMEM = STR8499_2_TEXT;
+const char STR8501[] PROGMEM = STR8501_TEXT;
+const char STR8502[] PROGMEM = STR8502_TEXT;
+const char STR8505[] PROGMEM = STR8505_TEXT;
+const char STR8506[] PROGMEM = STR8506_TEXT;
+const char STR8507[] PROGMEM = STR8507_TEXT;
+const char STR8508[] PROGMEM = STR8508_TEXT;
+const char STR8510[] PROGMEM = STR8510_TEXT;
+const char STR8511[] PROGMEM = STR8511_TEXT;
+const char STR8512[] PROGMEM = STR8512_TEXT;
+const char STR8513[] PROGMEM = STR8513_TEXT;
+const char STR8513_2[] PROGMEM = STR8513_2_TEXT;
+const char STR8514[] PROGMEM = STR8514_TEXT;
+const char STR8515[] PROGMEM = STR8515_TEXT;
+const char STR8519[] PROGMEM = STR8519_TEXT;
+const char STR8520[] PROGMEM = STR8520_TEXT;
+const char STR8521[] PROGMEM = STR8521_TEXT;
+const char STR8526[] PROGMEM = STR8526_TEXT;
+const char STR8527[] PROGMEM = STR8527_TEXT;
+const char STR8530[] PROGMEM = STR8530_TEXT;
+const char STR8531[] PROGMEM = STR8531_TEXT;
+const char STR8532[] PROGMEM = STR8532_TEXT;
+const char STR8543[] PROGMEM = STR8543_TEXT;
+const char STR8547[] PROGMEM = STR8547_TEXT;
+const char STR8548[] PROGMEM = STR8548_TEXT;
+const char STR8549[] PROGMEM = STR8549_TEXT;
+const char STR8550[] PROGMEM = STR8550_TEXT;
+const char STR8551[] PROGMEM = STR8551_TEXT;
+const char STR8552[] PROGMEM = STR8552_TEXT;
+const char STR8559[] PROGMEM = STR8559_TEXT;
+const char STR8560[] PROGMEM = STR8560_TEXT;
+const char STR8568[] PROGMEM = STR8568_TEXT;
+const char STR8570[] PROGMEM = STR8570_TEXT;
 
 // Diagnose Verbraucher
-const char STR8700[] PROGMEM = "Aussentemperatur";
-const char STR8701[] PROGMEM = "Außentemperatur Minimum";
-const char STR8702[] PROGMEM = "Außentemperatur Maximum";
-const char STR8703[] PROGMEM = "Aussentemperatur gedämpft";
-const char STR8704[] PROGMEM = "Aussentemperatur gemischt";
-const char STR8705[] PROGMEM = "Aussentemperatur LPB";
-const char STR8720[] PROGMEM = "Relative Raumfeuchte";
-const char STR8721[] PROGMEM = "Raumtemperatur";
-const char STR8722[] PROGMEM = "Taupunkttemperatur";
-const char STR8730[] PROGMEM = "Heizkreispumpe Q2";
-const char STR8731[] PROGMEM = "Heizkreismischer Auf Y1";
-const char STR8732[] PROGMEM = "Heizkreismischer Zu Y2";
-const char STR8735[] PROGMEM = "Drehzahl Heizkreispumpe 1";
-const char STR8740[] PROGMEM = "Raumtemperatur 1";
-const char STR8741[] PROGMEM = "Raumsollwert 1";
-const char STR8742[] PROGMEM = "Raumtemperatur 1 Modell";
-const char STR8743[] PROGMEM = "Vorlauftemperatur 1";
-const char STR8744[] PROGMEM = "Vorlaufsollwert 1";
-const char STR8749[] PROGMEM = "Raumthermostat 1";
-const char STR8750[] PROGMEM = "Mod Pumpe Sollwert";
-const char STR8751[] PROGMEM = "Kühlkreispumpe Q24";
-const char STR8752[] PROGMEM = "Kühlkreismischer Auf Y23";
-const char STR8753[] PROGMEM = "Kühlkreismischer Zu Y24";
-const char STR8754[] PROGMEM = "Umlenkventil Kühlen Y21";
-const char STR8756[] PROGMEM = "Vorlauftemperatur Kühlen 1";
-const char STR8757[] PROGMEM = "Vorlaufsollwert Kühlen1";
-const char STR8760[] PROGMEM = "Heizkreispumpe 2";
-const char STR8761[] PROGMEM = "Heizkreismischer 2 Auf";
-const char STR8762[] PROGMEM = "Heizkreismischer 2 Zu";
-const char STR8765[] PROGMEM = "Drehzahl Heizkreispumpe 2";
-const char STR8770[] PROGMEM = "Raumtemperatur 2";
-const char STR8771[] PROGMEM = "Raumsollwert 2";
-const char STR8772[] PROGMEM = "Raumtemperatur 2 Modell";
-const char STR8773[] PROGMEM = "Vorlauftemperatur 2";
-const char STR8774[] PROGMEM = "Vorlaufsollwert 2";
-const char STR8779[] PROGMEM = "Raumthermostat 2";
-const char STR8790[] PROGMEM = "Heizkreispumpe 3";
-const char STR8791[] PROGMEM = "Heizkreismischer P Auf";
-const char STR8792[] PROGMEM = "Heizkreismischer P Zu";
-const char STR8795[] PROGMEM = "Drehzahl Heizkreispumpe P";
-const char STR8800[] PROGMEM = "Raumtemperatur P";
-const char STR8801[] PROGMEM = "Raumsollwert P";
-const char STR8802[] PROGMEM = "Raumtemperatur P Modell";
-const char STR8803[] PROGMEM = "Vorlaufsollwert P";
-const char STR8804[] PROGMEM = "Vorlaufsollwert 3";
-const char STR8809[] PROGMEM = "Raumthermostat 3";
-const char STR8820[] PROGMEM = "Trinkwasserpumpe Q3";
-const char STR8821[] PROGMEM = "Elektroeinsatz TWW K6";
-const char STR8825[] PROGMEM = "Drehzahl Trinkwasserpumpe";
-const char STR8826[] PROGMEM = "Drehzahl TWW Zw'kreispumpe";
-const char STR8827[] PROGMEM = "Drehzahl Dl'erhitzerpumpe";
-const char STR8830[] PROGMEM = "Trinkwassertemperatur 1";
-const char STR8831[] PROGMEM = "Trinkwassersollwert";
-const char STR8832[] PROGMEM = "Trinkwassertemperatur 2";
-const char STR8835[] PROGMEM = "TWW Zirkulationstemperatur";
-const char STR8836[] PROGMEM = "TWW Ladetemperatur";
-const char STR8840[] PROGMEM = "Betr’stunden TWW-Pumpe";
-const char STR8841[] PROGMEM = "Startzähler TWW-Pumpe";
-const char STR8842[] PROGMEM = "Betr’stunden Elektro TWW";
-const char STR8843[] PROGMEM = "Startzähler Elektro TWW";
-const char STR8850[] PROGMEM = "TWW Vorreglertemperatur";
-const char STR8851[] PROGMEM = "TWW Vorreglersollwert";
-const char STR8852[] PROGMEM = "TWW Durchl'erhitzertemp";
-const char STR8853[] PROGMEM = "TWW Durchl'erhitzersollwert";
-const char STR8875[] PROGMEM = "Vorlaufsollwert VK1";
-const char STR8885[] PROGMEM = "Vorlaufsollwert VK2";
-const char STR8895[] PROGMEM = "Vorlaufsollwert Schwimmbad";
-const char STR8900[] PROGMEM = "Schwimmbadtemperatur";
-const char STR8901[] PROGMEM = "Schwimmbadsollwert";
-const char STR8930[] PROGMEM = "Vorreglertemperatur";
-const char STR8931[] PROGMEM = "Vorreglersollwert";
-const char STR8950[] PROGMEM = "Schienenvorlauftemperatur";
-const char STR8951[] PROGMEM = "Schienenvorlaufsollwert";
-const char STR8952[] PROGMEM = "Schienenrücklauftemperatur";
-const char STR8957[] PROGMEM = "Schienenvorl'sollwert Kälte";
-const char STR8962[] PROGMEM = "Leistungssollwert Schiene";
-const char STR8970[] PROGMEM = "Elektroeinsatz Puffer";
-const char STR8980[] PROGMEM = "Pufferspeichertemperatur 1";
-const char STR8981[] PROGMEM = "Pufferspeichersollwert";
-const char STR8982[] PROGMEM = "Pufferspeichertemperatur 2";
-const char STR8983[] PROGMEM = "Pufferspeichertemperatur 3";
-const char STR8990[] PROGMEM = "Betr’stunden Elektro Puffer";
-const char STR8991[] PROGMEM = "Startzähler Elektro Puffer";
-const char STR9000[] PROGMEM = "Vorlaufsollwert H1";
-const char STR9001[] PROGMEM = "Vorlaufsollwert H2";
-const char STR9004[] PROGMEM = "Vorlaufsollwert H3";
-const char STR9005[] PROGMEM = "Wasserdruck H1";
-const char STR9006[] PROGMEM = "Wasserdruck H2";
-const char STR9009[] PROGMEM = "Wasserdruck H3";
-const char STR9031[] PROGMEM = "Relaisausgang QX1";
-const char STR9032[] PROGMEM = "Relaisausgang QX2";
-const char STR9033[] PROGMEM = "Relaisausgang QX3";
-const char STR9034[] PROGMEM = "Relaisausgang QX4";
-const char STR9035[] PROGMEM = "Relaisausgang QX5";
-const char STR9036[] PROGMEM = "Relaisausgang QX6";
-const char STR9037[] PROGMEM = "Relaisausgang QX7";
-const char STR9038[] PROGMEM = "Relaisausgang QX8";
-const char STR9050[] PROGMEM = "Relaisausgang QX21 Modul 1";
-const char STR9051[] PROGMEM = "Relaisausgang QX22 Modul 1";
-const char STR9052[] PROGMEM = "Relaisausgang QX23 Modul 1";
-const char STR9053[] PROGMEM = "Relaisausgang QX21 Modul 2";
-const char STR9054[] PROGMEM = "Relaisausgang QX22 Modul 2";
-const char STR9055[] PROGMEM = "Relaisausgang QX23 Modul 2";
-const char STR9071[] PROGMEM = "Relaisausgang QX31";
-const char STR9072[] PROGMEM = "Relaisausgang QX32";
-const char STR9073[] PROGMEM = "Relaisausgang QX33";
-const char STR9074[] PROGMEM = "Relaisausgang QX34";
-const char STR9075[] PROGMEM = "Relaisausgang QX35";
+const char STR8700[] PROGMEM = STR8700_TEXT;
+const char STR8701[] PROGMEM = STR8701_TEXT;
+const char STR8702[] PROGMEM = STR8702_TEXT;
+const char STR8703[] PROGMEM = STR8703_TEXT;
+const char STR8704[] PROGMEM = STR8704_TEXT;
+const char STR8705[] PROGMEM = STR8705_TEXT;
+const char STR8720[] PROGMEM = STR8720_TEXT;
+const char STR8721[] PROGMEM = STR8721_TEXT;
+const char STR8722[] PROGMEM = STR8722_TEXT;
+const char STR8730[] PROGMEM = STR8730_TEXT;
+const char STR8731[] PROGMEM = STR8731_TEXT;
+const char STR8732[] PROGMEM = STR8732_TEXT;
+const char STR8735[] PROGMEM = STR8735_TEXT;
+const char STR8740[] PROGMEM = STR8740_TEXT;
+const char STR8741[] PROGMEM = STR8741_TEXT;
+const char STR8742[] PROGMEM = STR8742_TEXT;
+const char STR8743[] PROGMEM = STR8743_TEXT;
+const char STR8744[] PROGMEM = STR8744_TEXT;
+const char STR8749[] PROGMEM = STR8749_TEXT;
+const char STR8750[] PROGMEM = STR8750_TEXT;
+const char STR8751[] PROGMEM = STR8751_TEXT;
+const char STR8752[] PROGMEM = STR8752_TEXT;
+const char STR8753[] PROGMEM = STR8753_TEXT;
+const char STR8754[] PROGMEM = STR8754_TEXT;
+const char STR8756[] PROGMEM = STR8756_TEXT;
+const char STR8757[] PROGMEM = STR8757_TEXT;
+const char STR8760[] PROGMEM = STR8760_TEXT;
+const char STR8761[] PROGMEM = STR8761_TEXT;
+const char STR8762[] PROGMEM = STR8762_TEXT;
+const char STR8765[] PROGMEM = STR8765_TEXT;
+const char STR8770[] PROGMEM = STR8770_TEXT;
+const char STR8771[] PROGMEM = STR8771_TEXT;
+const char STR8772[] PROGMEM = STR8772_TEXT;
+const char STR8773[] PROGMEM = STR8773_TEXT;
+const char STR8774[] PROGMEM = STR8774_TEXT;
+const char STR8779[] PROGMEM = STR8779_TEXT;
+const char STR8790[] PROGMEM = STR8790_TEXT;
+const char STR8791[] PROGMEM = STR8791_TEXT;
+const char STR8792[] PROGMEM = STR8792_TEXT;
+const char STR8795[] PROGMEM = STR8795_TEXT;
+const char STR8800[] PROGMEM = STR8800_TEXT;
+const char STR8801[] PROGMEM = STR8801_TEXT;
+const char STR8802[] PROGMEM = STR8802_TEXT;
+const char STR8803[] PROGMEM = STR8803_TEXT;
+const char STR8804[] PROGMEM = STR8804_TEXT;
+const char STR8809[] PROGMEM = STR8809_TEXT;
+const char STR8820[] PROGMEM = STR8820_TEXT;
+const char STR8821[] PROGMEM = STR8821_TEXT;
+const char STR8825[] PROGMEM = STR8825_TEXT;
+const char STR8826[] PROGMEM = STR8826_TEXT;
+const char STR8827[] PROGMEM = STR8827_TEXT;
+const char STR8830[] PROGMEM = STR8830_TEXT;
+const char STR8831[] PROGMEM = STR8831_TEXT;
+const char STR8832[] PROGMEM = STR8832_TEXT;
+const char STR8835[] PROGMEM = STR8835_TEXT;
+const char STR8836[] PROGMEM = STR8836_TEXT;
+const char STR8840[] PROGMEM = STR8840_TEXT;
+const char STR8841[] PROGMEM = STR8841_TEXT;
+const char STR8842[] PROGMEM = STR8842_TEXT;
+const char STR8843[] PROGMEM = STR8843_TEXT;
+const char STR8850[] PROGMEM = STR8850_TEXT;
+const char STR8851[] PROGMEM = STR8851_TEXT;
+const char STR8852[] PROGMEM = STR8852_TEXT;
+const char STR8853[] PROGMEM = STR8853_TEXT;
+const char STR8875[] PROGMEM = STR8875_TEXT;
+const char STR8885[] PROGMEM = STR8885_TEXT;
+const char STR8895[] PROGMEM = STR8895_TEXT;
+const char STR8900[] PROGMEM = STR8900_TEXT;
+const char STR8901[] PROGMEM = STR8901_TEXT;
+const char STR8930[] PROGMEM = STR8930_TEXT;
+const char STR8931[] PROGMEM = STR8931_TEXT;
+const char STR8950[] PROGMEM = STR8950_TEXT;
+const char STR8951[] PROGMEM = STR8951_TEXT;
+const char STR8952[] PROGMEM = STR8952_TEXT;
+const char STR8957[] PROGMEM = STR8957_TEXT;
+const char STR8962[] PROGMEM = STR8962_TEXT;
+const char STR8970[] PROGMEM = STR8970_TEXT;
+const char STR8980[] PROGMEM = STR8980_TEXT;
+const char STR8981[] PROGMEM = STR8981_TEXT;
+const char STR8982[] PROGMEM = STR8982_TEXT;
+const char STR8983[] PROGMEM = STR8983_TEXT;
+const char STR8990[] PROGMEM = STR8990_TEXT;
+const char STR8991[] PROGMEM = STR8991_TEXT;
+const char STR9000[] PROGMEM = STR9000_TEXT;
+const char STR9001[] PROGMEM = STR9001_TEXT;
+const char STR9004[] PROGMEM = STR9004_TEXT;
+const char STR9005[] PROGMEM = STR9005_TEXT;
+const char STR9006[] PROGMEM = STR9006_TEXT;
+const char STR9009[] PROGMEM = STR9009_TEXT;
+#define STR9031 STR5890
+#define STR9032 STR5891
+#define STR9033 STR5892
+#define STR9034 STR5894
+#define STR9035 STR5895
+#define STR9036 STR5896
+const char STR9037[] PROGMEM = STR9037_TEXT;
+const char STR9038[] PROGMEM = STR9038_TEXT;
+#define STR9050 STR6030
+#define STR9051 STR6031
+#define STR9052 STR6032
+#define STR9053 STR6033
+#define STR9054 STR6034
+#define STR9055 STR6035
+const char STR9071[] PROGMEM = STR9071_TEXT;
+const char STR9072[] PROGMEM = STR9072_TEXT;
+const char STR9073[] PROGMEM = STR9073_TEXT;
+const char STR9074[] PROGMEM = STR9074_TEXT;
+const char STR9075[] PROGMEM = STR9075_TEXT;
 
 // Feuerungsautomat
-const char STR9500[] PROGMEM = "Vorlüftzeit";
-const char STR9502[] PROGMEM = "Gebl'ansteuerung Vorlüftung";
-const char STR9504[] PROGMEM = "Solldrehzahl Vorlüftung";
-const char STR9504_2[] PROGMEM = "Sollleistung Vorlüftung";
-const char STR9510[] PROGMEM = "Gebl'ansteuerung Zündung";
-const char STR9512[] PROGMEM = "Solldrehzahl Zündung";
-const char STR9512_2[] PROGMEM = "Sollleistung Zündlast";
-const char STR9520[] PROGMEM = "Gebl'ansteuerung Betrieb. Min";
-const char STR9522[] PROGMEM = "Gebl'ansteuerung Betrieb. Max";
-const char STR9524[] PROGMEM = "Solldrehzahl Betrieb Min";
-const char STR9524_2[] PROGMEM = "Sollleistung Teillast";
-const char STR9527[] PROGMEM = "Solldrehzahl Betrieb Max";
-const char STR9529[] PROGMEM = "Sollleistung Volllast";
-const char STR9540[] PROGMEM = "Nachlüftzeit";
-const char STR9550[] PROGMEM = "Gebl'ansteuerung Stillstand";
-const char STR9560[] PROGMEM = "Gebl'ansteuerung Durchlad";
-const char STR9563[] PROGMEM = "Solldrehzahl Durchladung";
-const char STR9626[] PROGMEM = "Gebl'Leist/Drehz Steigerung";
-const char STR9627[] PROGMEM = "Gebl'Leist/Drehz Y-Abschn";
+const char STR9500[] PROGMEM = STR9500_TEXT;
+const char STR9502[] PROGMEM = STR9502_TEXT;
+const char STR9504[] PROGMEM = STR9504_TEXT;
+const char STR9504_2[] PROGMEM = STR9504_2_TEXT;
+const char STR9510[] PROGMEM = STR9510_TEXT;
+const char STR9512[] PROGMEM = STR9512_TEXT;
+const char STR9512_2[] PROGMEM = STR9512_2_TEXT;
+const char STR9520[] PROGMEM = STR9520_TEXT;
+const char STR9522[] PROGMEM = STR9522_TEXT;
+const char STR9524[] PROGMEM = STR9524_TEXT;
+const char STR9524_2[] PROGMEM = STR9524_2_TEXT;
+const char STR9527[] PROGMEM = STR9527_TEXT;
+const char STR9529[] PROGMEM = STR9529_TEXT;
+const char STR9540[] PROGMEM = STR9540_TEXT;
+const char STR9550[] PROGMEM = STR9550_TEXT;
+const char STR9560[] PROGMEM = STR9560_TEXT;
+const char STR9563[] PROGMEM = STR9563_TEXT;
+const char STR9626[] PROGMEM = STR9626_TEXT;
+const char STR9627[] PROGMEM = STR9627_TEXT;
 
 
 /* User-defined command numbers */
-const char STR10000[] PROGMEM = "Raumtemperatur 1";     // same as 10109
-const char STR10001[] PROGMEM = "Raumtemperatur 2";
-const char STR10002[] PROGMEM = "Raumtemperatur P";
+const char STR10000[] PROGMEM = STR10000_TEXT;
+#define STR10001 STR8770
+#define STR10002 STR8800
 
-const char STR10100[] PROGMEM = "INFO Brenner";
-const char STR10101[] PROGMEM = "INFO Trinkwasserbereitung";
-const char STR10102[] PROGMEM = "INFO HK1 - TBD";
-const char STR10103[] PROGMEM = "INFO HK2 - TBD";
-const char STR10104[] PROGMEM = "INFO HK3/P - TBD";
+const char STR10100[] PROGMEM = STR10100_TEXT;
+const char STR10101[] PROGMEM = STR10101_TEXT;
+const char STR10102[] PROGMEM = STR10102_TEXT;
+const char STR10103[] PROGMEM = STR10103_TEXT;
+const char STR10104[] PROGMEM = STR10104_TEXT;
 
-const char STR10200[] PROGMEM = "Unknown command";
+const char STR10200[] PROGMEM = STR10200_TEXT;
 
-const char STR15004[] PROGMEM = "Mischervorlauftemperatur";
-const char STR15009[] PROGMEM = "Position Drehknopf";
-const char STR15011[] PROGMEM = "Präsenztaste";
-const char STR15012[] PROGMEM = "Verbleibende Ferientage";
-const char STR15019[] PROGMEM = "Heizperiode 1 Montag Start";
-const char STR15020[] PROGMEM = "Heizperiode 1 Montag Ende";
-const char STR15021[] PROGMEM = "Heizperiode 2 Montag Start";
-const char STR15022[] PROGMEM = "Heizperiode 2 Montag Ende";
-const char STR15023[] PROGMEM = "Heizperiode 3 Montag Start";
-const char STR15024[] PROGMEM = "Heizperiode 3 Montag Ende";
-const char STR15025[] PROGMEM = "Heizperiode 1 Dienstag Start";
-const char STR15026[] PROGMEM = "Heizperiode 1 Dienstag Ende";
-const char STR15027[] PROGMEM = "Heizperiode 2 Dienstag Start";
-const char STR15028[] PROGMEM = "Heizperiode 2 Dienstag Ende";
-const char STR15029[] PROGMEM = "Heizperiode 3 Dienstag Start";
-const char STR15030[] PROGMEM = "Heizperiode 3 Dienstag Ende";
-const char STR15031[] PROGMEM = "Heizperiode 1 Mittwoch Start";
-const char STR15032[] PROGMEM = "Heizperiode 1 Mittwoch Ende";
-const char STR15033[] PROGMEM = "Heizperiode 2 Mittwoch Start";
-const char STR15034[] PROGMEM = "Heizperiode 2 Mittwoch Ende";
-const char STR15035[] PROGMEM = "Heizperiode 3 Mittwoch Start";
-const char STR15036[] PROGMEM = "Heizperiode 3 Mittwoch Ende";
-const char STR15037[] PROGMEM = "Heizperiode 1 Donnerstag Start";
-const char STR15038[] PROGMEM = "Heizperiode 1 Donnerstag Ende";
-const char STR15039[] PROGMEM = "Heizperiode 2 Donnerstag Start";
-const char STR15040[] PROGMEM = "Heizperiode 2 Donnerstag Ende";
-const char STR15041[] PROGMEM = "Heizperiode 3 Donnerstag Start";
-const char STR15042[] PROGMEM = "Heizperiode 3 Donnerstag Ende";
-const char STR15043[] PROGMEM = "Heizperiode 1 Freitag Start";
-const char STR15044[] PROGMEM = "Heizperiode 1 Freitag Ende";
-const char STR15045[] PROGMEM = "Heizperiode 2 Freitag Start";
-const char STR15046[] PROGMEM = "Heizperiode 2 Freitag Ende";
-const char STR15047[] PROGMEM = "Heizperiode 3 Freitag Start";
-const char STR15048[] PROGMEM = "Heizperiode 3 Freitag Ende";
-const char STR15049[] PROGMEM = "Heizperiode 1 Samstag Start";
-const char STR15050[] PROGMEM = "Heizperiode 1 Samstag Ende";
-const char STR15051[] PROGMEM = "Heizperiode 2 Samstag Start";
-const char STR15052[] PROGMEM = "Heizperiode 2 Samstag Ende";
-const char STR15053[] PROGMEM = "Heizperiode 3 Samstag Start";
-const char STR15054[] PROGMEM = "Heizperiode 3 Samstag Ende";
-const char STR15055[] PROGMEM = "Heizperiode 1 Sonntag Start";
-const char STR15056[] PROGMEM = "Heizperiode 1 Sonntag Ende";
-const char STR15057[] PROGMEM = "Heizperiode 2 Sonntag Start";
-const char STR15058[] PROGMEM = "Heizperiode 2 Sonntag Ende";
-const char STR15059[] PROGMEM = "Heizperiode 3 Sonntag Start";
-const char STR15060[] PROGMEM = "Heizperiode 3 Sonntag Ende";
-const char STR15061[] PROGMEM = "Uhrzeit";
-const char STR15062[] PROGMEM = "QAA Modell";
-const char STR15064[] PROGMEM = "Zieltemperatur";
-const char STR15065[] PROGMEM = "Nächstes Schaltprogramm";
-const char STR15066[] PROGMEM = "Manuelles Heizen";
-const char STR15067[] PROGMEM = "Verbindung unterbrochen";
+const char STR15004[] PROGMEM = STR15004_TEXT;
+const char STR15009[] PROGMEM = STR15009_TEXT;
+const char STR15011[] PROGMEM = STR15011_TEXT;
+const char STR15012[] PROGMEM = STR15012_TEXT;
+const char STR15019[] PROGMEM = STR15019_TEXT;
+const char STR15020[] PROGMEM = STR15020_TEXT;
+const char STR15021[] PROGMEM = STR15021_TEXT;
+const char STR15022[] PROGMEM = STR15022_TEXT;
+const char STR15023[] PROGMEM = STR15023_TEXT;
+const char STR15024[] PROGMEM = STR15024_TEXT;
+const char STR15025[] PROGMEM = STR15025_TEXT;
+const char STR15026[] PROGMEM = STR15026_TEXT;
+const char STR15027[] PROGMEM = STR15027_TEXT;
+const char STR15028[] PROGMEM = STR15028_TEXT;
+const char STR15029[] PROGMEM = STR15029_TEXT;
+const char STR15030[] PROGMEM = STR15030_TEXT;
+const char STR15031[] PROGMEM = STR15031_TEXT;
+const char STR15032[] PROGMEM = STR15032_TEXT;
+const char STR15033[] PROGMEM = STR15033_TEXT;
+const char STR15034[] PROGMEM = STR15034_TEXT;
+const char STR15035[] PROGMEM = STR15035_TEXT;
+const char STR15036[] PROGMEM = STR15036_TEXT;
+const char STR15037[] PROGMEM = STR15037_TEXT;
+const char STR15038[] PROGMEM = STR15038_TEXT;
+const char STR15039[] PROGMEM = STR15039_TEXT;
+const char STR15040[] PROGMEM = STR15040_TEXT;
+const char STR15041[] PROGMEM = STR15041_TEXT;
+const char STR15042[] PROGMEM = STR15042_TEXT;
+const char STR15043[] PROGMEM = STR15043_TEXT;
+const char STR15044[] PROGMEM = STR15044_TEXT;
+const char STR15045[] PROGMEM = STR15045_TEXT;
+const char STR15046[] PROGMEM = STR15046_TEXT;
+const char STR15047[] PROGMEM = STR15047_TEXT;
+const char STR15048[] PROGMEM = STR15048_TEXT;
+const char STR15049[] PROGMEM = STR15049_TEXT;
+const char STR15050[] PROGMEM = STR15050_TEXT;
+const char STR15051[] PROGMEM = STR15051_TEXT;
+const char STR15052[] PROGMEM = STR15052_TEXT;
+const char STR15053[] PROGMEM = STR15053_TEXT;
+const char STR15054[] PROGMEM = STR15054_TEXT;
+const char STR15055[] PROGMEM = STR15055_TEXT;
+const char STR15056[] PROGMEM = STR15056_TEXT;
+const char STR15057[] PROGMEM = STR15057_TEXT;
+const char STR15058[] PROGMEM = STR15058_TEXT;
+const char STR15059[] PROGMEM = STR15059_TEXT;
+const char STR15060[] PROGMEM = STR15060_TEXT;
+const char STR15061[] PROGMEM = STR15061_TEXT;
+const char STR15062[] PROGMEM = STR15062_TEXT;
+const char STR15064[] PROGMEM = STR15064_TEXT;
+const char STR15065[] PROGMEM = STR15065_TEXT;
+const char STR15066[] PROGMEM = STR15066_TEXT;
+const char STR15067[] PROGMEM = STR15067_TEXT;
 
 // A catch-all description string for unrecognised command codes
-const char STR99999[] PROGMEM = "UNKNOWN command code";
+const char STR99999[] PROGMEM = STR99999_TEXT;
 
+#define ENUM42_00_TEXT ENUM_CAT_0b_TEXT
+#define ENUM47_01_TEXT ENUM_CAT_0b_TEXT
+#define ENUM48_01_TEXT ENUM_CAT_0b_TEXT
+#define ENUM48_02_TEXT ENUM_CAT_0d_TEXT
+#define ENUM700_02_TEXT ENUM648_01_TEXT
+#define ENUM780_00_TEXT MENU_TEXT_OFF
+#define ENUM850_00_TEXT ENUM780_00_TEXT
+#define ENUM861_00_TEXT ENUM780_00_TEXT
+#define ENUM898_00_TEXT ENUM700_00_TEXT
+#define ENUM898_01_TEXT ENUM648_01_TEXT
+#define ENUM898_02_TEXT ENUM700_03_TEXT
+#define ENUM900_00_TEXT ENUM48_00_TEXT
+#define ENUM900_01_TEXT ENUM700_00_TEXT
+#define ENUM900_02_TEXT ENUM648_01_TEXT
+#define ENUM900_03_TEXT ENUM700_03_TEXT
+#define ENUM900_04_TEXT ENUM700_01_TEXT
+#define ENUM900_2_00_TEXT ENUM700_00_TEXT
+#define ENUM900_2_01_TEXT ENUM648_01_TEXT
+#define ENUM900_2_03_TEXT ENUM700_03_TEXT
+#define ENUM900_2_04_TEXT ENUM700_01_TEXT
+#define ENUM1000_00_TEXT ENUM700_00_TEXT
+#define ENUM1000_01_TEXT ENUM700_01_TEXT
+#define ENUM1000_02_TEXT ENUM648_01_TEXT
+#define ENUM1000_03_TEXT ENUM700_03_TEXT
+#define ENUM1300_00_TEXT ENUM700_00_TEXT
+#define ENUM1300_01_TEXT ENUM700_01_TEXT
+#define ENUM1300_02_TEXT ENUM648_01_TEXT
+#define ENUM1300_03_TEXT ENUM700_03_TEXT
+#define ENUM1600_00_TEXT ENUM780_00_TEXT
+#define ENUM1600_01_TEXT MENU_TEXT_ON
+#define ENUM1620_2_00_TEXT ENUM1620_00_TEXT
+#define ENUM1620_2_01_TEXT ENUM1620_01_TEXT
+#define ENUM1620_2_04_TEXT ENUM1620_02_TEXT
+#define ENUM1630_04_TEXT ENUM780_00_TEXT
+#define ENUM1640_00_TEXT ENUM780_00_TEXT
+#define ENUM1660_01_TEXT ENUM_CAT_05_TEXT
+#define ENUM1660_03_TEXT ENUM1620_02_TEXT
+#define ENUM1660_04_TEXT ENUM_CAT_07_TEXT
+#define ENUM1680_00_TEXT ENUM48_00_TEXT
+#define ENUM1680_01_TEXT ENUM780_00_TEXT
+#define ENUM1680_02_TEXT ENUM1600_01_TEXT
+#define ENUM2132_00_TEXT ENUM832_00_TEXT
+#define ENUM2132_01_TEXT ENUM832_01_TEXT
+#define ENUM2200_01_TEXT ENUM700_01_TEXT
+#define ENUM2205_00_TEXT ENUM780_00_TEXT
+#define ENUM2205_02_TEXT ENUM1600_01_TEXT
+#define ENUM2305_2_01_TEXT ENUM2305_00_TEXT
+#define ENUM2305_2_02_TEXT ENUM2305_01_TEXT
+#define ENUM2320_00_TEXT ENUM48_00_TEXT
+#define ENUM2320_03_TEXT ENUM880_02_TEXT
+#define ENUM2450_00_TEXT ENUM780_00_TEXT
+#define ENUM2450_01_TEXT ENUM2305_00_TEXT
+#define ENUM2450_03_TEXT ENUM2305_01_TEXT
+#define ENUM2500_00_TEXT ENUM2480_00_TEXT
+#define ENUM2500_01_TEXT ENUM2480_ff_TEXT
+#define ENUM2740_00_TEXT MENU_TEXT_NO
+#define ENUM2706_03_TEXT ENUM2206_01_TEXT
+#define ENUM2749_00_TEXT ENUM2740_00_TEXT
+#define ENUM2920_00_TEXT ENUM2706_00_TEXT
+#define ENUM3095_00_TEXT ENUM48_00_TEXT
+#define ENUM3100_00_TEXT ENUM48_00_TEXT
+#define ENUM3100_01_TEXT ENUM3095_01_TEXT
+#define ENUM3100_02_TEXT ENUM3095_05_TEXT
+#define ENUM3100_03_TEXT ENUM3095_06_TEXT
+#define ENUM3100_04_TEXT ENUM3095_07_TEXT
+#define ENUM3100_05_TEXT ENUM3095_08_TEXT
+#define ENUM3100_06_TEXT ENUM3095_09_TEXT
+#define ENUM3100_07_TEXT ENUM3095_0a_TEXT
+#define ENUM3100_08_TEXT ENUM3095_0b_TEXT
+#define ENUM3100_09_TEXT ENUM3095_0c_TEXT
+#define ENUM3100_0a_TEXT ENUM3095_0d_TEXT
+#define ENUM3102_00_TEXT ENUM48_00_TEXT
+#define ENUM3102_01_TEXT ENUM3092_00_TEXT
+#define ENUM3109_00_TEXT ENUM48_00_TEXT
+#define ENUM3192_03_TEXT ENUM3109_03_TEXT
+#define ENUM3541_00_TEXT ENUM48_00_TEXT
+#define ENUM3822_00_TEXT ENUM1630_02_TEXT
+#define ENUM3822_01_TEXT ENUM_CAT_1c_TEXT
+#define ENUM3822_02_TEXT ENUM_CAT_1b_TEXT
+#define ENUM3880_01_TEXT ENUM1630_02_TEXT
+#define ENUM3887_01_TEXT ENUM1630_02_TEXT
+#define ENUM3887_02_TEXT ENUM3092_00_TEXT
+#define ENUM4720_00_TEXT ENUM48_00_TEXT
+#define ENUM4757_00_TEXT ENUM780_00_TEXT
+#define ENUM4757_02_TEXT ENUM861_02_TEXT
+#define ENUM4795_01_TEXT ENUM4720_01_TEXT
+#define ENUM4810_00_TEXT ENUM780_00_TEXT
+#define ENUM4810_01_TEXT ENUM861_01_TEXT
+#define ENUM4810_02_TEXT ENUM861_02_TEXT
+#define ENUM4813_01_TEXT ENUM4720_01_TEXT
+#define ENUM5040_00_TEXT ENUM780_00_TEXT
+#define ENUM5040_01_TEXT ENUM861_02_TEXT
+#define ENUM5057_00_TEXT ENUM780_00_TEXT
+#define ENUM5057_01_TEXT ENUM4757_01_TEXT
+#define ENUM5057_02_TEXT ENUM861_02_TEXT
+#define ENUM5060_02_TEXT ENUM4757_01_TEXT
+#define ENUM5060_03_TEXT ENUM861_02_TEXT
+#define ENUM5061_01_TEXT ENUM1620_00_TEXT
+#define ENUM5061_02_TEXT ENUM1660_02_TEXT
+#define ENUM5061_03_TEXT ENUM1620_02_TEXT
+#define ENUM5130_00_TEXT ENUM861_02_TEXT
+#define ENUM5131_00_TEXT ENUM4133_01_TEXT
+#define ENUM5131_01_TEXT ENUM4133_02_TEXT
+#define ENUM5711_00_TEXT ENUM780_00_TEXT
+#define ENUM5715_00_TEXT ENUM780_00_TEXT
+#define ENUM5734_02_TEXT ENUM_CAT_0f_TEXT
+#define ENUM5760_01_TEXT ENUM2150_01_TEXT
+#define ENUM5840_00_TEXT ENUM5731_01_TEXT
+#define ENUM5840_01_TEXT ENUM5731_02_TEXT
+#define ENUM5841_00_TEXT ENUM48_03_TEXT
+#define ENUM5841_01_TEXT ENUM_CAT_1c_TEXT
+#define ENUM5841_02_TEXT ENUM_CAT_1b_TEXT
+#define ENUM5890_00_TEXT ENUM1630_02_TEXT
+#define ENUM5895_00_TEXT ENUM1630_02_TEXT
+#define ENUM5895_01_TEXT ENUM5890_21_TEXT
+#define ENUM5895_09_TEXT ENUM5890_01_TEXT
+#define ENUM5895_0a_TEXT ENUM5890_02_TEXT
+#define ENUM5895_0c_TEXT ENUM5890_03_TEXT
+#define ENUM5895_0d_TEXT ENUM5890_04_TEXT
+#define ENUM5895_0e_TEXT ENUM5890_05_TEXT
+#define ENUM5895_0f_TEXT ENUM5890_06_TEXT
+#define ENUM5895_10_TEXT ENUM5890_07_TEXT
+#define ENUM5895_14_TEXT ENUM5890_0b_TEXT
+#define ENUM5895_15_TEXT ENUM5890_0c_TEXT
+#define ENUM5895_16_TEXT ENUM5890_0d_TEXT
+#define ENUM5895_17_TEXT ENUM5890_0f_TEXT
+#define ENUM5895_18_TEXT ENUM5890_10_TEXT
+#define ENUM5895_19_TEXT ENUM5890_11_TEXT
+#define ENUM5895_1b_TEXT ENUM5890_13_TEXT
+#define ENUM5895_1c_TEXT ENUM5890_14_TEXT
+#define ENUM5895_1d_TEXT ENUM5890_15_TEXT
+#define ENUM5895_1e_TEXT ENUM5890_16_TEXT
+#define ENUM5895_1f_TEXT ENUM5890_17_TEXT
+#define ENUM5895_21_TEXT ENUM5895_08_TEXT
+#define ENUM5895_26_TEXT ENUM5890_19_TEXT
+#define ENUM5895_27_TEXT ENUM5890_1a_TEXT
+#define ENUM5895_28_TEXT ENUM5890_1b_TEXT
+#define ENUM5895_29_TEXT ENUM5890_1c_TEXT
+#define ENUM5895_2a_TEXT ENUM5890_1d_TEXT
+#define ENUM5920_02_TEXT ENUM5890_2_0b_TEXT
+#define ENUM5920_11_TEXT ENUM5890_1b_TEXT
+#define ENUM5930_00_TEXT ENUM1630_02_TEXT
+#define ENUM5930_01_TEXT ENUM4133_02_TEXT
+#define ENUM5930_05_TEXT ENUM4133_03_TEXT
+#define ENUM5930_06_TEXT ENUM4133_04_TEXT
+#define ENUM5950_2_00_TEXT ENUM5890_2_00_TEXT
+#define ENUM5950_2_03_TEXT ENUM5920_07_TEXT
+#define ENUM5950_2_08_TEXT ENUM5950_06_TEXT
+#define ENUM5950_3_02_TEXT ENUM5950_02_TEXT
+#define ENUM5950_3_03_TEXT ENUM5950_03_TEXT
+#define ENUM5950_3_04_TEXT ENUM5950_04_TEXT
+#define ENUM5950_3_05_TEXT ENUM5950_05_TEXT
+#define ENUM5950_3_06_TEXT ENUM5950_06_TEXT
+#define ENUM5950_3_07_TEXT ENUM5950_07_TEXT
+#define ENUM5950_3_08_TEXT ENUM5950_08_TEXT
+#define ENUM5950_3_09_TEXT ENUM5950_0d_TEXT
+#define ENUM5950_4_00_TEXT ENUM48_00_TEXT
+#define ENUM5950_4_03_TEXT ENUM5950_02_TEXT
+#define ENUM5950_4_04_TEXT ENUM5950_03_TEXT
+#define ENUM5950_4_05_TEXT ENUM5950_04_TEXT
+#define ENUM5950_4_07_TEXT ENUM5950_06_TEXT
+#define ENUM5950_4_08_TEXT ENUM5950_07_TEXT
+#define ENUM5950_4_0c_TEXT ENUM5950_09_TEXT
+#define ENUM5950_4_1d_TEXT ENUM2480_00_TEXT
+#define ENUM5950_5_02_TEXT ENUM5950_02_TEXT
+#define ENUM5950_5_03_TEXT ENUM5950_03_TEXT
+#define ENUM5950_5_04_TEXT ENUM5950_04_TEXT
+#define ENUM5950_5_05_TEXT ENUM5950_05_TEXT
+#define ENUM5950_5_06_TEXT ENUM5950_06_TEXT
+#define ENUM5950_5_07_TEXT ENUM5950_07_TEXT
+#define ENUM5950_5_08_TEXT ENUM5950_08_TEXT
+#define ENUM5950_5_09_TEXT ENUM5950_09_TEXT
+#define ENUM5950_5_0a_TEXT ENUM5950_0a_TEXT
+#define ENUM5950_5_0b_TEXT ENUM5950_0b_TEXT
+#define ENUM5950_5_0c_TEXT ENUM5950_0c_TEXT
+#define ENUM5950_5_0e_TEXT ENUM5950_0d_TEXT
+#define ENUM5957_2_00_TEXT ENUM5957_01_TEXT
+#define ENUM5957_2_01_TEXT ENUM5957_02_TEXT
+#define ENUM5957_2_03_TEXT ENUM5950_6_03_TEXT
+#define ENUM5960_3_02_TEXT ENUM5950_6_03_TEXT
+#define ENUM5970_00_TEXT ENUM1630_02_TEXT
+#define ENUM5973_00_TEXT ENUM5890_2_00_TEXT
+#define ENUM5973_01_TEXT ENUM5950_2_01_TEXT
+#define ENUM5973_02_TEXT ENUM5950_2_02_TEXT
+#define ENUM5973_03_TEXT ENUM5920_07_TEXT
+#define ENUM5973_07_TEXT ENUM5950_2_07_TEXT
+#define ENUM5973_08_TEXT ENUM5950_06_TEXT
+#define ENUM5973_09_TEXT ENUM5950_2_09_TEXT
+#define ENUM5978_00_TEXT ENUM5731_00_TEXT
+#define ENUM5980_00_TEXT ENUM48_00_TEXT
+#define ENUM5980_0f_TEXT ENUM5950_07_TEXT
+#define ENUM5980_16_TEXT ENUM5950_02_TEXT
+#define ENUM5982_02_TEXT ENUM5950_06_TEXT
+#define ENUM5982_03_TEXT ENUM5950_07_TEXT
+#define ENUM5988_00_TEXT ENUM48_00_TEXT
+#define ENUM5988_01_TEXT ENUM5980_01_TEXT
+#define ENUM5988_02_TEXT ENUM5980_02_TEXT
+#define ENUM5988_03_TEXT ENUM5980_03_TEXT
+#define ENUM5988_04_TEXT ENUM5980_04_TEXT
+#define ENUM5988_05_TEXT ENUM5980_05_TEXT
+#define ENUM5988_06_TEXT ENUM5980_06_TEXT
+#define ENUM5988_07_TEXT ENUM5980_07_TEXT
+#define ENUM5988_08_TEXT ENUM5980_08_TEXT
+#define ENUM5988_09_TEXT ENUM5980_09_TEXT
+#define ENUM5988_0a_TEXT ENUM5980_0a_TEXT
+#define ENUM5988_0b_TEXT ENUM5980_0b_TEXT
+#define ENUM5988_0c_TEXT ENUM5980_0c_TEXT
+#define ENUM5988_0d_TEXT ENUM5950_07_TEXT
+#define ENUM6014_01_TEXT ENUM_CAT_0b_TEXT
+#define ENUM6014_05_TEXT ENUM_CAT_1d_TEXT
+#define ENUM6020_00_TEXT ENUM5890_2_00_TEXT
+#define ENUM6020_02_TEXT ENUM_CAT_0d_TEXT
+#define ENUM6020_03_TEXT ENUM6014_02_TEXT
+#define ENUM6020_05_TEXT ENUM6014_03_TEXT
+#define ENUM6020_06_TEXT ENUM6014_04_TEXT
+#define ENUM6020_07_TEXT ENUM_CAT_1d_TEXT
+#define ENUM6020_08_TEXT ENUM6014_06_TEXT
+#define ENUM6030_00_TEXT ENUM1630_02_TEXT
+#define ENUM6030_01_TEXT ENUM5890_21_TEXT
+#define ENUM6030_02_TEXT ENUM5895_02_TEXT
+#define ENUM6030_03_TEXT ENUM5895_03_TEXT
+#define ENUM6030_04_TEXT ENUM5895_04_TEXT
+#define ENUM6030_05_TEXT ENUM5895_05_TEXT
+#define ENUM6030_08_TEXT ENUM5895_08_TEXT
+#define ENUM6030_09_TEXT ENUM5890_01_TEXT
+#define ENUM6030_0a_TEXT ENUM5890_02_TEXT
+#define ENUM6030_0b_TEXT ENUM5895_0b_TEXT
+#define ENUM6030_0c_TEXT ENUM5890_03_TEXT
+#define ENUM6030_0d_TEXT ENUM5890_04_TEXT
+#define ENUM6030_0e_TEXT ENUM5890_05_TEXT
+#define ENUM6030_0f_TEXT ENUM5890_06_TEXT
+#define ENUM6030_10_TEXT ENUM5890_07_TEXT
+#define ENUM6030_11_TEXT ENUM5895_11_TEXT
+#define ENUM6030_12_TEXT ENUM5895_12_TEXT
+#define ENUM6030_13_TEXT ENUM5895_13_TEXT
+#define ENUM6030_14_TEXT ENUM5890_0b_TEXT
+#define ENUM6030_15_TEXT ENUM5890_0c_TEXT
+#define ENUM6030_16_TEXT ENUM5890_0d_TEXT
+#define ENUM6030_17_TEXT ENUM5890_0e_TEXT
+#define ENUM6030_18_TEXT ENUM5890_0f_TEXT
+#define ENUM6030_19_TEXT ENUM5890_10_TEXT
+#define ENUM6030_1a_TEXT ENUM5890_11_TEXT
+#define ENUM6030_1b_TEXT ENUM5890_12_TEXT
+#define ENUM6030_1c_TEXT ENUM5890_13_TEXT
+#define ENUM6030_1e_TEXT ENUM5890_15_TEXT
+#define ENUM6030_1f_TEXT ENUM5890_16_TEXT
+#define ENUM6030_20_TEXT ENUM5890_17_TEXT
+#define ENUM6030_21_TEXT ENUM5895_20_TEXT
+#define ENUM6030_22_TEXT ENUM5895_08_TEXT
+#define ENUM6030_23_TEXT ENUM5895_22_TEXT
+#define ENUM6030_25_TEXT ENUM5895_24_TEXT
+#define ENUM6030_26_TEXT ENUM5895_25_TEXT
+#define ENUM6030_27_TEXT ENUM5890_19_TEXT
+#define ENUM6030_28_TEXT ENUM5890_1a_TEXT
+#define ENUM6030_29_TEXT ENUM5890_1b_TEXT
+#define ENUM6030_2a_TEXT ENUM5890_1c_TEXT
+#define ENUM6030_2b_TEXT ENUM5890_1d_TEXT
+#define ENUM6030_2c_TEXT ENUM5895_2b_TEXT
+#define ENUM6030_2d_TEXT ENUM5895_2c_TEXT
+#define ENUM6030_2e_TEXT ENUM5895_2d_TEXT
+#define ENUM6040_00_TEXT ENUM1630_02_TEXT
+#define ENUM6040_01_TEXT ENUM4133_02_TEXT
+#define ENUM6040_02_TEXT ENUM5930_02_TEXT
+#define ENUM6040_04_TEXT ENUM5930_04_TEXT
+#define ENUM6040_05_TEXT ENUM4133_03_TEXT
+#define ENUM6040_06_TEXT ENUM4133_04_TEXT
+#define ENUM6040_07_TEXT ENUM5930_07_TEXT
+#define ENUM6040_08_TEXT ENUM5930_08_TEXT
+#define ENUM6040_09_TEXT ENUM5930_09_TEXT
+#define ENUM6040_0a_TEXT ENUM5930_0a_TEXT
+#define ENUM6040_0b_TEXT ENUM5930_0b_TEXT
+#define ENUM6040_0c_TEXT ENUM5930_0c_TEXT
+#define ENUM6040_0d_TEXT ENUM5930_0d_TEXT
+#define ENUM6040_0e_TEXT ENUM5930_0e_TEXT
+#define ENUM6040_0f_TEXT ENUM5930_0f_TEXT
+#define ENUM6040_10_TEXT ENUM5930_10_TEXT
+#define ENUM6040_11_TEXT ENUM5930_11_TEXT
+#define ENUM6070_00_TEXT ENUM2320_02_TEXT
+#define ENUM6085_00_TEXT ENUM48_00_TEXT
+#define ENUM6085_01_TEXT ENUM5890_05_TEXT
+#define ENUM6085_04_TEXT ENUM5890_21_TEXT
+#define ENUM6085_07_TEXT ENUM5890_03_TEXT
+#define ENUM6131_00_TEXT ENUM780_00_TEXT
+#define ENUM6131_01_TEXT ENUM2205_01_TEXT
+#define ENUM6131_02_TEXT ENUM1600_01_TEXT
+#define ENUM6136_03_TEXT ENUM_CAT_07_TEXT
+#define ENUM6148_00_TEXT ENUM48_00_TEXT
+#define ENUM6272_00_TEXT ENUM1630_02_TEXT
+#define ENUM6272_06_TEXT ENUM4133_04_TEXT
+#define ENUM6272_07_TEXT ENUM5930_07_TEXT
+#define ENUM6272_08_TEXT ENUM5930_08_TEXT
+#define ENUM6272_09_TEXT ENUM5930_09_TEXT
+#define ENUM6272_0B_TEXT ENUM5930_0b_TEXT
+#define ENUM6272_0C_TEXT ENUM5930_0c_TEXT
+#define ENUM6272_0D_TEXT ENUM5930_0d_TEXT
+#define ENUM6272_0E_TEXT ENUM5930_0e_TEXT
+#define ENUM6272_18_TEXT ENUM4133_01_TEXT
+#define ENUM6375_00_TEXT ENUM1630_02_TEXT
+#define ENUM6375_02_TEXT ENUM5895_04_TEXT
+#define ENUM6375_03_TEXT ENUM5895_05_TEXT
+#define ENUM6375_04_TEXT ENUM5895_06_TEXT
+#define ENUM6375_05_TEXT ENUM5895_07_TEXT
+#define ENUM6375_06_TEXT ENUM5895_08_TEXT
+#define ENUM6375_07_TEXT ENUM5890_0d_TEXT
+#define ENUM6375_08_TEXT ENUM5890_19_TEXT
+#define ENUM6375_09_TEXT ENUM5890_0e_TEXT
+#define ENUM6375_0a_TEXT ENUM5890_02_TEXT
+#define ENUM6375_0b_TEXT ENUM5890_01_TEXT
+#define ENUM6375_0c_TEXT ENUM5890_1a_TEXT
+#define ENUM6375_0d_TEXT ENUM5890_1c_TEXT
+#define ENUM6375_0e_TEXT ENUM5890_1b_TEXT
+#define ENUM6375_0f_TEXT ENUM5890_03_TEXT
+#define ENUM6375_10_TEXT ENUM5890_15_TEXT
+#define ENUM6375_12_TEXT ENUM5890_13_TEXT
+#define ENUM6375_13_TEXT ENUM5890_14_TEXT
+#define ENUM6375_14_TEXT ENUM5895_0b_TEXT
+#define ENUM6375_18_TEXT ENUM6085_06_TEXT
+#define ENUM6375_19_TEXT ENUM5895_11_TEXT
+#define ENUM6375_1a_TEXT ENUM5895_12_TEXT
+#define ENUM6375_1d_TEXT ENUM5895_25_TEXT
+#define ENUM6375_1e_TEXT ENUM5890_1d_TEXT
+#define ENUM6375_1f_TEXT ENUM5895_2b_TEXT
+#define ENUM6375_20_TEXT ENUM5890_07_TEXT
+#define ENUM6375_21_TEXT ENUM5890_10_TEXT
+#define ENUM6375_22_TEXT ENUM5890_21_TEXT
+#define ENUM6375_23_TEXT ENUM5895_02_TEXT
+#define ENUM6375_25_TEXT ENUM5895_24_TEXT
+#define ENUM6375_26_TEXT ENUM5895_2c_TEXT
+#define ENUM6375_29_TEXT ENUM6085_05_TEXT
+#define ENUM6375_2b_TEXT ENUM6375_28_TEXT
+#define ENUM6375_2c_TEXT ENUM6375_28_TEXT
+#define ENUM6375_32_TEXT ENUM5890_0f_TEXT
+#define ENUM6375_33_TEXT ENUM5890_17_TEXT
+#define ENUM6420_00_TEXT ENUM5700_05_TEXT
+#define ENUM6420_06_TEXT ENUM5700_05_TEXT
+#define ENUM6420_07_TEXT ENUM5700_05_TEXT
+#define ENUM6420_08_TEXT ENUM5700_05_TEXT
+#define ENUM6420_09_TEXT ENUM5700_05_TEXT
+#define ENUM6420_0a_TEXT ENUM5700_05_TEXT
+#define ENUM6420_0c_TEXT ENUM5700_05_TEXT
+#define ENUM6420_0d_TEXT ENUM5700_05_TEXT
+#define ENUM6604_00_TEXT ENUM780_00_TEXT
+#define ENUM6604_01_TEXT ENUM5040_02_TEXT
+#define ENUM6620_ff_TEXT ENUM6620_01_TEXT
+#define ENUM6621_ff_TEXT ENUM6621_01_TEXT
+#define ENUM6623_00_TEXT ENUM6621_00_TEXT
+#define ENUM6623_01_TEXT ENUM6621_01_TEXT
+#define ENUM6624_00_TEXT ENUM6621_00_TEXT
+#define ENUM6624_01_TEXT ENUM6620_00_TEXT
+#define ENUM6630_00_TEXT ENUM861_02_TEXT
+#define ENUM6630_01_TEXT ENUM5040_02_TEXT
+#define ENUM6631_00_TEXT ENUM780_00_TEXT
+#define ENUM6631_01_TEXT ENUM2205_01_TEXT
+#define ENUM6631_02_TEXT ENUM1600_01_TEXT
+#define ENUM6670_00_TEXT ENUM2320_02_TEXT
+#define ENUM6670_01_TEXT ENUM6070_01_TEXT
+#define ENUM6670_02_TEXT ENUM6070_02_TEXT
+#define ENUM7142_01_TEXT ENUM850_05_TEXT
+#define ENUM7142_02_TEXT ENUM5040_02_TEXT
+#define ENUM7147_00_TEXT ENUM48_00_TEXT
+#define ENUM7376_00_TEXT ENUM1630_02_TEXT
+#define ENUM7376_01_TEXT ENUM5890_01_TEXT
+#define ENUM7376_02_TEXT ENUM5890_02_TEXT
+#define ENUM7376_03_TEXT ENUM5890_03_TEXT
+#define ENUM7376_05_TEXT ENUM5890_05_TEXT
+#define ENUM7376_06_TEXT ENUM5890_06_TEXT
+#define ENUM7376_07_TEXT ENUM5890_07_TEXT
+#define ENUM7376_08_TEXT ENUM5890_08_TEXT
+#define ENUM7376_09_TEXT ENUM5890_09_TEXT
+#define ENUM7376_0a_TEXT ENUM5890_0a_TEXT
+#define ENUM7376_0b_TEXT ENUM5890_0b_TEXT
+#define ENUM7376_0c_TEXT ENUM5890_0c_TEXT
+#define ENUM7376_0d_TEXT ENUM5890_0d_TEXT
+#define ENUM7376_0e_TEXT ENUM5890_0e_TEXT
+#define ENUM7376_0f_TEXT ENUM5890_0f_TEXT
+#define ENUM7376_10_TEXT ENUM5890_10_TEXT
+#define ENUM7376_11_TEXT ENUM5890_11_TEXT
+#define ENUM7376_12_TEXT ENUM5890_12_TEXT
+#define ENUM7376_13_TEXT ENUM5890_13_TEXT
+#define ENUM7376_14_TEXT ENUM5890_14_TEXT
+#define ENUM7376_15_TEXT ENUM5890_15_TEXT
+#define ENUM7376_16_TEXT ENUM5890_16_TEXT
+#define ENUM7376_17_TEXT ENUM5890_17_TEXT
+#define ENUM7376_19_TEXT ENUM5890_19_TEXT
+#define ENUM7376_1a_TEXT ENUM5890_1a_TEXT
+#define ENUM7376_1b_TEXT ENUM5890_1b_TEXT
+#define ENUM7376_1c_TEXT ENUM5890_1c_TEXT
+#define ENUM7376_1d_TEXT ENUM5890_1d_TEXT
+#define ENUM7376_21_TEXT ENUM5890_21_TEXT
+#define ENUM7376_28_TEXT ENUM5890_28_TEXT
+#define ENUM7700_02_TEXT ENUM6040_03_TEXT
+#define ENUM7700_03_TEXT ENUM6040_03_TEXT
+#define ENUM7700_04_TEXT ENUM6085_02_TEXT
+#define ENUM7999_00_TEXT ENUM48_00_TEXT
+#define ENUM8000_00_TEXT ENUM6040_03_TEXT
+#define ENUM8000_18_TEXT ENUM780_00_TEXT
+#define ENUM8003_00_TEXT ENUM6040_03_TEXT
+#define ENUM8003_03_TEXT ENUM8000_03_TEXT
+#define ENUM8003_04_TEXT ENUM8000_04_TEXT
+#define ENUM8003_11_TEXT ENUM8000_11_TEXT
+#define ENUM8003_18_TEXT ENUM8000_17_TEXT
+#define ENUM8003_19_TEXT ENUM780_00_TEXT
+#define ENUM8004_00_TEXT ENUM6040_03_TEXT
+#define ENUM8005_00_TEXT ENUM6040_03_TEXT
+#define ENUM8005_03_TEXT ENUM8000_03_TEXT
+#define ENUM8005_04_TEXT ENUM8000_04_TEXT
+#define ENUM8005_0a_TEXT ENUM2706_00_TEXT
+#define ENUM8005_0f_TEXT ENUM2920_01_TEXT
+#define ENUM8005_11_TEXT ENUM8000_11_TEXT
+#define ENUM8005_12_TEXT ENUM130_01_TEXT
+#define ENUM8005_13_TEXT ENUM2920_01_TEXT
+#define ENUM8005_17_TEXT ENUM8000_16_TEXT
+#define ENUM8005_18_TEXT ENUM8000_17_TEXT
+#define ENUM8005_19_TEXT ENUM780_00_TEXT
+#define ENUM8006_00_TEXT ENUM6040_03_TEXT
+#define ENUM8006_02_TEXT ENUM8005_02_TEXT
+#define ENUM8006_0A_TEXT ENUM2706_00_TEXT
+#define ENUM8006_11_TEXT ENUM8000_11_TEXT
+#define ENUM8006_18_TEXT ENUM8000_17_TEXT
+#define ENUM8006_19_TEXT ENUM780_00_TEXT
+#define ENUM8006_89_TEXT ENUM861_01_TEXT
+#define ENUM8006_b0_TEXT ENUM8005_b0_TEXT
+#define ENUM8006_c6_TEXT ENUM8005_c6_TEXT
+#define ENUM8007_00_TEXT ENUM6040_03_TEXT
+#define ENUM8007_04_TEXT ENUM8000_04_TEXT
+#define ENUM8007_02_TEXT ENUM8005_02_TEXT
+#define ENUM8007_35_TEXT ENUM8003_35_TEXT
+#define ENUM8007_38_TEXT ENUM8000_38_TEXT
+#define ENUM8007_3b_TEXT ENUM8005_3b_TEXT
+#define ENUM8008_00_TEXT ENUM6040_03_TEXT
+#define ENUM8008_02_TEXT ENUM8005_02_TEXT
+#define ENUM8008_04_TEXT ENUM8000_04_TEXT
+#define ENUM8008_08_TEXT ENUM8005_08_TEXT
+#define ENUM8008_09_TEXT ENUM8005_09_TEXT
+#define ENUM8008_0a_TEXT ENUM2706_00_TEXT
+#define ENUM8008_0b_TEXT ENUM8005_0b_TEXT
+#define ENUM8008_0c_TEXT ENUM8005_0c_TEXT
+#define ENUM8008_11_TEXT ENUM8000_11_TEXT
+#define ENUM8008_12_TEXT ENUM130_01_TEXT
+#define ENUM8008_13_TEXT ENUM2920_01_TEXT
+#define ENUM8008_14_TEXT ENUM8005_14_TEXT
+#define ENUM8008_15_TEXT ENUM8005_15_TEXT
+#define ENUM8008_16_TEXT ENUM8005_16_TEXT
+#define ENUM8008_17_TEXT ENUM8000_16_TEXT
+#define ENUM8008_18_TEXT ENUM8000_17_TEXT
+#define ENUM8008_19_TEXT ENUM780_00_TEXT
+#define ENUM8008_38_TEXT ENUM8000_38_TEXT
+#define ENUM8008_3a_TEXT ENUM8007_3a_TEXT
+#define ENUM8008_3b_TEXT ENUM8005_3b_TEXT
+#define ENUM8008_a6_TEXT ENUM8005_a6_TEXT
+#define ENUM8008_a7_TEXT ENUM8005_a7_TEXT
+#define ENUM8008_a8_TEXT ENUM8005_a8_TEXT
+#define ENUM8008_a9_TEXT ENUM8005_a9_TEXT
+#define ENUM8008_aa_TEXT ENUM8005_aa_TEXT
+#define ENUM8008_ab_TEXT ENUM8005_ab_TEXT
+#define ENUM8009_2_00_TEXT ENUM6040_03_TEXT
+#define ENUM8009_2_01_TEXT ENUM2480_ff_TEXT
+#define ENUM8009_2_02_TEXT ENUM2480_00_TEXT
+#define ENUM8009_2_04_TEXT ENUM130_01_TEXT
+#define ENUM8009_2_12_TEXT ENUM130_01_TEXT
+#define ENUM8009_2_D8_TEXT ENUM2206_01_TEXT
+#define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
+#define ENUM8009_01_TEXT ENUM2480_ff_TEXT
+#define ENUM8009_02_TEXT ENUM2480_00_TEXT
+#define ENUM8009_12_TEXT ENUM130_01_TEXT
+#define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
+#define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
+#define ENUM8009_D7_TEXT ENUM8009_2_D7_TEXT
+#define ENUM8009_D8_TEXT ENUM2206_01_TEXT
+#define ENUM8009_D9_TEXT ENUM8009_2_D9_TEXT
+#define ENUM8009_DB_TEXT ENUM8009_2_DB_TEXT
+#define ENUM8010_00_TEXT ENUM6040_03_TEXT
+#define ENUM8010_18_TEXT ENUM8000_17_TEXT
+#define ENUM8010_35_TEXT ENUM8003_35_TEXT
+#define ENUM8010_42_TEXT ENUM8003_42_TEXT
+#define ENUM8010_43_TEXT ENUM8003_43_TEXT
+#define ENUM8010_45_TEXT ENUM8003_45_TEXT
+#define ENUM8010_46_TEXT ENUM8003_46_TEXT
+#define ENUM8010_47_TEXT ENUM8003_47_TEXT
+#define ENUM8010_4b_TEXT ENUM8003_4b_TEXT
+#define ENUM8010_4d_TEXT ENUM8003_4d_TEXT
+#define ENUM8010_51_TEXT ENUM8003_51_TEXT
+#define ENUM8010_68_TEXT ENUM8000_68_TEXT
+#define ENUM8011_00_TEXT ENUM6040_03_TEXT
+#define ENUM8011_02_TEXT ENUM8005_02_TEXT
+#define ENUM8011_04_TEXT ENUM8000_04_TEXT
+#define ENUM8011_4c_TEXT ENUM8010_4c_TEXT
+#define ENUM8011_6a_TEXT ENUM8000_6a_TEXT
+#define ENUM8011_6e_TEXT ENUM8000_6e_TEXT
+#define ENUM8011_89_TEXT ENUM861_01_TEXT
+#define ENUM8022_00_TEXT ENUM6040_03_TEXT
+#define ENUM8100_00_TEXT ENUM130_00_TEXT
+#define ENUM8100_02_TEXT ENUM8000_04_TEXT
+#define ENUM8100_04_TEXT ENUM8005_07_TEXT
+#define ENUM8100_08_TEXT ENUM2920_01_TEXT
+#define ENUM8304_00_TEXT ENUM780_00_TEXT
+#define ENUM8304_01_TEXT ENUM1600_01_TEXT
+#define ENUM8304_ff_TEXT ENUM1600_01_TEXT
+#define ENUM8304_01_00_TEXT ENUM5890_2_00_TEXT
+#define ENUM8749_01_TEXT ENUM2320_01_TEXT
+#define ENUM15010_00_TEXT ENUM5040_02_TEXT
+#define ENUM15010_01_TEXT ENUM850_05_TEXT
+#define ENUM15010_02_TEXT ENUM780_00_TEXT
+#define ENUM_ERROR_4d_TEXT ENUM_ERROR_49_TEXT
+#define ENUM_ERROR_01_51_TEXT ENUM_ERROR_01_4a_TEXT
+#define ENUM_ERROR_01_81_TEXT ENUM8006_f6_TEXT
+#define ENUM_SWCODE_6e_TEXT ENUM_ERROR_a1_TEXT
+#define ENUM_SWCODE_01_03_TEXT ENUM_ERROR_99_TEXT
+#define ENUM_SWCODE_02_09_TEXT ENUM_ERROR_8c_TEXT
+#define ENUM_SWCODE_02_5a_TEXT ENUM_ERROR_b8_TEXT
 
 
 /* ENUM tables */
 const char ENUM20[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x01 ?English\0"
-"\x02 ?Deutsch\0"
-"\x03 ?Francais\0"
-"\x04 ?Nederlands\0"
-"\x05 ?Italiano\0"
-"\x06 ?Espanol\0"
-"\x07 ?Polski\0"
-"\x08 ?Ceski"
+"\x01" "?" ENUM20_01_TEXT "\0"
+"\x02" "?" ENUM20_02_TEXT "\0"
+"\x03" "?" ENUM20_03_TEXT "\0"
+"\x04" "?" ENUM20_04_TEXT "\0"
+"\x05" "?" ENUM20_05_TEXT "\0"
+"\x06" "?" ENUM20_06_TEXT "\0"
+"\x07" "?" ENUM20_07_TEXT "\0"
+"\x08" "?" ENUM20_08_TEXT
 };
 // numerical values are hypothetical
-const char ENUM22[] PROGMEM_LATEST = {"\x01 Temporär\0\x02 Permanent"};
-const char ENUM23[] PROGMEM_LATEST = {"\x00 ?Code\0\x01 ?Code und Text"};
-const char ENUM28[] PROGMEM_LATEST = {"\x01 Speichern automatisch\0\x02 Speichern mit Bestätigung"};
-const char ENUM29[] PROGMEM_LATEST = {"\x01 °C,bar\0\x02 °F,PSI"};
+const char ENUM22[] PROGMEM_LATEST = {
+"\x01" ENUM22_01_TEXT "\0"
+"\x02" ENUM22_02_TEXT
+};
+const char ENUM23[] PROGMEM_LATEST = {
+"\x00" "?" ENUM23_00_TEXT "\0"
+"\x01" "?" ENUM23_01_TEXT
+};
+const char ENUM28[] PROGMEM_LATEST = {
+"\x01" ENUM28_01_TEXT "\0"
+"\x02" ENUM28_02_TEXT
+};
+const char ENUM29[] PROGMEM_LATEST = {
+"\x01" ENUM29_01_TEXT "\0"
+"\x02" ENUM29_02_TEXT
+};
 const char ENUM40[] PROGMEM_LATEST = {
-"\x00 ?Raumgerät 1\0"
-"\x01 ?Raumgerät 2\0"
-"\x02 ?Raumgerät P\0"
-"\x03 ?Bediengerät 1\0"
-"\x04 ?Bediengerät 2\0"
-"\x05 Servicegerät"
+"\x00" "?" ENUM40_00_TEXT "\0"
+"\x01" "?" ENUM40_01_TEXT "\0"
+"\x02" "?" ENUM40_02_TEXT "\0"
+"\x03" "?" ENUM40_03_TEXT "\0"
+"\x04" "?" ENUM40_04_TEXT "\0"
+"\x05" ENUM40_05_TEXT
 };
 const char ENUM42[] PROGMEM_LATEST = {	// numerical values are hypothetical
-"\x00 ?Heizkreis 1\0"
-"\x01 ?Heizkreis 1 und 2\0"
-"\x02 ?Heizkreis 1 und P\0"
-"\x03 ?Alle Heizkreise"
+"\x00" "?" ENUM42_00_TEXT "\0"
+"\x01" "?" ENUM42_01_TEXT "\0"
+"\x02" "?" ENUM42_02_TEXT "\0"
+"\x03" "?" ENUM42_03_TEXT
 };
-const char ENUM44[] PROGMEM_LATEST = {"\x01 Gemeinsam mit HK1\0\x02 Unabhängig"};
+const char ENUM44[] PROGMEM_LATEST = {
+"\x01" ENUM44_01_TEXT "\0"
+"\x02" ENUM44_02_TEXT
+};
 #define ENUM46 ENUM44
 const char ENUM47[] PROGMEM_LATEST = {  // NovoCondens WOB20C / WOB25C
-"\x01 ?Heizkreis 1\0"
-"\x02 ?Für alle zugeord'Heizkreise"
+"\x01" "?" ENUM47_01_TEXT "\0"
+"\x02" "?" ENUM47_02_TEXT
 };
 // Nur am Raumgerät sichtbar, numerical values are hypothetical
-const char ENUM48[] PROGMEM_LATEST = {"\x00 ?Keine\0\x01 ?Heizkreis 1\0\x02 ?Heizkreis 2\0\x03 ?Gemeinsam"};
+const char ENUM48[] PROGMEM_LATEST = {
+"\x00" "?" ENUM48_00_TEXT "\0"
+"\x01" "?" ENUM48_01_TEXT "\0"
+"\x02" "?" ENUM48_02_TEXT "\0"
+"\x03" "?" ENUM48_03_TEXT
+};
 
-const char ENUM130[] PROGMEM_LATEST = {"\x00 Fehlt\0\x01 In Betrieb\0\x02 ?Kein Empfang\0\x03 ?Batt. wechseln"};
+const char ENUM130[] PROGMEM_LATEST = {
+"\x00" ENUM130_00_TEXT "\0"
+"\x01" ENUM130_01_TEXT "\0"
+"\x02" "?" ENUM130_02_TEXT "\0"
+"\x03" "?" ENUM130_03_TEXT
+};
 #define ENUM131 ENUM130
 #define ENUM132 ENUM130
 #define ENUM133 ENUM130
@@ -2405,28 +2935,81 @@ const char ENUM130[] PROGMEM_LATEST = {"\x00 Fehlt\0\x01 In Betrieb\0\x02 ?Kein 
 #define ENUM138 ENUM130
 
 /*
-const char ENUM648[] PROGMEM_LATEST = {"\x00 Frostschutz\0\x01 Reduziert"};
+const char ENUM648[] PROGMEM_LATEST = {
+"\x00" ENUM648_00_TEXT "\0"
+"\x01" ENUM648_01_TEXT
+};
 #define ENUM658 ENUM648
 #define ENUM668 ENUM648
 */
 
-const char ENUM648[] PROGMEM_LATEST = {"\x00 Frostschutz\0\x01 Reduziert"};
+const char ENUM648[] PROGMEM_LATEST = {
+"\x00" ENUM648_00_TEXT "\0"
+"\x01" ENUM648_01_TEXT
+};
 #define ENUM665 ENUM648
 #define ENUM682 ENUM648
 
-const char ENUM700[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduziert\0\x03 Komfort"};
+const char ENUM700[] PROGMEM_LATEST = {
+"\x00" ENUM700_00_TEXT "\0"
+"\x01" ENUM700_01_TEXT "\0"
+"\x02" ENUM700_02_TEXT "\0"
+"\x03" ENUM700_03_TEXT
+};
 
-const char ENUM780[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Bis Reduziertsollwert\0\x02 Bis Frostschutzsollwert"};
-const char ENUM832[] PROGMEM_LATEST = {"\x00 2-Punkt\0\x01 3-Punkt"};
-const char ENUM850[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Funktionsheizen\0\x02 Belegreifheizen\0\x03 Funktions-/Belegreifheizen\0\x04 Belegreif-/Funktionsheizen\0\x05 Manuell"};
-const char ENUM861[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Heizbetrieb\0\x02 Immer"};
-const char ENUM880[] PROGMEM_LATEST = {"\x00 Betriebsniveau\0\x01 Kennlinie\0\x02 Temperaturhub Nenn"};
-const char ENUM898[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Reduziert\0\x02 Komfort"};
+const char ENUM780[] PROGMEM_LATEST = {
+"\x00" ENUM780_00_TEXT "\0"
+"\x01" ENUM780_01_TEXT "\0"
+"\x02" ENUM780_02_TEXT
+};
+const char ENUM832[] PROGMEM_LATEST = {
+"\x00" ENUM832_00_TEXT "\0"
+"\x01" ENUM832_01_TEXT
+};
+const char ENUM850[] PROGMEM_LATEST = {
+"\x00" ENUM850_00_TEXT "\0"
+"\x01" ENUM850_01_TEXT "\0"
+"\x02" ENUM850_02_TEXT "\0"
+"\x03" ENUM850_03_TEXT "\0"
+"\x04" ENUM850_04_TEXT "\0"
+"\x05" ENUM850_05_TEXT
+};
+const char ENUM861[] PROGMEM_LATEST = {
+"\x00" ENUM861_00_TEXT "\0"
+"\x01" ENUM861_01_TEXT "\0"
+"\x02" ENUM861_02_TEXT
+};
+const char ENUM880[] PROGMEM_LATEST = {
+"\x00" ENUM880_00_TEXT "\0"
+"\x01" ENUM880_01_TEXT "\0"
+"\x02" ENUM880_02_TEXT
+};
+const char ENUM898[] PROGMEM_LATEST = {
+"\x00" ENUM898_00_TEXT "\0"
+"\x01" ENUM898_01_TEXT "\0"
+"\x02" ENUM898_02_TEXT
+};
 
-const char ENUM900[] PROGMEM_LATEST = {"\x00 Keine\0\x01 Schutzbetrieb\0\x02 Reduziert\0\x03 Komfort\0\x04 Automatik"};
-const char ENUM900_2[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Reduziert\0\x03 Komfort\0\x04 Automatik"};
+const char ENUM900[] PROGMEM_LATEST = {
+"\x00" ENUM900_00_TEXT "\0"
+"\x01" ENUM900_01_TEXT "\0"
+"\x02" ENUM900_02_TEXT "\0"
+"\x03" ENUM900_03_TEXT "\0"
+"\x04" ENUM900_04_TEXT
+};
+const char ENUM900_2[] PROGMEM_LATEST = {
+"\x00" ENUM900_2_00_TEXT "\0"
+"\x01" ENUM900_2_01_TEXT "\0"
+"\x03" ENUM900_2_03_TEXT "\0"
+"\x04" ENUM900_2_04_TEXT
+};
 
-const char ENUM1000[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduziert\0\x03 Komfort"};
+const char ENUM1000[] PROGMEM_LATEST = {
+"\x00" ENUM1000_00_TEXT "\0"
+"\x01" ENUM1000_01_TEXT "\0"
+"\x02" ENUM1000_02_TEXT "\0"
+"\x03" ENUM1000_03_TEXT
+};
 
 #define ENUM1080 ENUM780         // Schnellabsenkung HK2
 #define ENUM1132 ENUM832         // Antrieb Typ HK2
@@ -2437,7 +3020,12 @@ const char ENUM1000[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x0
 
 #define ENUM1180 ENUM880
 
-const char ENUM1300[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x02 Reduziert\0\x03 Komfort"};
+const char ENUM1300[] PROGMEM_LATEST = {
+"\x00" ENUM1300_00_TEXT "\0"
+"\x01" ENUM1300_01_TEXT "\0"
+"\x02" ENUM1300_02_TEXT "\0"
+"\x03" ENUM1300_03_TEXT
+};
 #define ENUM1350 ENUM850
 #define ENUM1380 ENUM780
 #define ENUM1450 ENUM850
@@ -2447,370 +3035,505 @@ const char ENUM1300[] PROGMEM_LATEST = {"\x00 Schutzbetrieb\0\x01 Automatik\0\x0
 #define ENUM1500_2 ENUM900_2         // Betriebsartumschaltung HK P/3
 
 const char ENUM1600[] PROGMEM_LATEST = {
-"\x00 Aus\0"
-"\x01 Ein\0"
-"\x02 Eco"
+"\x00" ENUM1600_00_TEXT "\0"
+"\x01" ENUM1600_01_TEXT "\0"
+"\x02" ENUM1600_02_TEXT
 };
 
 const char ENUM1602[] PROGMEM_LATEST = {
-"\x00\x02 TWW-Push nicht aktiv\0"
-"\x02\x02 TWW-Push aktiv\0"
-"\x00\x04 TWW aus\0"
-"\x04\x04 TWW an\0"
-"\x00\x08 TWW Ladung nicht aktiv\0"
-"\x08\x08 TWW Ladung aktiv"
+"\x00\x02" ENUM1602_00_02_TEXT "\0"
+"\x02\x02" ENUM1602_02_02_TEXT "\0"
+"\x00\x04" ENUM1602_00_04_TEXT "\0"
+"\x04\x04" ENUM1602_04_04_TEXT "\0"
+"\x00\x08" ENUM1602_00_08_TEXT "\0"
+"\x08\x08" ENUM1602_08_08_TEXT
 };
 
-const char ENUM1620[] PROGMEM_LATEST = {"\x00 24h/Tag\0\x01 Zeitprogramme Heizkreise\0\x02 Zeitprogramm 4/TWW"};
-const char ENUM1620_2[] PROGMEM_LATEST = {"\x00 24h/Tag\0\x01 Zeitprogramme Heizkreise\0\x04 Zeitprogramm 4/TWW"};
-const char ENUM1630[] PROGMEM_LATEST = {"\x00 Absolut\0\x01 Gleitend\0\x02 Kein\0\x03 MK gleitend PK absolut\0\x04 Aus"};
-const char ENUM1640[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Periodisch\0\x02 Fixer Wochentag"};
-const char ENUM1660[] PROGMEM_LATEST = {"\x01 Zeitprogramm 3/HKP\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW\0\x04 Zeitprogramm 5"};
-const char ENUM1680[] PROGMEM_LATEST = {"\x00 Keine\0\x01 Aus\0\x02 Ein"};
+const char ENUM1620[] PROGMEM_LATEST = {
+"\x00" ENUM1620_00_TEXT "\0"
+"\x01" ENUM1620_01_TEXT "\0"
+"\x02" ENUM1620_02_TEXT
+};
+const char ENUM1620_2[] PROGMEM_LATEST = {
+"\x00" ENUM1620_2_00_TEXT "\0"
+"\x01" ENUM1620_2_01_TEXT "\0"
+"\x04" ENUM1620_2_04_TEXT
+};
+const char ENUM1630[] PROGMEM_LATEST = {
+"\x00" ENUM1630_00_TEXT "\0"
+"\x01" ENUM1630_01_TEXT "\0"
+"\x02" ENUM1630_02_TEXT "\0"
+"\x03" ENUM1630_03_TEXT "\0"
+"\x04" ENUM1630_04_TEXT
+};
+const char ENUM1640[] PROGMEM_LATEST = {
+"\x00" ENUM1640_00_TEXT "\0"
+"\x01" ENUM1640_01_TEXT "\0"
+"\x02" ENUM1640_02_TEXT
+};
+const char ENUM1660[] PROGMEM_LATEST = {
+"\x01" ENUM1660_01_TEXT "\0"
+"\x02" ENUM1660_02_TEXT "\0"
+"\x03" ENUM1660_03_TEXT "\0"
+"\x04" ENUM1660_04_TEXT
+};
+const char ENUM1680[] PROGMEM_LATEST = {
+"\x00" ENUM1680_00_TEXT "\0"
+"\x01" ENUM1680_01_TEXT "\0"
+"\x02" ENUM1680_02_TEXT
+};
 
 // Vorregler/Zubringerpumpe
 
 const char ENUM2132[] PROGMEM_LATEST = {  // ENUM values hypothetical
-"\x00 2-Punkt\0"
-"\x01 3-Punkt"
+"\x00" ENUM2132_00_TEXT "\0"
+"\x01" ENUM2132_01_TEXT
 };
 
 const char ENUM2150[] PROGMEM_LATEST = {  // ENUM values hypothetical
-"\x00 Von Pufferspeicher\0"
-"\x01 Nach Pufferspeicher"
+"\x00" ENUM2150_00_TEXT "\0"
+"\x01" ENUM2150_01_TEXT
 };
 
 // Kessel
-const char ENUM2200[] PROGMEM_LATEST = {"\x00 Dauerbetrieb\0\x01 Automatik\0\x02 Auto, verlängerte Laufzeit"};
-const char ENUM2205[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Ein Trinkwasser\0\x02 Ein"};
-const char ENUM2206[] PROGMEM_LATEST = {"\x00 Betrieb\0\x01 Standby"};
-const char ENUM2291[] PROGMEM_LATEST = {"\x00 Parallel Brennerbetrieb\0\x01 Rücklauftemperatur"};
+const char ENUM2200[] PROGMEM_LATEST = {
+"\x00" ENUM2200_00_TEXT "\0"
+"\x01" ENUM2200_01_TEXT "\0"
+"\x02" ENUM2200_02_TEXT
+};
+const char ENUM2205[] PROGMEM_LATEST = {
+"\x00" ENUM2205_00_TEXT "\0"
+"\x01" ENUM2205_01_TEXT "\0"
+"\x02" ENUM2205_02_TEXT
+};
+const char ENUM2206[] PROGMEM_LATEST = {
+"\x00" ENUM2206_00_TEXT "\0"
+"\x01" ENUM2206_01_TEXT
+};
+const char ENUM2291[] PROGMEM_LATEST = {
+"\x00" ENUM2291_00_TEXT "\0"
+"\x01" ENUM2291_01_TEXT
+};
 
 const char ENUM2305[] PROGMEM_LATEST = {
-"\x00 Nur Heizbetrieb\0"
-"\x01 Heiz- und Trinkwasserbetrieb"
+"\x00" ENUM2305_00_TEXT "\0"
+"\x01" ENUM2305_01_TEXT
 };
 
 const char ENUM2305_2[] PROGMEM_LATEST = {
-"\x01 Nur Heizbetrieb\0"
-"\x02 Heiz- und Trinkwasserbetrieb"
+"\x01" ENUM2305_2_01_TEXT "\0"
+"\x02" ENUM2305_2_02_TEXT
 };
 
 const char ENUM2320[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Bedarf\0"
-"\x02 Kesselsollwert\0"
-"\x03 Temperaturhub Nenn\0"
-"\x04 Brennerleistung"
+"\x00" ENUM2320_00_TEXT "\0"
+"\x01" ENUM2320_01_TEXT "\0"
+"\x02" ENUM2320_02_TEXT "\0"
+"\x03" ENUM2320_03_TEXT "\0"
+"\x04" ENUM2320_04_TEXT
 };
 
 const char ENUM2450[] PROGMEM_LATEST = {
-"\x00 Aus\0"
-"\x01 Nur Heizbetrieb\0"
-"\x02 Nur Trinkwasserbetrieb\0"
-"\x03 Heiz- und Trinkwasserbetrieb"
+"\x00" ENUM2450_00_TEXT "\0"
+"\x01" ENUM2450_01_TEXT "\0"
+"\x02" ENUM2450_02_TEXT "\0"
+"\x03" ENUM2450_03_TEXT
 };
 
 const char ENUM2480[] PROGMEM_LATEST = {
-"\x00 Startverhinderung\0"
-"\xff Störstellung"
+"\x00" ENUM2480_00_TEXT "\0"
+"\xff" ENUM2480_ff_TEXT
 };
 
 const char ENUM2500[] PROGMEM_LATEST = {
-"\x00 Startverhinderung\0"
-"\x01 Störstellung"
+"\x00" ENUM2500_00_TEXT "\0"
+"\x01" ENUM2500_01_TEXT
 };
 
 // Sitherm Pro
 const char ENUM2706[] PROGMEM_LATEST = {
-"\x00 Gesperrt\0"
-"\x01 Prüfmodus Schrittmotor\0"
-"\x02 Start manueller Drifttest\0"
-"\x03 Standby\0"                     // verifiziert an WMS (LP)
-"\x04 Initialisierung\0"
-"\x05 Zünden\0"
-"\x06 Kaltstarterkennung\0"
-"\x07 Anregelung\0"                  // verifiziert an WMS (LP)
-"\x08 Stabilisierung\0"              // verifiziert an WMS (LP)
-"\x09 Regelt\0"                      // verifiziert an WMS (LP)
-"\x0a Exotengasbetrieb\0"
-"\x0b Drifttest aktiv\0"
-"\x0c Drifttest fällig\0"
-"\x0d Drifttest überfällig\0"
-"\x12 ADA Intervall 1 fällig"        // verifiziert an WMS (LP)
+"\x00" ENUM2706_00_TEXT "\0"
+"\x01" ENUM2706_01_TEXT "\0"
+"\x02" ENUM2706_02_TEXT "\0"
+"\x03" ENUM2706_03_TEXT "\0"                     // verifiziert an WMS (LP)
+"\x04" ENUM2706_04_TEXT "\0"
+"\x05" ENUM2706_05_TEXT "\0"
+"\x06" ENUM2706_06_TEXT "\0"
+"\x07" ENUM2706_07_TEXT "\0"                  // verifiziert an WMS (LP)
+"\x08" ENUM2706_08_TEXT "\0"              // verifiziert an WMS (LP)
+"\x09" ENUM2706_09_TEXT "\0"                      // verifiziert an WMS (LP)
+"\x0a" ENUM2706_0a_TEXT "\0"
+"\x0b" ENUM2706_0b_TEXT "\0"
+"\x0c" ENUM2706_0c_TEXT "\0"
+"\x0d" ENUM2706_0d_TEXT "\0"
+"\x12" ENUM2706_12_TEXT        // verifiziert an WMS (LP)
 }; // todo Hinweis: x03, x07, x08, x12 sind definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM2721[] PROGMEM_LATEST = {
-"\x01 Erdgas\0"
-"\x02 Flüssiggas"
+"\x01" ENUM2721_01_TEXT "\0"
+"\x02" ENUM2721_02_TEXT
 }; // todo Hinweis: x01 Erdgas ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM2727[] PROGMEM_LATEST = {
-"\x01 Bereich 1\0"
-"\x02 Bereich 2\0"
-"\x03 Bereich 3"
+"\x01" ENUM2727_01_TEXT "\0"
+"\x02" ENUM2727_02_TEXT "\0"
+"\x03" ENUM2727_03_TEXT
 };
 
 const char ENUM2740[] PROGMEM_LATEST = {
-"\x00 Nein\0"
-"\x01 Alle Punkte\0"
-"\x02 Alle fälligen Punkte\0"
-"\x03 Punkt 1\0"
-"\x04 Punkt 2\0"
-"\x05 Punkt 3\0"
-"\x06 Punkt 4\0"
-"\x07 Punkt 5\0"
-"\x08 Punkt 6\0"
-"\x09 Punkt 7"
+"\x00" ENUM2740_00_TEXT "\0"
+"\x01" ENUM2740_01_TEXT "\0"
+"\x02" ENUM2740_02_TEXT "\0"
+"\x03" ENUM2740_03_TEXT "\0"
+"\x04" ENUM2740_04_TEXT "\0"
+"\x05" ENUM2740_05_TEXT "\0"
+"\x06" ENUM2740_06_TEXT "\0"
+"\x07" ENUM2740_07_TEXT "\0"
+"\x08" ENUM2740_08_TEXT "\0"
+"\x09" ENUM2740_09_TEXT
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM2749[] PROGMEM_LATEST = {
-"\x00 Nein\0"
-"\x01 Neue Elektrode\0"
-"\x02 Gebrauchte Elektrode"
+"\x00" ENUM2749_00_TEXT "\0"
+"\x01" ENUM2749_01_TEXT "\0"
+"\x02" ENUM2749_02_TEXT
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM2880[] PROGMEM_LATEST = {
-"\x02 Ergänzungsbetrieb HK"
+"\x02" ENUM2880_02_TEXT
 };
 
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
 const char ENUM2920[] PROGMEM_LATEST = {
-"\x00 Gesperrt\0"
-"\x01 Freigegeben"
+"\x00" ENUM2920_00_TEXT "\0"
+"\x01" ENUM2920_01_TEXT
 };
 
 // Energiezähler
 
 // "Durchflussmessung Wärme"
 const char ENUM3090[] PROGMEM_LATEST = {
-"\x00 Keine (Mit Eingang)"
+"\x00" ENUM3090_00_TEXT
 };
 
 const char ENUM3092[] PROGMEM_LATEST = {
-"\x00 kWh"
+"\x00" ENUM3092_00_TEXT
 };
 
 const char ENUM3095[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Mit Eingang H1\0"
-"\x02 Mit Eingang H2 Modul 1\0"
-"\x03 Mit Eingang H2 Modul 2\0"
-"\x04 Mit Eingang H2 Modul 3\0"
-"\x05 Mit Eingang H21 Modul 1\0"
-"\x06 Mit Eingang H21 Modul 2\0"
-"\x07 Mit Eingang H21 Modul 3\0"
-"\x08 Mit Eingang H22 Modul 1\0"
-"\x09 Mit Eingang H22 Modul 2\0"
-"\x0a Mit Eingang H22 Modul 3\0"
-"\x0b Mit Eingang H3\0"
-"\x0c Mit Eingang H31\0"
-"\x0d Mit Eingang H32"
+"\x00" ENUM3095_00_TEXT "\0"
+"\x01" ENUM3095_01_TEXT "\0"
+"\x02" ENUM3095_02_TEXT "\0"
+"\x03" ENUM3095_03_TEXT "\0"
+"\x04" ENUM3095_04_TEXT "\0"
+"\x05" ENUM3095_05_TEXT "\0"
+"\x06" ENUM3095_06_TEXT "\0"
+"\x07" ENUM3095_07_TEXT "\0"
+"\x08" ENUM3095_08_TEXT "\0"
+"\x09" ENUM3095_09_TEXT "\0"
+"\x0a" ENUM3095_0a_TEXT "\0"
+"\x0b" ENUM3095_0b_TEXT "\0"
+"\x0c" ENUM3095_0c_TEXT "\0"
+"\x0d" ENUM3095_0d_TEXT
 };
 // "Impulszählung Energie"
 const char ENUM3100[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Mit Eingang H1\0"
-"\x02 Mit Eingang H21 Modul 1\0"
-"\x03 Mit Eingang H21 Modul 2\0"
-"\x04 Mit Eingang H21 Modul 3\0"
-"\x05 Mit Eingang H22 Modul 1\0"
-"\x06 Mit Eingang H22 Modul 2\0"
-"\x07 Mit Eingang H22 Modul 3\0"
-"\x08 Mit Eingang H3\0"
-"\x09 Mit Eingang H31\0"
-"\x0a Mit Eingang H32"
+"\x00" ENUM3100_00_TEXT "\0"
+"\x01" ENUM3100_01_TEXT "\0"
+"\x02" ENUM3100_02_TEXT "\0"
+"\x03" ENUM3100_03_TEXT "\0"
+"\x04" ENUM3100_04_TEXT "\0"
+"\x05" ENUM3100_05_TEXT "\0"
+"\x06" ENUM3100_06_TEXT "\0"
+"\x07" ENUM3100_07_TEXT "\0"
+"\x08" ENUM3100_08_TEXT "\0"
+"\x09" ENUM3100_09_TEXT "\0"
+"\x0a" ENUM3100_0a_TEXT
 };
 // "Impulseinheit Energie"
 const char ENUM3102[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 kWh\0"
-"\x02 m3"
+"\x00" ENUM3102_00_TEXT "\0"
+"\x01" ENUM3102_01_TEXT "\0"
+"\x02" ENUM3102_02_TEXT
 };
 // "Zählung Intern Elektro Vorl’"
 const char ENUM3109[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Abgegebene Wärme\0"
-"\x02 Eingesetzte Energie\0"
-"\x03 Beide"
+"\x00" ENUM3109_00_TEXT "\0"
+"\x01" ENUM3109_01_TEXT "\0"
+"\x02" ENUM3109_02_TEXT "\0"
+"\x03" ENUM3109_03_TEXT
 };
 
 const char ENUM3192[] PROGMEM_LATEST = {
-"\x03 Beide"
+"\x03" ENUM3192_03_TEXT
 };
 
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 ?Spät ein, früh aus\0"
-"\x01 ?Spät ein, spät aus\0"
-"\x02 ?Früh ein, spät aus"
+"\x00" "?" ENUM3510_00_TEXT "\0"
+"\x01" "?" ENUM3510_01_TEXT "\0"
+"\x02" "?" ENUM3510_02_TEXT
 };
 const char ENUM3541[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 ?Keine\0"
-"\x01 ?Erster\0"
-"\x02 Letzter"
+"\x00" "?" ENUM3541_00_TEXT "\0"
+"\x01" "?" ENUM3541_01_TEXT "\0"
+"\x02" ENUM3541_02_TEXT
 };
 const char ENUM3544[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 ?Erzeuger 1\0"
-"\x01 ?Erzeuger 2\0"
-"\x02 ?Erzeuger 3\0"
-"\x03 ?Erzeuger 4\0"
-"\x04 ?Erzeuger 5\0"
-"\x05 ?Erzeuger 6\0"
-"\x06 ?Erzeuger 7\0"
-"\x07 ?Erzeuger 8\0"
-"\x08 ?Erzeuger 9\0"
-"\x09 ?Erzeuger 10\0"
-"\x0a ?Erzeuger 11\0"
-"\x0b ?Erzeuger 12\0"
-"\x0c ?Erzeuger 13\0"
-"\x0d ?Erzeuger 14\0"
-"\x0e ?Erzeuger 15\0"
-"\x0f ?Erzeuger 16"
+"\x00" "?" ENUM3544_00_TEXT "\0"
+"\x01" "?" ENUM3544_01_TEXT "\0"
+"\x02" "?" ENUM3544_02_TEXT "\0"
+"\x03" "?" ENUM3544_03_TEXT "\0"
+"\x04" "?" ENUM3544_04_TEXT "\0"
+"\x05" "?" ENUM3544_05_TEXT "\0"
+"\x06" "?" ENUM3544_06_TEXT "\0"
+"\x07" "?" ENUM3544_07_TEXT "\0"
+"\x08" "?" ENUM3544_08_TEXT "\0"
+"\x09" "?" ENUM3544_09_TEXT "\0"
+"\x0a" "?" ENUM3544_0a_TEXT "\0"
+"\x0b" "?" ENUM3544_0b_TEXT "\0"
+"\x0c" "?" ENUM3544_0c_TEXT "\0"
+"\x0d" "?" ENUM3544_0d_TEXT "\0"
+"\x0e" "?" ENUM3544_0e_TEXT "\0"
+"\x0f" "?" ENUM3544_0f_TEXT
 };
 
 // Solar
-const char ENUM3822[] PROGMEM_LATEST = {"\x00 Kein\0\x01 Trinkwasserspeicher\0\x02 Pufferspeicher"};
-const char ENUM3880[] PROGMEM_LATEST = {"\x01 Kein\0\x02 Ethylenglykol\0\x03 Propylenglykol\0\x04 Ethylen- und Propylenglykol"};
-const char ENUM3887[] PROGMEM_LATEST = {"\x01 Kein\0\x02 kWh\0\x03 Liter"};
+const char ENUM3822[] PROGMEM_LATEST = {
+"\x00" ENUM3822_00_TEXT "\0"
+"\x01" ENUM3822_01_TEXT "\0"
+"\x02" ENUM3822_02_TEXT
+};
+const char ENUM3880[] PROGMEM_LATEST = {
+"\x01" ENUM3880_01_TEXT "\0"
+"\x02" ENUM3880_02_TEXT "\0"
+"\x03" ENUM3880_03_TEXT "\0"
+"\x04" ENUM3880_04_TEXT
+};
+const char ENUM3887[] PROGMEM_LATEST = {
+"\x01" ENUM3887_01_TEXT "\0"
+"\x02" ENUM3887_02_TEXT "\0"
+"\x03" ENUM3887_03_TEXT
+};
 
 //Feststoffkessel
 const char ENUM4133[] PROGMEM_LATEST = {
-"\x01 Trinkwasserfühler B3\0"
-"\x02 Trinkwasserfühler B31\0"
-"\x03 Pufferspeicherfühler B4\0"
-"\x04 Pufferspeicherfühler B41\0"
-"\x05 Vorlaufsollwert\0"
-"\x06 Sollwert Minimum"
+"\x01" ENUM4133_01_TEXT "\0"
+"\x02" ENUM4133_02_TEXT "\0"
+"\x03" ENUM4133_03_TEXT "\0"
+"\x04" ENUM4133_04_TEXT "\0"
+"\x05" ENUM4133_05_TEXT "\0"
+"\x06" ENUM4133_06_TEXT
 };
 
 // Pufferspeicher
-const char ENUM4720[] PROGMEM_LATEST = {"\x00 Keine\0\x01 Mit B4\0\x02 Mit B4 und B42/41"};
-const char ENUM4757[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
-const char ENUM4795[] PROGMEM_LATEST = {"\x01 Mit B4\0\x02 Mit B41\0\x03 Mit B42"};
-const char ENUM4796[] PROGMEM_LATEST = {"\x01 Temperaturabsenkung\0\x02 Temperaturanhebung"};
-const char ENUM4810[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Heizbetrieb\0\x02 Immer"};
-const char ENUM4813[] PROGMEM_LATEST = {"\x01 Mit B4\0\x02 Mit B42/B41"};
+const char ENUM4720[] PROGMEM_LATEST = {
+"\x00" ENUM4720_00_TEXT "\0"
+"\x01" ENUM4720_01_TEXT "\0"
+"\x02" ENUM4720_02_TEXT
+};
+const char ENUM4757[] PROGMEM_LATEST = {
+"\x00" ENUM4757_00_TEXT "\0"
+"\x01" ENUM4757_01_TEXT "\0"
+"\x02" ENUM4757_02_TEXT
+};
+const char ENUM4795[] PROGMEM_LATEST = {
+"\x01" ENUM4795_01_TEXT "\0"
+"\x02" ENUM4795_02_TEXT "\0"
+"\x03" ENUM4795_03_TEXT
+};
+const char ENUM4796[] PROGMEM_LATEST = {
+"\x01" ENUM4796_01_TEXT "\0"
+"\x02" ENUM4796_02_TEXT
+};
+const char ENUM4810[] PROGMEM_LATEST = {
+"\x00" ENUM4810_00_TEXT "\0"
+"\x01" ENUM4810_01_TEXT "\0"
+"\x02" ENUM4810_02_TEXT
+};
+const char ENUM4813[] PROGMEM_LATEST = {
+"\x01" ENUM4813_01_TEXT "\0"
+"\x02" ENUM4813_02_TEXT
+};
 // Trinkwasserspeicher
-const char ENUM5010[] PROGMEM_LATEST = {"\x00 Einmal/Tag\0\xff Mehrmals/Tag"};
-const char ENUM5022[] PROGMEM_LATEST = {"\x01 Mit B3\0\x02 Mit B3/B31\0\x03 Mit B3, Legio B3/31"};
-const char ENUM5022_2[] PROGMEM_LATEST = {"\x01 Nachladen\0\x02 Durchladen\0\x03 Durchladen Legio\0\x04 Durchladen 1. Ladung\0\x05 Durchladen Legio und 1. Ladung"};
-const char ENUM5040[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Immer\0\x02 Automatisch"};
-const char ENUM5057[] PROGMEM_LATEST = {"\x00 Aus\0\x01 Sommer\0\x02 Immer"};
-const char ENUM5060[] PROGMEM_LATEST = {"\x01 Ersatz\0\x02 Sommer\0\x03 Immer"};
-const char ENUM5061[] PROGMEM_LATEST = {"\x01 24h/Tag\0\x02 Trinkwasser Freigabe\0\x03 Zeitprogramm 4/TWW"};
-const char ENUM5062[] PROGMEM_LATEST = {"\x01 Externer Thermostat\0\x02 Trinkwasserfühler"};
-const char ENUM5130[] PROGMEM_LATEST = {"\x00 Immer\0\x01 Warmwasser Freigabe"};
-const char ENUM5131[] PROGMEM_LATEST = {"\x00 Trinkwasserfühler B3\0\x01 Trinkwasserfühler B31"};
+const char ENUM5010[] PROGMEM_LATEST = {
+"\x00" ENUM5010_00_TEXT "\0"
+"\xff" ENUM5010_ff_TEXT
+};
+const char ENUM5022[] PROGMEM_LATEST = {
+"\x01" ENUM5022_01_TEXT "\0"
+"\x02" ENUM5022_02_TEXT "\0"
+"\x03" ENUM5022_03_TEXT
+};
+const char ENUM5022_2[] PROGMEM_LATEST = {
+"\x01" ENUM5022_2_01_TEXT "\0"
+"\x02" ENUM5022_2_02_TEXT "\0"
+"\x03" ENUM5022_2_03_TEXT "\0"
+"\x04" ENUM5022_2_04_TEXT "\0"
+"\x05" ENUM5022_2_05_TEXT
+};
+const char ENUM5040[] PROGMEM_LATEST = {
+"\x00" ENUM5040_00_TEXT "\0"
+"\x01" ENUM5040_01_TEXT "\0"
+"\x02" ENUM5040_02_TEXT
+};
+const char ENUM5057[] PROGMEM_LATEST = {
+"\x00" ENUM5057_00_TEXT "\0"
+"\x01" ENUM5057_01_TEXT "\0"
+"\x02" ENUM5057_02_TEXT
+};
+const char ENUM5060[] PROGMEM_LATEST = {
+"\x01" ENUM5060_01_TEXT "\0"
+"\x02" ENUM5060_02_TEXT "\0"
+"\x03" ENUM5060_03_TEXT
+};
+const char ENUM5061[] PROGMEM_LATEST = {
+"\x01" ENUM5061_01_TEXT "\0"
+"\x02" ENUM5061_02_TEXT "\0"
+"\x03" ENUM5061_03_TEXT
+};
+const char ENUM5062[] PROGMEM_LATEST = {
+"\x01" ENUM5062_01_TEXT "\0"
+"\x02" ENUM5062_02_TEXT
+};
+const char ENUM5130[] PROGMEM_LATEST = {
+"\x00" ENUM5130_00_TEXT "\0"
+"\x01" ENUM5130_01_TEXT
+};
+const char ENUM5131[] PROGMEM_LATEST = {
+"\x00" ENUM5131_00_TEXT "\0"
+"\x01" ENUM5131_01_TEXT
+};
 // Konfiguration
 const char ENUM5700[] PROGMEM_LATEST = { //FUJITSU
-"\x01 Voreinstellung 1 : 1 Heizkreislauf mit oder ohne Heizwiderstand und mit oder ohne WW.\0"
-"\x02 Voreinstellung 2 : 2 Heizkreisläufe mit oder ohne Heizwiderstand und mit oder ohne WW.\0"
-"\x03 Voreinstellung 3 : Übernahme vom Heizkessel, 1 Heizkreislau mit oder ohne WW.\0"
-"\x04 Voreinstellung 4 : Übernahme vom Heizkessel, 2 Heizkreisläufe mit oder ohne WW.\0"
-"\x05 Nicht verwendet"
+"\x01" ENUM5700_01_TEXT "\0"
+"\x02" ENUM5700_02_TEXT "\0"
+"\x03" ENUM5700_03_TEXT "\0"
+"\x04" ENUM5700_04_TEXT "\0"
+"\x05" ENUM5700_05_TEXT
 };
 const char ENUM5711[] PROGMEM_LATEST = { //FUJITSU
-"\x00 Aus\0"
-"\x01 4-Leitersystem\0"
-"\x02 2-Leitersystem"
+"\x00" ENUM5711_00_TEXT "\0"
+"\x01" ENUM5711_01_TEXT "\0"
+"\x02" ENUM5711_02_TEXT
 };
 
 const char ENUM5712[] PROGMEM_LATEST = {
-"\x01 Heizen\0"
-"\x02 Kühlen\0"
-"\x03 Heizen+Kühlen"
+"\x01" ENUM5712_01_TEXT "\0"
+"\x02" ENUM5712_02_TEXT "\0"
+"\x03" ENUM5712_03_TEXT
 };
 
 const char ENUM5715[] PROGMEM_LATEST = {
-"\x00 Aus\0"
-"\x01 Leitersystem Kühlen\0"
-"\x03 2-Leitersystem Kühlen"
+"\x00" ENUM5715_00_TEXT "\0"
+"\x01" ENUM5715_01_TEXT "\0"
+"\x03" ENUM5715_03_TEXT
 };
 
-const char ENUM5730[] PROGMEM_LATEST = {"\x00 Fühler\0\x01 Thermostat"};
-const char ENUM5731[] PROGMEM_LATEST = {"\x00 kein\0\x01 Ladepumpe\0\x02 Umlenkventil"};
-const char ENUM5734[] PROGMEM_LATEST = {"\x00 Letzte Anforderung\0\x01 Heizkreis\0\x02 Trinkwasser"};
-const char ENUM5760[] PROGMEM_LATEST = {"\x00 Vor Pufferspeicher\0\x01 Nach Pufferspeicher"};
+const char ENUM5730[] PROGMEM_LATEST = {
+"\x00" ENUM5730_00_TEXT "\0"
+"\x01" ENUM5730_01_TEXT
+};
+const char ENUM5731[] PROGMEM_LATEST = {
+"\x00" ENUM5731_00_TEXT "\0"
+"\x01" ENUM5731_01_TEXT "\0"
+"\x02" ENUM5731_02_TEXT
+};
+const char ENUM5734[] PROGMEM_LATEST = {
+"\x00" ENUM5734_00_TEXT "\0"
+"\x01" ENUM5734_01_TEXT "\0"
+"\x02" ENUM5734_02_TEXT
+};
+const char ENUM5760[] PROGMEM_LATEST = {
+"\x00" ENUM5760_00_TEXT "\0"
+"\x01" ENUM5760_01_TEXT
+};
 
 const char ENUM5761[] PROGMEM_LATEST = {
-"\x01\x01 Zonen mit Zubringerpumpe\0"
-"\x02\x02 HK1 mit Zubringerpumpe\0"
-"\x04\x04 HK2 mit Zubringerpumpe\0"
-"\x08\x08 TWW mit Zubringerpumpe"
+"\x01\x01" ENUM5761_01_01_TEXT "\0"
+"\x02\x02" ENUM5761_02_02_TEXT "\0"
+"\x04\x04" ENUM5761_04_04_TEXT "\0"
+"\x08\x08" ENUM5761_08_08_TEXT
 };
 
 const char ENUM5770[] PROGMEM_LATEST = {
-"\x00 Kein Erzeuger oder PPS-BMU\0"
-"\x01 1-stufig\0"
-"\x02 2-stufig\0"
-"\x03 Modulierend 3-Punkt Luftklappenantrieb\0"
-"\x04 Modulierend 2-Punkt Luftklappenantrieb\0"
-"\x05 Kaskade (zwei 1-stufige Brenner)"
+"\x00" ENUM5770_00_TEXT "\0"
+"\x01" ENUM5770_01_TEXT "\0"
+"\x02" ENUM5770_02_TEXT "\0"
+"\x03" ENUM5770_03_TEXT "\0"
+"\x04" ENUM5770_04_TEXT "\0"
+"\x05" ENUM5770_05_TEXT
 };
 
 const char ENUM5774[] PROGMEM_LATEST = {
-  "\x00 Alle Anforderungen\0"
+"\x00" ENUM5774_00_TEXT "\0"
   "\xFF Nur Anforderung HK1/TWW"};
 
 const char ENUM5806[] PROGMEM_LATEST = { //FUJITSU
-"\x01 3-stufig\0"
-"\x02 2-stufig ausschliessend\0"
-"\x03 2-stufig ergänzend\0"
-"\x04 Modulierend UX"
+"\x01" ENUM5806_01_TEXT "\0"
+"\x02" ENUM5806_02_TEXT "\0"
+"\x03" ENUM5806_03_TEXT "\0"
+"\x04" ENUM5806_04_TEXT
 };
-const char ENUM5840[] PROGMEM_LATEST = {"\x00 Ladepumpe\0\x01 Umlenkventil"};
-const char ENUM5841[] PROGMEM_LATEST = {"\x00 Gemeinsam\0\x01 Trinkwasserspeicher\0\x02 Pufferspeicher"};
+const char ENUM5840[] PROGMEM_LATEST = {
+"\x00" ENUM5840_00_TEXT "\0"
+"\x01" ENUM5840_01_TEXT
+};
+const char ENUM5841[] PROGMEM_LATEST = {
+"\x00" ENUM5841_00_TEXT "\0"
+"\x01" ENUM5841_01_TEXT "\0"
+"\x02" ENUM5841_02_TEXT
+};
 
 // Konfiguration - Relaisausgang QX1
 const char ENUM5890[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x01 Zirkulationspumpe Q4\0"
-"\x02 Elektroeinsatz TWW K6\0"
-"\x03 Kollektorpumpe Q5\0"
-"\x04 H1-Pumpe Q15\0"
-"\x05 Kesselpumpe Q1\0"
-"\x06 Bypasspumpe Q12\0"
-"\x07 Alarmausgang K10\0"
-"\x08 2.Pumpenstufe HK1 Q21\0"
-"\x09 2.Pumpenstufe HK2 Q22\0"
-"\x0a 2.Pumpenstufe HKP Q23\0"
-"\x0b Heizkreispumpe HKP Q20\0"
-"\x0c H2-Pumpe Q18\0"
-"\x0d Zubringerpumpe Q14\0"
-"\x0e Erzeugersperrventil Y4\0"
-"\x0f Feststoffkesselpumpe Q10\0"
-"\x10 Zeitprogramm 5 K13\0"
-"\x11 Pufferrücklaufventil Y15\0"
-"\x12 Solarpumpe ext. Tauscher K9\0"
-"\x13 Solarstellglied Puffer K8\0"
-"\x14 Solarstellglied Schw'bad K18\0"
-"\x15 Kollektorpumpe 2 Q16\0"
-"\x16 H3-Pumpe Q19\0"
-"\x17 Abgasrelais K17\0"
-"\x19 Kaskadenpumpe Q25\0"
-"\x1a Speicherumladepumpe Q11\0"
-"\x1b TWW Durchmischpumpe Q35\0"
-"\x1c TWW Zwisch'kreispumpe Q33\0"
-"\x1d Wärmeanforderung K27\0"
-"\x21 Heizkreispumpe HK1 Q2\0"
-"\x28 Meldeausgang K35\0"
-"\x29 Betriebsmeldung K36"
+"\x00" ENUM5890_00_TEXT "\0"
+"\x01" ENUM5890_01_TEXT "\0"
+"\x02" ENUM5890_02_TEXT "\0"
+"\x03" ENUM5890_03_TEXT "\0"
+"\x04" ENUM5890_04_TEXT "\0"
+"\x05" ENUM5890_05_TEXT "\0"
+"\x06" ENUM5890_06_TEXT "\0"
+"\x07" ENUM5890_07_TEXT "\0"
+"\x08" ENUM5890_08_TEXT "\0"
+"\x09" ENUM5890_09_TEXT "\0"
+"\x0a" ENUM5890_0a_TEXT "\0"
+"\x0b" ENUM5890_0b_TEXT "\0"
+"\x0c" ENUM5890_0c_TEXT "\0"
+"\x0d" ENUM5890_0d_TEXT "\0"
+"\x0e" ENUM5890_0e_TEXT "\0"
+"\x0f" ENUM5890_0f_TEXT "\0"
+"\x10" ENUM5890_10_TEXT "\0"
+"\x11" ENUM5890_11_TEXT "\0"
+"\x12" ENUM5890_12_TEXT "\0"
+"\x13" ENUM5890_13_TEXT "\0"
+"\x14" ENUM5890_14_TEXT "\0"
+"\x15" ENUM5890_15_TEXT "\0"
+"\x16" ENUM5890_16_TEXT "\0"
+"\x17" ENUM5890_17_TEXT "\0"
+"\x19" ENUM5890_19_TEXT "\0"
+"\x1a" ENUM5890_1a_TEXT "\0"
+"\x1b" ENUM5890_1b_TEXT "\0"
+"\x1c" ENUM5890_1c_TEXT "\0"
+"\x1d" ENUM5890_1d_TEXT "\0"
+"\x21" ENUM5890_21_TEXT "\0"
+"\x28" ENUM5890_28_TEXT "\0"
+"\x29" ENUM5890_29_TEXT
 };
 
 const char ENUM5890_2[] PROGMEM_LATEST = {
-"\x00 Keine Funktion\0"
-"\x01 Heizkreispumpe 2\0"
-"\x02 Zubringerpumpe nach BW\0"
-"\x03 Zubringerpumpe vor BW\0"
-"\x04 Zubringerpumpe bei ext. Anforderung\0"
-"\x05 Brauchwasser-Zirkulationspumpe\0"
-"\x06 Brauchwasser-Elektroeinsatz\0"
-"\x07 Solar-Pumpe\0"
-"\x08 H1 Pumpe\0"
-"\x09 Kesselpumpe\0"
-"\x0a Kessel-Bypasspumpe\0"
-"\x0b Alarmausgang"
+"\x00" ENUM5890_2_00_TEXT "\0"
+"\x01" ENUM5890_2_01_TEXT "\0"
+"\x02" ENUM5890_2_02_TEXT "\0"
+"\x03" ENUM5890_2_03_TEXT "\0"
+"\x04" ENUM5890_2_04_TEXT "\0"
+"\x05" ENUM5890_2_05_TEXT "\0"
+"\x06" ENUM5890_2_06_TEXT "\0"
+"\x07" ENUM5890_2_07_TEXT "\0"
+"\x08" ENUM5890_2_08_TEXT "\0"
+"\x09" ENUM5890_2_09_TEXT "\0"
+"\x0a" ENUM5890_2_0a_TEXT "\0"
+"\x0b" ENUM5890_2_0b_TEXT
 };
 
 #define ENUM5891 ENUM5890               // Relaisausgang QX2
@@ -2825,74 +3548,74 @@ const char ENUM5890_2[] PROGMEM_LATEST = {
 // The numerical values are undocumented in the Broetje Systemhandbuch
 // Values here are hypothetical.
 const char ENUM5895[] PROGMEM_LATEST = {        // Relaisausgang QX5
-"\x00 ?Kein\0"
-"\x01 ?Heizkreispumpe HK1 Q2\0"
-"\x02 ?Trinkwasserstellglied Q3\0"
-"\x03 ?Verdichterstufe 2 K2\0"
-"\x04 ?Prozessumkehrventil Y22\0"
-"\x05 ?Heissgastemperatur K31\0"
-"\x06 ?Elektroeinsatz1 Vorlauf K25\0"
-"\x07 ?Elektroeinsatz2 Vorlauf K26\0"
-"\x07 ?Umlenkventil Kühl Quelle Y28\0"
-"\x08 ?Zirkulationspumpe Q4\0"
-"\x09 ?Elektroeinsatz TWW K6\0"
-"\x0a ?Elektroeinsatz Puffer K16\0"
-"\x0b ?Kollektorpumpe Q5\0"
-"\x0c ?H1-Pumpe Q15\0"
-"\x0d ?Kesselpumpe Q1\0"
-"\x0e ?Bypasspumpe Q12\0"
-"\x0f ?Alarmausgang K10\0"
-"\x10 ?2. Pumpenstufe HK1 Q21\0"
-"\x11 ?2. Pumpenstufe HK2 Q22\0"
-"\x12 ?2. Pumpenstufe HKP Q23\0"
-"\x13 ?Heizkreispumpe HKP Q20\0"
-"\x14 ?H2-Pumpe Q18\0"
-"\x15 ?Zubringerpumpe Q14\0"
-"\x16 ?Feststoffkesselpumpe Q10\0"
-"\x17 ?Zeitprogramm 5 K13\0"
-"\x18 ?Pufferrücklaufventil Y15\0"
-"\x19 ?Solarpumpe ext. Tauscher\0"
-"\x1a ?Solarstellglied Puffer K8\0"
-"\x1b ?Solarstellglied Schw'bad K18\0"
-"\x1c ?Kollektorpumpe 2 Q16\0"
-"\x1d ?H3-Pumpe Q19\0"
-"\x1e ?Abgasrelais K17\0"
-"\x1f ?Umlenkventil Kühlen Y21\0"
-"\x20 ?Umlenkventil Kühl Quelle Y28\0"
-"\x21 ?Quell'pumpe Q8\0"
-"\x22 ?Ventilat K19\0"
-"\x23 ?Kondensatorpumpe Q9\0"
-"\x24 ?Luftentfeuchter K29\0"
-"\x25 ?Kaskadenpumpe Q25\0"
-"\x26 ?Speicherumladepumpe Q11\0"
-"\x27 ?TWW Durchmischpumpe Q35\0"
-"\x28 ?TWW Zwisch'kreispumpe Q33\0"
-"\x29 ?Wärmeanforderung K27\0"
-"\x2a ?Kälteanforderung K28\0"
-"\x2b ?Verdichterstufe 1 K1\0"
-"\x2c ?Zusatzerzeuger Regelung K32"
+"\x00" "?" ENUM5895_00_TEXT "\0"
+"\x01" "?" ENUM5895_01_TEXT "\0"
+"\x02" "?" ENUM5895_02_TEXT "\0"
+"\x03" "?" ENUM5895_03_TEXT "\0"
+"\x04" "?" ENUM5895_04_TEXT "\0"
+"\x05" "?" ENUM5895_05_TEXT "\0"
+"\x06" "?" ENUM5895_06_TEXT "\0"
+"\x07" "?" ENUM5895_07_TEXT "\0"
+"\x08" "?" ENUM5895_08_TEXT "\0"
+"\x09" "?" ENUM5895_09_TEXT "\0"
+"\x0a" "?" ENUM5895_0a_TEXT "\0"
+"\x0b" "?" ENUM5895_0b_TEXT "\0"
+"\x0c" "?" ENUM5895_0c_TEXT "\0"
+"\x0d" "?" ENUM5895_0d_TEXT "\0"
+"\x0e" "?" ENUM5895_0e_TEXT "\0"
+"\x0f" "?" ENUM5895_0f_TEXT "\0"
+"\x10" "?" ENUM5895_10_TEXT "\0"
+"\x11" "?" ENUM5895_11_TEXT "\0"
+"\x12" "?" ENUM5895_12_TEXT "\0"
+"\x13" "?" ENUM5895_13_TEXT "\0"
+"\x14" "?" ENUM5895_14_TEXT "\0"
+"\x15" "?" ENUM5895_15_TEXT "\0"
+"\x16" "?" ENUM5895_16_TEXT "\0"
+"\x17" "?" ENUM5895_17_TEXT "\0"
+"\x18" "?" ENUM5895_18_TEXT "\0"
+"\x19" "?" ENUM5895_19_TEXT "\0"
+"\x1a" "?" ENUM5895_1a_TEXT "\0"
+"\x1b" "?" ENUM5895_1b_TEXT "\0"
+"\x1c" "?" ENUM5895_1c_TEXT "\0"
+"\x1d" "?" ENUM5895_1d_TEXT "\0"
+"\x1e" "?" ENUM5895_1e_TEXT "\0"
+"\x1f" "?" ENUM5895_1f_TEXT "\0"
+"\x20" "?" ENUM5895_20_TEXT "\0"
+"\x21" "?" ENUM5895_21_TEXT "\0"
+"\x22" "?" ENUM5895_22_TEXT "\0"
+"\x23" "?" ENUM5895_23_TEXT "\0"
+"\x24" "?" ENUM5895_24_TEXT "\0"
+"\x25" "?" ENUM5895_25_TEXT "\0"
+"\x26" "?" ENUM5895_26_TEXT "\0"
+"\x27" "?" ENUM5895_27_TEXT "\0"
+"\x28" "?" ENUM5895_28_TEXT "\0"
+"\x29" "?" ENUM5895_29_TEXT "\0"
+"\x2a" "?" ENUM5895_2a_TEXT "\0"
+"\x2b" "?" ENUM5895_2b_TEXT "\0"
+"\x2c" "?" ENUM5895_2c_TEXT "\0"
+"\x2d" "?" ENUM5895_2d_TEXT
 };
 
 // Konfiguration - Thision 5922 Relaisausgang 1 RelCl
 const char ENUM5920[] PROGMEM_LATEST = {
-"\x00 Default, Keine Funktion\0"
-"\x01 Meldeausgang\0"
-"\x02 Alarmausgang\0"
-"\x03 Betriebsmeldung\0"
-"\x04 Externer Trafo\0"
-"\x05 Heizkreispumpe HK2 (Q2Y2)\0"
-"\x06 Zirkulationspumpe\0"
-"\x07 Torschleierfunktion\0"
-"\x08 Pumpe Hydraulische Weiche\0"
-"\x09 Zubringerpumpe Q8\0"
-"\x0a Grundfunktion K2\0"
-"\x0b Trinkwasserdurchladung\0"
-"\x0c Schwelle Analogsignal\0"
-"\x0d Abgasklappe\0"
-"\x0e Kollektorpumpe\0"
-"\x0f Gebläseabschaltung\0"
-"\x10 Pumpe Q1\0"
-"\x11 TWW Durchmischpumpe Q35"
+"\x00" ENUM5920_00_TEXT "\0"
+"\x01" ENUM5920_01_TEXT "\0"
+"\x02" ENUM5920_02_TEXT "\0"
+"\x03" ENUM5920_03_TEXT "\0"
+"\x04" ENUM5920_04_TEXT "\0"
+"\x05" ENUM5920_05_TEXT "\0"
+"\x06" ENUM5920_06_TEXT "\0"
+"\x07" ENUM5920_07_TEXT "\0"
+"\x08" ENUM5920_08_TEXT "\0"
+"\x09" ENUM5920_09_TEXT "\0"
+"\x0a" ENUM5920_0a_TEXT "\0"
+"\x0b" ENUM5920_0b_TEXT "\0"
+"\x0c" ENUM5920_0c_TEXT "\0"
+"\x0d" ENUM5920_0d_TEXT "\0"
+"\x0e" ENUM5920_0e_TEXT "\0"
+"\x0f" ENUM5920_0f_TEXT "\0"
+"\x10" ENUM5920_10_TEXT "\0"
+"\x11" ENUM5920_11_TEXT
 };
 #define ENUM5922 ENUM5920               // Thision 5923 Relaisausgang 2 RelCl
 #define ENUM5923 ENUM5920               // Thision 5923 Relaisausgang 2 RelCl
@@ -2903,24 +3626,24 @@ const char ENUM5920[] PROGMEM_LATEST = {
 
 // Konfiguration - Fuehlereingang BX1
 const char ENUM5930[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x01 Trinkwasserfühler B31\0"
-"\x02 Kollektorfühler B6\0"
-"\x03 Rücklauffühler B7\0"
-"\x04 TWW Zirkulationsfühler B39\0"
-"\x05 Pufferspeicherfühler B4\0"
-"\x06 Pufferspeicherfühler B41\0"
-"\x07 Abgastemperaturfühler B8\0"
-"\x08 Schienenvorlauffühler B10\0"
-"\x09 Feststoffkesselfühler B22\0"
-"\x0a TWW Ladefühler B36\0"
-"\x0b Pufferspeicherfühler B42\0"
-"\x0c Schienenrücklauffühler B73\0"
-"\x0d Kaskadenrücklauffühler B70\0"
-"\x0e Schwimmbadfühler B13\0"
-"\x0f Kollektorfühler 2 B61\0"
-"\x10 Solarvorlauffühler B63\0"
-"\x11 Solarrücklauffühler B64"
+"\x00" ENUM5930_00_TEXT "\0"
+"\x01" ENUM5930_01_TEXT "\0"
+"\x02" ENUM5930_02_TEXT "\0"
+"\x03" ENUM5930_03_TEXT "\0"
+"\x04" ENUM5930_04_TEXT "\0"
+"\x05" ENUM5930_05_TEXT "\0"
+"\x06" ENUM5930_06_TEXT "\0"
+"\x07" ENUM5930_07_TEXT "\0"
+"\x08" ENUM5930_08_TEXT "\0"
+"\x09" ENUM5930_09_TEXT "\0"
+"\x0a" ENUM5930_0a_TEXT "\0"
+"\x0b" ENUM5930_0b_TEXT "\0"
+"\x0c" ENUM5930_0c_TEXT "\0"
+"\x0d" ENUM5930_0d_TEXT "\0"
+"\x0e" ENUM5930_0e_TEXT "\0"
+"\x0f" ENUM5930_0f_TEXT "\0"
+"\x10" ENUM5930_10_TEXT "\0"
+"\x11" ENUM5930_11_TEXT
 };
 
 #define ENUM5931 ENUM5930               // Konfiguration - Fühlereingang BX 2
@@ -2932,138 +3655,141 @@ const char ENUM5930[] PROGMEM_LATEST = {
 
 // Konfiguration - Funktion Eingang H1 (LOGON B)
 const char ENUM5950[] PROGMEM_LATEST = {
-"\x01 BA-Umschaltung HK's + TWW\0"
-"\x02 BA-Umschaltung HK's\0"
-"\x03 BA-Umschaltung HK1\0"
-"\x04 BA-Umschaltung HK2\0"
-"\x05 BA-Umschaltung HKP\0"
-"\x06 Erzeugersperre\0"
-"\x07 Fehler- / Alarmmeldung\0"
-"\x08 Minimaler Vorlaufsollwert\0"
-"\x09 Übertemperaturableitung\0"
-"\x0a Freigabe Schwimmbad\0"
-"\x0b Taupunktwächter\0"
-"\x0c Vorlaufsollw'anhebung Hygro\0"
-"\x0d Wärmeanforderung 10V\0"
-"\x0e Druckmessung 10V"
+"\x01" ENUM5950_01_TEXT "\0"
+"\x02" ENUM5950_02_TEXT "\0"
+"\x03" ENUM5950_03_TEXT "\0"
+"\x04" ENUM5950_04_TEXT "\0"
+"\x05" ENUM5950_05_TEXT "\0"
+"\x06" ENUM5950_06_TEXT "\0"
+"\x07" ENUM5950_07_TEXT "\0"
+"\x08" ENUM5950_08_TEXT "\0"
+"\x09" ENUM5950_09_TEXT "\0"
+"\x0a" ENUM5950_0a_TEXT "\0"
+"\x0b" ENUM5950_0b_TEXT "\0"
+"\x0c" ENUM5950_0c_TEXT "\0"
+"\x0d" ENUM5950_0d_TEXT "\0"
+"\x0e" ENUM5950_0e_TEXT
 };
 
 // Konfiguration - Funktion Eingang H1 THISION
 const char ENUM5950_2[] PROGMEM_LATEST = {
-"\x00 Keine Funktion\0"
-"\x01 Modemfunktion\0"
-"\x02 Modemfunktion invers\0"
-"\x03 Torschleierfunktion\0"
-"\x07 Rückmeldung AbgKlp\0"
-"\x08 Erzeugersperre\0"
-"\x09 Erzeugersperre invers"
+"\x00" ENUM5950_2_00_TEXT "\0"
+"\x01" ENUM5950_2_01_TEXT "\0"
+"\x02" ENUM5950_2_02_TEXT "\0"
+"\x03" ENUM5950_2_03_TEXT "\0"
+"\x07" ENUM5950_2_07_TEXT "\0"
+"\x08" ENUM5950_2_08_TEXT "\0"
+"\x09" ENUM5950_2_09_TEXT
 };
 
 // Konfiguration - Funktion Eingang H1 Brötje
 const char ENUM5950_3[] PROGMEM_LATEST = {
-"\x01 BA-Umschaltung HK's + TWW\0"
-"\x02 BA-Umschaltung HK's\0"
-"\x03 BA-Umschaltung HK1\0"
-"\x04 BA-Umschaltung HK2\0"
-"\x05 BA-Umschaltung HKP\0"
-"\x06 Erzeugersperre\0"
-"\x07 Fehler- / Alarmmeldung\0"
-"\x08 Minimaler Vorlaufsollwert\0"
-"\x09 Wärmeanforderung 10V"
+"\x01" ENUM5950_3_01_TEXT "\0"
+"\x02" ENUM5950_3_02_TEXT "\0"
+"\x03" ENUM5950_3_03_TEXT "\0"
+"\x04" ENUM5950_3_04_TEXT "\0"
+"\x05" ENUM5950_3_05_TEXT "\0"
+"\x06" ENUM5950_3_06_TEXT "\0"
+"\x07" ENUM5950_3_07_TEXT "\0"
+"\x08" ENUM5950_3_08_TEXT "\0"
+"\x09" ENUM5950_3_09_TEXT
 };
 
 // Konfiguration - Funktion Eingang H1 Brötje BOB
 const char ENUM5950_4[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 BA-Umschaltung HK's + TWW\0"
-"\x02 BA-Umschaltung TWW\0"
-"\x03 BA-Umschaltung HK's\0"
-"\x04 BA-Umschaltung HK1\0"
-"\x05 BA-Umschaltung HK2\0"
-"\x06 BA-Umschaltung HK3\0"
-"\x07 Erzeugersperre\0"
-"\x08 Fehler- / Alarmmeldung\0"
-"\x09 Verbr'anforderung VK1\0"
-"\x0a Verbr'anforderung VK2\0"
-"\x0b Freigabe Schw'bad Erzeuger\0"
-"\x0c Übertemperaturableitung\0"
-"\x0d Freigabe Schw'bad Erzeuger Solar\0"
-"\x0e Betriebsniveau TWW\0"
-"\x0f Betriebsniveau HK1\0"
-"\x10 Betriebsniveau HK2\0"
-"\x11 Betriebsniveau HK3\0"
-"\x12 Raumthermostat HK1\0"
-"\x13 Raumthermostat HK2\0"
-"\x14 Raumthermostat HK3\0"
-"\x16 Trinkwasserthermostat\0"
-"\x17 Zirk'pumpenthermostat\0"
-"\x18 Impulszählung\0"
-"\x1d Startverhinderung\0"
-"\x1e Kessel-Rückflussthermostat\0"
-"\x32 Durchflussmessung Hz\0"
-"\x33 Verbraucheranforderung VK1 10V\0"
-"\x34 Verbraucheranforderung VK2 10V\0"
-"\x38 Raumtemperatur 10V"
+"\x00" ENUM5950_4_00_TEXT "\0"
+"\x01" ENUM5950_4_01_TEXT "\0"
+"\x02" ENUM5950_4_02_TEXT "\0"
+"\x03" ENUM5950_4_03_TEXT "\0"
+"\x04" ENUM5950_4_04_TEXT "\0"
+"\x05" ENUM5950_4_05_TEXT "\0"
+"\x06" ENUM5950_4_06_TEXT "\0"
+"\x07" ENUM5950_4_07_TEXT "\0"
+"\x08" ENUM5950_4_08_TEXT "\0"
+"\x09" ENUM5950_4_09_TEXT "\0"
+"\x0a" ENUM5950_4_0a_TEXT "\0"
+"\x0b" ENUM5950_4_0b_TEXT "\0"
+"\x0c" ENUM5950_4_0c_TEXT "\0"
+"\x0d" ENUM5950_4_0d_TEXT "\0"
+"\x0e" ENUM5950_4_0e_TEXT "\0"
+"\x0f" ENUM5950_4_0f_TEXT "\0"
+"\x10" ENUM5950_4_10_TEXT "\0"
+"\x11" ENUM5950_4_11_TEXT "\0"
+"\x12" ENUM5950_4_12_TEXT "\0"
+"\x13" ENUM5950_4_13_TEXT "\0"
+"\x14" ENUM5950_4_14_TEXT "\0"
+"\x16" ENUM5950_4_16_TEXT "\0"
+"\x17" ENUM5950_4_17_TEXT "\0"
+"\x18" ENUM5950_4_18_TEXT "\0"
+"\x1d" ENUM5950_4_1d_TEXT "\0"
+"\x1e" ENUM5950_4_1e_TEXT "\0"
+"\x32" ENUM5950_4_32_TEXT "\0"
+"\x33" ENUM5950_4_33_TEXT "\0"
+"\x34" ENUM5950_4_34_TEXT "\0"
+"\x38" ENUM5950_4_38_TEXT
 };
 
 const char ENUM5950_5[] PROGMEM_LATEST = {
-"\x01 BA-Umschaltung HK's + TWW\0"
-"\x02 BA-Umschaltung HK's\0"
-"\x03 BA-Umschaltung HK1\0"
-"\x04 BA-Umschaltung HK2\0"
-"\x05 BA-Umschaltung HKP\0"
-"\x06 Erzeugersperre\0"
-"\x07 Fehler- / Alarmmeldung\0"
-"\x08 Minimaler Vorlaufsollwert\0"
-"\x09 Übertemperaturableitung\0"
-"\x0a Freigabe Schwimmbad\0"
-"\x0b Taupunktwächter\0"
-"\x0c Vorlaufsollw'anhebung Hygro\0"
-"\x0d Kälteanforderung\0"
-"\x0e Wärmeanforderung 10V\0"
-"\x0f Kälteanforderung 10V\0"
-"\x11 Relative Raumfeuchte 10V\0"
+"\x01" ENUM5950_5_01_TEXT "\0"
+"\x02" ENUM5950_5_02_TEXT "\0"
+"\x03" ENUM5950_5_03_TEXT "\0"
+"\x04" ENUM5950_5_04_TEXT "\0"
+"\x05" ENUM5950_5_05_TEXT "\0"
+"\x06" ENUM5950_5_06_TEXT "\0"
+"\x07" ENUM5950_5_07_TEXT "\0"
+"\x08" ENUM5950_5_08_TEXT "\0"
+"\x09" ENUM5950_5_09_TEXT "\0"
+"\x0a" ENUM5950_5_0a_TEXT "\0"
+"\x0b" ENUM5950_5_0b_TEXT "\0"
+"\x0c" ENUM5950_5_0c_TEXT "\0"
+"\x0d" ENUM5950_5_0d_TEXT "\0"
+"\x0e" ENUM5950_5_0e_TEXT "\0"
+"\x0f" ENUM5950_5_0f_TEXT "\0"
+"\x11" ENUM5950_5_11_TEXT "\0"
 "\x12 Raumtemperatur 10V"};
 
 // Konfiguration - Funktion Eingang H1 RVA63.244
 const char ENUM5950_6[] PROGMEM_LATEST = {
-"\x00 BA-Umschaltung HK's + TWW\0"
-"\x01 BA-Umschaltung alle HK\0"
-"\x02 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
-"\x03 Wärmeerzeuger-Sperre\0"
-"\x04 Wärmeanforderung 0-10V"
+"\x00" ENUM5950_6_00_TEXT "\0"
+"\x01" ENUM5950_6_01_TEXT "\0"
+"\x02" ENUM5950_6_02_TEXT "\0"
+"\x03" ENUM5950_6_03_TEXT "\0"
+"\x04" ENUM5950_6_04_TEXT
 };
 
-const char ENUM5951[] PROGMEM_LATEST = {"\x00 Ruhekontakt\0\x01 Arbeitskontakt"};
+const char ENUM5951[] PROGMEM_LATEST = {
+"\x00" ENUM5951_00_TEXT "\0"
+"\x01" ENUM5951_01_TEXT
+};
 
 // Konfiguration - 5957 BA-Umschaltung HK's+TWW
 const char ENUM5957[] PROGMEM_LATEST = {
-  "\x01 in allen Heizkreisen und Trinkwasser\0"
-  "\x02 in allen Heizkreisen\0"
-  "\x03 in Heizkreis 1\0"
-  "\x04 in Heizkreis 2"
+"\x01" ENUM5957_01_TEXT "\0"
+"\x02" ENUM5957_02_TEXT "\0"
+"\x03" ENUM5957_03_TEXT "\0"
+"\x04" ENUM5957_04_TEXT
 };
 
 const char ENUM5957_2[] PROGMEM_LATEST = {
-  "\x00 in allen Heizkreisen und Trinkwasser\0"
-  "\x01 in allen Heizkreisen\0"
-  "\x02 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
-  "\x03 Wärmeerzeuger-Sperre\0"
-  "\x04 Wärmeanforderung 0...10 V"
+"\x00" ENUM5957_2_00_TEXT "\0"
+"\x01" ENUM5957_2_01_TEXT "\0"
+"\x02" ENUM5957_2_02_TEXT "\0"
+"\x03" ENUM5957_2_03_TEXT "\0"
+"\x04" ENUM5957_2_04_TEXT
 };
 
 #define ENUM5960 ENUM5950               // Konfiguration - Funktion Eingang H3
 #define ENUM5960_2 ENUM5950_2           // Konfiguration - Funktion Eingang H3
 
 const char ENUM5960_3[] PROGMEM_LATEST = {
-"\x00 Brauchwassertemperatur-Fühler 2\0"
-"\x01 Minimal-Vorlauftemperatur-Sollwert (TVHw)\0"
-"\x02 Wärmeerzeuger-Sperre\0"
-"\x03 Puffertemperatur-Fühler 2\0"
+"\x00" ENUM5960_3_00_TEXT "\0"
+"\x01" ENUM5960_3_01_TEXT "\0"
+"\x02" ENUM5960_3_02_TEXT "\0"
+"\x03" ENUM5960_3_03_TEXT "\0"
 };
 
 const char ENUM5960_4[] PROGMEM_LATEST = {
-"\x00 Analog H1"
+"\x00" ENUM5960_4_00_TEXT
 };
 
 #define ENUM5961 ENUM5951               // Konfiguration - Wirksinn Kontakt H3
@@ -3071,11 +3797,11 @@ const char ENUM5960_4[] PROGMEM_LATEST = {
 
 // Konfiguration - Thision 5970 Konfig Raumthermostat 1
 const char ENUM5970[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x01 Raumthermostat\0"
-"\x02 Schaltuhr Raumniveau\0"
-"\x03 Schaltuhr Heizungsanforderung\0"
-"\x04 Schaltuhr TWW Niveau"
+"\x00" ENUM5970_00_TEXT "\0"
+"\x01" ENUM5970_01_TEXT "\0"
+"\x02" ENUM5970_02_TEXT "\0"
+"\x03" ENUM5970_03_TEXT "\0"
+"\x04" ENUM5970_04_TEXT
 };
 #define ENUM5970_2 ENUM5950_4
 
@@ -3084,25 +3810,25 @@ const char ENUM5970[] PROGMEM_LATEST = {
 
 // Konfiguration - Thision 5973 Funktion Eingang RelCl
 const char ENUM5973[] PROGMEM_LATEST = {
-"\x00 Keine Funktion\0"
-"\x01 Modemfunktion\0"
-"\x02 Modemfunktion invers\0"
-"\x03 Torschleierfunktion\0"
-"\x04 Sollwertvorgabe\0"
-"\x05 Leistungsvorgabe\0"
-"\x06 Fühler hydraulische Weiche\0"
-"\x07 Rückmeldung AbgKlp\0"
-"\x08 Erzeugersperre\0"
-"\x09 Erzeugersperre invers\0"
-"\x0b Erzeugersperre Fühler"
+"\x00" ENUM5973_00_TEXT "\0"
+"\x01" ENUM5973_01_TEXT "\0"
+"\x02" ENUM5973_02_TEXT "\0"
+"\x03" ENUM5973_03_TEXT "\0"
+"\x04" ENUM5973_04_TEXT "\0"
+"\x05" ENUM5973_05_TEXT "\0"
+"\x06" ENUM5973_06_TEXT "\0"
+"\x07" ENUM5973_07_TEXT "\0"
+"\x08" ENUM5973_08_TEXT "\0"
+"\x09" ENUM5973_09_TEXT "\0"
+"\x0b" ENUM5973_0b_TEXT
 };
 
 #define ENUM5977_2 ENUM5970_2
 
 // Konfiguration - Thision 5978 Funktion Eingang SolCl
 const char ENUM5978[] PROGMEM_LATEST = {
-"\x00 kein\0"
-"\x0a Kollektor Fühler"
+"\x00" ENUM5978_00_TEXT "\0"
+"\x0a" ENUM5978_0a_TEXT
 };
 
 #define ENUM5978_2 ENUM5971_2
@@ -3110,38 +3836,38 @@ const char ENUM5978[] PROGMEM_LATEST = {
 // 5980 Konfiguration - Funktion Eingang EX1
 // The System-Handbuch does not document numerical values.
 const char ENUM5980[] PROGMEM_LATEST = {
-  "\x00 Keine\0"
-  "\x01 EWSperre E6\0"
-  "\x02 Niedertarif E5\0"
-  "\x03 ?Überlast Quelle E14\0"
-  "\x04 ?Druckwächter Quelle E26\0"
-  "\x05 ?Ström'wächter Quelle E15\0"
-  "\x06 ?Ström'wächter Verbrau E24\0"
-  "\x07 ?Abtauen manuell E17\0"
-  "\x08 ?Sammelstörung WP E20\0"
-  "\x09 ?Störung Sanftanlasser E25\0"
-  "\x0a ?Niederdruckwächter E9\0"
-  "\x0b ?Hochdruckwächter E10\0"
-  "\x0c ?Überlast Verdichter 1 E11\0"
-  "\x0f Fehler- / Alarmmeldung\0"
-  "\x10 ?Netzüberwachung E21\0"
-  "\x11 ?Druckdiff Abtauen E28\0"
-  "\x12 ?Druckw Quellzw'kreis E29\0"
-  "\x13 ?Strömw Quellzw'kreis E30\0"
-  "\x14 ?Smart Grid E61\0"
-  "\x15 ?Smart Grid E62\0"
-  "\x16 ?BA-Umschaltung HK's\0"
-  "\x1a Trinkwasser Push"
+"\x00" ENUM5980_00_TEXT "\0"
+"\x01" ENUM5980_01_TEXT "\0"
+"\x02" ENUM5980_02_TEXT "\0"
+"\x03" "?" ENUM5980_03_TEXT "\0"
+"\x04" "?" ENUM5980_04_TEXT "\0"
+"\x05" "?" ENUM5980_05_TEXT "\0"
+"\x06" "?" ENUM5980_06_TEXT "\0"
+"\x07" "?" ENUM5980_07_TEXT "\0"
+"\x08" "?" ENUM5980_08_TEXT "\0"
+"\x09" "?" ENUM5980_09_TEXT "\0"
+"\x0a" "?" ENUM5980_0a_TEXT "\0"
+"\x0b" "?" ENUM5980_0b_TEXT "\0"
+"\x0c" "?" ENUM5980_0c_TEXT "\0"
+"\x0f" ENUM5980_0f_TEXT "\0"
+"\x10" "?" ENUM5980_10_TEXT "\0"
+"\x11" "?" ENUM5980_11_TEXT "\0"
+"\x12" "?" ENUM5980_12_TEXT "\0"
+"\x13" "?" ENUM5980_13_TEXT "\0"
+"\x14" "?" ENUM5980_14_TEXT "\0"
+"\x15" "?" ENUM5980_15_TEXT "\0"
+"\x16" "?" ENUM5980_16_TEXT "\0"
+"\x1a" ENUM5980_1a_TEXT
 };
 
 #define ENUM5981 ENUM5951               // Konfiguration - Wirksinn Eingang EX1
 
 // Konfiguration - Funktion Eingang EX2
 const char ENUM5982[] PROGMEM_LATEST = {
-"\x01 Zähler 2.Brennerstufe\0"
-"\x02 Erzeugersperre\0"
-"\x03 Fehler- / Alarmmeldung\0"
-"\x04 STB Fehlermeldung\0"
+"\x01" ENUM5982_01_TEXT "\0"
+"\x02" ENUM5982_02_TEXT "\0"
+"\x03" ENUM5982_03_TEXT "\0"
+"\x04" ENUM5982_04_TEXT "\0"
 "\x05 Übertemperaturableitung"};
 
 #define ENUM5983 ENUM5951               // Konfiguration - Wirksinn Eingang EX2
@@ -3155,49 +3881,49 @@ const char ENUM5982[] PROGMEM_LATEST = {
 // The System-Handbuch does not document numerical values.
 // !FIXME! Values here are hypothetical.
 const char ENUM5988[] PROGMEM_LATEST = {
-  "\x00 ?Keine\0"
-  "\x01 ?EWSperre E6\0"
-  "\x02 ?Niedertarif E5\0"
-  "\x03 ?Überlast Quelle E14\0"
-  "\x04 ?Druckwächter Quelle E26\0"
-  "\x05 ?Ström'wächter Quelle E15\0"
-  "\x06 ?Ström'wächter Verbrau E24\0"
-  "\x07 ?Abtauen manuell E17\0"
-  "\x08 ?Sammelstörung WP E20\0"
-  "\x09 ?Störung Sanftanlasser E25\0"
-  "\x0a ?Niederdruckwächter E9\0"
-  "\x0b ?Hochdruckwächter E10\0"
-  "\x0c ?Überlast Verdichter 1 E11\0"
-  "\x0d ?Fehler- / Alarmmeldung\0"
-  "\x0e ?Drehstrom E21\0"
-  "\x0f ?Drehstrom E22\0"
-  "\x10 ?Drehstrom E23"
+"\x00" "?" ENUM5988_00_TEXT "\0"
+"\x01" "?" ENUM5988_01_TEXT "\0"
+"\x02" "?" ENUM5988_02_TEXT "\0"
+"\x03" "?" ENUM5988_03_TEXT "\0"
+"\x04" "?" ENUM5988_04_TEXT "\0"
+"\x05" "?" ENUM5988_05_TEXT "\0"
+"\x06" "?" ENUM5988_06_TEXT "\0"
+"\x07" "?" ENUM5988_07_TEXT "\0"
+"\x08" "?" ENUM5988_08_TEXT "\0"
+"\x09" "?" ENUM5988_09_TEXT "\0"
+"\x0a" "?" ENUM5988_0a_TEXT "\0"
+"\x0b" "?" ENUM5988_0b_TEXT "\0"
+"\x0c" "?" ENUM5988_0c_TEXT "\0"
+"\x0d" "?" ENUM5988_0d_TEXT "\0"
+"\x0e" "?" ENUM5988_0e_TEXT "\0"
+"\x0f" "?" ENUM5988_0f_TEXT "\0"
+"\x10" "?" ENUM5988_10_TEXT
 };
 #define ENUM5990 ENUM5988           // Konfiguration - 5990 Funktion Eingang EX6
 #define ENUM5992 ENUM5988           // Konfiguration - 5992 Funktion Eingang EX7
 
 // Konfiguration - Funktion Mischergruppe 1
 const char ENUM6014[] PROGMEM_LATEST = {
-"\x01 Heizkreis 1\0"
-"\x02 Rücklaufregler\0"           // ISR-SSR Solarsystemregler Handbuch
-"\x03 Vorregler / Zubringerpumpe\0"
-"\x04 Trinkwasser Vorregler\0"
-"\x05 Trinkwasser Durchl'erhitzer\0"
-"\x06 Rücklaufregler Kaskade"
+"\x01" ENUM6014_01_TEXT "\0"
+"\x02" ENUM6014_02_TEXT "\0"           // ISR-SSR Solarsystemregler Handbuch
+"\x03" ENUM6014_03_TEXT "\0"
+"\x04" ENUM6014_04_TEXT "\0"
+"\x05" ENUM6014_05_TEXT "\0"
+"\x06" ENUM6014_06_TEXT
 };
 #define ENUM6015 ENUM6014           // Konfiguration - 6015 Funktion Mischergruppe 2
 
 // Konfiguration - Funktion Erweiterungsmodul 1
 const char ENUM6020[] PROGMEM_LATEST = {
-"\x00 Keine Funktion\0"
-"\x01 Multifunktional\0"
-"\x02 Heizkreis 2\0"
-"\x03 Rücklaufregler\0"
-"\x04 Solar Trinkwasser\0"
-"\x05 Vorregler / Zubringerpumpe\0"
-"\x06 Trinkwasser Vorregler\0"
-"\x07 Trinkwasser Durchl'erhitzer\0"
-"\x08 Rücklaufregler Kaskade"
+"\x00" ENUM6020_00_TEXT "\0"
+"\x01" ENUM6020_01_TEXT "\0"
+"\x02" ENUM6020_02_TEXT "\0"
+"\x03" ENUM6020_03_TEXT "\0"
+"\x04" ENUM6020_04_TEXT "\0"
+"\x05" ENUM6020_05_TEXT "\0"
+"\x06" ENUM6020_06_TEXT "\0"
+"\x07" ENUM6020_07_TEXT "\0"
+"\x08" ENUM6020_08_TEXT
 };
 #define ENUM6021 ENUM6020           // Konfiguration - Funktion Erweiterungsmodul 2
 
@@ -3212,620 +3938,630 @@ const char ENUM6020[] PROGMEM_LATEST = {
 // inserting hypothetical values.
 // !FIXME! !TODO! Figure out the real numerical values.
 const char ENUM6030[] PROGMEM_LATEST = {
-  "\x00 ?Kein\0"                           // with all controllers
-  "\x01 ?Heizkreispumpe HK1 Q2\0"          // with      BSW,BLW
-  "\x02 ?Trinkwasserstellglied Q3\0"       // with      BSW,BLW
-  "\x03 ?Verdichterstufe 2 K2\0"           // with      BSW
-  "\x04 ?Prozessumkehrventil Y22\0"        // with      BSW,BLW
-  "\x05 ?Heissgastemperatur K31\0"         // with      BSW,BLW
-  "\x06 ?Elektroeinsatz 1 Vorlauf K25\0"   // with      BSW,BLW
-  "\x07 ?Elektroeinsatz 2 Vorlauf K26\0"   // with      BSW,BLW
-  "\x07 ?Umlenkventil Kühl Quelle Y28\0"   // with      BSW,BLW
-  "\x08 ?Zirkulationspumpe Q4\0"           // with      BSW,BLW, BCA,        Kessel L,TE,SOB
-  "\x09 ?Elektroeinsatz TWW K6\0"          // with SSR, BSW,BLW, BCA,        Kessel L,TE,SOB
-  "\x0a ?Elektroeinsatz Puffer K16\0"      // with SSR, BSW,BLW
-  "\x0b ?Kollektorpumpe Q5\0"              // with SSR, BSW,BLW,             Kessel L,TE,SOB
-  "\x0c ?H1-Pumpe Q15\0"                   // all controllers
-  "\x0d ?Kesselpumpe Q1\0"                 // with SSR, BSW,     BCA,        Kessel L,TE,SOB
-  "\x0e ?Bypasspumpe Q12\0"                // with SSR, BSW,BLW, BCA, ZR1/2, Kessel L,TE,SOB
-  "\x0f ?Alarmausgang K10\0"               // with all controllers
-  "\x10 ?2. Pumpenstufe HK1 Q21\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
-  "\x11 ?2. Pumpenstufe HK2 Q22\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
-  "\x12 ?2. Pumpenstufe HKP Q23\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
-  "\x13 ?Heizkreispumpe HKP Q20\0"         // with all controllers
-  "\x14 ?H2-Pumpe Q18\0"                   // with all controllers
-  "\x15 ?Zubringerpumpe Q14\0"             // with all controllers
-  "\x16 ?Erzeugersperrventil Y4\0"         // with SSR, BSW,                 Kessel L,TE,SOB
-  "\x17 ?Feststoffkesselpumpe Q10\0"       // with SSR, BSW,BLW, BCA
-  "\x18 ?Zeitprogramm 5 K13\0"             // with SSR, BSW           ZR1/2
-  "\x19 ?Pufferrücklaufventil Y15\0"       // with SSR, BSW
-  "\x1a ?Solarpumpe ext. Tauscher K9\0"    // with SSR, BSW,BLW
-  "\x1b ?Solarstellglied Puffer K8\0"      // with SSR, BSW,BLW
-  "\x1c ?Solarstellglied Schwimmbad K18\0" // with SSR, BSW,BLW
-  "\x1d ?Kollektorpumpe 2 Q16\0"           // with SSR, BSW
-  "\x1e ?H3-Pumpe Q19\0"                   // with      BSW,BLW
-  "\x1f ?Abgasrelais K17\0"                // with      BSW,     BCA
-  "\x20 ?Umlenkventil Kühlen Y21\0"        // with      BSW,BLW,      ZR1/2
-  "\x21 ?Umlenkventil Kühl Quelle Y28\0"   // with      BSW
-  "\x22 ?Quell'pumpe Q8\0"                 // with      BSW,BLW
-  "\x23 ?Ventilator K19\0"                 // with      BSW
-  "\x24 ?Kondensatorpumpe Q9\0"            // with SSR, BSW,BLW
-  "\x25 ?Luftentfeuchter K29\0"            // with SSR, BSW,BLW       ZR1/2
-  "\x26 ?Kaskadenpumpe Q25\0"              // with SSR, BSW,BLW, BCA
-  "\x27 ?Speicherumladepumpe Q11\0"        // with SSR, BSW
-  "\x28 ?TWW Durchmischpumpe Q35\0"        // with BSW,          BCA
-  "\x29 ?TWW Zwisch'kreispumpe Q33\0"      // with SSR, BSW,     BCA
-  "\x2a ?Wärmeanforderung K27\0"           // with      BSW,BLW  BCA, ZR1/2
-  "\x2b ?Kälteanforderung K28\0"           // with      BSW,BLW       ZR1/2
-  "\x2c ?Verdichterstufe 1 K1\0"           // with          BLW
-  "\x2d ?Zusatzerzeuger Regelung K32"    // with          BLW
+"\x00" "?" ENUM6030_00_TEXT "\0"                           // with all controllers
+"\x01" "?" ENUM6030_01_TEXT "\0"          // with      BSW,BLW
+"\x02" "?" ENUM6030_02_TEXT "\0"       // with      BSW,BLW
+"\x03" "?" ENUM6030_03_TEXT "\0"           // with      BSW
+"\x04" "?" ENUM6030_04_TEXT "\0"        // with      BSW,BLW
+"\x05" "?" ENUM6030_05_TEXT "\0"         // with      BSW,BLW
+"\x06" "?" ENUM6030_06_TEXT "\0"   // with      BSW,BLW
+"\x07" "?" ENUM6030_07_TEXT "\0"   // with      BSW,BLW
+"\x08" "?" ENUM6030_08_TEXT "\0"   // with      BSW,BLW
+"\x09" "?" ENUM6030_09_TEXT "\0"           // with      BSW,BLW, BCA,        Kessel L,TE,SOB
+"\x0a" "?" ENUM6030_0a_TEXT "\0"          // with SSR, BSW,BLW, BCA,        Kessel L,TE,SOB
+"\x0b" "?" ENUM6030_0b_TEXT "\0"      // with SSR, BSW,BLW
+"\x0c" "?" ENUM6030_0c_TEXT "\0"              // with SSR, BSW,BLW,             Kessel L,TE,SOB
+"\x0d" "?" ENUM6030_0d_TEXT "\0"                   // all controllers
+"\x0e" "?" ENUM6030_0e_TEXT "\0"                 // with SSR, BSW,     BCA,        Kessel L,TE,SOB
+"\x0f" "?" ENUM6030_0f_TEXT "\0"                // with SSR, BSW,BLW, BCA, ZR1/2, Kessel L,TE,SOB
+"\x10" "?" ENUM6030_10_TEXT "\0"               // with all controllers
+"\x11" "?" ENUM6030_11_TEXT "\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
+"\x12" "?" ENUM6030_12_TEXT "\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
+"\x13" "?" ENUM6030_13_TEXT "\0"         // with SSR, BSW,     BCA, ZR1/2, Kessel L,TE,SOB
+"\x14" "?" ENUM6030_14_TEXT "\0"         // with all controllers
+"\x15" "?" ENUM6030_15_TEXT "\0"                   // with all controllers
+"\x16" "?" ENUM6030_16_TEXT "\0"             // with all controllers
+"\x17" "?" ENUM6030_17_TEXT "\0"         // with SSR, BSW,                 Kessel L,TE,SOB
+"\x18" "?" ENUM6030_18_TEXT "\0"       // with SSR, BSW,BLW, BCA
+"\x19" "?" ENUM6030_19_TEXT "\0"             // with SSR, BSW           ZR1/2
+"\x1a" "?" ENUM6030_1a_TEXT "\0"       // with SSR, BSW
+"\x1b" "?" ENUM6030_1b_TEXT "\0"    // with SSR, BSW,BLW
+"\x1c" "?" ENUM6030_1c_TEXT "\0"      // with SSR, BSW,BLW
+"\x1d" "?" ENUM6030_1d_TEXT "\0" // with SSR, BSW,BLW
+"\x1e" "?" ENUM6030_1e_TEXT "\0"           // with SSR, BSW
+"\x1f" "?" ENUM6030_1f_TEXT "\0"                   // with      BSW,BLW
+"\x20" "?" ENUM6030_20_TEXT "\0"                // with      BSW,     BCA
+"\x21" "?" ENUM6030_21_TEXT "\0"        // with      BSW,BLW,      ZR1/2
+"\x22" "?" ENUM6030_22_TEXT "\0"   // with      BSW
+"\x23" "?" ENUM6030_23_TEXT "\0"                 // with      BSW,BLW
+"\x24" "?" ENUM6030_24_TEXT "\0"                 // with      BSW
+"\x25" "?" ENUM6030_25_TEXT "\0"            // with SSR, BSW,BLW
+"\x26" "?" ENUM6030_26_TEXT "\0"            // with SSR, BSW,BLW       ZR1/2
+"\x27" "?" ENUM6030_27_TEXT "\0"              // with SSR, BSW,BLW, BCA
+"\x28" "?" ENUM6030_28_TEXT "\0"        // with SSR, BSW
+"\x29" "?" ENUM6030_29_TEXT "\0"        // with BSW,          BCA
+"\x2a" "?" ENUM6030_2a_TEXT "\0"      // with SSR, BSW,     BCA
+"\x2b" "?" ENUM6030_2b_TEXT "\0"           // with      BSW,BLW  BCA, ZR1/2
+"\x2c" "?" ENUM6030_2c_TEXT "\0"           // with      BSW,BLW       ZR1/2
+"\x2d" "?" ENUM6030_2d_TEXT "\0"           // with          BLW
+"\x2e" "?" ENUM6030_2e_TEXT    // with          BLW
 };
 
 #define ENUM6031 ENUM6030
 #define ENUM6032 ENUM6030
-// #define ENUM6033 ENUM6030     // Relaisausgang QX21 Modul 2 / identity with 6030: analogous guess
-// #define ENUM6034 ENUM6030     // Relaisausgang QX22 Modul 2 / identity with 6030: analogous guess
-// #define ENUM6035 ENUM6030     // Relaisausgang QX23 Modul 2 / identity with 6030: analogous guess
+#define ENUM6033 ENUM6030     // Relaisausgang QX21 Modul 2 / identity with 6030: analogous guess
+#define ENUM6034 ENUM6030     // Relaisausgang QX22 Modul 2 / identity with 6030: analogous guess
+#define ENUM6035 ENUM6030     // Relaisausgang QX23 Modul 2 / identity with 6030: analogous guess
 
 // Konfiguration - 6040 Fühlereingang BX21
 const char ENUM6040[] PROGMEM_LATEST = {
-  "\x00 Kein\0"
-  "\x01 Trinkwasserfühler B31\0"
-  "\x02 Kollektorfühler B6\0"
-  "\x03 ---\0"
-  "\x04 TWW Zirkulationsfühler B39\0"
-  "\x05 Pufferspeicherfühler B4\0"
-  "\x06 Pufferspeicherfühler B41\0"
-  "\x07 Abgastemperaturfühler B8\0"
-  "\x08 Schienenvorlauffühler B10\0"
-  "\x09 Feststoffkesselfühler B22\0"
-  "\x0a TWW Ladefühler B36\0"
-  "\x0b Pufferspeicherfühler B42\0"
-  "\x0c Schienenrücklauffühler B73\0"
-  "\x0d Kaskadenrücklauffühler B70\0"
-  "\x0e Schwimmbadfühler B13\0"
-  "\x0f Kollektorfühler 2 B61\0"
-  "\x10 Solarvorlauffühler B63\0"
-  "\x11 Solarrücklauffühler B64"
+"\x00" ENUM6040_00_TEXT "\0"
+"\x01" ENUM6040_01_TEXT "\0"
+"\x02" ENUM6040_02_TEXT "\0"
+"\x03" ENUM6040_03_TEXT "\0"
+"\x04" ENUM6040_04_TEXT "\0"
+"\x05" ENUM6040_05_TEXT "\0"
+"\x06" ENUM6040_06_TEXT "\0"
+"\x07" ENUM6040_07_TEXT "\0"
+"\x08" ENUM6040_08_TEXT "\0"
+"\x09" ENUM6040_09_TEXT "\0"
+"\x0a" ENUM6040_0a_TEXT "\0"
+"\x0b" ENUM6040_0b_TEXT "\0"
+"\x0c" ENUM6040_0c_TEXT "\0"
+"\x0d" ENUM6040_0d_TEXT "\0"
+"\x0e" ENUM6040_0e_TEXT "\0"
+"\x0f" ENUM6040_0f_TEXT "\0"
+"\x10" ENUM6040_10_TEXT "\0"
+"\x11" ENUM6040_11_TEXT
 };
 #define ENUM6041 ENUM6040	// Konfiguration - 6041 Fühlereingang BX22
-// #define ENUM6042 ENUM6040 // Fühlereingang BX21 Modul 2 / identity with 6040: analogous guess
-// #define ENUM6043 ENUM6040 // Fühlereingang BX22 Modul 2 / identity with 6040: analogous guess
+#define ENUM6042 ENUM6040 // Fühlereingang BX21 Modul 2 / identity with 6040: analogous guess
+#define ENUM6043 ENUM6040 // Fühlereingang BX22 Modul 2 / identity with 6040: analogous guess
 #define ENUM6046 ENUM5950	// Konfiguration - Funktion Eingang H2
 #define ENUM6046_2 ENUM5977_2  // Konfiguration - Funktion Kontakt H2 EM1
 #define ENUM6047 ENUM5951	// Konfiguration - Wirksinn Kontakt H2
 #define ENUM6047_2 ENUM5978_2  // Konfiguration - Wirksinn Eingang H2 EM1
 // Konfiguration - 6070 Funktion Ausgang UX
-const char ENUM6070[] PROGMEM_LATEST = {"\x00 Kesselsollwert\0\x01 Leistungsanforderung\0\x02 Wärmeanforderung"};
+const char ENUM6070[] PROGMEM_LATEST = {
+"\x00" ENUM6070_00_TEXT "\0"
+"\x01" ENUM6070_01_TEXT "\0"
+"\x02" ENUM6070_02_TEXT
+};
 // Konfiguration - 6071 Signallogik Ausgang UX
-const char ENUM6071[] PROGMEM_LATEST = {"\x00 Standard\0\x01 Invertiert"};
+const char ENUM6071[] PROGMEM_LATEST = {
+"\x00" ENUM6071_00_TEXT "\0"
+"\x01" ENUM6071_01_TEXT
+};
 
 const char ENUM6085[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Kesselpumpe Q1\0"
-"\x02 Trinkwasserpumpe Q3\0"
-"\x04 Heizkreispumpe HK1 Q2\0"
-"\x05 Heizkreispumpe HK2 Q6\0"
-"\x06 Heizkreispumpe HK3 Q20\0"
-"\x07 Kollektorpumpe Q5"
+"\x00" ENUM6085_00_TEXT "\0"
+"\x01" ENUM6085_01_TEXT "\0"
+"\x02" ENUM6085_02_TEXT "\0"
+"\x04" ENUM6085_04_TEXT "\0"
+"\x05" ENUM6085_05_TEXT "\0"
+"\x06" ENUM6085_06_TEXT "\0"
+"\x07" ENUM6085_07_TEXT
 };
 
 // Konfiguration - Fühlertyp Kollektor
-const char ENUM6097[] PROGMEM_LATEST = {"\x01 NTC\0\x02 Pt 1000"};
+const char ENUM6097[] PROGMEM_LATEST = {
+"\x01" ENUM6097_01_TEXT "\0"
+"\x02" ENUM6097_02_TEXT
+};
 #define ENUM6101 ENUM6097           // Fühlertyp Abgastemperatur
 
 // Konfiguration - Wärm'anfo bei Ökobetrieb AUS| EIN Trinkwasser | ein
 const char ENUM6131[] PROGMEM_LATEST = {
-"\x00 Aus\0"
-"\x01 Ein Trinkwasser\0"
-"\x02 Ein"
+"\x00" ENUM6131_00_TEXT "\0"
+"\x01" ENUM6131_01_TEXT "\0"
+"\x02" ENUM6131_02_TEXT
 };
 
 const char ENUM6136[] PROGMEM_LATEST = {
-"\x01 24/Tag\0"
-"\x02 Zeitprogramm Heizkreis\0"
-"\x03 Zeitprogramm 5"
+"\x01" ENUM6136_01_TEXT "\0"
+"\x02" ENUM6136_02_TEXT "\0"
+"\x03" ENUM6136_03_TEXT
 };
 
 const char ENUM6148[] PROGMEM_LATEST = {
-"\x00 Keine"
+"\x00" ENUM6148_00_TEXT
 };
 
 
 // Konfiguration - KonfigRG0
 
 const char ENUM6230[] PROGMEM_LATEST = {
-"\x00\x01 Fühlerunterbruch Rücklauffühler unterdrücken\0"
-"\x01\x01 Fühlerunterbruch Rücklauffühler ausgeben\0"
-"\x00\x02 Fühlerunterbruch Trinkwasserfühler unterdrücken\0"
-"\x02\x02 Fühlerunterbruch Trinkwasserfühler ausgeben\0"
-"\x00\x04 Fühlerunterbruch Abgastemperaturfühler unterdrücken\0"
-"\x04\x04 Fühlerunterbruch Abgastemperaturfühler ausgeben\0"
-"\x00\x08 Fühlerunterbruch Außentemperaturfühler unterdrücken\0"
-"\x08\x08 Fühlerunterbruch Außentemperaturfühler ausgeben\0"
-"\x00\x10 Fühlerunterbruch Wasserdruckfühler unterdrücken\0"
-"\x10\x10 Fühlerunterbruch Wasserdruckfühler ausgeben\0"
-"\x00\x20 Fühlerunterbruch Vorlauffühler unterdrücken\0"
-"\x20\x20 Fühlerunterbruch Vorlauffühler ausgeben\0"
-"\x00\x40 Fühlerunterbruch Fühler am ClipIn unterdrücken\0"
-"\x40\x40 Fühlerunterbruch Fühler am ClipIn ausgeben"
+"\x00\x01" ENUM6230_00_01_TEXT "\0"
+"\x01\x01" ENUM6230_01_01_TEXT "\0"
+"\x00\x02" ENUM6230_00_02_TEXT "\0"
+"\x02\x02" ENUM6230_02_02_TEXT "\0"
+"\x00\x04" ENUM6230_00_04_TEXT "\0"
+"\x04\x04" ENUM6230_04_04_TEXT "\0"
+"\x00\x08" ENUM6230_00_08_TEXT "\0"
+"\x08\x08" ENUM6230_08_08_TEXT "\0"
+"\x00\x10" ENUM6230_00_10_TEXT "\0"
+"\x10\x10" ENUM6230_10_10_TEXT "\0"
+"\x00\x20" ENUM6230_00_20_TEXT "\0"
+"\x20\x20" ENUM6230_20_20_TEXT "\0"
+"\x00\x40" ENUM6230_00_40_TEXT "\0"
+"\x40\x40" ENUM6230_40_40_TEXT
 };
 
 // Konfiguration - KonfigRG1
 
 const char ENUM6240[] PROGMEM_LATEST = {
-"\x00\x03 Vorrang Trinkwasser: absolut\0"
-"\x01\x03 Vorrang Trinkwasser: gleitend\0"
-"\x02\x03 Vorrang Trinkwasser: kein\0"
-"\x00\x08 Klemmenbelegung RT: RT\0"
-"\x08\x08 Klemmenbelegung RT: Schaltuhr\0"
-"\x00\x10 Anlagenfrostschutz aus\0"
-"\x10\x10 Anlagenfrostschutz ein\0"
-"\x00\x80 Betriebsart des Heizkreises bei Modemfunktion: Standby\0"
-"\x80\x80 Betriebsart des Heizkreises bei Modemfunktion: Reduz."
+"\x00\x03" ENUM6240_00_03_TEXT "\0"
+"\x01\x03" ENUM6240_01_03_TEXT "\0"
+"\x02\x03" ENUM6240_02_03_TEXT "\0"
+"\x00\x08" ENUM6240_00_08_TEXT "\0"
+"\x08\x08" ENUM6240_08_08_TEXT "\0"
+"\x00\x10" ENUM6240_00_10_TEXT "\0"
+"\x10\x10" ENUM6240_10_10_TEXT "\0"
+"\x00\x80" ENUM6240_00_80_TEXT "\0"
+"\x80\x80" ENUM6240_80_80_TEXT
 };
 
 // Konfiguration - KonfigRG2
 
 const char ENUM6250[] PROGMEM_LATEST = {
-"\x00\x01 Pumpennachlauf TWW in den Heizkreis\0"
-"\x01\x01 Pumpennachlauf TWW in den TWW-Wärmetauscher\0"
-"\x00\x02 Komforttemperaturniveau wie Auslauftemp.\0"
-"\x02\x02 Komforttemperaturniveau wie Bereitschaftstemp.\0"
-"\x00\x0B Komfort PID Regelungsfühler: Kesselvorlauf\0"
-"\x04\x0B Komfort PID Regelungsfühler: TWW-Fühler\0"
-"\x08\x0B Komfort PID Regelungsfühler: Kesselrücklauf\0"
-"\x00\x30 Fühleranordnung Schichtenspeicher SSP: KVF\0"
-"\x10\x30 Fühleranordnung Schichtenspeicher SSP: KRF, nicht bei SSP\0"
-"\x20\x30 Fühleranordnung Schichtenspeicher SSP: KRF, nur SSP"
+"\x00\x01" ENUM6250_00_01_TEXT "\0"
+"\x01\x01" ENUM6250_01_01_TEXT "\0"
+"\x00\x02" ENUM6250_00_02_TEXT "\0"
+"\x02\x02" ENUM6250_02_02_TEXT "\0"
+"\x00\x0B" ENUM6250_00_0B_TEXT "\0"
+"\x04\x0B" ENUM6250_04_0B_TEXT "\0"
+"\x08\x0B" ENUM6250_08_0B_TEXT "\0"
+"\x00\x30" ENUM6250_00_30_TEXT "\0"
+"\x10\x30" ENUM6250_10_30_TEXT "\0"
+"\x20\x30" ENUM6250_20_30_TEXT
 };
 
 // Konfiguration - KonfigRG3
 
 const char ENUM6260[] PROGMEM_LATEST = {
-"\x01\x1F AD-Wandler Eingänge Konfiguration 1\0"
-"\x02\x1F AD-Wandler Eingänge Konfiguration 2\0"
-"\x03\x1F AD-Wandler Eingänge Konfiguration 3\0"
-"\x04\x1F AD-Wandler Eingänge Konfiguration 4\0"
-"\x05\x1F AD-Wandler Eingänge Konfiguration 5\0"
-"\x06\x1F AD-Wandler Eingänge Konfiguration 6\0"
-"\x07\x1F AD-Wandler Eingänge Konfiguration 7\0"
-"\x00\x20 AD-Wandler Heizanforderung 1: nach Bedarf\0"
-"\x20\x20 AD-Wandler Heizanforderung 1: permanent\0"
-"\x00\x40 AD-Wandler Heizanforderung 2: nach Bedarf\0"
-"\x40\x40 AD-Wandler Heizanforderung 2: permanent\0"
-"\x00\x80 AD-Wandler Heizanforderung Zone: nach Bedarf\0"
-"\x80\x80 AD-Wandler Heizanforderung Zone: permanent"
+"\x01\x1F" ENUM6260_01_1F_TEXT "\0"
+"\x02\x1F" ENUM6260_02_1F_TEXT "\0"
+"\x03\x1F" ENUM6260_03_1F_TEXT "\0"
+"\x04\x1F" ENUM6260_04_1F_TEXT "\0"
+"\x05\x1F" ENUM6260_05_1F_TEXT "\0"
+"\x06\x1F" ENUM6260_06_1F_TEXT "\0"
+"\x07\x1F" ENUM6260_07_1F_TEXT "\0"
+"\x00\x20" ENUM6260_00_20_TEXT "\0"
+"\x20\x20" ENUM6260_20_20_TEXT "\0"
+"\x00\x40" ENUM6260_00_40_TEXT "\0"
+"\x40\x40" ENUM6260_40_40_TEXT "\0"
+"\x00\x80" ENUM6260_00_80_TEXT "\0"
+"\x80\x80" ENUM6260_80_80_TEXT
 };
 
 // Konfiguration - KonfigRG4
 
 const char ENUM6270[] PROGMEM_LATEST = {
-"\x00\x01 Zubringerfunktion Q8: aus\0"
-"\x01\x01 Zubringerfunktion Q8: ein\0"
-"\x00\x02 Gebäudebauweise: leicht\0"
-"\x02\x02 Gebäudebauweise: schwer\0"
-"\x00\x04 Anschlussklemme TW-Thermostat: Fühler an X10/TWF\0"
-"\x04\x04 Anschlussklemme TW-Thermostat: Thermostat an X10/TWF\0"
-"\x00\xE0 Konfiguration 3-Wege-Ventil: kein\0"
-"\x20\xE0 Konfiguration 3-Wege-Ventil: Magnetventil\0"
-"\x40\xE0 Konfiguration 3-Wege-Ventil: Motorventil\0"
-"\x60\xE0 Konfiguration 3-Wege-Ventil: Motorventil invers"
+"\x00\x01" ENUM6270_00_01_TEXT "\0"
+"\x01\x01" ENUM6270_01_01_TEXT "\0"
+"\x00\x02" ENUM6270_00_02_TEXT "\0"
+"\x02\x02" ENUM6270_02_02_TEXT "\0"
+"\x00\x04" ENUM6270_00_04_TEXT "\0"
+"\x04\x04" ENUM6270_04_04_TEXT "\0"
+"\x00\xE0" ENUM6270_00_E0_TEXT "\0"
+"\x20\xE0" ENUM6270_20_E0_TEXT "\0"
+"\x40\xE0" ENUM6270_40_E0_TEXT "\0"
+"\x60\xE0" ENUM6270_60_E0_TEXT
 };
 
 const char ENUM6272[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x06 Pufferspeicherfühler B41\0"
-"\x07 Abgastemperaturfühler B8\0"
-"\x08 Schienenvorlauffühler B10\0"
-"\x09 Feststoffkesselfühler B22\0"
-"\x0B Pufferspeicherfühler B42\0"
-"\x0C Schienenrücklauffühler B73\0"
-"\x0D Kaskadenrücklauffühler B70\0"
-"\x0E Schwimmbadfühler B13\0"
-"\x15 Kesselfühler B2\0"
-"\x18 Trinkwasserfühler B3\0"
+"\x00" ENUM6272_00_TEXT "\0"
+"\x06" ENUM6272_06_TEXT "\0"
+"\x07" ENUM6272_07_TEXT "\0"
+"\x08" ENUM6272_08_TEXT "\0"
+"\x09" ENUM6272_09_TEXT "\0"
+"\x0B" ENUM6272_0B_TEXT "\0"
+"\x0C" ENUM6272_0C_TEXT "\0"
+"\x0D" ENUM6272_0D_TEXT "\0"
+"\x0E" ENUM6272_0E_TEXT "\0"
+"\x15" ENUM6272_15_TEXT "\0"
+"\x18" ENUM6272_18_TEXT "\0"
 };
 
 // Konfiguration - KonfigRG5
 
 const char ENUM6280[] PROGMEM_LATEST = {
-"\x00\x03 Wassermangelsicherung Strömungswächter->Störstellung\0"
-"\x01\x03 Wassermangelsicherung Strömungswächter->Startverhinderung\0"
-"\x02\x03 Wassermangelsicherung Wasserdruckwächter->Störstellung\0"
-"\x03\x03 Wassermangelsicherung Wasserdruckwächter->Startverhinderung\0"
-"\x00\x04 Wassermangelsicherung Drehzahlbegrenzung aus\0"
-"\x04\x04 Wassermangelsicherung Drehzahlbegrenzung ein\0"
-"\x00\xF8 Bits 3-7: Grundeinstellung; nicht verändern!"
+"\x00\x03" ENUM6280_00_03_TEXT "\0"
+"\x01\x03" ENUM6280_01_03_TEXT "\0"
+"\x02\x03" ENUM6280_02_03_TEXT "\0"
+"\x03\x03" ENUM6280_03_03_TEXT "\0"
+"\x00\x04" ENUM6280_00_04_TEXT "\0"
+"\x04\x04" ENUM6280_04_04_TEXT "\0"
+"\x00\xF8" ENUM6280_00_F8_TEXT
 };
 
 // Konfiguration - KonfigRG6
 
 const char ENUM6290[] PROGMEM_LATEST = {
-"\x00\x01 Initialisierung ISR: Sofort. Übernahme Stellgröße n. Freig.\0"
-"\x01\x01 Initialisierung ISR: Stoßfreier Übergang n. Freig.\0"
-"\x00\x02 Verriegelung Fremd-Room Units: aus\0"
-"\x02\x02 Verriegelung Fremd-Room Units: ein\0"
-"\x00\x04 Quelle BW-Sollwert: RU\0"
-"\x04\x04 Quelle BW-Sollwert: HMI\0"
-"\x00\x08 Sperrsignalberechnung deaktiviert\0"
-"\x08\x08 Sperrsignalberechnung aktiviert\0"
-"\x00\x20 Schnelle Wechsel der Drehzahlgrenzen: Normale Abarb.\0"
-"\x20\x20 Schnelle Wechsel der Drehzahlgrenzen: Beschleunigt\0"
-"\x00\x40 Initialisierung ISR: Nur bei Betriebsartwechsel\0"
-"\x40\x40 Initialisierung ISR: Immer bei Brennerstart\0"
-"\x00\x80 PWM-Gebläserampen: aus\0"
-"\x80\x80 PWM-Gebläserampen: ein"
+"\x00\x01" ENUM6290_00_01_TEXT "\0"
+"\x01\x01" ENUM6290_01_01_TEXT "\0"
+"\x00\x02" ENUM6290_00_02_TEXT "\0"
+"\x02\x02" ENUM6290_02_02_TEXT "\0"
+"\x00\x04" ENUM6290_00_04_TEXT "\0"
+"\x04\x04" ENUM6290_04_04_TEXT "\0"
+"\x00\x08" ENUM6290_00_08_TEXT "\0"
+"\x08\x08" ENUM6290_08_08_TEXT "\0"
+"\x00\x20" ENUM6290_00_20_TEXT "\0"
+"\x20\x20" ENUM6290_20_20_TEXT "\0"
+"\x00\x40" ENUM6290_00_40_TEXT "\0"
+"\x40\x40" ENUM6290_40_40_TEXT "\0"
+"\x00\x80" ENUM6290_00_80_TEXT "\0"
+"\x80\x80" ENUM6290_80_80_TEXT
 };
 
 // Konfiguration - KonfigRG7
 
 const char ENUM6300[] PROGMEM_LATEST = {
-"\x00\x01 Heizkreispumpe: stufig\0"
-"\x01\x01 Heizkreispumpe: modulierend\0"
-"\x00\x02 Delta-T-Begrenzung: aus\0"
-"\x02\x02 Delta-T-Begrenzung: ein\0"
-"\x00\x04 Delta-T-Überwachung: aus\0"
-"\x04\x04 Delta-T-Überwachung: ein\0"
-"\x00\x18 Anlagenvolumen: klein\0"
-"\x08\x18 Anlagenvolumen: mittel\0"
-"\x10\x18 Anlagenvolumen: groß\0"
-"\x00\x20 Delta-T-Überwachung im Reduz.-Betrieb: aus\0"
-"\x20\x20 Delta-T-Überwachung im Reduz.-Betrieb: ein\0"
-"\x00\x40 Reglerverzögerung: nur im Heizbetrieb aktiv\0"
-"\x40\x40 Reglerverzögerung: in allen Betriebsarten aktiv\0"
-"\x00\x80 Pumpe Q1 Modulation in Syst. 51,54,55,67,70,71: aus\0"
-"\x80\x80 Pumpe Q1 Modulation in Syst. 51,54,55,67,70,71: ein"
+"\x00\x01" ENUM6300_00_01_TEXT "\0"
+"\x01\x01" ENUM6300_01_01_TEXT "\0"
+"\x00\x02" ENUM6300_00_02_TEXT "\0"
+"\x02\x02" ENUM6300_02_02_TEXT "\0"
+"\x00\x04" ENUM6300_00_04_TEXT "\0"
+"\x04\x04" ENUM6300_04_04_TEXT "\0"
+"\x00\x18" ENUM6300_00_18_TEXT "\0"
+"\x08\x18" ENUM6300_08_18_TEXT "\0"
+"\x10\x18" ENUM6300_10_18_TEXT "\0"
+"\x00\x20" ENUM6300_00_20_TEXT "\0"
+"\x20\x20" ENUM6300_20_20_TEXT "\0"
+"\x00\x40" ENUM6300_00_40_TEXT "\0"
+"\x40\x40" ENUM6300_40_40_TEXT "\0"
+"\x00\x80" ENUM6300_00_80_TEXT "\0"
+"\x80\x80" ENUM6300_80_80_TEXT
 };
 
 // Konfiguration - KonfigRG8
 
 const char ENUM6310[] PROGMEM_LATEST = {
-"\x00\x0F Sekundärtauscher: Plattenwärmetauscher\0"
-"\x01\x0F Sekundärtauscher: Wendelwärmetauscher primärseitig\0"
-"\x02\x0F Sekundärtauscher: Wendelwärmetauscher sekundärs.\0"
-"\x00\x10 1. Maximum Durchlauferhitzer-Regelung: auswerten\0"
-"\x10\x10 1. Maximum Durchlauferhitzer-Regelung: ignorieren\0"
-"\x00\x20 Durchlauferhitzer Anfrage über DLH1 Sensor oder Flow-Switch\0"
-"\x20\x20 Durchl.Erh.Anfrage nur über Flow-Switch\0"
-"\x00\x40 Position von Verteilventil nach Durchlauferhitzer.: Letzte\0"
-"\x40\x40 Position von Verteilventil nach Durchlauferhitzer.: Heizpos."
+"\x00\x0F" ENUM6310_00_0F_TEXT "\0"
+"\x01\x0F" ENUM6310_01_0F_TEXT "\0"
+"\x02\x0F" ENUM6310_02_0F_TEXT "\0"
+"\x00\x10" ENUM6310_00_10_TEXT "\0"
+"\x10\x10" ENUM6310_10_10_TEXT "\0"
+"\x00\x20" ENUM6310_00_20_TEXT "\0"
+"\x20\x20" ENUM6310_20_20_TEXT "\0"
+"\x00\x40" ENUM6310_00_40_TEXT "\0"
+"\x40\x40" ENUM6310_40_40_TEXT
 };
 
 // Konfiguration - KonfigRG10
 
 const char ENUM6330[] PROGMEM_LATEST = {
-"\x00\x01 Kesselpumpe bei Brennersperre: keine Abschaltung\0"
-"\x01\x01 Kesselpumpe bei Brennersperre: Abschaltung\0"
-"\x00\x02 Brennersperre nur bei Heizanforderung\0"
-"\x02\x02 Brennersperre nur bei Heiz- und TWW-Anforderung\0"
-"\x00\x04 Durchlauferhitzertaktschutz durch Temperaturerhöhung: aus\0"
-"\x04\x04 Durchlauferhitzertaktschutz durch Temperaturerhöhung: ein\0"
-"\x00\x08 Position des TWW-Speichers: vor hydraulischer Weiche\0"
-"\x08\x08 Position des TWW-Speichers: nach hydraulischer Weiche\0"
-"\x00\x10 Zubringerpumpe bei Brennersperre: keine Abschaltung\0"
-"\x10\x10 Zubringerpumpe bei Brennersperre: Abschaltung\0"
-"\x00\x20 Gebläseabschaltung bei Heizanforderung: Freigabe\0"
-"\x20\x20 Gebläseabschaltung bei Heizanforderung: keine Freigabe\0"
-"\x00\x40 Pumpennachlauf TWW bei weiteren Wärmeanf.: Unterdrücken\0"
-"\x40\x40 Pumpennachlauf TWW bei weiteren Wärmeanf.: Durchführen"
+"\x00\x01" ENUM6330_00_01_TEXT "\0"
+"\x01\x01" ENUM6330_01_01_TEXT "\0"
+"\x00\x02" ENUM6330_00_02_TEXT "\0"
+"\x02\x02" ENUM6330_02_02_TEXT "\0"
+"\x00\x04" ENUM6330_00_04_TEXT "\0"
+"\x04\x04" ENUM6330_04_04_TEXT "\0"
+"\x00\x08" ENUM6330_00_08_TEXT "\0"
+"\x08\x08" ENUM6330_08_08_TEXT "\0"
+"\x00\x10" ENUM6330_00_10_TEXT "\0"
+"\x10\x10" ENUM6330_10_10_TEXT "\0"
+"\x00\x20" ENUM6330_00_20_TEXT "\0"
+"\x20\x20" ENUM6330_20_20_TEXT "\0"
+"\x00\x40" ENUM6330_00_40_TEXT "\0"
+"\x40\x40" ENUM6330_40_40_TEXT
 };
 
 // Konfiguration - Relaisausgang QX35  //FUJITSU
 const char ENUM6375[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x02 Prozessumkehrventil Y22\0"
-"\x03 Heissgastemperatur K31\0"
-"\x04 Elektroeinsatz1 Vorlauf K25\0"
-"\x05 Elektroeinsatz2 Vorlauf K26\0"
-"\x06 Umlenkventil Kühl Quelle Y28\0"
-"\x07 Zubringerpumpe Q14\0"
-"\x08 Kaskadenpumpe Q25\0"
-"\x09 Erzeugersperrventil Y4\0"
-"\x0a Elektroeinsatz TWW K6\0"
-"\x0b Zirkulationspumpe Q4\0"
-"\x0c Speicherumladepumpe Q11\0"
-"\x0d TWW Zwisch'kreispumpe Q33\0"
-"\x0e TWW Durchmischpumpe Q35\0"
-"\x0f Kollektorpumpe Q5\0"
-"\x10 Kollektorpumpe 2 Q16\0"
-"\x11 Solarpumpe ext.Tauscher K9\0"
-"\x12 Solarstellglied Puffer K8\0"
-"\x13 Solarstellglied Schw'bad K18\0"
-"\x14 Elektroeinsatz Puffer K16\0"
-"\x15 Verb'kreispumpe VK1 Q15\0"
-"\x16 Verb'kreispumpe VK2 Q18\0"
-"\x17 Schwimmbadpumpe Q19\0"
-"\x18 Heizkreispumpe HK3 Q20\0"
-"\x19 2. Pumpenstufe HK1 Q21\0"
-"\x1a 2. Pumpenstufe HK2 Q22\0"
-"\x1b 2. Pumpenstufe HK3 Q23\0"
-"\x1c Umlenkventil HK/KK1 Y21\0"
-"\x1d Luftentfeuchter K29\0"
-"\x1e Wärmeanforderung K27\0"
-"\x1f Kälteanforderung K28\0"
-"\x20 Alarmausgang K10\0"
-"\x21 Zeitprogramm 5 K13\0"
-"\x22 Heizkreispumpe HK1 Q2\0"
-"\x23 Trinkwasserstellglied Q3\0"
-"\x24 Quell'pumoe Q8/Ventilat K19\0"
-"\x25 Kondensatorpumpe Q9\0"
-"\x26 Verdichterstufe 1 K1\0"
-"\x27 Zus'erzeuger Regelung K32\0"
-"\x28 unbelegt\0"
-"\x29 Heizkreispumpe HK2 Q6\0"
-"\x2a Durchl'erhitzerstellglied Q34\0"
-"\x2b unbelegt\0"
-"\x2c unbelegt\0"
-"\x2d Umlenkventil HK/KK2 Y45\0"
-"\x2e Umlenkventil HK/KK3 Y46\0"
-"\x2f Kühlkreispumpe KK1 Q24\0"
-"\x30 Kühlkreispumpe KK2 Q28\0"
-"\x31 Kühlkreispumpe KK2 Q29\0"
-"\x32 Feststoffkesselpumpe Q10\0"
-"\x33 Abgasrelais K17\0"
-"\x34 Anfeuer'hilfe Ventilator K30\0"
-"\x35 Ölsumpfheizung K40\0"
-"\x36 Abtropfwannenheizung K41\0"
-"\x37 Ventil Verdampfer K81\0"
-"\x38 Ventil EVI K82\0"
-"\x39 Ventil Einspritzkapillare K83\0"
-"\x3a 58\0"
-"\x3b 59\0"
-"\x3c 60"
+"\x00" ENUM6375_00_TEXT "\0"
+"\x02" ENUM6375_02_TEXT "\0"
+"\x03" ENUM6375_03_TEXT "\0"
+"\x04" ENUM6375_04_TEXT "\0"
+"\x05" ENUM6375_05_TEXT "\0"
+"\x06" ENUM6375_06_TEXT "\0"
+"\x07" ENUM6375_07_TEXT "\0"
+"\x08" ENUM6375_08_TEXT "\0"
+"\x09" ENUM6375_09_TEXT "\0"
+"\x0a" ENUM6375_0a_TEXT "\0"
+"\x0b" ENUM6375_0b_TEXT "\0"
+"\x0c" ENUM6375_0c_TEXT "\0"
+"\x0d" ENUM6375_0d_TEXT "\0"
+"\x0e" ENUM6375_0e_TEXT "\0"
+"\x0f" ENUM6375_0f_TEXT "\0"
+"\x10" ENUM6375_10_TEXT "\0"
+"\x11" ENUM6375_11_TEXT "\0"
+"\x12" ENUM6375_12_TEXT "\0"
+"\x13" ENUM6375_13_TEXT "\0"
+"\x14" ENUM6375_14_TEXT "\0"
+"\x15" ENUM6375_15_TEXT "\0"
+"\x16" ENUM6375_16_TEXT "\0"
+"\x17" ENUM6375_17_TEXT "\0"
+"\x18" ENUM6375_18_TEXT "\0"
+"\x19" ENUM6375_19_TEXT "\0"
+"\x1a" ENUM6375_1a_TEXT "\0"
+"\x1b" ENUM6375_1b_TEXT "\0"
+"\x1c" ENUM6375_1c_TEXT "\0"
+"\x1d" ENUM6375_1d_TEXT "\0"
+"\x1e" ENUM6375_1e_TEXT "\0"
+"\x1f" ENUM6375_1f_TEXT "\0"
+"\x20" ENUM6375_20_TEXT "\0"
+"\x21" ENUM6375_21_TEXT "\0"
+"\x22" ENUM6375_22_TEXT "\0"
+"\x23" ENUM6375_23_TEXT "\0"
+"\x24" ENUM6375_24_TEXT "\0"
+"\x25" ENUM6375_25_TEXT "\0"
+"\x26" ENUM6375_26_TEXT "\0"
+"\x27" ENUM6375_27_TEXT "\0"
+"\x28" ENUM6375_28_TEXT "\0"
+"\x29" ENUM6375_29_TEXT "\0"
+"\x2a" ENUM6375_2a_TEXT "\0"
+"\x2b" ENUM6375_2b_TEXT "\0"
+"\x2c" ENUM6375_2c_TEXT "\0"
+"\x2d" ENUM6375_2d_TEXT "\0"
+"\x2e" ENUM6375_2e_TEXT "\0"
+"\x2f" ENUM6375_2f_TEXT "\0"
+"\x30" ENUM6375_30_TEXT "\0"
+"\x31" ENUM6375_31_TEXT "\0"
+"\x32" ENUM6375_32_TEXT "\0"
+"\x33" ENUM6375_33_TEXT "\0"
+"\x34" ENUM6375_34_TEXT "\0"
+"\x35" ENUM6375_35_TEXT "\0"
+"\x36" ENUM6375_36_TEXT "\0"
+"\x37" ENUM6375_37_TEXT "\0"
+"\x38" ENUM6375_38_TEXT "\0"
+"\x39" ENUM6375_39_TEXT "\0"
+"\x3a" ENUM6375_3a_TEXT "\0"
+"\x3b" ENUM6375_3b_TEXT "\0"
+"\x3c" ENUM6375_3c_TEXT
 };
 
 // Konfiguration - Funktion Eingang H33  //FUJITSU
 const char ENUM6420[] PROGMEM_LATEST = {
-"\x00 Nicht verwendet\0"
-"\x01 Betriebsartumschaltung HKW+TWW\0"
-"\x02 Betriebsartumschaltung HKW\0"
-"\x03 Betriebsartumschaltung HKW1\0"
-"\x04 Betriebsartumschaltung HKW2\0"
-"\x05 Betriebsartumschaltung HKP\0"
-"\x06 Nicht verwendet\0"
-"\x07 Nicht verwendet\0"
-"\x08 Nicht verwendet\0"
-"\x09 Nicht verwendet\0"
-"\x0a Nicht verwendet\0"
-"\x0b Betriebsartumschaltung Heizung Swimmingpool\0"
-"\x0c Nicht verwendet\0"
-"\x0d Nicht verwendet"
+"\x00" ENUM6420_00_TEXT "\0"
+"\x01" ENUM6420_01_TEXT "\0"
+"\x02" ENUM6420_02_TEXT "\0"
+"\x03" ENUM6420_03_TEXT "\0"
+"\x04" ENUM6420_04_TEXT "\0"
+"\x05" ENUM6420_05_TEXT "\0"
+"\x06" ENUM6420_06_TEXT "\0"
+"\x07" ENUM6420_07_TEXT "\0"
+"\x08" ENUM6420_08_TEXT "\0"
+"\x09" ENUM6420_09_TEXT "\0"
+"\x0a" ENUM6420_0a_TEXT "\0"
+"\x0b" ENUM6420_0b_TEXT "\0"
+"\x0c" ENUM6420_0c_TEXT "\0"
+"\x0d" ENUM6420_0d_TEXT
 };
 
 #define ENUM6421 ENUM5951               // Konfiguration - Wirksinn Kontakt H33 //FUJITSU
 
 // LPB   - Busspeisung Funktion
 const char ENUM6604[] PROGMEM_LATEST = {
-"\x00 Aus\0"
-"\x01 Automatisch"
+"\x00" ENUM6604_00_TEXT "\0"
+"\x01" ENUM6604_01_TEXT
 };
 
 // LPB   - LPBKonfig0
 
 const char ENUM6606[] PROGMEM_LATEST = {
-"\x00\x03 Uhrzeitlieferant Autonom\0"
-"\x01\x03 Uhrzeitlieferant Slave ohne Fernverstellung\0"
-"\x02\x03 Uhrzeitlieferant Slave mit Fernverstellung\0"
-"\x03\x03 Uhrzeitlieferant Systemzeit Master\0"
-"\x00\x04 Verteilte Busspeisung aus\0"
-"\x04\x04 Verteilte Busspeisung Automatik\0"
-"\x00\x08 Status Bussppeisung aus\0"
-"\x08\x08 Status Busspeisung ein\0"
-"\x00\x10 Ereignisverhalten nicht erlaubt\0"
-"\x10\x10 Ereignisverhalten erlaubt\0"
-"\x00\x60 Brauchwasserzuordnung Eigener Regler\0"
-"\x20\x60 Brauchwasserzuordnung Alle Regler Segment\0"
-"\x40\x60 Brauchwasserzuordnung Alle Regler Verbund\0"
-"\x00\x80 Vorrang LMU-Anforderung aus\0"
-"\x80\x80 Vorrang LMU-Anforderung ein"
+"\x00\x03" ENUM6606_00_03_TEXT "\0"
+"\x01\x03" ENUM6606_01_03_TEXT "\0"
+"\x02\x03" ENUM6606_02_03_TEXT "\0"
+"\x03\x03" ENUM6606_03_03_TEXT "\0"
+"\x00\x04" ENUM6606_00_04_TEXT "\0"
+"\x04\x04" ENUM6606_04_04_TEXT "\0"
+"\x00\x08" ENUM6606_00_08_TEXT "\0"
+"\x08\x08" ENUM6606_08_08_TEXT "\0"
+"\x00\x10" ENUM6606_00_10_TEXT "\0"
+"\x10\x10" ENUM6606_10_10_TEXT "\0"
+"\x00\x60" ENUM6606_00_60_TEXT "\0"
+"\x20\x60" ENUM6606_20_60_TEXT "\0"
+"\x40\x60" ENUM6606_40_60_TEXT "\0"
+"\x00\x80" ENUM6606_00_80_TEXT "\0"
+"\x80\x80" ENUM6606_80_80_TEXT
 };
 
 // LPB   - Wirkbereich Umschaltungen
 const char ENUM6620[] PROGMEM_LATEST = {
-"\x00 Segment\0"
-"\x01 System\0"
-"\xff System"
+"\x00" ENUM6620_00_TEXT "\0"
+"\x01" ENUM6620_01_TEXT "\0"
+"\xff" ENUM6620_ff_TEXT
 };
 
 // LPB   - Sommerumschaltung
 const char ENUM6621[] PROGMEM_LATEST = {
-"\x00 Lokal\0"
-"\x01 Zentral\0"
-"\xff Zentral"
+"\x00" ENUM6621_00_TEXT "\0"
+"\x01" ENUM6621_01_TEXT "\0"
+"\xff" ENUM6621_ff_TEXT
 };
 
 const char ENUM6623[] PROGMEM_LATEST = {
-"\x00 Lokal\0"
-"\x01 Zentral"
+"\x00" ENUM6623_00_TEXT "\0"
+"\x01" ENUM6623_01_TEXT
 };
 
 const char ENUM6624[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x00 ?Lokal\0"
-"\x01 ?Segment"
+"\x00" "?" ENUM6624_00_TEXT "\0"
+"\x01" "?" ENUM6624_01_TEXT
 };
 
 // LPB   - Trinkwasserzuordnung
 // Texts in the ACS Programm: "Eigener Regler", "Alle Regler im eigenen Segment", "Alle Regler im Verbund"
 const char ENUM6625[] PROGMEM_LATEST = {
-"\x00 Lokale Heizkreise\0"
-"\x01 Alle Heizkreise im Segment\0"
-"\x02 Alle Heizkreise im System"
+"\x00" ENUM6625_00_TEXT "\0"
+"\x01" ENUM6625_01_TEXT "\0"
+"\x02" ENUM6625_02_TEXT
 };
 
 #define ENUM6627 ENUM6623
 
 const char ENUM6630[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x00 ?Immer\0"
-"\x01 ?Automatisch"
+"\x00" "?" ENUM6630_00_TEXT "\0"
+"\x01" "?" ENUM6630_01_TEXT
 };
 
 const char ENUM6631[] PROGMEM_LATEST = {	// numerical values are hypothetical
-  "\x00 ?Aus\0"
-  "\x01 ?Ein Trinkwasser\0"
-  "\x02 ?Ein"
+"\x00" "?" ENUM6631_00_TEXT "\0"
+"\x01" "?" ENUM6631_01_TEXT "\0"
+"\x02" "?" ENUM6631_02_TEXT
 };
 
 // LPB   - Uhrbetrieb
 const char ENUM6640[] PROGMEM_LATEST = {
-"\x00 Autonom\0"
-"\x01 Slave ohne Fernverstellung\0"
-"\x02 Slave mit Fernverstellung\0"
-"\x03 Master"
+"\x00" ENUM6640_00_TEXT "\0"
+"\x01" ENUM6640_01_TEXT "\0"
+"\x02" ENUM6640_02_TEXT "\0"
+"\x03" ENUM6640_03_TEXT
 };
 // !TODO! ProgNo 6670 is not defined elsewhere
 const char ENUM6670[] PROGMEM_LATEST = {
-"\x00 Kesselsollwert\0"
-"\x01 Leistungsanforderung\0"
-"\x02 Wärmeanforderung"
+"\x00" ENUM6670_00_TEXT "\0"
+"\x01" ENUM6670_01_TEXT "\0"
+"\x02" ENUM6670_02_TEXT
 };
 
 #define ENUM7119 ENUM2920    // ProgNr 7119 "Ökofunktion" FUJITSU
 
 const char ENUM7131[] PROGMEM_LATEST = {
-"\x01 Teillast\0"         // ENUM-Wert überprüfen!
-"\x02 Volllast\0"
-"\x03 Maximale Heizlast"  // ENUM-Wert überprüfen!
+"\x01" ENUM7131_01_TEXT "\0"         // ENUM-Wert überprüfen!
+"\x02" ENUM7131_02_TEXT "\0"
+"\x03" ENUM7131_03_TEXT  // ENUM-Wert überprüfen!
 };
 
 const char ENUM7142[] PROGMEM_LATEST = {
-"\x01 Manuell\0"
-"\x02 Automatisch"
+"\x01" ENUM7142_01_TEXT "\0"
+"\x02" ENUM7142_02_TEXT
 };
 
 const char ENUM7147[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Heizkreis Dauerlauf\0"
-"\x02 Heizkreis Getaktet\0"
-"\x03 Trinkwasser Dauerlauf\0"
-"\x04 Trinkwasser Getaktet"
+"\x00" ENUM7147_00_TEXT "\0"
+"\x01" ENUM7147_01_TEXT "\0"
+"\x02" ENUM7147_02_TEXT "\0"
+"\x03" ENUM7147_03_TEXT "\0"
+"\x04" ENUM7147_04_TEXT
 }; // todo Hinweis: x00 Keine ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM7252[] PROGMEM_LATEST = {
-"\x00 Keine Operation\0"
-"\x01 Lesen von Stick\0"
-"\x02 Schreiben auf Stick"
+"\x00" ENUM7252_00_TEXT "\0"
+"\x01" ENUM7252_01_TEXT "\0"
+"\x02" ENUM7252_02_TEXT
 };
 
 // Konfiguration Erweit'module - Relaisausgang QX21 Modul 2
 const char ENUM7376[] PROGMEM_LATEST = {
-"\x00 Kein\0"
-"\x01 Zirkulationspumpe Q4\0"
-//"\x02 Elektroeinsatz TWW K6\0"
-"\x03 Kollektorpumpe Q5\0"
-"\x04 Verbr'kreispumpe VK1 Q15\0"
-//"\x05 Kesselpumpe Q1\0"
-//"\x06 Bypasspumpe Q12\0"
-"\x07 Alarmausgang K10\0"
-//"\x08 2.Pumpenstufe HK1 Q21\0"
-//"\x09 2.Pumpenstufe HK2 Q22\0"
-//"\x0a 2.Pumpenstufe HKP Q23\0"
-//"\x0b Heizkreispumpe HKP Q20\0"
-//"\x0c H2-Pumpe Q18\0"
-//"\x0d Zubringerpumpe Q14\0"
-//"\x0e Erzeugersperrventil Y4\0"
-//"\x0f Feststoffkesselpumpe Q10\0"
-//"\x10 Zeitprogramm 5 K13\0"
-//"\x11 Pufferrücklaufventil Y15\0"
-//"\x12 Solarpumpe ext. Tauscher K9\0"
-//"\x13 Solarstellglied Puffer K8\0"
-//"\x14 Solarstellglied Schw'bad K18\0"
-//"\x15 Kollektorpumpe 2 Q16\0"
-//"\x16 H3-Pumpe Q19\0"
-//"\x17 Abgasrelais K17\0"
-//"\x19 Kaskadenpumpe Q25\0"
-//"\x1a Speicherumladepumpe Q11\0"
-"\x1b TWW Durchmischpumpe Q35\0"
-//"\x1c TWW Zwisch'kreispumpe Q33\0"
-//"\x1d Wärmeanforderung K27\0"
-"\x21 Heizkreispumpe HK1 Q2\0"
-"\x28 Meldeausgang K35\0"
+"\x00" ENUM7376_00_TEXT "\0"
+"\x01" ENUM7376_01_TEXT "\0"
+"\x02" ENUM7376_02_TEXT "\0"
+"\x03" ENUM7376_03_TEXT "\0"
+"\x04" ENUM7376_04_TEXT "\0"
+"\x05" ENUM7376_05_TEXT "\0"
+"\x06" ENUM7376_06_TEXT "\0"
+"\x07" ENUM7376_07_TEXT "\0"
+"\x08" ENUM7376_08_TEXT "\0"
+"\x09" ENUM7376_09_TEXT "\0"
+"\x0a" ENUM7376_0a_TEXT "\0"
+"\x0b" ENUM7376_0b_TEXT "\0"
+"\x0c" ENUM7376_0c_TEXT "\0"
+"\x0d" ENUM7376_0d_TEXT "\0"
+"\x0e" ENUM7376_0e_TEXT "\0"
+"\x0f" ENUM7376_0f_TEXT "\0"
+"\x10" ENUM7376_10_TEXT "\0"
+"\x11" ENUM7376_11_TEXT "\0"
+"\x12" ENUM7376_12_TEXT "\0"
+"\x13" ENUM7376_13_TEXT "\0"
+"\x14" ENUM7376_14_TEXT "\0"
+"\x15" ENUM7376_15_TEXT "\0"
+"\x16" ENUM7376_16_TEXT "\0"
+"\x17" ENUM7376_17_TEXT "\0"
+"\x19" ENUM7376_19_TEXT "\0"
+"\x1a" ENUM7376_1a_TEXT "\0"
+"\x1b" ENUM7376_1b_TEXT "\0"
+"\x1c" ENUM7376_1c_TEXT "\0"
+"\x1d" ENUM7376_1d_TEXT "\0"
+"\x21" ENUM7376_21_TEXT "\0"
+"\x28" ENUM7376_28_TEXT "\0"
 "\x29 Betriebsmeldung K36"};
 
 
 const char ENUM7425[] PROGMEM_LATEST = {
-"\x00 0..10V\0"
-"\x01 PWM"
+"\x00" ENUM7425_00_TEXT "\0"
+"\x01" ENUM7425_01_TEXT
 };
 
 // Ein-/Ausgangstest - Relaistest
 const char ENUM7700[] PROGMEM_LATEST = {
-"\x00 Kein Test\0"
-"\x01 Alles aus\0"
-"\x02 ---\0"
-"\x03 ---\0"
-"\x04 Trinkwasserpumpe Q3\0"
-"\x05 Heizkreispumpe Q2\0"
-"\x06 Heizkreismischer Auf Y1\0"
-"\x07 Heizkreismischer Zu Y2\0"
-"\x08 Heizkreispumpe Q6\0"
-"\x09 Heizkreismischer Auf Y5\0"
-"\x0a Heizkreismischer Zu Y6\0"
-"\x0b Relaisausgang QX1\0"
-"\x0c Relaisausgang QX2\0"
-"\x0d Relaisausgang QX3\0"
-"\x0e Relaisausgang QX4\0"
-"\x0f Relaisausgang QX21 Modul 1\0"
-"\x10 Relaisausgang QX22 Modul 1\0"
-"\x11 Relaisausgang QX23 Modul 1\0"
-"\x12 Relaisausgang QX21 Modul 2\0"
-"\x13 Relaisausgang QX22 Modul 2\0"
-"\x14 Relaisausgang QX23 Modul 2"
+"\x00" ENUM7700_00_TEXT "\0"
+"\x01" ENUM7700_01_TEXT "\0"
+"\x02" ENUM7700_02_TEXT "\0"
+"\x03" ENUM7700_03_TEXT "\0"
+"\x04" ENUM7700_04_TEXT "\0"
+"\x05" ENUM7700_05_TEXT "\0"
+"\x06" ENUM7700_06_TEXT "\0"
+"\x07" ENUM7700_07_TEXT "\0"
+"\x08" ENUM7700_08_TEXT "\0"
+"\x09" ENUM7700_09_TEXT "\0"
+"\x0a" ENUM7700_0a_TEXT "\0"
+"\x0b" ENUM7700_0b_TEXT "\0"
+"\x0c" ENUM7700_0c_TEXT "\0"
+"\x0d" ENUM7700_0d_TEXT "\0"
+"\x0e" ENUM7700_0e_TEXT "\0"
+"\x0f" ENUM7700_0f_TEXT "\0"
+"\x10" ENUM7700_10_TEXT "\0"
+"\x11" ENUM7700_11_TEXT "\0"
+"\x12" ENUM7700_12_TEXT "\0"
+"\x13" ENUM7700_13_TEXT "\0"
+"\x14" ENUM7700_14_TEXT
 };
 
 const char ENUM7700_2[] PROGMEM_LATEST = {
-"\x00 Regelbetrieb nach Betriebszustand\0"
-"\x01 Alle Ausgänge AUS\0"
-"\x02 Brennerstufe 1 EIN K4\0"
-"\x03 Brenerstufe 1 und 2 EIN K4 / K5\0"
-"\x04 Brauchwasser-Ladepumpe EIN Q3 / Y3\0"
-"\x05 Heizkreispumpe 1 / Q2\0"
-"\x06 Mischer 1 auf Y1\0"
-"\x07 Mischer 2 zu Y2\0"
-"\x08 Multifunktionaler Ausgang EIN K6\0"
-"\x09 Multifunktionaler Ausgang EIN K7"
+"\x00" ENUM7700_2_00_TEXT "\0"
+"\x01" ENUM7700_2_01_TEXT "\0"
+"\x02" ENUM7700_2_02_TEXT "\0"
+"\x03" ENUM7700_2_03_TEXT "\0"
+"\x04" ENUM7700_2_04_TEXT "\0"
+"\x05" ENUM7700_2_05_TEXT "\0"
+"\x06" ENUM7700_2_06_TEXT "\0"
+"\x07" ENUM7700_2_07_TEXT "\0"
+"\x08" ENUM7700_2_08_TEXT "\0"
+"\x09" ENUM7700_2_09_TEXT
 };
 
 //Eingangssignal H33  //FUJITSU
 const char ENUM7999[] PROGMEM_LATEST = {
-"\x00 Keine\0"
-"\x01 Geschl'(ooo), Offen (---)\0"
-"\x02 ?Puls\0"
-"\x03 ?Frequenz Hz\0"
-"\x04 ?Spannung V"
+"\x00" ENUM7999_00_TEXT "\0"
+"\x01" ENUM7999_01_TEXT "\0"
+"\x02" "?" ENUM7999_02_TEXT "\0"
+"\x03" "?" ENUM7999_03_TEXT "\0"
+"\x04" "?" ENUM7999_04_TEXT
 };
 
 // Status Heizkreis 1, 2, 3
 const char ENUM8000[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x03 Wächter angesprochen\0"
-"\x04 Handbetrieb aktiv\0"
-"\x11 Nachlauf aktiv\0"
-"\x16 Anlagenfrostschutz aktiv\0"
-"\x17 Frostschutz aktiv\0"
-"\x18 Aus\0"
-"\x38 Überhitzschutz aktiv\0"
-"\x65 Raumfrostschutz aktiv\0"
-"\x66 Estrichfunktion aktiv\0"
-"\x67 Eingeschränkt, Kesselschutz\0"
-"\x68 Eingeschränkt, TWW-Vorrang\0"
-"\x69 Eingeschränkt, Puffer\0"
-"\x6a Heizbetrieb eingeschränkt\0"
-"\x6b Zwangsabnahme Puffer\0"
-"\x6c Zwangsabnahme TWW\0"
-"\x6d Zwangsabnahme Erzeuger\0"
-"\x6e Zwangsabnahme\0"
-"\x6f Einschaltopt + Schnellaufheiz\0"
-"\x70 Einschaltoptimierung\0"
-"\x71 Schnellaufheizung\0"
-"\x72 Heizbetrieb Komfort\0"
-"\x73 Ausschaltoptimierung\0"
-"\x74 Heizbetrieb Reduziert\0"
-"\x75 Vorlauffrostschutz aktiv\0"
-"\x76 Sommerbetrieb\0"
-"\x77 Tages-Eco aktiv\0"
-"\x78 Absenkung Reduziert\0"
-"\x79 Absenkung Frostschutz\0"
+"\x00" ENUM8000_00_TEXT "\0"
+"\x03" ENUM8000_03_TEXT "\0"
+"\x04" ENUM8000_04_TEXT "\0"
+"\x11" ENUM8000_11_TEXT "\0"
+"\x16" ENUM8000_16_TEXT "\0"
+"\x17" ENUM8000_17_TEXT "\0"
+"\x18" ENUM8000_18_TEXT "\0"
+"\x38" ENUM8000_38_TEXT "\0"
+"\x65" ENUM8000_65_TEXT "\0"
+"\x66" ENUM8000_66_TEXT "\0"
+"\x67" ENUM8000_67_TEXT "\0"
+"\x68" ENUM8000_68_TEXT "\0"
+"\x69" ENUM8000_69_TEXT "\0"
+"\x6a" ENUM8000_6a_TEXT "\0"
+"\x6b" ENUM8000_6b_TEXT "\0"
+"\x6c" ENUM8000_6c_TEXT "\0"
+"\x6d" ENUM8000_6d_TEXT "\0"
+"\x6e" ENUM8000_6e_TEXT "\0"
+"\x6f" ENUM8000_6f_TEXT "\0"
+"\x70" ENUM8000_70_TEXT "\0"
+"\x71" ENUM8000_71_TEXT "\0"
+"\x72" ENUM8000_72_TEXT "\0"
+"\x73" ENUM8000_73_TEXT "\0"
+"\x74" ENUM8000_74_TEXT "\0"
+"\x75" ENUM8000_75_TEXT "\0"
+"\x76" ENUM8000_76_TEXT "\0"
+"\x77" ENUM8000_77_TEXT "\0"
+"\x78" ENUM8000_78_TEXT "\0"
+"\x79" ENUM8000_79_TEXT "\0"
 "\x7a Raumtemp’begrenzung"};
 
 #define ENUM8001 ENUM8000               // Status - Status Heizkreis 2
@@ -3834,245 +4570,244 @@ const char ENUM8000[] PROGMEM_LATEST = {
 
 //Status Trinkwasser
 const char ENUM8003[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x03 Wächter angesprochen\0"
-"\x04 Handbetrieb aktiv\0"
-"\x11 Nachlauf aktiv\0"
-"\x18 Frostschutz aktiv\0"
-"\x19 Aus\0"
-"\x35 Rückkühlung aktiv\0"
-"\x42 Ladung Elektroeinsatz\0"
-"\x43 Zwangsladung aktiv\0"
-"\x45 Ladung aktiv\0"
-"\x46 Geladen, Max Speichertemp\0"
-"\x47 Geladen, Max Ladetemp\0"
-"\x4b Geladen\0"
-"\x4d Rückkühlung via Kollektor\0"
-"\x4e Rückkühlung via Erz / Hk's\0"
-"\x4f Entladeschutz aktiv\0"
-"\x50 Ladezeitbegrenzung aktiv\0"
-"\x51 Ladung gesperrt\0"
-"\x52 Ladesperre aktiv\0"
-"\x53 Zwang, Max Speichertemp\0"
-"\x54 Zwang, Max Ladetemperatur\0"
-"\x55 Zwang, Legionellensollwert\0"
-"\x56 Zwang, Nennsollwert\0"
-"\x57 Ladung Elektro, Leg’sollwert\0"
-"\x58 Ladung Elektro, Nennsollwert\0"
-"\x59 Ladung Elektro, Red’sollwert\0"
-"\x5a Ladung Elektro, Fros’sollwert\0"
-"\x5b Elektroeinsatz freigegeben\0"
-"\x5c Push, Legionellensollwert\0"
-"\x5d Push, Nennsollwert\0"
-"\x5e Push aktiv\0"
-"\x5f Ladung, Legionellensollwert\0"
-"\x60 Ladung, Nennsollwert\0"
-"\x61 Ladung, Reduziertsollwert\0"
-"\x62 Geladen, Legio’temperatur\0"
-"\x63 Geladen, Nenntemperatur\0"
-"\x64 Geladen, Reduz’temperatur\0"
-"\xc7 Zapfbetrieb\0"
-"\xc8 Bereit\0"
-"\xc9 Bereitschaftsladung"
+"\x00" ENUM8003_00_TEXT "\0"
+"\x03" ENUM8003_03_TEXT "\0"
+"\x04" ENUM8003_04_TEXT "\0"
+"\x11" ENUM8003_11_TEXT "\0"
+"\x18" ENUM8003_18_TEXT "\0"
+"\x19" ENUM8003_19_TEXT "\0"
+"\x35" ENUM8003_35_TEXT "\0"
+"\x42" ENUM8003_42_TEXT "\0"
+"\x43" ENUM8003_43_TEXT "\0"
+"\x45" ENUM8003_45_TEXT "\0"
+"\x46" ENUM8003_46_TEXT "\0"
+"\x47" ENUM8003_47_TEXT "\0"
+"\x4b" ENUM8003_4b_TEXT "\0"
+"\x4d" ENUM8003_4d_TEXT "\0"
+"\x4e" ENUM8003_4e_TEXT "\0"
+"\x4f" ENUM8003_4f_TEXT "\0"
+"\x50" ENUM8003_50_TEXT "\0"
+"\x51" ENUM8003_51_TEXT "\0"
+"\x52" ENUM8003_52_TEXT "\0"
+"\x53" ENUM8003_53_TEXT "\0"
+"\x54" ENUM8003_54_TEXT "\0"
+"\x55" ENUM8003_55_TEXT "\0"
+"\x56" ENUM8003_56_TEXT "\0"
+"\x57" ENUM8003_57_TEXT "\0"
+"\x58" ENUM8003_58_TEXT "\0"
+"\x59" ENUM8003_59_TEXT "\0"
+"\x5a" ENUM8003_5a_TEXT "\0"
+"\x5b" ENUM8003_5b_TEXT "\0"
+"\x5c" ENUM8003_5c_TEXT "\0"
+"\x5d" ENUM8003_5d_TEXT "\0"
+"\x5e" ENUM8003_5e_TEXT "\0"
+"\x5f" ENUM8003_5f_TEXT "\0"
+"\x60" ENUM8003_60_TEXT "\0"
+"\x61" ENUM8003_61_TEXT "\0"
+"\x62" ENUM8003_62_TEXT "\0"
+"\x63" ENUM8003_63_TEXT "\0"
+"\x64" ENUM8003_64_TEXT "\0"
+"\xc7" ENUM8003_c7_TEXT "\0"
+"\xc8" ENUM8003_c8_TEXT "\0"
+"\xc9" ENUM8003_c9_TEXT
 };
 
 //Status Kühlkreis 1  //FUJITSU
 const char ENUM8004[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x8A Kühlbetrieb aus"
+"\x00" ENUM8004_00_TEXT "\0"
+"\x8A" ENUM8004_8A_TEXT
 };
 
 //Status Kessel
 const char ENUM8005[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x01 STB angesprochen\0"
-"\x02 Störung\0"
-"\x03 Wächter angesprochen\0"
-"\x04 Handbetrieb aktiv\0"
-"\x05 Schornsteinfegerfkt, Vollast\0"
-"\x06 Schornsteinfegerfkt, Teillast\0"
-"\x07 Schornsteinfegerfkt aktiv\0"
-"\x08 Gesperrt, Manuell\0"
-"\x09 Gesperrt, Automatisch\0"
-"\x0a Gesperrt\0"
-"\x0b Anfahrentlastung\0"
-"\x0c Anfahrentlastung, Teillast\0"
-"\x0d Rückl’begrenzung\0"
-"\x0e Rückl’begrenzung, Teillast\0"
-"\x0f Freigegeben\0"
-"\x10 Freigegeben, Teillast\0"
-"\x11 Nachlauf aktiv\0"
-"\x12 In Betrieb\0"
-"\x13 Freigegeben\0"
-"\x14 Minimalbegrenzung\0"
-"\x15 Minimalbegrenzung, Teillast\0"
-"\x16 Minimalbegrenzung aktiv\0"
-"\x17 Anlagenfrostschutz aktiv\0"
-"\x18 Frostschutz aktiv\0"
-"\x19 Aus\0"
-"\x3b Ladung Pufferspeicher\0"
-"\x7b STB Test aktiv\0"
-"\xa6 In Betrieb für Heizkreis\0"
-"\xa7 In Teillastbetrieb für HK\0"
-"\xa8 In Betrieb für Trinkwasser\0"
-"\xa9 In Teillastbetrieb für TWW\0"
-"\xaa In Betrieb für HK, TWW\0"
-"\xab In Teillastbetrieb für HK, TWW\0"
-"\xac Gesperrt, Feststoffkessel\0"
-"\xad Freigegeben für HK, TWW\0"
-"\xae Freigeben für TWW\0"
-"\xaf Freigegeben für HK\0"
-"\xb0 Gesperrt, Außentemperatur\0"
-"\xc6 Gesperrt, Ökobetrieb"
+"\x00" ENUM8005_00_TEXT "\0"
+"\x01" ENUM8005_01_TEXT "\0"
+"\x02" ENUM8005_02_TEXT "\0"
+"\x03" ENUM8005_03_TEXT "\0"
+"\x04" ENUM8005_04_TEXT "\0"
+"\x05" ENUM8005_05_TEXT "\0"
+"\x06" ENUM8005_06_TEXT "\0"
+"\x07" ENUM8005_07_TEXT "\0"
+"\x08" ENUM8005_08_TEXT "\0"
+"\x09" ENUM8005_09_TEXT "\0"
+"\x0a" ENUM8005_0a_TEXT "\0"
+"\x0b" ENUM8005_0b_TEXT "\0"
+"\x0c" ENUM8005_0c_TEXT "\0"
+"\x0d" ENUM8005_0d_TEXT "\0"
+"\x0e" ENUM8005_0e_TEXT "\0"
+"\x0f" ENUM8005_0f_TEXT "\0"
+"\x10" ENUM8005_10_TEXT "\0"
+"\x11" ENUM8005_11_TEXT "\0"
+"\x12" ENUM8005_12_TEXT "\0"
+"\x13" ENUM8005_13_TEXT "\0"
+"\x14" ENUM8005_14_TEXT "\0"
+"\x15" ENUM8005_15_TEXT "\0"
+"\x16" ENUM8005_16_TEXT "\0"
+"\x17" ENUM8005_17_TEXT "\0"
+"\x18" ENUM8005_18_TEXT "\0"
+"\x19" ENUM8005_19_TEXT "\0"
+"\x3b" ENUM8005_3b_TEXT "\0"
+"\x7b" ENUM8005_7b_TEXT "\0"
+"\xa6" ENUM8005_a6_TEXT "\0"
+"\xa7" ENUM8005_a7_TEXT "\0"
+"\xa8" ENUM8005_a8_TEXT "\0"
+"\xa9" ENUM8005_a9_TEXT "\0"
+"\xaa" ENUM8005_aa_TEXT "\0"
+"\xab" ENUM8005_ab_TEXT "\0"
+"\xac" ENUM8005_ac_TEXT "\0"
+"\xad" ENUM8005_ad_TEXT "\0"
+"\xae" ENUM8005_ae_TEXT "\0"
+"\xaf" ENUM8005_af_TEXT "\0"
+"\xb0" ENUM8005_b0_TEXT "\0"
+"\xc6" ENUM8005_c6_TEXT
 };
 
 //Status Waermepumpe  //FUJITSU
 const char ENUM8006[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x02 Störung\0"
-"\x0A Gesperrt\0"      //10
-"\x11 Nachlauf aktiv\0"      //17
-"\x17 Anlagefrostschutz aktiv\0"
-"\x18 Frostschutz aktiv\0"      //24
-"\x19 Aus\0"      //25
-"\x1a Notbetrieb\0"
-"\x1b Gesperrt, extern\0"      //27
-"\x1d HD bei WP-Betrieb\0"      //29
-"\x1e Ström'wächter W'quelle\0"      //30
-"\x1f Druckwächter W'quelle\0"      //31
-"\x20 Begr Heissgas Verdichter 1\0"      //32
-"\x21 Begr Heissgas Verdichter 2\0"      //33
-"\x22 Begr Ausschalttemp Max\0"      //34
-"\x23 Verd'stillstandzeit Min aktiv\0"
-"\x24 Kompensat Wärmeüberschuss\0"      //36
-"\x25 Begrenzungszeit aktiv\0"      //37
-"\x26 Verd'laufzeit Min aktiv\0"
-"\x27 Kompensation Wärmedefizit\0"      //39
-"\x28 Begr Spreiz Kondens Max\0"      //40
-"\x29 Begr Spreiz Kondens Min\0"      //41
-"\x2a Begr Spreiz Verda Max\0"      //42
-"\x2b Begr Spreiz Verda Min\0"      //43
-"\x2c Verdichter und Elektro ein\0"      //44
-"\x2d Verdichter 1 und 2 Ein\0"      //45
-"\x2e Verdichter 1 Ein\0"
-"\x2f Verdichter 2 Ein\0"      //47
-"\x30 Frostschutz Wärmepumpe\0"      //48
-"\x31 Vorlauf aktiv\0"
-"\x33 Keine Anforderung\0"      //51
-"\x32 Freigegeben, Verd bereit\0"
-"\x33 keine Anforderung\0"
-"\x7d Abtauen aktiv\0"
-"\x7e Abtropfen\0"      //126
-"\x7f Aktiver Kühlbetrieb\0"      //127
-"\x80 Passiver Kühlbetrieb\0"      //128
-"\x81 Abkühlen Verdampfer\0"      //129
-"\x82 Vorwärmen für Abtauen\0"      //130
-"\x89 Heizbetrieb\0"      //137
-"\x8b Begr Ausschalttemp. Min\0"      //139
-"\x91 Begr Aus'temp max Kühlen\0"      //145
-"\xb0 Gesperrt, Aussentemperatur\0"
-"\xb4 Drehstrom asymmetrisch\0"      //180
-"\xb5 Niederdruck\0"      //181
-"\xb6 Ventilator Überlast\0"      //182
-"\xb7 Verdichter 1 Überlast\0"      //183
-"\xb8 Verdichter 2 Überlast\0"      //184
-"\xb9 Quellenpumpe Überlast\0"      //185
-"\xba Ström'wächter Verbraucher\0"      //186
-"\xbb Einsatzgrenze TA Min\0"      //187
-"\xbc Einsatzgrenze TA Max\0"      //188
-"\xbd Begr Quellentemp Min Wasser\0"      //189
-"\xbe Begr Quellentemp Min Sole\0"      //190
-"\xbf Begr Quellentemp Max\0"      //191
-"\xc0 Zwangsabtauen Verdichter\0"      //192
-"\xc1 Zwangsabtauen Ventilator\0"      //193
-"\xc2 Abtauen mit Verdichter\0"      //194
-"\xc3 Abtauen mit Ventilator\0"      //195
-"\xc4 Begr Quellentemp Min Kühlen\0"      //196
-"\xc5 Elektro Ein\0"      //197
-"\xc6 Gesperrt, Ökobetrieb\0"      //198
-"\xcf Verd'laufzeit Min aktiv, Kühl\0"      //207
-"\xd0 Verd' 1 und 2 ein, Kühlbetr\0"      //208
-"\xd1 Verdichter 1 ein,Kühlbetrieb\0"      //209
-"\xd2 Verdichter 2 ein,Kühlbetrieb\0"      //210
-"\xeb Wasserdruck zu niedrig\0"
-"\xf2 Umschichtung aktiv\0"      //242
-"\xf6 Netzunterspannung\0"      //246
-"\xfe Kältemittel abpumpen, Manuell\0"      //254
-"\x01\x00 Kältemittel abpumpen\0"      //256
-"\x01\x01 Startverzögerung Abtauen\0"      //257
-"\x01\x02 Verdichter gesperrt\0"      //258
-"\x01\x03 Gesperrt, Quellentemp Max\0"      //259
-"\x01\x04 Gesperrt, Quellentemp Min\0"      //260
-"\x01\x05 Gesperrt, Rücklauftemp Max\0"      //261
-"\x01\x06 Gesperrt, Rücklauftemp Min\0"      //262
-"\x01\x07 Gesperrt, Vorlauftemp Max\0"      //263
-"\x01\x08 Gesperrt, Vorlauftemp Min\0"      //264
-"\x01\x09 Gesperrt, Kondens'temp Max\0"      //265
-"\x01\x0a Gesperrt, Verdamp'temp Min\0"      //266
-"\x01\x0b Gesperrt, Heissgastemp Max\0"      //267
-"\x01\x0c Begr Verdampfungstemp Min\0"      //268
-"\x01\x0d Begr Kondensationstemp Max\0"      //269
-"\x01\x0e Begr Verdampfungstemp Max"      //270
+"\x00" ENUM8006_00_TEXT "\0"
+"\x02" ENUM8006_02_TEXT "\0"
+"\x0A" ENUM8006_0A_TEXT "\0"      //10
+"\x11" ENUM8006_11_TEXT "\0"      //17
+"\x17" ENUM8006_17_TEXT "\0"
+"\x18" ENUM8006_18_TEXT "\0"      //24
+"\x19" ENUM8006_19_TEXT "\0"      //25
+"\x1a" ENUM8006_1a_TEXT "\0"
+"\x1b" ENUM8006_1b_TEXT "\0"      //27
+"\x1d" ENUM8006_1d_TEXT "\0"      //29
+"\x1e" ENUM8006_1e_TEXT "\0"      //30
+"\x1f" ENUM8006_1f_TEXT "\0"      //31
+"\x20" ENUM8006_20_TEXT "\0"      //32
+"\x21" ENUM8006_21_TEXT "\0"      //33
+"\x22" ENUM8006_22_TEXT "\0"      //34
+"\x23" ENUM8006_23_TEXT "\0"
+"\x24" ENUM8006_24_TEXT "\0"      //36
+"\x25" ENUM8006_25_TEXT "\0"      //37
+"\x26" ENUM8006_26_TEXT "\0"
+"\x27" ENUM8006_27_TEXT "\0"      //39
+"\x28" ENUM8006_28_TEXT "\0"      //40
+"\x29" ENUM8006_29_TEXT "\0"      //41
+"\x2a" ENUM8006_2a_TEXT "\0"      //42
+"\x2b" ENUM8006_2b_TEXT "\0"      //43
+"\x2c" ENUM8006_2c_TEXT "\0"      //44
+"\x2d" ENUM8006_2d_TEXT "\0"      //45
+"\x2e" ENUM8006_2e_TEXT "\0"
+"\x2f" ENUM8006_2f_TEXT "\0"      //47
+"\x30" ENUM8006_30_TEXT "\0"      //48
+"\x31" ENUM8006_31_TEXT "\0"
+"\x32" ENUM8006_32_TEXT "\0"
+"\x33" ENUM8006_33_TEXT "\0"      //51
+"\x7d" ENUM8006_7d_TEXT "\0"
+"\x7e" ENUM8006_7e_TEXT "\0"      //126
+"\x7f" ENUM8006_7f_TEXT "\0"      //127
+"\x80" ENUM8006_80_TEXT "\0"      //128
+"\x81" ENUM8006_81_TEXT "\0"      //129
+"\x82" ENUM8006_82_TEXT "\0"      //130
+"\x89" ENUM8006_89_TEXT "\0"      //137
+"\x8b" ENUM8006_8b_TEXT "\0"      //139
+"\x91" ENUM8006_91_TEXT "\0"      //145
+"\xb0" ENUM8006_b0_TEXT "\0"
+"\xb4" ENUM8006_b4_TEXT "\0"      //180
+"\xb5" ENUM8006_b5_TEXT "\0"      //181
+"\xb6" ENUM8006_b6_TEXT "\0"      //182
+"\xb7" ENUM8006_b7_TEXT "\0"      //183
+"\xb8" ENUM8006_b8_TEXT "\0"      //184
+"\xb9" ENUM8006_b9_TEXT "\0"      //185
+"\xba" ENUM8006_ba_TEXT "\0"      //186
+"\xbb" ENUM8006_bb_TEXT "\0"      //187
+"\xbc" ENUM8006_bc_TEXT "\0"      //188
+"\xbd" ENUM8006_bd_TEXT "\0"      //189
+"\xbe" ENUM8006_be_TEXT "\0"      //190
+"\xbf" ENUM8006_bf_TEXT "\0"      //191
+"\xc0" ENUM8006_c0_TEXT "\0"      //192
+"\xc1" ENUM8006_c1_TEXT "\0"      //193
+"\xc2" ENUM8006_c2_TEXT "\0"      //194
+"\xc3" ENUM8006_c3_TEXT "\0"      //195
+"\xc4" ENUM8006_c4_TEXT "\0"      //196
+"\xc5" ENUM8006_c5_TEXT "\0"      //197
+"\xc6" ENUM8006_c6_TEXT "\0"      //198
+"\xcf" ENUM8006_cf_TEXT "\0"      //207
+"\xd0" ENUM8006_d0_TEXT "\0"      //208
+"\xd1" ENUM8006_d1_TEXT "\0"      //209
+"\xd2" ENUM8006_d2_TEXT "\0"      //210
+"\xeb" ENUM8006_eb_TEXT "\0"
+"\xf2" ENUM8006_f2_TEXT "\0"      //242
+"\xf6" ENUM8006_f6_TEXT "\0"      //246
+"\xfe" ENUM8006_fe_TEXT "\0"      //254
+"\x01\x00" ENUM8006_01_00_TEXT "\0"      //256
+"\x01\x01" ENUM8006_01_01_TEXT "\0"      //257
+"\x01\x02" ENUM8006_01_02_TEXT "\0"      //258
+"\x01\x03" ENUM8006_01_03_TEXT "\0"      //259
+"\x01\x04" ENUM8006_01_04_TEXT "\0"      //260
+"\x01\x05" ENUM8006_01_05_TEXT "\0"      //261
+"\x01\x06" ENUM8006_01_06_TEXT "\0"      //262
+"\x01\x07" ENUM8006_01_07_TEXT "\0"      //263
+"\x01\x08" ENUM8006_01_08_TEXT "\0"      //264
+"\x01\x09" ENUM8006_01_09_TEXT "\0"      //265
+"\x01\x0a" ENUM8006_01_0a_TEXT "\0"      //266
+"\x01\x0b" ENUM8006_01_0b_TEXT "\0"      //267
+"\x01\x0c" ENUM8006_01_0c_TEXT "\0"      //268
+"\x01\x0d" ENUM8006_01_0d_TEXT "\0"      //269
+"\x01\x0e" ENUM8006_01_0e_TEXT      //270
 };
 
 
 //Status Solar
 const char ENUM8007[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x04 Handbetrieb aktiv\0"
-"\x02 Störung\0"
-"\x34 Kollektorfrostschutz aktiv\0"
-"\x35 Rückkühlung aktiv\0"
-"\x36 Max Speichertemp erreicht\0"
-"\x37 Verdampfungsschutz aktiv\0"
-"\x38 Überhitzschutz aktiv\0"
-"\x39 Max Ladetemp erreicht\0"
-"\x3a Ladung Trinkwasser\0"
-"\x3b Ladung Pufferspeicher\0"
-"\x3c Ladung Schwimmbad\0"
-"\x3d Min Ladetemp nicht erreicht\0"
-"\x3e Temp’differenz ungenügend\0"
-"\x3f Einstrahlung ungenügend\0"
-"\x97 Lad'ng TWW + Puffer + Sch'bad\0"
-"\x98 Ladung Trinkwasser + Puffer\0"
-"\x99 Ladung Trinkwasser + Sch'bad\0"
-"\x9a Ladung Puffer + Schwimmbad"
+"\x00" ENUM8007_00_TEXT "\0"
+"\x04" ENUM8007_04_TEXT "\0"
+"\x02" ENUM8007_02_TEXT "\0"
+"\x34" ENUM8007_34_TEXT "\0"
+"\x35" ENUM8007_35_TEXT "\0"
+"\x36" ENUM8007_36_TEXT "\0"
+"\x37" ENUM8007_37_TEXT "\0"
+"\x38" ENUM8007_38_TEXT "\0"
+"\x39" ENUM8007_39_TEXT "\0"
+"\x3a" ENUM8007_3a_TEXT "\0"
+"\x3b" ENUM8007_3b_TEXT "\0"
+"\x3c" ENUM8007_3c_TEXT "\0"
+"\x3d" ENUM8007_3d_TEXT "\0"
+"\x3e" ENUM8007_3e_TEXT "\0"
+"\x3f" ENUM8007_3f_TEXT "\0"
+"\x97" ENUM8007_97_TEXT "\0"
+"\x98" ENUM8007_98_TEXT "\0"
+"\x99" ENUM8007_99_TEXT "\0"
+"\x9a" ENUM8007_9a_TEXT
 };
 
 
 //Status Feststoffkessel
 const char ENUM8008[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x02 Störung\0"
-"\x04 Handbetrieb aktiv\0"
-"\x08 Gesperrt, Manuell\0"
-"\x09 Gesperrt, Automatisch\0"
-"\x0a Gesperrt\0"
-"\x0b Anfahrentlastung\0"
-"\x0c Anfahrentlastung, Teillast\0"
-"\x0d Rücklaufbegrenzung\0"
-"\x0e Rücklaufbegrenzung, Teillast\0"
-"\x11 Nachlauf aktiv\0"
-"\x12 In Betrieb\0"
-"\x13 Freigegeben\0"
-"\x14 Minimalbegrenzung\0"
-"\x15 Minimalbegrenzung, Teillast\0"
-"\x16 Minimalbegrenzung aktiv\0"
-"\x17 Anlagenfrostschutz aktiv\0"
-"\x18 Frostschutz aktiv\0"
-"\x19 Aus\0"
-"\x38 Überhitzschutz aktiv\0"
-"\x3a Ladung Trinkwasser\0"
-"\x3b Ladung Pufferspeicher\0"
-"\x8d Kesselfrostschutz aktiv\0"
-"\xa3 Anfeuerungshilfe aktiv\0"
-"\xa6 In Betrieb für Heizkreis\0"
-"\xa7 In Teillastbetrieb für HK\0"
-"\xa8 In Betrieb für Trinkwasser\0"
-"\xa9 In Teillastbetrieb für TWW\0"
-"\xaa In Betrieb für HK, TWW\0"
-"\xab In Teillastbetrieb für HK, TWW\0"
-"\xf1 Restwärmenutzung"
+"\x00" ENUM8008_00_TEXT "\0"
+"\x02" ENUM8008_02_TEXT "\0"
+"\x04" ENUM8008_04_TEXT "\0"
+"\x08" ENUM8008_08_TEXT "\0"
+"\x09" ENUM8008_09_TEXT "\0"
+"\x0a" ENUM8008_0a_TEXT "\0"
+"\x0b" ENUM8008_0b_TEXT "\0"
+"\x0c" ENUM8008_0c_TEXT "\0"
+"\x0d" ENUM8008_0d_TEXT "\0"
+"\x0e" ENUM8008_0e_TEXT "\0"
+"\x11" ENUM8008_11_TEXT "\0"
+"\x12" ENUM8008_12_TEXT "\0"
+"\x13" ENUM8008_13_TEXT "\0"
+"\x14" ENUM8008_14_TEXT "\0"
+"\x15" ENUM8008_15_TEXT "\0"
+"\x16" ENUM8008_16_TEXT "\0"
+"\x17" ENUM8008_17_TEXT "\0"
+"\x18" ENUM8008_18_TEXT "\0"
+"\x19" ENUM8008_19_TEXT "\0"
+"\x38" ENUM8008_38_TEXT "\0"
+"\x3a" ENUM8008_3a_TEXT "\0"
+"\x3b" ENUM8008_3b_TEXT "\0"
+"\x8d" ENUM8008_8d_TEXT "\0"
+"\xa3" ENUM8008_a3_TEXT "\0"
+"\xa6" ENUM8008_a6_TEXT "\0"
+"\xa7" ENUM8008_a7_TEXT "\0"
+"\xa8" ENUM8008_a8_TEXT "\0"
+"\xa9" ENUM8008_a9_TEXT "\0"
+"\xaa" ENUM8008_aa_TEXT "\0"
+"\xab" ENUM8008_ab_TEXT "\0"
+"\xf1" ENUM8008_f1_TEXT
 };
 
 // Status Brenner
@@ -4082,94 +4817,94 @@ const char ENUM8008[] PROGMEM_LATEST = {
 
 // Thision
 const char ENUM8009_2[] PROGMEM_LATEST = {
-"\x00 ?---\0"                 // !TODO! "no text" is only an analogous deduction
-"\x01 ?Störstellung\0"        // !TODO! enum value is hypothetical
-"\x02 ?Startverhinderung\0"   // !TODO! enum value is hypothetical
-"\x04 In Betrieb\0"
-"\x12 In Betrieb\0"
-"\xD6 ?Sicherheitszeit\0"
-"\xDA ?Vorlüften\0"
-"\xD7 ?Inbetriebsetzung\0"
-"\xD8 Standby\0"
-"\x09 ??Außerbetriebsetzung\0" // !TODO! enum value is hypothetical
-"\xD9 ?Heimlauf\0"
-"\xDB ?Nachlüften"
+"\x00" "?" ENUM8009_2_00_TEXT "\0" // !TODO! "no text" is only an analogous deduction
+"\x01" "?" ENUM8009_2_01_TEXT "\0"        // !TODO! enum value is hypothetical
+"\x02" "?" ENUM8009_2_02_TEXT "\0"   // !TODO! enum value is hypothetical
+"\x04" ENUM8009_2_04_TEXT "\0"
+"\x12" ENUM8009_2_12_TEXT "\0"
+"\xD6" "?" ENUM8009_2_D6_TEXT "\0"
+"\xDA" "?" ENUM8009_2_DA_TEXT "\0"
+"\xD7" "?" ENUM8009_2_D7_TEXT "\0"
+"\xD8" ENUM8009_2_D8_TEXT "\0"
+"\x09" "?" ENUM8009_2_09_TEXT "\0" // !TODO! enum value is hypothetical
+"\xD9" "?" ENUM8009_2_D9_TEXT "\0"
+"\xDB" "?" ENUM8009_2_DB_TEXT
 };
 
 // Brötje BSW / WMS / WMC
 const char ENUM8009[] PROGMEM_LATEST = {
-"\x00 ?---\0"                 // !TODO! "no text" is only an analogous deduction
-"\x01 ?Störstellung\0"        // !TODO! enum value is hypothetical
-"\x02 ?Startverhinderung\0"   // !TODO! enum value is hypothetical
-"\x12 In Betrieb\0"           // verifiziert an WMS (LP)
-"\xD6 Sicherheitszeit\0"
-"\xDA Vorlüften\0"
-"\xD7 Inbetriebsetzung\0"     // verifiziert an WMS (LP)
-"\xD8 Standby\0"              // verifiziert an WMS (LP)
-"\x09 ?Außerbetriebsetzung\0" // !TODO! enum value is hypothetical
-"\xD9 Heimlauf\0"
-"\xDB Nachlüften\0"
-"\xE0 Zünden\0"               // verifiziert an WMS (LP)
-"\xE1 Einschwingzeit"         // verifiziert an WMS (LP)
+"\x00" "?" ENUM8009_00_TEXT "\0" // !TODO! "no text" is only an analogous deduction
+"\x01" "?" ENUM8009_01_TEXT "\0"        // !TODO! enum value is hypothetical
+"\x02" "?" ENUM8009_02_TEXT "\0"   // !TODO! enum value is hypothetical
+"\x12" ENUM8009_12_TEXT "\0"           // verifiziert an WMS (LP)
+"\xD6" ENUM8009_D6_TEXT "\0"
+"\xDA" ENUM8009_DA_TEXT "\0"
+"\xD7" ENUM8009_D7_TEXT "\0"     // verifiziert an WMS (LP)
+"\xD8" ENUM8009_D8_TEXT "\0"              // verifiziert an WMS (LP)
+"\x09" "?" ENUM8009_09_TEXT "\0" // !TODO! enum value is hypothetical
+"\xD9" ENUM8009_D9_TEXT "\0"
+"\xDB" ENUM8009_DB_TEXT "\0"
+"\xE0" ENUM8009_E0_TEXT "\0"               // verifiziert an WMS (LP)
+"\xE1" ENUM8009_E1_TEXT         // verifiziert an WMS (LP)
 };
 
 //Status Pufferspeicher
 const char ENUM8010[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x18 Frostschutz aktiv\0"
-"\x33 Keine Wärmeanforderung\0"
-"\x35 Rückkühlung aktiv\0"
-"\x40 Ladung Elektro, Notbetrieb\0"
-"\x41 Ladung Elektro, Quell’schutz\0"
-"\x42 Ladung Elektroeinsatz\0"
-"\x43 Zwangsladung aktiv\0"
-"\x44 Teilladung aktiv\0"
-"\x45 Ladung aktiv\0"
-"\x46 Geladen, Max Speichertemp\0"
-"\x47 Geladen, Max Ladetemp\0"
-"\x48 Geladen, Zwanglad Solltemp\0"
-"\x49 Geladen, Solltemperatur\0"
-"\x4a Teilgeladen, Solltemperatur\0"
-"\x4b Geladen\0"
-"\x4c Kalt\0"
-"\x4d Rückkühlung via Kollektor\0"
-"\x51 Ladung gesperrt\0"
-"\x68 Eingeschränkt, TWW-Vorrang\0"
-"\x7c Ladung eingeschränkt\0"
-"\x83 Ladung Elektro, Abtauen\0"
-"\x87 Sperrdauer nach Heizen\0"
-"\x8e Rückkühlung via TWW / Hk’s\0"
-"\x8f Geladen, Min Ladetemp\0"
-"\x93 Warm\0"
-"\xa4 Ladung Elektro, Zwang\0"
-"\xa5 Ladung Elektro, Ersatz\0"
-"\xca Frostschutz Kühlen aktiv\0"
-"\xcb Durchladung aktiv\0"
-"\xf4 Erzeuger freigegeben"
+"\x00" ENUM8010_00_TEXT "\0"
+"\x18" ENUM8010_18_TEXT "\0"
+"\x33" ENUM8010_33_TEXT "\0"
+"\x35" ENUM8010_35_TEXT "\0"
+"\x40" ENUM8010_40_TEXT "\0"
+"\x41" ENUM8010_41_TEXT "\0"
+"\x42" ENUM8010_42_TEXT "\0"
+"\x43" ENUM8010_43_TEXT "\0"
+"\x44" ENUM8010_44_TEXT "\0"
+"\x45" ENUM8010_45_TEXT "\0"
+"\x46" ENUM8010_46_TEXT "\0"
+"\x47" ENUM8010_47_TEXT "\0"
+"\x48" ENUM8010_48_TEXT "\0"
+"\x49" ENUM8010_49_TEXT "\0"
+"\x4a" ENUM8010_4a_TEXT "\0"
+"\x4b" ENUM8010_4b_TEXT "\0"
+"\x4c" ENUM8010_4c_TEXT "\0"
+"\x4d" ENUM8010_4d_TEXT "\0"
+"\x51" ENUM8010_51_TEXT "\0"
+"\x68" ENUM8010_68_TEXT "\0"
+"\x7c" ENUM8010_7c_TEXT "\0"
+"\x83" ENUM8010_83_TEXT "\0"
+"\x87" ENUM8010_87_TEXT "\0"
+"\x8e" ENUM8010_8e_TEXT "\0"
+"\x8f" ENUM8010_8f_TEXT "\0"
+"\x93" ENUM8010_93_TEXT "\0"
+"\xa4" ENUM8010_a4_TEXT "\0"
+"\xa5" ENUM8010_a5_TEXT "\0"
+"\xca" ENUM8010_ca_TEXT "\0"
+"\xcb" ENUM8010_cb_TEXT "\0"
+"\xf4" ENUM8010_f4_TEXT
 };
 
 // Status Schwimmbad
 const char ENUM8011[] PROGMEM_LATEST = {
-"\x00 ---\0"
-"\x02 Störung\0"
-"\x04 Handbetrieb aktiv\0"
-"\x4c Kalt\0"
-"\x6a Heizbetrieb eingeschränkt\0"
-"\x6e Zwangsabnahme\0"
-"\x89 Heizbetrieb\0"
-"\x9b Heizbetrieb Erzeuger\0"
-"\x9c Geheizt, Max Schw\'badtemp\0"
-"\x9d Geheizt, Sollwert Erzeuger\0"
-"\x9e Geheizt, Sollwert Solar\0"
-"\x9f Geheizt\0"
-"\xa0 Heizbetrieb Solar aus\0"
-"\xa1 Heizbetrieb Erzeuger aus\0"
-"\xa2 Heizbetrieb aus"
+"\x00" ENUM8011_00_TEXT "\0"
+"\x02" ENUM8011_02_TEXT "\0"
+"\x04" ENUM8011_04_TEXT "\0"
+"\x4c" ENUM8011_4c_TEXT "\0"
+"\x6a" ENUM8011_6a_TEXT "\0"
+"\x6e" ENUM8011_6e_TEXT "\0"
+"\x89" ENUM8011_89_TEXT "\0"
+"\x9b" ENUM8011_9b_TEXT "\0"
+"\x9c" ENUM8011_9c_TEXT "\0"
+"\x9d" ENUM8011_9d_TEXT "\0"
+"\x9e" ENUM8011_9e_TEXT "\0"
+"\x9f" ENUM8011_9f_TEXT "\0"
+"\xa0" ENUM8011_a0_TEXT "\0"
+"\xa1" ENUM8011_a1_TEXT "\0"
+"\xa2" ENUM8011_a2_TEXT
 };
 
 //Status Zusatzerzeuger  //FUJITSU
 const char ENUM8022[] PROGMEM_LATEST = {
-"\x00 ---"
+"\x00" ENUM8022_00_TEXT
 };
 
 #define ENUM8051 ENUM8006               // Status - Status Historie 1
@@ -4187,15 +4922,15 @@ const char ENUM8022[] PROGMEM_LATEST = {
 
 // Diagnose Kaskade
 const char ENUM8100[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x00 ?Fehlt\0"
-"\x01 ?In Störung\0"
-"\x02 ?Handbetrieb aktiv\0"
-"\x03 ?Erzeugersperre aktiv\0"
-"\x04 ?Schornsteinfegerfkt aktiv\0"
-"\x05 ?TWW-Trennschaltung aktiv\0"
-"\x06 ?Aussentemp'grenze aktiv\0"
-"\x07 ?Nicht freigegeben\0"
-"\x08 ?Freigegeben"
+"\x00" "?" ENUM8100_00_TEXT "\0"
+"\x01" "?" ENUM8100_01_TEXT "\0"
+"\x02" "?" ENUM8100_02_TEXT "\0"
+"\x03" "?" ENUM8100_03_TEXT "\0"
+"\x04" "?" ENUM8100_04_TEXT "\0"
+"\x05" "?" ENUM8100_05_TEXT "\0"
+"\x06" "?" ENUM8100_06_TEXT "\0"
+"\x07" "?" ENUM8100_07_TEXT "\0"
+"\x08" "?" ENUM8100_08_TEXT
 };
 #define ENUM8102 ENUM8100
 #define ENUM8104 ENUM8100
@@ -4217,296 +4952,296 @@ const char ENUM8100[] PROGMEM_LATEST = { // numerical values are hypothetical
 // NovoCondens WOB 20-25
 // !TODO! Collect the other possible values (probably 0=Aus, 1=Ein, 255=Ein)
 const char ENUM8304[] PROGMEM_LATEST = {
-  "\x00 Aus\0"    // precision guesswork
-  "\x01 Ein\0"    // precision guesswork
-  "\xff Ein\0"    // vom LCD abgelesen (Python code)
-  "\x01\x00 Keine Funktion"
+"\x00" ENUM8304_00_TEXT "\0"    // precision guesswork
+"\x01" ENUM8304_01_TEXT "\0"    // precision guesswork
+"\xff" ENUM8304_ff_TEXT "\0"    // vom LCD abgelesen (Python code)
+"\x01\x00" ENUM8304_01_00_TEXT
 };
 
 const char ENUM8313[] PROGMEM_LATEST = {
-  "\x01 Kesselfühler B2\0"               // verifiziert an WMS (LP)
-  "\x02 Rücklauffühler B7\0"
-  "\x03 TWW Ladefühler B36\0"
-  "\x04 TWW Zapffühler B38\0"
-  "\x05 TWW Zirkulationsfühler B39\0"
-  "\x06 Kaskadenfühler B10/ B70"
+"\x01" ENUM8313_01_TEXT "\0"               // verifiziert an WMS (LP)
+"\x02" ENUM8313_02_TEXT "\0"
+"\x03" ENUM8313_03_TEXT "\0"
+"\x04" ENUM8313_04_TEXT "\0"
+"\x05" ENUM8313_05_TEXT "\0"
+"\x06" ENUM8313_06_TEXT
 }; // todo Hinweis: x01 ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 const char ENUM8390[] PROGMEM_LATEST = {
-  "\x01 1\0"
-  "\x02 2\0"
-  "\x03 TNN\0"        // verifiziert an WMS (LP)
-  "\x04 STY\0"        // verifiziert an WMS (LP)
-  "\x05 5\0"
-  "\x06 6\0"
-  "\x07 7\0"
-  "\x08 8\0"
-  "\x09 9\0"
-  "\x0a 10\0"
-  "\x0b 11\0"
-  "\x0c 12\0"
-  "\x0d TSA\0"        // verifiziert an WMS (LP)
-  "\x0e 14\0"
-  "\x0f 15\0"
-  "\x10 MOD\0"        // verifiziert an WMS (LP)
-  "\x11 17\0"
-  "\x12 18\0"
-  "\x13 19\0"
-  "\x14 20\0"
-  "\x15 21\0"
-  "\x16 22\0"
-  "\x17 23\0"
-  "\x18 24"           // verifiziert an WMS (LP)
+"\x01" ENUM8390_01_TEXT "\0"
+"\x02" ENUM8390_02_TEXT "\0"
+"\x03" ENUM8390_03_TEXT "\0"        // verifiziert an WMS (LP)
+"\x04" ENUM8390_04_TEXT "\0"        // verifiziert an WMS (LP)
+"\x05" ENUM8390_05_TEXT "\0"
+"\x06" ENUM8390_06_TEXT "\0"
+"\x07" ENUM8390_07_TEXT "\0"
+"\x08" ENUM8390_08_TEXT "\0"
+"\x09" ENUM8390_09_TEXT "\0"
+"\x0a" ENUM8390_0a_TEXT "\0"
+"\x0b" ENUM8390_0b_TEXT "\0"
+"\x0c" ENUM8390_0c_TEXT "\0"
+"\x0d" ENUM8390_0d_TEXT "\0"        // verifiziert an WMS (LP)
+"\x0e" ENUM8390_0e_TEXT "\0"
+"\x0f" ENUM8390_0f_TEXT "\0"
+"\x10" ENUM8390_10_TEXT "\0"        // verifiziert an WMS (LP)
+"\x11" ENUM8390_11_TEXT "\0"
+"\x12" ENUM8390_12_TEXT "\0"
+"\x13" ENUM8390_13_TEXT "\0"
+"\x14" ENUM8390_14_TEXT "\0"
+"\x15" ENUM8390_15_TEXT "\0"
+"\x16" ENUM8390_16_TEXT "\0"
+"\x17" ENUM8390_17_TEXT "\0"
+"\x18" ENUM8390_18_TEXT           // verifiziert an WMS (LP)
 };
 
 // Diagnose Verbraucher 8749 Raumthermostat 1
 // Texts taken from manual
 const char ENUM8749[] PROGMEM_LATEST = {     // numerical values unverified
-  "\x00 Kein Bedarf\0"
-  "\x01 Bedarf"
+"\x00" ENUM8749_00_TEXT "\0"
+"\x01" ENUM8749_01_TEXT
 };
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
 
 // PPS Betriebsart
 const char ENUM15010[] PROGMEM_LATEST = {
-  "\x00 Automatisch\0"
-  "\x01 Manuell\0"
-  "\x02 Aus"
+"\x00" ENUM15010_00_TEXT "\0"
+"\x01" ENUM15010_01_TEXT "\0"
+"\x02" ENUM15010_02_TEXT
 };
 
 const char ENUM15062[] PROGMEM_LATEST = {
-  "\x52 QAA 50\0"
-  "\x53 QAA 70"
+"\x52" ENUM15062_52_TEXT "\0"
+"\x53" ENUM15062_53_TEXT
 };
 
 /* SPECIAL ENUM tables */
 //Fehlercodes
 const char ENUM_ERROR[] PROGMEM_LATEST = {
-"\x00 kein Fehler\0"
-"\x0a Außentemperatur Fühlerfehler\0"
-"\x14 Kesseltemperatur 1 Fühlerfehler\0"
-"\x19 Feststoffkesseltemperatur (Holz) Fühlerfehler\0"
-"\x1a Gemeinsame Vorlauftemperatur Fühlerfehler\0"
-"\x1c Rauch- / Abgastemperatur Fühlerfehler\0"
-"\x1e Vorlauftemperatur 1 Fühlerfehler\0"
-"\x1f Vorlauftemperatur 1 Kühlen Fühlerfehler\0"
-"\x20 Vorlauftemperatur 2 Fühlerfehler\0"
-"\x26 Vorlauftemperatur Vorregler Fühlerfehler\0"
-"\x28 Rücklauftemperatur 1 Fühlerfehler\0"
-"\x2e Rücklauftemperatur Kaskade Fühlerfehler\0"
-"\x2f Gemeinsame Rücklauftemperatur Fühlerfehler\0"
-"\x32 Trinkwassertemperatur 1 Fühlerfehler\0"
-"\x34 Trinkwassertemperatur 2 Fühlerfehler\0"
-"\x36 TWW-Vorregler Fühlerfehler\0"
-"\x39 TWW-Zirkulationstemperatur Fühlerfehler\0"
-"\x3c Raumtemperatur 1 Fühlerfehler\0"
-"\x41 Raumtemperatur 2 Fühlerfehler\0"
-"\x44 Raumtemperatur 3 Fühlerfehler\0"
-"\x46 Pufferspeichertemperatur 1 Fühlerfehler\0"
-"\x47 Pufferspeichertemperatur 2 Fühlerfehler\0"
-"\x48 Pufferspeichertemperatur 3 Fühlerfehler\0"
-"\x49 Kollektortemperatur 1 Fühlerfehler\0"
-"\x4a Kollektortemperatur 2 Fühlerfehler\0"
-"\x4d Kollektortemperatur 1 Fühlerfehler\0"
-"\x51 LPB-Kurzschluss\0"
-"\x52 LPB-Adresskollision\0"
-"\x53 BSB-Draht Kurzschluss\0"
-"\x54 BSB-Adresskollision\0"
-"\x55 BSB-Funk Kommunikationsfehler\0"
-"\x5b EEPROM-Fehler bei Verriegelungsinformation\0"
-"\x5c Hardwarefehler in der Elektronik\0"
-"\x5f Ungültige Uhrzeit\0"
-"\x62 Erweiterungsmodul 1 Fehler (Sammelfehler)\0"
-"\x63 Erweiterungsmodul 2 Fehler (Sammelfehler)\0"
-"\x64 Zwei Uhrzeitmaster (LPB)\0"
-"\x66 Uhrzeitmaster ohne Gangreserve (LPB)\0"
-"\x69 Wartungsmeldung\0"
-"\x6d Kesseltemperatur Überwachung\0"
-"\x6e Sicherheitstemperaturbegrenzung Störabschaltung\0"
-"\x6f Temperaturwächterabschaltung\0"
-"\x75 Obere Druckgrenze (überschritten)\0"
-"\x76 Kritische untere Druckgrenze (unterschritten)\0"
-"\x77 Fehler Druckschalter\0"
-"\x79 Vorlauftemperatur 1 (HK1) Überwachung\0"
-"\x7a Vorlauftemperatur 2 (HK2) Überwachung\0"
-"\x7e Trinkwasser-Ladeüberwachung\0"
-"\x7f Legionellentemperatur nicht erreicht\0"
-"\x80 Flammenausfall in Betrieb\0"
-"\x81 Drehzahlgrenze verletzt\0"
-"\x83 Brennerstörung\0"
-"\x84 Gasdruckwächter- oder Luftdruckwächterfehler / offen\0"
-"\x85 Keine Flammenbildung nach Ablauf der Sicherheitszeit\0"
-"\x8c Unzulässige LPB-Segment- oder -Gerätenummer\0"
-"\x92 Konfigurationsfehler Sammelmeldung\0"
-"\x94 Inkompatibilität LPB-Interface/Grundgerät\0"
-"\x97 Interner Fehler\0"
-"\x98 Parametrierungsfehler\0"
-"\x99 Entriegelungstaste wurde betätigt\0"
-"\x9a Temperaturwarnung\0"
-"\xa0 Gebläsefehler\0"
-"\xa1 Maximale Gebläsedrehzahl überschritten\0"
-"\xa2 Luftdruckwächter schließt nicht\0"
-"\xab Alarmkontakt 1 (H1 oder H4) aktiv\0"
-"\xac Alarmkontakt 2 (EM1, EM2 oder EM3) oder H5 aktiv\0"
-"\xad Alarmkontakt 3 (EX2 / 230 VAC) aktiv\0"
-"\xae Alarmkontakt 4 (H3) aktiv\0"
-"\xb0 Obere Druckgrenze 2 (überschritten)\0"
-"\xb1 Kritische untere Druckgrenze 2 (unterschritten)\0"
-"\xb2 Temperaturwächter Heizkreis 1\0"
-"\xb3 Temperaturwächter Heizkreis 2\0"
-"\xb4 Kaminkehrerfunktion ist aktiv\0"
-"\xb5 Reglerstoppfunktion ist aktiv\0"
-"\xb6 Drifttest aktiv (keine Störung!)\0"
-"\xb7 Gerät im Parametriermodus\0"
-"\xb8 Modemfunktion ist aktiviert\0"
-"\xb9 Estrichtrocknungsfunktion aktiviert\0"
-"\xcf Störung Kühlkreis\0"
-"\xd9 Fühler- / Sensorfehler Sammelmeldung\0"
-"\xda Drucküberwachung Sammelmeldung\0"
-"\xde Hochdruck bei Wärmepumpenbetrieb\0"
-"\xf1 Vorlauffühler Solar Fühlerfehler\0"
-"\xf2 Rücklauffühler Solar Fühlerfehler\0"
-"\xf3 Schwimmbadtemperatur Fühlerfehler\0"
-"\x01\x04 Vorlauftemperatur 3 Fühlerfehler\0"
-"\x01\x0e Wächterfunktion\0"
-"\x01\x3d Netzfrequenz außerh. zul. Bereich\0"
-"\x01\x40 TWW Ladetemperatur Fühlerfehler\0"
-"\x01\x41 Durchl’erhitzer Zapftemperatur Fühlerfehler\0"
-"\x01\x42 Obere Druckgrenze 3 (überschritten)\0"
-"\x01\x43 Kritische untere Druckgrenze 3 (unterschritten)\0"
-"\x01\x44 BX gleiche Fühler\0"
-"\x01\x45 BX/Erweiterungsmodul gleiche Fühler\0"
-"\x01\x46 BX/Mischergruppe gleiche Fühler\0"
-"\x01\x47 Erweiterungsmodul gleiche Funktion\0"
-"\x01\x48 Mischergruppe gleiche Funktion\0"
-"\x01\x49 Erweit’modul / Mischergruppe gleiche Funktion\0"
-"\x01\x4a Fühler BX1 keine Funktion\0"
-"\x01\x4b Fühler BX2 keine Funktion\0"
-"\x01\x4c Fühler BX3 keine Funktion\0"
-"\x01\x4d Fühler BX4 keine Funktion\0"
-"\x01\x4e Fühler BX5 keine Funktion\0"
-"\x01\x4f Fühler BX21 keine Funktion\0"
-"\x01\x50 Fühler BX22 keine Funktion\0"
-"\x01\x51 Fühler BX1 keine Funktion\0"
-"\x01\x52 Fühler BX12 keine Funktion\0"
-"\x01\x53 Kollektorpumpe Q5 fehlt\0"
-"\x01\x54 Kollektorpumpe Q16 fehlt\0"
-"\x01\x55 Kollektorfühler B6 fehlt\0"
-"\x01\x56 Solar TWW-Fühler B31 fehlt\0"
-"\x01\x57 Solareinbindung fehlt\0"
-"\x01\x58 Solarstellglied Puffer K8 fehlt\0"
-"\x01\x59 Solarstellglied Schwimmbad K18 fehlt\0"
-"\x01\x5a Feststoffkesselpumpe Q10 fehlt\0"
-"\x01\x5b Feststoffkessel Vergleichsfühler fehlt\0"
-"\x01\x5c Feststoffkessel Adressfehler\0"
-"\x01\x5d Pufferrücklaufventil Y15 fehlt\0"
-"\x01\x5e Pufferspeicher Adressfehler\0"
-"\x01\x5f Vorregler / Zubringerpumpe Adressfehler\0"
-"\x01\x60 Hydraulische Weiche Adressfehler\0"
-"\x01\x61 Kaskadenfühler B10 fehlt\0"
-"\x01\x65 Vorlauftemperatur Kühlkreis 1 Überwachung\0"
-"\x01\x6e Raumtemperatur Hx Fühlerfehler\0"
-"\x01\x6f Relative Raumfeuchte Hx Fühlerfehler\0"
-"\x01\x72 Thermodynamischer Erzeuger\0"  //FUJITSU
-"\x01\x73 Vorlauftemperatur 3 (HK3) Überwachung\0"
-"\x01\x74 Temperaturwächter HK3\0"
-"\x01\x75 Erweiterungsmodul 3 Fehler (Sammelfehler)\0"
-"\x01\x7a Repetitionszähler interner Fehler abgelaufen\0"
-"\x01\x7e Repetitionszähler Gebläsefehler abgelaufen\0"
-"\x01\x80 Fremdlicht\0"
-"\x01\x81 Netzunterspannung\0"
-"\x01\x82 Gebläsedrehzahl hat gültigen Bereich verlassen\0"
-"\x01\x83 Luftdruckwächterfehler\0"
-"\x01\xab Konfiguration Abgasklappe\0"
-"\x01\xb0 Funktionserde X17 nicht angeschlossen"
+"\x00" ENUM_ERROR_00_TEXT "\0"
+"\x0a" ENUM_ERROR_0a_TEXT "\0"
+"\x14" ENUM_ERROR_14_TEXT "\0"
+"\x19" ENUM_ERROR_19_TEXT "\0"
+"\x1a" ENUM_ERROR_1a_TEXT "\0"
+"\x1c" ENUM_ERROR_1c_TEXT "\0"
+"\x1e" ENUM_ERROR_1e_TEXT "\0"
+"\x1f" ENUM_ERROR_1f_TEXT "\0"
+"\x20" ENUM_ERROR_20_TEXT "\0"
+"\x26" ENUM_ERROR_26_TEXT "\0"
+"\x28" ENUM_ERROR_28_TEXT "\0"
+"\x2e" ENUM_ERROR_2e_TEXT "\0"
+"\x2f" ENUM_ERROR_2f_TEXT "\0"
+"\x32" ENUM_ERROR_32_TEXT "\0"
+"\x34" ENUM_ERROR_34_TEXT "\0"
+"\x36" ENUM_ERROR_36_TEXT "\0"
+"\x39" ENUM_ERROR_39_TEXT "\0"
+"\x3c" ENUM_ERROR_3c_TEXT "\0"
+"\x41" ENUM_ERROR_41_TEXT "\0"
+"\x44" ENUM_ERROR_44_TEXT "\0"
+"\x46" ENUM_ERROR_46_TEXT "\0"
+"\x47" ENUM_ERROR_47_TEXT "\0"
+"\x48" ENUM_ERROR_48_TEXT "\0"
+"\x49" ENUM_ERROR_49_TEXT "\0"
+"\x4a" ENUM_ERROR_4a_TEXT "\0"
+"\x4d" ENUM_ERROR_4d_TEXT "\0"
+"\x51" ENUM_ERROR_51_TEXT "\0"
+"\x52" ENUM_ERROR_52_TEXT "\0"
+"\x53" ENUM_ERROR_53_TEXT "\0"
+"\x54" ENUM_ERROR_54_TEXT "\0"
+"\x55" ENUM_ERROR_55_TEXT "\0"
+"\x5b" ENUM_ERROR_5b_TEXT "\0"
+"\x5c" ENUM_ERROR_5c_TEXT "\0"
+"\x5f" ENUM_ERROR_5f_TEXT "\0"
+"\x62" ENUM_ERROR_62_TEXT "\0"
+"\x63" ENUM_ERROR_63_TEXT "\0"
+"\x64" ENUM_ERROR_64_TEXT "\0"
+"\x66" ENUM_ERROR_66_TEXT "\0"
+"\x69" ENUM_ERROR_69_TEXT "\0"
+"\x6d" ENUM_ERROR_6d_TEXT "\0"
+"\x6e" ENUM_ERROR_6e_TEXT "\0"
+"\x6f" ENUM_ERROR_6f_TEXT "\0"
+"\x75" ENUM_ERROR_75_TEXT "\0"
+"\x76" ENUM_ERROR_76_TEXT "\0"
+"\x77" ENUM_ERROR_77_TEXT "\0"
+"\x79" ENUM_ERROR_79_TEXT "\0"
+"\x7a" ENUM_ERROR_7a_TEXT "\0"
+"\x7e" ENUM_ERROR_7e_TEXT "\0"
+"\x7f" ENUM_ERROR_7f_TEXT "\0"
+"\x80" ENUM_ERROR_80_TEXT "\0"
+"\x81" ENUM_ERROR_81_TEXT "\0"
+"\x83" ENUM_ERROR_83_TEXT "\0"
+"\x84" ENUM_ERROR_84_TEXT "\0"
+"\x85" ENUM_ERROR_85_TEXT "\0"
+"\x8c" ENUM_ERROR_8c_TEXT "\0"
+"\x92" ENUM_ERROR_92_TEXT "\0"
+"\x94" ENUM_ERROR_94_TEXT "\0"
+"\x97" ENUM_ERROR_97_TEXT "\0"
+"\x98" ENUM_ERROR_98_TEXT "\0"
+"\x99" ENUM_ERROR_99_TEXT "\0"
+"\x9a" ENUM_ERROR_9a_TEXT "\0"
+"\xa0" ENUM_ERROR_a0_TEXT "\0"
+"\xa1" ENUM_ERROR_a1_TEXT "\0"
+"\xa2" ENUM_ERROR_a2_TEXT "\0"
+"\xab" ENUM_ERROR_ab_TEXT "\0"
+"\xac" ENUM_ERROR_ac_TEXT "\0"
+"\xad" ENUM_ERROR_ad_TEXT "\0"
+"\xae" ENUM_ERROR_ae_TEXT "\0"
+"\xb0" ENUM_ERROR_b0_TEXT "\0"
+"\xb1" ENUM_ERROR_b1_TEXT "\0"
+"\xb2" ENUM_ERROR_b2_TEXT "\0"
+"\xb3" ENUM_ERROR_b3_TEXT "\0"
+"\xb4" ENUM_ERROR_b4_TEXT "\0"
+"\xb5" ENUM_ERROR_b5_TEXT "\0"
+"\xb6" ENUM_ERROR_b6_TEXT "\0"
+"\xb7" ENUM_ERROR_b7_TEXT "\0"
+"\xb8" ENUM_ERROR_b8_TEXT "\0"
+"\xb9" ENUM_ERROR_b9_TEXT "\0"
+"\xcf" ENUM_ERROR_cf_TEXT "\0"
+"\xd9" ENUM_ERROR_d9_TEXT "\0"
+"\xda" ENUM_ERROR_da_TEXT "\0"
+"\xde" ENUM_ERROR_de_TEXT "\0"
+"\xf1" ENUM_ERROR_f1_TEXT "\0"
+"\xf2" ENUM_ERROR_f2_TEXT "\0"
+"\xf3" ENUM_ERROR_f3_TEXT "\0"
+"\x01\x04" ENUM_ERROR_01_04_TEXT "\0"
+"\x01\x0e" ENUM_ERROR_01_0e_TEXT "\0"
+"\x01\x3d" ENUM_ERROR_01_3d_TEXT "\0"
+"\x01\x40" ENUM_ERROR_01_40_TEXT "\0"
+"\x01\x41" ENUM_ERROR_01_41_TEXT "\0"
+"\x01\x42" ENUM_ERROR_01_42_TEXT "\0"
+"\x01\x43" ENUM_ERROR_01_43_TEXT "\0"
+"\x01\x44" ENUM_ERROR_01_44_TEXT "\0"
+"\x01\x45" ENUM_ERROR_01_45_TEXT "\0"
+"\x01\x46" ENUM_ERROR_01_46_TEXT "\0"
+"\x01\x47" ENUM_ERROR_01_47_TEXT "\0"
+"\x01\x48" ENUM_ERROR_01_48_TEXT "\0"
+"\x01\x49" ENUM_ERROR_01_49_TEXT "\0"
+"\x01\x4a" ENUM_ERROR_01_4a_TEXT "\0"
+"\x01\x4b" ENUM_ERROR_01_4b_TEXT "\0"
+"\x01\x4c" ENUM_ERROR_01_4c_TEXT "\0"
+"\x01\x4d" ENUM_ERROR_01_4d_TEXT "\0"
+"\x01\x4e" ENUM_ERROR_01_4e_TEXT "\0"
+"\x01\x4f" ENUM_ERROR_01_4f_TEXT "\0"
+"\x01\x50" ENUM_ERROR_01_50_TEXT "\0"
+"\x01\x51" ENUM_ERROR_01_51_TEXT "\0"
+"\x01\x52" ENUM_ERROR_01_52_TEXT "\0"
+"\x01\x53" ENUM_ERROR_01_53_TEXT "\0"
+"\x01\x54" ENUM_ERROR_01_54_TEXT "\0"
+"\x01\x55" ENUM_ERROR_01_55_TEXT "\0"
+"\x01\x56" ENUM_ERROR_01_56_TEXT "\0"
+"\x01\x57" ENUM_ERROR_01_57_TEXT "\0"
+"\x01\x58" ENUM_ERROR_01_58_TEXT "\0"
+"\x01\x59" ENUM_ERROR_01_59_TEXT "\0"
+"\x01\x5a" ENUM_ERROR_01_5a_TEXT "\0"
+"\x01\x5b" ENUM_ERROR_01_5b_TEXT "\0"
+"\x01\x5c" ENUM_ERROR_01_5c_TEXT "\0"
+"\x01\x5d" ENUM_ERROR_01_5d_TEXT "\0"
+"\x01\x5e" ENUM_ERROR_01_5e_TEXT "\0"
+"\x01\x5f" ENUM_ERROR_01_5f_TEXT "\0"
+"\x01\x60" ENUM_ERROR_01_60_TEXT "\0"
+"\x01\x61" ENUM_ERROR_01_61_TEXT "\0"
+"\x01\x65" ENUM_ERROR_01_65_TEXT "\0"
+"\x01\x6e" ENUM_ERROR_01_6e_TEXT "\0"
+"\x01\x6f" ENUM_ERROR_01_6f_TEXT "\0"
+"\x01\x72" ENUM_ERROR_01_72_TEXT "\0"  //FUJITSU
+"\x01\x73" ENUM_ERROR_01_73_TEXT "\0"
+"\x01\x74" ENUM_ERROR_01_74_TEXT "\0"
+"\x01\x75" ENUM_ERROR_01_75_TEXT "\0"
+"\x01\x7a" ENUM_ERROR_01_7a_TEXT "\0"
+"\x01\x7e" ENUM_ERROR_01_7e_TEXT "\0"
+"\x01\x80" ENUM_ERROR_01_80_TEXT "\0"
+"\x01\x81" ENUM_ERROR_01_81_TEXT "\0"
+"\x01\x82" ENUM_ERROR_01_82_TEXT "\0"
+"\x01\x83" ENUM_ERROR_01_83_TEXT "\0"
+"\x01\xab" ENUM_ERROR_01_ab_TEXT "\0"
+"\x01\xb0" ENUM_ERROR_01_b0_TEXT
 };
 
 const char ENUM_SWCODE[] PROGMEM_LATEST = {
-"\x11 STB Unterbruch\0"
-"\x53 Erlaubtes Drehzahlband für Zündlast wurde bei Inbetriebsetzung nicht erreicht.\0"
-"\x5f Drehzahlnachstellung überprüfen, vorgeschriebenes Band wird nicht erreicht.\0"
-"\x60 Fremdlicht (unzulässiges Flammensignal) während Heimlauf oder Standby\0"
-"\x61 Fremdlicht (unzulässiges Flammensignal)\0"
-"\x69 Gerät befindet sich in Programmierstellung (PC-Tool)\0"
-"\x6e Maximale Gebläsedrehzahl überschritten\0"
-"\x73 STB Abschaltetemperatur überschritten (el. STB)\0"
-"\x81 Unterbruch (STB oder intern; z.B. durch Ventilkurzschluss)\0"
-"\xa2 ungültige AD-Konfiguration in KonfigRg3\0"
-"\xa8 Kaminkehrerfunktion aktiv\0"
-"\xa9 Reglerstoppfunktion aktiv\0"
-"\xaa Entriegelungstaste ist dauernd betätig\0"
-"\x01\x03 Entriegelungstaste wurde betätigt\0"
-"\x01\x19 Gebläsedrehzahl überschritten\0"
-"\x01\x20 Gebläsedrehzahl unterschritten\0"
-"\x01\x45 ungültiges Schema in hydraulischen System oder interner Fehler\0"
-"\x01\xa6 el. STB hat ausgelöst (Nacherwärmung)\0"
-"\x01\xaa Kesseltemperatur steigt schneller als erlaubt\0"
-"\x01\xb1 Delta-T ist größer als Auslegungsspreizung dTkTrSTB + 16K\0"
-"\x01\xc5 ungültige Konfiguration des Umsteuerventils in KonfigRg4\0"
-"\x01\xc7 Hydraulik-Schema enthält keinen Heizkreis 1\0"
-"\x01\xc8 Hydraulik-Schema enthält keinen Heizkreis 2\0"
-"\x01\xc9 Hydraulik-Schema enthält keine  Zone\0"
-"\x01\xca Eingetragene Anforderung ist für BW nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
-"\x01\xcb Eingetragene Anforderung ist für HK1 nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
-"\x01\xcc Eingetragene Anforderung ist für HK2 nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
-"\x01\xcd Eingetragene Anforderung ist für Zone nicht definiert und wurde deshalb zurückgesetzt (AUS)\0"
-"\x01\xd6 el. STB hat ausgelöst (Nacherwärmung)\0"
-"\x01\xe3 Hydraulik-Schema enthält keine Zone.\0"
-"\x01\xef Angeschlossenes LPB-ClipIn defekt\0"
-"\x01\xf1 Parametrieranforderung über LPB-Bus\0"
-"\x02\x04 Mischer ClipIn defekt\0"
-"\x02\x06 Kurzschluss am LPB-Bus oder keine Busspeisung\0"
-"\x02\x07 Adresskollision auf dem LPB-Bus\0"
-"\x02\x08 Zwei Uhrzeitmaster Systemfehler\0"
-"\x02\x09 Unzulässige LPB-Segment- oder -Gerätenummer\0"
-"\x02\x1b Ein QAA und ein OCI als Zeitmaster\0"
-"\x02\x24 Eingang ClipIn falsch programmiert bzw. nicht möglich\0"
-"\x02\x26 Hydr. Weiche kann bei diesem Schema nicht bedient werden (Regelung/Pumpe)"
-"\x02\x28 Relais-ClipIn defekt\0"
-"\x02\x30 Brennerbetriebsstunden seit letzter Wartung überschritten\0"
-"\x02\x31 Inbetriebssetzung seit letzter Wartung überschritten\0"
-"\x02\x32 Monate seit letzter Wartung überschritten\0"
-"\x02\x33 Flammenionisationsstrom-Grenze überschritten\0"
-"\x02\x3d Störung der Abgasklappensteuerung: Rückmeldung defekt\0"
-"\x02\x5a Modemfunktion ist aktivier\0"
-"\x02\x5f Solar-ClipIn defekt\0"
-"\x02\x60 Estrichtrocknungsfunktion aktiv\0"
-"\x02\x6c Drifttest aktiv (keine Störung!)\0"
-"\x02\x6d Vorlauftemperaturalarm HK 1\0"
-"\x02\x6e Vorlauftemperaturalarm HK 2\0"
-"\x02\x7d Sollwert Handbetrieb über bzw. unter max. Kessel- bzw. min. Kesseltemperatur"
+"\x11" ENUM_SWCODE_11_TEXT "\0"
+"\x53" ENUM_SWCODE_53_TEXT "\0"
+"\x5f" ENUM_SWCODE_5f_TEXT "\0"
+"\x60" ENUM_SWCODE_60_TEXT "\0"
+"\x61" ENUM_SWCODE_61_TEXT "\0"
+"\x69" ENUM_SWCODE_69_TEXT "\0"
+"\x6e" ENUM_SWCODE_6e_TEXT "\0"
+"\x73" ENUM_SWCODE_73_TEXT "\0"
+"\x81" ENUM_SWCODE_81_TEXT "\0"
+"\xa2" ENUM_SWCODE_a2_TEXT "\0"
+"\xa8" ENUM_SWCODE_a8_TEXT "\0"
+"\xa9" ENUM_SWCODE_a9_TEXT "\0"
+"\xaa" ENUM_SWCODE_aa_TEXT "\0"
+"\x01\x03" ENUM_SWCODE_01_03_TEXT "\0"
+"\x01\x19" ENUM_SWCODE_01_19_TEXT "\0"
+"\x01\x20" ENUM_SWCODE_01_20_TEXT "\0"
+"\x01\x45" ENUM_SWCODE_01_45_TEXT "\0"
+"\x01\xa6" ENUM_SWCODE_01_a6_TEXT "\0"
+"\x01\xaa" ENUM_SWCODE_01_aa_TEXT "\0"
+"\x01\xb1" ENUM_SWCODE_01_b1_TEXT "\0"
+"\x01\xc5" ENUM_SWCODE_01_c5_TEXT "\0"
+"\x01\xc7" ENUM_SWCODE_01_c7_TEXT "\0"
+"\x01\xc8" ENUM_SWCODE_01_c8_TEXT "\0"
+"\x01\xc9" ENUM_SWCODE_01_c9_TEXT "\0"
+"\x01\xca" ENUM_SWCODE_01_ca_TEXT "\0"
+"\x01\xcb" ENUM_SWCODE_01_cb_TEXT "\0"
+"\x01\xcc" ENUM_SWCODE_01_cc_TEXT "\0"
+"\x01\xcd" ENUM_SWCODE_01_cd_TEXT "\0"
+"\x01\xd6" ENUM_SWCODE_01_d6_TEXT "\0"
+"\x01\xe3" ENUM_SWCODE_01_e3_TEXT "\0"
+"\x01\xef" ENUM_SWCODE_01_ef_TEXT "\0"
+"\x01\xf1" ENUM_SWCODE_01_f1_TEXT "\0"
+"\x02\x04" ENUM_SWCODE_02_04_TEXT "\0"
+"\x02\x06" ENUM_SWCODE_02_06_TEXT "\0"
+"\x02\x07" ENUM_SWCODE_02_07_TEXT "\0"
+"\x02\x08" ENUM_SWCODE_02_08_TEXT "\0"
+"\x02\x09" ENUM_SWCODE_02_09_TEXT "\0"
+"\x02\x1b" ENUM_SWCODE_02_1b_TEXT "\0"
+"\x02\x24" ENUM_SWCODE_02_24_TEXT "\0"
+"\x02\x26" ENUM_SWCODE_02_26_TEXT
+"\x02\x28" ENUM_SWCODE_02_28_TEXT "\0"
+"\x02\x30" ENUM_SWCODE_02_30_TEXT "\0"
+"\x02\x31" ENUM_SWCODE_02_31_TEXT "\0"
+"\x02\x32" ENUM_SWCODE_02_32_TEXT "\0"
+"\x02\x33" ENUM_SWCODE_02_33_TEXT "\0"
+"\x02\x3d" ENUM_SWCODE_02_3d_TEXT "\0"
+"\x02\x5a" ENUM_SWCODE_02_5a_TEXT "\0"
+"\x02\x5f" ENUM_SWCODE_02_5f_TEXT "\0"
+"\x02\x60" ENUM_SWCODE_02_60_TEXT "\0"
+"\x02\x6c" ENUM_SWCODE_02_6c_TEXT "\0"
+"\x02\x6d" ENUM_SWCODE_02_6d_TEXT "\0"
+"\x02\x6e" ENUM_SWCODE_02_6e_TEXT "\0"
+"\x02\x7d" ENUM_SWCODE_02_7d_TEXT
 };
 
 // Wartungs-Codes
 const char ENUM_WARTUNG[] PROGMEM_LATEST = {
-"\x01 Brennerbetriebsstunden überschritten\0"
-"\x02 Brennerstarts überschritten\0"
-"\x03 Wartungsintervall überschritten\0"
-"\x05 Wasserdruck Heizkreis zu niedrig (Untere Druckgrenze 1 unterschritten)\0"
-"\x12 Wasserdruck 2 Heizkreis zu niedrig (Untere Druckgrenze 2 unterschritten)\0"
-"\x0a Batterie Außenfühler wechseln\0"
-"\x15 Maximale Abgastemperatur überschritten\0"
-"\x16 Wasserdruck 3 Heizkreis zu niedrig (Untere Druckgrenze 3 unterschritten)"
+"\x01" ENUM_WARTUNG_01_TEXT "\0"
+"\x02" ENUM_WARTUNG_02_TEXT "\0"
+"\x03" ENUM_WARTUNG_03_TEXT "\0"
+"\x05" ENUM_WARTUNG_05_TEXT "\0"
+"\x12" ENUM_WARTUNG_12_TEXT "\0"
+"\x0a" ENUM_WARTUNG_0a_TEXT "\0"
+"\x15" ENUM_WARTUNG_15_TEXT "\0"
+"\x16" ENUM_WARTUNG_16_TEXT
 };
 
 // Sonderbetriebs-Codes
 const char ENUM_SONDERBETRIEB[] PROGMEM_LATEST = {
-"\x01\x2d Handbetrieb\0"
-"\x01\x2e STB-Test\0"
-"\x01\x2f Schornsteinfegerfkt\0"
-"\x01\x35 Simulation Außentemp\0"
-"\x01\x36 Alternativenerg"
+"\x01\x2d" ENUM_SONDERBETRIEB_01_2d_TEXT "\0"
+"\x01\x2e" ENUM_SONDERBETRIEB_01_2e_TEXT "\0"
+"\x01\x2f" ENUM_SONDERBETRIEB_01_2f_TEXT "\0"
+"\x01\x35" ENUM_SONDERBETRIEB_01_35_TEXT "\0"
+"\x01\x36" ENUM_SONDERBETRIEB_01_36_TEXT
 };
 
 // Sonderbetriebs-Codes
 const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
-"\x01 Montag\0"
-"\x02 Dienstag\0"
-"\x03 Mittwoch\0"
-"\x04 Donnerstag\0"
-"\x05 Freitag\0"
-"\x06 Samstag\0"
-"\x07 Sonntag"
+"\x01" ENUM_WEEKDAY_01_TEXT "\0"
+"\x02" ENUM_WEEKDAY_02_TEXT "\0"
+"\x03" ENUM_WEEKDAY_03_TEXT "\0"
+"\x04" ENUM_WEEKDAY_04_TEXT "\0"
+"\x05" ENUM_WEEKDAY_05_TEXT "\0"
+"\x06" ENUM_WEEKDAY_06_TEXT "\0"
+"\x07" ENUM_WEEKDAY_07_TEXT
 };
 
 /*
@@ -5816,15 +6551,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_195_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_205_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_211_ALL}, // Relaisausgang QX23
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6033,  STR6033,  sizeof(ENUM6033),     ENUM6033,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX21 Modul 2
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6034,  STR6034,  sizeof(ENUM6034),     ENUM6034,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX22 Modul 2
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6035,  STR6035,  sizeof(ENUM6035),     ENUM6035,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX23 Modul 2
+{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6033,  STR6033,  sizeof(ENUM6033),     ENUM6033,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX21 Modul 2
+{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6034,  STR6034,  sizeof(ENUM6034),     ENUM6034,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX22 Modul 2
+{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       6035,  STR6035,  sizeof(ENUM6035),     ENUM6035,     DEFAULT_FLAG, DEV_ALL},              // Relaisausgang QX23 Modul 2
 // !FIXME! !AUTOGENERATED! same cmd as 5941
 {0x053D077F,  CAT_KONFIG,           VT_ENUM,          6040,  STR6040,  sizeof(ENUM6040),     ENUM6040,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 1
 // !FIXME! !AUTOGENERATED! same cmd as 5942
 {0x053D0784,  CAT_KONFIG,           VT_ENUM,          6041,  STR6041,  sizeof(ENUM6041),     ENUM6041,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 1
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6042,  STR6042,  sizeof(ENUM6042),     ENUM6042,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 2
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6043,  STR6043,  sizeof(ENUM6043),     ENUM6043,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 2
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6042,  STR6042,  sizeof(ENUM6042),     ENUM6042,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 2
+{CMD_UNKNOWN, CAT_KONFIG,           VT_ENUM,          6043,  STR6043,  sizeof(ENUM6043),     ENUM6043,     DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 2
 {0x063D0807,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_108_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     FL_NO_CMD,    DEV_123_ALL}, // Funktion Eingang H2
