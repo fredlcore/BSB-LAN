@@ -70,7 +70,7 @@ const int fixed_device_variant = 0;
  * Incomplete languages will automagically be filled up with English translations first, and if no English translation
  * is available, fallback will take place to German. 
 */
-#define LANG_DE
+#define LANG DE
 
 // Hide unknown parameters from web display (parameters will still be queried!)
 //#define HIDE_UNKNOWN
