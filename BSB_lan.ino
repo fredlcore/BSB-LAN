@@ -59,7 +59,7 @@ char version[] = "0.41";
  *       version 0.41 
  *        - Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (LANG_DE.h is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
  *          Attention: Language definition in BSB_lan_config.h is now #DEFINE LANG <ISO-CODE> 
- *          For example: #DEFINE LANG DE
+ *          For example: #define LANG DE
  *        - Added export to MQTT broker, use log_parameters[] in BSB_lan_config.h to define parameters and activate MQTTBrokerIP definement.
  *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino. 
  *          The ESP8266 has to be flashed with the AT firmware from Espressif to work.
@@ -2264,7 +2264,7 @@ void webPrintHeader(void){
 #endif
   client.print(F("C'>" MENU_TEXT_CFG));
 
-  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" xstr(LANG) ".md>" MENU_TEXT_URL));
+  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
   client.print(F("</a></td><td width=20% align=center>"));
 
   client.print(F("<a href='http://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md' target='new'>" MENU_TEXT_HWT "</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/FAQ.md' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
