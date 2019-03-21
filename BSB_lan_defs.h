@@ -2,6 +2,10 @@
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
+#ifndef LANG
+#define LANG EN
+#endif
+
 #include "localization/LANG_DE.h"
 #include "localization/UNDEF_LANG_EN.h"
 #include "localization/LANG_EN.h"
