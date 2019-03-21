@@ -1,4 +1,5 @@
-*Translate BSB-LAN into your language!*
+# Translate BSB-LAN into your language! #
+
 Translating BSB-LAN into your language is easy, and you don't have to do all at once (or at all) - simply start with the web interface labels or the category names first and then you or others can follow up later, whenever time allows it.
 
 **How to do it?**
