@@ -20,7 +20,7 @@
 
 /* Select language; so far German is the most complete, with English following.
  * Available languages are: Czech (CZ), German (DE), Danish (DK), English (EN), Spanish (ES), Finnish (FI),
- * French (FR), Greek (GR), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SE), 
+ * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SE), 
  * Slovenian (SI) and Turkish (TR).
  * Incomplete languages will automagically be filled up with English translations first, and if no English translation
  * is available, fallback will take place to German. 
