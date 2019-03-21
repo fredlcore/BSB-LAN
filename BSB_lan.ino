@@ -53,12 +53,13 @@ char version[] = "0.41";
  *       0.38  - 22.11.2017
  *       0.39  - 02.01.2018
  *       0.40  - 21.01.2018
- *       0.41  - 19.03.2018
+ *       0.41  - 17.03.2019
+ *       0.42  - 21.03.2019
  *
  * Changelog:
- *       version 0.41 
+ *       version 0.42
  *        - Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (LANG_DE.h is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
- *          Attention: Language definition in BSB_lan_config.h is now #DEFINE LANG <ISO-CODE> 
+ *          Attention: Language definition in BSB_lan_config.h is now #define LANG <ISO-CODE> 
  *          For example: #define LANG DE
  *        - Added export to MQTT broker, use log_parameters[] in BSB_lan_config.h to define parameters and activate MQTTBrokerIP definement.
  *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino. 
@@ -80,15 +81,18 @@ char version[] = "0.41";
  *        - Added Waterstage WP device family (119)
  *        - Added WHG Procon device family (195)
  *        - Added unit to log file as well as average output
- *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q with activated "#definde DEBUG" to see if transition has worked for your device!
+ *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q to see if transition has worked for your device!
  *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
  *        - Marked all (known) OEM parameters with flag FL_OEM. OEM parameters are set by default as read-only. To make them writeable, change FL_OEM from 5 to 4 in BSB_lan_defs.h
  *        - Increased performance for querying several parameters at once (similar to category query)
  *        - Added config option to define subnet.
+ *        - /Q no longer needs #define DEBUG
  *        - Bugfix ENUM memory adressing
- *        - Bugfix in reset function (/N)
+ *        - Bugfix in reset function (/N), clear EEPROM during reset with /NE
  *        - Added favicon.ico
  *        - Split of cmdtbl into cmdtbl1 and cmdtbl2 due to Arduino's(?) limit of 32kB size of struct, opening up more space for new parameters.
+ *       version 0.41
+ *        - Interim release containing all changes from 0.42 above, except locaization, i.e. all text fragments are still part of the main code.
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
  *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
@@ -4727,7 +4731,6 @@ ich mir da nicht)
         }
 
         if(p[1]=='Q') {
-//#ifdef DEBUG
           webPrintHeader();
 
           client.print(F("Available device addresses:<BR>"));
@@ -4840,7 +4843,6 @@ ich mir da nicht)
           }
           client.println(F("<BR>Test Ende.<BR>"));
           webPrintFooter();
-//#endif
           break;
         }
 
