@@ -711,7 +711,7 @@
 #define STR5019_TEXT "TWW Nachlad'Überhöh Schichtensp"
 #define STR5020_TEXT "TWW Vorlaufsollwertüberhöhung"
 #define STR5021_TEXT "TWW Umladeüberhöhung"
-#define STR5022_TEXT "TW Nachladeregelung"
+#define STR5022_TEXT "TWW Nachladeregelung"
 #define STR5022_2_TEXT "Ladeart"
 #define STR5024_TEXT "TWW Schaltdifferenz 1 ein"
 #define STR5025_TEXT "TWW Schaltdifferenz 1 Aus min"
