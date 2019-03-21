@@ -107,6 +107,7 @@
 #define MENU_TEXT_LBO "Log broadcast bus-telegrams only"
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
+
 #define STR516_TEXT "Standard values TSP heating circuit 1"
 #define STR536_TEXT "Standard values TSP heating circuit 2 "
 #define STR556_TEXT "Standard values TSP3"
