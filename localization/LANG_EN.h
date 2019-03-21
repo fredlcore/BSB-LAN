@@ -44,7 +44,8 @@
 #define ENUM_CAT_2b_TEXT "Unknown category"
 
 #define MENU_TEXT_HFK "Heater functions"
-#define MENU_TEXT_SNS "Sensors"
+#define MENU_TEXT_SN1 "DS18B20 sensors"
+#define MENU_TEXT_SN1 "DHT22 sensors"
 #define MENU_TEXT_DLG "Dump log file"
 #define MENU_TEXT_SLG "Display log file"
 #define MENU_TEXT_CFG "Settings"
