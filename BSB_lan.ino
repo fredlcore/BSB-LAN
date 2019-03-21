@@ -2223,27 +2223,27 @@ void webPrintHeader(void){
   client.print(F("</a></td><td width=20% align=center>"));
 
 #ifndef ONE_WIRE_BUS
-  client.print(F("<font color=#000000>DS18B20 " MENU_TEXT_SNS "</font>"));
+  client.print(F("<font color=#000000>" MENU_TEXT_SN1 "</font>"));
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
   client.print(PASSKEY);
   client.print(F("/"));
 #endif
-  client.print(F("T'>DS18B20 " MENU_TEXT_SNS "</a>"));
+  client.print(F("T'>" MENU_TEXT_SN1 "</a>"));
 #endif
 
   client.print(F("</td><td width=20% align=center>"));
 
 #ifndef DHT_BUS
-  client.print(F("<font color=#000000>DHT22 " MENU_TEXT_SNS "</font>"));
+  client.print(F("<font color=#000000>" MENU_TEXT_SN2 "</font>"));
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
   client.print(PASSKEY);
   client.print(F("/"));
 #endif
-  client.print(F("H'>DHT22 " MENU_TEXT_SNS "</a>"));
+  client.print(F("H'>" MENU_TEXT_SN2 "</a>"));
 #endif
 
   client.print(F("</td><td width=20% align=center>"));
@@ -5368,10 +5368,10 @@ ich mir da nicht)
                   client.print(F(MENU_TEXT_MXV));
                 }
                 if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
-                  client.print(F("DHT22 " MENU_TEXT_SNS));
+                  client.print(F(MENU_TEXT_SN2));
                 }
                 if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
-                  client.print(F("1-Wire " MENU_TEXT_SNS));
+                  client.print(F(MENU_TEXT_SN1));
                 }
                 if (log_parameters[i] == 30000) {
                   client.println(F(MENU_TEXT_BDT "<BR>"));
