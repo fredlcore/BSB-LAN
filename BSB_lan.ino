@@ -2232,7 +2232,7 @@ void webPrintHeader(void){
   client.print(F("</td><td width=20% align=center>"));
 
 #ifndef DHT_BUS
-  client.print(F("<font color=#000000>DHT22 " MENU_TXT_SNS "</font>"));
+  client.print(F("<font color=#000000>DHT22 " MENU_TEXT_SNS "</font>"));
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
@@ -2245,7 +2245,7 @@ void webPrintHeader(void){
   client.print(F("</td><td width=20% align=center>"));
 
 #ifndef LOGGER
-  client.print(F("<font color=#000000>" MENU_TXT_DLG "</font>"));
+  client.print(F("<font color=#000000>" MENU_TEXT_DLG "</font>"));
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
