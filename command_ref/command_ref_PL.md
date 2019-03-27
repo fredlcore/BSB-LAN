@@ -11,7 +11,7 @@
 |  /B0                  | Reset licznik czasu pracy palnika  
 |  /C                   | Wyświetl konfigurację BSB-LAN  
 |  /D                   | Wyświetl plik log z karty microSD  
-|  /DG                  | Wyświetl wykres na podstawie danych z pliku log z karty microSD  
+|  /DG                  | Wykres z pliku log z karty microSD  
 |  /D0                  | Zresetuj plik log i utwórz nowy nagłówek  
 |  /E\<x\>              | Wyświetl liste możliwych wartości tekstu parametru \<x\>  
 |  /G\<x\>              | GPIO: Wyświetl stan pinu \<x\>  
@@ -34,7 +34,7 @@
 |  /NE                  | Zresetuj i uruchom ponownie arduino (trwa około 15 sekund) i skasuj EEPROM 
 |  /P\<x\>              | Ustaw protokół / typ magistrali (tymczasowo): \<x\> = 0 → BSB | 1 → LPB | 2 → PPS  
 |  /P\<x\>,\<s\>,\<d\>  | Ustaw protokół / typ magistrali \<x\>, własny adres \<s\>, adres docelowy \<d\> (tymczasowo)  
-|  /Q                   | Sprawdź nieznany parametr specyficzny dla kontrolera  
+|  /Q                   | Przetestuj nieznane parametry sterownika (tylko BSB/LPB)  
 |  /R\<x\>              | Wyświetl i zrestetuj parametr \<x\>  
 |  /S\<x\>=\<y\>        | Ustaw wartość <y> dla parametru \<x\>  
 |  /T                   | Wyświetl opcjonalne czujniki DS18B20  
