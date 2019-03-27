@@ -22,6 +22,7 @@ Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssy
  - Brötje EcoCondens BBS 20E [LMS14] (Gasbrenner)
  - Brötje EcoCondens BBS 28C [LMU7] (Gasbrenner)
  - Brötje EcoCondens BBS EVO 20G [LMS15] (Gasbrenner)
+ - Brötje EcoSolar Kompakt BMR 20/24 [LMS15] (Gasbrenner + Solar)  
  - Brötje EcoTherm Kompakt WMS 12 [LMS 15] (Gasbrenner)
  - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (Gasbrenner)
  - Brötje EcoTherm Plus BBS2N.28 [LMU 64] (Gasbrenner) (mittels OCI420 via LPB!)
