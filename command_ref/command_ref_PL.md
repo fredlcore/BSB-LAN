@@ -1,47 +1,46 @@
-# Cheatsheet URL-commands #
+# Skrócona lista komend URL-a #
 
-| URL-command           | Effect                                                                    |
+| Polecenie URL           | Efekt                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
-|  /\<x\>               | Query value/setting of parameter \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Query values/settings of parameters \<x\>, \<y\> and \<z\>   
-|  /\<x\>-\<y\>         | Query values/settings of parameters \<x\> to \<y\>  
-|  /A                   | Query 24h-average values  
-|  /A=\<x\>,\<y\>       | Change 24h-average value calculation of parameters \<x\>, \<y\>  
-|  /B                   | Query accumulated burner-runtimes (in seconds) and -cycles (including DHW)  
-|  /B0                  | Reset counter of burner-runtime and -cycles  
-|  /C                   | Display configuration of BSB-LAN  
-|  /D                   | Display logfile from the microSD-card  
-|  /DG                  | Graphical display of the logfile from microSD-card  
-|  /D0                  | Reset logfile & create new header  
-|  /E\<x\>              | Display ENUM-values of parameter \<x\>  
-|  /G\<x\>              | GPIO: Query pin \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> to high (\<y\> = 1) or low (\<y\> = 0)  
-|  /G\<x\>,I            | GPIO: Query pin \<x\> while setting to INPUT  
-|  /H                   | Query optional DHT22-sensors  
-|  /I\<x\>=\<y\>        | Send INF-message to parameter \<x\> with value \<y\>  
-|  /JK=\<x\>        	| JSON: Query all parameters of category \<x\>  
-|  /JK=ALL          	| JSON: List all categories with corresponding parameter numbers  
-|  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Query parameters \<x\>, \<y\> und \<z\>  
-|  /JQ                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Query parameters
-|  /JS                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Set parameters
-|  /K                   | List all categories  
-|  /K\<x\>              | Query all parameters and values of category \<x\>  
-|  /L=0,0               | Deactivate logging to microSD-card temporary  
-|  /L=\<x\>,\<y1\>,\<y2\>,\<y3\>       | Set logging interval to \<x\> seconds with (optional) logging parameter \<y1\>,\<y2\>,\<y3\>  
-|  /LB=\<x\>            | Configure logging of bus-telegrams: only broadcasts (\<x\>=1) or all (\<x\>=0)  
-|  /LU=\<x\>            | Configure logging of bus-telegrams: only unknown (\<x\>=1) or all (\<x\>=0)  
-|  /M\<x\>              | Activate (\<x\> = 1) or deactivate (\<x\> = 0) bus monitor mode  
-|  /N                   | Reset & reboot arduino (takes approx. 15 seconds)  
-|  /NE                  | Reset & reboot arduino (takes approx. 15 seconds) and erase EEPROM 
-|  /P\<x\>              | Set busprotocol / bustype (temporarily): \<x\> = 0 → BSB | 1 → LPB | 2 → PPS  
-|  /P\<x\>,\<s\>,\<d\>  | Set busprotocol/-type \<x\>, own address \<s\>, target-address \<d\> (temporarily)  
-|  /Q                   | Check for unreleased controller-specific parameter  
-|  /R\<x\>              | Query reset-value of parameter \<x\>  
-|  /S\<x\>=\<y\>        | Set value <y> for parameter \<x\>  
-|  /T                   | Query optional DS18B20-sensors  
-|  /V\<x\>              | Activate (\<x\> = 1) or deactivate (\<x\> = 0) verbose output mode  
-|  /X                   | Query optional MAX!-thermostats  
+|  /\<x\>               | Wyświetlenie/ustawienie wartośći parametru \<x\>
+|  /\<x\>,\<y\>,\<z\>   | Wyświetlenie/ustawienie wartośći parametrów \<x\>, \<y\> i \<z\>   
+|  /\<x\>-\<y\>         | Wyświetlenie/ustawienie wartośći parametrów \<x\> do \<y\>  
+|  /A                   | Wyświetlenie wartości średnich z 24h  
+|  /A=\<x\>,\<y\>       | Zmiana obliczanie wartości średniej 24-godzinnej dla parametrów \<x\>, \<y\>  
+|  /B                   | Wyświetl skumulowany czasy pracy palnika (w sekundach) (w tym cwu)  
+|  /B0                  | Reset licznik czasu pracy palnika  
+|  /C                   | Wyświetl konfigurację BSB-LAN  
+|  /D                   | Wyświetl plik log z karty microSD  
+|  /DG                  | Wykres z pliku log z karty microSD  
+|  /D0                  | Zresetuj plik log i utwórz nowy nagłówek  
+|  /E\<x\>              | Wyświetl liste możliwych wartości tekstu parametru \<x\>  
+|  /G\<x\>              | GPIO: Wyświetl stan pinu \<x\>  
+|  /G\<x\>,\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
+|  /G\<x\>,I            | GPIO: Wyświetl stan pinu \<x\> i zmień typ na weściowy  
+|  /H                   | Wyświetl opcjonalne czujniki DHT22  
+|  /I\<x\>=\<y\>        | Wyślij komunikat INF do parametru \<x\> z wartością \<y\>  
+|  /JK=\<x\>        	| JSON: Zapytanie o wszystkie parametry kategorii \<x\>  
+|  /JK=ALL          	| JSON: Lista wszystkich kategorii z odpowiednimi numerami parametrów  
+|  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Parametry zapytania \<x\>, \<y\> i \<z\>  
+|  /JQ i /JS                 | *→ ze strukturą JSON ([patrz podręcznik](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) za pośrednictwem żądania HTTP-POST: Zapytanie i ustawienie parametrów
+|  /K                   | Wyświetl wszystkie kategorie  
+|  /K\<x\>              | Zapytanie o wszystkie parametry i wartości kategorii \<x\>  
+|  /L=0,0               | Tymczasowo wyłącz rejestrowanie na karcie microSD  
+|  /L=\<x\>,\<y1\>,\<y2\>,\<y3\>       | Ustaw interwał logowania na \<x\> sekund, opcjonalnie ustaw rejestrowanie parametrów \<y1\>,\<y2\>,\<y3\>  
+|  /LB=\<x\>            | Skonfiguruj rejestrowanie telegramów magistrali: tylko transmisje (\<x\>=1) lub wszystkie (\<x\>=0)  
+|  /LU=\<x\>            | Skonfiguruj rejestrowanie telegramów magistrali: tylko nieznane (\<x\>=1) lub wszystkie (\<x\>=0)  
+|  /M\<x\>              | Aktywuj (\<x\> = 1) lub wyłącz (\<x\> = 0) tryb monitorowania magistrali  
+|  /N                   | Zresetuj i uruchom ponownie arduino (trwa około 15 sekund)  
+|  /NE                  | Zresetuj i uruchom ponownie arduino (trwa około 15 sekund) i skasuj EEPROM 
+|  /P\<x\>              | Ustaw protokół / typ magistrali (tymczasowo): \<x\> = 0 → BSB | 1 → LPB | 2 → PPS  
+|  /P\<x\>,\<s\>,\<d\>  | Ustaw protokół / typ magistrali \<x\>, własny adres \<s\>, adres docelowy \<d\> (tymczasowo)  
+|  /Q                   | Przetestuj nieznane parametry sterownika (tylko BSB/LPB)  
+|  /R\<x\>              | Wyświetl i zrestetuj parametr \<x\>  
+|  /S\<x\>=\<y\>        | Ustaw wartość <y> dla parametru \<x\>  
+|  /T                   | Wyświetl opcjonalne czujniki DS18B20  
+|  /V\<x\>              | Aktywuj (\<x\> = 1) lub dezaktywuj (\<x\> = 0) tryb przekazywania dodatkowych informacji na interfejs szeregowy Arduino  
+|  /X                   | Wyświetl opcjonalne termostaty MAX!  
 
        
-[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/Cheatsheet%20URL-commands_EN.pdf)
+[Pobierz skróconą listę komend URL jako plik PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/commandref/Cheatsheet_URL-commands_PL.pdf)
     
