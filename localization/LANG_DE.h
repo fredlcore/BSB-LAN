@@ -47,7 +47,7 @@
 #define MENU_TEXT_SN1 "DS18B20 Sensoren"
 #define MENU_TEXT_SN2 "DHT22 Sensoren"
 #define MENU_TEXT_DLG "Ausgabe Logdatei"
-#define MENU_TEXT_SLG "Anzeige Logdatei"
+#define MENU_TEXT_SLG "Zeichne Logdatei"
 #define MENU_TEXT_CFG "Einstellungen"
 #define MENU_TEXT_URL "URL-Befehle"
 #define MENU_TEXT_HWT "HowTo"

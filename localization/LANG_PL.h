@@ -26,7 +26,7 @@
 #define MENU_TEXT_SN1 "Czujniki DS18B20"
 #define MENU_TEXT_SN2 "Czujniki DHT22"
 #define MENU_TEXT_DLG "Wyświetl plik log"
-//#define MENU_TEXT_SLG "Display log file"
+#define MENU_TEXT_SLG "Wykres z pliku log"
 #define MENU_TEXT_CFG "Konfiguracja"
 #define MENU_TEXT_URL "Polecenia URL"
 #define MENU_TEXT_HWT "Instrukcja obsługi"
