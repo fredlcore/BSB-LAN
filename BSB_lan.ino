@@ -4733,7 +4733,7 @@ ich mir da nicht)
         if(p[1]=='Q') {
           webPrintHeader();
 
-          client.print(F("Available device addresses:<BR>"));
+          client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus_type == 0) {
             bus.setBusType(bus_type, myAddr, 0x7F);
           }
@@ -4741,8 +4741,8 @@ ich mir da nicht)
             bus.setBusType(bus_type, myAddr, 0xFF);
           }
 
+          uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg)) {
-            uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
             unsigned long startquery = millis();
             while (millis() < startquery + 10000) {
               if (bus.GetMessage(msg)) {
@@ -4765,7 +4765,7 @@ ich mir da nicht)
                   }
                 }
                 if (!found) {
-                  client.print(F("Device address found: "));
+                  client.print(F(MENU_TEXT_QFD ": "));
                   client.print(found_id);
                   client.println(F("<BR>"));
                 }
@@ -4773,75 +4773,114 @@ ich mir da nicht)
               delay(1);
             }
           } else {
-            client.println(F("Device query failed!<BR>"));
+            client.println(F(MENU_TEXT_QFA "!<BR>"));
           }
-          bus.setBusType(bus_type, myAddr, destAddr);
-          client.print(F("Running test with destination device address "));
-          client.print(destAddr);
-          client.println(F(":<BR>"));
 
-          uint32_t c=0;
-          uint16_t l;
-          char* pvalstr=NULL;
-          client.print(F("Gerätefamilie: "));
-          client.println(my_dev_fam);
-          client.print(F("<BR>Gerätevariante: "));
-          client.println(my_dev_var);
-          client.println(F("<BR>Start Test...<BR>"));
-          for (int j=0;j<10000;j++) {
-            if (get_cmdtbl_cmd(j) == c) {
+          for (int x=0;x<10;x++) {
+            if (found_ids[x]==0xFF) {
               continue;
             }
-            c=get_cmdtbl_cmd(j);
-            if(c==CMD_END) break;
-            l=get_cmdtbl_line(j);
-            uint8_t dev_fam = get_cmdtbl_dev_fam(j);
-            uint8_t dev_var = get_cmdtbl_dev_var(j);
-            if (((dev_fam != my_dev_fam && dev_fam != 255) || (dev_var != my_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
-              Serial.println(c, HEX);
+            bus.setBusType(bus_type, myAddr, found_ids[x]);
+            client.print(F("<BR>" MENU_TEXT_QRT " "));
+            client.print(found_ids[x]);
+            client.println(F(":<BR>"));
 
-              if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
-                Serial.println(F("bus send failed"));  // to PC hardware serial I/F
-              } else {
-                if (msg[4+(bus_type*4)]!=TYPE_ERR) {
-                  // Decode the xmit telegram and send it to the PC serial interface
-                  printTelegram(tx_msg, -1);
+            uint32_t c=0;
+            uint16_t l;
+            char* pvalstr=NULL;
+            int temp_dev_fam = strtod(query(6225,6225,1),NULL);
+            int temp_dev_var = strtod(query(6226,6226,1),NULL);
+            client.print(F(STR6225_TEXT ": "));
+            client.println(temp_dev_fam);
+            client.print(F("<BR>" STR6226_TEXT ": "));
+            client.println(temp_dev_var);
+            client.print(F("<BR>" STR6224_TEXT ": "));
+            client.println(query(6224,6224,1));
+            client.print(F("<BR>" STR6220_TEXT ": "));
+            client.println(query(6220,6220,1));
+            client.print(F("<BR>" STR6221_TEXT ": "));
+            client.println(query(6221,6221,1));
+            client.print(F("<BR>" STR6227_TEXT ": "));
+            client.println(query(6227,6227,1));
+            client.print(F("<BR>" STR6228_TEXT ": "));
+            client.println(query(6228,6228,1));
+            client.print(F("<BR>" STR6229_TEXT ": "));
+            client.println(query(6229,6229,1));
+            client.print(F("<BR>" STR6231_TEXT ": "));
+            client.println(query(6231,6231,1));
+            client.print(F("<BR>" STR6232_TEXT ": "));
+            client.println(query(6232,6232,1));
+            client.print(F("<BR>" STR6233_TEXT ": "));
+            client.println(query(6233,6233,1));
+            client.print(F("<BR>" STR6234_TEXT ": "));
+            client.println(query(6234,6234,1));
+            client.print(F("<BR>" STR6235_TEXT ": "));
+            client.println(query(6235,6235,1));
+            client.print(F("<BR>" STR6223_TEXT ": "));
+            client.println(query(6223,6223,1));
+            client.print(F("<BR>" STR6236_TEXT ": "));
+            client.println(query(6236,6236,1));
+            client.print(F("<BR>" STR6223_TEXT ": "));
+            client.println(query(6237,6237,1));
+
+            client.println(F("<BR>" MENU_TEXT_QST "...<BR>"));
+            for (int j=0;j<10000;j++) {
+              if (get_cmdtbl_cmd(j) == c) {
+                continue;
+              }
+              c=get_cmdtbl_cmd(j);
+              if(c==CMD_END) break;
+              l=get_cmdtbl_line(j);
+              uint8_t dev_fam = get_cmdtbl_dev_fam(j);
+              uint8_t dev_var = get_cmdtbl_dev_var(j);
+              if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
+                Serial.println(c, HEX);
+                if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
+                  Serial.println(F("bus send failed"));  // to PC hardware serial I/F
+                } else {
+                  if (msg[4+(bus_type*4)]!=TYPE_ERR) {
+                    // Decode the xmit telegram and send it to the PC serial interface
+                    printTelegram(tx_msg, -1);
 #ifdef LOGGER
-                  LogTelegram(tx_msg);
+                    LogTelegram(tx_msg);
 #endif
-                  // Decode the rcv telegram and send it to the PC serial interface
-                  pvalstr=printTelegram(msg, -1);   // send to hardware serial interface
+                    // Decode the rcv telegram and send it to the PC serial interface
+                    pvalstr=printTelegram(msg, -1);   // send to hardware serial interface
 #ifdef LOGGER
-                  LogTelegram(msg);
+                    LogTelegram(msg);
 #endif
-                  if (pvalstr[0]<1) {
-                    pvalstr=query(l,l, true);
                     if (pvalstr[0]<1) {
-                      client.println(F("<BR>"));
-                      client.print(l);
-                      client.println(F("<BR>"));
-                      if(outBufLen>0){
-                        client.println(outBuf);
+                       pvalstr=query(l,l, true);
+                      if (pvalstr[0]<1) {
+                        client.println(F("<BR>"));
+                        client.print(l);
+                        client.println(F("<BR>"));
+                        if(outBufLen>0){
+                          client.println(outBuf);
+                          client.println(F("<br>"));
+                        }
+                        for (int i=0;i<tx_msg[len_idx]+bus_type;i++) {
+                          if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                          client.print(tx_msg[i], HEX);
+                          client.print(F(" "));
+                        }
                         client.println(F("<br>"));
-                      }
-                      for (int i=0;i<tx_msg[len_idx]+bus_type;i++) {
-                        if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-                        client.print(tx_msg[i], HEX);
-                        client.print(F(" "));
-                      }
-                      client.println(F("<br>"));
-                      for (int i=0;i<msg[len_idx]+bus_type;i++) {
-                        if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-                        client.print(msg[i], HEX);
-                        client.print(F(" "));
+                        for (int i=0;i<msg[len_idx]+bus_type;i++) {
+                          if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                          client.print(msg[i], HEX);
+                          client.print(F(" "));
+                        }
                       }
                     }
                   }
                 }
               }
             }
+            client.println(F("<BR>"));
           }
-          client.println(F("<BR>Test Ende.<BR>"));
+
+          client.println(F("<BR>" MENU_TEXT_QTE ".<BR>"));
+          bus.setBusType(bus_type, myAddr, destAddr);   // return to original destination address
           webPrintFooter();
           break;
         }
