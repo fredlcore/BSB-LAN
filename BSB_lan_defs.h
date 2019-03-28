@@ -72,6 +72,7 @@
 #define DEV_108_ALL  108,255 // Brötje Sensotherm BSW-K
 #define DEV_108_160  108,160 // Elco AEROTOP T07-16 mit Logon B WP 61
 #define DEV_116_ALL  116,255 // Brötije ISR-SSR B
+#define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S.17)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
 #define DEV_138_ALL  138,255 // Brötje BOB
@@ -5516,10 +5517,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
 {0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
 {0x2D3D05F6,  CAT_HK1,              VT_FP02,          720,   STR720,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Kennlinie Steilheit
+{0x2D3D05F6,  CAT_HK1,              VT_BYTE,          720,   STR720,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Heizkreis 1 - Kennlinie Steilheit
 {0x2D3D0610,  CAT_HK1,              VT_TEMP,          721,   STR721,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Kennlinie Verschiebung
+{0x2D3D0610,  CAT_HK1,              VT_TEMP_SHORT5,   721,   STR721,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Kennlinie Verschiebung
 {0x2D3D060B,  CAT_HK1,              VT_ONOFF,         726,   STR726,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [] - Heizkreis 1 - Kennlinie Adaption
 {0x2D3D05FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
-{0x393D05FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
+{0x393D05FD,  CAT_HK1,              VT_TEMP_SHORT,    730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
+// Parameter below is from Elco Thision S.17 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
+// {0x393D05FD,  CAT_HK1,              VT_TEMP,          730,   STR730,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Sommer-/ Winterheizgrenze
 {0x2D3D0640,  CAT_HK1,              VT_TEMP,          732,   STR732,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Tagesheizgrenze
 {0x053D1214,  CAT_HK1,              VT_YESNO,         733,   STR733,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Verlängerung Tagesheizgrenze
 {0x213D0663,  CAT_HK1,              VT_TEMP,          740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
@@ -5552,6 +5557,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tag ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
 {0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
@@ -5633,9 +5639,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D0590,  CAT_HK2,              VT_TEMP,          1012,  STR1012,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziertsollwert
 {0x2E3D0592,  CAT_HK2,              VT_TEMP,          1014,  STR1014,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Frostschutzsollwert
 {0x2E3D05F6,  CAT_HK2,              VT_FP02,          1020,  STR1020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Steilheit
+{0x2E3D05F6,  CAT_HK2,              VT_BYTE,          1020,  STR1020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Steilheit
 {0x2E3D0610,  CAT_HK2,              VT_TEMP,          1021,  STR1021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Verschiebung
+{0x2E3D0610,  CAT_HK2,              VT_TEMP_SHORT5,   1021,  STR1021,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Verschiebung
 {0x2E3D060B,  CAT_HK2,              VT_ONOFF,         1026,  STR1026,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [] - Heizkreis 2 (nur wenn aktiviert) - Kennlinie Adaption
 {0x2E3D05FD,  CAT_HK2,              VT_TEMP,          1030,  STR1030,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Sommer-/ Winterheizgrenze
+{0x2E3D05FD,  CAT_HK2,              VT_TEMP_SHORT,    1030,  STR1030,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Sommer-/ Winterheizgrenze
 {0x2E3D0640,  CAT_HK2,              VT_TEMP,          1032,  STR1032,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Tagesheizgrenze
 {0x223D0663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x223D0662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
@@ -5665,6 +5674,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D0DF2,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag erfüllt
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_090_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_107_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
+{0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 
 {0x223D08C9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),     ENUM1161,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
@@ -6652,8 +6662,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0BD3,  CAT_KONFIG,           VT_DWORD,         6217,  STR6217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053D000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Software- Version LOGON B
 {0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index [?]
-{0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
+{0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Thision 6221 Entwicklungs-Index [?]
+{0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
 {0x053D0000,  CAT_KONFIG,           VT_UINT,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlagetyp
 {0x053D0067,  CAT_KONFIG,           VT_BYTE,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
@@ -6662,7 +6673,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0003,  CAT_KONFIG,           VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6226 Gerätevariante [?]
 {0x053D0004,  CAT_KONFIG,           VT_FP1,           6227,  STR6227,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6227 Objektverzeichnis-Version [?]
 {0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
-{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version
+{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
@@ -6714,6 +6725,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_097_100}, // [0] - LPB - Geraeteadresse
+{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [0] - LPB - Geraeteadresse
 {0x053D00CA,  CAT_LPB,              VT_BYTE,          6601,  STR6601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Segmentadresse
 {0x053D0071,  CAT_LPB,              VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Busspeisung Funktion
 {0x053D0072,  CAT_LPB,              VT_ONOFF,         6605,  STR6605,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Busspeisung Status
