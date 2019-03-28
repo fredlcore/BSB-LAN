@@ -108,6 +108,13 @@
 #define MENU_TEXT_LBO "Nur Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_LGI "Neues Logging-Intervall"
 #define MENU_TEXT_LGN "Neue Logging-Parameter"
+#define MENU_TEXT_QSC "Scanne nach Geräten"
+#define MENU_TEXT_QFD "Geräteadresse gefunden"
+#define MENU_TEXT_QFA "Geräteabfrage fehlgeschlagen"
+#define MENU_TEXT_QRT "Teste Geräteadresse"
+#define MENU_TEXT_QST "Starte Test"
+#define MENU_TEXT_QTE "Test beendet"
+
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"
 #define STR2_TEXT "Tag/Monat"
