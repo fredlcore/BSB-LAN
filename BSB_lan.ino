@@ -3168,13 +3168,8 @@ int set(int line      // the ProgNr of the heater parameter
       uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
       uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
 
-for (int x=0;x<20;x++) {
-  Serial.println(msg[x], HEX);
-}
-
       for (int x=pl_start;x<pl_start+data_len;x++) {
         param[x-pl_start] = msg[x];
-        Serial.println(param[x-pl_start]);
       }
       param[idx] = t;
       param_len = data_len;
@@ -3286,12 +3281,17 @@ char* query(int line_start  // begin at this line (ProgNr)
     if(i>=0){
       idx=i;
       uint8_t flags = get_cmdtbl_flags(i);
+      uint8_t type = get_cmdtbl_type(i);
       //Serial.println(F("found"));
       if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
         if (bus_type != BUS_PPS) {  // bus type is not PPS
           retry=QUERY_RETRIES;
           while(retry){
-            if(bus.Send(TYPE_QUR, c, msg, tx_msg)){
+            uint8_t query_type = TYPE_QUR;
+            if (type == VT_CUSTOM_ENUM) {
+              query_type = TYPE_QINF;
+            }
+            if(bus.Send(query_type, c, msg, tx_msg)){
 
               // Decode the xmit telegram and send it to the PC serial interface
               if(verbose) {
@@ -3322,7 +3322,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         } else { // bus type is PPS
 
           uint32_t cmd = get_cmdtbl_cmd(i);
-          uint8_t type = get_cmdtbl_type(i);
+//          uint8_t type = get_cmdtbl_type(i);
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
