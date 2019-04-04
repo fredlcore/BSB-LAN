@@ -55,8 +55,14 @@ char version[] = "0.42";
  *       0.40  - 21.01.2018
  *       0.41  - 17.03.2019
  *       0.42  - 21.03.2019
+ *       0.43  - 02.04.2019
  *
  * Changelog:
+ *       version 0.43
+ *        - Moved all sensors to /T , /H is now no longer used
+ *        - New virtual parameters 702/703 for Weishaupt room controller
+ *        - New data types VT_CUSTOM_ENUM and VT_CUSTOM_BYTE to extract information from non-standard telegrams (such as 702/703)
+ *        - Added text descriptions for error phases (6706 ff.)
  *       version 0.42
  *        - Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (LANG_DE.h is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
  *          Attention: Language definition in BSB_lan_config.h is now #define LANG <ISO-CODE> 
@@ -1522,6 +1528,52 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
+void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
+  uint8_t val;
+  char *p=outBuf+outBufLen;
+
+  if(enumstr!=0){
+    uint16_t c=0;
+    while(c<enumstr_len){
+      val=pgm_read_byte_far(enumstr+c+1);
+      //skip leading space
+      c+=3;
+      if(val==search_val){
+       // enum value found
+       break;
+      }
+      while(pgm_read_byte_far(enumstr+c)!=0) c++;
+      c++;
+    }
+    if(c<enumstr_len){
+      if(print_val){
+        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+        buffer[sizeof(buffer)-1] = 0;
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
+      }else{
+        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+        buffer[sizeof(buffer)-1] = 0;
+        outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
+      }
+    }else{
+      outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
+    }
+    Serial.print(p);
+  }
+}
+
 
 /** *****************************************************************
  *  Function:
@@ -2069,6 +2121,42 @@ char *printTelegram(byte* msg, int query_line) {
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
               break;
+            case VT_CUSTOM_ENUM: // custom enum
+            {
+              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+              uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+              if(enumstr_ptr!=0) {
+                uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
+                printCustomENUM(enumstr_ptr,enumstr_len,msg[pl_start+idx],1);
+              }else{
+                Serial.print(F("no enum str "));
+                SerialPrintData(msg);
+                outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
+              }
+              break;
+            }
+            case VT_CUSTOM_BYTE: // custom byte
+            {
+              char *p=outBuf+outBufLen;
+              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+              uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+              if(enumstr_ptr!=0) {
+                uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
+                uint8_t len = pgm_read_byte_far(enumstr_ptr+1);
+                uint32_t val = 0;
+                for (int x=0; x<len; x++) {
+                  val = val + ((uint32_t)msg[pl_start+idx+x] << (8*(len-1-x)));
+                }
+
+                outBufLen+=sprintf(outBuf+outBufLen,"%lu",val);
+                Serial.println(p);
+              }else{
+                Serial.print(F("no enum str "));
+                SerialPrintData(msg);
+                outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
+              }
+              break;
+            }
             case VT_STRING: // string
               if(data_len > 0){
                 if(msg[pl_start]!=0){
@@ -2222,29 +2310,12 @@ void webPrintHeader(void){
 
   client.print(F("</a></td><td width=20% align=center>"));
 
-#ifndef ONE_WIRE_BUS
-  client.print(F("<font color=#000000>" MENU_TEXT_SN1 "</font>"));
-#else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
   client.print(PASSKEY);
   client.print(F("/"));
 #endif
-  client.print(F("T'>" MENU_TEXT_SN1 "</a>"));
-#endif
-
-  client.print(F("</td><td width=20% align=center>"));
-
-#ifndef DHT_BUS
-  client.print(F("<font color=#000000>" MENU_TEXT_SN2 "</font>"));
-#else
-  client.print(F("<a href='/"));
-#ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
-#endif
-  client.print(F("H'>" MENU_TEXT_SN2 "</a>"));
-#endif
+  client.print(F("T'>" MENU_TEXT_SNS "</a>"));
 
   client.print(F("</td><td width=20% align=center>"));
 
@@ -2259,7 +2330,17 @@ void webPrintHeader(void){
   client.print(F("DG'>" MENU_TEXT_SLG "</a>"));
 #endif
 
-  client.print(F("</td></tr><tr bgcolor=#f0f0f0><td width=20% align=center>"));
+  client.print(F("</td><td width=20% align=center>"));
+
+  client.print(F("<a href='/"));
+#ifdef PASSKEY
+  client.print(PASSKEY);
+  client.print(F("/"));
+#endif
+  client.print(F("Q'>" MENU_TEXT_CHK "</a>"));
+
+  client.println(F("</td></tr>"));
+  client.print(F("<tr bgcolor=#f0f0f0><td width=20% align=center>"));
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
@@ -3071,6 +3152,34 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=9;
       }
       break;
+
+    case VT_CUSTOM_ENUM:
+    {
+      uint8_t t=atoi(val);
+      bus.Send(TYPE_QINF, c, msg, tx_msg);
+      int data_len;
+      if (bus_type == BUS_LPB) {
+        data_len=msg[len_idx]-14;     // get packet length, then subtract
+      } else {
+        data_len=msg[len_idx]-11;     // get packet length, then subtract
+      }
+
+      uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+      uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+      uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
+
+for (int x=0;x<20;x++) {
+  Serial.println(msg[x], HEX);
+}
+
+      for (int x=pl_start;x<pl_start+data_len;x++) {
+        param[x-pl_start] = msg[x];
+        Serial.println(param[x-pl_start]);
+      }
+      param[idx] = t;
+      param_len = data_len;
+      break;
+    }
     // ---------------------------------------------
     case VT_HOURS: // (read only)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
@@ -3256,6 +3365,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         }
         client.println(outBuf);
 
+        double num_pvalstr = strtod(pvalstr, NULL);
         uint8_t flags = get_cmdtbl_flags(i);
         uint8_t type = get_cmdtbl_type(i);
         uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
@@ -3284,7 +3394,7 @@ char* query(int line_start  // begin at this line (ProgNr)
 */
         client.println(F("</td><td>"));
         if (msg[4+(bus_type*4)] != TYPE_ERR && type != VT_UNKNOWN) {
-          if(type == VT_ENUM || type == VT_BIT || type == VT_ONOFF) {
+          if(type == VT_ENUM || type == VT_CUSTOM_ENUM || type == VT_BIT || type == VT_ONOFF) {
 
             client.print(F("<select "));
             if (type == VT_BIT) {
@@ -3298,10 +3408,10 @@ char* query(int line_start  // begin at this line (ProgNr)
               int val=msg[pl_start+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
+              client.print(F("<option value='1'"));
                 client.print(F(" selected"));
               }
               client.println(F(">" MENU_TEXT_OFF "</option>"));
-              client.print(F("<option value='1'"));
               if (val>0) {
                 client.print(F(" selected"));
               }
@@ -3319,6 +3429,9 @@ char* query(int line_start  // begin at this line (ProgNr)
                     bitmask = val & 0xff;
                     val = val >> 8 & 0xff;
                   }
+                  if (type == VT_CUSTOM_ENUM) {
+                    val=uint16_t(pgm_read_byte_far(enumstr+c+1));
+                  }
                   c++;
                 }else{
                   val=uint16_t(pgm_read_byte_far(enumstr+c));
@@ -3329,7 +3442,7 @@ char* query(int line_start  // begin at this line (ProgNr)
                 sprintf(outBuf,"%s",strcpy_PF(buffer, enumstr+c));
                 client.print(F("<option value='"));
                 client.print(val);
-                if ( (type == VT_ENUM && strtod(pvalstr,NULL) == val) || (type == VT_BIT && (msg[10+(bus_type*3)+data_len-2] & bitmask) == (val & bitmask)) ) {
+                if ( ((type == VT_ENUM || type == VT_CUSTOM_ENUM) && num_pvalstr == val) || (type == VT_BIT && (msg[10+(bus_type*3)+data_len-2] & bitmask) == (val & bitmask)) ) {
                   client.print(F("' SELECTED>"));
                 } else {
                   client.print(F("'>"));
@@ -5605,6 +5718,9 @@ ich mir da nicht)
 #ifdef ONE_WIRE_BUS
             ds18b20();
 #endif
+#ifdef DHT_BUS
+            dht22();
+#endif
           }else if(range[0]=='X'){ // handle MAX command
 #ifdef MAX_CUL
             int max_avg_count = 0;
@@ -5642,10 +5758,6 @@ ich mir da nicht)
             } else {
               client.println(F("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
             }
-#endif
-          }else if(range[0]=='H'){ // handle humidity command
-#ifdef DHT_BUS
-            dht22();
 #endif
           }else if(range[0]=='A') { // handle average command
             if (range[1]=='=') {
