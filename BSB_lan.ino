@@ -4900,9 +4900,13 @@ ich mir da nicht)
 
             uint32_t c=0;
             uint16_t l;
+            int orig_dev_fam = my_dev_fam;
+            int orig_dev_var = my_dev_var;
             char* pvalstr=NULL;
             int temp_dev_fam = strtod(query(6225,6225,1),NULL);
             int temp_dev_var = strtod(query(6226,6226,1),NULL);
+            my_dev_fam = temp_dev_fam;
+            my_dev_var = temp_dev_var;
             client.print(F(STR6225_TEXT ": "));
             client.println(temp_dev_fam);
             client.print(F("<BR>" STR6226_TEXT ": "));
@@ -4935,6 +4939,8 @@ ich mir da nicht)
             client.println(query(6236,6236,1));
             client.print(F("<BR>" STR6223_TEXT ": "));
             client.println(query(6237,6237,1));
+            my_dev_fam = orig_dev_fam;
+            my_dev_var = orig_dev_var;
 
             client.println(F("<BR>" MENU_TEXT_QST "...<BR>"));
             for (int j=0;j<10000;j++) {
@@ -4963,7 +4969,11 @@ ich mir da nicht)
                     LogTelegram(msg);
 #endif
                     if (pvalstr[0]<1) {
-                       pvalstr=query(l,l, true);
+                      my_dev_fam = temp_dev_fam;
+                      my_dev_var = temp_dev_var;
+                      pvalstr=query(l,l, true);
+                      my_dev_fam = orig_dev_fam;
+                      my_dev_var = orig_dev_var;
                       if (pvalstr[0]<1) {
                         client.println(F("<BR>"));
                         client.print(l);
