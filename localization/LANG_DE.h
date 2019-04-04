@@ -142,6 +142,7 @@
 #define STR48_TEXT "Wirkung Präsenztaste"
 #define STR54_TEXT "Korrektur Raumfühler"
 #define STR70_TEXT "Geräte-Version Bedienteil"
+#define STR71_TEXT "Raumgerät-Typ"
 #define STR120_TEXT "Binding"
 #define STR121_TEXT "Testmode"
 #define STR130_TEXT "Raumgerät 1 Status"
