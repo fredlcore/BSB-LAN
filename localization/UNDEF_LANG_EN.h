@@ -43,8 +43,10 @@
 #undef ENUM_CAT_2a_TEXT
 #undef ENUM_CAT_2b_TEXT
 #undef MENU_TEXT_HFK
+#undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
 #undef MENU_TEXT_SN2
+#undef MENU_TEXT_CHK
 #undef MENU_TEXT_DLG
 #undef MENU_TEXT_SLG
 #undef MENU_TEXT_CFG
