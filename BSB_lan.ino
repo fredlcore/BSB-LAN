@@ -3170,6 +3170,12 @@ int set(int line      // the ProgNr of the heater parameter
         data_len=msg[len_idx]-11;     // get packet length, then subtract
       }
 
+      if (data_len > 18) {
+        Serial.print(F("Set failed, invalid data length: "));
+        Serial.println(data_len);
+        return 0;
+      }
+
       uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
       uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
       uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
@@ -4705,9 +4711,6 @@ ich mir da nicht)
           // Now send it out to the bus
           int setresult = 0;
           setresult = set(line,p,setcmd);
-          if (token[0] > 0) {
-            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
-          }
 
           if(setresult!=1){
             webPrintHeader();
@@ -4726,6 +4729,9 @@ ich mir da nicht)
           }else{
             webPrintHeader();
             webPrintFooter();
+          }
+          if (token[0] > 0) {
+            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
           }
           break;
         }
