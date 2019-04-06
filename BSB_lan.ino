@@ -3415,10 +3415,10 @@ char* query(int line_start  // begin at this line (ProgNr)
               int val=msg[pl_start+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
-              client.print(F("<option value='1'"));
                 client.print(F(" selected"));
               }
               client.println(F(">" MENU_TEXT_OFF "</option>"));
+              client.print(F("<option value='1'"));
               if (val>0) {
                 client.print(F(" selected"));
               }
