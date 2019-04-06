@@ -1024,7 +1024,7 @@
 #define STR6801_2_TEXT "Historie 1 Fehlermeldung"
 #define STR6805_2_TEXT "SW Diagnosecode 1"
 #define STR6806_2_TEXT "FA Phase 1"
-#define STR6810_2_TEXT "Historie 2"
+#define STR6810_2_TEXT "Historie 2 "
 #define STR6811_2_TEXT "Fehlercode 2"
 #define STR6813_2_TEXT "Historie 2 Fehlermeldung"
 #define STR6815_2_TEXT "SW Diagnosecode 2"
