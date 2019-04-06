@@ -116,6 +116,7 @@
 #define MENU_TEXT_QRT "Teste Geräteadresse"
 #define MENU_TEXT_QST "Starte Test"
 #define MENU_TEXT_QTE "Test beendet"
+#define MENU_TEXT_QFE "Fertig"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"
