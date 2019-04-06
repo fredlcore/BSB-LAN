@@ -1996,12 +1996,11 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_WORD: //u16 min
             case VT_SECONDS_WORD: //u16 s
             case VT_GRADIENT: // u16
-            case VT_UINT: //  s16
-            case VT_UINT5: //  s16 / 5
-            case VT_UINT10: //  s16 / 10
+            case VT_UINT: //  u16
+            case VT_UINT5: //  u16 / 5
+            case VT_UINT10: //  u16 / 10
             case VT_UINT100:  // u32 / 100
-//              printWORD(msg,data_len,div_operand,div_unit);
-              printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
+              printWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
