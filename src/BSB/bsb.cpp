@@ -195,7 +195,7 @@ bool BSB::GetMessage(byte* msg) {
 
       if (bus_type == 2) {
         if (i == len_idx+1) {
-	  len_idx = 8;
+	        len_idx = 8;
           return true; // TODO: add CRC check before returning true/false
         }
       } else {
@@ -451,8 +451,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
           return true;
 	      } else {
           Serial.println(F("Message received, but not for us:"));
-          for (int x=0; x > data_len+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-            uint8_t data = tx_msg[x];
+          for (int x=0; x < rx_msg[len_idx]+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
+            uint8_t data = rx_msg[x];
             if (data < 16) Serial.print("0");
             Serial.print(data, HEX);
             Serial.print(" ");
@@ -464,8 +464,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
           return true;
 	      } else {
           Serial.println(F("Message received, but not for us:"));
-          for (int x=0; x > data_len+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-            uint8_t data = tx_msg[x];
+          for (int x=0; x < rx_msg[len_idx]+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
+            uint8_t data = rx_msg[x];
             if (data < 16) Serial.print("0");
             Serial.print(data, HEX);
             Serial.print(" ");
