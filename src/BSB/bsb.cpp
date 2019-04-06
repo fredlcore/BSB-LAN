@@ -437,7 +437,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   unsigned long timeout = millis() + 3000;
   while ((i > 0) && (millis() < timeout)) {
     if (GetMessage(rx_msg)) {
-      Serial.print(F("Duration until msg received: "));
+      Serial.print(F("Duration until answer received: "));
       Serial.println(3000-(timeout-millis()));
 
       i--;
