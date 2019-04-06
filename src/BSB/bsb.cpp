@@ -385,7 +385,6 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 
 bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
   byte i;
-  uint8_t data_len = 0;
 
   if (bus_type == 2) {
     return _send(tx_msg);
@@ -409,7 +408,6 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     tx_msg[10] = A2;
     tx_msg[11] = A3;
     tx_msg[12] = A4;
-    data_len = tx_msg[1];
   } else {
     tx_msg[3] = param_len + 11;
     tx_msg[4] = type;
@@ -418,7 +416,6 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     tx_msg[6] = A2;
     tx_msg[7] = A3;
     tx_msg[8] = A4;
-    data_len = tx_msg[3];
   }
 
   // Value
@@ -451,26 +448,14 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
           return true;
 	      } else {
           Serial.println(F("Message received, but not for us:"));
-          for (int x=0; x < rx_msg[len_idx]+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-            uint8_t data = rx_msg[x];
-            if (data < 16) Serial.print("0");
-            Serial.print(data, HEX);
-            Serial.print(" ");
-          }
-          Serial.println();
+          print(rx_msg);
         }
       } else {
         if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
           return true;
 	      } else {
           Serial.println(F("Message received, but not for us:"));
-          for (int x=0; x < rx_msg[len_idx]+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-            uint8_t data = rx_msg[x];
-            if (data < 16) Serial.print("0");
-            Serial.print(data, HEX);
-            Serial.print(" ");
-          }
-          Serial.println();
+          print(rx_msg);
         }
       }
     }
@@ -479,14 +464,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     }
   }
   Serial.println(F("No answer for this send telegram:"));
-
-  for (int x=0; x > data_len+bus_type; x++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-    uint8_t data = tx_msg[x];
-    if (data < 16) Serial.print("0");
-    Serial.print(data, HEX);
-    Serial.print(" ");
-  }
-  Serial.println();
+  print(tx_msg);
 
   return false;
 }
