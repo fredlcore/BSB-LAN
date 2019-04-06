@@ -39,8 +39,10 @@
 #define ADDR_RGT1  0x06
 #define ADDR_RGT2  0x07
 #define ADDR_CNTR  0x08
+#define ADDR_BSBL  0x09
 #define ADDR_DISP  0x0A
 #define ADDR_SRVC  0x0B
+#define ADDR_OZW   0x31
 #define ADDR_ALL   0x7F
 
 #define BUS_BSB 0
@@ -311,7 +313,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_DAYS,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
 {VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
@@ -335,7 +337,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
-{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
@@ -5344,12 +5346,11 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
+{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ ] - Uhrzeit und Datum
-{0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL}, // [ ] - Uhrzeit und Datum
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
@@ -7018,7 +7019,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FFF,  CAT_FEHLER,           VT_UINT,          6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 4
 {0x053D2FFE,  CAT_FEHLER,           VT_ENUM,          6836,  STR6836,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
 // 5
-{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
+{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
 {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Historie 5
@@ -7925,7 +7926,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
 {0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00
 {0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 // "Anlagenbild" (ASCII: "A006103") / on RVS43.222: (ASCII: "A0060Z2") / on ZR1: (ASCII: "A006BZ2")
-{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload 
 {0x053D0076,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // QINF message sent out by ACS700 diagnosis software
 {0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0094,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 (ASCII: "00") // "Anlagebildbeschreibung 1"
