@@ -39,8 +39,10 @@
 #define ADDR_RGT1  0x06
 #define ADDR_RGT2  0x07
 #define ADDR_CNTR  0x08
+#define ADDR_LAN  0x09
 #define ADDR_DISP  0x0A
 #define ADDR_SRVC  0x0B
+#define ADDR_OZW   0x31
 #define ADDR_ALL   0x7F
 
 #define BUS_BSB 0
@@ -58,14 +60,15 @@
 
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
 #define DEV_050_ALL  50,255 // Weishaupt
-#define DEV_064_ALL  64,255   // Brötje WGB 2 (über OCI420)
-#define DEV_076_ALL  76,255   // RVA63.244/160
-#define DEV_085_ALL  85,255   // Elco Aquatop 8es
-#define DEV_090_ALL  90,255   // RVS43.222 SSR C
+#define DEV_064_ALL  64,255 // Brötje WGB 2 (über OCI420)
+#define DEV_076_ALL  76,255 // RVA63.244/160
+#define DEV_085_ALL  85,255 // Elco Aquatop 8es
+#define DEV_090_ALL  90,255 // RVS43.222 SSR C
+#define DEV_091_ALL  91,255 // AVS75.390 Erweiterungsmodul (EWM)
 #define DEV_095_ALL  95,255 // Brötje LogoBloc Unit L-UB 25C
 #define DEV_096_ALL  96,255 // Brötje NovoCondens SOB 22C, 26C
-#define DEV_097_100  97,100   // Brötje WGB 20 C
-#define DEV_097_ALL  97,255   // Elco Thision S 17.1, Brötje WBS 14D
+#define DEV_097_100  97,100 // Brötje WGB 20 C
+#define DEV_097_ALL  97,255 // Elco Thision S 17.1, Brötje WBS 14D
 #define DEV_098_ALL  98,255 // Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
 #define DEV_103_ALL  103,255 // CTC 380 IC
 #define DEV_107_ALL  107,255 // RVS43.222-Z1
@@ -75,10 +78,13 @@
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
+#define DEV_133_ALL  133,255 // QAA75.910/349
+#define DEV_137_ALL  138,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
 #define DEV_170_ALL  170,255 // Fujitsu Waterstage WSYK160DC9
+#define DEV_184_ALL  184,255 // OZW672.01
 #define DEV_195_ALL  195,255 // MHG Procon E 25 HS
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
@@ -243,6 +249,8 @@ typedef enum{
   VT_VACATIONPROG,      //* 9 Byte - 1 enable 0x06 / byte 2/3 month/year
   VT_TIMEPROG,          //*12 Byte - no flag / 1_ein 1_aus 2_ein 2_aus 3_ein 3_aus (jeweils SS:MM)
   VT_STRING,            //* x Byte - 1 enable / string
+  VT_CUSTOM_ENUM,       //* x Byte - 1 Byte Position, 1 Byte Parameter-Wert, Space, Text
+  VT_CUSTOM_BYTE,       //* x Byte - 1 Byte Position, 1 Byte Länge Parameter, Space (!) (nötig für Erkennung)
   VT_UNKNOWN
 }vt_type_t;
 
@@ -306,7 +314,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_DAYS,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
 {VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
@@ -330,7 +338,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
-{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
@@ -376,6 +384,9 @@ PROGMEM_LATE const units optbl[]={
 {VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_TIMEPROG,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
+{VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 };
@@ -503,6 +514,7 @@ const char STR46[] PROGMEM = STR46_TEXT;
 const char STR48[] PROGMEM = STR48_TEXT;
 const char STR54[] PROGMEM = STR54_TEXT;
 const char STR70[] PROGMEM = STR70_TEXT;
+const char STR71[] PROGMEM = STR71_TEXT;
 const char STR120[] PROGMEM = STR120_TEXT;
 const char STR121[] PROGMEM = STR121_TEXT;
 const char STR130[] PROGMEM = STR130_TEXT;
@@ -635,6 +647,8 @@ const char STR648[] PROGMEM = STR648_TEXT;
 // Heizkreis 1
 const char STR700[] PROGMEM = STR700_TEXT;
 const char STR701[] PROGMEM = STR701_TEXT;
+#define STR702 STR701
+#define STR703 STR702
 const char STR709[] PROGMEM = STR709_TEXT;
 const char STR710[] PROGMEM = STR710_TEXT;
 const char STR711[] PROGMEM = STR711_TEXT;
@@ -2724,6 +2738,10 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM6670_00_TEXT ENUM2320_02_TEXT
 #define ENUM6670_01_TEXT ENUM6070_01_TEXT
 #define ENUM6670_02_TEXT ENUM6070_02_TEXT
+#define ENUM6706_00_TEXT ENUM2206_01_TEXT
+#define ENUM6706_01_TEXT ENUM2480_00_TEXT
+#define ENUM6706_63_TEXT ENUM2480_ff_TEXT
+#define ENUM6706_0a_TEXT ENUM861_01_TEXT
 #define ENUM7142_01_TEXT ENUM850_05_TEXT
 #define ENUM7142_02_TEXT ENUM5040_02_TEXT
 #define ENUM7147_00_TEXT ENUM48_00_TEXT
@@ -2826,11 +2844,13 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8009_2_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_2_02_TEXT ENUM2480_00_TEXT
 #define ENUM8009_2_04_TEXT ENUM130_01_TEXT
+#define ENUM8009_2_09_TEXT ENUM8009_09_TEXT
 #define ENUM8009_2_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_2_D8_TEXT ENUM2206_01_TEXT
 #define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
 #define ENUM8009_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_02_TEXT ENUM2480_00_TEXT
+#define ENUM8009_09_TEXT ENUM6706_16_TEXT 
 #define ENUM8009_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
 #define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
@@ -2974,6 +2994,23 @@ const char ENUM700[] PROGMEM_LATEST = {
 "\x01 " ENUM700_01_TEXT "\0"
 "\x02 " ENUM700_02_TEXT "\0"
 "\x03 " ENUM700_03_TEXT
+};
+
+// Parameters 702 and 703 are virtual Weishaupt parameters based on one and the same command ID, using new data type VT_CUSTOM_ENUM
+
+const char ENUM702[] PROGMEM_LATEST = {
+"\x00\x00 " ENUM702_00_TEXT "\0"
+"\x00\x01 " ENUM702_01_TEXT "\0"
+"\x00\x02 " ENUM702_02_TEXT "\0"
+"\x00\x03 " ENUM702_03_TEXT "\0"
+"\x00\x04 " ENUM702_04_TEXT "\0"
+"\x00\x05 " ENUM702_05_TEXT "\0"
+"\x00\x06 " ENUM702_06_TEXT
+};
+
+const char ENUM703[] PROGMEM_LATEST = {
+"\x01\x00 " ENUM703_00_TEXT "\0"
+"\x01\x01 " ENUM703_01_TEXT
 };
 
 const char ENUM780[] PROGMEM_LATEST = {
@@ -4094,6 +4131,9 @@ const char ENUM6148[] PROGMEM_LATEST = {
 "\x00 " ENUM6148_00_TEXT
 };
 
+const char ENUM6236[] PROGMEM_LATEST = {
+"\x06\x04 "
+};
 
 // Konfiguration - KonfigRG0
 
@@ -4120,10 +4160,14 @@ const char ENUM6240[] PROGMEM_LATEST = {
 "\x00\x03 " ENUM6240_00_03_TEXT "\0"
 "\x01\x03 " ENUM6240_01_03_TEXT "\0"
 "\x02\x03 " ENUM6240_02_03_TEXT "\0"
+"\x00\x04 " ENUM6240_00_04_TEXT "\0"
+"\x04\x04 " ENUM6240_04_04_TEXT "\0"
 "\x00\x08 " ENUM6240_00_08_TEXT "\0"
 "\x08\x08 " ENUM6240_08_08_TEXT "\0"
 "\x00\x10 " ENUM6240_00_10_TEXT "\0"
 "\x10\x10 " ENUM6240_10_10_TEXT "\0"
+"\x00\x20 " ENUM6240_00_20_TEXT "\0"
+"\x20\x20 " ENUM6240_20_20_TEXT "\0"
 "\x00\x80 " ENUM6240_00_80_TEXT "\0"
 "\x80\x80 " ENUM6240_80_80_TEXT
 };
@@ -4436,6 +4480,26 @@ const char ENUM6640[] PROGMEM_LATEST = {
 "\x02 " ENUM6640_02_TEXT "\0"
 "\x03 " ENUM6640_03_TEXT
 };
+
+// FA Phase
+const char ENUM6706[] PROGMEM_LATEST = {
+"\x01 " ENUM6706_01_TEXT "\0"
+"\x02 " ENUM6706_02_TEXT "\0"
+"\x00 " ENUM6706_00_TEXT "\0"
+"\x03 " ENUM6706_03_TEXT "\0"
+"\x04 " ENUM6706_04_TEXT "\0"
+"\x05 " ENUM6706_05_TEXT "\0"
+"\x06 " ENUM6706_06_TEXT "\0"
+"\x07 " ENUM6706_07_TEXT "\0"
+"\x0a " ENUM6706_0a_TEXT "\0"
+"\x0b " ENUM6706_0b_TEXT "\0"
+"\x0c " ENUM6706_0c_TEXT "\0"
+"\x14 " ENUM6706_14_TEXT "\0"
+"\x15 " ENUM6706_15_TEXT "\0"
+"\x16 " ENUM6706_16_TEXT "\0"
+"\x63 " ENUM6706_63_TEXT
+};
+
 // !TODO! ProgNo 6670 is not defined elsewhere
 const char ENUM6670[] PROGMEM_LATEST = {
 "\x00 " ENUM6670_00_TEXT "\0"
@@ -5287,13 +5351,13 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Uhrzeit und Datum
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
+{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ ] - Uhrzeit und Datum
-{0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL}, // [ ] - Uhrzeit und Datum
+{0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [ ] - Uhrzeit und Datum
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
 {CMD_UNKNOWN, CAT_DATUMZEIT,        VT_UNKNOWN,       3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
@@ -5307,11 +5371,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 
 // nur Bedienteil -> keine Kommunikation über BSB
@@ -5334,6 +5400,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_ENUM,          48,    STR48,    sizeof(ENUM48),       ENUM48,       DEFAULT_FLAG, DEV_ALL}, // Wirkung Präsenztaste
 {CMD_UNKNOWN, CAT_BEDIENEINHEIT,    VT_UNKNOWN,       54,    STR54,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Raumfühler
 {0x053D000E,  CAT_BEDIENEINHEIT,    VT_FP1,           70,    STR70,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Bedieneinheit - Geraete-Version Bedienteil
+{0x053D0078,  CAT_BEDIENEINHEIT,    VT_UNKNOWN,       71,    STR71,    0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumgerät-Typ (logged via OZW671 on LMU64)
 
 // Funk
 {CMD_UNKNOWN, CAT_FUNK,             VT_YESNO,         120,   STR120,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Binding
@@ -5526,7 +5593,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Einstellungen Heizkreis 1
 {0x2D3D0574,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
+{0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_064_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D3D0572,  CAT_HK1,              VT_ONOFF,         701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
+{0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
 {0x393D2F80,  CAT_HK1,              VT_TEMP_SHORT5,   709,   STR709,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Min
 {0x2D3D058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
 //HEIZ->DISP ANS      2D3D05A5 00 08 C0 (35.0°C)
@@ -6428,7 +6498,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D04A0,  CAT_KONFIG,           VT_ENUM,          5908,  STR5908,  sizeof(ENUM5908),     ENUM5908,     DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX3-Mod
 // provide 5902-5908 for non-Brötje systems
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5909,  STR5909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX4-Mod
-{0x153D2FCC,  CAT_KONFIG,           VT_BIT,           5920,  STR5920,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
+{0x153D2FCC,  CAT_KONFIG,           VT_BIT,           5920,  STR5920,  sizeof(ENUM5920),     ENUM5920,     DEFAULT_FLAG, DEV_ALL}, // Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
 {0x053D3078,  CAT_KONFIG,           VT_YESNO,         5921,  STR5921,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5921 Default K2 auf K1 [Ja/Nein]
 {0x153D2FCF,  CAT_KONFIG,           VT_ENUM,          5922,  STR5922,  sizeof(ENUM5922),     ENUM5922,     DEFAULT_FLAG, DEV_ALL}, // Thision 5922 Relaisausgang 1 RelCl [enum: ]
 {0x153D2FD0,  CAT_KONFIG,           VT_ENUM,          5923,  STR5923,  sizeof(ENUM5923),     ENUM5923,     DEFAULT_FLAG, DEV_ALL}, // Thision 5923 Relaisausgang 2 RelCl [s.o.]
@@ -6708,8 +6778,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
-{0x053D0000,  CAT_KONFIG,           VT_UINT,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlagetyp
-{0x2D052FEA,  CAT_KONFIG,           VT_UINT,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
+{0x053D0000,  CAT_KONFIG,           VT_DWORD,         6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlagetyp
+{0x2D052FEA,  CAT_KONFIG,           VT_DWORD,         6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x053D0067,  CAT_KONFIG,           VT_BYTE,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
 {0x053D0001,  CAT_KONFIG,           VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
@@ -6726,7 +6796,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
 {0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
 {0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
-{0x053D0064,  CAT_KONFIG,           VT_UNKNOWN,       6236,  STR6236,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
+{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
 {0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6237,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
@@ -6763,19 +6833,26 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // LPB-System
 {0x053D00C9,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
-{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [0] - LPB - Geraeteadresse
+{0x053D000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_LPBADDR,       6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [0] - LPB - Geraeteadresse
+{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_091_ALL}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_097_100}, // [0] - LPB - Geraeteadresse
 {0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [0] - LPB - Geraeteadresse
+{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_133_ALL}, // [0] - LPB - Geraeteadresse
+{0x0505000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_137_ALL}, // [0] - LPB - Geraeteadresse
 {0x053D00CA,  CAT_LPB,              VT_BYTE,          6601,  STR6601,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Segmentadresse
 {0x053D0071,  CAT_LPB,              VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Busspeisung Funktion
 {0x053D0072,  CAT_LPB,              VT_ONOFF,         6605,  STR6605,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Busspeisung Status
 {0x053D3053,  CAT_LPB,              VT_BIT,           6606,  STR6606,  sizeof(ENUM6606),     ENUM6606,     DEFAULT_FLAG, DEV_ALL}, // Thision 6606 LPB-Konfig. 0 [?]
 {0x053D006A,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_ALL}, // [0] - LPB - Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_091_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_118_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_133_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_137_ALL}, // Anzeige Systemmeldungen
 {0x053D08D2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                    NULL,         FL_OEM, DEV_ALL}, // Alarmverzögerung
 {0x053D0839,  CAT_LPB,              VT_ENUM,          6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_ALL}, // [ - ] - LPB - Wirkbereich Umschaltungen
 {0x2D3D0611,  CAT_LPB,              VT_ENUM,          6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Sommerumschaltung
@@ -6801,11 +6878,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
 {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
 {0x093D3008,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
-{0x093D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_BYTE,          6706,  STR6706,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x093D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_163_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
 {0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
@@ -6847,11 +6924,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D2FF2,  CAT_FEHLER,           VT_BYTE,          6806,  STR6806_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806) - logged on OCI700 via LPB
-{0x053D2FF2,  CAT_FEHLER,           VT_BYTE,          6806,  STR6806_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_BYTE,          6806,  STR6806_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_BYTE,          6806,  STR6806_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_BYTE,          6806,  STR6806_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 1
+{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806) - logged on OCI700 via LPB
+{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 1
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D06E0,  CAT_FEHLER,           VT_ENUM,          6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
@@ -6904,11 +6981,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
-{0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816) - logged on OCI700 via LPB
-{0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
-{0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
-{0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 2
-{0x053D2FF6,  CAT_FEHLER,           VT_BYTE,          6816,  STR6816_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816) - logged on OCI700 via LPB
+{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 2
+{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
 {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
 {0x053D06E5,  CAT_FEHLER,           VT_ENUM,          6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
 {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
@@ -6934,7 +7011,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0D3D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
 {0x053D2FFB,  CAT_FEHLER,           VT_UINT,          6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 3
-{0x053D2FFA,  CAT_FEHLER,           VT_BYTE,          6826,  STR6826,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
+{0x053D2FFA,  CAT_FEHLER,           VT_ENUM,          6826,  STR6826,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
 // 4
 {0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
@@ -6946,9 +7023,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
 {0x053D2FFF,  CAT_FEHLER,           VT_UINT,          6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 4
-{0x053D2FFE,  CAT_FEHLER,           VT_BYTE,          6836,  STR6836,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
+{0x053D2FFE,  CAT_FEHLER,           VT_ENUM,          6836,  STR6836,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
 // 5
-{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
+{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
 {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Historie 5
@@ -6959,87 +7036,87 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
 {0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
 {0x053D3003,  CAT_FEHLER,           VT_UINT,          6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 5
-{0x053D3002,  CAT_FEHLER,           VT_BYTE,          6846,  STR6846,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
+{0x053D3002,  CAT_FEHLER,           VT_ENUM,          6846,  STR6846,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
 // 6
 {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6850,  STR6850,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6
 {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6851,  STR6851,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6 Datum/Uhrzeit (6850 on display, mapped to 6851)
 {0x053D3084,  CAT_FEHLER,           VT_ERRORCODE,     6855,  STR6855,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
 {0x053D3084,  CAT_FEHLER,           VT_UINT,          6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 6
-{0x053D3093,  CAT_FEHLER,           VT_BYTE,          6856,  STR6856,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
+{0x053D3093,  CAT_FEHLER,           VT_ENUM,          6856,  STR6856,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
 // 7
 {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6860,  STR6860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7
 {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6861,  STR6861,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7 Datum/Uhrzeit (6860 on display, mapped to 6861)
 {0x053D3085,  CAT_FEHLER,           VT_ERRORCODE,     6865,  STR6865,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
 {0x053D3085,  CAT_FEHLER,           VT_UINT,          6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 7
-{0x053D3094,  CAT_FEHLER,           VT_BYTE,          6866,  STR6866,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
+{0x053D3094,  CAT_FEHLER,           VT_ENUM,          6866,  STR6866,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
 // 8
 {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6870,  STR6870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8
 {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6871,  STR6871,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8 Datum/Uhrzeit (6870 on display, mapped to 6871)
 {0x053D3086,  CAT_FEHLER,           VT_ERRORCODE,     6875,  STR6875,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
 {0x053D3086,  CAT_FEHLER,           VT_UINT,          6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 8
-{0x053D3095,  CAT_FEHLER,           VT_BYTE,          6876,  STR6876,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
+{0x053D3095,  CAT_FEHLER,           VT_ENUM,          6876,  STR6876,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
 // 9
 {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6880,  STR6880,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9
 {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6881,  STR6881,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9 Datum/Uhrzeit (6880 on display, mapped to 6881)
 {0x053D3087,  CAT_FEHLER,           VT_ERRORCODE,     6885,  STR6885,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
 {0x053D3087,  CAT_FEHLER,           VT_UINT,          6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 9
-{0x053D3096,  CAT_FEHLER,           VT_BYTE,          6886,  STR6886,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
+{0x053D3096,  CAT_FEHLER,           VT_ENUM,          6886,  STR6886,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
 // 10
 {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6890,  STR6890,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10
 {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
 {0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
 {0x053D3088,  CAT_FEHLER,           VT_UINT,          6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 10
-{0x053D3097,  CAT_FEHLER,           VT_BYTE,          6896,  STR6896,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
+{0x053D3097,  CAT_FEHLER,           VT_ENUM,          6896,  STR6896,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
 // 11
 {0x053D30A2,  CAT_FEHLER,           VT_DATETIME,      6900,  STR6900,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Datum/Zeit
 {0x053D30AC,  CAT_FEHLER,           VT_ERRORCODE,     6901,  STR6901,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Fehlercode
 {0x053D3089,  CAT_FEHLER,           VT_UINT,          6905,  STR6905,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 11
-{0x053D3098,  CAT_FEHLER,           VT_BYTE,          6906,  STR6906,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 11
+{0x053D3098,  CAT_FEHLER,           VT_ENUM,          6906,  STR6906,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 11
 // 12
 {0x053D30A3,  CAT_FEHLER,           VT_DATETIME,      6910,  STR6910,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Datum/Zeit
 {0x053D30AD,  CAT_FEHLER,           VT_ERRORCODE,     6911,  STR6911,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Fehlercode
 {0x053D308A,  CAT_FEHLER,           VT_UINT,          6915,  STR6915,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 12
-{0x053D3099,  CAT_FEHLER,           VT_BYTE,          6916,  STR6916,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 12
+{0x053D3099,  CAT_FEHLER,           VT_ENUM,          6916,  STR6916,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 12
 // 13
 {0x053D30A4,  CAT_FEHLER,           VT_DATETIME,      6920,  STR6920,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Datum/Zeit
 {0x053D30AE,  CAT_FEHLER,           VT_ERRORCODE,     6921,  STR6921,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Fehlercode
 {0x053D308B,  CAT_FEHLER,           VT_UINT,          6925,  STR6925,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 13
-{0x053D309A,  CAT_FEHLER,           VT_BYTE,          6926,  STR6926,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 13
+{0x053D309A,  CAT_FEHLER,           VT_ENUM,          6926,  STR6926,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 13
 // 14
 {0x053D30A5,  CAT_FEHLER,           VT_DATETIME,      6930,  STR6930,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Datum/Zeit
 {0x053D30AF,  CAT_FEHLER,           VT_ERRORCODE,     6931,  STR6931,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Fehlercode
 {0x053D308C,  CAT_FEHLER,           VT_UINT,          6935,  STR6935,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 14
-{0x053D309B,  CAT_FEHLER,           VT_BYTE,          6936,  STR6936,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 14
+{0x053D309B,  CAT_FEHLER,           VT_ENUM,          6936,  STR6936,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 14
 // 15
 {0x053D30A6,  CAT_FEHLER,           VT_DATETIME,      6940,  STR6940,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Datum/Zeit
 {0x053D30B0,  CAT_FEHLER,           VT_ERRORCODE,     6941,  STR6941,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Fehlercode
 {0x053D308D,  CAT_FEHLER,           VT_UINT,          6945,  STR6945,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 15
-{0x053D309C,  CAT_FEHLER,           VT_BYTE,          6946,  STR6946,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 15
+{0x053D309C,  CAT_FEHLER,           VT_ENUM,          6946,  STR6946,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 15
 // 16
 {0x053D30A7,  CAT_FEHLER,           VT_DATETIME,      6950,  STR6950,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Datum/Zeit
 {0x053D30B1,  CAT_FEHLER,           VT_ERRORCODE,     6951,  STR6951,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Fehlercode
 {0x053D308E,  CAT_FEHLER,           VT_UINT,          6955,  STR6955,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 16
-{0x053D309D,  CAT_FEHLER,           VT_BYTE,          6956,  STR6956,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 16
+{0x053D309D,  CAT_FEHLER,           VT_ENUM,          6956,  STR6956,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 16
 // 17
 {0x053D30A8,  CAT_FEHLER,           VT_DATETIME,      6960,  STR6960,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Datum/Zeit
 {0x053D30B2,  CAT_FEHLER,           VT_ERRORCODE,     6961,  STR6961,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Fehlercode
 {0x053D308F,  CAT_FEHLER,           VT_UINT,          6965,  STR6965,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 17
-{0x053D309E,  CAT_FEHLER,           VT_BYTE,          6966,  STR6966,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 17
+{0x053D309E,  CAT_FEHLER,           VT_ENUM,          6966,  STR6966,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 17
 // 18
 {0x053D30A9,  CAT_FEHLER,           VT_DATETIME,      6970,  STR6970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Datum/Zeit
 {0x053D30B3,  CAT_FEHLER,           VT_ERRORCODE,     6971,  STR6971,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Fehlercode
 {0x053D3090,  CAT_FEHLER,           VT_UINT,          6975,  STR6975,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 18
-{0x053D309F,  CAT_FEHLER,           VT_BYTE,          6976,  STR6976,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 18
+{0x053D309F,  CAT_FEHLER,           VT_ENUM,          6976,  STR6976,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 18
 // 19
 {0x053D30AA,  CAT_FEHLER,           VT_DATETIME,      6980,  STR6980,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Datum/Zeit
 {0x053D30B4,  CAT_FEHLER,           VT_ERRORCODE,     6981,  STR6981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Fehlercode
 {0x053D3091,  CAT_FEHLER,           VT_UINT,          6985,  STR6985,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 19
-{0x053D30A0,  CAT_FEHLER,           VT_BYTE,          6986,  STR6986,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 19
+{0x053D30A0,  CAT_FEHLER,           VT_ENUM,          6986,  STR6986,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 19
 // 20
 {0x053D30AB,  CAT_FEHLER,           VT_DATETIME,      6990,  STR6990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Datum/Zeit
 {0x053D30B5,  CAT_FEHLER,           VT_ERRORCODE,     6991,  STR6991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Fehlercode
 {0x053D3092,  CAT_FEHLER,           VT_UINT,          6995,  STR6995,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 20
-{0x053D30A1,  CAT_FEHLER,           VT_BYTE,          6996,  STR6996,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
+{0x053D30A1,  CAT_FEHLER,           VT_ENUM,          6996,  STR6996,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
 
 // Wartung/Sonderbetrieb
 
@@ -7057,7 +7134,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D03F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden Intervall
 {0x2E3D03F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7011,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 7011 Repetitionszeit Meldung [Tage] - logged on OCI700 via LPB
 {0x053D03F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung
-{0x25052FDF,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB  // TODO: Check if value has to be divided by 10 for LMU64?
+{0x253D2FDE,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB  // TODO: Check if value has to be divided by 10 for LMU64?
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x250503F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB
 {0x2E052FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall - logged on OCI700 via LPB
@@ -7167,6 +7244,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // Ein-/Ausgangstest
 {0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG, DEV_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x05050082,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG, DEV_064_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
 {0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700_2),   ENUM7700_2,   DEFAULT_FLAG, DEV_076_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Mod'sollwert QX3 Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // Mod'sollwert QX3 Relaistest
@@ -7411,14 +7489,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D0C86,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8321,  STR8321,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Virtual parameter logged on OCI420 via ACS700 diagnosis software: Aktuelle Regeldifferenz
 {0x093D0E69,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebläsedrehzahl - Broetje NovoCondens WOB20-25
 {0x113D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1 - logged on OCI700 via LPB
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl - Elco Thision S 17.1
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl - Elco Thision S 17.1
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // Gebläsedrehzahl
 {0x0D3D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl - logged on OCI700 via LPB
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
@@ -7615,10 +7694,12 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D09A7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8732,  STR8732,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y2
 {0x213D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Heizkreispumpe 1
 {0x2D3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
+{0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1
 {0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP_WORD5_US, 8741,  STR8741,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1 - logged on OCI700 via LPB
 {0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Thision 8742 Raumtemperatur 1 Modell [°C]
-{0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1 Alarm
+{0x213D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
+{0x053D0464,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
 {0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
 {0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),     ENUM8749,     FL_RONLY,     DEV_ALL}, // Raumthermostat 1
 {0x053D04A2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 8750 Mod Pumpe Sollwert [%]
@@ -7851,7 +7932,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
 {0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00
 {0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 // "Anlagenbild" (ASCII: "A006103") / on RVS43.222: (ASCII: "A0060Z2") / on ZR1: (ASCII: "A006BZ2")
-{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload 
 {0x053D0076,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // QINF message sent out by ACS700 diagnosis software
 {0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0094,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 (ASCII: "00") // "Anlagebildbeschreibung 1"

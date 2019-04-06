@@ -195,7 +195,7 @@ bool BSB::GetMessage(byte* msg) {
 
       if (bus_type == 2) {
         if (i == len_idx+1) {
-	  len_idx = 8;
+	        len_idx = 8;
           return true; // TODO: add CRC check before returning true/false
         }
       } else {
@@ -434,7 +434,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   unsigned long timeout = millis() + 3000;
   while ((i > 0) && (millis() < timeout)) {
     if (GetMessage(rx_msg)) {
-      Serial.print(F("Duration: "));
+      Serial.print(F("Duration until answer received: "));
       Serial.println(3000-(timeout-millis()));
 
       i--;
@@ -446,17 +446,25 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 */
         if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
           return true;
-	}
+	      } else {
+          Serial.println(F("Message received, but not for us:"));
+          print(rx_msg);
+        }
       } else {
         if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
           return true;
-	}
+	      } else {
+          Serial.println(F("Message received, but not for us:"));
+          print(rx_msg);
+        }
       }
     }
     else {
       delayMicroseconds(205);
     }
   }
-  Serial.println(F("Timeout waiting for answer..."));
+  Serial.println(F("No answer for this send telegram:"));
+  print(tx_msg);
+
   return false;
 }

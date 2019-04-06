@@ -160,13 +160,13 @@ byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
 // BSB: 
-// - third parameter sets own address, defaults to RGT1 (0x06)
-// - use BSB bus(68,69,7) to define device as RGT2
+// - optional third parameter sets own address, defaults to 0x09 (BSBL in serial monitor)
+// - use BSB bus(68,69,6) to define device as RGT1
 // LPB: 
-// - third and fourth parameter set own and destination address (high nibble = segment, low nibble = device minus 1)
-// - defaults to 0x06 for own address and 0x00 for destination address, i.e. segment 0, device 7 for Arduino and segment 0, device 1 for heating system
+// - optional third and fourth parameter set own and destination address (high nibble = segment, low nibble = device minus 1)
+// - defaults to 0x09 for own address and 0x00 for destination address, i.e. segment 0, device 10 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
-// - third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
+// - optional third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
 BSB bus(68,69);
 uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 //#define QAA_TYPE  0x53  // 0x53 = QAA70, 0x52 = QAA50

@@ -44,8 +44,10 @@
 #define ENUM_CAT_2b_TEXT "Unknown category"
 
 #define MENU_TEXT_HFK "Heater functions"
+#define MENU_TEXT_SNS "Sensors"
 #define MENU_TEXT_SN1 "DS18B20 sensors"
 #define MENU_TEXT_SN2 "DHT22 sensors"
+#define MENU_TEXT_CHK "Check for new parameters"
 #define MENU_TEXT_DLG "Display log file"
 #define MENU_TEXT_SLG "Plot log file"
 #define MENU_TEXT_CFG "Settings"
@@ -62,6 +64,7 @@
 #define MENU_TEXT_QRA "Running test with destination device address"
 #define MENU_TEXT_QST "Start test"
 #define MENU_TEXT_QTE "Test finished"
+#define MENU_TEXT_QFE "Done"
 
 #define MENU_DESC_HFK "Allows you to query or set parameters of your heating system, sorted in different clickable categories."
 #define MENU_DESC_CFG "Displays a list of configuration options. You can change most of these by using the extended URL commands."
