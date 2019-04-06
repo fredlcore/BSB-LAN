@@ -39,7 +39,7 @@
 #define ADDR_RGT1  0x06
 #define ADDR_RGT2  0x07
 #define ADDR_CNTR  0x08
-#define ADDR_BSBL  0x09
+#define ADDR_LAN  0x09
 #define ADDR_DISP  0x0A
 #define ADDR_SRVC  0x0B
 #define ADDR_OZW   0x31
