@@ -983,8 +983,10 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_RGT1: strncpy(device, "RGT1", 4); break;
     case ADDR_RGT2: strncpy(device, "RGT2", 4); break;
     case ADDR_CNTR: strncpy(device, "CNTR", 4); break;
+    case ADDR_BSBL: strncpy(device, "BSBL", 4); break;
     case ADDR_DISP: strncpy(device, "DISP", 4); break;
     case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
+    case ADDR_OZW: strncpy(device, "OZW", 4); break;
     case ADDR_ALL: strncpy(device, "ALL ", 4); break;
     default: sprintf(device, "%02X", addr); break;
   }
@@ -1018,7 +1020,9 @@ void SerialPrintAddr(byte addr){
     case ADDR_RGT2: Serial.print(F("RGT2")); break;
     case ADDR_CNTR: Serial.print(F("CNTR")); break;
     case ADDR_SRVC: Serial.print(F("SRVC")); break;
+    case ADDR_BSBL: Serial.print(F("BSBL")); break;
     case ADDR_DISP: Serial.print(F("DISP")); break;
+    case ADDR_OZW: Serial.print(F("OZW")); break;
     case ADDR_ALL: Serial.print(F("ALL ")); break;
     default: SerialPrintHex(addr); break;
   }
@@ -3033,16 +3037,18 @@ int set(int line      // the ProgNr of the heater parameter
 
     // ---------------------------------------------
     // Schedule data
-    case VT_DATETIME: // TODO do we have to send INF or SET command?
+    case VT_DATETIME: // Has to be sent as INF command as well as a broadcast (destination 127 / 0x7F)
       {
-      //S0=dd.mm.yyyy_mm:hh:ss
+      // I0=dd.mm.yyyy_mm:hh:ss!127
       // date and time are transmitted as INF message by the display unit
       // DISP->ALL  INF    0 Uhrzeit und Datum -  Datum/Zeit: 30.01.2015 23:17:00
       // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
       int d,m,y,min,hour,sec;
       // The caller MUST provide six values for an event
-      if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec))
+      if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec)) {
+        Serial.println(F("Too few/many arguments for date/time!"));
         return 0;
+      }
 
       // Send to the PC hardware serial interface (DEBUG)
       Serial.print(F("date time: "));
@@ -3184,7 +3190,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ERRORCODE: // read only
     case VT_UNKNOWN:
     default:
-      return 0;
+      Serial.println(F("Unknown type or read-only parameter"));
+      return 2;
     break;
   } // endswitch
 
@@ -4698,7 +4705,9 @@ ich mir da nicht)
           // Now send it out to the bus
           int setresult = 0;
           setresult = set(line,p,setcmd);
-          bus_type=bus.setBusType(bus_type, myAddr, destAddr);
+          if (token[0] > 0) {
+            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
+          }
 
           if(setresult!=1){
             webPrintHeader();
