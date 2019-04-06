@@ -5014,10 +5014,10 @@ ich mir da nicht)
                 }
               }
             }
-            client.println(F("<BR>"));
+            client.println(F(MENU_TEXT_QTE ".<BR>"));
           }
 
-          client.println(F("<BR>" MENU_TEXT_QTE ".<BR>"));
+          client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
           bus.setBusType(bus_type, myAddr, destAddr);   // return to original destination address
           webPrintFooter();
           break;
