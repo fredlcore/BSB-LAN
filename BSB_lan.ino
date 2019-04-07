@@ -3161,7 +3161,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_CUSTOM_ENUM:
     {
       uint8_t t=atoi(val);
-      bus.Send(TYPE_QINF, c, msg, tx_msg);
+      bus.Send(TYPE_QUR, c, msg, tx_msg);
       int data_len;
       if (bus_type == BUS_LPB) {
         data_len=msg[len_idx]-14;     // get packet length, then subtract
@@ -3300,9 +3300,6 @@ char* query(int line_start  // begin at this line (ProgNr)
           retry=QUERY_RETRIES;
           while(retry){
             uint8_t query_type = TYPE_QUR;
-            if (type == VT_CUSTOM_ENUM) {
-              query_type = TYPE_QINF;
-            }
             if(bus.Send(query_type, c, msg, tx_msg)){
 
               // Decode the xmit telegram and send it to the PC serial interface
@@ -4875,10 +4872,10 @@ ich mir da nicht)
               if (bus.GetMessage(msg)) {
                 uint8_t found_id = 0;
                 boolean found = false;
-                if (bus_type == 0) {
+                if (bus_type == 0 && msg[4] == 0x02) {
                   found_id = msg[1] & 0x7F;
                 }
-                if (bus_type == 1) {
+                if (bus_type == 1 && msg[8] == 0x02) {
                   found_id = msg[3];
                 }
                 for (int i=0;i<10;i++) {
