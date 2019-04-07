@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # Reads BSB_lan_defs.h-style file from first command-line parameter and 
-# renumbers entries, starting from $startID.
+# renumbers entries in the CAT_USER_DEFINED category, starting from $startID.
 
 open (IN, $ARGV[0]);
 
