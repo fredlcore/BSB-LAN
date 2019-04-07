@@ -265,7 +265,6 @@
 #define STR963_TEXT "Mit Vorregler/Zubring'pumpe"
 #define STR1030_TEXT "Sommer-/Winterheizgrenze"
 #define STR1042_TEXT "Vorlaufsollwert Raumthermostat"
-#define STR1100_TEXT "Reduziert-Anhebung Begin"
 #define STR1109_TEXT "Pumpendauerlauf HK2"
 #define STR1150_TEXT "Estrichfunktion"
 #define STR1151_TEXT "Estrich Sollwert manuell"

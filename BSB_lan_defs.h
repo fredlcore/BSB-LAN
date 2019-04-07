@@ -39,10 +39,10 @@
 #define ADDR_RGT1  0x06
 #define ADDR_RGT2  0x07
 #define ADDR_CNTR  0x08
-#define ADDR_LAN   0x09
 #define ADDR_DISP  0x0A
 #define ADDR_SRVC  0x0B
 #define ADDR_OZW   0x31
+#define ADDR_LAN   0x42
 #define ADDR_ALL   0x7F
 
 #define BUS_BSB 0
@@ -766,11 +766,13 @@ const char STR1042[] PROGMEM = STR1042_TEXT;
 #define STR1060 STR760
 #define STR1070 STR770
 #define STR1080 STR780
+#define STR1081 STR781
 #define STR1090 STR790
 #define STR1091 STR791
-const char STR1100[] PROGMEM = STR1100_TEXT;
+#define STR1100 STR800
 #define STR1101 STR801
 const char STR1109[] PROGMEM = STR1109_TEXT;
+#define STR1110 STR810
 #define STR1120 STR820
 #define STR1130 STR830
 #define STR1131 STR831
@@ -785,6 +787,7 @@ const char STR1155[] PROGMEM = STR1155_TEXT;
 const char STR1156[] PROGMEM = STR1156_TEXT;
 const char STR1157[] PROGMEM = STR1157_TEXT;
 #define STR1161 STR861
+#define STR1164 STR864
 #define STR1170 STR870
 #define STR1172 STR872
 const char STR1180[] PROGMEM = STR1180_TEXT;
@@ -810,22 +813,27 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 #define STR1360 STR760
 #define STR1370 STR770
 #define STR1380 STR780
+#define STR1381 STR781
 #define STR1390 STR790
 #define STR1391 STR791
 #define STR1400 STR1100
 #define STR1401 STR801
+#define STR1410 STR810
 #define STR1420 STR820
 #define STR1430 STR830
 #define STR1431 STR831
 #define STR1432 STR832
 #define STR1433 STR833
 #define STR1434 STR834
+#define STR1435 STR835
+#define STR1436 STR836
 #define STR1450 STR1150
 #define STR1451 STR1151
 #define STR1455 STR1155
 #define STR1456 STR1156
 #define STR1457 STR1157
 #define STR1461 STR861
+#define STR1464 STR864
 #define STR1470 STR870
 #define STR1472 STR872
 #define STR1482 STR882
@@ -5370,20 +5378,20 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Bei Anzeige werden keine Werte abgefragt. Bei Änderung wird ein INF geschickt.
 // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
 // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
-{0x0500009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x050504B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 
 // nur Bedienteil -> keine Kommunikation über BSB
@@ -5754,11 +5762,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D0614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2E3D0602,  CAT_HK2,              VT_TEMP,          1070,  STR1070,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Schnellaufheizung
 {0x2E3D05E8,  CAT_HK2,              VT_ENUM,          1080,  STR1080,  sizeof(ENUM1080),     ENUM1080,     DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 (nur wenn aktiviert) - Schnellabsenkung
+{0x2E3D05FB,  CAT_HK2,              VT_BYTE,          1081,  STR1081,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2E3D0607,  CAT_HK2,              VT_MINUTES,       1090,  STR1090,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2E3D0609,  CAT_HK2,              VT_MINUTES,       1091,  STR1091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Ausschalt-Optimierung Max.
 {0x2E3D059E,  CAT_HK2,              VT_TEMP,          1100,  STR1100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2E3D059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1109,  STR1109,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
+{0x223D063A,  CAT_HK2,              VT_YESNO,         1110,  STR1110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
 {0x223D0674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x223D065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {0x223D065D,  CAT_HK2,              VT_TEMP_WORD5_US, 1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung - logged on OCI700 via LPB
@@ -5779,6 +5789,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 
 {0x223D08C9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),     ENUM1161,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
+{0x223D065E,  CAT_HK2,              VT_PERCENT,       1164,  STR1164,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2E3D07C4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
 {0x2E3D07C5,  CAT_HK2,              VT_YESNO,         1172,  STR1172,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
 {0x223D04AD,  CAT_HK2,              VT_ENUM,          1180,  STR1180,  sizeof(ENUM1180),     ENUM1180,     DEFAULT_FLAG, DEV_ALL}, // HK2 Pumpe Drehzahlreduktion
@@ -5805,19 +5816,26 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D0614,  CAT_HKP,              VT_TEMP   ,       1360,  STR1360,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2F3D0602,  CAT_HKP,              VT_TEMP,          1370,  STR1370,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Schnellaufheizung
 {0x2F3D05E8,  CAT_HKP,              VT_ENUM,          1380,  STR1380,  sizeof(ENUM1380),     ENUM1380,     DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 3/P (nur wenn aktiviert) - Schnellabsenkung
+{0x2F3D05FB,  CAT_HKP,              VT_BYTE,          1381,  STR1381,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 3/P (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2F3D0607,  CAT_HKP,              VT_MINUTES,       1390,  STR1390,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2F3D0609,  CAT_HKP,              VT_MINUTES,       1391,  STR1391,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Ausschalt-Optimierung Max.
 {0x2F3D059E,  CAT_HKP,              VT_TEMP,          1400,  STR1400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2F3D059D,  CAT_HKP,              VT_TEMP,          1401,  STR1401,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Ende
+{0x233D063A,  CAT_HKP,              VT_YESNO,         1410,  STR1410,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
 {0x233D0674,  CAT_HKP,              VT_ONOFF,         1420,  STR1420,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x233D065D,  CAT_HKP,              VT_TEMP,          1430,  STR1430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Mischerüberhöhung
+{0x233D065C,  CAT_HKP,              VT_TEMP,          1433,  STR1433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
 {0x233D065A,  CAT_HKP,              VT_SECONDS_WORD,  1434,  STR1434,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit HKP
+{0x2F3D065A,  CAT_HKP,              VT_SECONDS_WORD,  1434,  STR1434,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 1134 Antrieb Laufzeit [s] - logged on OCI700 via LPB
+{0x233D0658,  CAT_HKP,              VT_TEMP,          1435,  STR1435,  0,                    NULL,         FL_OEM, DEV_ALL}, // TODO Thision 1135 Mischer P-Band XP [K]
+{0x233D0659,  CAT_HKP,              VT_SECONDS_WORD,  1436,  STR1436,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x2F3D067B,  CAT_HKP,              VT_ENUM,          1450,  STR1450,  sizeof(ENUM1450),     ENUM1450,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Estrichfunktion
 {0x2F3D068A,  CAT_HKP,              VT_TEMP,          1451,  STR1451,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Estrich sollwert manuell
 {0x2F3D067D,  CAT_HKP,              VT_TEMP,          1455,  STR1455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Sollwert aktuell
 {0x2F3D067C,  CAT_HKP,              VT_DAYS,          1456,  STR1456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag aktuell
 {0x233D0DF2,  CAT_HKP,              VT_BYTE,          1457,  STR1457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag erfüllt
 {0x233D08C9,  CAT_HKP,              VT_ENUM,          1461,  STR1461,  sizeof(ENUM1461),     ENUM1461,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Übertemperaturabnahme
+{0x233D065E,  CAT_HKP,              VT_PERCENT,       1464,  STR1464,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2F3D07C4,  CAT_HKP,              VT_YESNO,         1470,  STR1470,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Pufferspeicher
 {0x2F3D07C5,  CAT_HKP,              VT_YESNO,         1472,  STR1472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
 {0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
@@ -7208,7 +7226,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x05050B4E,  CAT_WARTUNG,          VT_ONOFF,         7120,  STR7120,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ökobetrieb
 {0x053D0B4E,  CAT_WARTUNG,          VT_ONOFF,         7120,  STR7120,  0,                    NULL,         DEFAULT_FLAG, DEV_138_ALL}, // Ökobetrieb
 {0x0D3D092A,  CAT_WARTUNG,          VT_ONOFF,         7130,  STR7130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion
-{0x0505058D,  CAT_WARTUNG,          VT_ENUM,          7131,  STR7131,  sizeof(ENUM7131),     ENUM7131,     DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion Brennerleistung (00 02 = Vollast)
+{0x053D058D,  CAT_WARTUNG,          VT_ENUM,          7131,  STR7131,  sizeof(ENUM7131),     ENUM7131,     DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Schornsteinfegerfunktion Brennerleistung (00 02 = Vollast)
 {0x053D0075,  CAT_WARTUNG,          VT_ONOFF,         7140,  STR7140,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Handbetrieb
 {0x053D06AD,  CAT_WARTUNG,          VT_ONOFF,         7141,  STR7141,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Notbetrieb //FUJITSU
 {0x053D06AE,  CAT_WARTUNG,          VT_ENUM,          7142,  STR7142,  sizeof(ENUM7142),     ENUM7142,     DEFAULT_FLAG, DEV_ALL}, // Notbetrieb Funktionsstart //FUJITSU
@@ -7471,8 +7489,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 //Diagnose Erzeuger
 {0x053D09A0,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8300,  STR8300,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
 {0x053D09A1,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8301,  STR8301,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - 2. Brennerstufe T8
-{0x050509C1,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8302,  STR8302,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Zustand Brennerklappe Auf
-{0x050509C2,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8303,  STR8303,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Zustand Brennerklappe Zu
+{0x053D09C1,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8302,  STR8302,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Zustand Brennerklappe Auf
+{0x053D09C2,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8303,  STR8303,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Zustand Brennerklappe Zu
 {0x053D09A2,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8304,  STR8304,  sizeof(ENUM8304),     ENUM8304,     FL_RONLY,     DEV_ALL}, // Kesselpumpe Q1 TODO determine enum values
 {0x053D0826,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8308,  STR8308,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Kesselpumpe
 {0x0D3D0519,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
@@ -7921,7 +7939,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2F3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
 
 // Lines below seem to have found an explanation.
-{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
@@ -7950,9 +7967,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0096,  CAT_USER_DEFINED,     VT_UNKNOWN,       10212, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 // "Anlagebildbeschreibung 3"
 {0x053D0097,  CAT_USER_DEFINED,     VT_UNKNOWN,       10213, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // "Anlagebildbeschreibung 4"
 {0x053D009B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10214, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
-{0x053D009D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10215, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16 / same on RVS43.222
-{0x053D009E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10216, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 03 19 FF FF FF FF 16 / same on RVS43.222
-{0x053D03F9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10217, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 {0x053D0416,  CAT_USER_DEFINED,     VT_UNKNOWN,       10218, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D045F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10219, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0461,  CAT_USER_DEFINED,     VT_UNKNOWN,       10220, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
@@ -7964,11 +7978,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0473,  CAT_USER_DEFINED,     VT_UNKNOWN,       10226, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 03 E8    // dec. 1000
 {0x053D047F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10227, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 FF FF 00 00 00 00 00 00 00 00 00 00
 {0x053D0489,  CAT_USER_DEFINED,     VT_UNKNOWN,       10228, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 FF 00 FF 00 00 00 00 00 00 00 00 00 00
-{0x053D04B2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10229, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 0A 19 FF FF FF FF 16 / same on RVS43.222
 {0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10231, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10233, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10234, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64
-{0x053D058D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10235, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D05D8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10236, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 23 / on RVS43.222: 01 1E
 {0x053D05DA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10237, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 / on RVS43.222: 01 05
 {0x053D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10238, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 / same on RVS43.222
@@ -8002,8 +8014,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D09AC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10268, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09AF,  CAT_USER_DEFINED,     VT_UNKNOWN,       10270, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09C0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10276, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D09C1,  CAT_USER_DEFINED,     VT_UNKNOWN,       10277, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
-{0x053D09C2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10278, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D09C3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10279, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00
 {0x053D0AD3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10280, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0AD4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10281, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
@@ -8672,12 +8682,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // 0x223D....
 
 {0x223D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10391, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00
-{0x223D063A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10393, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 / same on RVS43.222
 {0x223D064F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10394, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x223D0658,  CAT_USER_DEFINED,     VT_UNKNOWN,       10395, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06 00 / on RVS43.222:  00 08 00
-{0x223D0659,  CAT_USER_DEFINED,     VT_UNKNOWN,       10396, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 5A / on RVS43.222:  00 00 78
-{0x223D065C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10397, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 80
-{0x223D065E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10398, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 64
 {0x223D0666,  CAT_USER_DEFINED,     VT_UNKNOWN,       10399, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 F0 / on RVS43.222:  00 78
 {0x223D066A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10400, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x223D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10401, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
@@ -8692,12 +8697,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // 0x233D....
 
 {0x233D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10413, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00
-{0x233D063A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10415, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222:  00 01
 {0x233D064F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10416, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x233D0658,  CAT_USER_DEFINED,     VT_UNKNOWN,       10417, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06 00 / on RVS43.222:  00 08 00
-{0x233D0659,  CAT_USER_DEFINED,     VT_UNKNOWN,       10418, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 5A / on RVS43.222:  00 00 78
-{0x233D065C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10419, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 80
-{0x233D065E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10420, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 64
 {0x233D0666,  CAT_USER_DEFINED,     VT_UNKNOWN,       10421, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF / on RVS43.222:  00 78
 {0x233D066A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10422, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x233D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10423, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
@@ -8707,15 +8707,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x233D2F8C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10427, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06
 {0x233D2F8D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10428, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 08
 {0x233D2F8E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10429, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 10
-{0x233D2F8F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10430, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0A
-{0x233D2F90,  CAT_USER_DEFINED,     VT_UNKNOWN,       10431, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
-{0x233D2F91,  CAT_USER_DEFINED,     VT_UNKNOWN,       10432, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
-{0x233D2F92,  CAT_USER_DEFINED,     VT_UNKNOWN,       10433, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06
-{0x233D2F93,  CAT_USER_DEFINED,     VT_UNKNOWN,       10434, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0C
+{0x233D2F8F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10430, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0A // Einschaltdifferenz?
+{0x233D2F90,  CAT_USER_DEFINED,     VT_UNKNOWN,       10431, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 // Ausschaltdifferenz?
+{0x233D2F91,  CAT_USER_DEFINED,     VT_UNKNOWN,       10432, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 // Schaltdifferenz?
+{0x233D2F92,  CAT_USER_DEFINED,     VT_UNKNOWN,       10433, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06 // Schaltdifferenz?
+{0x233D2F93,  CAT_USER_DEFINED,     VT_UNKNOWN,       10434, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0C // Schaltdifferenz?
 {0x233D2FAE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10435, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 05
-{0x233D2FD5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10436, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x233D300F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10437, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 32
-{0x233D3038,  CAT_USER_DEFINED,     VT_UNKNOWN,       10438, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 32
+{0x233D2FD5,  CAT_USER_DEFINED,     VT_UNKNOWN,       10436, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 // Schaltdifferenz?
+{0x233D300F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10437, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 32  // Gebläseansteuerung Vorlüftung?
+{0x233D3038,  CAT_USER_DEFINED,     VT_UNKNOWN,       10438, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 32  // Gebläseansteuerung Vorlüftung?
 {0x233D3044,  CAT_USER_DEFINED,     VT_UNKNOWN,       10439, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 06
 {0x233D3075,  CAT_USER_DEFINED,     VT_UNKNOWN,       10440, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 
@@ -8750,7 +8750,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D3D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10460, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02
 {0x2D3D056A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10461, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 05 04
 {0x2D3D05F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10462, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF 85 / on RVS43.222: 00 00 00
-{0x2D3D05FB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10463, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 05
 {0x2D3D060D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10464, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F
 {0x2D3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10465, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F
 {0x2D3D0613,  CAT_USER_DEFINED,     VT_UNKNOWN,       10466, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 00 FF
@@ -8764,13 +8763,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // 0x2E3D.... (größtenteils Steuerung HK2)
 
-{0x2E3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10475, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 FF FF FF FF FF FF 00 00
 {0x2E3D0231,  CAT_USER_DEFINED,     VT_UNKNOWN,       10476, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 02 4E A0 01 00 02 / same on RVS43.222
 {0x2E3D04B7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10477, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x2E3D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10478, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x2E3D056A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10479, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 0C 80
 {0x2E3D05F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10480, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 / same on RVS43.222
-{0x2E3D05FB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10481, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 05
 {0x2E3D060D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10482, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F / same on RVS43.222
 {0x2E3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10483, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F / same on RVS43.222
 {0x2E3D0613,  CAT_USER_DEFINED,     VT_UNKNOWN,       10484, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222:  00 FF
@@ -8798,13 +8795,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // 0x2F3D.... (größtenteils Steuerung HK3)
 
-{0x2F3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10493, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 FF FF FF FF FF FF 00 00
 {0x2F3D0231,  CAT_USER_DEFINED,     VT_UNKNOWN,       10494, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 5E EC 01 00 01 / on RVS43.222:  00 02 4E A0 01 00 02
 {0x2F3D04B7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10495, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 04 / on RVS43.222:  00 00
 {0x2F3D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10496, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 31 / on RVS43.222:  00 00
 {0x2F3D056A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10497, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 0C 80
 {0x2F3D05F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10498, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 40 / on RVS43.222:  00 00 00
-{0x2F3D05FB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10499, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 05
 {0x2F3D0603,  CAT_USER_DEFINED,     VT_UNKNOWN,       10500, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF / on RVS43.222:  01 14
 {0x2F3D060D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10501, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F / same on RVS43.222
 {0x2F3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10502, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 / on RVS43.222:  00 0F
@@ -8836,7 +8831,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // 0x313D....
 
 {0x313D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10513, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 40 08 57
-{0x313D0212,  CAT_USER_DEFINED,     VT_UNKNOWN,       10514, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 41
 {0x313D0215,  CAT_USER_DEFINED,     VT_UNKNOWN,       10515, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 09 0B
 {0x313D0216,  CAT_USER_DEFINED,     VT_UNKNOWN,       10516, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 09 0B
 {0x313D0686,  CAT_USER_DEFINED,     VT_UNKNOWN,       10517, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
