@@ -57,13 +57,12 @@ uint8_t BSB::getBusDest() {
 // Dumps a message to Serial
 void BSB::print(byte* msg) {
   if (bus_type != 2) {
-    //if (msg[0] != 0xDC) return;
     byte len = msg[len_idx];
-    //if (len > 30) return;
+    if (len > 32) return;
     byte data = 0;
 
-    for (; len > 0-bus_type; len--) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
-      data = msg[msg[len_idx]-len];
+    for (int i=0; i<len+bus_type; i++) {	// msg length counts from zero with LPB (bus_type 1) and from 1 with BSB (bus_type 0)
+      data = msg[i];
       if (data < 16) Serial.print("0");
       Serial.print(data, HEX);
       Serial.print(" ");
