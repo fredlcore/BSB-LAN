@@ -1,4 +1,12 @@
 #!/usr/bin/perl
+
+# This script tests whether the data payload of command ids in related fields 
+# are similar and thus point to the same paraameter.
+# For example 0x2D3D0574 and 0x2E3D0574 are heating mode in heat circuit 1 and 2
+# respectively.
+# Define baseID1 and baseID2 before running this script. Results will be 
+# appended to doubles.txt
+
 use strict;
 
 my $URL = "http://192.168.1.50/4444";
