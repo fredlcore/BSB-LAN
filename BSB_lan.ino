@@ -4866,7 +4866,7 @@ ich mir da nicht)
           }
 
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-          if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg)) {
+          if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
             unsigned long startquery = millis();
             while (millis() < startquery + 10000) {
               if (bus.GetMessage(msg)) {
