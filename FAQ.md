@@ -123,7 +123,9 @@ Last two bytes: CRC checksum<BR><BR>
 5. The lower data telegram above has the command ID 0x113D3063. Please note that the first two bytes of the command ID are switched in message type "query" (0x06), so make sure you look at the right telegram (type "answer" (0x07), last line in this example).
 6. Look up the "global command table" section in file BSB_lan_defs.h and check whether an entry for this command already exists (search for STRxxxx where xxxx is the parameter number). If it does exist, go on to step 8.
 7. If your parameter is not yet listed in the "global command table", you have to add an entry in the "menu strings" section like this:
-<pre>const char STRxxxx[] PROGMEM = "Parameter_Name_or_Function";</pre>
+<pre>const char STRxxxx[] PROGMEM = STRxxxx_TEXT;</pre>
+Then add the actual text description in the language file (preferrably at least in both LANG_DE.h and LANG_EN.h):
+<pre>#define STRxxxx_TEXT "Dummy description"</pre>
 Now copy a line from the "global command table" section where your new parameter would fit numerically. Proceed with step 8 but rather than replacing CMD_UNKNOW you have to replace the command ID and value type of the copied line of course.
 
 8. Replace the CMD_UNKNOWN with the command ID you just found. If the return value type (column 3) is VT_UNKNOWN try and find out which parameter type from the list at the beginning of the file works. For example, if the parameter should return a temperature value, you can try VT_TEMP, VT_TEMP_SHORT, VT_TEMP_SHORT5 or VT_TEMP_WORD. For parameters which offer multiple options, you have to add a corresponding line in the "ENUM tables" section. 
