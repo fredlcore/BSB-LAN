@@ -6486,14 +6486,6 @@ void setup() {
   Serial.println(sizeof(cmdtbl2));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
-#ifndef IPAddr
-#ifdef WIFI
-  IPAddress ip = WiFi.localIP();
-#else
-  IPAddress ip = Ethernet.localIP();
-#endif
-#endif
-  Serial.println(ip);
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
@@ -6565,16 +6557,29 @@ void setup() {
 
   // start the Ethernet connection and the server:
 #ifndef WIFI
-#ifdef GatewayIP        // assume that DNS is equal to gateway
-#ifdef SubnetIP
-  Ethernet.begin(mac, ip, gateway, gateway, subnet);
-#else
-  Ethernet.begin(mac, ip, gateway, gateway);
+  #ifdef IPAddr
+    #ifdef GatewayIP        // assume that DNS is equal to gateway
+      #ifdef SubnetIP
+        Ethernet.begin(mac, ip, gateway, gateway, subnet);
+      #else
+        Ethernet.begin(mac, ip, gateway, gateway);
+      #endif
+    #else
+      Ethernet.begin(mac, ip);
+    #endif
+  #else
+    Ethernet.begin(mac);
+  #endif
 #endif
+
+#ifndef IPAddr
+#ifdef WIFI
+  IPAddress ip = WiFi.localIP();
 #else
-  Ethernet.begin(mac, ip);
-#endif 
+  IPAddress ip = Ethernet.localIP();
 #endif
+#endif
+  Serial.println(ip);
 
 #ifdef LOGGER
   digitalWrite(10,HIGH);
