@@ -59,6 +59,7 @@ char version[] = "0.42";
  *
  * Changelog:
  *       version 0.43
+ *        - Bugfix: DHCP (ethernet) implementation
  *        - Moved all sensors to /T , /H is now no longer used
  *        - New virtual parameters 702/703 for Weishaupt room controller
  *        - New data types VT_CUSTOM_ENUM and VT_CUSTOM_BYTE to extract information from non-standard telegrams (such as 702/703)
@@ -3926,6 +3927,40 @@ void loop() {
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
 
+  #ifndef IPAddr 
+  #ifndef WIFI
+  switch (Ethernet.maintain()) 
+  {
+    case 1:
+      //renewed fail
+      Serial.println(F("Error: renewed fail"));
+      break;
+    case 2:
+      //renewed success
+      Serial.println(F("Renewed success"));
+      //print your local IP address:
+      Serial.print(F("My IP address: "));
+      Serial.println(Ethernet.localIP());
+      break;
+    case 3:
+      //rebind fail
+      Serial.println(F("Error: rebind fail"));
+      break;
+    case 4:
+      //rebind success
+      Serial.println(F("Rebind success"));
+      //print your local IP address:
+      Serial.print(F("My IP address: "));
+      Serial.println(Ethernet.localIP());
+    break;
+
+    default:
+      //nothing happened
+      break;
+  }
+  #endif
+  #endif
+
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
   // Separate telegrams after a pause of more than one character time.
@@ -6486,14 +6521,6 @@ void setup() {
   Serial.println(sizeof(cmdtbl2));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
-#ifndef IPAddr
-#ifdef WIFI
-  IPAddress ip = WiFi.localIP();
-#else
-  IPAddress ip = Ethernet.localIP();
-#endif
-#endif
-  Serial.println(ip);
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
@@ -6565,16 +6592,29 @@ void setup() {
 
   // start the Ethernet connection and the server:
 #ifndef WIFI
-#ifdef GatewayIP        // assume that DNS is equal to gateway
-#ifdef SubnetIP
-  Ethernet.begin(mac, ip, gateway, gateway, subnet);
-#else
-  Ethernet.begin(mac, ip, gateway, gateway);
+  #ifdef IPAddr
+    #ifdef GatewayIP        // assume that DNS is equal to gateway
+      #ifdef SubnetIP
+        Ethernet.begin(mac, ip, gateway, gateway, subnet);
+      #else
+        Ethernet.begin(mac, ip, gateway, gateway);
+      #endif
+    #else
+      Ethernet.begin(mac, ip);
+    #endif
+  #else
+    Ethernet.begin(mac);
+  #endif
 #endif
+
+#ifndef IPAddr
+#ifdef WIFI
+  IPAddress ip = WiFi.localIP();
 #else
-  Ethernet.begin(mac, ip);
-#endif 
+  IPAddress ip = Ethernet.localIP();
 #endif
+#endif
+  Serial.println(ip);
 
 #ifdef LOGGER
   digitalWrite(10,HIGH);
