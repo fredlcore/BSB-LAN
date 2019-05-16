@@ -59,6 +59,7 @@ char version[] = "0.42";
  *
  * Changelog:
  *       version 0.43
+ *        - Bugfix: DHCP (ethernet) implementation
  *        - Moved all sensors to /T , /H is now no longer used
  *        - New virtual parameters 702/703 for Weishaupt room controller
  *        - New data types VT_CUSTOM_ENUM and VT_CUSTOM_BYTE to extract information from non-standard telegrams (such as 702/703)
@@ -3925,6 +3926,40 @@ void loop() {
   char  cLineBuffer[MaxArrayElement];  //
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
+
+  #ifndef IPAddr 
+  #ifndef WIFI
+  switch (Ethernet.maintain()) 
+  {
+    case 1:
+      //renewed fail
+      Serial.println(F("Error: renewed fail"));
+      break;
+    case 2:
+      //renewed success
+      Serial.println(F("Renewed success"));
+      //print your local IP address:
+      Serial.print(F("My IP address: "));
+      Serial.println(Ethernet.localIP());
+      break;
+    case 3:
+      //rebind fail
+      Serial.println(F("Error: rebind fail"));
+      break;
+    case 4:
+      //rebind success
+      Serial.println(F("Rebind success"));
+      //print your local IP address:
+      Serial.print(F("My IP address: "));
+      Serial.println(Ethernet.localIP());
+    break;
+
+    default:
+      //nothing happened
+      break;
+  }
+  #endif
+  #endif
 
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
