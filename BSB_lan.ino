@@ -3134,6 +3134,8 @@ int set(int line      // the ProgNr of the heater parameter
           param[3]=d;
       }else{
           param[0]=0x05;   // flag = disabled
+          param[2]=1;
+          param[3]=1;
       }
       break;
     // ---------------------------------------------
@@ -3927,10 +3929,9 @@ void loop() {
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
 
-  #ifndef IPAddr 
-  #ifndef WIFI
-  switch (Ethernet.maintain()) 
-  {
+#ifndef IPAddr 
+#ifndef WIFI
+  switch (Ethernet.maintain()) {
     case 1:
       //renewed fail
       Serial.println(F("Error: renewed fail"));
@@ -3958,8 +3959,8 @@ void loop() {
       //nothing happened
       break;
   }
-  #endif
-  #endif
+#endif
+#endif
 
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
