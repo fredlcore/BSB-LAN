@@ -5155,6 +5155,7 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\x53 " ENUM_ERROR_53_TEXT "\0"
 "\x54 " ENUM_ERROR_54_TEXT "\0"
 "\x55 " ENUM_ERROR_55_TEXT "\0"
+"\x58 " ENUM_ERROR_58_TEXT "\0"
 "\x5b " ENUM_ERROR_5b_TEXT "\0"
 "\x5c " ENUM_ERROR_5c_TEXT "\0"
 "\x5f " ENUM_ERROR_5f_TEXT "\0"
@@ -5166,6 +5167,7 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\x6d " ENUM_ERROR_6d_TEXT "\0"
 "\x6e " ENUM_ERROR_6e_TEXT "\0"
 "\x6f " ENUM_ERROR_6f_TEXT "\0"
+"\x74 " ENUM_ERROR_74_TEXT "\0"
 "\x75 " ENUM_ERROR_75_TEXT "\0"
 "\x76 " ENUM_ERROR_76_TEXT "\0"
 "\x77 " ENUM_ERROR_77_TEXT "\0"
@@ -5188,6 +5190,9 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xa0 " ENUM_ERROR_a0_TEXT "\0"
 "\xa1 " ENUM_ERROR_a1_TEXT "\0"
 "\xa2 " ENUM_ERROR_a2_TEXT "\0"
+"\xa3 " ENUM_ERROR_a3_TEXT "\0"
+"\xa4 " ENUM_ERROR_a4_TEXT "\0"
+"\xa6 " ENUM_ERROR_a6_TEXT "\0"
 "\xab " ENUM_ERROR_ab_TEXT "\0"
 "\xac " ENUM_ERROR_ac_TEXT "\0"
 "\xad " ENUM_ERROR_ad_TEXT "\0"
@@ -5202,6 +5207,10 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xb7 " ENUM_ERROR_b7_TEXT "\0"
 "\xb8 " ENUM_ERROR_b8_TEXT "\0"
 "\xb9 " ENUM_ERROR_b9_TEXT "\0"
+"\xb3 " ENUM_ERROR_be_TEXT "\0"
+"\xbf " ENUM_ERROR_bf_TEXT "\0"
+"\xc0 " ENUM_ERROR_c0_TEXT "\0"
+"\xc1 " ENUM_ERROR_c1_TEXT "\0"
 "\xcf " ENUM_ERROR_cf_TEXT "\0"
 "\xd9 " ENUM_ERROR_d9_TEXT "\0"
 "\xda " ENUM_ERROR_da_TEXT "\0"
@@ -5673,6 +5682,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D0DF2,  CAT_HK1,              VT_BYTE,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tag ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
 {0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
+{0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_BYTE,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
@@ -6820,8 +6830,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
 {0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
-{0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_211_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1195,  CAT_KONFIG,           VT_UINT,          6231,  STR6231,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Konfiguration - Info 2 OEM
 {0x053D1770,  CAT_KONFIG,           VT_DWORD,         6232,  STR6232,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Inbetriebssetzung?
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
@@ -7360,6 +7371,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_116_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D078F,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x06050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x06050809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -7530,6 +7542,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_107_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // Gebläsedrehzahl
@@ -8630,7 +8643,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 {0x113D01F7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10338, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D01FA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10339, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 32 00
-{0x113D0209,  CAT_USER_DEFINED,     VT_UNKNOWN,       10340, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 02 81 00 01 F4 02 F1 E1 C0
+{0x113D0209,  CAT_USER_DEFINED,     VT_UNKNOWN,       10340, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 02 81 00 01 F4 02 F1 E1 C0 // periodically sent by LMU64 with paylaod 02 01 00 01 18 05 3E DB E0
 {0x113D042A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10341, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D0642,  CAT_USER_DEFINED,     VT_UNKNOWN,       10343, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D0775,  CAT_USER_DEFINED,     VT_UNKNOWN,       10344, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
@@ -8710,7 +8723,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x233D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10423, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x233D066C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10424, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x233D0683,  CAT_USER_DEFINED,     VT_UNKNOWN,       10425, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x233D0684,  CAT_USER_DEFINED,     VT_UNKNOWN,       10426, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40 / on RVS43.222:  00 17 C0
+{0x233D0684,  CAT_USER_DEFINED,     VT_UNKNOWN,       10426, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40 / on RVS43.222:  00 17 C0  // Temperaturwächter Sollwert HK3/P?
 {0x233D2F8C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10427, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06
 {0x233D2F8D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10428, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 08
 {0x233D2F8E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10429, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 10
