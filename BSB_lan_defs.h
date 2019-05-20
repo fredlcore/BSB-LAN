@@ -5123,6 +5123,19 @@ const char ENUM15062[] PROGMEM_LATEST = {
 "\x53 " ENUM15062_53_TEXT
 };
 
+const char ENUM15063[] PROGMEM_LATEST = {
+"\x00\x01 " ENUM702_04_TEXT "\0"
+"\x01\x01 " ENUM702_04_TEXT "\0"
+"\x00\x02 " ENUM15063_00_02_TEXT "\0"
+"\x02\x02 " ENUM15063_02_02_TEXT "\0"
+"\x00\x04 " ENUM702_04_TEXT "\0"
+"\x04\x04 " ENUM702_04_TEXT "\0"
+"\x00\x08 " ENUM15063_00_08_TEXT "\0"
+"\x08\x08 " ENUM15063_08_08_TEXT "\0"
+"\x00\x10 " ENUM15063_00_10_TEXT "\0"
+"\x10\x10 " ENUM15063_10_10_TEXT
+};
+
 /* SPECIAL ENUM tables */
 //Fehlercodes
 const char ENUM_ERROR[] PROGMEM_LATEST = {
@@ -8974,7 +8987,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
 {0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      15061, STR15061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
 {0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM15062),    ENUM15062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
-{0x2D4D003F,  CAT_PPS,              VT_BYTE,          15063, STR8009,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
+{0x2D4D003F,  CAT_PPS,              VT_BIT,           15063, STR8009,  sizeof(ENUM15063),    ENUM15063,    FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 {0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
 {0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
 {0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
@@ -9049,8 +9062,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 #define PPS_CON 67
 
 #define PPS_ANZ 68
-#define LAST_ENUM_NR 15062
-#define LAST_ENUM ENUM15062
+#define LAST_ENUM_NR 15063
+#define LAST_ENUM ENUM15063
 
 //PPS-Bus commands end
 
