@@ -4316,6 +4316,7 @@ void loop() {
               case 0x08: msg_cycle = 8; break;
               case 0x09: msg_cycle = 9; break;
               case 0x0B: msg_cycle = 10; break;
+              case 0x38: msg_cycle = 0; break;
               case 0x48: msg_cycle = 1; break;
               case 0x49: msg_cycle = 5; break;
               case 0x4C: msg_cycle = 11; break;
