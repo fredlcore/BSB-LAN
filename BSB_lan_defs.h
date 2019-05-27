@@ -65,8 +65,8 @@
 #define DEV_085_ALL  85,255 // Elco Aquatop 8es
 #define DEV_090_ALL  90,255 // RVS43.222 SSR C
 #define DEV_091_ALL  91,255 // AVS75.390 Erweiterungsmodul (EWM)
-#define DEV_094_ALL  91,255 // QAA75.611/101
 #define DEV_092_ALL  92,255 // AVS37.294/100 (Bedienteil von Brötje EcoTherm WGB 20 E)
+#define DEV_094_ALL  94,255 // QAA75.611/101
 #define DEV_095_ALL  95,255 // Brötje LogoBloc Unit L-UB 25C
 #define DEV_096_ALL  96,255 // Brötje NovoCondens SOB 22C, 26C
 #define DEV_097_100  97,100 // Brötje WGB 20 C
