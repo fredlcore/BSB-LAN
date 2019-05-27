@@ -6067,8 +6067,50 @@ ich mir da nicht)
           String MQTTTopic = "BSB-LAN/";
 #endif
           MQTTTopic.concat(String(log_parameters[i]));
-
-          MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
+          char buffer[20];
+          if (log_parameters[i] < 20000) {
+            uint32_t c=0;
+            int line=findLine(log_parameters[i],0,&c);
+            uint8_t type=get_cmdtbl_type(line);
+            if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE) {
+              MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
+            } else {
+              MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
+            }
+          }
+          if (log_parameters[i] >= 20000 && log_parameters[i] < 20006) {
+            uint32_t val = 0;
+            switch (log_parameters[i]) {              
+              case 20000: val = brenner_duration; break;
+              case 20001: val = brenner_count; break;
+              case 20002: val = brenner_duration_2; break;
+              case 20003: val = brenner_count_2; break;
+              case 20004: val = TWW_duration; break;
+              case 20005: val = TWW_count; break;
+            }
+            sprintf(buffer, "%ld", val);
+            MQTTClient.publish(MQTTTopic.c_str(), buffer);
+          }
+          if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
+            int log_sensor = log_parameters[i] - 20100;
+            int chk = DHT.read22(DHT_Pins[log_sensor]);
+            Serial.println(chk);
+            double hum = DHT.humidity;
+            double temp = DHT.temperature;
+            if (hum > 0 && hum < 101) {
+              sprintf(buffer, "%f / %f", temp, hum);
+              MQTTClient.publish(MQTTTopic.c_str(), buffer);
+            }
+          } 
+          if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
+#ifdef ONE_WIRE_BUS
+            int log_sensor = log_parameters[i] - 20200;
+            sensors.requestTemperatures(); // Send the command to get temperatures
+            float t=sensors.getTempCByIndex(log_sensor);
+              sprintf(buffer, "%f", (double)t);
+            MQTTClient.publish(MQTTTopic.c_str(), buffer);
+#endif
+          }
         }
       }
     }
