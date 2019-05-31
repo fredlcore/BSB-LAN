@@ -8718,7 +8718,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 {0x193D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10369, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00
 {0x193D01F9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10370, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x193D01FD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10371, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 01
+{0x193D01FD,  CAT_USER_DEFINED,     VT_TEMP,          10371, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 01
 {0x193D01FE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10372, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00
 {0x193D022C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10373, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x193D022E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10374, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
