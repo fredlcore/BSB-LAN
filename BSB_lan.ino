@@ -6048,8 +6048,11 @@ ich mir da nicht)
         }
       }
     }
+#ifdef ONE_WIRE_BUS
+    sensors.requestTemperatures(); // Send the command to get temperatures
+#endif
     for (int i=0; i < numLogValues; i++) {
-      if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
+      if (log_parameters[i] > 0) {
         if (MQTTClient.connected()) {
 /*
           String MQTTPayload = "";
@@ -6092,22 +6095,44 @@ ich mir da nicht)
             MQTTClient.publish(MQTTTopic.c_str(), buffer);
           }
           if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
+#ifdef DHT_BUS
             int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
             Serial.println(chk);
             double hum = DHT.humidity;
             double temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
-              sprintf(buffer, "%f / %f", temp, hum);
+              char tmpSign[] = " ";
+              if (temp < 0) {
+                tmpSign[0] = '-';
+              }
+              float tmpVal = (temp < 0) ? -temp : temp;
+              int tmpInt1 = tmpVal;
+              float tmpFrac = tmpVal - tmpInt1;
+              int tmpInt2 = trunc(tmpFrac * 100);
+
+              float tmpVal2 = (hum < 0) ? -hum : hum;
+              int tmpInt3 = tmpVal2;
+              float tmpFrac2 = tmpVal2 - tmpInt3;
+              int tmpInt4 = trunc(tmpFrac2 * 100);
+              sprintf (buffer, "%s%d.%02d / %d.%02d", tmpSign, tmpInt1, tmpInt2, tmpInt3, tmpInt4);
               MQTTClient.publish(MQTTTopic.c_str(), buffer);
             }
+#endif
           } 
           if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
 #ifdef ONE_WIRE_BUS
             int log_sensor = log_parameters[i] - 20200;
-            sensors.requestTemperatures(); // Send the command to get temperatures
             float t=sensors.getTempCByIndex(log_sensor);
-              sprintf(buffer, "%f", (double)t);
+            char tmpSign[] = " ";
+            if (t < 0) {
+              tmpSign[0] = '-';
+            }
+            float tmpVal = (t < 0) ? -t : t;
+            int tmpInt1 = tmpVal;
+            float tmpFrac = tmpVal - tmpInt1;
+            int tmpInt2 = trunc(tmpFrac * 100);
+            sprintf (buffer, "%s%d.%02d\n", tmpSign, tmpInt1, tmpInt2);
             MQTTClient.publish(MQTTTopic.c_str(), buffer);
 #endif
           }
