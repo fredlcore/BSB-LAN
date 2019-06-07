@@ -2421,7 +2421,7 @@ void webPrintSite() {
  * *************************************************************** */
 char *GetDateTime(char date[]){
   sprintf(date,"%02d.%02d.%d %02d:%02d:%02d",day(),month(),year(),hour(),minute(),second());
-  date[20] = 0;
+  date[19] = 0;
   return date;
 }
 
