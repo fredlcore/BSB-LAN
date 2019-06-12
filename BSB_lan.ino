@@ -6075,7 +6075,7 @@ ich mir da nicht)
             uint32_t c=0;
             int line=findLine(log_parameters[i],0,&c);
             uint8_t type=get_cmdtbl_type(line);
-            if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE) {
+            if (type == VT_ENUM || type == VT_BIT || type == VT_ONOFF || type == VT_ERRORCODE) {
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
             } else {
               MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
