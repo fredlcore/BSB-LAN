@@ -86,8 +86,10 @@
 #define DEV_138_ALL  138,255 // Brötje BOB
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
+#define DEV_164_ALL  164,255 // AVS37.295/309 Olymp WHS-500 Luft-/Wasser-Wärmepumpe
 #define DEV_170_ALL  170,255 // Fujitsu Waterstage WSYK160DC9
 #define DEV_184_ALL  184,255 // OZW672.01
+#define DEV_186_ALL  186,255 // AVS75.370/109
 #define DEV_195_ALL  195,255 // MHG Procon E 25 HS
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
