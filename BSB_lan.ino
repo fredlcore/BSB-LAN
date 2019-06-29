@@ -3066,7 +3066,7 @@ int set(int line      // the ProgNr of the heater parameter
 
       // Set up the command payload
       //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
-      param[0]=0x01;
+      param[0]=0x00;
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
