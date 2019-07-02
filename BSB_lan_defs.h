@@ -1340,9 +1340,22 @@ const char STR4133[] PROGMEM = STR4133_TEXT;
 const char STR4134[] PROGMEM = STR4134_TEXT;
 const char STR4135[] PROGMEM = STR4135_TEXT;
 const char STR4136[] PROGMEM = STR4136_TEXT;
+const char STR4137[] PROGMEM = STR4137_TEXT;
+const char STR4138[] PROGMEM = STR4138_TEXT;
 #define STR4140 STR2250
 const char STR4141[] PROGMEM = STR4141_TEXT;
+#define STR4153 STR2270
+const char STR4158[] PROGMEM = STR4158_TEXT;
+#define STR4163 STR834
+#define STR4164 STR835
+#define STR4165 STR836
 #define STR4170 STR2300
+const char STR4190[] PROGMEM = STR4190_TEXT;
+const char STR4192[] PROGMEM = STR4192_TEXT;
+const char STR4201[] PROGMEM = STR4201_TEXT;
+const char STR4202[] PROGMEM = STR4202_TEXT;
+const char STR4203[] PROGMEM = STR4203_TEXT;
+const char STR4204[] PROGMEM = STR4204_TEXT;
 
 // 4700 Pufferspeicher
 const char STR4708[] PROGMEM = STR4708_TEXT;
@@ -3401,7 +3414,7 @@ const char ENUM3887[] PROGMEM_LATEST = {
 "\x03 " ENUM3887_03_TEXT
 };
 
-//Feststoffkessel
+// Feststoffkessel
 const char ENUM4133[] PROGMEM_LATEST = {
 "\x01 " ENUM4133_01_TEXT "\0"
 "\x02 " ENUM4133_02_TEXT "\0"
@@ -3423,6 +3436,20 @@ const char ENUM4135[] PROGMEM_LATEST = {
 "\x02 " "?" ENUM4135_02_TEXT "\0"
 "\x03 " "?" ENUM4135_03_TEXT
 }; // todo Hinweis: x01 Speichertemperatur ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+const char ENUM4137[] PROGMEM_LATEST = {
+"\x00 " "?" ENUM4137_00_TEXT "\0"
+"\x01 " ENUM4137_01_TEXT "\0"
+"\x02 " "?" ENUM4137_02_TEXT "\0"
+"\x03 " "?" ENUM4137_03_TEXT
+}; // todo Hinweis: x01 Speichertemperatur ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+#define ENUM4138 ENUM4135
+
+const char ENUM4192[] PROGMEM_LATEST = {
+"\x00 " ENUM4192_00_TEXT "\0"
+"\x01 " ENUM4192_01_TEXT
+};
 
 // Pufferspeicher
 const char ENUM4720[] PROGMEM_LATEST = {
@@ -6411,12 +6438,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x513D0A06,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4133,  STR4133,  sizeof(ENUM4133),     ENUM4133,     DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Vergleichstempertatur
 {0x513D11D1,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4134,  STR4134,  sizeof(ENUM4134),     ENUM4134,     DEFAULT_FLAG, DEV_ALL}, // TWW-Speicheranbindung
 {0x513D11C8,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4135,  STR4135,  sizeof(ENUM4135),     ENUM4135,     DEFAULT_FLAG, DEV_ALL}, // Kesselsollwert TWW-Ladung
-{0x053D11D2,  CAT_FESTSTOFFKESSEL,  VT_YESNO,         4136,  STR4136,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasserladung mit Q3
+{0x053D11D2,  CAT_FESTSTOFFKESSEL,  VT_YESNO,         4136,  STR4136,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasserladung mit Q3
+{0x513D11D0,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4137,  STR4137,  sizeof(ENUM4137),     ENUM4137,     FL_OEM, DEV_ALL}, // Pufferspeicheranbindung
+{0x513D11C9,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4138,  STR4138,  sizeof(ENUM4138),     ENUM4138,     FL_OEM, DEV_ALL}, // Kesselsollwert Pufferladung
 {0x513D089D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4140,  STR4140,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpennachlaufzeit
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4141,  STR4141,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4170,  STR4170,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Anl'frostschutz Kess'pumpe
-
-// 4170 Anlagenfrostschutz Kesselpumpe An/Aus
+{0x513D0A05,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4141,  STR4141,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
+{0x513D0884,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4153,  STR4153,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Rücklaufsollwert Minimum
+{0x513D11C7,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4158,  STR4158,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorl'einfluss Rückl'regelung
+{0x513D087E,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4163,  STR4163,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
+{0x513D0880,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4164,  STR4164,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x513D087F,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4165,  STR4165,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x513D063B,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4170,  STR4170,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anl'frostschutz Kess'pumpe
+{0x513D089E,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4190,  STR4190,  0,                    NULL,         FL_OEM, DEV_ALL}, // Restwärmefkt Dauer Max
+{0x513D066E,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4192,  STR4192,  sizeof(ENUM4192),     ENUM4192,     FL_OEM, DEV_ALL}, // Restwärmefkt Auslösung
+{0x513D089F,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4201,  STR4201,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x513D08A0,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4202,  STR4202,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x513D11C0,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4203,  STR4203,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
+{0x513D11C2,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4204,  STR4204,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
 
 // Pufferspeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4708,  STR4708,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsollwert Kühlen
