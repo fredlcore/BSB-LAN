@@ -3446,7 +3446,7 @@ const char ENUM4137[] PROGMEM_LATEST = {
 "\x01 " ENUM4137_01_TEXT "\0"
 "\x02 " "?" ENUM4137_02_TEXT "\0"
 "\x03 " "?" ENUM4137_03_TEXT
-}; // todo Hinweis: x01 Speichertemperatur ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+}; // todo Hinweis: x01 Mit B4 ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
 #define ENUM4138 ENUM4135
 
@@ -7807,8 +7807,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D0A14,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8478,  STR8478,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp'diff Abtauen Sollwert
 {0x593D0A16,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8480,  STR8480,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtausperrung
 {0x593D0A17,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8481,  STR8481,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Zwangsabtauen
-{0x593D0D2C,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT,       8482,  STR8482,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtaustabilisierung
-// received datagram: DC 80 0A 0D 07 59 3D 08 E2 00 00 71 77  -> is VT_BYTE OK or is it just a 2 byte value without "enable" flag?
+{0x593D0D2C,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8482,  STR8482,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtaustabilisierung
 {0x593D08E2,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8485,  STR8485,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anzahl Abtauversuche
 {0x593D08E8,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Status Abtauen WP
 
