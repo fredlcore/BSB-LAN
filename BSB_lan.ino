@@ -5,7 +5,7 @@ char version[] = "0.42";
  * BSB Boiler-System-Bus LAN Interface
  *
  * ATTENTION:
- *       There is no waranty that this system will not damage your heating system!
+ *       There is no warranty that this system will not damage your heating system!
  *
  * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
@@ -37,7 +37,7 @@ char version[] = "0.42";
  *       0.22  - 07.02.2017
  *       0.23  - 12.02.2017
  *       0.24  - 14.02.2017
- *       0.25  - 21.02.20172
+ *       0.25  - 21.02.2017
  *       0.26  - 27.02.2017
  *       0.27  - 01.03.2017
  *       0.28  - 05.03.2017
