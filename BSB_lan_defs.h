@@ -1180,6 +1180,11 @@ const char STR3010[] PROGMEM = STR3010_TEXT;
 const char STR3011[] PROGMEM = STR3011_TEXT;
 const char STR3012[] PROGMEM = STR3012_TEXT;
 const char STR3014[] PROGMEM = STR3014_TEXT;
+const char STR3025[] PROGMEM = STR3025_TEXT;
+const char STR3026[] PROGMEM = STR3026_TEXT;
+const char STR3027[] PROGMEM = STR3027_TEXT;
+const char STR3028[] PROGMEM = STR3028_TEXT;
+const char STR3029[] PROGMEM = STR3029_TEXT;
 
 // Energiezähler (Fujitsu Waterstage)
 const char STR3090[] PROGMEM = STR3090_TEXT;
@@ -6275,7 +6280,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3002,  STR3002,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp min Kühlbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3010,  STR3010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehz max V'lator/Q'Pump
+{0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Drehz max V'lator/Q'Pump
+{0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Drehz min V'lator/Q'Pump
+{0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Silent Mode Drehzahl Max
+{0x593D17A8,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3026,  STR3026,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Silent Mode Ein
+{0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Silent Mode Aus
+{0x593D1796,  CAT_WAERMEPUMPE,      VT_TEMP,          3028,  STR3028,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Silent'M Drehz'anheb Beginn
+{0x593D1797,  CAT_WAERMEPUMPE,      VT_TEMP,          3029,  STR3029,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Silent'M Drehz'anheb Ende
 
 // Energiezähler (Fujitsu Waterstage)
 {0x053D1088,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3090,  STR3090,  sizeof(ENUM3090),     ENUM3090,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Wärme
