@@ -7763,8 +7763,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D05C0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8417,  STR8417,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur 2
 {0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kältemitteltemperatur flüssig
 {0x593D1783,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensatortemperatur
-// is this really 8424? it is sent along with parameter 8423
-{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8424,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensationsdruck
+// todo: How to integrate this line? it's sent along with parameter 8423
+// {0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, ????,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensationsdruck
 {0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Kondensator //FUJITSU
 {0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Verdampfer
 {0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemperatur
@@ -7776,10 +7776,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D196D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8434,  STR8434,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sauggastemperatur
 {0x593D1664,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8435,  STR8435,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfungstemperatur
 // todo: How to integrate this line? it's sent along with parameter 8435
-//{0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD,      ????,  STR8435_1,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfungsdruck
+// {0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, ????,  STR8435_1, 0,                   NULL,         FL_RONLY,     DEV_ALL}, // Verdampfungsdruck
 {0x593D1663,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Überhitzung
 // todo: How to integrate this line? it's sent along with parameter 8436
-//{0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436_1,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Überhitzungssollwert
+// {0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          ????,  STR8436_1, 0,                   NULL,         FL_RONLY,     DEV_ALL}, // Überhitzungssollwert
 {0x053D163A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8437,  STR8437,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Expansionsventil // kein Funktion
 {0x053D165B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8438,  STR8438,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Magnetventil
 {0x593D0BD4,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8440,  STR8440,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 1 Stillst’zeit Min
