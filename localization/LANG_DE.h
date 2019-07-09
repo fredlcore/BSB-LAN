@@ -1399,7 +1399,7 @@
 #define STR8417_TEXT "Heissgastemperatur 2"
 #define STR8420_TEXT "Kältemitteltemperatur flüssig"
 #define STR8423_TEXT "Kondensatortemperatur"
-#define STR8424_TEXT "Kondensationsdruck"
+#define STR8423_1_TEXT "Kondensationsdruck"
 #define STR8425_TEXT "Temp’spreizung Kondensator"
 #define STR8426_TEXT "Temp’spreizung Verdampfer"
 #define STR8427_TEXT "Quelle Eintrittstemperatur"

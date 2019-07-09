@@ -2128,7 +2128,7 @@ const char STR8416[] PROGMEM = STR8416_TEXT;
 const char STR8417[] PROGMEM = STR8417_TEXT;
 const char STR8420[] PROGMEM = STR8420_TEXT;
 const char STR8423[] PROGMEM = STR8423_TEXT;
-const char STR8424[] PROGMEM = STR8424_TEXT;
+const char STR8423_1[] PROGMEM = STR8423_1_TEXT;
 const char STR8425[] PROGMEM = STR8425_TEXT;
 const char STR8426[] PROGMEM = STR8426_TEXT;
 const char STR8427[] PROGMEM = STR8427_TEXT;
@@ -7763,7 +7763,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kältemitteltemperatur flüssig
 {0x593D1783,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensatortemperatur
 // todo: How to integrate this line? it's sent along with parameter 8423
-// {0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, ????,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensationsdruck
+// {0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, ????,  STR8423_1,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensationsdruck
 {0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Kondensator //FUJITSU
 {0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Verdampfer
 {0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemperatur
