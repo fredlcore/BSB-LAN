@@ -12,7 +12,7 @@
 #define ENUM_CAT_0b_TEXT "Heating circuit 1"
 #define ENUM_CAT_0c_TEXT "Cooling circuit 1"
 #define ENUM_CAT_0d_TEXT "Heating circuit 2"
-#define ENUM_CAT_0e_TEXT "Heating circuit 2"
+#define ENUM_CAT_0e_TEXT "Heating circuit 3/P"
 #define ENUM_CAT_0f_TEXT "DHW"
 #define ENUM_CAT_10_TEXT "Hx pump"
 #define ENUM_CAT_11_TEXT "Swimming pool"
