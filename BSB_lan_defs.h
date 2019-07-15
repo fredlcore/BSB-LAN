@@ -84,6 +84,7 @@
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
 #define DEV_133_ALL  133,255 // QAA75.910/349
+#define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  138,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
@@ -6933,6 +6934,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_094_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_118_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_133_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_136_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_137_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_164_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Anzeige Systemmeldungen
