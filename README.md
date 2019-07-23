@@ -66,7 +66,8 @@ This hardware/software combination should in principle work with all BSB- and LP
 - Fujitsu Waterstage WSHA 050 DA [RVS41.813] (heat pump)
 - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
 - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
-- MHG Procon E 25 HS [LMS14] (gas-fired)
+- MHG Procon E 25 HS [LMS14] (gas-fired)  
+- Olymp WHS-500 [AVS75.370] (heat pump) 
 - Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
 - Weishaupt WTU-25 G with WRS-CPU B2/E [RVS23.220] (oil-fired) {LPB_only}
 
