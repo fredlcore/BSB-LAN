@@ -5285,7 +5285,9 @@ ich mir da nicht)
                   // If the unit just contains "\0", so the unit is U_NONE (this is also the case for
                   // VT_STRING, which has a unit, but it is already included at the end of the string).
                   } else if (div_unit_len <= 1) {
-                    unit_str = strstr(ret_val_str, " ");
+                    if (div_data_type != DT_DTTM) {
+                      unit_str = strstr(ret_val_str, " ");
+                    }       
                     if (unit_str != NULL) {
                       // Terminate the value sring at the position of the found space.
                       *unit_str = '\0';
