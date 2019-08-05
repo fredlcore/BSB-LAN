@@ -357,6 +357,11 @@ EthernetServer server(Port);
 #ifdef GatewayIP
 IPAddress gateway(GatewayIP);
 #endif
+#ifdef DNSIP
+IPAddress dnsserver(DNSIP);
+#else
+IPAddress dnsserver(GatewayIP);
+#endif
 #ifdef SubnetIP
 IPAddress subnet(SubnetIP);
 #endif
@@ -6661,11 +6666,11 @@ void setup() {
   // start the Ethernet connection and the server:
 #ifndef WIFI
   #ifdef IPAddr
-    #ifdef GatewayIP        // assume that DNS is equal to gateway
+    #ifdef GatewayIP
       #ifdef SubnetIP
-        Ethernet.begin(mac, ip, gateway, gateway, subnet);
+        Ethernet.begin(mac, ip, gateway, dnsserver, subnet);
       #else
-        Ethernet.begin(mac, ip, gateway, gateway);
+        Ethernet.begin(mac, ip, gateway, dnsserver);
       #endif
     #else
       Ethernet.begin(mac, ip);
