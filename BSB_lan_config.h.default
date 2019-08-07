@@ -15,7 +15,7 @@
 #define Port 80
 #define IPAddr 192,168,178,88   // please note the commas instead of dots!!! Remove this line when you want DHCP
 //#define GatewayIP 192,168,178,1 // Optional: this is usually your router's IP address. Please note the commas instead of dots!!!
-//#define GatewayIP 192,168,178,1 // this is usually your router's IP address. It is assumed that gateway and DNS are the same. Please note the commas instead of dots!!!
+//#define DNSIP 192,168,178,1 // Only set this variable if your DNS server is different from your router's IP address (GatewayIP). Please note the commas instead of dots!!!
 //#define SubnetIP 255,255,255,0  // Please use commas insteaf of dots!!!
 
 /* Select language; so far German is the most complete, with English following.
