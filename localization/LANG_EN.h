@@ -58,7 +58,7 @@
 #define MENU_TEXT_NO "No"
 #define MENU_TEXT_ON "On"
 #define MENU_TEXT_OFF "Off"
-#define MENU_TEXT_QSC "Scanning for devinces..."
+#define MENU_TEXT_QSC "Scanning for devices..."
 #define MENU_TEXT_QFD "Device address found"
 #define MENU_TEXT_QFA "Device query failed"
 #define MENU_TEXT_QRA "Running test with destination device address"
