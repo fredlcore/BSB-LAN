@@ -360,7 +360,9 @@ IPAddress gateway(GatewayIP);
 #ifdef DNSIP
 IPAddress dnsserver(DNSIP);
 #else
+#ifdef GatewayIP
 IPAddress dnsserver(GatewayIP);
+#endif
 #endif
 #ifdef SubnetIP
 IPAddress subnet(SubnetIP);
