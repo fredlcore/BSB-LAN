@@ -91,6 +91,7 @@
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
 #define DEV_164_ALL  164,255 // AVS37.295/309 Olymp WHS-500 Luft-/Wasser-Wärmepumpe
 #define DEV_170_ALL  170,255 // Fujitsu Waterstage WSYK160DC9
+#define DEV_170_ALL  172,255 // SensoTherm BLW Split B (RVS21.826F/200)
 #define DEV_184_ALL  184,255 // OZW672.01
 #define DEV_186_ALL  186,255 // AVS75.370/109#
 #define DEV_188_ALL  188,255 // AVS37.296/141
@@ -5730,6 +5731,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // dt Überhöhungsfaktor [%]
+{0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // dt Überhöhungsfaktor [%]
@@ -6448,6 +6450,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_162_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_163_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_170_ALL}, // TW Schaltdifferenz 1 ein
+{0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_172_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_195_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_205_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_211_ALL}, // TW Schaltdifferenz 1 ein
@@ -6607,6 +6610,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_162_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_163_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_170_ALL}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_172_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_195_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_205_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_211_ALL}, // [-] - Konfiguration - Funktion Eingang H1
@@ -6621,6 +6625,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_162_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_163_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_170_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
+{0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_172_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_195_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_205_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
 {0x053D0DC8,  CAT_KONFIG,           VT_ENUM,          5951,  STR5951,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_211_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H1
@@ -6645,6 +6650,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
@@ -6666,6 +6672,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
@@ -6739,6 +6746,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_162_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_170_ALL}, // Relaisausgang QX21
+{0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_172_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_195_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_205_ALL}, // Relaisausgang QX21
 {0x053D0D52,  CAT_KONFIG,           VT_ENUM,          6030,  STR6030,  sizeof(ENUM6030),     ENUM6030,     DEFAULT_FLAG, DEV_211_ALL}, // Relaisausgang QX21
@@ -6750,6 +6758,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_162_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_170_ALL}, // Relaisausgang QX22
+{0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_172_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_195_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_205_ALL}, // Relaisausgang QX22
 {0x053D0D53,  CAT_KONFIG,           VT_ENUM,          6031,  STR6031,  sizeof(ENUM6031),     ENUM6031,     DEFAULT_FLAG, DEV_211_ALL}, // Relaisausgang QX22
@@ -6761,6 +6770,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_162_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_163_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_170_ALL}, // Relaisausgang QX23
+{0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_172_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_195_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_205_ALL}, // Relaisausgang QX23
 {0x053D0D54,  CAT_KONFIG,           VT_ENUM,          6032,  STR6032,  sizeof(ENUM6032),     ENUM6032,     DEFAULT_FLAG, DEV_211_ALL}, // Relaisausgang QX23
@@ -6780,12 +6790,14 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_162_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_163_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_170_ALL}, // Funktion Eingang H2
+{0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_172_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_195_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_205_ALL}, // Funktion Eingang H2
 {0x053D0D92,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046),     ENUM6046,     DEFAULT_FLAG, DEV_211_ALL}, // Funktion Eingang H2
 {0x063D0700,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046_2),   ENUM6046_2,   DEFAULT_FLAG, DEV_108_160}, // Funktion Eingang H2
 {0x063D0700,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046_2),   ENUM6046_2,   DEFAULT_FLAG, DEV_119_ALL}, // Funktion Eingang H2
 {0x063D0700,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046_2),   ENUM6046_2,   FL_NO_CMD,    DEV_170_ALL}, // Funktion Eingang H2
+{0x063D0700,  CAT_KONFIG,           VT_ENUM,          6046,  STR6046,  sizeof(ENUM6046_2),   ENUM6046_2,   FL_NO_CMD,    DEV_172_ALL}, // Funktion Eingang H2
 {0x063D0808,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_108_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_123_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
@@ -6793,6 +6805,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_162_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_163_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_170_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
+{0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_172_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_195_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_205_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
 {0x053D0DC9,  CAT_KONFIG,           VT_ENUM,          6047,  STR6047,  sizeof(ENUM6047),     ENUM6047,     DEFAULT_FLAG, DEV_211_ALL}, // Wirksinn Kontakt H2 | Arbeitskontakt
@@ -6811,6 +6824,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Funktionswert 1 H2
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Funktionswert 1 H2
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // Funktionswert 1 H2
+{0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Funktionswert 1 H2
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Funktionswert 1 H2
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // Funktionswert 1 H2
 {0x063D0B7D,  CAT_KONFIG,           VT_UNKNOWN,       6050,  STR6050_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Funktionswert 1 H2
@@ -6878,6 +6892,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // Thision 6221 Entwicklungs-Index [?]
+{0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
@@ -6895,6 +6910,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_163_ALL}, // Konfiguration - Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_172_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_195_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_211_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1195,  CAT_KONFIG,           VT_UINT,          6231,  STR6231,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Konfiguration - Info 2 OEM
@@ -6916,6 +6932,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Info 1 OEM
 {0x313D2FB7,  CAT_KONFIG,           VT_BIT,           6310,  STR6310,  sizeof(ENUM6310),     ENUM6310,     DEFAULT_FLAG, DEV_ALL}, // Thision 6310 KonfigRg8 Bit 0-7 [?]
@@ -7349,6 +7366,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_123_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_138_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_170_ALL}, // Funktion Eingang H2 Modul 1
+{0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_172_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_195_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D55,  CAT_MODULE,           VT_ENUM,          7376,  STR7376,  sizeof(ENUM7376),     ENUM7376,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21 Modul 2
 {0x053D0D56,  CAT_MODULE,           VT_ENUM,          7377,  STR7377,  sizeof(ENUM7376),     ENUM7376,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX22 Modul 2
@@ -7402,9 +7420,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7777,  STR7777,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur B92 B84
 {0x053D15F7,  CAT_IOTEST,           VT_PERCENT,       7784,  STR7784,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangstest UX21 Modul 2
 {0x053D1703,  CAT_IOTEST,           VT_UNKNOWN,       7785,  STR7785,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2
-{0x053D170A,  CAT_IOTEST,           VT_UNKNOWN,       7788,  STR7785_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2 PWM % // Teil 2 von 7785 abgelegt als 7788
 {0x053D15FA,  CAT_IOTEST,           VT_PERCENT,       7786,  STR7786,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangstest UX22 Modul 2
 {0x053D1706,  CAT_IOTEST,           VT_UNKNOWN,       7787,  STR7787,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX22 Modul 2
+{0x053D170A,  CAT_IOTEST,           VT_UNKNOWN,       7788,  STR7785_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2 PWM % // Teil 2 von 7785 abgelegt als 7788
 {0x053D1717,  CAT_IOTEST,           VT_UNKNOWN,       7789,  STR7787_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX22 Modul 2 PWM % // Teil 2 von 7787 abgelegt als 7789
 
 {0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
@@ -7431,6 +7449,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
+{0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
 {0x053D0579,  CAT_IOTEST,           VT_VOLTAGE,       7840,  STR7840,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H1
@@ -7442,6 +7461,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
+{0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
@@ -7456,6 +7476,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D078F,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -7470,6 +7491,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7846,  STR7846,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -7610,6 +7632,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0D3D0923,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8311,  STR8311,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Kesselsollwert
@@ -7640,6 +7663,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // Gebläsedrehzahl
 {0x0D3D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl - logged on OCI700 via LPB
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
@@ -7901,6 +7925,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // TWW Ladetemperatur
+{0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // TWW Ladetemperatur
@@ -7947,6 +7972,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
+{0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
 {0x0605080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
