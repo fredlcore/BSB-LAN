@@ -1546,6 +1546,7 @@
 #define STR8981_TEXT "Pufferspeichersollwert"
 #define STR8982_TEXT "Pufferspeichertemperatur 2"
 #define STR8983_TEXT "Pufferspeichertemperatur 3"
+#define STR8983_TEXT "Pufferspeichersollwert Reset?"
 #define STR8990_TEXT "Betr’stunden Elektro Puffer"
 #define STR8991_TEXT "Startzähler Elektro Puffer"
 #define STR9000_TEXT "Vorlaufsollwert H1"
