@@ -2277,6 +2277,7 @@ const char STR8980[] PROGMEM = STR8980_TEXT;
 const char STR8981[] PROGMEM = STR8981_TEXT;
 const char STR8982[] PROGMEM = STR8982_TEXT;
 const char STR8983[] PROGMEM = STR8983_TEXT;
+const char STR8984[] PROGMEM = STR8984_TEXT;
 const char STR8990[] PROGMEM = STR8990_TEXT;
 const char STR8991[] PROGMEM = STR8991_TEXT;
 const char STR9000[] PROGMEM = STR9000_TEXT;
@@ -7957,7 +7958,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert
 {0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
 {0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichertemperatur 3
-{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert Reset?
+{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert Reset?
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8990,  STR8990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro Puffer
 {CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Puffer
 {0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
