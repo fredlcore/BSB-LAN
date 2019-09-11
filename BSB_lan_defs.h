@@ -85,7 +85,7 @@
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
 #define DEV_133_ALL  133,255 // QAA75.910/349
 #define DEV_136_ALL  136,255 // AVS75.391/109
-#define DEV_137_ALL  138,255 // AGU2.550 Mischer-ClipIn
+#define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
