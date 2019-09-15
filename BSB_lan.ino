@@ -357,6 +357,13 @@ EthernetServer server(Port);
 #ifdef GatewayIP
 IPAddress gateway(GatewayIP);
 #endif
+#ifdef DNSIP
+IPAddress dnsserver(DNSIP);
+#else
+#ifdef GatewayIP
+IPAddress dnsserver(GatewayIP);
+#endif
+#endif
 #ifdef SubnetIP
 IPAddress subnet(SubnetIP);
 #endif
@@ -3037,12 +3044,9 @@ int set(int line      // the ProgNr of the heater parameter
 
     // ---------------------------------------------
     // Schedule data
-    case VT_DATETIME: // Has to be sent as INF command as well as a broadcast (destination 127 / 0x7F)
+    case VT_DATETIME:
       {
-      // I0=dd.mm.yyyy_mm:hh:ss!127
-      // date and time are transmitted as INF message by the display unit
-      // DISP->ALL  INF    0 Uhrzeit und Datum -  Datum/Zeit: 30.01.2015 23:17:00
-      // DC 8A 7F 14 02 05 00 00 6C 00 73 01 1E 05 17 11 00 00 A1 AB
+      // /S0=dd.mm.yyyy_mm:hh:ss
       int d,m,y,min,hour,sec;
       // The caller MUST provide six values for an event
       if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec)) {
@@ -5288,7 +5292,9 @@ ich mir da nicht)
                   // If the unit just contains "\0", so the unit is U_NONE (this is also the case for
                   // VT_STRING, which has a unit, but it is already included at the end of the string).
                   } else if (div_unit_len <= 1) {
-                    unit_str = strstr(ret_val_str, " ");
+                    if (div_data_type != DT_DTTM) {
+                      unit_str = strstr(ret_val_str, " ");
+                    }       
                     if (unit_str != NULL) {
                       // Terminate the value sring at the position of the found space.
                       *unit_str = '\0';
@@ -6662,11 +6668,11 @@ void setup() {
   // start the Ethernet connection and the server:
 #ifndef WIFI
   #ifdef IPAddr
-    #ifdef GatewayIP        // assume that DNS is equal to gateway
+    #ifdef GatewayIP
       #ifdef SubnetIP
-        Ethernet.begin(mac, ip, gateway, gateway, subnet);
+        Ethernet.begin(mac, ip, gateway, dnsserver, subnet);
       #else
-        Ethernet.begin(mac, ip, gateway, gateway);
+        Ethernet.begin(mac, ip, gateway, dnsserver);
       #endif
     #else
       Ethernet.begin(mac, ip);
