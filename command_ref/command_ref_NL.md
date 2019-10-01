@@ -17,7 +17,6 @@
 |  /G\<x\>              | GPIO: Opvragen van pin \<x\>  
 |  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> naar hoog (\<y\> = 1) of laag (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Opvragen van pin \<x\> tijdens het instellen op INPUT 
-|  /H                   | Opvragen van optionele DHT22-sensors  
 |  /I\<x\>=\<y\>        | Stuur INF-message naar parameter \<x\> met waarde \<y\>  
 |  /JK=\<x\>        	| JSON: Opvragen van alle parameters van categorie \<x\>  
 |  /JK=ALL          	| JSON: Maak een lijst van alle categorieën met bijbehorende parameternummers  
@@ -38,7 +37,7 @@
 |  /Q                   | Controleer op niet-vrijgegeven controller-specifieke parameter  
 |  /R\<x\>              | Opvragen van de reset-waarde van de parameter \<x\>  
 |  /S\<x\>=\<y\>        | Stel de waarde <y> in voor de parameter \<x\>  
-|  /T                   | Opvragen van optionele DS18B20-sensors  
+|  /T                   | Opvragen van optionele sensors (DS18B20/DHT22)  
 |  /V\<x\>              | Activeren (\<x\> = 1) of deactiveren (\<x\> = 0) uitgebreide uitvoer modus 
 |  /X                   | Opvragen van optionele MAX! -Thermostaten  
 
