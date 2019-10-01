@@ -17,7 +17,6 @@
 |  /G\<x\>              | **please enter translation here**
 |  /G\<x\>,\<y\>        | **please enter translation here**
 |  /G\<x\>,I            | **please enter translation here**
-|  /H                   | **please enter translation here**
 |  /I\<x\>=\<y\>        | **please enter translation here**
 |  /JK=\<x\>        	| **please enter translation here**
 |  /JK=ALL        	| **please enter translation here**
