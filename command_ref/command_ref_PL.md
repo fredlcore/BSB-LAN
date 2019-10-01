@@ -17,7 +17,6 @@
 |  /G\<x\>              | GPIO: Wyświetl stan pinu \<x\>  
 |  /G\<x\>,\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Wyświetl stan pinu \<x\> i zmień typ na weściowy  
-|  /H                   | Wyświetl opcjonalne czujniki DHT22  
 |  /I\<x\>=\<y\>        | Wyślij komunikat INF do parametru \<x\> z wartością \<y\>  
 |  /JK=\<x\>        	| JSON: Zapytanie o wszystkie parametry kategorii \<x\>  
 |  /JK=ALL          	| JSON: Lista wszystkich kategorii z odpowiednimi numerami parametrów  
@@ -37,7 +36,7 @@
 |  /Q                   | Przetestuj nieznane parametry sterownika (tylko BSB/LPB)  
 |  /R\<x\>              | Wyświetl i zrestetuj parametr \<x\>  
 |  /S\<x\>=\<y\>        | Ustaw wartość <y> dla parametru \<x\>  
-|  /T                   | Wyświetl opcjonalne czujniki DS18B20  
+|  /T                   | Wyświetl opcjonalne czujniki (DS18B20/DHT22)  
 |  /V\<x\>              | Aktywuj (\<x\> = 1) lub dezaktywuj (\<x\> = 0) tryb przekazywania dodatkowych informacji na interfejs szeregowy Arduino  
 |  /X                   | Wyświetl opcjonalne termostaty MAX!  
 

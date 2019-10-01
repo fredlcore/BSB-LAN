@@ -17,7 +17,6 @@
 |  /G\<x\>              | GPIO: Abfragen des Pins \<x\>  
 |  /G\<x\>,\<y\>        | GPIO: Setzen des Pins \<x\> auf high (\<y\> = 1) oder low (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Abfragen des Pins \<x\> mit gleichzeitigem Setzen auf INPUT  
-|  /H                   | Abfrage optional angeschlossener DHT22-Sensoren  
 |  /I\<x\>=\<y\>        | INF-Nachricht an Parameter \<x\> mit Wert \<y\> senden  
 |  /JK=\<x\>        	| JSON: Abfrage der verfügbaren Parameter der Kategorie \<x\>  
 |  /JK=ALL          	| JSON: Auflistung aller Kategorien samt zugehörigen Parameternummern  
@@ -38,7 +37,7 @@
 |  /Q                   | Test auf nicht-freigegebene reglerspezifische Parameter  
 |  /R\<x\>              | Abfrage des Reset-Werts für Parameter \<x\>  
 |  /S\<x\>=\<y\>        | Wert \<y\> für Parameter \<x\> setzen  
-|  /T                   | Abfrage optional angeschlossener DS18B20-Sensoren  
+|  /T                   | Abfrage optional angeschlossener Sensoren (DS18B20/DHT22)  
 |  /V\<x\>              | Verbositäts-Modus aktivieren (\<x\> = 1) oder deaktivieren (\<x\> = 0)  
 |  /X                   | Abfrage optional eingebundener MAX!-Thermostate  
 
