@@ -58,9 +58,9 @@
 
 /* heating systems */
 
-#define DEV_023_ALL  23,255 // Grünwald RVA46.531/109
+#define DEV_023_ALL  23,255 // Grünenwald RVA46.531/109
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
-#define DEV_029_ALL  29,255 // Grünwald RVA63.280/109
+#define DEV_029_ALL  29,255 // Grünenwald RVA63.280/109
 #define DEV_049_ALL  49,255 // Weishaupt WRS-CPU-B1
 #define DEV_050_ALL  50,255 // Weishaupt
 #define DEV_052_ALL  52,255 // Weishaupt WRS-BE
