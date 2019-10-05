@@ -59,6 +59,7 @@ char version[] = "0.42";
  *
  * Changelog:
  *       version 0.43
+ *        - Added STL files to print a case with a 3D printer (thanks to FHEM user EPo!)
  *        - Bugfix: DHCP (ethernet) implementation
  *        - Moved all sensors to /T , /H is now no longer used
  *        - New virtual parameters 702/703 for Weishaupt room controller
