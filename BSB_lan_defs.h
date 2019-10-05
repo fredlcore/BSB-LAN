@@ -7575,6 +7575,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D17DC,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY,     DEV_ALL}, // Status Wärmepumpe //FUJITSU
 {0x053D07AF,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY,     DEV_108_160}, // Status Wärmepumpe
 {0x053D07AF,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY,     DEV_119_ALL}, // Status Wärmepumpe
+{0x053D07AF,  CAT_STATUS,           VT_ENUM,          8006,  STR8006,  sizeof(ENUM8006),     ENUM8006,     FL_RONLY,     DEV_170_ALL}, // Status Wärmepumpe
 {0x053D07AD,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Solar
 {0x053D07AE,  CAT_STATUS,           VT_ENUM,          8007,  STR8007,  sizeof(ENUM8007),     ENUM8007,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Solar        // gleiche Funktion in eigener CommandID
 {0x053D0A08,  CAT_STATUS,           VT_ENUM,          8008,  STR8008,  sizeof(ENUM8008),     ENUM8008,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Feststoffkessel
@@ -7585,6 +7586,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D17E6,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_ALL}, // Status Zusatzerzeuger //FUJITSU
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_108_160}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_119_ALL}, // Status Zusatzerzeuger
+{0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_170_ALL}, // Status Zusatzerzeuger
 {0x053D1AC1,  CAT_STATUS,           VT_ENUM,          8023,  STR8023,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY,     DEV_123_ALL}, // Status Sitherm Pro
 {0x053D1AC1,  CAT_STATUS,           VT_ENUM,          8023,  STR8023,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY,     DEV_162_ALL}, // Status Sitherm Pro
 {0x053D1AC1,  CAT_STATUS,           VT_ENUM,          8023,  STR8023,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY,     DEV_163_ALL}, // Status Sitherm Pro
