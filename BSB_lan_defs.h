@@ -55,6 +55,7 @@
 #define FL_RONLY    1
 #define FL_NO_CMD   2
 #define FL_OEM      5    // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
+#define FL_SPECIAL_INF  8 // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
 
 /* heating systems */
 
@@ -242,7 +243,6 @@ typedef enum{
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
-  VT_ATEMP,             //  3 Byte - 1 enable / value/64
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
@@ -379,7 +379,6 @@ PROGMEM_LATE const units optbl[]={
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_ATEMP,          64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
@@ -8118,7 +8117,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
 {0x2E3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden)
 {0x2F3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
-{0x0005021F,  CAT_USER_DEFINED,     VT_ATEMP,         10003, STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt, ersten beiden Bytes vertauscht, korrekte CommandID: 0x0500021F
+{0x0500021F,  CAT_USER_DEFINED,     VT_TEMP,          10003, STR8700,  0,                    NULL,         DEFAULT_FLAG+FL_SPECIAL_INF, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt, ersten beiden Bytes vertauscht, korrekte CommandID: 0x0500021F
 
 {0x05000BDF,  CAT_USER_DEFINED,     VT_UNKNOWN,       10050, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
 {0x05000B02,  CAT_USER_DEFINED,     VT_UNKNOWN,       10051, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
