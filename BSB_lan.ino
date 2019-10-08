@@ -2914,25 +2914,16 @@ int set(int line      // the ProgNr of the heater parameter
         param[0]=0x01;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }else{ // INF message type (e.g. for room temperature)
-        param[0]=(t >> 8);
-        param[1]= t & 0xff;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-    case VT_ATEMP:  // Special case for outside temperature transmitted via INF telegram which differs from room temperature INF telegram
-      {
-      uint16_t t=atof(val)*64.0;
-      if(setcmd){
-        param[0]=0x01;
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{ // INF message type (payload begins with 0x00 followed by two byte payload)
-        param[0]=0x00;
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
+      }else{ // INF message type
+        if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
+          param[0]=0x00;
+          param[1]=(t >> 8);
+          param[2]= t & 0xff;
+        } else {  // Case for room temperature
+          param[0]=(t >> 8);
+          param[1]= t & 0xff;
+          param[2]=0x00;
+        }
       }
       param_len=3;
       }
@@ -3232,6 +3223,10 @@ int set(int line      // the ProgNr of the heater parameter
   Serial.println();
 
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
+
+  if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {
+    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FF00) | (c & 0x000000FF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
+  }
 
   // Send telegram to the bus
   if(!bus.Send(t           // message type
