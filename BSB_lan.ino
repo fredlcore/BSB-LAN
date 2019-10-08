@@ -2922,6 +2922,22 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=3;
       }
       break;
+    case VT_ATEMP:  // Special case for outside temperature transmitted via INF telegram which differs from room temperature INF telegram
+      {
+      uint16_t t=atof(val)*64.0;
+      if(setcmd){
+        param[0]=0x01;
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }else{ // INF message type (payload begins with 0x00 followed by two byte payload)
+        param[0]=0x00;
+        param[1]=(t >> 8);
+        param[2]= t & 0xff;
+      }
+      param_len=3;
+      }
+      break;
+
     case VT_TEMP_SHORT5_US:
     case VT_TEMP_SHORT5:
     case VT_PERCENT5:
