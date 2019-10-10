@@ -992,10 +992,11 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_RGT1: strncpy(device, "RGT1", 4); break;
     case ADDR_RGT2: strncpy(device, "RGT2", 4); break;
     case ADDR_CNTR: strncpy(device, "CNTR", 4); break;
+    case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
     case ADDR_LAN: strncpy(device, "LAN", 4); break;
     case ADDR_DISP: strncpy(device, "DISP", 4); break;
-    case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
     case ADDR_OZW: strncpy(device, "OZW", 4); break;
+    case ADDR_FE: strncpy(device, "FE", 4); break;
     case ADDR_ALL: strncpy(device, "ALL ", 4); break;
     default: sprintf(device, "%02X", addr); break;
   }
@@ -1032,6 +1033,7 @@ void SerialPrintAddr(byte addr){
     case ADDR_LAN: Serial.print(F("LAN")); break;
     case ADDR_DISP: Serial.print(F("DISP")); break;
     case ADDR_OZW: Serial.print(F("OZW")); break;
+    case ADDR_FE: Serial.print(F("FE")); break;
     case ADDR_ALL: Serial.print(F("ALL ")); break;
     default: SerialPrintHex(addr); break;
   }
