@@ -133,7 +133,7 @@ PROGMEM_LATE const device_table dev_tbl[]={
 {163, DEV_163_ALL},
 {170, DEV_170_ALL},
 {203, DEV_203_ALL},
-{205, DEV_203_ALL},
+{205, DEV_205_ALL},
 {211, DEV_211_ALL},
 {255, DEV_NONE},
 };
