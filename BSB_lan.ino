@@ -5005,6 +5005,10 @@ ich mir da nicht)
             client.println(query(6236,6236,1));
             client.print(F("<BR>" STR6223_TEXT ": "));
             client.println(query(6237,6237,1));
+            client.print(F("<BR>" STR8700_TEXT " (10003): "));
+            client.println(query(10003,10003,1));
+            client.print(F("<BR>" STR8700_TEXT " (10004): "));
+            client.println(query(10004,10004,1));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
