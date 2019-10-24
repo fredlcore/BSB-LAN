@@ -1022,21 +1022,8 @@ char *TranslateAddr(byte addr, char *device){
  *   Serial  instance
  * *************************************************************** */
 void SerialPrintAddr(byte addr){
-  switch(addr&0x7F){
-    case ADDR_HEIZ: Serial.print(F("HEIZ")); break;
-    case ADDR_EM1: Serial.print(F("EM1")); break;
-    case ADDR_EM2: Serial.print(F("EM2")); break;
-    case ADDR_RGT1: Serial.print(F("RGT1")); break;
-    case ADDR_RGT2: Serial.print(F("RGT2")); break;
-    case ADDR_CNTR: Serial.print(F("CNTR")); break;
-    case ADDR_SRVC: Serial.print(F("SRVC")); break;
-    case ADDR_LAN: Serial.print(F("LAN")); break;
-    case ADDR_DISP: Serial.print(F("DISP")); break;
-    case ADDR_OZW: Serial.print(F("OZW")); break;
-    case ADDR_FE: Serial.print(F("FE")); break;
-    case ADDR_ALL: Serial.print(F("ALL ")); break;
-    default: SerialPrintHex(addr); break;
-  }
+  char device[5];
+  Serial.print(TranslateAddr(addr, device));
 }
 
 /** *****************************************************************
@@ -1083,23 +1070,8 @@ char *TranslateType(byte type, char *mtype){
  *   Serial    the hardware serial interface to a PC
  * *************************************************************** */
 void SerialPrintType(byte type){
-  switch(type){
-    case TYPE_QINF: Serial.print(F("QINF")); break;
-    case TYPE_INF: Serial.print(F("INF")); break;
-    case TYPE_SET: Serial.print(F("SET")); break;
-    case TYPE_ACK: Serial.print(F("ACK")); break;
-    case TYPE_NACK: Serial.print(F("NACK")); break;
-    case TYPE_QUR: Serial.print(F("QUR")); break;
-    case TYPE_ANS: Serial.print(F("ANS")); break;
-    case TYPE_QRV: Serial.print(F("QRV")); break;
-    case TYPE_ARV: Serial.print(F("ARV")); break;
-    case TYPE_ERR:
-    Serial.print(F("ERR"));
-    //outBufLen+=sprintf(outBuf+outBufLen,"ERR");
-    break;
-    // If no match found: print the hex value
-    default: SerialPrintHex(type); break;
-  } // endswitch
+  char device[5];
+  Serial.print(TranslateType(type, device));
 } // --- SerialPrintType() ---
 
 /** *****************************************************************
@@ -3758,7 +3730,7 @@ char *lookup_descr(uint16_t line) {
  * *************************************************************** */
 void Ipwe() {
   client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html"));
+  client.println(F("Content-Type: text/html; charset=utf-8"));
   client.println();
 
   int i;
@@ -4632,7 +4604,7 @@ ich mir da nicht)
         // GET /710 HTTP/1.0 (befehlseingabe)
         String urlString = String(cLineBuffer);
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-                Serial.println(urlString);
+        Serial.println(urlString);
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
 
 // IPWE START
@@ -5508,9 +5480,9 @@ ich mir da nicht)
             }
           }
           client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_MMD " "));
+          client.print(F(MENU_TEXT_MMD ": "));
           client.println(monitor);
-          client.print(F("<BR>" MENU_TEXT_VBL " "));
+          client.print(F("<BR>" MENU_TEXT_VBL ": "));
           client.print(verbose);
           client.println(F("<BR>"));
           
