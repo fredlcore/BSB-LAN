@@ -37,7 +37,7 @@ typedef struct
 class BSB
 {
 public:
-  BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x09, uint8_t d_addr=0x00 );
+  BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x42, uint8_t d_addr=0x00 );
   boolean Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);

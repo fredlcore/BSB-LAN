@@ -59,6 +59,7 @@ char version[] = "0.42";
  *
  * Changelog:
  *       version 0.43
+ *        - Added STL files to print a case with a 3D printer (thanks to FHEM user EPo!)
  *        - Bugfix: DHCP (ethernet) implementation
  *        - Moved all sensors to /T , /H is now no longer used
  *        - New virtual parameters 702/703 for Weishaupt room controller
@@ -991,10 +992,11 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_RGT1: strncpy(device, "RGT1", 4); break;
     case ADDR_RGT2: strncpy(device, "RGT2", 4); break;
     case ADDR_CNTR: strncpy(device, "CNTR", 4); break;
+    case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
     case ADDR_LAN: strncpy(device, "LAN", 4); break;
     case ADDR_DISP: strncpy(device, "DISP", 4); break;
-    case ADDR_SRVC: strncpy(device, "SRVC", 4); break;
     case ADDR_OZW: strncpy(device, "OZW", 4); break;
+    case ADDR_FE: strncpy(device, "FE", 4); break;
     case ADDR_ALL: strncpy(device, "ALL ", 4); break;
     default: sprintf(device, "%02X", addr); break;
   }
@@ -1020,20 +1022,8 @@ char *TranslateAddr(byte addr, char *device){
  *   Serial  instance
  * *************************************************************** */
 void SerialPrintAddr(byte addr){
-  switch(addr&0x7F){
-    case ADDR_HEIZ: Serial.print(F("HEIZ")); break;
-    case ADDR_EM1: Serial.print(F("EM1")); break;
-    case ADDR_EM2: Serial.print(F("EM2")); break;
-    case ADDR_RGT1: Serial.print(F("RGT1")); break;
-    case ADDR_RGT2: Serial.print(F("RGT2")); break;
-    case ADDR_CNTR: Serial.print(F("CNTR")); break;
-    case ADDR_SRVC: Serial.print(F("SRVC")); break;
-    case ADDR_LAN: Serial.print(F("LAN")); break;
-    case ADDR_DISP: Serial.print(F("DISP")); break;
-    case ADDR_OZW: Serial.print(F("OZW")); break;
-    case ADDR_ALL: Serial.print(F("ALL ")); break;
-    default: SerialPrintHex(addr); break;
-  }
+  char device[5];
+  Serial.print(TranslateAddr(addr, device));
 }
 
 /** *****************************************************************
@@ -1080,23 +1070,8 @@ char *TranslateType(byte type, char *mtype){
  *   Serial    the hardware serial interface to a PC
  * *************************************************************** */
 void SerialPrintType(byte type){
-  switch(type){
-    case TYPE_QINF: Serial.print(F("QINF")); break;
-    case TYPE_INF: Serial.print(F("INF")); break;
-    case TYPE_SET: Serial.print(F("SET")); break;
-    case TYPE_ACK: Serial.print(F("ACK")); break;
-    case TYPE_NACK: Serial.print(F("NACK")); break;
-    case TYPE_QUR: Serial.print(F("QUR")); break;
-    case TYPE_ANS: Serial.print(F("ANS")); break;
-    case TYPE_QRV: Serial.print(F("QRV")); break;
-    case TYPE_ARV: Serial.print(F("ARV")); break;
-    case TYPE_ERR:
-    Serial.print(F("ERR"));
-    //outBufLen+=sprintf(outBuf+outBufLen,"ERR");
-    break;
-    // If no match found: print the hex value
-    default: SerialPrintHex(type); break;
-  } // endswitch
+  char device[5];
+  Serial.print(TranslateType(type, device));
 } // --- SerialPrintType() ---
 
 /** *****************************************************************
@@ -2913,14 +2888,21 @@ int set(int line      // the ProgNr of the heater parameter
         param[0]=0x01;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }else{ // INF message type (e.g. for room temperature)
-        param[0]=(t >> 8);
-        param[1]= t & 0xff;
-        param[2]=0x00;
+      }else{ // INF message type
+        if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
+          param[0]=0x00;
+          param[1]=(t >> 8);
+          param[2]= t & 0xff;
+        } else {  // Case for room temperature
+          param[0]=(t >> 8);
+          param[1]= t & 0xff;
+          param[2]=0x00;
+        }
       }
       param_len=3;
       }
       break;
+
     case VT_TEMP_SHORT5_US:
     case VT_TEMP_SHORT5:
     case VT_PERCENT5:
@@ -3215,6 +3197,10 @@ int set(int line      // the ProgNr of the heater parameter
   Serial.println();
 
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
+
+  if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {
+    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FF00) | (c & 0x000000FF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
+  }
 
   // Send telegram to the bus
   if(!bus.Send(t           // message type
@@ -3744,7 +3730,7 @@ char *lookup_descr(uint16_t line) {
  * *************************************************************** */
 void Ipwe() {
   client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html"));
+  client.println(F("Content-Type: text/html; charset=utf-8"));
   client.println();
 
   int i;
@@ -4618,7 +4604,7 @@ ich mir da nicht)
         // GET /710 HTTP/1.0 (befehlseingabe)
         String urlString = String(cLineBuffer);
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-                Serial.println(urlString);
+        Serial.println(urlString);
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
 
 // IPWE START
@@ -4991,6 +4977,10 @@ ich mir da nicht)
             client.println(query(6236,6236,1));
             client.print(F("<BR>" STR6223_TEXT ": "));
             client.println(query(6237,6237,1));
+            client.print(F("<BR>" STR8700_TEXT " (10003): "));
+            client.println(query(10003,10003,1));
+            client.print(F("<BR>" STR8700_TEXT " (10004): "));
+            client.println(query(10004,10004,1));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
@@ -5490,9 +5480,9 @@ ich mir da nicht)
             }
           }
           client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_MMD " "));
+          client.print(F(MENU_TEXT_MMD ": "));
           client.println(monitor);
-          client.print(F("<BR>" MENU_TEXT_VBL " "));
+          client.print(F("<BR>" MENU_TEXT_VBL ": "));
           client.print(verbose);
           client.println(F("<BR>"));
           

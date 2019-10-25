@@ -17,7 +17,6 @@
 |  /G\<x\>              | GPIO: Query pin \<x\>  
 |  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> to high (\<y\> = 1) or low (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Query pin \<x\> while setting to INPUT  
-|  /H                   | Query optional DHT22-sensors  
 |  /I\<x\>=\<y\>        | Send INF-message to parameter \<x\> with value \<y\>  
 |  /JK=\<x\>        	| JSON: Query all parameters of category \<x\>  
 |  /JK=ALL          	| JSON: List all categories with corresponding parameter numbers  
@@ -38,7 +37,7 @@
 |  /Q                   | Check for unreleased controller-specific parameter  
 |  /R\<x\>              | Query reset-value of parameter \<x\>  
 |  /S\<x\>=\<y\>        | Set value <y> for parameter \<x\>  
-|  /T                   | Query optional DS18B20-sensors  
+|  /T                   | Query optional sensors (DS18B20/DHT22)  
 |  /V\<x\>              | Activate (\<x\> = 1) or deactivate (\<x\> = 0) verbose output mode  
 |  /X                   | Query optional MAX!-thermostats  
 
