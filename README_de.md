@@ -28,7 +28,7 @@ Wärmepumpenregler:
 Weishaupt (Modell WTU):  
 - [RVS23](https://github.com/1coderookie/BSB-LPB-LAN/blob/master/docs/kap03.md#3222-rvs-regler), Anschluss via LPB, (nahezu) vollumfänglich steuer- und bedienbar   
    
-Folgende Systeme in Kombination mit dem Adapter und der Software wurden bisher als lauffähig gemeldet:
+**Folgende Systeme in Kombination mit dem Adapter und der Software wurden bisher als lauffähig gemeldet:**
  - Atlantic Alféa Extensa + [RVS21.831F] (Wärmepumpe)
  - Austria Email LWPK 8 [RVS21.831] (Wärmepumpe)
  - Baxi Luna Platinum + [LMS15] (Gasbrenner) 
