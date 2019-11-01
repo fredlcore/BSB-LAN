@@ -4685,7 +4685,7 @@ const char ENUM8000[] PROGMEM_LATEST = {
 "\x77 " ENUM8000_77_TEXT "\0"
 "\x78 " ENUM8000_78_TEXT "\0"
 "\x79 " ENUM8000_79_TEXT "\0"
-"\x7a Raumtemp’begrenzung"};
+"\x7a " ENUM8000_7a_TEXT};
 
 #define ENUM8001 ENUM8000               // Status - Status Heizkreis 2
 #define ENUM8002 ENUM8000               // Status - Status Heizkreis P/3
