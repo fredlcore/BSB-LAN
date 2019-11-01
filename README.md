@@ -7,7 +7,23 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
 <B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.
-
+   
+The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. For further and more detailed informations about the different [controllers](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#32-detailliertere-auflistung-und-beschreibung-der-unterst%C3%BCtzten-regler) and the [connection](https://1coderookie.github.io/BSB-LPB-LAN/kap02.html#23-anschluss-des-adapters) see the corresponding chapters in the [manual](https://1coderookie.github.io/BSB-LPB-LAN) (German language only).  
+   
+Gas-fired heating systems controllers:  
+- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3211-lmu-regler) and [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3212-lms-regler) (latest models), connection via BSB, complete functionality  
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3211-lmu-regler), connection via PPS, limited functionality  
+   
+Oil-fired heating systems controllers / solarthermic controllers / zone controllers:  
+- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via BSB, full functionality  
+- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3221-rva--und-rvp-regler), connection via PPS (modelspecific sometimes LPB), limited functionality  
+   
+Heat pump controllers:  
+- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via BSB, full functionality  
+   
+Weishaupt (model WTU):  
+- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via LPB, (nearly) full functionality  
+   
 This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
 
 - Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
