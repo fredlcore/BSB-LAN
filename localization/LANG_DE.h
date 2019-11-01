@@ -2348,6 +2348,7 @@
 #define ENUM8000_77_TEXT "Tages-Eco aktiv"
 #define ENUM8000_78_TEXT "Absenkung Reduziert"
 #define ENUM8000_79_TEXT "Absenkung Frostschutz"
+#define ENUM8000_7a_TEXT "Raumtemp’begrenzung"
 #define ENUM8003_35_TEXT "Rückkühlung aktiv"
 #define ENUM8003_42_TEXT "Ladung Elektroeinsatz"
 #define ENUM8003_43_TEXT "Zwangsladung aktiv"
