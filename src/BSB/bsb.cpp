@@ -351,7 +351,7 @@ den nachfolgenden Code keinen Sinn:
 1. Es wird hier nicht bitweise gesendet, sondern ein ganzes Byte an
 BSBSoftwareSerial::write übergeben. Dort wird dann unabhängig davon, ob der 
 Bus frei ist oder nicht, dieses komplette Byte inkl. Start-, Stop- und Parity-
-Bytes gesendet.
+Bits gesendet.
 2. BSBSoftwareSerial::write gibt immer 1 zurück, außer wenn _tx_delay == 0 ist.
 Diese Variable wird aber nur einmalig bei Aufruf von BSBSoftwareSerial::begin
 gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
