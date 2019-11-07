@@ -6958,6 +6958,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
 {0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_108_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_163_ALL}, // Konfiguration - Info 1 OEM
@@ -6984,6 +6985,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FA2,  CAT_KONFIG,           VT_BIT,           6280,  STR6280,  sizeof(ENUM6280),     ENUM6280,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Info 1 OEM
@@ -7733,8 +7735,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_107_ALL}, // Gebläsedrehzahl
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_100}, // Gebläsedrehzahl
-{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl
+{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Gebläsedrehzahl
+//{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_100}, // Gebläsedrehzahl
+//{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_160}, // Gebläsedrehzahl
+//{0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_108_169}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Gebläsedrehzahl
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // Gebläsedrehzahl
@@ -8184,6 +8188,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x11000C12,  CAT_USER_DEFINED,     VT_UNKNOWN,       10053, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
 {0x21000A88,  CAT_USER_DEFINED,     VT_TEMP,          10054, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
 {0x21000A88,  CAT_USER_DEFINED,     VT_UNKNOWN,       10055, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from FE ISR Plus
+{0x0500008F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10056, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 00
+{0x2D00020F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10057, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 06 06 02 00 2D 8A 90 90 90 90 90 90 FC 00 00
+{0x31000210,  CAT_USER_DEFINED,     VT_UNKNOWN,       10058, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 03 00
 
 // Lines below seem to have found an explanation.
 {0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
@@ -9111,6 +9118,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D2FA8,  CAT_USER_DEFINED,     VT_PERCENT_WORD1, 10531, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Minimale Förderhöhe der modulierenden Pumpe
 {0x2D3D3023,  CAT_USER_DEFINED,     VT_UNKNOWN,       10532, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x2E3D302F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10533, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
+
 
 //PPS-Bus commands
 
