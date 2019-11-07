@@ -1,4 +1,4 @@
-char version[] = "0.42";
+char version[] = "0.43";
 
 /*
  * 
@@ -55,16 +55,28 @@ char version[] = "0.42";
  *       0.40  - 21.01.2018
  *       0.41  - 17.03.2019
  *       0.42  - 21.03.2019
- *       0.43  - 02.04.2019
+ *       0.43  - 25.10.2019
  *
  * Changelog:
  *       version 0.43
+ *        - Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")
+ *        - Many new parameters
+ *        - Added device families 23 and 29 (Grünenwald heaters)
+ *        - Added device families 49, 52, 59 (Weishaupt heaters)
+ *        - Added device fmilies 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (various controllers like QAA75 or AVS37)
+ *        - Added device family 172 (SensoTherm BLW Split B (RVS21.826F/200))
+ *        - Added device families 186 and 164 (Olymp WHS-500)
+ *        - Including DHT, 1Wire and burner status parameters (>20000) to MQTT
+ *        - English is now default language
+ *        - Updated various translations
  *        - Added STL files to print a case with a 3D printer (thanks to FHEM user EPo!)
- *        - Bugfix: DHCP (ethernet) implementation
  *        - Moved all sensors to /T , /H is now no longer used
  *        - New virtual parameters 702/703 for Weishaupt room controller
- *        - New data types VT_CUSTOM_ENUM and VT_CUSTOM_BYTE to extract information from non-standard telegrams (such as 702/703)
+ *        - New virtual parameter 10003 to set outside temperature on newer systems
  *        - Added text descriptions for error phases (6706 ff.)
+ *        - /Q is now more comprehensive
+ *        - New data types VT_CUSTOM_ENUM and VT_CUSTOM_BYTE to extract information from non-standard telegrams (such as 702/703)
+ *        - Bugfix: DHCP (ethernet) implementation
  *       version 0.42
  *        - Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (LANG_DE.h is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
  *          Attention: Language definition in BSB_lan_config.h is now #define LANG <ISO-CODE> 
@@ -2030,7 +2042,8 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_POWER: // u32 / 10.0 kW
             case VT_ENERGY10: // u32 / 10.0 kWh
             case VT_ENERGY: // u32 / 1.0 kWh
-              printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
+//              printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
+              printDWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_ONOFF:
               printCHOICE(msg,data_len,"Aus","Ein");
@@ -3605,7 +3618,6 @@ void SetDateTime(){
  * *************************************************************** */
 void dht22(void) {
   int i;
-  Serial.println(F("start request values"));
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   Serial.print(F("DHT22 sensors: "));
   Serial.println(numDHTSensors);
@@ -3630,7 +3642,6 @@ void dht22(void) {
 
     double hum = DHT.humidity;
     double temp = DHT.temperature;
-    Serial.println(F("end request values"));
     Serial.print(F("temp["));
     Serial.print(i);
     Serial.print(F("]: "));
@@ -3676,10 +3687,7 @@ void dht22(void) {
 void ds18b20(void) {
   int i;
   //webPrintHeader();
-  Serial.println(F("start requestTemperatures"));
   sensors.requestTemperatures(); // Send the command to get temperatures
-  Serial.println(F("end requestTemperatures"));
-  Serial.println(F("start getTempCByIndex"));
   outBufclear();
   for(i=0;i<numSensors;i++){
     float t=sensors.getTempCByIndex(i);
@@ -5133,8 +5141,8 @@ ich mir da nicht)
               if (c == 'V' || c == 'v') { v_flag = true; }
               if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
-              if (isdigit(c)) {
-                while (client.available() && j_char_idx < 10 && (isdigit(c) || c=='.')) {
+              if (isdigit(c) || c=='-') {
+                while (client.available() && j_char_idx < 10 && (isdigit(c) || c=='.' || c=='-')) {
                   json_temp[j_char_idx] = c;
                   c = client.read();
                   j_char_idx++;
@@ -5589,7 +5597,7 @@ ich mir da nicht)
                   }
                   client.println(F(MENU_TEXT_LBO ": "));
                   if (log_bc_only) {
-                    client.println(F(MENU_TEXT_YES "BR>"));
+                    client.println(F(MENU_TEXT_YES "<BR>"));
                   } else {
                     client.println(F(MENU_TEXT_NO "<BR>"));
                   }
