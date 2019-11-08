@@ -24,10 +24,10 @@ Heat pump controllers:
 Weishaupt (model WTU):  
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via LPB, (nearly) full functionality  
    
-To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:  
-- [Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)  
-- [Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)  
-- [other manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)  
+**To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:**  
+- **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)**  
+- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)**  
+- **[other manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)**  
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB, LPB or PPS but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
