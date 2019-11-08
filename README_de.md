@@ -27,70 +27,11 @@ Wärmepumpenregler:
 Weishaupt (Modell WTU):  
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via LPB, (nahezu) vollumfänglich steuer- und bedienbar   
    
-**Folgende Systeme in Kombination mit dem Adapter und der Software wurden bisher als lauffähig gemeldet:**
- - Atlantic Alféa Extensa + [RVS21.831F] (Wärmepumpe)
- - Austria Email LWPK 8 [RVS21.831] (Wärmepumpe)
- - Baxi Luna Platinum + [LMS15] (Gasbrenner) 
- - Brötje BBK 22E [LMS14] (Gasbrenner)
- - Brötje BBK 22F [LMS14] (Gasbrenner)
- - Brötje BBS Pro Evo 15C [LMU74] (Gasbrenner)
- - Brötje BSK 20 [LMS14] (Gasbrenner)
- - Brötje EcoCondens BBS 15E [LMS14] (Gasbrenner)
- - Brötje EcoCondens BBS 20E [LMS14] (Gasbrenner)
- - Brötje EcoCondens BBS 28C [LMU7] (Gasbrenner)
- - Brötje EcoCondens BBS EVO 20G [LMS15] (Gasbrenner)
- - Brötje EcoSolar Kompakt BMR 20/24 [LMS15] (Gasbrenner + Solar)  
- - Brötje EcoTherm Kompakt WMS 12 [LMS 15] (Gasbrenner)
- - Brötje EcoTherm Kompakt WMS 24 [LMS 15] (Gasbrenner)
- - Brötje EcoTherm Plus BBS2N.28 [LMU 64] (Gasbrenner) (mittels OCI420 via LPB!)
- - Brötje EcoTherm Plus WGB2N.20 [LMU 64] (Gasbrenner) (mittels OCI420 via LPB!)
- - Brötje ISR-SSR [RVS63.283] (Solar-System-Regler) 
- - Brötje ISR-ZR1 [RVS46.530] (Zonen-Regler)
- - Brötje LogoBloc Unit L-UB 25C [RVS43.122] (Ölbrenner)
- - Brötje NovoCondens BOB 20 [RVS43.325] (Ölbrenner)
- - Brötje NovoCondens SOB 26 [RVA63.242] (Ölbrenner) {LPB_only}
- - Brötje NovoCondens SOB 22C [RVS43.222] (Ölbrenner)
- - Brötje NovoCondens SOB 26C [RVS43.222] (Ölbrenner) + EWM [RVS75.390]
- - Brötje NovoCondens WOB 20D [RVS43.325] (Ölbrenner)
- - Brötje SensoTherm BLW 12B [RVS21.825] (Wärmepumpe)
- - Brötje SensoTherm BLW 15B [RVS21.825] (Wärmepumpe)
- - Brötje SensoTherm BSW 10E [RVS61.843] (Wärmepumpe)
- - Brötje SensoTherm BSW-K [RVS61.843] (Wärmepumpe)
- - Brötje TrioCondens BGB 20E [LMS14] (Gasbrenner)
- - Brötje WBS 14D [LMU74] (Gasbrenner)
- - Brötje WBS 14F [LMS14] (Gasbrenner)
- - Brötje WBS 22E [LMS14] (Gasbrenner)
- - Brötje WGB 15E [LMS14] (Gasbrenner)
- - Brötje WGB 20C [LMU74] (Gasbrenner)
- - Brötje WGB-C 20/24H [LMS14] (Gasbrenner)
- - Brötje WGB EVO 20H [LMS15] (Gasbrenner)
- - Brötje WGB EVO 15I [LMS15] (Gasbrenner)
- - Brötje WGB Pro EVO 20C [LMU75] (Gasbrenner)
- - Brötje WGB S 17/20E EcoTherm Plus [LMS14] (Gasbrenner)
- - Brötje WGB-U 15H [LMS14] (Gasbrenner)
- - CTC 380 IC [RVS43.143] (Ölbrenner)
- - Deville 9981 [RVA53.140] (Ölbrenner) {PPS_only}
- - Elco Aerotop G07-14 [RVS61.843] (Wärmepumpe)
- - Elco Aerotop T07-16 [RVS61.843] (Wärmepumpe)
- - Elco Aerotop T10C [RVS61.843] (Wärmepumpe)
- - Elco Aquatop 8es [RVS51.843] (entspricht CTA Optihead OH1-8es) (Wärmepumpe)
- - Elco Straton 21 [RVS63.283] (Ölbrenner)
- - Elco Thision S Plus 13 [LMS14] (Gasbrenner)
- - Elco Thision S 13.1 [LMU7] (Gasbrenner)
- - Elco Thision S 17.1 [LMU74] & [RVS63.283] (Gasbrenner)
- - Elco Thision S 25.1 [RSV63.283] (Gasbrenner) + MM [AVS75.390]
- - Fröling Rendagas Plus [RVA63.244] (Gasbrenner) {LPB_only}
- - Fujitsu Waterstage Comfort 10 [RVS21.827] (Wärmepumpe)
- - Fujitsu Waterstage WSHA 050 DA [RVS41.813] (Wärmepumpe)
- - Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (Wärmepumpe)
- - Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (Wärmepumpe)
- - MHG Procon E 25 HS [LMS14] (Gasbrenner)  
- - Olymp WHS-500 [AVS75.370] (Wärmepumpe)  
- - Sieger TG11 [RVP54.100] (Ölbrenner) {PPS_only}
- - Weishaupt WTU-25 G mit WRS-CPU B2/E [RVS23.220] (Ölbrenner) {LPB_only}
-
- - PPS-basierte Regler (wie bspw. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11…) bzw. Heizungssysteme, bei denen ein QAA50 / QAA70 zum Einsatz kommt (wie bspw. Brötje WGB 15 / WGB 20 / Triobloc E23 (Eurocontrol K), Weishaupt WRD 0.2 / 1.1, Sieger TG11 (mit Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (mit DomoCommand DC 225)), allerdings mit PPS-typischer eingeschränkter Funktionalität im Vergleich zu BSB/LPB.
-
+**Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:**  
+- **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)**
+- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)**
+- **[weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)**      
+   
 Bitte beachte: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit BSB, LPB oder PPS arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 <BR><BR>
 <B>Achtung!</B><BR>
