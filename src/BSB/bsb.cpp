@@ -6,16 +6,21 @@
 
 #include "bsb.h"
 
+//#define HwSerial 1
 #define DEBUG_LL 0
 
 extern int bus_type;
 
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
+#ifdef HwSerial
+  serial = &Serial2;
+  serial->begin(4800, SERIAL_8O1);
+#else
   serial = new BSBSoftwareSerial(rx, tx, true);
-
   serial->begin(4800);
   serial->listen();
+#endif
   myAddr=addr;
   destAddr=d_addr;
 }
@@ -141,17 +146,20 @@ bool BSB::GetMessage(byte* msg) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
       if (bus_type == 2 && read == 0x17) {
-	uint8_t PPS_write_enabled = myAddr;
-	if (PPS_write_enabled == 1) {
+      	uint8_t PPS_write_enabled = myAddr;
+      	if (PPS_write_enabled == 1) {
           return true; // PPS-Bus request byte 0x17 just contains one byte, so return
-	} else {
-	  len_idx = 9;
-	}
+      	} else {
+      	  len_idx = 9;
+	      }
       }
 
       // Delay for more data
+#ifdef HwSerial
+      delay(3);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
+#else
       delay(1);
-
+#endif
       // read the rest of the message
       while (serial->available() > 0) {
         read = serial->read();
@@ -178,7 +186,11 @@ bool BSB::GetMessage(byte* msg) {
         }
         // Delay until we got next byte
         if (serial->available() == 0) {
+#ifdef HwSerial
+          timeout = 200;  // again, see above, why does HwSerial take more time to process a character? Here, timeout easily counts down 120 times 15 microseconds for a new character to be ready to process... 
+#else
           timeout = 30;
+#endif
           while ((timeout > 0) && (serial->available() == 0)){
             delayMicroseconds(15);
             timeout--;
@@ -204,10 +216,10 @@ bool BSB::GetMessage(byte* msg) {
           if (bus_type == 1) {
             if (CRC_LPB(msg, i-1)-msg[i-2]*256-msg[i-1] == 0) return true;
             else return false;
-	  } else {
+	        } else {
             if (CRC(msg, i) == 0) return true;
             else return false;
-	  }
+	        }
         } else {
           // Length error
           return false;
@@ -321,7 +333,11 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
       unsigned long timeout = millis() + waitfree;
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
       while (millis() < timeout) {
+#ifdef HwSerial
+        if (digitalRead(17) == 0)
+#else
         if ( serial->rx_pin_read()) // inverse logic
+#endif
         {
           goto retry;
         } // endif
@@ -358,27 +374,41 @@ gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
 So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
+#ifndef HwSerial
   cli();
+#endif
   if (bus_type != 2) {
     for (i=0; i < msg[len_idx]+bus_type; i++) {	// same msg length difference as above
       data = msg[i] ^ 0xFF;
       if (serial->write(data) != 1) {
         // Collision
+#ifndef HwSerial
         sei();
+#endif
         goto retry;
       }
+      Serial2.flush();
+      Serial2.read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
   } else {
     for (i=0; i <= len; i++) {
       data = msg[i];
       if (serial->write(data) != 1) {
         // Collision
+#ifndef HwSerial
         sei();
+#endif
         goto retry;
       }
+      Serial2.flush();
+      Serial2.read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
   }
+#ifdef HwSerial
+  Serial2.flush();
+#else
   sei();
+#endif
   return true;
 }
 
@@ -388,6 +418,12 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   if (bus_type == 2) {
     return _send(tx_msg);
   }
+
+#ifdef HwSerial
+  while(Serial2.available()) {
+    Serial2.read();
+  }
+#endif
 
   // first two bytes are swapped
   byte A2 = (cmd & 0xff000000) >> 24;

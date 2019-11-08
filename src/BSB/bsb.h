@@ -58,7 +58,11 @@ private:
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
 
+#ifdef HwSerial
+  HardwareSerial* serial;
+#else
   BSBSoftwareSerial* serial;
+#endif
 };
 
 #endif
