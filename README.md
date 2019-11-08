@@ -24,70 +24,10 @@ Heat pump controllers:
 Weishaupt (model WTU):  
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via LPB, (nearly) full functionality  
    
-This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
-
-- Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
-- Austria Email LWPK 8 [RVS21.831] (heat pump)
-- Baxi Luna Platinum + [LMS15] (gas-fired) 
-- Brötje BBK 22E [LMS14] (gas-fired)
-- Brötje BBK 22F [LMS14] (gas-fired)
-- Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
-- Brötje BSK 20 [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 20E [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 28C [LMU7] (gas-fired)
-- Brötje EcoCondens BBS EVO 20G [LMS15] (gas-fired)  
-- Brötje EcoSolar Kompakt BMR 20/24 [LMS15] (gas-fired + solar)  
-- Brötje EcoTherm Kompakt WMS 12 [LMS 15] (gas-fired)
-- Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
-- Brötje EcoTherm Plus BBS2N.28 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
-- Brötje EcoTherm Plus WGB2N.20 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
-- Brötje ISR-SSR [RVS63.283]
-- Brötje ISR-ZR1 [RVS46.530]
-- Brötje LogoBloc Unit L-UB 25C [RVS43.122] (oil-fired)
-- Brötje NovoCondens BOB 20 [RVS43.325] (oil-fired)
-- Brötje NovoCondens SOB 26 [RVA63.242] (oil-fired) {LPB_only} 
-- Brötje NovoCondens SOB 22C [RVS43.222] (oil-fired)
-- Brötje NovoCondens SOB 26C [RVS43.222] (oil-fired) + EWM [RVS75.390]
-- Brötje NovoCondens WOB 20D [RVS43.325] (oil-fired)
-- Brötje SensoTherm BLW 12B [RVS21.825] (heat pump)
-- Brötje SensoTherm BLW 15B [RVS21.825] (heat pump)
-- Brötje SensoTherm BSW 10E [RVS61.843] (heat pump)
-- Brötje SensoTherm BSW-K [RVS61.843] (heat pump)
-- Brötje TrioCondens BGB 20E [LMS14] (gas-fired)
-- Brötje WBS 14D [LMU74] (gas-fired)
-- Brötje WBS 14F [LMS14] (gas-fired)
-- Brötje WBS 22E [LMS14] (gas-fired)
-- Brötje WGB 15E [LMS14] (gas-fired)
-- Brötje WGB 20C [LMU74] (gas-fired)
-- Brötje WGB-C 20/24H [LMS14] (gas-fired)
-- Brötje WGB EVO 20H [LMS15] (gas-fired)
-- Brötje WGB EVO 15I [LMS15] (gas-fired)
-- Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
-- Brötje WGB S 17/20E EcoTherm Plus [LMS14] (gas-fired)
-- Brötje WGB-U 15H [LMS14] (gas-fired)
-- CTC 380 IC [RVS43.143] (oil-fired)
-- Deville 9981 [RVA53.140] (oil-fired) {PPS_only}
-- Elco Aerotop G07-14 [RVS61.843] (heat pump)
-- Elco Aerotop T07-16 [RVS61.843] (heat pump)
-- Elco Aerotop T10C [RVS61.843] (heat pump)
-- Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
-- Elco Straton 21 [RVS63.283] (oil-fired)
-- Elco Thision S Plus 13 [LMS14] (gas-fired)
-- Elco Thision S 13.1 [LMU7] (gas-fired)
-- Elco Thision S 17.1 [LMU74.100] & [RVS63.283] (gas-fired)
-- Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
-- Fröling Rendagas Plus [RVA63.244] (gas-fired)
-- Fujitsu Waterstage Comfort 10 [RVS21.827] (heat pump)
-- Fujitsu Waterstage WSHA 050 DA [RVS41.813] (heat pump)
-- Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
-- Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
-- MHG Procon E 25 HS [LMS14] (gas-fired)  
-- Olymp WHS-500 [AVS75.370] (heat pump) 
-- Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
-- Weishaupt WTU-25 G with WRS-CPU B2/E [RVS23.220] (oil-fired) {LPB_only}
-
-- PPS-based heating systems (e.g. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11… and such as those using a QAA50 / QAA70 or similar like Brötje WGB 15 / WGB 20 / Triobloc E23 (Eurocontrol K), Weishaupt WRD 0.2 / 1.1, Sieger TG11 (with Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (with DomoCommand DC 225)), albeit with PPS-typical limited functionality compared to BSB/LPB.
+To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:  
+- [Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)  
+- [Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)  
+- [other manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)  
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB, LPB or PPS but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
