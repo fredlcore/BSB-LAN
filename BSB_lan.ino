@@ -3689,6 +3689,8 @@ void ds18b20(void) {
   //webPrintHeader();
   sensors.requestTemperatures(); // Send the command to get temperatures
   outBufclear();
+  DeviceAddress device_address;
+  char device_ascii[17];
   for(i=0;i<numSensors;i++){
     float t=sensors.getTempCByIndex(i);
     Serial.print(F("temp["));
@@ -3697,7 +3699,9 @@ void ds18b20(void) {
     Serial.print(t);
     Serial.println();
 
-    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
+    sensors.getAddress(device_address, i);
+    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d] %s: ",i, device_ascii);
     _printFIXPOINT(t,2);
     outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
   }
