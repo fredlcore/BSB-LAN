@@ -349,7 +349,7 @@ char version[] = "0.43";
 #include <Arduino.h>
 #include <SPI.h>
 #include <EEPROM.h>
-#include <util/crc16.h>
+//#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #include "src/PubSubClient/src/PubSubClient.h"
 #include "html_strings.h"

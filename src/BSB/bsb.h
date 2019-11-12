@@ -9,7 +9,7 @@
 #endif
 
 #include "BSBSoftwareSerial.h"
-#include "util/crc16.h"
+//#include "util/crc16.h"
 
 // See this page for further details:
 // http://www.mikrocontroller.net/topic/218643
@@ -57,6 +57,7 @@ private:
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
+  uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
 
 #ifdef HwSerial
   HardwareSerial* serial;
