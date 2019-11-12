@@ -8,7 +8,11 @@
 #include "WProgram.h"
 #endif
 
+//#define HwSerial 1
+
+#ifndef HwSerial 1
 #include "BSBSoftwareSerial.h"
+#endif
 //#include "util/crc16.h"
 
 // See this page for further details:

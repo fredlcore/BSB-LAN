@@ -6,7 +6,6 @@
 
 #include "bsb.h"
 
-//#define HwSerial 1
 #define DEBUG_LL 0
 
 extern int bus_type;
