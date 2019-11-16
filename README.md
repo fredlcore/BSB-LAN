@@ -8,21 +8,21 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-
 
 <B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.
    
-The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. For further and more detailed informations about the different [controllers](chap03.md#32-detailed-listing-and-description-of-the-supported-controllers) and the [connection](chap02.md#23-connecting-the-adapter-to-the-controller) see the corresponding chapters in the [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN).  
+The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. For further and more detailed informations about the different [controllers](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#32-detailed-listing-and-description-of-the-supported-controllers) and the [connection](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#23-connecting-the-adapter-to-the-controller) see the corresponding chapters in the [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN).  
    
 **Gas-fired heating systems controllers:**  
-- [LMU74/LMU75](chap03.md#3211-lmu-controllers) and [LMS14/LMS15](chap03.md#3212-lms-controllers) (latest models), connection via BSB, complete functionality  
-- [LMU54/LMU64](chap03.md#3211-lmu-controllers), connection via PPS, limited functionality  
+- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3211-lmu-controllers) and [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3212-lms-controllers) (latest models), connection via BSB, complete functionality  
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3211-lmu-controllers), connection via PPS, limited functionality  
    
 **Oil-fired heating systems controllers / solarthermic controllers / zone controllers:**  
-- [RVS43/RVS63/RVS46](chap03.md#3222-rvs-controllers), connection via BSB, full functionality  
-- [RVA/RVP](chap03.md#3221-rva-and-rvp-controllers), connection via PPS (modelspecific sometimes LPB), limited functionality 
+- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via BSB, full functionality  
+- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3221-rva-and-rvp-controllers), connection via PPS (modelspecific sometimes LPB), limited functionality 
    
 **Heat pump controllers:**  
-- [RVS21/RVS61](chap03.md#3222-rvs-controllers), connection via BSB, full functionality  
+- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via BSB, full functionality  
    
 **Weishaupt (model WTU):**  
-- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), connection via LPB, (nearly) full functionality  
+- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via LPB, (nearly) full functionality  
    
 **To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:**  
 - **[Broetje](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#311-broetje)**  
