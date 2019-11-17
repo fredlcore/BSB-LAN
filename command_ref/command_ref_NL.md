@@ -42,6 +42,6 @@
 |  /X                   | Opvragen van optionele MAX! -Thermostaten  
 
        
-[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_NL.pdf)
+[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/commandref/Cheatsheet_URL-commands_NL.pdf)
 
     

@@ -41,5 +41,5 @@
 |  /X                   | Wyświetl opcjonalne termostaty MAX!  
 
        
-[Pobierz skróconą listę komend URL jako plik PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_PL.pdf)
+[Pobierz skróconą listę komend URL jako plik PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/commandref/Cheatsheet_URL-commands_PL.pdf)
     
