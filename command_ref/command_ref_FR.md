@@ -17,7 +17,6 @@
 |  /G\<x\>              | GPIO (entrées/sorties): interroge l'état de la pin \<x\>  											|
 |  /G\<x\>,\<y\>        | GPIO (entrées/sorties): définit la pin \<x\> à l'état haut (\<y\> = 1) ou à l'état bas (\<y\> = 0)  							|
 |  /G\<x\>,I            | GPIO (entrées/sorties): interroge l'état de la pin \<x\> en la définissant en tant qu'entrée (INPUT)  								|
- 										|
 |  /I\<x\>=\<y\>        | Envoi d'un message INF au paramètre \<x\> avec la valeur \<y\>  							|
 |  /JK=\<x\>        	| JSON: énumère les paramètres disponibles de la catégorie \<x\>  								|
 |  /JK=ALL        	| JSON: énumère toutes les catégories y compris les paramètres associés avec leur numéro   						|
