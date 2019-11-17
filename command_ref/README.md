@@ -1,7 +1,7 @@
 ***Localized Command References***
 
 Here you'll find localized versions of the URL command reference (so called 'cheatsheet').  
-A printer-friendly PDF-version is linked at the bottom of each page.  
+A printer-friendly PDF version is linked at the bottom of each page.  
   
 For a comprehensive description go to  
 https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html  
