@@ -22,7 +22,7 @@
 |  /JK=\<x\>        	| JSON: énumère les paramètres disponibles de la catégorie \<x\>  								|
 |  /JK=ALL        	| JSON: énumère toutes les catégories y compris les paramètres associés avec leur numéro   						|
 |  /JQ=\<x\>,\<y\>,\<z\>| JSON: interroge les paramètres \<x\>, \<y\> et \<z\>  								|
-|  /JQ  /JS  		| → sous forme de structure JSON (voir le manuel) via une requête de type HTTP-POST : interrogation et réglage des paramètres  				|
+|  /JQ  /JS  		| → sous forme de structure JSON (voir le [manuel](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) via une requête de type HTTP-POST : interrogation et réglage des paramètres  				|
 |  /K                   | Liste toutes les catégories  												|
 |  /K\<x\>              | Interrogation des valeurs / réglages de la catégorie \<x\>  								|
 |  /L=0,0               | Désactive temporairement l'enregistrement sur la carte micro SD  								|
@@ -42,7 +42,7 @@
 |  /X                   | Interroge les thermostats de type MAX! (facultatifs)   										|
 
 
-[Aide-mémoire en PDF]
+[Aide-mémoire en PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_FR.pdf)
 
 
 

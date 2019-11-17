@@ -21,8 +21,8 @@
 |  /JK=\<x\>        	| JSON: Query all parameters of category \<x\>  
 |  /JK=ALL          	| JSON: List all categories with corresponding parameter numbers  
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Query parameters \<x\>, \<y\> und \<z\>  
-|  /JQ                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Query parameters
-|  /JS                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Set parameters
+|  /JQ                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) via HTTP-POST request:* Query parameters
+|  /JS                  | *→ with JSON-structure (see [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) via HTTP-POST request:* Set parameters
 |  /K                   | List all categories  
 |  /K\<x\>              | Query all parameters and values of category \<x\>  
 |  /L=0,0               | Deactivate logging to microSD-card temporary  
@@ -42,6 +42,6 @@
 |  /X                   | Query optional MAX!-thermostats  
 
        
-[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/commandref/Cheatsheet_URL-commands_EN.pdf)
+[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_EN.pdff)
 
     

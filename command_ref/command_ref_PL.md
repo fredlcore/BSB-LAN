@@ -21,7 +21,7 @@
 |  /JK=\<x\>        	| JSON: Zapytanie o wszystkie parametry kategorii \<x\>  
 |  /JK=ALL          	| JSON: Lista wszystkich kategorii z odpowiednimi numerami parametrów  
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Parametry zapytania \<x\>, \<y\> i \<z\>  
-|  /JQ i /JS                 | *→ ze strukturą JSON ([patrz podręcznik](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) za pośrednictwem żądania HTTP-POST: Zapytanie i ustawienie parametrów
+|  /JQ i /JS                 | *→ ze strukturą JSON ([patrz podręcznik](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) za pośrednictwem żądania HTTP-POST: Zapytanie i ustawienie parametrów
 |  /K                   | Wyświetl wszystkie kategorie  
 |  /K\<x\>              | Zapytanie o wszystkie parametry i wartości kategorii \<x\>  
 |  /L=0,0               | Tymczasowo wyłącz rejestrowanie na karcie microSD  
@@ -41,5 +41,5 @@
 |  /X                   | Wyświetl opcjonalne termostaty MAX!  
 
        
-[Pobierz skróconą listę komend URL jako plik PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/commandref/Cheatsheet_URL-commands_PL.pdf)
+[Pobierz skróconą listę komend URL jako plik PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_PL.pdf)
     

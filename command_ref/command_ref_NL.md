@@ -21,8 +21,8 @@
 |  /JK=\<x\>        	| JSON: Opvragen van alle parameters van categorie \<x\>  
 |  /JK=ALL          	| JSON: Maak een lijst van alle categorieën met bijbehorende parameternummers  
 |  /JQ=\<x\>,\<y\>,\<z\>      | JSON: Opvragen van parameters \<x\>, \<y\> en \<z\>  
-|  /JQ                  | *→ met JSON-structure (bekijk [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Opvragen van parameters
-|  /JS                  | *→ met JSON-structure (bekijk [manual](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json)) via HTTP-POST request:* Parameters instellen
+|  /JQ                  | *→ met JSON-structure (bekijk [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) via HTTP-POST request:* Opvragen van parameters
+|  /JS                  | *→ met JSON-structure (bekijk [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json)) via HTTP-POST request:* Parameters instellen
 |  /K                   | Maak een lijst van alle categorieën  
 |  /K\<x\>              | Vraag alle parameters en waardes van categorie \<x\>  
 |  /L=0,0               | Deactiveer het loggen tijdelijk naar een microSD-kaart  
@@ -42,6 +42,6 @@
 |  /X                   | Opvragen van optionele MAX! -Thermostaten  
 
        
-[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/commandref/Cheatsheet_URL-commands_NL.pdf)
+[Cheatsheet as PDF](https://github.com/1coderookie/BSB-LPB-LAN_EN/raw/master/Cheatsheet_URL-commands_NL.pdf)
 
     
