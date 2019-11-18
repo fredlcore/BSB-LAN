@@ -8,7 +8,7 @@ LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-
 
 <B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.  
    
-<B>Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!</B>
+<B><I>Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!</I></B>
    
 The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. For further and more detailed informations about the different [controllers](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#32-detailed-listing-and-description-of-the-supported-controllers) and the [connection](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#23-connecting-the-adapter-to-the-controller) see the corresponding chapters in the [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN).  
    
