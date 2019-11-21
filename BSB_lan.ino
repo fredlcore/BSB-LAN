@@ -345,7 +345,7 @@ char version[] = "0.43";
 #include "BSB_lan_defs.h"
 
 #include <avr/pgmspace.h>
-#include <avr/wdt.h>
+//#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
 #include <EEPROM.h>
@@ -2000,6 +2000,9 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
             case VT_DWORD: // s32
+            case VT_POWER: // u32 / 10.0 kW
+            case VT_ENERGY10: // u32 / 10.0 kWh
+            case VT_ENERGY: // u32 / 1.0 kWh
               printDWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_SINT: //  s16
@@ -2038,12 +2041,6 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_PERCENT_100: // u16 / 100 %
             case VT_SINT1000: // s16 / 1000
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
-              break;
-            case VT_POWER: // u32 / 10.0 kW
-            case VT_ENERGY10: // u32 / 10.0 kWh
-            case VT_ENERGY: // u32 / 1.0 kWh
-//              printFIXPOINT_DWORD(msg,data_len,div_operand,div_precision,div_unit);
-              printDWORD(msg,data_len,div_operand,div_unit);
               break;
             case VT_ONOFF:
               printCHOICE(msg,data_len,"Aus","Ein");
@@ -3688,12 +3685,12 @@ void ds18b20(void) {
   int i;
   //webPrintHeader();
   sensors.requestTemperatures(); // Send the command to get temperatures
-  outBufclear();
   DeviceAddress device_address;
   char device_ascii[17];
   for(i=0;i<numSensors;i++){
+    outBufclear();
     float t=sensors.getTempCByIndex(i);
-    Serial.print(F("temp["));
+    Serial.print(F("1w_temp["));
     Serial.print(i);
     Serial.print(F("]: "));
     Serial.print(t);
@@ -3704,8 +3701,8 @@ void ds18b20(void) {
     outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d] %s: ",i, device_ascii);
     _printFIXPOINT(t,2);
     outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
+    client.println(outBuf);
   }
-  client.println(outBuf);
   //webPrintFooter();
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
