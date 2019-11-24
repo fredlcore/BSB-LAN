@@ -42,5 +42,5 @@
 |  /X                   | Abfrage optional eingebundener MAX!-Thermostate  
 
        
-[Cheatsheet als PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/Cheatsheet%20URL-Befehle.pdf)
+[Cheatsheet als PDF](https://github.com/1coderookie/BSB-LPB-LAN/raw/master/commandref/Cheatsheet_URL-Befehle.pdf)
     
