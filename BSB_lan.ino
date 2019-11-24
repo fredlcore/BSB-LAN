@@ -3691,7 +3691,7 @@ void ds18b20(void) {
   for(i=0;i<numSensors;i++){
     outBufclear();
     float t=sensors.getTempCByIndex(i);
-    Serial.print(F("1w_temp["));
+    Serial.print(F("temp["));
     Serial.print(i);
     Serial.print(F("]: "));
     Serial.print(t);
@@ -3699,7 +3699,7 @@ void ds18b20(void) {
 
     sensors.getAddress(device_address, i);
     sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d] %s: ",i, device_ascii);
+    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
     _printFIXPOINT(t,2);
     outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
     client.println(outBuf);
