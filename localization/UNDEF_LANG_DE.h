@@ -116,6 +116,10 @@
 #undef MENU_TEXT_QST
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
+#undef MENU_TEXT_TOC
+#undef MENU_LINK_TOC
+#undef MENU_LINK_FAQ
+#undef MENU_LINK_URL
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT

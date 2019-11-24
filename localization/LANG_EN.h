@@ -65,6 +65,10 @@
 #define MENU_TEXT_QST "Start test"
 #define MENU_TEXT_QTE "Test finished"
 #define MENU_TEXT_QFE "Done"
+#define MENU_TEXT_TOC "Manual"
+#define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
+#define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html"
+#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html"
 
 #define MENU_DESC_HFK "Allows you to query or set parameters of your heating system, sorted in different clickable categories."
 #define MENU_DESC_CFG "Displays a list of configuration options. You can change most of these by using the extended URL commands."
