@@ -2345,10 +2345,11 @@ void webPrintHeader(void){
 #endif
   client.print(F("C'>" MENU_TEXT_CFG));
 
-  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+//  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+  client.print(F("</a></td><td width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
   client.print(F("</a></td><td width=20% align=center>"));
 
-  client.print(F("<a href='http://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md' target='new'>" MENU_TEXT_HWT "</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/FAQ.md' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
+  client.print(F("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
   client.println(F("</tr></table><p></p><table align=center width=80%><tr><td>"));
 
@@ -5480,7 +5481,12 @@ ich mir da nicht)
             client.print(myAddr);
             client.print(F(", "));
             client.print(destAddr);
-            client.print(F(")"));
+            client.print(F(") "));
+            if (DEFAULT_FLAG == FL_RONLY) {
+              client.print(F(MENU_TEXT_BRO));
+            } else {
+              client.print(F(MENU_TEXT_BRW));
+            }
           } else {
             if (*PPS_write_enabled == 1) {
               client.print(F(" (" MENU_TEXT_BRW ")"));
