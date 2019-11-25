@@ -43,6 +43,11 @@
 #define ENUM_CAT_2a_TEXT "Шина PPS"
 #define ENUM_CAT_2b_TEXT "Неизвестная категория"
 
+#define MENU_TEXT_TOC "Руководство (на английском языке)"
+#define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
+#define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html"
+#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html"
+
 #define MENU_TEXT_HFK "Функции устройства"
 #define MENU_TEXT_SNS "Датчики"
 #define MENU_TEXT_SN1 "Датчики DS18B20"
