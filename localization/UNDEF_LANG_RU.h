@@ -42,6 +42,10 @@
 #undef ENUM_CAT_29_TEXT
 #undef ENUM_CAT_2a_TEXT
 #undef ENUM_CAT_2b_TEXT
+#undef MENU_TEXT_TOC
+#undef MENU_LINK_TOC
+#undef MENU_LINK_FAQ
+#undef MENU_LINK_URL
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
