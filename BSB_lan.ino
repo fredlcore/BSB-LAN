@@ -4991,6 +4991,20 @@ ich mir da nicht)
             client.println(query(10003,10003,1));
             client.print(F("<BR>" STR8700_TEXT " (10004): "));
             client.println(query(10004,10004,1));
+            client.println(F("<BR><BR>"));
+
+            int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
+            for (int i=0; i<15; i++) {
+              client.print(params[i]);
+              client.print(F(";"));
+            }
+            client.println(F("<BR>"));
+            for (int i=0; i<15; i++) {
+              client.print(query(params[i], params[i], 1));
+              client.print(F(";"));
+            }
+
+            client.println(F("<BR><BR>"));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
