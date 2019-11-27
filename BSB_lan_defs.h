@@ -6,6 +6,13 @@
 #define LANG EN
 #endif
 
+
+#ifdef DebugTelnet
+#define DebugOutput telnetClient
+#else
+#define DebugOutput Serial
+#endif
+
 #include "localization/LANG_DE.h"
 #include "localization/UNDEF_LANG_EN.h"
 #include "localization/LANG_EN.h"
