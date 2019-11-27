@@ -364,8 +364,14 @@ IPAddress ip(IPAddr);
 #endif
 #ifdef WIFI
 WiFiEspServer server(Port);
+#ifdef DebugTelnet
+WiFiEspServer telnetServer(23);
+#endif
 #else
 EthernetServer server(Port);
+#ifdef DebugTelnet
+EthernetServer telnetServer(23);
+#endif
 #endif
 #ifdef GatewayIP
 IPAddress gateway(GatewayIP);
@@ -401,8 +407,14 @@ char div_unit[10];
 
 #ifdef WIFI
 WiFiEspClient client;
+#ifdef DebugTelnet
+WiFiEspClient telnetClient;
+#endif
 #else
 EthernetClient client;
+#ifdef DebugTelnet
+EthernetClient telnetClient;
+#endif
 #endif
 
 #ifdef WIFI
@@ -412,6 +424,7 @@ EthernetClient max_cul;
 #endif
 
 PubSubClient MQTTClient(client);
+boolean haveTelnetClient = false;
 
 #ifdef MAX_CUL
 uint16_t max_cur_temp[20] = { 0 };
@@ -511,30 +524,30 @@ unsigned long connectTime[MAX_SOCK_NUM];
 void ShowSockStatus()
 {
   for (int i = 0; i < MAX_SOCK_NUM; i++) {
-    Serial.print(F("Socket#"));
-    Serial.print(i);
+    DebugOutput.print(F("Socket#"));
+    DebugOutput.print(i);
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     uint8_t s = W5100.readSnSR(i);
     SPI.endTransaction();
     socketStat[i] = s;
-    Serial.print(F(":0x"));
-    Serial.print(s,16);
-    Serial.print(F(" "));
-    Serial.print(W5100.readSnPORT(i));
-    Serial.print(F(" D:"));
+    DebugOutput.print(F(":0x"));
+    DebugOutput.print(s,16);
+    DebugOutput.print(F(" "));
+    DebugOutput.print(W5100.readSnPORT(i));
+    DebugOutput.print(F(" D:"));
     uint8_t dip[4];
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     W5100.readSnDIPR(i, dip);
     SPI.endTransaction();
     for (int j=0; j<4; j++) {
-      Serial.print(dip[j],10);
-      if (j<3) Serial.print(".");
+      DebugOutput.print(dip[j],10);
+      if (j<3) DebugOutput.print(".");
     }
-    Serial.print(F("("));
+    DebugOutput.print(F("("));
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-    Serial.print(W5100.readSnDPORT(i));
+    DebugOutput.print(W5100.readSnDPORT(i));
     SPI.endTransaction();
-    Serial.println(F(")"));
+    DebugOutput.println(F(")"));
   }
 }
 
@@ -549,14 +562,14 @@ void checkSockStatus()
 
     if((s == 0x14) || (s == 0x1C)) {
         if(thisTime - connectTime[i] > 30000UL) {
-          Serial.print(F("\r\nSocket frozen: "));
-          Serial.println(i);
+          DebugOutput.print(F("\r\nSocket frozen: "));
+          DebugOutput.println(i);
 
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
           W5100.execCmdSn(s, Sock_DISCON);
           SPI.endTransaction();
 
-          Serial.println(F("Socket freed."));
+          DebugOutput.println(F("Socket freed."));
           ShowSockStatus();
         }
     }
@@ -892,8 +905,8 @@ int freeRam () {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex(byte val) {
-  if (val < 16) Serial.print(F("0"));  // add a leading zero to single-digit values
-  Serial.print(val, HEX);
+  if (val < 16) DebugOutput.print(F("0"));  // add a leading zero to single-digit values
+  DebugOutput.print(val, HEX);
 }
 
 /** *****************************************************************
@@ -911,14 +924,14 @@ void SerialPrintHex(byte val) {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex32(uint32_t val) {
-  if (val <= 0x0fffffff) Serial.print(F("0"));
-  if (val <= 0x00ffffff) Serial.print(F("0"));
-  if (val <= 0x000fffff) Serial.print(F("0"));
-  if (val <= 0x0000ffff) Serial.print(F("0"));
-  if (val <= 0x00000fff) Serial.print(F("0"));
-  if (val <= 0x000000ff) Serial.print(F("0"));
-  if (val <= 0x0000000f) Serial.print(F("0"));
-  Serial.print(val, HEX);
+  if (val <= 0x0fffffff) DebugOutput.print(F("0"));
+  if (val <= 0x00ffffff) DebugOutput.print(F("0"));
+  if (val <= 0x000fffff) DebugOutput.print(F("0"));
+  if (val <= 0x0000ffff) DebugOutput.print(F("0"));
+  if (val <= 0x00000fff) DebugOutput.print(F("0"));
+  if (val <= 0x000000ff) DebugOutput.print(F("0"));
+  if (val <= 0x0000000f) DebugOutput.print(F("0"));
+  DebugOutput.print(val, HEX);
 }
 
 
@@ -951,7 +964,7 @@ void SerialPrintData(byte* msg){
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
     SerialPrintHex(msg[pl_start+i]);
-    Serial.print(F(" "));
+    DebugOutput.print(F(" "));
   }
 }
 
@@ -975,7 +988,7 @@ void SerialPrintData(byte* msg){
 void SerialPrintRAW(byte* msg, byte len){
   for(int i=0;i<len;i++){
     SerialPrintHex(msg[i]);
-    Serial.print(F(" "));
+    DebugOutput.print(F(" "));
   }
 }
 
@@ -1035,7 +1048,7 @@ char *TranslateAddr(byte addr, char *device){
  * *************************************************************** */
 void SerialPrintAddr(byte addr){
   char device[5];
-  Serial.print(TranslateAddr(addr, device));
+  DebugOutput.print(TranslateAddr(addr, device));
 }
 
 /** *****************************************************************
@@ -1083,7 +1096,7 @@ char *TranslateType(byte type, char *mtype){
  * *************************************************************** */
 void SerialPrintType(byte type){
   char device[5];
-  Serial.print(TranslateType(type, device));
+  DebugOutput.print(TranslateType(type, device));
 } // --- SerialPrintType() ---
 
 /** *****************************************************************
@@ -1101,7 +1114,7 @@ void SerialPrintType(byte type){
 void printLineNumber(uint32_t val) {
     char *p=outBuf+outBufLen;
     outBufLen+=sprintf(outBuf+outBufLen,"%4ld",val);
-    Serial.print(p);
+    DebugOutput.print(p);
 }
 
 /** *****************************************************************
@@ -1126,9 +1139,9 @@ void printBIT(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("BYTE len error len!=2: "));
+    DebugOutput.print(F("BYTE len error len!=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1159,9 +1172,9 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("BYTE len error len!=2: "));
+    DebugOutput.print(F("BYTE len error len!=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1193,9 +1206,9 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("WORD len error len!=3: "));
+    DebugOutput.print(F("WORD len error len!=3: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1227,9 +1240,9 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("WORD len error len!=3: "));
+    DebugOutput.print(F("WORD len error len!=3: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1261,9 +1274,9 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("DWORD len error len!=5: "));
+    DebugOutput.print(F("DWORD len error len!=5: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1333,9 +1346,9 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("FIXPOINT len !=3: "));
+    DebugOutput.print(F("FIXPOINT len !=3: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1367,9 +1380,9 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,co
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("FIXPOINT_DWORD len !=5: "));
+    DebugOutput.print(F("FIXPOINT_DWORD len !=5: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1401,9 +1414,9 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("FIXPOINT_BYTE len !=2: "));
+    DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1435,9 +1448,9 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
     if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("FIXPOINT_BYTE len !=2: "));
+    DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1468,9 +1481,9 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   } else {
-    Serial.print(F("CHOICE len !=2: "));
+    DebugOutput.print(F("CHOICE len !=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1523,7 +1536,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }
 }
 
@@ -1569,7 +1582,7 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }
 }
 
@@ -1595,9 +1608,9 @@ void printDateTime(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F(" VT_DATETIME len !=9: "));
+    DebugOutput.print(F(" VT_DATETIME len !=9: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1624,9 +1637,9 @@ void printDate(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F(" VT_DATE len !=9: "));
+    DebugOutput.print(F(" VT_DATE len !=9: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1666,9 +1679,9 @@ void printTimeProg(byte *msg,byte data_len){
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F(" VT_TIMEPROG len !=12: "));
+    DebugOutput.print(F(" VT_TIMEPROG len !=12: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1695,9 +1708,9 @@ void printTime(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
-    Serial.print(p);
+    DebugOutput.print(p);
   }else{
-    Serial.print(F("VT_HOUR_MINUTES len !=3: "));
+    DebugOutput.print(F("VT_HOUR_MINUTES len !=3: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1725,9 +1738,9 @@ void printLPBAddr(byte *msg,byte data_len){
   }else{
     outBufLen+=sprintf(outBuf+outBufLen,"---");
   }
-  Serial.print(p);
+  DebugOutput.print(p);
   }else{
-    Serial.print(F(" VT_LPBADDR len !=2: "));
+    DebugOutput.print(F(" VT_LPBADDR len !=2: "));
     SerialPrintData(msg);
     outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
   }
@@ -1788,19 +1801,19 @@ char *printTelegram(byte* msg, int query_line) {
   if (bus_type != BUS_PPS) {
     // source
     SerialPrintAddr(msg[1+(bus_type*2)]); // source address
-    Serial.print(F("->"));
+    DebugOutput.print(F("->"));
     SerialPrintAddr(msg[2]); // destination address
-    Serial.print(F(" "));
+    DebugOutput.print(F(" "));
     // msg[3] contains the message length, not handled here
     SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
-    Serial.print(F(" "));
+    DebugOutput.print(F(" "));
   } else {
     if (!monitor) {
       switch (msg[0]) {
-        case 0x1D: Serial.print(F("INF HEIZ->QAA ")); break;
-        case 0x1E: Serial.print(F("REQ HEIZ->QAA ")); break;
-        case 0x17: Serial.print(F("RTS HEIZ->QAA ")); break;
-        case 0xFD: Serial.print(F("ANS QAA->HEIZ ")); break;
+        case 0x1D: DebugOutput.print(F("INF HEIZ->QAA ")); break;
+        case 0x1E: DebugOutput.print(F("REQ HEIZ->QAA ")); break;
+        case 0x17: DebugOutput.print(F("RTS HEIZ->QAA ")); break;
+        case 0xFD: DebugOutput.print(F("ANS QAA->HEIZ ")); break;
         default: break;
       }
     }
@@ -1893,16 +1906,16 @@ char *printTelegram(byte* msg, int query_line) {
   if(!known){                          // no hex code match
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus_type != BUS_PPS) {
-      Serial.print(F("     "));
+      DebugOutput.print(F("     "));
       SerialPrintHex32(cmd);             // print what we have got
-      Serial.print(F(" "));
+      DebugOutput.print(F(" "));
     }
   }else{
     i = save_i;
     // Entry in command table is a documented command code
     uint16_t line=get_cmdtbl_line(i);
     printLineNumber(line);             // the ProgNr
-    Serial.print(F(" "));
+    DebugOutput.print(F(" "));
     outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
@@ -1912,7 +1925,7 @@ char *printTelegram(byte* msg, int query_line) {
 //    memcpy_P(buffer, &ENUM_CAT,len);
 //    buffer[len]=0;
     printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
-    Serial.print(F(" - "));
+    DebugOutput.print(F(" - "));
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
     // print menue text
@@ -1920,7 +1933,7 @@ char *printTelegram(byte* msg, int query_line) {
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
     outBufLen+=sprintf(outBuf+outBufLen," %s: ", buffer);
-    Serial.print(p);
+    DebugOutput.print(p);
   }
 
   // decode parameter
@@ -1936,8 +1949,8 @@ char *printTelegram(byte* msg, int query_line) {
   }
 
   if(data_len < 0){
-    Serial.print(F("len ERROR "));
-    Serial.print(msg[len_idx]);
+    DebugOutput.print(F("len ERROR "));
+    DebugOutput.print(msg[len_idx]);
   }else{
     if(data_len > 0){
       if(known){
@@ -1949,7 +1962,7 @@ char *printTelegram(byte* msg, int query_line) {
           if(msg[pl_start]==0x07){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
-          Serial.print(p);
+          DebugOutput.print(p);
         }else{
           pvalstr=outBuf+outBufLen;
           uint8_t type=get_cmdtbl_type(i);
@@ -2079,11 +2092,11 @@ char *printTelegram(byte* msg, int query_line) {
 //                  buffer[len]=0;
                   printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[pl_start+1],0);
                 }else{
-                  Serial.print(F("---"));
+                  DebugOutput.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
               }else{
-                Serial.print(F(" VT_WEEKDAY !=2: "));
+                DebugOutput.print(F(" VT_WEEKDAY !=2: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
@@ -2103,16 +2116,16 @@ char *printTelegram(byte* msg, int query_line) {
                       printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+2+pps_offset],1);
                     }
                   }else{
-                    Serial.print(F("no enum str "));
+                    DebugOutput.print(F("no enum str "));
                     SerialPrintData(msg);
                     outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
                   }
                 }else{
-                  Serial.print(F("---"));
+                  DebugOutput.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
               } else {
-                Serial.print(F(" VT_ENUM len !=2 && len != 3: "));
+                DebugOutput.print(F(" VT_ENUM len !=2 && len != 3: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
@@ -2125,7 +2138,7 @@ char *printTelegram(byte* msg, int query_line) {
                 uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
                 printCustomENUM(enumstr_ptr,enumstr_len,msg[pl_start+idx],1);
               }else{
-                Serial.print(F("no enum str "));
+                DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
               }
@@ -2145,9 +2158,9 @@ char *printTelegram(byte* msg, int query_line) {
                 }
 
                 outBufLen+=sprintf(outBuf+outBufLen,"%lu",val);
-                Serial.println(p);
+                DebugOutput.println(p);
               }else{
-                Serial.print(F("no enum str "));
+                DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
               }
@@ -2157,15 +2170,15 @@ char *printTelegram(byte* msg, int query_line) {
               if(data_len > 0){
                 if(msg[pl_start]!=0){
                   msg[pl_start + data_len]='\0'; // write terminating zero
-                  Serial.print((char*)&msg[pl_start]);
+                  DebugOutput.print((char*)&msg[pl_start]);
                   outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[pl_start]);
                   remove_char(outBuf, '\'');
                 } else {
-                  Serial.print(F("-"));
+                  DebugOutput.print(F("-"));
                   outBufLen+=sprintf(outBuf+outBufLen,"-");
                 }
               }else{
-                Serial.print(F(" VT_STRING len ==0: "));
+                DebugOutput.print(F(" VT_STRING len ==0: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
@@ -2213,11 +2226,11 @@ char *printTelegram(byte* msg, int query_line) {
 //                  buffer[len]=0;
 //                  printENUM(buffer,len,lval,1);
                 } else {
-                  Serial.print(F("---"));
+                  DebugOutput.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
                 }
               }else{
-                Serial.print(F(" VT_ERRORCODE len ==0: "));
+                DebugOutput.print(F(" VT_ERRORCODE len ==0: "));
                 SerialPrintData(msg);
                 outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
               }
@@ -2236,14 +2249,14 @@ char *printTelegram(byte* msg, int query_line) {
         if (bus_type != BUS_PPS) {
           SerialPrintData(msg);        
         }
-//        Serial.println();
+//        DebugOutput.println();
 //        SerialPrintRAW(msg,msg[len_idx]+bus_type);
         outBufLen+=sprintf(outBuf+outBufLen,"unknown command");
       }
     }
   }
   if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
-    Serial.println();
+    DebugOutput.println();
   }
   if(verbose){
     if (bus_type != BUS_PPS) {
@@ -2255,7 +2268,7 @@ char *printTelegram(byte* msg, int query_line) {
         SerialPrintRAW(msg, 9);
       }
     }
-    Serial.println();
+    DebugOutput.println();
   }
   return pvalstr;
 }
@@ -2645,7 +2658,7 @@ int set(int line      // the ProgNr of the heater parameter
   // Check for readonly parameter
   if((get_cmdtbl_flags(i) & FL_RONLY) == FL_RONLY) {
 //  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
-    Serial.println(F("Parameter is readonly!"));
+    DebugOutput.println(F("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
 
@@ -2671,10 +2684,10 @@ int set(int line      // the ProgNr of the heater parameter
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-      Serial.print(F("Writing EEPROM slot "));
-      Serial.print(cmd_no);
-      Serial.print(F(" with value "));
-      Serial.println(pps_values[cmd_no]);
+      DebugOutput.print(F("Writing EEPROM slot "));
+      DebugOutput.print(cmd_no);
+      DebugOutput.print(F(" with value "));
+      DebugOutput.println(pps_values[cmd_no]);
       EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
     }
     return 1;
@@ -3043,23 +3056,23 @@ int set(int line      // the ProgNr of the heater parameter
       int d,m,y,min,hour,sec;
       // The caller MUST provide six values for an event
       if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec)) {
-        Serial.println(F("Too few/many arguments for date/time!"));
+        DebugOutput.println(F("Too few/many arguments for date/time!"));
         return 0;
       }
 
       // Send to the PC hardware serial interface (DEBUG)
-      Serial.print(F("date time: "));
-      Serial.print(d);
-      Serial.print(F("."));
-      Serial.print(m);
-      Serial.print(F("."));
-      Serial.print(y);
-      Serial.print(F(" "));
-      Serial.print(hour);
-      Serial.print(F(":"));
-      Serial.print(min);
-      Serial.print(F(":"));
-      Serial.println(sec);
+      DebugOutput.print(F("date time: "));
+      DebugOutput.print(d);
+      DebugOutput.print(F("."));
+      DebugOutput.print(m);
+      DebugOutput.print(F("."));
+      DebugOutput.print(y);
+      DebugOutput.print(F(" "));
+      DebugOutput.print(hour);
+      DebugOutput.print(F(":"));
+      DebugOutput.print(min);
+      DebugOutput.print(F(":"));
+      DebugOutput.println(sec);
 
       // Set up the command payload
       //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[12],msg[11],msg[10]+1900,msg[14],msg[15],msg[16]);
@@ -3170,8 +3183,8 @@ int set(int line      // the ProgNr of the heater parameter
       }
 
       if (data_len > 18) {
-        Serial.print(F("Set failed, invalid data length: "));
-        Serial.println(data_len);
+        DebugOutput.print(F("Set failed, invalid data length: "));
+        DebugOutput.println(data_len);
         return 0;
       }
 
@@ -3195,17 +3208,17 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ERRORCODE: // read only
     case VT_UNKNOWN:
     default:
-      Serial.println(F("Unknown type or read-only parameter"));
+      DebugOutput.println(F("Unknown type or read-only parameter"));
       return 2;
     break;
   } // endswitch
 
   // Send a message to PC hardware serial port
-  Serial.print(F("setting line: "));
-  Serial.print(line);
-  Serial.print(F(" val: "));
+  DebugOutput.print(F("setting line: "));
+  DebugOutput.print(line);
+  DebugOutput.print(F(" val: "));
   SerialPrintRAW(param,param_len);
-  Serial.println();
+  DebugOutput.println();
 
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
 
@@ -3222,7 +3235,7 @@ int set(int line      // the ProgNr of the heater parameter
              , param_len   // payload length
              , setcmd))    // wait_for_reply
   {
-    Serial.println(F("set failed"));
+    DebugOutput.println(F("set failed"));
     return 0;
   }
 
@@ -3245,7 +3258,7 @@ int set(int line      // the ProgNr of the heater parameter
 
   // Expect an acknowledgement to our SET telegram
   if(msg[4+(bus_type*4)]!=TYPE_ACK){      // msg type at 4 (BSB) or 8 (LPB)
-    Serial.println(F("set failed NACK"));
+    DebugOutput.println(F("set failed NACK"));
     return 0;
   }
 
@@ -3298,7 +3311,7 @@ char* query(int line_start  // begin at this line (ProgNr)
       idx=i;
       uint8_t flags = get_cmdtbl_flags(i);
       uint8_t type = get_cmdtbl_type(i);
-      //Serial.println(F("found"));
+      //DebugOutput.println(F("found"));
       if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
         if (bus_type != BUS_PPS) {  // bus type is not PPS
           retry=QUERY_RETRIES;
@@ -3316,12 +3329,16 @@ char* query(int line_start  // begin at this line (ProgNr)
 
               // Decode the rcv telegram and send it to the PC serial interface
               pvalstr=printTelegram(msg, line);
+              Serial.print(F("#"));
+              Serial.print(line);
+              Serial.print(F(": "));
+              Serial.println(pvalstr);
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
               break;   // success, break out of while loop
             }else{
-              Serial.println(F("query failed"));
+              DebugOutput.println(F("query failed"));
               retry--;          // decrement number of attempts
             }
           } // endwhile, maximum number of retries reached
@@ -3358,11 +3375,11 @@ char* query(int line_start  // begin at this line (ProgNr)
           pvalstr = printTelegram(msg, line);
         }
       }else{
-        //Serial.println(F("unknown command"));
+        //DebugOutput.println(F("unknown command"));
         //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
       } // endelse, valid / invalid command codes
     }else{
-      //Serial.println(F("line not found"));
+      //DebugOutput.println(F("line not found"));
       //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
     } // endelse, line (ProgNr) found / not found
     
@@ -3551,19 +3568,19 @@ void SetDevId() {
     family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   }
   if (!known){
-    Serial.print(F("Your device family no. "));
-    Serial.print(device_id);
-    Serial.println(F(" is not yet known to BSB-LAN. Certain parameters will be disabled."));
-    Serial.println(F("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems."));
+    DebugOutput.print(F("Your device family no. "));
+    DebugOutput.print(device_id);
+    DebugOutput.println(F(" is not yet known to BSB-LAN. Certain parameters will be disabled."));
+    DebugOutput.println(F("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems."));
     dev_id=DEV_ALL;
   } else {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
   }
 */
-  Serial.print(F("Device family: "));
-  Serial.println(my_dev_fam);
-  Serial.print(F("Device variant: "));
-  Serial.println(my_dev_var);
+  DebugOutput.print(F("Device family: "));
+  DebugOutput.println(my_dev_fam);
+  DebugOutput.print(F("Device variant: "));
+  DebugOutput.println(my_dev_var);
 }
 
 /** *****************************************************************
@@ -3617,37 +3634,37 @@ void SetDateTime(){
 void dht22(void) {
   int i;
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
-  Serial.print(F("DHT22 sensors: "));
-  Serial.println(numDHTSensors);
+  DebugOutput.print(F("DHT22 sensors: "));
+  DebugOutput.println(numDHTSensors);
     outBufclear();
     for(i=0;i<numDHTSensors;i++){
 
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
       case DHTLIB_OK:  
-      Serial.print(F("OK,\t")); 
+      DebugOutput.print(F("OK,\t")); 
       break;
       case DHTLIB_ERROR_CHECKSUM: 
-      Serial.print(F("Checksum error,\t")); 
+      DebugOutput.print(F("Checksum error,\t")); 
       break;
       case DHTLIB_ERROR_TIMEOUT: 
-      Serial.print(F("Time out error,\t")); 
+      DebugOutput.print(F("Time out error,\t")); 
       break;
       default: 
-      Serial.print(F("Unknown error,\t")); 
+      DebugOutput.print(F("Unknown error,\t")); 
       break;
     }
 
     double hum = DHT.humidity;
     double temp = DHT.temperature;
-    Serial.print(F("temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(temp);
-    Serial.print(F(", hum["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.println(hum);
+    DebugOutput.print(F("temp["));
+    DebugOutput.print(i);
+    DebugOutput.print(F("]: "));
+    DebugOutput.print(temp);
+    DebugOutput.print(F(", hum["));
+    DebugOutput.print(i);
+    DebugOutput.print(F("]: "));
+    DebugOutput.println(hum);
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
       _printFIXPOINT(temp,2);
@@ -3691,11 +3708,11 @@ void ds18b20(void) {
   for(i=0;i<numSensors;i++){
     outBufclear();
     float t=sensors.getTempCByIndex(i);
-    Serial.print(F("temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(t);
-    Serial.println();
+    DebugOutput.print(F("temp["));
+    DebugOutput.print(i);
+    DebugOutput.print(F("]: "));
+    DebugOutput.print(t);
+    DebugOutput.println();
 
     sensors.getAddress(device_address, i);
     sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
@@ -3746,8 +3763,8 @@ void Ipwe() {
   int i;
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
-  Serial.print(F("IPWE sensors: "));
-  Serial.println(numIPWESensors);
+  DebugOutput.print(F("IPWE sensors: "));
+  DebugOutput.println(numIPWESensors);
   double ipwe_sensors[numIPWESensors];
   for (i=0; i < numIPWESensors; i++) {
     ipwe_sensors[i] = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
@@ -3868,8 +3885,8 @@ void InitMaxDeviceList() {
       if (!strcmp(max_id, max_id_eeprom)) {
         EEPROM.get(500 + 15 * z, max_addr);
         max_devices[x] = max_addr;
-        Serial.println(F("Adding known Max ID to list:"));
-        Serial.println(max_devices[x], HEX);
+        DebugOutput.println(F("Adding known Max ID to list:"));
+        DebugOutput.println(max_devices[x], HEX);
         break;
       }
     }
@@ -3934,25 +3951,25 @@ void loop() {
   switch (Ethernet.maintain()) {
     case 1:
       //renewed fail
-      Serial.println(F("Error: renewed fail"));
+      DebugOutput.println(F("Error: renewed fail"));
       break;
     case 2:
       //renewed success
-      Serial.println(F("Renewed success"));
+      DebugOutput.println(F("Renewed success"));
       //print your local IP address:
-      Serial.print(F("My IP address: "));
-      Serial.println(Ethernet.localIP());
+      DebugOutput.print(F("My IP address: "));
+      DebugOutput.println(Ethernet.localIP());
       break;
     case 3:
       //rebind fail
-      Serial.println(F("Error: rebind fail"));
+      DebugOutput.println(F("Error: rebind fail"));
       break;
     case 4:
       //rebind success
-      Serial.println(F("Rebind success"));
+      DebugOutput.println(F("Rebind success"));
       //print your local IP address:
-      Serial.print(F("My IP address: "));
-      Serial.println(Ethernet.localIP());
+      DebugOutput.print(F("My IP address: "));
+      DebugOutput.println(Ethernet.localIP());
     break;
 
     default:
@@ -4005,8 +4022,8 @@ void loop() {
         }
 
         if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
-          Serial.print(F("INF: TWW-Status: "));
-          Serial.println(msg[11]);      // assumed info byte
+          DebugOutput.print(F("INF: TWW-Status: "));
+          DebugOutput.println(msg[11]);      // assumed info byte
 
           if( (msg[11]==0x4D && my_dev_fam != 97) || (msg[11]==0xCD && my_dev_fam == 97)) {  // TWW Ladung on BROETJE_SOB and THISION
             if(TWW_start==0){        // has not been timed
@@ -4030,8 +4047,8 @@ void loop() {
         if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
           unsigned long brenner_end;
           boolean reset_brenner_timer = 0;
-          Serial.print(F("INF: Brennerstatus: "));
-          Serial.println(msg[pl_start]);      // first payload byte
+          DebugOutput.print(F("INF: Brennerstatus: "));
+          DebugOutput.println(msg[pl_start]);      // first payload byte
 
           if(msg[pl_start]==0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
@@ -4296,8 +4313,8 @@ void loop() {
             if (!monitor) {
               printTelegram(msg, -1);
             } else {
-              Serial.print(millis());
-              Serial.print(F(" "));
+              DebugOutput.print(millis());
+              DebugOutput.print(F(" "));
             }
             printTelegram(tx_msg, -1);
 #ifdef LOGGER
@@ -4331,13 +4348,13 @@ void loop() {
               case 0x66: msg_cycle = 19; break;
               case 0x7C: msg_cycle = 20; break;
               default:
-                 Serial.print("Unknown request: ");
+                 DebugOutput.print("Unknown request: ");
                 for (int c=0;c<9;c++) {
-                  if (msg[c]<16) Serial.print("0");
-                  Serial.print(msg[c], HEX);
-                  Serial.print(" ");
+                  if (msg[c]<16) DebugOutput.print("0");
+                  DebugOutput.print(msg[c], HEX);
+                  DebugOutput.print(" ");
                 }
-                Serial.println();
+                DebugOutput.println();
 #ifdef LOGGER
 /*
                 File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -4477,35 +4494,35 @@ ich mir da nicht)
                   break;
                 case 0x00: break;
                 default:
-                  Serial.print("Unknown telegram: ");
+                  DebugOutput.print("Unknown telegram: ");
                   for (int c=0;c<9+pps_offset;c++) {
-                    if (msg[c]<16) Serial.print("0");
-                    Serial.print(msg[c], HEX);
-                    Serial.print(" ");
+                    if (msg[c]<16) DebugOutput.print("0");
+                    DebugOutput.print(msg[c], HEX);
+                    DebugOutput.print(" ");
                   }
-                  Serial.println();
+                  DebugOutput.println();
                   break;
               }
             }
 
 /*
-            Serial.print(F("Outside Temperature: "));
-            Serial.println(outside_temp);
-            Serial.print(F("Boiler Temperature: "));
-            Serial.println(boiler_temp);
-            Serial.print(F("Mixer Flow Temperature: "));
-            Serial.println(mixer_flow_temp);
-            Serial.print(F("Flow Temperature: "));
-            Serial.println(flow_temp);
-            Serial.print(F("Weighted Temperature: "));
-            Serial.println(weighted_temp);
-            Serial.print(F("Boiler active: "));
+            DebugOutput.print(F("Outside Temperature: "));
+            DebugOutput.println(outside_temp);
+            DebugOutput.print(F("Boiler Temperature: "));
+            DebugOutput.println(boiler_temp);
+            DebugOutput.print(F("Mixer Flow Temperature: "));
+            DebugOutput.println(mixer_flow_temp);
+            DebugOutput.print(F("Flow Temperature: "));
+            DebugOutput.println(flow_temp);
+            DebugOutput.print(F("Weighted Temperature: "));
+            DebugOutput.println(weighted_temp);
+            DebugOutput.print(F("Boiler active: "));
             if (boiler_active) {
-              Serial.println(F("yes"));
+              DebugOutput.println(F("yes"));
             } else {
-              Serial.println(F("no"));
+              DebugOutput.println(F("no"));
             }
-            Serial.print(F("Time: ")); Serial.print(d); Serial.print(", "); Serial.print(h); Serial.print(":"); Serial.print(m); Serial.print(":"); Serial.println(s);
+            DebugOutput.print(F("Time: ")); DebugOutput.print(d); DebugOutput.print(", "); DebugOutput.print(h); DebugOutput.print(":"); DebugOutput.print(m); DebugOutput.print(":"); DebugOutput.println(s);
 */
           } // End parsing 0x1D heater telegrams
     
@@ -4536,14 +4553,14 @@ ich mir da nicht)
 #endif
     IPAddress remoteIP = client.remoteIP();
     if (remoteIP[3] != TRUSTED_IP && remoteIP[3] != TRUSTED_IP2) {      // reject clients from unauthorized IP addresses; replace != with > to block access from all IPs greater than TRUSTED_IP segment
-      Serial.print(F("Rejected access from "));
+      DebugOutput.print(F("Rejected access from "));
       for (int i=0; i<4; i++) {
-        Serial.print(remoteIP[i]);
+        DebugOutput.print(remoteIP[i]);
         if (i<3) {
-          Serial.print(F("."));
+          DebugOutput.print(F("."));
         }
       }
-      Serial.println(F("."));
+      DebugOutput.println(F("."));
       client.stop();
     }
 #endif
@@ -4556,16 +4573,17 @@ ich mir da nicht)
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
-          Serial.print(c);         // and send it to hardware UART
+          DebugOutput.print(c);         // and send it to hardware UART
         }
         if (Serial.available()) {
           c = Serial.read();
-          Serial.print(c);         // and send it to hardware UART
+          DebugOutput.print(c);         // and send it to hardware UART
           int timeout = 0;
           while (Serial.available() == 0 && c!='\r' && c!='\n') {
             delay(1);
             timeout++;
             if (timeout > 2000) {
+              DebugOutput.println(F("Serial input timeout"));
               break;
             }
           }
@@ -4576,7 +4594,7 @@ ich mir da nicht)
           continue;
         }
         // Got an EOL character
-        Serial.println();
+        DebugOutput.println();
         // perform HTTP-Authentification by reading the remaining client data and look for credentials
 #ifdef USER_PASS_B64
 
@@ -4628,7 +4646,7 @@ ich mir da nicht)
         // GET /710 HTTP/1.0 (befehlseingabe)
         String urlString = String(cLineBuffer);
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-        Serial.println(urlString);
+        DebugOutput.println(urlString);
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
 
 // IPWE START
@@ -4659,7 +4677,7 @@ ich mir da nicht)
         }
         *p='\0';     // mark end of string
         if(strcmp(cLineBuffer+1, PASSKEY)){
-          Serial.println(F("no matching passkey"));
+          DebugOutput.println(F("no matching passkey"));
           client.flush();
           webPrintHeader();
           webPrintFooter();
@@ -4745,16 +4763,16 @@ ich mir da nicht)
           token++;
           if (token[0] > 0) {
             int d_addr = atoi(token);
-            Serial.print(F("Setting temporary destination to "));
-            Serial.println(d_addr);
+            DebugOutput.print(F("Setting temporary destination to "));
+            DebugOutput.println(d_addr);
             bus_type=bus.setBusType(bus_type, myAddr, d_addr);
           }
           
-          Serial.print(F("set ProgNr "));
-          Serial.print(line);    // the ProgNr
-          Serial.print(F(" = "));
-//          Serial.println(atof(p));     // the value
-          Serial.println(p);     // the value
+          DebugOutput.print(F("set ProgNr "));
+          DebugOutput.print(line);    // the ProgNr
+          DebugOutput.print(F(" = "));
+//          DebugOutput.println(atof(p));     // the value
+          DebugOutput.println(p);     // the value
           // Now send it out to the bus
           int setresult = 0;
           setresult = set(line,p,setcmd);
@@ -4807,7 +4825,7 @@ ich mir da nicht)
             outBufclear();
             if ((bus_type != BUS_PPS) || (bus_type == BUS_PPS && cat == CAT_PPS)) {
               printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
-              Serial.println();
+              DebugOutput.println();
               client.print(F("<tr><td><A HREF='K"));
               client.print(cat);
               client.print(F("'>"));
@@ -4878,7 +4896,7 @@ ich mir da nicht)
             client.println(F(MENU_TEXT_ER6));
           }else{
             if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
-              Serial.println(F("set failed"));  // to PC hardware serial I/F
+              DebugOutput.println(F("set failed"));  // to PC hardware serial I/F
               client.println(F(MENU_TEXT_ER3));
             }else{
 
@@ -5033,9 +5051,9 @@ ich mir da nicht)
               uint8_t dev_fam = get_cmdtbl_dev_fam(j);
               uint8_t dev_var = get_cmdtbl_dev_var(j);
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
-                Serial.println(c, HEX);
+                DebugOutput.println(c, HEX);
                 if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
-                  Serial.println(F("bus send failed"));  // to PC hardware serial I/F
+                  DebugOutput.println(F("bus send failed"));  // to PC hardware serial I/F
                 } else {
                   if (msg[4+(bus_type*4)]!=TYPE_ERR) {
                     // Decode the xmit telegram and send it to the PC serial interface
@@ -5094,7 +5112,7 @@ ich mir da nicht)
           uint8_t type = strtol(&p[2],NULL,16);
           uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
           if(!bus.Send(type, c, msg, tx_msg)){
-            Serial.println(F("bus send failed"));  // to PC hardware serial I/F
+            DebugOutput.println(F("bus send failed"));  // to PC hardware serial I/F
           }else{
             // Decode the xmit telegram and send it to the PC serial interface
             printTelegram(tx_msg, -1);
@@ -5405,12 +5423,12 @@ ich mir da nicht)
               }
 
               if (p[2]=='S') {
-                Serial.print(F("Setting parameter "));
-                Serial.print(json_parameter);
-                Serial.print(F(" to "));
-                Serial.print(json_value_string);
-                Serial.print(F(" with type "));
-                Serial.println(json_type);
+                DebugOutput.print(F("Setting parameter "));
+                DebugOutput.print(json_parameter);
+                DebugOutput.print(F(" to "));
+                DebugOutput.print(json_value_string);
+                DebugOutput.print(F(" with type "));
+                DebugOutput.println(json_type);
                 int status = set(json_parameter, json_value_string, json_type);
                 client.print(F("  \""));
                 client.print(json_parameter);
@@ -5441,7 +5459,7 @@ ich mir da nicht)
               dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
               dataFile.close();
               client.println(F(MENU_TEXT_DTR));
-              Serial.println(F("File datalog.txt removed and recreated."));
+              DebugOutput.println(F("File datalog.txt removed and recreated."));
             } else {
               client.println(F(MENU_TEXT_DTF));
             }
@@ -5476,8 +5494,8 @@ ich mir da nicht)
               if (chars_read > 0) client.write(loglineBuf, chars_read);
               dataFile.close();
 
-              Serial.print(F("Duration: "));
-              Serial.println(millis()-startdump);
+              DebugOutput.print(F("Duration: "));
+              DebugOutput.println(millis()-startdump);
             } else {
               client.println(F(MENU_TEXT_DTO));
             }
@@ -5646,14 +5664,14 @@ ich mir da nicht)
           client.println(F("<BR>"));
           webPrintFooter();
 
-          Serial.println(F("EEPROM dump:"));
+          DebugOutput.println(F("EEPROM dump:"));
           for (uint16_t x=0; x<EEPROM.length(); x++) {
             uint8_t i = EEPROM.read(x);
             if (i < 16) {
-              Serial.print(F("0"));
+              DebugOutput.print(F("0"));
             }
-            Serial.print(i, HEX);
-            Serial.print(F(" "));
+            DebugOutput.print(i, HEX);
+            DebugOutput.print(F(" "));
           }
           
           break;
@@ -5794,7 +5812,7 @@ ich mir da nicht)
             for (uint16_t x=0; x<EEPROM.length(); x++) {
               EEPROM.write(x, 0);
             }
-            Serial.println(F("Cleared EEPROM"));
+            DebugOutput.println(F("Cleared EEPROM"));
           }
           client.println(F("Restarting Arduino..."));
           asm volatile ("  jmp 0");
@@ -5944,9 +5962,9 @@ ich mir da nicht)
               if (dir_token!=NULL) {
                 if (*dir_token=='I') {
                   pinMode(pin, INPUT);
-                  Serial.print(F("Pin "));
-                  Serial.print(pin);
-                  Serial.println(F(" set to input."));
+                  DebugOutput.print(F("Pin "));
+                  DebugOutput.print(pin);
+                  DebugOutput.println(F(" set to input."));
                 }
               }
               val=digitalRead(pin);
@@ -6051,7 +6069,7 @@ ich mir da nicht)
       loopCount++;
       if(loopCount > 1000) {
         client.stop();
-        Serial.println("\r\nTimeout");
+        DebugOutput.println("\r\nTimeout");
       }
 
     }
@@ -6083,7 +6101,7 @@ ich mir da nicht)
         retries++;
         if (!MQTTClient.connected()) {
           delay(1000);
-          Serial.println(F("Failed to connect to MQTT broker, retrying..."));
+          DebugOutput.println(F("Failed to connect to MQTT broker, retrying..."));
         }
       }
     }
@@ -6137,7 +6155,7 @@ ich mir da nicht)
 #ifdef DHT_BUS
             int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
-            Serial.println(chk);
+            DebugOutput.println(chk);
             double hum = DHT.humidity;
             double temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
@@ -6327,7 +6345,7 @@ ich mir da nicht)
           if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
             int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
-            Serial.println(chk);
+            DebugOutput.println(chk);
             double hum = DHT.humidity;
             double temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
@@ -6366,7 +6384,7 @@ ich mir da nicht)
    } else {
     // if the file isn't open, pop up an error:
       client.println(F(MENU_TEXT_DTO));
-      Serial.println(F("Error opening datalog.txt!"));
+      DebugOutput.println(F("Error opening datalog.txt!"));
     }
     lastLogTime = millis();
   }
@@ -6439,11 +6457,11 @@ custom_timer = millis();
   byte max_str_index = 0;
   while (max_cul.available()) {
     c = max_cul.read();
-//    Serial.print(c);
+//    DebugOutput.print(c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
       buffer[max_str_index++]=c;
     } else {
-//      Serial.println();
+//      DebugOutput.println();
       break;
     }
   }
@@ -6483,15 +6501,15 @@ custom_timer = millis();
           max_id[x] = (char)strtoul(max_hex_str,NULL,16);
         }
         max_id[10] = '\0';
-        Serial.println(F("MAX device info received: "));
-        Serial.println(max_addr, HEX);
-        Serial.println(max_id);
+        DebugOutput.println(F("MAX device info received: "));
+        DebugOutput.println(max_addr, HEX);
+        DebugOutput.println(max_id);
 
         int32_t max_addr_temp=0;
         for (int x=0;x<20;x++) {
           EEPROM.get(500 + 15 * x, max_addr_temp);
           if (max_addr_temp == max_addr) {
-            Serial.println(F("Device already in EEPROM"));
+            DebugOutput.println(F("Device already in EEPROM"));
             known_eeprom = true;
             break;
           }
@@ -6508,10 +6526,10 @@ custom_timer = millis();
               char temp2[11] = { 0 };
               EEPROM.get(500+15*x, temp1);
               EEPROM.get(500+15*x+4, temp2);
-              Serial.println(temp1, HEX);
-              Serial.println(temp2);
+              DebugOutput.println(temp1, HEX);
+              DebugOutput.println(temp2);
 */
-              Serial.println(F("Device stored in EEPROM"));
+              DebugOutput.println(F("Device stored in EEPROM"));
               InitMaxDeviceList();
               break;
             }
@@ -6523,9 +6541,9 @@ custom_timer = millis();
         strncpy(max_hex_str, buffer+27, 2);        
         max_hex_str[2]='\0';
         max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
-        Serial.println(F("Valve position from associated thermostat received:"));
-        Serial.println(max_addr, HEX);
-        Serial.println((max_valve[max_idx]));
+        DebugOutput.println(F("Valve position from associated thermostat received:"));
+        DebugOutput.println(max_addr, HEX);
+        DebugOutput.println((max_valve[max_idx]));
       }
 
       if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
@@ -6541,8 +6559,8 @@ custom_timer = millis();
         strncpy(max_hex_str, buffer+temp_str_offset, str_len);
         max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-        Serial.println(max_msg_len);
-        Serial.println(max_temp_status, HEX);
+        DebugOutput.println(max_msg_len);
+        DebugOutput.println(max_temp_status, HEX);
         if (max_msg_type == 0x42) {
           max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
           max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -6553,13 +6571,34 @@ custom_timer = millis();
           max_valve[max_idx] = (max_temp_status & 0xFF000000) >> 24;
         }
 
-        Serial.println(F("MAX temperature message received: "));
-        Serial.println(max_addr, HEX);
-        Serial.println(((float)max_cur_temp[max_idx] / 10));
-        Serial.println((float)(max_dst_temp[max_idx] / 2));
-        Serial.println((max_valve[max_idx]));
+        DebugOutput.println(F("MAX temperature message received: "));
+        DebugOutput.println(max_addr, HEX);
+        DebugOutput.println(((float)max_cur_temp[max_idx] / 10));
+        DebugOutput.println((float)(max_dst_temp[max_idx] / 2));
+        DebugOutput.println((max_valve[max_idx]));
       }
       free(max_hex_str);
+    }
+  }
+#endif
+
+#ifdef DebugTelnet
+  if (telnetServer.available()) {
+    //find free/disconnected spot
+    if (haveTelnetClient == true) {
+      //no free/disconnected spot so reject
+//      EthernetClient newTelnetClient = telnetServer.available();
+//      newTelnetClient.stop();
+    } else {
+      if (!telnetClient || !telnetClient.connected()) {
+//        if (telnetClient) telnetClient.stop();
+        telnetClient = telnetServer.available();
+        //      Serial.println("New telnet client.");
+        telnetClient.println();
+        telnetClient.print(F("Version: "));
+        telnetClient.println(version);
+        haveTelnetClient = true;
+      }
     }
   }
 #endif
@@ -6570,19 +6609,19 @@ custom_timer = millis();
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  DebugOutput.print("SSID: ");
+  DebugOutput.println(WiFi.SSID());
 
   // print your WiFi shield's IP address
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  DebugOutput.print("IP Address: ");
+  DebugOutput.println(ip);
 
   // print the received signal strength
   long rssi = WiFi.RSSI();
-  Serial.print("Signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+  DebugOutput.print("Signal strength (RSSI):");
+  DebugOutput.print(rssi);
+  DebugOutput.println(" dBm");
 }
 #endif
 
@@ -6623,15 +6662,15 @@ void setup() {
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
   Serial.println(F("READY"));
-  Serial.print(F("Size of cmdtbl1: "));
-  Serial.println(sizeof(cmdtbl1));
-  Serial.print(F("Size of cmdtbl2: "));
-  Serial.println(sizeof(cmdtbl2));
-  Serial.print(F("free RAM:"));
-  Serial.println(freeRam());
+  DebugOutput.print(F("Size of cmdtbl1: "));
+  DebugOutput.println(sizeof(cmdtbl1));
+  DebugOutput.print(F("Size of cmdtbl2: "));
+  DebugOutput.println(sizeof(cmdtbl2));
+  DebugOutput.print(F("free RAM:"));
+  DebugOutput.println(freeRam());
 
   while (Serial.available()) {
-    Serial.print(Serial.read());
+    DebugOutput.print(Serial.read());
   }
 
 #ifdef WIFI
@@ -6675,10 +6714,10 @@ void setup() {
     uint16_t f=0;
     EEPROM.get(sizeof(uint16_t)*i, f);
     if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
-      Serial.print(F("Reading "));
-      Serial.print(f);
-      Serial.print(F(" from EEPROM slot "));
-      Serial.println(i);
+      DebugOutput.print(F("Reading "));
+      DebugOutput.print(f);
+      DebugOutput.print(F(" from EEPROM slot "));
+      DebugOutput.println(i);
       pps_values[i] = f;
     }
   }
@@ -6743,12 +6782,16 @@ void setup() {
   }
   server.begin();
 
+#ifdef DebugTelnet
+  telnetServer.begin();
+#endif
+
 #ifdef ONE_WIRE_BUS
   // check ds18b20 sensors
   sensors.begin();
   numSensors=sensors.getDeviceCount();
-  Serial.print(F("numSensors: "));
-  Serial.println(numSensors);
+  DebugOutput.print(F("numSensors: "));
+  DebugOutput.println(numSensors);
 #endif
 
 /*
@@ -6778,32 +6821,32 @@ void setup() {
 */
 
 /*
-Serial.println(enum_page, HEX);
-Serial.println(temp_offset1, HEX);
-Serial.println(temp_offset2, HEX);
-Serial.println(pgm_get_far_address(LAST_ENUM), HEX);
-Serial.println(pgm_get_far_address(ENUM10513), HEX);
-Serial.println(pgm_get_far_address(ENUM10510), HEX);
-Serial.println(pgm_get_far_address(ENUM8008), HEX);
-Serial.println(pgm_get_far_address(ENUM8007), HEX);
-Serial.println(pgm_get_far_address(ENUM8006), HEX);
-Serial.println(pgm_get_far_address(ENUM20), HEX);
+DebugOutput.println(enum_page, HEX);
+DebugOutput.println(temp_offset1, HEX);
+DebugOutput.println(temp_offset2, HEX);
+DebugOutput.println(pgm_get_far_address(LAST_ENUM), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM10513), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM10510), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM8008), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM8007), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM8006), HEX);
+DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
 
-Serial.println((uint32_t)&ENUM20, HEX);
-Serial.println(pgm_get_far_address(ENUM20), HEX);
-Serial.println((uint32_t)&LAST_ENUM, HEX);
-Serial.println(pgm_get_far_address(ENUMLASTENUM), HEX);
-//Serial.println(temp_offset1, HEX);
-Serial.println(temp_offset2, HEX);
+DebugOutput.println((uint32_t)&ENUM20, HEX);
+DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
+DebugOutput.println((uint32_t)&LAST_ENUM, HEX);
+DebugOutput.println(pgm_get_far_address(ENUMLASTENUM), HEX);
+//DebugOutput.println(temp_offset1, HEX);
+DebugOutput.println(temp_offset2, HEX);
 
 index_first_enum = 0;
 for (int i=0; i<=LAST_ENUM_NR; i++) {
   index_first_enum=findLine(i, 0, &c);
   temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
   if (temp_offset1 > 0 && temp_offset1 < 65535) {
-    Serial.print(i);
-    Serial.print(F("\t"));
-    Serial.println(temp_offset1, HEX);
+    DebugOutput.print(i);
+    DebugOutput.print(F("\t"));
+    DebugOutput.println(temp_offset1, HEX);
   }
 }
 */
@@ -6891,9 +6934,9 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 
 #ifdef MAX_CUL
   if (max_cul.connect({MAX_CUL}, 2323)) {
-    Serial.println(F("Connected to max_cul"));
+    DebugOutput.println(F("Connected to max_cul"));
   } else {
-    Serial.println(F("Connection to max_cul failed"));
+    DebugOutput.println(F("Connection to max_cul failed"));
   }
 
   InitMaxDeviceList();
