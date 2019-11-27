@@ -10,7 +10,7 @@
 
 //#define HwSerial 1
 
-#ifndef HwSerial 1
+#ifndef HwSerial
 #include "BSBSoftwareSerial.h"
 #endif
 //#include "util/crc16.h"
