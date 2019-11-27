@@ -4528,7 +4528,7 @@ ich mir da nicht)
 
   // Listen for incoming clients
   client = server.available();
-  if (client) {
+  if (client || Serial.available()) {
 
 #ifdef TRUSTED_IP
 #ifndef TRUSTED_IP2
@@ -4551,11 +4551,25 @@ ich mir da nicht)
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
-    while (client.connected()) {
-      if (client.available()) {
+    while (client.connected() || Serial.available()) {
+      if (client.available() || Serial.available()) {
         loopCount = 0;
-        c = client.read();       // read one character
-        Serial.print(c);         // and send it to hardware UART
+        if (client.available()) {
+          c = client.read();       // read one character
+          Serial.print(c);         // and send it to hardware UART
+        }
+        if (Serial.available()) {
+          c = Serial.read();
+          Serial.print(c);         // and send it to hardware UART
+          int timeout = 0;
+          while (Serial.available() == 0 && c!='\r' && c!='\n') {
+            delay(1);
+            timeout++;
+            if (timeout > 2000) {
+              break;
+            }
+          }
+        }
 
         if ((c!='\n') && (c!='\r') && (bPlaceInBuffer<MaxArrayElement)){
           cLineBuffer[bPlaceInBuffer++]=c;
@@ -4563,9 +4577,9 @@ ich mir da nicht)
         }
         // Got an EOL character
         Serial.println();
-
         // perform HTTP-Authentification by reading the remaining client data and look for credentials
 #ifdef USER_PASS_B64
+
         char linebuf[80];
         uint8_t charcount=0;
         boolean authenticated=false;
@@ -6615,6 +6629,10 @@ void setup() {
   Serial.println(sizeof(cmdtbl2));
   Serial.print(F("free RAM:"));
   Serial.println(freeRam());
+
+  while (Serial.available()) {
+    Serial.print(Serial.read());
+  }
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
