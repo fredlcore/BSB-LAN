@@ -3657,14 +3657,14 @@ void dht22(void) {
 
     double hum = DHT.humidity;
     double temp = DHT.temperature;
-    DebugOutput.print(F("temp["));
-    DebugOutput.print(i);
-    DebugOutput.print(F("]: "));
-    DebugOutput.print(temp);
-    DebugOutput.print(F(", hum["));
-    DebugOutput.print(i);
-    DebugOutput.print(F("]: "));
-    DebugOutput.println(hum);
+    Serial.print(F("#dht_temp["));
+    Serial.print(i);
+    Serial.print(F("]: "));
+    Serial.print(temp);
+    Serial.print(F(", hum["));
+    Serial.print(i);
+    Serial.print(F("]: "));
+    Serial.println(hum);
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
       _printFIXPOINT(temp,2);
@@ -3708,11 +3708,11 @@ void ds18b20(void) {
   for(i=0;i<numSensors;i++){
     outBufclear();
     float t=sensors.getTempCByIndex(i);
-    DebugOutput.print(F("temp["));
-    DebugOutput.print(i);
-    DebugOutput.print(F("]: "));
-    DebugOutput.print(t);
-    DebugOutput.println();
+    Serial.print(F("#1w_temp["));
+    Serial.print(i);
+    Serial.print(F("]: "));
+    Serial.print(t);
+    Serial.println();
 
     sensors.getAddress(device_address, i);
     sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
@@ -5932,6 +5932,14 @@ ich mir da nicht)
                   client.println(div_unit);
 
                   client.println(F("</td></tr>"));
+
+                  Serial.print(F("#avg_"));
+                  Serial.print(avg_parameters[i]);
+                  Serial.print(F(": "));
+                  Serial.print(rounded/10);
+                  Serial.print(F(" "));
+                  Serial.println(div_unit);
+
                 }
               }
             }
