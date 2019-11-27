@@ -1156,7 +1156,7 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1190,7 +1190,7 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1224,7 +1224,7 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1258,7 +1258,7 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1330,7 +1330,7 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1364,7 +1364,7 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,co
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1398,7 +1398,7 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
@@ -1432,7 +1432,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
-    if(postfix!=NULL){
+    if(strlen(postfix) > 0){
       outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
     }
     Serial.print(p);
