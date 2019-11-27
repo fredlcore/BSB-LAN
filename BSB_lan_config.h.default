@@ -186,6 +186,7 @@ byte monitor = 0;
 //#define CUSTOM_COMMANDS
 
 //#define DEBUG
+//#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port
 
 /************************************************************************************/
 /************************************************************************************/
