@@ -507,8 +507,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 	      } else {
 #if DEBUG_LL
           Serial.println(F("Message received, but not for us:"));
-#endif
           print(rx_msg);
+#endif
         }
       }
     }
