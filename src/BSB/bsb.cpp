@@ -482,9 +482,10 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   unsigned long timeout = millis() + 3000;
   while ((i > 0) && (millis() < timeout)) {
     if (GetMessage(rx_msg)) {
+#if DEBUG_LL
       Serial.print(F("Duration until answer received: "));
       Serial.println(3000-(timeout-millis()));
-
+#endif
       i--;
       if (bus_type == 1) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
@@ -495,14 +496,18 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
         if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
           return true;
 	      } else {
+#if DEBUG_LL
           Serial.println(F("Message received, but not for us:"));
           print(rx_msg);
+#endif
         }
       } else {
         if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
           return true;
 	      } else {
+#if DEBUG_LL
           Serial.println(F("Message received, but not for us:"));
+#endif
           print(rx_msg);
         }
       }
@@ -511,7 +516,9 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       delayMicroseconds(205);
     }
   }
+#if DEBUG_LL
   Serial.println(F("No answer for this send telegram:"));
+#endif
   print(tx_msg);
 
   return false;
