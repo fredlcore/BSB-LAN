@@ -6,6 +6,26 @@
 //TWW - ГВС
 //Wärmepumpe - тепловой насос
 //
+#define UNIT_MONTHS_TEXT "месяцев"
+#define UNIT_DAYS_TEXT "дней"
+#define UNIT_HOUR_TEXT "ч"
+#define UNIT_MIN_TEXT "мин"
+#define UNIT_SEC_TEXT "с"
+#define UNIT_DEG_TEXT "&deg;C"
+#define UNIT_PERC_TEXT "&#037;"
+#define UNIT_RPM_TEXT "Об/мин"
+#define UNIT_KW_TEXT "кВт"
+#define UNIT_KWH_TEXT "кВт*ч"
+#define UNIT_KWHM3_TEXT "кВт*ч/м³"
+#define UNIT_CURR_TEXT "&#181;А"
+#define UNIT_BAR_TEXT "бар"
+#define UNIT_VOLT_TEXT "В"
+#define UNIT_GRADIENT_TEXT "мин/K"
+#define UNIT_GRADIENTKS_TEXT "K/с"
+#define UNIT_INTEGRAL_TEXT "Kмин"
+#define UNIT_LITERPERHOUR_TEXT "л/ч"
+#define UNIT_LITERPERMIN_TEXT "л/мин"
+
 #define ENUM_CAT_00_TEXT "Дата и время"
 #define ENUM_CAT_01_TEXT "Комнатный термостат"
 #define ENUM_CAT_02_TEXT "Беспроводный интерфейс"
@@ -845,7 +865,7 @@
 #define STR8002_TEXT "Состояние контура отполения P"
 #define STR8003_TEXT "Состояние ГВС"
 #define STR8005_TEXT "Состояние котла"
-#define STR8007_TEXT "Состояние солн элемента"
+#define STR8007_TEXT "Состояние солнечного элемента"
 #define STR8009_TEXT "Состояние горелки"
 
 #define STR8300_TEXT "1-я ступень горелки T2"
@@ -860,8 +880,8 @@
 #define STR8313_TEXT "Датчик регулятора"
 #define STR8314_TEXT "Температура обратки котла"
 #define STR8315_TEXT "Уставка температуры обратки котла"
-#define STR8316_TEXT "Темпертура топочных газов"
-#define STR8318_TEXT "Максимальная темпертура топочных газов"
+#define STR8316_TEXT "Температура топочных газов"
+#define STR8318_TEXT "Максимальная температура топочных газов"
 
 #define STR8323_TEXT "Скорость вентилятора"
 #define STR8324_TEXT "Заданная скорость вентилятора"
