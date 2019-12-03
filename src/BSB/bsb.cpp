@@ -13,7 +13,12 @@ extern int bus_type;
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 #ifdef HwSerial
-  serial = &Serial2;
+  #define RX_PIN 19
+  pinMode(52, OUTPUT);    // provide voltage
+  pinMode(53, OUTPUT);    // provide voltage
+  digitalWrite(52, 1);
+  digitalWrite(53, 1);
+  serial = &Serial1;
   serial->begin(4800, SERIAL_8O1);
 #else
   serial = new BSBSoftwareSerial(rx, tx, true);
@@ -347,7 +352,7 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
       while (millis() < timeout) {
 #ifdef HwSerial
-        if (digitalRead(17) == 0)
+        if (digitalRead(RX_PIN) == 0)   // Test Serial1 RX pin
 #else
         if ( serial->rx_pin_read()) // inverse logic
 #endif
@@ -400,8 +405,8 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
         goto retry;
       }
-      Serial2.flush();
-      Serial2.read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+      serial->flush();
+      serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
   } else {
     for (i=0; i <= len; i++) {
@@ -413,12 +418,12 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
         goto retry;
       }
-      Serial2.flush();
-      Serial2.read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+      serial->flush();
+      serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
   }
 #ifdef HwSerial
-  Serial2.flush();
+  serial->flush();
 #else
   sei();
 #endif
@@ -433,8 +438,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   }
 
 #ifdef HwSerial
-  while(Serial2.available()) {
-    Serial2.read();
+  while(serial->available()) {
+    serial->read();
   }
 #endif
 
