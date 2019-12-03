@@ -924,6 +924,7 @@ void SerialPrintHex(byte val) {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex32(uint32_t val) {
+/*
   if (val <= 0x0fffffff) DebugOutput.print(F("0"));
   if (val <= 0x00ffffff) DebugOutput.print(F("0"));
   if (val <= 0x000fffff) DebugOutput.print(F("0"));
@@ -932,6 +933,10 @@ void SerialPrintHex32(uint32_t val) {
   if (val <= 0x000000ff) DebugOutput.print(F("0"));
   if (val <= 0x0000000f) DebugOutput.print(F("0"));
   DebugOutput.print(val, HEX);
+*/
+  char val_str[9] = { 0 };
+  sprintf(val_str, "%08lX", val);
+  DebugOutput.print(val_str);
 }
 
 
