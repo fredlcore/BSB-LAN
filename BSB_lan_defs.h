@@ -270,25 +270,25 @@ typedef enum{
   VT_UNKNOWN
 }vt_type_t;
 
-const char U_MONTHS[] PROGMEM = "Monate";
-const char U_DAYS[] PROGMEM = "Tage";
-const char U_HOUR[] PROGMEM = "h";
-const char U_MIN[] PROGMEM = "min";
-const char U_SEC[] PROGMEM = "s";
-const char U_DEG[] PROGMEM = "&deg;C";
-const char U_PERC[] PROGMEM = "&#037;";
-const char U_RPM[] PROGMEM = "U/min";
-const char U_KW[] PROGMEM = "kW";
-const char U_KWH[] PROGMEM = "kWh";
-const char U_KWHM3[] PROGMEM = "kWh/m³";
-const char U_CURR[] PROGMEM = "&#181;A";
-const char U_BAR[] PROGMEM = "bar";
-const char U_VOLT[] PROGMEM = "V";
-const char U_GRADIENT[] PROGMEM = "min/K";
-const char U_GRADIENTKS[] PROGMEM = "K/s";
-const char U_INTEGRAL[] PROGMEM = "Kmin";
-const char U_LITERPERHOUR[] PROGMEM = "l/h";
-const char U_LITERPERMIN[] PROGMEM = "l/min";
+const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
+const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
+const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
+const char U_MIN[] PROGMEM = UNIT_MIN_TEXT;
+const char U_SEC[] PROGMEM = UNIT_SEC_TEXT;
+const char U_DEG[] PROGMEM = UNIT_DEG_TEXT;
+const char U_PERC[] PROGMEM = UNIT_PERC_TEXT;
+const char U_RPM[] PROGMEM = UNIT_RPM_TEXT;
+const char U_KW[] PROGMEM = UNIT_KW_TEXT;
+const char U_KWH[] PROGMEM = UNIT_KWH_TEXT;
+const char U_KWHM3[] PROGMEM = UNIT_KWHM3_TEXT;
+const char U_CURR[] PROGMEM = UNIT_CURR_TEXT;
+const char U_BAR[] PROGMEM = UNIT_BAR_TEXT;
+const char U_VOLT[] PROGMEM = UNIT_VOLT_TEXT;
+const char U_GRADIENT[] PROGMEM = UNIT_GRADIENT_TEXT;
+const char U_GRADIENTKS[] PROGMEM = UNIT_GRADIENTKS_TEXT;
+const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
+const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
+const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
