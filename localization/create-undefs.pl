@@ -9,8 +9,10 @@ foreach $file (@files) {
   open (IN, $file);
   open (OUT, ">UNDEF_$file");
   while ($line = <IN>) {
-    if ($line =~ /#define (.*?) /) {
-      print OUT "#undef $1\n";
+    if (!($line =~ /^\/\//)) {
+      if ($line =~ /#define (.*?) /) {
+        print OUT "#undef $1\n";
+      }
     }
   }
   close IN;
