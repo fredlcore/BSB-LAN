@@ -14,9 +14,7 @@ extern int bus_type;
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 #ifdef HwSerial
   #define RX_PIN 19
-  pinMode(52, OUTPUT);    // provide voltage
   pinMode(53, OUTPUT);    // provide voltage
-  digitalWrite(52, 1);
   digitalWrite(53, 1);
   serial = &Serial1;
   serial->begin(4800, SERIAL_8O1);
@@ -337,20 +335,21 @@ inline bool BSB::_send(byte* msg) {
 Er wartet 11/4800 Sek ab (statt 10, Hinweis von miwi), lauscht und schaut ob der Bus in dieser Zeit von jemand anderem benutzt wird. Sprich ob der Bus in dieser Zeit mal
 auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 */
-  unsigned long timeoutabort = millis() + 1000;  // one second timeout
+  unsigned long timeoutabort = 1000;  // one second timeout
+  unsigned long start_timer = millis();
   retry:
   // Select a random wait time between 60 and 79 ms
   unsigned long waitfree = random(1,60) + 25; // range 26 .. 85 ms
 //  unsigned long waitfree = random(1,20) + 59; // range 60 .. 79 ms
   { // block begins
-    if(millis() > timeoutabort){  // one second has elapsed
+    if(millis()-start_timer > timeoutabort){  // one second has elapsed
       return false;
     }
     if (bus_type != 2) {
       // Wait 59 ms plus a random time
-      unsigned long timeout = millis() + waitfree;
+      unsigned long timeout = millis();
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
-      while (millis() < timeout) {
+      while (millis()-timeout < waitfree) {
 #ifdef HwSerial
         if (digitalRead(RX_PIN) == 0)   // Test Serial1 RX pin
 #else
@@ -405,8 +404,10 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
         goto retry;
       }
+#ifdef HwSerial
       serial->flush();
       serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+#endif
     }
   } else {
     for (i=0; i <= len; i++) {
@@ -418,8 +419,10 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
         goto retry;
       }
+#ifdef HwSerial
       serial->flush();
       serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+#endif
     }
   }
 #ifdef HwSerial
