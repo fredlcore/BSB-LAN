@@ -9195,7 +9195,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
 {0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
 {0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
-{0x2D4F0043,  CAT_PPS,              VT_ONOFF,         15067, STR15067, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
+{0x2D4F0043,  CAT_PPS,              VT_YESNO,         15067, STR15067, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
