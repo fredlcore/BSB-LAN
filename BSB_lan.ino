@@ -2061,16 +2061,16 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
-              printCHOICE(msg,data_len,"Aus","Ein");
+              printCHOICE(msg,data_len,MENU_TEXT_OFF,MENU_TEXT_ON);
               break;
             case VT_YESNO:
-              printCHOICE(msg,data_len,"Nein","Ja");
+              printCHOICE(msg,data_len,MENU_TEXT_NO,MENU_TEXT_YES);
               break;
             case VT_CLOSEDOPEN:
-              printCHOICE(msg,data_len,"Offen","Geschlossen");
+              printCHOICE(msg,data_len,MENU_TEXT_OPEN,MENU_TEXT_CLOSE);
               break;
             case VT_VOLTAGEONOFF:
-              printCHOICE(msg,data_len,"0 Volt","230 Volt");
+              printCHOICE(msg,data_len,"0" UNIT_VOLT_TEXT,"230" UNIT_VOLT_TEXT);
               break;
             case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
               printLPBAddr(msg,data_len);
@@ -3316,6 +3316,7 @@ char* query(int line_start  // begin at this line (ProgNr)
       idx=i;
       uint8_t flags = get_cmdtbl_flags(i);
       uint8_t type = get_cmdtbl_type(i);
+      
       //DebugOutput.println(F("found"));
       if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
         if (bus_type != BUS_PPS) {  // bus type is not PPS
@@ -3338,6 +3339,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               Serial.print(line);
               Serial.print(F(": "));
               Serial.println(pvalstr);
+              Serial.flush();
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
@@ -3361,11 +3363,18 @@ char* query(int line_start  // begin at this line (ProgNr)
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
-            case VT_ONOFF: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_BYTE: 
+            case VT_ONOFF:
+            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; break;
             case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
           }
+
+          Serial.print(F("#"));
+          Serial.print(line);
+          Serial.print(F(": "));
+          Serial.println(temp_val);
+          Serial.flush();
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
           msg[4+(bus_type*4)]=TYPE_ANS;
@@ -3429,7 +3438,7 @@ char* query(int line_start  // begin at this line (ProgNr)
 */
         client.println(F("</td><td>"));
         if (msg[4+(bus_type*4)] != TYPE_ERR && type != VT_UNKNOWN) {
-          if(type == VT_ENUM || type == VT_CUSTOM_ENUM || type == VT_BIT || type == VT_ONOFF) {
+          if(type == VT_ENUM || type == VT_CUSTOM_ENUM || type == VT_BIT || type == VT_ONOFF || type == VT_YESNO ) {
 
             client.print(F("<select "));
             if (type == VT_BIT) {
@@ -3438,19 +3447,31 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.print(F("id='value"));
             client.print(line);
             client.println(F("'>"));
-            if (type == VT_ONOFF) {
+            if (type == VT_ONOFF || type == VT_YESNO) {
               uint8_t pps_offset = (bus_type == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
               int val=msg[pl_start+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
                 client.print(F(" selected"));
               }
-              client.println(F(">" MENU_TEXT_OFF "</option>"));
+              client.print(F(">"));
+              if (type == VT_ONOFF) {
+                client.print(F(MENU_TEXT_OFF));
+              } else {
+                client.print(F(MENU_TEXT_NO));
+              }
+              client.println(F("</option>"));
               client.print(F("<option value='1'"));
               if (val>0) {
                 client.print(F(" selected"));
               }
-              client.println(F(">" MENU_TEXT_ON "</option>"));
+              client.print(F(">"));
+              if (type == VT_ONOFF) {
+                client.print(F(MENU_TEXT_ON));
+              } else {
+                client.print(F(MENU_TEXT_YES));
+              }
+              client.println(F("</option>"));
             } else {
 //              memcpy_PF(buffer, enumstr, enumstr_len);
 //              buffer[enumstr_len]=0;
@@ -4410,9 +4431,7 @@ ich mir da nicht)
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-
             if ((flags & FL_RONLY) == FL_RONLY || *PPS_write_enabled != 1) {
-
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
