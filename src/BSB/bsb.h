@@ -8,11 +8,7 @@
 #include "WProgram.h"
 #endif
 
-//#define HwSerial 1
-
-#ifndef HwSerial
 #include "BSBSoftwareSerial.h"
-#endif
 //#include "util/crc16.h"
 
 // See this page for further details:
@@ -53,6 +49,7 @@ public:
   bool Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
 
 private:
+  boolean HwSerial = false;
   uint8_t myAddr;
   uint8_t destAddr;
   uint8_t bus_type = 0;
@@ -63,11 +60,11 @@ private:
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
 
-#ifdef HwSerial
-  HardwareSerial* serial;
-#else
-  BSBSoftwareSerial* serial;
-#endif
+  int serial_available();
+  int serial_read();
+
+  HardwareSerial* serial_hw;
+  BSBSoftwareSerial* serial_sw;
 };
 
 #endif
