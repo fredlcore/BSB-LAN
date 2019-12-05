@@ -76,6 +76,8 @@
 #undef MENU_TEXT_NO
 #undef MENU_TEXT_ON
 #undef MENU_TEXT_OFF
+#undef MENU_TEXT_OPEN
+#undef MENU_TEXT_CLOSE
 #undef MENU_DESC_HFK
 #undef MENU_DESC_CFG
 #undef MENU_DESC_URL

@@ -78,6 +78,8 @@
 #define MENU_TEXT_NO "Nein"
 #define MENU_TEXT_ON "Ein"
 #define MENU_TEXT_OFF "Aus"
+#define MENU_TEXT_OPEN "Offen"
+#define MENU_TEXT_CLOSE "Geschlossen"
 #define MENU_DESC_HFK "Hiermit können Sie die Funktionen Ihres Heizungssystems abfragen bzw. steuern. Die einzelnen Parameter sind in entsprechende Kategorien aufgeteilt, die Sie anklicken können."
 #define MENU_DESC_CFG "Hier sehen Sie, mit welchen Werten BSB-LAN konfiguriert ist. Eine Änderung dieser Parameter ist über die erweiterten URL-Befehle möglich."
 #define MENU_DESC_URL "Zeigt Ihnen eine Übersicht der Befehle an, die Sie über die direkte Eingabe in der Adresszeile des Browsers absenden können. Diese Befehle sind auch für die Anbindung an Hausautomations-Systeme wie FHEM nötig."
