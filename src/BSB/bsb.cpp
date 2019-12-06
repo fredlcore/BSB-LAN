@@ -168,9 +168,13 @@ bool BSB::GetMessage(byte* msg) {
 
       // Delay for more data
       if (HwSerial == true) {
-        delay(3);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
+        delay(1);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
       } else {
-        delay(1);
+        delay(1);   // Or should I wonder why SoftwareSerial is fine with just 1ms? 
+                    // At 4800bps 8O1, one byte needs 11 Bit to be transferred. One bit takes 0.2ms transmit time. Thus, 11 bits
+                    // take 2.2ms, and therefore, obviously, a new byte can only appear after 2.2ms.
+                    // The question is if serial.available() reacts differently in SoftwareSerial and HardwareSerial - maybe
+                    // SoftwareSerial reacts as soon as a new bit comes in, and HardwareSerial only notifies once a full byte is ready?
       }
       // read the rest of the message
       while (serial_available() > 0) {
