@@ -59,6 +59,9 @@ char version[] = "0.43";
  *
  * Changelog:
  *       version 0.43
+ *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
+ *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
+ *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
  *        - Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")
  *        - Many new parameters
  *        - Added device families 23 and 29 (Grünenwald heaters)
@@ -3370,12 +3373,6 @@ char* query(int line_start  // begin at this line (ProgNr)
             default: temp_val = pps_values[(line-15000)]; break;
           }
 
-          Serial.print(F("#"));
-          Serial.print(line);
-          Serial.print(F(": "));
-          Serial.println(temp_val);
-          Serial.flush();
-
           msg[1] = ((cmd & 0x00FF0000) >> 16);
           msg[4+(bus_type*4)]=TYPE_ANS;
           msg[pl_start+1]=temp_val >> 8;
@@ -3387,6 +3384,12 @@ char* query(int line_start  // begin at this line (ProgNr)
           msg[8] = c & 0xFF;
 */
           pvalstr = printTelegram(msg, line);
+
+          Serial.print(F("#"));
+          Serial.print(line);
+          Serial.print(F(": "));
+          Serial.println(pvalstr);
+          Serial.flush();
         }
       }else{
         //DebugOutput.println(F("unknown command"));
