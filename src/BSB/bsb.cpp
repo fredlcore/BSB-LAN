@@ -119,9 +119,9 @@ boolean BSB::Monitor(byte* msg) {
       Serial.print(" ");
       // if no inout available -> wait
       if (serial_available() == 0) {
-        unsigned long timeout = millis() + 3;// > ((11/4800)*1000);
+        unsigned long timeout = millis() + 3;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
         while (millis() < timeout) {
-          delayMicroseconds(15);
+          delayMicroseconds(15);                                      // ...but unclear to me (FH) why the delay is done in 15us steps when nothing else is done after each iteration...
         }
       }
       // if still no input available telegramm has finished
