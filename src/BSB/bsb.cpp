@@ -168,7 +168,7 @@ bool BSB::GetMessage(byte* msg) {
 
       // Delay for more data
       if (HwSerial == true) {
-        delay(1);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
+        delay(3);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
       } else {
         delay(1);   // Or should I wonder why SoftwareSerial is fine with just 1ms? 
                     // At 4800bps 8O1, one byte needs 11 Bit to be transferred. One bit takes 0.2ms transmit time. Thus, 11 bits
