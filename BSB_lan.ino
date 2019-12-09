@@ -1,4 +1,4 @@
-char version[] = "0.43";
+char version[] = "0.43a";
 
 /*
  * 
@@ -392,6 +392,7 @@ IPAddress subnet(SubnetIP);
 #ifdef MQTTBrokerIP
 IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
+uint8_t bus_type;
 uint8_t len_idx, pl_start;
 uint8_t myAddr = bus.getBusAddr();
 uint8_t* PPS_write_enabled = &myAddr;
@@ -6677,7 +6678,23 @@ void printWifiStatus()
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
+  // The computer hardware serial interface #0:
+  //   115,800 bps, 8 data bits, no parity
+  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
+  Serial.println(F("READY"));
+  DebugOutput.print(F("Size of cmdtbl1: "));
+  DebugOutput.println(sizeof(cmdtbl1));
+  DebugOutput.print(F("Size of cmdtbl2: "));
+  DebugOutput.println(sizeof(cmdtbl2));
+  DebugOutput.print(F("free RAM:"));
+  DebugOutput.println(freeRam());
 
+  while (Serial.available()) { // TODO: remove? why is this needed? Flush buffer? - should be emtpy after boot (we are still in setup()! :)
+    DebugOutput.print(Serial.read());
+  }
+
+  bus_type = bus.setBusType(BUS_TYPE);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+  
   switch (bus_type) {
     case 0:
       len_idx = 3;
@@ -6691,21 +6708,6 @@ void setup() {
       len_idx = 9;
       pl_start = 6;
       break;
-  }
-
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
-  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
-  Serial.println(F("READY"));
-  DebugOutput.print(F("Size of cmdtbl1: "));
-  DebugOutput.println(sizeof(cmdtbl1));
-  DebugOutput.print(F("Size of cmdtbl2: "));
-  DebugOutput.println(sizeof(cmdtbl2));
-  DebugOutput.print(F("free RAM:"));
-  DebugOutput.println(freeRam());
-
-  while (Serial.available()) {
-    DebugOutput.print(Serial.read());
   }
 
 #ifdef WIFI

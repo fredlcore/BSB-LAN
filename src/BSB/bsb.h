@@ -40,6 +40,7 @@ public:
   BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x42, uint8_t d_addr=0x00 );
   boolean Monitor(byte* msg);
   bool GetMessage(byte* msg);
+  // void begin(Stream* _serial_bus);
   void print(byte* msg);
   uint8_t setBusType(uint8_t bus_type_val, uint16_t addr=0x100, uint16_t d_addr=0x100);
   uint8_t getBusType();
@@ -52,6 +53,8 @@ private:
   boolean HwSerial = false;
   uint8_t myAddr;
   uint8_t destAddr;
+  uint8_t rx_pin;
+  uint8_t tx_pin;
   uint8_t bus_type = 0;
   uint8_t len_idx = 3;
   inline bool _send(byte* msg);
@@ -60,11 +63,9 @@ private:
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
 
-  int serial_available();
-  int serial_read();
-
-  HardwareSerial* serial_hw;
-  BSBSoftwareSerial* serial_sw;
+  Stream* serial_bus;
+  // HardwareSerial* serial_hw;
+  // BSBSoftwareSerial* serial_sw;
 };
 
 #endif
