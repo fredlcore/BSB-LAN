@@ -54,6 +54,7 @@ private:
   uint8_t destAddr;
   uint8_t bus_type = 0;
   uint8_t len_idx = 3;
+  uint8_t rx_pin;
   inline bool _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
@@ -62,9 +63,13 @@ private:
 
   int serial_available();
   int serial_read();
+  uint8_t rx_pin_read();
 
-  HardwareSerial* serial_hw;
-  BSBSoftwareSerial* serial_sw;
+//  HardwareSerial* serial_hw;
+//  BSBSoftwareSerial* serial_sw;
+
+  Stream* serial;
+
 };
 
 #endif
