@@ -167,8 +167,8 @@ byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
 // - optional third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
-BSB bus(68,69);
-uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+BSB bus(19,18); // BSB bus(68,69);
+static const uint8_t BUS_TYPE = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 //#define QAA_TYPE  0x53  // 0x53 = QAA70, 0x52 = QAA50
 
 // Protect these pins from accidental GPIO access
