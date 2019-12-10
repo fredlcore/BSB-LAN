@@ -13,7 +13,7 @@ extern uint8_t bus_type;
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 
-  if (rx == 19) {	// TODO: allow other USART pins? Serial2?
+  if (rx == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
     pinMode(22, OUTPUT);    // provide voltage
     digitalWrite(22, 1);
