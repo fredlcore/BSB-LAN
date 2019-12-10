@@ -53,19 +53,19 @@ private:
   boolean HwSerial = false;
   uint8_t myAddr;
   uint8_t destAddr;
-  uint8_t rx_pin;
-  uint8_t tx_pin;
   uint8_t bus_type = 0;
   uint8_t len_idx = 3;
+  uint8_t rx_pin;
   inline bool _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
 
-  Stream* serial_bus;
-  // HardwareSerial* serial_hw;
-  // BSBSoftwareSerial* serial_sw;
+  uint8_t rx_pin_read();
+
+  Stream* serial;
+
 };
 
 #endif

@@ -6,35 +6,31 @@
 
 #include "bsb.h"
 
-#define RX_PIN 19
-
 //#define DEBUG_LL 1
 
 extern uint8_t bus_type;
 
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
-  rx_pin = rx;
-  tx_pin = tx;
-  myAddr = addr;
-  destAddr = d_addr;
 
-  if (rx == RX_PIN) {	// TODO: allow other USART pins? Serial2?
+  if (rx == 19) {	// TODO: allow other USART pins? Serial2?
     HwSerial = true;
-    // pinMode(22, OUTPUT);    // provide voltage
-    // digitalWrite(22, 1);
-    // pinMode(23, OUTPUT);    // provide voltage
-    // digitalWrite(23, 1);
+    pinMode(22, OUTPUT);    // provide voltage
+    digitalWrite(22, 1);
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
+    serial = &Serial1;
     Serial1.begin(4800, SERIAL_8O1);
-	serial_bus = &Serial1;
   } else {
-    static BSBSoftwareSerial serial_sw = BSBSoftwareSerial(rx, tx, true);
-	serial_sw.begin(4800);
-	// serial_sw.listen();
-	serial_bus = &serial_sw;
+    BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
+    serial = serial_sw;
+    serial_sw->begin(4800);
+    serial_sw->listen();
   }
+
+  myAddr=addr;
+  destAddr=d_addr;
+  rx_pin=rx;
 }
 
 uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
@@ -94,16 +90,15 @@ boolean BSB::Monitor(byte* msg) {
   byte read;
   byte i=0;
     
-  if (serial_bus->available() > 0) {
+  if (serial->available() > 0) {
     // get timestamp
     ts=millis();
     // output
     Serial.print(ts);
     Serial.print(" ");
-    while (serial_bus->available() > 0) {
-      
+    while (serial->available() > 0) {
       // Read serial data...
-      read = serial_bus->read();
+      read = serial->read();
       if (bus_type != 2) {
         read = read ^ 0xFF;
       }
@@ -118,14 +113,14 @@ boolean BSB::Monitor(byte* msg) {
       Serial.print(read, HEX);
       Serial.print(" ");
       // if no inout available -> wait
-      if (serial_bus->available() == 0) {
+      if (serial->available() == 0) {
         unsigned long timeout = millis() + 3;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
         while (millis() < timeout) {
           delayMicroseconds(15);                                      // ...but unclear to me (FH) why the delay is done in 15us steps when nothing else is done after each iteration...
         }
       }
       // if still no input available telegramm has finished
-      if (serial_bus->available() == 0) break;
+      if (serial->available() == 0) break;
     }
     Serial.println();
     return true;
@@ -137,9 +132,9 @@ bool BSB::GetMessage(byte* msg) {
   byte i=0,timeout;
   byte read;
 
-  while (serial_bus->available() > 0) {
+  while (serial->available() > 0) {
     // Read serial data...
-    read = serial_bus->read();
+    read = serial->read();
     if (bus_type != 2) {
       read = read ^ 0xFF;
     }
@@ -177,8 +172,8 @@ bool BSB::GetMessage(byte* msg) {
                     // SoftwareSerial reacts as soon as a new bit comes in, and HardwareSerial only notifies once a full byte is ready?
       }
       // read the rest of the message
-      while (serial_bus->available() > 0) {
-        read = serial_bus->read();
+      while (serial->available() > 0) {
+        read = serial->read();
         if (bus_type != 2) {
           read = read ^ 0xFF;
         }
@@ -201,14 +196,14 @@ bool BSB::GetMessage(byte* msg) {
             break;
         }
         // Delay until we got next byte
-        if (serial_bus->available() == 0) {
+        if (serial->available() == 0) {
 		  // timeout = HwSerial ? 200 : 30;
           if (HwSerial == true) {
             timeout = 200;  // again, see above, why does HwSerial take more time to process a character? Here, timeout easily counts down 120 times 15 microseconds for a new character to be ready to process... 
           } else {
             timeout = 30;
           }
-          while ((timeout > 0) && (serial_bus->available() == 0)){
+          while ((timeout > 0) && (serial->available() == 0)){
             delayMicroseconds(15);
             timeout--;
           }
@@ -365,8 +360,7 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
       unsigned long timeout = millis();
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
       while (millis()-timeout < waitfree) {
-        // if ((HwSerial == true && digitalRead(RX_PIN) == 0) || (HwSerial == false && serial_sw->rx_pin_read()))   // Test RX pin
-        if ((HwSerial == true && digitalRead(rx_pin) == 0) || (HwSerial == false && digitalRead(rx_pin)))   // Test RX pin
+        if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read()))   // Test RX pin
         {
           goto retry;
         } // endif
@@ -415,16 +409,12 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     if (bus_type != 2) {
       data = data ^ 0xFF;
     }
+    serial->write(data);
     if (HwSerial == true) {
-      serial_bus->write(data);
-      serial_bus->flush();
-	  // TODO: read byte and compare to the one we just send? (to detect collisions)?
-      serial_bus->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
-    } else {
-      serial_bus->write(data);
+      serial->flush();
+      serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
-    // if ((HwSerial == true && digitalRead(RX_PIN) == 0) || (HwSerial == false && serial_sw->rx_pin_read())) {  // Test RX pin
-    if ((HwSerial == true && digitalRead(rx_pin) == 0) || (HwSerial == false && digitalRead(rx_pin))) {  // Test RX pin
+    if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
       // Collision
       if (HwSerial == false) {
         sei();
@@ -433,7 +423,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     }
   }
   if (HwSerial == true) {
-    serial_bus->flush();
+    serial->flush();
   } else {
     sei();
   }
@@ -448,8 +438,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   }
 
   if (HwSerial == true) {
-    while(serial_bus->available()) {
-      serial_bus->read();
+    while(serial->available()) {
+      serial->read();
     }
   }
 
@@ -539,3 +529,6 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
+uint8_t BSB::rx_pin_read() {
+  return * portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin);
+}
