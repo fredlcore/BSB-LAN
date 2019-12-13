@@ -1,7 +1,6 @@
 #!/usr/bin/perl
-
 # Run this script after adding entries to a language file to prevent compiler warnings
-
+use bytes;
 @files = `ls LANG*.h`;
 foreach $file (@files) {
   chomp ($file);
@@ -11,7 +10,11 @@ foreach $file (@files) {
   while ($line = <IN>) {
     if (!($line =~ /^\/\//)) {
       if ($line =~ /#define (.*?) /) {
-        print OUT "#undef $1\n";
+        $stringname = $1;
+        print OUT "#undef $stringname\n";
+        my @def =  ($line =~ /\"(.*?)\"/g);
+        $defstrlen = length($def[0]);
+        if($defstrlen > 99) {print "$file WARNING: string length $stringname too big: $defstrlen bytes.\n";}
       }
     }
   }
