@@ -197,7 +197,6 @@ bool BSB::GetMessage(byte* msg) {
         }
         // Delay until we got next byte
         if (serial->available() == 0) {
-		  // timeout = HwSerial ? 200 : 30;
           if (HwSerial == true) {
             timeout = 200;  // again, see above, why does HwSerial take more time to process a character? Here, timeout easily counts down 120 times 15 microseconds for a new character to be ready to process... 
           } else {
@@ -397,7 +396,7 @@ gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
 So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
-  if (HwSerial == false) {  // TODO: SofwareSerial handles/disables interrupts during send... do we need this here?
+  if (HwSerial == false) {
     cli();
   }
   byte loop_len = len;

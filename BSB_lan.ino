@@ -1,4 +1,4 @@
-char version[] = "0.43a";
+char version[] = "0.43";
 
 /*
  * 
