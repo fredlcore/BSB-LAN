@@ -55,7 +55,7 @@ char version[] = "0.43";
  *       0.40  - 21.01.2018
  *       0.41  - 17.03.2019
  *       0.42  - 21.03.2019
- *       0.43  - 25.10.2019
+ *       0.43  - 06.12.2019
  *
  * Changelog:
  *       version 0.43
@@ -342,7 +342,7 @@ char version[] = "0.43";
  *
  */
 
-#include "src/BSB/BSBSoftwareSerial.h"
+//#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
@@ -351,7 +351,15 @@ char version[] = "0.43";
 //#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
+#if defined(__SAM3X8E__)
+#include <Wire.h>
+#include "src/I2C_EEPROM/I2C_EEPROM.h"
+template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 256000U,2,16>{};
+// EEPROM 24LC256: Size 256000 Bits, 2-Byte address mode, 16 byte page size
+UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
+#else
 #include <EEPROM.h>
+#endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #include "src/PubSubClient/src/PubSubClient.h"
@@ -477,9 +485,13 @@ unsigned long lastLogTime = millis();
 unsigned long lastMQTTTime = millis();
 unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
+float custom_floats[20] = { 0 };
+long custom_longs[20] = { 0 };
 int numAverages = sizeof(avg_parameters) / sizeof(int);
 int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
 int numLogValues = sizeof(log_parameters) / sizeof(int);
+int numCustomFloats = sizeof(custom_floats) / sizeof(float);
+int numCustomLongs = sizeof(custom_longs) / sizeof(long);
 double *avgValues = new double[numAverages];
 double *avgValues_Old = new double[numAverages];
 double *avgValues_Current = new double[numAverages];
@@ -4722,7 +4734,7 @@ ich mir da nicht)
         }
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTUVXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -5863,6 +5875,19 @@ ich mir da nicht)
 #ifdef DHT_BUS
             dht22();
 #endif
+          }else if(range[0]=='U'){ // output user-defined custom_array variable
+            for(int i=0;i<numCustomFloats;i++){
+              outBufclear();
+              outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ncustom_float[%d]: ",i);
+              _printFIXPOINT(custom_floats[i],2);
+              outBufLen+=sprintf(outBuf+outBufLen,"\n</td></tr>\n");
+              client.println(outBuf);  
+            }
+            for(int i=0;i<numCustomLongs;i++){
+              outBufclear();
+              outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ncustom_long[%d]: %ld\n</td></tr>\n",i, custom_longs[i]);
+              client.println(outBuf);  
+            }
           }else if(range[0]=='X'){ // handle MAX command
 #ifdef MAX_CUL
             int max_avg_count = 0;
@@ -6678,6 +6703,24 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
 
+  // The computer hardware serial interface #0:
+  //   115,800 bps, 8 data bits, no parity
+#if defined(__SAM3X8E__)
+  Wire.begin();
+#endif
+  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
+  Serial.println(F("READY"));
+  DebugOutput.print(F("Size of cmdtbl1: "));
+  DebugOutput.println(sizeof(cmdtbl1));
+  DebugOutput.print(F("Size of cmdtbl2: "));
+  DebugOutput.println(sizeof(cmdtbl2));
+  DebugOutput.print(F("free RAM:"));
+  DebugOutput.println(freeRam());
+
+  while (Serial.available()) {
+    DebugOutput.print(Serial.read());
+  }
+
   switch (bus_type) {
     case 0:
       len_idx = 3;
@@ -6691,21 +6734,6 @@ void setup() {
       len_idx = 9;
       pl_start = 6;
       break;
-  }
-
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
-  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
-  Serial.println(F("READY"));
-  DebugOutput.print(F("Size of cmdtbl1: "));
-  DebugOutput.println(sizeof(cmdtbl1));
-  DebugOutput.print(F("Size of cmdtbl2: "));
-  DebugOutput.println(sizeof(cmdtbl2));
-  DebugOutput.print(F("free RAM:"));
-  DebugOutput.println(freeRam());
-
-  while (Serial.available()) {
-    DebugOutput.print(Serial.read());
   }
 
 #ifdef WIFI
