@@ -8,7 +8,7 @@
 
 //#define DEBUG_LL 1
 
-extern int bus_type;
+extern uint8_t bus_type;
 
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
@@ -24,10 +24,13 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
     serial = &Serial1;
     Serial1.begin(4800, SERIAL_8O1);
   } else {
+#if defined(__SAM3X8E__)
+#else
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
     serial = serial_sw;
     serial_sw->begin(4800);
     serial_sw->listen();
+#endif
   }
 
   myAddr=addr;
@@ -400,7 +403,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
   if (HwSerial == false) {
-    cli();
+//    cli();
   }
   byte loop_len = len;
   if (bus_type != 2) {
@@ -419,7 +422,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
       // Collision
       if (HwSerial == false) {
-        sei();
+//        sei();
       }
       goto retry;
     }
@@ -427,7 +430,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
   if (HwSerial == true) {
     serial->flush();
   } else {
-    sei();
+//    sei();
   }
   return true;
 }

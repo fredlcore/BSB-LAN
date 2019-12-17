@@ -8,8 +8,11 @@
 #include "WProgram.h"
 #endif
 
+#if defined(__SAM3X8E__)
+#else
 #include "BSBSoftwareSerial.h"
 //#include "util/crc16.h"
+#endif
 
 // See this page for further details:
 // http://www.mikrocontroller.net/topic/218643
@@ -60,13 +63,7 @@ private:
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
-
-  int serial_available();
-  int serial_read();
   uint8_t rx_pin_read();
-
-//  HardwareSerial* serial_hw;
-//  BSBSoftwareSerial* serial_sw;
 
   Stream* serial;
 
