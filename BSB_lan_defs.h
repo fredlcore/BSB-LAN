@@ -734,7 +734,6 @@ const char STR890[] PROGMEM = STR890_TEXT;
 const char STR894[] PROGMEM = STR894_TEXT;
 const char STR895[] PROGMEM = STR895_TEXT;
 const char STR898[] PROGMEM = STR898_TEXT;
-const char STR900[] PROGMEM = STR900_TEXT;
 
 // Einstellungen Kühlkreis 1
 #define STR900 STR700
