@@ -737,7 +737,8 @@ const char STR898[] PROGMEM = STR898_TEXT;
 const char STR900[] PROGMEM = STR900_TEXT;
 
 // Einstellungen Kühlkreis 1
-#define STR901 STR700
+#define STR900 STR700
+#define STR901 STR701
 #define STR902 STR710
 #define STR903 STR712
 const char STR904[] PROGMEM = STR904_TEXT;
@@ -5782,7 +5783,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D07BE,  CAT_HK1,              VT_ENUM,          900,   STR900,   sizeof(ENUM900_2),    ENUM900_2,    DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 1 - Betriebsartumschaltung
 
 // Kühlkreis 1
-{0x653D0A26,  CAT_KUEHL1,           VT_UNKNOWN,       901,   STR901,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x653D0A26,  CAT_KUEHL1,           VT_ENUM,          901,   STR901,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x653D0A1A,  CAT_KUEHL1,           VT_TEMP,          902,   STR902,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Komfortsollwert
 {0x653D1943,  CAT_KUEHL1,           VT_TEMP,          903,   STR903,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reduziertsollwert
 {0x653D0A80,  CAT_KUEHL1,           VT_TEMP,          904,   STR904,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Schutzsollwert Kühlkreis 1
