@@ -59,6 +59,8 @@ char version[] = "0.43";
  *
  * Changelog:
  *       version 0.43
+ *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_lan_custom.h, for example to read sensors etc.
+ *          Output of these variables is done via new URL command /U
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
  *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
@@ -406,7 +408,7 @@ uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
-#define BUFLEN 100
+#define BUFLEN 200
 char buffer[BUFLEN] = { 0 };
 
 /* buffer to print output lines*/
