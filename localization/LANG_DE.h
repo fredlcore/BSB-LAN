@@ -128,7 +128,7 @@
 #define MENU_TEXT_BUT "Nur unbekannte Bus-Telegramme loggen"
 #define MENU_TEXT_MMD "Monitor Modus"
 #define MENU_TEXT_VBL "Verbositäts-Level"
-#define MENU_TEXT_AVT "Berechnung von 24h-Mittelwerten für die folgenden Parameter:"
+#define MENU_TEXT_AVT "Berechnung von 24h-Mittelwerten für die folgenden Parameter"
 #define MENU_TEXT_LBO "Nur Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_LGI "Neues Logging-Intervall"
 #define MENU_TEXT_LGN "Neue Logging-Parameter"
