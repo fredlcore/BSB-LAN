@@ -356,8 +356,8 @@ char version[] = "0.43";
 #if defined(__SAM3X8E__)
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
-template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 256000U,2,16>{};
-// EEPROM 24LC256: Size 256000 Bits, 2-Byte address mode, 16 byte page size
+template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
+// EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #else
 #include <EEPROM.h>
@@ -1730,7 +1730,13 @@ void printTime(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
-    DebugOutput.print(p);
+    if (bus_type == BUS_PPS) {
+      char PPS_output[55];
+      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[pl_start+1] / 6, (msg[pl_start+1] % 6) * 10, msg[pl_start] / 6, (msg[pl_start] % 6) * 10, msg[pl_start-1] / 6, (msg[pl_start-1] % 6) * 10, msg[pl_start-2] / 6, (msg[pl_start-2] % 6) * 10, msg[pl_start-3] / 6, (msg[pl_start-3] % 6) * 10, msg[pl_start-4] / 6, (msg[pl_start-4] % 6) * 10);
+      DebugOutput.print(PPS_output);
+    } else {
+      DebugOutput.print(p);
+    }
   }else{
     DebugOutput.print(F("VT_HOUR_MINUTES len !=3: "));
     SerialPrintData(msg);
@@ -2223,6 +2229,7 @@ char *printTelegram(byte* msg, int query_line) {
               outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
               outBufLen+=sprintf(outBuf+outBufLen,":");
               outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              DebugOutput.print(pvalstr);
               break;
             }
             case VT_ERRORCODE: //  u16 or u8 (via OCI420)
