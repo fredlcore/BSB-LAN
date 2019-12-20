@@ -45,6 +45,7 @@ public:
   uint8_t getBusType();
   uint8_t getBusAddr();
   uint8_t getBusDest();
+  uint8_t pl_start;
 
   bool Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
 

@@ -36,10 +36,19 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   bus_type = bus_type_val;
   switch (bus_type) {
-    case 0: len_idx = 3; break;
-    case 1: len_idx = 1; break;
-    case 2: len_idx = 8; break;
-    default: len_idx = 3; break;
+    case 0:
+      len_idx = 3;
+      pl_start = 9;
+      break;
+    case 1:
+      len_idx = 1;
+      pl_start = 13;
+      break;
+    case 2:
+      len_idx = 8;
+      pl_start = 6;
+      break;
+    default: len_idx = 3; pl_start = 9; break;
   }
   if (addr<=0xff) {
     myAddr = addr & 0xFF;
