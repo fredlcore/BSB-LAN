@@ -1733,7 +1733,7 @@ void printTime(byte *msg,byte data_len){
     }
     if (bus_type == BUS_PPS) {
       char PPS_output[55];
-      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[pl_start+1] / 6, (msg[pl_start+1] % 6) * 10, msg[pl_start] / 6, (msg[pl_start] % 6) * 10, msg[pl_start-1] / 6, (msg[pl_start-1] % 6) * 10, msg[pl_start-2] / 6, (msg[pl_start-2] % 6) * 10, msg[pl_start-3] / 6, (msg[pl_start-3] % 6) * 10, msg[pl_start-4] / 6, (msg[pl_start-4] % 6) * 10);
+      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[bus.pl_start+1] / 6, (msg[bus.pl_start+1] % 6) * 10, msg[bus.pl_start] / 6, (msg[bus.pl_start] % 6) * 10, msg[bus.pl_start-1] / 6, (msg[bus.pl_start-1] % 6) * 10, msg[bus.pl_start-2] / 6, (msg[bus.pl_start-2] % 6) * 10, msg[bus.pl_start-3] / 6, (msg[bus.pl_start-3] % 6) * 10, msg[bus.pl_start-4] / 6, (msg[bus.pl_start-4] % 6) * 10);
       DebugOutput.print(PPS_output);
     } else {
       DebugOutput.print(p);
