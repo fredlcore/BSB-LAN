@@ -8,7 +8,6 @@
 
 //#define DEBUG_LL 1
 
-extern uint8_t bus_type;
 
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
@@ -36,7 +35,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   rx_pin=rx;
 }
 
-uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
+void BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   bus_type = bus_type_val;
   switch (bus_type) {
     case 0:
@@ -63,7 +62,7 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   Serial.println(myAddr);
   Serial.print(F("Destination address: "));
   Serial.println(destAddr);
-  return bus_type;
+  //return bus_type;
 }
 
 uint8_t BSB::getBusType() {
