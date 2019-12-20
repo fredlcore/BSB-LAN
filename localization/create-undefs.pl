@@ -14,7 +14,7 @@ foreach $file (@files) {
         print OUT "#undef $stringname\n";
         my @def =  ($line =~ /\"(.*?)\"/g);
         $defstrlen = length($def[0]);
-        if($defstrlen > 99) {print "$file WARNING: string length $stringname too big: $defstrlen bytes.\n";}
+        if($defstrlen > 199) {print "$file WARNING: string length $stringname too big: $defstrlen bytes.\n";}
       }
     }
   }

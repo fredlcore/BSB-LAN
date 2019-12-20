@@ -59,6 +59,8 @@ char version[] = "0.43";
  *
  * Changelog:
  *       version 0.43
+ *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_lan_custom.h, for example to read sensors etc.
+ *          Output of these variables is done via new URL command /U
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
  *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
@@ -354,8 +356,8 @@ char version[] = "0.43";
 #if defined(__SAM3X8E__)
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
-template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 256000U,2,16>{};
-// EEPROM 24LC256: Size 256000 Bits, 2-Byte address mode, 16 byte page size
+template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
+// EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #else
 #include <EEPROM.h>
@@ -407,7 +409,7 @@ uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
-#define BUFLEN 100
+#define BUFLEN 200
 char buffer[BUFLEN] = { 0 };
 
 /* buffer to print output lines*/
@@ -1729,7 +1731,13 @@ void printTime(byte *msg,byte data_len){
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
-    DebugOutput.print(p);
+    if (bus_type == BUS_PPS) {
+      char PPS_output[55];
+      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[pl_start+1] / 6, (msg[pl_start+1] % 6) * 10, msg[pl_start] / 6, (msg[pl_start] % 6) * 10, msg[pl_start-1] / 6, (msg[pl_start-1] % 6) * 10, msg[pl_start-2] / 6, (msg[pl_start-2] % 6) * 10, msg[pl_start-3] / 6, (msg[pl_start-3] % 6) * 10, msg[pl_start-4] / 6, (msg[pl_start-4] % 6) * 10);
+      DebugOutput.print(PPS_output);
+    } else {
+      DebugOutput.print(p);
+    }
   }else{
     DebugOutput.print(F("VT_HOUR_MINUTES len !=3: "));
     SerialPrintData(msg);
@@ -2222,6 +2230,7 @@ char *printTelegram(byte* msg, int query_line) {
               outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
               outBufLen+=sprintf(outBuf+outBufLen,":");
               outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              DebugOutput.print(pvalstr);
               break;
             }
             case VT_ERRORCODE: //  u16 or u8 (via OCI420)

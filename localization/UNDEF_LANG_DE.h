@@ -265,7 +265,6 @@
 #undef STR894_TEXT
 #undef STR895_TEXT
 #undef STR898_TEXT
-#undef STR900_TEXT
 #undef STR904_TEXT
 #undef STR907_TEXT
 #undef STR908_TEXT

@@ -8,8 +8,11 @@
 #include "WProgram.h"
 #endif
 
+#if defined(__SAM3X8E__)
+#else
 #include "BSBSoftwareSerial.h"
 //#include "util/crc16.h"
+#endif
 
 // See this page for further details:
 // http://www.mikrocontroller.net/topic/218643
@@ -65,7 +68,6 @@ private:
   uint8_t rx_pin_read();
 
   Stream* serial;  // Bus interface. Point to Software or HarwareSerial
-
 };
 
 #endif
