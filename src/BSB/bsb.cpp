@@ -14,8 +14,6 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 
   if (rx == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
-    pinMode(22, OUTPUT);    // provide voltage
-    digitalWrite(22, 1);
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
     serial = &Serial1;
