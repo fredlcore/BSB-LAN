@@ -5563,6 +5563,10 @@ ich mir da nicht)
           client.print(freeRam());
           client.println(F(" Bytes <BR>"));
 
+          client.print(F(MENU_TEXT_UPT ": "));
+          client.print(millis());
+          client.println(F("<BR>"));
+
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
           client.print(F(MENU_TEXT_BUS ": "));
