@@ -358,6 +358,7 @@ char version[] = "0.43";
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
+// EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #else
 #include <EEPROM.h>
