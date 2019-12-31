@@ -93,6 +93,7 @@
 #define DEV_108_ALL  108,255 // Brötje Sensotherm BSW-K
 #define DEV_108_100  108,100 // Brötje BSW 8K
 #define DEV_108_160  108,160 // Elco AEROTOP T07-16 mit Logon B WP 61
+#define DEV_108_169  108,169 // Wärmepumpe CTA Optiheat 1-18es RVS61.843D/169
 #define DEV_116_ALL  116,255 // Brötje ISR-SSR B
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
@@ -1432,12 +1433,21 @@ const char STR5102[] PROGMEM = STR5102_TEXT;
 #define STR5103 STR2324
 #define STR5104 STR2325
 #define STR5105 STR2326
+const char STR5108[] PROGMEM = STR5108_TEXT;
+const char STR5109[] PROGMEM = STR5109_TEXT;
 #define STR5120 STR830
 #define STR5124 STR834
 #define STR5125 STR835
 #define STR5126 STR836
 const char STR5130[] PROGMEM = STR5130_TEXT;
 const char STR5131[] PROGMEM = STR5131_TEXT;
+const char STR5139[] PROGMEM = STR5139_TEXT;
+const char STR5140[] PROGMEM = STR5140_TEXT;
+const char STR5141[] PROGMEM = STR5141_TEXT;
+const char STR5142[] PROGMEM = STR5142_TEXT;
+const char STR5146[] PROGMEM = STR5146_TEXT;
+const char STR5148[] PROGMEM = STR5148_TEXT;
+const char STR5151[] PROGMEM = STR5151_TEXT;
 
 // 5400 Trinkwasser Durchlauferhitzer
 #define STR5400 STR710
@@ -2284,6 +2294,7 @@ const char STR8850[] PROGMEM = STR8850_TEXT;
 const char STR8851[] PROGMEM = STR8851_TEXT;
 const char STR8852[] PROGMEM = STR8852_TEXT;
 const char STR8853[] PROGMEM = STR8853_TEXT;
+const char STR8860[] PROGMEM = STR8860_TEXT;
 const char STR8875[] PROGMEM = STR8875_TEXT;
 const char STR8885[] PROGMEM = STR8885_TEXT;
 const char STR8895[] PROGMEM = STR8895_TEXT;
@@ -2324,6 +2335,9 @@ const char STR9038[] PROGMEM = STR9038_TEXT;
 #define STR9053 STR6033
 #define STR9054 STR6034
 #define STR9055 STR6035
+const char STR9056[] PROGMEM = STR9056_TEXT;
+const char STR9057[] PROGMEM = STR9057_TEXT;
+const char STR9058[] PROGMEM = STR9058_TEXT;
 const char STR9071[] PROGMEM = STR9071_TEXT;
 const char STR9072[] PROGMEM = STR9072_TEXT;
 const char STR9073[] PROGMEM = STR9073_TEXT;
@@ -2342,14 +2356,23 @@ const char STR9520[] PROGMEM = STR9520_TEXT;
 const char STR9522[] PROGMEM = STR9522_TEXT;
 const char STR9524[] PROGMEM = STR9524_TEXT;
 const char STR9524_2[] PROGMEM = STR9524_2_TEXT;
+const char STR9526[] PROGMEM = STR9526_TEXT;
 const char STR9527[] PROGMEM = STR9527_TEXT;
 const char STR9529[] PROGMEM = STR9529_TEXT;
+const char STR9529_2[] PROGMEM = STR9529_2_TEXT;
+const char STR9531[] PROGMEM = STR9531_TEXT;
+const char STR9534[] PROGMEM = STR9534_TEXT;
 const char STR9540[] PROGMEM = STR9540_TEXT;
+const char STR9542[] PROGMEM = STR9542_TEXT;
 const char STR9550[] PROGMEM = STR9550_TEXT;
+const char STR9551[] PROGMEM = STR9551_TEXT;
 const char STR9560[] PROGMEM = STR9560_TEXT;
 const char STR9563[] PROGMEM = STR9563_TEXT;
+const char STR9615[] PROGMEM = STR9615_TEXT;
 const char STR9626[] PROGMEM = STR9626_TEXT;
 const char STR9627[] PROGMEM = STR9627_TEXT;
+const char STR9650[] PROGMEM = STR9650_TEXT;
+const char STR9652[] PROGMEM = STR9652_TEXT;
 
 
 /* User-defined command numbers */
@@ -3502,9 +3525,18 @@ const char ENUM5130[] PROGMEM_LATEST = {
 "\x00 " ENUM5130_00_TEXT "\0"
 "\x01 " ENUM5130_01_TEXT
 };
+const char ENUM5130_2[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " ENUM5130_00_TEXT "\0"
+"\x02 " ENUM5130_01_TEXT
+};
 const char ENUM5131[] PROGMEM_LATEST = {
 "\x00 " ENUM5131_00_TEXT "\0"
 "\x01 " ENUM5131_01_TEXT
+};
+const char ENUM5131_2[] PROGMEM_LATEST = {
+"\x01 " ENUM5131_00_TEXT "\0"
+"\x02 " ENUM5131_01_TEXT
 };
 // Konfiguration
 const char ENUM5700[] PROGMEM_LATEST = { //FUJITSU
@@ -6252,6 +6284,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D18A0,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2802,  STR2802,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufzeit Kondens’pumpe
 {0x593D18A1,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nachlaufzeit Kondens’pumpe
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Nachlaufzeit Kondens’pumpe
+{0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_108_169}, // Nachlaufzeit Kondens’pumpe
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Nachlaufzeit Kondens’pumpe //FUJITSU
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // Nachlaufzeit Kondens’pumpe //FUJITSU
 {0x593D05BD,  CAT_WAERMEPUMPE,      VT_TEMP,          2805,  STR2805,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Soll Temp’Spreizung Kondens
@@ -6516,6 +6549,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_103_ALL}, // TW Schaltdifferenz 1 ein
@@ -6567,12 +6601,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Maximum %
 {0x253D0B19,  CAT_TWSPEICHER,       VT_UNKNOWN,       5103,  STR5103,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_UNKNOWN,       5104,  STR5104,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
+{0x053D10DD,  CAT_TWSPEICHER,       VT_PERCENT,       5109,  STR5109,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anl'drehzahl Zwi'kreispumpe //Thision 19 Plus
 {0x253D072C,  CAT_TWSPEICHER,       VT_UNKNOWN,       5120,  STR5120,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
 {0x253D072B,  CAT_TWSPEICHER,       VT_UNKNOWN,       5124,  STR5124,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
 {0x253D0729,  CAT_TWSPEICHER,       VT_UNKNOWN,       5125,  STR5125,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer-B-Band Xp
 {CMD_UNKNOWN, CAT_TWSPEICHER,       VT_UNKNOWN,       5126,  STR5126,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130),     ENUM5130,     FL_OEM, DEV_ALL}, // Umladestrategie
+{0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_195_002}, // Umladestrategie
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131),     ENUM5131,     FL_OEM, DEV_ALL}, // Vergleichstemp Umladung
+{0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_195_002}, // Vergleichstemp Umladung
+{0x253D10C9,  CAT_TWSPEICHER,       VT_TEMP,          5139,  STR5139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreisüberhöhung Nachladen //Thision 19 Plus
+{0x253D0E50,  CAT_TWSPEICHER,       VT_TEMP,          5140,  STR5140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zwischenkreisüberhöhung //Thision 19 Plus
+{0x253D0E68,  CAT_TWSPEICHER,       VT_TEMP,          5141,  STR5141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Überschreit Max //Thision 19 Plus
+{0x253D0E51,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5142,  STR5142,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollw'führung Verzög //Thision 19 Plus
+{0x313D0E67,  CAT_TWSPEICHER,       VT_YESNO,         5146,  STR5146,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Durchladen mit B36 //Thision 19 Plus
+{0x253D0F94,  CAT_TWSPEICHER,       VT_TEMP,          5148,  STR5148,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Minimale Anlauftemp'diff Q33 //Thision 19 Plus
+{0x253D0FED,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5151,  STR5151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Übersch Verzög //Thision 19 Plus
 
 // Trinkwasser Durchl'erhitzer
 {0x313D2FC5,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5400,  STR5400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5400 Komfortsollwert [°C]
@@ -7848,6 +7893,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Wasserdruck
+{0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Wasserdruck
 {0x093D3034,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8328,  STR8328,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsanzeige FA [?]
 {0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT1000,   8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // WGBS Ionisationsstrom [uA?] - logged on OCI700 via LPB
 {0x093D0E16,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Ionisationsstrom [uA?]
@@ -8107,9 +8153,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0B36,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8851,  STR8851,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // TWW Vorreglersollwert
 {0x313D0B24,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8852,  STR8852,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // TWW Durchl'erhitzertemp
 {0x313D0B37,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8853,  STR8853,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // TWW Durchl'erhitzersollwert
+{0x053D0F8E,  CAT_DIAG_VERBRAUCHER, VT_LITERPERMIN,   8860,  STR8860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Trinkwasserdurchfluss //Thision 19 Plus
 {0x053D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8875,  STR8875,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollwert VK1
 {0x063D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8885,  STR8885,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollwert VK2
 {0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8895,  STR8895,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // Vorlaufsollwert Schwimmbad //FUJITSU
+{0x073D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8895,  STR8895,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Vorlaufsollwert Schwimmbad //Thision 19 Plus
 {0x053D0AF9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8900,  STR8900,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schwimmbadtemperatur
 {0x053D0AF2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8901,  STR8901,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schwimmbadsollwert
 {0x053D08C7,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8930,  STR8930,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorreglertemperatur
@@ -8170,6 +8218,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D09F9,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9053,  STR9053,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 2
 {0x053D09FA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9054,  STR9054,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 2
 {0x053D09FB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9055,  STR9055,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 2
+{0x053D0E4D,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9056,  STR9056,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX21 Modul 3 //Thision 19 Plus
+{0x053D0E4E,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9057,  STR9057,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX22 Modul 3 //Thision 19 Plus
+{0x053D0E4F,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9058,  STR9058,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX23 Modul 3 //Thision 19 Plus
 {0x053D1225,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9071,  STR9071,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX31 //FUJITSU
 {0x053D1226,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9072,  STR9072,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX32 //FUJITSU
 {0x053D1227,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9073,  STR9073,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX33 //FUJITSU
@@ -8210,6 +8261,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Sollleistung Vorlüftung
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Vorlüftung
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Vorlüftung
+{0x093D10EB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9504,  STR9504,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Sollleistung Vorlüftung
 {0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Zündung [%]
 {0x0D3D2FC6,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Zündung [%] - logged on OCI700 via LPB
 {0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Zündung [rpm]
@@ -8218,6 +8270,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Zündlast
+{0x093D10EC,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Zündlast
 {0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Min [%]
 {0x0D3D2FC7,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Betrieb. Min [%] - logged on OCI700 via LPB
 {0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Max [%]
@@ -8228,8 +8281,13 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Sollleistung Teillast
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Teillast
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Teillast
+{0x093D10ED,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Teillast
+{0x093D0DE2,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9526,  STR9526,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahltoleranz Teillast //Thision 19 Plus
 {0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Max [rpm]
 {0x093D120E,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9529,  STR9529,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Vollast
+{0x093D10EE,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9529,  STR9529_2,0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Vollast
+{0x093D0DE1,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9531,  STR9531,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahltoleranz Volllast //Thision 19 Plus
+{0x093D0DEB,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9534,  STR9534,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betriebszeit mit Zündlast //Thision 19 Plus
 {0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x2E3D304C,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_064_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
@@ -8239,15 +8297,20 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Nachlüftzeit
+{0x093D0DD9,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9542,  STR9542,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Min //Thision 19 Plus
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
+{0x093D0DEC,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9551,  STR9551,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Stillstand Max //Thision 19 Plus
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Durchlad [%]
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD1, 9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Durchlad [%] - logged on OCI700 via LPB
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Durchlad [%]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
+{0x093D0DE9,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9615,  STR9615,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zwangsvorlüften bei Fehler //Thision 19 Plus
 {0x093D12AF,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9626,  STR9626,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehz Steigerung
 {0x093D12B0,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9627,  STR9627,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehl Y-Abschn
+{0x093D0F87,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9650,  STR9650,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kamintrocknung //Thision 19 Plus
+{0x093D0F89,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_WORD,  9652,  STR9652,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Dauer Kamintrocknung //Thision 19 Plus
 
 //*** virtuelle Zeilen ***
 // * There are a number of telegrams which need to get an "official" ProgNr assigned. Until then ProgNrs GE 10,000
