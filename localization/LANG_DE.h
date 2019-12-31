@@ -140,6 +140,7 @@
 #define MENU_TEXT_QTE "Test beendet"
 #define MENU_TEXT_QFE "Fertig"
 #define MENU_TEXT_TOC "Handbuch"
+#define MENU_TEXT_UPT "Uptime"
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html"
