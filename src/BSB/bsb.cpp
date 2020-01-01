@@ -19,6 +19,8 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   if (HwSerial == true) {
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
+    pinMode(22, OUTPUT);    // provide 3V3 volt also via pin 22 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 22 to get necessary 3V3 voltage.
+    digitalWrite(22, 1);
     serial = &Serial1;
     Serial1.begin(4800, SERIAL_8O1);
   } else {
