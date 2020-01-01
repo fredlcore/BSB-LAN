@@ -52,10 +52,13 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   if (d_addr<=0xff) {
     destAddr = d_addr & 0xFF;
   }
+#if defined(__SAM3X8E__)    // Arduino Due crashes when accessing Serial prior to running setup() function
+#else
   Serial.print(F("My address: "));
   Serial.println(myAddr);
   Serial.print(F("Destination address: "));
   Serial.println(destAddr);
+#endif
   return bus_type;
 }
 
