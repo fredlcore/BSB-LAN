@@ -2,10 +2,14 @@
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
+#if defined(__SAM3X8E__)
+#undef uint_farptr_t
+#define uint_farptr_t const char*
+#endif
+
 #ifndef LANG
 #define LANG EN
 #endif
-
 
 #ifdef DebugTelnet
 #define DebugOutput telnetClient
@@ -24,8 +28,13 @@
 #include FILE1
 #include FILE2
 
+#if defined(__SAM3X8E__)
+#define PROGMEM_LATE 
+#define PROGMEM_LATEST
+#else
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
 #define PROGMEM_LATEST __attribute__ (( __section__(".fini1") ))
+#endif
 
 /* telegram types */
 #define TYPE_QINF 0x01  // request info telegram
