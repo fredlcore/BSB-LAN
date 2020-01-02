@@ -55,7 +55,7 @@ char version[] = "0.43";
  *       0.40  - 21.01.2018
  *       0.41  - 17.03.2019
  *       0.42  - 21.03.2019
- *       0.43  - 06.12.2019
+ *       0.43  - 24.12.2019
  *
  * Changelog:
  *       version 0.43
@@ -65,12 +65,14 @@ char version[] = "0.43";
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
  *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
  *        - Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")
- *        - Many new parameters
+ *        - Many new parameters, please run /Q to see any possible changes for your device family and report back to us!
  *        - Added device families 23 and 29 (Grünenwald heaters)
  *        - Added device families 49, 52, 59 (Weishaupt heaters)
  *        - Added device fmilies 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (various controllers like QAA75 or AVS37)
+ *        - Added device family 171 (Bösch wood pellet system)
  *        - Added device family 172 (SensoTherm BLW Split B (RVS21.826F/200))
  *        - Added device families 186 and 164 (Olymp WHS-500)
+ *        - Added device family 195 variant 2 (Thision 19 Plus / LMS14.111B109)
  *        - Including DHT, 1Wire and burner status parameters (>20000) to MQTT
  *        - English is now default language
  *        - Updated various translations
@@ -690,9 +692,17 @@ uint32_t get_cmdtbl_cmd(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
+#if defined(__SAM3X8E__)
+    c = cmdtbl1[i].cmd;
+#else
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl1[0].cmd) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    c = cmdtbl2[i-entries1].cmd;
+#else
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));    
+#endif
   }
   return c;
 }
@@ -702,9 +712,17 @@ uint16_t get_cmdtbl_line(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
+#if defined(__SAM3X8E__)
+    l = cmdtbl1[i].line;
+#else
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].line) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    l = cmdtbl2[i-entries1].line;
+#else
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));    
+#endif
   }
   return l;
 }
@@ -735,9 +753,17 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    enumstr_len = cmdtbl1[i].enumstr_len;
+#else
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    enumstr_len = cmdtbl2[i-entries1].enumsr_len;
+#else
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));    
+#endif
   }
   return enumstr_len;
 }
@@ -748,9 +774,17 @@ uint8_t get_cmdtbl_category(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
+#if defined(__SAM3X8E__)
+    cat = cmdtbl1[i].category;
+#else
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].category) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    cat = cmdtbl2[i-entries1].category;
+#else
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
+#endif
   }
   return cat;
 }
