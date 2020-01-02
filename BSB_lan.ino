@@ -405,7 +405,7 @@ IPAddress subnet(SubnetIP);
 #ifdef MQTTBrokerIP
 IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
-uint8_t len_idx;//, pl_start;
+
 uint8_t myAddr = bus.getBusAddr();
 uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
@@ -1010,17 +1010,17 @@ void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
   int data_len=0;
   if (bus.getBusType() == BUS_BSB) {
-    data_len=msg[len_idx]-11;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
   }
   if (bus.getBusType() == BUS_LPB) {
-    data_len=msg[len_idx]-14;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
   }
   if (bus.getBusType() == BUS_PPS) {
     data_len=9;
   }
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
-    SerialPrintHex(msg[bus.pl_start+i]);
+    SerialPrintHex(msg[bus.getPl_start()+i]);
     DebugOutput.print(F(" "));
   }
 }
@@ -1189,9 +1189,9 @@ void printLineNumber(uint32_t val) {
 void printBIT(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
   if(data_len == 2 || data_len == 3){
-    if(msg[bus.pl_start]==0 || data_len == 3){
+    if(msg[bus.getPl_start()]==0 || data_len == 3){
       for (int i=7;i>=0;i--) {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.pl_start+1+data_len-2] >> i & 1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+data_len-2] >> i & 1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1221,8 +1221,8 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
   uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1 && bus.getBusType() == BUS_PPS);
 
   if(data_len == 2 || bus.getBusType() == BUS_PPS){
-    if(msg[bus.pl_start]==0 || bus.getBusType() == BUS_PPS){
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.pl_start+1+pps_offset]);
+    if(msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS){
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+pps_offset]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1254,8 +1254,8 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[bus.pl_start]==0){
-      lval=((long(msg[bus.pl_start+1])<<8)+long(msg[bus.pl_start+2])) / divisor;
+    if(msg[bus.getPl_start()]==0){
+      lval=((long(msg[bus.getPl_start()+1])<<8)+long(msg[bus.getPl_start()+2])) / divisor;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1288,8 +1288,8 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[bus.pl_start]==0){
-      lval=(((int16_t)(msg[bus.pl_start+1])<<8) + (int16_t)(msg[bus.pl_start+2])) * multiplier;
+    if(msg[bus.getPl_start()]==0){
+      lval=(((int16_t)(msg[bus.getPl_start()+1])<<8) + (int16_t)(msg[bus.getPl_start()+2])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%d",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1322,8 +1322,8 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[bus.pl_start]==0){
-      lval=((long(msg[bus.pl_start+1])<<24)+(long(msg[bus.pl_start+2])<<16)+(long(msg[bus.pl_start+3])<<8)+long(msg[bus.pl_start+4]))/divider;
+    if(msg[bus.getPl_start()]==0){
+      lval=((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4]))/divider;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1390,11 +1390,11 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
   int8_t pps_offset = (((*PPS_write_enabled == 1 && msg[0] != 0x00) || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus.getBusType() == BUS_PPS);
 
   if(data_len == 3 || data_len == 5){
-    if(msg[bus.pl_start]==0 || bus.getBusType() == BUS_PPS){
+    if(msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS){
       if (data_len == 3) {
-        dval=double((msg[bus.pl_start+1-pps_offset] << 8) + msg[bus.pl_start+2-pps_offset]) / divider;
+        dval=double((msg[bus.getPl_start()+1-pps_offset] << 8) + msg[bus.getPl_start()+2-pps_offset]) / divider;
       } else {
-        dval=double((msg[bus.pl_start+3-pps_offset] << 8) + msg[bus.pl_start+4-pps_offset]) / divider;
+        dval=double((msg[bus.getPl_start()+3-pps_offset] << 8) + msg[bus.getPl_start()+4-pps_offset]) / divider;
       }
       _printFIXPOINT(dval,precision);
     } else {
@@ -1428,8 +1428,8 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,co
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[bus.pl_start]==0){
-      dval=double((long(msg[bus.pl_start+1])<<24)+(long(msg[bus.pl_start+2])<<16)+(long(msg[bus.pl_start+3])<<8)+long(msg[bus.pl_start+4])) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=double((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4])) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1462,8 +1462,8 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
   char *p=outBuf+outBufLen;
 
   if(data_len == 2 || (data_len == 3 && (my_dev_fam == 107 || my_dev_fam == 123 || my_dev_fam == 163))){
-    if(msg[bus.pl_start]==0){
-      dval=double((signed char)msg[bus.pl_start+1+(data_len==3)]) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=double((signed char)msg[bus.getPl_start()+1+(data_len==3)]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1496,8 +1496,8 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[bus.pl_start]==0){
-      dval=double(msg[bus.pl_start+1]) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=double(msg[bus.getPl_start()+1]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1529,11 +1529,11 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
   uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus.getBusType() == BUS_PPS);
   if (data_len == 2 || bus.getBusType() == BUS_PPS) {
-    if (msg[bus.pl_start]==0 || bus.getBusType() == BUS_PPS) {
-      if(msg[bus.pl_start+1+pps_offset]==0){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.pl_start+1+pps_offset],val0);
+    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
+      if(msg[bus.getPl_start()+1+pps_offset]==0){
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.getPl_start()+1+pps_offset],val0);
       } else {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.pl_start+1+pps_offset],val1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.getPl_start()+1+pps_offset],val1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1660,8 +1660,8 @@ void printDateTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[bus.pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.pl_start+3],msg[bus.pl_start+2],msg[bus.pl_start+1]+1900,msg[bus.pl_start+5],msg[bus.pl_start+6],msg[bus.pl_start+7]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2],msg[bus.getPl_start()+1]+1900,msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1689,8 +1689,8 @@ void printDate(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[bus.pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.pl_start+3],msg[bus.pl_start+2]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1719,20 +1719,20 @@ void printTimeProg(byte *msg,byte data_len){
 
   if(data_len == 12){
     outBufLen+=sprintf(outBuf+outBufLen,"1. ");
-    if(msg[bus.pl_start]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.pl_start],msg[bus.pl_start+1],msg[bus.pl_start+2],msg[bus.pl_start+3]);
+    if(msg[bus.getPl_start()]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()],msg[bus.getPl_start()+1],msg[bus.getPl_start()+2],msg[bus.getPl_start()+3]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 2. ");
-    if(msg[bus.pl_start+4]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.pl_start+4],msg[bus.pl_start+5],msg[bus.pl_start+6],msg[bus.pl_start+7]);
+    if(msg[bus.getPl_start()+4]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+4],msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 3. ");
-    if(msg[bus.pl_start+8]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.pl_start+8],msg[bus.pl_start+9],msg[bus.pl_start+10],msg[bus.pl_start+11]);
+    if(msg[bus.getPl_start()+8]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+8],msg[bus.getPl_start()+9],msg[bus.getPl_start()+10],msg[bus.getPl_start()+11]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
@@ -1760,14 +1760,14 @@ void printTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[bus.pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.pl_start+1],msg[bus.pl_start+2]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
     if (bus.getBusType() == BUS_PPS) {
       char PPS_output[55];
-      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[bus.pl_start+1] / 6, (msg[bus.pl_start+1] % 6) * 10, msg[bus.pl_start] / 6, (msg[bus.pl_start] % 6) * 10, msg[bus.pl_start-1] / 6, (msg[bus.pl_start-1] % 6) * 10, msg[bus.pl_start-2] / 6, (msg[bus.pl_start-2] % 6) * 10, msg[bus.pl_start-3] / 6, (msg[bus.pl_start-3] % 6) * 10, msg[bus.pl_start-4] / 6, (msg[bus.pl_start-4] % 6) * 10);
+      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[bus.getPl_start()+1] / 6, (msg[bus.getPl_start()+1] % 6) * 10, msg[bus.getPl_start()] / 6, (msg[bus.getPl_start()] % 6) * 10, msg[bus.getPl_start()-1] / 6, (msg[bus.getPl_start()-1] % 6) * 10, msg[bus.getPl_start()-2] / 6, (msg[bus.getPl_start()-2] % 6) * 10, msg[bus.getPl_start()-3] / 6, (msg[bus.getPl_start()-3] % 6) * 10, msg[bus.getPl_start()-4] / 6, (msg[bus.getPl_start()-4] % 6) * 10);
       DebugOutput.print(PPS_output);
     } else {
       DebugOutput.print(p);
@@ -1796,8 +1796,8 @@ void printLPBAddr(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[bus.pl_start]==0){   // payload Int8 value
-    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.pl_start+1]>>4,(msg[bus.pl_start+1] & 0x0f)+1);
+    if(msg[bus.getPl_start()]==0){   // payload Int8 value
+    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+1]>>4,(msg[bus.getPl_start()+1] & 0x0f)+1);
   }else{
     outBufLen+=sprintf(outBuf+outBufLen,"---");
   }
@@ -2002,10 +2002,10 @@ char *printTelegram(byte* msg, int query_line) {
   // decode parameter
   int data_len=0;
   if (bus.getBusType() == BUS_BSB) {
-    data_len=msg[len_idx]-11;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
   }
   if (bus.getBusType() == BUS_LPB) {
-    data_len=msg[len_idx]-14;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
   } 
   if (bus.getBusType() == BUS_PPS) {
     data_len = 3;
@@ -2013,7 +2013,7 @@ char *printTelegram(byte* msg, int query_line) {
 
   if(data_len < 0){
     DebugOutput.print(F("len ERROR "));
-    DebugOutput.print(msg[len_idx]);
+    DebugOutput.print(msg[bus.getLen_idx()]);
   }else{
     if(data_len > 0){
       if(known){
@@ -2021,8 +2021,8 @@ char *printTelegram(byte* msg, int query_line) {
           char *p=outBuf+outBufLen;
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[bus.pl_start]);
-          if(msg[bus.pl_start]==0x07){
+          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[bus.getPl_start()]);
+          if(msg[bus.getPl_start()]==0x07){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
           DebugOutput.print(p);
@@ -2148,12 +2148,12 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_WEEKDAY: // enum
               if(data_len == 2){
-                if(msg[bus.pl_start]==0){
+                if(msg[bus.getPl_start()]==0){
                   int len=sizeof(ENUM_WEEKDAY);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_WEEKDAY), len);
 //                  memcpy_P(buffer, &ENUM_WEEKDAY,len);
 //                  buffer[len]=0;
-                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus.pl_start+1],0);
+                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus.getPl_start()+1],0);
                 }else{
                   DebugOutput.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -2166,17 +2166,17 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus.getBusType() == 2) {
-                if((msg[bus.pl_start]==0 && data_len==2) || (msg[bus.pl_start]==0 && data_len==3) || (bus.getBusType() == BUS_PPS)) {
+                if((msg[bus.getPl_start()]==0 && data_len==2) || (msg[bus.getPl_start()]==0 && data_len==3) || (bus.getBusType() == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);
 //                    buffer[len]=0;
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.pl_start+1],1);
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.getPl_start()+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       int8_t pps_offset = 0;
                       if (*PPS_write_enabled == 1 && msg[0] != 0x00 && bus.getBusType() == BUS_PPS) pps_offset = -1;
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.pl_start+2+pps_offset],1);
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.getPl_start()+2+pps_offset],1);
                     }
                   }else{
                     DebugOutput.print(F("no enum str "));
@@ -2199,7 +2199,7 @@ char *printTelegram(byte* msg, int query_line) {
               uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
               if(enumstr_ptr!=0) {
                 uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
-                printCustomENUM(enumstr_ptr,enumstr_len,msg[bus.pl_start+idx],1);
+                printCustomENUM(enumstr_ptr,enumstr_len,msg[bus.getPl_start()+idx],1);
               }else{
                 DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
@@ -2217,7 +2217,7 @@ char *printTelegram(byte* msg, int query_line) {
                 uint8_t len = pgm_read_byte_far(enumstr_ptr+1);
                 uint32_t val = 0;
                 for (int x=0; x<len; x++) {
-                  val = val + ((uint32_t)msg[bus.pl_start+idx+x] << (8*(len-1-x)));
+                  val = val + ((uint32_t)msg[bus.getPl_start()+idx+x] << (8*(len-1-x)));
                 }
 
                 outBufLen+=sprintf(outBuf+outBufLen,"%lu",val);
@@ -2231,10 +2231,10 @@ char *printTelegram(byte* msg, int query_line) {
             }
             case VT_STRING: // string
               if(data_len > 0){
-                if(msg[bus.pl_start]!=0){
-                  msg[bus.pl_start + data_len]='\0'; // write terminating zero
-                  DebugOutput.print((char*)&msg[bus.pl_start]);
-                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[bus.pl_start]);
+                if(msg[bus.getPl_start()]!=0){
+                  msg[bus.getPl_start() + data_len]='\0'; // write terminating zero
+                  DebugOutput.print((char*)&msg[bus.getPl_start()]);
+                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[bus.getPl_start()]);
                   remove_char(outBuf, '\'');
                 } else {
                   DebugOutput.print(F("-"));
@@ -2269,12 +2269,12 @@ char *printTelegram(byte* msg, int query_line) {
             }
             case VT_ERRORCODE: //  u16 or u8 (via OCI420)
               if(data_len == 3 || data_len == 2) {
-                if(msg[bus.pl_start]==0){
+                if(msg[bus.getPl_start()]==0){
                   long lval;
                   if (data_len == 3) {
-                    lval=(long(msg[bus.pl_start+1])<<8)+long(msg[bus.pl_start+2]);
+                    lval=(long(msg[bus.getPl_start()+1])<<8)+long(msg[bus.getPl_start()+2]);
                   } else {
-                    lval=long(msg[bus.pl_start+1]);
+                    lval=long(msg[bus.getPl_start()+1]);
                   }
                   uint16_t len=0;
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
@@ -2303,7 +2303,7 @@ char *printTelegram(byte* msg, int query_line) {
             default:
               SerialPrintData(msg);
               for (int i=0; i < data_len; i++) {
-                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.pl_start+i]);
+                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
               }
               outBufLen+=sprintf(outBuf+outBufLen," - unknown type");
               break;
@@ -2324,7 +2324,7 @@ char *printTelegram(byte* msg, int query_line) {
   }
   if(verbose){
     if (bus.getBusType() != BUS_PPS) {
-      SerialPrintRAW(msg,msg[len_idx]+bus.getBusType());      
+      SerialPrintRAW(msg,msg[bus.getLen_idx()]+bus.getBusType());      
     } else {
       if (msg[0] == 0x17) {
         SerialPrintRAW(msg, 10);
@@ -2592,7 +2592,7 @@ void LogTelegram(byte* msg){
             dataFile.print(F(" "));
             dataFile.print(TranslateType(msg[4+(bus.getBusType()*4)], device));
             dataFile.print(F(";"));
-            msg_len = msg[len_idx]+bus.getBusType();
+            msg_len = msg[bus.getLen_idx()]+bus.getBusType();
           } else {
             dataFile.print(F(";"));
             switch (msg[0]) {
@@ -2616,7 +2616,7 @@ void LogTelegram(byte* msg){
 
           // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
-          if (bus.getBusType() != BUS_PPS && (msg[4+(bus.getBusType()*4)] == TYPE_INF || msg[4+(bus.getBusType()*4)] == TYPE_SET || msg[4+(bus.getBusType()*4)] == TYPE_ANS) && msg[len_idx] < 17+bus.getBusType()) {
+          if (bus.getBusType() != BUS_PPS && (msg[4+(bus.getBusType()*4)] == TYPE_INF || msg[4+(bus.getBusType()*4)] == TYPE_SET || msg[4+(bus.getBusType()*4)] == TYPE_ANS) && msg[bus.getLen_idx()] < 17+bus.getBusType()) {
             dataFile.print(F(";"));
             i=0;
             while(type!=VT_UNKNOWN){
@@ -3241,9 +3241,9 @@ int set(int line      // the ProgNr of the heater parameter
       bus.Send(TYPE_QUR, c, msg, tx_msg);
       int data_len;
       if (bus.getBusType() == BUS_LPB) {
-        data_len=msg[len_idx]-14;     // get packet length, then subtract
+        data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
       } else {
-        data_len=msg[len_idx]-11;     // get packet length, then subtract
+        data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
       }
 
       if (data_len > 18) {
@@ -3256,8 +3256,8 @@ int set(int line      // the ProgNr of the heater parameter
       uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
       uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
 
-      for (int x=bus.pl_start;x<bus.pl_start+data_len;x++) {
-        param[x-bus.pl_start] = msg[x];
+      for (int x=bus.getPl_start();x<bus.getPl_start()+data_len;x++) {
+        param[x-bus.getPl_start()] = msg[x];
       }
       param[idx] = t;
       param_len = data_len;
@@ -3431,8 +3431,8 @@ char* query(int line_start  // begin at this line (ProgNr)
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
           msg[4+(bus.getBusType()*4)]=TYPE_ANS;
-          msg[bus.pl_start+1]=temp_val >> 8;
-          msg[bus.pl_start+2]=temp_val & 0xFF;
+          msg[bus.getPl_start()+1]=temp_val >> 8;
+          msg[bus.getPl_start()+2]=temp_val & 0xFF;
 /*
           msg[5] = c >> 24;
           msg[6] = c >> 16 & 0xFF;
@@ -3475,9 +3475,9 @@ char* query(int line_start  // begin at this line (ProgNr)
         uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
         int data_len;
         if (bus.getBusType() == BUS_LPB) {
-          data_len=msg[len_idx]-14;     // get packet length, then subtract
+          data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
         } else {
-          data_len=msg[len_idx]-11;     // get packet length, then subtract
+          data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
         }
 
 /*
@@ -3508,7 +3508,7 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.println(F("'>"));
             if (type == VT_ONOFF || type == VT_YESNO) {
               uint8_t pps_offset = (bus.getBusType() == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
-              int val=msg[bus.pl_start+1+pps_offset];
+              int val=msg[bus.getPl_start()+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
                 client.print(F(" selected"));
@@ -4103,7 +4103,7 @@ void loop() {
         uint32_t cmd;
         cmd=(uint32_t)msg[5+(bus.getBusType()*4)]<<24 | (uint32_t)msg[6+(bus.getBusType()*4)]<<16 | (uint32_t)msg[7+(bus.getBusType()*4)] << 8 | (uint32_t)msg[8+(bus.getBusType()*4)];
         if(cmd==0x0500006C) {   // set Time from BC, same CommandID for BSB and LPB
-          setTime(msg[bus.pl_start+5], msg[bus.pl_start+6], msg[bus.pl_start+7], msg[bus.pl_start+3], msg[bus.pl_start+2], msg[bus.pl_start+1]+1900);
+          setTime(msg[bus.getPl_start()+5], msg[bus.getPl_start()+6], msg[bus.getPl_start()+7], msg[bus.getPl_start()+3], msg[bus.getPl_start()+2], msg[bus.getPl_start()+1]+1900);
         }
 
         if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
@@ -4133,9 +4133,9 @@ void loop() {
           unsigned long brenner_end;
           boolean reset_brenner_timer = 0;
           DebugOutput.print(F("INF: Brennerstatus: "));
-          DebugOutput.println(msg[bus.pl_start]);      // first payload byte
+          DebugOutput.println(msg[bus.getPl_start()]);      // first payload byte
 
-          if(msg[bus.pl_start]==0x04) {       // Stufe 1
+          if(msg[bus.getPl_start()]==0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
@@ -4145,7 +4145,7 @@ void loop() {
             }
             brenner_stufe=1;
           }
-          if(msg[bus.pl_start]==0x14) {       // Stufe 2 (only oil furnace)
+          if(msg[bus.getPl_start()]==0x14) {       // Stufe 2 (only oil furnace)
             if(brenner_start_2==0){        // has not been timed
               brenner_start_2=millis();   // keep current timestamp
               brenner_count_2++;          // increment number of starts
@@ -4175,7 +4175,7 @@ void loop() {
             }
             reset_brenner_timer = 0;
           }
-          if (msg[bus.pl_start]==0x00) {    // brenner off
+          if (msg[bus.getPl_start()]==0x00) {    // brenner off
             brenner_end=millis();      // timestamp the end
             brenner_stufe=0;
             if(brenner_start!=0){        // start has been timed
@@ -5163,13 +5163,13 @@ ich mir da nicht)
                           client.println(outBuf);
                           client.println(F("<br>"));
                         }
-                        for (int i=0;i<tx_msg[len_idx]+bus.getBusType();i++) {
+                        for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
                           client.print(tx_msg[i], HEX);
                           client.print(F(" "));
                         }
                         client.println(F("<br>"));
-                        for (int i=0;i<msg[len_idx]+bus.getBusType();i++) {
+                        for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
                           client.print(msg[i], HEX);
                           client.print(F(" "));
@@ -5212,14 +5212,14 @@ ich mir da nicht)
             client.println(outBuf);
             client.println(F("<br>"));
           }
-          for (int i=0;i<tx_msg[len_idx]+bus.getBusType();i++) {
+          for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
             if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
             client.print(tx_msg[i], HEX);
             client.print(F(" "));
           }
           client.println();
           client.println(F("<br>"));
-          for (int i=0;i<msg[len_idx]+bus.getBusType();i++) {
+          for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
             if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
             client.print(msg[i], HEX);
             client.print(F(" "));
@@ -5847,20 +5847,14 @@ ich mir da nicht)
           client.print(F(MENU_TEXT_BUS ": "));
           if (p[2]=='0') {
             bus.setBusType(BUS_BSB, myAddr, destAddr);
-            len_idx = 3;
-            //pl_start = 9;
             client.println(F("BSB"));
           }
           if (p[2]=='1') {
             bus.setBusType(BUS_LPB, myAddr, destAddr);
-            len_idx = 1;
-            //pl_start = 13;
             client.println(F("LPB"));
           } 
           if (p[2]=='2') {
             bus.setBusType(BUS_PPS, myAddr);
-            len_idx = 9;
-            //pl_start = 6;
             client.println(F("PPS"));
           }           
           if (bus.getBusType() != BUS_PPS) {
@@ -6770,21 +6764,6 @@ void setup() {
 #if defined(__SAM3X8E__)
   Wire.begin();
 #endif
-
-  switch (bus.getBusType()) {
-    case 0:
-      len_idx = 3;
-      //pl_start = 9;
-      break;
-    case 1:
-      len_idx = 1;
-      //pl_start = 13;
-      break;
-    case 2:
-      len_idx = 9;
-      //pl_start = 6;
-      break;
-  }
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;

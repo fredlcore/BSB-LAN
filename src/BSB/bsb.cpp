@@ -19,8 +19,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
     serial = &Serial1;
     Serial1.begin(4800, SERIAL_8O1);
   } else {
-#if defined(__SAM3X8E__)
-#else
+#if !defined(__SAM3X8E__)
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
     serial = serial_sw;
     serial_sw->begin(4800);
@@ -60,7 +59,6 @@ void BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   Serial.println(myAddr);
   Serial.print(F("Destination address: "));
   Serial.println(destAddr);
-  //return bus_type;
 }
 
 uint8_t BSB::getBusType() {
@@ -73,6 +71,17 @@ uint8_t BSB::getBusAddr() {
 
 uint8_t BSB::getBusDest() {
   return destAddr;
+}
+
+uint8_t BSB::getLen_idx() {
+  if (bus_type == 2) {
+    return len_idx +1;  // different only for BUS_PPS
+  }
+  return len_idx;
+}
+
+uint8_t BSB::getPl_start() {
+  return pl_start;
 }
 
 
@@ -96,7 +105,6 @@ void BSB::print(byte* msg) {
 // Receives a message and stores it to buffer
 boolean BSB::Monitor(byte* msg) {
   unsigned long int ts;
-  byte read;
   byte i=0;
     
   if (serial->available() > 0) {
@@ -107,20 +115,15 @@ boolean BSB::Monitor(byte* msg) {
     Serial.print(" ");
     while (serial->available() > 0) {
       // Read serial data...
-      read = serial->read();
-      if (bus_type != 2) {
-        read = read ^ 0xFF;
-      }
-
-      msg[i] = read;
-      i++;
+      msg[i] = readByte();;
 
       // output
-      if(read<16){  
+      if(msg[i]<16){  
         Serial.print("0");
       }
-      Serial.print(read, HEX);
+      Serial.print(msg[i], HEX);
       Serial.print(" ");
+      i++;
       // if no inout available -> wait
       if (serial->available() == 0) {
         unsigned long timeout = millis() + 3;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
@@ -139,14 +142,11 @@ boolean BSB::Monitor(byte* msg) {
 
 bool BSB::GetMessage(byte* msg) {
   byte i=0,timeout;
-  byte read;
+  uint8_t read;
 
   while (serial->available() > 0) {
     // Read serial data...
-    read = serial->read();
-    if (bus_type != 2) {
-      read = read ^ 0xFF;
-    }
+    read = readByte();
 
 #if DEBUG_LL
     Serial.println();    
@@ -182,10 +182,7 @@ bool BSB::GetMessage(byte* msg) {
       }
       // read the rest of the message
       while (serial->available() > 0) {
-        read = serial->read();
-        if (bus_type != 2) {
-          read = read ^ 0xFF;
-        }
+        read = readByte();
         msg[i++] = read;
 #if DEBUG_LL
         if(read<16){  
@@ -420,7 +417,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     serial->write(data);
     if (HwSerial == true) {
       serial->flush();
-      serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+      readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
     if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
       // Collision
@@ -447,7 +444,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 
   if (HwSerial == true) {
     while(serial->available()) {
-      serial->read();
+      readByte();
     }
   }
 
@@ -539,4 +536,12 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 
 uint8_t BSB::rx_pin_read() {
   return * portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin);
+}
+
+uint8_t BSB::readByte() {
+  byte read = serial->read();
+  if (bus_type != 2) {
+    read = read ^ 0xFF;
+  }
+  return read;
 }
