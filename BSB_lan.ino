@@ -4969,7 +4969,7 @@ ich mir da nicht)
               if (chars_read > 0) client.write(loglineBuf, chars_read);
             }
 
-            DebugOutput.println(isHeadRequest?"HEAD":"GET" + " request received");
+            DebugOutput.println(isHeadRequest?(String)"HEAD":(String)"GET" + " request received");
             
             dataFile.close();
           }
