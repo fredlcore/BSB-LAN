@@ -458,7 +458,7 @@ uint8_t json_types[20] = { 0 };
 // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format  
 
-#ifdef LOGGER
+#if defined  LOGGER || defined  WEBSERVER
 //  #include <SD.h>   // if you run into troubles with SdFat.h, just remove the following two lines and uncomment this line.
   #include "src/SdFat/SdFat.h"
   SdFat SD;
@@ -3698,6 +3698,109 @@ void SetDateTime(){
   }
 }
 
+#ifdef WEBSERVER
+//https://forum.arduino.cc/index.php?topic=198103.15
+//================================================================================
+// Begin calcdayofweek( D, M, Y)
+//================================================================================
+
+byte calcDayOfWeek( byte d, byte m, unsigned int y )                // Call routine using DD, MM, YY, it returns the dayoftheweek, where Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6, Sat=7
+{
+
+  while (y >= 400) {
+    y -= 400;
+  }                                    // while (y >= 400) { y = y - 400; }cast out multiples of 400 from the entered year (step down in steps of 400?)
+
+  boolean leap = ((y & 3) == 0);                                    // do we have a leap-year?? if so, leap = 'true' (year can be divided by 4)
+
+  if ((y == 100) || (y == 200) || (y == 300)) leap = false;         // check if the year is a 'century', they are NO leapyears, but any multiple of '400' IS a leapyear
+  if (d > 31 || d == 0) return 0;                                   // check for false dates, if so, exit in error, return '0'
+
+  byte w = 6;                                                       // temp weekday variable used to determine the weekday, starts at '6' because of .....????
+  while (y >= 100) {
+    y -= 100;
+    w -= 2;
+  }                             // while (y >= 100) {y = y - 100; w = w - 2; } step down the year, and step down weekday too. Weekday -2 for every 100 year?
+
+  w += (y + (y >> 2));                                              // w = w + (y + (y >> 2));
+
+  // correction for Jan. and Feb. of leap year
+  if (leap && (m <= 2)) {
+    w--;
+  }                                    // if ( leap = 'true' && (m <= 2) ) { w = w - 1; }
+
+  // using substraction iso addition makes the while at end possible 1 iteration faster ???
+  switch (m)                                                        // find weekday in the 12 month's
+  {
+    case 1:                                                     // if January
+      w++;                                                        // weekday = weekday +1 ;
+      break;
+
+    case 2:                                                     // if February
+      if (d > (leap ? 29 : 28)) return 0;                         // ???? if leap AND date = 29 or 28, return 0; so exit in error, return '0'
+      w += 4;                                                     // weekday = weekday + 4;
+      break;
+
+    case 3:                                                     // if March
+      w += 4;                                                     // weekday = weekday + 4;
+      break;
+
+    case 5:                                                     // if May
+      w += 2;                                                     // weekday = weekday +2;
+      break;
+
+    case 7:                                                     // if July
+      break;                                                      // do nothing
+
+    case 8:                                                     // if August
+      w += 3;                                                     // weekday = weekday + 3;
+      break;
+
+    case 10:                                                    // if October
+      w++;                                                        // weekday = weekday + 1;
+      break;
+
+    case 12:                                                    // if December
+      w += 6;                                                     // weekday = weekday + 6;
+      break;
+
+    default:                                                    // here when April, June, September, November
+      if (d > 30) return 0;                                       // if date bigger than 30: impossible in these months, so exit with error, return '0'
+      switch (m)                                                  // process these other months
+      {
+        case 4:                                               // if April
+          break;                                                // do nothing
+
+        case 6:                                               // if June
+          w += 5;                                               // weekday = weekday + 5;
+          break;
+
+        case 9:                                               // if September
+          w += 6;                                               // weekday = weekday + 6;
+          break;
+
+        case 11:                                              // if November
+          w += 4;                                               // weekday = weekday + 4;
+          break;
+
+        default:                                              // no month's left to process, an answer must have been found before this point
+          return 0;                                             // so exit in error, return '0'
+      }
+  }
+
+  w += d;                                                           // weekday = weekday + date;
+
+  // there are only 7 days in a week, so we "cast out" sevens
+  while (w > 7) {
+    w = ( w >> 3 ) + ( w & 7 );
+  }                     // while (w > 7) { w = (w >> 3) + (w & 7); }
+  return w;                                                         // end of routine, return the weekday, where Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6, Sat=7
+}
+//================================================================================
+// End calcdayofweek( D, M, Y)
+//================================================================================
+#endif
+
 #ifdef DHT_BUS
 
 /** *****************************************************************
@@ -4728,6 +4831,11 @@ ich mir da nicht)
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
         String urlString = String(cLineBuffer);
+#ifdef WEBSERVER
+        // Check for HEAD request (for file caching)
+        boolean isHeadRequest = false;
+        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) isHeadRequest = true;
+#endif
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
         DebugOutput.println(urlString);
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
@@ -4768,6 +4876,116 @@ ich mir da nicht)
         }
         *p='/';
 #endif
+
+#ifdef WEBSERVER
+        urlString = String(p + 1);
+        DebugOutput.println("URL: " + urlString);
+        int mimetype = 0; //unknown MIME type
+        if (urlString.endsWith(".html") || urlString.endsWith(".htm")) mimetype = 1;
+        else if(urlString.endsWith(".css")) mimetype = 2;
+        else if(urlString.endsWith(".js")) mimetype = 3; 
+        else if(urlString.endsWith(".xml")) mimetype = 4; 
+        else if(urlString.endsWith(".jpg")) mimetype = 101;
+        else if(urlString.endsWith(".gif")) mimetype = 102;
+        else if(urlString.endsWith(".svg")) mimetype = 103;
+        else if(urlString.endsWith(".png")) mimetype = 104;
+        // You can add more MIME types here
+
+        if(mimetype)  {
+          File dataFile;
+          dataFile = SD.open(urlString);
+          // if the file is available, read from it:
+          if (dataFile) {
+            DebugOutput.println("file opened from SD: " + urlString);
+            client.print(F("HTTP/1.1 200 OK\nContent-Type: "));
+            switch(mimetype){
+              case 1: client.println("text/html"); break;
+              case 2: client.println("text/css"); break;
+              case 3: client.println("application/x-javascript"); break;
+              case 4: client.println("application/xml"); break;
+              case 101: client.println("image/jpeg"); break;
+              case 102: client.println("image/gif"); break;
+              case 103: client.println("image/svg"); break;
+              case 104: client.println("image/png"); break;
+              default: client.println("text");
+            }
+
+            client.println("Content-Length: " + dataFile.size());
+            client.println("Cache-Control: max-age=84400, must-revalidate");
+            dir_t d;
+            if (dataFile.dirEntry(&d)) {
+              String monthname;
+              String downame;
+              uint16_t lastWrtYr =  (FAT_YEAR(d.lastWriteDate));
+              byte monthval = FAT_MONTH(d.lastWriteDate);
+              byte dayval = FAT_DAY(d.lastWriteDate);
+              switch (calcDayOfWeek(dayval, monthval, lastWrtYr))
+              {
+                case 1: downame = "Sun"; break;
+                case 2: downame = "Mon"; break;
+                case 3: downame = "Tue"; break;
+                case 4: downame = "Wed"; break;
+                case 5: downame = "Thu"; break;
+                case 6: downame = "Fri"; break;
+                case 7: downame = "Sat"; break;
+                default: downame = "ERR"; break;
+              }
+
+              switch (monthval)
+              {
+                case 1: monthname = "Jan"; break;
+                case 2: monthname = "Feb"; break;
+                case 3: monthname = "Mar"; break;
+                case 4: monthname = "Apr"; break;
+                case 5: monthname = "May"; break;
+                case 6: monthname = "Jun"; break;
+                case 7: monthname = "Jul"; break;
+                case 8: monthname = "Aug"; break;
+                case 9: monthname = "Sep"; break;
+                case 10: monthname = "Oct"; break;
+                case 11: monthname = "Nov"; break;
+                case 12: monthname = "Dec"; break;
+                default: monthname = "ERR"; break;
+              }
+
+              client.println("Last-Modified: " +
+                             downame + ", " +
+                             (dayval < 10 ? "0" : "") + dayval + " " +
+                             monthname + " " +
+                             lastWrtYr + " " +
+                             (FAT_HOUR(d.lastWriteTime) < 10 ? "0" : "") + FAT_HOUR(d.lastWriteTime) +
+                             (FAT_MINUTE(d.lastWriteTime) < 10 ? ":0" : ":") + FAT_MINUTE(d.lastWriteTime) +
+                             (FAT_SECOND(d.lastWriteTime) < 10 ? ":0" : ":") + FAT_SECOND(d.lastWriteTime) + " GMT");
+            }
+            client.println();
+            if (!isHeadRequest) {
+              int logbuflen = 512;
+              byte loglineBuf[logbuflen];
+              int chars_read = dataFile.read(&loglineBuf , logbuflen);
+              while (chars_read == logbuflen) {
+                client.write(loglineBuf, logbuflen);
+                chars_read = dataFile.read(&loglineBuf , logbuflen);
+              }
+              if (chars_read > 0) client.write(loglineBuf, chars_read);
+            }
+
+            DebugOutput.println(isHeadRequest?"HEAD":"GET" + " request received");
+            
+            dataFile.close();
+          }
+          else
+          {
+            client.println("HTTP/1.1 404 Not Found");
+            client.println("Content-Type: text/html");
+            client.println();
+            client.println("<h2>File Not Found!</h2><br>File name: " + urlString);
+
+          }
+          client.flush();
+          break;
+        }
+#endif
+        
         if (p[1] != 'J') {
           client.flush();
         }
@@ -6834,7 +7052,7 @@ void setup() {
   }
 
 
-#ifdef LOGGER
+#if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
