@@ -4747,8 +4747,7 @@ ich mir da nicht)
         }
       }
       DebugOutput.println(F("."));
-      keepaliveConnect = false; 
-      break;
+      client.stop();
     }
 #endif
     boolean keepaliveConnect = true;
