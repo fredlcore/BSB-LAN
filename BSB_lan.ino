@@ -4747,10 +4747,12 @@ ich mir da nicht)
         }
       }
       DebugOutput.println(F("."));
-      client.stop();
+      keepaliveConnect = false; 
+      break;
     }
 #endif
-
+    boolean keepaliveConnect = true;
+    while(keepaliveConnect){
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
@@ -4821,7 +4823,8 @@ ich mir da nicht)
           client.println(F("<!DOCTYPE HTML>"));
           client.println(F("<HTML>  <HEAD>   <TITLE>Error</TITLE>"));
           client.println(F(" </HEAD> <BODY><H1>401 Unauthorized.</H1></BODY> </HTML>"));
-          client.stop();
+          keepaliveConnect = false; 
+          break;
         }
         // otherwise continue like normal
 #endif
@@ -4878,7 +4881,11 @@ ich mir da nicht)
 #endif
 
 #ifdef WEBSERVER
-        urlString = String(p + 1);
+        if(!strcmp(p,"/")){
+          urlString = "index.html";
+        }
+        else
+          urlString = String(p + 1);
         DebugOutput.println("URL: " + urlString);
         int mimetype = 0; //unknown MIME type
         if (urlString.endsWith(".html") || urlString.endsWith(".htm")) mimetype = 1;
@@ -4975,6 +4982,11 @@ ich mir da nicht)
           }
           else
           {
+          // simply print the website if no index.html on SD card 
+            if(!strcmp(p,"/")){
+              webPrintSite();
+              break;
+            }
             client.println("HTTP/1.1 404 Not Found");
             client.println("Content-Type: text/html");
             client.println();
@@ -4989,18 +5001,28 @@ ich mir da nicht)
         if (p[1] != 'J') {
           client.flush();
         }
+#ifndef WEBSERVER
         // simply print the website
         if(!strcmp(p,"/")){
           webPrintSite();
           break;
         }
+#endif
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTUVXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTUVWXY",p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
         }
+
+        //Send HTML pages without header and footer (For external interface)
+        boolean needFullHTML = true;
+        if(p[1]=='W'){
+          p++;
+          needFullHTML = false;
+        }
+
         // setting verbosity level
         if(p[1]=='V'){
           p+=2;
@@ -6106,6 +6128,7 @@ ich mir da nicht)
             client.println(F("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>"));
           }
           webPrintFooter();
+          keepaliveConnect = false; 
           client.stop();
 #ifdef LOGGER
           File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -6394,10 +6417,12 @@ ich mir da nicht)
       delay(1);
       loopCount++;
       if(loopCount > 1000) {
-        client.stop();
         DebugOutput.println("\r\nTimeout");
+        keepaliveConnect = false; 
+        break;
       }
 
+    }
     }
     // give the web browser time to receive the data
     delay(1);
