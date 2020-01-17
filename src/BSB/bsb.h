@@ -63,7 +63,7 @@ private:
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
-  uint8_t rx_pin_read();
+  boolean rx_pin_read();
 
   Stream* serial;
 
