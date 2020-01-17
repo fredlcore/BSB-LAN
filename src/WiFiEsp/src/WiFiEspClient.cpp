@@ -1,3 +1,4 @@
+#if defined(__AVR__)
 /*--------------------------------------------------------------------
 This file is part of the Arduino WiFiEsp library.
 
@@ -288,3 +289,4 @@ size_t WiFiEspClient::printFSH(const __FlashStringHelper *ifsh, bool appendCrLf)
 
 	return size;
 }
+#endif

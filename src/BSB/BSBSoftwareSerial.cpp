@@ -1,3 +1,4 @@
+#if defined(__AVR__)
 /*
 SoftwareSerial.cpp (formerly NewSoftSerial.cpp) - 
 Multi-instance software serial library for Arduino/Wiring
@@ -501,3 +502,4 @@ int BSBSoftwareSerial::peek()
   // Read from "head"
   return _receive_buffer[_receive_buffer_head];
 }
+#endif
