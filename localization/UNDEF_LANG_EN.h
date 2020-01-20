@@ -65,6 +65,9 @@
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
 #undef MENU_TEXT_TOC
+#undef MENU_TEXT_NVS
+#undef MENU_TEXT_NVA
+#undef MENU_TEXT_NVN
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
