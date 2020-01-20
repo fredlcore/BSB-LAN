@@ -4782,7 +4782,6 @@ ich mir da nicht)
         // Got an EOL character
         DebugOutput.println();
 
-        // perform HTTP-Authentification by reading the remaining client data and look for credentials
         // Parsing headers
         char linebuf[80];
         uint8_t charcount=0;
@@ -4801,11 +4800,12 @@ ich mir da nicht)
             if (c == '\n') {
               // you're starting a new line
               currentLineIsBlank = true;
-              if (strstr(linebuf,"Accept-encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
+              if (strstr(linebuf,F("Accept-encoding:")) != 0 && strstr(linebuf+16, F("gzip")) != 0) {
                 gzipaccepted=true;
               }
 #ifdef USER_PASS_B64
-              if (strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
+        // perform HTTP-Authentification by reading the remaining client data and look for credentials
+              else if (strstr(linebuf,F("Authorization: Basic"))!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
                 authenticated=true;
               }
 #else
@@ -4905,7 +4905,7 @@ ich mir da nicht)
         // You can add more MIME types here
 
         if(mimetype)  {
-          File dataFile;
+          File dataFile = NULL;
           boolean gzippedfile = false;
           if (gzipaccepted) dataFile = SD.open(urlString + ".gz");
           if (dataFile) {
