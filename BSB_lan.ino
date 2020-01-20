@@ -4750,8 +4750,7 @@ ich mir da nicht)
       client.stop();
     }
 #endif
-    boolean keepaliveConnect = true;
-    while(keepaliveConnect){
+
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
@@ -4822,8 +4821,7 @@ ich mir da nicht)
           client.println(F("<!DOCTYPE HTML>"));
           client.println(F("<HTML>  <HEAD>   <TITLE>Error</TITLE>"));
           client.println(F(" </HEAD> <BODY><H1>401 Unauthorized.</H1></BODY> </HTML>"));
-          keepaliveConnect = false; 
-          break;
+          client.stop();
         }
         // otherwise continue like normal
 #endif
@@ -4881,20 +4879,21 @@ ich mir da nicht)
 
 #ifdef WEBSERVER
         if(!strcmp(p,"/")){
-          urlString = "index.html";
+          urlString = F("index.html");
         }
         else
           urlString = String(p + 1);
         DebugOutput.println("URL: " + urlString);
         int mimetype = 0; //unknown MIME type
-        if (urlString.endsWith(".html") || urlString.endsWith(".htm")) mimetype = 1;
-        else if(urlString.endsWith(".css")) mimetype = 2;
-        else if(urlString.endsWith(".js")) mimetype = 3; 
-        else if(urlString.endsWith(".xml")) mimetype = 4; 
-        else if(urlString.endsWith(".jpg")) mimetype = 101;
-        else if(urlString.endsWith(".gif")) mimetype = 102;
-        else if(urlString.endsWith(".svg")) mimetype = 103;
-        else if(urlString.endsWith(".png")) mimetype = 104;
+        if (urlString.endsWith(F(".html")) || urlString.endsWith(F(".htm"))) mimetype = 1;
+        else if(urlString.endsWith(F(".css"))) mimetype = 2;
+        else if(urlString.endsWith(F(".js"))) mimetype = 3; 
+        else if(urlString.endsWith(F(".xml"))) mimetype = 4; 
+        else if(urlString.endsWith(F(".txt"))) mimetype = 5; 
+        else if(urlString.endsWith(F(".jpg"))) mimetype = 101;
+        else if(urlString.endsWith(F(".gif"))) mimetype = 102;
+        else if(urlString.endsWith(F(".svg"))) mimetype = 103;
+        else if(urlString.endsWith(F(".png"))) mimetype = 104;
         // You can add more MIME types here
 
         if(mimetype)  {
@@ -4902,22 +4901,24 @@ ich mir da nicht)
           dataFile = SD.open(urlString);
           // if the file is available, read from it:
           if (dataFile) {
-            DebugOutput.println("file opened from SD: " + urlString);
+            DebugOutput.print(F("file opened from SD: ")); DebugOutput.println(urlString);
             client.print(F("HTTP/1.1 200 OK\nContent-Type: "));
             switch(mimetype){
-              case 1: client.println("text/html"); break;
-              case 2: client.println("text/css"); break;
-              case 3: client.println("application/x-javascript"); break;
-              case 4: client.println("application/xml"); break;
-              case 101: client.println("image/jpeg"); break;
-              case 102: client.println("image/gif"); break;
-              case 103: client.println("image/svg"); break;
-              case 104: client.println("image/png"); break;
-              default: client.println("text");
+              case 1: client.println(F("text/html")); break;
+              case 2: client.println(F("text/css")); break;
+              case 3: client.println(F("application/x-javascript")); break;
+              case 4: client.println(F("application/xml")); break;
+              // case 5 below
+              case 101: client.println(F("image/jpeg")); break;
+              case 102: client.println(F("image/gif")); break;
+              case 103: client.println(F("image/svg")); break;
+              case 104: client.println(F("image/png")); break;
+              case 5:
+              default: client.println(F("text"));
             }
 
             client.println("Content-Length: " + dataFile.size());
-            client.println("Cache-Control: max-age=84400, must-revalidate");
+            client.println(F("Cache-Control: max-age=84400, must-revalidate"));
             dir_t d;
             if (dataFile.dirEntry(&d)) {
               String monthname;
@@ -4927,31 +4928,31 @@ ich mir da nicht)
               byte dayval = FAT_DAY(d.lastWriteDate);
               switch (calcDayOfWeek(dayval, monthval, lastWrtYr))
               {
-                case 1: downame = "Sun"; break;
-                case 2: downame = "Mon"; break;
-                case 3: downame = "Tue"; break;
-                case 4: downame = "Wed"; break;
-                case 5: downame = "Thu"; break;
-                case 6: downame = "Fri"; break;
-                case 7: downame = "Sat"; break;
-                default: downame = "ERR"; break;
+                case 1: downame = F("Sun"); break;
+                case 2: downame = F("Mon"); break;
+                case 3: downame = F("Tue"); break;
+                case 4: downame = F("Wed"); break;
+                case 5: downame = F("Thu"); break;
+                case 6: downame = F("Fri"); break;
+                case 7: downame = F("Sat"); break;
+                default: downame = F("ERR"); break;
               }
 
               switch (monthval)
               {
-                case 1: monthname = "Jan"; break;
-                case 2: monthname = "Feb"; break;
-                case 3: monthname = "Mar"; break;
-                case 4: monthname = "Apr"; break;
-                case 5: monthname = "May"; break;
-                case 6: monthname = "Jun"; break;
-                case 7: monthname = "Jul"; break;
-                case 8: monthname = "Aug"; break;
-                case 9: monthname = "Sep"; break;
-                case 10: monthname = "Oct"; break;
-                case 11: monthname = "Nov"; break;
-                case 12: monthname = "Dec"; break;
-                default: monthname = "ERR"; break;
+                case 1: monthname = F("Jan"); break;
+                case 2: monthname = F("Feb"); break;
+                case 3: monthname = F("Mar"); break;
+                case 4: monthname = F("Apr"); break;
+                case 5: monthname = F("May"); break;
+                case 6: monthname = F("Jun"); break;
+                case 7: monthname = F("Jul"); break;
+                case 8: monthname = F("Aug"); break;
+                case 9: monthname = F("Sep"); break;
+                case 10: monthname = F("Oct"); break;
+                case 11: monthname = F("Nov"); break;
+                case 12: monthname = F("Dec"); break;
+                default: monthname = F("ERR"); break;
               }
 
               client.println("Last-Modified: " +
@@ -4986,10 +4987,8 @@ ich mir da nicht)
               webPrintSite();
               break;
             }
-            client.println("HTTP/1.1 404 Not Found");
-            client.println("Content-Type: text/html");
-            client.println();
-            client.println("<h2>File Not Found!</h2><br>File name: " + urlString);
+            client.print(F("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
+            client.println(urlString);
 
           }
           client.flush();
@@ -5246,7 +5245,7 @@ ich mir da nicht)
         }
 
         if(p[1]=='Q') {
-          webPrintHeader();
+          if(needFullHTML) webPrintHeader();
 
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus_type == 0) {
@@ -5424,7 +5423,7 @@ ich mir da nicht)
 
           client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
           bus.setBusType(bus_type, myAddr, destAddr);   // return to original destination address
-          webPrintFooter();
+          if(needFullHTML) webPrintFooter();
           break;
         }
 
@@ -5826,7 +5825,7 @@ ich mir da nicht)
         }
 #endif
         if (p[1]=='C'){ // dump configuration
-          webPrintHeader();
+          if(needFullHTML) webPrintHeader();
           client.println(F(MENU_TEXT_CFG "<BR><BR>"));
 //          client.println(F("BSB pins: "));
 //          client.println(bus);
@@ -5988,7 +5987,7 @@ ich mir da nicht)
           #endif
 
           client.println(F("<BR>"));
-          webPrintFooter();
+          if(needFullHTML) webPrintFooter();
 
           DebugOutput.println(F("EEPROM dump:"));
           for (uint16_t x=0; x<EEPROM.length(); x++) {
@@ -6127,7 +6126,6 @@ ich mir da nicht)
             client.println(F("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>"));
           }
           webPrintFooter();
-          keepaliveConnect = false; 
           client.stop();
 #ifdef LOGGER
           File dataFile = SD.open("datalog.txt", FILE_WRITE);
@@ -6416,12 +6414,10 @@ ich mir da nicht)
       delay(1);
       loopCount++;
       if(loopCount > 1000) {
+        client.stop();
         DebugOutput.println("\r\nTimeout");
-        keepaliveConnect = false; 
-        break;
       }
 
-    }
     }
     // give the web browser time to receive the data
     delay(1);
