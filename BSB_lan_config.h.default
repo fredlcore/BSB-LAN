@@ -185,6 +185,9 @@ byte monitor = 0;
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop
 //#define CUSTOM_COMMANDS
 
+// Check for new versions when accessing BSB-LAN's main page
+#define VERSION_CHECK 1
+
 //#define DEBUG
 //#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port
 
