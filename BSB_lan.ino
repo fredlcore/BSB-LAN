@@ -1,5 +1,3 @@
-char version[] = "0.43";
-
 /*
  * 
  * BSB Boiler-System-Bus LAN Interface
@@ -425,11 +423,13 @@ char div_unit[10];
 
 #ifdef WIFI
 WiFiEspClient client;
+WiFiEspClient httpclient;
 #ifdef DebugTelnet
 WiFiEspClient telnetClient;
 #endif
 #else
 EthernetClient client;
+EthernetClient httpclient;
 #ifdef DebugTelnet
 EthernetClient telnetClient;
 #endif
@@ -531,6 +531,9 @@ uint8_t saved_msg_cycle = 0;
 uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
+
+#include "bsb-version.h"
+char version[] = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
 #include "BSB_lan_custom_global.h"
 
@@ -2559,6 +2562,55 @@ void webPrintSite() {
   client.println(F("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK));
   client.println(F("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG));
   client.println(F("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL));
+
+#ifdef VERSION_CHECK
+  client.println(F("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
+
+  httpclient.connect("bsb-lan.de", 80);
+  httpclient.println("GET /bsb-version.h");
+  httpclient.println();
+
+  unsigned long timeout = millis();
+  while (millis() - timeout < 3000 && !httpclient.available()) {
+  }
+
+  int major = -1;
+  int minor = -1;
+  int patch = -1;
+  char version_number[8] = { 0 };
+  while (httpclient.available()) {
+    char c = httpclient.read();
+    if (c == '\"') {
+      int index = 0;
+      do {
+        c = httpclient.read();
+        version_number[index] = c;
+        index++;
+      } while (c != '\"');
+      version_number[index-1] = '\0';
+      if (major < 0) {
+        major = atoi(version_number);
+      } else if (minor < 0) {
+        minor = atoi(version_number);
+      } else if (patch < 0) {
+        patch = atoi(version_number);
+      }
+    }
+  }
+  if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
+    client.print(F(MENU_TEXT_NVA ": "));
+    client.print(F("<A HREF=\"http://www.bsb-lan.de/index.html\">"));
+    client.print(major);
+    client.print(F("."));
+    client.print(minor);
+    client.print(F("."));
+    client.print(patch);
+    client.println(F("</A><BR>"));
+  } else {
+    client.println(MENU_TEXT_NVN);
+  }
+#endif
+
   webPrintFooter();
 } // --- webPrintSite() ---
 
@@ -5130,7 +5182,7 @@ ich mir da nicht)
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
             unsigned long startquery = millis();
-            while (millis() < startquery + 10000) {
+            while (millis() - startquery < 10000) {
               if (bus.GetMessage(msg)) {
                 uint8_t found_id = 0;
                 boolean found = false;
@@ -5671,7 +5723,7 @@ ich mir da nicht)
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
-            client.println(F("Content-Type: text/plain"));
+            client.println(F("Content-Type: text/plain; charset=utf-8"));
             client.println();
 
             File dataFile = SD.open("datalog.txt");
