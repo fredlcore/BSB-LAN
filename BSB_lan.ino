@@ -4781,12 +4781,13 @@ ich mir da nicht)
         }
         // Got an EOL character
         DebugOutput.println();
-        // perform HTTP-Authentification by reading the remaining client data and look for credentials
-#ifdef USER_PASS_B64
 
+        // perform HTTP-Authentification by reading the remaining client data and look for credentials
+        // Parsing headers
         char linebuf[80];
         uint8_t charcount=0;
         boolean authenticated=false;
+        boolean gzipaccepted=false;
         memset(linebuf,0,sizeof(linebuf));
         boolean currentLineIsBlank = false;
         while (client.connected()) {
@@ -4800,9 +4801,16 @@ ich mir da nicht)
             if (c == '\n') {
               // you're starting a new line
               currentLineIsBlank = true;
+              if (strstr(linebuf,"Accept-encoding") != 0 && strstr(linebuf+16, "gzip") != 0) {
+                gzipaccepted=true;
+              }
+#ifdef USER_PASS_B64
               if (strstr(linebuf,"Authorization: Basic")!=0 && strstr(linebuf,USER_PASS_B64)!=0) {
                 authenticated=true;
               }
+#else
+                authenticated=true;
+#endif
               memset(linebuf,0,sizeof(linebuf));
               charcount=0;
             } else if (c != '\r') {
@@ -4824,7 +4832,6 @@ ich mir da nicht)
           client.stop();
         }
         // otherwise continue like normal
-#endif
 
         // Flush any remaining bytes from the client buffer
 //        client.flush();
@@ -4894,11 +4901,18 @@ ich mir da nicht)
         else if(urlString.endsWith(F(".gif"))) mimetype = 102;
         else if(urlString.endsWith(F(".svg"))) mimetype = 103;
         else if(urlString.endsWith(F(".png"))) mimetype = 104;
+        else if(urlString.endsWith(F(".gz"))) mimetype = 201;
         // You can add more MIME types here
 
         if(mimetype)  {
           File dataFile;
-          dataFile = SD.open(urlString);
+          boolean gzippedfile = false;
+          if (gzipaccepted) dataFile = SD.open(urlString + ".gz");
+          if (dataFile) {
+            gzippedfile = true;
+          }
+          else
+            dataFile = SD.open(urlString);
           // if the file is available, read from it:
           if (dataFile) {
             DebugOutput.print(F("file opened from SD: ")); DebugOutput.println(urlString);
@@ -4913,12 +4927,14 @@ ich mir da nicht)
               case 102: client.println(F("image/gif")); break;
               case 103: client.println(F("image/svg")); break;
               case 104: client.println(F("image/png")); break;
+              case 201: client.println(F("application/x-gzip")); break;
               case 5:
               default: client.println(F("text"));
             }
 
-            client.println("Content-Length: " + dataFile.size());
+            client.print(F("Content-Length: ")); client.println(dataFile.size());
             client.println(F("Cache-Control: max-age=84400, must-revalidate"));
+            if(gzippedfile) client.println(F("Content-Encoding: gzip"));
             dir_t d;
             if (dataFile.dirEntry(&d)) {
               String monthname;
