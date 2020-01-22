@@ -45,6 +45,7 @@ WiFiEspClient::WiFiEspClient(uint8_t sock) : _sock(sock)
 size_t WiFiEspClient::print(const __FlashStringHelper *ifsh)
 {
 	printFSH(ifsh, false);
+	return 0;
 }
 
 // if we do override this, the standard println will call the print
@@ -52,6 +53,7 @@ size_t WiFiEspClient::print(const __FlashStringHelper *ifsh)
 size_t WiFiEspClient::println(const __FlashStringHelper *ifsh)
 {
 	printFSH(ifsh, true);
+	return 0;
 }
 
 
