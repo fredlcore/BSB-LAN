@@ -14,8 +14,12 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 
   if (rx == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
+#if defined(__SAM3X8E__)
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
+    pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
+    digitalWrite(24, 1);
+#endif
     serial = &Serial1;
     Serial1.begin(4800, SERIAL_8O1);
   } else {
@@ -172,7 +176,7 @@ bool BSB::GetMessage(byte* msg) {
 
       // Delay for more data
       if (HwSerial == true) {
-        delay(3);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
+        delay(4);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed. Also, why 3ms are fine for the Mega, but at least 4ms are necessary on the Due
       } else {
         delay(1);   // Or should I wonder why SoftwareSerial is fine with just 1ms? 
                     // At 4800bps 8O1, one byte needs 11 Bit to be transferred. One bit takes 0.2ms transmit time. Thus, 11 bits
@@ -365,7 +369,8 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
       unsigned long timeout = millis();
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
       while (millis()-timeout < waitfree) {
-        if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read()))   // Test RX pin
+//        if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read()))   // Test RX pin
+      if (rx_pin_read())
         {
           goto retry;
         } // endif
@@ -402,9 +407,11 @@ gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
 So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
+#if defined(__AVR__)
   if (HwSerial == false) {
-//    cli();
+    cli();
   }
+#endif
   byte loop_len = len;
   if (bus_type != 2) {
     loop_len = len + bus_type - 1; // same msg length difference as above
@@ -419,18 +426,23 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
       serial->flush();
       readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
-    if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
+//    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
+      if (rx_pin_read()) {
       // Collision
+#if defined(__AVR__)
       if (HwSerial == false) {
-//        sei();
+        sei();
       }
+#endif
       goto retry;
     }
   }
   if (HwSerial == true) {
     serial->flush();
   } else {
-//    sei();
+#if defined(__AVR__)
+    sei();
+#endif
   }
   return true;
 }
@@ -534,8 +546,8 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
-uint8_t BSB::rx_pin_read() {
-  return * portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin);
+boolean BSB::rx_pin_read() {
+  return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
 }
 
 uint8_t BSB::readByte() {
