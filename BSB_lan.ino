@@ -429,7 +429,9 @@ WiFiEspClient telnetClient;
 #endif
 #else
 EthernetClient client;
+#ifdef VERSION_CHECK
 EthernetClient httpclient;
+#endif
 #ifdef DebugTelnet
 EthernetClient telnetClient;
 #endif
@@ -533,7 +535,7 @@ boolean time_set = false;
 uint8_t current_switchday = 0;
 
 #include "bsb-version.h"
-static const char version[] = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
+#define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
 
 #include "BSB_lan_custom_global.h"
 
@@ -2558,7 +2560,7 @@ void webPrintSite() {
 
   client.println(F("<p>"));
   client.print(F("BSB-LAN Web, Version "));
-  client.print(version);
+  client.print(F(BSB_VERSION));
   client.println(F("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK));
   client.println(F("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG));
   client.println(F("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL));
@@ -4862,8 +4864,8 @@ ich mir da nicht)
           client.println(F("Connnection: close"));
           client.println();
           client.println(F("<!DOCTYPE HTML>"));
-          client.println(F("<HTML>  <HEAD>   <TITLE>Error</TITLE>"));
-          client.println(F(" </HEAD> <BODY><H1>401 Unauthorized.</H1></BODY> </HTML>"));
+          client.println(F("<HTML><HEAD><TITLE>Error</TITLE>"));
+          client.println(F("</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>"));
           client.stop();
         }
         // otherwise continue like normal
@@ -5815,7 +5817,7 @@ ich mir da nicht)
 
           client.println(F(MENU_TEXT_EXP ": "));
           for (int i=0; i<anz_ex_gpio; i++) {
-            client.print (exclude_GPIO[i]);
+            client.print(exclude_GPIO[i]);
             client.print(F(" "));
           }
           client.println(F("<BR>"));
@@ -6227,6 +6229,7 @@ ich mir da nicht)
             for (int i=0; i < anz_ex_gpio; i++) {
               if (pin==exclude_GPIO[i]) {
                 error = true;
+                break;
               }
             }
             if (error==true) {
@@ -6883,7 +6886,7 @@ custom_timer = millis();
         //      Serial.println("New telnet client.");
         telnetClient.println();
         telnetClient.print(F("Version: "));
-        telnetClient.println(version);
+        telnetClient.println(F(BSB_VERSION));
         haveTelnetClient = true;
       }
     }
