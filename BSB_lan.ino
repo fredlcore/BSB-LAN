@@ -5174,7 +5174,7 @@ ich mir da nicht)
           webPrintHeader();
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(version);
+          client.print(BSB_VERSION);
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus.getBusType() == BUS_BSB) {
@@ -5766,7 +5766,7 @@ ich mir da nicht)
 //          client.println(F("<BR><BR>"));
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(version);
+          client.print(BSB_VERSION);
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());
@@ -6962,7 +6962,7 @@ void setup() {
     DebugOutput.print(Serial.read());
   }
 
-  bus.setBusType(BUS_TYPE);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+  bus.setBusType(bus_type);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
