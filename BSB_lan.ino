@@ -5171,6 +5171,9 @@ ich mir da nicht)
         if(p[1]=='Q') {
           webPrintHeader();
 
+          client.print(F(MENU_TEXT_VER ": "));
+          client.print(version);
+          client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus_type == 0) {
             bus.setBusType(bus_type, myAddr, 0x7F);
@@ -5760,6 +5763,9 @@ ich mir da nicht)
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
+          client.print(F(MENU_TEXT_VER ": "));
+          client.print(version);
+          client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());
           client.println(F(" Bytes <BR>"));
