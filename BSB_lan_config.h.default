@@ -69,8 +69,8 @@ char pass[] = "Your_WiFi_password_goes_here";        // your network password
  * if autodetect does not work or heating system is not running when Arduino is powered on
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
-const int fixed_device_family = 0;
-const int fixed_device_variant = 0;
+static const int fixed_device_family = 0;
+static const int fixed_device_variant = 0;
 
 // Hide unknown parameters from web display (parameters will still be queried!)
 //#define HIDE_UNKNOWN
@@ -153,7 +153,7 @@ const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating the
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
 */
-byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
+static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus pins and bus type
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)

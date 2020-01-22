@@ -497,11 +497,11 @@ unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
-int numAverages = sizeof(avg_parameters) / sizeof(int);
-int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
-int numLogValues = sizeof(log_parameters) / sizeof(int);
-int numCustomFloats = sizeof(custom_floats) / sizeof(float);
-int numCustomLongs = sizeof(custom_longs) / sizeof(long);
+static const int numAverages = sizeof(avg_parameters) / sizeof(int);
+static const int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
+static const int numLogValues = sizeof(log_parameters) / sizeof(int);
+static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
+static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
 float *avgValues_Old = new float[numAverages];
 float *avgValues = new float[numAverages];
 float *avgValues_Current = new float[numAverages];
@@ -533,7 +533,7 @@ boolean time_set = false;
 uint8_t current_switchday = 0;
 
 #include "bsb-version.h"
-char version[] = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
+static const char version[] = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
 #include "BSB_lan_custom_global.h"
 

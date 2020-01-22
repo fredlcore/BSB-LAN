@@ -254,9 +254,9 @@ bool BSB::GetMessage(byte* msg) {
 
 // Generates CCITT XMODEM CRC from BSB message
 uint16_t BSB::CRC (byte* buffer, uint8_t length) {
-  uint16_t crc = 0, i;
+  uint16_t crc = 0;
 
-  for (i = 0; i < length; i++) {
+  for (uint8_t i = 0; i < length; i++) {
     crc = _crc_xmodem_update(crc, buffer[i]);
   }
 
@@ -269,11 +269,10 @@ uint16_t BSB::CRC (byte* buffer, uint8_t length) {
 // (255 - (Telegrammlänge ohne PS - 1)) * 256 + Telegrammlänge ohne PS - 1 + Summe aller Telegrammbytes
 uint16_t BSB::CRC_LPB (byte* buffer, uint8_t length) {
   uint16_t crc = 0;
-  uint8_t i;
 
   crc = (257-length)*256+length-2;
 
-  for (i = 0; i < length-1; i++) {
+  for (uint8_t i = 0; i < length-1; i++) {
     crc = crc+buffer[i];
   }
 
@@ -282,10 +281,10 @@ uint16_t BSB::CRC_LPB (byte* buffer, uint8_t length) {
 
 // Generates CRC for PPS message
 uint8_t BSB::CRC_PPS (byte* buffer, uint8_t length) {
-  uint8_t crc = 0, i;
+  uint8_t crc = 0;
   int sum = 0;
 
-  for (i = 0; i < length; i++) {
+  for (uint8_t i = 0; i < length; i++) {
     sum+=buffer[i];
   }
   sum = sum & 0xFF;
@@ -295,7 +294,7 @@ uint8_t BSB::CRC_PPS (byte* buffer, uint8_t length) {
 }
 
 uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
-  int i;
+  uint8_t i;
 
   crc = crc ^ ((uint16_t)data << 8);
   for (i=0; i<8; i++) {
@@ -311,32 +310,37 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 // Low-Level sending of message to bus
 inline bool BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
-  byte i;
   byte data, len;
   if (bus_type != 2) {
     len = msg[len_idx];
   } else {
     len = len_idx;
   }
-  switch (bus_type) {
-    case 0:
+  // switch (bus_type) {
+    // case 0:
+      // msg[0] = 0xDC;
+      // msg[1] = myAddr | 0x80;
+      // msg[2] = destAddr;
+      // break;
+    // case 1:
+      // msg[0] = 0x78;
+      // msg[2] = destAddr;
+      // msg[3] = myAddr;
+      // break;
+  // }
+  {
+    if (bus_type == 0) {
       msg[0] = 0xDC;
       msg[1] = myAddr | 0x80;
       msg[2] = destAddr;
-      break;
-    case 1:
-      msg[0] = 0x78;
-      msg[2] = destAddr;
-      msg[3] = myAddr;
-      break;
-  }
-  {
-    if (bus_type == 0) {
       uint16_t crc = CRC (msg, len -2);
       msg[len -2] = (crc >> 8);
       msg[len -1] = (crc & 0xFF);
     }
     if (bus_type == 1) {
+      msg[0] = 0x78;
+      msg[2] = destAddr;
+      msg[3] = myAddr;
       uint16_t crc = CRC_LPB (msg, len);
       msg[len-1] = (crc >> 8);
       msg[len] = (crc & 0xFF);
@@ -354,7 +358,7 @@ inline bool BSB::_send(byte* msg) {
 Er wartet 11/4800 Sek ab (statt 10, Hinweis von miwi), lauscht und schaut ob der Bus in dieser Zeit von jemand anderem benutzt wird. Sprich ob der Bus in dieser Zeit mal
 auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 */
-  unsigned long timeoutabort = 1000;  // one second timeout
+  static const unsigned long timeoutabort = 1000;  // one second timeout
   unsigned long start_timer = millis();
   retry:
   // Select a random wait time between 60 and 79 ms
@@ -416,7 +420,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
   if (bus_type != 2) {
     loop_len = len + bus_type - 1; // same msg length difference as above
   }
-  for (i=0; i <= loop_len; i++) {
+  for (byte i=0; i <= loop_len; i++) {
     data = msg[i];
     if (bus_type != 2) {
       data = data ^ 0xFF;
