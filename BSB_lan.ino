@@ -5174,7 +5174,7 @@ ich mir da nicht)
           webPrintHeader();
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(BSB_VERSION);
+          client.print(F(BSB_VERSION));
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus.getBusType() == BUS_BSB) {
@@ -5766,7 +5766,7 @@ ich mir da nicht)
 //          client.println(F("<BR><BR>"));
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(BSB_VERSION);
+          client.print(F(BSB_VERSION));
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());
