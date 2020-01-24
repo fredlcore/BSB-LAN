@@ -411,7 +411,7 @@ uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
-#define BUFLEN 200
+#define BUFLEN 450
 char buffer[BUFLEN] = { 0 };
 
 /* buffer to print output lines*/
