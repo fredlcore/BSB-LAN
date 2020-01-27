@@ -1979,7 +1979,7 @@ char *printTelegram(byte* msg, int query_line) {
   line = get_cmdtbl_line(i);
 
   while(c!=CMD_END){
-    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus.getBusType() == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
+    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus.getBusType() == BUS_PPS)) && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -2078,7 +2078,11 @@ char *printTelegram(byte* msg, int query_line) {
     data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
   } 
   if (bus.getBusType() == BUS_PPS) {
-    data_len = 3;
+    if (msg[0] != 0x1E) {
+      data_len = 3;
+    } else {
+      data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
+    }
   }
 
   if(data_len < 0){
@@ -4429,8 +4433,10 @@ void loop() {
                 } else {
                   pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
                 }
+                break;
+              } else {
+                msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
-              break;
             }
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
