@@ -266,6 +266,7 @@ typedef enum{
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
+  VT_CELPERMIN,        //  3 Byte - 1 enable / value
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
@@ -309,6 +310,7 @@ const char U_VOLT[] PROGMEM = UNIT_VOLT_TEXT;
 const char U_GRADIENT[] PROGMEM = UNIT_GRADIENT_TEXT;
 const char U_GRADIENTKS[] PROGMEM = UNIT_GRADIENTKS_TEXT;
 const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
+const char U_CELPERMIN[] PROGMEM = UNIT_CELPERMIN_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_NONE[] PROGMEM = "";
@@ -403,6 +405,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_CELPERMIN,      1.0,    DT_VALS, 1,  U_CELPERMIN, sizeof(U_CELPERMIN)},
 {VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
@@ -3451,32 +3454,33 @@ const char ENUM3192[] PROGMEM_LATEST = {
 
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3510_00_TEXT "\0"
-"\x01 " "?" ENUM3510_01_TEXT "\0"
-"\x02 " "?" ENUM3510_02_TEXT
+"\x01 " ENUM3510_01_TEXT "\0"
+"\x02 " ENUM3510_02_TEXT "\0"
+"\x03 " ENUM3510_03_TEXT
 };
 const char ENUM3541[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3541_00_TEXT "\0"
-"\x01 " "?" ENUM3541_01_TEXT "\0"
-"\x02 " ENUM3541_02_TEXT
+"\x00 " ENUM3541_00_TEXT "\0"
+"\x01 " ENUM3541_01_TEXT "\0"
+"\x02 " ENUM3541_02_TEXT "\0"
+"\x03 " ENUM3541_03_TEXT
 };
 const char ENUM3544[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3544_00_TEXT "\0"
-"\x01 " "?" ENUM3544_01_TEXT "\0"
-"\x02 " "?" ENUM3544_02_TEXT "\0"
-"\x03 " "?" ENUM3544_03_TEXT "\0"
-"\x04 " "?" ENUM3544_04_TEXT "\0"
-"\x05 " "?" ENUM3544_05_TEXT "\0"
-"\x06 " "?" ENUM3544_06_TEXT "\0"
-"\x07 " "?" ENUM3544_07_TEXT "\0"
-"\x08 " "?" ENUM3544_08_TEXT "\0"
-"\x09 " "?" ENUM3544_09_TEXT "\0"
-"\x0a " "?" ENUM3544_0a_TEXT "\0"
-"\x0b " "?" ENUM3544_0b_TEXT "\0"
-"\x0c " "?" ENUM3544_0c_TEXT "\0"
-"\x0d " "?" ENUM3544_0d_TEXT "\0"
-"\x0e " "?" ENUM3544_0e_TEXT "\0"
-"\x0f " "?" ENUM3544_0f_TEXT
+"\x01 " ENUM3544_01_TEXT "\0"
+"\x02 " ENUM3544_02_TEXT "\0"
+"\x03 " ENUM3544_03_TEXT "\0"
+"\x04 " ENUM3544_04_TEXT "\0"
+"\x05 " ENUM3544_05_TEXT "\0"
+"\x06 " ENUM3544_06_TEXT "\0"
+"\x07 " ENUM3544_07_TEXT "\0"
+"\x08 " ENUM3544_08_TEXT "\0"
+"\x09 " ENUM3544_09_TEXT "\0"
+"\x0a " ENUM3544_0a_TEXT "\0"
+"\x0b " ENUM3544_0b_TEXT "\0"
+"\x0c " ENUM3544_0c_TEXT "\0"
+"\x0d " ENUM3544_0d_TEXT "\0"
+"\x0e " ENUM3544_0e_TEXT "\0"
+"\x0f " ENUM3544_0f_TEXT "\0"
+"\x10 " ENUM3544_10_TEXT
 };
 
 // Solar
@@ -6529,25 +6533,25 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D19BD,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3267,  STR3267,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis Alternativ Erz";
 
 // Kaskade
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_OEM, DEV_ALL}, // Führungsstrategie
+{0x153D0842,  CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_OEM, DEV_ALL}, // Führungsstrategie
 {0x153D0843,  CAT_KASKADE,          VT_PERCENT,       3511,  STR3511,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Minimum
 {0x153D0844,  CAT_KASKADE,          VT_PERCENT,       3512,  STR3512,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Maximum
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3544,  STR3544,  sizeof(ENUM3544),     ENUM3544,     DEFAULT_FLAG, DEV_ALL}, // Führender Erzeuger
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ONOFF,         3550,  STR3550,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anfahrentlast Kaskad'pumpe
+{0x0D3D0942,  CAT_KASKADE,          VT_CELPERMIN,     3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
+{0x0D3D0943,  CAT_KASKADE,          VT_CELPERMIN,     3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
+{0x053D0830,  CAT_KASKADE,          VT_SECONDS_WORD,  3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
+{0x053D0831,  CAT_KASKADE,          VT_MINUTES_SHORT, 3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
+{0x053D0832,  CAT_KASKADE,          VT_SECONDS_WORD,  3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
+{0x053D0833,  CAT_KASKADE,          VT_HOURS_WORD,    3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
+{0x053D084E,  CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
+{0x053D083B,  CAT_KASKADE,          VT_ENUM,          3544,  STR3544,  sizeof(ENUM3544),     ENUM3544,     DEFAULT_FLAG, DEV_ALL}, // Führender Erzeuger
+{0x153D0B3C,  CAT_KASKADE,          VT_ONOFF,         3550,  STR3550,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anfahrentlast Kaskad'pumpe
 {0x153D0B3A,  CAT_KASKADE,          VT_TEMP,          3560,  STR3560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufsollwert Minimum
 {0x153D0B3B,  CAT_KASKADE,          VT_TEMP,          3561,  STR3561,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rücklaufsollwert Min OEM
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3562,  STR3562,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
+{0x153D0B40,  CAT_KASKADE,          VT_ONOFF,         3562,  STR3562,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
+{0x153D0B3F,  CAT_KASKADE,          VT_SECONDS_WORD,  3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
+{0x153D0B3D,  CAT_KASKADE,          VT_TEMP,          3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x153D0B3E,  CAT_KASKADE,          VT_SECONDS_WORD,  3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x053D0846,  CAT_KASKADE,          VT_TEMP,          3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
 
 // Zusatzerzeuger
 {CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_UNKNOWN,       3700,  STR3700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe unter Außentemp
