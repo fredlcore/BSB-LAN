@@ -2,8 +2,8 @@
  * 
  * BSB Boiler-System-Bus LAN Interface
  *
- * ATTENION:
- *       There is no waranty that this system will not damage your heating system!
+ * ATTENTION:
+ *       There is no warranty that this system will not damage your heating system!
  *
  * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
@@ -411,7 +411,7 @@ uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
-#define BUFLEN 200
+#define BUFLEN 450
 char buffer[BUFLEN] = { 0 };
 
 /* buffer to print output lines*/
@@ -1979,7 +1979,7 @@ char *printTelegram(byte* msg, int query_line) {
   line = get_cmdtbl_line(i);
 
   while(c!=CMD_END){
-    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus.getBusType() == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
+    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus.getBusType() == BUS_PPS)) && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -2078,7 +2078,11 @@ char *printTelegram(byte* msg, int query_line) {
     data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
   } 
   if (bus.getBusType() == BUS_PPS) {
-    data_len = 3;
+    if (msg[0] != 0x1E) {
+      data_len = 3;
+    } else {
+      data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
+    }
   }
 
   if(data_len < 0){
@@ -2341,12 +2345,7 @@ char *printTelegram(byte* msg, int query_line) {
                 case 6: outBufLen+=sprintf(outBuf+outBufLen, WEEKDAY_FRI_TEXT); break;
                 default: break;
               }
-              outBufLen+=sprintf(outBuf+outBufLen,", ");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",hour());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              outBufLen+=sprintf(outBuf+outBufLen, ", %02d:%02d:%02d", hour(), minute(), second());
               DebugOutput.print(pvalstr);
               break;
             }
@@ -2601,7 +2600,7 @@ void webPrintSite() {
   }
   if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
     client.print(F(MENU_TEXT_NVA ": "));
-    client.print(F("<A HREF=\"http://www.bsb-lan.de/index.html\">"));
+    client.print(F("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">"));
     client.print(major);
     client.print(F("."));
     client.print(minor);
@@ -4429,8 +4428,10 @@ void loop() {
                 } else {
                   pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
                 }
+                break;
+              } else {
+                msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
-              break;
             }
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
@@ -4581,7 +4582,7 @@ void loop() {
               case 0x66: msg_cycle = 19; break;
               case 0x7C: msg_cycle = 20; break;
               default:
-                 DebugOutput.print("Unknown request: ");
+                 DebugOutput.print(F("Unknown request: "));
                 for (int c=0;c<9;c++) {
                   if (msg[c]<16) DebugOutput.print("0");
                   DebugOutput.print(msg[c], HEX);
@@ -4725,7 +4726,7 @@ ich mir da nicht)
                   break;
                 case 0x00: break;
                 default:
-                  DebugOutput.print("Unknown telegram: ");
+                  DebugOutput.print(F("Unknown telegram: "));
                   for (int c=0;c<9+pps_offset;c++) {
                     if (msg[c]<16) DebugOutput.print("0");
                     DebugOutput.print(msg[c], HEX);
@@ -5834,7 +5835,7 @@ ich mir da nicht)
               client.print(F("0"));
             }
             client.print(mac[i], HEX);
-            client.print(F(" "));
+            if(i != 5) client.print(F(":"));
           }
           client.println(F("<BR>"));
 
@@ -6905,19 +6906,19 @@ custom_timer = millis();
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  DebugOutput.print("SSID: ");
+  DebugOutput.print(F("SSID: "));
   DebugOutput.println(WiFi.SSID());
 
   // print your WiFi shield's IP address
   IPAddress ip = WiFi.localIP();
-  DebugOutput.print("IP Address: ");
+  DebugOutput.print(F("IP Address: "));
   DebugOutput.println(ip);
 
   // print the received signal strength
   long rssi = WiFi.RSSI();
-  DebugOutput.print("Signal strength (RSSI):");
+  DebugOutput.print(F("Signal strength (RSSI):"));
   DebugOutput.print(rssi);
-  DebugOutput.println(" dBm");
+  DebugOutput.println(F(" dBm"));
 }
 #endif
 
@@ -6978,7 +6979,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
+    Serial.println(F("WiFi shield not present"));
     // don't continue
     while (true);
   }
@@ -6989,14 +6990,14 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.print(F("Attempting to connect to WPA SSID: "));
     Serial.println(ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  Serial.println("You're connected to the network");
+  Serial.println(F("You're connected to the network"));
   
   printWifiStatus();
 #endif

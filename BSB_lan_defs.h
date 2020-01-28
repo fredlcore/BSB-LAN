@@ -266,6 +266,7 @@ typedef enum{
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
+  VT_CELPERMIN,        //  3 Byte - 1 enable / value
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
@@ -309,6 +310,7 @@ const char U_VOLT[] PROGMEM = UNIT_VOLT_TEXT;
 const char U_GRADIENT[] PROGMEM = UNIT_GRADIENT_TEXT;
 const char U_GRADIENTKS[] PROGMEM = UNIT_GRADIENTKS_TEXT;
 const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
+const char U_CELPERMIN[] PROGMEM = UNIT_CELPERMIN_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_NONE[] PROGMEM = "";
@@ -403,6 +405,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_CELPERMIN,      1.0,    DT_VALS, 1,  U_CELPERMIN, sizeof(U_CELPERMIN)},
 {VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
 {VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
@@ -1124,6 +1127,8 @@ const char STR2807[] PROGMEM = STR2807_TEXT;
 const char STR2809[] PROGMEM = STR2809_TEXT;
 const char STR2810[] PROGMEM = STR2810_TEXT;
 const char STR2811[] PROGMEM = STR2811_TEXT;
+const char STR2812[] PROGMEM = STR2812_TEXT;
+const char STR2813[] PROGMEM = STR2813_TEXT;
 const char STR2814[] PROGMEM = STR2814_TEXT;
 const char STR2815[] PROGMEM = STR2815_TEXT;
 const char STR2816[] PROGMEM = STR2816_TEXT;
@@ -1219,6 +1224,11 @@ const char STR3010[] PROGMEM = STR3010_TEXT;
 const char STR3011[] PROGMEM = STR3011_TEXT;
 const char STR3012[] PROGMEM = STR3012_TEXT;
 const char STR3014[] PROGMEM = STR3014_TEXT;
+const char STR3025[] PROGMEM = STR3025_TEXT;
+const char STR3026[] PROGMEM = STR3026_TEXT;
+const char STR3027[] PROGMEM = STR3027_TEXT;
+const char STR3028[] PROGMEM = STR3028_TEXT;
+const char STR3029[] PROGMEM = STR3029_TEXT;
 
 // Energiezähler (Fujitsu Waterstage)
 const char STR3090[] PROGMEM = STR3090_TEXT;
@@ -1369,14 +1379,32 @@ const char STR3887[] PROGMEM = STR3887_TEXT;
 
 // 4100 Feststoffkessel
 const char STR4102[] PROGMEM = STR4102_TEXT;
+const char STR4103[] PROGMEM = STR4103_TEXT;
 #define STR4110 STR2210
 #define STR4112 STR2212
+#define STR4114 STR2315
 #define STR4130 STR3810
 #define STR4131 STR3811
 const char STR4133[] PROGMEM = STR4133_TEXT;
+const char STR4134[] PROGMEM = STR4134_TEXT;
+const char STR4135[] PROGMEM = STR4135_TEXT;
+const char STR4136[] PROGMEM = STR4136_TEXT;
+const char STR4137[] PROGMEM = STR4137_TEXT;
+const char STR4138[] PROGMEM = STR4138_TEXT;
 #define STR4140 STR2250
 const char STR4141[] PROGMEM = STR4141_TEXT;
+#define STR4153 STR2270
+const char STR4158[] PROGMEM = STR4158_TEXT;
+#define STR4163 STR834
+#define STR4164 STR835
+#define STR4165 STR836
 #define STR4170 STR2300
+const char STR4190[] PROGMEM = STR4190_TEXT;
+const char STR4192[] PROGMEM = STR4192_TEXT;
+#define STR4201 STR882
+#define STR4202 STR883
+#define STR4203 STR2324
+#define STR4204 STR2325
 
 // 4700 Pufferspeicher
 const char STR4708[] PROGMEM = STR4708_TEXT;
@@ -2153,6 +2181,7 @@ const char STR8416[] PROGMEM = STR8416_TEXT;
 const char STR8417[] PROGMEM = STR8417_TEXT;
 const char STR8420[] PROGMEM = STR8420_TEXT;
 const char STR8423[] PROGMEM = STR8423_TEXT;
+const char STR8424[] PROGMEM = STR8424_TEXT;
 const char STR8425[] PROGMEM = STR8425_TEXT;
 const char STR8426[] PROGMEM = STR8426_TEXT;
 const char STR8427[] PROGMEM = STR8427_TEXT;
@@ -2162,8 +2191,9 @@ const char STR8430[] PROGMEM = STR8430_TEXT;
 const char STR8431[] PROGMEM = STR8431_TEXT;
 const char STR8434[] PROGMEM = STR8434_TEXT;
 const char STR8435[] PROGMEM = STR8435_TEXT;
+const char STR8435_1[] PROGMEM = STR8435_1_TEXT;
 const char STR8436[] PROGMEM = STR8436_TEXT;
-// vorheriges könnte auch 1663 sein weil da noch Überhitzungssollwert übermittelt wird
+const char STR8436_1[] PROGMEM = STR8436_1_TEXT;
 const char STR8437[] PROGMEM = STR8437_TEXT;
 const char STR8438[] PROGMEM = STR8438_TEXT;
 const char STR8440[] PROGMEM = STR8440_TEXT;
@@ -2239,6 +2269,8 @@ const char STR8559[] PROGMEM = STR8559_TEXT;
 const char STR8560[] PROGMEM = STR8560_TEXT;
 const char STR8568[] PROGMEM = STR8568_TEXT;
 const char STR8570[] PROGMEM = STR8570_TEXT;
+#define STR8585 STR8319
+const char STR8586[] PROGMEM = STR8586_TEXT;
 
 // Diagnose Verbraucher
 const char STR8700[] PROGMEM = STR8700_TEXT;
@@ -2513,6 +2545,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2740_00_TEXT MENU_TEXT_NO
 #define ENUM2706_03_TEXT ENUM2206_01_TEXT
 #define ENUM2749_00_TEXT ENUM2740_00_TEXT
+#define ENUM2801_01_TEXT ENUM5040_02_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
@@ -2537,6 +2570,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM3880_01_TEXT ENUM1630_02_TEXT
 #define ENUM3887_01_TEXT ENUM1630_02_TEXT
 #define ENUM3887_02_TEXT ENUM3092_00_TEXT
+#define ENUM4134_00_TEXT ENUM48_00_TEXT
+#define ENUM4137_00_TEXT ENUM48_00_TEXT
 #define ENUM4720_00_TEXT ENUM48_00_TEXT
 #define ENUM4757_00_TEXT ENUM780_00_TEXT
 #define ENUM4757_02_TEXT ENUM861_02_TEXT
@@ -2978,13 +3013,13 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM_SWCODE_02_09_TEXT ENUM_ERROR_8c_TEXT
 #define ENUM_SWCODE_02_5a_TEXT ENUM_ERROR_b8_TEXT
 
-#define WEEKDAY_MON_TEXT STR500
-#define WEEKDAY_TUE_TEXT STR501
-#define WEEKDAY_WED_TEXT STR502
-#define WEEKDAY_THU_TEXT STR503
-#define WEEKDAY_FRI_TEXT STR504
-#define WEEKDAY_SAT_TEXT STR505
-#define WEEKDAY_SUN_TEXT STR506
+#define WEEKDAY_MON_TEXT STR500_TEXT
+#define WEEKDAY_TUE_TEXT STR501_TEXT
+#define WEEKDAY_WED_TEXT STR502_TEXT
+#define WEEKDAY_THU_TEXT STR503_TEXT
+#define WEEKDAY_FRI_TEXT STR504_TEXT
+#define WEEKDAY_SAT_TEXT STR505_TEXT
+#define WEEKDAY_SUN_TEXT STR506_TEXT
 
 /* ENUM tables */
 const char ENUM20[] PROGMEM_LATEST = { // numerical values are hypothetical
@@ -3342,6 +3377,12 @@ const char ENUM2749[] PROGMEM_LATEST = {
 "\x02 " ENUM2749_02_TEXT
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
+const char ENUM2801[] PROGMEM_LATEST = {
+"\x01 " ENUM2801_01_TEXT "\0"
+"\x02 " ENUM2801_02_TEXT "\0"
+"\x03 " ENUM2801_03_TEXT
+};
+
 const char ENUM2880[] PROGMEM_LATEST = {
 "\x02 " ENUM2880_02_TEXT
 };
@@ -3413,32 +3454,33 @@ const char ENUM3192[] PROGMEM_LATEST = {
 
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3510_00_TEXT "\0"
-"\x01 " "?" ENUM3510_01_TEXT "\0"
-"\x02 " "?" ENUM3510_02_TEXT
+"\x01 " ENUM3510_01_TEXT "\0"
+"\x02 " ENUM3510_02_TEXT "\0"
+"\x03 " ENUM3510_03_TEXT
 };
 const char ENUM3541[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3541_00_TEXT "\0"
-"\x01 " "?" ENUM3541_01_TEXT "\0"
-"\x02 " ENUM3541_02_TEXT
+"\x00 " ENUM3541_00_TEXT "\0"
+"\x01 " ENUM3541_01_TEXT "\0"
+"\x02 " ENUM3541_02_TEXT "\0"
+"\x03 " ENUM3541_03_TEXT
 };
 const char ENUM3544[] PROGMEM_LATEST = {  // numerical values are hypothetical
-"\x00 " "?" ENUM3544_00_TEXT "\0"
-"\x01 " "?" ENUM3544_01_TEXT "\0"
-"\x02 " "?" ENUM3544_02_TEXT "\0"
-"\x03 " "?" ENUM3544_03_TEXT "\0"
-"\x04 " "?" ENUM3544_04_TEXT "\0"
-"\x05 " "?" ENUM3544_05_TEXT "\0"
-"\x06 " "?" ENUM3544_06_TEXT "\0"
-"\x07 " "?" ENUM3544_07_TEXT "\0"
-"\x08 " "?" ENUM3544_08_TEXT "\0"
-"\x09 " "?" ENUM3544_09_TEXT "\0"
-"\x0a " "?" ENUM3544_0a_TEXT "\0"
-"\x0b " "?" ENUM3544_0b_TEXT "\0"
-"\x0c " "?" ENUM3544_0c_TEXT "\0"
-"\x0d " "?" ENUM3544_0d_TEXT "\0"
-"\x0e " "?" ENUM3544_0e_TEXT "\0"
-"\x0f " "?" ENUM3544_0f_TEXT
+"\x01 " ENUM3544_01_TEXT "\0"
+"\x02 " ENUM3544_02_TEXT "\0"
+"\x03 " ENUM3544_03_TEXT "\0"
+"\x04 " ENUM3544_04_TEXT "\0"
+"\x05 " ENUM3544_05_TEXT "\0"
+"\x06 " ENUM3544_06_TEXT "\0"
+"\x07 " ENUM3544_07_TEXT "\0"
+"\x08 " ENUM3544_08_TEXT "\0"
+"\x09 " ENUM3544_09_TEXT "\0"
+"\x0a " ENUM3544_0a_TEXT "\0"
+"\x0b " ENUM3544_0b_TEXT "\0"
+"\x0c " ENUM3544_0c_TEXT "\0"
+"\x0d " ENUM3544_0d_TEXT "\0"
+"\x0e " ENUM3544_0e_TEXT "\0"
+"\x0f " ENUM3544_0f_TEXT "\0"
+"\x10 " ENUM3544_10_TEXT
 };
 
 // Solar
@@ -3459,7 +3501,7 @@ const char ENUM3887[] PROGMEM_LATEST = {
 "\x03 " ENUM3887_03_TEXT
 };
 
-//Feststoffkessel
+// Feststoffkessel
 const char ENUM4133[] PROGMEM_LATEST = {
 "\x01 " ENUM4133_01_TEXT "\0"
 "\x02 " ENUM4133_02_TEXT "\0"
@@ -3467,6 +3509,33 @@ const char ENUM4133[] PROGMEM_LATEST = {
 "\x04 " ENUM4133_04_TEXT "\0"
 "\x05 " ENUM4133_05_TEXT "\0"
 "\x06 " ENUM4133_06_TEXT
+};
+
+const char ENUM4134[] PROGMEM_LATEST = {
+"\x00 " ENUM4134_00_TEXT "\0"
+"\x01 " "?" ENUM4134_01_TEXT "\0"
+"\x02 " "?" ENUM4134_02_TEXT "\0"
+"\x03 " "?" ENUM4134_03_TEXT
+}; // todo Hinweis: x00 Keine ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+const char ENUM4135[] PROGMEM_LATEST = {
+"\x01 " ENUM4135_01_TEXT "\0"
+"\x02 " "?" ENUM4135_02_TEXT "\0"
+"\x03 " "?" ENUM4135_03_TEXT
+}; // todo Hinweis: x01 Speichertemperatur ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+const char ENUM4137[] PROGMEM_LATEST = {
+"\x00 " "?" ENUM4137_00_TEXT "\0"
+"\x01 " ENUM4137_01_TEXT "\0"
+"\x02 " "?" ENUM4137_02_TEXT "\0"
+"\x03 " "?" ENUM4137_03_TEXT
+}; // todo Hinweis: x01 Mit B4 ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+#define ENUM4138 ENUM4135
+
+const char ENUM4192[] PROGMEM_LATEST = {
+"\x00 " ENUM4192_00_TEXT "\0"
+"\x01 " ENUM4192_01_TEXT
 };
 
 // Pufferspeicher
@@ -6296,19 +6365,28 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D04AB,  CAT_WAERMEPUMPE,      VT_PERCENT,       2792,  STR2792,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Pumpendrehzahl Minimum
 {0x593D1674,  CAT_WAERMEPUMPE,      VT_PERCENT,       2793,  STR2793,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 //OEM
-{0x593D166C,  CAT_WAERMEPUMPE,      VT_TEMP,          2794,  STR2794,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Drehzahl P-Band Xp
-{0x593D166B,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2795,  STR2795,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x593D166C,  CAT_WAERMEPUMPE,      VT_TEMP,          2794, STR2794,   0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
+{0x593D166B,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2795, STR2795,   0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x593D166A,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT4,2796, STR2796,   0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
+{0x593D166E,  CAT_WAERMEPUMPE,      VT_TEMP,          2799, STR2799,   0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpensollw'reduktion
 //end OEM
 {0x593D05CC,  CAT_WAERMEPUMPE,      VT_ONOFF,         2800,  STR2800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Frostschutz Kondens’pumpe
-{0x593D05CD,  CAT_WAERMEPUMPE,      VT_DWORD,         2801,  STR2801,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Steuerung Kondens’pumpe // Temperaturanforderung
+{0x593D05CD,  CAT_WAERMEPUMPE,      VT_ENUM,          2801,  STR2801,  sizeof(ENUM2801),     ENUM2801,     FL_OEM,       DEV_ALL}, // Steuerung Kondens’pumpe // Temperaturanforderung
 {0x593D18A0,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2802,  STR2802,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufzeit Kondens’pumpe
 {0x593D18A1,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nachlaufzeit Kondens’pumpe
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Nachlaufzeit Kondens’pumpe
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_108_169}, // Nachlaufzeit Kondens’pumpe
 {0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Nachlaufzeit Kondens’pumpe //FUJITSU
-{0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // Nachlaufzeit Kondens’pumpe //FUJITSU
+{0x593D05CB,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2803,  STR2803,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // Nachlaufzeit Kondenscpumpe //FUJITSU
+{0x593D166D,  CAT_WAERMEPUMPE,      VT_TEMP,          2804,  STR2804,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Temp’spreizung Konden
 {0x593D05BD,  CAT_WAERMEPUMPE,      VT_TEMP,          2805,  STR2805,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Soll Temp’Spreizung Kondens
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2806,  STR2806,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Abweich Spreiz Kondens
+{0x593D05BE,  CAT_WAERMEPUMPE,      VT_TEMP,          2806,  STR2806,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Abweich Spreiz Kondens
+{0x593D0DED,  CAT_WAERMEPUMPE,      VT_TEMP,          2807,  STR2807,  0,                    NULL,         FL_OEM, DEV_ALL}, // Min Kondens’spreiz TWW
+{0x593D0B89,  CAT_WAERMEPUMPE,      VT_TEMP,          2809,  STR2809,  0,                    NULL,         FL_OEM, DEV_ALL}, // Temperatur Frost-Alarm
+{0x593D1787,  CAT_WAERMEPUMPE,      VT_TEMP,          2810,  STR2810,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kondensatorfrostschutz
+{0x593D1893,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2811,  STR2811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlauf Kond’frostschutz
+{0x593D0B8A,  CAT_WAERMEPUMPE,      VT_TEMP_WORD,     2812,  STR2812,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Min Luft
+{0x593D0CF0,  CAT_WAERMEPUMPE,      VT_TEMP_WORD,     2813,  STR2813,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Max Luft
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_TEMP,          2815,  STR2815,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp Min Wasser
 {0x593D05AE,  CAT_WAERMEPUMPE,      VT_TEMP,          2816,  STR2816,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp Min Sole
 {0x593D05BC,  CAT_WAERMEPUMPE,      VT_TEMP,          2817,  STR2817,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Quellenschutz
@@ -6337,6 +6415,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Verdichtermod Laufzeit
 {0x053D0D00,  CAT_WAERMEPUMPE,      VT_ENUM,          2880,  STR2880,  sizeof(ENUM2880),     ENUM2880,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
+{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D02,  CAT_WAERMEPUMPE,      VT_UINT,          2882,  STR2882,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr. Elektro-Vorl °Cmin[0-500] //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
 {0x593D0D2E,  CAT_WAERMEPUMPE,      VT_TEMP,          2884,  STR2884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freig Elektro-Vorl unter TA //FUJITSU
@@ -6349,17 +6428,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2912,  STR2912,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
 {0x593D12F3,  CAT_WAERMEPUMPE,      VT_TEMP,          2916,  STR2916,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert WP Max TWW //FUJITSU
 {0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2951,  STR2951,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtaufreigabe unterhalb TA
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2952,  STR2952,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz Abtauen
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2954,  STR2954,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdampfertemp Abtau-Ende
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2963,  STR2963,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Dauer bis Zwangsabtauen
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2964,  STR2964,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtaudauer Maximal
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2965,  STR2965,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtropfdauer Verdampfer
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2966,  STR2966,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abkühldauer Verdampfer
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3002,  STR3002,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp min Kühlbetrieb
+{0x593D08D5,  CAT_WAERMEPUMPE,      VT_TEMP,          2951,  STR2951,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaufreigabe unterhalb TA
+{0x593D08D6,  CAT_WAERMEPUMPE,      VT_TEMP,          2952,  STR2952,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Abtauen
+{0x593D08D8,  CAT_WAERMEPUMPE,      VT_TEMP,          2954,  STR2954,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verdampfertemp Abtau-Ende
+{0x593D08DC,  CAT_WAERMEPUMPE,      VT_MINUTES_WORD,  2963,  STR2963,  0,                    NULL,         FL_OEM, DEV_ALL}, // Dauer bis Zwangsabtauen
+{0x593D08DD,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2964,  STR2964,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaudauer Maximal
+{0x593D08DE,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2965,  STR2965,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtropfdauer Verdampfer
+{0x593D08DF,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2966,  STR2966,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abkühldauer Verdampfer
+{0x593D0CF1,  CAT_WAERMEPUMPE,      VT_TEMP,          3002,  STR3002,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quellentemp min Kühlbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3010,  STR3010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Drehz max V'lator/Q'Pump
+{0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz max V'lator/Q'Pump
+{0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz min V'lator/Q'Pump
+{0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Drehzahl Max
+{0x593D17A8,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3026,  STR3026,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Ein
+{0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Aus
+{0x593D1796,  CAT_WAERMEPUMPE,      VT_TEMP,          3028,  STR3028,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Beginn
+{0x593D1797,  CAT_WAERMEPUMPE,      VT_TEMP,          3029,  STR3029,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Ende
 
 // Energiezähler (Fujitsu Waterstage)
 {0x053D1088,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3090,  STR3090,  sizeof(ENUM3090),     ENUM3090,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Wärme
@@ -6448,25 +6533,25 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D19BD,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3267,  STR3267,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis Alternativ Erz";
 
 // Kaskade
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_OEM, DEV_ALL}, // Führungsstrategie
+{0x153D0842,  CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_OEM, DEV_ALL}, // Führungsstrategie
 {0x153D0843,  CAT_KASKADE,          VT_PERCENT,       3511,  STR3511,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Minimum
 {0x153D0844,  CAT_KASKADE,          VT_PERCENT,       3512,  STR3512,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Maximum
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ENUM,          3544,  STR3544,  sizeof(ENUM3544),     ENUM3544,     DEFAULT_FLAG, DEV_ALL}, // Führender Erzeuger
-{CMD_UNKNOWN, CAT_KASKADE,          VT_ONOFF,         3550,  STR3550,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anfahrentlast Kaskad'pumpe
+{0x0D3D0942,  CAT_KASKADE,          VT_CELPERMIN,     3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
+{0x0D3D0943,  CAT_KASKADE,          VT_CELPERMIN,     3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
+{0x053D0830,  CAT_KASKADE,          VT_SECONDS_WORD,  3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
+{0x053D0831,  CAT_KASKADE,          VT_MINUTES_SHORT, 3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
+{0x053D0832,  CAT_KASKADE,          VT_SECONDS_WORD,  3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
+{0x053D0833,  CAT_KASKADE,          VT_HOURS_WORD,    3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
+{0x053D084E,  CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
+{0x053D083B,  CAT_KASKADE,          VT_ENUM,          3544,  STR3544,  sizeof(ENUM3544),     ENUM3544,     DEFAULT_FLAG, DEV_ALL}, // Führender Erzeuger
+{0x153D0B3C,  CAT_KASKADE,          VT_ONOFF,         3550,  STR3550,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anfahrentlast Kaskad'pumpe
 {0x153D0B3A,  CAT_KASKADE,          VT_TEMP,          3560,  STR3560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufsollwert Minimum
 {0x153D0B3B,  CAT_KASKADE,          VT_TEMP,          3561,  STR3561,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rücklaufsollwert Min OEM
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3562,  STR3562,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
-{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
+{0x153D0B40,  CAT_KASKADE,          VT_ONOFF,         3562,  STR3562,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
+{0x153D0B3F,  CAT_KASKADE,          VT_SECONDS_WORD,  3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
+{0x153D0B3D,  CAT_KASKADE,          VT_TEMP,          3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x153D0B3E,  CAT_KASKADE,          VT_SECONDS_WORD,  3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x053D0846,  CAT_KASKADE,          VT_TEMP,          3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
 
 // Zusatzerzeuger
 {CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_UNKNOWN,       3700,  STR3700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe unter Außentemp
@@ -6517,16 +6602,33 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Feststoffkessel
 {0x513D088A,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4102,  STR4102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Feststoffkessel (nur wenn aktiviert) - Sperrt andere Erzeuger
+{0x513D11CA,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4103,  STR4103,  0,                    NULL,         FL_OEM, DEV_ALL}, // [0] - Feststoffkessel (nur wenn aktiviert) - Ladepriorität TWW Speicher
 {0x513D0885,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4110,  STR4110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Sollwert Minimum
 {0x513D0B0C,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4112,  STR4112,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Maximaler Feststoffkessel-Sollwert
+{0x513D0886,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4114,  STR4114,  0,                    NULL,         FL_OEM, DEV_ALL}, // Temperaturhub Minimum
 {0x513D0887,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4130,  STR4130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Ein
 {0x513D0A04,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4131,  STR4131,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Temperaturdifferenz Aus
 {0x513D0A06,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4133,  STR4133,  sizeof(ENUM4133),     ENUM4133,     DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Vergleichstempertatur
+{0x513D11D1,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4134,  STR4134,  sizeof(ENUM4134),     ENUM4134,     FL_OEM, DEV_ALL}, // TWW-Speicheranbindung
+{0x513D11C8,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4135,  STR4135,  sizeof(ENUM4135),     ENUM4135,     FL_OEM, DEV_ALL}, // Kesselsollwert TWW-Ladung
+{0x053D11D2,  CAT_FESTSTOFFKESSEL,  VT_YESNO,         4136,  STR4136,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasserladung mit Q3
+{0x513D11D0,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4137,  STR4137,  sizeof(ENUM4137),     ENUM4137,     FL_OEM, DEV_ALL}, // Pufferspeicheranbindung
+{0x513D11C9,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4138,  STR4138,  sizeof(ENUM4138),     ENUM4138,     FL_OEM, DEV_ALL}, // Kesselsollwert Pufferladung
 {0x513D089D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4140,  STR4140,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpennachlaufzeit
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4141,  STR4141,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
-{CMD_UNKNOWN, CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4170,  STR4170,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Anl'frostschutz Kess'pumpe
+{0x513D0A05,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4141,  STR4141,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Übertemperaturableitung
+{0x513D0884,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4153,  STR4153,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Rücklaufsollwert Minimum
+{0x513D11C7,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4158,  STR4158,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorl'einfluss Rückl'regelung
+{0x513D087E,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4163,  STR4163,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
+{0x513D0880,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4164,  STR4164,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x513D087F,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4165,  STR4165,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x513D063B,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4170,  STR4170,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anl'frostschutz Kess'pumpe
+{0x513D089E,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4190,  STR4190,  0,                    NULL,         FL_OEM, DEV_ALL}, // Restwärmefkt Dauer Max
+{0x513D066E,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4192,  STR4192,  sizeof(ENUM4192),     ENUM4192,     FL_OEM, DEV_ALL}, // Restwärmefkt Auslösung
+{0x513D089F,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4201,  STR4201,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x513D08A0,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4202,  STR4202,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x513D11C0,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4203,  STR4203,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
+{0x513D11C2,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4204,  STR4204,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
 
-// 4170 Anlagenfrostschutz Kesselpumpe An/Aus
 
 // Pufferspeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4708,  STR4708,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsollwert Kühlen
@@ -7981,6 +8083,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D05C0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8417,  STR8417,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur 2
 {0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kältemitteltemperatur flüssig
 {0x053D163C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensatortemperatur
+{0x593D1783,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // Kondensatortemperatur
+{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8424,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // Kondensationsdruck // actually comes as second value with parameter 8423 on device family 186
 {0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Kondensator //FUJITSU
 {0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Verdampfer
 {0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemperatur
@@ -7989,12 +8093,17 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Ausschaltschwelle 0x593D0766
 {0x593D1769,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8430,  STR8430,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Austritt Min
 {0x053D195A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8431,  STR8431,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quellenzw'kreis Vorlauftemp
+{0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8433,  STR8435_1, 0,                   NULL,         FL_RONLY,     DEV_186_ALL}, // Verdampfungsdruck // actually comes as second value with parameter 8435 on device family 186
+{0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8433,  STR8435_1, 0,                   NULL,         FL_NO_CMD,    DEV_ALL}, // Verdampfungsdruck
 {0x053D196D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8434,  STR8434,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sauggastemperatur
+
 {0x053D163B,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8435,  STR8435,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfungstemperatur
-{0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Überhitzung oder Überhitzungssollwert
-// vorheriges könnte auch 1663 sein weil da noch Überhitzungssollwert übermittelt wird
+{0x593D1664,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8435,  STR8435,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // Verdampfungstemperatur
+{0x593D1662,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8436,  STR8436,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Überhitzungssollwert
+
 {0x053D163A,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8437,  STR8437,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Expansionsventil // kein Funktion
 {0x053D165B,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8438,  STR8438,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Magnetventil
+{0x593D1663,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8439,  STR8436_1,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Überhitzung // actually comes as second value with parameter 8436 on device family 186
 {0x593D0BD4,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8440,  STR8440,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 1 Stillst’zeit Min
 {0x593D0BD5,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8441,  STR8441,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 2 Stillst’zeit Min
 {0x593D0BD6,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8442,  STR8442,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 1 Laufzeit Min
@@ -8023,17 +8132,18 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D17AA,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8465,  STR8465,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Expansionsventil EVI
 {0x053D165C,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8466,  STR8466,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Magnetventil EVI // Keine Funktion
 {0x053D165D,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8467,  STR8467,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Mag'ventil Einspritzkapillare // todo: ENUM ? Keine Funktion
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8469,  STR8469,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Ventilator
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8470,  STR8470,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ventilator K19
-{0x053D0A02,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8471,  STR8471,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Prozessumkehrventil // Keine Funktion
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8475,  STR8475,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfertemperatur
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8477,  STR8477,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp'diff Abtauen Istwert
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8478,  STR8478,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp'diff Abtauen Sollwert
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8480,  STR8480,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtausperrung
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8481,  STR8481,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Zwangsabtauen
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8482,  STR8482,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtaustabilisierung
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8485,  STR8485,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anzahl Abtauversuche
-{CMD_UNKNOWN, CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Status Abtauen WP
+{0x053D0B39,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8469,  STR8469,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Ventilator
+{0x053D0A03,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8470,  STR8470,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ventilator K19
+{0x053D0A02,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8471,  STR8471,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Prozessumkehrventil // Keine Funktion
+{0x593D08E1,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8475,  STR8475,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdampfertemperatur
+{0x593D0A15,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8477,  STR8477,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp'diff Abtauen Istwert
+{0x593D0A14,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8478,  STR8478,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp'diff Abtauen Sollwert
+{0x593D0A16,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8480,  STR8480,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtausperrung
+{0x593D0A17,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8481,  STR8481,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Zwangsabtauen
+{0x593D0D2C,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8482,  STR8482,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtaustabilisierung
+{0x593D08E2,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8485,  STR8485,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anzahl Abtauversuche
+{0x593D08E8,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Status Abtauen WP
+
 
 // Diagnose Erzeuger - Solar
 {0x053D09AB,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8499,  STR8499,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kollektorpumpe 1 (Aus) - Broetje NovoCondens WOB20-25
@@ -8076,6 +8186,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x513D052E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8560,  STR8560,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Feststoffkesseltemperatur
 {0x513D04CF,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8568,  STR8568,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Festst'pumpe
 {0x513D0892,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8570,  STR8570,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr'std Feststoffkessel
+{0x053D14A0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8585,  STR8585,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Regeltemperatur
+{0x053D149F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8586,  STR8586, 0,                     NULL,         FL_RONLY,     DEV_ALL}, // Zusatzerzeugersollwert // // actually comes as second value with parameter 8585 on device family 186
 
 // Diagnose Verbraucher
 {0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
