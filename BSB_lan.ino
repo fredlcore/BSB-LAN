@@ -2345,12 +2345,7 @@ char *printTelegram(byte* msg, int query_line) {
                 case 6: outBufLen+=sprintf(outBuf+outBufLen, WEEKDAY_FRI_TEXT); break;
                 default: break;
               }
-              outBufLen+=sprintf(outBuf+outBufLen,", ");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",hour());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              outBufLen+=sprintf(outBuf+outBufLen, ", %02d:%02d:%02d", hour(), minute(), second());
               DebugOutput.print(pvalstr);
               break;
             }
@@ -4587,7 +4582,7 @@ void loop() {
               case 0x66: msg_cycle = 19; break;
               case 0x7C: msg_cycle = 20; break;
               default:
-                 DebugOutput.print("Unknown request: ");
+                 DebugOutput.print(F("Unknown request: "));
                 for (int c=0;c<9;c++) {
                   if (msg[c]<16) DebugOutput.print("0");
                   DebugOutput.print(msg[c], HEX);
@@ -4731,7 +4726,7 @@ ich mir da nicht)
                   break;
                 case 0x00: break;
                 default:
-                  DebugOutput.print("Unknown telegram: ");
+                  DebugOutput.print(F("Unknown telegram: "));
                   for (int c=0;c<9+pps_offset;c++) {
                     if (msg[c]<16) DebugOutput.print("0");
                     DebugOutput.print(msg[c], HEX);
@@ -5840,7 +5835,7 @@ ich mir da nicht)
               client.print(F("0"));
             }
             client.print(mac[i], HEX);
-            client.print(F(" "));
+            if(i != 5) client.print(F(":"));
           }
           client.println(F("<BR>"));
 
@@ -6911,19 +6906,19 @@ custom_timer = millis();
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  DebugOutput.print("SSID: ");
+  DebugOutput.print(F("SSID: "));
   DebugOutput.println(WiFi.SSID());
 
   // print your WiFi shield's IP address
   IPAddress ip = WiFi.localIP();
-  DebugOutput.print("IP Address: ");
+  DebugOutput.print(F("IP Address: "));
   DebugOutput.println(ip);
 
   // print the received signal strength
   long rssi = WiFi.RSSI();
-  DebugOutput.print("Signal strength (RSSI):");
+  DebugOutput.print(F("Signal strength (RSSI):"));
   DebugOutput.print(rssi);
-  DebugOutput.println(" dBm");
+  DebugOutput.println(F(" dBm"));
 }
 #endif
 
@@ -6984,7 +6979,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
+    Serial.println(F("WiFi shield not present"));
     // don't continue
     while (true);
   }
@@ -6995,14 +6990,14 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.print(F("Attempting to connect to WPA SSID: "));
     Serial.println(ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  Serial.println("You're connected to the network");
+  Serial.println(F("You're connected to the network"));
   
   printWifiStatus();
 #endif
