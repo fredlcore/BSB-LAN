@@ -2605,7 +2605,7 @@ void webPrintSite() {
   }
   if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
     client.print(F(MENU_TEXT_NVA ": "));
-    client.print(F("<A HREF=\"http://www.bsb-lan.de/index.html\">"));
+    client.print(F("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">"));
     client.print(major);
     client.print(F("."));
     client.print(minor);
