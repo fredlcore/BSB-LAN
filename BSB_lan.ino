@@ -2171,6 +2171,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_TEMP_SHORT64: // s8 / 64 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
             case VT_TEMP_SHORT: // s8
+            case VT_TEMP_PER_MIN: // s8
               printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_PRESSURE: // u8 / 10.0 bar
@@ -2183,6 +2184,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_CELMIN: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
@@ -2937,6 +2939,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_BIT:
     case VT_BYTE:
     case VT_TEMP_SHORT:
+    case VT_TEMP_PER_MIN:
       {
       uint8_t t=atoi(val);
       param[0]=0x01;  //enable
@@ -3005,6 +3008,7 @@ int set(int line      // the ProgNr of the heater parameter
     // 16-bit unsigned integer representation
     // Temperature values
     case VT_TEMP_WORD:
+    case VT_CELMIN:
       {
       uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
       if(val[0]!='\0'){
