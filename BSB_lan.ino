@@ -2939,7 +2939,6 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_BIT:
     case VT_BYTE:
     case VT_TEMP_SHORT:
-    case VT_TEMP_PER_MIN:
       {
       uint8_t t=atoi(val);
       param[0]=0x01;  //enable
@@ -2947,6 +2946,16 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=2;
       }
       break;
+
+    case VT_TEMP_PER_MIN:
+      {
+      uint8_t t=atoi(val);
+      param[0]=0x06;  //enable
+      param[1]= t;
+      param_len=2;
+      }
+      break;
+
 
     // ---------------------------------------------
     // 16-bit unsigned integer representation
