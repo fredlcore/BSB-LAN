@@ -15,7 +15,8 @@
 #define UNIT_GRADIENT_TEXT "min/K"
 #define UNIT_GRADIENTKS_TEXT "K/s"
 #define UNIT_INTEGRAL_TEXT "Kmin"
-#define UNIT_CELPERMIN_TEXT "&deg;Cmin"
+#define UNIT_TEMP_PER_MIN_TEXT "&deg;C/min"
+#define UNIT_CEL_MIN_TEXT "&deg;Cmin"
 #define UNIT_LITERPERHOUR_TEXT "l/h"
 #define UNIT_LITERPERMIN_TEXT "l/min"
 
