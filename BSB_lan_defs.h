@@ -3736,6 +3736,7 @@ const char ENUM5890[] PROGMEM_LATEST = {
 "\x15 " ENUM5890_15_TEXT "\0"
 "\x16 " ENUM5890_16_TEXT "\0"
 "\x17 " ENUM5890_17_TEXT "\0"
+"\x18 " ENUM5890_18_TEXT "\0"
 "\x19 " ENUM5890_19_TEXT "\0"
 "\x1a " ENUM5890_1a_TEXT "\0"
 "\x1b " ENUM5890_1b_TEXT "\0"
@@ -4620,8 +4621,8 @@ const char ENUM6623[] PROGMEM_LATEST = {
 };
 
 const char ENUM6624[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x00 " "?" ENUM6624_00_TEXT "\0"
-"\x01 " "?" ENUM6624_01_TEXT
+"\x00 " ENUM6624_00_TEXT "\0"
+"\x01 " ENUM6624_01_TEXT
 };
 
 // LPB   - Trinkwasserzuordnung
@@ -4640,9 +4641,9 @@ const char ENUM6630[] PROGMEM_LATEST = { // numerical values are hypothetical
 };
 
 const char ENUM6631[] PROGMEM_LATEST = {	// numerical values are hypothetical
-"\x00 " "?" ENUM6631_00_TEXT "\0"
-"\x01 " "?" ENUM6631_01_TEXT "\0"
-"\x02 " "?" ENUM6631_02_TEXT
+"\x00 " ENUM6631_00_TEXT "\0"
+"\x01 " ENUM6631_01_TEXT "\0"
+"\x02 " ENUM6631_02_TEXT
 };
 
 // LPB   - Uhrbetrieb
@@ -7289,7 +7290,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D074A,  CAT_LPB,              VT_ENUM,          6625,  STR6625,  sizeof(ENUM6625),     ENUM6625,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Trinkwasserzuordnung
 {0x053D0D04,  CAT_LPB,              VT_ENUM,          6627,  STR6627,  sizeof(ENUM6627),     ENUM6627,     DEFAULT_FLAG, DEV_ALL}, // Kälteanforderung
 {0x053D0ABB,  CAT_LPB,              VT_ENUM,          6630,  STR6630,  sizeof(ENUM6630),     ENUM6630,     FL_OEM, DEV_ALL}, // LPB - Kaskadenmaster
-{0x05050D18,  CAT_LPB,              VT_ENUM,          6631,  STR6631,  sizeof(ENUM6631),     ENUM6631,     DEFAULT_FLAG, DEV_ALL}, // LPB - Externe Erzeuger bei Ökobetrieb
+{0x053D0D18,  CAT_LPB,              VT_ENUM,          6631,  STR6631,  sizeof(ENUM6631),     ENUM6631,     DEFAULT_FLAG, DEV_ALL}, // LPB - Externe Erzeuger bei Ökobetrieb
 {0x053D0D6F,  CAT_LPB,              VT_YESNO,         6632,  STR6632,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TA'grenze ext Erz beachten
 {0x053D006D,  CAT_LPB,              VT_ENUM,          6640,  STR6640,  sizeof(ENUM6640),     ENUM6640,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Uhrbetrieb
 {0x053D009F,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Aussentemperatur Lieferant
