@@ -1997,6 +1997,7 @@
 #define ENUM5890_15_TEXT "Kollektorpumpe 2 Q16"
 #define ENUM5890_16_TEXT "H3-Pumpe Q19"
 #define ENUM5890_17_TEXT "Abgasrelais K17"
+#define ENUM5890_18_TEXT "Anfeuer'hilfe Ventilator K30"
 #define ENUM5890_19_TEXT "Kaskadenpumpe Q25"
 #define ENUM5890_1a_TEXT "Speicherumladepumpe Q11"
 #define ENUM5890_1b_TEXT "TWW Durchmischpumpe Q35"
