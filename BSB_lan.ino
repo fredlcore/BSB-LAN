@@ -6963,6 +6963,7 @@ void setup() {
     DebugOutput.print(Serial.read());
   }
 
+  bus.enableInterface();
   bus.setBusType(bus_type);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 #ifdef WIFI
