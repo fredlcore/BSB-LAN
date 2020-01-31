@@ -460,6 +460,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 
 bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
   byte i;
+  byte offset = 0;
 
   if (bus_type == 2) {
     return _send(tx_msg);
@@ -476,9 +477,20 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   byte A1 = (cmd & 0x00ff0000) >> 16;
   byte A3 = (cmd & 0x0000ff00) >> 8;
   byte A4 = (cmd & 0x000000ff);
+
+  // special treatment of internal query types
+  if (type == 0x12) {   // TYPE_IA1
+    A1 = A3;
+    A2 = A4;
+    offset = 2;
+  }
+  if (type == 0x14) {   // TYPE_IA2
+    A1 = A4;
+    offset = 3;
+  }
   
   if (bus_type == 1) {
-    tx_msg[1] = param_len + 14;
+    tx_msg[1] = param_len + 14 - offset;
     tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
     tx_msg[5] = 0x02;	// yet unknown
     tx_msg[6] = 0x00;	// yet unknown
@@ -490,7 +502,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     tx_msg[11] = A3;
     tx_msg[12] = A4;
   } else {
-    tx_msg[3] = param_len + 11;
+    tx_msg[3] = param_len + 11 - offset;
     tx_msg[4] = type;
     // Adress
     tx_msg[5] = A1;
@@ -520,6 +532,10 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       Serial.println(3000-(timeout-millis()));
 #endif
       i--;
+      byte msg_type = rx_msg[4+(bus_type*4)];
+      if (msg_type == 0x13 || msg_type == 0x15) {   // no recipient check for answers for special query types 0x12/0x13 and 0x14/0x15
+        return true;
+      }
       if (bus_type == 1) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
 	if (rx_msg[2] == myAddr && rx_msg[8]==0x08) {  // TYPE_ERR
