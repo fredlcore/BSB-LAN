@@ -7003,11 +7003,11 @@ void setup() {
   DebugOutput.print(F("free RAM:"));
   DebugOutput.println(freeRam());
 
-  while (Serial.available()) { // TODO: remove? why is this needed? Flush buffer? - should be emtpy after boot (we are still in setup()! :)
+  while (Serial.available()) { // UART buffer often still contains characters after reset if power is not cut
     DebugOutput.print(Serial.read());
   }
 
-  Serial1.begin(4800, SERIAL_8O1);
+  bus.enableInterface();
   bus.setBusType(bus_type);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 #ifdef WIFI

@@ -8,20 +8,23 @@
 
 //#define DEBUG_LL 1
 
-
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
+  bus_type = 0;
+  len_idx = 3;
+  myAddr=addr;
+  destAddr=d_addr;
+  rx_pin=rx;
 
-  if (rx == 19) {	// 19 = RX pin of Serial1 USART module
-    HwSerial = true;
 #if defined(__SAM3X8E__)
-    pinMode(53, OUTPUT);    // provide voltage
-    digitalWrite(53, 1);
-    pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
-    digitalWrite(24, 1);
+  pinMode(53, OUTPUT);    // provide voltage
+  digitalWrite(53, 1);
+  pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
+  digitalWrite(24, 1);
 #endif
+  if (rx_pin == 19) {	// 19 = RX pin of Serial1 USART module
+    HwSerial = true;
     serial = &Serial1;
-//    Serial1.begin(4800, SERIAL_8O1);
   } else {
 #if !defined(__SAM3X8E__)
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
@@ -30,10 +33,12 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
     serial_sw->listen();
 #endif
   }
+}
 
-  myAddr=addr;
-  destAddr=d_addr;
-  rx_pin=rx;
+void BSB::enableInterface() {
+  if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
+    Serial1.begin(4800, SERIAL_8O1);
+  }
 }
 
 uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
@@ -65,7 +70,7 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   Serial.print(F("Destination address: "));
   Serial.println(destAddr);
 */
-  return bus_type_val;
+  return bus_type;
 }
 
 uint8_t BSB::getBusType() {
