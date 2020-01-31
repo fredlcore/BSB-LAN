@@ -1183,7 +1183,7 @@ void SerialPrintAddr(byte addr){
 }
 
 /** *****************************************************************
- *  Function:  TranslateAddr()
+ *  Function:  TranslateType()
  *  Does:      Returns the message type in human-readable form.
  *  Pass parameters:
  *   byte type a number which indicates the type
@@ -2971,9 +2971,14 @@ int set(int line      // the ProgNr of the heater parameter
 
     case VT_TEMP_PER_MIN:
       {
-      uint8_t t=atoi(val);
-      param[0]=0x06;  //enable
-      param[1]= t;
+      if(val[0]!='\0'){
+        uint8_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]= t;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+      }
       param_len=2;
       }
       break;
@@ -3772,7 +3777,11 @@ char* query(int line_start  // begin at this line (ProgNr)
             if (type == VT_HOUR_MINUTES) {
               client.print(pvalstr);              
             } else {
-              client.print(strtod(pvalstr,NULL));
+              if  (pvalstr[2] == '-') {   // do not run strtod on disabled parameters (---)
+                client.print(F("---"));
+              } else {
+                client.print(strtod(pvalstr,NULL));
+              }
             }
             client.print(F("'></td><td>"));
             if ((flags & FL_RONLY) != FL_RONLY) {
