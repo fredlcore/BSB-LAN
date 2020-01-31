@@ -37,16 +37,20 @@
 #endif
 
 /* telegram types */
-#define TYPE_QINF 0x01  // request info telegram
-#define TYPE_INF  0x02
-#define TYPE_SET  0x03
-#define TYPE_ACK  0x04
-#define TYPE_NACK 0x05
-#define TYPE_QUR  0x06
-#define TYPE_ANS  0x07
-#define TYPE_ERR  0x08
+#define TYPE_QINF 0x01 // request info telegram
+#define TYPE_INF  0x02 // send info telegram
+#define TYPE_SET  0x03 // set parameter
+#define TYPE_ACK  0x04 // acknowledge set parameter
+#define TYPE_NACK 0x05 // do not acknowledge set parameter
+#define TYPE_QUR  0x06 // query parameter
+#define TYPE_ANS  0x07 // answer query
+#define TYPE_ERR  0x08 // error
 #define TYPE_QRV  0x0F // query  reset value
 #define TYPE_ARV  0x10 // answer reset value
+#define TYPE_IQ1  0x12 // internal query type 1 (still undecoded)
+#define TYPE_IA1  0x13 // internal answer type 1 (still undecoded)
+#define TYPE_IQ2  0x14 // internal query type 2 (still undecoded)
+#define TYPE_IA2  0x15 // internal answer type 2 (still undecoded)
 
 /* telegram addresses */
 #define ADDR_HEIZ  0x00

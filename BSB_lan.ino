@@ -1076,18 +1076,25 @@ void SerialPrintHex32(uint32_t val) {
 void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
   int data_len=0;
+  byte offset = 0;
+  byte msg_type = msg[4+(bus.getBusType()*1)];
+  if (bus_type != BUS_PPS) {
+    if (msg_type >= 0x12) {
+      offset = 4;
+    }
+  }
   if (bus.getBusType() == BUS_BSB) {
-    data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-11+offset;     // get packet length, then subtract
   }
   if (bus.getBusType() == BUS_LPB) {
-    data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
+    data_len=msg[bus.getLen_idx()]-14+offset;     // get packet length, then subtract
   }
   if (bus.getBusType() == BUS_PPS) {
     data_len=9;
   }
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
-    SerialPrintHex(msg[bus.getPl_start()+i]);
+    SerialPrintHex(msg[bus.getPl_start()-offset+i]);
     DebugOutput.print(F(" "));
   }
 }
@@ -1199,6 +1206,10 @@ char *TranslateType(byte type, char *mtype){
     case TYPE_QRV: strncpy(mtype, "QRV", 4); break;
     case TYPE_ARV: strncpy(mtype, "ARV", 4); break;
     case TYPE_ERR: strncpy(mtype, "ERR", 4); break;
+    case TYPE_IQ1: strncpy(mtype, "IQ1", 4); break;
+    case TYPE_IA1: strncpy(mtype, "IA1", 4); break;
+    case TYPE_IQ2: strncpy(mtype, "IQ2", 4); break;
+    case TYPE_IA2: strncpy(mtype, "IA2", 4); break;
     // If no match found: print the hex value
     default: sprintf(mtype, "%02X", type); break;
   } // endswitch
@@ -1927,6 +1938,8 @@ char *printTelegram(byte* msg, int query_line) {
 #endif
 */
 
+  byte msg_type = msg[4+(bus.getBusType()*4)];
+
   if (bus.getBusType() != BUS_PPS) {
     // source
     SerialPrintAddr(msg[1+(bus.getBusType()*2)]); // source address
@@ -1934,7 +1947,7 @@ char *printTelegram(byte* msg, int query_line) {
     SerialPrintAddr(msg[2]); // destination address
     DebugOutput.print(F(" "));
     // msg[3] contains the message length, not handled here
-    SerialPrintType(msg[4+(bus.getBusType()*4)]); // message type, human readable
+    SerialPrintType(msg_type); // message type, human readable
     DebugOutput.print(F(" "));
   } else {
     if (!monitor) {
@@ -2036,8 +2049,10 @@ char *printTelegram(byte* msg, int query_line) {
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus.getBusType() != BUS_PPS) {
       DebugOutput.print(F("     "));
-      SerialPrintHex32(cmd);             // print what we have got
-      DebugOutput.print(F(" "));
+      if (msg_type < 0x12) {
+        SerialPrintHex32(cmd);             // print what we have got
+        DebugOutput.print(F(" "));
+      }
     }
   }else{
     i = save_i;
@@ -2072,10 +2087,18 @@ char *printTelegram(byte* msg, int query_line) {
   // decode parameter
   int data_len=0;
   if (bus.getBusType() == BUS_BSB) {
-    data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
+    if (msg_type < 0x12) {
+      data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
+    } else {
+      data_len=msg[bus.getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
+    }
   }
   if (bus.getBusType() == BUS_LPB) {
-    data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
+    if (msg_type < 0x12) {
+      data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
+    } else {
+      data_len=msg[bus.getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
+    }
   } 
   if (bus.getBusType() == BUS_PPS) {
     if (msg[0] != 0x1E) {
@@ -2084,14 +2107,13 @@ char *printTelegram(byte* msg, int query_line) {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
     }
   }
-
   if(data_len < 0){
     DebugOutput.print(F("len ERROR "));
     DebugOutput.print(msg[bus.getLen_idx()]);
   }else{
     if(data_len > 0){
       if(known){
-        if(msg[4+(bus.getBusType()*4)]==TYPE_ERR){
+        if(msg_type==TYPE_ERR){
           char *p=outBuf+outBufLen;
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
@@ -6976,6 +6998,7 @@ void setup() {
     DebugOutput.print(Serial.read());
   }
 
+  Serial1.begin(4800, SERIAL_8O1);
   bus.setBusType(bus_type);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 #ifdef WIFI
