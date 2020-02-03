@@ -5840,7 +5840,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x393D2F89,  CAT_HK1,              VT_TEMP_SHORT5_US,734,   STR734,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumsollabsenkung mit Schaltuhr
 {0x213D0663,  CAT_HK1,              VT_TEMP,          740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
 {0x213D0662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
-{0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1
+{0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1, also used by Brötje IDA and FE ISR Plus
 {0x2D3D0D85,  CAT_HK1,              VT_PERCENT,       744,   STR744,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Soll Einschaltverh R'stat
 {0x2D3D0603,  CAT_HK1,              VT_PERCENT,       750,   STR750,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Raumeinfluss
 {0x2D3D0614,  CAT_HK1,              VT_TEMP,          760,   STR760,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumtemperaturbegrenzung
@@ -8383,7 +8383,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D08BF,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9410,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Vorreglermischer Auf (Y19)
 {0x053D08C0,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9411,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Vorreglermischer Zu (Y20)
 {0x053D0AD7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9412,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Zeitprogramm 5 Relais (K13)
-{0x053D0B02,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9413,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Wärmeanforderung (K27)
+{0x053D0B02,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9413,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Wärmeanforderung (K27), also used by Brötje IDA
 {0x053D0B03,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9414,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Kälteanforderung (K28)
 {0x053D0B04,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9415,  STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software: Zustand Luftentfeuchter (K29)
 
@@ -8476,11 +8476,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0521,  CAT_USER_DEFINED,     VT_TEMP,          10004, STR8700,  0,                    NULL,         DEFAULT_FLAG+FL_SPECIAL_INF, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt
 
 {0x05000BDF,  CAT_USER_DEFINED,     VT_UNKNOWN,       10050, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
-{0x05000B02,  CAT_USER_DEFINED,     VT_UNKNOWN,       10051, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
 {0x0500137D,  CAT_USER_DEFINED,     VT_TEMP,          10052, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
 {0x11000C12,  CAT_USER_DEFINED,     VT_UNKNOWN,       10053, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
-{0x21000A88,  CAT_USER_DEFINED,     VT_TEMP,          10054, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from Brötje IDA
-{0x21000A88,  CAT_USER_DEFINED,     VT_UNKNOWN,       10055, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Captured from FE ISR Plus
 {0x0500008F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10056, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 00
 {0x2D00020F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10057, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 06 06 02 00 2D 8A 90 90 90 90 90 90 FC 00 00
 {0x31000210,  CAT_USER_DEFINED,     VT_UNKNOWN,       10058, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 03 00
@@ -8546,7 +8543,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D07BD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10251, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D07EA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10253, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10254, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
-{0x053D08F2,  CAT_USER_DEFINED,     VT_UNKNOWN,       10255, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 {0x053D08FC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10256, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 0A
 {0x053D0904,  CAT_USER_DEFINED,     VT_UNKNOWN,       10257, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 78
 {0x053D0905,  CAT_USER_DEFINED,     VT_UNKNOWN,       10258, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 14
