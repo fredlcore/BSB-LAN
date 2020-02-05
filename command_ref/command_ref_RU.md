@@ -3,10 +3,11 @@
 | URL-command           | Effect                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Query value/setting of parameter \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Query values/settings of parameters \<x\>, \<y\> and \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Query values/settings of parameters \<x\>, \<y\> and \<z\>   
 |  /\<x\>-\<y\>         | Query values/settings of parameters \<x\> to \<y\>  
 |  /A                   | Query 24h-average values  
 |  /A=\<x\>,\<y\>       | Change 24h-average value calculation of parameters \<x\>, \<y\>  
+|  /A0			| Disable 24h average calculation temporarily  
 |  /B                   | Query accumulated burner-runtimes (in seconds) and -cycles (including DHW)  
 |  /B0                  | Reset counter of burner-runtime and -cycles  
 |  /C                   | Display configuration of BSB-LAN  

@@ -3,10 +3,11 @@
 | URL-command           | Effect                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Interroga il valore del parametro \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Interroga i valori dei parametri \<x\>, \<y\> and \<z\>
+|  /\<x\>/\<y\>/\<z\>   | Interroga i valori dei parametri \<x\>, \<y\> and \<z\>
 |  /\<x\>-\<y\>         | Interroga i valori dei parametri da \<x\> a \<y\>
 |  /A                   | Interroga i valori medi su 24h dei parametri impostati
 |  /A=\<x\>,\<y\>       | Imposta i parametri per il calcolo medio su 24h \<x\>, \<y\>
+|  /A0			| Disable 24h average calculation temporarily  
 |  /B                   | Interroga i tempi (in secondi) e i cicli di funzionamento del bruciatore (incluso ACS)
 |  /B0                  | Azzera il contatore dei tempi e dei cicli di funzionamento del bruciatore
 |  /C                   | Visualizza la configurazione di BSB-LAN

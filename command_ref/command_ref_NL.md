@@ -3,10 +3,11 @@
 | URL-commando          | Resultaat                                                                     |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Opvragen van waarde/instelling van parameter \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Opvragen van waardes/waardes van parameters \<x\>, \<y\> and \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Opvragen van waardes/waardes van parameters \<x\>, \<y\> and \<z\>   
 |  /\<x\>-\<y\>         | Opvragen van waardes/waardes van parameters \<x\> to \<y\>  
 |  /A                   | Opvragen van 24uurs-gemiddelde waardes  
 |  /A=\<x\>,\<y\>       | Verander het 24uurs-gemiddelde waarde berekening van parameters \<x\>, \<y\>  
+|  /A0			| Disable 24h average calculation temporarily  
 |  /B                   | Opvragen van geaccumuleerde brander-looptijd (in secondes) en -cycli (inbegrepen SWW)  
 |  /B0                  | Reset teller van brander-looptijd and -cycli  
 |  /C                   | Weergave configuratie van BSB-LAN 

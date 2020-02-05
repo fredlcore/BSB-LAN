@@ -3,10 +3,11 @@
 | Polecenie URL           | Efekt                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Wyświetlenie/ustawienie wartośći parametru \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Wyświetlenie/ustawienie wartośći parametrów \<x\>, \<y\> i \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Wyświetlenie/ustawienie wartośći parametrów \<x\>, \<y\> i \<z\>   
 |  /\<x\>-\<y\>         | Wyświetlenie/ustawienie wartośći parametrów \<x\> do \<y\>  
 |  /A                   | Wyświetlenie wartości średnich z 24h  
 |  /A=\<x\>,\<y\>       | Zmiana obliczanie wartości średniej 24-godzinnej dla parametrów \<x\>, \<y\>  
+|  /A0			| Disable 24h average calculation temporarily  
 |  /B                   | Wyświetl skumulowany czasy pracy palnika (w sekundach) (w tym cwu)  
 |  /B0                  | Reset licznik czasu pracy palnika  
 |  /C                   | Wyświetl konfigurację BSB-LAN  
