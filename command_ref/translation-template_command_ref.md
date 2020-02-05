@@ -7,7 +7,7 @@
 |  /\<x\>-\<y\>         | **please enter translation here**
 |  /A                   | **please enter translation here**
 |  /A=\<x\>,\<y\>       | **please enter translation here**
-|  /A0			| **please enter translation here**  
+|  /A=0			| **please enter translation here**  
 |  /B                   | **please enter translation here**
 |  /B0                  | **please enter translation here**
 |  /C                   | **please enter translation here**

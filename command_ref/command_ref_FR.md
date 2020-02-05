@@ -7,7 +7,7 @@
 |  /\<x\>-\<y\>         | Affichage des valeurs / réglages des paramètres \<x\> à \<y\>  								|
 |  /A                   | Affichage des moyennes sur 24h											|
 |  /A=\<x\>,\<y\>       | Change le calcul des valeurs moyennes sur 24h des paramètres \<x\>, \<y\>  						|
-|  /A0			| Disable 24h average calculation temporarily  
+|  /A=0			| Disable 24h average calculation temporarily  
 |  /B                   | Affichage des temps de fonctionnement cumulés du brûleur (en sec.) (y compris eau chaude sanitaire)  						|
 |  /B0                  | Remise à zéro du temps de fonctionnement du brûleur 										|
 |  /C                   | Affichage de la configuration de BSB_lan  										|
