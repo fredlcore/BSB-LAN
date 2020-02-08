@@ -16,7 +16,7 @@
 |  /D0                  | **please enter translation here**
 |  /E\<x\>              | **please enter translation here**
 |  /G\<x\>              | **please enter translation here**
-|  /G\<x\>,\<y\>        | **please enter translation here**
+|  /G\<x\>=\<y\>        | **please enter translation here**
 |  /G\<x\>,I            | **please enter translation here**
 |  /I\<x\>=\<y\>        | **please enter translation here**
 |  /JK=\<x\>        	| **please enter translation here**

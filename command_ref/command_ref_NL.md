@@ -16,7 +16,7 @@
 |  /D0                  | Reset logfile en maak een nieuwe header 
 |  /E\<x\>              | Toon ENUM-waardes van parameter \<x\>  
 |  /G\<x\>              | GPIO: Opvragen van pin \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> naar hoog (\<y\> = 1) of laag (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Set pin \<x\> naar hoog (\<y\> = 1) of laag (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Opvragen van pin \<x\> tijdens het instellen op INPUT 
 |  /I\<x\>=\<y\>        | Stuur INF-message naar parameter \<x\> met waarde \<y\>  
 |  /JK=\<x\>        	| JSON: Opvragen van alle parameters van categorie \<x\>  

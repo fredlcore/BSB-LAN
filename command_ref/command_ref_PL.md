@@ -16,7 +16,7 @@
 |  /D0                  | Zresetuj plik log i utwórz nowy nagłówek  
 |  /E\<x\>              | Wyświetl liste możliwych wartości tekstu parametru \<x\>  
 |  /G\<x\>              | GPIO: Wyświetl stan pinu \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Wyświetl stan pinu \<x\> i zmień typ na weściowy  
 |  /I\<x\>=\<y\>        | Wyślij komunikat INF do parametru \<x\> z wartością \<y\>  
 |  /JK=\<x\>        	| JSON: Zapytanie o wszystkie parametry kategorii \<x\>  

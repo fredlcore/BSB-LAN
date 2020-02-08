@@ -16,7 +16,7 @@
 |  /D0                  | Cancella il file di registro e ne crea una nuovo vuoto
 |  /E\<x\>              | Visualizza i valori ENUM del parametro \ <x \>
 |  /G\<x\>              | GPIO: Interroga il pin \<x\>
-|  /G\<x\>,\<y\>        | GPIO: Imposta il pin \<x\> a HIGH (\<y\> = 1) oppure a LOW (\<y\> = 0)
+|  /G\<x\>=\<y\>        | GPIO: Imposta il pin \<x\> a HIGH (\<y\> = 1) oppure a LOW (\<y\> = 0)
 |  /G\<x\>,I            | GPIO: Interroga il pin \<x\> mentre lo imposta a INPUT
 |  /I\<x\>=\<y\>        | Invia un messaggio INF al parametro \<x\> con valore \<y\>
 |  /JK=\<x\>        	| JSON: Interroga una categoria specifica \<x\>
