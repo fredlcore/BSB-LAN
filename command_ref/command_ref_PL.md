@@ -38,6 +38,7 @@
 |  /R\<x\>              | Wyświetl i zrestetuj parametr \<x\>  
 |  /S\<x\>=\<y\>        | Ustaw wartość <y> dla parametru \<x\>  
 |  /T                   | Wyświetl opcjonalne czujniki (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Aktywuj (\<x\> = 1) lub dezaktywuj (\<x\> = 0) tryb przekazywania dodatkowych informacji na interfejs szeregowy Arduino  
 |  /X                   | Wyświetl opcjonalne termostaty MAX!  
 

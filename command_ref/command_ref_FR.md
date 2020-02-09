@@ -38,6 +38,7 @@
 |  /R\<x\>              | Demande la valeur par défaut du paramètre \<x\>  									|
 |  /S\<x\>=\<y\>        | Envoie la valeur <y> au paramètre \<x\>  										|
 |  /T                   | Interroge les capteurs des type DS18B20 et DHT22 (facultatifs)  										|
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Active (\<x\> = 1) ou désactive (\<x\> = 0) l'affichage détaillé sur le port série  						|
 |  /X                   | Interroge les thermostats de type MAX! (facultatifs)   										|
 

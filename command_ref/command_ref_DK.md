@@ -39,6 +39,7 @@
 |  /R\<x\>              | Query reset-value of parameter \<x\>  
 |  /S\<x\>=\<y\>        | Set value <y> for parameter \<x\>  
 |  /T                   | Query optional sensors (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Activate (\<x\> = 1) or deactivate (\<x\> = 0) verbose output mode  
 |  /X                   | Query optional MAX!-thermostats  
 

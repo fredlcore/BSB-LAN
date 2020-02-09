@@ -39,6 +39,7 @@
 |  /R\<x\>              | Ripristina il valore del parametro \<x\> 
 |  /S\<x\>=\<y\>        | Imposta il valore \<y\> per il parametro \<x\>
 |  /T                   | Interroga i sensori opzionali (DS18B20/DHT22)
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Attiva (\<x\> = 1) oppure disattiva (\<x\> = 0) la modalità verbose di output
 |  /X                   | Interroga i termoatati MAX! opzionali
 

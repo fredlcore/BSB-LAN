@@ -39,6 +39,7 @@
 |  /R\<x\>              | Opvragen van de reset-waarde van de parameter \<x\>  
 |  /S\<x\>=\<y\>        | Stel de waarde <y> in voor de parameter \<x\>  
 |  /T                   | Opvragen van optionele sensors (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Activeren (\<x\> = 1) of deactiveren (\<x\> = 0) uitgebreide uitvoer modus 
 |  /X                   | Opvragen van optionele MAX! -Thermostaten  
 
