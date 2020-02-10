@@ -5443,14 +5443,12 @@ ich mir da nicht)
         }
 
         if (p[1]=='J') {
-          client.println(F("HTTP/1.1 200 OK"));
-          client.println(F("Content-Type: application/json; charset=utf-8"));
-          client.println();
-          client.println(F("{"));
-
+          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
+          client.print(buffer);
+          char jsonbuffer[512];
           int i=0;
           uint32_t cmd=0;
-            
+          char formatbuf[80];
           // Parse potential JSON payload
 
           char json_temp[11];
@@ -5517,40 +5515,45 @@ ich mir da nicht)
               }
 
               output = false;
+              jsonbuffer[0] = 0;
+              int buffershiftedbycolon = 0;
               if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
                 been_here = true;
               } else {
-                client.println(F(","));
+//                client.println(F(","));
+                strcpy_P(jsonbuffer, PSTR(","));
+                buffershiftedbycolon = strlen(jsonbuffer);
               }
               if (p[2]=='K' && !isdigit(p[4])) {
                 uint16_t x=2;
                 uint8_t cat=0;
-                client.print(F("\"0\": { \"name\": \""));
                 while (x<sizeof(ENUM_CAT)) {
-                  char z = pgm_read_byte_far(pgm_get_far_address(ENUM_CAT)+x);
-                  if (z == '\0') {
-                    cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-                    cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
-                    client.print(F("\", \"min\": "));
-                    client.print(cat_min);
-                    client.print(F(", \"max\": "));
-                    client.print(cat_max);
-                    if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
-                      cat++;
-                      client.println(F(" },"));
-                      client.print(F("\""));
-                      client.print(cat);
-                      client.print(F("\": { \"name\": \""));
-                      x = x + 3;
-                      continue;
-                    } else {
-                      client.print(F(" }"));
-                      json_token = NULL;
-                      break;
-                    }
+                  char z;
+                  strcpy_P(formatbuf, PSTR("\"%d\": { \"name\": \""));
+                  sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, cat);
+                  buffershiftedbycolon = 0;
+                  char *outBufp = jsonbuffer + strlen(jsonbuffer);
+                  strcpy_PF(outBufp, pgm_get_far_address(ENUM_CAT)+x);
+                  uint16_t y = strlen(outBufp);
+                  x += y;
+                  outBufp += y;
+                  cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
+                  cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+                  strcpy_P(formatbuf, PSTR("\", \"min\": %d, \"max\": %d },\n"));
+                  sprintf(outBufp, formatbuf, cat_min, cat_max);
+                  if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
+                    cat++;
+                    x += 3;
+                    client.print(jsonbuffer);
+                    continue;
+                  } else {
+                    y = strlen(outBufp);
+                    outBufp[--y] = 0;//shift to last non-zero char ('\n') and clear it
+                    outBufp[--y] = 0;//shift to last non-zero char (',') and clear it
+                    client.print(jsonbuffer);
+                    json_token = NULL;
+                    break;
                   }
-                  client.print(z);
-                  x++;
                 }
                 json_token = NULL;
               }
@@ -5583,21 +5586,16 @@ ich mir da nicht)
                 uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
                 uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
-                strcpy_PF(buffer, get_cmdtbl_desc(i));
+                strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
+                if (p[2] == 'Q') buffershiftedbycolon = 0;
+                sprintf(jsonbuffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
+                buffershiftedbycolon = 0;
+                if (!been_here2 || p[2] == 'Q') been_here2=true;
 
-                if (!been_here2 || p[2] == 'Q') {
-                  been_here2=true;
-                } else {
-                  client.println(F(","));
-                }
-
-                client.print(F("  \""));
-                client.print(json_parameter);
-                client.println(F("\": {"));
-
-                client.print(F("    \"name\": \""));
-                client.print(buffer);
-                client.println(F("\","));
+                char *bufferp = jsonbuffer + strlen(jsonbuffer);
+                strcpy_PF(bufferp, get_cmdtbl_desc(i));
+                strcat_P(bufferp, PSTR("\",\n"));
+                client.print(jsonbuffer);
 
                 uint8_t div_unit_len=0;
                 uint8_t div_data_type=0;
@@ -5638,7 +5636,7 @@ ich mir da nicht)
                   } else if (div_unit_len <= 1) {
                     if (div_data_type != DT_DTTM) {
                       unit_str = strstr(ret_val_str, " ");
-                    }       
+                    }
                     if (unit_str != NULL) {
                       // Terminate the value sring at the position of the found space.
                       *unit_str = '\0';
@@ -5661,88 +5659,106 @@ ich mir da nicht)
                     }
                   }
 
-                  client.print(F("    \"value\": \""));
-                  client.print(ret_val_str);
-                  client.println(F("\","));
-
-                  client.print(F("    \"unit\": \""));
-                  client.print(unit_str);
-                  client.println(F("\","));
-
-                  client.print(F("    \"desc\": \""));
-                  if (div_data_type == DT_ENUM) {
-                    client.print(desc_str);
-                  }
-                  client.println(F("\","));
+//                  strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \"%s\",\n"));
+//                  sprintf(outBuf, formatbuf, ret_val_str, unit_str, ((div_data_type == DT_ENUM)?desc_str:""));
+//                  client.print(outBuf);
+                  strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
+                  sprintf(jsonbuffer, formatbuf, ret_val_str, unit_str);
+                  if(div_data_type == DT_ENUM)
+                    strcat(jsonbuffer,desc_str);
+                  strcat_P(jsonbuffer,PSTR("\",\n"));
+                  client.print(jsonbuffer);
                 }
 
                 if (p[2] != 'Q') {
-                  client.println(F("    \"possibleValues\": ["));
-                  if (enumstr_len > 0) {
-                    uint16_t x = 0;
-                    uint16_t val = 0;
-                    been_here=false;
-                    while (x < enumstr_len) {
-                      if (!been_here) {
-                        been_here = true;
-                      } else {
-                        client.println(F(","));
-                      }
-                      client.print(F("      { \"enumValue\": \"")); 
-                      if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                        val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
+                  strcpy_P(formatbuf, PSTR("    \"possibleValues\": [\n"));
+                  client.print(formatbuf);
+
+                  if (type == VT_ONOFF || type == VT_YESNO) {
+                    jsonbuffer[0] = 0;
+                    strcat_P(jsonbuffer, PSTR("      { \"enumValue\": \"0\", \"desc\": \""));
+                    if (type == VT_ONOFF) {
+                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_OFF));
+                    } else {
+                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_NO));
+                    }
+                    strcat_P(jsonbuffer, PSTR("\" },\n      { \"enumValue\": \""));
+                    if (type == VT_ONOFF) {
+                      strcat_P(jsonbuffer, PSTR("255"));
+                    } else {
+                      strcat_P(jsonbuffer, PSTR("1"));
+                    }
+                    strcat_P(jsonbuffer, PSTR("\", \"desc\": \""));
+                    if (type == VT_ONOFF) {
+                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_ON));
+                    } else {
+                      strcat_P(jsonbuffer, PSTR(MENU_TEXT_YES));
+                    }
+                    strcat_P(jsonbuffer, PSTR("\" }"));
+                    client.print(jsonbuffer);
+                  } else {
+                    if (enumstr_len > 0) {
+                      uint16_t x = 0;
+                      uint16_t val = 0;
+                      been_here=false;
+                      while (x < enumstr_len) {
+                        if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+                          val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
+                          x++;
+                        }else{
+                          val=uint16_t(pgm_read_byte_far(enumstr+x));
+                        }
+                        strcpy_P(formatbuf, PSTR(",\n      { \"enumValue\": \"%d\", \"desc\": \""));
+                        sprintf(jsonbuffer, been_here?formatbuf:(formatbuf + 2), val); //do not print ",\n" if it first enumValue
+                        if (!been_here) been_here = true;
+                        client.print(jsonbuffer);
+                        //skip leading space
+                        x = x + 2;
+//                        strcpy_PF(buffer, pgm_get_far_address(enumstr)+x);
+                        char z = pgm_read_byte_far(enumstr+x);
+                        char *outB = jsonbuffer;
+                        while (z != '\0') {
+                            outB[0] = z;
+                            outB++;
+                          x++;
+                          z = pgm_read_byte_far(enumstr+x);
+                        }
+                        outB[0] = 0;
+//                        x += strlen(buffer);
+                        strcat_P(jsonbuffer, PSTR("\" }"));
+                        client.print(jsonbuffer);
                         x++;
-                      }else{
-                        val=uint16_t(pgm_read_byte_far(enumstr+x));
                       }
-                      client.print(val);
-                      client.print(F("\", \"desc\": \""));
-                      //skip leading space
-                      x = x + 2;
-                      char z = pgm_read_byte_far(enumstr+x);
-                      while (z != '\0') {
-                        client.print(z);
-                        x++;
-                        z = pgm_read_byte_far(enumstr+x);
-                      }
-                      client.print(F("\" }"));
-                      x++;
                     }
                   }
-                  client.println();
-                  client.println(F("    ],"));
+                  //client.println();
+                  strcpy_P(formatbuf, PSTR("\n    ],\n"));
+                  client.print(formatbuf);
                 }
 
-                client.print(F("    \"dataType\": "));
-                client.print(div_data_type);
-                client.println();
-
-                client.print(F("  }"));
+                strcpy_P(formatbuf, PSTR("    \"dataType\": %d\n  }"));
+                sprintf(jsonbuffer, formatbuf, div_data_type);
+                client.print(jsonbuffer);
               }
 
               if (p[2]=='S') {
-                DebugOutput.print(F("Setting parameter "));
-                DebugOutput.print(json_parameter);
-                DebugOutput.print(F(" to "));
-                DebugOutput.print(json_value_string);
-                DebugOutput.print(F(" with type "));
-                DebugOutput.println(json_type);
                 int status = set(json_parameter, json_value_string, json_type);
-                client.print(F("  \""));
-                client.print(json_parameter);
-                client.println(F("\": {"));
-                client.print(F("    \"status\": "));
-                client.print(status);
-                client.println();
-                client.print(F("  }"));
+                strcpy_P(formatbuf, PSTR("  \"%s\": {\n    \"status\": %d\n  }"));
+                sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, json_parameter, status);
+                buffershiftedbycolon = 0;
+                client.print(jsonbuffer);
+
+                strcpy_P(formatbuf, PSTR("Setting parameter %s to %s with type %s\n"));
+                sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
+                DebugOutput.print(jsonbuffer);
               }
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
                 json_token = strtok(NULL,",");
               }
             }
           }
-          client.println();
-          client.println(F("}"));
+          strcpy_P(formatbuf, PSTR("\n}\n"));
+          client.print(formatbuf);
           client.flush();
           break;
         }
