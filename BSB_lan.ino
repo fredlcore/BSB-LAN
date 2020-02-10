@@ -5110,7 +5110,12 @@ ich mir da nicht)
             }
 
             DebugOutput.print(F("File opened from SD: ")); DebugOutput.println(urlString);
-            strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: "));
+            strcpy_P(buffer, PSTR("HTTP/1.1 "));
+            if((httpflags & 8))
+              strcat_P(buffer, PSTR("304 Not Modified"));
+            else
+              strcat_P(buffer, PSTR("200 OK"));
+            strcat_P(buffer, PSTR("\nContent-Type: "));
             switch(mimetype){
               case 1: getfarstrings = PSTR("text/html"); break;
               case 2: getfarstrings = PSTR("text/css"); break;
