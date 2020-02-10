@@ -3705,6 +3705,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               client.println(F("</option>"));
               client.print(F("<option value='1'"));
               if (val>0) {
+                strcpy_P(pvalstr, PSTR("1")); //define one value instead two (1 or 255)
                 client.print(F(" selected"));
               }
               client.print(F(">"));
@@ -5682,13 +5683,7 @@ ich mir da nicht)
                     } else {
                       strcat_P(jsonbuffer, PSTR(MENU_TEXT_NO));
                     }
-                    strcat_P(jsonbuffer, PSTR("\" },\n      { \"enumValue\": \""));
-                    if (type == VT_ONOFF) {
-                      strcat_P(jsonbuffer, PSTR("255"));
-                    } else {
-                      strcat_P(jsonbuffer, PSTR("1"));
-                    }
-                    strcat_P(jsonbuffer, PSTR("\", \"desc\": \""));
+                    strcat_P(jsonbuffer, PSTR("\" },\n      { \"enumValue\": \"1\", \"desc\": \""));
                     if (type == VT_ONOFF) {
                       strcat_P(jsonbuffer, PSTR(MENU_TEXT_ON));
                     } else {
