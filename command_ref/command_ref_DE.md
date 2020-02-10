@@ -8,6 +8,7 @@
 |  /A                   | Anzeigen der 24h-Durchschnittswerte  
 |  /A=\<x\>,\<y\>       | Ändern der 24h-Durchschnittswertberechnung in Parameter \<x\>, \<y\>  
 |  /B                   | Anzeige akkumulierter Brennerlaufzeiten (in Sek.) und -takte (inkl. TWW)  
+|  /A=0			| 24h-Durchschnittswertberechnung temporär deaktivieren  
 |  /B0                  | Zurücksetzen des Zählers Brennerlaufzeiten und -takte  
 |  /C                   | Anzeige der Konfiguration von BSB-LAN  
 |  /D                   | Anzeige der Logdatei der microSD-Karte  
@@ -15,7 +16,7 @@
 |  /D0                  | Zurücksetzen der Logdatei & neue Generierung des Headers  
 |  /E\<x\>              | ENUM-Werte für Parameter \<x\> anzeigen  
 |  /G\<x\>              | GPIO: Abfragen des Pins \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Setzen des Pins \<x\> auf high (\<y\> = 1) oder low (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Setzen des Pins \<x\> auf high (\<y\> = 1) oder low (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Abfragen des Pins \<x\> mit gleichzeitigem Setzen auf INPUT  
 |  /I\<x\>=\<y\>        | INF-Nachricht an Parameter \<x\> mit Wert \<y\> senden  
 |  /JK=\<x\>        	| JSON: Abfrage der verfügbaren Parameter der Kategorie \<x\>  
@@ -38,6 +39,7 @@
 |  /R\<x\>              | Abfrage des Reset-Werts für Parameter \<x\>  
 |  /S\<x\>=\<y\>        | Wert \<y\> für Parameter \<x\> setzen  
 |  /T                   | Abfrage optional angeschlossener Sensoren (DS18B20/DHT22)  
+|  /U                   | Zeigt die benutzerdefinierten Variablen an, falls diese in `BSB_lan_custom.h` verwendet werden  
 |  /V\<x\>              | Verbositäts-Modus aktivieren (\<x\> = 1) oder deaktivieren (\<x\> = 0)  
 |  /X                   | Abfrage optional eingebundener MAX!-Thermostate  
 

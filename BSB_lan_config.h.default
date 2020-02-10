@@ -69,8 +69,8 @@ char pass[] = "Your_WiFi_password_goes_here";        // your network password
  * if autodetect does not work or heating system is not running when Arduino is powered on
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
-const int fixed_device_family = 0;
-const int fixed_device_variant = 0;
+static const int fixed_device_family = 0;
+static const int fixed_device_variant = 0;
 
 // Hide unknown parameters from web display (parameters will still be queried!)
 //#define HIDE_UNKNOWN
@@ -153,7 +153,7 @@ const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating the
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
 */
-byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
+static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus pins and bus type
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)
@@ -167,12 +167,12 @@ byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
 // - optional third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
-BSB bus(68,69);
-uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+BSB bus(68,69); // BSB bus(19,18); // pin 19,18 = USART Serial1
+constexpr uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 //#define QAA_TYPE  0x53  // 0x53 = QAA70, 0x52 = QAA50
 
 // Protect these pins from accidental GPIO access
-const byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+constexpr byte exclude_GPIO[] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface
@@ -184,6 +184,9 @@ byte monitor = 0;
 
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop
 //#define CUSTOM_COMMANDS
+
+// Check for new versions when accessing BSB-LAN's main page
+#define VERSION_CHECK 1
 
 //#define DEBUG
 //#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port

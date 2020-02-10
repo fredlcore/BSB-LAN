@@ -3,10 +3,11 @@
 | URL-command           | Effect                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Query value/setting of parameter \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Query values/settings of parameters \<x\>, \<y\> and \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Query values/settings of parameters \<x\>, \<y\> and \<z\>   
 |  /\<x\>-\<y\>         | Query values/settings of parameters \<x\> to \<y\>  
 |  /A                   | Query 24h-average values  
 |  /A=\<x\>,\<y\>       | Change 24h-average value calculation of parameters \<x\>, \<y\>  
+|  /A=0			| Disable 24h average calculation temporarily  
 |  /B                   | Query accumulated burner-runtimes (in seconds) and -cycles (including DHW)  
 |  /B0                  | Reset counter of burner-runtime and -cycles  
 |  /C                   | Display configuration of BSB-LAN  
@@ -15,7 +16,7 @@
 |  /D0                  | Reset logfile & create new header  
 |  /E\<x\>              | Display ENUM-values of parameter \<x\>  
 |  /G\<x\>              | GPIO: Query pin \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> to high (\<y\> = 1) or low (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Set pin \<x\> to high (\<y\> = 1) or low (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Query pin \<x\> while setting to INPUT  
 |  /I\<x\>=\<y\>        | Send INF-message to parameter \<x\> with value \<y\>  
 |  /JK=\<x\>        	| JSON: Query all parameters of category \<x\>  
@@ -38,6 +39,7 @@
 |  /R\<x\>              | Query reset-value of parameter \<x\>  
 |  /S\<x\>=\<y\>        | Set value <y> for parameter \<x\>  
 |  /T                   | Query optional sensors (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Activate (\<x\> = 1) or deactivate (\<x\> = 0) verbose output mode  
 |  /X                   | Query optional MAX!-thermostats  
 

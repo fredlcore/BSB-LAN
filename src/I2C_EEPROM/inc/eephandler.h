@@ -223,7 +223,7 @@ class eephandler
 //  T &get(uint16_t address, T &customvar)
   {
     uint8_t *ptr = (uint8_t*) &customvar;
-    for(int i = 0; i < sizeof(T); i++)
+    for(uint32_t i = 0; i < sizeof(T); i++)
       *ptr++ = read(address + i);
    // return &customvar;
   }
@@ -236,7 +236,7 @@ class eephandler
 //  T put(uint16_t address,T &customvar)
   {
     uint8_t *ptr = (uint8_t*) &customvar;
-    for(int i = 0; i < sizeof(T); i++)
+    for(uint32_t i = 0; i < sizeof(T); i++)
        update(address + i,*ptr++);
     // return &customvar;
   }

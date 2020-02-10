@@ -1,11 +1,9 @@
-char version[] = "0.43";
-
 /*
  * 
  * BSB Boiler-System-Bus LAN Interface
  *
- * ATTENION:
- *       There is no waranty that this system will not damage your heating system!
+ * ATTENTION:
+ *       There is no warranty that this system will not damage your heating system!
  *
  * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
@@ -59,13 +57,13 @@ char version[] = "0.43";
  *
  * Changelog:
  *       version 0.43
- *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_lan_custom.h, for example to read sensors etc.
- *          Output of these variables is done via new URL command /U
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
  *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
  *        - Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")
  *        - Many new parameters, please run /Q to see any possible changes for your device family and report back to us!
+ *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_lan_custom.h, for example to read sensors etc.
+ *          Output of these variables is done via new URL command /U
  *        - Added device families 23 and 29 (Grünenwald heaters)
  *        - Added device families 49, 52, 59 (Weishaupt heaters)
  *        - Added device fmilies 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (various controllers like QAA75 or AVS37)
@@ -375,6 +373,8 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include "src/WiFiEsp/src/WiFiEsp.h"
 #endif
 
+boolean EEPROM_ready = true;
+
 #ifdef IPAddr
 IPAddress ip(IPAddr);
 #endif
@@ -405,13 +405,13 @@ IPAddress subnet(SubnetIP);
 #ifdef MQTTBrokerIP
 IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
-uint8_t len_idx, pl_start;
+
 uint8_t myAddr = bus.getBusAddr();
 uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
 
 /* buffer to load PROGMEM values in RAM */
-#define BUFLEN 200
+#define BUFLEN 450
 char buffer[BUFLEN] = { 0 };
 
 /* buffer to print output lines*/
@@ -423,11 +423,15 @@ char div_unit[10];
 
 #ifdef WIFI
 WiFiEspClient client;
+WiFiEspClient httpclient;
 #ifdef DebugTelnet
 WiFiEspClient telnetClient;
 #endif
 #else
 EthernetClient client;
+#ifdef VERSION_CHECK
+EthernetClient httpclient;
+#endif
 #ifdef DebugTelnet
 EthernetClient telnetClient;
 #endif
@@ -459,9 +463,12 @@ uint8_t json_types[20] = { 0 };
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format  
 
 #ifdef LOGGER
-//  #include <SD.h>   // if you run into troubles with SdFat.h, just remove the following two lines and uncomment this line.
-  #include "src/SdFat/SdFat.h"
+#if defined(__SAM3X8E__)
+  #include <SD.h>   
+#else
+  #include "src/SdFat/SdFat.h" // if you run into troubles with SdFat.h, just remove these two lines and activate the line above.
   SdFat SD;
+#endif
   File Logfile;
 #endif
 
@@ -492,14 +499,14 @@ unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
-int numAverages = sizeof(avg_parameters) / sizeof(int);
-int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
-int numLogValues = sizeof(log_parameters) / sizeof(int);
-int numCustomFloats = sizeof(custom_floats) / sizeof(float);
-int numCustomLongs = sizeof(custom_longs) / sizeof(long);
-double *avgValues = new double[numAverages];
-double *avgValues_Old = new double[numAverages];
-double *avgValues_Current = new double[numAverages];
+static const int numAverages = sizeof(avg_parameters) / sizeof(int);
+static const int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
+static const int numLogValues = sizeof(log_parameters) / sizeof(int);
+static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
+static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
+float *avgValues_Old = new float[numAverages];
+float *avgValues = new float[numAverages];
+float *avgValues_Current = new float[numAverages];
 int avgCounter = 1;
 int loopCount = 0;
 
@@ -526,6 +533,9 @@ uint8_t saved_msg_cycle = 0;
 uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
+
+#include "bsb-version.h"
+#define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
 
 #include "BSB_lan_custom_global.h"
 
@@ -615,8 +625,11 @@ void checkSockStatus()
  * Global resources used:
  *  enumstr_offset
  * *************************************************************** */
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
 
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+#if defined(__SAM3X8E__)
+  return enum_addr;
+#else
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
     uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
@@ -639,6 +652,7 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
   enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
 */
   return enum_addr;
+#endif
 }
 
 /**  ****************************************************************
@@ -727,24 +741,40 @@ uint16_t get_cmdtbl_line(int i) {
   return l;
 }
 
-uint16_t get_cmdtbl_desc(int i) {
-  uint16_t desc = 0;
+uint_farptr_t get_cmdtbl_desc(int i) {
+  uint_farptr_t desc = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    desc = cmdtbl1[i].desc;
+#else
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    desc = cmdtbl2[i-entries1].desc;
+#else
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));    
+#endif
   }
   return desc;
 }
 
-uint16_t get_cmdtbl_enumstr(int i) {
-  uint16_t enumstr = 0;
+uint_farptr_t get_cmdtbl_enumstr(int i) {
+  uint_farptr_t enumstr = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    enumstr = cmdtbl1[i].enumstr;
+#else
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    enumstr = cmdtbl2[i-entries1].enumstr;
+#else
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));    
+#endif
   }
   return enumstr;
 }
@@ -760,7 +790,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
 #endif
   } else {
 #if defined(__SAM3X8E__)
-    enumstr_len = cmdtbl2[i-entries1].enumsr_len;
+    enumstr_len = cmdtbl2[i-entries1].enumstr_len;
 #else
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));    
 #endif
@@ -793,9 +823,17 @@ uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    type = cmdtbl1[i].type;
+#else
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    type = cmdtbl2[i-entries1].type;
+#else
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
+#endif
   }
   return type;
 }
@@ -804,9 +842,17 @@ uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    dev_fam = cmdtbl1[i].dev_fam;
+#else
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    dev_fam = cmdtbl2[i-entries1].dev_fam;
+#else
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
+#endif
   }
   return dev_fam;
 }
@@ -815,9 +861,17 @@ uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    dev_var = cmdtbl1[i].dev_var;
+#else
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    dev_var = cmdtbl2[i-entries1].dev_var;
+#else
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
+#endif
   }
   return dev_var;
 }
@@ -826,9 +880,17 @@ uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
+#if defined(__SAM3X8E__)
+    flags = cmdtbl1[i].flags;
+#else
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
+#endif
   } else {
+#if defined(__SAM3X8E__)
+    flags = cmdtbl2[i-entries1].flags;
+#else
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
+#endif
   }
   return flags;
 }
@@ -936,9 +998,14 @@ int findLine(uint16_t line
  *
  * *************************************************************** */
 int freeRam () {
+#if defined(__SAM3X8E__)
+  // TODO
+  return 0;
+#else
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+#endif
 }
 
 
@@ -1009,18 +1076,25 @@ void SerialPrintHex32(uint32_t val) {
 void SerialPrintData(byte* msg){
   // Calculate pure data length without housekeeping info
   int data_len=0;
-  if (bus_type == BUS_BSB) {
-    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  byte offset = 0;
+  byte msg_type = msg[4+(bus.getBusType()*1)];
+  if (bus_type != BUS_PPS) {
+    if (msg_type >= 0x12) {
+      offset = 4;
+    }
   }
-  if (bus_type == BUS_LPB) {
-    data_len=msg[len_idx]-14;     // get packet length, then subtract
+  if (bus.getBusType() == BUS_BSB) {
+    data_len=msg[bus.getLen_idx()]-11+offset;     // get packet length, then subtract
   }
-  if (bus_type == BUS_PPS) {
+  if (bus.getBusType() == BUS_LPB) {
+    data_len=msg[bus.getLen_idx()]-14+offset;     // get packet length, then subtract
+  }
+  if (bus.getBusType() == BUS_PPS) {
     data_len=9;
   }
   // Start indexing where the payload begins
   for(int i=0;i<data_len;i++){
-    SerialPrintHex(msg[pl_start+i]);
+    SerialPrintHex(msg[bus.getPl_start()-offset+i]);
     DebugOutput.print(F(" "));
   }
 }
@@ -1109,7 +1183,7 @@ void SerialPrintAddr(byte addr){
 }
 
 /** *****************************************************************
- *  Function:  TranslateAddr()
+ *  Function:  TranslateType()
  *  Does:      Returns the message type in human-readable form.
  *  Pass parameters:
  *   byte type a number which indicates the type
@@ -1132,6 +1206,10 @@ char *TranslateType(byte type, char *mtype){
     case TYPE_QRV: strncpy(mtype, "QRV", 4); break;
     case TYPE_ARV: strncpy(mtype, "ARV", 4); break;
     case TYPE_ERR: strncpy(mtype, "ERR", 4); break;
+    case TYPE_IQ1: strncpy(mtype, "IQ1", 4); break;
+    case TYPE_IA1: strncpy(mtype, "IA1", 4); break;
+    case TYPE_IQ2: strncpy(mtype, "IQ2", 4); break;
+    case TYPE_IA2: strncpy(mtype, "IA2", 4); break;
     // If no match found: print the hex value
     default: sprintf(mtype, "%02X", type); break;
   } // endswitch
@@ -1189,9 +1267,9 @@ void printLineNumber(uint32_t val) {
 void printBIT(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
   if(data_len == 2 || data_len == 3){
-    if(msg[pl_start]==0 || data_len == 3){
+    if(msg[bus.getPl_start()]==0 || data_len == 3){
       for (int i=7;i>=0;i--) {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1+data_len-2] >> i & 1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+data_len-2] >> i & 1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1218,11 +1296,11 @@ void printBIT(byte *msg,byte data_len){
  * *************************************************************** */
 void printBYTE(byte *msg,byte data_len,const char *postfix){
   char *p=outBuf+outBufLen;
-  uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1 && bus_type == BUS_PPS);
+  uint8_t pps_offset = (msg[0] == 0x17 && *PPS_write_enabled != 1 && bus.getBusType() == BUS_PPS);
 
-  if(data_len == 2 || bus_type == BUS_PPS){
-    if(msg[pl_start]==0 || bus_type == BUS_PPS){
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[pl_start+1+pps_offset]);
+  if(data_len == 2 || bus.getBusType() == BUS_PPS){
+    if(msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS){
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+pps_offset]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1254,8 +1332,8 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[pl_start]==0){
-      lval=((long(msg[pl_start+1])<<8)+long(msg[pl_start+2])) / divisor;
+    if(msg[bus.getPl_start()]==0){
+      lval=((long(msg[bus.getPl_start()+1])<<8)+long(msg[bus.getPl_start()+2])) / divisor;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1288,8 +1366,8 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[pl_start]==0){
-      lval=(((int16_t)(msg[pl_start+1])<<8) + (int16_t)(msg[pl_start+2])) * multiplier;
+    if(msg[bus.getPl_start()]==0){
+      lval=(((int16_t)(msg[bus.getPl_start()+1])<<8) + (int16_t)(msg[bus.getPl_start()+2])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%d",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1322,8 +1400,8 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[pl_start]==0){
-      lval=((long(msg[pl_start+1])<<24)+(long(msg[pl_start+2])<<16)+(long(msg[pl_start+3])<<8)+long(msg[pl_start+4]))/divider;
+    if(msg[bus.getPl_start()]==0){
+      lval=((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4]))/divider;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1351,13 +1429,13 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
  * Global resources used:
  *
  * *************************************************************** */
-void _printFIXPOINT(double dval, int precision){
+void _printFIXPOINT(float dval, int precision){
   int a,b,i;
   if(dval<0){
     outBufLen+=sprintf(outBuf+outBufLen,"-");
     dval*=-1.0;
   }
-  double rval=10.0;
+  float rval=10.0;
   for(i=0;i<precision;i++) rval*=10.0;
   dval+=5.0/rval;
   a=(int)(dval);
@@ -1384,17 +1462,17 @@ void _printFIXPOINT(double dval, int precision){
  * Global resources used:
  *
  * *************************************************************** */
-void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const char *postfix){
-  double dval;
+void printFIXPOINT(byte *msg,byte data_len,float divider,int precision,const char *postfix){
+  float dval;
   char *p=outBuf+outBufLen;
-  int8_t pps_offset = (((*PPS_write_enabled == 1 && msg[0] != 0x00) || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus_type == BUS_PPS);
+  int8_t pps_offset = (((*PPS_write_enabled == 1 && msg[0] != 0x00) || (*PPS_write_enabled != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus.getBusType() == BUS_PPS);
 
   if(data_len == 3 || data_len == 5){
-    if(msg[pl_start]==0 || bus_type == BUS_PPS){
+    if(msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS){
       if (data_len == 3) {
-        dval=double((msg[pl_start+1-pps_offset] << 8) + msg[pl_start+2-pps_offset]) / divider;
+        dval=float((int16_t)(msg[bus.getPl_start()+1-pps_offset] << 8) + (int16_t)msg[bus.getPl_start()+2-pps_offset]) / divider;
       } else {
-        dval=double((msg[pl_start+3-pps_offset] << 8) + msg[pl_start+4-pps_offset]) / divider;
+        dval=float((int16_t)(msg[bus.getPl_start()+3-pps_offset] << 8) + (int16_t)msg[bus.getPl_start()+4-pps_offset]) / divider;
       }
       _printFIXPOINT(dval,precision);
     } else {
@@ -1423,13 +1501,13 @@ void printFIXPOINT(byte *msg,byte data_len,double divider,int precision,const ch
  * Global resources used:
  *
  * *************************************************************** */
-void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,const char *postfix){
-  double dval;
+void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision,const char *postfix){
+  float dval;
   char *p=outBuf+outBufLen;
 
   if(data_len == 5){
-    if(msg[pl_start]==0){
-      dval=double((long(msg[pl_start+1])<<24)+(long(msg[pl_start+2])<<16)+(long(msg[pl_start+3])<<8)+long(msg[pl_start+4])) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=float((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4])) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1457,13 +1535,13 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,double divider,int precision,co
  * Global resources used:
  *
  * *************************************************************** */
-void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,const char *postfix){
-  double dval;
+void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision,const char *postfix){
+  float dval;
   char *p=outBuf+outBufLen;
 
   if(data_len == 2 || (data_len == 3 && (my_dev_fam == 107 || my_dev_fam == 123 || my_dev_fam == 163))){
-    if(msg[pl_start]==0){
-      dval=double((signed char)msg[pl_start+1+(data_len==3)]) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=float((signed char)msg[bus.getPl_start()+1+(data_len==3)]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1491,13 +1569,13 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,double divider,int precision,con
  * Global resources used:
  *
  * *************************************************************** */
-void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,const char *postfix){
-  double dval;
+void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision,const char *postfix){
+  float dval;
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[pl_start]==0){
-      dval=double(msg[pl_start+1]) / divider;
+    if(msg[bus.getPl_start()]==0){
+      dval=float(msg[bus.getPl_start()+1]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1527,13 +1605,13 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,double divider,int precision,
  * *************************************************************** */
 void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   char *p=outBuf+outBufLen;
-  uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus_type == BUS_PPS);
-  if (data_len == 2 || bus_type == BUS_PPS) {
-    if (msg[pl_start]==0 || bus_type == BUS_PPS) {
-      if(msg[pl_start+1+pps_offset]==0){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+pps_offset],val0);
+  uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus.getBusType() == BUS_PPS);
+  if (data_len == 2 || bus.getBusType() == BUS_PPS) {
+    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
+      if(msg[bus.getPl_start()+1+pps_offset]==0){
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.getPl_start()+1+pps_offset],val0);
       } else {
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[pl_start+1+pps_offset],val1);
+        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.getPl_start()+1+pps_offset],val1);
       }
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -1561,7 +1639,6 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint16_t val;
   char *p=outBuf+outBufLen;
-
   if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
@@ -1660,8 +1737,8 @@ void printDateTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[pl_start+3],msg[pl_start+2],msg[pl_start+1]+1900,msg[pl_start+5],msg[pl_start+6],msg[pl_start+7]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2],msg[bus.getPl_start()+1]+1900,msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1689,8 +1766,8 @@ void printDate(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 9){
-    if(msg[pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[pl_start+3],msg[pl_start+2]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"---");
     }
@@ -1719,20 +1796,20 @@ void printTimeProg(byte *msg,byte data_len){
 
   if(data_len == 12){
     outBufLen+=sprintf(outBuf+outBufLen,"1. ");
-    if(msg[pl_start]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start],msg[pl_start+1],msg[pl_start+2],msg[pl_start+3]);
+    if(msg[bus.getPl_start()]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()],msg[bus.getPl_start()+1],msg[bus.getPl_start()+2],msg[bus.getPl_start()+3]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 2. ");
-    if(msg[pl_start+4]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start+4],msg[pl_start+5],msg[pl_start+6],msg[pl_start+7]);
+    if(msg[bus.getPl_start()+4]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+4],msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
     outBufLen+=sprintf(outBuf+outBufLen," 3. ");
-    if(msg[pl_start+8]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[pl_start+8],msg[pl_start+9],msg[pl_start+10],msg[pl_start+11]);
+    if(msg[bus.getPl_start()+8]<24){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+8],msg[bus.getPl_start()+9],msg[bus.getPl_start()+10],msg[bus.getPl_start()+11]);
     }else{
       outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
     }
@@ -1760,14 +1837,14 @@ void printTime(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 3){
-    if(msg[pl_start]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[pl_start+1],msg[pl_start+2]);
+    if(msg[bus.getPl_start()]==0){
+      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
     } else {
       outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
-    if (bus_type == BUS_PPS) {
+    if (bus.getBusType() == BUS_PPS) {
       char PPS_output[55];
-      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[pl_start+1] / 6, (msg[pl_start+1] % 6) * 10, msg[pl_start] / 6, (msg[pl_start] % 6) * 10, msg[pl_start-1] / 6, (msg[pl_start-1] % 6) * 10, msg[pl_start-2] / 6, (msg[pl_start-2] % 6) * 10, msg[pl_start-3] / 6, (msg[pl_start-3] % 6) * 10, msg[pl_start-4] / 6, (msg[pl_start-4] % 6) * 10);
+      sprintf(PPS_output,"%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d",msg[bus.getPl_start()+1] / 6, (msg[bus.getPl_start()+1] % 6) * 10, msg[bus.getPl_start()] / 6, (msg[bus.getPl_start()] % 6) * 10, msg[bus.getPl_start()-1] / 6, (msg[bus.getPl_start()-1] % 6) * 10, msg[bus.getPl_start()-2] / 6, (msg[bus.getPl_start()-2] % 6) * 10, msg[bus.getPl_start()-3] / 6, (msg[bus.getPl_start()-3] % 6) * 10, msg[bus.getPl_start()-4] / 6, (msg[bus.getPl_start()-4] % 6) * 10);
       DebugOutput.print(PPS_output);
     } else {
       DebugOutput.print(p);
@@ -1796,8 +1873,8 @@ void printLPBAddr(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 2){
-    if(msg[pl_start]==0){   // payload Int8 value
-    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[pl_start+1]>>4,(msg[pl_start+1] & 0x0f)+1);
+    if(msg[bus.getPl_start()]==0){   // payload Int8 value
+    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+1]>>4,(msg[bus.getPl_start()+1] & 0x0f)+1);
   }else{
     outBufLen+=sprintf(outBuf+outBufLen,"---");
   }
@@ -1861,14 +1938,16 @@ char *printTelegram(byte* msg, int query_line) {
 #endif
 */
 
-  if (bus_type != BUS_PPS) {
+  byte msg_type = msg[4+(bus.getBusType()*4)];
+
+  if (bus.getBusType() != BUS_PPS) {
     // source
-    SerialPrintAddr(msg[1+(bus_type*2)]); // source address
+    SerialPrintAddr(msg[1+(bus.getBusType()*2)]); // source address
     DebugOutput.print(F("->"));
     SerialPrintAddr(msg[2]); // destination address
     DebugOutput.print(F(" "));
     // msg[3] contains the message length, not handled here
-    SerialPrintType(msg[4+(bus_type*4)]); // message type, human readable
+    SerialPrintType(msg_type); // message type, human readable
     DebugOutput.print(F(" "));
   } else {
     if (!monitor) {
@@ -1883,14 +1962,14 @@ char *printTelegram(byte* msg, int query_line) {
   }
 
   uint32_t cmd = 0;
-  if (bus_type == BUS_BSB) {
+  if (bus.getBusType() == BUS_BSB) {
     if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
       cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
     }else{
       cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
     }
   }
-  if (bus_type == BUS_LPB) {
+  if (bus.getBusType() == BUS_LPB) {
     if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 9 and 10 are in reversed order
       cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
     }else{
@@ -1898,7 +1977,7 @@ char *printTelegram(byte* msg, int query_line) {
     }
   }
   uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && *PPS_write_enabled != 1)];
-  if (bus_type == BUS_PPS) {
+  if (bus.getBusType() == BUS_PPS) {
     cmd = 0x2D000000 + query_line - 15000;
     cmd = cmd + (msg[1] * 0x10000);
   }
@@ -1913,7 +1992,7 @@ char *printTelegram(byte* msg, int query_line) {
   line = get_cmdtbl_line(i);
 
   while(c!=CMD_END){
-    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus_type == BUS_PPS && msg[0] != 0x1E)) && (query_line == -1 || line == query_line)){
+    if((c == cmd || (line >= 15000 && ((c & 0x00FF0000) >> 16) == pps_cmd && bus.getBusType() == BUS_PPS)) && (query_line == -1 || line == query_line)){
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -1968,10 +2047,12 @@ char *printTelegram(byte* msg, int query_line) {
   }
   if(!known){                          // no hex code match
     // Entry in command table is "UNKNOWN" (0x00000000)
-    if (bus_type != BUS_PPS) {
+    if (bus.getBusType() != BUS_PPS) {
       DebugOutput.print(F("     "));
-      SerialPrintHex32(cmd);             // print what we have got
-      DebugOutput.print(F(" "));
+      if (msg_type < 0x12) {
+        SerialPrintHex32(cmd);             // print what we have got
+        DebugOutput.print(F(" "));
+      }
     }
   }else{
     i = save_i;
@@ -1987,7 +2068,11 @@ char *printTelegram(byte* msg, int query_line) {
 //    memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //    memcpy_P(buffer, &ENUM_CAT,len);
 //    buffer[len]=0;
+#if defined(__SAM3X8E__)
+    printENUM(ENUM_CAT,len,cat,0);
+#else
     printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
+#endif
     DebugOutput.print(F(" - "));
     outBufLen+=sprintf(outBuf+outBufLen," - ");
 
@@ -2001,28 +2086,39 @@ char *printTelegram(byte* msg, int query_line) {
 
   // decode parameter
   int data_len=0;
-  if (bus_type == BUS_BSB) {
-    data_len=msg[len_idx]-11;     // get packet length, then subtract
+  if (bus.getBusType() == BUS_BSB) {
+    if (msg_type < 0x12) {
+      data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
+    } else {
+      data_len=msg[bus.getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
+    }
   }
-  if (bus_type == BUS_LPB) {
-    data_len=msg[len_idx]-14;     // get packet length, then subtract
+  if (bus.getBusType() == BUS_LPB) {
+    if (msg_type < 0x12) {
+      data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
+    } else {
+      data_len=msg[bus.getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
+    }
   } 
-  if (bus_type == BUS_PPS) {
-    data_len = 3;
+  if (bus.getBusType() == BUS_PPS) {
+    if (msg[0] != 0x1E) {
+      data_len = 3;
+    } else {
+      data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
+    }
   }
-
   if(data_len < 0){
     DebugOutput.print(F("len ERROR "));
-    DebugOutput.print(msg[len_idx]);
+    DebugOutput.print(msg[bus.getLen_idx()]);
   }else{
     if(data_len > 0){
       if(known){
-        if(msg[4+(bus_type*4)]==TYPE_ERR){
+        if(msg_type==TYPE_ERR){
           char *p=outBuf+outBufLen;
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[pl_start]);
-          if(msg[pl_start]==0x07){
+          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[bus.getPl_start()]);
+          if(msg[bus.getPl_start()]==0x07){
             outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
           }
           DebugOutput.print(p);
@@ -2036,10 +2132,18 @@ char *printTelegram(byte* msg, int query_line) {
           int k=0;
           while(div_type!=VT_UNKNOWN){
             div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
+#if defined(__AVR__)
             div_operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + k * sizeof(optbl[0]));
+#else
+            div_operand=optbl[k].operand;
+#endif
             div_precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + k * sizeof(optbl[0]));
             div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+#if defined(__SAM3X8E__)
+            memcpy(div_unit, optbl[k].unit, div_unit_len);
+#else
             memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+#endif
             if(type == div_type){
               break;
             }
@@ -2089,6 +2193,7 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_TEMP_SHORT64: // s8 / 64 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
             case VT_TEMP_SHORT: // s8
+            case VT_TEMP_PER_MIN: // s8
               printFIXPOINT_BYTE(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_PRESSURE: // u8 / 10.0 bar
@@ -2101,9 +2206,11 @@ char *printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_CELMIN: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
+            case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_CURRENT: // u16 / 100 uA
@@ -2148,12 +2255,16 @@ char *printTelegram(byte* msg, int query_line) {
               break;
             case VT_WEEKDAY: // enum
               if(data_len == 2){
-                if(msg[pl_start]==0){
+                if(msg[bus.getPl_start()]==0){
                   int len=sizeof(ENUM_WEEKDAY);
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_WEEKDAY), len);
 //                  memcpy_P(buffer, &ENUM_WEEKDAY,len);
 //                  buffer[len]=0;
-                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[pl_start+1],0);
+#if defined(__SAM3X8E__)
+                  printENUM(ENUM_WEEKDAY,len,msg[bus.getPl_start()+1],0);
+#else
+                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus.getPl_start()+1],0);
+#endif
                 }else{
                   DebugOutput.print(F("---"));
                   outBufLen+=sprintf(outBuf+outBufLen,"---");
@@ -2165,18 +2276,18 @@ char *printTelegram(byte* msg, int query_line) {
               }
               break;
             case VT_ENUM: // enum
-              if(data_len == 2 || data_len == 3 || bus_type == 2) {
-                if((msg[pl_start]==0 && data_len==2) || (msg[pl_start]==0 && data_len==3) || (bus_type == BUS_PPS)) {
+              if(data_len == 2 || data_len == 3 || bus.getBusType() == 2) {
+                if((msg[bus.getPl_start()]==0 && data_len==2) || (msg[bus.getPl_start()]==0 && data_len==3) || (bus.getBusType() == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
 //                    memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),len);
 //                    buffer[len]=0;
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+1],1);
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.getPl_start()+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       int8_t pps_offset = 0;
-                      if (*PPS_write_enabled == 1 && msg[0] != 0x00 && bus_type == BUS_PPS) pps_offset = -1;
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[pl_start+2+pps_offset],1);
+                      if (*PPS_write_enabled == 1 && msg[0] != 0x00 && bus.getBusType() == BUS_PPS) pps_offset = -1;
+                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus.getPl_start()+2+pps_offset],1);
                     }
                   }else{
                     DebugOutput.print(F("no enum str "));
@@ -2199,7 +2310,7 @@ char *printTelegram(byte* msg, int query_line) {
               uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
               if(enumstr_ptr!=0) {
                 uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
-                printCustomENUM(enumstr_ptr,enumstr_len,msg[pl_start+idx],1);
+                printCustomENUM(enumstr_ptr,enumstr_len,msg[bus.getPl_start()+idx],1);
               }else{
                 DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
@@ -2217,7 +2328,7 @@ char *printTelegram(byte* msg, int query_line) {
                 uint8_t len = pgm_read_byte_far(enumstr_ptr+1);
                 uint32_t val = 0;
                 for (int x=0; x<len; x++) {
-                  val = val + ((uint32_t)msg[pl_start+idx+x] << (8*(len-1-x)));
+                  val = val + ((uint32_t)msg[bus.getPl_start()+idx+x] << (8*(len-1-x)));
                 }
 
                 outBufLen+=sprintf(outBuf+outBufLen,"%lu",val);
@@ -2231,10 +2342,10 @@ char *printTelegram(byte* msg, int query_line) {
             }
             case VT_STRING: // string
               if(data_len > 0){
-                if(msg[pl_start]!=0){
-                  msg[pl_start + data_len]='\0'; // write terminating zero
-                  DebugOutput.print((char*)&msg[pl_start]);
-                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[pl_start]);
+                if(msg[bus.getPl_start()]!=0){
+                  msg[bus.getPl_start() + data_len]='\0'; // write terminating zero
+                  DebugOutput.print((char*)&msg[bus.getPl_start()]);
+                  outBufLen+=sprintf(outBuf+outBufLen,"%s",(char*)&msg[bus.getPl_start()]);
                   remove_char(outBuf, '\'');
                 } else {
                   DebugOutput.print(F("-"));
@@ -2258,23 +2369,18 @@ char *printTelegram(byte* msg, int query_line) {
                 case 6: outBufLen+=sprintf(outBuf+outBufLen, WEEKDAY_FRI_TEXT); break;
                 default: break;
               }
-              outBufLen+=sprintf(outBuf+outBufLen,", ");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",hour());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",minute());
-              outBufLen+=sprintf(outBuf+outBufLen,":");
-              outBufLen+=sprintf(outBuf+outBufLen,"%02d",second());
+              outBufLen+=sprintf(outBuf+outBufLen, ", %02d:%02d:%02d", hour(), minute(), second());
               DebugOutput.print(pvalstr);
               break;
             }
             case VT_ERRORCODE: //  u16 or u8 (via OCI420)
               if(data_len == 3 || data_len == 2) {
-                if(msg[pl_start]==0){
+                if(msg[bus.getPl_start()]==0){
                   long lval;
                   if (data_len == 3) {
-                    lval=(long(msg[pl_start+1])<<8)+long(msg[pl_start+2]);
+                    lval=(long(msg[bus.getPl_start()+1])<<8)+long(msg[bus.getPl_start()+2]);
                   } else {
-                    lval=long(msg[pl_start+1]);
+                    lval=long(msg[bus.getPl_start()+1]);
                   }
                   uint16_t len=0;
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
@@ -2283,7 +2389,11 @@ char *printTelegram(byte* msg, int query_line) {
                     printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
                   } else {
                     len=sizeof(ENUM_ERROR);
+#if defined(__SAM3X8E__)
+                    printENUM(ENUM_ERROR,len,lval,1);
+#else
                     printENUM(pgm_get_far_address(ENUM_ERROR),len,lval,1);
+#endif
                   }
 //                  memcpy_PF(buffer, pgm_get_far_address(ENUM_ERROR), len);
 //                  memcpy_P(buffer, &ENUM_ERROR,len);
@@ -2303,14 +2413,14 @@ char *printTelegram(byte* msg, int query_line) {
             default:
               SerialPrintData(msg);
               for (int i=0; i < data_len; i++) {
-                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[pl_start+i]);
+                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
               }
               outBufLen+=sprintf(outBuf+outBufLen," - unknown type");
               break;
           }
         }
       }else{
-        if (bus_type != BUS_PPS) {
+        if (bus.getBusType() != BUS_PPS) {
           SerialPrintData(msg);        
         }
 //        DebugOutput.println();
@@ -2319,12 +2429,12 @@ char *printTelegram(byte* msg, int query_line) {
       }
     }
   }
-  if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
+  if (bus.getBusType() != BUS_PPS || (bus.getBusType() == BUS_PPS && !monitor)) {
     DebugOutput.println();
   }
   if(verbose){
-    if (bus_type != BUS_PPS) {
-      SerialPrintRAW(msg,msg[len_idx]+bus_type);      
+    if (bus.getBusType() != BUS_PPS) {
+      SerialPrintRAW(msg,msg[bus.getLen_idx()]+bus.getBusType());      
     } else {
       if (msg[0] == 0x17) {
         SerialPrintRAW(msg, 10);
@@ -2337,11 +2447,11 @@ char *printTelegram(byte* msg, int query_line) {
   return pvalstr;
 }
 
-void printPStr(uint32_t outstr, uint16_t outstr_len) {
+void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   int htmlbuflen = 100;
   byte htmllineBuf[htmlbuflen];
   int i = 0;
-  for (unsigned int x=0;x<outstr_len-1;x++) {
+  for (uint16_t x=0;x<outstr_len-1;x++) {
     htmllineBuf[i] = pgm_read_byte_far(outstr+x);
     i++;
     if (i==htmlbuflen) {
@@ -2367,7 +2477,11 @@ void printPStr(uint32_t outstr, uint16_t outstr_len) {
  * *************************************************************** */
 void webPrintHeader(void){
 
+#if defined(__SAM3X8E__)
+  printPStr(header_html, sizeof(header_html));
+#else
   printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+#endif
 
 #ifdef PASSKEY
   client.print(PASSKEY);
@@ -2469,10 +2583,59 @@ void webPrintSite() {
 
   client.println(F("<p>"));
   client.print(F("BSB-LAN Web, Version "));
-  client.print(version);
+  client.print(F(BSB_VERSION));
   client.println(F("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK));
   client.println(F("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG));
   client.println(F("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL));
+
+#ifdef VERSION_CHECK
+  client.println(F("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
+
+  httpclient.connect("bsb-lan.de", 80);
+  httpclient.println("GET /bsb-version.h");
+  httpclient.println();
+
+  unsigned long timeout = millis();
+  while (millis() - timeout < 3000 && !httpclient.available()) {
+  }
+
+  int major = -1;
+  int minor = -1;
+  int patch = -1;
+  char version_number[8] = { 0 };
+  while (httpclient.available()) {
+    char c = httpclient.read();
+    if (c == '\"') {
+      int index = 0;
+      do {
+        c = httpclient.read();
+        version_number[index] = c;
+        index++;
+      } while (c != '\"');
+      version_number[index-1] = '\0';
+      if (major < 0) {
+        major = atoi(version_number);
+      } else if (minor < 0) {
+        minor = atoi(version_number);
+      } else if (patch < 0) {
+        patch = atoi(version_number);
+      }
+    }
+  }
+  if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
+    client.print(F(MENU_TEXT_NVA ": "));
+    client.print(F("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">"));
+    client.print(major);
+    client.print(F("."));
+    client.print(minor);
+    client.print(F("."));
+    client.print(patch);
+    client.println(F("</A><BR>"));
+  } else {
+    client.println(MENU_TEXT_NVN);
+  }
+#endif
+
   webPrintFooter();
 } // --- webPrintSite() ---
 
@@ -2520,19 +2683,19 @@ void LogTelegram(byte* msg){
   uint32_t c;     // command code
   uint8_t type=0;
   uint8_t cmd_type=0;
-  double operand=1;
+  float operand=1;
   uint8_t precision=0;
   int data_len;
-  double dval;
+  float dval;
   uint16_t line = 0;
 
   if (log_parameters[0] == 30000) {
 
-    if (bus_type != BUS_PPS) {
-      if(msg[4+(bus_type*4)]==TYPE_QUR || msg[4+(bus_type*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus_type==BUS_BSB) || (msg[2]<0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
-        cmd=(uint32_t)msg[6+(bus_type*4)]<<24 | (uint32_t)msg[5+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+    if (bus.getBusType() != BUS_PPS) {
+      if(msg[4+(bus.getBusType()*4)]==TYPE_QUR || msg[4+(bus.getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus.getBusType()==BUS_LPB)) && msg[4+(bus.getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
+        cmd=(uint32_t)msg[6+(bus.getBusType()*4)]<<24 | (uint32_t)msg[5+(bus.getBusType()*4)]<<16 | (uint32_t)msg[7+(bus.getBusType()*4)] << 8 | (uint32_t)msg[8+(bus.getBusType()*4)];
       }else{
-        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+        cmd=(uint32_t)msg[5+(bus.getBusType()*4)]<<24 | (uint32_t)msg[6+(bus.getBusType()*4)]<<16 | (uint32_t)msg[7+(bus.getBusType()*4)] << 8 | (uint32_t)msg[8+(bus.getBusType()*4)];
       }
     } else {
       cmd=msg[1+(msg[0]==0x17 && *PPS_write_enabled != 1)];
@@ -2542,7 +2705,7 @@ void LogTelegram(byte* msg){
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
     while(c!=CMD_END){
       line=get_cmdtbl_line(i);
-      if((bus_type != BUS_PPS && c == cmd) || (bus_type == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
+      if((bus.getBusType() != BUS_PPS && c == cmd) || (bus.getBusType() == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
@@ -2564,7 +2727,7 @@ void LogTelegram(byte* msg){
     }
 
     if ((log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) && cmd > 0) {
-      if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)))) {
+      if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
         dataFile = SD.open("datalog.txt", FILE_WRITE);
         if (dataFile) {
           dataFile.print(millis());
@@ -2584,15 +2747,15 @@ void LogTelegram(byte* msg){
           }
 
           uint8_t msg_len = 0;
-          if (bus_type != BUS_PPS) {
+          if (bus.getBusType() != BUS_PPS) {
             dataFile.print(F(";"));
-            dataFile.print(TranslateAddr(msg[1+(bus_type*2)], device));
+            dataFile.print(TranslateAddr(msg[1+(bus.getBusType()*2)], device));
             dataFile.print(F("->"));
             dataFile.print(TranslateAddr(msg[2], device));
             dataFile.print(F(" "));
-            dataFile.print(TranslateType(msg[4+(bus_type*4)], device));
+            dataFile.print(TranslateType(msg[4+(bus.getBusType()*4)], device));
             dataFile.print(F(";"));
-            msg_len = msg[len_idx]+bus_type;
+            msg_len = msg[bus.getLen_idx()]+bus.getBusType();
           } else {
             dataFile.print(F(";"));
             switch (msg[0]) {
@@ -2616,7 +2779,7 @@ void LogTelegram(byte* msg){
 
           // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
-          if (bus_type != BUS_PPS && (msg[4+(bus_type*4)] == TYPE_INF || msg[4+(bus_type*4)] == TYPE_SET || msg[4+(bus_type*4)] == TYPE_ANS) && msg[len_idx] < 17+bus_type) {
+          if (bus.getBusType() != BUS_PPS && (msg[4+(bus.getBusType()*4)] == TYPE_INF || msg[4+(bus.getBusType()*4)] == TYPE_SET || msg[4+(bus.getBusType()*4)] == TYPE_ANS) && msg[bus.getLen_idx()] < 17+bus.getBusType()) {
             dataFile.print(F(";"));
             i=0;
             while(type!=VT_UNKNOWN){
@@ -2626,16 +2789,20 @@ void LogTelegram(byte* msg){
               i++;
               type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + i * sizeof(optbl[0]));
             }
-            if (bus_type == BUS_LPB) {
+            if (bus.getBusType() == BUS_LPB) {
               data_len=msg[1]-14;
             } else {
               data_len=msg[3]-11;
             }
             dval = 0;
+#if defined(__AVR__)
             operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + i * sizeof(optbl[0]));
+#else
+            operand=optbl[i].operand;
+#endif
             precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
-            for (i=0;i<data_len-1+bus_type;i++) {
-              if (bus_type == BUS_LPB) {
+            for (i=0;i<data_len-1+bus.getBusType();i++) {
+              if (bus.getBusType() == BUS_LPB) {
                 dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
               } else {
                 dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
@@ -2655,7 +2822,7 @@ void LogTelegram(byte* msg){
             if(dval<0){
               dval*=-1.0;
             }
-            double rval=10.0;
+            float rval=10.0;
             for(i=0;i<precision;i++) rval*=10.0;
             dval+=5.0/rval;
             a=(int)(dval);
@@ -2726,7 +2893,7 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
-  if (bus_type == BUS_PPS && line >= 15000) {  // PPS-Bus set parameter
+  if (bus.getBusType() == BUS_PPS && line >= 15000) {  // PPS-Bus set parameter
     int cmd_no = line - 15000;
     uint8_t type=get_cmdtbl_type(i);
 
@@ -2747,7 +2914,7 @@ int set(int line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
+    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
       DebugOutput.print(F("Writing EEPROM slot "));
       DebugOutput.print(cmd_no);
       DebugOutput.print(F(" with value "));
@@ -2801,6 +2968,21 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=2;
       }
       break;
+
+    case VT_TEMP_PER_MIN:
+      {
+      if(val[0]!='\0'){
+        uint8_t t=atoi(val);
+        param[0]=0x06;  //enable
+        param[1]= t;
+      }else{
+        param[0]=0x05;  // disable
+        param[1]=0x00;
+      }
+      param_len=2;
+      }
+      break;
+
 
     // ---------------------------------------------
     // 16-bit unsigned integer representation
@@ -2862,6 +3044,7 @@ int set(int line      // the ProgNr of the heater parameter
     // 16-bit unsigned integer representation
     // Temperature values
     case VT_TEMP_WORD:
+    case VT_CELMIN:
       {
       uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
       if(val[0]!='\0'){
@@ -3240,10 +3423,10 @@ int set(int line      // the ProgNr of the heater parameter
       uint8_t t=atoi(val);
       bus.Send(TYPE_QUR, c, msg, tx_msg);
       int data_len;
-      if (bus_type == BUS_LPB) {
-        data_len=msg[len_idx]-14;     // get packet length, then subtract
+      if (bus.getBusType() == BUS_LPB) {
+        data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
       } else {
-        data_len=msg[len_idx]-11;     // get packet length, then subtract
+        data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
       }
 
       if (data_len > 18) {
@@ -3256,8 +3439,8 @@ int set(int line      // the ProgNr of the heater parameter
       uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
       uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
 
-      for (int x=pl_start;x<pl_start+data_len;x++) {
-        param[x-pl_start] = msg[x];
+      for (int x=bus.getPl_start();x<bus.getPl_start()+data_len;x++) {
+        param[x-bus.getPl_start()] = msg[x];
       }
       param[idx] = t;
       param_len = data_len;
@@ -3321,7 +3504,7 @@ int set(int line      // the ProgNr of the heater parameter
 #endif
 
   // Expect an acknowledgement to our SET telegram
-  if(msg[4+(bus_type*4)]!=TYPE_ACK){      // msg type at 4 (BSB) or 8 (LPB)
+  if(msg[4+(bus.getBusType()*4)]!=TYPE_ACK){      // msg type at 4 (BSB) or 8 (LPB)
     DebugOutput.println(F("set failed NACK"));
     return 0;
   }
@@ -3378,7 +3561,7 @@ char* query(int line_start  // begin at this line (ProgNr)
       
       //DebugOutput.println(F("found"));
       if(c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
-        if (bus_type != BUS_PPS) {  // bus type is not PPS
+        if (bus.getBusType() != BUS_PPS) {  // bus type is not PPS
           retry=QUERY_RETRIES;
           while(retry){
             uint8_t query_type = TYPE_QUR;
@@ -3409,7 +3592,7 @@ char* query(int line_start  // begin at this line (ProgNr)
             }
           } // endwhile, maximum number of retries reached
           if(retry==0) {
-            if (bus_type == 1 && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
+            if (bus.getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
               outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
             } else {
               outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
@@ -3430,9 +3613,9 @@ char* query(int line_start  // begin at this line (ProgNr)
           }
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
-          msg[4+(bus_type*4)]=TYPE_ANS;
-          msg[pl_start+1]=temp_val >> 8;
-          msg[pl_start+2]=temp_val & 0xFF;
+          msg[4+(bus.getBusType()*4)]=TYPE_ANS;
+          msg[bus.getPl_start()+1]=temp_val >> 8;
+          msg[bus.getPl_start()+2]=temp_val & 0xFF;
 /*
           msg[5] = c >> 24;
           msg[6] = c >> 16 & 0xFF;
@@ -3458,7 +3641,7 @@ char* query(int line_start  // begin at this line (ProgNr)
     
     if(outBufLen>0){
       if (!no_print) {  // display result in web client
-        if (msg[4+(bus_type*4)] == TYPE_ERR) {
+        if (msg[4+(bus.getBusType()*4)] == TYPE_ERR) {
 #ifdef HIDE_UNKNOWN
           continue;
 #endif
@@ -3468,16 +3651,16 @@ char* query(int line_start  // begin at this line (ProgNr)
         }
         client.println(outBuf);
 
-        double num_pvalstr = strtod(pvalstr, NULL);
+        float num_pvalstr = strtod(pvalstr, NULL);
         uint8_t flags = get_cmdtbl_flags(i);
         uint8_t type = get_cmdtbl_type(i);
         uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
-        uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+        uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
         int data_len;
-        if (bus_type == BUS_LPB) {
-          data_len=msg[len_idx]-14;     // get packet length, then subtract
+        if (bus.getBusType() == BUS_LPB) {
+          data_len=msg[bus.getLen_idx()]-14;     // get packet length, then subtract
         } else {
-          data_len=msg[len_idx]-11;     // get packet length, then subtract
+          data_len=msg[bus.getLen_idx()]-11;     // get packet length, then subtract
         }
 
 /*
@@ -3496,7 +3679,7 @@ char* query(int line_start  // begin at this line (ProgNr)
         }
 */
         client.println(F("</td><td>"));
-        if (msg[4+(bus_type*4)] != TYPE_ERR && type != VT_UNKNOWN) {
+        if (msg[4+(bus.getBusType()*4)] != TYPE_ERR && type != VT_UNKNOWN) {
           if(type == VT_ENUM || type == VT_CUSTOM_ENUM || type == VT_BIT || type == VT_ONOFF || type == VT_YESNO ) {
 
             client.print(F("<select "));
@@ -3507,8 +3690,8 @@ char* query(int line_start  // begin at this line (ProgNr)
             client.print(line);
             client.println(F("'>"));
             if (type == VT_ONOFF || type == VT_YESNO) {
-              uint8_t pps_offset = (bus_type == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
-              int val=msg[pl_start+1+pps_offset];
+              uint8_t pps_offset = (bus.getBusType() == BUS_PPS && *PPS_write_enabled != 1 && msg[0] != 0);
+              int val=msg[bus.getPl_start()+1+pps_offset];
               client.print(F("<option value='0'"));
               if (val==0) {
                 client.print(F(" selected"));
@@ -3557,7 +3740,7 @@ char* query(int line_start  // begin at this line (ProgNr)
                 sprintf(outBuf,"%s",strcpy_PF(buffer, enumstr+c));
                 client.print(F("<option value='"));
                 client.print(val);
-                if ( ((type == VT_ENUM || type == VT_CUSTOM_ENUM) && num_pvalstr == val) || (type == VT_BIT && (msg[10+(bus_type*3)+data_len-2] & bitmask) == (val & bitmask)) ) {
+                if ( ((type == VT_ENUM || type == VT_CUSTOM_ENUM) && num_pvalstr == val) || (type == VT_BIT && (msg[10+(bus.getBusType()*3)+data_len-2] & bitmask) == (val & bitmask)) ) {
                   client.print(F("' SELECTED>"));
                 } else {
                   client.print(F("'>"));
@@ -3594,7 +3777,11 @@ char* query(int line_start  // begin at this line (ProgNr)
             if (type == VT_HOUR_MINUTES) {
               client.print(pvalstr);              
             } else {
-              client.print(strtod(pvalstr,NULL));
+              if  (pvalstr[2] == '-') {   // do not run strtod on disabled parameters (---)
+                client.print(F("---"));
+              } else {
+                client.print(strtod(pvalstr,NULL));
+              }
             }
             client.print(F("'></td><td>"));
             if ((flags & FL_RONLY) != FL_RONLY) {
@@ -3689,7 +3876,7 @@ void SetDateTime(){
   findLine(0,0,&c);
   if(c!=CMD_UNKNOWN){     // send only valid command codes
     if(bus.Send(TYPE_QUR, c, rx_msg, tx_msg)){
-      if (bus_type == BUS_LPB) {
+      if (bus.getBusType() == BUS_LPB) {
         setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
       } else {
         setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
@@ -3740,8 +3927,8 @@ void dht22(void) {
       break;
     }
 
-    double hum = DHT.humidity;
-    double temp = DHT.temperature;
+    float hum = DHT.humidity;
+    float temp = DHT.temperature;
     Serial.print(F("#dht_temp["));
     Serial.print(i);
     Serial.print(F("]: "));
@@ -3850,7 +4037,7 @@ void Ipwe() {
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
-  double ipwe_sensors[numIPWESensors];
+  float ipwe_sensors[numIPWESensors];
   for (i=0; i < numIPWESensors; i++) {
     ipwe_sensors[i] = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
   }
@@ -3876,7 +4063,7 @@ void Ipwe() {
       client.print(F("Avg"));
       client.print(lookup_descr(avg_parameters[i]));            
       client.print(F("<br></td><td>"));
-      double rounded = round(avgValues[i]*10);
+      float rounded = round(avgValues[i]*10);
       client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
       client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
@@ -3890,7 +4077,7 @@ void Ipwe() {
   char device_ascii[17];
   for(i=0;i<numSensors;i++){
     counter++;
-    double t=sensors.getTempCByIndex(i);
+    float t=sensors.getTempCByIndex(i);
     sensors.getAddress(device_address, i);
     sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 
@@ -3910,8 +4097,8 @@ void Ipwe() {
   for(i=0;i<numDHTSensors;i++){
     DHT.read22(DHT_Pins[i]);
     
-    double hum = DHT.humidity;
-    double temp = DHT.temperature;
+    float hum = DHT.humidity;
+    float temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
       counter++;
       client.print(F("<tr><td>T<br></td><td>"));
@@ -3966,9 +4153,13 @@ void InitMaxDeviceList() {
       max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
     }
     for (int z=0;z<20;z++) {
-      EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
+      if (EEPROM_ready) {
+        EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
+      }
       if (!strcmp(max_id, max_id_eeprom)) {
-        EEPROM.get(500 + 15 * z, max_addr);
+        if (EEPROM_ready) {
+          EEPROM.get(500 + 15 * z, max_addr);
+        }
         max_devices[x] = max_addr;
         DebugOutput.println(F("Adding known Max ID to list:"));
         DebugOutput.println(max_devices[x], HEX);
@@ -4025,7 +4216,7 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
 void loop() {
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
-  char c;
+  char c = '\0';
   const byte MaxArrayElement=252;
   char  cLineBuffer[MaxArrayElement];  //
   byte  bPlaceInBuffer;                // index into buffer
@@ -4082,14 +4273,14 @@ void loop() {
     // Method GetMessage() validates length byte and CRC.
     if (bus.GetMessage(msg) || busmsg == true) { // message was syntactically correct
        // Decode the rcv telegram and send it to the PC serial interface
-      if(verbose && bus_type != BUS_PPS && !monitor) {  // verbose output for PPS comes later
+      if(verbose && bus.getBusType() != BUS_PPS && !monitor) {  // verbose output for PPS comes later
         printTelegram(msg, -1);
 #ifdef LOGGER
         LogTelegram(msg);
 #endif
       }
       // Is this a broadcast message?
-      if(((msg[2]==ADDR_ALL && bus_type==BUS_BSB) || (msg[2]>=0xF0 && bus_type==BUS_LPB)) && msg[4+(bus_type*4)]==TYPE_INF){ // handle broadcast messages
+      if(((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)) && msg[4+(bus.getBusType()*4)]==TYPE_INF){ // handle broadcast messages
       // Decode the rcv telegram and send it to the PC serial interface
         if (!verbose && !monitor) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
           printTelegram(msg, -1);
@@ -4101,9 +4292,9 @@ void loop() {
         // Filter Brenner Status messages (attention: partially undocumented enum values)
 
         uint32_t cmd;
-        cmd=(uint32_t)msg[5+(bus_type*4)]<<24 | (uint32_t)msg[6+(bus_type*4)]<<16 | (uint32_t)msg[7+(bus_type*4)] << 8 | (uint32_t)msg[8+(bus_type*4)];
+        cmd=(uint32_t)msg[5+(bus.getBusType()*4)]<<24 | (uint32_t)msg[6+(bus.getBusType()*4)]<<16 | (uint32_t)msg[7+(bus.getBusType()*4)] << 8 | (uint32_t)msg[8+(bus.getBusType()*4)];
         if(cmd==0x0500006C) {   // set Time from BC, same CommandID for BSB and LPB
-          setTime(msg[pl_start+5], msg[pl_start+6], msg[pl_start+7], msg[pl_start+3], msg[pl_start+2], msg[pl_start+1]+1900);
+          setTime(msg[bus.getPl_start()+5], msg[bus.getPl_start()+6], msg[bus.getPl_start()+7], msg[bus.getPl_start()+3], msg[bus.getPl_start()+2], msg[bus.getPl_start()+1]+1900);
         }
 
         if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
@@ -4133,9 +4324,9 @@ void loop() {
           unsigned long brenner_end;
           boolean reset_brenner_timer = 0;
           DebugOutput.print(F("INF: Brennerstatus: "));
-          DebugOutput.println(msg[pl_start]);      // first payload byte
+          DebugOutput.println(msg[bus.getPl_start()]);      // first payload byte
 
-          if(msg[pl_start]==0x04) {       // Stufe 1
+          if(msg[bus.getPl_start()]==0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
@@ -4145,7 +4336,7 @@ void loop() {
             }
             brenner_stufe=1;
           }
-          if(msg[pl_start]==0x14) {       // Stufe 2 (only oil furnace)
+          if(msg[bus.getPl_start()]==0x14) {       // Stufe 2 (only oil furnace)
             if(brenner_start_2==0){        // has not been timed
               brenner_start_2=millis();   // keep current timestamp
               brenner_count_2++;          // increment number of starts
@@ -4175,7 +4366,7 @@ void loop() {
             }
             reset_brenner_timer = 0;
           }
-          if (msg[pl_start]==0x00) {    // brenner off
+          if (msg[bus.getPl_start()]==0x00) {    // brenner off
             brenner_end=millis();      // timestamp the end
             brenner_stufe=0;
             if(brenner_start!=0){        // start has been timed
@@ -4199,7 +4390,7 @@ void loop() {
       } // endif, broadcasts
 
 // PPS-Bus handling
-      if (bus_type == BUS_PPS) {
+      if (bus.getBusType() == BUS_PPS) {
         if (msg[0] == 0x17 && *PPS_write_enabled == 1) { // Send client data
           byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
           byte rx_msg[10] = { 0 };
@@ -4281,8 +4472,10 @@ void loop() {
                 } else {
                   pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
                 }
+                break;
+              } else {
+                msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
-              break;
             }
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
@@ -4433,7 +4626,7 @@ void loop() {
               case 0x66: msg_cycle = 19; break;
               case 0x7C: msg_cycle = 20; break;
               default:
-                 DebugOutput.print("Unknown request: ");
+                 DebugOutput.print(F("Unknown request: "));
                 for (int c=0;c<9;c++) {
                   if (msg[c]<16) DebugOutput.print("0");
                   DebugOutput.print(msg[c], HEX);
@@ -4577,7 +4770,7 @@ ich mir da nicht)
                   break;
                 case 0x00: break;
                 default:
-                  DebugOutput.print("Unknown telegram: ");
+                  DebugOutput.print(F("Unknown telegram: "));
                   for (int c=0;c<9+pps_offset;c++) {
                     if (msg[c]<16) DebugOutput.print("0");
                     DebugOutput.print(msg[c], HEX);
@@ -4716,8 +4909,8 @@ ich mir da nicht)
           client.println(F("Connnection: close"));
           client.println();
           client.println(F("<!DOCTYPE HTML>"));
-          client.println(F("<HTML>  <HEAD>   <TITLE>Error</TITLE>"));
-          client.println(F(" </HEAD> <BODY><H1>401 Unauthorized.</H1></BODY> </HTML>"));
+          client.println(F("<HTML><HEAD><TITLE>Error</TITLE>"));
+          client.println(F("</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>"));
           client.stop();
         }
         // otherwise continue like normal
@@ -4746,7 +4939,11 @@ ich mir da nicht)
           client.println(F("HTTP/1.1 200 OK"));
           client.println(F("Content-Type: image/x-icon"));
           client.println();
+#if defined(__SAM3X8E__)
+          printPStr(favicon, sizeof(favicon));
+#else
           printPStr(pgm_get_far_address(favicon), sizeof(favicon));
+#endif
           break;
         }
 
@@ -4848,7 +5045,7 @@ ich mir da nicht)
             int d_addr = atoi(token);
             DebugOutput.print(F("Setting temporary destination to "));
             DebugOutput.println(d_addr);
-            bus_type=bus.setBusType(bus_type, myAddr, d_addr);
+            bus.setBusType(bus.getBusType(), myAddr, d_addr);
           }
           
           DebugOutput.print(F("set ProgNr "));
@@ -4879,7 +5076,7 @@ ich mir da nicht)
             webPrintFooter();
           }
           if (token[0] > 0) {
-            bus_type=bus.setBusType(bus_type, myAddr, destAddr);
+            bus.setBusType(bus.getBusType(), myAddr, destAddr);
           }
           break;
         }
@@ -4906,17 +5103,29 @@ ich mir da nicht)
           client.println(F("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"));
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
-            if ((bus_type != BUS_PPS) || (bus_type == BUS_PPS && cat == CAT_PPS)) {
+            if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
+#if defined(__SAM3X8E__)
+              printENUM(ENUM_CAT,len,cat,1);
+#else
               printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
+#endif
               DebugOutput.println();
               client.print(F("<tr><td><A HREF='K"));
               client.print(cat);
               client.print(F("'>"));
               client.print(outBuf);
               client.println(F("</A></td><td>"));
+#if defined(__SAM3X8E__)
+              client.print(ENUM_CAT_NR[cat*2]);
+#else
               client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
+#endif
               client.print(F(" - "));
+#if defined(__SAM3X8E__)
+              client.print(ENUM_CAT_NR[cat*2+1]);
+#else
               client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
+#endif
               client.println(F("</td></tr>"));
             }
           }
@@ -4934,7 +5143,7 @@ ich mir da nicht)
               if(get_cmdtbl_type(i)==VT_ENUM) {
 //            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-              uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 //              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
 //              memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),enumstr_len);
 //              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
@@ -5009,25 +5218,28 @@ ich mir da nicht)
         if(p[1]=='Q') {
           webPrintHeader();
 
+          client.print(F(MENU_TEXT_VER ": "));
+          client.print(BSB_VERSION);
+          client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
-          if (bus_type == 0) {
-            bus.setBusType(bus_type, myAddr, 0x7F);
+          if (bus.getBusType() == BUS_BSB) {
+            bus.setBusType(BUS_BSB, myAddr, 0x7F);
           }
-          if (bus_type == 1) {
-            bus.setBusType(bus_type, myAddr, 0xFF);
+          if (bus.getBusType() == BUS_LPB) {
+            bus.setBusType(BUS_LPB, myAddr, 0xFF);
           }
 
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus.Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
             unsigned long startquery = millis();
-            while (millis() < startquery + 10000) {
+            while (millis() - startquery < 10000) {
               if (bus.GetMessage(msg)) {
                 uint8_t found_id = 0;
                 boolean found = false;
-                if (bus_type == 0 && msg[4] == 0x02) {
+                if (bus.getBusType() == BUS_BSB && msg[4] == 0x02) {
                   found_id = msg[1] & 0x7F;
                 }
-                if (bus_type == 1 && msg[8] == 0x02) {
+                if (bus.getBusType() == BUS_LPB && msg[8] == 0x02) {
                   found_id = msg[3];
                 }
                 for (int i=0;i<10;i++) {
@@ -5056,7 +5268,7 @@ ich mir da nicht)
             if (found_ids[x]==0xFF) {
               continue;
             }
-            bus.setBusType(bus_type, myAddr, found_ids[x]);
+            bus.setBusType(bus.getBusType(), myAddr, found_ids[x]);
             client.print(F("<BR>" MENU_TEXT_QRT " "));
             client.print(found_ids[x]);
             client.println(F(":<BR>"));
@@ -5138,7 +5350,7 @@ ich mir da nicht)
                 if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                   DebugOutput.println(F("bus send failed"));  // to PC hardware serial I/F
                 } else {
-                  if (msg[4+(bus_type*4)]!=TYPE_ERR) {
+                  if (msg[4+(bus.getBusType()*4)]!=TYPE_ERR) {
                     // Decode the xmit telegram and send it to the PC serial interface
                     printTelegram(tx_msg, -1);
 #ifdef LOGGER
@@ -5163,13 +5375,13 @@ ich mir da nicht)
                           client.println(outBuf);
                           client.println(F("<br>"));
                         }
-                        for (int i=0;i<tx_msg[len_idx]+bus_type;i++) {
+                        for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
                           client.print(tx_msg[i], HEX);
                           client.print(F(" "));
                         }
                         client.println(F("<br>"));
-                        for (int i=0;i<msg[len_idx]+bus_type;i++) {
+                        for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
                           client.print(msg[i], HEX);
                           client.print(F(" "));
@@ -5184,7 +5396,7 @@ ich mir da nicht)
           }
 
           client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
-          bus.setBusType(bus_type, myAddr, destAddr);   // return to original destination address
+          bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
           webPrintFooter();
           break;
         }
@@ -5212,14 +5424,14 @@ ich mir da nicht)
             client.println(outBuf);
             client.println(F("<br>"));
           }
-          for (int i=0;i<tx_msg[len_idx]+bus_type;i++) {
+          for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
             if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
             client.print(tx_msg[i], HEX);
             client.print(F(" "));
           }
           client.println();
           client.println(F("<br>"));
-          for (int i=0;i<msg[len_idx]+bus_type;i++) {
+          for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
             if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
             client.print(msg[i], HEX);
             client.print(F(" "));
@@ -5245,7 +5457,7 @@ ich mir da nicht)
           char json_value_string[11];
           uint8_t j_char_idx = 0;
           int json_parameter = 0;
-          double json_value = 0; json_value = json_value;   // to disable irrelevant compiler warning despite variable being used below
+          float json_value = 0; json_value = json_value;   // to disable irrelevant compiler warning despite variable being used below
           boolean json_type = 0;
           boolean p_flag = false;
           boolean v_flag = false;
@@ -5369,7 +5581,7 @@ ich mir da nicht)
                 int k=0;
                 uint8_t type=get_cmdtbl_type(i);
                 uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
-                uint32_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+                uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
                 strcpy_PF(buffer, get_cmdtbl_desc(i));
 
@@ -5394,8 +5606,11 @@ ich mir da nicht)
                   div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
                   div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
                   div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+#if defined(__SAM3X8E__)
+                  memcpy(div_unit, optbl[k].unit, div_unit_len);
+#else
                   memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
-
+#endif
                   if(type == div_type){
                     break;
                   }
@@ -5550,13 +5765,15 @@ ich mir da nicht)
           } else if (p[2]=='G') {
             webPrintHeader();
       	    client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
-
+#if defined(__SAM3X8E__)
+            printPStr(graph_html, sizeof(graph_html));
+#else
             printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
-
+#endif
             webPrintFooter();
           } else {  // dump datalog file
             client.println(F("HTTP/1.1 200 OK"));
-            client.println(F("Content-Type: text/plain"));
+            client.println(F("Content-Type: text/plain; charset=utf-8"));
             client.println();
 
             File dataFile = SD.open("datalog.txt");
@@ -5593,6 +5810,9 @@ ich mir da nicht)
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
+          client.print(F(MENU_TEXT_VER ": "));
+          client.print(BSB_VERSION);
+          client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());
           client.println(F(" Bytes <BR>"));
@@ -5604,12 +5824,12 @@ ich mir da nicht)
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
           client.print(F(MENU_TEXT_BUS ": "));
-          switch (bus_type) {
+          switch (bus.getBusType()) {
             case 0: client.print(F("BSB")); break;
             case 1: client.print(F("LPB")); break;
             case 2: client.print(F("PPS")); break;
           }
-          if (bus_type != BUS_PPS) {
+          if (bus.getBusType() != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
             client.print(F(", "));
@@ -5648,7 +5868,7 @@ ich mir da nicht)
 
           client.println(F(MENU_TEXT_EXP ": "));
           for (int i=0; i<anz_ex_gpio; i++) {
-            client.print (exclude_GPIO[i]);
+            client.print(exclude_GPIO[i]);
             client.print(F(" "));
           }
           client.println(F("<BR>"));
@@ -5659,7 +5879,7 @@ ich mir da nicht)
               client.print(F("0"));
             }
             client.print(mac[i], HEX);
-            client.print(F(" "));
+            if(i != 5) client.print(F(":"));
           }
           client.println(F("<BR>"));
 
@@ -5751,6 +5971,7 @@ ich mir da nicht)
           client.println(F("<BR>"));
           webPrintFooter();
 
+#if defined(__AVR__)
           DebugOutput.println(F("EEPROM dump:"));
           for (uint16_t x=0; x<EEPROM.length(); x++) {
             uint8_t i = EEPROM.read(x);
@@ -5760,7 +5981,8 @@ ich mir da nicht)
             DebugOutput.print(i, HEX);
             DebugOutput.print(F(" "));
           }
-          
+#endif
+
           break;
         }
         if (p[1]=='L' && p[2]=='B' && p[3]=='='){
@@ -5846,24 +6068,18 @@ ich mir da nicht)
 
           client.print(F(MENU_TEXT_BUS ": "));
           if (p[2]=='0') {
-            bus_type=bus.setBusType(BUS_BSB, myAddr, destAddr);
-            len_idx = 3;
-            pl_start = 9;
+            bus.setBusType(BUS_BSB, myAddr, destAddr);
             client.println(F("BSB"));
           }
           if (p[2]=='1') {
-            bus_type=bus.setBusType(BUS_LPB, myAddr, destAddr);
-            len_idx = 1;
-            pl_start = 13;
+            bus.setBusType(BUS_LPB, myAddr, destAddr);
             client.println(F("LPB"));
           } 
           if (p[2]=='2') {
-            bus_type=bus.setBusType(BUS_PPS, myAddr);
-            len_idx = 9;
-            pl_start = 6;
+            bus.setBusType(BUS_PPS, myAddr);
             client.println(F("PPS"));
           }           
-          if (bus_type != BUS_PPS) {
+          if (bus.getBusType() != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
             client.print(F(", "));
@@ -5895,14 +6111,18 @@ ich mir da nicht)
             dataFile.close();
           }
 #endif
-          if (p[2]=='E') {
+          if (p[2]=='E' && EEPROM_ready) {
             for (uint16_t x=0; x<EEPROM.length(); x++) {
               EEPROM.write(x, 0);
             }
             DebugOutput.println(F("Cleared EEPROM"));
           }
           client.println(F("Restarting Arduino..."));
+#if defined(__SAM3X8E__)
+          // TODO
+#else
           asm volatile ("  jmp 0");
+#endif
           while (1==1) {}
 #endif
           break;
@@ -6010,7 +6230,7 @@ ich mir da nicht)
                   client.print(F(" Avg"));
                   client.print(lookup_descr(avg_parameters[i]));            
                   client.print(F(": "));
-                  double rounded = round(avgValues[i]*10);
+                  float rounded = round(avgValues[i]*10);
                   client.print(rounded/10);
                   client.print(F(" "));
 
@@ -6023,7 +6243,11 @@ ich mir da nicht)
                   while(div_type!=VT_UNKNOWN){
                     div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
                     div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+#if defined(__SAM3X8E__)
+                    memcpy(div_unit, optbl[k].unit, div_unit_len);
+#else
                     memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+#endif
                     if(type == div_type){
                       break;
                     }
@@ -6056,6 +6280,7 @@ ich mir da nicht)
             for (int i=0; i < anz_ex_gpio; i++) {
               if (pin==exclude_GPIO[i]) {
                 error = true;
+                break;
               }
             }
             if (error==true) {
@@ -6264,8 +6489,8 @@ ich mir da nicht)
             int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
             DebugOutput.println(chk);
-            double hum = DHT.humidity;
-            double temp = DHT.temperature;
+            float hum = DHT.humidity;
+            float temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
               char tmpSign[] = " ";
               if (temp < 0) {
@@ -6342,7 +6567,11 @@ ich mir da nicht)
           while(div_type!=VT_UNKNOWN){
             div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
             div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
-            memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+#if defined(__SAM3X8E__)
+             memcpy(div_unit, optbl[k].unit, div_unit_len);
+#else
+             memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+#endif
             if(type == div_type){
               break;
             }
@@ -6392,7 +6621,7 @@ ich mir da nicht)
                 dataFile.print(F("Avg_"));
                 dataFile.print(lookup_descr(avg_parameters[i]));            
                 dataFile.print(F(";"));
-                double rounded = round(avgValues[i]*10);
+                float rounded = round(avgValues[i]*10);
                 dataFile.print(rounded/10);
                 dataFile.print(F(";"));
 
@@ -6405,7 +6634,11 @@ ich mir da nicht)
                 while(div_type!=VT_UNKNOWN){
                   div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
                   div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+#if defined(__SAM3X8E__)
+                  memcpy(div_unit, optbl[k].unit, div_unit_len);
+#else
                   memcpy_PF(div_unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+#endif
                   if(type == div_type){
                     break;
                   }
@@ -6454,8 +6687,8 @@ ich mir da nicht)
             int log_sensor = log_parameters[i] - 20100;
             int chk = DHT.read22(DHT_Pins[log_sensor]);
             DebugOutput.println(chk);
-            double hum = DHT.humidity;
-            double temp = DHT.temperature;
+            float hum = DHT.humidity;
+            float temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
               dataFile.print(F("Temperature "));
               dataFile.print(log_sensor);
@@ -6509,7 +6742,7 @@ ich mir da nicht)
     }
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
-        double reading = strtod(query(avg_parameters[i],avg_parameters[i],1),NULL);
+        float reading = strtod(query(avg_parameters[i],avg_parameters[i],1),NULL);
         if (isnan(reading)) {} else {
           avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
           if (avgValues_Old[i] == -9999) {
@@ -6563,7 +6796,7 @@ custom_timer = millis();
 
 #ifdef MAX_CUL
   byte max_str_index = 0;
-  while (max_cul.available()) {
+  while (max_cul.available() && EEPROM_ready) {
     c = max_cul.read();
 //    DebugOutput.print(c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
@@ -6704,7 +6937,7 @@ custom_timer = millis();
         //      Serial.println("New telnet client.");
         telnetClient.println();
         telnetClient.print(F("Version: "));
-        telnetClient.println(version);
+        telnetClient.println(F(BSB_VERSION));
         haveTelnetClient = true;
       }
     }
@@ -6717,19 +6950,19 @@ custom_timer = millis();
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  DebugOutput.print("SSID: ");
+  DebugOutput.print(F("SSID: "));
   DebugOutput.println(WiFi.SSID());
 
   // print your WiFi shield's IP address
   IPAddress ip = WiFi.localIP();
-  DebugOutput.print("IP Address: ");
+  DebugOutput.print(F("IP Address: "));
   DebugOutput.println(ip);
 
   // print the received signal strength
   long rssi = WiFi.RSSI();
-  DebugOutput.print("Signal strength (RSSI):");
+  DebugOutput.print(F("Signal strength (RSSI):"));
   DebugOutput.print(rssi);
-  DebugOutput.println(" dBm");
+  DebugOutput.println(F(" dBm"));
 }
 #endif
 
@@ -6751,11 +6984,16 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
 
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
 #if defined(__SAM3X8E__)
   Wire.begin();
+  if (!EEPROM.ready()) {
+    EEPROM_ready = false;
+  }
+  pinMode(19, INPUT);
 #endif
+
+  // The computer hardware serial interface #0:
+  //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
   Serial.println(F("READY"));
   DebugOutput.print(F("Size of cmdtbl1: "));
@@ -6765,24 +7003,12 @@ void setup() {
   DebugOutput.print(F("free RAM:"));
   DebugOutput.println(freeRam());
 
-  while (Serial.available()) {
+  while (Serial.available()) { // UART buffer often still contains characters after reset if power is not cut
     DebugOutput.print(Serial.read());
   }
 
-  switch (bus_type) {
-    case 0:
-      len_idx = 3;
-      pl_start = 9;
-      break;
-    case 1:
-      len_idx = 1;
-      pl_start = 13;
-      break;
-    case 2:
-      len_idx = 9;
-      pl_start = 6;
-      break;
-  }
+  bus.enableInterface();
+  bus.setBusType(bus_type);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
@@ -6798,7 +7024,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println("WiFi shield not present");
+    Serial.println(F("WiFi shield not present"));
     // don't continue
     while (true);
   }
@@ -6809,21 +7035,24 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    Serial.print("Attempting to connect to WPA SSID: ");
+    Serial.print(F("Attempting to connect to WPA SSID: "));
     Serial.println(ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  Serial.println("You're connected to the network");
+  Serial.println(F("You're connected to the network"));
   
   printWifiStatus();
 #endif
 
+  DebugOutput.println(F("Reading EEPROM..."));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     uint16_t f=0;
-    EEPROM.get(sizeof(uint16_t)*i, f);
+    if (EEPROM_ready) {
+      EEPROM.get(sizeof(uint16_t)*i, f);
+    }
     if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
       DebugOutput.print(F("Reading "));
       DebugOutput.print(f);
@@ -6832,7 +7061,6 @@ void setup() {
       pps_values[i] = f;
     }
   }
-
 
 #ifdef LOGGER
   // disable w5100 while setting up SD
@@ -7035,7 +7263,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 
 #endif
 
-  if (bus_type != BUS_PPS) {
+  if (bus.getBusType() != BUS_PPS) {
 // receive inital date/time from heating system
     SetDateTime();
   

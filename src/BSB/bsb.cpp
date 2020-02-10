@@ -8,41 +8,55 @@
 
 //#define DEBUG_LL 1
 
-extern uint8_t bus_type;
-
 // Constructor
 BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
-  if (rx == 19) {
-    HwSerial = true;
-  }
+  bus_type = 0;
+  len_idx = 3;
+  myAddr=addr;
+  destAddr=d_addr;
+  rx_pin=rx;
 
-  if (HwSerial == true) {
-    pinMode(53, OUTPUT);    // provide voltage
-    digitalWrite(53, 1);
-    serial = &Serial1;
-    Serial1.begin(4800, SERIAL_8O1);
-  } else {
 #if defined(__SAM3X8E__)
-#else
+  pinMode(53, OUTPUT);    // provide voltage
+  digitalWrite(53, 1);
+  pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
+  digitalWrite(24, 1);
+#endif
+  if (rx_pin == 19) {	// 19 = RX pin of Serial1 USART module
+    HwSerial = true;
+    serial = &Serial1;
+  } else {
+#if !defined(__SAM3X8E__)
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
     serial = serial_sw;
     serial_sw->begin(4800);
     serial_sw->listen();
 #endif
   }
+}
 
-  myAddr=addr;
-  destAddr=d_addr;
-  rx_pin=rx;
+void BSB::enableInterface() {
+  if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
+    Serial1.begin(4800, SERIAL_8O1);
+  }
 }
 
 uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   bus_type = bus_type_val;
   switch (bus_type) {
-    case 0: len_idx = 3; break;
-    case 1: len_idx = 1; break;
-    case 2: len_idx = 8; break;
-    default: len_idx = 3; break;
+    case 0:
+      len_idx = 3;
+      pl_start = 9;
+      break;
+    case 1:
+      len_idx = 1;
+      pl_start = 13;
+      break;
+    case 2:
+      len_idx = 8;
+      pl_start = 6;
+      break;
+    default: len_idx = 3; pl_start = 9; break;
   }
   if (addr<=0xff) {
     myAddr = addr & 0xFF;
@@ -50,10 +64,12 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   if (d_addr<=0xff) {
     destAddr = d_addr & 0xFF;
   }
+/*
   Serial.print(F("My address: "));
   Serial.println(myAddr);
   Serial.print(F("Destination address: "));
   Serial.println(destAddr);
+*/
   return bus_type;
 }
 
@@ -67,6 +83,17 @@ uint8_t BSB::getBusAddr() {
 
 uint8_t BSB::getBusDest() {
   return destAddr;
+}
+
+uint8_t BSB::getLen_idx() {
+  if (bus_type == 2) {
+    return len_idx +1;  // different only for BUS_PPS
+  }
+  return len_idx;
+}
+
+uint8_t BSB::getPl_start() {
+  return pl_start;
 }
 
 
@@ -90,7 +117,6 @@ void BSB::print(byte* msg) {
 // Receives a message and stores it to buffer
 boolean BSB::Monitor(byte* msg) {
   unsigned long int ts;
-  byte read;
   byte i=0;
     
   if (serial->available() > 0) {
@@ -100,22 +126,16 @@ boolean BSB::Monitor(byte* msg) {
     Serial.print(ts);
     Serial.print(" ");
     while (serial->available() > 0) {
-      
       // Read serial data...
-      read = serial->read();
-      if (bus_type != 2) {
-        read = read ^ 0xFF;
-      }
-
-      msg[i] = read;
-      i++;
+      msg[i] = readByte();;
 
       // output
-      if(read<16){  
+      if(msg[i]<16){  
         Serial.print("0");
       }
-      Serial.print(read, HEX);
+      Serial.print(msg[i], HEX);
       Serial.print(" ");
+      i++;
       // if no inout available -> wait
       if (serial->available() == 0) {
         unsigned long timeout = millis() + 3;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
@@ -134,14 +154,11 @@ boolean BSB::Monitor(byte* msg) {
 
 bool BSB::GetMessage(byte* msg) {
   byte i=0,timeout;
-  byte read;
+  uint8_t read;
 
   while (serial->available() > 0) {
     // Read serial data...
-    read = serial->read();
-    if (bus_type != 2) {
-      read = read ^ 0xFF;
-    }
+    read = readByte();
 
 #if DEBUG_LL
     Serial.println();    
@@ -167,7 +184,7 @@ bool BSB::GetMessage(byte* msg) {
 
       // Delay for more data
       if (HwSerial == true) {
-        delay(3);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed...
+        delay(4);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed. Also, why 3ms are fine for the Mega, but at least 4ms are necessary on the Due
       } else {
         delay(1);   // Or should I wonder why SoftwareSerial is fine with just 1ms? 
                     // At 4800bps 8O1, one byte needs 11 Bit to be transferred. One bit takes 0.2ms transmit time. Thus, 11 bits
@@ -177,10 +194,7 @@ bool BSB::GetMessage(byte* msg) {
       }
       // read the rest of the message
       while (serial->available() > 0) {
-        read = serial->read();
-        if (bus_type != 2) {
-          read = read ^ 0xFF;
-        }
+        read = readByte();
         msg[i++] = read;
 #if DEBUG_LL
         if(read<16){  
@@ -248,9 +262,9 @@ bool BSB::GetMessage(byte* msg) {
 
 // Generates CCITT XMODEM CRC from BSB message
 uint16_t BSB::CRC (byte* buffer, uint8_t length) {
-  uint16_t crc = 0, i;
+  uint16_t crc = 0;
 
-  for (i = 0; i < length; i++) {
+  for (uint8_t i = 0; i < length; i++) {
     crc = _crc_xmodem_update(crc, buffer[i]);
   }
 
@@ -263,11 +277,10 @@ uint16_t BSB::CRC (byte* buffer, uint8_t length) {
 // (255 - (Telegrammlänge ohne PS - 1)) * 256 + Telegrammlänge ohne PS - 1 + Summe aller Telegrammbytes
 uint16_t BSB::CRC_LPB (byte* buffer, uint8_t length) {
   uint16_t crc = 0;
-  uint8_t i;
 
   crc = (257-length)*256+length-2;
 
-  for (i = 0; i < length-1; i++) {
+  for (uint8_t i = 0; i < length-1; i++) {
     crc = crc+buffer[i];
   }
 
@@ -276,10 +289,10 @@ uint16_t BSB::CRC_LPB (byte* buffer, uint8_t length) {
 
 // Generates CRC for PPS message
 uint8_t BSB::CRC_PPS (byte* buffer, uint8_t length) {
-  uint8_t crc = 0, i;
+  uint8_t crc = 0;
   int sum = 0;
 
-  for (i = 0; i < length; i++) {
+  for (uint8_t i = 0; i < length; i++) {
     sum+=buffer[i];
   }
   sum = sum & 0xFF;
@@ -289,7 +302,7 @@ uint8_t BSB::CRC_PPS (byte* buffer, uint8_t length) {
 }
 
 uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
-  int i;
+  uint8_t i;
 
   crc = crc ^ ((uint16_t)data << 8);
   for (i=0; i<8; i++) {
@@ -305,32 +318,37 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 // Low-Level sending of message to bus
 inline bool BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
-  byte i;
   byte data, len;
   if (bus_type != 2) {
     len = msg[len_idx];
   } else {
     len = len_idx;
   }
-  switch (bus_type) {
-    case 0:
+  // switch (bus_type) {
+    // case 0:
+      // msg[0] = 0xDC;
+      // msg[1] = myAddr | 0x80;
+      // msg[2] = destAddr;
+      // break;
+    // case 1:
+      // msg[0] = 0x78;
+      // msg[2] = destAddr;
+      // msg[3] = myAddr;
+      // break;
+  // }
+  {
+    if (bus_type == 0) {
       msg[0] = 0xDC;
       msg[1] = myAddr | 0x80;
       msg[2] = destAddr;
-      break;
-    case 1:
-      msg[0] = 0x78;
-      msg[2] = destAddr;
-      msg[3] = myAddr;
-      break;
-  }
-  {
-    if (bus_type == 0) {
       uint16_t crc = CRC (msg, len -2);
       msg[len -2] = (crc >> 8);
       msg[len -1] = (crc & 0xFF);
     }
     if (bus_type == 1) {
+      msg[0] = 0x78;
+      msg[2] = destAddr;
+      msg[3] = myAddr;
       uint16_t crc = CRC_LPB (msg, len);
       msg[len-1] = (crc >> 8);
       msg[len] = (crc & 0xFF);
@@ -348,7 +366,7 @@ inline bool BSB::_send(byte* msg) {
 Er wartet 11/4800 Sek ab (statt 10, Hinweis von miwi), lauscht und schaut ob der Bus in dieser Zeit von jemand anderem benutzt wird. Sprich ob der Bus in dieser Zeit mal
 auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
 */
-  unsigned long timeoutabort = 1000;  // one second timeout
+  static const unsigned long timeoutabort = 1000;  // one second timeout
   unsigned long start_timer = millis();
   retry:
   // Select a random wait time between 60 and 79 ms
@@ -363,7 +381,8 @@ auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
       unsigned long timeout = millis();
 //      unsigned long timeout = millis() + 3;//((1/480)*1000);
       while (millis()-timeout < waitfree) {
-        if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read()))   // Test RX pin
+//        if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read()))   // Test RX pin
+      if (rx_pin_read())
         {
           goto retry;
         } // endif
@@ -400,14 +419,16 @@ gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
 So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
+#if defined(__AVR__)
   if (HwSerial == false) {
-//    cli();
+    cli();
   }
+#endif
   byte loop_len = len;
   if (bus_type != 2) {
     loop_len = len + bus_type - 1; // same msg length difference as above
   }
-  for (i=0; i <= loop_len; i++) {
+  for (byte i=0; i <= loop_len; i++) {
     data = msg[i];
     if (bus_type != 2) {
       data = data ^ 0xFF;
@@ -415,26 +436,32 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     serial->write(data);
     if (HwSerial == true) {
       serial->flush();
-      serial->read(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+      readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
-    if ((HwSerial == true && rx_pin_read() == 0) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
+//    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
+      if (rx_pin_read()) {
       // Collision
+#if defined(__AVR__)
       if (HwSerial == false) {
-//        sei();
+        sei();
       }
+#endif
       goto retry;
     }
   }
   if (HwSerial == true) {
     serial->flush();
   } else {
-//    sei();
+#if defined(__AVR__)
+    sei();
+#endif
   }
   return true;
 }
 
 bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
   byte i;
+  byte offset = 0;
 
   if (bus_type == 2) {
     return _send(tx_msg);
@@ -442,7 +469,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 
   if (HwSerial == true) {
     while(serial->available()) {
-      serial->read();
+      readByte();
     }
   }
 
@@ -451,9 +478,20 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   byte A1 = (cmd & 0x00ff0000) >> 16;
   byte A3 = (cmd & 0x0000ff00) >> 8;
   byte A4 = (cmd & 0x000000ff);
+
+  // special treatment of internal query types
+  if (type == 0x12) {   // TYPE_IA1
+    A1 = A3;
+    A2 = A4;
+    offset = 2;
+  }
+  if (type == 0x14) {   // TYPE_IA2
+    A1 = A4;
+    offset = 3;
+  }
   
   if (bus_type == 1) {
-    tx_msg[1] = param_len + 14;
+    tx_msg[1] = param_len + 14 - offset;
     tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
     tx_msg[5] = 0x02;	// yet unknown
     tx_msg[6] = 0x00;	// yet unknown
@@ -465,7 +503,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
     tx_msg[11] = A3;
     tx_msg[12] = A4;
   } else {
-    tx_msg[3] = param_len + 11;
+    tx_msg[3] = param_len + 11 - offset;
     tx_msg[4] = type;
     // Adress
     tx_msg[5] = A1;
@@ -495,6 +533,10 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       Serial.println(3000-(timeout-millis()));
 #endif
       i--;
+      byte msg_type = rx_msg[4+(bus_type*4)];
+      if (msg_type == 0x13 || msg_type == 0x15) {   // no recipient check for answers for special query types 0x12/0x13 and 0x14/0x15
+        return true;
+      }
       if (bus_type == 1) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
 	if (rx_msg[2] == myAddr && rx_msg[8]==0x08) {  // TYPE_ERR
@@ -532,6 +574,14 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
-uint8_t BSB::rx_pin_read() {
-  return * portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin);
+boolean BSB::rx_pin_read() {
+  return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
+}
+
+uint8_t BSB::readByte() {
+  byte read = serial->read();
+  if (bus_type != 2) {
+    read = read ^ 0xFF;
+  }
+  return read;
 }

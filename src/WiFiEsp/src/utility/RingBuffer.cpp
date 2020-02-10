@@ -1,3 +1,4 @@
+#if defined(__AVR__)
 /*--------------------------------------------------------------------
 This file is part of the Arduino WiFiEsp library.
 
@@ -103,3 +104,4 @@ void RingBuffer::getStrN(char * destination, unsigned int skipChars, unsigned in
 	// terminate output string
 	//destination[len]=0;
 }
+#endif

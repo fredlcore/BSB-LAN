@@ -1,4 +1,8 @@
+#if defined(__SAM3X8E__)
+const char favicon [] PROGMEM_LATE = { 
+#else
 const byte favicon [] PROGMEM_LATE = { 
+#endif
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x91, 0x68,
   0x36, 0x00, 0x00, 0x00, 0x6c, 0x49, 0x44, 0x41, 0x54, 0x28, 0xcf, 0x95, 0x52, 0x41, 0x0e, 0xc0,
@@ -274,8 +278,9 @@ const char header_html[] PROGMEM_LATE =
   "</head><body>\n"
   "<script>function set(line){\n"
   "var value = document.getElementById('value'+line).value.replace(\":\", \".\");\n"
-  "if(isNaN(value)==false){\n"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+document.getElementById('value'+line).value,'_self');\n"
+  "value = value.replace(\"---\", \"\");\n"
+  "if(isNaN(value)==false || value == ''){\n"
+  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
   "}}\n"
   "function setbit(line){\n"
   "var x=document.getElementById('value'+line); var value=0;\n"

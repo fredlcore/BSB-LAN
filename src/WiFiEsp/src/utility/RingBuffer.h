@@ -1,3 +1,4 @@
+#if defined(__AVR__)
 /*--------------------------------------------------------------------
 This file is part of the Arduino WiFiEsp library.
 
@@ -44,4 +45,5 @@ private:
 
 };
 
+#endif
 #endif
