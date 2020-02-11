@@ -3,10 +3,11 @@
 | Polecenie URL           | Efekt                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Wyświetlenie/ustawienie wartośći parametru \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Wyświetlenie/ustawienie wartośći parametrów \<x\>, \<y\> i \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Wyświetlenie/ustawienie wartośći parametrów \<x\>, \<y\> i \<z\>   
 |  /\<x\>-\<y\>         | Wyświetlenie/ustawienie wartośći parametrów \<x\> do \<y\>  
 |  /A                   | Wyświetlenie wartości średnich z 24h  
 |  /A=\<x\>,\<y\>       | Zmiana obliczanie wartości średniej 24-godzinnej dla parametrów \<x\>, \<y\>  
+|  /A=0			| Disable 24h average calculation temporarily  
 |  /B                   | Wyświetl skumulowany czasy pracy palnika (w sekundach) (w tym cwu)  
 |  /B0                  | Reset licznik czasu pracy palnika  
 |  /C                   | Wyświetl konfigurację BSB-LAN  
@@ -15,7 +16,7 @@
 |  /D0                  | Zresetuj plik log i utwórz nowy nagłówek  
 |  /E\<x\>              | Wyświetl liste możliwych wartości tekstu parametru \<x\>  
 |  /G\<x\>              | GPIO: Wyświetl stan pinu \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Ustaw stan pinu \<x\> na wysoki (\<y\> = 1) lub niski (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Wyświetl stan pinu \<x\> i zmień typ na weściowy  
 |  /I\<x\>=\<y\>        | Wyślij komunikat INF do parametru \<x\> z wartością \<y\>  
 |  /JK=\<x\>        	| JSON: Zapytanie o wszystkie parametry kategorii \<x\>  
@@ -37,6 +38,7 @@
 |  /R\<x\>              | Wyświetl i zrestetuj parametr \<x\>  
 |  /S\<x\>=\<y\>        | Ustaw wartość <y> dla parametru \<x\>  
 |  /T                   | Wyświetl opcjonalne czujniki (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Aktywuj (\<x\> = 1) lub dezaktywuj (\<x\> = 0) tryb przekazywania dodatkowych informacji na interfejs szeregowy Arduino  
 |  /X                   | Wyświetl opcjonalne termostaty MAX!  
 

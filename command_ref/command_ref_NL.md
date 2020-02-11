@@ -3,10 +3,11 @@
 | URL-commando          | Resultaat                                                                     |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Opvragen van waarde/instelling van parameter \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Opvragen van waardes/waardes van parameters \<x\>, \<y\> and \<z\>   
+|  /\<x\>/\<y\>/\<z\>   | Opvragen van waardes/waardes van parameters \<x\>, \<y\> and \<z\>   
 |  /\<x\>-\<y\>         | Opvragen van waardes/waardes van parameters \<x\> to \<y\>  
 |  /A                   | Opvragen van 24uurs-gemiddelde waardes  
 |  /A=\<x\>,\<y\>       | Verander het 24uurs-gemiddelde waarde berekening van parameters \<x\>, \<y\>  
+|  /A=0			| Disable 24h average calculation temporarily  
 |  /B                   | Opvragen van geaccumuleerde brander-looptijd (in secondes) en -cycli (inbegrepen SWW)  
 |  /B0                  | Reset teller van brander-looptijd and -cycli  
 |  /C                   | Weergave configuratie van BSB-LAN 
@@ -15,7 +16,7 @@
 |  /D0                  | Reset logfile en maak een nieuwe header 
 |  /E\<x\>              | Toon ENUM-waardes van parameter \<x\>  
 |  /G\<x\>              | GPIO: Opvragen van pin \<x\>  
-|  /G\<x\>,\<y\>        | GPIO: Set pin \<x\> naar hoog (\<y\> = 1) of laag (\<y\> = 0)  
+|  /G\<x\>=\<y\>        | GPIO: Set pin \<x\> naar hoog (\<y\> = 1) of laag (\<y\> = 0)  
 |  /G\<x\>,I            | GPIO: Opvragen van pin \<x\> tijdens het instellen op INPUT 
 |  /I\<x\>=\<y\>        | Stuur INF-message naar parameter \<x\> met waarde \<y\>  
 |  /JK=\<x\>        	| JSON: Opvragen van alle parameters van categorie \<x\>  
@@ -38,6 +39,7 @@
 |  /R\<x\>              | Opvragen van de reset-waarde van de parameter \<x\>  
 |  /S\<x\>=\<y\>        | Stel de waarde <y> in voor de parameter \<x\>  
 |  /T                   | Opvragen van optionele sensors (DS18B20/DHT22)  
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Activeren (\<x\> = 1) of deactiveren (\<x\> = 0) uitgebreide uitvoer modus 
 |  /X                   | Opvragen van optionele MAX! -Thermostaten  
 
