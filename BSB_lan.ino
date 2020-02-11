@@ -5098,38 +5098,39 @@ ich mir da nicht)
               monthval = FAT_MONTH(d.lastWriteDate);
               dayval = FAT_DAY(d.lastWriteDate);
               }
-            char *p = outBuf + strlen(outBuf) + 1;  
-            strcpy_P(p, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""));
-            sprintf(buffer, p, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize);
-            
-            if (strstr(outBuf, buffer) == NULL) {
-              // reuse httpflags
-              bitClear(httpflags, 3); //ETag not match
-            } else {
-              filesize = 0; //Send header only
+
+            if ((httpflags & 8))  { //Compare ETag if presented
+              char *p = outBuf + strlen(outBuf) + 1;  
+              strcpy_P(p, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""));
+              sprintf(buffer, p, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize);
+
+              if (strstr(outBuf, buffer) == NULL) {
+                // reuse httpflags
+                bitClear(httpflags, 3); //ETag not match
+              }
             }
 
             DebugOutput.print(F("File opened from SD: ")); DebugOutput.println(urlString);
-            strcpy_P(buffer, PSTR("HTTP/1.1 "));
+            strcpy_P(buffer, PSTR("HTTP/1.1 ")); // 10 bytes with zero
             if((httpflags & 8))
-              strcat_P(buffer, PSTR("304 Not Modified"));
+              strcat_P(buffer, PSTR("304 Not Modified\n")); // 18 bytes with zero
             else
-              strcat_P(buffer, PSTR("200 OK"));
-            strcat_P(buffer, PSTR("\nContent-Type: "));
+              strcat_P(buffer, PSTR("200 OK\n")); // 8 bytes with zero
+            strcat_P(buffer, PSTR("Content-Type: ")); // 15 bytes with zero
             switch(mimetype){
-              case 1: getfarstrings = PSTR("text/html"); break;
-              case 2: getfarstrings = PSTR("text/css"); break;
-              case 3: getfarstrings = PSTR("application/x-javascript"); break;
-              case 4: getfarstrings = PSTR("application/xml"); break;
+              case 1: getfarstrings = PSTR("text/html\n"); break;
+              case 2: getfarstrings = PSTR("text/css\n"); break;
+              case 3: getfarstrings = PSTR("application/x-javascript\n"); break;
+              case 4: getfarstrings = PSTR("application/xml\n"); break;
               // case 5 below
-              case 101: getfarstrings = PSTR("image/jpeg"); break;
-              case 102: getfarstrings = PSTR("image/gif"); break;
-              case 103: getfarstrings = PSTR("image/svg"); break;
-              case 104: getfarstrings = PSTR("image/png"); break;
-              case 105: getfarstrings = PSTR("image/x-icon"); break;
-              case 201: getfarstrings = PSTR("application/x-gzip"); break;
+              case 101: getfarstrings = PSTR("image/jpeg\n"); break;
+              case 102: getfarstrings = PSTR("image/gif\n"); break;
+              case 103: getfarstrings = PSTR("image/svg\n"); break;
+              case 104: getfarstrings = PSTR("image/png\n"); break;
+              case 105: getfarstrings = PSTR("image/x-icon\n"); break;
+              case 201: getfarstrings = PSTR("application/x-gzip\n"); break;
               case 5:
-              default: getfarstrings = PSTR("text");
+              default: getfarstrings = PSTR("text\n");
             }
             strcat_P(buffer, getfarstrings);
             if((httpflags & 2)) strcat_P(buffer, PSTR("Content-Encoding: gzip\n"));
@@ -5169,16 +5170,13 @@ ich mir da nicht)
               strcpy_P(outBuf, PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\n"));
               sprintf(buffer + strlen(buffer), outBuf, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
-            strcpy_P(outBuf, PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\n"));
-            sprintf(buffer + strlen(buffer), outBuf, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize);
-
-            strcpy_P(outBuf, PSTR("\nContent-Length: %lu\n"));
-            sprintf(buffer + strlen(buffer), outBuf, filesize);
-            strcat_P(buffer, PSTR("Cache-Control: max-age=300, public\n\n")); //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
+            //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
+            strcpy_P(outBuf, PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n")); 
+            sprintf(buffer + strlen(buffer), outBuf, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             client.print(buffer);
 
-            //!HEAD request received or ETag not match 
-            if (!(httpflags & 4) && !(httpflags & 8)) {
+            //Send file if !HEAD request received or ETag not match 
+            if (!(httpflags & 8) && !(httpflags & 4)) {
               transmitFile(dataFile);
             }
             strcpy_P(buffer, ((httpflags & 4)?PSTR("HEAD"):PSTR("GET"))); strcat_P(buffer, PSTR(" request received\n"));
