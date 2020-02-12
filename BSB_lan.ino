@@ -4211,13 +4211,18 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
  * *************************************************************** */
 void transmitFile(File dataFile) {
   int logbuflen = 512;
-  byte loglineBuf[logbuflen];
+  byte *loglineBuf = malloc(logbuflen);
+  if(!loglineBuf) {
+    DebugOutput.println(F("Can't alloc memory"));
+    return;
+    }
   int chars_read = dataFile.read(&loglineBuf , logbuflen);
   while (chars_read == logbuflen) {
     client.write(loglineBuf, logbuflen);
     chars_read = dataFile.read(&loglineBuf , logbuflen);
     }
   if (chars_read > 0) client.write(loglineBuf, chars_read);
+  free(loglineBuf);
 }
 
 /** *****************************************************************
@@ -5690,14 +5695,9 @@ ich mir da nicht)
         }
 
         if (p[1]=='J') {
-          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
-          client.print(buffer);
-          char jsonbuffer[512];
           int i=0;
           uint32_t cmd=0;
-          char formatbuf[80];
           // Parse potential JSON payload
-
           char json_temp[11];
           char json_value_string[11];
           uint8_t j_char_idx = 0;
@@ -5714,6 +5714,22 @@ ich mir da nicht)
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
+          
+          strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
+          client.print(buffer);
+
+          char *jsonbuffer = malloc(512);
+          if(!jsonbuffer) {
+            DebugOutput.println(F("Can't alloc memory"));
+            break;
+            }
+          char formatbuf = malloc(80);
+          if(!formatbuf) {
+            free(jsonbuffer);
+            DebugOutput.println(F("Can't alloc memory"));
+            break;
+            }
+
           if (json_token!=NULL) {
             client.flush();
           }
@@ -6001,6 +6017,8 @@ ich mir da nicht)
           strcpy_P(formatbuf, PSTR("\n}\n"));
           client.print(formatbuf);
           client.flush();
+          free(formatbuf);
+          free(jsonbuffer);
           break;
         }
 
