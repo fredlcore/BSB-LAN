@@ -4744,7 +4744,7 @@ const char ENUM7376[] PROGMEM_LATEST = {
 "\x1d " ENUM7376_1d_TEXT "\0"
 "\x21 " ENUM7376_21_TEXT "\0"
 "\x28 " ENUM7376_28_TEXT "\0"
-"\x29 Betriebsmeldung K36"};
+"\x29 " ENUM7376_29_TEXT };
 
 
 const char ENUM7425[] PROGMEM_LATEST = {
