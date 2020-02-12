@@ -6825,14 +6825,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0498,  CAT_KONFIG,           VT_ENUM,          5891,  STR5891_2,  sizeof(ENUM5891),   ENUM5891,     DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Relaisausgang QX2
 {0x053D0587,  CAT_KONFIG,           VT_ENUM,          5892,  STR5892,  sizeof(ENUM5892),     ENUM5892,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Relaisausgang QX3
 {0x053D0588,  CAT_KONFIG,           VT_ENUM,          5894,  STR5894,  sizeof(ENUM5894),     ENUM5894,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX4
-{0x053D0589,  CAT_KONFIG,           VT_UNKNOWN,       5895,  STR5895,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX5
+{0x053D0589,  CAT_KONFIG,           VT_ENUM,          5895,  STR5895,  sizeof(ENUM5895),     ENUM5895,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX5
 {0x053D058A,  CAT_KONFIG,           VT_UNKNOWN,       5896,  STR5896,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX6
 {0x053D0785,  CAT_KONFIG,           VT_ENUM,          5902,  STR5902,  sizeof(ENUM5902),     ENUM5902,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21
 {0x053D0787,  CAT_KONFIG,           VT_ENUM,          5904,  STR5904,  sizeof(ENUM5904),     ENUM5904,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX23
 {0x053D04A0,  CAT_KONFIG,           VT_ENUM,          5908,  STR5908,  sizeof(ENUM5908),     ENUM5908,     DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX3-Mod
 // provide 5902-5908 for non-Brötje systems
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5909,  STR5909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang QX4-Mod
-{0x153D2FCC,  CAT_KONFIG,           VT_BIT,           5920,  STR5920,  sizeof(ENUM5920),     ENUM5920,     DEFAULT_FLAG, DEV_ALL}, // Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
+{0x153D2FCC,  CAT_KONFIG,           VT_ENUM,          5920,  STR5920,  sizeof(ENUM5920),     ENUM5920,     DEFAULT_FLAG, DEV_ALL}, // Thision 5920 Relaisausgang K2 LMU-Basis Bit 0-7 [?]
 {0x053D3078,  CAT_KONFIG,           VT_YESNO,         5921,  STR5921,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5921 Default K2 auf K1 [Ja/Nein]
 {0x153D2FCF,  CAT_KONFIG,           VT_ENUM,          5922,  STR5922,  sizeof(ENUM5922),     ENUM5922,     DEFAULT_FLAG, DEV_ALL}, // Thision 5922 Relaisausgang 1 RelCl [enum: ]
 {0x153D2FD0,  CAT_KONFIG,           VT_ENUM,          5923,  STR5923,  sizeof(ENUM5923),     ENUM5923,     DEFAULT_FLAG, DEV_ALL}, // Thision 5923 Relaisausgang 2 RelCl [s.o.]
@@ -8751,7 +8751,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x063D0858 and 0x053D0858 have same payload
 0x063D08A5 and 0x053D08A5 have same payload
 0x063D08A6 and 0x053D08A6 have same payload
-0x063D08F2 and 0x053D08F2 have same payload
+0x063D08F2 and 0x053D08F2 have same payload - parameter value is actually mirrored to this Command ID
 0x063D08F3 and 0x053D08F3 have same payload
 0x063D08FC and 0x053D08FC have same payload
 0x063D08FD and 0x053D08FD have same payload
@@ -9024,7 +9024,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 0x073D0858 and 0x053D0858 have same payload
 0x073D08A5 and 0x053D08A5 have same payload
 0x073D08A6 and 0x053D08A6 have same payload
-0x073D08F2 and 0x053D08F2 have same payload
+0x073D08F2 and 0x053D08F2 have same payload - parameter value is actually mirrored to this Command ID
 0x073D08F3 and 0x053D08F3 have same payload
 0x073D08FC and 0x053D08FC have same payload
 0x073D08FD and 0x053D08FD have same payload

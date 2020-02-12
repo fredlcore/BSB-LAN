@@ -6937,7 +6937,7 @@ ich mir da nicht)
             float hum = DHT.humidity;
             float temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
-              dataFile.print(F("Temperature "));
+              dataFile.print(F("DHT Temperature "));
               dataFile.print(log_sensor);
               dataFile.print(F(";"));
               dataFile.println(temp);
@@ -6948,7 +6948,7 @@ ich mir da nicht)
               dataFile.print(F(";"));
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
-              dataFile.print(F("Humidity "));
+              dataFile.print(F("DHT Humidity "));
               dataFile.print(log_sensor);
               dataFile.print(F(";"));
               dataFile.println(hum);
@@ -6960,7 +6960,7 @@ ich mir da nicht)
             int log_sensor = log_parameters[i] - 20200;
             sensors.requestTemperatures(); // Send the command to get temperatures
             float t=sensors.getTempCByIndex(log_sensor);
-            dataFile.print(F("Temperature "));
+            dataFile.print(F("1W Temperature "));
             dataFile.print(log_sensor);
             dataFile.print(F(";"));
             dataFile.println(t);
