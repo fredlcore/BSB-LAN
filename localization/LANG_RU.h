@@ -9,6 +9,7 @@
 //Freigabe - программа работы
 //Elektroeinsatz - ТЭН
 // TO DO: Придумать замену кальке "Загрузка" в контексте нагрева горячей воды.
+//
 #define UNIT_MONTHS_TEXT "месяцев"
 #define UNIT_DAYS_TEXT "дней"
 #define UNIT_HOUR_TEXT "ч"
@@ -18,8 +19,8 @@
 #define UNIT_PERC_TEXT "&#037;"
 #define UNIT_RPM_TEXT "Об/мин"
 #define UNIT_KW_TEXT "кВт"
-#define UNIT_KWH_TEXT "кВт*ч"
-#define UNIT_KWHM3_TEXT "кВт*ч/м³"
+#define UNIT_KWH_TEXT "кВт&times;ч"
+#define UNIT_KWHM3_TEXT "кВт&times;ч/м&sup3;"
 #define UNIT_CURR_TEXT "&#181;А"
 #define UNIT_BAR_TEXT "бар"
 #define UNIT_VOLT_TEXT "В"
@@ -1389,7 +1390,7 @@
 #define ENUM2880_02_TEXT "Ergänzungsbetrieb HK"
 #define ENUM2920_01_TEXT "Freigegeben"
 #define ENUM3090_00_TEXT "Keine (Mit Eingang)"
-#define ENUM3092_00_TEXT "кВт*ч"
+#define ENUM3092_00_TEXT "кВт&times;ч"
 #define ENUM3095_01_TEXT "С входом H1"
 #define ENUM3095_02_TEXT "С входом H2 Модуля 1"
 #define ENUM3095_03_TEXT "С входом H2 Модуля 2"
@@ -1403,7 +1404,7 @@
 #define ENUM3095_0b_TEXT "С входом H3"
 #define ENUM3095_0c_TEXT "С входом H31"
 #define ENUM3095_0d_TEXT "С входом H32"
-#define ENUM3102_02_TEXT "м3"
+#define ENUM3102_02_TEXT "м&sup3;"
 //#define ENUM3109_01_TEXT "Abgegebene Wärme"
 #define ENUM3109_01_TEXT "Выделяемого тепла"
 //#define ENUM3109_02_TEXT "Eingesetzte Energie"
@@ -1503,6 +1504,7 @@
 #define ENUM5770_04_TEXT "Модулируемый привод воздушного клапана, 2-контактный"
 #define ENUM5770_05_TEXT "Каскад (две одноступенчатых горелки)"
 #define ENUM5774_00_TEXT "Все потребители"
+#define ENUM5774_ff_TEXT "Только контур отопления 1/ГВС"
 #define ENUM5806_01_TEXT "3-ступенчатый"
 #define ENUM5806_02_TEXT "2-ступенчатый раздельный"
 #define ENUM5806_03_TEXT "2-ступенчатый совместный"
