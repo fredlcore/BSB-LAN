@@ -5066,19 +5066,28 @@ ich mir da nicht)
         else
           urlString = String(p + 1);
         DebugOutput.println("URL: " + urlString);
-        int mimetype = 0; //unknown MIME type
-        if (urlString.endsWith(F(".html")) || urlString.endsWith(F(".htm"))) mimetype = 1;
-        else if(urlString.endsWith(F(".css"))) mimetype = 2;
-        else if(urlString.endsWith(F(".js"))) mimetype = 3;
-        else if(urlString.endsWith(F(".xml"))) mimetype = 4;
-        else if(urlString.endsWith(F(".txt"))) mimetype = 5;
-        else if(urlString.endsWith(F(".jpg"))) mimetype = 101;
-        else if(urlString.endsWith(F(".gif"))) mimetype = 102;
-        else if(urlString.endsWith(F(".svg"))) mimetype = 103;
-        else if(urlString.endsWith(F(".png"))) mimetype = 104;
-        else if(urlString.endsWith(F(".ico"))) mimetype = 105;
-        else if(urlString.endsWith(F(".gz"))) mimetype = 201;
-        // You can add more MIME types here
+        int mimetype = urlString.lastIndexOf('.'); //0 = unknown MIME type
+        //local reuse mimetype variable
+        if(mimetype > -1) {
+          mimetype++; //next symbol after dot
+          String str = urlString.substring(mimetype);
+          str.toLowerCase();
+          mimetype = 0; // unknown MIME type
+          if (str.equals(F("html")) || str.equals(F("htm"))) mimetype = 1;
+          else if(str.equals(F("css"))) mimetype = 2;
+          else if(str.equals(F("js"))) mimetype = 3;
+          else if(str.equals(F("xml"))) mimetype = 4;
+          else if(str.equals(F("txt"))) mimetype = 5;
+          else if(str.equals(F("jpg"))) mimetype = 101;
+          else if(str.equals(F("gif"))) mimetype = 102;
+          else if(str.equals(F("svg"))) mimetype = 103;
+          else if(str.equals(F("png"))) mimetype = 104;
+          else if(str.equals(F("ico"))) mimetype = 105;
+          else if(str.equals(F("gz"))) mimetype = 201;
+          // You can add more MIME types here
+          }
+        else
+          mimetype = 0; // unknown MIME type
 
         if(mimetype)  {
           File dataFile;
