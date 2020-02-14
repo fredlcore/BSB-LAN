@@ -3,10 +3,11 @@
 | URL-command           | Effect                                                                    |
 |:----------------------|:------------------------------------------------------------------------------|
 |  /\<x\>               | Interroga il valore del parametro \<x\>
-|  /\<x\>,\<y\>,\<z\>   | Interroga i valori dei parametri \<x\>, \<y\> and \<z\>
+|  /\<x\>/\<y\>/\<z\>   | Interroga i valori dei parametri \<x\>, \<y\> and \<z\>
 |  /\<x\>-\<y\>         | Interroga i valori dei parametri da \<x\> a \<y\>
 |  /A                   | Interroga i valori medi su 24h dei parametri impostati
 |  /A=\<x\>,\<y\>       | Imposta i parametri per il calcolo medio su 24h \<x\>, \<y\>
+|  /A=0			| Disable 24h average calculation temporarily  
 |  /B                   | Interroga i tempi (in secondi) e i cicli di funzionamento del bruciatore (incluso ACS)
 |  /B0                  | Azzera il contatore dei tempi e dei cicli di funzionamento del bruciatore
 |  /C                   | Visualizza la configurazione di BSB-LAN
@@ -15,7 +16,7 @@
 |  /D0                  | Cancella il file di registro e ne crea una nuovo vuoto
 |  /E\<x\>              | Visualizza i valori ENUM del parametro \ <x \>
 |  /G\<x\>              | GPIO: Interroga il pin \<x\>
-|  /G\<x\>,\<y\>        | GPIO: Imposta il pin \<x\> a HIGH (\<y\> = 1) oppure a LOW (\<y\> = 0)
+|  /G\<x\>=\<y\>        | GPIO: Imposta il pin \<x\> a HIGH (\<y\> = 1) oppure a LOW (\<y\> = 0)
 |  /G\<x\>,I            | GPIO: Interroga il pin \<x\> mentre lo imposta a INPUT
 |  /I\<x\>=\<y\>        | Invia un messaggio INF al parametro \<x\> con valore \<y\>
 |  /JK=\<x\>        	| JSON: Interroga una categoria specifica \<x\>
@@ -38,6 +39,7 @@
 |  /R\<x\>              | Ripristina il valore del parametro \<x\> 
 |  /S\<x\>=\<y\>        | Imposta il valore \<y\> per il parametro \<x\>
 |  /T                   | Interroga i sensori opzionali (DS18B20/DHT22)
+|  /U                   | Displays the user-defined variables if used in `BSB_lan_custom.h`  
 |  /V\<x\>              | Attiva (\<x\> = 1) oppure disattiva (\<x\> = 0) la modalità verbose di output
 |  /X                   | Interroga i termoatati MAX! opzionali
 
