@@ -3696,7 +3696,7 @@ const char ENUM5770[] PROGMEM_LATEST = {
 
 const char ENUM5774[] PROGMEM_LATEST = {
 "\x00 " ENUM5774_00_TEXT "\0"
-  "\xFF Nur Anforderung HK1/TWW"};
+"\xFF " ENUM5774_ff_TEXT "\0"};
 
 const char ENUM5806[] PROGMEM_LATEST = { //FUJITSU
 "\x01 " ENUM5806_01_TEXT "\0"
