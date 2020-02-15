@@ -7881,6 +7881,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D17E6,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_ALL}, // Status Zusatzerzeuger //FUJITSU
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_108_160}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_119_ALL}, // Status Zusatzerzeuger
+{0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_138_ALL}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_170_ALL}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_171_ALL}, // Status Zusatzerzeuger
 {0x053D1AC1,  CAT_STATUS,           VT_ENUM,          8023,  STR8023,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY,     DEV_123_ALL}, // Status Sitherm Pro
