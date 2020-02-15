@@ -16,15 +16,13 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   destAddr=d_addr;
   rx_pin=rx;
 
-#if defined(__SAM3X8E__)
-  pinMode(53, OUTPUT);    // provide voltage
-  digitalWrite(53, 1);
-  pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
-  digitalWrite(24, 1);
-#endif
   if (rx_pin == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
     serial = &Serial1;
+    pinMode(53, OUTPUT);    // provide voltage
+    digitalWrite(53, 1);
+    pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
+    digitalWrite(24, 1);
   } else {
 #if !defined(__SAM3X8E__)
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
@@ -86,9 +84,11 @@ uint8_t BSB::getBusDest() {
 }
 
 uint8_t BSB::getLen_idx() {
+/*
   if (bus_type == 2) {
     return len_idx +1;  // different only for BUS_PPS
   }
+*/
   return len_idx;
 }
 
@@ -170,16 +170,16 @@ bool BSB::GetMessage(byte* msg) {
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E))) {
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E || read == 0xFD))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
       if (bus_type == 2 && read == 0x17) {
-      	uint8_t PPS_write_enabled = myAddr;
-      	if (PPS_write_enabled == 1) {
+//      	uint8_t PPS_write_enabled = myAddr;
+//      	if (PPS_write_enabled == 1) {
           return true; // PPS-Bus request byte 0x17 just contains one byte, so return
-      	} else {
-      	  len_idx = 9;
-	      }
+//      	} else {
+//      	  len_idx = 9;
+//	      }
       }
 
       // Delay for more data
