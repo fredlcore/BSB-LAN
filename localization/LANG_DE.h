@@ -1970,6 +1970,7 @@
 #define ENUM5770_04_TEXT "Modulierend 2-Punkt Luftklappenantrieb"
 #define ENUM5770_05_TEXT "Kaskade (zwei 1-stufige Brenner)"
 #define ENUM5774_00_TEXT "Alle Anforderungen"
+#define ENUM5774_ff_TEXT "Nur Anforderung HK1/TWW"
 #define ENUM5806_01_TEXT "3-stufig"
 #define ENUM5806_02_TEXT "2-stufig ausschliessend"
 #define ENUM5806_03_TEXT "2-stufig ergänzend"

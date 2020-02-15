@@ -419,7 +419,7 @@ char buffer[BUFLEN] = { 0 };
 char outBuf[OUTBUF_LEN] = { 0 };
 byte outBufLen=0;
 
-char div_unit[10];
+char div_unit[32];
 
 #ifdef WIFI
 WiFiEspClient client;
