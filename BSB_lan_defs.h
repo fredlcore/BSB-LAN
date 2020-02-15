@@ -29,7 +29,7 @@
 #include FILE2
 
 #if defined(__SAM3X8E__)
-#define PROGMEM_LATE 
+#define PROGMEM_LATE
 #define PROGMEM_LATEST
 #else
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
@@ -2972,7 +2972,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
 #define ENUM8009_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_02_TEXT ENUM2480_00_TEXT
-#define ENUM8009_09_TEXT ENUM6706_16_TEXT 
+#define ENUM8009_09_TEXT ENUM6706_16_TEXT
 #define ENUM8009_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
 #define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
@@ -6387,7 +6387,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D1AB2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2776,  STR2776,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min bei TWW
 {0x593D1AB3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2777,  STR2777,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max bei TWW
 {0x593D1AB4,  CAT_WAERMEPUMPE,      VT_PERCENT,       2778,  STR2778,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min Kühlbetr
-{0x593D1AB5,  CAT_WAERMEPUMPE,      VT_PERCENT,       2779,  STR2779,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max Kühlbetr 
+{0x593D1AB5,  CAT_WAERMEPUMPE,      VT_PERCENT,       2779,  STR2779,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max Kühlbetr
 
 //OEM
 {0x593D186C,  CAT_WAERMEPUMPE,      VT_TEMP,          2785,  STR2785,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Max Kondensationstemp
@@ -7230,8 +7230,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
 {0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
 {0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
-{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
-{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
+{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
+{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
 {0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6237,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
@@ -8531,7 +8531,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
 {0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00
 {0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 // "Anlagenbild" (ASCII: "A006103") / on RVS43.222: (ASCII: "A0060Z2") / on ZR1: (ASCII: "A006BZ2")
-{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload 
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload
 {0x053D0076,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // QINF message sent out by ACS700 diagnosis software
 {0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0094,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 (ASCII: "00") // "Anlagebildbeschreibung 1"
@@ -9232,7 +9232,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x193D2FEE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10376, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 
 {0x193D0232,  CAT_USER_DEFINED,     VT_TEMP,          10377, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x193D0233,  CAT_USER_DEFINED,     VT_TEMP,          10378, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, 
+{0x193D0233,  CAT_USER_DEFINED,     VT_TEMP,          10378, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
 
 // 0x213D....
 
