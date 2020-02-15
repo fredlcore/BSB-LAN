@@ -419,7 +419,7 @@ char buffer[BUFLEN] = { 0 };
 char outBuf[OUTBUF_LEN] = { 0 };
 byte outBufLen=0;
 
-char div_unit[10];
+char div_unit[32];
 
 #ifdef WIFI
 WiFiEspClient client;
@@ -4211,15 +4211,15 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
  * *************************************************************** */
 void transmitFile(File dataFile) {
   int logbuflen = 512;
-  byte *loglineBuf = malloc(logbuflen);
+  byte *loglineBuf = (byte *)malloc(logbuflen);
   if(!loglineBuf) {
     DebugOutput.println(F("Can't alloc memory"));
     return;
     }
-  int chars_read = dataFile.read(&loglineBuf , logbuflen);
+  int chars_read = dataFile.read(loglineBuf , logbuflen);
   while (chars_read == logbuflen) {
     client.write(loglineBuf, logbuflen);
-    chars_read = dataFile.read(&loglineBuf , logbuflen);
+    chars_read = dataFile.read(loglineBuf , logbuflen);
     }
   if (chars_read > 0) client.write(loglineBuf, chars_read);
   free(loglineBuf);
@@ -5727,12 +5727,12 @@ ich mir da nicht)
           strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
           client.print(buffer);
 
-          char *jsonbuffer = malloc(512);
+          char *jsonbuffer = (char *)malloc(512);
           if(!jsonbuffer) {
             DebugOutput.println(F("Can't alloc memory"));
             break;
             }
-          char formatbuf = malloc(80);
+          char *formatbuf = (char *)malloc(80);
           if(!formatbuf) {
             free(jsonbuffer);
             DebugOutput.println(F("Can't alloc memory"));
