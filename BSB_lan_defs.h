@@ -3000,6 +3000,19 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8011_6e_TEXT ENUM8000_6e_TEXT
 #define ENUM8011_89_TEXT ENUM861_01_TEXT
 #define ENUM8022_00_TEXT ENUM6040_03_TEXT
+#define ENUM8022_02_TEXT ENUM8005_02_TEXT
+#define ENUM8022_0a_TEXT ENUM8005_0a_TEXT
+#define ENUM8022_11_TEXT ENUM8005_11_TEXT
+#define ENUM8022_19_TEXT ENUM8005_19_TEXT
+#define ENUM8022_3b_TEXT ENUM8005_3b_TEXT
+#define ENUM8022_a6_TEXT ENUM8005_a6_TEXT
+#define ENUM8022_a8_TEXT ENUM8005_a8_TEXT
+#define ENUM8022_aa_TEXT ENUM8005_aa_TEXT
+#define ENUM8022_ac_TEXT ENUM8005_ac_TEXT
+#define ENUM8022_ad_TEXT ENUM8005_ad_TEXT
+#define ENUM8022_ae_TEXT ENUM8005_ae_TEXT
+#define ENUM8022_b0_TEXT ENUM8005_b0_TEXT
+#define ENUM8022_c6_TEXT ENUM8005_c6_TEXT
 #define ENUM8100_00_TEXT ENUM130_00_TEXT
 #define ENUM8100_02_TEXT ENUM8000_04_TEXT
 #define ENUM8100_04_TEXT ENUM8005_07_TEXT
@@ -5171,8 +5184,22 @@ const char ENUM8011[] PROGMEM_LATEST = {
 };
 
 //Status Zusatzerzeuger  //FUJITSU
+// note: unverified values are taken from http://www.mhg-schweiz.ch/de/downloads/aid!7b786239-40bf-4077-9a19-e2c97ebab6c5/id!187/
 const char ENUM8022[] PROGMEM_LATEST = {
-"\x00 " ENUM8022_00_TEXT
+"\x00 " ENUM8022_00_TEXT "\0"
+"\x02 " "?" ENUM8022_02_TEXT "\0"
+"\x0a " "?" ENUM8022_0a_TEXT "\0"
+"\x11 " "?" ENUM8022_11_TEXT "\0"
+"\x19 " ENUM8022_19_TEXT "\0"
+"\x3b " "?" ENUM8022_3b_TEXT "\0"
+"\xa6 " "?" ENUM8022_a6_TEXT "\0"
+"\xa8 " "?" ENUM8022_a8_TEXT "\0"
+"\xaa " ENUM8022_aa_TEXT "\0"
+"\xac " "?" ENUM8022_ac_TEXT "\0"
+"\xad " "?" ENUM8022_ad_TEXT "\0"
+"\xae " "?" ENUM8022_ae_TEXT "\0"
+"\xb0 " "?" ENUM8022_b0_TEXT "\0"
+"\xc6 " "?" ENUM8022_c6_TEXT
 };
 
 #define ENUM8051 ENUM8006               // Status - Status Historie 1
