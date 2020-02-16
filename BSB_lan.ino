@@ -1281,7 +1281,10 @@ void printBIT(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F("BYTE len error len!=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1315,7 +1318,10 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
   }else{
     DebugOutput.print(F("BYTE len error len!=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1349,7 +1355,10 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
   }else{
     DebugOutput.print(F("WORD len error len!=3: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1383,7 +1392,10 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
   }else{
     DebugOutput.print(F("WORD len error len!=3: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1417,7 +1429,10 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
   }else{
     DebugOutput.print(F("DWORD len error len!=5: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1490,7 +1505,10 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision,const cha
   }else{
     DebugOutput.print(F("FIXPOINT len !=3: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1524,7 +1542,10 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision,con
   }else{
     DebugOutput.print(F("FIXPOINT_DWORD len !=5: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1558,7 +1579,10 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision,cons
   }else{
     DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1592,7 +1616,10 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision,c
   }else{
     DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1628,7 +1655,10 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
   } else {
     DebugOutput.print(F("CHOICE len !=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1754,7 +1784,10 @@ void printDateTime(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F(" VT_DATETIME len !=9: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1783,7 +1816,10 @@ void printDate(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F(" VT_DATE len !=9: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1825,7 +1861,10 @@ void printTimeProg(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F(" VT_TIMEPROG len !=12: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1860,7 +1899,10 @@ void printTime(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F("VT_HOUR_MINUTES len !=3: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1890,7 +1932,10 @@ void printLPBAddr(byte *msg,byte data_len){
   }else{
     DebugOutput.print(F(" VT_LPBADDR len !=2: "));
     SerialPrintData(msg);
-    outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+    for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -2282,7 +2327,10 @@ char *printTelegram(byte* msg, int query_line) {
               }else{
                 DebugOutput.print(F(" VT_WEEKDAY !=2: "));
                 SerialPrintData(msg);
-                outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+                for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
               }
               break;
             case VT_ENUM: // enum
@@ -2312,7 +2360,10 @@ char *printTelegram(byte* msg, int query_line) {
               } else {
                 DebugOutput.print(F(" VT_ENUM len !=2 && len != 3: "));
                 SerialPrintData(msg);
-                outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+                for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
               }
               break;
             case VT_CUSTOM_ENUM: // custom enum
@@ -2365,7 +2416,10 @@ char *printTelegram(byte* msg, int query_line) {
               }else{
                 DebugOutput.print(F(" VT_STRING len ==0: "));
                 SerialPrintData(msg);
-                outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+                for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
               }
               break;
             case VT_PPS_TIME: // PPS: Time and day of week
@@ -2417,7 +2471,10 @@ char *printTelegram(byte* msg, int query_line) {
               }else{
                 DebugOutput.print(F(" VT_ERRORCODE len ==0: "));
                 SerialPrintData(msg);
-                outBufLen+=sprintf(outBuf+outBufLen,"decoding error");
+                for (int i=0; i < data_len; i++) {
+      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
+    }
+    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
               }
               break;
             case VT_UNKNOWN:
