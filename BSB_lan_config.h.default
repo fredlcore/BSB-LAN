@@ -191,6 +191,9 @@ byte monitor = 0;
 //#define DEBUG
 //#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port
 
+//"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
+//#define WEBSERVER
+
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */
