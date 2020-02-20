@@ -56,6 +56,8 @@
  *       0.43  - 20.02.2020
  *
  * Changelog:
+ *       version 0.44
+ *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *       version 0.43
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
