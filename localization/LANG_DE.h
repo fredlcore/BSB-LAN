@@ -2025,7 +2025,7 @@
 #define ENUM5895_05_TEXT "Heissgastemperatur K31"
 #define ENUM5895_06_TEXT "Elektroeinsatz1 Vorlauf K25"
 #define ENUM5895_07_TEXT "Elektroeinsatz2 Vorlauf K26"
-#define ENUM5895_08_TEXT "Umlenkventil Kühl Quelle Y28"
+#define ENUM5895_08_TEXT "Umlenkventil Kühlquelle Y28"
 #define ENUM5895_0b_TEXT "Elektroeinsatz Puffer K16"
 #define ENUM5895_11_TEXT "2. Pumpenstufe HK1 Q21"
 #define ENUM5895_12_TEXT "2. Pumpenstufe HK2 Q22"
