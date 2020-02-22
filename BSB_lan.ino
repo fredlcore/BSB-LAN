@@ -53,9 +53,11 @@
  *       0.40  - 21.01.2018
  *       0.41  - 17.03.2019
  *       0.42  - 21.03.2019
- *       0.43  - 24.12.2019
+ *       0.43  - 20.02.2020
  *
  * Changelog:
+ *       version 0.44
+ *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *       version 0.43
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
  *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
@@ -5872,17 +5874,26 @@ uint8_t pps_offset = 0;
                 uint16_t x=2;
                 uint8_t cat=0;
                 while (x<sizeof(ENUM_CAT)) {
-                  char z;
+//                  char z;
                   strcpy_P(formatbuf, PSTR("\"%d\": { \"name\": \""));
                   sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, cat);
                   buffershiftedbycolon = 0;
                   char *outBufp = jsonbuffer + strlen(jsonbuffer);
+#if defined(__SAM3X8E__)
+                  strcpy(outBufp, ENUM_CAT+x);
+#else
                   strcpy_PF(outBufp, pgm_get_far_address(ENUM_CAT)+x);
+#endif
                   uint16_t y = strlen(outBufp);
                   x += y;
                   outBufp += y;
+#if defined(__SAM3X8E__)
+                  cat_min = ENUM_CAT_NR[cat*2];
+                  cat_max = ENUM_CAT_NR[cat*2+1];
+#else
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#endif
                   strcpy_P(formatbuf, PSTR("\", \"min\": %d, \"max\": %d },\n"));
                   sprintf(outBufp, formatbuf, cat_min, cat_max);
                   if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
