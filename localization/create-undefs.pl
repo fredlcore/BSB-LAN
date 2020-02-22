@@ -33,7 +33,7 @@ while ( $line = <IN> ) {
 close IN;
 close OUT;
 
-#create UNDEF files
+# Create UNDEF files
 @files = `ls LANG*.h`;
 foreach $file (@files) {
   chomp ($file);
@@ -53,4 +53,37 @@ foreach $file (@files) {
   }
   close IN;
   close OUT;
+}
+
+# Create JavaScript language files for Web-AJAX infterface in www subdir.
+@files = `ls LANG*.h`;
+foreach $file (@files) {
+    chomp($file);
+    print "$file\n";
+    if ( $file ne "LANG_C.h" ) {
+        open( IN, $file );
+        my @file1 = ( ( lc $file ) =~ /(.*?)\.h/g );
+        print "$file1[0]\n";
+
+        mkdir "www";
+        open( OUT, ">www/$file1[0].js" );
+        while ( $line = <IN> ) {
+            if ( !( $line =~ /^\/\// ) ) {
+                if ( $line =~ /#define (.*?) \"(.*?)\"/ ) {
+                    $stringname = $1;
+                    print OUT "UIStrings[\"$stringname\"] = \"$2\";\n";
+                }
+                else {
+                    print OUT "$line";
+                }
+            }
+            else {
+                print OUT "$line";
+            }
+        }
+        close IN;
+        close OUT;
+        system ("gzip -9 -k -N -f www/${file1[0]}.js");
+        if ( $? != 0 ) {print "Can't gzip file ${file1[0]}.js\n";}
+    }
 }
