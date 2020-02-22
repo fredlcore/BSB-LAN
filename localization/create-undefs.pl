@@ -33,7 +33,7 @@ while ( $line = <IN> ) {
 close IN;
 close OUT;
 
-//create UNDEF files
+#create UNDEF files
 @files = `ls LANG*.h`;
 foreach $file (@files) {
   chomp ($file);
