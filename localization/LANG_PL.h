@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Język polski"
 #define ENUM_CAT_00_TEXT "Czas zegarowy i data"
 #define ENUM_CAT_03_TEXT "Program 1. obiegu c.o."
 #define ENUM_CAT_04_TEXT "Program 2. obiegu c.o."

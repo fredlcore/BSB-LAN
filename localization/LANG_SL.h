@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Slovenščina"
 #define ENUM_CAT_00_TEXT "Čas a dátum"
 #define ENUM_CAT_03_TEXT "Časový program VO1"
 #define ENUM_CAT_04_TEXT "Časový program VO2"

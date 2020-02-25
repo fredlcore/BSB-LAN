@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Türkçe"
 #define ENUM_CAT_00_TEXT "Gun ve zaman saati"
 #define ENUM_CAT_03_TEXT "Zaman programi ist dev 1"
 #define ENUM_CAT_04_TEXT "Zaman programi ist dev 2"

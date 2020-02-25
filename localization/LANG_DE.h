@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Deutsch"
 #define UNIT_MONTHS_TEXT "Monate"
 #define UNIT_DAYS_TEXT "Tage"
 #define UNIT_HOUR_TEXT "h"
@@ -1850,7 +1851,7 @@
 #define ENUM2740_09_TEXT "Punkt 7"
 #define ENUM2749_01_TEXT "Neue Elektrode"
 #define ENUM2749_02_TEXT "Gebrauchte Elektrode"
-#define ENUM2801_02_TEXT "Temperaturanforderung" 
+#define ENUM2801_02_TEXT "Temperaturanforderung"
 #define ENUM2801_03_TEXT "Parallel Verdichterbetrieb"
 #define ENUM2880_02_TEXT "Ergänzungsbetrieb HK"
 #define ENUM2920_01_TEXT "Freigegeben"
