@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "France"
 #define ENUM_CAT_00_TEXT "Heure"
 #define ENUM_CAT_03_TEXT "Progr. de commande horaire 1"
 #define ENUM_CAT_04_TEXT "Progr. de commande horaire 2"

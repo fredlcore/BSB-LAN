@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Nederlands"
 #define ENUM_CAT_00_TEXT "Kloktijd"
 #define ENUM_CAT_01_TEXT "bedieningseenheid"
 #define ENUM_CAT_02_TEXT "Draadloos"
@@ -543,7 +544,7 @@
 #define ENUM780_02_TEXT "Naar vorstbeveiliging waarde"
 #define ENUM832_00_TEXT "2-punts"
 #define ENUM832_01_TEXT "3-punts"
-#define ENUM850_01_TEXT "Verwarmingseisen"  //not sure 
+#define ENUM850_01_TEXT "Verwarmingseisen"  //not sure
 
 #define ENUM850_05_TEXT "Handmatig"
 #define ENUM861_01_TEXT "Verwarming"

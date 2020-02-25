@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Čeština"
 #define ENUM_CAT_00_TEXT "Čas"
 #define ENUM_CAT_03_TEXT "Spínací program 1"
 #define ENUM_CAT_04_TEXT "Spínací program 2"

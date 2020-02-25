@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Italiano"
 #define ENUM_CAT_00_TEXT "Data e ora"
 #define ENUM_CAT_01_TEXT "Unità di comando"
 #define ENUM_CAT_02_TEXT "Radio"

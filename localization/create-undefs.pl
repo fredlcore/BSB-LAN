@@ -55,20 +55,27 @@ foreach $file (@files) {
 
 # Create JavaScript language files for Web-AJAX infterface in www subdir.
 @files = `ls LANG*.h`;
+open(LANGLIST, ">www/languages.js");
+print LANGLIST "//From https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes\n";
 foreach $file (@files) {
   chomp($file);
-  print "$file\n";
+  $languageNameFound = 0;
   if ($file ne "LANG_C.h") {
     open(IN, $file);
     my @file1 = ((lc $file) =~ /(.*?)\.h/g);
-    print "$file1[0]\n";
-
+    print "$file1[0].js\n";
     open(OUT, ">www/$file1[0].js");
     while ($line = <IN>) {
       if (!($line =~ /^\/\//)) {
         if ($line =~ /#define (.*?) \"(.*?)\"/) {
           $stringname = $1;
           print OUT "UIStrings[\"$stringname\"] = \"$2\";\n";
+          if (!$languageNameFound && ($stringname eq "LANGUAGENAME_TEXT")) {
+            $languageNameFound = 1;
+            $langName = $2;
+            @langname = ((lc $file) =~ /lang_(.*?)\.h/g);
+            print LANGLIST "langList[\"$langname[0]\"] = \"$langName\";\n";
+          }
         } else {
           print OUT "$line";
         }
@@ -76,9 +83,14 @@ foreach $file (@files) {
         print OUT "$line";
       }
     }
+    if (!$languageNameFound) {
+      @langname = ((lc $file) =~ /lang_(.*?)\.h/g);
+      print LANGLIST "langList[\"$langname[0]\"] = \"$langname[0]\";\n";
+    }
     close IN;
     close OUT;
     system ("gzip -9 -k -N -f www/${file1[0]}.js");
     if ( $? != 0 ) {print "Can't gzip file ${file1[0]}.js\n";}
   }
 }
+close LANGLIST;
