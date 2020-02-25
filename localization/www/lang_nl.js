@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Nederlands";
 UIStrings["ENUM_CAT_00_TEXT"] = "Kloktijd";
 UIStrings["ENUM_CAT_01_TEXT"] = "bedieningseenheid";
 UIStrings["ENUM_CAT_02_TEXT"] = "Draadloos";

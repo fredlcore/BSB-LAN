@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Italiano";
 UIStrings["ENUM_CAT_00_TEXT"] = "Data e ora";
 UIStrings["ENUM_CAT_01_TEXT"] = "Unità di comando";
 UIStrings["ENUM_CAT_02_TEXT"] = "Radio";

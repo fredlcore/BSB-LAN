@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Suomi";
 UIStrings["ENUM_CAT_00_TEXT"] = "Kellonaika ja päivämäärä";
 UIStrings["ENUM_CAT_03_TEXT"] = "Aikaohjelma, lämmityspiiri 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Aikaohjelma, lämmityspiiri 2";

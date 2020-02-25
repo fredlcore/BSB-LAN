@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Język polski";
 UIStrings["ENUM_CAT_00_TEXT"] = "Czas zegarowy i data";
 UIStrings["ENUM_CAT_03_TEXT"] = "Program 1. obiegu c.o.";
 UIStrings["ENUM_CAT_04_TEXT"] = "Program 2. obiegu c.o.";

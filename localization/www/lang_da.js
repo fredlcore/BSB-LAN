@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Dansk";
 UIStrings["ENUM_CAT_00_TEXT"] = "Klokkeslæt og dato";
 UIStrings["ENUM_CAT_03_TEXT"] = "Tidsprogram varmekreds 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Tidsprogram varmekreds 2";

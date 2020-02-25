@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Slovenščina";
 UIStrings["ENUM_CAT_00_TEXT"] = "Čas a dátum";
 UIStrings["ENUM_CAT_03_TEXT"] = "Časový program VO1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Časový program VO2";

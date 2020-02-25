@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Deutsch";
 UIStrings["UNIT_MONTHS_TEXT"] = "Monate";
 UIStrings["UNIT_DAYS_TEXT"] = "Tage";
 UIStrings["UNIT_HOUR_TEXT"] = "h";

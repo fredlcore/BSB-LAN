@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "France";
 UIStrings["ENUM_CAT_00_TEXT"] = "Heure";
 UIStrings["ENUM_CAT_03_TEXT"] = "Progr. de commande horaire 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Progr. de commande horaire 2";
