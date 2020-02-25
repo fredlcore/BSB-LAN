@@ -10,6 +10,7 @@
 //Elektroeinsatz - ТЭН
 // TO DO: Придумать замену кальке "Загрузка" в контексте нагрева горячей воды.
 //
+UIStrings["LANGUAGENAME_TEXT"] = "Русский";
 UIStrings["UNIT_MONTHS_TEXT"] = "месяцев";
 UIStrings["UNIT_DAYS_TEXT"] = "дней";
 UIStrings["UNIT_HOUR_TEXT"] = "ч";
@@ -246,7 +247,7 @@ UIStrings["STR733_TEXT"] = "Расширение суточного предел
 //???Компенсация температуры в помещении с таймером
 UIStrings["STR734_TEXT"] = "Raumsollabsenkung mit Schaltuhr";
 //740-742 В зависимости от выбранной настройки используется фиксированное значение температуры контура отопления или в диапазоне 740-741.
-//Baxi Luna Platinum+ russian manual: P740 must be >45C. Probably incorrect 
+//Baxi Luna Platinum+ russian manual: P740 must be >45C. Probably incorrect
 //#define STR740_TEXT "Минимальная температура в контуре высокотемпературной системы отопления"
 UIStrings["STR740_TEXT"] = "Минимальная температура в контуре отопления";
 //Baxi Luna Platinum+ russian manual: P741 must be <45C. Probably incorrect
@@ -262,7 +263,7 @@ UIStrings["STR750_TEXT"] = "Влияние температуры помещен
 UIStrings["STR760_TEXT"] = "Гистерезис комнатной температуры";
 UIStrings["STR761_TEXT"] = "Heizgrenze Raumregler";
 //#define STR770_TEXT "Schnellaufheizung"
-// Указать превышение над уставкой температуры (комфортного режима) для бОльшей разницы между текущей и целевой температурами для более быстрого прогрева помещения 
+// Указать превышение над уставкой температуры (комфортного режима) для бОльшей разницы между текущей и целевой температурами для более быстрого прогрева помещения
 UIStrings["STR770_TEXT"] = "Завысить уставку температуры (быстрый нагрев)";
 //Быстрое охлаждение (отключение КО до достижения заданной температуры)
 UIStrings["STR780_TEXT"] = "Быстрое охлаждение";

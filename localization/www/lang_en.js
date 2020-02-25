@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "English";
 UIStrings["ENUM_CAT_00_TEXT"] = "Date/Time";
 UIStrings["ENUM_CAT_01_TEXT"] = "Room Unit";
 UIStrings["ENUM_CAT_02_TEXT"] = "Wireless";

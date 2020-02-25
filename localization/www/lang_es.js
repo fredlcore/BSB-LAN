@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Español";
 UIStrings["ENUM_CAT_00_TEXT"] = "Reloj";
 UIStrings["ENUM_CAT_03_TEXT"] = "Programa de conmutación 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Programa de conmutación 2";

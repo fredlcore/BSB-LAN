@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Ελληνικά";
 UIStrings["ENUM_CAT_00_TEXT"] = "Ημερομηνία/ώρα";
 UIStrings["ENUM_CAT_01_TEXT"] = "Μονάδα δωματίου";
 UIStrings["ENUM_CAT_02_TEXT"] = "Ασύρματο";

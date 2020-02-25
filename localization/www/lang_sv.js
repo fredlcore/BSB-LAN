@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Svenska";
 UIStrings["ENUM_CAT_00_TEXT"] = "Klocka";
 UIStrings["ENUM_CAT_03_TEXT"] = "Tidprogram 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Tidprogram 2";

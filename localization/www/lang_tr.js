@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Türkçe";
 UIStrings["ENUM_CAT_00_TEXT"] = "Gun ve zaman saati";
 UIStrings["ENUM_CAT_03_TEXT"] = "Zaman programi ist dev 1";
 UIStrings["ENUM_CAT_04_TEXT"] = "Zaman programi ist dev 2";

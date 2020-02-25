@@ -1,3 +1,4 @@
+UIStrings["LANGUAGENAME_TEXT"] = "Magyar nyelv";
 UIStrings["ENUM_CAT_00_TEXT"] = "Óra állás";
 UIStrings["ENUM_CAT_03_TEXT"] = "1.fűtési kör időprogram";
 UIStrings["ENUM_CAT_04_TEXT"] = "2.fűtési kör időprogram";
