@@ -47,7 +47,9 @@ if($dirlistWasChanged){
   unlink "dirlist.txt";
   rename "dirlist.new", "dirlist.txt";
   }
-
+else {
+  unlink "dirlist.new";
+  }
 
 # Create LANG_C.h and UNDEF_LANG_C.h: language-independed definitions, based on German language
 if($germanLanguageWasChanged){
