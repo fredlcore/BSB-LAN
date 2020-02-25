@@ -4269,6 +4269,7 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
   return log_parameter;
 }
 
+#if defined LOGGER || defined WEBSERVER
 /** *****************************************************************
  *  Function: transmitFile
  *  Does: transmit file from SD card to network client
@@ -4296,6 +4297,8 @@ void transmitFile(File dataFile) {
   if (chars_read > 0) client.write(loglineBuf, chars_read);
   free(loglineBuf);
 }
+
+#endif
 
 /** *****************************************************************
  *  Function: bufferedprint and bufferedprintln
@@ -6780,6 +6783,11 @@ uint8_t pps_offset = 0;
   const char* MQTTPass = NULL;
 #endif
 
+#ifdef MQTT_JSON
+  String MQTTPayload = "";
+#endif
+  String MQTTTopic = "";
+
   if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
     if (!MQTTClient.connected()) {
       MQTTClient.setServer(MQTTBroker, 1883);
@@ -6796,6 +6804,21 @@ uint8_t pps_offset = 0;
 #ifdef ONE_WIRE_BUS
     sensors.requestTemperatures(); // Send the command to get temperatures
 #endif
+
+    // Declare local variables and start building json if enabled
+#ifdef MQTT_JSON
+     MQTTPayload = "";
+    // Build the json heading
+    MQTTPayload.concat(F("{\""));
+#ifdef DeviceID
+    MQTTPayload.concat(DeviceID);
+#else
+    MQTTPayload.concat(F("BSB-LAN"));
+#endif
+    MQTTPayload.concat(F("\":"));
+    MQTTPayload.concat(F("{\"status\":{"));
+#endif
+
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
         if (MQTTClient.connected()) {
@@ -6809,21 +6832,52 @@ uint8_t pps_offset = 0;
 */
 
 #ifdef MQTTTopicPrefix
-          String MQTTTopic = MQTTTopicPrefix;
+          MQTTTopic = MQTTTopicPrefix;
           MQTTTopic.concat(F("/"));
 #else
-          String MQTTTopic = "BSB-LAN/";
+          MQTTTopic = "BSB-LAN/";
 #endif
+
+// use the sub-topic "json" if json output is enabled
+#ifdef MQTT_JSON
+          MQTTTopic.concat(F("json"));
+#else
           MQTTTopic.concat(String(log_parameters[i]));
+#endif       
+          
           char buffer[20];
           if (log_parameters[i] < 20000) {
             uint32_t c=0;
             int line=findLine(log_parameters[i],0,&c);
             uint8_t type=get_cmdtbl_type(line);
             if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE) {
+#ifdef MQTT_JSON  // Build the json doc on the fly
+              MQTTPayload.concat(F("\""));
+              MQTTPayload.concat(String(log_parameters[i]));
+              MQTTPayload.concat(F("\":\""));
+              MQTTPayload.concat(String(query(log_parameters[i],log_parameters[i],1)));
+              if (i < numLogValues - 1) {
+                MQTTPayload.concat(F("\","));
+              } else {
+                MQTTPayload.concat(F("\"}"));
+	      }	
+#else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
+#endif                   
             } else {
+#ifdef MQTT_JSON  // Build the json doc on the fly
+              MQTTPayload.concat(F("\""));
+              MQTTPayload.concat(String(log_parameters[i]));
+              MQTTPayload.concat(F("\":\""));
+              MQTTPayload.concat(String(strtok(query(log_parameters[i],log_parameters[i],1)," ")));
+              if (i < numLogValues - 1) {
+                MQTTPayload.concat(F("\","));
+              } else {
+                MQTTPayload.concat(F("\"}"));
+	      }
+#else
               MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
+#endif
             }
           }
           if (log_parameters[i] >= 20000 && log_parameters[i] < 20006) {
@@ -6884,6 +6938,18 @@ uint8_t pps_offset = 0;
         }
       }
     }
+    // End of mqtt if loop so close off the json and publish
+#ifdef MQTT_JSON
+    // Close the json doc off
+    MQTTPayload.concat(F("}}"));
+      // debugging..
+      Serial.print(F("Output topic: "));
+      Serial.println(MQTTTopic.c_str());
+      Serial.print(F("Payload Output : "));
+      Serial.println(MQTTPayload.c_str());
+    // Now publish the json payload only once
+    MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+#endif    
     MQTTClient.disconnect();
     lastMQTTTime = millis();
   }
