@@ -6811,8 +6811,8 @@ uint8_t pps_offset = 0;
      MQTTPayload = "";
     // Build the json heading
     MQTTPayload.concat(F("{\""));
-#ifdef DeviceID
-    MQTTPayload.concat(DeviceID);
+#ifdef MQTTDeviceID
+    MQTTPayload.concat(MQTTDeviceID);
 #else
     MQTTPayload.concat(F("BSB-LAN"));
 #endif
