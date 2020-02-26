@@ -481,7 +481,7 @@ uint8_t json_types[20] = { 0 };
   // Pass our oneWire reference to Dallas Temperature.
   DallasTemperature sensors(&oneWire);
 
-  int numSensors;
+  uint8_t numSensors;
 #endif
 
 #ifdef DHT_BUS
@@ -3972,7 +3972,7 @@ void dht22(void) {
  *    client object
  * *************************************************************** */
 void ds18b20(void) {
-  int i;
+  uint8_t i;
   //webPrintHeader();
   sensors.requestTemperatures(); // Send the command to get temperatures
   DeviceAddress device_address;
