@@ -292,3 +292,13 @@ const char header_html[] PROGMEM_LATE =
   "}</script>\n"
   "<font face='Arial'>\n"
   "<center><h1><A ID=main_link HREF='/";
+
+const char auth_req_html[] PROGMEM_LATE = 
+  "HTTP/1.1 401 Authorization Required\n"
+  "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
+  "Content-Type: text/html\n"
+  "Connnection: close\n"
+  "\n"
+  "<!DOCTYPE HTML>\n"
+  "<HTML><HEAD><TITLE>Error</TITLE>\n"
+  "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>\n";

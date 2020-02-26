@@ -4903,14 +4903,11 @@ ich mir da nicht)
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (!authenticated) {
-          client.println(F("HTTP/1.1 401 Authorization Required"));
-          client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
-          client.println(F("Content-Type: text/html"));
-          client.println(F("Connnection: close"));
-          client.println();
-          client.println(F("<!DOCTYPE HTML>"));
-          client.println(F("<HTML><HEAD><TITLE>Error</TITLE>"));
-          client.println(F("</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>"));
+#if defined(__SAM3X8E__)
+          printPStr(auth_req_html, sizeof(auth_req_html));
+#else
+          printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
+#endif
           client.stop();
         }
         // otherwise continue like normal
