@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Magyar nyelv"
 #define ENUM_CAT_00_TEXT "Óra állás"
 #define ENUM_CAT_03_TEXT "1.fűtési kör időprogram"
 #define ENUM_CAT_04_TEXT "2.fűtési kör időprogram"

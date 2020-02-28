@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Svenska"
 #define ENUM_CAT_00_TEXT "Klocka"
 #define ENUM_CAT_03_TEXT "Tidprogram 1"
 #define ENUM_CAT_04_TEXT "Tidprogram 2"

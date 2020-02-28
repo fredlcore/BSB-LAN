@@ -129,6 +129,7 @@
 #define DEV_195_002  195,2   // ELCO Thision S Plus 19 (LMS14.111B109)
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
+#define DEV_206_ALL  206,255 // AVS74.261/109
 #define DEV_211_ALL  211,255 // Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteidentifikation: RVS21.831F/127)
 #define DEV_ALL      255,255 // All devices
 #define DEV_NONE     0,0
@@ -524,7 +525,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   5400, 5544,
   5700, 6421,
   6600, 6650,
-  6705, 6846,
+  6705, 6996,
   7001, 7254,
   7300, 7500,
   7700, 7999,
@@ -2905,6 +2906,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM7376_1d_TEXT ENUM5890_1d_TEXT
 #define ENUM7376_21_TEXT ENUM5890_21_TEXT
 #define ENUM7376_28_TEXT ENUM5890_28_TEXT
+#define ENUM7376_29_TEXT ENUM5890_29_TEXT
 #define ENUM7700_02_TEXT ENUM6040_03_TEXT
 #define ENUM7700_03_TEXT ENUM6040_03_TEXT
 #define ENUM7700_04_TEXT ENUM6085_02_TEXT
@@ -3743,7 +3745,7 @@ const char ENUM5770[] PROGMEM_LATEST = {
 
 const char ENUM5774[] PROGMEM_LATEST = {
 "\x00 " ENUM5774_00_TEXT "\0"
-  "\xFF Nur Anforderung HK1/TWW"};
+"\xFF " ENUM5774_ff_TEXT};
 
 const char ENUM5806[] PROGMEM_LATEST = { //FUJITSU
 "\x01 " ENUM5806_01_TEXT "\0"
@@ -4792,7 +4794,7 @@ const char ENUM7376[] PROGMEM_LATEST = {
 "\x1d " ENUM7376_1d_TEXT "\0"
 "\x21 " ENUM7376_21_TEXT "\0"
 "\x28 " ENUM7376_28_TEXT "\0"
-"\x29 Betriebsmeldung K36"};
+"\x29 " ENUM7376_29_TEXT };
 
 
 const char ENUM7425[] PROGMEM_LATEST = {
@@ -7355,6 +7357,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_165_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_188_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  0,                    NULL,         FL_OEM, DEV_206_ALL}, // Anzeige Systemmeldungen
 {0x053D08D2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                    NULL,         FL_OEM, DEV_ALL}, // Alarmverzögerung
 {0x053D0839,  CAT_LPB,              VT_ENUM,          6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_ALL}, // [ - ] - LPB - Wirkbereich Umschaltungen
 {0x2D3D0611,  CAT_LPB,              VT_ENUM,          6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Sommerumschaltung
@@ -7951,6 +7954,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D17E6,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_ALL}, // Status Zusatzerzeuger //FUJITSU
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_108_160}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_119_ALL}, // Status Zusatzerzeuger
+{0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_138_ALL}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_170_ALL}, // Status Zusatzerzeuger
 {0x053D0D68,  CAT_STATUS,           VT_ENUM,          8022,  STR8022,  sizeof(ENUM8022),     ENUM8022,     FL_RONLY,     DEV_171_ALL}, // Status Zusatzerzeuger
 {0x053D1AC1,  CAT_STATUS,           VT_ENUM,          8023,  STR8023,  sizeof(ENUM8009),     ENUM8009,     FL_RONLY,     DEV_123_ALL}, // Status Sitherm Pro

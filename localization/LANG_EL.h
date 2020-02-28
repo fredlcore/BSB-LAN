@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Ελληνικά"
 #define ENUM_CAT_00_TEXT "Ημερομηνία/ώρα"
 #define ENUM_CAT_01_TEXT "Μονάδα δωματίου"
 #define ENUM_CAT_02_TEXT "Ασύρματο"

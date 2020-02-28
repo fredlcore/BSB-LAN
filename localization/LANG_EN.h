@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "English"
 #define ENUM_CAT_00_TEXT "Date/Time"
 #define ENUM_CAT_01_TEXT "Room Unit"
 #define ENUM_CAT_02_TEXT "Wireless"

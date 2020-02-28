@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Dansk"
 #define ENUM_CAT_00_TEXT "Klokkeslæt og dato"
 #define ENUM_CAT_03_TEXT "Tidsprogram varmekreds 1"
 #define ENUM_CAT_04_TEXT "Tidsprogram varmekreds 2"
