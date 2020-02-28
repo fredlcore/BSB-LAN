@@ -3529,8 +3529,8 @@ const char ENUM3694[] PROGMEM_LATEST = {
 };
 
 const char ENUM3725[] PROGMEM_LATEST = {
-"\x00 " ENUM3725_00_TEXT "\0"
-"\x01 " ENUM3725_01_TEXT
+"\x01 " ENUM3725_01_TEXT "\0"
+"\x02 " ENUM3725_02_TEXT
 };
 
 const char ENUM3750[] PROGMEM_LATEST = {
@@ -5224,19 +5224,19 @@ const char ENUM8011[] PROGMEM_LATEST = {
 // note: unverified values are taken from http://www.mhg-schweiz.ch/de/downloads/aid!7b786239-40bf-4077-9a19-e2c97ebab6c5/id!187/
 const char ENUM8022[] PROGMEM_LATEST = {
 "\x00 " ENUM8022_00_TEXT "\0"
-"\x02 " "?" ENUM8022_02_TEXT "\0"
-"\x0a " "?" ENUM8022_0a_TEXT "\0"
-"\x11 " "?" ENUM8022_11_TEXT "\0"
+"\x02 " ENUM8022_02_TEXT "\0"
+"\x0a " ENUM8022_0a_TEXT "\0"
+"\x11 " ENUM8022_11_TEXT "\0"
 "\x19 " ENUM8022_19_TEXT "\0"
-"\x3b " "?" ENUM8022_3b_TEXT "\0"
-"\xa6 " "?" ENUM8022_a6_TEXT "\0"
-"\xa8 " "?" ENUM8022_a8_TEXT "\0"
+"\x3b " ENUM8022_3b_TEXT "\0"
+"\xa6 " ENUM8022_a6_TEXT "\0"
+"\xa8 " ENUM8022_a8_TEXT "\0"
 "\xaa " ENUM8022_aa_TEXT "\0"
-"\xac " "?" ENUM8022_ac_TEXT "\0"
-"\xad " "?" ENUM8022_ad_TEXT "\0"
-"\xae " "?" ENUM8022_ae_TEXT "\0"
-"\xb0 " "?" ENUM8022_b0_TEXT "\0"
-"\xc6 " "?" ENUM8022_c6_TEXT
+"\xac " ENUM8022_ac_TEXT "\0"
+"\xad " ENUM8022_ad_TEXT "\0"
+"\xae " ENUM8022_ae_TEXT "\0"
+"\xb0 " ENUM8022_b0_TEXT "\0"
+"\xc6 " ENUM8022_c6_TEXT
 };
 
 #define ENUM8051 ENUM8006               // Status - Status Historie 1
@@ -6626,20 +6626,20 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0846,  CAT_KASKADE,          VT_TEMP,          3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
 
 // Zusatzerzeuger
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP,          3690,  STR3690,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollw'anhebung Haupterzeug
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_PERCENT,       3691,  STR3691,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leist'grenze Haupterzeuger
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_ENUM,          3692,  STR3692,  sizeof(ENUM3692),     ENUM3692,     FL_OEM, DEV_ALL}, // Bei Trinkwasserladung
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_ENUM,          3694,  STR3694,  sizeof(ENUM3694),     ENUM3694,     FL_OEM, DEV_ALL}, // TA Grenzen bei TWW
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP,          3700,  STR3700,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe unter Außentemp
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP,          3701,  STR3701,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe über Außentemp
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_MINUTES,       3705,  STR3705,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlaufzeit
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP,          3710,  STR3710,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwert Minimum
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP_PER_MIN,  3720,  STR3720,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltintegral
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_TEMP,          3722,  STR3722,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Aus
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_MINUTES,       3723,  STR3723,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_ENUM,          3725,  STR3725,  sizeof(ENUM3725),     ENUM3725,     FL_OEM, DEV_ALL}, // Regelfühler
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_ENUM,          3750,  STR3750,  sizeof(ENUM3750),     ENUM3750,     FL_OEM, DEV_ALL}, // Erzeugertyp
-{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_MINUTES,       3755,  STR3755,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verzögerung Störstellung
+{0x053D1300, CAT_ZUSATZERZEUGER,   VT_TEMP,          3690,  STR3690,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollw'anhebung Haupterzeug
+{0x053D11D4, CAT_ZUSATZERZEUGER,   VT_PERCENT,       3691,  STR3691,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leist'grenze Haupterzeuger
+{0x053D11D3, CAT_ZUSATZERZEUGER,   VT_ENUM,          3692,  STR3692,  sizeof(ENUM3692),     ENUM3692,     FL_OEM, DEV_ALL}, // Bei Trinkwasserladung
+{0x053D0E66, CAT_ZUSATZERZEUGER,   VT_ENUM,          3694,  STR3694,  sizeof(ENUM3694),     ENUM3694,     FL_OEM, DEV_ALL}, // TA Grenzen bei TWW
+{0x053D0B5C, CAT_ZUSATZERZEUGER,   VT_TEMP,          3700,  STR3700,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe unter Außentemp
+{0x053D0B5B, CAT_ZUSATZERZEUGER,   VT_TEMP,          3701,  STR3701,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe über Außentemp
+{0x053D0D70, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3705,  STR3705,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlaufzeit
+{0x053D11D5, CAT_ZUSATZERZEUGER,   VT_TEMP,          3710,  STR3710,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwert Minimum
+{0x053D0D6A, CAT_ZUSATZERZEUGER,   VT_CELMIN,        3720,  STR3720,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltintegral
+{0x053D0D6B, CAT_ZUSATZERZEUGER,   VT_TEMP,          3722,  STR3722,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Aus
+{0x053D0D6C, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3723,  STR3723,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit
+{0x053D11EA, CAT_ZUSATZERZEUGER,   VT_ENUM,          3725,  STR3725,  sizeof(ENUM3725),     ENUM3725,     FL_OEM, DEV_ALL}, // Regelfühler
+{0x053D117F, CAT_ZUSATZERZEUGER,   VT_ENUM,          3750,  STR3750,  sizeof(ENUM3750),     ENUM3750,     FL_OEM, DEV_ALL}, // Erzeugertyp
+{0x053D11EB, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3755,  STR3755,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verzögerung Störstellung
 
 // Solar
 {0x493D085D,  CAT_SOLAR,            VT_TEMP,          3810,  STR3810,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Temperaturdifferenz Ein
