@@ -29,7 +29,7 @@
 #include FILE2
 
 #if defined(__SAM3X8E__)
-#define PROGMEM_LATE 
+#define PROGMEM_LATE
 #define PROGMEM_LATEST
 #else
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
@@ -1952,6 +1952,7 @@ const char STR7146[] PROGMEM = STR7146_TEXT;
 const char STR7147[] PROGMEM = STR7147_TEXT;
 const char STR7150[] PROGMEM = STR7150_TEXT;
 const char STR7152[] PROGMEM = STR7152_TEXT;
+const char STR7153[] PROGMEM = STR7153_TEXT;
 const char STR7160[] PROGMEM = STR7160_TEXT;
 const char STR7166[] PROGMEM = STR7166_TEXT;
 const char STR7170[] PROGMEM = STR7170_TEXT;
@@ -2242,6 +2243,8 @@ const char STR8481[] PROGMEM = STR8481_TEXT;
 const char STR8482[] PROGMEM = STR8482_TEXT;
 const char STR8485[] PROGMEM = STR8485_TEXT;
 const char STR8487[] PROGMEM = STR8487_TEXT;
+const char STR8488[] PROGMEM = STR8488_TEXT;
+
 // Diagnose Erzeuger - Solar
 const char STR8499[] PROGMEM = STR8499_TEXT;
 const char STR8499_2[] PROGMEM = STR8499_2_TEXT;
@@ -2974,7 +2977,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
 #define ENUM8009_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_02_TEXT ENUM2480_00_TEXT
-#define ENUM8009_09_TEXT ENUM6706_16_TEXT 
+#define ENUM8009_09_TEXT ENUM6706_16_TEXT
 #define ENUM8009_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
 #define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
@@ -6362,7 +6365,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D1AB2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2776,  STR2776,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min bei TWW
 {0x593D1AB3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2777,  STR2777,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max bei TWW
 {0x593D1AB4,  CAT_WAERMEPUMPE,      VT_PERCENT,       2778,  STR2778,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Min Kühlbetr
-{0x593D1AB5,  CAT_WAERMEPUMPE,      VT_PERCENT,       2779,  STR2779,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max Kühlbetr 
+{0x593D1AB5,  CAT_WAERMEPUMPE,      VT_PERCENT,       2779,  STR2779,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pump'drehzahl Max Kühlbetr
 
 //OEM
 {0x593D186C,  CAT_WAERMEPUMPE,      VT_TEMP,          2785,  STR2785,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Max Kondensationstemp
@@ -7205,8 +7208,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
 {0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
 {0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
-{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
-{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID 
+{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
+{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
 {0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6237,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
@@ -7618,7 +7621,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Meldung Ionisationsstrom
-{0x05050B0F,  CAT_WARTUNG,          VT_TEMP   ,       7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
+{0x05050B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
@@ -7626,20 +7629,20 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D05E2,  CAT_WARTUNG,          VT_MONTHS,        7071,  STR7071,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // WP Zeit seit Wartung //FUJITSU
 {0x593D06B2,  CAT_WARTUNG,          VT_UNKNOWN,       7072,  STR7072,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Starts Verd1 / Betr’Std
 {0x593D06B3,  CAT_WARTUNG,          VT_FP1,           7073,  STR7073,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Starts Verd1 / Betr’Std //FUJITSU
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7074,  STR7074,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Starts Verd2 / Betr’Std
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7075,  STR7075,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Starts Verd2 / Betr’Std
+{0x593D06B4,  CAT_WARTUNG,          VT_UNKNOWN,       7074,  STR7074,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Starts Verd2 / Betr’Std
+{0x593D06B5,  CAT_WARTUNG,          VT_UNKNOWN,       7075,  STR7075,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Starts Verd2 / Betr’Std
 {0x593D06E9,  CAT_WARTUNG,          VT_UNKNOWN,       7076,  STR7076,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Kondens Max / Wo
 {0x593D06EA,  CAT_WARTUNG,          VT_UNKNOWN,       7077,  STR7077,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Kondens Max / Wo
 {0x593D06EB,  CAT_WARTUNG,          VT_UNKNOWN,       7078,  STR7078,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Kondens Min / Wo
 {0x593D06EC,  CAT_WARTUNG,          VT_UNKNOWN,       7079,  STR7079,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Kondens Min / Wo
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7080,  STR7080,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Verdampfer Max / Wo
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7081,  STR7081,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Verdampfer Max / Wo
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7082,  STR7082,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Verdampfer Min / Wo
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7083,  STR7083,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Verdampfer Min / Wo
+{0x593D06ED,  CAT_WARTUNG,          VT_UNKNOWN,       7080,  STR7080,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Verdampfer Max / Wo
+{0x593D06EE,  CAT_WARTUNG,          VT_UNKNOWN,       7081,  STR7081,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Verdampfer Max / Wo
+{0x593D06EF,  CAT_WARTUNG,          VT_UNKNOWN,       7082,  STR7082,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Verdampfer Min / Wo
+{0x593D06F0,  CAT_WARTUNG,          VT_UNKNOWN,       7083,  STR7083,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Verdampfer Min / Wo
 {0x253D06F1,  CAT_WARTUNG,          VT_MONTHS,        7090,  STR7090,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher Zeitintervall
 {0x253D06F2,  CAT_WARTUNG,          VT_UNKNOWN,       7091,  STR7091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher seit Wartung
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7092,  STR7092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Ladetemp WP Minimum
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7093,  STR7093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt TWW Ladetemperatur WP
+{0x593D05B1,  CAT_WARTUNG,          VT_TEMP,          7092,  STR7092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Ladetemp WP Minimum
+{0x593D05B0,  CAT_WARTUNG,          VT_TEMP,          7093,  STR7093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt TWW Ladetemperatur WP
 {0x05050D20,  CAT_WARTUNG,          VT_ENUM,          7119,  STR7119,  sizeof(ENUM7119),     ENUM7119,     DEFAULT_FLAG, DEV_ALL}, // Ökofunktion
 {0x053D0D20,  CAT_WARTUNG,          VT_ENUM,          7119,  STR7119,  sizeof(ENUM7119),     ENUM7119,     DEFAULT_FLAG, DEV_138_ALL}, // Ökofunktion
 {0x05050B4E,  CAT_WARTUNG,          VT_ONOFF,         7120,  STR7120,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ökobetrieb
@@ -7659,7 +7662,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D307C,  CAT_WARTUNG,          VT_ONOFF,         7146,  STR7146,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 7146 Entlüftungsfunktion [Ein/Aus]
 {0x113D0F97,  CAT_WARTUNG,          VT_ENUM,          7147,  STR7147,  sizeof(ENUM7147),     ENUM7147,     DEFAULT_FLAG, DEV_ALL}, // [ ] Wartung/Sonderbetrieb - Entlüftungsart
 {0x053D0528,  CAT_WARTUNG,          VT_TEMP,          7150,  STR7150,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ °C ] - Wartung/Service - Simulation Aussentemperatur
-{CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7152,  STR7152,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtauen auslösen
+{0x593D08D4,  CAT_WARTUNG,          VT_YESNO,         7152,  STR7152,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abtauen auslösen
+{0x593D1679,  CAT_WARTUNG,          VT_YESNO,         7153,  STR7153,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kältemittel abpumpen
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7160,  STR7160,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Begrenzungszeiten
 {0x113D1A9A,  CAT_WARTUNG,          VT_BYTE,          7166,  STR7166,  0,                    NULL,         FL_RONLY, DEV_ALL}, // [ ] Wartung/Sonderbetrieb - Inbetriebnahmefunktion
 {0x053D06E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Kundendienst
@@ -8154,7 +8158,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D0D2C,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8482,  STR8482,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Abtaustabilisierung
 {0x593D08E2,  CAT_DIAG_ERZEUGER,    VT_BYTE,          8485,  STR8485,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Anzahl Abtauversuche
 {0x593D08E8,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8487,  STR8487,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Status Abtauen WP
-
+{0x053D1921,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8488,  STR8488,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relative Feutchte Lufteintritt
 
 // Diagnose Erzeuger - Solar
 {0x053D09AB,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8499,  STR8499,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kollektorpumpe 1 (Aus) - Broetje NovoCondens WOB20-25
@@ -8320,14 +8324,14 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schienenvorl'sollwert Kälte //FUJITSU
 {0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungssollwert Schiene
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Elektroeinsatz Puffer
+{0x053D09B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Elektroeinsatz Puffer
 {0x053D0534,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8980,  STR8980,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 1
 {0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert
 {0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
 {0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichertemperatur 3
 {0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert Reset?
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8990,  STR8990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro Puffer
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Puffer
+{0x053D06C4,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8990,  STR8990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro Puffer
+{0x053D06BF,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Puffer
 {0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
 {0x053D080C,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1
 {0x053D0577,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9001,  STR9001,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H2
@@ -8358,7 +8362,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0ABD,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9035,  STR9035,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX5 //FUJITSU
 {0x053D082D,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9036,  STR9036,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX6
 {0x053D0D5E,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9037,  STR9037,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX7
-{CMD_UNKNOWN, CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       9038,  STR9038,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX8
+{0x053D0D5F,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9038,  STR9038,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Relaisausgang QX8
 {0x053D09F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
 {0x053D09F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
 {0x053D09F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
@@ -8508,7 +8512,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
 {0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00
 {0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 // "Anlagenbild" (ASCII: "A006103") / on RVS43.222: (ASCII: "A0060Z2") / on ZR1: (ASCII: "A006BZ2")
-{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload 
+{0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload
 {0x053D0076,  CAT_USER_DEFINED,     VT_UNKNOWN,       10208, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // QINF message sent out by ACS700 diagnosis software
 {0x053D0091,  CAT_USER_DEFINED,     VT_UNKNOWN,       10209, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0094,  CAT_USER_DEFINED,     VT_UNKNOWN,       10210, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 30 30 00 00 00 00 00 00 00 00 00 00 00 00 00 00 (ASCII: "00") // "Anlagebildbeschreibung 1"
@@ -9209,7 +9213,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x193D2FEE,  CAT_USER_DEFINED,     VT_UNKNOWN,       10376, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 
 {0x193D0232,  CAT_USER_DEFINED,     VT_TEMP,          10377, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x193D0233,  CAT_USER_DEFINED,     VT_TEMP,          10378, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, 
+{0x193D0233,  CAT_USER_DEFINED,     VT_TEMP,          10378, STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
 
 // 0x213D....
 
