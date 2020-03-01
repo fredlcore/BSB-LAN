@@ -19,8 +19,8 @@
 //#define SubnetIP 255,255,255,0  // Please use commas insteaf of dots!!!
 
 /* Select language; so far German is the most complete, with English following.
- * Available languages are: Czech (CZ), German (DE), Danish (DK), English (EN), Spanish (ES), Finnish (FI),
- * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SE), 
+ * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
+ * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SV), 
  * Slovenian (SI) and Turkish (TR).
  * Incomplete languages will automagically be filled up with English translations first, and if no English translation
  * is available, fallback will take place to German. 
@@ -116,7 +116,10 @@ boolean log_bc_only = 0;              // should we log only broadcast commands (
 //#define MQTTBrokerIP 192,168,1,20	// Please use commas insteaf of dots!!!
 //#define MQTTUsername "User" // Set username for MQTT broker here or comment out if no username/password is used.
 //#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
-//#define MQTTTopicPrefix "BSB-LAN" // Choose the "topic" for MQTT messages here
+//#define MQTTTopicPrefix "BSB-LAN" 	// Optional: Choose the "topic" for MQTT messages here
+//#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging infomation printed to the mqtt topic
+//#define MQTTDeviceID "MyHeater"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
+// Payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
@@ -190,6 +193,9 @@ byte monitor = 0;
 
 //#define DEBUG
 //#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port
+
+//"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
+//#define WEBSERVER
 
 /************************************************************************************/
 /************************************************************************************/

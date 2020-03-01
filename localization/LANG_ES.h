@@ -1,3 +1,4 @@
+#define LANGUAGENAME_TEXT "Español"
 #define ENUM_CAT_00_TEXT "Reloj"
 #define ENUM_CAT_03_TEXT "Programa de conmutación 1"
 #define ENUM_CAT_04_TEXT "Programa de conmutación 2"
