@@ -484,7 +484,7 @@ uint8_t json_types[20] = { 0 };
   // Pass our oneWire reference to Dallas Temperature.
   DallasTemperature sensors(&oneWire);
 
-  int numSensors;
+  uint8_t numSensors;
 #endif
 
 #ifdef DHT_BUS
@@ -4046,7 +4046,7 @@ void dht22(void) {
  *    client object
  * *************************************************************** */
 void ds18b20(void) {
-  int i;
+  uint8_t i;
   //webPrintHeader();
   sensors.requestTemperatures(); // Send the command to get temperatures
   DeviceAddress device_address;
@@ -5065,14 +5065,11 @@ uint8_t pps_offset = 0;
 #ifdef USER_PASS_B64
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (!(httpflags & 1)) {
-          client.println(F("HTTP/1.1 401 Authorization Required"));
-          client.println(F("WWW-Authenticate: Basic realm=\"Secure Area\""));
-          client.println(F("Content-Type: text/html"));
-          client.println(F("Connnection: close"));
-          client.println();
-          client.println(F("<!DOCTYPE HTML>"));
-          client.println(F("<HTML><HEAD><TITLE>Error</TITLE>"));
-          client.println(F("</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>"));
+#if defined(__SAM3X8E__)
+          printPStr(auth_req_html, sizeof(auth_req_html));
+#else
+          printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
+#endif
           client.stop();
         }
         // otherwise continue like normal
@@ -5427,19 +5424,22 @@ uint8_t pps_offset = 0;
 //          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
 //          buffer[len]=0;
-          client.print(F("<table><tr><td><a href='/"));
+          bufferedprint(client, PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
             client.print(F("/"));
           #endif
-          client.println(F("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>"));
-          client.print(F("<tr><td><a href='/"));
+          bufferedprint(client, PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
           #ifdef PASSKEY
             client.print(PASSKEY);
             client.print(F("/"));
           #endif
-          client.println(F("A'>" MENU_TEXT_24A "</A></td><td></td></tr>"));
-          client.println(F("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>"));
+          bufferedprint(client, PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
+          bufferedprint(client, PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
+          #define K_FORMAT_TBL "<tr><td><a href='K%u'>%s</a></td><td>%d - %d</td></tr>\n"
+          char *formatbuf = (char *)malloc(sizeof(K_FORMAT_TBL)+1); //TODO: validate if malloc was successful?
+          int16_t cat_min = -1, cat_max = -1;
+          strcpy_P(formatbuf, PSTR(K_FORMAT_TBL));
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             outBufclear();
             if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
@@ -5449,26 +5449,22 @@ uint8_t pps_offset = 0;
               printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
 #endif
               DebugOutput.println();
-              client.print(F("<tr><td><A HREF='K"));
-              client.print(cat);
-              client.print(F("'>"));
-              client.print(outBuf);
-              client.println(F("</A></td><td>"));
 #if defined(__SAM3X8E__)
-              client.print(ENUM_CAT_NR[cat*2]);
+              cat_min = ENUM_CAT_NR[cat*2];
 #else
-              client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0])));
+              cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
 #endif
-              client.print(F(" - "));
 #if defined(__SAM3X8E__)
-              client.print(ENUM_CAT_NR[cat*2+1]);
+              cat_max = ENUM_CAT_NR[cat*2+1];
 #else
-              client.print(pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0])));
+              cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #endif
-              client.println(F("</td></tr>"));
+              sprintf(buffer, formatbuf, cat, outBuf, cat_min, cat_max);
+              client.print(buffer);
             }
           }
-          client.println(F("</table>"));
+          free(formatbuf);
+          bufferedprint(client, PSTR("</table>"));
           webPrintFooter();
           break;
         }
@@ -5558,7 +5554,7 @@ uint8_t pps_offset = 0;
           if(!(httpflags & 128)) webPrintHeader();
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(BSB_VERSION);
+          client.print(F(BSB_VERSION));
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus.getBusType() == BUS_BSB) {
@@ -6172,7 +6168,7 @@ uint8_t pps_offset = 0;
 //          client.println(F("<BR><BR>"));
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(BSB_VERSION);
+          client.print(F(BSB_VERSION));
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());

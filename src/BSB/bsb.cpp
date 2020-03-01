@@ -16,7 +16,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   destAddr=d_addr;
   rx_pin=rx;
 
-  if (rx_pin == 19) {	// 19 = RX pin of Serial1 USART module
+  if (rx == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
     serial = &Serial1;
     pinMode(53, OUTPUT);    // provide voltage
