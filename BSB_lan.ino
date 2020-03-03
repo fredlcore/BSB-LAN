@@ -5860,7 +5860,7 @@ uint8_t pps_offset = 0;
             }
             if (output || json_token != NULL) {
               int temp_i=findLine(json_parameter,0,&cmd);
-              if (p[2] == 'Q' && (temp_i<0 || cmd == CMD_UNKNOWN)) {
+              if ((p[2] == 'Q' || p[2] == 'C') && (temp_i<0 || cmd == CMD_UNKNOWN)) {
                 json_token = strtok(NULL,",");
                 continue;
               }
@@ -5922,8 +5922,13 @@ uint8_t pps_offset = 0;
                 cat_param++;
                 if (cat_min<0) {
                   search_cat = atoi(&p[4]);
+#if defined(__SAM3X8E__)
+                  cat_min = ENUM_CAT_NR[search_cat*2];
+                  cat_max = ENUM_CAT_NR[search_cat*2+1];
+#else
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#endif
                   cat_param = cat_min;
                 }
                 if (cat_param <= cat_max) {
@@ -5936,7 +5941,7 @@ uint8_t pps_offset = 0;
                 }
               }
 
-              if (p[2]=='Q' || (p[2]=='K' && isdigit(p[4]))) {
+              if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i=findLine(json_parameter,0,&cmd);
                 if (i<0 || cmd == CMD_UNKNOWN) {
                   continue;
@@ -6019,9 +6024,6 @@ uint8_t pps_offset = 0;
                     }
                   }
 
-//                  strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \"%s\",\n"));
-//                  sprintf(outBuf, formatbuf, ret_val_str, unit_str, ((div_data_type == DT_ENUM)?desc_str:""));
-//                  client.print(outBuf);
                   strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
                   sprintf(jsonbuffer, formatbuf, ret_val_str, unit_str);
                   if(div_data_type == DT_ENUM)
@@ -6106,7 +6108,7 @@ uint8_t pps_offset = 0;
                 sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
                 DebugOutput.print(jsonbuffer);
               }
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q') || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
               }
             }
