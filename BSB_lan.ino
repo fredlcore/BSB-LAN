@@ -368,7 +368,9 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
+#ifdef MQTTBrokerIP
 #include "src/PubSubClient/src/PubSubClient.h"
+#endif
 #include "html_strings.h"
 
 #include <Ethernet.h>
@@ -446,7 +448,9 @@ WiFiEspClient max_cul;
 EthernetClient max_cul;
 #endif
 
+#ifdef MQTTBrokerIP
 PubSubClient MQTTClient(client);
+#endif
 boolean haveTelnetClient = false;
 
 #ifdef MAX_CUL
