@@ -6026,8 +6026,8 @@ uint8_t pps_offset = 0;
                 }
 
                 if (p[2] != 'Q') {
-                  strcpy_P(formatbuf, PSTR("    \"possibleValues\": [\n"));
-                  client.print(formatbuf);
+                  strcpy_P(jsonbuffer, PSTR("    \"possibleValues\": [\n"));
+                  client.print(jsonbuffer);
 
                   if (type == VT_ONOFF || type == VT_YESNO) {
                     jsonbuffer[0] = 0;
@@ -6072,17 +6072,17 @@ uint8_t pps_offset = 0;
                           x++;
                           z = pgm_read_byte_far(enumstr+x);
                         }
-                        outB[0] = 0;
+//                        outB[0] = 0;
 //                        x += strlen(buffer);
-                        strcat_P(jsonbuffer, PSTR("\" }"));
+                        strcpy_P(outB, PSTR("\" }"));
                         client.print(jsonbuffer);
                         x++;
                       }
                     }
                   }
                   //client.println();
-                  strcpy_P(formatbuf, PSTR("\n    ],\n"));
-                  client.print(formatbuf);
+                  strcpy_P(jsonbuffer, PSTR("\n    ],\n"));
+                  client.print(jsonbuffer);
                 }
 
                 strcpy_P(formatbuf, PSTR("    \"dataType\": %d\n  }"));
@@ -6092,12 +6092,12 @@ uint8_t pps_offset = 0;
 
               if (p[2]=='S') {
                 int status = set(json_parameter, json_value_string, json_type);
-                strcpy_P(formatbuf, PSTR("  \"%s\": {\n    \"status\": %d\n  }"));
+                strcpy_P(formatbuf, PSTR("  \"%d\": {\n    \"status\": %d\n  }"));
                 sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, json_parameter, status);
                 buffershiftedbycolon = 0;
                 client.print(jsonbuffer);
 
-                strcpy_P(formatbuf, PSTR("Setting parameter %s to %s with type %s\n"));
+                strcpy_P(formatbuf, PSTR("Setting parameter %d to %s with type %d\n"));
                 sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
                 DebugOutput.print(jsonbuffer);
               }
@@ -6106,8 +6106,8 @@ uint8_t pps_offset = 0;
               }
             }
           }
-          strcpy_P(formatbuf, PSTR("\n}\n"));
-          client.print(formatbuf);
+          strcpy_P(jsonbuffer, PSTR("\n}\n"));
+          client.print(jsonbuffer);
           client.flush();
           free(formatbuf);
           free(jsonbuffer);
