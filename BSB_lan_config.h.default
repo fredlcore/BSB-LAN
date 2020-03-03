@@ -118,8 +118,8 @@ boolean log_bc_only = 0;              // should we log only broadcast commands (
 //#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
 //#define MQTTTopicPrefix "BSB-LAN" 	// Optional: Choose the "topic" for MQTT messages here
 //#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging infomation printed to the mqtt topic
-//#define DeviceID    "boilerNode01"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
-// Payload will be of the structure: {"DeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
+//#define MQTTDeviceID "MyHeater"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
+// Payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
