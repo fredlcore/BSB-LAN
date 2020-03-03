@@ -5947,10 +5947,10 @@ uint8_t pps_offset = 0;
                 uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
                 strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
-                if (p[2] == 'Q') buffershiftedbycolon = 0;
+                if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
                 sprintf(jsonbuffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
                 buffershiftedbycolon = 0;
-                if (!been_here2 || p[2] == 'Q') been_here2=true;
+                if (!been_here2 || p[2] == 'Q' || p[2] == 'C') been_here2=true;
 
                 char *bufferp = jsonbuffer + strlen(jsonbuffer);
                 strcpy_PF(bufferp, get_cmdtbl_desc(i));
@@ -6103,7 +6103,7 @@ uint8_t pps_offset = 0;
                 sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
                 DebugOutput.print(jsonbuffer);
               }
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q') || p[2] == 'C')) {
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
               }
             }
