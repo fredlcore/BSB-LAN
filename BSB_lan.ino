@@ -368,7 +368,9 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
+#ifdef MQTTBrokerIP
 #include "src/PubSubClient/src/PubSubClient.h"
+#endif
 #include "html_strings.h"
 
 #include <Ethernet.h>
@@ -446,7 +448,9 @@ WiFiEspClient max_cul;
 EthernetClient max_cul;
 #endif
 
+#ifdef MQTTBrokerIP
 PubSubClient MQTTClient(client);
+#endif
 boolean haveTelnetClient = false;
 
 #ifdef MAX_CUL
@@ -5855,7 +5859,7 @@ uint8_t pps_offset = 0;
             }
             if (output || json_token != NULL) {
               int temp_i=findLine(json_parameter,0,&cmd);
-              if (p[2] == 'Q' && (temp_i<0 || cmd == CMD_UNKNOWN)) {
+              if ((p[2] == 'Q' || p[2] == 'C') && (temp_i<0 || cmd == CMD_UNKNOWN)) {
                 json_token = strtok(NULL,",");
                 continue;
               }
@@ -5917,8 +5921,13 @@ uint8_t pps_offset = 0;
                 cat_param++;
                 if (cat_min<0) {
                   search_cat = atoi(&p[4]);
+#if defined(__SAM3X8E__)
+                  cat_min = ENUM_CAT_NR[search_cat*2];
+                  cat_max = ENUM_CAT_NR[search_cat*2+1];
+#else
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#endif
                   cat_param = cat_min;
                 }
                 if (cat_param <= cat_max) {
@@ -5931,7 +5940,7 @@ uint8_t pps_offset = 0;
                 }
               }
 
-              if (p[2]=='Q' || (p[2]=='K' && isdigit(p[4]))) {
+              if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i=findLine(json_parameter,0,&cmd);
                 if (i<0 || cmd == CMD_UNKNOWN) {
                   continue;
@@ -5942,10 +5951,10 @@ uint8_t pps_offset = 0;
                 uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
 
                 strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
-                if (p[2] == 'Q') buffershiftedbycolon = 0;
+                if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
                 sprintf(jsonbuffer + buffershiftedbycolon, been_here2?formatbuf:(formatbuf + 2), json_parameter); //do not print ",\n" if it first field
                 buffershiftedbycolon = 0;
-                if (!been_here2 || p[2] == 'Q') been_here2=true;
+                if (!been_here2 || p[2] == 'Q' || p[2] == 'C') been_here2=true;
 
                 char *bufferp = jsonbuffer + strlen(jsonbuffer);
                 strcpy_PF(bufferp, get_cmdtbl_desc(i));
@@ -6014,9 +6023,6 @@ uint8_t pps_offset = 0;
                     }
                   }
 
-//                  strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \"%s\",\n"));
-//                  sprintf(outBuf, formatbuf, ret_val_str, unit_str, ((div_data_type == DT_ENUM)?desc_str:""));
-//                  client.print(outBuf);
                   strcpy_P(formatbuf, PSTR("    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
                   sprintf(jsonbuffer, formatbuf, ret_val_str, unit_str);
                   if(div_data_type == DT_ENUM)
@@ -6101,7 +6107,7 @@ uint8_t pps_offset = 0;
                 sprintf(jsonbuffer, formatbuf, json_parameter, json_value_string, json_type);
                 DebugOutput.print(jsonbuffer);
               }
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q')) {
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
               }
             }
