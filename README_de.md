@@ -49,7 +49,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Thermital: TBox Clima TOP
 - Weishaupt: WTU
    
-**Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:**  
+***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
 - **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)**
 - **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)**
 - **[weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)**      
