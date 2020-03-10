@@ -7432,10 +7432,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
 {0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
-{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
 {0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler SW Diagnosecode 1 - logged on OCI700 via LPB
+{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
 {0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler SW Diagnosecode 1
-{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
+{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806) - logged on OCI700 via LPB
