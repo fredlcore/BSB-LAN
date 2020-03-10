@@ -31,8 +31,23 @@ The following overview shows the most common used controllers of the different h
    
 **Weishaupt (model WTU):**  
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via LPB, (nearly) full functionality  
+     
+**In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
+- Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
+- Atlantic: Alféa Excellia, Extensa  
+- Austria Email: LWPK  
+- Baxi: Luna Platinum
+- CTA: Optiheat  
+- Froeling: Rendagas Plus
+- Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
+- Gruenenwald: Greenheat
+- MHG: Procon E
+- Olymp: SHS, WHS
+- Thermital: TBox Clima TOP
+- Weishaupt: WTU
    
-**To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:**  
+***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
 - **[Broetje](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#311-broetje)**  
 - **[Elco](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#312-elco)**  
 - **[Other Manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#313-other-manufacturers)**  
