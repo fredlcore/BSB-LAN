@@ -3678,9 +3678,9 @@ char* query(int line_start  // begin at this line (ProgNr)
           uint16_t temp_val = 0;
           switch (type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE:
+            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_YESNO: temp_val = (pps_values[(line-15000)]?1:0) * 256; break; //define one value instead two (1 or 255)
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
             case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
@@ -3780,7 +3780,6 @@ char* query(int line_start  // begin at this line (ProgNr)
               client.println(F("</option>"));
               client.print(F("<option value='1'"));
               if (val>0) {
-                 strcpy_P(pvalstr, PSTR("1")); //define one value instead two (1 or 255)
                  client.print(F(" selected"));
               }
               client.print(F(">"));
@@ -4337,6 +4336,27 @@ void bufferedprintln(EthernetClient& cl, PGM_P outstr){
   strcat_P(buffer, PSTR("\n"));
   buffer[BUFLEN - 1] = 0;
   cl.print(buffer);
+}
+
+/** *****************************************************************
+ *  Function: resetBoard
+ *  Does: restart Arduino
+ *  Pass parameters:
+ *   none
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+void resetBoard(){
+#if defined(__SAM3X8E__)
+            // TODO
+#else
+  asm volatile ("  jmp 0");
+#endif
+  while (1==1) {}
 }
 
 /** *****************************************************************
@@ -5193,7 +5213,7 @@ uint8_t pps_offset = 0;
               }
 
             if ((httpflags & 8))  { //Compare ETag if presented
-              char *p = outBuf + strlen(outBuf) + 1;  
+              char *p = outBuf + strlen(outBuf) + 1;
               strcpy_P(p, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""));
               sprintf(buffer, p, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize);
 
@@ -5264,11 +5284,11 @@ uint8_t pps_offset = 0;
               sprintf(buffer + strlen(buffer), outBuf, downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
-            strcpy_P(outBuf, PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n")); 
+            strcpy_P(outBuf, PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n"));
             sprintf(buffer + strlen(buffer), outBuf, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             client.print(buffer);
 
-            //Send file if !HEAD request received or ETag not match 
+            //Send file if !HEAD request received or ETag not match
             if (!(httpflags & 8) && !(httpflags & 4)) {
               transmitFile(dataFile);
             }
@@ -5801,7 +5821,7 @@ uint8_t pps_offset = 0;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
-          
+
           strcpy_P(buffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
           client.print(buffer);
 
@@ -6479,12 +6499,7 @@ uint8_t pps_offset = 0;
             DebugOutput.println(F("Cleared EEPROM"));
           }
           client.println(F("Restarting Arduino..."));
-#if defined(__SAM3X8E__)
-          // TODO
-#else
-          asm volatile ("  jmp 0");
-#endif
-          while (1==1) {}
+          resetBoard();
 #endif
           break;
         }
@@ -6773,6 +6788,10 @@ uint8_t pps_offset = 0;
     client.stop();
   } // endif, client
 
+#ifdef TIMETORESTART
+if(millis() > TIMETORESTART) resetBoard();
+#endif
+
 #ifdef MQTTBrokerIP
 
 #ifdef MQTTUsername
@@ -6846,8 +6865,8 @@ uint8_t pps_offset = 0;
           MQTTTopic.concat(F("json"));
 #else
           MQTTTopic.concat(String(log_parameters[i]));
-#endif       
-          
+#endif
+
           char buffer[20];
           if (log_parameters[i] < 20000) {
             uint32_t c=0;
@@ -6863,10 +6882,10 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	      }	
+	      }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
-#endif                   
+#endif
             } else {
 #ifdef MQTT_JSON  // Build the json doc on the fly
               MQTTPayload.concat(F("\""));
@@ -6952,7 +6971,7 @@ uint8_t pps_offset = 0;
       Serial.println(MQTTPayload.c_str());
     // Now publish the json payload only once
     MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
-#endif    
+#endif
     MQTTClient.disconnect();
     lastMQTTTime = millis();
   }
