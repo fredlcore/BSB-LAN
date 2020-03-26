@@ -2288,9 +2288,11 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
+              msg[bus.getPl_start()+1]=msg[bus.getPl_start()+1]?1:0;  //define one value instead two (1 or 255)
               printCHOICE(msg,data_len,MENU_TEXT_OFF,MENU_TEXT_ON);
               break;
             case VT_YESNO:
+              msg[bus.getPl_start()+1]=msg[bus.getPl_start()+1]?1:0;  //define one value instead two (1 or 255)
               printCHOICE(msg,data_len,MENU_TEXT_NO,MENU_TEXT_YES);
               break;
             case VT_CLOSEDOPEN:
