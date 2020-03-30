@@ -5387,17 +5387,17 @@ uint8_t pps_offset = 0;
 
           p+=2;               // third position in cLineBuffer
           if(!isdigit(*p)){   // now we check for digits - nice
-            webPrintHeader();
+            if(!(httpflags & 128)) webPrintHeader();
             client.println(F(MENU_TEXT_ER1));
-            webPrintFooter();
+            if(!(httpflags & 128)) webPrintFooter();
             break;
           }
           line=atoi(p);       // convert until non-digit char is found
           p=strchr(p,'=');    // search for '=' sign
           if(p==NULL){        // no match
-            webPrintHeader();
+            if(!(httpflags & 128)) webPrintHeader();
             client.println(F(MENU_TEXT_ER2));
-            webPrintFooter();
+            if(!(httpflags & 128)) webPrintFooter();
             break;
           }
           p++;                   // position pointer past the '=' sign
@@ -5420,22 +5420,22 @@ uint8_t pps_offset = 0;
           setresult = set(line,p,setcmd);
 
           if(setresult!=1){
-            webPrintHeader();
+            if(!(httpflags & 128)) webPrintHeader();
             client.println(F(MENU_TEXT_ER3));
             if (setresult == 2) {
               client.println(F(" - " MENU_TEXT_ER4));
             }
-            webPrintFooter();
+            if(!(httpflags & 128)) webPrintFooter();
             break;
           }
           if(setcmd){            // was this a SET command?
-            webPrintHeader();
+            if(!(httpflags & 128)) webPrintHeader();
             // Query controller for this value
             query(line,line,0);  // read value back
-            webPrintFooter();
+            if(!(httpflags & 128)) webPrintFooter();
           }else{
-            webPrintHeader();
-            webPrintFooter();
+            if(!(httpflags & 128)) webPrintHeader();
+            if(!(httpflags & 128)) webPrintFooter();
           }
           if (token[0] > 0) {
             bus.setBusType(bus.getBusType(), myAddr, destAddr);
