@@ -115,8 +115,8 @@
 #define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
-#define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E, WBS 22 E
-#define DEV_162_014  162,14  // FunkOdyssey
+#define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E
+#define DEV_162_014  162,14  // Broetje WBS 22 E (FunkOdyssey)
 #define DEV_163_ALL  163,255 // Brötje WGB Evo 20 H
 #define DEV_164_ALL  164,255 // AVS37.295/309 Olymp WHS-500 Luft-/Wasser-Wärmepumpe
 #define DEV_165_ALL  165,255 // Funkempfänger FE ISR Plus AVS71.411/349
