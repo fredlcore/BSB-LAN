@@ -6853,7 +6853,7 @@ uint8_t pps_offset = 0;
             uint32_t c=0;
             int line=findLine(log_parameters[i],0,&c);
             uint8_t type=get_cmdtbl_type(line);
-            if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE) {
+            if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE || type == VT_DATETIME) {
 #ifdef MQTT_JSON  // Build the json doc on the fly
               MQTTPayload.concat(F("\""));
               MQTTPayload.concat(String(log_parameters[i]));
@@ -6863,7 +6863,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	      }	
+	            }	
 #else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
 #endif                   
