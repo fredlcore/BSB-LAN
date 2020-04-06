@@ -1730,6 +1730,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
       }
     }else{
 //      outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
       decodedTelegram.error = 4;
     }
     DebugOutput.print(p);
@@ -1777,6 +1778,7 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
       }
     }else{
 //      outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
+      outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
       decodedTelegram.error = 4;
     }
     DebugOutput.print(p);
@@ -2314,11 +2316,9 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
-              msg[bus.getPl_start()+1]=msg[bus.getPl_start()+1]?1:0;  //define one value instead two (1 or 255)
               printCHOICE(msg,data_len,MENU_TEXT_OFF,MENU_TEXT_ON);
               break;
             case VT_YESNO:
-              msg[bus.getPl_start()+1]=msg[bus.getPl_start()+1]?1:0;  //define one value instead two (1 or 255)
               printCHOICE(msg,data_len,MENU_TEXT_NO,MENU_TEXT_YES);
               break;
             case VT_CLOSEDOPEN:
@@ -2387,7 +2387,8 @@ char *printTelegram(byte* msg, int query_line) {
                   }else{
                     DebugOutput.print(F("no enum str "));
                     SerialPrintData(msg);
-                    outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
+                    decodedTelegram.error = 8;
+//                    outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
                   }
                 }else{
                   DebugOutput.print(F("---"));
@@ -3713,7 +3714,8 @@ char* query(int line_start  // begin at this line (ProgNr)
             if (bus.getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
               outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
             } else {
-              outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+//              outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
+              outBufLen+=sprintf(outBuf+outBufLen,"%d",line);
             }
           decodedTelegram.error = 128;
           }
@@ -3726,7 +3728,7 @@ char* query(int line_start  // begin at this line (ProgNr)
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
             case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = (pps_values[(line-15000)]?1:0) * 256; break; //define one value instead two (1 or 255)
+            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
             case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
@@ -6062,7 +6064,7 @@ uint8_t pps_offset = 0;
                   char* unit_str = NULL;
                   char* desc_str = NULL;
 //                  if (ret_val_str == NULL) { i=-1; continue; }
-                  if (div_data_type == DT_ENUM) {
+                  if (div_data_type == DT_ENUM || div_data_type == DT_OOYN) {
                     unit_str = strstr(ret_val_str, "- ");
                     if (unit_str != NULL) {
                       desc_str = unit_str + 2;
@@ -6104,7 +6106,7 @@ uint8_t pps_offset = 0;
                   strcpy_P(formatbuf, PSTR("    \"error\": %d,\n    \"readonly\": %d,\n    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
 
                   sprintf(jsonbuffer, formatbuf, decodedTelegram.error, decodedTelegram.readonly, ret_val_str, unit_str);
-                  if(div_data_type == DT_ENUM)
+                  if(div_data_type == DT_ENUM || div_data_type == DT_OOYN)
                     strcat(jsonbuffer,desc_str);
                   strcat_P(jsonbuffer,PSTR("\",\n"));
                   client.print(jsonbuffer);
@@ -6847,9 +6849,6 @@ uint8_t pps_offset = 0;
     client.stop();
   } // endif, client
 
-#ifdef TIMETORESTART
-if(millis() > TIMETORESTART) resetBoard();
-#endif
 
 #ifdef MQTTBrokerIP
 
