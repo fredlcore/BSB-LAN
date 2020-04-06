@@ -355,7 +355,8 @@ typedef enum {
   DT_DTTM,    // date and time
   DT_DDMM,    // day and month
   DT_STRN,    // string
-  DT_DWHM     // PPS time (day of week, hour:minute)
+  DT_DWHM,    // PPS time (day of week, hour:minute)
+  DT_OOYN     // switch type: On/Off and Yes/No (three possible values: 1/255 and 0)
 } dt_types_t;
 
 PROGMEM_LATE const units optbl[]={
@@ -369,7 +370,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
 {VT_MONTHS,         1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS)},
-{VT_ONOFF,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_ONOFF,          1.0,    DT_OOYN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
 {VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
 {VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
@@ -384,7 +385,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_VOLTAGE,        10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
 {VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE)},
-{VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_YESNO,          1.0,    DT_OOYN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
