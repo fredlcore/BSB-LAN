@@ -32,9 +32,24 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via BSB, vollumfänglich steuer- und bedienbar  
    
 **Weishaupt (Modell WTU):**  
-- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via LPB, (nahezu) vollumfänglich steuer- und bedienbar   
+- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via LPB, (nahezu) vollumfänglich steuer- und bedienbar      
+  
+**Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
+- Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
+- Atlantic: Alféa Excellia, Extensa  
+- Austria Email: LWPK  
+- Baxi: Luna Platinum
+- CTA: Optiheat  
+- Fröling: Rendagas Plus
+- Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
+- Grünenwald: Greenheat
+- MHG: Procon E
+- Olymp: SHS, WHS
+- Thermital: TBox Clima TOP
+- Weishaupt: WTU
    
-**Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:**  
+***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
 - **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)**
 - **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)**
 - **[weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)**      
