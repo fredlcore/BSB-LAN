@@ -520,7 +520,7 @@ int loopCount = 0;
 struct decodedTelegram_t {
 uint8_t error; //0 - ok, 1 - decoding error, 2 - unknown command, 4 - not found, 8 - no enum str, 16 - unknown type, 32 - parameter not supported, 64 - common LPB bus error, 128 - query failed
 uint8_t readonly; // 0 - read/write, 1 - read only
-char *pvalstr;
+uint8_t isswitch; // 0 - ENUM type, 1 - ONOFF or YESNO type
 } decodedTelegram;
 
 // uint_farptr_t enumstr_offset = 0;
@@ -2007,6 +2007,7 @@ void remove_char(char* str, char c) {
  *  Global resources used:
  *   Serial    hardware serial interface to a PC
  *   outBuf[]
+ *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 char *printTelegram(byte* msg, int query_line) {
   char *pvalstr=NULL;
@@ -2316,9 +2317,11 @@ char *printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,div_operand,div_precision,div_unit);
               break;
             case VT_ONOFF:
+              decodedTelegram.isswitch = 1;
               printCHOICE(msg,data_len,MENU_TEXT_OFF,MENU_TEXT_ON);
               break;
             case VT_YESNO:
+              decodedTelegram.isswitch = 1;
               printCHOICE(msg,data_len,MENU_TEXT_NO,MENU_TEXT_YES);
               break;
             case VT_CLOSEDOPEN:
@@ -3643,6 +3646,7 @@ int set(int line      // the ProgNr of the heater parameter
  *   Serial instance
  *   bus    instance
  *   client instance
+ *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 char* query(int line_start  // begin at this line (ProgNr)
           , int line_end    // end with this line (ProgNr)
@@ -3655,11 +3659,10 @@ char* query(int line_start  // begin at this line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
-  char *pvalstr=NULL;
-
+  char *pvalstr = NULL;
   decodedTelegram.error = 0;
   decodedTelegram.readonly = 0;
-
+  decodedTelegram.isswitch = 0;
 
   if (!no_print) {         // display in web client?
 //    client.println(F("<p><form><table>")); // yes, begin HTML paragraph
@@ -3695,7 +3698,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               }
 
               // Decode the rcv telegram and send it to the PC serial interface
-              pvalstr=printTelegram(msg, line);
+              pvalstr = printTelegram(msg, line);
               Serial.print(F("#"));
               Serial.print(line);
               Serial.print(F(": "));
@@ -3728,7 +3731,7 @@ char* query(int line_start  // begin at this line (ProgNr)
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
             case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
             case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
@@ -3917,7 +3920,7 @@ char* query(int line_start  // begin at this line (ProgNr)
               if  (pvalstr[2] == '-') {   // do not run strtod on disabled parameters (---)
                 client.print(F("---"));
               } else {
-                client.print(strtod(pvalstr,NULL));
+                client.print(strtod(pvalstr, NULL));
               }
             }
             client.print(F("'></td><td>"));
@@ -6064,7 +6067,7 @@ uint8_t pps_offset = 0;
                   char* unit_str = NULL;
                   char* desc_str = NULL;
 //                  if (ret_val_str == NULL) { i=-1; continue; }
-                  if (div_data_type == DT_ENUM || div_data_type == DT_OOYN) {
+                  if (div_data_type == DT_ENUM) {
                     unit_str = strstr(ret_val_str, "- ");
                     if (unit_str != NULL) {
                       desc_str = unit_str + 2;
@@ -6106,7 +6109,7 @@ uint8_t pps_offset = 0;
                   strcpy_P(formatbuf, PSTR("    \"error\": %d,\n    \"readonly\": %d,\n    \"value\": \"%s\",\n    \"unit\": \"%s\",\n    \"desc\": \""));
 
                   sprintf(jsonbuffer, formatbuf, decodedTelegram.error, decodedTelegram.readonly, ret_val_str, unit_str);
-                  if(div_data_type == DT_ENUM || div_data_type == DT_OOYN)
+                  if(div_data_type == DT_ENUM)
                     strcat(jsonbuffer,desc_str);
                   strcat_P(jsonbuffer,PSTR("\",\n"));
                   client.print(jsonbuffer);
@@ -6169,6 +6172,7 @@ uint8_t pps_offset = 0;
                   }
                   //client.println();
                   strcpy_P(jsonbuffer, PSTR("\n    ],\n"));
+                  if(decodedTelegram.isswitch == 1) strcat_P(jsonbuffer, PSTR("    \"isswitch\": 1,\n"));
                   client.print(jsonbuffer);
                 }
 
@@ -6940,7 +6944,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	            }	
+	            }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
 #endif
