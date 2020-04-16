@@ -6030,8 +6030,14 @@ uint8_t pps_offset = 0;
                 }
                 int k=0;
                 uint8_t type=get_cmdtbl_type(i);
+                uint8_t flags=get_cmdtbl_flags(i);
                 uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
                 uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+
+                if ((flags & FL_RONLY) == FL_RONLY)
+                  decodedTelegram.readonly = 1;
+                else
+                  decodedTelegram.readonly = 0;
 
                 strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
                 if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
@@ -6173,13 +6179,15 @@ uint8_t pps_offset = 0;
                     }
                   }
                   //client.println();
-                  strcpy_P(jsonbuffer, PSTR("\n    ],\n"));
-                  if(decodedTelegram.isswitch == 1) strcat_P(jsonbuffer, PSTR("    \"isswitch\": 1,\n"));
+//                  strcpy_P(jsonbuffer, PSTR("\n    ],\n"));
+//                  if(decodedTelegram.isswitch == 1) strcat_P(jsonbuffer, PSTR("    \"isswitch\": 1,\n"));
+                  strcpy_P(formatbuf, PSTR("\n    ],\n    \"isswitch\": \"%d\",\n"));
+                  sprintf(jsonbuffer, formatbuf, decodedTelegram.isswitch);
                   client.print(jsonbuffer);
                 }
 
-                strcpy_P(formatbuf, PSTR("    \"dataType\": %d\n  }"));
-                sprintf(jsonbuffer, formatbuf, div_data_type);
+                strcpy_P(formatbuf, PSTR("    \"dataType\": %d,\n    \"readonly\": %d\n  }"));
+                sprintf(jsonbuffer, formatbuf, div_data_type, decodedTelegram.readonly);
                 client.print(jsonbuffer);
               }
 
