@@ -355,7 +355,7 @@ typedef enum {
   DT_DTTM,    // date and time
   DT_DDMM,    // day and month
   DT_STRN,    // string
-  DT_DWHM,    // PPS time (day of week, hour:minute)
+  DT_DWHM     // PPS time (day of week, hour:minute)
 } dt_types_t;
 
 PROGMEM_LATE const units optbl[]={
