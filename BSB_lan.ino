@@ -6118,8 +6118,10 @@ uint8_t pps_offset = 0;
                 if (p[2] != 'Q') {
                   strcpy_P(jsonbuffer, PSTR("    \"possibleValues\": [\n"));
                   client.print(jsonbuffer);
+                  decodedTelegram.isswitch = 0;
 
                   if (type == VT_ONOFF || type == VT_YESNO) {
+                    decodedTelegram.isswitch = 1;
                     jsonbuffer[0] = 0;
                     strcat_P(jsonbuffer, PSTR("      { \"enumValue\": \"0\", \"desc\": \""));
                     if (type == VT_ONOFF) {
