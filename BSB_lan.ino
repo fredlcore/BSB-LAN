@@ -1297,7 +1297,6 @@ void printBIT(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1335,7 +1334,6 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1373,7 +1371,6 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1411,7 +1408,6 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1449,7 +1445,6 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1526,7 +1521,6 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision,const cha
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1564,7 +1558,6 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision,con
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1602,7 +1595,6 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision,cons
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1640,7 +1632,6 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision,c
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1681,7 +1672,6 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
     decodedTelegram.error = 1;
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   }
 }
 
@@ -1729,7 +1719,6 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
-//      outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
       outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
       decodedTelegram.error = 4;
     }
@@ -1777,7 +1766,6 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
-//      outBufLen+=sprintf(outBuf+outBufLen,"%d - not found",search_val);
       outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
       decodedTelegram.error = 4;
     }
@@ -1814,7 +1802,6 @@ void printDateTime(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1847,7 +1834,6 @@ void printDate(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1893,7 +1879,6 @@ void printTimeProg(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -1932,7 +1917,6 @@ void printTime(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
   decodedTelegram.error = 1;
   }
 }
@@ -1966,7 +1950,6 @@ void printLPBAddr(byte *msg,byte data_len){
     for (int i=0; i < data_len; i++) {
       outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
     }
-//    outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
     decodedTelegram.error = 1;
   }
 }
@@ -2208,7 +2191,6 @@ char *printTelegram(byte* msg, int query_line) {
           outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[bus.getPl_start()]);
             decodedTelegram.error = 64;
           if(msg[bus.getPl_start()]==0x07){
-//            outBufLen+=sprintf(outBuf+outBufLen," (parameter not supported)");
             decodedTelegram.error = 32;
           }
           DebugOutput.print(p);
@@ -2368,7 +2350,6 @@ char *printTelegram(byte* msg, int query_line) {
                 for (int i=0; i < data_len; i++) {
                   outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
                   }
-//                outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2391,7 +2372,6 @@ char *printTelegram(byte* msg, int query_line) {
                     DebugOutput.print(F("no enum str "));
                     SerialPrintData(msg);
                     decodedTelegram.error = 8;
-//                    outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
                   }
                 }else{
                   DebugOutput.print(F("---"));
@@ -2403,7 +2383,6 @@ char *printTelegram(byte* msg, int query_line) {
                 for (int i=0; i < data_len; i++) {
                   outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
                   }
-//                outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2417,7 +2396,6 @@ char *printTelegram(byte* msg, int query_line) {
               }else{
                 DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
-//                outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
                 decodedTelegram.error = 8;
               }
               break;
@@ -2440,7 +2418,6 @@ char *printTelegram(byte* msg, int query_line) {
               }else{
                 DebugOutput.print(F("no enum str "));
                 SerialPrintData(msg);
-//                outBufLen+=sprintf(outBuf+outBufLen,"no enum str");
                 decodedTelegram.error = 8;
               }
               break;
@@ -2462,7 +2439,6 @@ char *printTelegram(byte* msg, int query_line) {
                 for (int i=0; i < data_len; i++) {
                   outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
                   }
-//                outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2518,7 +2494,6 @@ char *printTelegram(byte* msg, int query_line) {
                 for (int i=0; i < data_len; i++) {
                   outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
                   }
-//                outBufLen+=sprintf(outBuf+outBufLen," - decoding error");
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2528,7 +2503,6 @@ char *printTelegram(byte* msg, int query_line) {
               for (int i=0; i < data_len; i++) {
                 outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
               }
-//              outBufLen+=sprintf(outBuf+outBufLen," - unknown type");
               decodedTelegram.error = 16;
               break;
           }
@@ -2539,7 +2513,6 @@ char *printTelegram(byte* msg, int query_line) {
         }
 //        DebugOutput.println();
 //        SerialPrintRAW(msg,msg[len_idx]+bus_type);
-//        outBufLen+=sprintf(outBuf+outBufLen,"unknown command");
         decodedTelegram.error = 2;
       }
     }
@@ -3717,7 +3690,6 @@ char* query(int line_start  // begin at this line (ProgNr)
             if (bus.getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
               outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]);
             } else {
-//              outBufLen+=sprintf(outBuf+outBufLen,"%d query failed",line);
               outBufLen+=sprintf(outBuf+outBufLen,"%d",line);
             }
           decodedTelegram.error = 128;
