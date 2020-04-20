@@ -7424,7 +7424,7 @@ custom_timer = millis();
         //      Serial.println("New telnet client.");
         telnetClient.println();
         telnetClient.print(F("Version: "));
-        telnetClient.println(F(BSB_VERSION));
+        telnetClient.println(BSB_VERSION);
         haveTelnetClient = true;
       }
     }
