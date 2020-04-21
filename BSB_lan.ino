@@ -548,7 +548,7 @@ boolean time_set = false;
 uint8_t current_switchday = 0;
 
 #include "bsb-version.h"
-#define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
+const char BSB_VERSION[] PROGMEM = { MAJOR "." MINOR "." PATCH "-" COMPILETIME };
 
 #include "BSB_lan_custom_global.h"
 
@@ -2667,7 +2667,7 @@ void webPrintSite() {
 
   client.println(F("<p>"));
   client.print(F("BSB-LAN Web, Version "));
-  client.print(F(BSB_VERSION));
+  client.print(BSB_VERSION);
   client.println(F("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK));
   client.println(F("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG));
   client.println(F("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL));
@@ -5613,7 +5613,7 @@ uint8_t pps_offset = 0;
           if(!(httpflags & 128)) webPrintHeader();
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(F(BSB_VERSION));
+          client.print(BSB_VERSION);
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_QSC "...<BR>"));
           if (bus.getBusType() == BUS_BSB) {
@@ -6241,7 +6241,7 @@ uint8_t pps_offset = 0;
 //          client.println(F("<BR><BR>"));
 
           client.print(F(MENU_TEXT_VER ": "));
-          client.print(F(BSB_VERSION));
+          client.print(BSB_VERSION);
           client.println(F("<BR>"));
           client.print(F(MENU_TEXT_RAM ": "));
           client.print(freeRam());
@@ -7424,7 +7424,7 @@ custom_timer = millis();
         //      Serial.println("New telnet client.");
         telnetClient.println();
         telnetClient.print(F("Version: "));
-        telnetClient.println(F(BSB_VERSION));
+        telnetClient.println(BSB_VERSION);
         haveTelnetClient = true;
       }
     }
