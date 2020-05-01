@@ -3491,7 +3491,7 @@ int set(int line      // the ProgNr of the heater parameter
       int d,m;
       if(2!=sscanf(val,"%d.%d",&d,&m))
         return 0;
-      param[0]=0;
+      param[0]=0x01;
       param[1]=0xff;
       param[2]=m;
       param[3]=d;
@@ -3499,7 +3499,7 @@ int set(int line      // the ProgNr of the heater parameter
       param[5]=0xff;
       param[6]=0xff;
       param[7]=0xff;
-      param[8]=0x17; //?
+      param[8]=0x16; //?
       param_len=9;
       }
       break;
