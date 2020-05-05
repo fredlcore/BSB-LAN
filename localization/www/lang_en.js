@@ -403,7 +403,7 @@ UIStrings["STR9563_TEXT"] = "Fan speed for full charging of stratific. tank";
 UIStrings["ENUM8004_02_TEXT"] = "Fault";
 UIStrings["ENUM8004_04_TEXT"] = "Manual control active";
 UIStrings["ENUM8004_11_TEXT"] = "Overrun active";
-//#define ENUM8004_11d_TEXT "Cooling mode Reduced"
+UIStrings["ENUM8004_11d_TEXT"] = "Cooling mode Reduced";
 UIStrings["ENUM8004_17_TEXT"] = "Frost prot plant active";
 UIStrings["ENUM8004_18_TEXT"] = "Frost protection active";
 UIStrings["ENUM8004_18_TEXT"] = "Frost protection active";

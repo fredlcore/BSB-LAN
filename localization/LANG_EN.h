@@ -403,7 +403,7 @@
 #define ENUM8004_02_TEXT "Fault"
 #define ENUM8004_04_TEXT "Manual control active"
 #define ENUM8004_11_TEXT "Overrun active"
-//#define ENUM8004_11d_TEXT "Cooling mode Reduced"
+#define ENUM8004_11d_TEXT "Cooling mode Reduced"
 #define ENUM8004_17_TEXT "Frost prot plant active"
 #define ENUM8004_18_TEXT "Frost protection active"
 #define ENUM8004_18_TEXT "Frost protection active"
