@@ -4941,7 +4941,6 @@ const char ENUM8004[] PROGMEM_LATEST = {
 "\x02 " ENUM8004_02_TEXT "\0"
 "\x04 " ENUM8004_04_TEXT "\0"
 "\x11 " ENUM8004_11_TEXT "\0"
-"\x11d " ENUM8004_11d_TEXT "\0"
 "\x17 " ENUM8004_17_TEXT "\0"
 "\x18 " ENUM8004_18_TEXT "\0"
 "\x18 " ENUM8004_18_TEXT "\0"
@@ -4964,7 +4963,8 @@ const char ENUM8004[] PROGMEM_LATEST = {
 "\xb3 " ENUM8004_b3_TEXT "\0"
 "\xcc " ENUM8004_cc_TEXT "\0"
 "\xcd " ENUM8004_cd_TEXT "\0"
-"\xce " ENUM8004_ce_TEXT
+"\xce " ENUM8004_ce_TEXT "\0"
+"\x11d " ENUM8004_11d_TEXT
 };
 
 //Status Kessel
