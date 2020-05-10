@@ -272,6 +272,7 @@ const char header_html[] PROGMEM_LATE =
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">\n"
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
+  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">\n"
   "<title>BSB-LAN Web</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
