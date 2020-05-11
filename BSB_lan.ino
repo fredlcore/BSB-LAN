@@ -55,12 +55,14 @@
  *       0.42  - 21.03.2019
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
+ *       1.0   -
  *
  * Changelog:
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
  *        - mobile friendlier web interface
+ *        - more parameters and device families
  *        - last version completely tested on Mega 2560. Future versions may still run on the Mega, but will only be tested on the Arduino Due.
  *       version 0.43
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
