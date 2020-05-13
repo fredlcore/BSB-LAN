@@ -7416,23 +7416,16 @@ custom_timer = millis();
 #endif
 
 #ifdef DebugTelnet
-  if (telnetServer.available()) {
-    //find free/disconnected spot
-    if (haveTelnetClient == true) {
-      //no free/disconnected spot so reject
-//      EthernetClient newTelnetClient = telnetServer.available();
-//      newTelnetClient.stop();
-    } else {
-      if (!telnetClient || !telnetClient.connected()) {
-//        if (telnetClient) telnetClient.stop();
-        telnetClient = telnetServer.available();
-        //      Serial.println("New telnet client.");
-        telnetClient.println();
-        telnetClient.print(F("Version: "));
-        telnetClient.println(F(BSB_VERSION));
-        haveTelnetClient = true;
-      }
-    }
+  telnetClient = telnetServer.available();
+  
+  if (telnetClient && haveTelnetClient == false) {
+    telnetClient.flush();
+    telnetClient.println(F("Version: " BSB_VERSION));
+    haveTelnetClient = true;
+  }
+  if (!telnetClient.connected()) {
+    haveTelnetClient = false;
+    telnetClient.stop();
   }
 #endif
 
@@ -7488,6 +7481,9 @@ void setup() {
   //   115,800 bps, 8 data bits, no parity
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
   Serial.println(F("READY"));
+ #ifdef DebugTelnet
+  Serial.println(F("Logging output to Telnet"));
+ #endif
   DebugOutput.print(F("Size of cmdtbl1: "));
   DebugOutput.println(sizeof(cmdtbl1));
   DebugOutput.print(F("Size of cmdtbl2: "));
