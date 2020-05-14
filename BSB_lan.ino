@@ -431,6 +431,9 @@ byte outBufLen=0;
 
 char div_unit[32];
 
+#define averagesFileName "averages.txt"
+#define datalogFileName "datalog.txt"
+
 #ifdef WIFI
 WiFiEspClient client;
 WiFiEspClient httpclient;
@@ -1271,6 +1274,47 @@ void printLineNumber(uint32_t val) {
 }
 
 /** *****************************************************************
+ *  Function: prepareToPrintHumanReadableTelegram
+ *  Does: copy telegram in human-readable format into buffer
+ *  Pass parameters: msg, data_len, shift
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used: outBuf, outBufLen
+ *
+ * *************************************************************** */
+void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift){
+  SerialPrintData(msg);
+  for (int i=0; i < data_len; i++) {
+    outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[shift+i]);
+  }
+}
+
+/** *****************************************************************
+ *  Function: undefinedValueToBuffer
+ *  Does: copy undefined (---) value into outBuf
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used: outBuf, outBufLen
+ *
+ * *************************************************************** */
+void undefinedValueToBuffer(){
+  strcpy(outBuf+outBufLen,"---");
+  outBufLen+=3;
+}
+
+void addPostfixToBuffer(const char *postfix){
+  if(postfix[0] > 0){ //if first byte non-zero then strlen > 0
+    outBufLen+=sprintf(outBuf+outBufLen," %s", postfix);
+  }
+}
+/** *****************************************************************
  *  Function:
  *  Does:
  *  Pass parameters:
@@ -1293,15 +1337,12 @@ void printBIT(byte *msg,byte data_len){
         outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+data_len-2] >> i & 1);
       }
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("BYTE len error len!=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1327,18 +1368,13 @@ void printBYTE(byte *msg,byte data_len,const char *postfix){
 //      outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1+pps_offset]);
       outBufLen+=sprintf(outBuf+outBufLen,"%d",msg[bus.getPl_start()+1]);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("BYTE len error len!=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1364,18 +1400,13 @@ void printWORD(byte *msg,byte data_len, long divisor, const char *postfix){
       lval=((long(msg[bus.getPl_start()+1])<<8)+long(msg[bus.getPl_start()+2])) / divisor;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("WORD len error len!=3: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1401,18 +1432,13 @@ void printSINT(byte *msg,byte data_len, long multiplier, const char *postfix){
       lval=(((int16_t)(msg[bus.getPl_start()+1])<<8) + (int16_t)(msg[bus.getPl_start()+2])) * multiplier;
       outBufLen+=sprintf(outBuf+outBufLen,"%d",lval);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("WORD len error len!=3: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1438,18 +1464,13 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
       lval=((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4]))/divider;
       outBufLen+=sprintf(outBuf+outBufLen,"%ld",lval);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("DWORD len error len!=5: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1514,18 +1535,13 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision,const cha
       }
       _printFIXPOINT(dval,precision);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("FIXPOINT len !=3: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1551,18 +1567,13 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision,con
       dval=float((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4])) / divider;
       _printFIXPOINT(dval,precision);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("FIXPOINT_DWORD len !=5: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1588,18 +1599,13 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision,cons
       dval=float((signed char)msg[bus.getPl_start()+1+(data_len==3)]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1625,18 +1631,13 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision,c
       dval=float(msg[bus.getPl_start()+1]) / divider;
       _printFIXPOINT(dval,precision);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
-    if(strlen(postfix) > 0){
-      outBufLen+=sprintf(outBuf+outBufLen," %s",postfix);
-    }
+    addPostfixToBuffer(postfix);
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F("FIXPOINT_BYTE len !=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1667,15 +1668,12 @@ void printCHOICE(byte *msg,byte data_len,const char *val0,const char *val1){
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",msg[bus.getPl_start()+1],val1);
       }
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
     DebugOutput.print(p);
   } else {
     DebugOutput.print(F("CHOICE len !=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1798,15 +1796,12 @@ void printDateTime(byte *msg,byte data_len){
     if(msg[bus.getPl_start()]==0){
       outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2],msg[bus.getPl_start()+1]+1900,msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_DATETIME len !=9: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1830,15 +1825,12 @@ void printDate(byte *msg,byte data_len){
     if(msg[bus.getPl_start()]==0){
       outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2]);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"---");
+      undefinedValueToBuffer();
     }
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_DATE len !=9: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1859,31 +1851,23 @@ void printTimeProg(byte *msg,byte data_len){
   char *p=outBuf+outBufLen;
 
   if(data_len == 12){
-    outBufLen+=sprintf(outBuf+outBufLen,"1. ");
-    if(msg[bus.getPl_start()]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()],msg[bus.getPl_start()+1],msg[bus.getPl_start()+2],msg[bus.getPl_start()+3]);
-    }else{
-      outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
-    }
-    outBufLen+=sprintf(outBuf+outBufLen," 2. ");
-    if(msg[bus.getPl_start()+4]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+4],msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
-    }else{
-      outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
-    }
-    outBufLen+=sprintf(outBuf+outBufLen," 3. ");
-    if(msg[bus.getPl_start()+8]<24){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[bus.getPl_start()+8],msg[bus.getPl_start()+9],msg[bus.getPl_start()+10],msg[bus.getPl_start()+11]);
-    }else{
-      outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
+    for(byte i = 0; i < 3; i++){
+      outBufLen+=sprintf(outBuf+outBufLen,"%d. ", i + 1);
+      byte k = bus.getPl_start() + i * 4;
+      if(msg[k]<24){
+        outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+      }else{
+        outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
+      }
+      if(i<2){
+        outBuf[outBufLen] = ' ';
+        outBufLen++;
+      }
     }
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_TIMEPROG len !=12: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -1918,11 +1902,8 @@ void printTime(byte *msg,byte data_len){
     }
   }else{
     DebugOutput.print(F("VT_HOUR_MINUTES len !=3: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
-  decodedTelegram.error = 1;
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
+    decodedTelegram.error = 1;
   }
 }
 
@@ -1946,15 +1927,12 @@ void printLPBAddr(byte *msg,byte data_len){
     if(msg[bus.getPl_start()]==0){   // payload Int8 value
     outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+1]>>4,(msg[bus.getPl_start()+1] & 0x0f)+1);
   }else{
-    outBufLen+=sprintf(outBuf+outBufLen,"---");
+    undefinedValueToBuffer();
   }
   DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_LPBADDR len !=2: "));
-    SerialPrintData(msg);
-    for (int i=0; i < data_len; i++) {
-      outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-    }
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
     decodedTelegram.error = 1;
   }
 }
@@ -2136,7 +2114,8 @@ char *printTelegram(byte* msg, int query_line) {
     uint16_t line=get_cmdtbl_line(i);
     printLineNumber(line);             // the ProgNr
     DebugOutput.print(F(" "));
-    outBufLen+=sprintf(outBuf+outBufLen," ");
+//    outBufLen+=sprintf(outBuf+outBufLen," ");
+    outBuf[outBufLen] = ' '; outBufLen++;
 
     // print category
     int cat=get_cmdtbl_category(i);
@@ -2151,7 +2130,6 @@ char *printTelegram(byte* msg, int query_line) {
 #endif
     DebugOutput.print(F(" - "));
     outBufLen+=sprintf(outBuf+outBufLen," - ");
-
     // print menue text
     strcpy_PF(buffer, get_cmdtbl_desc(i));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
@@ -2347,14 +2325,11 @@ char *printTelegram(byte* msg, int query_line) {
 #endif
                 }else{
                   DebugOutput.print(F("---"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"---");
+                  undefinedValueToBuffer();
                 }
               }else{
                 DebugOutput.print(F(" VT_WEEKDAY !=2: "));
-                SerialPrintData(msg);
-                for (int i=0; i < data_len; i++) {
-                  outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-                  }
+                prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2380,14 +2355,11 @@ char *printTelegram(byte* msg, int query_line) {
                   }
                 }else{
                   DebugOutput.print(F("---"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"---");
+                  undefinedValueToBuffer();
                 }
               } else {
                 DebugOutput.print(F(" VT_ENUM len !=2 && len != 3: "));
-                SerialPrintData(msg);
-                for (int i=0; i < data_len; i++) {
-                  outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-                  }
+                prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2440,10 +2412,7 @@ char *printTelegram(byte* msg, int query_line) {
                 }
               }else{
                 DebugOutput.print(F(" VT_STRING len ==0: "));
-                SerialPrintData(msg);
-                for (int i=0; i < data_len; i++) {
-                  outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-                  }
+                prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
                 decodedTelegram.error = 1;
                 }
               break;
@@ -2491,23 +2460,17 @@ char *printTelegram(byte* msg, int query_line) {
 //                  printENUM(buffer,len,lval,1);
                 } else {
                   DebugOutput.print(F("---"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"---");
+                  undefinedValueToBuffer();
                 }
               }else{
                 DebugOutput.print(F(" VT_ERRORCODE len ==0: "));
-                SerialPrintData(msg);
-                for (int i=0; i < data_len; i++) {
-                  outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-                  }
+                prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
                 decodedTelegram.error = 1;
                 }
               break;
             case VT_UNKNOWN:
             default:
-              SerialPrintData(msg);
-              for (int i=0; i < data_len; i++) {
-                outBufLen+=sprintf(outBuf+outBufLen,"%02X",msg[bus.getPl_start()+i]);
-              }
+              prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
               decodedTelegram.error = 16;
               break;
           }
@@ -2648,11 +2611,7 @@ void webPrintHeader(void){
  *   client object
  * *************************************************************** */
 void webPrintFooter(void){
-  client.println(F("</td></tr></table>"));
-  client.println(F("</body>"));
-  client.println(F("</html>"));
-  client.println();
-
+  client.println(F("</td></tr></table>\n</body>\n</html>\n"));
 } // --- webPrintFooter() ---
 
 /** *****************************************************************
@@ -2818,7 +2777,7 @@ void LogTelegram(byte* msg){
 
     if ((log_unknown_only == 0 || (log_unknown_only == 1 && known == 0)) && cmd > 0) {
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
-        dataFile = SD.open("datalog.txt", FILE_WRITE);
+        dataFile = SD.open(datalogFileName, FILE_WRITE);
         if (dataFile) {
           dataFile.print(millis());
           dataFile.print(F(";"));
@@ -4093,7 +4052,7 @@ void ds18b20(void) {
   //webPrintHeader();
   sensors.requestTemperatures(); // Send the command to get temperatures
   DeviceAddress device_address;
-  char device_ascii[17];
+//  char device_ascii[17];
   for(i=0;i<numSensors;i++){
     outBufclear();
     float t=sensors.getTempCByIndex(i);
@@ -4104,8 +4063,9 @@ void ds18b20(void) {
     Serial.println();
 
     sensors.getAddress(device_address, i);
-    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
+//    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+//    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
+    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: ",i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
     _printFIXPOINT(t,2);
     outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
     client.println(outBuf);
@@ -4837,7 +4797,7 @@ void loop() {
                 DebugOutput.println();
 #ifdef LOGGER
 /*
-                File dataFile = SD.open("datalog.txt", FILE_WRITE);
+                File dataFile = SD.open(datalogFileName, FILE_WRITE);
                 if (dataFile) {
                   dataFile.print(millis());
                   dataFile.print(F(";"));
@@ -6196,13 +6156,13 @@ uint8_t pps_offset = 0;
         if(p[1]=='D'){ // access datalog file
           if (p[2]=='0') {  // remove datalog file
             webPrintHeader();
-            SD.remove("datalog.txt");
-            File dataFile = SD.open("datalog.txt", FILE_WRITE);
+            SD.remove(datalogFileName);
+            File dataFile = SD.open(datalogFileName, FILE_WRITE);
             if (dataFile) {
               dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
               dataFile.close();
               client.println(F(MENU_TEXT_DTR));
-              DebugOutput.println(F("File datalog.txt removed and recreated."));
+              DebugOutput.print(F("File " datalogFileName " removed and recreated."));
             } else {
               client.println(F(MENU_TEXT_DTF));
             }
@@ -6221,7 +6181,7 @@ uint8_t pps_offset = 0;
             client.println(F("Content-Type: text/plain; charset=utf-8"));
             client.println();
 
-            File dataFile = SD.open("datalog.txt");
+            File dataFile = SD.open(datalogFileName);
             // if the file is available, read from it:
             if (dataFile) {
 
@@ -6539,7 +6499,7 @@ uint8_t pps_offset = 0;
           webPrintFooter();
           client.stop();
 #ifdef LOGGER
-          File dataFile = SD.open("datalog.txt", FILE_WRITE);
+          File dataFile = SD.open(datalogFileName, FILE_WRITE);
           if (dataFile) {
             dataFile.close();
           }
@@ -6636,7 +6596,7 @@ uint8_t pps_offset = 0;
                 }
                 avgCounter = 1;
 #ifdef LOGGER
-                SD.remove("averages.txt");
+                SD.remove(averagesFileName);
 #endif
                 client.println(F(MENU_TEXT_24N ": "));
               }
@@ -7033,7 +6993,7 @@ uint8_t pps_offset = 0;
 //    SetDateTime(); // receive inital date/time from heating system
 
     log_now = 0;
-    File dataFile = SD.open("datalog.txt", FILE_WRITE);
+    File dataFile = SD.open(datalogFileName, FILE_WRITE);
 
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
@@ -7217,7 +7177,7 @@ uint8_t pps_offset = 0;
    } else {
     // if the file isn't open, pop up an error:
       client.println(F(MENU_TEXT_DTO));
-      DebugOutput.println(F("Error opening datalog.txt!"));
+      DebugOutput.print(F("Error opening " datalogFileName "!"));
     }
     lastLogTime = millis();
   }
@@ -7253,10 +7213,10 @@ uint8_t pps_offset = 0;
 
 // write averages to SD card to protect from power off
 
-    if (SD.exists("averages.txt")) {
-      SD.remove("averages.txt");
+    if (SD.exists(averagesFileName)) {
+      SD.remove(averagesFileName);
     }
-    File avgfile = SD.open("averages.txt", FILE_WRITE);
+    File avgfile = SD.open(averagesFileName, FILE_WRITE);
     if (avgfile) {
       for (int i=0; i<numAverages; i++) {
         avgfile.println(avgValues[i]);
@@ -7702,8 +7662,8 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 
 // restore average
 
-  if (SD.exists("averages.txt")) {
-    File avgfile = SD.open("averages.txt", FILE_READ);
+  if (SD.exists(averagesFileName)) {
+    File avgfile = SD.open(averagesFileName, FILE_READ);
     if (avgfile) {
       char c;
       char num[10];
