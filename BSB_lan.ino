@@ -498,7 +498,7 @@ uint8_t json_types[20] = { 0 };
 
 #ifdef DHT_BUS
   #include "src/DHT/dht.h"
-  int DHT_Pins[] = {DHT_BUS};
+  uint8_t DHT_Pins[] = {DHT_BUS};
   dht DHT;
 #endif
 
@@ -2536,6 +2536,46 @@ char *printTelegram(byte* msg, int query_line) {
   return pvalstr;
 }
 
+/** *****************************************************************
+ *  Function: bufferedprint and bufferedprintln
+ *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
+ *  Pass parameters:
+ *  WiFiEspClient/EthernetClient &cl
+ *  PGM_P outstr
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   buffer variable
+ * *************************************************************** */
+
+#ifdef WIFI
+void bufferedprint(WiFiEspClient& cl, PGM_P outstr) {
+#else
+void bufferedprint(EthernetClient& cl, PGM_P outstr) {
+#endif
+  strncpy_P(buffer, outstr, BUFLEN);
+  buffer[BUFLEN - 1] = 0;
+  cl.print(buffer);
+}
+
+#ifdef WIFI
+void bufferedprintln(WiFiEspClient& cl, PGM_P outstr) {
+#else
+void bufferedprintln(EthernetClient& cl, PGM_P outstr) {
+#endif
+  strncpy_P(buffer, outstr, BUFLEN - 2);
+  strcat_P(buffer, PSTR("\n"));
+  buffer[BUFLEN - 1] = 0;
+  cl.print(buffer);
+}
+
+/** *****************************************************************
+ *  Function: printPStr
+ *  
+ *  TODO: add description
+ */
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   int htmlbuflen = 100;
   byte htmllineBuf[htmlbuflen];
@@ -4022,7 +4062,7 @@ void SetDateTime(){
  * *************************************************************** */
 void dht22(void) {
   int i;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
+  static const uint8_t numDHTSensors = sizeof(DHT_Pins) / sizeof(uint8_t);
   DebugOutput.print(F("DHT22 sensors: "));
   DebugOutput.println(numDHTSensors);
     outBufclear();
@@ -4114,6 +4154,10 @@ void ds18b20(void) {
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
 
+/** *****************************************************************
+ *  Function:  lookup_descr()
+ *  Does:      searches...
+ */
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
   if (i<0) {                    // Not found (for this heating system)?
@@ -4145,45 +4189,31 @@ char *lookup_descr(uint16_t line) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html; charset=utf-8"));
-  client.println();
+  bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
 
-  int i;
   int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
+  static const int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
-  float ipwe_sensors[numIPWESensors];
-  for (i=0; i < numIPWESensors; i++) {
-    ipwe_sensors[i] = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
-  }
-
-  client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (i=0; i < numIPWESensors; i++) {
+  char *formatbuf = (char *)malloc(127);
+  
+  bufferedprint(client, PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  
+  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  for (int i=0; i < numIPWESensors; i++) {
     counter++;
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(counter);
-    client.print(F("<br></td><td>"));
-    client.print(lookup_descr(ipwe_parameters[i]));
-    client.print(F("<br></td><td>"));
-    client.print(ipwe_sensors[i]);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    sprintf(outBuf, formatbuf, counter, lookup_descr(ipwe_parameters[i]), query(ipwe_parameters[i],ipwe_parameters[i],1));
+    client.println(outBuf);
   }
 
+  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>Avg%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
-      client.print(F("<tr><td>T<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("Avg"));
-      client.print(lookup_descr(avg_parameters[i]));
-      client.print(F("<br></td><td>"));
       float rounded = round(avgValues[i]*10);
-      client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      sprintf(outBuf, formatbuf, counter, lookup_descr(ipwe_parameters[i]), rounded/10);
+      client.println(outBuf);
     }
   }
 
@@ -4191,57 +4221,56 @@ void Ipwe() {
   // output of one wire sensors
   sensors.requestTemperatures();
   DeviceAddress device_address;
-  char device_ascii[17];
-  for(i=0;i<numSensors;i++){
+  
+  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>%02x%02x%02x%02x%02x%02x%02x%02x<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  for(uint8_t i=0;i<numSensors;i++) {
     counter++;
     float t=sensors.getTempCByIndex(i);
     sensors.getAddress(device_address, i);
-    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(counter);
-    client.print(F("<br></td><td>"));
-    client.print(device_ascii);
-    client.print(F("<br></td><td>"));
-    client.print(t);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    
+    sprintf(outBuf, formatbuf, counter, device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], t);
+    client.println(outBuf);
   }
 #endif
 
 #ifdef DHT_BUS
   // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
-  for(i=0;i<numDHTSensors;i++){
+  static const uint8_t numDHTSensors = sizeof(DHT_Pins) / sizeof(uint8_t);
+  for(int i=0;i<numDHTSensors;i++){
     DHT.read22(DHT_Pins[i]);
 
     float hum = DHT.humidity;
     float temp = DHT.temperature;
+    strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>DHT sensor %u<br></td><td>%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td></tr>"));
     if (hum > 0 && hum < 101) {
       counter++;
-      client.print(F("<tr><td>T<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("DHT sensor "));
-      client.print(i+1);
-      client.print(F(" temperature"));
-      client.print(F("<br></td><td>"));
-      client.print(temp);
-      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-      counter++;
-      client.print(F("<tr><td>F<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("DHT sensor "));
-      client.print(i+1);
-      client.print(F(" humidity"));
-      client.print(F("<br></td><td>0<br></td><td>"));
-      client.print(hum);
-      client.print(F("<br></td><td>0<br></td><td>0<br></td></tr>"));
+//      client.print(F("<tr><td>T<br></td><td>"));
+//      client.print(counter);
+//      client.print(F("<br></td><td>"));
+//      client.print(F("DHT sensor "));
+//      client.print(i+1);
+//      client.print(F(" temperature"));
+//      client.print(F("<br></td><td>"));
+//      client.print(temp);
+//      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+//      counter++;
+//      client.print(F("<tr><td>F<br></td><td>"));
+//      client.print(counter);
+//      client.print(F("<br></td><td>"));
+//      client.print(F("DHT sensor "));
+//      client.print(i+1);
+//      client.print(F(" humidity"));
+//      client.print(F("<br></td><td>0<br></td><td>"));
+//      client.print(hum);
+//      client.print(F("<br></td><td>0<br></td><td>0<br></td></tr>"));
+      sprintf(outBuf, formatbuf, counter, i+1, temp, hum);
+      client.println(outBuf);
     }
   }
 #endif
 
-  client.print(F("</tbody></table></form>"));
+  free(formatbuf);
+  bufferedprint(client, PSTR("</tbody></table></form>"));
 }
 
 #endif    // --- Ipwe() ---
@@ -4343,40 +4372,6 @@ void transmitFile(File dataFile) {
 }
 
 #endif
-
-/** *****************************************************************
- *  Function: bufferedprint and bufferedprintln
- *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *  Pass parameters:
- *  WiFiEspClient/EthernetClient &cl
- *  PGM_P outstr
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   buffer variable
- * *************************************************************** */
-
-#ifdef WIFI
-void bufferedprint(WiFiEspClient& cl, PGM_P outstr){
-#else
-void bufferedprint(EthernetClient& cl, PGM_P outstr){
-#endif
-  strncpy_P(buffer, outstr, BUFLEN);
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
-#ifdef WIFI
-void bufferedprintln(WiFiEspClient& cl, PGM_P outstr){
-#else
-void bufferedprintln(EthernetClient& cl, PGM_P outstr){
-#endif
-  strncpy_P(buffer, outstr, BUFLEN - 2);
-  strcat_P(buffer, PSTR("\n"));
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
 
 /** *****************************************************************
  *  Function: resetBoard
@@ -4830,9 +4825,8 @@ void loop() {
               default:
                  DebugOutput.print(F("Unknown request: "));
                 for (int c=0;c<9;c++) {
-                  if (msg[c]<16) DebugOutput.print("0");
-                  DebugOutput.print(msg[c], HEX);
-                  DebugOutput.print(" ");
+                  SerialPrintHex(msg[c]);
+                  DebugOutput.print(F(" "));
                 }
                 DebugOutput.println();
 #ifdef LOGGER
@@ -4976,9 +4970,8 @@ uint8_t pps_offset = 0;
                 default:
                   DebugOutput.print(F("Unknown telegram: "));
                   for (int c=0;c<9+pps_offset;c++) {
-                    if (msg[c]<16) DebugOutput.print("0");
-                    DebugOutput.print(msg[c], HEX);
-                    DebugOutput.print(" ");
+                    SerialPrintHex(msg[c]);
+                    DebugOutput.print(F(" "));
                   }
                   DebugOutput.println();
                   break;
@@ -5775,13 +5768,13 @@ uint8_t pps_offset = 0;
                           client.println(F("<br>"));
                         }
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                          if (tx_msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
                           client.print(tx_msg[i], HEX);
                           client.print(F(" "));
                         }
                         client.println(F("<br>"));
                         for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+                          if (msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
                           client.print(msg[i], HEX);
                           client.print(F(" "));
                         }
@@ -5824,14 +5817,14 @@ uint8_t pps_offset = 0;
             client.println(F("<br>"));
           }
           for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            if (tx_msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
             client.print(tx_msg[i], HEX);
             client.print(F(" "));
           }
           client.println();
           client.println(F("<br>"));
           for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+            if (msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
             client.print(msg[i], HEX);
             client.print(F(" "));
           }
