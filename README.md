@@ -2,7 +2,7 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#22-pps) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling (locally via LAN or if so desiread also via the internet) heating systems such as Elco Thision, Brötje and similar systems, including logging to Micro-SD-card. This project can serve in many ways as a cost-effective alternative to the OZW 672 or OCI 700.
+LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#22-pps) designed for Arduino Due with Ethernet-Shield for web-based controlling (locally via LAN or if so desiread also via the internet) heating systems such as Elco Thision, Brötje and similar systems, including logging to Micro-SD-card. This project can serve in many ways as a cost-effective alternative to the OZW 672 or OCI 700.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
@@ -59,7 +59,7 @@ Please note: General parameters should work on all devices, more specific parame
 Some companies which previously used BSB/LPB in their heating systems have now switched to other systems for their lower-cost devices. Examples are Brötje's WLC/WLS/BOK series. These are not compatible with BSB/LPB and only allow very limited parameters to be configured by the user. If you have one of these heating systems, you are so far out of luck to configure and monitor your heating system as it can be done with the more expensive (but BSB/LPB compatible) devices mentioned above among others.
 <BR><BR>
 
-Instructions on how to configure etc. can be found in the <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md">HowTo</A>.<BR>
+Instructions on how to configure etc. can be found in the <A HREF="https://1coderookie.github.io/BSB-LPB-LAN_EN">manual</A>.<BR>
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
 
@@ -72,8 +72,5 @@ Web-Interface screenshots:
 BSB-Board plain, with location of CL+ and CL- connectors:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
 
-BSB-Board and Ethernet Shield plugged into the Arduino Mega 2560:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Mega%202560.jpg" size="50%">
-
-BSB-Board on Raspberry Pi 2:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Raspberry%20Pi%202.jpg" size="50%">
+BSB-Board and Ethernet Shield plugged into the Arduino Due:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">

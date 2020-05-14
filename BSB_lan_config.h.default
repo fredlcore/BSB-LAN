@@ -27,10 +27,6 @@
 */
 #define LANG DE
 
-//#define WIFI  // activate if you are using an ESP8266 AT-firmware based WiFi module
-char ssid[] = "Your_WiFi_name_goes_here";            // your network SSID (name)
-char pass[] = "Your_WiFi_password_goes_here";        // your network password
-
 /* SECURITY OPTIONS
  * There are several options to control and protect access to your heating system. However, keep  
  * in mind, that even activating all three options are no guarantee that a versatile intruder with
@@ -160,8 +156,8 @@ static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus pins and bus type
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)
-// Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
-// W5100 ethernet shield uses the following pins: 10, 50-53
+// Hardware Serial is always pin 19 (RX) and pin 18 (TX).
+// Software Serial needs special pins for RX (68) and TX (69), this is now deprecated.
 // BSB: 
 // - optional third parameter sets own address, defaults to 0x42 (LAN in serial monitor)
 // - use BSB bus(68,69,6) to define device as RGT1
@@ -170,7 +166,7 @@ static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
 // - optional third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
-BSB bus(68,69); // BSB bus(19,18); // pin 19,18 = USART Serial1
+BSB bus(19,18); // BSB bus(68,69); // pin 68,69 = SoftwareSerial
 constexpr uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 //#define QAA_TYPE  0x53  // 0x53 = QAA70, 0x52 = QAA50
 
