@@ -1305,12 +1305,12 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift){
  *
  * *************************************************************** */
 void undefinedValueToBuffer(){
-  strcpy(outBuf+outBufLen,"---");
+  strcpy_P(outBuf+outBufLen,PSTR("---"));
   outBufLen+=3;
 }
 
 void addPostfixToBuffer(const char *postfix){
-  if(postfix[0] > 0){ //if first byte non-zero then strlen > 0
+  if(postfix[0] != 0){ //if first byte non-zero then strlen > 0
     outBufLen+=sprintf(outBuf+outBufLen," %s", postfix);
   }
 }
@@ -1712,13 +1712,11 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
       c++;
     }
     if(c<enumstr_len){
+      strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+      buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
       }else{
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
@@ -1759,13 +1757,11 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
       c++;
     }
     if(c<enumstr_len){
+      strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+      buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
       }else{
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
@@ -1857,13 +1853,15 @@ void printTimeProg(byte *msg,byte data_len){
       if(msg[k]<24){
         outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
+        strcpy_P(outBuf+outBufLen,PSTR("--:-- - --:--"));
+        outBufLen += 13;
       }
       if(i<2){
         outBuf[outBufLen] = ' ';
         outBufLen++;
       }
     }
+    outBuf[outBufLen] = 0;
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_TIMEPROG len !=12: "));
@@ -1891,7 +1889,7 @@ void printTime(byte *msg,byte data_len){
     if(msg[bus.getPl_start()]==0){
       outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"--:--");
+      strcpy_P(outBuf+outBufLen,PSTR("--:--")); outBufLen+=5; // outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
     if (bus.getBusType() == BUS_PPS) {
       char PPS_output[55];
@@ -2114,8 +2112,7 @@ char *printTelegram(byte* msg, int query_line) {
     uint16_t line=get_cmdtbl_line(i);
     printLineNumber(line);             // the ProgNr
     DebugOutput.print(F(" "));
-//    outBufLen+=sprintf(outBuf+outBufLen," ");
-    outBuf[outBufLen] = ' '; outBufLen++;
+    outBuf[outBufLen] = ' '; outBufLen++; // outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
     int cat=get_cmdtbl_category(i);
@@ -2129,7 +2126,7 @@ char *printTelegram(byte* msg, int query_line) {
     printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
 #endif
     DebugOutput.print(F(" - "));
-    outBufLen+=sprintf(outBuf+outBufLen," - ");
+    strcpy_P(outBuf+outBufLen,PSTR(" - ")); outBufLen+=3; //outBufLen+=sprintf(outBuf+outBufLen," - ");
     // print menue text
     strcpy_PF(buffer, get_cmdtbl_desc(i));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
@@ -2408,7 +2405,7 @@ char *printTelegram(byte* msg, int query_line) {
                   remove_char(outBuf, '\'');
                 } else {
                   DebugOutput.print(F("-"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"-");
+                  outBuf[outBufLen] = '-'; outBufLen++; outBuf[outBufLen] = 0; //outBufLen+=sprintf(outBuf+outBufLen,"-");
                 }
               }else{
                 DebugOutput.print(F(" VT_STRING len ==0: "));
@@ -2707,6 +2704,27 @@ char *GetDateTime(char date[]){
 }
 
 /** *****************************************************************
+ *  Function:  printTrailToFile()
+ *  Does:      print to file current date/time and time since start.
+ *             starting at position null. It stops
+ *             when it has sent the requested number of message bytes.
+ *  Pass parameters:
+ *   File dataFile - opened file handler
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *
+ * *************************************************************** */
+void printTrailToFile(File dataFile){
+ char fileBuf[64];
+ // get current time from heating system
+ sprintf(fileBuf, "%s;%s;", millis(), GetDateTime(date));
+ dataFile.print(fileBuf);
+}
+
+/** *****************************************************************
  *  Function:  LogTelegram()
  *  Does:      Logs the telegram content in hex to the SD card,
  *             starting at position null. It stops
@@ -2779,10 +2797,7 @@ void LogTelegram(byte* msg){
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
         dataFile = SD.open(datalogFileName, FILE_WRITE);
         if (dataFile) {
-          dataFile.print(millis());
-          dataFile.print(F(";"));
-          dataFile.print(GetDateTime(date));
-          dataFile.print(F(";"));
+          printTrailToFile(dataFile);
 
           if(!known){                          // no hex code match
           // Entry in command table is "UNKNOWN" (0x00000000)
@@ -4799,10 +4814,8 @@ void loop() {
 /*
                 File dataFile = SD.open(datalogFileName, FILE_WRITE);
                 if (dataFile) {
-                  dataFile.print(millis());
-                  dataFile.print(F(";"));
-                  dataFile.print(GetDateTime(date));
-                  dataFile.print(F(";Unknown PPS telegram;"));
+                  printTrailToFile(dataFile);
+                  dataFile.print(F("Unknown PPS telegram;"));
                   for(int i=0;i<9+(*PPS_write_enabled!=1 && msg[0] == 0x17);i++){
                     if (i > 0) {
                       dataFile.print(F(" "));
@@ -6998,10 +7011,7 @@ uint8_t pps_offset = 0;
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
-          dataFile.print(millis());
-          dataFile.print(F(";"));
-          dataFile.print(GetDateTime(date)); // get current time from heating system
-          dataFile.print(F(";"));
+          printTrailToFile(dataFile);
           dataFile.print(log_parameters[i]);
           dataFile.print(F(";"));
         }
@@ -7064,10 +7074,7 @@ uint8_t pps_offset = 0;
           if (log_parameters[i] == 20006) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
-                dataFile.print(millis());
-                dataFile.print(F(";"));
-                dataFile.print(GetDateTime(date)); // get current time from heating system
-                dataFile.print(F(";"));
+                printTrailToFile(dataFile);
                 dataFile.print(avg_parameters[i]);
                 dataFile.print(F(";"));
                 dataFile.print(F("Avg_"));
@@ -7111,10 +7118,7 @@ uint8_t pps_offset = 0;
                 }
                 max_id[10] = '\0';
 
-                dataFile.print(millis());
-                dataFile.print(F(";"));
-                dataFile.print(GetDateTime(date)); // get current time from heating system
-                dataFile.print(F(";"));
+                printTrailToFile(dataFile);
                 dataFile.print(log_parameters[i]);
                 dataFile.print(F(";"));
                 switch (log_parameters[i]) {
@@ -7147,10 +7151,7 @@ uint8_t pps_offset = 0;
               dataFile.print(F(";"));
               dataFile.println(temp);
 
-              dataFile.print(millis());
-              dataFile.print(F(";"));
-              dataFile.print(GetDateTime(date)); // get current time from heating system
-              dataFile.print(F(";"));
+              printTrailToFile(dataFile);
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
               dataFile.print(F("DHT Humidity "));
