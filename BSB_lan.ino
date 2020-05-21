@@ -5850,6 +5850,87 @@ uint8_t pps_offset = 0;
             break;
             }
 
+          if (p[2] == 'I'){ // dump configuration in JSON
+            strcpy_P(formatbuf, PSTR("  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %d,\n  \"MAC\": \"%02X:%02X:%02X:%02X:%02X:%02X\",\n"));
+            sprintf(jsonbuffer, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            client.print(jsonbuffer);
+// Bus info
+            json_parameter = 0; //reuse json_parameter  for lesser memory usage
+            i = bus.getBusType();
+            if (i != BUS_PPS) {
+              if (DEFAULT_FLAG != FL_RONLY) json_parameter = 1;
+            } else {
+              if (*PPS_write_enabled == 1)  json_parameter = 1;
+            }
+
+            switch (i) {
+              case 0: strcpy_P(json_temp, PSTR("BSB")); break; //reuse json_temp for lesser memory usage
+              case 1: strcpy_P(json_temp, PSTR("LPB")); break;
+              case 2: strcpy_P(json_temp, PSTR("PPS")); break;
+            }
+            strcpy_P(formatbuf, PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"));
+            sprintf(jsonbuffer, formatbuf, json_temp, json_parameter);
+            client.print(jsonbuffer);
+            strcpy_P(formatbuf, PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"));
+            sprintf(jsonbuffer, formatbuf, bus.getBusAddr(), bus.getBusDest());
+            client.print(jsonbuffer);
+//enabled options
+            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d,\n  \"onewirebus\": %d,\n  \"dhtbus\": %d,\n"));
+
+            json_parameter = 0;
+            #ifdef ONE_WIRE_BUS
+            json_parameter += 1;
+            #endif
+            #ifdef DHT_BUS
+            json_parameter +=2;
+            #endif
+            sprintf(jsonbuffer, formatbuf, monitor, verbose, json_parameter&1, json_parameter&2?1:0);
+            client.print(jsonbuffer);
+//protected GPIO
+            json_parameter = 0;
+            strcpy_P(formatbuf, PSTR("  \"protectedGPIO\": [\n"));
+            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf);
+            strcpy_P(formatbuf, PSTR("    { \"pin\": %d },\n"));
+            for (i=0; i<anz_ex_gpio; i++) {
+              json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, exclude_GPIO[i]);
+            }
+            strcpy_P(jsonbuffer+json_parameter-2, PSTR("\n  ],\n"));
+            client.print(jsonbuffer);
+//averages
+            json_parameter = 0;
+            strcpy_P(formatbuf, PSTR("  \"averages\": [\n"));
+            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf);
+            strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
+            for (i=0; i<numAverages; i++) {
+              if (avg_parameters[i] > 0) json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, avg_parameters[i]);
+            }
+            strcpy_P(formatbuf, PSTR("\n  ],\n"));
+            json_parameter+=sprintf(jsonbuffer+json_parameter-2, formatbuf);
+
+// logged parameters
+          #ifdef LOGGER
+            client.print(jsonbuffer);
+            json_parameter = 0;
+            strcpy_P(formatbuf, PSTR("  \"loginterval\": %d,\n  \"logged\": [\n"));
+            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, log_interval);
+            strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
+            for (i=0; i<numLogValues; i++) {
+              if (log_parameters[i] > 0) json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, log_parameters[i]);
+            }
+            strcpy_P(formatbuf, PSTR("\n  ],\n"));
+            json_parameter+=sprintf(jsonbuffer+json_parameter-2, formatbuf);
+          #endif
+
+            strcpy_P(jsonbuffer+json_parameter-2, PSTR("\n}\n"));
+            client.print(jsonbuffer);
+            client.flush();
+
+            free(formatbuf);
+            free(jsonbuffer);
+            break;
+          }
+
+
           if (json_token!=NULL) {
             client.flush();
           }
@@ -6218,26 +6299,21 @@ uint8_t pps_offset = 0;
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
-          client.print(F(MENU_TEXT_VER ": "));
-          client.print(F(BSB_VERSION));
-          client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_RAM ": "));
+          client.print(F("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
           client.print(freeRam());
-          client.println(F(" Bytes <BR>"));
-
-          client.print(F(MENU_TEXT_UPT ": "));
+          client.print(F(" Bytes <BR>\n" MENU_TEXT_UPT ": "));
           client.print(millis());
-          client.println(F("<BR>"));
-
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
-          client.print(F(MENU_TEXT_BUS ": "));
-          switch (bus.getBusType()) {
+          client.println(F("<BR>\n" MENU_TEXT_BUS ": "));
+          int bustype = bus.getBusType();
+
+          switch (bustype) {
             case 0: client.print(F("BSB")); break;
             case 1: client.print(F("LPB")); break;
             case 2: client.print(F("PPS")); break;
           }
-          if (bus.getBusType() != BUS_PPS) {
+          if (bustype != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
             client.print(F(", "));
@@ -6255,23 +6331,18 @@ uint8_t pps_offset = 0;
               client.print(F(" (" MENU_TEXT_BRO ")"));
             }
           }
-          client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_MMD ": "));
-          client.println(monitor);
-          client.print(F("<BR>" MENU_TEXT_VBL ": "));
+          client.print(F("<BR>\n" MENU_TEXT_MMD ": "));
+          client.print(monitor);
+          client.print(F("<BR>\n" MENU_TEXT_VBL ": "));
           client.print(verbose);
           client.println(F("<BR>"));
 
           #ifdef ONE_WIRE_BUS
-          client.println(F(MENU_TEXT_OWP ": "));
-          client.println(ONE_WIRE_BUS);
-          client.println(F("<BR>"));
+          client.println(F("" MENU_TEXT_OWP ": " ONE_WIRE_BUS "<BR>"));
           #endif
 
           #ifdef DHT_BUS
-          client.println(F(MENU_TEXT_DHP ": "));
-          client.println(DHT_BUS);
-          client.println(F("<BR>"));
+          client.println(F("" MENU_TEXT_DHP ": " DHT_BUS "<BR>"));
           #endif
 
           client.println(F(MENU_TEXT_EXP ": "));
@@ -6904,7 +6975,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	            }
+              }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
 #endif
@@ -6918,7 +6989,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	      }
+        }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
 #endif
