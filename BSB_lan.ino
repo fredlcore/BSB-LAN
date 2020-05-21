@@ -1315,6 +1315,57 @@ void addPostfixToBuffer(const char *postfix){
   }
 }
 /** *****************************************************************
+ *  Function: bufferedprint and bufferedprintln
+ *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
+ *  Pass parameters:
+ *  WiFiEspClient/EthernetClient &cl
+ *  PGM_P outstr
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   buffer variable
+ * *************************************************************** */
+
+void bufferedprint(PGM_P outstr){
+  strncpy_P(buffer, outstr, BUFLEN);
+  buffer[BUFLEN - 1] = 0;
+  client.print(buffer);
+}
+
+void bufferedprintln(PGM_P outstr){
+  strncpy_P(buffer, outstr, BUFLEN - 2);
+  strcat_P(buffer, PSTR("\n"));
+  buffer[BUFLEN - 1] = 0;
+  client.print(buffer);
+}
+
+#ifdef PASSKEY
+void printPassKey(void){
+  bufferedprint(PSTR(PASSKEY "/"));
+}
+#endif
+/** *****************************************************************
+ *  Function: printyesno
+ *  Does: print HTML yes or no
+ *  Pass parameters:
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   client variable
+ * *************************************************************** */
+void printyesno(boolean i){
+  if (i) {
+    bufferedprintln(PSTR(MENU_TEXT_YES "<BR>"));
+  } else {
+    bufferedprintln(PSTR(MENU_TEXT_NO "<BR>"));
+  }
+}
+
+/** *****************************************************************
  *  Function:
  *  Does:
  *  Pass parameters:
@@ -2533,14 +2584,12 @@ void webPrintHeader(void){
 #endif
 
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.println(F("'>BSB-LAN Web</A></h1></center>"));
   client.print(F("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("K'>" MENU_TEXT_HFK));
 
@@ -2548,8 +2597,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("T'>" MENU_TEXT_SNS "</a>"));
 
@@ -2560,8 +2608,7 @@ void webPrintHeader(void){
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("DG'>" MENU_TEXT_SLG "</a>"));
 #endif
@@ -2570,8 +2617,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("Q'>" MENU_TEXT_CHK "</a>"));
 
@@ -2580,8 +2626,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("C'>" MENU_TEXT_CFG));
 
@@ -5463,13 +5508,11 @@ uint8_t pps_offset = 0;
 //          buffer[len]=0;
           bufferedprint(client, PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
-            client.print(PASSKEY);
-            client.print(F("/"));
+            printPassKey();
           #endif
           bufferedprint(client, PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
           #ifdef PASSKEY
-            client.print(PASSKEY);
-            client.print(F("/"));
+            printPassKey();
           #endif
           bufferedprint(client, PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
           bufferedprint(client, PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
@@ -5872,20 +5915,20 @@ uint8_t pps_offset = 0;
             sprintf(jsonbuffer, formatbuf, json_temp, json_parameter);
             client.print(jsonbuffer);
             strcpy_P(formatbuf, PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"));
-            sprintf(jsonbuffer, formatbuf, bus.getBusAddr(), bus.getBusDest());
-            client.print(jsonbuffer);
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, bus.getBusAddr(), bus.getBusDest());
 //enabled options
-            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d,\n  \"onewirebus\": %d,\n  \"dhtbus\": %d,\n"));
+            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d,\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, monitor, verbose);
 
-            json_parameter = 0;
             #ifdef ONE_WIRE_BUS
-            json_parameter += 1;
+            strcpy_P(formatbuf, PSTR("  \"onewirebus\": %d,\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, ONE_WIRE_BUS);
             #endif
             #ifdef DHT_BUS
-            json_parameter +=2;
+            strcpy_P(formatbuf, PSTR("  \"dhtbus\": \"%d,%d\",\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, DHT_BUS);
             #endif
-            sprintf(jsonbuffer, formatbuf, monitor, verbose, json_parameter&1, json_parameter&2?1:0);
-            client.print(jsonbuffer);
+            client.print(outBuf);
 //protected GPIO
             json_parameter = 0;
             strcpy_P(formatbuf, PSTR("  \"protectedGPIO\": [\n"));
@@ -6338,11 +6381,15 @@ uint8_t pps_offset = 0;
           client.println(F("<BR>"));
 
           #ifdef ONE_WIRE_BUS
-          client.println(F("" MENU_TEXT_OWP ": " ONE_WIRE_BUS "<BR>"));
+          client.println(F(MENU_TEXT_OWP ": "));
+          client.println(ONE_WIRE_BUS);
+          client.println(F("<BR>"));
           #endif
 
           #ifdef DHT_BUS
-          client.println(F("" MENU_TEXT_DHP ": " DHT_BUS "<BR>"));
+          client.println(F(MENU_TEXT_DHP ": "));
+          client.println(DHT_BUS);
+          client.println(F("<BR>"));
           #endif
 
           client.println(F(MENU_TEXT_EXP ": "));
@@ -6425,19 +6472,10 @@ uint8_t pps_offset = 0;
                   client.print(F(MENU_TEXT_SN1));
                 }
                 if (log_parameters[i] == 30000) {
-                  client.println(F(MENU_TEXT_BDT "<BR>"));
-                  client.println(F(MENU_TEXT_BUT ": "));
-                  if (log_unknown_only) {
-                    client.println(F(MENU_TEXT_YES "<BR>"));
-                  } else {
-                    client.println(F(MENU_TEXT_NO "<BR>"));
-                  }
-                  client.println(F(MENU_TEXT_LBO ": "));
-                  if (log_bc_only) {
-                    client.println(F(MENU_TEXT_YES "<BR>"));
-                  } else {
-                    client.println(F(MENU_TEXT_NO "<BR>"));
-                  }
+                  bufferedprint(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+                  printyesno(log_unknown_only);
+                  bufferedprint(PSTR(MENU_TEXT_LBO ": "));
+                  printyesno(log_bc_only);
                 }
               }
               client.println(F("<BR>"));
@@ -6470,11 +6508,7 @@ uint8_t pps_offset = 0;
           }
           webPrintHeader();
           client.print(F(MENU_TEXT_LBO ": "));
-          if (log_bc_only) {
-            client.println(F(MENU_TEXT_YES "<BR>"));
-          } else {
-            client.println(F(MENU_TEXT_NO "<BR>"));
-          }
+          printyesno(log_bc_only) ;
           webPrintFooter();
           break;
         }
@@ -6486,11 +6520,7 @@ uint8_t pps_offset = 0;
           }
           webPrintHeader();
           client.print(F(MENU_TEXT_BUT ": "));
-          if (log_unknown_only) {
-            client.println(F(MENU_TEXT_YES "<BR>"));
-          } else {
-            client.println(F(MENU_TEXT_NO "<BR>"));
-          }
+          printyesno(log_unknown_only);
           webPrintFooter();
           break;
         }
@@ -6798,24 +6828,19 @@ uint8_t pps_offset = 0;
               TWW_count=0;
             }else{
               // query brenner duration
-              client.print(F("<tr><td>Brenner Laufzeit Stufe 1: "));
+              bufferedprint(PSTR("<tr><td>Brenner Laufzeit Stufe 1: "));
               client.print(brenner_duration);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("Brenner Takte Stufe 1: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 1: "));
               client.print(brenner_count);
-              client.println(F("</td></tr>"));
-              client.print(F("<tr><td>Brenner Laufzeit Stufe 2: "));
+              bufferedprint(PSTR("</td></tr>\n<tr><td>Brenner Laufzeit Stufe 2: "));
               client.print(brenner_duration_2);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("Brenner Takte Stufe 2: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 2: "));
               client.print(brenner_count_2);
-              client.println(F("</td></tr>"));
-              client.print(F("<tr><td>TWW Laufzeit: "));
+              bufferedprint(PSTR("</td></tr>\n<tr><td>TWW Laufzeit: "));
               client.print(TWW_duration);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("TWW Takte: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nTWW Takte: "));
               client.print(TWW_count);
-              client.println(F("</td></tr>"));
+              bufferedprintln(PSTR("</td></tr>"));
             }
           }else{
             if(range[0]=='K'){
@@ -7113,33 +7138,27 @@ uint8_t pps_offset = 0;
           dataFile.println(div_unit);
         } else {
           if (log_parameters[i] == 20000) {
-            dataFile.print(F(MENU_TEXT_BZ1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BZ1 ";"));
             dataFile.println(brenner_duration);
           }
           if (log_parameters[i] == 20001) {
-            dataFile.print(F(MENU_TEXT_BT1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BT1 ";"));
             dataFile.println(brenner_count);
           }
           if (log_parameters[i] == 20002) {
-            dataFile.print(F(MENU_TEXT_BZ2));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BZ2 ";"));
             dataFile.println(brenner_duration_2);
           }
           if (log_parameters[i] == 20003) {
-            dataFile.print(F(MENU_TEXT_BT2));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BT2 ";"));
             dataFile.println(brenner_count_2);
           }
           if (log_parameters[i] == 20004) {
-            dataFile.print(F(MENU_TEXT_TZ1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_TZ1 ";"));
             dataFile.println(TWW_duration);
           }
           if (log_parameters[i] == 20005) {
-            dataFile.print(F(MENU_TEXT_TT1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_TT1 ";"));
             dataFile.println(TWW_count);
           }
           if (log_parameters[i] == 20006) {
@@ -7147,8 +7166,7 @@ uint8_t pps_offset = 0;
               if (avg_parameters[i] > 0) {
                 printTrailToFile(dataFile);
                 dataFile.print(avg_parameters[i]);
-                dataFile.print(F(";"));
-                dataFile.print(F("Avg_"));
+                dataFile.print(F(";Avg_"));
                 dataFile.print(lookup_descr(avg_parameters[i]));
                 dataFile.print(F(";"));
                 float rounded = round(avgValues[i]*10);
