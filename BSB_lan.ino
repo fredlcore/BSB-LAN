@@ -6218,8 +6218,8 @@ uint8_t pps_offset = 0;
                         char z = pgm_read_byte_far(enumstr+x);
                         char *outB = jsonbuffer;
                         while (z != '\0') {
-                            outB[0] = z;
-                            outB++;
+                          outB[0] = z;
+                          outB++;
                           x++;
                           z = pgm_read_byte_far(enumstr+x);
                         }
