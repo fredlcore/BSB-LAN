@@ -5860,9 +5860,10 @@ uint8_t pps_offset = 0;
             }
 
           if (p[2] == 'I'){ // dump configuration in JSON
-            strcpy_P(formatbuf, PSTR("  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %d,\n  \"MAC\": \"%02X:%02X:%02X:%02X:%02X:%02X\",\n"));
-            sprintf(jsonbuffer, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-            client.print(jsonbuffer);
+            free(jsonbuffer);
+            strcpy_P(formatbuf, PSTR("  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n"));
+            sprintf(outBuf, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            client.print(outBuf);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus.getBusType();
@@ -5878,9 +5879,10 @@ uint8_t pps_offset = 0;
               case 2: strcpy_P(json_temp, PSTR("PPS")); break;
             }
             strcpy_P(formatbuf, PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"));
-            sprintf(jsonbuffer, formatbuf, json_temp, json_parameter);
-            client.print(jsonbuffer);
+            sprintf(outBuf, formatbuf, json_temp, json_parameter);
+            client.print(outBuf);
             strcpy_P(formatbuf, PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"));
+            outBufLen = 0;
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, bus.getBusAddr(), bus.getBusDest());
 //enabled options
             strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d,\n"));
@@ -5896,46 +5898,57 @@ uint8_t pps_offset = 0;
             #endif
             client.print(outBuf);
 //protected GPIO
-            json_parameter = 0;
+            outBufLen = 0;
             strcpy_P(formatbuf, PSTR("  \"protectedGPIO\": [\n"));
-            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf);
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"pin\": %d },\n"));
             for (i=0; i<anz_ex_gpio; i++) {
-              json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, exclude_GPIO[i]);
+              outBufLen+=sprintf(outBuf+outBufLen, formatbuf, exclude_GPIO[i]);
+              if(outBufLen > 200 && i < (anz_ex_gpio - 1)) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
             }
-            strcpy_P(jsonbuffer+json_parameter-2, PSTR("\n  ],\n"));
-            client.print(jsonbuffer);
+            strcpy_P(outBuf+outBufLen-2, PSTR("\n  ],\n")); //two bytes shift (delete comma and \n)
+            client.print(outBuf);
 //averages
-            json_parameter = 0;
+            outBufLen = 0;
             strcpy_P(formatbuf, PSTR("  \"averages\": [\n"));
-            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf);
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, avg_parameters[i]);
+              if (avg_parameters[i] > 0) outBufLen+=sprintf(outBuf+outBufLen, formatbuf, avg_parameters[i]);
+              if(outBufLen > 200 && i < (numAverages - 1)) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
             }
             strcpy_P(formatbuf, PSTR("\n  ],\n"));
-            json_parameter+=sprintf(jsonbuffer+json_parameter-2, formatbuf);
+            outBufLen+=sprintf(outBuf+outBufLen-2, formatbuf); //two bytes shift (delete comma and \n)
 
 // logged parameters
           #ifdef LOGGER
-            client.print(jsonbuffer);
-            json_parameter = 0;
+            client.print(outBuf);
+            outBufLen = 0;
             strcpy_P(formatbuf, PSTR("  \"loginterval\": %d,\n  \"logged\": [\n"));
-            json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, log_interval);
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numLogValues; i++) {
-              if (log_parameters[i] > 0) json_parameter+=sprintf(jsonbuffer+json_parameter, formatbuf, log_parameters[i]);
+              if (log_parameters[i] > 0) outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);
+              if(outBufLen > 200 && i < (numLogValues - 1)) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
             }
             strcpy_P(formatbuf, PSTR("\n  ],\n"));
-            json_parameter+=sprintf(jsonbuffer+json_parameter-2, formatbuf);
+            outBufLen+=sprintf(outBuf+outBufLen-2, formatbuf); //two bytes shift (delete comma and \n)
           #endif
 
-            strcpy_P(jsonbuffer+json_parameter-2, PSTR("\n}\n"));
-            client.print(jsonbuffer);
+            strcpy_P(outBuf+outBufLen-4, PSTR("\n}\n")); //twice two bytes shift (delete one more comma and \n)
+            client.print(outBuf);
             client.flush();
 
             free(formatbuf);
-            free(jsonbuffer);
             break;
           }
 
