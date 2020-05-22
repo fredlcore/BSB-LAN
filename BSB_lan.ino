@@ -2762,11 +2762,11 @@ char *GetDateTime(char date[]){
  * Global resources used:
  *
  * *************************************************************** */
-void printTrailToFile(File dataFile){
+void printTrailToFile(File *dataFile){
  char fileBuf[64];
  // get current time from heating system
  sprintf(fileBuf, "%lu;%s;", millis(), GetDateTime(date));
- dataFile.print(fileBuf);
+ dataFile->print(fileBuf);
 }
 
 /** *****************************************************************
@@ -2842,7 +2842,7 @@ void LogTelegram(byte* msg){
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
         dataFile = SD.open(datalogFileName, FILE_WRITE);
         if (dataFile) {
-          printTrailToFile(dataFile);
+          printTrailToFile(&dataFile);
 
           if(!known){                          // no hex code match
           // Entry in command table is "UNKNOWN" (0x00000000)
@@ -4825,7 +4825,7 @@ void loop() {
 /*
                 File dataFile = SD.open(datalogFileName, FILE_WRITE);
                 if (dataFile) {
-                  printTrailToFile(dataFile);
+                  printTrailToFile(&dataFile);
                   dataFile.print(F("Unknown PPS telegram;"));
                   for(int i=0;i<9+(*PPS_write_enabled!=1 && msg[0] == 0x17);i++){
                     if (i > 0) {
@@ -7086,7 +7086,7 @@ uint8_t pps_offset = 0;
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
-          printTrailToFile(dataFile);
+          printTrailToFile(&dataFile);
           dataFile.print(log_parameters[i]);
           dataFile.print(F(";"));
         }
@@ -7143,7 +7143,7 @@ uint8_t pps_offset = 0;
           if (log_parameters[i] == 20006) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
-                printTrailToFile(dataFile);
+                printTrailToFile(&dataFile);
                 dataFile.print(avg_parameters[i]);
                 dataFile.print(F(";Avg_"));
                 dataFile.print(lookup_descr(avg_parameters[i]));
@@ -7186,7 +7186,7 @@ uint8_t pps_offset = 0;
                 }
                 max_id[10] = '\0';
 
-                printTrailToFile(dataFile);
+                printTrailToFile(&dataFile);
                 dataFile.print(log_parameters[i]);
                 dataFile.print(F(";"));
                 switch (log_parameters[i]) {
@@ -7219,7 +7219,7 @@ uint8_t pps_offset = 0;
               dataFile.print(F(";"));
               dataFile.println(temp);
 
-              printTrailToFile(dataFile);
+              printTrailToFile(&dataFile);
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
               dataFile.print(F("DHT Humidity "));
