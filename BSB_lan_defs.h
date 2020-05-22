@@ -101,7 +101,7 @@
 #define DEV_097_100  97,100 // Brötje WGB 20 C
 #define DEV_097_ALL  97,255 // Elco Thision S 17.1, Brötje WBS 14D
 #define DEV_098_ALL  98,255 // Brötje Ecotherm Plus WGB Pro Evo 20C, EcoCondens BBS Pro EVO 15 C
-#define DEV_101_ALL  103,255 // AVS37.390/227 
+#define DEV_101_ALL  103,255 // AVS37.390/227
 #define DEV_103_ALL  103,255 // CTC 380 IC
 #define DEV_107_ALL  107,255 // RVS43.222-Z1
 #define DEV_108_ALL  108,255 // Brötje Sensotherm BSW-K
@@ -4945,7 +4945,6 @@ const char ENUM8004[] PROGMEM_LATEST = {
 "\x11 " ENUM8004_11_TEXT "\0"
 "\x17 " ENUM8004_17_TEXT "\0"
 "\x18 " ENUM8004_18_TEXT "\0"
-"\x18 " ENUM8004_18_TEXT "\0"
 "\x19 " ENUM8004_19_TEXT "\0"
 "\x75 " ENUM8004_75_TEXT "\0"
 "\x77 " ENUM8004_77_TEXT "\0"
@@ -4958,7 +4957,6 @@ const char ENUM8004[] PROGMEM_LATEST = {
 "\x90 " ENUM8004_90_TEXT "\0"
 "\x92 " ENUM8004_92_TEXT "\0"
 "\x95 " ENUM8004_95_TEXT "\0"
-"\x96 " ENUM8004_96_TEXT "\0"
 "\x96 " ENUM8004_96_TEXT "\0"
 "\xb1 " ENUM8004_b1_TEXT "\0"
 "\xb2 " ENUM8004_b2_TEXT "\0"
