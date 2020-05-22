@@ -4365,40 +4365,6 @@ void transmitFile(File dataFile) {
 #endif
 
 /** *****************************************************************
- *  Function: bufferedprint and bufferedprintln
- *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *  Pass parameters:
- *  WiFiEspClient/EthernetClient &cl
- *  PGM_P outstr
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   buffer variable
- * *************************************************************** */
-
-#ifdef WIFI
-void bufferedprint(WiFiEspClient& cl, PGM_P outstr){
-#else
-void bufferedprint(EthernetClient& cl, PGM_P outstr){
-#endif
-  strncpy_P(buffer, outstr, BUFLEN);
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
-#ifdef WIFI
-void bufferedprintln(WiFiEspClient& cl, PGM_P outstr){
-#else
-void bufferedprintln(EthernetClient& cl, PGM_P outstr){
-#endif
-  strncpy_P(buffer, outstr, BUFLEN - 2);
-  strcat_P(buffer, PSTR("\n"));
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
-
-/** *****************************************************************
  *  Function: resetBoard
  *  Does: restart Arduino
  *  Pass parameters:
@@ -5180,7 +5146,7 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (urlString == "/favicon.ico") {
-          bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
+          bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(urlString + 1);
           if (dataFile) {
@@ -5506,16 +5472,16 @@ uint8_t pps_offset = 0;
 //          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
 //          buffer[len]=0;
-          bufferedprint(client, PSTR("<table><tr><td><a href='/"));
+          bufferedprint(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
           #endif
-          bufferedprint(client, PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
+          bufferedprint(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
           #endif
-          bufferedprint(client, PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
-          bufferedprint(client, PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
+          bufferedprint(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
+          bufferedprint(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
           #define K_FORMAT_TBL "<tr><td><a href='K%u'>%s</a></td><td>%d - %d</td></tr>\n"
           char *formatbuf = (char *)malloc(sizeof(K_FORMAT_TBL)+1); //TODO: validate if malloc was successful?
           int16_t cat_min = -1, cat_max = -1;
@@ -5544,7 +5510,7 @@ uint8_t pps_offset = 0;
             }
           }
           free(formatbuf);
-          bufferedprint(client, PSTR("</table>"));
+          bufferedprint(PSTR("</table>"));
           webPrintFooter();
           break;
         }
