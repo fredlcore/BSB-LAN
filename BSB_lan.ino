@@ -2765,7 +2765,7 @@ char *GetDateTime(char date[]){
 void printTrailToFile(File dataFile){
  char fileBuf[64];
  // get current time from heating system
- sprintf(fileBuf, "%s;%s;", millis(), GetDateTime(date));
+ sprintf(fileBuf, "%lu;%s;", millis(), GetDateTime(date));
  dataFile.print(fileBuf);
 }
 
