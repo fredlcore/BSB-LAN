@@ -2943,6 +2943,7 @@
 #define ENUM_WEEKDAY_06_TEXT "Samstag"
 #define ENUM_WEEKDAY_07_TEXT "Sonntag"
 
+// These strings do not take space in Arduino memory. They are for external interfaces.
 #define EXTIF_HOME_TEXT "Haus"
 #define EXTIF_MANAGEMENT_TEXT "Management"
 #define EXTIF_MONITOR_TEXT "Monitor"

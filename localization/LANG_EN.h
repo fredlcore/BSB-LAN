@@ -426,6 +426,7 @@
 #define ENUM8004_cd_TEXT "Locked, source"
 #define ENUM8004_ce_TEXT "Locked, buffer"
 
+// These strings do not take space in Arduino memory. They are for external interfaces.
 #define EXTIF_HOME_TEXT "Home"
 #define EXTIF_MANAGEMENT_TEXT "Management"
 #define EXTIF_MONITOR_TEXT "Monitor"

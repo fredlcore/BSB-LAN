@@ -2568,6 +2568,7 @@
 #define WEEKDAY_SAT_TEXT "Сб"
 #define WEEKDAY_SUN_TEXT "Вс"
 
+// These strings do not take space in Arduino memory. They are for external interfaces.
 #define EXTIF_HOME_TEXT "Домой"
 #define EXTIF_MANAGEMENT_TEXT "Управление"
 #define EXTIF_MONITOR_TEXT "Монитор"
