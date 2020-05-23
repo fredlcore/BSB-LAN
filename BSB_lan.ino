@@ -2762,12 +2762,14 @@ char *GetDateTime(char date[]){
  * Global resources used:
  *
  * *************************************************************** */
+#ifdef LOGGER
 void printTrailToFile(File *dataFile){
  char fileBuf[64];
  // get current time from heating system
  sprintf(fileBuf, "%lu;%s;", millis(), GetDateTime(date));
  dataFile->print(fileBuf);
 }
+#endif
 
 /** *****************************************************************
  *  Function:  LogTelegram()
