@@ -427,7 +427,7 @@ char buffer[BUFLEN] = { 0 };
 /* buffer to print output lines*/
 #define OUTBUF_LEN  300
 char outBuf[OUTBUF_LEN] = { 0 };
-byte outBufLen=0;
+int outBufLen=0;
 
 char div_unit[32];
 
@@ -2762,11 +2762,11 @@ char *GetDateTime(char date[]){
  * Global resources used:
  *
  * *************************************************************** */
-void printTrailToFile(File dataFile){
+void printTrailToFile(File *dataFile){
  char fileBuf[64];
  // get current time from heating system
  sprintf(fileBuf, "%lu;%s;", millis(), GetDateTime(date));
- dataFile.print(fileBuf);
+ dataFile->print(fileBuf);
 }
 
 /** *****************************************************************
@@ -2842,7 +2842,7 @@ void LogTelegram(byte* msg){
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
         dataFile = SD.open(datalogFileName, FILE_WRITE);
         if (dataFile) {
-          printTrailToFile(dataFile);
+          printTrailToFile(&dataFile);
 
           if(!known){                          // no hex code match
           // Entry in command table is "UNKNOWN" (0x00000000)
@@ -4825,7 +4825,7 @@ void loop() {
 /*
                 File dataFile = SD.open(datalogFileName, FILE_WRITE);
                 if (dataFile) {
-                  printTrailToFile(dataFile);
+                  printTrailToFile(&dataFile);
                   dataFile.print(F("Unknown PPS telegram;"));
                   for(int i=0;i<9+(*PPS_write_enabled!=1 && msg[0] == 0x17);i++){
                     if (i > 0) {
@@ -5861,7 +5861,7 @@ uint8_t pps_offset = 0;
 
           if (p[2] == 'I'){ // dump configuration in JSON
             free(jsonbuffer);
-            strcpy_P(formatbuf, PSTR("  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n"));
+            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n"));
             sprintf(outBuf, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
             client.print(outBuf);
 // Bus info
@@ -5885,21 +5885,25 @@ uint8_t pps_offset = 0;
             outBufLen = 0;
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, bus.getBusAddr(), bus.getBusDest());
 //enabled options
-            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d,\n"));
+            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d")); //note: no \n here! Look for it below
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, monitor, verbose);
 
             #ifdef ONE_WIRE_BUS
-            strcpy_P(formatbuf, PSTR("  \"onewirebus\": %d,\n"));
+            strcpy_P(formatbuf, PSTR(",\n  \"onewirebus\": %d"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, ONE_WIRE_BUS);
             #endif
             #ifdef DHT_BUS
-            strcpy_P(formatbuf, PSTR("  \"dhtbus\": \"%d,%d\",\n"));
+            strcpy_P(formatbuf, PSTR(",\n  \"dhtbus\": \"%d,%d\""));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, DHT_BUS);
             #endif
-            client.print(outBuf);
+            boolean somethingexist = false;
+            int tempoutBufLen = outBufLen;
 //protected GPIO
+            if(anz_ex_gpio > 0){
+            somethingexist = true;
+            client.print(outBuf);
             outBufLen = 0;
-            strcpy_P(formatbuf, PSTR("  \"protectedGPIO\": [\n"));
+            strcpy_P(formatbuf, PSTR(",\n  \"protectedGPIO\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"pin\": %d },\n"));
             for (i=0; i<anz_ex_gpio; i++) {
@@ -5909,42 +5913,46 @@ uint8_t pps_offset = 0;
                 client.print(outBuf);
               }
             }
-            strcpy_P(outBuf+outBufLen-2, PSTR("\n  ],\n")); //two bytes shift (delete comma and \n)
-            client.print(outBuf);
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+            }
 //averages
-            outBufLen = 0;
-            strcpy_P(formatbuf, PSTR("  \"averages\": [\n"));
+            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
+            somethingexist = false;
+            strcpy_P(formatbuf, PSTR(",\n  \"averages\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) outBufLen+=sprintf(outBuf+outBufLen, formatbuf, avg_parameters[i]);
-              if(outBufLen > 200 && i < (numAverages - 1)) { //flush buffer
+              if (avg_parameters[i] > 0) {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, avg_parameters[i]);}
+              if(outBufLen > 200 && i < (numAverages - 1) && somethingexist) { //flush buffer
                 outBufLen = 0;
                 client.print(outBuf);
               }
             }
-            strcpy_P(formatbuf, PSTR("\n  ],\n"));
-            outBufLen+=sprintf(outBuf+outBufLen-2, formatbuf); //two bytes shift (delete comma and \n)
-
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
 // logged parameters
           #ifdef LOGGER
-            client.print(outBuf);
-            outBufLen = 0;
-            strcpy_P(formatbuf, PSTR("  \"loginterval\": %d,\n  \"logged\": [\n"));
+            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
+            somethingexist = false;
+            strcpy_P(formatbuf, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numLogValues; i++) {
-              if (log_parameters[i] > 0) outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);
-              if(outBufLen > 200 && i < (numLogValues - 1)) { //flush buffer
+              if (log_parameters[i] > 0)  {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);}
+              if(outBufLen > 200 && i < (numLogValues - 1) && somethingexist) { //flush buffer
                 outBufLen = 0;
                 client.print(outBuf);
               }
             }
-            strcpy_P(formatbuf, PSTR("\n  ],\n"));
-            outBufLen+=sprintf(outBuf+outBufLen-2, formatbuf); //two bytes shift (delete comma and \n)
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
           #endif
-
-            strcpy_P(outBuf+outBufLen-4, PSTR("\n}\n")); //twice two bytes shift (delete one more comma and \n)
+            if(!somethingexist) outBufLen = tempoutBufLen;
+            strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
             client.print(outBuf);
             client.flush();
 
@@ -7086,7 +7094,7 @@ uint8_t pps_offset = 0;
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
-          printTrailToFile(dataFile);
+          printTrailToFile(&dataFile);
           dataFile.print(log_parameters[i]);
           dataFile.print(F(";"));
         }
@@ -7143,7 +7151,7 @@ uint8_t pps_offset = 0;
           if (log_parameters[i] == 20006) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
-                printTrailToFile(dataFile);
+                printTrailToFile(&dataFile);
                 dataFile.print(avg_parameters[i]);
                 dataFile.print(F(";Avg_"));
                 dataFile.print(lookup_descr(avg_parameters[i]));
@@ -7186,7 +7194,7 @@ uint8_t pps_offset = 0;
                 }
                 max_id[10] = '\0';
 
-                printTrailToFile(dataFile);
+                printTrailToFile(&dataFile);
                 dataFile.print(log_parameters[i]);
                 dataFile.print(F(";"));
                 switch (log_parameters[i]) {
@@ -7219,7 +7227,7 @@ uint8_t pps_offset = 0;
               dataFile.print(F(";"));
               dataFile.println(temp);
 
-              printTrailToFile(dataFile);
+              printTrailToFile(&dataFile);
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
               dataFile.print(F("DHT Humidity "));
