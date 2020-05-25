@@ -427,7 +427,7 @@ char buffer[BUFLEN] = { 0 };
 /* buffer to print output lines*/
 #define OUTBUF_LEN  300
 char outBuf[OUTBUF_LEN] = { 0 };
-byte outBufLen=0;
+int outBufLen=0;
 
 char div_unit[32];
 
@@ -1305,15 +1305,66 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift){
  *
  * *************************************************************** */
 void undefinedValueToBuffer(){
-  strcpy(outBuf+outBufLen,"---");
+  strcpy_P(outBuf+outBufLen,PSTR("---"));
   outBufLen+=3;
 }
 
 void addPostfixToBuffer(const char *postfix){
-  if(postfix[0] > 0){ //if first byte non-zero then strlen > 0
+  if(postfix[0] != 0){ //if first byte non-zero then strlen > 0
     outBufLen+=sprintf(outBuf+outBufLen," %s", postfix);
   }
 }
+/** *****************************************************************
+ *  Function: bufferedprint and bufferedprintln
+ *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
+ *  Pass parameters:
+ *  WiFiEspClient/EthernetClient &cl
+ *  PGM_P outstr
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   buffer variable
+ * *************************************************************** */
+
+void bufferedprint(PGM_P outstr){
+  strncpy_P(buffer, outstr, BUFLEN);
+  buffer[BUFLEN - 1] = 0;
+  client.print(buffer);
+}
+
+void bufferedprintln(PGM_P outstr){
+  strncpy_P(buffer, outstr, BUFLEN - 2);
+  strcat_P(buffer, PSTR("\n"));
+  buffer[BUFLEN - 1] = 0;
+  client.print(buffer);
+}
+
+#ifdef PASSKEY
+void printPassKey(void){
+  bufferedprint(PSTR(PASSKEY "/"));
+}
+#endif
+/** *****************************************************************
+ *  Function: printyesno
+ *  Does: print HTML yes or no
+ *  Pass parameters:
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   client variable
+ * *************************************************************** */
+void printyesno(boolean i){
+  if (i) {
+    bufferedprintln(PSTR(MENU_TEXT_YES "<BR>"));
+  } else {
+    bufferedprintln(PSTR(MENU_TEXT_NO "<BR>"));
+  }
+}
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -1712,13 +1763,11 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
       c++;
     }
     if(c<enumstr_len){
+      strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+      buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
       }else{
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
@@ -1759,13 +1808,11 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
       c++;
     }
     if(c<enumstr_len){
+      strncpy_PF(buffer, enumstr+c, sizeof(buffer));
+      buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
       }else{
-        strncpy_PF(buffer, enumstr+c, sizeof(buffer));
-        buffer[sizeof(buffer)-1] = 0;
         outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
       }
     }else{
@@ -1857,13 +1904,15 @@ void printTimeProg(byte *msg,byte data_len){
       if(msg[k]<24){
         outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d - %02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"--:-- - --:--");
+        strcpy_P(outBuf+outBufLen,PSTR("--:-- - --:--"));
+        outBufLen += 13;
       }
       if(i<2){
         outBuf[outBufLen] = ' ';
         outBufLen++;
       }
     }
+    outBuf[outBufLen] = 0;
     DebugOutput.print(p);
   }else{
     DebugOutput.print(F(" VT_TIMEPROG len !=12: "));
@@ -1891,7 +1940,7 @@ void printTime(byte *msg,byte data_len){
     if(msg[bus.getPl_start()]==0){
       outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
     } else {
-      outBufLen+=sprintf(outBuf+outBufLen,"--:--");
+      strcpy_P(outBuf+outBufLen,PSTR("--:--")); outBufLen+=5; // outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
     if (bus.getBusType() == BUS_PPS) {
       char PPS_output[55];
@@ -2114,8 +2163,7 @@ char *printTelegram(byte* msg, int query_line) {
     uint16_t line=get_cmdtbl_line(i);
     printLineNumber(line);             // the ProgNr
     DebugOutput.print(F(" "));
-//    outBufLen+=sprintf(outBuf+outBufLen," ");
-    outBuf[outBufLen] = ' '; outBufLen++;
+    outBuf[outBufLen] = ' '; outBufLen++; // outBufLen+=sprintf(outBuf+outBufLen," ");
 
     // print category
     int cat=get_cmdtbl_category(i);
@@ -2129,7 +2177,7 @@ char *printTelegram(byte* msg, int query_line) {
     printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
 #endif
     DebugOutput.print(F(" - "));
-    outBufLen+=sprintf(outBuf+outBufLen," - ");
+    strcpy_P(outBuf+outBufLen,PSTR(" - ")); outBufLen+=3; //outBufLen+=sprintf(outBuf+outBufLen," - ");
     // print menue text
     strcpy_PF(buffer, get_cmdtbl_desc(i));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
@@ -2408,7 +2456,7 @@ char *printTelegram(byte* msg, int query_line) {
                   remove_char(outBuf, '\'');
                 } else {
                   DebugOutput.print(F("-"));
-                  outBufLen+=sprintf(outBuf+outBufLen,"-");
+                  outBuf[outBufLen] = '-'; outBufLen++; outBuf[outBufLen] = 0; //outBufLen+=sprintf(outBuf+outBufLen,"-");
                 }
               }else{
                 DebugOutput.print(F(" VT_STRING len ==0: "));
@@ -2576,14 +2624,12 @@ void webPrintHeader(void){
 #endif
 
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.println(F("'>BSB-LAN Web</A></h1></center>"));
   client.print(F("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("K'>" MENU_TEXT_HFK));
 
@@ -2591,8 +2637,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("T'>" MENU_TEXT_SNS "</a>"));
 
@@ -2603,8 +2648,7 @@ void webPrintHeader(void){
 #else
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("DG'>" MENU_TEXT_SLG "</a>"));
 #endif
@@ -2613,8 +2657,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("Q'>" MENU_TEXT_CHK "</a>"));
 
@@ -2623,8 +2666,7 @@ void webPrintHeader(void){
 
   client.print(F("<a href='/"));
 #ifdef PASSKEY
-  client.print(PASSKEY);
-  client.print(F("/"));
+printPassKey();
 #endif
   client.print(F("C'>" MENU_TEXT_CFG));
 
@@ -2747,6 +2789,29 @@ char *GetDateTime(char date[]){
 }
 
 /** *****************************************************************
+ *  Function:  printTrailToFile()
+ *  Does:      print to file current date/time and time since start.
+ *             starting at position null. It stops
+ *             when it has sent the requested number of message bytes.
+ *  Pass parameters:
+ *   File dataFile - opened file handler
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *
+ * *************************************************************** */
+#ifdef LOGGER
+void printTrailToFile(File *dataFile){
+ char fileBuf[64];
+ // get current time from heating system
+ sprintf(fileBuf, "%lu;%s;", millis(), GetDateTime(date));
+ dataFile->print(fileBuf);
+}
+#endif
+
+/** *****************************************************************
  *  Function:  LogTelegram()
  *  Does:      Logs the telegram content in hex to the SD card,
  *             starting at position null. It stops
@@ -2819,10 +2884,7 @@ void LogTelegram(byte* msg){
       if (log_bc_only == 0 || (log_bc_only == 1 && ((msg[2]==ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus.getBusType()==BUS_LPB)))) {
         dataFile = SD.open(datalogFileName, FILE_WRITE);
         if (dataFile) {
-          dataFile.print(millis());
-          dataFile.print(F(";"));
-          dataFile.print(GetDateTime(date));
-          dataFile.print(F(";"));
+          printTrailToFile(&dataFile);
 
           if(!known){                          // no hex code match
           // Entry in command table is "UNKNOWN" (0x00000000)
@@ -4793,10 +4855,8 @@ void loop() {
 /*
                 File dataFile = SD.open(datalogFileName, FILE_WRITE);
                 if (dataFile) {
-                  dataFile.print(millis());
-                  dataFile.print(F(";"));
-                  dataFile.print(GetDateTime(date));
-                  dataFile.print(F(";Unknown PPS telegram;"));
+                  printTrailToFile(&dataFile);
+                  dataFile.print(F("Unknown PPS telegram;"));
                   for(int i=0;i<9+(*PPS_write_enabled!=1 && msg[0] == 0x17);i++){
                     if (i > 0) {
                       dataFile.print(F(" "));
@@ -5115,7 +5175,7 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (urlString == "/favicon.ico") {
-          bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
+          bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(urlString + 1);
           if (dataFile) {
@@ -5441,18 +5501,16 @@ uint8_t pps_offset = 0;
 //          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
 //          buffer[len]=0;
-          bufferedprint(client, PSTR("<table><tr><td><a href='/"));
+          bufferedprint(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
-            client.print(PASSKEY);
-            client.print(F("/"));
+            printPassKey();
           #endif
-          bufferedprint(client, PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
+          bufferedprint(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
           #ifdef PASSKEY
-            client.print(PASSKEY);
-            client.print(F("/"));
+            printPassKey();
           #endif
-          bufferedprint(client, PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
-          bufferedprint(client, PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
+          bufferedprint(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
+          bufferedprint(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
           #define K_FORMAT_TBL "<tr><td><a href='K%u'>%s</a></td><td>%d - %d</td></tr>\n"
           char *formatbuf = (char *)malloc(sizeof(K_FORMAT_TBL)+1); //TODO: validate if malloc was successful?
           int16_t cat_min = -1, cat_max = -1;
@@ -5481,7 +5539,7 @@ uint8_t pps_offset = 0;
             }
           }
           free(formatbuf);
-          bufferedprint(client, PSTR("</table>"));
+          bufferedprint(PSTR("</table>"));
           webPrintFooter();
           break;
         }
@@ -5830,6 +5888,108 @@ uint8_t pps_offset = 0;
             break;
             }
 
+          if (p[2] == 'I'){ // dump configuration in JSON
+            free(jsonbuffer);
+            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n"));
+            sprintf(outBuf, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            client.print(outBuf);
+// Bus info
+            json_parameter = 0; //reuse json_parameter  for lesser memory usage
+            i = bus.getBusType();
+            if (i != BUS_PPS) {
+              if (DEFAULT_FLAG != FL_RONLY) json_parameter = 1;
+            } else {
+              if (*PPS_write_enabled == 1)  json_parameter = 1;
+            }
+
+            switch (i) {
+              case 0: strcpy_P(json_temp, PSTR("BSB")); break; //reuse json_temp for lesser memory usage
+              case 1: strcpy_P(json_temp, PSTR("LPB")); break;
+              case 2: strcpy_P(json_temp, PSTR("PPS")); break;
+            }
+            strcpy_P(formatbuf, PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"));
+            sprintf(outBuf, formatbuf, json_temp, json_parameter);
+            client.print(outBuf);
+            strcpy_P(formatbuf, PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"));
+            outBufLen = 0;
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, bus.getBusAddr(), bus.getBusDest());
+//enabled options
+            strcpy_P(formatbuf, PSTR("  \"monitor\": %d,\n  \"verbose\": %d")); //note: no \n here! Look for it below
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, monitor, verbose);
+
+            #ifdef ONE_WIRE_BUS
+            strcpy_P(formatbuf, PSTR(",\n  \"onewirebus\": %d"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, ONE_WIRE_BUS);
+            #endif
+            #ifdef DHT_BUS
+            strcpy_P(formatbuf, PSTR(",\n  \"dhtbus\": \"%d,%d\""));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, DHT_BUS);
+            #endif
+            boolean somethingexist = false;
+            int tempoutBufLen = outBufLen;
+//protected GPIO
+            if(anz_ex_gpio > 0){
+            somethingexist = true;
+            client.print(outBuf);
+            outBufLen = 0;
+            strcpy_P(formatbuf, PSTR(",\n  \"protectedGPIO\": [\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+            strcpy_P(formatbuf, PSTR("    { \"pin\": %d },\n"));
+            for (i=0; i<anz_ex_gpio; i++) {
+              outBufLen+=sprintf(outBuf+outBufLen, formatbuf, exclude_GPIO[i]);
+              if(outBufLen > 200 && i < (anz_ex_gpio - 1)) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
+            }
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+            }
+//averages
+            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
+            somethingexist = false;
+            strcpy_P(formatbuf, PSTR(",\n  \"averages\": [\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+            strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
+            for (i=0; i<numAverages; i++) {
+              if (avg_parameters[i] > 0) {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, avg_parameters[i]);}
+              if(outBufLen > 200 && i < (numAverages - 1) && somethingexist) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
+            }
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+// logged parameters
+          #ifdef LOGGER
+            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
+            somethingexist = false;
+            strcpy_P(formatbuf, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
+            strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
+            for (i=0; i<numLogValues; i++) {
+              if (log_parameters[i] > 0)  {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);}
+              if(outBufLen > 200 && i < (numLogValues - 1) && somethingexist) { //flush buffer
+                outBufLen = 0;
+                client.print(outBuf);
+              }
+            }
+            strcpy_P(formatbuf, PSTR("\n  ]"));
+            outBufLen-=2; //two bytes shift (delete comma and \n)
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+          #endif
+            if(!somethingexist) outBufLen = tempoutBufLen;
+            strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
+            client.print(outBuf);
+            client.flush();
+
+            free(formatbuf);
+            break;
+          }
+
+
           if (json_token!=NULL) {
             client.flush();
           }
@@ -6095,8 +6255,8 @@ uint8_t pps_offset = 0;
                         char z = pgm_read_byte_far(enumstr+x);
                         char *outB = jsonbuffer;
                         while (z != '\0') {
-                            outB[0] = z;
-                            outB++;
+                          outB[0] = z;
+                          outB++;
                           x++;
                           z = pgm_read_byte_far(enumstr+x);
                         }
@@ -6198,26 +6358,21 @@ uint8_t pps_offset = 0;
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
-          client.print(F(MENU_TEXT_VER ": "));
-          client.print(F(BSB_VERSION));
-          client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_RAM ": "));
+          client.print(F("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
           client.print(freeRam());
-          client.println(F(" Bytes <BR>"));
-
-          client.print(F(MENU_TEXT_UPT ": "));
+          client.print(F(" Bytes <BR>\n" MENU_TEXT_UPT ": "));
           client.print(millis());
-          client.println(F("<BR>"));
-
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
-          client.print(F(MENU_TEXT_BUS ": "));
-          switch (bus.getBusType()) {
+          client.println(F("<BR>\n" MENU_TEXT_BUS ": "));
+          int bustype = bus.getBusType();
+
+          switch (bustype) {
             case 0: client.print(F("BSB")); break;
             case 1: client.print(F("LPB")); break;
             case 2: client.print(F("PPS")); break;
           }
-          if (bus.getBusType() != BUS_PPS) {
+          if (bustype != BUS_PPS) {
             client.print(F(" ("));
             client.print(myAddr);
             client.print(F(", "));
@@ -6235,10 +6390,9 @@ uint8_t pps_offset = 0;
               client.print(F(" (" MENU_TEXT_BRO ")"));
             }
           }
-          client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_MMD ": "));
-          client.println(monitor);
-          client.print(F("<BR>" MENU_TEXT_VBL ": "));
+          client.print(F("<BR>\n" MENU_TEXT_MMD ": "));
+          client.print(monitor);
+          client.print(F("<BR>\n" MENU_TEXT_VBL ": "));
           client.print(verbose);
           client.println(F("<BR>"));
 
@@ -6334,19 +6488,10 @@ uint8_t pps_offset = 0;
                   client.print(F(MENU_TEXT_SN1));
                 }
                 if (log_parameters[i] == 30000) {
-                  client.println(F(MENU_TEXT_BDT "<BR>"));
-                  client.println(F(MENU_TEXT_BUT ": "));
-                  if (log_unknown_only) {
-                    client.println(F(MENU_TEXT_YES "<BR>"));
-                  } else {
-                    client.println(F(MENU_TEXT_NO "<BR>"));
-                  }
-                  client.println(F(MENU_TEXT_LBO ": "));
-                  if (log_bc_only) {
-                    client.println(F(MENU_TEXT_YES "<BR>"));
-                  } else {
-                    client.println(F(MENU_TEXT_NO "<BR>"));
-                  }
+                  bufferedprint(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+                  printyesno(log_unknown_only);
+                  bufferedprint(PSTR(MENU_TEXT_LBO ": "));
+                  printyesno(log_bc_only);
                 }
               }
               client.println(F("<BR>"));
@@ -6379,11 +6524,7 @@ uint8_t pps_offset = 0;
           }
           webPrintHeader();
           client.print(F(MENU_TEXT_LBO ": "));
-          if (log_bc_only) {
-            client.println(F(MENU_TEXT_YES "<BR>"));
-          } else {
-            client.println(F(MENU_TEXT_NO "<BR>"));
-          }
+          printyesno(log_bc_only) ;
           webPrintFooter();
           break;
         }
@@ -6395,11 +6536,7 @@ uint8_t pps_offset = 0;
           }
           webPrintHeader();
           client.print(F(MENU_TEXT_BUT ": "));
-          if (log_unknown_only) {
-            client.println(F(MENU_TEXT_YES "<BR>"));
-          } else {
-            client.println(F(MENU_TEXT_NO "<BR>"));
-          }
+          printyesno(log_unknown_only);
           webPrintFooter();
           break;
         }
@@ -6707,24 +6844,19 @@ uint8_t pps_offset = 0;
               TWW_count=0;
             }else{
               // query brenner duration
-              client.print(F("<tr><td>Brenner Laufzeit Stufe 1: "));
+              bufferedprint(PSTR("<tr><td>Brenner Laufzeit Stufe 1: "));
               client.print(brenner_duration);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("Brenner Takte Stufe 1: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 1: "));
               client.print(brenner_count);
-              client.println(F("</td></tr>"));
-              client.print(F("<tr><td>Brenner Laufzeit Stufe 2: "));
+              bufferedprint(PSTR("</td></tr>\n<tr><td>Brenner Laufzeit Stufe 2: "));
               client.print(brenner_duration_2);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("Brenner Takte Stufe 2: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 2: "));
               client.print(brenner_count_2);
-              client.println(F("</td></tr>"));
-              client.print(F("<tr><td>TWW Laufzeit: "));
+              bufferedprint(PSTR("</td></tr>\n<tr><td>TWW Laufzeit: "));
               client.print(TWW_duration);
-              client.println(F("</td></tr><tr><td>"));
-              client.print(F("TWW Takte: "));
+              bufferedprint(PSTR("</td></tr><tr><td>\nTWW Takte: "));
               client.print(TWW_count);
-              client.println(F("</td></tr>"));
+              bufferedprintln(PSTR("</td></tr>"));
             }
           }else{
             if(range[0]=='K'){
@@ -6884,7 +7016,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	            }
+              }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), query(log_parameters[i],log_parameters[i],1));
 #endif
@@ -6898,7 +7030,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(F("\","));
               } else {
                 MQTTPayload.concat(F("\"}"));
-	      }
+        }
 #else
               MQTTClient.publish(MQTTTopic.c_str(), strtok(query(log_parameters[i],log_parameters[i],1)," "));
 #endif
@@ -6991,10 +7123,7 @@ uint8_t pps_offset = 0;
     if (dataFile) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
-          dataFile.print(millis());
-          dataFile.print(F(";"));
-          dataFile.print(GetDateTime(date)); // get current time from heating system
-          dataFile.print(F(";"));
+          printTrailToFile(&dataFile);
           dataFile.print(log_parameters[i]);
           dataFile.print(F(";"));
         }
@@ -7025,45 +7154,35 @@ uint8_t pps_offset = 0;
           dataFile.println(div_unit);
         } else {
           if (log_parameters[i] == 20000) {
-            dataFile.print(F(MENU_TEXT_BZ1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BZ1 ";"));
             dataFile.println(brenner_duration);
           }
           if (log_parameters[i] == 20001) {
-            dataFile.print(F(MENU_TEXT_BT1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BT1 ";"));
             dataFile.println(brenner_count);
           }
           if (log_parameters[i] == 20002) {
-            dataFile.print(F(MENU_TEXT_BZ2));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BZ2 ";"));
             dataFile.println(brenner_duration_2);
           }
           if (log_parameters[i] == 20003) {
-            dataFile.print(F(MENU_TEXT_BT2));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_BT2 ";"));
             dataFile.println(brenner_count_2);
           }
           if (log_parameters[i] == 20004) {
-            dataFile.print(F(MENU_TEXT_TZ1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_TZ1 ";"));
             dataFile.println(TWW_duration);
           }
           if (log_parameters[i] == 20005) {
-            dataFile.print(F(MENU_TEXT_TT1));
-            dataFile.print(F(";"));
+            dataFile.print(F(MENU_TEXT_TT1 ";"));
             dataFile.println(TWW_count);
           }
           if (log_parameters[i] == 20006) {
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
-                dataFile.print(millis());
-                dataFile.print(F(";"));
-                dataFile.print(GetDateTime(date)); // get current time from heating system
-                dataFile.print(F(";"));
+                printTrailToFile(&dataFile);
                 dataFile.print(avg_parameters[i]);
-                dataFile.print(F(";"));
-                dataFile.print(F("Avg_"));
+                dataFile.print(F(";Avg_"));
                 dataFile.print(lookup_descr(avg_parameters[i]));
                 dataFile.print(F(";"));
                 float rounded = round(avgValues[i]*10);
@@ -7104,10 +7223,7 @@ uint8_t pps_offset = 0;
                 }
                 max_id[10] = '\0';
 
-                dataFile.print(millis());
-                dataFile.print(F(";"));
-                dataFile.print(GetDateTime(date)); // get current time from heating system
-                dataFile.print(F(";"));
+                printTrailToFile(&dataFile);
                 dataFile.print(log_parameters[i]);
                 dataFile.print(F(";"));
                 switch (log_parameters[i]) {
@@ -7140,10 +7256,7 @@ uint8_t pps_offset = 0;
               dataFile.print(F(";"));
               dataFile.println(temp);
 
-              dataFile.print(millis());
-              dataFile.print(F(";"));
-              dataFile.print(GetDateTime(date)); // get current time from heating system
-              dataFile.print(F(";"));
+              printTrailToFile(&dataFile);
               dataFile.print(log_parameters[i]);
               dataFile.print(F(";"));
               dataFile.print(F("DHT Humidity "));
