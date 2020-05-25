@@ -2547,40 +2547,6 @@ char *printTelegram(byte* msg, int query_line) {
   return pvalstr;
 }
 
-/** *****************************************************************
- *  Function: bufferedprint and bufferedprintln
- *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *  Pass parameters:
- *  WiFiEspClient/EthernetClient &cl
- *  PGM_P outstr
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   buffer variable
- * *************************************************************** */
-
-#ifdef WIFI
-void bufferedprint(WiFiEspClient& cl, PGM_P outstr) {
-#else
-void bufferedprint(EthernetClient& cl, PGM_P outstr) {
-#endif
-  strncpy_P(buffer, outstr, BUFLEN);
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
-
-#ifdef WIFI
-void bufferedprintln(WiFiEspClient& cl, PGM_P outstr) {
-#else
-void bufferedprintln(EthernetClient& cl, PGM_P outstr) {
-#endif
-  strncpy_P(buffer, outstr, BUFLEN - 2);
-  strcat_P(buffer, PSTR("\n"));
-  buffer[BUFLEN - 1] = 0;
-  cl.print(buffer);
-}
 
 /** *****************************************************************
  *  Function: printPStr
@@ -4211,39 +4177,39 @@ char *lookup_descr(uint16_t line) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  bufferedprint(client, PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
+  bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
 
   int counter = 0;
   static const int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
   
-  bufferedprint(client, PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  bufferedprint(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   
   for (int i=0; i < numIPWESensors; i++) { 
     counter++;
     float ipwe_sensor = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
-    bufferedprint(client, PSTR("<tr><td>T<br></td><td>"));
+    bufferedprint(PSTR("<tr><td>T<br></td><td>"));
     client.print(counter);
-    bufferedprint(client, PSTR("<br></td><td>"));
+    bufferedprint(PSTR("<br></td><td>"));
     client.print(lookup_descr(ipwe_parameters[i]));
-    bufferedprint(client, PSTR("<br></td><td>"));
+    bufferedprint(PSTR("<br></td><td>"));
     client.print(ipwe_sensor);
-    bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    bufferedprint(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
-      bufferedprint(client, PSTR("<tr><td>T<br></td><td>"));
+      bufferedprint(PSTR("<tr><td>T<br></td><td>"));
       client.print(counter);
-      bufferedprint(client, PSTR("<br></td><td>Avg"));
+      bufferedprint(PSTR("<br></td><td>Avg"));
       client.print(lookup_descr(avg_parameters[i]));
-      bufferedprint(client, PSTR("<br></td><td>"));
+      bufferedprint(PSTR("<br></td><td>"));
       float rounded = round(avgValues[i]*10);
       client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-      bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      bufferedprint(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 
@@ -4282,9 +4248,9 @@ void Ipwe() {
       sprintf(outBuf, formatbuf, counter, i+1);
       client.println(outBuf);
       client.print(temp);
-      bufferedprint(client, PSTR("<br></td><td>"));
+      bufferedprint(PSTR("<br></td><td>"));
       client.print(hum);
-      bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
+      bufferedprint(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 #endif
@@ -4292,7 +4258,7 @@ void Ipwe() {
   free(formatbuf);
 #endif
 
-  bufferedprint(client, PSTR("</tbody></table></form>"));
+  bufferedprint(PSTR("</tbody></table></form>"));
 }
 
 #endif    // --- Ipwe() ---
@@ -5786,13 +5752,13 @@ uint8_t pps_offset = 0;
                           client.println(F("<br>"));
                         }
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (tx_msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
+                          if (tx_msg[i] < 16) bufferedprint(PSTR("0"));  // add a leading zero to single-digit values
                           client.print(tx_msg[i], HEX);
                           client.print(F(" "));
                         }
                         client.println(F("<br>"));
                         for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
+                          if (msg[i] < 16) bufferedprint(PSTR("0"));  // add a leading zero to single-digit values
                           client.print(msg[i], HEX);
                           client.print(F(" "));
                         }
@@ -5835,14 +5801,14 @@ uint8_t pps_offset = 0;
             client.println(F("<br>"));
           }
           for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (tx_msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
+            if (tx_msg[i] < 16) bufferedprint(PSTR("0"));  // add a leading zero to single-digit values
             client.print(tx_msg[i], HEX);
             client.print(F(" "));
           }
           client.println();
           client.println(F("<br>"));
           for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (msg[i] < 16) bufferedprint(client, PSTR("0"));  // add a leading zero to single-digit values
+            if (msg[i] < 16) bufferedprint(PSTR("0"));  // add a leading zero to single-digit values
             client.print(msg[i], HEX);
             client.print(F(" "));
           }
