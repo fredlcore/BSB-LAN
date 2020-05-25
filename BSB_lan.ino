@@ -4155,40 +4155,53 @@ void Ipwe() {
   static const int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
-  char *formatbuf = (char *)malloc(127);
   
   bufferedprint(client, PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   
-  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-  for (int i=0; i < numIPWESensors; i++) {
+  for (int i=0; i < numIPWESensors; i++) { 
     counter++;
-    sprintf(outBuf, formatbuf, counter, lookup_descr(ipwe_parameters[i]), query(ipwe_parameters[i],ipwe_parameters[i],1));
-    client.println(outBuf);
+    float ipwe_sensor = strtod(query(ipwe_parameters[i],ipwe_parameters[i],1),NULL);
+    bufferedprint(client, PSTR("<tr><td>T<br></td><td>"));
+    client.print(counter);
+    bufferedprint(client, PSTR("<br></td><td>"));
+    client.print(lookup_descr(ipwe_parameters[i]));
+    bufferedprint(client, PSTR("<br></td><td>"));
+    client.print(ipwe_sensor);
+    bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
-  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>Avg%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
+      bufferedprint(client, PSTR("<tr><td>T<br></td><td>"));
+      client.print(counter);
+      bufferedprint(client, PSTR("<br></td><td>Avg"));
+      client.print(lookup_descr(avg_parameters[i]));
+      bufferedprint(client, PSTR("<br></td><td>"));
       float rounded = round(avgValues[i]*10);
+      client.println(rounded/10);
 // TODO: extract and display unit text from cmdtbl.type
-      sprintf(outBuf, formatbuf, counter, lookup_descr(ipwe_parameters[i]), rounded/10);
-      client.println(outBuf);
+      bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 
+#if defined(ONE_WIRE_BUS) || defined(DHT_BUS)
+  char *formatbuf = (char *)malloc(100);
+#endif
 #ifdef ONE_WIRE_BUS
   // output of one wire sensors
   sensors.requestTemperatures();
   DeviceAddress device_address;
-  
-  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>%02x%02x%02x%02x%02x%02x%02x%02x<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+
+  strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>%02x%02x%02x%02x%02x%02x%02x%02x<br></td><td>"));
   for(uint8_t i=0;i<numSensors;i++) {
     counter++;
+    outBufclear();
     float t=sensors.getTempCByIndex(i);
     sensors.getAddress(device_address, i);
-    
-    sprintf(outBuf, formatbuf, counter, device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], t);
+    outBufLen+=sprintf(outBuf, formatbuf, counter, device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+    _printFIXPOINT(t,2);
+    strcat_P(outBuf, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     client.println(outBuf);
   }
 #endif
@@ -4201,35 +4214,22 @@ void Ipwe() {
 
     float hum = DHT.humidity;
     float temp = DHT.temperature;
-    strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>DHT sensor %u<br></td><td>%s<br></td><td>%s<br></td><td>0<br></td><td>0<br></td></tr>"));
+    strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>DHT sensor %u<br></td><td>"));
     if (hum > 0 && hum < 101) {
       counter++;
-//      client.print(F("<tr><td>T<br></td><td>"));
-//      client.print(counter);
-//      client.print(F("<br></td><td>"));
-//      client.print(F("DHT sensor "));
-//      client.print(i+1);
-//      client.print(F(" temperature"));
-//      client.print(F("<br></td><td>"));
-//      client.print(temp);
-//      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-//      counter++;
-//      client.print(F("<tr><td>F<br></td><td>"));
-//      client.print(counter);
-//      client.print(F("<br></td><td>"));
-//      client.print(F("DHT sensor "));
-//      client.print(i+1);
-//      client.print(F(" humidity"));
-//      client.print(F("<br></td><td>0<br></td><td>"));
-//      client.print(hum);
-//      client.print(F("<br></td><td>0<br></td><td>0<br></td></tr>"));
-      sprintf(outBuf, formatbuf, counter, i+1, temp, hum);
+      sprintf(outBuf, formatbuf, counter, i+1);
       client.println(outBuf);
+      client.print(temp);
+      bufferedprint(client, PSTR("<br></td><td>"));
+      client.print(hum);
+      bufferedprint(client, PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 #endif
-
+#if defined(ONE_WIRE_BUS) || defined(DHT_BUS)
   free(formatbuf);
+#endif
+
   bufferedprint(client, PSTR("</tbody></table></form>"));
 }
 
