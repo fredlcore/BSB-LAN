@@ -5898,13 +5898,10 @@ uint8_t pps_offset = 0;
             strcpy_P(formatbuf, PSTR(",\n  \"dhtbus\": \"%d,%d\""));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, DHT_BUS);
             #endif
-            boolean somethingexist = false;
-            int tempoutBufLen = outBufLen;
-//protected GPIO
-            if(anz_ex_gpio > 0){
-            somethingexist = true;
             client.print(outBuf);
             outBufLen = 0;
+//protected GPIO
+            if(anz_ex_gpio > 0){
             strcpy_P(formatbuf, PSTR(",\n  \"protectedGPIO\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"pin\": %d },\n"));
@@ -5918,10 +5915,11 @@ uint8_t pps_offset = 0;
             strcpy_P(formatbuf, PSTR("\n  ]"));
             outBufLen-=2; //two bytes shift (delete comma and \n)
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
+            client.print(outBuf);
+            outBufLen = 0;
             }
+            boolean somethingexist = false;
 //averages
-            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
-            somethingexist = false;
             strcpy_P(formatbuf, PSTR(",\n  \"averages\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
@@ -5937,7 +5935,7 @@ uint8_t pps_offset = 0;
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
 // logged parameters
           #ifdef LOGGER
-            if(somethingexist) {client.print(outBuf); outBufLen = 0; tempoutBufLen = 0;} else {outBufLen = tempoutBufLen;}
+            if(somethingexist) {client.print(outBuf); outBufLen = 0;}
             somethingexist = false;
             strcpy_P(formatbuf, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"));
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
@@ -5953,7 +5951,6 @@ uint8_t pps_offset = 0;
             outBufLen-=2; //two bytes shift (delete comma and \n)
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
           #endif
-            if(!somethingexist) outBufLen = tempoutBufLen;
             strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
             client.print(outBuf);
             client.flush();
