@@ -1540,8 +1540,10 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
  * *************************************************************** */
 void _printFIXPOINT(float dval, int precision){
   int a,b,i;
+  char sign[] = " ";
+  
   if(dval<0){
-    outBufLen+=sprintf(outBuf+outBufLen,"-");
+    sign[0] = '-';
     dval*=-1.0;
   }
   float rval=10.0;
@@ -1551,11 +1553,11 @@ void _printFIXPOINT(float dval, int precision){
   rval/=10.0;
   b=(int)(dval*rval - a*rval);
   if(precision==0){
-    outBufLen+=sprintf(outBuf+outBufLen,"%d",a);
+    outBufLen+=sprintf(outBuf+outBufLen,"%s%d", sign, a);
   }else{
-    char formatstr[8]="%d.%01d";
-    formatstr[5]='0'+precision;
-    outBufLen+=sprintf(outBuf+outBufLen,formatstr,a,b);
+    char formatstr[10]="%s%d.%01d";
+    formatstr[7]='0'+precision;
+    outBufLen+=sprintf(outBuf+outBufLen, formatstr, sign, a, b);
   }
 }
 
@@ -4234,21 +4236,63 @@ void Ipwe() {
   }
 #endif
 
+/*#ifdef DHT_BUS // TODO: Reduce code for this part... use old "style" below in the meantime
+  // output of DHT sensors
+  static const uint8_t numDHTSensors = sizeof(DHT_Pins) / sizeof(uint8_t);
+  strcpy_P(formatbuf, PSTR("<tr><td>%<br></td><td>%u<br></td><td>DHT sensor %u<br></td><td>"));
+  const char typeF[] = "F";
+  const char typeT[] = "T";
+  
+  for(int i=0;i<numDHTSensors;i++){
+    DHT.read22(DHT_Pins[i]);
+    float hum = DHT.humidity;
+    float temp = DHT.temperature;
+    
+    if (hum > 0 && hum < 101) {
+      counter++;
+      outBufclear();
+      outBufLen+=sprintf(outBuf, formatbuf, typeT, counter, i+1);
+      _printFIXPOINT(temp,2);
+      strcat_P(outBuf, PSTR("<br></td><td>"));
+      //_printFIXPOINT(hum,0);
+      //strcat_P(outBuf, PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
+      strcat_P(outBuf, PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      client.println(outBuf);
+
+      counter++;
+      outBufclear();
+      outBufLen+=sprintf(outBuf, formatbuf, typeF, counter, i+1);
+      strcat_P(outBuf, PSTR("0<br></td><td>"));
+      _printFIXPOINT(hum,0);
+      strcat_P(outBuf, PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
+      client.println(outBuf);
+    }
+  }
+#endif*/
 #ifdef DHT_BUS
   // output of DHT sensors
   static const uint8_t numDHTSensors = sizeof(DHT_Pins) / sizeof(uint8_t);
+  
   for(int i=0;i<numDHTSensors;i++){
     DHT.read22(DHT_Pins[i]);
-
     float hum = DHT.humidity;
     float temp = DHT.temperature;
-    strcpy_P(formatbuf, PSTR("<tr><td>T<br></td><td>%u<br></td><td>DHT sensor %u<br></td><td>"));
+
     if (hum > 0 && hum < 101) {
       counter++;
-      sprintf(outBuf, formatbuf, counter, i+1);
-      client.println(outBuf);
+      bufferedprint(PSTR("<tr><td>T<br></td><td>"));
+      client.print(counter);
+      bufferedprint(PSTR("<br></td><td>DHT sensor "));
+      client.print(i+1);
+      bufferedprint(PSTR(" temperature<br></td><td>"));
       client.print(temp);
-      bufferedprint(PSTR("<br></td><td>"));
+      bufferedprint(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      counter++;
+      bufferedprint(PSTR("<tr><td>F<br></td><td>"));
+      client.print(counter);
+      bufferedprint(PSTR("<br></td><td>DHT sensor "));
+      client.print(i+1);
+      bufferedprint(PSTR(" humidity<br></td><td>0<br></td><td>"));
       client.print(hum);
       bufferedprint(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
@@ -6395,7 +6439,7 @@ uint8_t pps_offset = 0;
           client.println(ip);
           client.println(F("<BR>"));
 */
-          client.println(F(MENU_TEXT_AVT ": <BR>"));
+
           for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
               client.print (avg_parameters[i]);
