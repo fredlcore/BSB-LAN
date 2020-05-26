@@ -6443,7 +6443,7 @@ uint8_t pps_offset = 0;
           client.println(ip);
           client.println(F("<BR>"));
 */
-
+          client.println(F(MENU_TEXT_AVT ": <BR>"));
           for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
               client.print (avg_parameters[i]);
