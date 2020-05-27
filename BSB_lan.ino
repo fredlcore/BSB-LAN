@@ -1269,7 +1269,7 @@ void SerialPrintType(byte type){
  * *************************************************************** */
 void printLineNumber(uint32_t val) {
     char *p=outBuf+outBufLen;
-    outBufLen+=sprintf(outBuf+outBufLen,"%4ld",val);
+    outBufLen+=sprintf(p,"%4ld",val);
     DebugOutput.print(p);
 }
 
@@ -1766,12 +1766,12 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
       strncpy_PF(buffer, enumstr+c, sizeof(buffer));
       buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
+        outBufLen+=sprintf(p,"%d - %s",val,buffer);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
+        outBufLen+=sprintf(p,"%s",buffer);
       }
     }else{
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
+      outBufLen+=sprintf(p,"%d",search_val);
       decodedTelegram.error = 4;
     }
     DebugOutput.print(p);
@@ -1811,12 +1811,12 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
       strncpy_PF(buffer, enumstr+c, sizeof(buffer));
       buffer[sizeof(buffer)-1] = 0;
       if(print_val){
-        outBufLen+=sprintf(outBuf+outBufLen,"%d - %s",val,buffer);
+        outBufLen+=sprintf(p,"%d - %s",val,buffer);
       }else{
-        outBufLen+=sprintf(outBuf+outBufLen,"%s",buffer);
+        outBufLen+=sprintf(p,"%s",buffer);
       }
     }else{
-      outBufLen+=sprintf(outBuf+outBufLen,"%d",search_val);
+      outBufLen+=sprintf(p,"%d",search_val);
       decodedTelegram.error = 4;
     }
     DebugOutput.print(p);
@@ -1841,7 +1841,7 @@ void printDateTime(byte *msg,byte data_len){
 
   if(data_len == 9){
     if(msg[bus.getPl_start()]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2],msg[bus.getPl_start()+1]+1900,msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
+      outBufLen+=sprintf(p,"%02d.%02d.%d %02d:%02d:%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2],msg[bus.getPl_start()+1]+1900,msg[bus.getPl_start()+5],msg[bus.getPl_start()+6],msg[bus.getPl_start()+7]);
     } else {
       undefinedValueToBuffer();
     }
@@ -1870,7 +1870,7 @@ void printDate(byte *msg,byte data_len){
 
   if(data_len == 9){
     if(msg[bus.getPl_start()]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2]);
+      outBufLen+=sprintf(p,"%02d.%02d",msg[bus.getPl_start()+3],msg[bus.getPl_start()+2]);
     } else {
       undefinedValueToBuffer();
     }
@@ -1938,9 +1938,9 @@ void printTime(byte *msg,byte data_len){
 
   if(data_len == 3){
     if(msg[bus.getPl_start()]==0){
-      outBufLen+=sprintf(outBuf+outBufLen,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
+      outBufLen+=sprintf(p,"%02d:%02d",msg[bus.getPl_start()+1],msg[bus.getPl_start()+2]);
     } else {
-      strcpy_P(outBuf+outBufLen,PSTR("--:--")); outBufLen+=5; // outBufLen+=sprintf(outBuf+outBufLen,"--:--");
+      strcpy_P(p,PSTR("--:--")); outBufLen+=5; // outBufLen+=sprintf(outBuf+outBufLen,"--:--");
     }
     if (bus.getBusType() == BUS_PPS) {
       char PPS_output[55];
@@ -1974,7 +1974,7 @@ void printLPBAddr(byte *msg,byte data_len){
 
   if(data_len == 2){
     if(msg[bus.getPl_start()]==0){   // payload Int8 value
-    outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[bus.getPl_start()+1]>>4,(msg[bus.getPl_start()+1] & 0x0f)+1);
+    outBufLen+=sprintf(p,"%02d.%02d",msg[bus.getPl_start()+1]>>4,(msg[bus.getPl_start()+1] & 0x0f)+1);
   }else{
     undefinedValueToBuffer();
   }
@@ -2182,7 +2182,7 @@ char *printTelegram(byte* msg, int query_line) {
     strcpy_PF(buffer, get_cmdtbl_desc(i));
 //    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
-    outBufLen+=sprintf(outBuf+outBufLen," %s: ", buffer);
+    outBufLen+=sprintf(p," %s: ", buffer);
     DebugOutput.print(p);
   }
 
@@ -2219,7 +2219,7 @@ char *printTelegram(byte* msg, int query_line) {
           char *p=outBuf+outBufLen;
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
-          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[bus.getPl_start()]);
+          outBufLen+=sprintf(p,"error %d",msg[bus.getPl_start()]);
             decodedTelegram.error = 64;
           if(msg[bus.getPl_start()]==0x07){
             decodedTelegram.error = 32;
@@ -2382,7 +2382,7 @@ char *printTelegram(byte* msg, int query_line) {
                 }
               break;
             case VT_ENUM: // enum
-              if(data_len == 2 || data_len == 3 || bus.getBusType() == 2) {
+              if(data_len == 2 || data_len == 3 || bus.getBusType() == BUS_PPS) {
                 if((msg[bus.getPl_start()]==0 && data_len==2) || (msg[bus.getPl_start()]==0 && data_len==3) || (bus.getBusType() == BUS_PPS)) {
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
