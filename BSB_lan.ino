@@ -1018,10 +1018,13 @@ int findLine(uint16_t line
  *  Does:     Returns the amount of available RAM
  *
  * *************************************************************** */
+#if defined(__SAM3X8E__)
+extern "C" char* sbrk(int incr);
+#endif
 int freeRam () {
 #if defined(__SAM3X8E__)
-  // TODO
-  return 0;
+  char top;
+  return &top - reinterpret_cast<char*>(sbrk(0));
 #else
   extern int __heap_start, *__brkval;
   int v;
