@@ -67,6 +67,7 @@
 #define MENU_TEXT_QTE "Test finished"
 #define MENU_TEXT_QFE "Done"
 #define MENU_TEXT_TOC "Manual"
+#define MENU_TEXT_MOD "Installed modules"
 #define MENU_TEXT_NVS "Checking for newer version"
 #define MENU_TEXT_NVA "Newer version found"
 #define MENU_TEXT_NVN "Current version is up to date"

@@ -2308,12 +2308,13 @@ char *printTelegram(byte* msg, int query_line) {
     printENUM(pgm_get_far_address(ENUM_CAT),len,cat,0);
 #endif
     DebugOutput.print(F(" - "));
-    strcpy_P(outBuf+outBufLen,PSTR(" - ")); outBufLen+=3; //outBufLen+=sprintf(outBuf+outBufLen," - ");
+    strcpy_P(outBuf+outBufLen,PSTR(" -  ")); outBufLen+=4; //outBufLen+=sprintf(outBuf+outBufLen," - ");
     // print menue text
-    strcpy_PF(buffer, get_cmdtbl_desc(i));
-//    strcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].desc)));
     char *p=outBuf+outBufLen;
-    outBufLen+=sprintf(p," %s: ", buffer);
+    strcpy_PF(p, get_cmdtbl_desc(i));
+    outBufLen+=strlen(p);
+    p -=1; //add space to string
+    strcpy_P(outBuf+outBufLen,PSTR(": ")); outBufLen+=2;
     DebugOutput.print(p);
   }
 
@@ -6462,6 +6463,57 @@ uint8_t pps_offset = 0;
             }
           }
           client.println(F("<BR>"));
+// list of enabled modules
+          client.println(F(MENU_TEXT_MOD ": <BR>"));
+          outBufclear();
+          #ifdef WEBSERVER
+          strcpy_P(outBuf + outBufLen, PSTR("WEBSERVER, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef IPWE
+          strcpy_P(outBuf + outBufLen, PSTR("IPWE, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef CUSTOM_COMMANDS
+          strcpy_P(outBuf + outBufLen, PSTR("CUSTOM_COMMANDS, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef RESET
+          strcpy_P(outBuf + outBufLen, PSTR("RESET, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef MQTTBrokerIP
+          #ifdef MQTT_JSON
+          strcpy_P(outBuf + outBufLen, PSTR("MQTT JSON, "));
+          #else
+          strcpy_P(outBuf + outBufLen, PSTR("MQTT, "));
+          #endif
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #if defined DebugTelnet || defined DEBUG
+          #ifdef DEBUG
+          strcpy_P(outBuf + outBufLen, PSTR("DEBUG, "));
+          #else
+          strcpy_P(outBuf + outBufLen, PSTR("DebugTelnet, "));
+          #endif
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef LOGGER
+          strcpy_P(outBuf + outBufLen, PSTR("LOGGER, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          #ifdef VERSION_CHECK
+          strcpy_P(outBuf + outBufLen, PSTR("VERSION_CHECK, "));
+          outBufLen+=strlen(outBuf + outBufLen);
+          #endif
+          if(outBufLen > 0)
+            outBuf[outBufLen - 2] = '\0';
+          else
+            strcpy_P(outBuf + outBufLen, PSTR("NONE"));
+          client.print(outBuf);
+          outBufclear();
+          client.println(F("<BR><BR>"));
+// end of list of enabled modules
 
           #ifdef LOGGER
           client.println(F(MENU_TEXT_LGP " "));
