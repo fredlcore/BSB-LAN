@@ -2600,7 +2600,8 @@ char *printTelegram(byte* msg, int query_line) {
               strcat_P(decodedTelegram.value, getfarstrings);
               q = strlen(decodedTelegram.value);
               sprintf(decodedTelegram.value + q, ", %02d:%02d:%02d", hour(), minute(), second());
-              outBufLen+=sprintf(outBuf+outBufLen, decodedTelegram.value);
+              strcpy(outBuf + outBufLen, decodedTelegram.value);
+              outBufLen+=strlen(outBuf + outBufLen);
               DebugOutput.print(pvalstr);
               break;
             }
@@ -6453,16 +6454,6 @@ uint8_t pps_offset = 0;
           client.println(ip);
           client.println(F("<BR>"));
 */
-          client.println(F(MENU_TEXT_AVT ": <BR>"));
-          for (int i=0; i<numAverages; i++) {
-            if (avg_parameters[i] > 0) {
-              client.print (avg_parameters[i]);
-              client.print(F(" - "));
-              client.print(lookup_descr(avg_parameters[i]));
-              client.println(F("<BR>"));
-            }
-          }
-          client.println(F("<BR>"));
 // list of enabled modules
           client.println(F(MENU_TEXT_MOD ": <BR>"));
           outBufclear();
@@ -6514,6 +6505,17 @@ uint8_t pps_offset = 0;
           outBufclear();
           client.println(F("<BR><BR>"));
 // end of list of enabled modules
+
+          client.println(F(MENU_TEXT_AVT ": <BR>"));
+          for (int i=0; i<numAverages; i++) {
+            if (avg_parameters[i] > 0) {
+              client.print (avg_parameters[i]);
+              client.print(F(" - "));
+              client.print(lookup_descr(avg_parameters[i]));
+              client.println(F("<BR>"));
+            }
+          }
+          client.println(F("<BR>"));
 
           #ifdef LOGGER
           client.println(F(MENU_TEXT_LGP " "));
