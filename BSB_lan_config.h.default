@@ -156,8 +156,8 @@ static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus pins and bus type
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)
-// Hardware Serial is always pin 19 (RX) and pin 18 (TX).
-// Software Serial needs special pins for RX (68) and TX (69), this is now deprecated.
+// Hardware Serial is always pin 19 (RX) and pin 18 (TX). On the Arduino Due this is the only way to connect to the bus.
+// Software Serial needs special pins for RX (68) and TX (69); this is now deprecated and should only be used on older installations running on the Arduino Mega.
 // BSB: 
 // - optional third parameter sets own address, defaults to 0x42 (LAN in serial monitor)
 // - use BSB bus(68,69,6) to define device as RGT1
