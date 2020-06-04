@@ -143,6 +143,7 @@
 #undef MENU_TEXT_TOC
 #undef MENU_TEXT_UPT
 #undef MENU_TEXT_VER
+#undef MENU_TEXT_MOD
 #undef MENU_TEXT_NVS
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
