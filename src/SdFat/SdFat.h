@@ -1,21 +1,26 @@
-/* Arduino SdFat Library
- * Copyright (C) 2016 by William Greiman
+/**
+ * Copyright (c) 2011-2018 Bill Greiman
+ * This file is part of the SdFat library for SD memory cards.
  *
- * This file is part of the Arduino SdFat Library
+ * MIT License
  *
- * This Library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * This Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with the Arduino SdFat Library.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 #ifndef SdFat_h
 #define SdFat_h
@@ -27,9 +32,12 @@
 #include "BlockDriver.h"
 #include "FatLib/FatLib.h"
 #include "SdCard/SdioCard.h"
+#if INCLUDE_SDIOS
+#include "sdios.h"
+#endif  // INCLUDE_SDIOS
 //------------------------------------------------------------------------------
-/** SdFat version */
-#define SD_FAT_VERSION "1.0.1"
+/** SdFat version 1.1.2 */
+#define SD_FAT_VERSION 10102
 //==============================================================================
 /**
  * \class SdBaseFile
@@ -44,9 +52,9 @@ class SdBaseFile : public FatFile {
    *
    * \param[in] oflag Values for \a oflag are constructed by a
    * bitwise-inclusive OR of open flags. see
-   * FatFile::open(FatFile*, const char*, uint8_t).
+   * FatFile::open(FatFile*, const char*, oflag_t).
    */
-  SdBaseFile(const char* path, uint8_t oflag) : FatFile(path, oflag) {}
+  SdBaseFile(const char* path, oflag_t oflag) : FatFile(path, oflag) {}
 };
 //-----------------------------------------------------------------------------
 #if ENABLE_ARDUINO_FEATURES
@@ -63,9 +71,9 @@ class SdFile : public PrintFile {
    *
    * \param[in] oflag Values for \a oflag are constructed by a
    * bitwise-inclusive OR of open flags. see
-   * FatFile::open(FatFile*, const char*, uint8_t).
+   * FatFile::open(FatFile*, const char*, oflag_t).
    */
-  SdFile(const char* path, uint8_t oflag) : PrintFile(path, oflag) {}
+  SdFile(const char* path, oflag_t oflag) : PrintFile(path, oflag) {}
 };
 #endif  // #if ENABLE_ARDUINO_FEATURES
 //-----------------------------------------------------------------------------
@@ -303,12 +311,12 @@ class SdFat : public SdFileSystem<SdSpiCard> {
  public:
 #if IMPLEMENT_SPI_PORT_SELECTION || defined(DOXYGEN)
   SdFat() {
-    m_spi.setPort(0);
+    m_spi.setPort(nullptr);
   }
   /** Constructor with SPI port selection.
    * \param[in] spiPort SPI port number.
    */
-  explicit SdFat(uint8_t spiPort) {
+  explicit SdFat(SPIClass* spiPort) {
     m_spi.setPort(spiPort);
   }
 #endif  // IMPLEMENT_SPI_PORT_SELECTION
@@ -436,12 +444,12 @@ class SdFatEX : public SdFileSystem<SdSpiCardEX> {
  public:
 #if IMPLEMENT_SPI_PORT_SELECTION  || defined(DOXYGEN)
   SdFatEX() {
-    m_spi.setPort(0);
+    m_spi.setPort(nullptr);
   }
   /** Constructor with SPI port selection.
    * \param[in] spiPort SPI port number.
    */
-  explicit SdFatEX(uint8_t spiPort) {
+  explicit SdFatEX(SPIClass* spiPort) {
     m_spi.setPort(spiPort);
   }
 #endif  // IMPLEMENT_SPI_PORT_SELECTION

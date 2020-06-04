@@ -476,12 +476,12 @@ uint8_t json_types[20] = { 0 };
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 #if defined LOGGER || defined WEBSERVER
-#if defined(__SAM3X8E__)
-  #include <SD.h>
-#else
-  #include "src/SdFat/SdFat.h" // if you run into troubles with SdFat.h, just remove these two lines and activate the line above.
+//leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
+#define MINIMUM_FREE_SPACE_ON_SD 100
+// set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
+// do not forget set it up after SdFat upgrading
+  #include "src/SdFat/SdFat.h"
   SdFat SD;
-#endif
   File Logfile;
 #endif
 
@@ -2928,7 +2928,7 @@ void LogTelegram(byte* msg){
   int data_len;
   float dval;
   uint16_t line = 0;
-
+  if(SD.vol()->freeClusterCount() < MINIMUM_FREE_SPACE_ON_SD) return;
   if (log_parameters[0] == 30000) {
 
     if (bus.getBusType() != BUS_PPS) {
@@ -6064,8 +6064,8 @@ uint8_t pps_offset = 0;
           #ifdef LOGGER
             if(somethingexist) {client.print(outBuf); outBufLen = 0;}
             somethingexist = false;
-            strcpy_P(formatbuf, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"));
-            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
+            strcpy_P(formatbuf, PSTR(",\n  \"freespace\": %lu,\n  \"loginterval\": %d,\n  \"logged\": [\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, SD.vol()->freeClusterCount(), log_interval);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);}
@@ -6484,7 +6484,8 @@ uint8_t pps_offset = 0;
           #if defined DebugTelnet || defined DEBUG
           #ifdef DEBUG
           strcpy_P(outBuf + outBufLen, PSTR("DEBUG, "));
-          #else
+          #endif
+          #ifdef DebugTelnet
           strcpy_P(outBuf + outBufLen, PSTR("DebugTelnet, "));
           #endif
           outBufLen+=strlen(outBuf + outBufLen);
@@ -6504,7 +6505,18 @@ uint8_t pps_offset = 0;
           client.print(outBuf);
           outBufclear();
           client.println(F("<BR><BR>"));
-// end of list of enabled modules
+          // end of list of enabled modules
+
+#if defined LOGGER || defined WEBSERVER
+          strcpy_P(outBuf, PSTR("free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"));
+          char *p = outBuf + strlen(outBuf) + 1; //add zero to split strings
+          uint32_t m = micros();
+          uint32_t volFree = SD.vol()->freeClusterCount();
+          uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
+          outBufLen+=sprintf(p, outBuf, fs, volFree, micros() - m);
+          client.print(p);
+          outBufclear();
+#endif
 
           client.println(F(MENU_TEXT_AVT ": <BR>"));
           for (int i=0; i<numAverages; i++) {
@@ -7177,7 +7189,7 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-
+if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
   if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
 
@@ -7340,7 +7352,7 @@ uint8_t pps_offset = 0;
         }
       }
     }
-
+  }
     avgCounter++;
     lastAvgTime += 60000;
 
@@ -7689,19 +7701,39 @@ void setup() {
 #endif
   Serial.println(ip);
 
-#ifdef LOGGER
+#if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
 #endif
 
-  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));  // ...and flash the LED during that time...
-
+  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  // turn the LED on until Ethernet shield is ready and freeClusterCount is over
   pinMode(LED_BUILTIN, OUTPUT);
-  for (int i=0; i<3; i++) {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(500);                       // wait for a second
+  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+
+  long diff = 3000;
+  #if defined LOGGER || defined WEBSERVER
+  Serial.print(F("Calculating free space on SD..."));
+  uint32_t m = millis();
+  uint32_t volFree = SD.vol()->freeClusterCount();
+  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
+  strcpy_P(outBuf, PSTR("%lu MB free\n"));
+  char *p = outBuf + strlen(outBuf) + 1; //add zero to split strings
+  sprintf(p, outBuf, fs);
+  Serial.print(p);
+  outBufclear();
+  diff -= (millis() - m); //3 sec - delay
+  #endif
+  if(diff > 0)  delay(diff);
+
+  //decoration: double blink by LED before start. wait for a second
+  for (int i=0; i<2; i++) {
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(500);                       // wait for a second
+    delay(250);
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(250);
   }
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  //end of decoration
   server.begin();
 
 #ifdef DebugTelnet

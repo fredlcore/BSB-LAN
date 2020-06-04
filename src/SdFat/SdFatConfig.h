@@ -1,21 +1,26 @@
-/* Arduino SdFat Library
- * Copyright (C) 2012 by William Greiman
+/**
+ * Copyright (c) 2011-2018 Bill Greiman
+ * This file is part of the SdFat library for SD memory cards.
  *
- * This file is part of the Arduino SdFat Library
+ * MIT License
  *
- * This Library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * This Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with the Arduino SdFat Library.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 /**
  * \file
@@ -23,10 +28,17 @@
  */
 #ifndef SdFatConfig_h
 #define SdFatConfig_h
+#include <Arduino.h>
 #include <stdint.h>
 #ifdef __AVR__
 #include <avr/io.h>
 #endif  // __AVR__
+//------------------------------------------------------------------------------
+/**
+ * Set INCLUDE_SDIOS nonzero to include sdios.h in SdFat.h.
+ * sdios.h provides C++ style IO Streams.
+ */
+#define INCLUDE_SDIOS 1
 //------------------------------------------------------------------------------
 /**
  * Set USE_LONG_FILE_NAMES nonzero to use long file names (LFN).
@@ -57,14 +69,16 @@
  * the SPI bus may not be shared with other devices in this mode.
  */
 #define ENABLE_EXTENDED_TRANSFER_CLASS 0
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
- * If the symbol USE_STANDARD_SPI_LIBRARY is nonzero, the classes SdFat and
- * SdFatEX use the standard Arduino SPI.h library. If USE_STANDARD_SPI_LIBRARY
- * is zero, an optimized custom SPI driver is used if it exists.
- */ 
+ * If the symbol USE_STANDARD_SPI_LIBRARY is zero, an optimized custom SPI
+ * driver is used if it exists.  If the symbol USE_STANDARD_SPI_LIBRARY is
+ * one, the standard Arduino SPI.h library is used with SPI. If the symbol
+ * USE_STANDARD_SPI_LIBRARY is two, the SPI port can be selected with the
+ * constructors SdFat(SPIClass* spiPort) and SdFatEX(SPIClass* spiPort).
+ */
 #define USE_STANDARD_SPI_LIBRARY 0
-//-----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 /**
  * If the symbol ENABLE_SOFTWARE_SPI_CLASS is nonzero, the class SdFatSoftSpi
  * will be defined. If ENABLE_EXTENDED_TRANSFER_CLASS is also nonzero,
@@ -72,12 +86,41 @@
  */
 #define ENABLE_SOFTWARE_SPI_CLASS 0
 //------------------------------------------------------------------------------
-/** 
+/** If the symbol USE_FCNTL_H is nonzero, open flags for access modes O_RDONLY,
+ * O_WRONLY, O_RDWR and the open modifiers O_APPEND, O_CREAT, O_EXCL, O_SYNC
+ * will be defined by including the system file fcntl.h.
+ */
+#if defined(__AVR__)
+// AVR fcntl.h does not define open flags.
+#define USE_FCNTL_H 0
+#elif defined(PLATFORM_ID)
+// Particle boards - use fcntl.h.
+#define USE_FCNTL_H 1
+#elif defined(__arm__)
+// ARM gcc defines open flags.
+#define USE_FCNTL_H 1
+#elif defined(ESP32)
+#define USE_FCNTL_H 1
+#else  // defined(__AVR__)
+#define USE_FCNTL_H 0
+#endif  // defined(__AVR__)
+//------------------------------------------------------------------------------
+/**
+ * If CHECK_FLASH_PROGRAMMING is zero, overlap of single sector flash
+ * programming and other operations will be allowed for faster write
+ * performance.
+ *
+ * Some cards will not sleep in low power mode unless CHECK_FLASH_PROGRAMMING
+ * is non-zero.
+ */
+#define CHECK_FLASH_PROGRAMMING 1
+//------------------------------------------------------------------------------
+/**
  * Set MAINTAIN_FREE_CLUSTER_COUNT nonzero to keep the count of free clusters
  * updated.  This will increase the speed of the freeClusterCount() call
  * after the first call.  Extra flash will be required.
  */
-#define MAINTAIN_FREE_CLUSTER_COUNT 0
+#define MAINTAIN_FREE_CLUSTER_COUNT 1
 //------------------------------------------------------------------------------
 /**
  * To enable SD card CRC checking set USE_SD_CRC nonzero.
@@ -104,7 +147,7 @@
 #endif
 //------------------------------------------------------------------------------
 /**
- * Set FAT12_SUPPORT nonzero to enable use if FAT12 volumes.
+ * Set FAT12_SUPPORT nonzero to enable use of FAT12 volumes.
  * FAT12 has not been well tested and requires additional flash.
  */
 #define FAT12_SUPPORT 0
@@ -168,7 +211,7 @@
 /**
  * Determine the default SPI configuration.
  */
-#if defined(__STM32F1__)
+#if defined(__STM32F1__) || defined(__STM32F4__) || defined(PLATFORM_ID)
 // has multiple SPI ports
 #define SD_HAS_CUSTOM_SPI 2
 #elif defined(__AVR__)\
@@ -184,9 +227,9 @@
 /**
  * Check if API to select HW SPI port is needed.
  */
-#if (USE_STANDARD_SPI_LIBRARY || SD_HAS_CUSTOM_SPI < 2)
-#define IMPLEMENT_SPI_PORT_SELECTION 0
-#else  // USE_STANDARD_SPI_LIBRARY
+#if USE_STANDARD_SPI_LIBRARY > 1 || SD_HAS_CUSTOM_SPI > 1
 #define IMPLEMENT_SPI_PORT_SELECTION 1
-#endif  // USE_STANDARD_SPI_LIBRARY
+#else  // IMPLEMENT_SPI_PORT_SELECTION
+#define IMPLEMENT_SPI_PORT_SELECTION 0
+#endif  // IMPLEMENT_SPI_PORT_SELECTION
 #endif  // SdFatConfig_h
