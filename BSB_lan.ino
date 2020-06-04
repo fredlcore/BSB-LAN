@@ -1646,9 +1646,9 @@ void printDWORD(byte *msg,byte data_len,long divider, const char *postfix){
  *
  * *************************************************************** */
 void _printFIXPOINT(float dval, int precision){
-  outBufLen+=_printFIXPOINT(outBuf+outBufLen, dval, precision);
+  outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen, dval, precision);
 }
-int _printFIXPOINT(char *p, float dval, int precision){
+int _printFIXPOINTtoBuf(char *p, float dval, int precision){
   int a,b,i;
   int len = 0;
   if(dval<0){
@@ -1696,7 +1696,7 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision,const cha
       } else {
         dval=float((int16_t)(msg[bus.getPl_start()+3-pps_offset] << 8) + (int16_t)msg[bus.getPl_start()+4-pps_offset]) / divider;
       }
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,dval,precision);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,dval,precision);
     } else {
       outBufLen+=undefinedValueToBuffer(outBuf+outBufLen);
     }
@@ -1729,7 +1729,7 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision,con
   if(data_len == 5){
     if(msg[bus.getPl_start()]==0){
       dval=float((long(msg[bus.getPl_start()+1])<<24)+(long(msg[bus.getPl_start()+2])<<16)+(long(msg[bus.getPl_start()+3])<<8)+long(msg[bus.getPl_start()+4])) / divider;
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,dval,precision);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,dval,precision);
     } else {
       outBufLen+=undefinedValueToBuffer(outBuf+outBufLen);
     }
@@ -1762,7 +1762,7 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision,cons
   if(data_len == 2 || (data_len == 3 && (my_dev_fam == 107 || my_dev_fam == 123 || my_dev_fam == 163))){
     if(msg[bus.getPl_start()]==0){
       dval=float((signed char)msg[bus.getPl_start()+1+(data_len==3)]) / divider;
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,dval,precision);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,dval,precision);
     } else {
       outBufLen+=undefinedValueToBuffer(outBuf+outBufLen);
     }
@@ -1795,7 +1795,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision,c
   if(data_len == 2){
     if(msg[bus.getPl_start()]==0){
       dval=float(msg[bus.getPl_start()+1]) / divider;
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,dval,precision);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,dval,precision);
     } else {
       outBufLen+=undefinedValueToBuffer(outBuf+outBufLen);
     }
@@ -4207,13 +4207,13 @@ void dht22(void) {
     Serial.println(hum);
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ntemp[%d]: ",i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,temp,2);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,temp,2);
       outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n<tr><td>\n");
       outBufLen+=sprintf(outBuf+outBufLen,"hum[%d]: ",i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,hum,2);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,hum,2);
       outBufLen+=sprintf(outBuf+outBufLen," &#037;\n</td></tr>\n<tr><td>\n");
       outBufLen+=sprintf(outBuf+outBufLen,"abs_hum[%d]: ",i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
+      outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
       outBufLen+=sprintf(outBuf+outBufLen," g/m<sup>3</sup>\n</td></tr>\n");
     }
   }
@@ -4258,7 +4258,7 @@ void ds18b20(void) {
 //    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 //    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
     outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: ",i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    outBufLen+=_printFIXPOINT(outBuf+outBufLen,t,2);
+    outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,t,2);
     outBufLen+=sprintf(outBuf+outBufLen," &deg;C\n</td></tr>\n");
     client.println(outBuf);
   }
@@ -6757,7 +6757,7 @@ uint8_t pps_offset = 0;
             for(int i=0;i<numCustomFloats;i++){
               outBufclear();
               outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\ncustom_float[%d]: ",i);
-              outBufLen+=_printFIXPOINT(outBuf+outBufLen,custom_floats[i],2);
+              outBufLen+=_printFIXPOINTtoBuf(outBuf+outBufLen,custom_floats[i],2);
               outBufLen+=sprintf(outBuf+outBufLen,"\n</td></tr>\n");
               client.println(outBuf);
             }
