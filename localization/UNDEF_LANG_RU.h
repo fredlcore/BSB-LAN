@@ -92,6 +92,7 @@
 #undef MENU_TEXT_QST
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
+#undef MENU_TEXT_MOD
 #undef MENU_DESC_HFK
 #undef MENU_DESC_CFG
 #undef MENU_DESC_URL
