@@ -145,6 +145,7 @@ UIStrings["MENU_TEXT_QFE"] = "Fertig";
 UIStrings["MENU_TEXT_TOC"] = "Handbuch";
 UIStrings["MENU_TEXT_UPT"] = "Uptime";
 UIStrings["MENU_TEXT_VER"] = "Version";
+UIStrings["MENU_TEXT_MOD"] = "Installierte Module";
 UIStrings["MENU_TEXT_NVS"] = "Überprüfe auf neuere Version";
 UIStrings["MENU_TEXT_NVA"] = "Neuere Version gefunden";
 UIStrings["MENU_TEXT_NVN"] = "Installierte Version ist aktuell.";

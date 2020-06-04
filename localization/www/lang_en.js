@@ -67,6 +67,7 @@ UIStrings["MENU_TEXT_QST"] = "Start test";
 UIStrings["MENU_TEXT_QTE"] = "Test finished";
 UIStrings["MENU_TEXT_QFE"] = "Done";
 UIStrings["MENU_TEXT_TOC"] = "Manual";
+UIStrings["MENU_TEXT_MOD"] = "Installed modules";
 UIStrings["MENU_TEXT_NVS"] = "Checking for newer version";
 UIStrings["MENU_TEXT_NVA"] = "Newer version found";
 UIStrings["MENU_TEXT_NVN"] = "Current version is up to date";
