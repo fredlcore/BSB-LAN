@@ -2365,7 +2365,7 @@ char *printTelegram(byte* msg, int query_line) {
           pvalstr=outBuf+outBufLen;
           loadPrognrElementsFromTable(i);
           uint8_t type=decodedTelegram.type;
-          uint8_t div_type=decodedTelegram.type;
+//          uint8_t div_type=decodedTelegram.type;
           uint8_t div_precision=decodedTelegram.precision;
           float div_operand=decodedTelegram.operand;
 
@@ -2599,7 +2599,7 @@ char *printTelegram(byte* msg, int query_line) {
                 case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
                 case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
-                default: break;
+                default: getfarstrings = ""; break;
               }
               strcat_P(decodedTelegram.value, getfarstrings);
               q = strlen(decodedTelegram.value);
@@ -6219,7 +6219,7 @@ uint8_t pps_offset = 0;
                 if (i<0 || cmd == CMD_UNKNOWN) {
                   continue;
                 }
-                int k=0;
+//                int k=0;
 
                 strcpy_P(formatbuf, PSTR(",\n  \"%d\": {\n    \"name\": \""));
                 if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
