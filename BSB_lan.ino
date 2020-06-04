@@ -7193,145 +7193,146 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
-  if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
+  if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
+    if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
 
-    log_now = 0;
-    File dataFile = SD.open(datalogFileName, FILE_WRITE);
+      log_now = 0;
+      File dataFile = SD.open(datalogFileName, FILE_WRITE);
 
-    if (dataFile) {
-      for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
-          printTrailToFile(&dataFile);
-          dataFile.print(log_parameters[i]);
-          dataFile.print(F(";"));
-        }
-        if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
-          dataFile.print(lookup_descr(log_parameters[i]));
-          dataFile.print(F(";"));
-          dataFile.print(strtok(query(log_parameters[i],log_parameters[i],1)," "));
-          dataFile.print(F(";"));
-          dataFile.println(decodedTelegram.unit);
-        } else {
-          if (log_parameters[i] == 20000) {
-            dataFile.print(F(MENU_TEXT_BZ1 ";"));
-            dataFile.println(brenner_duration);
+      if (dataFile) {
+        for (int i=0; i < numLogValues; i++) {
+          if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
+            printTrailToFile(&dataFile);
+            dataFile.print(log_parameters[i]);
+            dataFile.print(F(";"));
           }
-          if (log_parameters[i] == 20001) {
-            dataFile.print(F(MENU_TEXT_BT1 ";"));
-            dataFile.println(brenner_count);
-          }
-          if (log_parameters[i] == 20002) {
-            dataFile.print(F(MENU_TEXT_BZ2 ";"));
-            dataFile.println(brenner_duration_2);
-          }
-          if (log_parameters[i] == 20003) {
-            dataFile.print(F(MENU_TEXT_BT2 ";"));
-            dataFile.println(brenner_count_2);
-          }
-          if (log_parameters[i] == 20004) {
-            dataFile.print(F(MENU_TEXT_TZ1 ";"));
-            dataFile.println(TWW_duration);
-          }
-          if (log_parameters[i] == 20005) {
-            dataFile.print(F(MENU_TEXT_TT1 ";"));
-            dataFile.println(TWW_count);
-          }
-          if (log_parameters[i] == 20006) {
-            for (int i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) {
-                printTrailToFile(&dataFile);
-                dataFile.print(avg_parameters[i]);
-                dataFile.print(F(";Avg_"));
-                dataFile.print(lookup_descr(avg_parameters[i]));
-                dataFile.print(F(";"));
-                float rounded = round(avgValues[i]*10);
-                dataFile.print(rounded/10);
-                dataFile.print(F(";"));
+          if (log_parameters[i] > 0 && log_parameters[i] < 20000) {
+            dataFile.print(lookup_descr(log_parameters[i]));
+            dataFile.print(F(";"));
+            dataFile.print(strtok(query(log_parameters[i],log_parameters[i],1)," "));
+            dataFile.print(F(";"));
+            dataFile.println(decodedTelegram.unit);
+          } else {
+            if (log_parameters[i] == 20000) {
+              dataFile.print(F(MENU_TEXT_BZ1 ";"));
+              dataFile.println(brenner_duration);
+            }
+            if (log_parameters[i] == 20001) {
+              dataFile.print(F(MENU_TEXT_BT1 ";"));
+              dataFile.println(brenner_count);
+            }
+            if (log_parameters[i] == 20002) {
+              dataFile.print(F(MENU_TEXT_BZ2 ";"));
+              dataFile.println(brenner_duration_2);
+            }
+            if (log_parameters[i] == 20003) {
+              dataFile.print(F(MENU_TEXT_BT2 ";"));
+              dataFile.println(brenner_count_2);
+            }
+            if (log_parameters[i] == 20004) {
+              dataFile.print(F(MENU_TEXT_TZ1 ";"));
+              dataFile.println(TWW_duration);
+            }
+            if (log_parameters[i] == 20005) {
+              dataFile.print(F(MENU_TEXT_TT1 ";"));
+              dataFile.println(TWW_count);
+            }
+            if (log_parameters[i] == 20006) {
+              for (int i=0; i<numAverages; i++) {
+                if (avg_parameters[i] > 0) {
+                  printTrailToFile(&dataFile);
+                  dataFile.print(avg_parameters[i]);
+                  dataFile.print(F(";Avg_"));
+                  dataFile.print(lookup_descr(avg_parameters[i]));
+                  dataFile.print(F(";"));
+                  float rounded = round(avgValues[i]*10);
+                  dataFile.print(rounded/10);
+                  dataFile.print(F(";"));
 
-                uint32_t c=0;
-                int line=findLine(avg_parameters[i],0,&c);
-                loadPrognrElementsFromTable(line);
-                dataFile.println(decodedTelegram.unit);
+                  uint32_t c=0;
+                  int line=findLine(avg_parameters[i],0,&c);
+                  loadPrognrElementsFromTable(line);
+                  dataFile.println(decodedTelegram.unit);
+                }
               }
             }
-          }
 #ifdef MAX_CUL
-          if (log_parameters[i] > 20006 && log_parameters[i] < 20010) {
-            int max_idx = 0;
-            while (max_devices[max_idx] > 0) {
-              if ((log_parameters[i]<20009 && max_dst_temp[max_idx] > 0) || (log_parameters[i]==20009 && max_valve[max_idx] > -1)) {
-                char max_id[11];
-                for (int y=0;y<10;y++) {
-                  max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(max_idx*10)+y);
+            if (log_parameters[i] > 20006 && log_parameters[i] < 20010) {
+              int max_idx = 0;
+              while (max_devices[max_idx] > 0) {
+                if ((log_parameters[i]<20009 && max_dst_temp[max_idx] > 0) || (log_parameters[i]==20009 && max_valve[max_idx] > -1)) {
+                  char max_id[11];
+                  for (int y=0;y<10;y++) {
+                    max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(max_idx*10)+y);
+                  }
+                  max_id[10] = '\0';
+
+                  printTrailToFile(&dataFile);
+                  dataFile.print(log_parameters[i]);
+                  dataFile.print(F(";"));
+                  switch (log_parameters[i]) {
+                    case 20007: dataFile.print(F("MaxCurTemp_")); break;
+                    case 20008: dataFile.print(F("MaxDstTemp_")); break;
+                    case 20009: dataFile.print(F("MaxValvePc_")); break;
+                  }
+                  dataFile.print(max_id);
+                  dataFile.print(F(";"));
+                  switch (log_parameters[i]) {
+                    case 20007: dataFile.println((float)max_cur_temp[max_idx]/10); break;
+                    case 20008: dataFile.println((float)max_dst_temp[max_idx]/2); break;
+                    case 20009: dataFile.println(max_valve[max_idx]); break;
+                  }
                 }
-                max_id[10] = '\0';
+                max_idx++;
+              }
+            }
+#endif
+#ifdef DHT_BUS
+            if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
+              int log_sensor = log_parameters[i] - 20100;
+              int chk = DHT.read22(DHT_Pins[log_sensor]);
+              DebugOutput.println(chk);
+              float hum = DHT.humidity;
+              float temp = DHT.temperature;
+              if (hum > 0 && hum < 101) {
+                dataFile.print(F("DHT Temperature "));
+                dataFile.print(log_sensor);
+                dataFile.print(F(";"));
+                dataFile.println(temp);
 
                 printTrailToFile(&dataFile);
                 dataFile.print(log_parameters[i]);
                 dataFile.print(F(";"));
-                switch (log_parameters[i]) {
-                  case 20007: dataFile.print(F("MaxCurTemp_")); break;
-                  case 20008: dataFile.print(F("MaxDstTemp_")); break;
-                  case 20009: dataFile.print(F("MaxValvePc_")); break;
-                }
-                dataFile.print(max_id);
+                dataFile.print(F("DHT Humidity "));
+                dataFile.print(log_sensor);
                 dataFile.print(F(";"));
-                switch (log_parameters[i]) {
-                  case 20007: dataFile.println((float)max_cur_temp[max_idx]/10); break;
-                  case 20008: dataFile.println((float)max_dst_temp[max_idx]/2); break;
-                  case 20009: dataFile.println(max_valve[max_idx]); break;
-                }
-              }
-              max_idx++;
+                dataFile.println(hum);
+               }
             }
-          }
-#endif
-#ifdef DHT_BUS
-          if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
-            int log_sensor = log_parameters[i] - 20100;
-            int chk = DHT.read22(DHT_Pins[log_sensor]);
-            DebugOutput.println(chk);
-            float hum = DHT.humidity;
-            float temp = DHT.temperature;
-            if (hum > 0 && hum < 101) {
-              dataFile.print(F("DHT Temperature "));
-              dataFile.print(log_sensor);
-              dataFile.print(F(";"));
-              dataFile.println(temp);
-
-              printTrailToFile(&dataFile);
-              dataFile.print(log_parameters[i]);
-              dataFile.print(F(";"));
-              dataFile.print(F("DHT Humidity "));
-              dataFile.print(log_sensor);
-              dataFile.print(F(";"));
-              dataFile.println(hum);
-             }
-          }
 #endif
 #ifdef ONE_WIRE_BUS
-          if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
-            int log_sensor = log_parameters[i] - 20200;
-            sensors.requestTemperatures(); // Send the command to get temperatures
-            float t=sensors.getTempCByIndex(log_sensor);
-            dataFile.print(F("1W Temperature "));
-            dataFile.print(log_sensor);
-            dataFile.print(F(";"));
-            dataFile.println(t);
-          }
+            if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
+              int log_sensor = log_parameters[i] - 20200;
+              sensors.requestTemperatures(); // Send the command to get temperatures
+              float t=sensors.getTempCByIndex(log_sensor);
+              dataFile.print(F("1W Temperature "));
+              dataFile.print(log_sensor);
+              dataFile.print(F(";"));
+              dataFile.println(t);
+            }
 #endif
+          }
         }
-      }
-      dataFile.close();
-   } else {
+        dataFile.close();
+      } else {
     // if the file isn't open, pop up an error:
-      client.println(F(MENU_TEXT_DTO));
-      DebugOutput.print(F("Error opening " datalogFileName "!"));
+        client.println(F(MENU_TEXT_DTO));
+        DebugOutput.print(F("Error opening " datalogFileName "!"));
+      }
+      lastLogTime = millis();
     }
-    lastLogTime = millis();
-  }
+  } 
 #endif
 
 // Calculate 24h averages
@@ -7356,45 +7357,44 @@ if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
         }
       }
     }
-  }
     avgCounter++;
     lastAvgTime += 60000;
+  }
 
 #ifdef LOGGER
 
 // write averages to SD card to protect from power off
 
-    if (SD.exists(averagesFileName)) {
-      SD.remove(averagesFileName);
+  if (SD.exists(averagesFileName)) {
+    SD.remove(averagesFileName);
+  }
+  File avgfile = SD.open(averagesFileName, FILE_WRITE);
+  if (avgfile) {
+    for (int i=0; i<numAverages; i++) {
+      avgfile.println(avgValues[i]);
+      avgfile.println(avgValues_Old[i]);
+      avgfile.println(avgValues_Current[i]);
     }
-    File avgfile = SD.open(averagesFileName, FILE_WRITE);
-    if (avgfile) {
-      for (int i=0; i<numAverages; i++) {
-        avgfile.println(avgValues[i]);
-        avgfile.println(avgValues_Old[i]);
-        avgfile.println(avgValues_Current[i]);
-      }
-      avgfile.println(avgCounter);
-      avgfile.close();
-    }
+    avgfile.println(avgCounter);
+    avgfile.close();
+  }
 
 #endif
 
 #ifdef WATCH_SOCKETS
-    ShowSockStatus();
-    checkSockStatus();
+  ShowSockStatus();
+  checkSockStatus();
 #endif
 
 // while we are here, update date/time as well...
 //    SetDateTime();
-  }
 // end calculate averages
 
 #ifdef CUSTOM_COMMANDS
-{
-custom_timer = millis();
-#include "BSB_lan_custom.h"
-}
+  {
+    custom_timer = millis();
+    #include "BSB_lan_custom.h"
+  }
 #endif
 
 #ifdef MAX_CUL
