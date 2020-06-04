@@ -1,21 +1,26 @@
-/* FatLib Library
- * Copyright (C) 2012 by William Greiman
+/**
+ * Copyright (c) 2011-2018 Bill Greiman
+ * This file is part of the SdFat library for SD memory cards.
  *
- * This file is part of the FatLib Library
+ * MIT License
  *
- * This Library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * This Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with the FatLib Library.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 #ifndef FatFile_h
 #define FatFile_h
@@ -111,9 +116,9 @@ class FatFile {
    * \param[in] path A path with a valid 8.3 DOS name for a file to be opened.
    *
    * \param[in] oflag Values for \a oflag are constructed by a bitwise-inclusive
-   * OR of open flags. see FatFile::open(FatFile*, const char*, uint8_t).
+   * OR of open flags. see FatFile::open(FatFile*, const char*, oflag_t).
    */
-  FatFile(const char* path, uint8_t oflag) {
+  FatFile(const char* path, oflag_t oflag) {
     m_attr = FILE_ATTR_CLOSED;
     m_error = 0;
     open(path, oflag);
@@ -136,9 +141,11 @@ class FatFile {
    * LS_SIZE - %Print file size.
    *
    * LS_R - Recursive list of subdirectories.
+   *
+   * \return true for success or false if an error occurred.
    */
-  void ls(uint8_t flags = 0) {
-    ls(&Serial, flags);
+  bool ls(uint8_t flags = 0) {
+    return ls(&Serial, flags);
   }
   /** %Print a directory date field.
    *
@@ -217,24 +224,27 @@ class FatFile {
   /** Create and open a new contiguous file of a specified size.
    *
    * \param[in] dirFile The directory where the file will be created.
-   * \param[in] path A path with a validfile name.
+   * \param[in] path A path with a valid file name.
    * \param[in] size The desired file size.
+   * \param[in] startCluster The desired startCluster.
    *
    * \return The value true is returned for success and
    * the value false, is returned for failure.
    */
-  bool createContiguous(FatFile* dirFile,
-                        const char* path, uint32_t size);
+  bool createContiguous(FatFile* dirFile, const char* path,
+                        uint32_t size, uint32_t startCluster = 0);
   /** Create and open a new contiguous file of a specified size.
    *
-   * \param[in] path A path with a validfile name.
+   * \param[in] path A path with a valid file name.
    * \param[in] size The desired file size.
+   * \param[in] startCluster The desired startCluster.
    *
    * \return The value true is returned for success and
    * the value false, is returned for failure.
-   */                        
-  bool createContiguous(const char* path, uint32_t size) {
-    return createContiguous(m_cwd, path, size);
+   */
+  bool createContiguous(const char* path,
+                        uint32_t size, uint32_t startCluster = 0) {
+    return createContiguous(m_cwd, path, size, startCluster);
   }
   /** \return The current cluster number for a file or directory. */
   uint32_t curCluster() const {
@@ -328,7 +338,7 @@ class FatFile {
    */
   bool exists(const char* path) {
     FatFile file;
-    return file.open(this, path, O_READ);
+    return file.open(this, path, O_RDONLY);
   }
   /**
    * Get a string from a file.
@@ -377,7 +387,7 @@ class FatFile {
    *                  The array must be at least 13 bytes long.
    * \return The value true, is returned for success and
    * the value false, is returned for failure.
-   */  
+   */
   bool getSFN(char* name);
   /** \return True if this is a directory else false. */
   bool isDir() const {
@@ -459,8 +469,10 @@ class FatFile {
    *
    * \param[in] indent Amount of space before file name. Used for recursive
    * list to indicate subdirectory level.
+   *
+   * \return true for success or false if an error occurred.
    */
-  void ls(print_t* pr, uint8_t flags = 0, uint8_t indent = 0);
+  bool ls(print_t* pr, uint8_t flags = 0, uint8_t indent = 0);
   /** Make a new directory.
    *
    * \param[in] dir An open FatFile instance for the directory that will
@@ -481,12 +493,12 @@ class FatFile {
    * \param[in] path with a valid 8.3 DOS name for a file to be opened.
    *
    * \param[in] oflag bitwise-inclusive OR of open mode flags.
-   *                  See see FatFile::open(FatFile*, const char*, uint8_t).
+   *                  See see FatFile::open(FatFile*, const char*, oflag_t).
    *
    * \return The value true is returned for success and
    * the value false is returned for failure.
    */
-  bool open(FatFileSystem* fs, const char* path, uint8_t oflag);
+  bool open(FatFileSystem* fs, const char* path, oflag_t oflag);
   /** Open a file by index.
    *
    * \param[in] dirFile An open FatFile instance for the directory.
@@ -495,12 +507,12 @@ class FatFile {
    * opened.  The value for \a index is (directory file position)/32.
    *
    * \param[in] oflag bitwise-inclusive OR of open mode flags.
-   *                  See see FatFile::open(FatFile*, const char*, uint8_t).
+   *                  See see FatFile::open(FatFile*, const char*, oflag_t).
    *
    * See open() by path for definition of flags.
    * \return true for success or false for failure.
    */
-  bool open(FatFile* dirFile, uint16_t index, uint8_t oflag);
+  bool open(FatFile* dirFile, uint16_t index, oflag_t oflag);
   /** Open a file or directory by name.
    *
    * \param[in] dirFile An open FatFile instance for the directory containing
@@ -511,13 +523,13 @@ class FatFile {
    * \param[in] oflag Values for \a oflag are constructed by a
    *                  bitwise-inclusive OR of flags from the following list
    *
-   * O_READ - Open for reading.
+   * O_RDONLY - Open for reading.
    *
-   * O_RDONLY - Same as O_READ.
+   * O_READ - Same as O_RDONLY (GNU).
    *
-   * O_WRITE - Open for writing.
+   * O_WRONLY - Open for writing.
    *
-   * O_WRONLY - Same as O_WRITE.
+   * O_WRITE - Same as O_WRONLY (GNU).
    *
    * O_RDWR - Open for reading and writing.
    *
@@ -547,31 +559,36 @@ class FatFile {
    * \return The value true is returned for success and
    * the value false is returned for failure.
    */
-  bool open(FatFile* dirFile, const char* path, uint8_t oflag);
+  bool open(FatFile* dirFile, const char* path, oflag_t oflag);
   /** Open a file in the current working directory.
    *
    * \param[in] path A path with a valid 8.3 DOS name for a file to be opened.
    *
    * \param[in] oflag bitwise-inclusive OR of open mode flags.
-   *                  See see FatFile::open(FatFile*, const char*, uint8_t).
+   *                  See see FatFile::open(FatFile*, const char*, oflag_t).
    *
    * \return The value true is returned for success and
    * the value false is returned for failure.
    */
-  bool open(const char* path, uint8_t oflag = O_READ) {
+  bool open(const char* path, oflag_t oflag = O_RDONLY) {
     return open(m_cwd, path, oflag);
   }
+  /** Open current working directory.
+   *
+   * \return true for success or false for failure.
+   */
+  bool openCwd();
   /** Open the next file or subdirectory in a directory.
    *
    * \param[in] dirFile An open FatFile instance for the directory
    *                    containing the file to be opened.
    *
    * \param[in] oflag bitwise-inclusive OR of open mode flags.
-   *                  See see FatFile::open(FatFile*, const char*, uint8_t).
+   *                  See see FatFile::open(FatFile*, const char*, oflag_t).
    *
    * \return true for success or false for failure.
    */
-  bool openNext(FatFile* dirFile, uint8_t oflag = O_READ);
+  bool openNext(FatFile* dirFile, oflag_t oflag = O_RDONLY);
   /** Open a volume's root directory.
    *
    * \param[in] vol The FAT volume containing the root directory to be opened.
@@ -670,7 +687,7 @@ class FatFile {
    *
    * \return The number of characters printed is returned
    *         for success and zero is returned for failure.
-   */  
+   */
   size_t printSFN(print_t* pr);
   /** Read the next byte from a file.
    *
@@ -736,6 +753,18 @@ class FatFile {
   /** Set the file's current position to zero. */
   void rewind() {
     seekSet(0);
+  }
+  /** Rename a file or subdirectory.
+   *
+   * \note the file will be moved to the current working directory.
+   *
+   * \param[in] newPath New path name for the file/directory.
+   *
+   * \return The value true is returned for success and
+   * the value false is returned for failure.
+   */
+  bool rename(const char* newPath) {
+    return rename(cwd(), newPath);
   }
   /** Rename a file or subdirectory.
    *
@@ -806,7 +835,7 @@ class FatFile {
    * \return true for success else false.
    */
   static bool setCwd(FatFile* dir) {
-    if (!dir->isDir()) {
+    if (!dir || !dir->isDir()) {
       return false;
     }
     m_cwd = dir;
@@ -965,18 +994,20 @@ class FatFile {
   bool openCluster(FatFile* file);
   static bool parsePathName(const char* str, fname_t* fname, const char** ptr);
   bool mkdir(FatFile* parent, fname_t* fname);
-  bool open(FatFile* dirFile, fname_t* fname, uint8_t oflag);
-  bool openCachedEntry(FatFile* dirFile, uint16_t cacheIndex, uint8_t oflag,
+  bool open(FatFile* dirFile, fname_t* fname, oflag_t oflag);
+  bool openCachedEntry(FatFile* dirFile, uint16_t cacheIndex, oflag_t oflag,
                        uint8_t lfnOrd);
   bool readLBN(uint32_t* lbn);
   dir_t* readDirCache(bool skipReadOk = false);
   bool setDirSize();
 
   // bits defined in m_flags
-  // should be 0X0F
-  static const uint8_t F_OFLAG = (O_ACCMODE | O_APPEND | O_SYNC);
-  // sync of directory entry required
-  static const uint8_t F_FILE_DIR_DIRTY = 0X80;
+  static const uint8_t F_READ           = 0X01;
+  static const uint8_t F_WRITE          = 0X02;
+  static const uint8_t F_FILE_DIR_DIRTY = 0X04;
+  static const uint8_t F_APPEND         = 0X08;
+  static const uint8_t F_SYNC           = 0X80;
+
 
   // global pointer to cwd dir
   static FatFile* m_cwd;

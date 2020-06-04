@@ -1,21 +1,26 @@
-/* FatLib Library
- * Copyright (C) 2012 by William Greiman
+/**
+ * Copyright (c) 2011-2018 Bill Greiman
+ * This file is part of the SdFat library for SD memory cards.
  *
- * This file is part of the FatLib Library
+ * MIT License
  *
- * This Library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * This Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with the FatLib Library.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 #include "FatFile.h"
 #include "FatFileSystem.h"
@@ -118,7 +123,7 @@ fail:
 //------------------------------------------------------------------------------
 // open with filename in fname
 #define SFN_OPEN_USES_CHKSUM 0
-bool FatFile::open(FatFile* dirFile, fname_t* fname, uint8_t oflag) {
+bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
   bool emptyFound = false;
 #if SFN_OPEN_USES_CHKSUM
   uint8_t chksum;
@@ -184,8 +189,8 @@ bool FatFile::open(FatFile* dirFile, fname_t* fname, uint8_t oflag) {
     }
     index++;
   }
-  // don't create unless O_CREAT and O_WRITE
-  if (!(oflag & O_CREAT) || !(oflag & O_WRITE)) {
+  // don't create unless O_CREAT and write mode
+  if (!(oflag & O_CREAT) || !isWriteMode(oflag)) {
     DBG_FAIL_MACRO;
     goto fail;
   }
@@ -243,7 +248,7 @@ size_t FatFile::printName(print_t* pr) {
 bool FatFile::remove() {
   dir_t* dir;
   // Can't remove if LFN or not open for write.
-  if (!isFile() || isLFN() || !(m_flags & O_WRITE)) {
+  if (!isFile() || isLFN() || !(m_flags & F_WRITE)) {
     DBG_FAIL_MACRO;
     goto fail;
   }
