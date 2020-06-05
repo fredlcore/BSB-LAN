@@ -7666,7 +7666,11 @@ void setup() {
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
   Serial.print(F("Starting SD.."));
+#if defined(__SAM3X8E__)
+  if(!SD.begin(4, SPI_DIV3_SPEED)) Serial.println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+#else
   if(!SD.begin(4)) Serial.println(F("failed"));
+#endif
   else Serial.println(F("ok"));
 
 #else
