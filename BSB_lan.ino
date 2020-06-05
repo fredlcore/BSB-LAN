@@ -6062,7 +6062,7 @@ uint8_t pps_offset = 0;
               }
             }
             strcpy_P(formatbuf, PSTR("\n  ]"));
-            outBufLen-=2; //two bytes shift (delete comma and \n)
+            if (avg_parameters[0] > 0) outBufLen-=2; //two bytes shift (delete comma and \n)
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
 // logged parameters
           #ifdef LOGGER
@@ -6079,7 +6079,7 @@ uint8_t pps_offset = 0;
               }
             }
             strcpy_P(formatbuf, PSTR("\n  ]"));
-            outBufLen-=2; //two bytes shift (delete comma and \n)
+            if (log_parameters[0] > 0)outBufLen-=2; //two bytes shift (delete comma and \n)
             outBufLen+=sprintf(outBuf+outBufLen, formatbuf);
           #endif
             strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
