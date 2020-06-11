@@ -1816,9 +1816,9 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
   if(data_len == 2){
     if(msg[bus.getPl_start()]==0){
       dval=float(msg[bus.getPl_start()+1]) / divider;
-      outBufLen+=_printFIXPOINT(decodedTelegram.value,dval,precision);
+      _printFIXPOINT(decodedTelegram.value,dval,precision);
     } else {
-      outBufLen+=undefinedValueToBuffer(decodedTelegram.value);
+      undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
   }else{
