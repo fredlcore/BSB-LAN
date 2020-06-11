@@ -1648,7 +1648,10 @@ void __attribute__((deprecated)) printSINT(byte *msg,byte data_len, long multipl
      decodedTelegram.error = 1;
    }
  }
-
+ //deprecated
+ void __attribute__((deprecated)) printDWORD(byte *msg,byte data_len, long divider, const char *postfix){
+   printDWORD(msg, data_len, divider);
+ }
 /** *****************************************************************
  *  Function:
  *  Does:
