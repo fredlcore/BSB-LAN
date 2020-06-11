@@ -2065,7 +2065,7 @@ void printTimeProg(byte *msg,byte data_len){
       if(msg[k]<24){
         len+=sprintf(decodedTelegram.value+len,"%02d:%02d - %02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       }else{
-        strcpy_P(outBuf+outBufLen,PSTR("--:-- - --:--"));
+        strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
         len += 13;
       }
       if(i<2){
