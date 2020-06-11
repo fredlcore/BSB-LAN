@@ -2607,7 +2607,6 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_STRING: // string
               if(data_len > 0){
-                char *p = outBuf+outBufLen;
                 if(msg[bus.getPl_start()]!=0){
                   msg[bus.getPl_start() + data_len]='\0'; // write terminating zero
                   DebugOutput.print((char*)&msg[bus.getPl_start()]);
@@ -2652,7 +2651,6 @@ void printTelegram(byte* msg, int query_line) {
                   } else {
                     lval=long(msg[bus.getPl_start()+1]);
                   }
-                  uint16_t len=0;
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
                 } else {
@@ -4016,7 +4014,6 @@ void query(int line)  // line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
-  char *pvalstr = NULL;
   resetDecodedTelegram();
 
     outBufclear();
