@@ -16,19 +16,19 @@
 #define IPAddr 192,168,178,88   // please note the commas instead of dots!!! Remove this line when you want DHCP
 //#define GatewayIP 192,168,178,1 // Optional: this is usually your router's IP address. Please note the commas instead of dots!!!
 //#define DNSIP 192,168,178,1 // Only set this variable if your DNS server is different from your router's IP address (GatewayIP). Please note the commas instead of dots!!!
-//#define SubnetIP 255,255,255,0  // Please use commas insteaf of dots!!!
+//#define SubnetIP 255,255,255,0  // Please use commas instead of dots!!!
 
 /* Select language; so far German is the most complete, with English following.
  * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
- * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SV), 
+ * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SV),
  * Slovenian (SI) and Turkish (TR).
- * Incomplete languages will automagically be filled up with English translations first, and if no English translation
- * is available, fallback will take place to German. 
+ * Incomplete languages will automatically be filled up with English translations first, and if no English translation
+ * is available, fallback will take place to German.
 */
 #define LANG DE
 
 /* SECURITY OPTIONS
- * There are several options to control and protect access to your heating system. However, keep  
+ * There are several options to control and protect access to your heating system. However, keep
  * in mind, that even activating all three options are no guarantee that a versatile intruder with
  * access to your (W)LAN won't be able to gain access. In any case, no encryption of data streams
  * is provided from the Arduino itself. Use VPN or a SSL proxy if that is a must for you and connect
@@ -47,12 +47,12 @@
 
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
- * TRUSTED_IP to 20. 
+ * TRUSTED_IP to 20.
 */
 //#define TRUSTED_IP 20
 //#define TRUSTED_IP2 30
 
-/* activate HTTP-Auth authentification to provide username/password based access. No encryption!
+/* activate HTTP-Auth authentication to provide username/password based access. No encryption!
  * Default sets username to "atari" and password to "800xl". Visit a website like
  * https://www.base64encode.org/
  * to encode your own username/password combination in the format username:password
@@ -61,8 +61,8 @@
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
- * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here 
- * if autodetect does not work or heating system is not running when Arduino is powered on
+ * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
+ * if auto-detect does not work or heating system is not running when Arduino is powered on
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
 static const int fixed_device_family = 0;
@@ -158,10 +158,10 @@ static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)
 // Hardware Serial is always pin 19 (RX) and pin 18 (TX). On the Arduino Due this is the only way to connect to the bus.
 // Software Serial needs special pins for RX (68) and TX (69); this is now deprecated and should only be used on older installations running on the Arduino Mega.
-// BSB: 
+// BSB:
 // - optional third parameter sets own address, defaults to 0x42 (LAN in serial monitor)
 // - use BSB bus(68,69,6) to define device as RGT1
-// LPB: 
+// LPB:
 // - optional third and fourth parameter set own and destination address (high nibble = segment, low nibble = device minus 1)
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
