@@ -1844,59 +1844,6 @@ void __attribute__((deprecated)) printFIXPOINT_BYTE_US(byte *msg,byte data_len,f
  * Global resources used:
  *
  * *************************************************************** */
-void __attribute__((deprecated)) printCHOICE(byte *msg,byte data_len, uint_farptr_t val0, uint_farptr_t val1){
-//  uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus.getBusType() == BUS_PPS);
-  if (data_len == 2 || bus.getBusType() == BUS_PPS) {
-    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
-//      if(msg[bus.getPl_start()+1+pps_offset]==0){
-      if(msg[bus.getPl_start()+1]==0){
-        decodedTelegram.enumdescaddr = val0;
-      } else {
-        decodedTelegram.enumdescaddr = val1;
-      }
-//      outBufLen+=sprintf(decodedTelegram.value, "%d", msg[bus.getPl_start()+1+pps_offset]);
-      sprintf(decodedTelegram.value, "%d", msg[bus.getPl_start()+1]);
-      strcpy_PF(decodedTelegram.unit, decodedTelegram.enumdescaddr);
-      sprintf(outBuf,"%s - %s",decodedTelegram.value,decodedTelegram.unit);
-      DebugOutput.print(outBuf);
-    } else {
-      outBufLen+=undefinedValueToBuffer(decodedTelegram.value);
-      DebugOutput.print(decodedTelegram.value);
-    }
-  } else {
-    DebugOutput.print(F("CHOICE len !=2: "));
-    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
-    decodedTelegram.error = 1;
-  }
-}
-void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enumstr_len){
-  if (data_len == 2 || bus.getBusType() == BUS_PPS) {
-    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
-      printENUM(enumstr,enumstr_len,msg[bus.getPl_start()+1]?1:0,1);
-      sprintf(decodedTelegram.value,"%d",msg[bus.getPl_start()+1]);
-    } else {
-      outBufLen+=undefinedValueToBuffer(decodedTelegram.value);
-      DebugOutput.print(decodedTelegram.value);
-    }
-    } else {
-    DebugOutput.print(F("CHOICE len !=2: "));
-    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
-    decodedTelegram.error = 1;
-  }
-}
-
-/** *****************************************************************
- *  Function:
- *  Does:
- *  Pass parameters:
- *
- * Parameters passed back:
- *
- * Function value returned:
- *
- * Global resources used:
- *
- * *************************************************************** */
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint16_t val;
   char *p=outBuf+outBufLen;
@@ -1936,6 +1883,59 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
       decodedTelegram.error = 4;
     }
     DebugOutput.print(p);
+  }
+}
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
+void __attribute__((deprecated)) printCHOICE(byte *msg,byte data_len, uint_farptr_t val0, uint_farptr_t val1){
+//  uint8_t pps_offset = ((*PPS_write_enabled != 1 && msg[0] == 0x17) && bus.getBusType() == BUS_PPS);
+  if (data_len == 2 || bus.getBusType() == BUS_PPS) {
+    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
+//      if(msg[bus.getPl_start()+1+pps_offset]==0){
+      if(msg[bus.getPl_start()+1]==0){
+        decodedTelegram.enumdescaddr = val0;
+      } else {
+        decodedTelegram.enumdescaddr = val1;
+      }
+//      outBufLen+=sprintf(decodedTelegram.value, "%d", msg[bus.getPl_start()+1+pps_offset]);
+      sprintf(decodedTelegram.value, "%d", msg[bus.getPl_start()+1]);
+      strcpy_PF(decodedTelegram.unit, decodedTelegram.enumdescaddr);
+      sprintf(outBuf,"%s - %s",decodedTelegram.value,decodedTelegram.unit);
+      DebugOutput.print(outBuf);
+    } else {
+      outBufLen+=undefinedValueToBuffer(decodedTelegram.value);
+      DebugOutput.print(decodedTelegram.value);
+    }
+  } else {
+    DebugOutput.print(F("CHOICE len !=2: "));
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
+    decodedTelegram.error = 1;
+  }
+}
+void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enumstr_len){
+  if (data_len == 2 || bus.getBusType() == BUS_PPS) {
+    if (msg[bus.getPl_start()]==0 || bus.getBusType() == BUS_PPS) {
+      printENUM(enumstr,enumstr_len,msg[bus.getPl_start()+1]?1:0,1);
+      sprintf(decodedTelegram.value,"%d",msg[bus.getPl_start()+1]);
+    } else {
+      outBufLen+=undefinedValueToBuffer(decodedTelegram.value);
+      DebugOutput.print(decodedTelegram.value);
+    }
+    } else {
+    DebugOutput.print(F("CHOICE len !=2: "));
+    prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
+    decodedTelegram.error = 1;
   }
 }
 
@@ -2607,7 +2607,6 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_STRING: // string
               if(data_len > 0){
-                char *p = outBuf+outBufLen;
                 if(msg[bus.getPl_start()]!=0){
                   msg[bus.getPl_start() + data_len]='\0'; // write terminating zero
                   DebugOutput.print((char*)&msg[bus.getPl_start()]);
@@ -2652,7 +2651,6 @@ void printTelegram(byte* msg, int query_line) {
                   } else {
                     lval=long(msg[bus.getPl_start()+1]);
                   }
-                  uint16_t len=0;
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
                 } else {
@@ -4016,7 +4014,6 @@ void query(int line)  // line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
-  char *pvalstr = NULL;
   resetDecodedTelegram();
 
     outBufclear();
