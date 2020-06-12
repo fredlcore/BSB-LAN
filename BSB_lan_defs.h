@@ -2862,8 +2862,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM6420_0d_TEXT ENUM5700_05_TEXT
 #define ENUM6604_00_TEXT ENUM780_00_TEXT
 #define ENUM6604_01_TEXT ENUM5040_02_TEXT
-#define ENUM6620_ff_TEXT ENUM6620_01_TEXT
-#define ENUM6621_ff_TEXT ENUM6621_01_TEXT
+//#define ENUM6620_ff_TEXT ENUM6620_01_TEXT
+//#define ENUM6621_ff_TEXT ENUM6621_01_TEXT
 #define ENUM6623_00_TEXT ENUM6621_00_TEXT
 #define ENUM6623_01_TEXT ENUM6621_01_TEXT
 #define ENUM6624_00_TEXT ENUM6621_00_TEXT
@@ -4663,17 +4663,19 @@ const char ENUM6606[] PROGMEM_LATEST = {
 };
 
 // LPB   - Wirkbereich Umschaltungen
+// Looks like a choice (VT_YESNO, VT_ONOFF, etc)
 const char ENUM6620[] PROGMEM_LATEST = {
 "\x00 " ENUM6620_00_TEXT "\0"
-"\x01 " ENUM6620_01_TEXT "\0"
-"\xff " ENUM6620_ff_TEXT
+"\x01 " ENUM6620_01_TEXT
+//"\xff " ENUM6620_ff_TEXT
 };
 
 // LPB   - Sommerumschaltung
+// Looks like a choice (VT_YESNO, VT_ONOFF, etc)
 const char ENUM6621[] PROGMEM_LATEST = {
 "\x00 " ENUM6621_00_TEXT "\0"
-"\x01 " ENUM6621_01_TEXT "\0"
-"\xff " ENUM6621_ff_TEXT
+"\x01 " ENUM6621_01_TEXT
+//"\xff " ENUM6621_ff_TEXT
 };
 
 const char ENUM6623[] PROGMEM_LATEST = {
@@ -7447,8 +7449,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_191_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_206_ALL}, // Anzeige Systemmeldungen
 {0x053D08D2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                    NULL,         FL_OEM, DEV_ALL}, // Alarmverzögerung
-{0x053D0839,  CAT_LPB,              VT_ENUM,          6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_ALL}, // [ - ] - LPB - Wirkbereich Umschaltungen
-{0x2D3D0611,  CAT_LPB,              VT_ENUM,          6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Sommerumschaltung
+{0x053D0839,  CAT_LPB,              VT_YESNO,         6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_ALL}, // [ - ] - LPB - Wirkbereich Umschaltungen
+{0x2D3D0611,  CAT_LPB,              VT_YESNO,         6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Sommerumschaltung
 {0x053D0B34,  CAT_LPB,              VT_ENUM,          6623,  STR6623,  sizeof(ENUM6623),     ENUM6623,     DEFAULT_FLAG, DEV_ALL}, // Betriebsartumschaltung
 {0x05050A86,  CAT_LPB,              VT_ENUM,          6624,  STR6624,  sizeof(ENUM6624),     ENUM6624,     DEFAULT_FLAG, DEV_ALL}, // Manuelle Erzeugersperre
 {0x053D0A86,  CAT_LPB,              VT_ENUM,          6624,  STR6624,  sizeof(ENUM6624),     ENUM6624,     DEFAULT_FLAG, DEV_138_ALL}, // Manuelle Erzeugersperre

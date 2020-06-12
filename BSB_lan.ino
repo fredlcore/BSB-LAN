@@ -2472,37 +2472,13 @@ void printTelegram(byte* msg, int query_line) {
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_ONOFF:
-              decodedTelegram.isswitch = 1;
-#if defined(__SAM3X8E__)
-              printCHOICE(msg,data_len, ENUM_ONOFF, sizeof(ENUM_ONOFF));
-#else
-              printCHOICE(msg,data_len, pgm_get_far_address(ENUM_ONOFF), sizeof(ENUM_ONOFF));
-#endif
-
-              break;
             case VT_YESNO:
-              decodedTelegram.isswitch = 1;
-#if defined(__SAM3X8E__)
-              printCHOICE(msg,data_len, ENUM_YESNO, sizeof(ENUM_YESNO));
-#else
-              printCHOICE(msg,data_len, pgm_get_far_address(ENUM_YESNO), sizeof(ENUM_YESNO));
-#endif
-              break;
             case VT_CLOSEDOPEN:
-              decodedTelegram.isswitch = 1;
-#if defined(__SAM3X8E__)
-              printCHOICE(msg,data_len, ENUM_CLOSEDOPEN, sizeof(ENUM_CLOSEDOPEN));
-#else
-              printCHOICE(msg,data_len, pgm_get_far_address(ENUM_CLOSEDOPEN), sizeof(ENUM_CLOSEDOPEN));
-#endif
-              break;
             case VT_VOLTAGEONOFF:
               decodedTelegram.isswitch = 1;
-#if defined(__SAM3X8E__)
-              printCHOICE(msg,data_len, ENUM_VOLTAGEONOFF, sizeof(ENUM_VOLTAGEONOFF));
-#else
-              printCHOICE(msg,data_len, pgm_get_far_address(ENUM_VOLTAGEONOFF), sizeof(ENUM_VOLTAGEONOFF));
-#endif
+              decodedTelegram.enumstr_len = get_cmdtbl_enumstr_len(i);
+              decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
+              printCHOICE(msg,data_len, decodedTelegram.enumstr, decodedTelegram.enumstr_len);
               break;
             case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
               printLPBAddr(msg,data_len);
@@ -2607,7 +2583,6 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_STRING: // string
               if(data_len > 0){
-                char *p = outBuf+outBufLen;
                 if(msg[bus.getPl_start()]!=0){
                   msg[bus.getPl_start() + data_len]='\0'; // write terminating zero
                   DebugOutput.print((char*)&msg[bus.getPl_start()]);
@@ -2652,7 +2627,6 @@ void printTelegram(byte* msg, int query_line) {
                   } else {
                     lval=long(msg[bus.getPl_start()+1]);
                   }
-                  uint16_t len=0;
                   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
                   printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
                 } else {
@@ -4016,7 +3990,6 @@ void query(int line)  // line (ProgNr)
   int i=0;
   int idx=0;
   int retry;
-  char *pvalstr = NULL;
   resetDecodedTelegram();
 
     outBufclear();
@@ -6086,8 +6059,12 @@ uint8_t pps_offset = 0;
 
           if (p[2] == 'I'){ // dump configuration in JSON
             free(jsonbuffer);
-            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n"));
-            sprintf(outBuf, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %l,\n"));
+            int32_t freespace = 0;
+#if defined LOGGER || defined WEBSERVER
+            freespace = SD.vol()->freeClusterCount();
+#endif
+            sprintf(outBuf, formatbuf, freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
             client.print(outBuf);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
@@ -6160,8 +6137,8 @@ uint8_t pps_offset = 0;
           #ifdef LOGGER
             if(somethingexist) {client.print(outBuf); outBufLen = 0;}
             somethingexist = false;
-            strcpy_P(formatbuf, PSTR(",\n  \"freespace\": %lu,\n  \"loginterval\": %d,\n  \"logged\": [\n"));
-            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, SD.vol()->freeClusterCount(), log_interval);
+            strcpy_P(formatbuf, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"));
+            outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_interval);
             strcpy_P(formatbuf, PSTR("    { \"parameter\": %d },\n"));
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {somethingexist = true; outBufLen+=sprintf(outBuf+outBufLen, formatbuf, log_parameters[i]);}
@@ -7443,12 +7420,9 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
 
 // write averages to SD card to protect from power off
-
-  if (SD.exists(averagesFileName)) {
-    SD.remove(averagesFileName);
-  }
   File avgfile = SD.open(averagesFileName, FILE_WRITE);
   if (avgfile) {
+    avgfile.seek(0);
     for (int i=0; i<numAverages; i++) {
       avgfile.println(avgValues[i]);
       avgfile.println(avgValues_Old[i]);
