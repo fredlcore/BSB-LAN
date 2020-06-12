@@ -5,8 +5,8 @@ use bytes;
 # Extract the variable size of buffer via BUFLEN from BSB_lan.ino
 # Can probably be written shorter/nicer/more effective?
 @Ino = `cat ../BSB_lan.ino`;
-@size = grep(/#define BUFLEN /, @Ino);
-$size[0] =~ /#define BUFLEN (.*)/;
+@size = grep(/#define OUTBUF_LEN /, @Ino);
+$size[0] =~ /#define OUTBUF_LEN (.*)/;
 $size = $1-1;
 
 # Create LANG_C.h: language-independed definitions, based on German language
