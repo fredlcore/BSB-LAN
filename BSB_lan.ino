@@ -7419,21 +7419,21 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
 
 // write averages to SD card to protect from power off
-  if (avg_parameters[0] > 0) { //write averages if at least one value is set
-    File avgfile = SD.open(averagesFileName, FILE_WRITE);
-    if (avgfile) {
-      avgfile.seek(0);
-      for (int i=0; i<numAverages; i++) {
-        avgfile.println(avgValues[i]);
-        avgfile.println(avgValues_Old[i]);
-        avgfile.println(avgValues_Current[i]);
+    if (avg_parameters[0] > 0) { //write averages if at least one value is set
+      File avgfile = SD.open(averagesFileName, FILE_WRITE);
+      if (avgfile) {
+        avgfile.seek(0);
+        for (int i=0; i<numAverages; i++) {
+          avgfile.println(avgValues[i]);
+          avgfile.println(avgValues_Old[i]);
+          avgfile.println(avgValues_Current[i]);
+        }
+        avgfile.println(avgCounter);
+        avgfile.close();
       }
-      avgfile.println(avgCounter);
-      avgfile.close();
     }
-  }
 #endif
-}
+  }
 
 #ifdef WATCH_SOCKETS
   ShowSockStatus();
