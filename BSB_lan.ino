@@ -505,7 +505,7 @@ uint8_t json_types[20] = { 0 };
 
 char date[20];
 
-unsigned long lastAvgTime = millis();
+unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 unsigned long lastMQTTTime = millis();
 unsigned long custom_timer = millis();
@@ -7391,7 +7391,7 @@ uint8_t pps_offset = 0;
 #endif
 
 // Calculate 24h averages
-  if (millis() - lastAvgTime >= 60000) {
+  if (millis() / 60000 != lastAvgTime) {
     if (avgCounter == 1441) {
       for (int i=0; i<numAverages; i++) {
         avgValues_Old[i] = avgValues[i];
@@ -7414,25 +7414,26 @@ uint8_t pps_offset = 0;
       }
     }
     avgCounter++;
-    lastAvgTime += 60000;
-  }
+    lastAvgTime = millis() / 60000;
 
 #ifdef LOGGER
 
 // write averages to SD card to protect from power off
-  File avgfile = SD.open(averagesFileName, FILE_WRITE);
-  if (avgfile) {
-    avgfile.seek(0);
-    for (int i=0; i<numAverages; i++) {
-      avgfile.println(avgValues[i]);
-      avgfile.println(avgValues_Old[i]);
-      avgfile.println(avgValues_Current[i]);
+  if (avg_parameters[0] > 0) { //write averages if at least one value is set
+    File avgfile = SD.open(averagesFileName, FILE_WRITE);
+    if (avgfile) {
+      avgfile.seek(0);
+      for (int i=0; i<numAverages; i++) {
+        avgfile.println(avgValues[i]);
+        avgfile.println(avgValues_Old[i]);
+        avgfile.println(avgValues_Current[i]);
+      }
+      avgfile.println(avgCounter);
+      avgfile.close();
     }
-    avgfile.println(avgCounter);
-    avgfile.close();
   }
-
 #endif
+}
 
 #ifdef WATCH_SOCKETS
   ShowSockStatus();
