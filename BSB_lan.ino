@@ -6059,7 +6059,7 @@ uint8_t pps_offset = 0;
 
           if (p[2] == 'I'){ // dump configuration in JSON
             free(jsonbuffer);
-            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %lu,\n"));
+            strcpy_P(formatbuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %ld,\n"));
             int32_t freespace = 0;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
