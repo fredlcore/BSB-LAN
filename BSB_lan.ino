@@ -939,6 +939,9 @@ uint8_t get_cmdtbl_flags(int i) {
   return flags;
 }
 
+void printcantalloc(void){
+  DebugOutput.println(F("Can't alloc memory"));
+}
 
 /** *****************************************************************
  *  Function: findLine()
@@ -1370,7 +1373,6 @@ void SerialPrintType(byte type){
   char device[5];
   DebugOutput.print(TranslateType(type, device));
 } // --- SerialPrintType() ---
-
 
 /** *****************************************************************
  *  Function: prepareToPrintHumanReadableTelegram
@@ -4487,9 +4489,6 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
   return log_parameter;
 }
 
-void printcantalloc(void){
-  DebugOutput.println(F("Can't alloc memory"));
-}
 #if defined LOGGER || defined WEBSERVER
 /** *****************************************************************
  *  Function: transmitFile
