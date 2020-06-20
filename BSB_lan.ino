@@ -58,6 +58,11 @@
  *       1.0   -
  *
  * Changelog:
+ *       version 1.0
+ *        - /JI URL command outputs configuration in JSON structure
+ *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
+ *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
+ *        - Simple viewport for mobile devices added 
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
