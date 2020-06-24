@@ -7052,6 +7052,7 @@ uint8_t pps_offset = 0;
   String MQTTTopic = "";
 
   if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+    lastMQTTTime = millis();
     if (!MQTTClient.connected()) {
       MQTTClient.setServer(MQTTBroker, 1883);
       int retries = 0;
@@ -7216,7 +7217,6 @@ uint8_t pps_offset = 0;
     MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
 #endif
     MQTTClient.disconnect();
-    lastMQTTTime = millis();
   }
 #endif
 
