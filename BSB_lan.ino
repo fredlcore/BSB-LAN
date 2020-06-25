@@ -6371,8 +6371,8 @@ uint8_t pps_offset = 0;
 //recreate datalog file for programs values logging
             if(p[2]=='D' || p[2]=='0'){
               if(p[2]=='0') {
-                DebugOutput.print(F(" ,"));
-                client.print(F(" ,"));
+                DebugOutput.print(F(", "));
+                client.print(F(", "));
               }
               SD.remove(datalogFileName);
               dataFile = SD.open(datalogFileName, FILE_WRITE);
