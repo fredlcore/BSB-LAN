@@ -152,6 +152,7 @@
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html"
+#define MENU_TEXT_LOT "Telegramme loggen"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

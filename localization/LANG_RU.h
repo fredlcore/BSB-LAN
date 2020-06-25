@@ -162,7 +162,7 @@
 #define MENU_TEXT_LBO "Журналировать только широковещательные телеграммы"
 #define MENU_TEXT_LGI "Новый интервал журналирования"
 #define MENU_TEXT_LGN "Новые параметры для журналирования"
-
+#define MENU_TEXT_LOT "Журналирование телеграмм"
 
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"

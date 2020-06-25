@@ -87,6 +87,10 @@ int avg_parameters[20] = {
 
 /* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
 #define LOGGER
+// Logging von "rohen" Bus-Datentelegrammen
+// telegrams logging. False - disabled on start, true - enabled on start.
+// You can enable logging with URL /LE command or disable it with /LD command when run time.
+boolean logTelegram = false;
 
 int log_parameters[20] = {
 //  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)

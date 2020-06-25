@@ -2916,7 +2916,7 @@ void LogTelegram(byte* msg){
   float dval;
   uint16_t line = 0;
   if(SD.vol()->freeClusterCount() < MINIMUM_FREE_SPACE_ON_SD) return;
-  if (log_parameters[0] == 30000) {
+  if (logTelegram) {
 
     if (bus.getBusType() != BUS_PPS) {
       if(msg[4+(bus.getBusType()*4)]==TYPE_QUR || msg[4+(bus.getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus.getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus.getBusType()==BUS_LPB)) && msg[4+(bus.getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
@@ -6628,7 +6628,7 @@ uint8_t pps_offset = 0;
                 if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
                   client.print(F(MENU_TEXT_SN1));
                 }
-                if (log_parameters[i] == 30000) {
+                if (logTelegram) {
                   bufferedprint(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
                   printyesno(log_unknown_only);
                   bufferedprint(PSTR(MENU_TEXT_LBO ": "));
@@ -6657,63 +6657,77 @@ uint8_t pps_offset = 0;
 
           break;
         }
-        if (p[1]=='L' && p[2]=='B' && p[3]=='='){
-          if (p[4]=='1') {
-            log_bc_only=1;
-          } else {
-            log_bc_only=0;
-          }
+        if (p[1]=='L'){
           webPrintHeader();
-          client.print(F(MENU_TEXT_LBO ": "));
-          printyesno(log_bc_only) ;
-          webPrintFooter();
-          break;
-        }
-        if (p[1]=='L' && p[2]=='U' && p[3]=='='){
-          if (p[4]=='1') {
-            log_unknown_only=1;
-          } else {
-            log_unknown_only=0;
+          switch(p[2]){
+            case 'B':
+              if (p[3]=='='){
+                if (p[4]=='1') {
+                  log_bc_only=1;
+                } else {
+                  log_bc_only=0;
+                }
+                client.print(F(MENU_TEXT_LBO ": "));
+                printyesno(log_bc_only) ;
+              }
+              break;
+            case 'U':
+              if (p[3]=='='){
+                if (p[4]=='1') {
+                  log_unknown_only=1;
+                } else {
+                  log_unknown_only=0;
+                }
+                client.print(F(MENU_TEXT_BUT ": "));
+                printyesno(log_unknown_only);
+              }
+              break;
+            case '=': // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
+              char* log_token = strtok(p,"=,");  // drop everything before "="
+              log_token = strtok(NULL, "=,");   // first token: interval
+              if (log_token != 0) {
+                log_interval = atoi(log_token);
+//                if (log_interval < 10) {log_interval = 10;}
+                lastLogTime = millis();
+                lastMQTTTime = millis();
+                client.print(F(MENU_TEXT_LGI ": "));
+                client.print(log_interval);
+                client.println(F(" " MENU_TEXT_SEC "<BR>"));
+              }
+              log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
+              int token_counter = 0;
+              if (log_token != 0) {
+                for (int i=0;i<numLogValues;i++) {
+                  log_parameters[i] = 0;
+                }
+              client.println(F(MENU_TEXT_LGN ": "));
+              }
+              while (log_token!=0) {
+                int log_parameter = atoi(log_token);
+                if (token_counter < numLogValues) {
+                  log_parameters[token_counter] = log_parameter;
+                  if (log_parameters[token_counter] == 30000) logTelegram = true; //deprecated
+                  client.print(log_parameters[token_counter]);
+                  client.println(F(" "));
+                  token_counter++;
+                }
+                log_token = strtok(NULL,"=,");
+              }
+            break;
+          case 'E': //enable telegrams logging to journal.txt
+          case 'D': //disable telegrams logging
+            if (p[2]=='E')
+              logTelegram = true;
+            else
+              logTelegram = false;
+            client.print(F(MENU_TEXT_LOT ": "));
+            printyesno(logTelegram);
+            break;
+          default:
+            client.print(F(MENU_TEXT_ER1));
+            break;
           }
-          webPrintHeader();
-          client.print(F(MENU_TEXT_BUT ": "));
-          printyesno(log_unknown_only);
-          webPrintFooter();
-          break;
-        }
-        if (p[1]=='L' && p[2]=='='){ // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
-          webPrintHeader();
-          char* log_token = strtok(p,"=,");  // drop everything before "="
-          log_token = strtok(NULL, "=,");   // first token: interval
-          if (log_token != 0) {
-            log_interval = atoi(log_token);
-//            if (log_interval < 10) {log_interval = 10;}
-            lastLogTime = millis();
-            lastMQTTTime = millis();
-            client.print(F(MENU_TEXT_LGI ": "));
-            client.print(log_interval);
-            client.println(F(" " MENU_TEXT_SEC "<BR>"));
-          }
-          log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
-          int token_counter = 0;
-          if (log_token != 0) {
-            for (int i=0;i<numLogValues;i++) {
-              log_parameters[i] = 0;
-            }
-            client.println(F(MENU_TEXT_LGN ": "));
-          }
-          while (log_token!=0) {
-            int log_parameter = atoi(log_token);
-            if (token_counter < numLogValues) {
-              log_parameters[token_counter] = log_parameter;
-              client.print(log_parameters[token_counter]);
-              client.println(F(" "));
-              token_counter++;
-            }
-            log_token = strtok(NULL,"=,");
-          }
-          webPrintFooter();
-          break;
+        webPrintFooter();
         }
         if (p[1]=='P') {
           webPrintHeader();
@@ -7630,6 +7644,8 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
+  if (log_parameters[0] == 30000) logTelegram = true;
+
 #if defined(__SAM3X8E__)
   Wire.begin();
   if (!EEPROM.ready()) {
