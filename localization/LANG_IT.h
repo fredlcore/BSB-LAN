@@ -79,7 +79,7 @@
 #define MENU_TEXT_BRS "Tempo di funzionamento caldaia e sanitario impostato su zero"
 #define MENU_TEXT_24A "Valori medi 24h"
 #define MENU_TEXT_24N "Nuovi parametri medi"
-#define MENU_TEXT_DTR "File datalog.txt rimosso e rigenerato."
+#define MENU_TEXT_DTR ": file rimosso e rigenerato."
 #define MENU_TEXT_DTD "Scarica dati"
 #define MENU_TEXT_DTF "Errore durante la creazione del file datalog.txt!"
 #define MENU_TEXT_DTO "Errore durante l'apertura del file datalog.txt!"

@@ -95,7 +95,7 @@
 #define MENU_TEXT_BRS "Furnace and hot water duration is set to zero"
 #define MENU_TEXT_24A "24h averages"
 #define MENU_TEXT_24N "New average parameters"
-#define MENU_TEXT_DTR "File datalog.txt removed and recreated."
+#define MENU_TEXT_DTR ": file was removed and recreated."
 #define MENU_TEXT_DTD "Download data"
 #define MENU_TEXT_DTF "Failed to create datalog.txt!"
 #define MENU_TEXT_DTO "Error opening datalog.txt!"

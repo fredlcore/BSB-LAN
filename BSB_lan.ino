@@ -429,9 +429,9 @@ char buffer[BUFLEN] = { 0 };
 char outBuf[OUTBUF_LEN] = { 0 };
 int outBufLen=0;
 
-#define averagesFileName "averages.txt"
-#define datalogFileName "datalog.txt"
-#define journalFileName "journal.txt"
+const char *averagesFileName = "averages.txt";
+const char *datalogFileName = "datalog.txt";
+const char *journalFileName = "journal.txt";
 
 #ifdef WIFI
 WiFiEspClient client;
@@ -6353,20 +6353,40 @@ uint8_t pps_offset = 0;
 
 #ifdef LOGGER
         if(p[1]=='D'){ // access datalog file
-          if (p[2]=='0') {  // remove datalog file
+          if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
             webPrintHeader();
+            File dataFile;
+            boolean filewasrecreated = false;
 //recreate journal file for telegram logging
-            SD.remove(journalFileName);
-            File dataFile = SD.open(journalFileName, FILE_WRITE);
-            dataFile.close();
-
-            SD.remove(datalogFileName);
-            dataFile = SD.open(datalogFileName, FILE_WRITE);
-            if (dataFile) {
-              dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
-              dataFile.close();
+            if(p[2]=='J' || p[2]=='0'){
+              SD.remove(journalFileName);
+              dataFile = SD.open(journalFileName, FILE_WRITE);
+              if (dataFile) {
+                dataFile.close();
+                filewasrecreated = true;
+                DebugOutput.print(journalFileName);
+                client.print(journalFileName);
+              }
+            }
+//recreate datalog file for programs values logging
+            if(p[2]=='D' || p[2]=='0'){
+              if(p[2]=='0') {
+                DebugOutput.print(F(" ,"));
+                client.print(F(" ,"));
+              }
+              SD.remove(datalogFileName);
+              dataFile = SD.open(datalogFileName, FILE_WRITE);
+              if (dataFile) {
+                dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
+                dataFile.close();
+                filewasrecreated = true;
+                DebugOutput.print(datalogFileName);
+                client.print(datalogFileName);
+              }
+            }
+            if(filewasrecreated){
               client.println(F(MENU_TEXT_DTR));
-              DebugOutput.print(F("File " datalogFileName " removed and recreated."));
+              DebugOutput.print(F(": file(s) was removed and recreated."));
             } else {
               client.println(F(MENU_TEXT_DTF));
             }
@@ -6387,6 +6407,8 @@ uint8_t pps_offset = 0;
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
+            } else if (p[2]=='D') { //datalog
+              dataFile = SD.open(datalogFileName);
             } else { //datalog
               dataFile = SD.open(datalogFileName);
             }
@@ -7355,7 +7377,9 @@ uint8_t pps_offset = 0;
       } else {
     // if the file isn't open, pop up an error:
         client.println(F(MENU_TEXT_DTO));
-        DebugOutput.print(F("Error opening " datalogFileName "!"));
+        DebugOutput.print(F("Error opening "));
+        DebugOutput.print(datalogFileName);
+        DebugOutput.print(F("!"));
       }
       lastLogTime = millis();
     }
