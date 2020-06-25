@@ -6683,7 +6683,7 @@ uint8_t pps_offset = 0;
               }
               break;
             case '=': // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
-              char* log_token = strtok(p,"=,");  // drop everything before "="
+              {char* log_token = strtok(p,"=,");  // drop everything before "="
               log_token = strtok(NULL, "=,");   // first token: interval
               if (log_token != 0) {
                 log_interval = atoi(log_token);
@@ -6712,7 +6712,7 @@ uint8_t pps_offset = 0;
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
-              }
+              }}
             break;
           case 'E': //enable telegrams logging to journal.txt
           case 'D': //disable telegrams logging
@@ -6728,6 +6728,7 @@ uint8_t pps_offset = 0;
             break;
           }
         webPrintFooter();
+        break;
         }
         if (p[1]=='P') {
           webPrintHeader();
