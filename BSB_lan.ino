@@ -385,6 +385,11 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 
 boolean EEPROM_ready = true;
 
+#ifndef LOGTELEGRAM
+#define LOGTELEGRAM false
+#endif
+boolean logTelegram = LOGTELEGRAM;
+
 #ifdef IPAddr
 IPAddress ip(IPAddr);
 #endif
@@ -6706,7 +6711,7 @@ uint8_t pps_offset = 0;
                 int log_parameter = atoi(log_token);
                 if (token_counter < numLogValues) {
                   log_parameters[token_counter] = log_parameter;
-                  if (log_parameters[token_counter] == 30000) logTelegram = true; //deprecated
+                  if (log_parameters[token_counter] == 30000) logTelegram = true; //deprecated behavior. Delete it after big release
                   client.print(log_parameters[token_counter]);
                   client.println(F(" "));
                   token_counter++;
@@ -7265,7 +7270,7 @@ uint8_t pps_offset = 0;
 
       if (dataFile) {
         for (int i=0; i < numLogValues; i++) {
-          if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) {
+          if (log_parameters[i] > 0 && (log_parameters[i] < 20006 || log_parameters[i] > 20009) && log_parameters[i] != 30000) { //&& log_parameters[i] != 30000 - deprecated behavior. delete it after big release
             printTrailToFile(&dataFile);
             dataFile.print(log_parameters[i]);
             dataFile.print(F(";"));
@@ -7645,7 +7650,7 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  if (log_parameters[0] == 30000) logTelegram = true;
+  if (log_parameters[0] == 30000) logTelegram = true; // deprecated behavior. delete it after big release
 
 #if defined(__SAM3X8E__)
   Wire.begin();
