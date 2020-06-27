@@ -70,7 +70,7 @@
 #define MENU_TEXT_BRS "Ketel- en Warmwater-looptijd ingesteld op nul"
 #define MENU_TEXT_24A "24 uur gemiddelde waarden"
 #define MENU_TEXT_24N "Nieuwe gemiddelde parameters"
-#define MENU_TEXT_DTR "Bestand datalog.txt verwijderd en geregenereerd."
+#define MENU_TEXT_DTR ": bestand verwijderd en geregenereerd."
 #define MENU_TEXT_DTD "Gegevens downloaden"
 #define MENU_TEXT_DTF "Fout bij het maken van datalog.txt bestand!"
 #define MENU_TEXT_DTO "Fout bij openen van datalog.txt bestand!"

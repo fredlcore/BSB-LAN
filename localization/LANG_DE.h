@@ -103,7 +103,7 @@
 #define MENU_TEXT_BRS "Heizkessel- und TWW-Laufzeit auf null gesetzt"
 #define MENU_TEXT_24A "24h Durchschnittswerte"
 #define MENU_TEXT_24N "Neue Durchschnitts-Parameter"
-#define MENU_TEXT_DTR "Datei datalog.txt entfernt und neu generiert."
+#define MENU_TEXT_DTR ": datei was entfernt und neu generiert."
 #define MENU_TEXT_DTD "Daten herunterladen"
 #define MENU_TEXT_DTF "Fehler beim Erstellen der Datei datalog.txt!"
 #define MENU_TEXT_DTO "Fehler beim Öffnen der Datei datalog.txt!"
@@ -152,6 +152,7 @@
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html"
+#define MENU_TEXT_LOT "Telegramme loggen"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

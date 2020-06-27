@@ -87,9 +87,19 @@ int avg_parameters[20] = {
 
 /* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
 #define LOGGER
+// Logging von "rohen" Bus-Datentelegrammen
+// Telegrams logging. False - disabled on start, true - enabled on start.
+#define LOGTELEGRAM false
+// You can enable logging with URL /LE command or disable it with /LD command when run time.
+// Data will be write to "journal.txt"
+boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
+boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
+
+// Logging data from parameters
+// Interval and list of parameters can be redefined through /L command when run time
+// Data will be write to "datalog.txt"
 int log_parameters[20] = {
-//  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -103,17 +113,14 @@ int log_parameters[20] = {
 //  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/T)
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
-
 unsigned long log_interval = 3600;    // logging interval in seconds
-boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
-boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
 // Activate sending log_parameters to MQTT broker every log_interval seconds
-//#define MQTTBrokerIP 192,168,1,20	// Please use commas insteaf of dots!!!
+//#define MQTTBrokerIP 192,168,1,20	// Please use commas instead of dots!!!
 //#define MQTTUsername "User" // Set username for MQTT broker here or comment out if no username/password is used.
 //#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
 //#define MQTTTopicPrefix "BSB-LAN" 	// Optional: Choose the "topic" for MQTT messages here
-//#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging infomation printed to the mqtt topic
+//#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging information printed to the mqtt topic
 //#define MQTTDeviceID "MyHeater"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
 // Payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 

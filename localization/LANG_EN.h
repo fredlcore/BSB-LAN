@@ -95,7 +95,7 @@
 #define MENU_TEXT_BRS "Furnace and hot water duration is set to zero"
 #define MENU_TEXT_24A "24h averages"
 #define MENU_TEXT_24N "New average parameters"
-#define MENU_TEXT_DTR "File datalog.txt removed and recreated."
+#define MENU_TEXT_DTR ": file was removed and recreated."
 #define MENU_TEXT_DTD "Download data"
 #define MENU_TEXT_DTF "Failed to create datalog.txt!"
 #define MENU_TEXT_DTO "Error opening datalog.txt!"
@@ -127,6 +127,7 @@
 #define MENU_TEXT_LBO "Log broadcast bus-telegrams only"
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
+#define MENU_TEXT_LOT "Log of telegrams"
 
 #define STR516_TEXT "Standard values TSP heating circuit 1"
 #define STR536_TEXT "Standard values TSP heating circuit 2 "
