@@ -4546,6 +4546,20 @@ void resetBoard(){
   while (1==1) {}
 }
 
+#ifdef LOGGER
+boolean createdatalogFileAndWriteHeader(){
+  File dataFile = SD.open(datalogFileName, FILE_WRITE);
+  if (dataFile) {
+    strcpy_P(outBuf, PSTR("Milliseconds;Date;Parameter;Description;Value;Unit"));
+    dataFile.println(outBuf);
+    dataFile.close();
+    outBuf[0] = 0;
+    return true;
+  }
+  return false;
+}
+#endif
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -6383,10 +6397,7 @@ uint8_t pps_offset = 0;
                 client.print(F(", "));
               }
               SD.remove(datalogFileName);
-              dataFile = SD.open(datalogFileName, FILE_WRITE);
-              if (dataFile) {
-                dataFile.println(F("Milliseconds;Date;Parameter;Description;Value;Unit"));
-                dataFile.close();
+              if (createdatalogFileAndWriteHeader()) {
                 filewasrecreated = true;
                 DebugOutput.print(datalogFileName);
                 client.print(datalogFileName);
@@ -7959,6 +7970,9 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
     avgfile.close();
   }
 
+if (!SD.exists(datalogFileName)) {
+  createdatalogFileAndWriteHeader();
+}
 #endif
 
   if (bus.getBusType() != BUS_PPS) {
