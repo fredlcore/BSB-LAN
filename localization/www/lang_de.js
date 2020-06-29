@@ -103,7 +103,7 @@ UIStrings["MENU_TEXT_BST"] = "Brennerstatistik";
 UIStrings["MENU_TEXT_BRS"] = "Heizkessel- und TWW-Laufzeit auf null gesetzt";
 UIStrings["MENU_TEXT_24A"] = "24h Durchschnittswerte";
 UIStrings["MENU_TEXT_24N"] = "Neue Durchschnitts-Parameter";
-UIStrings["MENU_TEXT_DTR"] = "Datei datalog.txt entfernt und neu generiert.";
+UIStrings["MENU_TEXT_DTR"] = ": datei was entfernt und neu generiert.";
 UIStrings["MENU_TEXT_DTD"] = "Daten herunterladen";
 UIStrings["MENU_TEXT_DTF"] = "Fehler beim Erstellen der Datei datalog.txt!";
 UIStrings["MENU_TEXT_DTO"] = "Fehler beim Öffnen der Datei datalog.txt!";
@@ -152,6 +152,7 @@ UIStrings["MENU_TEXT_NVN"] = "Installierte Version ist aktuell.";
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html";
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html";
+UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
