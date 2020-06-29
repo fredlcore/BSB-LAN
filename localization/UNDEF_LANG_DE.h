@@ -150,6 +150,7 @@
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
+#undef MENU_TEXT_LOT
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT

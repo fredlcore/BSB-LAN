@@ -125,6 +125,7 @@
 #undef MENU_TEXT_LBO
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
+#undef MENU_TEXT_LOT
 #undef STR516_TEXT
 #undef STR536_TEXT
 #undef STR556_TEXT
