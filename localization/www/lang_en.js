@@ -95,7 +95,7 @@ UIStrings["MENU_TEXT_BST"] = "Heater statistics";
 UIStrings["MENU_TEXT_BRS"] = "Furnace and hot water duration is set to zero";
 UIStrings["MENU_TEXT_24A"] = "24h averages";
 UIStrings["MENU_TEXT_24N"] = "New average parameters";
-UIStrings["MENU_TEXT_DTR"] = "File datalog.txt removed and recreated.";
+UIStrings["MENU_TEXT_DTR"] = ": file was removed and recreated.";
 UIStrings["MENU_TEXT_DTD"] = "Download data";
 UIStrings["MENU_TEXT_DTF"] = "Failed to create datalog.txt!";
 UIStrings["MENU_TEXT_DTO"] = "Error opening datalog.txt!";
@@ -127,6 +127,7 @@ UIStrings["MENU_TEXT_AVT"] = "Calculating 24h averages for the following paramet
 UIStrings["MENU_TEXT_LBO"] = "Log broadcast bus-telegrams only";
 UIStrings["MENU_TEXT_LGI"] = "New logging interval";
 UIStrings["MENU_TEXT_LGN"] = "New logging parameters";
+UIStrings["MENU_TEXT_LOT"] = "Log of telegrams";
 
 UIStrings["STR516_TEXT"] = "Standard values TSP heating circuit 1";
 UIStrings["STR536_TEXT"] = "Standard values TSP heating circuit 2 ";

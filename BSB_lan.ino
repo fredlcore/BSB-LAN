@@ -58,6 +58,10 @@
  *       1.0   -
  *
  * Changelog:
+ *       version 1.0
+ *        - /JI URL command outputs configuration in JSON structure
+ *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
+ *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
@@ -940,6 +944,9 @@ uint8_t get_cmdtbl_flags(int i) {
   return flags;
 }
 
+void printcantalloc(void){
+  DebugOutput.println(F("Can't alloc memory"));
+}
 
 /** *****************************************************************
  *  Function: findLine()
@@ -1371,7 +1378,6 @@ void SerialPrintType(byte type){
   char device[5];
   DebugOutput.print(TranslateType(type, device));
 } // --- SerialPrintType() ---
-
 
 /** *****************************************************************
  *  Function: prepareToPrintHumanReadableTelegram
@@ -4488,9 +4494,6 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
   return log_parameter;
 }
 
-void printcantalloc(void){
-  DebugOutput.println(F("Can't alloc memory"));
-}
 #if defined LOGGER || defined WEBSERVER
 /** *****************************************************************
  *  Function: transmitFile
@@ -4537,8 +4540,7 @@ void transmitFile(File dataFile) {
 void resetBoard(){
 #if defined(__SAM3X8E__)
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
-// reset with Ethernet shield resetting
-  rstc_set_external_reset(RSTC, 256);
+  rstc_start_software_reset(RSTC);
 #else
   asm volatile ("  jmp 0");
 #endif
@@ -7104,6 +7106,7 @@ uint8_t pps_offset = 0;
   String MQTTTopic = "";
 
   if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+    lastMQTTTime = millis();
     if (!MQTTClient.connected()) {
       MQTTClient.setServer(MQTTBroker, 1883);
       int retries = 0;
@@ -7268,7 +7271,6 @@ uint8_t pps_offset = 0;
     MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
 #endif
     MQTTClient.disconnect();
-    lastMQTTTime = millis();
   }
 #endif
 

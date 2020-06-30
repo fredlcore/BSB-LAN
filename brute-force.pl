@@ -38,8 +38,8 @@ my $len=0;
 my $payload_start=0;
 
 
-my $bus = `wget -q -O - $URL/C | grep Bus-System`;
-$bus =~ /.*: (.*) \((.*), (.*)\)/;
+my $bus = `wget -q -O - $URL/JI | grep "\"bus\""`;
+$bus =~ /.*: "(.*)"/;
 $bus = $1;
 my $orig = sprintf("%02X", $2);;
 my $dest = sprintf("%02X", $3+0x80);
