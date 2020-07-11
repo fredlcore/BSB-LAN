@@ -970,77 +970,81 @@ int findLine(uint16_t line
            , uint32_t *cmd)      // 32-bit command code
 {
   int found;
-  int i = 0;
+  uint8_t found = 0;
+  int i = -1;
   int save_i;
   uint32_t c, save_c;
   uint16_t l;
 
-  // search for the line in cmdtbl
-  if (start_idx == 0) {
-    if (get_cmdtbl_line(i) < line) {
-      while (i+100 < (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0])-1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0])-1)) {
-        if (get_cmdtbl_line(i+100) < line) {
-          i = i + 100;
+  // binary search for the line in cmdtbl
+
+  int left = start_idx;
+  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1);
+  int mid = 0;
+  while (!(left >= right))
+    {
+    if (get_cmdtbl_line(left) == line){ i = left; break; }
+    mid = left + (right - left) / 2;
+    int temp = get_cmdtbl_line(mid);
+    if (temp == line)
+      {
+      if (mid == left + 1)
+        {i = mid; break; }
+      else
+        right = mid + 1;
+      }
+    else if (temp > line)
+      right = mid;
+    else
+      left = mid + 1;
+    }
+
+  if(i == -1) return i;
+
+  l = get_cmdtbl_line(i);
+  while(l == line){
+    c = get_cmdtbl_cmd(i);
+    uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+    uint8_t dev_var = get_cmdtbl_dev_var(i);
+    uint8_t dev_flags = get_cmdtbl_flags(i);
+
+    if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
+      if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+        if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+          while (c==get_cmdtbl_cmd(i)) {
+            i++;
+          }
+          found=0;
+          i--;
         } else {
+          found=1;
+          save_i=i;
+          save_c=c;
           break;
         }
-      }
-    }
-  } else {
-    i=start_idx;
-  }
-  found=0;
-  do{
-    c=get_cmdtbl_cmd(i);
-    if(c==CMD_END) break;
-    l=get_cmdtbl_line(i);
-    if(l==line){
-      uint8_t dev_fam = get_cmdtbl_dev_fam(i);
-      uint8_t dev_var = get_cmdtbl_dev_var(i);
-      uint8_t dev_flags = get_cmdtbl_flags(i);
-
-      if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
-        if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==get_cmdtbl_cmd(i)) {
-              i++;
-            }
-            found=0;
-            i--;
-          } else {
-            found=1;
-            break;
+      } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
+        if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+          while (c==get_cmdtbl_cmd(i)) {
+            i++;
           }
-        } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            while (c==get_cmdtbl_cmd(i)) {
-              i++;
-            }
-            found=0;
-            i--;
-          } else {
-            found=1;
-            save_i=i;
-            save_c=c;
-          }
+          found=0;
+          i--;
+        } else {
+          found=1;
+          save_i=i;
+          save_c=c;
         }
       }
     }
-    if(l>line){
-      if (found) {
-        i=save_i;
-        c=save_c;
-      }
-      break;
-    }
     i++;
-  }while(1);
+    l = get_cmdtbl_line(i);
+  }
 
   if(!found){
     return -1;
   }
-  if(cmd!=NULL) *cmd=c;
-  return i;
+  if(cmd!=NULL) *cmd=save_c;
+  return save_i;
 }
 
 
@@ -1679,18 +1683,18 @@ int _printFIXPOINT(char *p, float dval, int precision){
   int a,b,i;
   int len = 0;
   if(dval<0){
-    len+=sprintf(p+len,"-");
+    p[len++] = '-';
     dval*=-1.0;
   }
   float rval=10.0;
   for(i=0;i<precision;i++) rval*=10.0;
-  dval+=5.0/rval;
+  dval+=5.0/rval; //rounding
   a=(int)(dval);
-  rval/=10.0;
-  b=(int)(dval*rval - a*rval);
   if(precision==0){
     len+=sprintf(p+len,"%d",a);
   }else{
+    rval/=10.0;
+    b=(int)(dval*rval - a*rval);
     char formatstr[8]="%d.%01d";
     formatstr[5]='0'+precision;
     len+=sprintf(p+len,formatstr,a,b);
@@ -3972,15 +3976,13 @@ void query(int line)  // line (ProgNr)
   byte tx_msg[33] = { 0 };   // xmit buffer
   uint32_t c;        // command code
   int i=0;
-  int idx=0;
   int retry;
   resetDecodedTelegram();
 
     outBufclear();
-    i=findLine(line,idx,&c);
+    i=findLine(line,0,&c);
 
     if(i>=0){
-      idx=i;
       uint8_t flags = get_cmdtbl_flags(i);
       decodedTelegram.type = get_cmdtbl_type(i);
 
@@ -4329,9 +4331,7 @@ char *lookup_descr(uint16_t line) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  client.println(F("HTTP/1.1 200 OK"));
-  client.println(F("Content-Type: text/html; charset=utf-8"));
-  client.println();
+  bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
 
   int i;
   int counter = 0;
@@ -5504,10 +5504,10 @@ uint8_t pps_offset = 0;
               webPrintSite();
               break;
             }
-            strcpy_P(buffer, PSTR("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
-            uint16_t x = strlen(buffer);
-            urlString.toCharArray(buffer + x, BUFLEN - x);
-            client.print(buffer);
+            strcpy_P(outBuf, PSTR("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
+            uint16_t x = strlen(outBuf);
+            urlString.toCharArray(outBuf + x, BUFLEN - x);
+            client.print(outBuf);
            }
           client.flush();
           break;
@@ -5711,19 +5711,14 @@ uint8_t pps_offset = 0;
           if(i>=0){
             // check type
               if(get_cmdtbl_type(i)==VT_ENUM) {
-//            if(pgm_read_byte(&cmdtbl[i].type)==VT_ENUM){
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-//              uint16_t enumstr_len=pgm_read_word(&cmdtbl[i].enumstr_len);
-//              memcpy_PF(buffer, calc_enum_offset(get_cmdtbl_enumstr(i)),enumstr_len);
-//              memcpy_P(buffer, (char*)pgm_read_word(&(cmdtbl[i].enumstr)),enumstr_len);
-//              buffer[enumstr_len]=0;
 
               uint16_t val;
               uint16_t c=0;
               while(c<enumstr_len){
                 if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
-                  val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
+                  val=pgm_read_word_far(enumstr+c);
                   c++;
                 }else{
                   val=uint16_t(pgm_read_byte_far(enumstr+c));
@@ -5731,12 +5726,11 @@ uint8_t pps_offset = 0;
                 //skip leading space
                 c+=2;
 
-                sprintf(outBuf,"%d - %s",val,strcpy_PF(buffer, enumstr+c));
-                client.println(outBuf);
+                int shift = sprintf(outBuf, "%d - ", val);
+                strcpy_PF(outBuf + shift, enumstr + c);
+                client.print(outBuf);
                 client.println(F("<br>"));
-
-                while(pgm_read_byte_far(enumstr+c)!=0) c++;
-                c++;
+                c += strlen(outBuf + shift) + 1;
               }
 
             }else{
@@ -5849,14 +5843,14 @@ uint8_t pps_offset = 0;
             int orig_dev_var = my_dev_var;
             query(6225);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
+            client.print(F(STR6225_TEXT ": "));
+            client.println(decodedTelegram.value);
             query(6226);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
+            client.print(F("<BR>" STR6226_TEXT ": "));
+            client.println(decodedTelegram.value);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
-            client.print(F(STR6225_TEXT ": "));
-            client.println(temp_dev_fam);
-            client.print(F("<BR>" STR6226_TEXT ": "));
-            client.println(temp_dev_var);
             client.print(F("<BR>" STR6224_TEXT ": "));
             query(6224); client.println(build_pvalstr(0));
             client.print(F("<BR>" STR6220_TEXT ": "));
@@ -6212,7 +6206,6 @@ uint8_t pps_offset = 0;
                 uint16_t x=2;
                 uint8_t cat=0;
                 while (x<sizeof(ENUM_CAT)) {
-//                  char z;
                   strcpy_P(formatbuf, PSTR("\"%d\": { \"name\": \""));
                   sprintf(jsonbuffer + buffershiftedbycolon, formatbuf, cat);
                   buffershiftedbycolon = 0;
@@ -6233,14 +6226,13 @@ uint8_t pps_offset = 0;
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #endif
                   strcpy_P(formatbuf, PSTR("\", \"min\": %d, \"max\": %d },\n"));
-                  sprintf(outBufp, formatbuf, cat_min, cat_max);
+                  y = sprintf(outBufp, formatbuf, cat_min, cat_max);
                   if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
                     cat++;
                     x += 3;
                     client.print(jsonbuffer);
                     continue;
                   } else {
-                    y = strlen(outBufp);
                     outBufp[--y] = 0;//shift to last non-zero char ('\n') and clear it
                     outBufp[--y] = 0;//shift to last non-zero char (',') and clear it
                     client.print(jsonbuffer);
@@ -6421,9 +6413,7 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            client.println(F("HTTP/1.1 200 OK"));
-            client.println(F("Content-Type: text/plain; charset=utf-8"));
-            client.println();
+            bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: text/plain; charset=utf-8\n\n"));
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
@@ -7221,20 +7211,9 @@ uint8_t pps_offset = 0;
             float hum = DHT.humidity;
             float temp = DHT.temperature;
             if (hum > 0 && hum < 101) {
-              char tmpSign[] = " ";
-              if (temp < 0) {
-                tmpSign[0] = '-';
-              }
-              float tmpVal = (temp < 0) ? -temp : temp;
-              int tmpInt1 = tmpVal;
-              float tmpFrac = tmpVal - tmpInt1;
-              int tmpInt2 = trunc(tmpFrac * 100);
-
-              float tmpVal2 = (hum < 0) ? -hum : hum;
-              int tmpInt3 = tmpVal2;
-              float tmpFrac2 = tmpVal2 - tmpInt3;
-              int tmpInt4 = trunc(tmpFrac2 * 100);
-              sprintf (smallbuf, "%s%d.%02d / %d.%02d", tmpSign, tmpInt1, tmpInt2, tmpInt3, tmpInt4);
+              _printFIXPOINT(smallbuf, temp, 2);
+              strcat_P(smallbuf, PSTR(" / "));
+              _printFIXPOINT(smallbuf + strlen(smallbuf), hum, 2);
               MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
             }
 #endif
@@ -7243,16 +7222,9 @@ uint8_t pps_offset = 0;
 #ifdef ONE_WIRE_BUS
             int log_sensor = log_parameters[i] - 20200;
             float t=sensors.getTempCByIndex(log_sensor);
-            char tmpSign[] = " ";
-            if (t < 0) {
-              tmpSign[0] = '-';
-            }
-            float tmpVal = (t < 0) ? -t : t;
-            int tmpInt1 = tmpVal;
-            float tmpFrac = tmpVal - tmpInt1;
-            int tmpInt2 = trunc(tmpFrac * 100);
-            sprintf (buffer, "%s%d.%02d\n", tmpSign, tmpInt1, tmpInt2);
-            MQTTClient.publish(MQTTTopic.c_str(), buffer);
+            _printFIXPOINT(smallbuf, t, 2);
+            strcat_P(smallbuf, PSTR("\n"));
+            MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
 #endif
           }
         }
