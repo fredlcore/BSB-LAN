@@ -969,7 +969,6 @@ int findLine(uint16_t line
            , uint16_t start_idx  //
            , uint32_t *cmd)      // 32-bit command code
 {
-  int found;
   uint8_t found = 0;
   int i = -1;
   int save_i;
