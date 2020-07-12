@@ -1197,9 +1197,8 @@ void SerialPrintRAW(byte* msg, byte len){
  * *************************************************************** */
 void loadPrognrElementsFromTable(int i){
   int k=0;
-  uint8_t type=get_cmdtbl_type(i);
+  decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
-  uint8_t div_type=1;
   decodedTelegram.precision=1;
   uint8_t div_data_type=0;
   uint8_t div_unit_len=0;
@@ -1209,31 +1208,21 @@ void loadPrognrElementsFromTable(int i){
     decodedTelegram.readonly = 1;
   else
     decodedTelegram.readonly = 0;
-
-  while(div_type!=VT_UNKNOWN){
-    div_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + k * sizeof(optbl[0]));
-    if(type == div_type){
-      k++;
-      break;
-    }
-    k++;
-  }
-  k--;
-  div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + k * sizeof(optbl[0]));
+  div_data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
   #if defined(__AVR__)
-  decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + k * sizeof(optbl[0]));
+  decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
   #else
-  decodedTelegram.operand=optbl[k].operand;
+  decodedTelegram.operand=optbl[decodedTelegram.type].operand;
   #endif
-  decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + k * sizeof(optbl[0]));
-  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + k * sizeof(optbl[0]));
+  decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
+  div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
+  decodedTelegram.unit[0] = 0;
   #if defined(__SAM3X8E__)
-  memcpy(decodedTelegram.unit, optbl[k].unit, div_unit_len);
+  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, div_unit_len);
   #else
-  memcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + k * sizeof(optbl[0])),div_unit_len);
+  strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
   #endif
 
-  decodedTelegram.type = div_type;
   decodedTelegram.data_type = div_data_type;
   decodedTelegram.unit_len = div_unit_len;
 
@@ -3021,14 +3010,6 @@ void LogTelegram(byte* msg){
 
           if (bus.getBusType() != BUS_PPS && (msg[4+(bus.getBusType()*4)] == TYPE_INF || msg[4+(bus.getBusType()*4)] == TYPE_SET || msg[4+(bus.getBusType()*4)] == TYPE_ANS) && msg[bus.getLen_idx()] < 17+bus.getBusType()) {
             dataFile.print(F(";"));
-            i=0;
-            while(type!=VT_UNKNOWN){
-              if(type == cmd_type){
-                break;
-              }
-              i++;
-              type=pgm_read_byte_far(pgm_get_far_address(optbl[0].type) + i * sizeof(optbl[0]));
-            }
             if (bus.getBusType() == BUS_LPB) {
               data_len=msg[1]-14;
             } else {
@@ -3036,11 +3017,12 @@ void LogTelegram(byte* msg){
             }
             dval = 0;
 #if defined(__AVR__)
-            operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + i * sizeof(optbl[0]));
+            operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + cmd_type * sizeof(optbl[0]));
+            precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + cmd_type * sizeof(optbl[0]));
 #else
-            operand=optbl[i].operand;
+            operand=optbl[cmd_type].operand;
+            precision=optbl[cmd_type].precision;
 #endif
-            precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + i * sizeof(optbl[0]));
             for (i=0;i<data_len-1+bus.getBusType();i++) {
               if (bus.getBusType() == BUS_LPB) {
                 dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
@@ -3110,10 +3092,10 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
+  uint8_t type=get_cmdtbl_type(i);
+
   if (bus.getBusType() == BUS_PPS && line >= 15000) {  // PPS-Bus set parameter
     int cmd_no = line - 15000;
-    uint8_t type=get_cmdtbl_type(i);
-
     switch (type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
       case VT_HOUR_MINUTES:
@@ -3142,7 +3124,7 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
   // Get the parameter type from the table row[i]
-  switch(get_cmdtbl_type(i)) {
+  switch(type) {
 //  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
     // 8-bit unsigned integer representation
@@ -4030,7 +4012,6 @@ void query(int line)  // line (ProgNr)
         } else { // bus type is PPS
 
           uint32_t cmd = get_cmdtbl_cmd(i);
-//          uint8_t type = get_cmdtbl_type(i);
           uint16_t temp_val = 0;
           switch (decodedTelegram.type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
@@ -6185,8 +6166,8 @@ uint8_t pps_offset = 0;
               json_parameter = atoi(json_token);
             }
             if (output || json_token != NULL) {
-              int temp_i=findLine(json_parameter,0,&cmd);
-              if ((p[2] == 'Q' || p[2] == 'C') && (temp_i<0 || cmd == CMD_UNKNOWN)) {
+              int i_line=findLine(json_parameter,0,&cmd);
+              if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || cmd == CMD_UNKNOWN)) {
                 json_token = strtok(NULL,",");
                 continue;
               }
@@ -6266,8 +6247,8 @@ uint8_t pps_offset = 0;
               }
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
-                i=findLine(json_parameter,0,&cmd);
-                if (i<0 || cmd == CMD_UNKNOWN) {
+                i_line=findLine(json_parameter,0,&cmd);
+                if (i_line<0 || cmd == CMD_UNKNOWN) {
                   continue;
                 }
 //                int k=0;
@@ -6279,7 +6260,7 @@ uint8_t pps_offset = 0;
                 if (!been_here2 || p[2] == 'Q' || p[2] == 'C') been_here2=true;
 
                 char *bufferp = jsonbuffer + strlen(jsonbuffer);
-                strcpy_PF(bufferp, get_cmdtbl_desc(i));
+                strcpy_PF(bufferp, get_cmdtbl_desc(i_line));
                 strcat_P(bufferp, PSTR("\",\n"));
                 client.print(jsonbuffer);
 
@@ -6295,11 +6276,11 @@ uint8_t pps_offset = 0;
                 }
 
                 if (p[2] != 'Q') {
-                  loadPrognrElementsFromTable(i);
+                  loadPrognrElementsFromTable(i_line);
                   strcpy_P(jsonbuffer, PSTR("    \"possibleValues\": [\n"));
                   client.print(jsonbuffer);
-                    uint16_t enumstr_len = get_cmdtbl_enumstr_len(i);
-                    uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+                    uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
+                    uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
                       uint16_t x = 0;
                       uint16_t val = 0;
@@ -7155,11 +7136,9 @@ uint8_t pps_offset = 0;
           char smallbuf[20];
           if (log_parameters[i] < 20000) {
             uint32_t c=0;
-            int line=findLine(log_parameters[i],0,&c);
-            uint8_t type=get_cmdtbl_type(line);
             query(log_parameters[i]);
             char *pvalstr = build_pvalstr(0);
-            if (type == VT_ENUM || type == VT_BIT || type == VT_ERRORCODE || type == VT_DATETIME) {
+            if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
 #ifdef MQTT_JSON  // Build the json doc on the fly
               MQTTPayload.concat(F("\""));
               MQTTPayload.concat(String(log_parameters[i]));

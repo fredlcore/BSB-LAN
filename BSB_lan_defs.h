@@ -219,6 +219,7 @@ typedef enum{
 }category_t;
 
 /* Parameter types */
+/* order of types must according to optbl table */
 typedef enum{
   VT_BIT,               //  2 Byte - 1 enable 0x01 / value
   VT_BYTE,              //  2 Byte - 1 enable 0x01 / value
@@ -362,6 +363,7 @@ typedef enum {
   DT_DWHM     // PPS time (day of week, hour:minute)
 } dt_types_t;
 
+/* order of types must according to vt_type_t enum */
 PROGMEM_LATE const units optbl[]={
 {VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
@@ -442,7 +444,6 @@ PROGMEM_LATE const units optbl[]={
 {VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 };
 
