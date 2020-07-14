@@ -1216,7 +1216,6 @@ void loadPrognrElementsFromTable(int i){
   #endif
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
   div_unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.unit[0] = 0;
   #if defined(__SAM3X8E__)
   memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, div_unit_len);
   #else
@@ -3797,18 +3796,17 @@ return outBuf;
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void query_printHTML(){
-  if(decodedTelegram.value[0] != 0){
-      if (decodedTelegram.msg_type == TYPE_ERR) {
+  if (decodedTelegram.msg_type == TYPE_ERR) {
 #ifdef HIDE_UNKNOWN
-        continue;
+    if (decodedTelegram.error == 7) return;
 #endif
-        bufferedprintln(PSTR("<tr style='color: #7f7f7f'><td>"));
-      } else {
-        bufferedprintln(PSTR("<tr><td>"));
-      }
-      client.print(build_pvalstr(1));
+    bufferedprintln(PSTR("<tr style='color: #7f7f7f'><td>"));
+  } else {
+    bufferedprintln(PSTR("<tr><td>"));
+  }
+  client.print(build_pvalstr(1));
 
-      float num_pvalstr = strtod(decodedTelegram.value, NULL);
+  float num_pvalstr = strtod(decodedTelegram.value, NULL);
 
 
 /*
@@ -3920,7 +3918,6 @@ void query_printHTML(){
         }
       }
       bufferedprintln(PSTR("</td></tr>"));
-  } // endif
 
 // TODO: check at least for data length (only used for temperature values)
 /*
