@@ -3815,7 +3815,7 @@ void query_printHTML(){
   if(decodedTelegram.value[0] != 0){
       if (decodedTelegram.msg_type == TYPE_ERR) {
 #ifdef HIDE_UNKNOWN
-        continue;
+        return;
 #endif
         bufferedprintln(PSTR("<tr style='color: #7f7f7f'><td>"));
       } else {
