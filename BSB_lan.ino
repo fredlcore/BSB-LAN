@@ -4078,6 +4078,7 @@ void query(int line_start  // begin at this line (ProgNr)
   int line;     // ProgNr
    for(line=line_start;line<=line_end;line++){
      query(line);
+     if(decodedTelegram.prognr == -1) continue;
      if (!no_print) {         // display in web client?
         query_printHTML();
      }
