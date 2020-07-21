@@ -6001,7 +6001,13 @@ uint8_t pps_offset = 0;
             }
 
           strcpy_P(jsonbuffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
-          client.print(jsonbuffer);
+          if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
+            strcat_P(jsonbuffer, PSTR("}"));
+            client.print(jsonbuffer);
+            break;
+          }
+          else
+            client.print(jsonbuffer);
 
           if (p[2] == 'I'){ // dump configuration in JSON
             free(jsonbuffer);
