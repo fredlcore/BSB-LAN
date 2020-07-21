@@ -6004,6 +6004,7 @@ uint8_t pps_offset = 0;
           if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
             strcat_P(jsonbuffer, PSTR("}"));
             client.print(jsonbuffer);
+            free(jsonbuffer);
             break;
           }
           else
