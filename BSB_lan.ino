@@ -513,6 +513,14 @@ uint8_t json_types[20] = { 0 };
   dht DHT;
 #endif
 
+//dirty hack for sprintf_P() with format string only.
+#if defined(__SAM3X8E__)
+#ifdef sprintf_P
+#undef sprintf_P
+#endif
+#define sprintf_P(s, ...) sprintf((s), __VA_ARGS__)
+#endif
+
 char date[20];
 
 unsigned long lastAvgTime = 0;
@@ -4224,13 +4232,13 @@ void dht22(void) {
     if (hum > 0 && hum < 101) {
       outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\ntemp[%d]: "),i);
       outBufLen+=_printFIXPOINT(outBuf+outBufLen,temp,2);
-      strcpy_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));outBufLen+=28;
+      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
       outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("hum[%d]: "),i);
       outBufLen+=_printFIXPOINT(outBuf+outBufLen,hum,2);
-      strcpy_P(outBuf+outBufLen,PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));outBufLen+=28;
+      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
       outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("abs_hum[%d]: "),i);
       outBufLen+=_printFIXPOINT(outBuf+outBufLen,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      strcpy_P(outBuf+outBufLen,PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));outBufLen+=28;
+      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
     }
   }
   client.println(outBuf);
@@ -4275,7 +4283,7 @@ void ds18b20(void) {
 //    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
     outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: "),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
     outBufLen+=_printFIXPOINT(outBuf+outBufLen,t,2);
-    strcpy_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n"));outBufLen+=19;
+    outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n"));
     client.println(outBuf);
   }
   //webPrintFooter();
@@ -6049,7 +6057,7 @@ uint8_t pps_offset = 0;
             outBufLen = 0;
 //protected GPIO
             if(anz_ex_gpio > 0){
-            strcpy_P(outBuf+outBufLen, PSTR(",\n  \"protectedGPIO\": [\n")); outBufLen+=23;
+            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"protectedGPIO\": [\n"));
             for (i=0; i<anz_ex_gpio; i++) {
               outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("    { \"pin\": %d },\n"), exclude_GPIO[i]);
               if(outBufLen > 200 && i < (anz_ex_gpio - 1)) { //flush buffer
@@ -6064,7 +6072,7 @@ uint8_t pps_offset = 0;
             }
             boolean somethingexist = false;
 //averages
-            strcpy_P(outBuf+outBufLen, PSTR(",\n  \"averages\": [\n")); outBufLen+=18;
+            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"averages\": [\n"));
             for (i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {somethingexist = true; outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("    { \"parameter\": %d },\n"), avg_parameters[i]);}
               if(outBufLen > 200 && i < (numAverages - 1) && somethingexist) { //flush buffer
@@ -6073,7 +6081,7 @@ uint8_t pps_offset = 0;
               }
             }
             if (avg_parameters[0] > 0) outBufLen-=2; //two bytes shift (delete comma and \n)
-            strcpy_P(outBuf+outBufLen, PSTR("\n  ]")); outBufLen+=4;
+            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("\n  ]"));
 // logged parameters
           #ifdef LOGGER
             if(somethingexist) {client.print(outBuf); outBufLen = 0;}
@@ -6087,7 +6095,7 @@ uint8_t pps_offset = 0;
               }
             }
             if (log_parameters[0] > 0)outBufLen-=2; //two bytes shift (delete comma and \n)
-            strcpy_P(outBuf+outBufLen, PSTR("\n  ]")); outBufLen+=4;
+            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("\n  ]"));
           #endif
             strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
             client.print(outBuf);
@@ -6221,7 +6229,7 @@ uint8_t pps_offset = 0;
                 }
 
                 if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
-                if(been_here2) {strcpy_P(jsonbuffer + buffershiftedbycolon, PSTR(",\n")); buffershiftedbycolon +=2;}//do not print ",\n" if it first field
+                if(been_here2) buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR(",\n")); //do not print ",\n" if it first field
                 buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
                 if (!been_here2 || p[2] == 'Q' || p[2] == 'C') been_here2=true;
 
@@ -6258,7 +6266,7 @@ uint8_t pps_offset = 0;
                           val=uint16_t(pgm_read_byte_far(enumstr+x));
                         }
                         int jsonbufshift = 0;
-                        if(been_here) {strcpy_P(jsonbuffer + jsonbufshift, PSTR(",\n")); jsonbufshift+=2;} //do not print ",\n" if it first enumValue
+                        if(been_here) jsonbufshift += sprintf_P(jsonbuffer + jsonbufshift, PSTR(",\n")); //do not print ",\n" if it first enumValue
                         jsonbufshift += sprintf_P(jsonbuffer + jsonbufshift, PSTR("      { \"enumValue\": %d, \"desc\": \""), val);
                         if (!been_here) been_here = true;
                         //skip leading space
@@ -6766,7 +6774,7 @@ uint8_t pps_offset = 0;
               outBufclear();
               outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\ncustom_float[%d]: "),i);
               outBufLen+=_printFIXPOINT(outBuf+outBufLen,custom_floats[i],2);
-              strcpy_P(outBuf+outBufLen, PSTR("\n</td></tr>\n")); outBufLen+=12;
+              outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("\n</td></tr>\n"));
               client.println(outBuf);
             }
             for(int i=0;i<numCustomLongs;i++){
