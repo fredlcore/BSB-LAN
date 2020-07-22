@@ -438,6 +438,10 @@ char buffer[BUFLEN] = { 0 };
 char outBuf[OUTBUF_LEN] = { 0 };
 int outBufLen=0;
 
+// big output buffer with automatic flushing. Do not do direct access
+char bigBuff[OUTBUF_LEN * 3] = { 0 };
+int bigBuffLen=0;
+
 const char *averagesFileName = "averages.txt";
 const char *datalogFileName = "datalog.txt";
 const char *journalFileName = "journal.txt";
@@ -511,14 +515,6 @@ uint8_t json_types[20] = { 0 };
   #include "src/DHT/dht.h"
   int DHT_Pins[] = {DHT_BUS};
   dht DHT;
-#endif
-
-//dirty hack for sprintf_P() with format string only.
-#if defined(__SAM3X8E__)
-#ifdef sprintf_P
-#undef sprintf_P
-#endif
-#define sprintf_P(s, ...) sprintf((s), __VA_ARGS__)
 #endif
 
 char date[20];
@@ -669,6 +665,70 @@ void checkSockStatus()
 }
 
 #endif
+
+/* Functions for management "Ring" output buffer */
+/** *****************************************************************
+ *  Function: pushStrToBigBuff(), pushStrToBigBuff_P(), pushStrToBigBuff_PF(), pushFmtStrToBigBuff_P()
+ *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
+ *         flushBigBuff() must be called before end of connection
+ *  Pass parameters:
+ *  WiFiEspClient/EthernetClient &cl
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   bigBuffLen and bigBuff variable
+ * *************************************************************** */
+
+void flushBigBuff(){
+  if(bigBuffLen > 0)client.write(bigBuff, bigBuffLen);
+  bigBuffLen = 0;
+}
+
+int pushStrToBigBuff(char *format){
+  strcpy(bigBuff + bigBuffLen, format);
+  int len = strlen(bigBuff + bigBuffLen);
+  bigBuffLen += len;
+  if(bigBuffLen > OUTBUF_LEN * 2){
+    flushBigBuff();
+  }
+  return len;
+}
+int pushStrToBigBuff_P(const char *format){
+  strcpy_P(bigBuff + bigBuffLen, format);
+  int len = strlen(bigBuff + bigBuffLen);
+  bigBuffLen += len;
+  if(bigBuffLen > OUTBUF_LEN * 2){
+    flushBigBuff();
+  }
+  return len;
+}
+int pushStrToBigBuff_PF(uint_farptr_t src){
+  strcpy_PF(bigBuff + bigBuffLen, src);
+  int len = strlen(bigBuff + bigBuffLen);
+  bigBuffLen += len;
+  if(bigBuffLen > OUTBUF_LEN * 2){
+    flushBigBuff();
+  }
+  return len;
+}
+int pushFmtStrToBigBuff_P(const char *format, ...){
+  va_list args;
+  va_start(args, format);
+#if defined(__SAM3X8E__)
+  int len = vsprintf(bigBuff + bigBuffLen, format, args);
+#else
+  int len = vsprintf_P(bigBuff + bigBuffLen, format, args);
+#endif
+  bigBuffLen += len;
+  va_end(args);
+  if(bigBuffLen > OUTBUF_LEN * 2){
+    flushBigBuff();
+  }
+  return len;
+}
+
 
 /** *****************************************************************
  *  Function: calc_enum_offset()
@@ -1415,33 +1475,10 @@ void addPostfixToBuffer(const char *postfix){
     outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" %s"), postfix);
   }
 }
-/** *****************************************************************
- *  Function: bufferedprint and bufferedprintln
- *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *  Pass parameters:
- *  WiFiEspClient/EthernetClient &cl
- *  PGM_P outstr
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   buffer variable
- * *************************************************************** */
-
-void bufferedprint(PGM_P outstr){
-  strncpy_P(outBuf, outstr, OUTBUF_LEN - 1);
-  client.print(outBuf);
-}
-
-void bufferedprintln(PGM_P outstr){
-  strncpy_P(outBuf, outstr, OUTBUF_LEN - 2);
-  client.println(outBuf);
-}
 
 #ifdef PASSKEY
 void printPassKey(void){
-  bufferedprint(PSTR(PASSKEY "/"));
+  pushStrToBigBuff_P(PSTR(PASSKEY "/"));
 }
 #endif
 /** *****************************************************************
@@ -1457,10 +1494,11 @@ void printPassKey(void){
  * *************************************************************** */
 void printyesno(boolean i){
   if (i) {
-    bufferedprintln(PSTR(MENU_TEXT_YES "<BR>"));
+    pushStrToBigBuff_P(PSTR(MENU_TEXT_YES "<BR>"));
   } else {
-    bufferedprintln(PSTR(MENU_TEXT_NO "<BR>"));
+    pushStrToBigBuff_P(PSTR(MENU_TEXT_NO "<BR>"));
   }
+  pushStrToBigBuff_P(PSTR("\n"));
 }
 
 /** *****************************************************************
@@ -2713,58 +2751,58 @@ void webPrintHeader(void){
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
-  bufferedprint(PSTR("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
+  pushStrToBigBuff_P(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
+  pushStrToBigBuff_P(PSTR("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("K'>" MENU_TEXT_HFK));
+  pushStrToBigBuff_P(PSTR("K'>" MENU_TEXT_HFK));
 
-  bufferedprint(PSTR("</a></td><td width=20% align=center>"));
+  pushStrToBigBuff_P(PSTR("</a></td><td width=20% align=center>"));
 
-  bufferedprint(PSTR("<a href='/"));
+  pushStrToBigBuff_P(PSTR("<a href='/"));
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("T'>" MENU_TEXT_SNS "</a>"));
+  pushStrToBigBuff_P(PSTR("T'>" MENU_TEXT_SNS "</a>"));
 
-  bufferedprint(PSTR("</td><td width=20% align=center>"));
+  pushStrToBigBuff_P(PSTR("</td><td width=20% align=center>"));
 
 #ifndef LOGGER
-  bufferedprint(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
+  pushStrToBigBuff_P(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
 #else
-  bufferedprint(PSTR("<a href='/"));
+  pushStrToBigBuff_P(PSTR("<a href='/"));
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
+  pushStrToBigBuff_P(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
 #endif
 
-  bufferedprint(PSTR("</td><td width=20% align=center>"));
+  pushStrToBigBuff_P(PSTR("</td><td width=20% align=center>"));
 
-  bufferedprint(PSTR("<a href='/"));
+  pushStrToBigBuff_P(PSTR("<a href='/"));
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
+  pushStrToBigBuff_P(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
 
-  bufferedprint(PSTR("</td></tr>\n"));
-  bufferedprint(PSTR("<tr bgcolor=#f0f0f0><td width=20% align=center>"));
+  pushStrToBigBuff_P(PSTR("</td></tr>\n"));
+  pushStrToBigBuff_P(PSTR("<tr bgcolor=#f0f0f0><td width=20% align=center>"));
 
-  bufferedprint(PSTR("<a href='/"));
+  pushStrToBigBuff_P(PSTR("<a href='/"));
 #ifdef PASSKEY
 printPassKey();
 #endif
-  bufferedprint(PSTR("C'>" MENU_TEXT_CFG));
+  pushStrToBigBuff_P(PSTR("C'>" MENU_TEXT_CFG));
 
 //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-  bufferedprint(PSTR("</a></td><td width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
-  bufferedprint(PSTR("</a></td><td width=20% align=center>"));
+  pushStrToBigBuff_P(PSTR("</a></td><td width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+  pushStrToBigBuff_P(PSTR("</a></td><td width=20% align=center>"));
 
-  bufferedprint(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
+  pushStrToBigBuff_P(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  bufferedprint(PSTR("</tr></table><p></p><table align=center width=80%><tr><td>\n"));
-
+  pushStrToBigBuff_P(PSTR("</tr></table><p></p><table align=center width=80%><tr><td>\n"));
+  flushBigBuff();
 } // --- webPrintHeader() ---
 
 /** *****************************************************************
@@ -2780,7 +2818,8 @@ printPassKey();
  *   client object
  * *************************************************************** */
 void webPrintFooter(void){
-  bufferedprint(PSTR("</td></tr></table>\n</body>\n</html>\n\n"));
+  pushStrToBigBuff_P(PSTR("</td></tr></table>\n</body>\n</html>\n\n"));
+  flushBigBuff();
 } // --- webPrintFooter() ---
 
 /** *****************************************************************
@@ -2798,16 +2837,16 @@ void webPrintFooter(void){
 void webPrintSite() {
   webPrintHeader();
 
-  client.println(F("<p>"));
-  client.print(F("BSB-LAN Web, Version "));
-  client.print(F(BSB_VERSION));
-  client.println(F("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK));
-  client.println(F("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG));
-  client.println(F("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL));
+  pushStrToBigBuff_P(PSTR("<p>\n"));
+  pushStrToBigBuff_P(PSTR("BSB-LAN Web, Version "));
+  pushStrToBigBuff_P(PSTR(BSB_VERSION));
+  pushStrToBigBuff_P(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK "\n"));
+  pushStrToBigBuff_P(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG "\n"));
+  pushStrToBigBuff_P(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL "\n"));
 
 #ifdef VERSION_CHECK
-  client.println(F("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
-
+  pushStrToBigBuff_P(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>\n"));
+  flushBigBuff();
   httpclient.connect("bsb-lan.de", 80);
   httpclient.println("GET /bsb-version.h");
   httpclient.println();
@@ -2840,19 +2879,13 @@ void webPrintSite() {
     }
   }
   if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
-    client.print(F(MENU_TEXT_NVA ": "));
-    client.print(F("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">"));
-    client.print(major);
-    client.print(F("."));
-    client.print(minor);
-    client.print(F("."));
-    client.print(patch);
-    client.println(F("</A><BR>"));
+    pushStrToBigBuff_P(PSTR(MENU_TEXT_NVA ": "));
+    pushFmtStrToBigBuff_P(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\n"), major, minor, patch);
   } else {
-    client.println(MENU_TEXT_NVN);
+    pushStrToBigBuff_P(PSTR(MENU_TEXT_NVN "\n"));
   }
 #endif
-
+  flushBigBuff();
   webPrintFooter();
 } // --- webPrintSite() ---
 
@@ -3811,11 +3844,11 @@ void query_printHTML(){
 #ifdef HIDE_UNKNOWN
     if (decodedTelegram.error == 7) return;
 #endif
-    bufferedprintln(PSTR("<tr style='color: #7f7f7f'><td>"));
+    pushStrToBigBuff_P(PSTR("<tr style='color: #7f7f7f'><td>"));
   } else {
-    bufferedprintln(PSTR("<tr><td>"));
+    pushStrToBigBuff_P(PSTR("<tr><td>"));
   }
-  client.print(build_pvalstr(1));
+  pushStrToBigBuff(build_pvalstr(1));
 
   float num_pvalstr = strtod(decodedTelegram.value, NULL);
 
@@ -3835,16 +3868,15 @@ void query_printHTML(){
         }
       }
 */
-      bufferedprintln(PSTR("</td><td>"));
+      pushStrToBigBuff_P(PSTR("</td><td>\n"));
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-          bufferedprint(PSTR("<select "));
+          pushStrToBigBuff_P(PSTR("<select "));
           if (decodedTelegram.type == VT_BIT) {
-            bufferedprint(PSTR("multiple "));
+            pushStrToBigBuff_P(PSTR("multiple "));
           }
-          bufferedprint(PSTR("id='value"));
-          client.print(decodedTelegram.prognr);
-          bufferedprintln(PSTR("'>"));
+          pushFmtStrToBigBuff_P(PSTR("id='value%d'>\n"), decodedTelegram.prognr);
+
             uint16_t val;
             uint16_t c=0;
             uint8_t bitmask=0;
@@ -3871,38 +3903,30 @@ void query_printHTML(){
               //skip leading space
               c+=2;
 
-              bufferedprint(PSTR("<option value='"));
-              client.print(val);
+              pushFmtStrToBigBuff_P(PSTR("<option value='%d"), val);
               if (((decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_ERRORCODE) && num_pvalstr == val)
                 || ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && ((num_pvalstr != 0 && val != 0) || num_pvalstr == val))
                 || (decodedTelegram.type == VT_BIT && (bitvalue & bitmask) == (val & bitmask))) {
-                bufferedprint(PSTR("' SELECTED>"));
+                pushStrToBigBuff_P(PSTR("' SELECTED>"));
               } else {
-                bufferedprint(PSTR("'>"));
+                pushStrToBigBuff_P(PSTR("'>"));
               }
-              strcpy_PF(outBuf, decodedTelegram.enumstr+c);
-              client.print(outBuf);
-              bufferedprintln(PSTR("</option>"));
-
-              while(pgm_read_byte_far(decodedTelegram.enumstr+c)!=0) c++;
+              c += pushStrToBigBuff_PF(decodedTelegram.enumstr+c);
+              pushStrToBigBuff_P(PSTR("</option>"));
               c++;
             }
 
 
-          bufferedprint(PSTR("</select></td><td>"));
+          pushStrToBigBuff_P(PSTR("</select></td><td>"));
           if (!decodedTelegram.readonly) {
-            bufferedprint(PSTR("<input type=button value='Set' onclick=\"set"));
+            pushStrToBigBuff_P(PSTR("<input type=button value='Set' onclick=\"set"));
             if (decodedTelegram.type == VT_BIT) {
-              bufferedprint(PSTR("bit"));
+              pushStrToBigBuff_P(PSTR("bit"));
             }
-            bufferedprint(PSTR("("));
-            client.print(decodedTelegram.prognr);
-            bufferedprint(PSTR(")\">"));
+            pushFmtStrToBigBuff_P(PSTR("(%d)\">"), decodedTelegram.prognr);
           }
         } else {
-          bufferedprint(PSTR("<input type=text id='value"));
-          client.print(decodedTelegram.prognr);
-          bufferedprint(PSTR("' VALUE='"));
+          pushFmtStrToBigBuff_P(PSTR("<input type=text id='value%d' VALUE='"), decodedTelegram.prognr);
 
 /*
           char* colon_pos = strchr(pvalstr,':');
@@ -3914,21 +3938,19 @@ void query_printHTML(){
             client.print(decodedTelegram.value);
           } else {
             if  (decodedTelegram.value[2] == '-') {   // do not run strtod on disabled parameters (---)
-              bufferedprint(PSTR("---"));
+              pushStrToBigBuff_P(PSTR("---"));
             } else {
               client.print(strtod(decodedTelegram.value, NULL));
             }
           }*/
-          client.print(decodedTelegram.value);
-          bufferedprint(PSTR("'></td><td>"));
+          pushStrToBigBuff(decodedTelegram.value);
+          pushStrToBigBuff_P(PSTR("'></td><td>"));
           if (!decodedTelegram.readonly) {
-            bufferedprint(PSTR("<input type=button value='Set' onclick=\"set("));
-            client.print(decodedTelegram.prognr);
-            bufferedprint(PSTR(")\">"));
+            pushFmtStrToBigBuff_P(PSTR("<input type=button value='Set' onclick=\"set(%d)\">"), decodedTelegram.prognr);
           }
         }
       }
-      bufferedprintln(PSTR("</td></tr>"));
+      pushStrToBigBuff_P(PSTR("</td></tr>"));
 
 // TODO: check at least for data length (only used for temperature values)
 /*
@@ -3937,6 +3959,7 @@ if(data_len==3){
   returnval = printFIXPOINT(msg,data_len,64.0,1,"");
 }
 */
+  flushBigBuff();
 }
 
 /** *****************************************************************
@@ -4200,7 +4223,6 @@ void dht22(void) {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   DebugOutput.print(F("DHT22 sensors: "));
   DebugOutput.println(numDHTSensors);
-    outBufclear();
     for(i=0;i<numDHTSensors;i++){
 
     int chk = DHT.read22(DHT_Pins[i]);
@@ -4230,18 +4252,19 @@ void dht22(void) {
     Serial.print(F("]: "));
     Serial.println(hum);
     if (hum > 0 && hum < 101) {
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\ntemp[%d]: "),i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,temp,2);
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("hum[%d]: "),i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,hum,2);
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("abs_hum[%d]: "),i);
-      outBufLen+=_printFIXPOINT(outBuf+outBufLen,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
+      char tempBuf[10];
+      _printFIXPOINT(tempBuf,temp,2);
+      pushFmtStrToBigBuff_P(PSTR("<tr><td>\ntemp[%d]: %s"), i, tempBuf);
+      pushStrToBigBuff_P(PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
+      _printFIXPOINT(tempBuf,hum,2);
+      pushFmtStrToBigBuff_P(PSTR("hum[%d]: "), i, tempBuf);
+      pushStrToBigBuff_P(PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
+      _printFIXPOINT(tempBuf,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
+      pushFmtStrToBigBuff_P(PSTR("abs_hum[%d]: "), i, tempBuf);
+      pushStrToBigBuff_P(PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
     }
   }
-  client.println(outBuf);
+  flushBigBuff();
 }
 #endif  //ifdef DHT_BUS
 
@@ -4270,7 +4293,6 @@ void ds18b20(void) {
   DeviceAddress device_address;
 //  char device_ascii[17];
   for(i=0;i<numSensors;i++){
-    outBufclear();
     float t=sensors.getTempCByIndex(i);
     Serial.print(F("#1w_temp["));
     Serial.print(i);
@@ -4281,11 +4303,12 @@ void ds18b20(void) {
     sensors.getAddress(device_address, i);
 //    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 //    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
-    outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: "),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    outBufLen+=_printFIXPOINT(outBuf+outBufLen,t,2);
-    outBufLen+=sprintf_P(outBuf+outBufLen,PSTR(" &deg;C\n</td></tr>\n"));
-    client.println(outBuf);
+    char tempBuf[10];
+    _printFIXPOINT(tempBuf,t,2);
+    pushFmtStrToBigBuff_P(PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: %s"),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], tempBuf);
+    pushStrToBigBuff_P(PSTR(" &deg;C\n</td></tr>\n"));
   }
+flushBigBuff();
   //webPrintFooter();
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
@@ -4320,7 +4343,7 @@ char *lookup_descr(uint16_t line) {
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
+  pushStrToBigBuff_P(PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
 
   int i;
   int counter = 0;
@@ -4328,32 +4351,25 @@ void Ipwe() {
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
 
-  client.print(F("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  pushStrToBigBuff_P(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   for (i=0; i < numIPWESensors; i++) {
     query(ipwe_parameters[i]);
     counter++;
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(counter);
-    client.print(F("<br></td><td>"));
-    client.print(lookup_descr(ipwe_parameters[i]));
-    client.print(F("<br></td><td>"));
-    client.print(decodedTelegram.value);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    pushFmtStrToBigBuff_P(PSTR("<tr><td>T<br></td><td>%d<br></td><td>%s"), counter);
+    pushFmtStrToBigBuff_P(PSTR("<br></td><td>%s"), lookup_descr(ipwe_parameters[i]));
+    pushFmtStrToBigBuff_P(PSTR("<br></td><td>%s"), decodedTelegram.value);
+    pushFmtStrToBigBuff_P(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
-      client.print(F("<tr><td>T<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("Avg"));
-      client.print(lookup_descr(avg_parameters[i]));
-      client.print(F("<br></td><td>"));
+      pushFmtStrToBigBuff_P(PSTR("<tr><td>T<br></td><td>%d"), counter);
+      pushFmtStrToBigBuff_P(PSTR("<br></td><td>Avg%s"), lookup_descr(avg_parameters[i]));
       float rounded = round(avgValues[i]*10);
-      client.println(rounded/10);
+      pushFmtStrToBigBuff_P(PSTR("<br></td><td>%d"), (int)(rounded/10));
 // TODO: extract and display unit text from cmdtbl.type
-      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      pushStrToBigBuff_P(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 
@@ -4361,20 +4377,15 @@ void Ipwe() {
   // output of one wire sensors
   sensors.requestTemperatures();
   DeviceAddress device_address;
-  char device_ascii[17];
   for(i=0;i<numSensors;i++){
     counter++;
-    float t=sensors.getTempCByIndex(i);
+    char tmpbuf[10];
+    _printFIXPOINT(tmpbuf, sensors.getTempCByIndex(i), 2);
     sensors.getAddress(device_address, i);
-    sprintf_P(device_ascii, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 
-    client.print(F("<tr><td>T<br></td><td>"));
-    client.print(counter);
-    client.print(F("<br></td><td>"));
-    client.print(device_ascii);
-    client.print(F("<br></td><td>"));
-    client.print(t);
-    client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+    pushFmtStrToBigBuff_P(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+    pushFmtStrToBigBuff_P(PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+    pushFmtStrToBigBuff_P(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), tmpbuf);
   }
 #endif
 
@@ -4383,35 +4394,29 @@ void Ipwe() {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
   for(i=0;i<numDHTSensors;i++){
     DHT.read22(DHT_Pins[i]);
-
+    char tmpbuf[10];
     float hum = DHT.humidity;
     float temp = DHT.temperature;
     if (hum > 0 && hum < 101) {
       counter++;
-      client.print(F("<tr><td>T<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("DHT sensor "));
-      client.print(i+1);
-      client.print(F(" temperature"));
-      client.print(F("<br></td><td>"));
-      client.print(temp);
-      client.print(F("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      pushFmtStrToBigBuff_P(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+      pushFmtStrToBigBuff_P(PSTR("DHT sensor %d temperature"), i+1);
+      _printFIXPOINT(tmpbuf, temp, 2);
+      pushFmtStrToBigBuff_P(PSTR("<br></td><td>%s"), tmpbuf);
+      pushStrToBigBuff_P(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
       counter++;
-      client.print(F("<tr><td>F<br></td><td>"));
-      client.print(counter);
-      client.print(F("<br></td><td>"));
-      client.print(F("DHT sensor "));
-      client.print(i+1);
-      client.print(F(" humidity"));
-      client.print(F("<br></td><td>0<br></td><td>"));
-      client.print(hum);
-      client.print(F("<br></td><td>0<br></td><td>0<br></td></tr>"));
+      pushFmtStrToBigBuff_P(PSTR("<tr><td>F<br></td><td>%d"), counter);
+      pushStrToBigBuff_P(PSTR("<br></td><td>"));
+      pushFmtStrToBigBuff_P(PSTR("DHT sensor %d humidity"), i+1);
+      _printFIXPOINT(tmpbuf, hum, 2);
+      pushFmtStrToBigBuff_P(PSTR("<br></td><td>0<br></td><td>%s"), tmpbuf);
+      pushStrToBigBuff_P(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
 #endif
 
-  client.print(F("</tbody></table></form>"));
+  pushStrToBigBuff_P(PSTR("</tbody></table></form>"));
+  flushBigBuff();
 }
 
 #endif    // --- Ipwe() ---
@@ -4497,19 +4502,24 @@ uint16_t setPPS(uint8_t pps_index, uint16_t value) {
  *   client instance
  * *************************************************************** */
 void transmitFile(File dataFile) {
-  int logbuflen = 512;
-  byte *loglineBuf = (byte *)malloc(logbuflen);
+//  int logbuflen = 512;
+  int logbuflen = (OUTBUF_LEN * 3 > 1024)?1024:(OUTBUF_LEN * 3);
+  flushBigBuff();
+/*  byte *loglineBuf = (byte *)malloc(logbuflen);
   if(!loglineBuf) {
     printcantalloc();
     return;
-    }
-  int chars_read = dataFile.read(loglineBuf , logbuflen);
+  } */
+//  int chars_read = dataFile.read(loglineBuf , logbuflen);
+  int chars_read = dataFile.read(bigBuff , logbuflen);
   while (chars_read == logbuflen) {
-    client.write(loglineBuf, logbuflen);
-    chars_read = dataFile.read(loglineBuf , logbuflen);
+//    client.write(loglineBuf, logbuflen);
+//    chars_read = dataFile.read(loglineBuf , logbuflen);
+    client.write(bigBuff, logbuflen);
+    chars_read = dataFile.read(bigBuff , logbuflen);
     }
-  if (chars_read > 0) client.write(loglineBuf, chars_read);
-  free(loglineBuf);
+  if (chars_read > 0) client.write(bigBuff, chars_read);
+//  free(loglineBuf);
 }
 
 #endif
@@ -5311,7 +5321,8 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (urlString == "/favicon.ico") {
-          bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
+          pushStrToBigBuff_P(PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
+          flushBigBuff();
 #ifdef WEBSERVER
           File dataFile = SD.open(urlString + 1);
           if (dataFile) {
@@ -5411,12 +5422,12 @@ uint8_t pps_offset = 0;
             }
 
             DebugOutput.print(F("File opened from SD: ")); DebugOutput.println(urlString);
-            strcpy_P(buffer, PSTR("HTTP/1.1 ")); // 10 bytes with zero
+            pushStrToBigBuff_P(PSTR("HTTP/1.1 ")); // 10 bytes with zero
             if((httpflags & 8))
-              strcat_P(buffer, PSTR("304 Not Modified\n")); // 18 bytes with zero
+              pushStrToBigBuff_P(PSTR("304 Not Modified\n")); // 18 bytes with zero
             else
-              strcat_P(buffer, PSTR("200 OK\n")); // 8 bytes with zero
-            strcat_P(buffer, PSTR("Content-Type: ")); // 15 bytes with zero
+              pushStrToBigBuff_P(PSTR("200 OK\n")); // 8 bytes with zero
+            pushStrToBigBuff_P(PSTR("Content-Type: ")); // 15 bytes with zero
             switch(mimetype){
               case 1: getfarstrings = PSTR("text/html\n"); break;
               case 2: getfarstrings = PSTR("text/css\n"); break;
@@ -5432,8 +5443,8 @@ uint8_t pps_offset = 0;
               case 5:
               default: getfarstrings = PSTR("text\n");
             }
-            strcat_P(buffer, getfarstrings);
-            if((httpflags & 2)) strcat_P(buffer, PSTR("Content-Encoding: gzip\n"));
+            pushStrToBigBuff_P(getfarstrings);
+            if((httpflags & 2)) pushStrToBigBuff_P(PSTR("Content-Encoding: gzip\n"));
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -5467,12 +5478,11 @@ uint8_t pps_offset = 0;
                 default: getfarstrings = PSTR("ERR"); break;
               }
               strcpy_P(monthname, getfarstrings);
-              sprintf_P(buffer + strlen(buffer), PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
+              pushFmtStrToBigBuff_P(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
-            sprintf_P(buffer + strlen(buffer), PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
-            client.print(buffer);
-
+            pushFmtStrToBigBuff_P(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            flushBigBuff();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & 8) && !(httpflags & 4)) {
               transmitFile(dataFile);
@@ -5531,11 +5541,11 @@ uint8_t pps_offset = 0;
           verbose=atoi(p);
           webPrintHeader();
           if(verbose>0){
-            client.println(F(MENU_TEXT_VB1 "<BR>"));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_VB1 "<BR>"));
           }else{
-            client.println(F(MENU_TEXT_VB2 "<BR>"));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_VB2 "<BR>"));
           }
-          client.println(F(MENU_TEXT_VB3));
+          pushStrToBigBuff_P(PSTR("\n" MENU_TEXT_VB3 "\n"));
           webPrintFooter();
           break;
         }
@@ -5545,11 +5555,11 @@ uint8_t pps_offset = 0;
           monitor=atoi(p);    // .. to convert
           webPrintHeader();
           if(monitor>0){
-            client.println(F(MENU_TEXT_SR1));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_SR1));
           }else{
-            client.println(F(MENU_TEXT_SR2));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_SR2));
           }
-          client.println(F(MENU_TEXT_SR3));
+          pushStrToBigBuff_P(PSTR("\n" MENU_TEXT_SR3 "\n"));
           webPrintFooter();
           break;
         }
@@ -5571,7 +5581,7 @@ uint8_t pps_offset = 0;
           p+=2;               // third position in cLineBuffer
           if(!isdigit(*p)){   // now we check for digits - nice
             if(!(httpflags & 128)) webPrintHeader();
-            client.println(F(MENU_TEXT_ER1));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER1 "\n"));
             if(!(httpflags & 128)) webPrintFooter();
             break;
           }
@@ -5579,7 +5589,7 @@ uint8_t pps_offset = 0;
           p=strchr(p,'=');    // search for '=' sign
           if(p==NULL){        // no match
             if(!(httpflags & 128)) webPrintHeader();
-            client.println(F(MENU_TEXT_ER2));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER2 "\n"));
             if(!(httpflags & 128)) webPrintFooter();
             break;
           }
@@ -5604,9 +5614,9 @@ uint8_t pps_offset = 0;
 
           if(setresult!=1){
             if(!(httpflags & 128)) webPrintHeader();
-            client.println(F(MENU_TEXT_ER3));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER3 "\n"));
             if (setresult == 2) {
-              client.println(F(" - " MENU_TEXT_ER4));
+              pushStrToBigBuff_P(PSTR(" - " MENU_TEXT_ER4 "\n"));
             }
             if(!(httpflags & 128)) webPrintFooter();
             break;
@@ -5634,33 +5644,26 @@ uint8_t pps_offset = 0;
 //          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
 //          memcpy_P(buffer, &ENUM_CAT,len);
 //          buffer[len]=0;
-          bufferedprint(PSTR("<table><tr><td><a href='/"));
+          pushStrToBigBuff_P(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
           #endif
-          bufferedprint(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
+          pushStrToBigBuff_P(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
           #endif
-          bufferedprint(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
-          bufferedprint(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
-          #define K_FORMAT_TBL "<tr><td><a href='K%u'>%s</a></td><td>%d - %d</td></tr>\n"
-          char *tempBuf = (char *)malloc(BUFLEN);
-          if(!tempBuf) {
-            printcantalloc();
-            return;
-            }
+          pushStrToBigBuff_P(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
+          pushStrToBigBuff_P(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
-            outBufclear();
             if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
 #if defined(__SAM3X8E__)
               printENUM(ENUM_CAT,len,cat,1);
 #else
               printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
 #endif
-              strcpy_PF(outBuf, decodedTelegram.enumdescaddr); //copy Category name to buffer
-              DebugOutput.println();
+              pushFmtStrToBigBuff_P(PSTR("<tr><td><a href='K%d'>"), cat);
+              pushStrToBigBuff_PF(decodedTelegram.enumdescaddr); //copy Category name to buffer
 #if defined(__SAM3X8E__)
               cat_min = ENUM_CAT_NR[cat*2];
 #else
@@ -5671,13 +5674,12 @@ uint8_t pps_offset = 0;
 #else
               cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #endif
-              sprintf_P(tempBuf, PSTR(K_FORMAT_TBL), cat, outBuf, cat_min, cat_max);
-              client.print(tempBuf);
+              pushFmtStrToBigBuff_P(PSTR("</a></td><td>%hd - %hd</td></tr>\n"), cat_min, cat_max);
             }
           }
-          free(tempBuf);
-          bufferedprint(PSTR("</table>"));
+          pushStrToBigBuff_P(PSTR("</table>"));
           webPrintFooter();
+          flushBigBuff();
           break;
         }
         // list enum values
@@ -5703,18 +5705,16 @@ uint8_t pps_offset = 0;
                 //skip leading space
                 c+=2;
 
-                int shift = sprintf_P(outBuf, PSTR("%d - "), val);
-                strcpy_PF(outBuf + shift, enumstr + c);
-                client.print(outBuf);
-                client.println(F("<br>"));
-                c += strlen(outBuf + shift) + 1;
+                pushFmtStrToBigBuff_P(PSTR("%d - "), val);
+                c += pushStrToBigBuff_PF(enumstr + c) + 1;
+                pushStrToBigBuff_P(PSTR("<br>\n"));
               }
 
             }else{
-              client.println(F(MENU_TEXT_ER5));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_ER5));
             }
           }else{
-            client.println(F(MENU_TEXT_ER6));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER6));
           }
           webPrintFooter();
           break;
@@ -5726,11 +5726,11 @@ uint8_t pps_offset = 0;
           int line = atoi(&p[2]);
           int i=findLine(line,0,&c);
           if(i<0){
-            client.println(F(MENU_TEXT_ER6));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER6 "\n"));
           }else{
             if(!bus.Send(TYPE_QRV, c, msg, tx_msg)){
               DebugOutput.println(F("set failed"));  // to PC hardware serial I/F
-              client.println(F(MENU_TEXT_ER3));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_ER3 "\n"));
             }else{
 
               // Decode the xmit telegram and send it to the PC serial interface
@@ -5746,9 +5746,11 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
-              if(outBufLen>0){
-                client.println(outBuf);
-                client.println(F("<br>"));
+// TODO: replace pvalstr with data from decodedTelegram structure
+              build_pvalstr(0);
+              if(outBuf[0]>0){
+                pushStrToBigBuff(outBuf);
+                pushStrToBigBuff_P(PSTR("<br>"));
               }
             }
           }
@@ -5759,10 +5761,10 @@ uint8_t pps_offset = 0;
         if(p[1]=='Q') {
           if(!(httpflags & 128)) webPrintHeader();
 
-          client.print(F(MENU_TEXT_VER ": "));
-          client.print(F(BSB_VERSION));
-          client.println(F("<BR>"));
-          client.print(F(MENU_TEXT_QSC "...<BR>"));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_VER ": "));
+          pushStrToBigBuff_P(PSTR(BSB_VERSION));
+          pushStrToBigBuff_P(PSTR("<BR>\n"));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_QSC "...<BR>"));
           switch(bus.getBusType()) {
             case BUS_BSB: bus.setBusType(BUS_BSB, myAddr, 0x7F); break;
             case BUS_LPB: bus.setBusType(BUS_LPB, myAddr, 0xFF); break;
@@ -5792,15 +5794,13 @@ uint8_t pps_offset = 0;
                   }
                 }
                 if (!found) {
-                  client.print(F(MENU_TEXT_QFD ": "));
-                  client.print(found_id);
-                  client.println(F("<BR>"));
+                  pushFmtStrToBigBuff_P(PSTR(MENU_TEXT_QFD ": %hu<BR>\n"),found_id);
                 }
               }
               delay(1);
             }
           } else {
-            client.println(F(MENU_TEXT_QFA "!<BR>"));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_QFA "!<BR>"));
           }
 
           for (int x=0;x<10;x++) {
@@ -5808,9 +5808,7 @@ uint8_t pps_offset = 0;
               continue;
             }
             bus.setBusType(bus.getBusType(), myAddr, found_ids[x]);
-            client.print(F("<BR>" MENU_TEXT_QRT " "));
-            client.print(found_ids[x]);
-            client.println(F(":<BR>"));
+            pushFmtStrToBigBuff_P(PSTR("<BR>" MENU_TEXT_QRT " %hu<BR>\n"), found_ids[x]);
 
             uint32_t c=0;
             uint16_t l;
@@ -5818,64 +5816,61 @@ uint8_t pps_offset = 0;
             int orig_dev_var = my_dev_var;
             query(6225);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            client.print(F(STR6225_TEXT ": "));
-            client.println(decodedTelegram.value);
+            pushFmtStrToBigBuff_P(PSTR(STR6225_TEXT ": %s\n"), decodedTelegram.value);
             query(6226);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
-            client.print(F("<BR>" STR6226_TEXT ": "));
-            client.println(decodedTelegram.value);
+            pushFmtStrToBigBuff_P(PSTR("<BR>" STR6226_TEXT ": %s\n"), decodedTelegram.value);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
-            client.print(F("<BR>" STR6224_TEXT ": "));
-            query(6224); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6220_TEXT ": "));
-            query(6220); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6221_TEXT ": "));
-            query(6221); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6227_TEXT ": "));
-            query(6227); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6228_TEXT ": "));
-            query(6228); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6229_TEXT ": "));
-            query(6229); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6231_TEXT ": "));
-            query(6231); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6232_TEXT ": "));
-            query(6232); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6233_TEXT ": "));
-            query(6233); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6234_TEXT ": "));
-            query(6234); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6235_TEXT ": "));
-            query(6235); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6223_TEXT ": "));
-            query(6223); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR6236_TEXT ": "));
-            query(6236); client.println(build_pvalstr(0));
-              client.print(F("<BR>" STR6223_TEXT ": "));
-            query(6237); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR8700_TEXT " (10003): "));
-            query(10003); client.println(build_pvalstr(0));
-            client.print(F("<BR>" STR8700_TEXT " (10004): "));
-            query(10004); client.println(build_pvalstr(0));
-            client.println(F("<BR><BR>"));
+            pushStrToBigBuff_P(PSTR("<BR>" STR6224_TEXT ": "));
+            query(6224); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6220_TEXT ": "));
+            query(6220); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6221_TEXT ": "));
+            query(6221); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6227_TEXT ": "));
+            query(6227); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6228_TEXT ": "));
+            query(6228); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6229_TEXT ": "));
+            query(6229); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6231_TEXT ": "));
+            query(6231); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6232_TEXT ": "));
+            query(6232); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6233_TEXT ": "));
+            query(6233); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6234_TEXT ": "));
+            query(6234); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6235_TEXT ": "));
+            query(6235); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6223_TEXT ": "));
+            query(6223); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6236_TEXT ": "));
+            query(6236); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR6223_TEXT ": "));
+            query(6237); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR8700_TEXT " (10003): "));
+            query(10003); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR>" STR8700_TEXT " (10004): "));
+            query(10004); pushStrToBigBuff(build_pvalstr(0));
+            pushStrToBigBuff_P(PSTR("\n<BR><BR>\n"));
 
             int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
             for (int i=0; i<15; i++) {
-              client.print(params[i]);
-              client.print(F(";"));
+              pushFmtStrToBigBuff_P(PSTR("%d;"), params[i]);
             }
-            client.println(F("<BR>"));
+            pushStrToBigBuff_P(PSTR("<BR>\n"));
             for (int i=0; i<15; i++) {
-              query(params[i]); client.print(decodedTelegram.value);
-              client.print(F(";"));
+              query(params[i]); pushStrToBigBuff(decodedTelegram.value);
+              pushStrToBigBuff_P(PSTR(";"));
             }
 
-            client.println(F("<BR><BR>"));
+            pushStrToBigBuff_P(PSTR("<BR><BR>\n"));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
-            client.println(F("<BR>" MENU_TEXT_QST "...<BR>"));
+            pushStrToBigBuff_P(PSTR("<BR>" MENU_TEXT_QST "...<BR>\n"));
             for (int j=0;j<10000;j++) {
               if (get_cmdtbl_cmd(j) == c) {
                 continue;
@@ -5909,21 +5904,15 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.error == 260) { //pvalstr[0]<1 - unknown type
-                        client.println(F("<BR>"));
-                        client.print(l);
-                        client.println(F("<BR>"));
-                        client.println(build_pvalstr(0));
-                        client.println(F("<br>"));
+                        pushFmtStrToBigBuff_P(PSTR("<BR>\n%du<BR>\n"), l);
+                        pushStrToBigBuff(build_pvalstr(0));
+                        pushStrToBigBuff_P(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-                          client.print(tx_msg[i], HEX);
-                          client.print(F(" "));
+                          pushFmtStrToBigBuff_P(PSTR("%02X "), tx_msg[i]);
                         }
-                        client.println(F("<br>"));
+                        pushStrToBigBuff_P(PSTR("<br>\n"));
                         for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-                          if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-                          client.print(msg[i], HEX);
-                          client.print(F(" "));
+                          pushFmtStrToBigBuff_P(PSTR("%02X "), msg[i]);
                         }
                       }
                     }
@@ -5931,12 +5920,13 @@ uint8_t pps_offset = 0;
                 }
               }
             }
-            client.println(F(MENU_TEXT_QTE ".<BR>"));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_QTE ".<BR>\n"));
           }
 
-          client.println(F("<BR>" MENU_TEXT_QFE ".<BR>"));
+          pushStrToBigBuff_P(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\n"));
           bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
           if(!(httpflags & 128)) webPrintFooter();
+          flushBigBuff();
           break;
         }
 
@@ -5959,24 +5949,23 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
           LogTelegram(msg);
 #endif
-          if(outBufLen>0){
-            client.println(outBuf);
-            client.println(F("<br>"));
+// TODO: replace pvalstr with data from decodedTelegram structure
+          build_pvalstr(0);
+          if(outBuf[0]>0){
+            pushStrToBigBuff(outBuf);
+            pushStrToBigBuff_P(PSTR("<br>"));
           }
+
           for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (tx_msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-            client.print(tx_msg[i], HEX);
-            client.print(F(" "));
+            pushFmtStrToBigBuff_P(PSTR("%02X "), tx_msg[i]);
           }
-          client.println();
-          client.println(F("<br>"));
+          pushStrToBigBuff_P(PSTR("\n<br>\n"));
           for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
-            if (msg[i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
-            client.print(msg[i], HEX);
-            client.print(F(" "));
+            pushFmtStrToBigBuff_P(PSTR("%02X "), msg[i]);
           }
-          client.println();
+          pushStrToBigBuff_P(PSTR("\n"));
           webPrintFooter();
+          flushBigBuff();
 #endif
           break;
         }
@@ -5996,36 +5985,24 @@ uint8_t pps_offset = 0;
           boolean t_flag = false;
           boolean output = false;
           boolean been_here = false;
-          boolean been_here2 = false;
           int8_t search_cat = -1;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          char *jsonbuffer = (char *)malloc(512);
-          if(!jsonbuffer) {
-            printcantalloc();
-            break;
-            }
-
-          strcpy_P(jsonbuffer, PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
+          pushStrToBigBuff_P(PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
           if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
-            strcat_P(jsonbuffer, PSTR("}"));
-            client.print(jsonbuffer);
-            free(jsonbuffer);
+            pushStrToBigBuff_P(PSTR("}"));
+            flushBigBuff();
             break;
           }
-          else
-            client.print(jsonbuffer);
 
           if (p[2] == 'I'){ // dump configuration in JSON
-            free(jsonbuffer);
             int32_t freespace = 0;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
 #endif
-            sprintf_P(outBuf, PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %ld,\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
-            client.print(outBuf);
+            pushFmtStrToBigBuff_P(PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %ld,\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus.getBusType();
@@ -6040,70 +6017,56 @@ uint8_t pps_offset = 0;
               case 1: strcpy_P(json_temp, PSTR("LPB")); break;
               case 2: strcpy_P(json_temp, PSTR("PPS")); break;
             }
-            sprintf_P(outBuf, PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"), json_temp, json_parameter);
-            client.print(outBuf);
-            outBufLen = 0;
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"), bus.getBusAddr(), bus.getBusDest());
+            pushFmtStrToBigBuff_P(PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"), json_temp, json_parameter);
+            pushFmtStrToBigBuff_P(PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"), bus.getBusAddr(), bus.getBusDest());
 //enabled options
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("  \"monitor\": %d,\n  \"verbose\": %d"), monitor, verbose);
+            pushFmtStrToBigBuff_P(PSTR("  \"monitor\": %d,\n  \"verbose\": %d"), monitor, verbose);
 
             #ifdef ONE_WIRE_BUS
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"onewirebus\": %d"), ONE_WIRE_BUS);
+            pushFmtStrToBigBuff_P(PSTR(",\n  \"onewirebus\": %d"), ONE_WIRE_BUS);
             #endif
             #ifdef DHT_BUS
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"dhtbus\": \"%d,%d\""), DHT_BUS);
+            pushFmtStrToBigBuff_P(PSTR(",\n  \"dhtbus\": \"%d,%d\""), DHT_BUS);
             #endif
-            client.print(outBuf);
-            outBufLen = 0;
 //protected GPIO
             if(anz_ex_gpio > 0){
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"protectedGPIO\": [\n"));
+            pushStrToBigBuff_P(PSTR(",\n  \"protectedGPIO\": [\n"));
             for (i=0; i<anz_ex_gpio; i++) {
-              outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("    { \"pin\": %d },\n"), exclude_GPIO[i]);
-              if(outBufLen > 200 && i < (anz_ex_gpio - 1)) { //flush buffer
-                outBufLen = 0;
-                client.print(outBuf);
-              }
+              pushFmtStrToBigBuff_P(PSTR("    { \"pin\": %d }"), exclude_GPIO[i]);
+              if(i < anz_ex_gpio - 1)
+                pushStrToBigBuff_P(PSTR(",\n"));
             }
-            outBufLen-=2; //two bytes shift (delete comma and \n)
-            strcpy_P(outBuf+outBufLen, PSTR("\n  ]"));
-            client.print(outBuf);
-            outBufLen = 0;
+            pushStrToBigBuff_P(PSTR("\n  ]"));
             }
-            boolean somethingexist = false;
 //averages
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"averages\": [\n"));
+            pushStrToBigBuff_P(PSTR(",\n  \"averages\": [\n"));
             for (i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) {somethingexist = true; outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("    { \"parameter\": %d },\n"), avg_parameters[i]);}
-              if(outBufLen > 200 && i < (numAverages - 1) && somethingexist) { //flush buffer
-                outBufLen = 0;
-                client.print(outBuf);
+              if (avg_parameters[i] > 0) {
+                pushFmtStrToBigBuff_P(PSTR("    { \"parameter\": %d }"), avg_parameters[i]);
+                if(i < numAverages - 1 && avg_parameters[i + 1] > 0)
+                  pushStrToBigBuff_P(PSTR(",\n"));
               }
             }
-            if (avg_parameters[0] > 0) outBufLen-=2; //two bytes shift (delete comma and \n)
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("\n  ]"));
+            pushStrToBigBuff_P(PSTR("\n  ]"));
 // logged parameters
           #ifdef LOGGER
-            if(somethingexist) {client.print(outBuf); outBufLen = 0;}
-            somethingexist = false;
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"), log_interval);
+            pushFmtStrToBigBuff_P(PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"), log_interval);
             for (i=0; i<numLogValues; i++) {
-              if (log_parameters[i] > 0)  {somethingexist = true; outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("    { \"parameter\": %d },\n"), log_parameters[i]);}
-              if(outBufLen > 200 && i < (numLogValues - 1) && somethingexist) { //flush buffer
-                outBufLen = 0;
-                client.print(outBuf);
+              if (log_parameters[i] > 0)  {
+                pushFmtStrToBigBuff_P(PSTR("    { \"parameter\": %d }"), log_parameters[i]);
+                if(i < numLogValues - 1 && log_parameters[i + 1] > 0)
+                  pushStrToBigBuff_P(PSTR(",\n"));
               }
             }
-            if (log_parameters[0] > 0)outBufLen-=2; //two bytes shift (delete comma and \n)
-            outBufLen+=sprintf_P(outBuf+outBufLen, PSTR("\n  ]"));
+            pushStrToBigBuff_P(PSTR("\n  ]"));
           #endif
-            strcpy_P(outBuf+outBufLen, PSTR("\n}\n"));
-            client.print(outBuf);
+            pushStrToBigBuff_P(PSTR("\n}\n"));
+            flushBigBuff();
             client.flush();
             break;
           }
 
-
+// really we need flushing before every prognr parsing?
           if (json_token!=NULL) {
             client.flush();
           }
@@ -6152,28 +6115,22 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
-              jsonbuffer[0] = 0;
-              int buffershiftedbycolon = 0;
-              if (!been_here || (p[2]=='K' && isdigit(p[4]))) {
+              if (!been_here) {
                 been_here = true;
               } else {
-//                client.println(F(","));
-                strcpy_P(jsonbuffer, PSTR(","));
-                buffershiftedbycolon = strlen(jsonbuffer);
+                pushStrToBigBuff_P(PSTR(",\n"));
               }
+
               if (p[2]=='K' && !isdigit(p[4])) {
                 uint16_t x=2;
                 uint8_t cat=0;
                 while (x<sizeof(ENUM_CAT)) {
-                  buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR("\"%d\": { \"name\": \""), cat);
+                  pushFmtStrToBigBuff_P(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__SAM3X8E__)
-                  strcpy(jsonbuffer + buffershiftedbycolon, ENUM_CAT+x);
+                  x += pushStrToBigBuff_P(ENUM_CAT+x);
 #else
-                  strcpy_PF(jsonbuffer + buffershiftedbycolon, pgm_get_far_address(ENUM_CAT)+x);
+                  x += pushStrToBigBuff_PF(pgm_get_far_address(ENUM_CAT)+x);
 #endif
-                  uint16_t y = strlen(jsonbuffer + buffershiftedbycolon);
-                  x += y;
-                  buffershiftedbycolon += y;
 #if defined(__SAM3X8E__)
                   cat_min = ENUM_CAT_NR[cat*2];
                   cat_max = ENUM_CAT_NR[cat*2+1];
@@ -6181,18 +6138,14 @@ uint8_t pps_offset = 0;
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #endif
-                  buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR("\", \"min\": %d, \"max\": %d },\n"), cat_min, cat_max);
+                  pushFmtStrToBigBuff_P(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
                   if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
                     cat++;
                     x += 3;
-                    client.print(jsonbuffer);
-                    buffershiftedbycolon = 0;
+                    pushStrToBigBuff_P(PSTR(",\n"));
                     continue;
                   } else {
-                    jsonbuffer[buffershiftedbycolon - 2] = 0;//shift to second non-zero char (',') from end of string and clear it
-                    client.print(jsonbuffer);
-                    json_token = NULL;
-                    buffershiftedbycolon = 0;
+                    flushBigBuff();
                     break;
                   }
                 }
@@ -6225,32 +6178,25 @@ uint8_t pps_offset = 0;
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i_line=findLine(json_parameter,0,&cmd);
                 if (i_line<0 || cmd == CMD_UNKNOWN) {
+                  been_here = false; //do not print ',' twice
                   continue;
                 }
 
-                if (p[2] == 'Q' || p[2] == 'C') buffershiftedbycolon = 0;
-                if(been_here2) buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR(",\n")); //do not print ",\n" if it first field
-                buffershiftedbycolon += sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
-                if (!been_here2 || p[2] == 'Q' || p[2] == 'C') been_here2=true;
-
-                strcpy_PF(jsonbuffer + buffershiftedbycolon, get_cmdtbl_desc(i_line));
-                strcat_P(jsonbuffer + buffershiftedbycolon, PSTR("\",\n"));
-                client.print(jsonbuffer);
-                buffershiftedbycolon = 0;
+                pushFmtStrToBigBuff_P(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
+                pushStrToBigBuff_PF(get_cmdtbl_desc(i_line));
+                pushStrToBigBuff_P(PSTR("\",\n"));
 
                 if (p[2]=='Q') {
                   query(json_parameter);
-                  int shift = sprintf_P(jsonbuffer, PSTR("    \"error\": %d,\n    \"value\": \"%s\",\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
+                  pushFmtStrToBigBuff_P(PSTR("    \"error\": %d,\n    \"value\": \"%s\",\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
                   if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr)
-                    strcpy_PF(jsonbuffer + shift, decodedTelegram.enumdescaddr);
-                  strcat_P(jsonbuffer + shift,PSTR("\",\n"));
-                  client.print(jsonbuffer);
+                    pushStrToBigBuff_PF(decodedTelegram.enumdescaddr);
+                  pushStrToBigBuff_P(PSTR("\",\n"));
                 }
 
                 if (p[2] != 'Q') {
                   loadPrognrElementsFromTable(i_line);
-                  strcpy_P(jsonbuffer, PSTR("    \"possibleValues\": [\n"));
-                  client.print(jsonbuffer);
+                  pushStrToBigBuff_P(PSTR("    \"possibleValues\": [\n"));
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
@@ -6265,51 +6211,40 @@ uint8_t pps_offset = 0;
                         }else{
                           val=uint16_t(pgm_read_byte_far(enumstr+x));
                         }
-                        int jsonbufshift = 0;
-                        if(been_here) jsonbufshift += sprintf_P(jsonbuffer + jsonbufshift, PSTR(",\n")); //do not print ",\n" if it first enumValue
-                        jsonbufshift += sprintf_P(jsonbuffer + jsonbufshift, PSTR("      { \"enumValue\": %d, \"desc\": \""), val);
+                        if(been_here) pushStrToBigBuff_P(PSTR(",\n")); //do not print ",\n" if it first enumValue
+                        pushFmtStrToBigBuff_P(PSTR("      { \"enumValue\": %d, \"desc\": \""), val);
                         if (!been_here) been_here = true;
                         //skip leading space
                         x = x + 2;
-                        strcpy_PF(jsonbuffer + jsonbufshift, enumstr+x);
-                        int j = strlen(jsonbuffer + jsonbufshift);
-                        x += j;
-                        jsonbufshift += j;
-                        strcpy_P(jsonbuffer + jsonbufshift, PSTR("\" }"));
-                        client.print(jsonbuffer);
+                        x += pushStrToBigBuff_PF(enumstr+x);
+                        pushStrToBigBuff_P(PSTR("\" }"));
                         x++;
                       }
                     }
 
-                  //client.println();
-//                  strcpy_P(jsonbuffer, PSTR("\n    ],\n"));
-//                  if(decodedTelegram.isswitch == 1) strcat_P(jsonbuffer, PSTR("    \"isswitch\": 1,\n"));
-                  sprintf_P(jsonbuffer, PSTR("\n    ],\n    \"isswitch\": %d,\n"), decodedTelegram.isswitch);
-                  client.print(jsonbuffer);
+//                  pushFmtStrToBigBuff_P( PSTR("\n    ],\n"));
+//                  if(decodedTelegram.isswitch == 1) pushStrToBigBuff_P(PSTR("    \"isswitch\": 1,\n"));
+                  pushFmtStrToBigBuff_P(PSTR("\n    ],\n    \"isswitch\": %d,\n"), decodedTelegram.isswitch);
                 }
 
-                sprintf_P(jsonbuffer, PSTR("    \"dataType\": %d,\n    \"readonly\": %d,\n    \"unit\": \"%s\"\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
-                client.print(jsonbuffer);
+                pushFmtStrToBigBuff_P(PSTR("    \"dataType\": %d,\n    \"readonly\": %d,\n    \"unit\": \"%s\"\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
                 int status = set(json_parameter, json_value_string, json_type);
-                sprintf_P(jsonbuffer + buffershiftedbycolon, PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
-                buffershiftedbycolon = 0;
-                client.print(jsonbuffer);
+                pushFmtStrToBigBuff_P(PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
 
-                sprintf_P(jsonbuffer, PSTR("Setting parameter %d to %s with type %d\n"), json_parameter, json_value_string, json_type);
-                DebugOutput.print(jsonbuffer);
+                sprintf_P(outBuf, PSTR("Setting parameter %d to %s with type %d\n"), json_parameter, json_value_string, json_type);
+                DebugOutput.print(outBuf);
               }
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
               }
             }
           }
-          strcpy_P(jsonbuffer, PSTR("\n}\n"));
-          client.print(jsonbuffer);
+          pushFmtStrToBigBuff_P(PSTR("\n}\n"));
+          flushBigBuff();
           client.flush();
-          free(jsonbuffer);
           break;
         }
 
@@ -6327,32 +6262,33 @@ uint8_t pps_offset = 0;
                 dataFile.close();
                 filewasrecreated = true;
                 DebugOutput.print(journalFileName);
-                client.print(journalFileName);
+                pushStrToBigBuff_P(journalFileName);
               }
             }
 //recreate datalog file for programs values logging
             if(p[2]=='D' || p[2]=='0'){
               if(p[2]=='0') {
                 DebugOutput.print(F(", "));
-                client.print(F(", "));
+                pushStrToBigBuff_P(PSTR(", "));
               }
               SD.remove(datalogFileName);
               if (createdatalogFileAndWriteHeader()) {
                 filewasrecreated = true;
                 DebugOutput.print(datalogFileName);
-                client.print(datalogFileName);
+                pushStrToBigBuff_P(datalogFileName);
               }
             }
             if(filewasrecreated){
-              client.println(F(MENU_TEXT_DTR));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_DTR "\n"));
               DebugOutput.print(F(": file(s) was removed and recreated."));
             } else {
-              client.println(F(MENU_TEXT_DTF));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_DTF "\n"));
             }
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
-            client.println(F("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>"));
+            pushStrToBigBuff_P(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\n"));
+            flushBigBuff();
 #if defined(__SAM3X8E__)
             printPStr(graph_html, sizeof(graph_html));
 #else
@@ -6360,7 +6296,8 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            bufferedprint(PSTR("HTTP/1.1 200 OK\nContent-Type: text/plain; charset=utf-8\n\n"));
+            pushStrToBigBuff_P(PSTR("HTTP/1.1 200 OK\nContent-Type: text/plain; charset=utf-8\n\n"));
+            flushBigBuff();
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
@@ -6379,92 +6316,77 @@ uint8_t pps_offset = 0;
               DebugOutput.print(F("Duration: "));
               DebugOutput.println(millis()-startdump);
             } else {
-              client.println(F(MENU_TEXT_DTO));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_DTO "\n"));
             }
           }
+          flushBigBuff();
           break;
         }
 #endif
         if (p[1]=='C'){ // dump configuration
           if(!(httpflags & 128)) webPrintHeader();
-          client.println(F(MENU_TEXT_CFG "<BR><BR>"));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
 //          client.println(F("BSB pins: "));
 //          client.println(bus);
 //          client.println(F("<BR><BR>"));
 
-          client.print(F("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
-          client.print(freeRam());
-          client.print(F(" Bytes <BR>\n" MENU_TEXT_UPT ": "));
-          client.print(millis());
+          pushStrToBigBuff_P(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
+          pushFmtStrToBigBuff_P(PSTR("%d Bytes <BR>\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
           myAddr = bus.getBusAddr();
           destAddr = bus.getBusDest();
-          client.println(F("<BR>\n" MENU_TEXT_BUS ": "));
+          pushStrToBigBuff_P(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
           int bustype = bus.getBusType();
 
           switch (bustype) {
-            case 0: client.print(F("BSB")); break;
-            case 1: client.print(F("LPB")); break;
-            case 2: client.print(F("PPS")); break;
+            case 0: pushStrToBigBuff_P(PSTR("BSB")); break;
+            case 1: pushStrToBigBuff_P(PSTR("LPB")); break;
+            case 2: pushStrToBigBuff_P(PSTR("PPS")); break;
           }
           if (bustype != BUS_PPS) {
-            client.print(F(" ("));
-            client.print(myAddr);
-            client.print(F(", "));
-            client.print(destAddr);
-            client.print(F(") "));
+            pushFmtStrToBigBuff_P(PSTR(" (%d, %d) "), myAddr, destAddr);
+
             if (DEFAULT_FLAG == FL_RONLY) {
-              client.print(F(MENU_TEXT_BRO));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_BRO));
             } else {
-              client.print(F(MENU_TEXT_BRW));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_BRW));
             }
           } else {
             if (*PPS_write_enabled == 1) {
-              client.print(F(" (" MENU_TEXT_BRW ")"));
+              pushStrToBigBuff_P(PSTR(" (" MENU_TEXT_BRW ")"));
             } else {
-              client.print(F(" (" MENU_TEXT_BRO ")"));
+              pushStrToBigBuff_P(PSTR(" (" MENU_TEXT_BRO ")"));
             }
           }
-          client.print(F("<BR>\n" MENU_TEXT_MMD ": "));
-          client.print(monitor);
-          client.print(F("<BR>\n" MENU_TEXT_VBL ": "));
-          client.print(verbose);
-          client.println(F("<BR>"));
+          pushFmtStrToBigBuff_P(PSTR("<BR>\n" MENU_TEXT_MMD ": %d"), monitor);
+          pushFmtStrToBigBuff_P(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
 
           #ifdef ONE_WIRE_BUS
-          client.println(F(MENU_TEXT_OWP ": "));
-          client.println(ONE_WIRE_BUS);
-          client.println(F("<BR>"));
+          pushFmtStrToBigBuff_P(PSTR(MENU_TEXT_OWP ": \n%d\n<BR>\n"), ONE_WIRE_BUS);
           #endif
 
           #ifdef DHT_BUS
-          client.println(F(MENU_TEXT_DHP ": "));
-          client.println(DHT_BUS);
-          client.println(F("<BR>"));
+          pushFmtStrToBigBuff_P(PSTR(MENU_TEXT_DHP ": \n%d\n<BR>\n"), DHT_BUS);
           #endif
 
-          client.println(F(MENU_TEXT_EXP ": "));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_EXP ": \n"));
           for (int i=0; i<anz_ex_gpio; i++) {
-            client.print(exclude_GPIO[i]);
-            client.print(F(" "));
+            pushFmtStrToBigBuff_P(PSTR("%d "), exclude_GPIO[i]);
           }
-          client.println(F("<BR>"));
+          pushStrToBigBuff_P(PSTR("<BR>\n"));
 
-          client.println(F(MENU_TEXT_MAC ": "));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_MAC ": \n"));
           for (int i=0; i<=5; i++) {
-            if (mac[i] < 10) {
-              client.print(F("0"));
-            }
-            client.print(mac[i], HEX);
-            if(i != 5) client.print(F(":"));
+            pushFmtStrToBigBuff_P(PSTR("%02X"), mac[i]);
+            if(i != 5) pushStrToBigBuff_P(PSTR(":"));
           }
-          client.println(F("<BR><BR>"));
+          pushStrToBigBuff_P(PSTR("<BR><BR>\n"));
 /*
           client.println(F("IP address: "));
           client.println(ip);
           client.println(F("<BR>"));
 */
 // list of enabled modules
-          client.println(F(MENU_TEXT_MOD ": <BR>"));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_MOD ": <BR>\n"));
           outBufclear();
           #ifdef WEBSERVER
           strcpy_P(outBuf + outBufLen, PSTR("WEBSERVER, "));
@@ -6511,92 +6433,86 @@ uint8_t pps_offset = 0;
             outBuf[outBufLen - 2] = '\0';
           else
             strcpy_P(outBuf + outBufLen, PSTR("NONE"));
-          client.print(outBuf);
+          pushStrToBigBuff(outBuf);
           outBufclear();
-          client.println(F("<BR><BR>"));
+          pushStrToBigBuff_P(PSTR("<BR><BR>\n"));
           // end of list of enabled modules
 
 #if defined LOGGER || defined WEBSERVER
           uint32_t m = micros();
           uint32_t volFree = SD.vol()->freeClusterCount();
           uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-          outBufLen+=sprintf_P(outBuf, PSTR("free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
-          client.print(outBuf);
-          outBufclear();
+          pushFmtStrToBigBuff_P(PSTR("free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
 #endif
 
-          client.println(F(MENU_TEXT_AVT ": <BR>"));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_AVT ": <BR>\n"));
           for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
-              client.print (avg_parameters[i]);
-              bufferedprint(PSTR(" - "));
-              client.print(lookup_descr(avg_parameters[i]));
-              bufferedprintln(PSTR("<BR>"));
+              pushFmtStrToBigBuff_P(PSTR("%d - %s<BR>\n"), avg_parameters[i], lookup_descr(avg_parameters[i]));
             }
           }
-          bufferedprintln(PSTR("<BR>"));
+          pushStrToBigBuff_P(PSTR("<BR>"));
 
           #ifdef LOGGER
-          bufferedprintln(PSTR(MENU_TEXT_LGP " "));
-          client.print(log_interval);
-          bufferedprintln(PSTR(" " MENU_TEXT_SEC ": <BR>"));
+          pushFmtStrToBigBuff_P(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
+          pushStrToBigBuff_P(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
           for (int i=0; i<numLogValues; i++) {
             if (log_parameters[i] > 0) {
-              client.print (log_parameters[i]);
-              bufferedprint(PSTR(" - "));
+              pushFmtStrToBigBuff_P(PSTR("%d - "), log_parameters[i]);
               if (log_parameters[i] < 20000) {
-                client.print(lookup_descr(log_parameters[i]));
+                pushStrToBigBuff(lookup_descr(log_parameters[i]));
               } else {
                 if (log_parameters[i] == 20000) {
-                  bufferedprint(PSTR(MENU_TEXT_BZ1));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_BZ1));
                 }
                 if (log_parameters[i] == 20001) {
-                  bufferedprint(PSTR(MENU_TEXT_BT1));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_BT1));
                 }
                 if (log_parameters[i] == 20002) {
-                  bufferedprint(PSTR(MENU_TEXT_BZ2));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_BZ2));
                 }
                 if (log_parameters[i] == 20003) {
-                  bufferedprint(PSTR(MENU_TEXT_BT2));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_BT2));
                 }
                 if (log_parameters[i] == 20004) {
-                  bufferedprint(PSTR(MENU_TEXT_TZ1));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_TZ1));
                 }
                 if (log_parameters[i] == 20005) {
-                  bufferedprint(PSTR(MENU_TEXT_TT1));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_TT1));
                 }
                 if (log_parameters[i] == 20006) {
-                  bufferedprint(PSTR(MENU_TEXT_24A));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_24A));
                 }
                 if (log_parameters[i] == 20007) {
-                  bufferedprint(PSTR(MENU_TEXT_MXI));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_MXI));
                 }
                 if (log_parameters[i] == 20008) {
-                  bufferedprint(PSTR(MENU_TEXT_MXS));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_MXS));
                 }
                 if (log_parameters[i] == 20009) {
-                  bufferedprint(PSTR(MENU_TEXT_MXV));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_MXV));
                 }
                 if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
-                  bufferedprint(PSTR(MENU_TEXT_SN2));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_SN2));
                 }
                 if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
-                  bufferedprint(PSTR(MENU_TEXT_SN1));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_SN1));
                 }
                 if (logTelegram) {
-                  bufferedprint(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
                   printyesno(log_unknown_only);
-                  bufferedprint(PSTR(MENU_TEXT_LBO ": "));
+                  pushStrToBigBuff_P(PSTR(MENU_TEXT_LBO ": "));
                   printyesno(log_bc_only);
                 }
               }
-              bufferedprintln(PSTR("<BR>"));
+              pushStrToBigBuff_P(PSTR("<BR>\n"));
             }
           }
           #endif
 
-          bufferedprintln(PSTR("<BR>"));
+          pushStrToBigBuff_P(PSTR("<BR>\n"));
           if(!(httpflags & 128)) webPrintFooter();
+          flushBigBuff();
 
 #if defined(__AVR__)
           DebugOutput.println(F("EEPROM dump:"));
@@ -6622,7 +6538,7 @@ uint8_t pps_offset = 0;
                 } else {
                   log_bc_only=0;
                 }
-                client.print(F(MENU_TEXT_LBO ": "));
+                pushStrToBigBuff_P(PSTR(MENU_TEXT_LBO ": "));
                 printyesno(log_bc_only) ;
               }
               break;
@@ -6633,7 +6549,7 @@ uint8_t pps_offset = 0;
                 } else {
                   log_unknown_only=0;
                 }
-                client.print(F(MENU_TEXT_BUT ": "));
+                pushStrToBigBuff_P(PSTR(MENU_TEXT_BUT ": "));
                 printyesno(log_unknown_only);
               }
               break;
@@ -6645,9 +6561,8 @@ uint8_t pps_offset = 0;
 //                if (log_interval < 10) {log_interval = 10;}
                 lastLogTime = millis();
                 lastMQTTTime = millis();
-                bufferedprint(PSTR(MENU_TEXT_LGI ": "));
-                client.print(log_interval);
-                bufferedprintln(PSTR(" " MENU_TEXT_SEC "<BR>"));
+                pushFmtStrToBigBuff_P(PSTR(MENU_TEXT_LGI ": %d"), log_interval);
+                pushStrToBigBuff_P(PSTR(" " MENU_TEXT_SEC "<BR>\n"));
               }
               log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
               int token_counter = 0;
@@ -6655,15 +6570,14 @@ uint8_t pps_offset = 0;
                 for (int i=0;i<numLogValues;i++) {
                   log_parameters[i] = 0;
                 }
-              bufferedprintln(PSTR(MENU_TEXT_LGN ": "));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_LGN ": "));
               }
               while (log_token!=0) {
                 int log_parameter = atoi(log_token);
                 if (token_counter < numLogValues) {
                   log_parameters[token_counter] = log_parameter;
                   if (log_parameters[token_counter] == 30000) logTelegram = true; //deprecated behavior. Delete it after big release
-                  client.print(log_parameters[token_counter]);
-                  bufferedprint(PSTR(" \n"));
+                  pushFmtStrToBigBuff_P(PSTR("%d \n"), log_parameters[token_counter]);
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
@@ -6675,11 +6589,11 @@ uint8_t pps_offset = 0;
               logTelegram = true;
             else
               logTelegram = false;
-            bufferedprint(PSTR(MENU_TEXT_LOT ": "));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_LOT ": "));
             printyesno(logTelegram);
             break;
           default:
-            bufferedprint(PSTR(MENU_TEXT_ER1));
+            pushStrToBigBuff_P(PSTR(MENU_TEXT_ER1));
             break;
           }
         webPrintFooter();
@@ -6700,28 +6614,29 @@ uint8_t pps_offset = 0;
             destAddr = (uint8_t)val;
           }
 
-          bufferedprint(PSTR(MENU_TEXT_BUS ": "));
+          pushStrToBigBuff_P(PSTR(MENU_TEXT_BUS ": "));
           if (p[2]=='0') {
             bus.setBusType(BUS_BSB, myAddr, destAddr);
-            bufferedprintln(PSTR("BSB"));
+            pushStrToBigBuff_P(PSTR("BSB"));
           }
           if (p[2]=='1') {
             bus.setBusType(BUS_LPB, myAddr, destAddr);
-            bufferedprintln(PSTR("LPB"));
+            pushStrToBigBuff_P(PSTR("LPB"));
           }
           if (p[2]=='2') {
             bus.setBusType(BUS_PPS, myAddr);
-            bufferedprintln(PSTR("PPS"));
+            pushStrToBigBuff_P(PSTR("PPS"));
           }
+          pushStrToBigBuff_P(PSTR("\n"));
           if (bus.getBusType() != BUS_PPS) {
-            sprintf_P(outBuf, PSTR(" (%d, %d)"), myAddr, destAddr);
-            client.print(outBuf);
+            pushFmtStrToBigBuff_P(PSTR(" (%d, %d)"), myAddr, destAddr);
           } else {
             if (*PPS_write_enabled == 1) {
-              bufferedprintln(PSTR(" " MENU_TEXT_BRW));
+              pushStrToBigBuff_P(PSTR(" " MENU_TEXT_BRW));
             } else {
-              bufferedprintln(PSTR(" " MENU_TEXT_BRO));
+              pushStrToBigBuff_P(PSTR(" " MENU_TEXT_BRO));
             }
+            pushStrToBigBuff_P(PSTR("\n"));
           }
 
           SetDevId();
@@ -6732,7 +6647,7 @@ uint8_t pps_offset = 0;
 #ifdef RESET
           webPrintHeader();
           if (p[2]=='E') {
-            bufferedprintln(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>"));
+            pushStrToBigBuff_P(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\n"));
           }
           webPrintFooter();
           client.stop();
@@ -6748,7 +6663,9 @@ uint8_t pps_offset = 0;
             }
             DebugOutput.println(F("Cleared EEPROM"));
           }
-          bufferedprintln(PSTR("Restarting Arduino..."));
+          pushStrToBigBuff_P(PSTR("Restarting Arduino...\n"));
+          flushBigBuff();
+          client.flush();
           resetBoard();
 #endif
           break;
@@ -6770,17 +6687,13 @@ uint8_t pps_offset = 0;
             dht22();
 #endif
           }else if(range[0]=='U'){ // output user-defined custom_array variable
+            char tempBuf[10];
             for(int i=0;i<numCustomFloats;i++){
-              outBufclear();
-              outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\ncustom_float[%d]: "),i);
-              outBufLen+=_printFIXPOINT(outBuf+outBufLen,custom_floats[i],2);
-              outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("\n</td></tr>\n"));
-              client.println(outBuf);
+              _printFIXPOINT(tempBuf,custom_floats[i],2);
+              pushFmtStrToBigBuff_P(PSTR("<tr><td>\ncustom_float[%d]: %s\n</td></tr>\n"), i, tempBuf);
             }
             for(int i=0;i<numCustomLongs;i++){
-              outBufclear();
-              outBufLen+=sprintf_P(outBuf+outBufLen,PSTR("<tr><td>\ncustom_long[%d]: %ld\n</td></tr>\n"),i, custom_longs[i]);
-              client.println(outBuf);
+              pushFmtStrToBigBuff_P(PSTR("<tr><td>\ncustom_long[%d]: %ld\n</td></tr>\n"),i, custom_longs[i]);
             }
           }else if(range[0]=='X'){ // handle MAX command
 #ifdef MAX_CUL
@@ -6788,6 +6701,7 @@ uint8_t pps_offset = 0;
             float max_avg = 0;
             char max_id[11];
             for (int x=0;x<20;x++) {
+              char tempBuf[10];
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
@@ -6795,29 +6709,23 @@ uint8_t pps_offset = 0;
                   max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
                 }
                 max_id[10] = '\0';
-                bufferedprint(PSTR("<tr><td>"));
-                client.print(max_id);
-                bufferedprint(PSTR(" ("));
-                client.print(max_devices[x], HEX);
-                bufferedprint(PSTR("): "));
-                client.print((float)max_cur_temp[x] / 10);
-                bufferedprint(PSTR(" / "));
-                client.print((float)max_dst_temp[x] / 2);
+                pushFmtStrToBigBuff_P(PSTR("<tr><td>%s (%lx): "), max_id, max_devices[x]);
+                _printFIXPOINT(tempBuf,max_cur_temp[x] / 10,2);
+                pushFmtStrToBigBuff_P(PSTR("%s / "), tempBuf);
+                _printFIXPOINT(tempBuf,max_dst_temp[x] / 2,2);
+                pushStrToBigBuff(tempBuf);
                 if (max_valve[x] > -1) {
-                  bufferedprint(PSTR(" ("));
-                  client.print(max_valve[x]);
-                  bufferedprint(PSTR("%)"));
+                  pushFmtStrToBigBuff_P(PSTR(" (%h%%)"), max_valve[x]);
                 }
-                bufferedprintln(PSTR("</td></tr>"));
+                pushStrToBigBuff_P(PSTR("</td></tr>"));
               }
             }
             if (max_avg_count > 0) {
-              bufferedprint(PSTR("<tr><td>"));
-              bufferedprint(PSTR("AvgMax: "));
-              client.print(max_avg / max_avg_count);
-              bufferedprintln(PSTR("</td></tr>"));
+              char tempBuf[10];
+              _printFIXPOINT(tempBuf,max_avg / max_avg_count,2);
+              pushFmtStrToBigBuff_P(PSTR("<tr><td>AvgMax: %s</td></tr>\n"), tempBuf);
             } else {
-              bufferedprintln(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
+              pushStrToBigBuff_P(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
             }
 #endif
           }else if(range[0]=='A') { // handle average command
@@ -6836,14 +6744,13 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
                 SD.remove(averagesFileName);
 #endif
-                bufferedprintln(PSTR(MENU_TEXT_24N ": "));
+                pushStrToBigBuff_P(PSTR(MENU_TEXT_24N ": "));
               }
               while (avg_token!=0) {
                 int avg_parameter = atoi(avg_token);
                 if (token_counter < numAverages) {
                   avg_parameters[token_counter] = avg_parameter;
-                  client.print(avg_parameters[token_counter]);
-                  bufferedprintln(PSTR(" "));
+                  pushFmtStrToBigBuff_P(PSTR("%d \n"), avg_parameters[token_counter]);
                   token_counter++;
                 }
                 avg_token = strtok(NULL,"=,");
@@ -6851,27 +6758,20 @@ uint8_t pps_offset = 0;
             } else {
               for (int i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
-                  bufferedprint(PSTR("<tr><td>\n"));
-                  client.print(avg_parameters[i]);
-                  bufferedprint(PSTR(" Avg"));
-                  client.print(lookup_descr(avg_parameters[i]));
-                  bufferedprint(PSTR(": "));
-                  float rounded = round(avgValues[i]*10);
-                  client.print(rounded/10);
-                  bufferedprint(PSTR(" "));
+                  char tempBuf[10];
+                  _printFIXPOINT(tempBuf,avgValues[i],1);
+                  pushFmtStrToBigBuff_P(PSTR("<tr><td>\n %d  Avg%s: %s "), avg_parameters[i], lookup_descr(avg_parameters[i]), tempBuf);
 
                   uint32_t c=0;
                   int line=findLine(avg_parameters[i],0,&c);
                   loadPrognrElementsFromTable(line);
-
-                  client.println(decodedTelegram.unit);
-
-                  bufferedprintln(PSTR("</td></tr>"));
+                  pushStrToBigBuff(decodedTelegram.unit);
+                  pushStrToBigBuff_P(PSTR("</td></tr>\n"));
 
                   Serial.print(F("#avg_"));
                   Serial.print(avg_parameters[i]);
                   Serial.print(F(": "));
-                  Serial.print(rounded/10);
+                  Serial.print(tempBuf);
                   Serial.print(F(" "));
                   Serial.println(decodedTelegram.unit);
 
@@ -6884,7 +6784,7 @@ uint8_t pps_offset = 0;
             bool error = false;
             p=range+1;
             if(!isdigit(*p)){   // now we check for digits
-              client.println(F(MENU_TEXT_ER1));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_ER1 "\n"));
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
@@ -6895,7 +6795,7 @@ uint8_t pps_offset = 0;
               }
             }
             if (error==true) {
-              client.println(F(MENU_TEXT_ER7));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_ER7 "\n"));
               break;
             }
 
@@ -6922,13 +6822,10 @@ uint8_t pps_offset = 0;
               pinMode(pin, OUTPUT); // TODO: does this case a problem if already set as output?
               digitalWrite(pin, val);
             }
-            bufferedprint(PSTR("GPIO"));
-            client.print(pin);
-            bufferedprint(PSTR(": "));
-            client.print(val!=LOW?F("1"):F("0"));
+            pushFmtStrToBigBuff_P(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
-              bufferedprintln(PSTR(MENU_TEXT_BRS ".<br>"));
+              pushStrToBigBuff_P(PSTR(MENU_TEXT_BRS ".<br>\n"));
               brenner_duration=0;
               brenner_count=0;
               brenner_duration_2=0;
@@ -6937,19 +6834,13 @@ uint8_t pps_offset = 0;
               TWW_count=0;
             }else{
               // query brenner duration
-              bufferedprint(PSTR("<tr><td>Brenner Laufzeit Stufe 1: "));
-              client.print(brenner_duration);
-              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 1: "));
-              client.print(brenner_count);
-              bufferedprint(PSTR("</td></tr>\n<tr><td>Brenner Laufzeit Stufe 2: "));
-              client.print(brenner_duration_2);
-              bufferedprint(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 2: "));
-              client.print(brenner_count_2);
-              bufferedprint(PSTR("</td></tr>\n<tr><td>TWW Laufzeit: "));
-              client.print(TWW_duration);
-              bufferedprint(PSTR("</td></tr><tr><td>\nTWW Takte: "));
-              client.print(TWW_count);
-              bufferedprintln(PSTR("</td></tr>"));
+              pushFmtStrToBigBuff_P(PSTR("<tr><td>Brenner Laufzeit Stufe 1: %lu"), brenner_duration);
+              pushFmtStrToBigBuff_P(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 1: %lu"), brenner_count);
+              pushFmtStrToBigBuff_P(PSTR("</td></tr>\n<tr><td>Brenner Laufzeit Stufe 2: %lu"), brenner_duration_2);
+              pushFmtStrToBigBuff_P(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 2: %lu"), brenner_count_2);
+              pushFmtStrToBigBuff_P(PSTR("</td></tr>\n<tr><td>TWW Laufzeit: %lu"), TWW_duration);
+              pushFmtStrToBigBuff_P(PSTR("</td></tr><tr><td>\nTWW Takte: %lu"), TWW_count);
+              pushStrToBigBuff_P(PSTR("</td></tr>\n"));
             }
           }else{
             if(range[0]=='K'){
@@ -7323,7 +7214,7 @@ uint8_t pps_offset = 0;
         dataFile.close();
       } else {
     // if the file isn't open, pop up an error:
-        client.println(F(MENU_TEXT_DTO));
+        pushStrToBigBuff_P(PSTR(MENU_TEXT_DTO "\n"));
         DebugOutput.print(F("Error opening "));
         DebugOutput.print(datalogFileName);
         DebugOutput.print(F("!"));
@@ -7717,7 +7608,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
-  long diff = 3000;
+  long diff = 2200; // + 1 sec with decoration
   #if defined LOGGER || defined WEBSERVER
   Serial.print(F("Calculating free space on SD..."));
   uint32_t m = millis();
