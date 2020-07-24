@@ -365,15 +365,15 @@
 //#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
-#if defined(__SAM3X8E__)
+#if defined(__AVR__)
+#include <EEPROM.h>
+#else // __SAM3X8E__
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
-#else
-#include <EEPROM.h>
 #endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
@@ -774,9 +774,7 @@ int printFmtToWebClient(const char *format, ...){
  * *************************************************************** */
 
 uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
-#if defined(__SAM3X8E__)
-  return enum_addr;
-#else
+#if defined(__AVR__)
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
     uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
@@ -798,6 +796,8 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
   }
   enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
 */
+  return enum_addr;
+#else
   return enum_addr;
 #endif
 }
@@ -853,16 +853,16 @@ uint32_t get_cmdtbl_cmd(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
-#if defined(__SAM3X8E__)
-    c = cmdtbl1[i].cmd;
-#else
+#if defined(__AVR__)
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl1[0].cmd) + i * sizeof(cmdtbl1[0]));
+#else
+    c = cmdtbl1[i].cmd;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    c = cmdtbl2[i-entries1].cmd;
-#else
+#if defined(__AVR__)
     c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    c = cmdtbl2[i-entries1].cmd;
 #endif
   }
   return c;
@@ -873,16 +873,16 @@ uint16_t get_cmdtbl_line(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
-#if defined(__SAM3X8E__)
-    l = cmdtbl1[i].line;
-#else
+#if defined(__AVR__)
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].line) + i * sizeof(cmdtbl1[0]));
+#else
+    l = cmdtbl1[i].line;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    l = cmdtbl2[i-entries1].line;
-#else
+#if defined(__AVR__)
     l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    l = cmdtbl2[i-entries1].line;
 #endif
   }
   return l;
@@ -892,16 +892,16 @@ uint_farptr_t get_cmdtbl_desc(int i) {
   uint_farptr_t desc = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    desc = cmdtbl1[i].desc;
-#else
+#if defined(__AVR__)
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
+#else
+    desc = cmdtbl1[i].desc;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    desc = cmdtbl2[i-entries1].desc;
-#else
+#if defined(__AVR__)
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    desc = cmdtbl2[i-entries1].desc;
 #endif
   }
   return desc;
@@ -911,16 +911,16 @@ uint_farptr_t get_cmdtbl_enumstr(int i) {
   uint_farptr_t enumstr = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    enumstr = cmdtbl1[i].enumstr;
-#else
+#if defined(__AVR__)
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
+#else
+    enumstr = cmdtbl1[i].enumstr;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    enumstr = cmdtbl2[i-entries1].enumstr;
-#else
+#if defined(__AVR__)
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    enumstr = cmdtbl2[i-entries1].enumstr;
 #endif
   }
   return enumstr;
@@ -930,16 +930,16 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    enumstr_len = cmdtbl1[i].enumstr_len;
-#else
+#if defined(__AVR__)
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
+#else
+    enumstr_len = cmdtbl1[i].enumstr_len;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    enumstr_len = cmdtbl2[i-entries1].enumstr_len;
-#else
+#if defined(__AVR__)
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    enumstr_len = cmdtbl2[i-entries1].enumstr_len;
 #endif
   }
   return enumstr_len;
@@ -951,16 +951,16 @@ uint8_t get_cmdtbl_category(int i) {
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
-#if defined(__SAM3X8E__)
-    cat = cmdtbl1[i].category;
-#else
+#if defined(__AVR__)
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].category) + i * sizeof(cmdtbl1[0]));
+#else
+    cat = cmdtbl1[i].category;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    cat = cmdtbl2[i-entries1].category;
-#else
+#if defined(__AVR__)
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    cat = cmdtbl2[i-entries1].category;
 #endif
   }
   return cat;
@@ -970,16 +970,16 @@ uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    type = cmdtbl1[i].type;
-#else
+#if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
+#else
+    type = cmdtbl1[i].type;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    type = cmdtbl2[i-entries1].type;
-#else
+#if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    type = cmdtbl2[i-entries1].type;
 #endif
   }
   return type;
@@ -989,16 +989,16 @@ uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    dev_fam = cmdtbl1[i].dev_fam;
-#else
+#if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
+#else
+    dev_fam = cmdtbl1[i].dev_fam;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    dev_fam = cmdtbl2[i-entries1].dev_fam;
-#else
+#if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    dev_fam = cmdtbl2[i-entries1].dev_fam;
 #endif
   }
   return dev_fam;
@@ -1008,16 +1008,16 @@ uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    dev_var = cmdtbl1[i].dev_var;
-#else
+#if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
+#else
+    dev_var = cmdtbl1[i].dev_var;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    dev_var = cmdtbl2[i-entries1].dev_var;
-#else
+#if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    dev_var = cmdtbl2[i-entries1].dev_var;
 #endif
   }
   return dev_var;
@@ -1027,16 +1027,16 @@ uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   if (i < entries1) {
-#if defined(__SAM3X8E__)
-    flags = cmdtbl1[i].flags;
-#else
+#if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
+#else
+    flags = cmdtbl1[i].flags;
 #endif
   } else {
-#if defined(__SAM3X8E__)
-    flags = cmdtbl2[i-entries1].flags;
-#else
+#if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
+#else
+    flags = cmdtbl2[i-entries1].flags;
 #endif
   }
   return flags;
@@ -1150,17 +1150,17 @@ int findLine(uint16_t line
  *  Does:     Returns the amount of available RAM
  *
  * *************************************************************** */
-#if defined(__SAM3X8E__)
+#if !defined(__AVR__)
 extern "C" char* sbrk(int incr);
 #endif
 int freeRam () {
-#if defined(__SAM3X8E__)
-  char top;
-  return &top - reinterpret_cast<char*>(sbrk(0));
-#else
+#if defined(__AVR__)
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
+#else
+  char top;
+  return &top - reinterpret_cast<char*>(sbrk(0));
 #endif
 }
 
@@ -1305,10 +1305,10 @@ void loadPrognrElementsFromTable(int i){
   #endif
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
-  #if defined(__SAM3X8E__)
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, decodedTelegram.unit_len);
-  #else
+  #if defined(__AVR__)
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
+  #else
+  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, decodedTelegram.unit_len);
   #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
@@ -2398,10 +2398,10 @@ void printTelegram(byte* msg, int query_line) {
     decodedTelegram.cat=get_cmdtbl_category(i);
     int len=sizeof(ENUM_CAT);
 
-#if defined(__SAM3X8E__)
-    printENUM(ENUM_CAT,len,decodedTelegram.cat,0);
-#else
+#if defined(__AVR__)
     printENUM(pgm_get_far_address(ENUM_CAT),len,decodedTelegram.cat,0);
+#else
+    printENUM(ENUM_CAT,len,decodedTelegram.cat,0);
 #endif
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
@@ -2559,10 +2559,10 @@ void printTelegram(byte* msg, int query_line) {
               if(data_len == 2){
                 if(msg[bus.getPl_start()]==0){
                   int len=sizeof(ENUM_WEEKDAY);
-#if defined(__SAM3X8E__)
-                  printENUM(ENUM_WEEKDAY,len,msg[bus.getPl_start()+1],0);
-#else
+#if defined(__AVR__)
                   printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus.getPl_start()+1],0);
+#else
+                  printENUM(ENUM_WEEKDAY,len,msg[bus.getPl_start()+1],0);
 #endif
                 }else{
                   undefinedValueToBuffer(decodedTelegram.value);
@@ -2752,10 +2752,10 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  * *************************************************************** */
 void webPrintHeader(void){
   flushToWebClient();
-#if defined(__SAM3X8E__)
-  printPStr(header_html, sizeof(header_html));
-#else
+#if defined(__AVR__)
   printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+#else
+  printPStr(header_html, sizeof(header_html));
 #endif
 
 #ifdef PASSKEY
@@ -4536,7 +4536,8 @@ void resetBoard(){
 #if defined(__SAM3X8E__)
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
   rstc_start_software_reset(RSTC);
-#else
+#endif
+#if defined(__AVR__)
   asm volatile ("  jmp 0");
 #endif
   while (1==1) {}
@@ -5284,10 +5285,10 @@ uint8_t pps_offset = 0;
 #ifdef USER_PASS_B64
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (!(httpflags & 1)) {
-#if defined(__SAM3X8E__)
-          printPStr(auth_req_html, sizeof(auth_req_html));
-#else
+#if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
+#else
+          printPStr(auth_req_html, sizeof(auth_req_html));
 #endif
           flushToWebClient();
           client.flush();
@@ -5328,10 +5329,10 @@ uint8_t pps_offset = 0;
             dataFile.close();
           } else {
 #endif
-#if defined(__SAM3X8E__)
-            printPStr(favicon, sizeof(favicon));
-#else
+#if defined(__AVR__)
             printPStr(pgm_get_far_address(favicon), sizeof(favicon));
+#else
+            printPStr(favicon, sizeof(favicon));
 #endif
             flushToWebClient();
 #ifdef WEBSERVER
@@ -5661,23 +5662,23 @@ uint8_t pps_offset = 0;
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
-#if defined(__SAM3X8E__)
-              printENUM(ENUM_CAT,len,cat,1);
-#else
+#if defined(__AVR__)
               printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
+#else
+              printENUM(ENUM_CAT,len,cat,1);
 #endif
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
               printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
               DebugOutput.println();
-#if defined(__SAM3X8E__)
-              cat_min = ENUM_CAT_NR[cat*2];
-#else
+#if defined(__AVR__)
               cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-#endif
-#if defined(__SAM3X8E__)
-              cat_max = ENUM_CAT_NR[cat*2+1];
 #else
+              cat_min = ENUM_CAT_NR[cat*2];
+#endif
+#if defined(__AVR__)
               cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#else
+              cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
               printFmtToWebClient(PSTR("</a></td><td>%hd - %hd</td></tr>\n"), cat_min, cat_max);
             }
@@ -6131,17 +6132,17 @@ uint8_t pps_offset = 0;
                 uint8_t cat=0;
                 while (x<sizeof(ENUM_CAT)) {
                   printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
-#if defined(__SAM3X8E__)
-                  x += printToWebClient(ENUM_CAT+x);
-#else
+#if defined(__AVR__)
                   x += printToWebClient(pgm_get_far_address(ENUM_CAT)+x);
-#endif
-#if defined(__SAM3X8E__)
-                  cat_min = ENUM_CAT_NR[cat*2];
-                  cat_max = ENUM_CAT_NR[cat*2+1];
 #else
+                  x += printToWebClient(ENUM_CAT+x);
+#endif
+#if defined(__AVR__)
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#else
+                  cat_min = ENUM_CAT_NR[cat*2];
+                  cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
                   printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
                   if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
@@ -6161,12 +6162,12 @@ uint8_t pps_offset = 0;
                 cat_param++;
                 if (cat_min<0) {
                   search_cat = atoi(&p[4]);
-#if defined(__SAM3X8E__)
-                  cat_min = ENUM_CAT_NR[search_cat*2];
-                  cat_max = ENUM_CAT_NR[search_cat*2+1];
-#else
+#if defined(__AVR__)
                   cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2) * sizeof(ENUM_CAT_NR[0]));
                   cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+#else
+                  cat_min = ENUM_CAT_NR[search_cat*2];
+                  cat_max = ENUM_CAT_NR[search_cat*2+1];
 #endif
                   cat_param = cat_min;
                 }
@@ -6291,10 +6292,10 @@ uint8_t pps_offset = 0;
           } else if (p[2]=='G') {
             webPrintHeader();
             printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\n"));
-#if defined(__SAM3X8E__)
-            printPStr(graph_html, sizeof(graph_html));
-#else
+#if defined(__AVR__)
             printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
+#else
+            printPStr(graph_html, sizeof(graph_html));
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
@@ -7563,10 +7564,10 @@ void setup() {
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
   Serial.print(F("Starting SD.."));
-#if defined(__SAM3X8E__)
-  if(!SD.begin(4, SPI_DIV3_SPEED)) Serial.println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-#else
+#if defined(__AVR__)
   if(!SD.begin(4)) Serial.println(F("failed"));
+#else
+  if(!SD.begin(4, SPI_DIV3_SPEED)) Serial.println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
 #endif
   else Serial.println(F("ok"));
 
