@@ -540,7 +540,7 @@ int loopCount = 0;
 struct decodedTelegram_t {
 //Commented fields for future use
 int cat; //category number
-uint32_t prognr; //program number
+int32_t prognr; //program number
 uint_farptr_t catdescaddr; //category description string address
 uint_farptr_t prognrdescaddr; //prognr description string address
 uint_farptr_t enumdescaddr; //enum description string address
@@ -1082,7 +1082,7 @@ int findLine(uint16_t line
     {
     if (get_cmdtbl_line(left) == line){ i = left; break; }
     mid = left + (right - left) / 2;
-    int temp = get_cmdtbl_line(mid);
+    uint16_t temp = get_cmdtbl_line(mid);
     if (temp == line)
       {
       if (mid == left + 1)
@@ -2963,7 +2963,6 @@ void LogTelegram(byte* msg){
   int save_i=0;
   boolean known=0;
   uint32_t c;     // command code
-  uint8_t type=0;
   uint8_t cmd_type=0;
   float operand=1;
   uint8_t precision=0;
@@ -3883,7 +3882,7 @@ void query_printHTML(){
           if (decodedTelegram.type == VT_BIT) {
             printToWebClient(PSTR("multiple "));
           }
-          printFmtToWebClient(PSTR("id='value%d'>\n"), decodedTelegram.prognr);
+          printFmtToWebClient(PSTR("id='value%ld'>\n"), decodedTelegram.prognr);
 
             uint16_t val;
             uint16_t c=0;
@@ -3931,10 +3930,10 @@ void query_printHTML(){
             if (decodedTelegram.type == VT_BIT) {
               printToWebClient(PSTR("bit"));
             }
-            printFmtToWebClient(PSTR("(%d)\">"), decodedTelegram.prognr);
+            printFmtToWebClient(PSTR("(%ld)\">"), decodedTelegram.prognr);
           }
         } else {
-          printFmtToWebClient(PSTR("<input type=text id='value%d' VALUE='"), decodedTelegram.prognr);
+          printFmtToWebClient(PSTR("<input type=text id='value%ld' VALUE='"), decodedTelegram.prognr);
 
 /*
           char* colon_pos = strchr(pvalstr,':');
@@ -3954,7 +3953,7 @@ void query_printHTML(){
           printToWebClient(decodedTelegram.value);
           printToWebClient(PSTR("'></td><td>"));
           if (!decodedTelegram.readonly) {
-            printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%d)\">"), decodedTelegram.prognr);
+            printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%ld)\">"), decodedTelegram.prognr);
           }
         }
       }
