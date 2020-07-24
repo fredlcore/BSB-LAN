@@ -694,8 +694,13 @@ void flushToWebClient(){
 }
 
 int writelnToWebClient(){
+#if defined(__AVR__)
   strcpy_P(bigBuff + bigBuffPos, PSTR("\n"));
-  int len = strlen(bigBuff + bigBuffPos);
+#else
+  strcpy(bigBuff + bigBuffPos, PSTR("\n"));
+#endif
+//  int len = strlen(bigBuff + bigBuffPos);
+  int len = 1; //"\n" string length
   bigBuffPos += len;
   return len;
 }
@@ -711,10 +716,10 @@ int printToWebClient(char *format){
 }
 
 int printToWebClient(const char *format){
-  #if defined(__SAM3X8E__)
-  strcpy(bigBuff + bigBuffPos, format);
-  #else
+  #if defined(__AVR__)
   strcpy_P(bigBuff + bigBuffPos, format);
+  #else
+  strcpy(bigBuff + bigBuffPos, format);
   #endif
   int len = strlen(bigBuff + bigBuffPos);
   bigBuffPos += len;
@@ -724,7 +729,7 @@ int printToWebClient(const char *format){
   return len;
 }
 
-#if !defined(__SAM3X8E__)
+#if defined(__AVR__)
 int printToWebClient(uint_farptr_t src){
   strcpy_PF(bigBuff + bigBuffPos, src);
   int len = strlen(bigBuff + bigBuffPos);
@@ -741,10 +746,10 @@ int printToWebClient(uint_farptr_t src){
 int printFmtToWebClient(const char *format, ...){
   va_list args;
   va_start(args, format);
-#if defined(__SAM3X8E__)
-  int len = vsprintf(bigBuff + bigBuffPos, format, args);
-#else
+#if defined(__AVR__)
   int len = vsprintf_P(bigBuff + bigBuffPos, format, args);
+#else
+  int len = vsprintf(bigBuff + bigBuffPos, format, args);
 #endif
   bigBuffPos += len;
   va_end(args);
