@@ -6992,7 +6992,6 @@ uint8_t pps_offset = 0;
 
           char smallbuf[20];
           if (log_parameters[i] < 20000) {
-            uint32_t c=0;
             query(log_parameters[i]);
             char *pvalstr = build_pvalstr(0);
             if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
