@@ -5646,9 +5646,6 @@ uint8_t pps_offset = 0;
           //list categories
           webPrintHeader();
           int len=sizeof(ENUM_CAT);
-//          memcpy_PF(buffer, pgm_get_far_address(ENUM_CAT), len);
-//          memcpy_P(buffer, &ENUM_CAT,len);
-//          buffer[len]=0;
           printToWebClient(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();

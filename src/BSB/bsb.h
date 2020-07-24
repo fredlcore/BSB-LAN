@@ -8,8 +8,7 @@
 #include "WProgram.h"
 #endif
 
-#if defined(__SAM3X8E__)
-#else
+#if defined(__AVR__)
 #include "BSBSoftwareSerial.h"
 //#include "util/crc16.h"
 #endif

@@ -2,7 +2,7 @@
 /* DEFINITIONS and TYPEDEFS                         */
 /****************************************************/
 
-#if defined(__SAM3X8E__)
+#if !defined(__AVR__)
 #undef uint_farptr_t
 #define uint_farptr_t const char*
 #endif
@@ -28,12 +28,12 @@
 #include FILE1
 #include FILE2
 
-#if defined(__SAM3X8E__)
-#define PROGMEM_LATE
-#define PROGMEM_LATEST
-#else
+#if defined(__AVR__)
 #define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
 #define PROGMEM_LATEST __attribute__ (( __section__(".fini1") ))
+#else
+#define PROGMEM_LATE
+#define PROGMEM_LATEST
 #endif
 
 /* telegram types */
