@@ -3796,7 +3796,7 @@ char *build_pvalstr(boolean extended){
   strcpy_P(outBuf + len, PSTR(":"));
   len+=strlen(outBuf + len);
   }
-if(decodedTelegram.value[0] != 0 && decodedTelegram.value != 260){
+if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
   strcpy_P(outBuf + len, PSTR(" "));
   strcat(outBuf + len, decodedTelegram.value);
   len+=strlen(outBuf + len);
