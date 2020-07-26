@@ -2697,6 +2697,10 @@ void printTelegram(byte* msg, int query_line) {
             case VT_UNKNOWN:
             default:
               prepareToPrintHumanReadableTelegram(msg, data_len, bus.getPl_start());
+              int len = 0;
+              for (int i=0; i < data_len; i++) {
+                len += sprintf_P(decodedTelegram.value + len,PSTR("%02X"),msg[bus.getPl_start()+i]);
+              }
               decodedTelegram.error = 260;
               break;
           }
@@ -3792,7 +3796,7 @@ char *build_pvalstr(boolean extended){
   strcpy_P(outBuf + len, PSTR(":"));
   len+=strlen(outBuf + len);
   }
-if(decodedTelegram.value[0] != 0){
+if(decodedTelegram.value[0] != 0 && decodedTelegram.value != 260){
   strcpy_P(outBuf + len, PSTR(" "));
   strcat(outBuf + len, decodedTelegram.value);
   len+=strlen(outBuf + len);
@@ -5898,13 +5902,13 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
                     LogTelegram(msg);
 #endif
-                    if (decodedTelegram.error == 260) { //pvalstr[0]<1 - unknown type
+                    if (decodedTelegram.error == 257) { //pvalstr[0]<1 - unknown command
                       my_dev_fam = temp_dev_fam;
                       my_dev_var = temp_dev_var;
                       query(l);
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
-                      if (decodedTelegram.error == 260) { //pvalstr[0]<1 - unknown type
+                      if (decodedTelegram.error == 257) { //pvalstr[0]<1 - unknown command
                         printFmtToWebClient(PSTR("<BR>\n%hu<BR>\n"), l);
                         printToWebClient(build_pvalstr(0));
                         printToWebClient(PSTR("\n<br>\n"));
