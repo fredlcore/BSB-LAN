@@ -670,7 +670,8 @@ void checkSockStatus()
 /** *****************************************************************
  *  Function: printToWebClient(char *), printToWebClient(const char *), printToWebClient(uint_farptr_t), printFmtToWebClient()
  *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *         flushToWebClient() must be called before end of connection
+ *         flushToWebClient() can be called when you want.
+ *         forcedflushToWebClient() must be called before end of connection
  *  Pass parameters:
  *  WiFiEspClient/EthernetClient &cl
  * Parameters passed back:
@@ -691,6 +692,14 @@ void flushToWebClient(){
   }
 // for debug purposes
 //  if(bigBuffPos < 0)  DebugOutput.println(F("bigBuffPos is negative"));
+}
+
+void forcedflushToWebClient(){
+  if(bigBuffPos > 0){
+    client.write(bigBuff, bigBuffPos);
+    bigBuffPos = 0;
+  }
+  client.flush();
 }
 
 int writelnToWebClient(){
@@ -5293,8 +5302,7 @@ uint8_t pps_offset = 0;
 #else
           printPStr(auth_req_html, sizeof(auth_req_html));
 #endif
-          flushToWebClient();
-          client.flush();
+          forcedflushToWebClient();
           client.stop();
           break;
         }
@@ -5808,7 +5816,7 @@ uint8_t pps_offset = 0;
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!<BR>"));
           }
-          flushToWebClient(); client.flush();
+          forcedflushToWebClient();
 
           for (int x=0;x<10;x++) {
             if (found_ids[x]==0xFF) {
@@ -5831,35 +5839,35 @@ uint8_t pps_offset = 0;
             my_dev_var = temp_dev_var;
             printToWebClient(PSTR("<BR>" STR6224_TEXT ": "));
             query(6224); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); client.flush(); //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6220_TEXT ": "));
             query(6220); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6221_TEXT ": "));
             query(6221); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6227_TEXT ": "));
             query(6227); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); client.flush(); //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6228_TEXT ": "));
             query(6228); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6229_TEXT ": "));
             query(6229); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6231_TEXT ": "));
             query(6231); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); client.flush(); //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6232_TEXT ": "));
             query(6232); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6233_TEXT ": "));
             query(6233); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6234_TEXT ": "));
             query(6234); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); client.flush(); //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6235_TEXT ": "));
             query(6235); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
             query(6223); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6236_TEXT ": "));
             query(6236); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); client.flush(); //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
             query(6237); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10003): "));
@@ -5867,7 +5875,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10004): "));
             query(10004); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR><BR>\n"));
-            flushToWebClient(); client.flush();  //flushing every 3 query() - ~0.6 - 0.9 seconds
+            forcedflushToWebClient();  //flushing every 3 query() - ~0.6 - 0.9 seconds
 
             int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
             for (int i=0; i<15; i++) {
@@ -5877,7 +5885,7 @@ uint8_t pps_offset = 0;
             for (int i=0; i<15; i++) {
               query(params[i]); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
-              if(i % 3 == 0) {flushToWebClient(); client.flush();}
+              if(i % 3 == 0) {forcedflushToWebClient();}
             }
 
             printToWebClient(PSTR("<BR><BR>\n"));
@@ -5885,7 +5893,7 @@ uint8_t pps_offset = 0;
             my_dev_var = orig_dev_var;
 
             printToWebClient(PSTR("<BR>" MENU_TEXT_QST "...<BR>\n"));
-            flushToWebClient(); client.flush();
+            forcedflushToWebClient();
             for (int j=0;j<10000;j++) {
               if (get_cmdtbl_cmd(j) == c) {
                 continue;
@@ -5931,21 +5939,20 @@ uint8_t pps_offset = 0;
                         }
                         printToWebClient(PSTR("<br>\n"));
                       }
-                      flushToWebClient(); client.flush(); //browser will build page immediately
+                      forcedflushToWebClient(); //browser will build page immediately
                     }
                   }
                 }
               }
             }
             printToWebClient(PSTR("<BR>\n" MENU_TEXT_QTE ".<BR>\n"));
-            flushToWebClient(); client.flush();
+            forcedflushToWebClient();
           }
 
           printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\n"));
           bus.setBusType(bus.getBusType(), myAddr, destAddr);   // return to original destination address
           if(!(httpflags & 128)) webPrintFooter();
-          flushToWebClient();
-          client.flush();
+          forcedflushToWebClient();
           break;
         }
 
@@ -6011,8 +6018,7 @@ uint8_t pps_offset = 0;
           printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
           if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
-            flushToWebClient();
-            client.flush();
+            forcedflushToWebClient();
             break;
           }
 
@@ -6080,8 +6086,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\n  ]"));
           #endif
             printToWebClient(PSTR("\n}\n"));
-            flushToWebClient();
-            client.flush();
+            forcedflushToWebClient();
             break;
           }
 
@@ -6260,8 +6265,7 @@ uint8_t pps_offset = 0;
             }
           }
           printFmtToWebClient(PSTR("\n}\n"));
-          flushToWebClient();
-          client.flush();
+          forcedflushToWebClient();
           break;
         }
 
@@ -6685,8 +6689,7 @@ uint8_t pps_offset = 0;
             DebugOutput.println(F("Cleared EEPROM"));
           }
           printToWebClient(PSTR("Restarting Arduino...\n"));
-          flushToWebClient();
-          client.flush();
+          forcedflushToWebClient();
           resetBoard();
 #endif
           break;
