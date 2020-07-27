@@ -5902,14 +5902,15 @@ uint8_t pps_offset = 0;
 #ifdef LOGGER
                     LogTelegram(msg);
 #endif
-                    if (decodedTelegram.error == 257) { //pvalstr[0]<1 - unknown command
+                    if (decodedTelegram.msg_type != TYPE_ERR) { //pvalstr[0]<1 - unknown command
                       my_dev_fam = temp_dev_fam;
                       my_dev_var = temp_dev_var;
                       query(l);
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
-                      if (decodedTelegram.error == 257) { //pvalstr[0]<1 - unknown command
+                      if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
                         printFmtToWebClient(PSTR("<BR>\n%hu<BR>\n"), l);
+                        printFmtToWebClient(PSTR("%08X - "), c);
                         printToWebClient(build_pvalstr(0));
                         printToWebClient(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
@@ -5919,6 +5920,7 @@ uint8_t pps_offset = 0;
                         for (int i=0;i<msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), msg[i]);
                         }
+                        printToWebClient(PSTR("<br>\n"));
                       }
                       flushToWebClient(); //browser will build page immediatly
                     }
@@ -5926,7 +5928,7 @@ uint8_t pps_offset = 0;
                 }
               }
             }
-            printToWebClient(PSTR(MENU_TEXT_QTE ".<BR>\n"));
+            printToWebClient(PSTR("<BR>\n" MENU_TEXT_QTE ".<BR>\n"));
           }
 
           printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\n"));
@@ -6996,7 +6998,6 @@ uint8_t pps_offset = 0;
 
           char smallbuf[20];
           if (log_parameters[i] < 20000) {
-            uint32_t c=0;
             query(log_parameters[i]);
             char *pvalstr = build_pvalstr(0);
             if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
