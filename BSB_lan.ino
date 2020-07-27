@@ -5811,6 +5811,7 @@ uint8_t pps_offset = 0;
                 }
                 if (!found) {
                   printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu<BR>\n"),found_id);
+                  flushToWebClient();
                 }
               }
               delay(1);
@@ -5818,14 +5819,14 @@ uint8_t pps_offset = 0;
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!<BR>"));
           }
-          flushToWebClient();
 
           for (int x=0;x<10;x++) {
             if (found_ids[x]==0xFF) {
               continue;
             }
             bus.setBusType(bus.getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu<BR>\n"), found_ids[x]);
+            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu...<BR>\n"), found_ids[x]);
+            flushToWebClient();
 
             uint32_t c=0;
             uint16_t l;
@@ -5841,35 +5842,30 @@ uint8_t pps_offset = 0;
             my_dev_var = temp_dev_var;
             printToWebClient(PSTR("<BR>" STR6224_TEXT ": "));
             query(6224); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6220_TEXT ": "));
             query(6220); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6221_TEXT ": "));
             query(6221); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6227_TEXT ": "));
             query(6227); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6228_TEXT ": "));
             query(6228); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6229_TEXT ": "));
             query(6229); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6231_TEXT ": "));
             query(6231); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6232_TEXT ": "));
             query(6232); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6233_TEXT ": "));
             query(6233); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6234_TEXT ": "));
             query(6234); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6235_TEXT ": "));
             query(6235); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
             query(6223); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR6236_TEXT ": "));
             query(6236); printToWebClient(build_pvalstr(0));
-            flushToWebClient(); //flushing every 3 query() - ~0.6 - 0.9 seconds
             printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
             query(6237); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10003): "));
@@ -5877,7 +5873,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10004): "));
             query(10004); printToWebClient(build_pvalstr(0));
             printToWebClient(PSTR("\n<BR><BR>\n"));
-            flushToWebClient();  //flushing every 3 query() - ~0.6 - 0.9 seconds
+            flushToWebClient();
 
             int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
             for (int i=0; i<15; i++) {
@@ -5887,7 +5883,6 @@ uint8_t pps_offset = 0;
             for (int i=0; i<15; i++) {
               query(params[i]); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
-              if(i % 3 == 0) flushToWebClient();
             }
 
             printToWebClient(PSTR("<BR><BR>\n"));
@@ -5928,9 +5923,9 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("<BR>\n%hu<BR>\n"), l);
-                        printFmtToWebClient(PSTR("%08X - "), c);
-                        printToWebClient(build_pvalstr(0));
+                        printFmtToWebClient(PSTR("<BR>\n%hu - %s - %s<BR>\n"), l, decodedTelegram.catdescaddr, decodedTelegram.prognrdescaddr);
+                        printFmtToWebClient(PSTR("0x%08X"), c);
+//                        printToWebClient(build_pvalstr(0)); // is this really necessary, because it would always be "parameter not supported", isn't it?
                         printToWebClient(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
