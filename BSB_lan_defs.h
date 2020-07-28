@@ -7518,6 +7518,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0815,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_097_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
@@ -7540,6 +7541,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 1
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D06E0,  CAT_FEHLER,           VT_ENUM,          6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+{0x053D06E0,  CAT_FEHLER,           VT_ENUM,          6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_097_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
@@ -7547,6 +7549,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
 {0x053D06E1,  CAT_FEHLER,           VT_ENUM,          6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+{0x053D06E1,  CAT_FEHLER,           VT_ENUM,          6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_097_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
 {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
 {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
@@ -8418,6 +8421,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_023_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
+{0x053D0475,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8741,  STR8741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1
 {0x2D3D0593,  CAT_DIAG_VERBRAUCHER, VT_TEMP_WORD5_US, 8741,  STR8741,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Raumsollwert 1 - logged on OCI700 via LPB
 {0x2D3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8742,  STR8742,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Thision 8742 Raumtemperatur 1 Modell [°C]
@@ -8464,6 +8468,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0B2A,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8827,  STR8827,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Dl'erhitzerpumpe
 {0x313D052F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
 {0x053D0222,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
+{0x253D0516,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
 {0x313D074B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8831,  STR8831,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert
 {0x313D0532,  CAT_DIAG_VERBRAUCHER, VT_TEMP_WORD5_US, 8831,  STR8831,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert - logged on OCI700 via LPB
 {0x313D0530,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8832,  STR8832,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 2
