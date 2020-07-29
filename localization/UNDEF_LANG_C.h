@@ -20,6 +20,7 @@
 #undef UNIT_CEL_MIN_TEXT
 #undef UNIT_LITERPERHOUR_TEXT
 #undef UNIT_LITERPERMIN_TEXT
+
 #undef ENUM_CAT_00_TEXT
 #undef ENUM_CAT_01_TEXT
 #undef ENUM_CAT_02_TEXT
@@ -64,6 +65,7 @@
 #undef ENUM_CAT_29_TEXT
 #undef ENUM_CAT_2a_TEXT
 #undef ENUM_CAT_2b_TEXT
+
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
@@ -151,6 +153,7 @@
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
 #undef MENU_TEXT_LOT
+
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT
@@ -357,6 +360,7 @@
 #undef STR2213_TEXT
 #undef STR2214_TEXT
 #undef STR2215_TEXT
+#undef STR2217_TEXT
 #undef STR2220_TEXT
 #undef STR2221_TEXT
 #undef STR2222_TEXT
@@ -376,6 +380,7 @@
 #undef STR2260_TEXT
 #undef STR2261_TEXT
 #undef STR2262_TEXT
+#undef STR2264_TEXT
 #undef STR2270_TEXT
 #undef STR2271_TEXT
 #undef STR2272_TEXT
@@ -394,6 +399,9 @@
 #undef STR2324_TEXT
 #undef STR2325_TEXT
 #undef STR2326_TEXT
+#undef STR2327_TEXT
+#undef STR2328_TEXT
+#undef STR2329_TEXT
 #undef STR2330_TEXT
 #undef STR2331_TEXT
 #undef STR2334_TEXT
@@ -404,8 +412,10 @@
 #undef STR2441_2_TEXT
 #undef STR2442_TEXT
 #undef STR2442_2_TEXT
+#undef STR2442_3_TEXT
 #undef STR2443_TEXT
 #undef STR2443_2_TEXT
+#undef STR2443_3_TEXT
 #undef STR2444_TEXT
 #undef STR2444_2_TEXT
 #undef STR2444_3_TEXT
@@ -467,6 +477,11 @@
 #undef STR2657_TEXT
 #undef STR2662_TEXT
 #undef STR2663_TEXT
+#undef STR2670_TEXT
+#undef STR2672_TEXT
+#undef STR2675_TEXT
+#undef STR2681_TEXT
+#undef STR2682_TEXT
 #undef STR2700_TEXT
 #undef STR2700_2_TEXT
 #undef STR2702_TEXT
@@ -826,6 +841,7 @@
 #undef STR5146_TEXT
 #undef STR5148_TEXT
 #undef STR5151_TEXT
+
 #undef STR5406_TEXT
 #undef STR5420_TEXT
 #undef STR5430_TEXT
@@ -1731,6 +1747,7 @@
 #undef STR15066_TEXT
 #undef STR15067_TEXT
 #undef STR99999_TEXT
+
 #undef ENUM20_01_TEXT
 #undef ENUM20_02_TEXT
 #undef ENUM20_03_TEXT
@@ -1825,6 +1842,7 @@
 #undef ENUM2320_02_TEXT
 #undef ENUM2320_04_TEXT
 #undef ENUM2450_02_TEXT
+#undef ENUM2476_ff_TEXT
 #undef ENUM2480_00_TEXT
 #undef ENUM2480_ff_TEXT
 #undef ENUM2706_00_TEXT
@@ -2939,6 +2957,8 @@
 #undef ENUM_WEEKDAY_05_TEXT
 #undef ENUM_WEEKDAY_06_TEXT
 #undef ENUM_WEEKDAY_07_TEXT
+
+// These strings do not take space in Arduino memory. They are for external interfaces.
 #undef EXTIF_HOME_TEXT
 #undef EXTIF_MANAGEMENT_TEXT
 #undef EXTIF_MONITOR_TEXT

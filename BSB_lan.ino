@@ -2489,7 +2489,6 @@ void printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  u16
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
-            case VT_UINT100:  // u32 / 100
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
@@ -2507,7 +2506,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_SHORT5: // s8 / 5 (signed)
             case VT_TEMP_SHORT64: // s8 / 64 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
-            case VT_TEMP_SHORT: // s8
+            case VT_TEMP_SHORT: // s8 (signed)
             case VT_TEMP_PER_MIN: // s8
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
@@ -2515,6 +2514,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PERCENT5: // u8 %
             case VT_TEMP_SHORT5_US: // u8 / 2 (unsigned)
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
+            case VT_TEMP_SHORT_US: //u8 (unsigned)
               printFIXPOINT_BYTE_US(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
@@ -2538,6 +2538,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
             case VT_SINT1000: // s16 / 1000
+            case VT_UINT100:  // u32 / 100
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_ONOFF:
@@ -3224,6 +3225,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_BIT:
     case VT_BYTE:
     case VT_TEMP_SHORT:
+    case VT_TEMP_SHORT_US:
       {
       uint8_t t=atoi(val);
       param[0]=0x01;  //enable
@@ -5922,9 +5924,16 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("<BR>\n%hu - %s - %s<BR>\n"), l, decodedTelegram.catdescaddr, decodedTelegram.prognrdescaddr);
-                        printFmtToWebClient(PSTR("0x%08X"), c);
-//                        printToWebClient(build_pvalstr(0)); // is this really necessary, because it would always be "parameter not supported", isn't it?
+
+#if defined (__AVR__)
+                        printFmtToWebClient(PSTR("<BR>\n%hu - "), l);
+                        printToWebClient(decodedTelegram.catdescaddr);
+                        printToWebClient(PSTR(" - "));
+                        printToWebClient(decodedTelegram.prognrdescaddr);
+#else
+                        printFmtToWebClient(PSTR("<BR>\n%hu - %s - %s"), l, decodedTelegram.catdescaddr, decodedTelegram.prognrdescaddr);
+#endif
+                        printFmtToWebClient(PSTR("<BR>\n0x%08X"), c);
                         printToWebClient(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
