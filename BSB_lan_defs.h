@@ -6846,7 +6846,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
 {0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_108_217}, // Ladung opt Energie
 {0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_108_217}, // Ladung opt Energie Kontakt
-{0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Nachlad'Überhöh Schichtensp
+{0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
@@ -6876,11 +6876,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_205_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_211_ALL}, // TW Schaltdifferenz 1 ein
 {0x213D2F8F,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasser-Speicher Schaltdifferenz
-{0x213D2F90,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5025,  STR5025,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Schaltdifferenz 1 Aus min
-{0x213D2F91,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5026,  STR5026,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Schaltdifferenz 1 Aus max
-{0x213D2F92,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5027,  STR5027,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Schaltdifferenz 2 Ein
-{0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Schaltdifferenz 2 Aus min
-{0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Schaltdifferenz 2 Aus max
+{0x213D2F90,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5025,  STR5025,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus min
+{0x213D2F91,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5026,  STR5026,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus max
+{0x213D2F92,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5027,  STR5027,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Ein
+{0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
+{0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
 {0x253D0731,  CAT_TWSPEICHER,       VT_MINUTES_WORD,  5030,  STR5030,  0,                    NULL,         FL_OEM, DEV_ALL}, // TW Ladezeitbegrenzung //FUJITSU
 {0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_108_217}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
@@ -6901,7 +6901,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D07C2,  CAT_TWSPEICHER,       VT_YESNO,         5090,  STR5090,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Mit Pufferspeicher
 {0x313D07C3,  CAT_TWSPEICHER,       VT_YESNO,         5092,  STR5092,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Trinkwasser-Speicher - Mit Vorregler/Zubring`pumpe
 {0x253D0A11,  CAT_TWSPEICHER,       VT_YESNO,         5093,  STR5093,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser-Speicher - Mit Solareinbindung
-{0x113D2F96,  CAT_TWSPEICHER,       VT_PERCENT,       5100,  STR5100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL-DEV_108_217}, // TW Pumpe-PWM Durchladung
+{0x113D2F96,  CAT_TWSPEICHER,       VT_PERCENT,       5100,  STR5100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Pumpe-PWM Durchladung
 {0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Minimum %
@@ -6921,7 +6921,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_195_002}, // Umladestrategie
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131),     ENUM5131,     FL_OEM, DEV_ALL}, // Vergleichstemp Umladung
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_195_002}, // Vergleichstemp Umladung
-{0x253D10C9,  CAT_TWSPEICHER,       VT_TEMP,          5139,  STR5139,  0,                    NULL,         FL_RONLY,     DEV_ALL-DEV_108_217}, // Z'kreisüberhöhung Nachladen //Thision 19 Plus
+{0x253D10C9,  CAT_TWSPEICHER,       VT_TEMP,          5139,  STR5139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreisüberhöhung Nachladen //Thision 19 Plus
 {0x253D0E50,  CAT_TWSPEICHER,       VT_TEMP,          5140,  STR5140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zwischenkreisüberhöhung //Thision 19 Plus
 {0x253D0E68,  CAT_TWSPEICHER,       VT_TEMP,          5141,  STR5141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Überschreit Max //Thision 19 Plus
 {0x253D0E51,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5142,  STR5142,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollw'führung Verzög //Thision 19 Plus
