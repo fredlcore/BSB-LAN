@@ -109,6 +109,7 @@
 #define DEV_108_100  108,100 // Brötje BSW 8K
 #define DEV_108_160  108,160 // Elco AEROTOP T07-16 mit Logon B WP 61
 #define DEV_108_169  108,169 // Wärmepumpe CTA Optiheat 1-18es RVS61.843D/169
+#define DEV_108_217  108,217 // Elco Wärmepumpe RVS61.843E/560
 #define DEV_116_ALL  116,255 // Brötje ISR-SSR B
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
@@ -527,7 +528,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   3810, 3887,
   4102, 4204,
   4708, 4813,
-  5010, 5151,
+  5007, 5151,
   5400, 5544,
   5700, 6498,
   6600, 6699,
@@ -1459,6 +1460,8 @@ const char STR4796[] PROGMEM = STR4796_TEXT;
 const char STR4811[] PROGMEM = STR4811_TEXT;
 const char STR4813[] PROGMEM = STR4813_TEXT;
 // 5000 Trinkwasserspeicher
+const char STR5007[] PROGMEM = STR5007_TEXT;
+const char STR5008[] PROGMEM = STR5008_TEXT;
 const char STR5010[] PROGMEM = STR5010_TEXT;
 const char STR5011[] PROGMEM = STR5011_TEXT;
 const char STR5019[] PROGMEM = STR5019_TEXT;
@@ -3634,6 +3637,10 @@ const char ENUM4813[] PROGMEM_LATEST = {
 "\x02 " ENUM4813_02_TEXT
 };
 // Trinkwasserspeicher
+const char ENUM5007[] PROGMEM_LATEST = {
+"\x02 " ENUM5007_02_TEXT "\0"
+"\x03 " ENUM5007_03_TEXT
+};
 const char ENUM5010[] PROGMEM_LATEST = {
 "\x00 " ENUM5010_00_TEXT "\0"
 "\xff " ENUM5010_ff_TEXT
@@ -6812,6 +6819,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
 
 // Trinkwasserspeicher
+{0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_108_217}, // Ladeanforderung
+{0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_108_217}, // Lad'anforderung zeitgeführt
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     FL_OEM, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp

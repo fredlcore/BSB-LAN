@@ -786,6 +786,8 @@
 #define STR4796_TEXT "Wirksinn Rücklaufumlenkung"
 #define STR4811_TEXT "Durchladetemperatur Minimum"
 #define STR4813_TEXT "Durchladefühler"
+#define STR5007_TEXT "Ladeanforderung"
+#define STR5008_TEXT "Lad'anforderung zeitgeführt"
 #define STR5010_TEXT "Trinkwasserladung"
 #define STR5011_TEXT "Trinkwasser-Speicher Ladevorlegungszeit"
 #define STR5019_TEXT "TWW Nachlad'Überhöh Schichtensp"
@@ -1950,6 +1952,8 @@
 #define ENUM4796_01_TEXT "Temperaturabsenkung"
 #define ENUM4796_02_TEXT "Temperaturanhebung"
 #define ENUM4813_02_TEXT "Mit B42/B41"
+#define ENUM5007_02_TEXT "Mit B3"   // HEIZ->DISP ANS      253D1667 00 02 
+#define ENUM5007_03_TEXT "Mit B31"  // HEIZ->DISP ANS      253D1667 00 03 
 #define ENUM5010_00_TEXT "Einmal/Tag"
 #define ENUM5010_ff_TEXT "Mehrmals/Tag"
 #define ENUM5022_01_TEXT "Mit B3"
