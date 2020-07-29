@@ -899,6 +899,7 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 // Trinkwasser
 const char STR1600[] PROGMEM = STR1600_TEXT;
 const char STR1601[] PROGMEM = STR1601_TEXT;
+const char STR1601_2[] PROGMEM = STR1601_2_TEXT;
 const char STR1602[] PROGMEM = STR1602_TEXT;
 const char STR1610[] PROGMEM = STR1610_TEXT;
 const char STR1612[] PROGMEM = STR1612_TEXT;
@@ -1471,6 +1472,7 @@ const char STR5020[] PROGMEM = STR5020_TEXT;
 const char STR5021[] PROGMEM = STR5021_TEXT;
 const char STR5022[] PROGMEM = STR5022_TEXT;
 const char STR5022_2[] PROGMEM = STR5022_2_TEXT;
+const char STR5023[] PROGMEM = STR5023_TEXT;
 const char STR5024[] PROGMEM = STR5024_TEXT;
 const char STR5025[] PROGMEM = STR5025_TEXT;
 const char STR5026[] PROGMEM = STR5026_TEXT;
@@ -3264,6 +3266,11 @@ const char ENUM1600[] PROGMEM_LATEST = {
 "\x02 " ENUM1600_02_TEXT
 };
 
+const char ENUM1601_2[] PROGMEM_LATEST = {
+"\x00 " ENUM1601_2_00_TEXT "\0"
+"\x01 " ENUM1601_2_01_TEXT
+};
+
 const char ENUM1602[] PROGMEM_LATEST = {
 "\x00\x02 " ENUM1602_00_02_TEXT "\0"
 "\x02\x02 " ENUM1602_02_02_TEXT "\0"
@@ -3283,6 +3290,14 @@ const char ENUM1620_2[] PROGMEM_LATEST = {
 "\x01 " ENUM1620_2_01_TEXT "\0"
 "\x04 " ENUM1620_2_04_TEXT
 };
+const char ENUM1620_3[] PROGMEM_LATEST = {
+"\x00 " ENUM1620_00_TEXT "\0"
+"\x01 " ENUM1620_3_01_TEXT "\0"
+"\x02 " ENUM1620_02_TEXT "\0"
+"\x02 " ENUM1620_3_03_TEXT "\0"
+"\x02 " ENUM1620_3_04_TEXT
+};
+
 const char ENUM1630[] PROGMEM_LATEST = {
 "\x00 " ENUM1630_00_TEXT "\0"
 "\x01 " ENUM1630_01_TEXT "\0"
@@ -6215,13 +6230,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x313D0573,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_217}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Freigabe
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_2),   ENUM1620_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser - Freigabe
+{0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_3),   ENUM1620_3,   DEFAULT_FLAG, DEV_108_217}, // [0] - Trinkwasser - Freigabe
 {0x313D0721,  CAT_TW,               VT_ENUM,          1630,  STR1630,  sizeof(ENUM1630),     ENUM1630,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Ladevorgang
 {0x313D0759,  CAT_TW,               VT_ENUM,          1640,  STR1640,  sizeof(ENUM1640),     ENUM1640,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Legionellenfunktion
 {0x313D0738,  CAT_TW,               VT_DAYS,          1641,  STR1641,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Tage ] - Trinkwasser - Legionellenfkt. Periodisch
@@ -6855,6 +6871,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_108_217}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
