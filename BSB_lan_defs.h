@@ -2562,6 +2562,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1680_00_TEXT ENUM48_00_TEXT
 #define ENUM1680_01_TEXT ENUM780_00_TEXT
 #define ENUM1680_02_TEXT ENUM1600_01_TEXT
+#define ENUM1680_03_TEXT ENUM1600_02_TEXT
 #define ENUM2132_00_TEXT ENUM832_00_TEXT
 #define ENUM2132_01_TEXT ENUM832_01_TEXT
 #define ENUM2200_01_TEXT ENUM700_01_TEXT
@@ -3294,8 +3295,8 @@ const char ENUM1620_3[] PROGMEM_LATEST = {
 "\x00 " ENUM1620_00_TEXT "\0"
 "\x01 " ENUM1620_3_01_TEXT "\0"
 "\x02 " ENUM1620_02_TEXT "\0"
-"\x02 " ENUM1620_3_03_TEXT "\0"
-"\x02 " ENUM1620_3_04_TEXT
+"\x03 " ENUM1620_3_03_TEXT "\0"
+"\x04 " ENUM1620_3_04_TEXT
 };
 
 const char ENUM1630[] PROGMEM_LATEST = {
@@ -3319,7 +3320,8 @@ const char ENUM1660[] PROGMEM_LATEST = {
 const char ENUM1680[] PROGMEM_LATEST = {
 "\x00 " ENUM1680_00_TEXT "\0"
 "\x01 " ENUM1680_01_TEXT "\0"
-"\x02 " ENUM1680_02_TEXT
+"\x02 " ENUM1680_02_TEXT "\0"
+"\x03 " ENUM1680_03_TEXT
 };
 
 // Vorregler/Zubringerpumpe
@@ -6230,7 +6232,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x313D0573,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_217}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
+{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_217}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
@@ -6870,8 +6872,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_217}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
-{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
-{0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_108_217}, // Sollwertreduktion B31
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart  
+{0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_108_217}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
