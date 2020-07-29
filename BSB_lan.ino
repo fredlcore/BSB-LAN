@@ -2826,6 +2826,7 @@ void webPrintHeader(void){
   printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
   printToWebClient(PSTR("</tr></table><p></p><table align=center width=80%><tr><td>\n"));
+  flushToWebClient();
 } // --- webPrintHeader() ---
 
 /** *****************************************************************
@@ -5924,15 +5925,10 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-
-#if defined (__AVR__)
                         printFmtToWebClient(PSTR("<BR>\n%hu - "), l);
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
                         printToWebClient(decodedTelegram.prognrdescaddr);
-#else
-                        printFmtToWebClient(PSTR("<BR>\n%hu - %s - %s"), l, decodedTelegram.catdescaddr, decodedTelegram.prognrdescaddr);
-#endif
                         printFmtToWebClient(PSTR("<BR>\n0x%08X"), c);
                         printToWebClient(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus.getLen_idx()]+bus.getBusType();i++) {
