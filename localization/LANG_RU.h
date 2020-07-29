@@ -535,7 +535,7 @@
 //#define STR2473_TEXT "Abgastemp Leistungsredukt"
 #define STR2473_TEXT "Пониженная выходная температура выхлопных газов"
 //#define STR2474_TEXT "Abgastemp Abschaltgrenze"
-#define STR2474_TEXT "Пред температура выхлопных газов"
+#define STR2474_TEXT "Предельная температура выхлопных газов"
 //#define STR2476_TEXT "Abgasüberwach' Abschaltung"
 #define STR2476_TEXT "Отключение мониторинга топочных газов"
 //#define STR2477_TEXT "Abgasüberw Startverhin'zeit"

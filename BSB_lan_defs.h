@@ -240,7 +240,8 @@ typedef enum{
   VT_SECONDS_SHORT,     //  2 Byte - 1 enable / seconds
   VT_SECONDS_SHORT4,    //  2 Byte - 1 enable 0x01 / value/4 (signed?)
   VT_SECONDS_SHORT5,    //  2 Byte - 1 enable 0x01 / value/5 (signed?)
-  VT_TEMP_SHORT,        //  2 Byte - 1 enable 0x01 / value
+  VT_TEMP_SHORT,        //  2 Byte - 1 enable 0x01 / value (signed)
+  VT_TEMP_SHORT_US,        //  2 Byte - 1 enable 0x01 / value (unsigned)
   VT_TEMP_SHORT5,       //  2 Byte - 1 enable 0x01 / value/2 (signed)
   VT_TEMP_SHORT5_US,    //  2 Byte - 1 enable 0x01 / value/2 (unsigned)
   VT_TEMP_SHORT64,      //  2 Byte - 1 enable 0x01 / value/64 (signed)
@@ -383,6 +384,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
 {VT_TEMP_SHORT,     1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG)},
+{VT_TEMP_SHORT_US,  1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_SHORT5,    2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_SHORT5_US, 2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_SHORT64,   64.0,   DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS)},
@@ -6455,17 +6457,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_WORD,  2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min] - logged on OCI700 via LPB
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2472 Pumpennachlauftemp TWW - logged on OCI700 via LPB
-{0x053D0F69,  CAT_KESSEL,           VT_TEMP_SHORT,    2473,  STR2473,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsredukt
-{0x053D3061,  CAT_KESSEL,           VT_TEMP_SHORT,    2474,  STR2474,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Abschaltgrenze
+{0x053D0F69,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2473,  STR2473,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsredukt
+{0x053D3061,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2474,  STR2474,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Abschaltgrenze
 {0x093D0F8C,  CAT_KESSEL,           VT_ENUM,          2476,  STR2476,  sizeof(ENUM2476),     ENUM2476,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  [enum] Kessel - Abgasüberwach' Abschaltung
 {0x093D0F8D,  CAT_KESSEL,           VT_MINUTES_SHORT, 2477,  STR2477,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Abgasüberw Startverhin'zeit [min]
-{0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT,    2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz
+{0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz. This parameter set with 0x06 cmd from Room Device, but can be set with 0x01
 {0x053D17B3,  CAT_KESSEL,           VT_SECONDS_SHORT5,2479,  STR2479,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x053D0FEB,  CAT_KESSEL,           VT_ENUM,          2480,  STR2480,  sizeof(ENUM2480),     ENUM2480,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Statisch' Drucküberw Absch'
 {0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
 {0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
-{0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5,   2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
+{0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
 {0x113D2FAA,  CAT_KESSEL,           VT_PROPVAL,       2543,  STR2543,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
 {0x053D1A79,  CAT_KESSEL,           VT_ONOFF,         2550,  STR2550,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [] - Kessel - Gasenergiezählung
@@ -6477,7 +6479,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D307B,  CAT_KESSEL,           VT_BYTE,          2657,  STR2657,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl Wiederholungen
 //2662 Baxi Luna Platinum - VT_MINUTES_SHORT instead VT_SECONDS_SHORT. Typo error?
 {0x113D0F98,  CAT_KESSEL,           VT_MINUTES_SHORT, 2662,  STR2662,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Heizkreis
-{0x113D0F99,  CAT_KESSEL,           VT_SECONDS_SHORT, 2663,  STR2663,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Trinkwasser
+//2663 Baxi Luna Platinum - VT_MINUTES_SHORT instead VT_SECONDS_SHORT. Typo error?
+{0x113D0F99,  CAT_KESSEL,           VT_MINUTES_SHORT, 2663,  STR2663,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Trinkwasser
 {0x053D0FFC,  CAT_KESSEL,           VT_ONOFF,         2670,  STR2670,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Activation of Super Over Temperature Function (SOT)
 {0x053D0FFE,  CAT_KESSEL,           VT_TEMP,          2672,  STR2672,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Increase of boiler setpoint for the control of SOT
 {0x053D1003,  CAT_KESSEL,           VT_ONOFF,         2675,  STR2675,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
