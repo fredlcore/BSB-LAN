@@ -4384,8 +4384,7 @@ void Ipwe() {
       counter++;
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
       printFmtToWebClient(PSTR("<br></td><td>Avg%s"), lookup_descr(avg_parameters[i]));
-      float rounded = round(avgValues[i]*10);
-      printFmtToWebClient(PSTR("<br></td><td>%d"), (int)(rounded/10));
+      printFmtToWebClient(PSTR("<br></td><td>%.1f"), (avgValues[i]));
 // TODO: extract and display unit text from cmdtbl.type
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
@@ -7257,6 +7256,7 @@ uint8_t pps_offset = 0;
       if (avg_parameters[i] > 0) {
         query(avg_parameters[i]);
         float reading = strtod(decodedTelegram.value,NULL);
+        DebugOutput.println(reading);
         if (isnan(reading)) {} else {
           avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
           if (avgValues_Old[i] == -9999) {
@@ -7265,6 +7265,7 @@ uint8_t pps_offset = 0;
             avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
           }
         }
+        DebugOutput.println(avgValues[i]);
       }
     }
     avgCounter++;
