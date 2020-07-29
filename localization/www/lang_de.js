@@ -360,6 +360,7 @@ UIStrings["STR2212_TEXT"] = "Sollwert Maximum";
 UIStrings["STR2213_TEXT"] = "Sollwert Maximum OEM";
 UIStrings["STR2214_TEXT"] = "Sollwert Handbetrieb";
 UIStrings["STR2215_TEXT"] = "Max. Regeldiff. ohne Abbruch der Mindestpause (°K)";
+UIStrings["STR2217_TEXT"] = "Sollwert Frostschutz";
 UIStrings["STR2220_TEXT"] = "Freigabeintegral Stufe 2";
 UIStrings["STR2221_TEXT"] = "Rückstellintegral Stufe 2";
 UIStrings["STR2222_TEXT"] = "Zwangseinschaltung Stufe 2";
