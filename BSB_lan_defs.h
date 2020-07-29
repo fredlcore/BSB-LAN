@@ -6232,7 +6232,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_217}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
+{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
@@ -6858,22 +6858,22 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
 
 // Trinkwasserspeicher
-{0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_108_217}, // Ladeanforderung
-{0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_108_217}, // Lad'anforderung zeitgeführt
+{0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_ALL}, // Ladeanforderung
+{0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_ALL}, // Lad'anforderung zeitgeführt
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     FL_OEM, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
-{0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_108_217}, // Ladung opt Energie
-{0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_108_217}, // Ladung opt Energie Kontakt
+{0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_ALL}, // Ladung opt Energie
+{0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_ALL}, // Ladung opt Energie Kontakt
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
-{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_217}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart  
-{0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_108_217}, // Sollwertreduktion B31
+{0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
@@ -6901,9 +6901,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
 {0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
 {0x253D0731,  CAT_TWSPEICHER,       VT_MINUTES_WORD,  5030,  STR5030,  0,                    NULL,         FL_OEM, DEV_ALL}, // TW Ladezeitbegrenzung //FUJITSU
-{0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_108_217}, // Max Ladeabbruchtemp
+{0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
-{0x253D116F,  CAT_TWSPEICHER,       VT_ENUM,          5041,  STR5041,  sizeof(ENUM5041),     ENUM5041,     FL_OEM, DEV_108_217}, // Entladeschutzfühler
+{0x253D116F,  CAT_TWSPEICHER,       VT_ENUM,          5041,  STR5041,  sizeof(ENUM5041),     ENUM5041,     FL_OEM, DEV_ALL}, // Entladeschutzfühler
 {0x253D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ladetemperatur Maximum
 {0x153D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Ladetemperatur Maximum - logged on OCI700 via LPB
 {0x253D08A7,  CAT_TWSPEICHER,       VT_TEMP,          5051,  STR5051,  0,                    NULL,         FL_OEM, DEV_ALL}, // Speichertemperatur Maximum
