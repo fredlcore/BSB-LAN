@@ -2489,7 +2489,6 @@ void printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  u16
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
-            case VT_UINT100:  // u32 / 100
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
@@ -2498,6 +2497,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_POWER: // u32 / 10.0 kW
             case VT_ENERGY10: // u32 / 10.0 kWh
             case VT_ENERGY: // u32 / 1.0 kWh
+            case VT_UINT100:  // u32 / 100
               printDWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_SINT: //  s16

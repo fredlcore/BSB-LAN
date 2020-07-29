@@ -518,7 +518,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   2008, 2051,
   2055, 2080,
   2110, 2150,
-  2200, 2663,
+  2200, 2682,
   2700, 2753,
   2776, 3029,
   3090, 3267,
@@ -967,6 +967,7 @@ const char STR2212[] PROGMEM = STR2212_TEXT;
 const char STR2213[] PROGMEM = STR2213_TEXT;
 const char STR2214[] PROGMEM = STR2214_TEXT;
 const char STR2215[] PROGMEM = STR2215_TEXT;
+const char STR2217[] PROGMEM = STR2217_TEXT;
 const char STR2220[] PROGMEM = STR2220_TEXT;
 const char STR2221[] PROGMEM = STR2221_TEXT;
 const char STR2222[] PROGMEM = STR2222_TEXT;
@@ -986,6 +987,7 @@ const char STR2253[] PROGMEM = STR2253_TEXT;
 const char STR2260[] PROGMEM = STR2260_TEXT;
 const char STR2261[] PROGMEM = STR2261_TEXT;
 const char STR2262[] PROGMEM = STR2262_TEXT;
+const char STR2264[] PROGMEM = STR2264_TEXT;
 const char STR2270[] PROGMEM = STR2270_TEXT;
 const char STR2271[] PROGMEM = STR2271_TEXT;
 const char STR2272[] PROGMEM = STR2272_TEXT;
@@ -1009,6 +1011,9 @@ const char STR2321[] PROGMEM = STR2321_TEXT;
 const char STR2324[] PROGMEM = STR2324_TEXT;
 const char STR2325[] PROGMEM = STR2325_TEXT;
 const char STR2326[] PROGMEM = STR2326_TEXT;
+const char STR2327[] PROGMEM = STR2327_TEXT;
+const char STR2328[] PROGMEM = STR2328_TEXT;
+const char STR2329[] PROGMEM = STR2329_TEXT;
 const char STR2330[] PROGMEM = STR2330_TEXT;
 const char STR2331[] PROGMEM = STR2331_TEXT;
 const char STR2334[] PROGMEM = STR2334_TEXT;
@@ -1019,8 +1024,10 @@ const char STR2441[] PROGMEM = STR2441_TEXT;
 const char STR2441_2[] PROGMEM = STR2441_2_TEXT;
 const char STR2442[] PROGMEM = STR2442_TEXT;
 const char STR2442_2[] PROGMEM = STR2442_2_TEXT;
+const char STR2442_3[] PROGMEM = STR2442_3_TEXT;
 const char STR2443[] PROGMEM = STR2443_TEXT;
 const char STR2443_2[] PROGMEM = STR2443_2_TEXT;
+const char STR2443_3[] PROGMEM = STR2443_3_TEXT;
 const char STR2444[] PROGMEM = STR2444_TEXT;
 const char STR2444_2[] PROGMEM = STR2444_2_TEXT;
 const char STR2444_3[] PROGMEM = STR2444_3_TEXT;
@@ -1085,6 +1092,10 @@ const char STR2657[] PROGMEM = STR2657_TEXT;
 const char STR2662[] PROGMEM = STR2662_TEXT;
 const char STR2663[] PROGMEM = STR2663_TEXT;
 #define STR2670 STR2478
+const char STR2672[] PROGMEM = STR2672_TEXT;
+const char STR2675[] PROGMEM = STR2675_TEXT;
+const char STR2681[] PROGMEM = STR2681_TEXT;
+const char STR2682[] PROGMEM = STR2682_TEXT;
 
 //Sitherm Pro
 const char STR2700[] PROGMEM = STR2700_TEXT;
@@ -3355,6 +3366,11 @@ const char ENUM2450[] PROGMEM_LATEST = {
 "\x01 " ENUM2450_01_TEXT "\0"
 "\x02 " ENUM2450_02_TEXT "\0"
 "\x03 " ENUM2450_03_TEXT
+};
+
+const char ENUM2476[] PROGMEM_LATEST = {
+"\x00 " ENUM2480_00_TEXT "\0"
+"\xff " ENUM2476_ff_TEXT
 };
 
 const char ENUM2480[] PROGMEM_LATEST = {
@@ -6266,6 +6282,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // command with same command id as line 2270
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2214 Sollwert Handbetrieb [°C]
 {0x11052F87,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2215,  STR2215,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Regeldiff. ohne Abbruch der Mindestpause (von LMU64 Parameter 517/113)
+{0x053D137D,  CAT_KESSEL,           VT_TEMP,          2217,  STR2217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ 1.24 [°C]
 {0x0D3D0932,  CAT_KESSEL,           VT_UINT,          2220,  STR2220,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Stufe 2 °Cmin[0-500]
 {0x0D3D0933,  CAT_KESSEL,           VT_UINT,          2221,  STR2221,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Stufe 2 °Cmin[0-500]
 {0x0D3D08BE,  CAT_KESSEL,           VT_SECONDS_SHORT, 2222,  STR2222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangseinschaltung Stufe 2
@@ -6293,6 +6310,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D08FE,  CAT_KESSEL,           VT_ONOFF,         2260,  STR2260,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Verbraucher
 {0x113D093A,  CAT_KESSEL,           VT_ONOFF,         2261,  STR2261,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Kesselpumpe
 {0x053D0437,  CAT_KESSEL,           VT_ONOFF,         2262,  STR2262,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Einschaltoptimierung
+{0x0B063D05,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel - Antrieb Laufzeit
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
@@ -6327,6 +6345,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0B62,  CAT_KESSEL,           VT_TEMP,          2324,  STR2324,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x113D0B63,  CAT_KESSEL,           VT_SECONDS_WORD,  2325,  STR2325,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
 {0x113D0D13,  CAT_KESSEL,           VT_SECONDS_SHORT4,2326,  STR2326,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
+{0x053D10E8,  CAT_KESSEL,           VT_PERCENT,       2327,  STR2327,  0,                    NULL,         FL_OEM, DEV_ALL}, // Baxi Luna Platinum+,  Pumpendrehzahl minimum OEM(%)
+{0x053D10E9,  CAT_KESSEL,           VT_PERCENT,       2328,  STR2328,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, // Baxi Luna Platinum+,  Pumpendrehzahl maximum OEM(%)
 {0x053D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2330,  STR2330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Nenn
 {0x053D2F70,  CAT_KESSEL,           VT_POWER_WORD,    2331,  STR2331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Grundstufe
 {0x053D10F4,  CAT_KESSEL,           VT_PERCENT_100,   2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
@@ -6335,6 +6355,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
 {0x0D3D2F94,  CAT_KESSEL,           VT_SPEED,         2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2441 Gebläsedrehzahl Hz Maximum
+{0x093D0F80,  CAT_KESSEL,           VT_SPEED2,        2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Gebläsedrehzahl Maximum RPM
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Gebläseleistung Heizen Max
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Gebläseleistung Heizen Max
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Gebläseleistung Heizen Max
@@ -6348,6 +6369,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Gebl'leistung Durchladen Max
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Gebl'leistung Durchladen Max
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Gebl'leistung Durchladen Max
+{0x093D10C7,  CAT_KESSEL,           VT_SPEED2,        2442,  STR2442_3,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pump Max speed RPM maximum heater power
 {0x2D3D2FD4,  CAT_KESSEL,           VT_PERCENT,       2443,  STR2443,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brötje 2443 Gebläse-PWM Startwert DLH
 {0x2E3D2FD4,  CAT_KESSEL,           VT_PERCENT,       2443,  STR2443,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Brötje 2443 Gebläse-PWM Startwert DLH - logged on OCI700 via LPB
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Gebl'leistung Startwert DLH
@@ -6356,13 +6378,16 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_178_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_195_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_203_ALL}, // Gebl'leistung Startwert DLH
+{0x093D1140,  CAT_KESSEL,           VT_SPEED2,        2443,  STR2443_3,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pump Min speed RPM maximum heater power
 {0x093D2F99,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2444 Leistung Minimum [kW]
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Gebläseleistung TWW Max
+//2444 below need VT_SPEED2 instead VT_POWER_WORD?
 {0x093D1215,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_3,0,                    NULL,         DEFAULT_FLAG, DEV_195_002}, // Gebläsedrehzahl TWW Max
+{0x093D1215,  CAT_KESSEL,           VT_SPEED2,        2444,  STR2444_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Gebläsedrehzahl TWW Max
 {0x093D3066,  CAT_KESSEL,           VT_POWER,         2445,  STR2445,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2445 Leistung Nenn [kW]
 {0x223D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2445,  STR2445,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2444 Leistung Minimum [kW]
 {0x053D1123,  CAT_KESSEL,           VT_ONOFF,         2445,  STR2445_2,sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_123_ALL}, // Gebl'abschaltung Heizbetrieb
@@ -6382,6 +6407,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1210,  CAT_KESSEL,           VT_POWER_WORD,    2452,  STR2452_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Reglerverzög' Gebl'leistung
 {0x093D1210,  CAT_KESSEL,           VT_POWER_WORD,    2452,  STR2452_2,0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Reglerverzög' Gebl'leistung
 {0x093D0F7F,  CAT_KESSEL,           VT_SPEED2,        2452,  STR2452_3,0,                    NULL,         DEFAULT_FLAG, DEV_195_002}, // Reglerverzög' Drehzahl
+{0x093D0F7F,  CAT_KESSEL,           VT_SPEED2,        2452,  STR2452_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Reglerverzög' Drehzahl
 {0x2D3D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2453 Reglerverzögerung Dauer
 {0x053D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Brötje 2453 Reglerverzögerung Dauer
 {0x053D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Brötje 2453 Reglerverzögerung Dauer
@@ -6412,21 +6438,34 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
+//Or 0x113D0E0C must be instead 0x113D0E0A for 2457?
 {0x113D0E0A,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschwingzeit HK's
+{0x113D0E0C,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Einschwingzeit HK's
 {0x0D3D2FBA,  CAT_KESSEL,           VT_SECONDS_SHORT, 2459,  STR2459,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2459 Sperrzeit dynam Schaltdiff [s]
 {0x113D0E05,  CAT_KESSEL,           VT_TEMP,          2460,  STR2460,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Ein TWW
 {0x113D0E06,  CAT_KESSEL,           VT_TEMP,          2461,  STR2461,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Aus Min TWW
 {0x113D0E07,  CAT_KESSEL,           VT_TEMP,          2462,  STR2462,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Aus Max TWW
 {0x113D0E0B,  CAT_KESSEL,           VT_MINUTES_SHORT, 2463,  STR2463,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschwingzeit TWW
+{0x113D0E01,  CAT_KESSEL,           VT_ONOFF,         2464,  STR2464,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Dyn SD bei Sollwertänderung
+{0x113D0E04,  CAT_KESSEL,           VT_TEMP,          2465,  STR2465,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min Sollwertänderung dyn SD
+{0x113D0E02,  CAT_KESSEL,           VT_ONOFF,         2466,  STR2466,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Dyn SD bei Wechsel HK/TWW
+{0x113D0E03,  CAT_KESSEL,           VT_ONOFF,         2467,  STR2467,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Dyn SD bei Brenner ein
 {0x053D17BC,  CAT_KESSEL,           VT_SECONDS_WORD,  2470,  STR2470,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [s] Kessel - Verz' Wärmeanfo Sonderbet
 {0x113D3051,  CAT_KESSEL,           VT_MINUTES_SHORT, 2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min]
 {0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_WORD,  2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min] - logged on OCI700 via LPB
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2472 Pumpennachlauftemp TWW - logged on OCI700 via LPB
+{0x053D0F69,  CAT_KESSEL,           VT_TEMP_SHORT,    2473,  STR2473,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsredukt
+{0x053D3061,  CAT_KESSEL,           VT_TEMP_SHORT,    2474,  STR2474,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Abschaltgrenze
+{0x093D0F8C,  CAT_KESSEL,           VT_ENUM,          2476,  STR2476,  sizeof(ENUM2476),     ENUM2476,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  [enum] Kessel - Abgasüberwach' Abschaltung
+{0x093D0F8D,  CAT_KESSEL,           VT_MINUTES_SHORT, 2477,  STR2477,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Abgasüberw Startverhin'zeit [min]
+{0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT,    2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz
+{0x053D17B3,  CAT_KESSEL,           VT_SECONDS_SHORT5,2479,  STR2479,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x053D0FEB,  CAT_KESSEL,           VT_ENUM,          2480,  STR2480,  sizeof(ENUM2480),     ENUM2480,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Statisch' Drucküberw Absch'
 {0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
 {0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
+{0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5,   2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
 {0x113D2FAA,  CAT_KESSEL,           VT_PROPVAL,       2543,  STR2543,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
 {0x053D1A79,  CAT_KESSEL,           VT_ONOFF,         2550,  STR2550,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [] - Kessel - Gasenergiezählung
@@ -6436,8 +6475,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D3079,  CAT_KESSEL,           VT_SECONDS_SHORT, 2655,  STR2655,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ein'dauer Entlüftung
 {0x113D307A,  CAT_KESSEL,           VT_SECONDS_SHORT, 2656,  STR2656,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Aus'dauer Entlüftung
 {0x113D307B,  CAT_KESSEL,           VT_BYTE,          2657,  STR2657,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl Wiederholungen
-{0x113D0F98,  CAT_KESSEL,           VT_SECONDS_SHORT, 2662,  STR2662,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Heizkreis
+//2662 Baxi Luna Platinum - VT_MINUTES_SHORT instead VT_SECONDS_SHORT. Typo error?
+{0x113D0F98,  CAT_KESSEL,           VT_MINUTES_SHORT, 2662,  STR2662,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Heizkreis
 {0x113D0F99,  CAT_KESSEL,           VT_SECONDS_SHORT, 2663,  STR2663,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Trinkwasser
+{0x053D0FFC,  CAT_KESSEL,           VT_ONOFF,         2670,  STR2670,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Activation of Super Over Temperature Function (SOT)
+{0x053D0FFE,  CAT_KESSEL,           VT_TEMP,          2672,  STR2672,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Increase of boiler setpoint for the control of SOT
+{0x053D1003,  CAT_KESSEL,           VT_ONOFF,         2675,  STR2675,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
+{0x053D1049,  CAT_KESSEL,           VT_SECONDS_WORD,  2681,  STR2681,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Precirculation time on DHW way (3WV position) during precirculation functionposition)
+{0x053D104A,  CAT_KESSEL,           VT_SECONDS_WORD,  2682,  STR2682,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Precirculation time on CH way (3WV position) during precirculation functionposition) during precirculation function
 
 //Sitherm Pro
 {0x093D303A,  CAT_SITHERM,           VT_UINT,         2700,  STR2700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ergebnis letzter Drifttest
@@ -7477,263 +7522,263 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x413D000E,  CAT_LPB,              VT_FP1    ,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
 
-//Fehler
-{0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
-{0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
-{0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
-{0x093D3008,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
-{0x093D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_163_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_178_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_203_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
-{0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
-{0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
-{0x213D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm - logged on OCI700 via LPB
-{0x223D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
-{0x223D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm - logged on OCI700 via LPB
-{0x233D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6742,  STR6742,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemperatur Heizkreis 3 Fehler
-{0x113D05DE,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Kesseltemperatur Alarm
-{0x25050B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Trinkwasserladung Alarm
-{0x253D0B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Trinkwasserladung Alarm
-{0x693D0B67,  CAT_FEHLER,           VT_MINUTES_SHORT, 6746,  STR6746,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemp Kühlen 1 Alarm
-{0x053D06D3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 1 Datum/Zeit
-{0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 1 - logged on OCI700 via LPB
-{0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 1
-{0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 1
-{0x053D0814,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
-{0x053D06DD,  CAT_FEHLER,           VT_ENUM,          6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
-{0x053D06DD,  CAT_FEHLER,           VT_ENUM,          6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
-{0x053D06DD,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 1 Fehlermeldung (6800 on display, mapped to 6801)
-{0x053D06DD,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 1 Fehlermeldung (6800 on display, mapped to 6801)
-{0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
-{0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
-{0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
-{0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x31052FF4,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - Historie 2 Fehlercode - logged on OCI700 via LPB
-{0x053D0815,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06DF,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
-{0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler SW Diagnosecode 1 - logged on OCI700 via LPB
-{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
-{0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler SW Diagnosecode 1
-{0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
-{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806) - logged on OCI700 via LPB
-{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
-{0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 1
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x053D06E0,  CAT_FEHLER,           VT_ENUM,          6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
-{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
-{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
-{0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
-{0x053D06E1,  CAT_FEHLER,           VT_ENUM,          6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
-{0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
-{0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
-{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
-{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
-{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
-{0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
-{0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
-{0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 2 - logged on OCI700 via LPB
-{0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 2
-{0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 2
-{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
-{0x053D06E2,  CAT_FEHLER,           VT_ENUM,          6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
-{0x053D06E2,  CAT_FEHLER,           VT_ENUM,          6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
-{0x053D06DE,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehlercode 2 (6810 on display, mapped to 6811)
-{0x053D06DE,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehlercode 2 (6810 on display, mapped to 6811)
-{0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
-{0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_014}, // [ ] - Fehler - Historie 2 Fehlercode
-{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
-{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
-{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
-{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
-{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
-{0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
-{0x393D2FF8,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - Historie 7 Fehlercode - logged on OCI700 via LPB
-{0x053D06E3,  CAT_FEHLER,           VT_ENUM,          6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
-{0x053D06E3,  CAT_FEHLER,           VT_ENUM,          6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
-{0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
-{0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
-{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
-{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
-{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
-{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
-{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D06E4,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  0,                    0,            FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D06E4,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  0,                    0,            FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2 - logged on OCI700 via LPB
-{0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
-{0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
-{0x053D2FF7,  CAT_FEHLER,           VT_UINT,          6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 2
-{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_014}, // [ ] - THISION: Fehler Software Diagnosecode 2
-{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
-{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
-{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
-{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
-{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816) - logged on OCI700 via LPB
-{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
-{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
-{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 2
-{0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
-{0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
-{0x053D06E5,  CAT_FEHLER,           VT_ENUM,          6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
-{0x053D06E5,  CAT_FEHLER,           VT_ENUM,          6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
-{0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
-{0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
-{0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
-{0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
-{0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
-{0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
-{0x053D06E6,  CAT_FEHLER,           VT_ENUM,          6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
-{0x053D06E6,  CAT_FEHLER,           VT_ENUM,          6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
-{0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
-{0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
-// 3
-{0x0D3D06E7,  CAT_FEHLER,           VT_YESNO,         6820,  STR6820,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM,       DEV_ALL}, // [ ] - Fehler - Reset Historie
-{0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 3 - logged on OCI700 via LPB
-{0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 3
-{0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 3
-{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
-{0x053D06DF,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6821,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 3 (6820 on display, mapped to 6821)
-{0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
-{0x393D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x0D3D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
-{0x053D2FFB,  CAT_FEHLER,           VT_UINT,          6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 3
-{0x053D2FFA,  CAT_FEHLER,           VT_ENUM,          6826,  STR6826,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
-// 4
-{0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
-{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
-{0x053D06E0,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6831,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 4 (6830 on display, mapped to 6831)
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
-{0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
-{0x053D2FFF,  CAT_FEHLER,           VT_UINT,          6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 4
-{0x053D2FFE,  CAT_FEHLER,           VT_ENUM,          6836,  STR6836,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
-// 5
-{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
-{0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 5
-{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Historie 5
-{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Historie 5
-{0x053D06E1,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
-{0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
-{0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
-{0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
-{0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
-{0x053D3003,  CAT_FEHLER,           VT_UINT,          6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 5
-{0x053D3002,  CAT_FEHLER,           VT_ENUM,          6846,  STR6846,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
-// 6
-{0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6850,  STR6850,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6
-{0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6851,  STR6851,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6 Datum/Uhrzeit (6850 on display, mapped to 6851)
-{0x053D3084,  CAT_FEHLER,           VT_ERRORCODE,     6855,  STR6855,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
-{0x053D3084,  CAT_FEHLER,           VT_UINT,          6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 6
-{0x053D3093,  CAT_FEHLER,           VT_ENUM,          6856,  STR6856,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
-// 7
-{0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6860,  STR6860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7
-{0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6861,  STR6861,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7 Datum/Uhrzeit (6860 on display, mapped to 6861)
-{0x053D3085,  CAT_FEHLER,           VT_ERRORCODE,     6865,  STR6865,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
-{0x053D3085,  CAT_FEHLER,           VT_UINT,          6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 7
-{0x053D3094,  CAT_FEHLER,           VT_ENUM,          6866,  STR6866,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
-// 8
-{0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6870,  STR6870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8
-{0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6871,  STR6871,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8 Datum/Uhrzeit (6870 on display, mapped to 6871)
-{0x053D3086,  CAT_FEHLER,           VT_ERRORCODE,     6875,  STR6875,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
-{0x053D3086,  CAT_FEHLER,           VT_UINT,          6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 8
-{0x053D3095,  CAT_FEHLER,           VT_ENUM,          6876,  STR6876,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
-// 9
-{0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6880,  STR6880,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9
-{0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6881,  STR6881,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9 Datum/Uhrzeit (6880 on display, mapped to 6881)
-{0x053D3087,  CAT_FEHLER,           VT_ERRORCODE,     6885,  STR6885,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
-{0x053D3087,  CAT_FEHLER,           VT_UINT,          6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 9
-{0x053D3096,  CAT_FEHLER,           VT_ENUM,          6886,  STR6886,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
-// 10
-{0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6890,  STR6890,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10
-{0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
-{0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
-{0x053D3088,  CAT_FEHLER,           VT_UINT,          6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 10
-{0x053D3097,  CAT_FEHLER,           VT_ENUM,          6896,  STR6896,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
-// 11
-{0x053D30A2,  CAT_FEHLER,           VT_DATETIME,      6900,  STR6900,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Datum/Zeit
-{0x053D30AC,  CAT_FEHLER,           VT_ERRORCODE,     6901,  STR6901,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Fehlercode
-{0x053D3089,  CAT_FEHLER,           VT_UINT,          6905,  STR6905,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 11
-{0x053D3098,  CAT_FEHLER,           VT_ENUM,          6906,  STR6906,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 11
-// 12
-{0x053D30A3,  CAT_FEHLER,           VT_DATETIME,      6910,  STR6910,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Datum/Zeit
-{0x053D30AD,  CAT_FEHLER,           VT_ERRORCODE,     6911,  STR6911,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Fehlercode
-{0x053D308A,  CAT_FEHLER,           VT_UINT,          6915,  STR6915,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 12
-{0x053D3099,  CAT_FEHLER,           VT_ENUM,          6916,  STR6916,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 12
-// 13
-{0x053D30A4,  CAT_FEHLER,           VT_DATETIME,      6920,  STR6920,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Datum/Zeit
-{0x053D30AE,  CAT_FEHLER,           VT_ERRORCODE,     6921,  STR6921,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Fehlercode
-{0x053D308B,  CAT_FEHLER,           VT_UINT,          6925,  STR6925,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 13
-{0x053D309A,  CAT_FEHLER,           VT_ENUM,          6926,  STR6926,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 13
-// 14
-{0x053D30A5,  CAT_FEHLER,           VT_DATETIME,      6930,  STR6930,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Datum/Zeit
-{0x053D30AF,  CAT_FEHLER,           VT_ERRORCODE,     6931,  STR6931,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Fehlercode
-{0x053D308C,  CAT_FEHLER,           VT_UINT,          6935,  STR6935,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 14
-{0x053D309B,  CAT_FEHLER,           VT_ENUM,          6936,  STR6936,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 14
-// 15
-{0x053D30A6,  CAT_FEHLER,           VT_DATETIME,      6940,  STR6940,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Datum/Zeit
-{0x053D30B0,  CAT_FEHLER,           VT_ERRORCODE,     6941,  STR6941,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Fehlercode
-{0x053D308D,  CAT_FEHLER,           VT_UINT,          6945,  STR6945,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 15
-{0x053D309C,  CAT_FEHLER,           VT_ENUM,          6946,  STR6946,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 15
-// 16
-{0x053D30A7,  CAT_FEHLER,           VT_DATETIME,      6950,  STR6950,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Datum/Zeit
-{0x053D30B1,  CAT_FEHLER,           VT_ERRORCODE,     6951,  STR6951,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Fehlercode
-{0x053D308E,  CAT_FEHLER,           VT_UINT,          6955,  STR6955,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 16
-{0x053D309D,  CAT_FEHLER,           VT_ENUM,          6956,  STR6956,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 16
-// 17
-{0x053D30A8,  CAT_FEHLER,           VT_DATETIME,      6960,  STR6960,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Datum/Zeit
-{0x053D30B2,  CAT_FEHLER,           VT_ERRORCODE,     6961,  STR6961,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Fehlercode
-{0x053D308F,  CAT_FEHLER,           VT_UINT,          6965,  STR6965,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 17
-{0x053D309E,  CAT_FEHLER,           VT_ENUM,          6966,  STR6966,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 17
-// 18
-{0x053D30A9,  CAT_FEHLER,           VT_DATETIME,      6970,  STR6970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Datum/Zeit
-{0x053D30B3,  CAT_FEHLER,           VT_ERRORCODE,     6971,  STR6971,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Fehlercode
-{0x053D3090,  CAT_FEHLER,           VT_UINT,          6975,  STR6975,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 18
-{0x053D309F,  CAT_FEHLER,           VT_ENUM,          6976,  STR6976,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 18
-// 19
-{0x053D30AA,  CAT_FEHLER,           VT_DATETIME,      6980,  STR6980,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Datum/Zeit
-{0x053D30B4,  CAT_FEHLER,           VT_ERRORCODE,     6981,  STR6981,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Fehlercode
-{0x053D3091,  CAT_FEHLER,           VT_UINT,          6985,  STR6985,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 19
-{0x053D30A0,  CAT_FEHLER,           VT_ENUM,          6986,  STR6986,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 19
-// 20
-{0x053D30AB,  CAT_FEHLER,           VT_DATETIME,      6990,  STR6990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Datum/Zeit
-{0x053D30B5,  CAT_FEHLER,           VT_ERRORCODE,     6991,  STR6991,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Fehlercode
-{0x053D3092,  CAT_FEHLER,           VT_UINT,          6995,  STR6995,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 20
-{0x053D30A1,  CAT_FEHLER,           VT_ENUM,          6996,  STR6996,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
-
 };
 
 PROGMEM_LATE const cmd_t cmdtbl2[]={
+
+  //Fehler
+  {0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
+  {0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
+  {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
+  {0x093D3008,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
+  {0x093D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_163_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_178_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_203_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
+  {0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
+  {0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
+  {0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
+  {0x213D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm - logged on OCI700 via LPB
+  {0x223D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
+  {0x223D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm - logged on OCI700 via LPB
+  {0x233D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6742,  STR6742,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemperatur Heizkreis 3 Fehler
+  {0x113D05DE,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Kesseltemperatur Alarm
+  {0x25050B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Trinkwasserladung Alarm
+  {0x253D0B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Trinkwasserladung Alarm
+  {0x693D0B67,  CAT_FEHLER,           VT_MINUTES_SHORT, 6746,  STR6746,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemp Kühlen 1 Alarm
+  {0x053D06D3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 1 Datum/Zeit
+  {0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 1 - logged on OCI700 via LPB
+  {0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 1
+  {0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 1
+  {0x053D0814,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
+  {0x053D06DD,  CAT_FEHLER,           VT_ENUM,          6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
+  {0x053D06DD,  CAT_FEHLER,           VT_ENUM,          6801,  STR6801,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 1 Fehlercode
+  {0x053D06DD,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 1 Fehlermeldung (6800 on display, mapped to 6801)
+  {0x053D06DD,  CAT_FEHLER,           VT_ERRORCODE,     6801,  STR6801_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 1 Fehlermeldung (6800 on display, mapped to 6801)
+  {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
+  {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
+  {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6802,  STR6802,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
+  {0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x31052FF4,  CAT_FEHLER,           VT_ERRORCODE,     6803,  STR6803_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - Historie 2 Fehlercode - logged on OCI700 via LPB
+  {0x053D0815,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D06DE,  CAT_FEHLER,           VT_ENUM,          6803,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
+  {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
+  {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6804,  STR6804,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
+  {0x053D06DF,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
+  {0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler SW Diagnosecode 1 - logged on OCI700 via LPB
+  {0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
+  {0x053D2FF3,  CAT_FEHLER,           VT_UINT,          6805,  STR6805_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler SW Diagnosecode 1
+  {0x053D2FF3,  CAT_FEHLER,           VT_ERRORCODE,     6805,  STR6805_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler SW Diagnosecode 1
+  {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
+  {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6806,  STR6806,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
+  {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806) - logged on OCI700 via LPB
+  {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+  {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+  {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 1 (6805 on display, mapped to 6806)
+  {0x053D2FF2,  CAT_FEHLER,           VT_ENUM,          6806,  STR6806_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 1
+  {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x053D06E0,  CAT_FEHLER,           VT_ENUM,          6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6807,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
+  {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
+  {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6808,  STR6808,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Datum/Zeit
+  {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+  {0x053D06E1,  CAT_FEHLER,           VT_ENUM,          6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+  {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+  {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6809,  STR6809,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+  {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
+  {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
+  {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6810,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 6 Datum/Zeit
+  {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
+  {0x053D06D4,  CAT_FEHLER,           VT_DATETIME,      6810,  STR6802,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 2 Datum/Zeit
+  {0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 2 - logged on OCI700 via LPB
+  {0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 2
+  {0x053D2FF5,  CAT_FEHLER,           VT_BYTE,          6810,  STR6810_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 2
+  {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
+  {0x053D06E2,  CAT_FEHLER,           VT_ENUM,          6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
+  {0x053D06E2,  CAT_FEHLER,           VT_ENUM,          6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
+  {0x053D06DE,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehlercode 2 (6810 on display, mapped to 6811)
+  {0x053D06DE,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehlercode 2 (6810 on display, mapped to 6811)
+  {0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
+  {0x053D0815,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6803,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_014}, // [ ] - Fehler - Historie 2 Fehlercode
+  {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6811,  STR6811,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 6 Fehlercode
+  {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
+  {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
+  {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
+  {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6812,  STR6812,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 7 Datum/Zeit
+  {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
+  {0x393D2FF8,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - Historie 7 Fehlercode - logged on OCI700 via LPB
+  {0x053D06E3,  CAT_FEHLER,           VT_ENUM,          6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
+  {0x053D06E3,  CAT_FEHLER,           VT_ENUM,          6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
+  {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
+  {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6813,  STR6813,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 7 Fehlercode
+  {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
+  {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
+  {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
+  {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6814,  STR6814,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Datum/Zeit
+  {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+  {0x053D06E4,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  0,                    0,            FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+  {0x053D06E4,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  0,                    0,            FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+  {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2 - logged on OCI700 via LPB
+  {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
+  {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 2
+  {0x053D2FF7,  CAT_FEHLER,           VT_UINT,          6815,  STR6815_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 2
+  {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+  {0x053D2FF7,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_014}, // [ ] - THISION: Fehler Software Diagnosecode 2
+  {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6815,  STR6815,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 8 Fehlercode
+  {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
+  {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
+  {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6816,  STR6816,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Datum/Zeit
+  {0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816) - logged on OCI700 via LPB
+  {0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+  {0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+  {0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_123_ALL}, // [ ] - FA Phase 2
+  {0x053D2FF6,  CAT_FEHLER,           VT_ENUM,          6816,  STR6816_2,sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: FA Phase 2 (6815 on display, mapped to 6816)
+  {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
+  {0x053D06E5,  CAT_FEHLER,           VT_ENUM,          6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
+  {0x053D06E5,  CAT_FEHLER,           VT_ENUM,          6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
+  {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
+  {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6817,  STR6817,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 9 Fehlercode
+  {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
+  {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
+  {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6818,  STR6818,  0,                    NULL,         FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 10 Datum/Zeit
+  {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
+  {0x053D06E6,  CAT_FEHLER,           VT_ENUM,          6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_095_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
+  {0x053D06E6,  CAT_FEHLER,           VT_ENUM,          6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
+  {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_123_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
+  {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
+  // 3
+  {0x0D3D06E7,  CAT_FEHLER,           VT_YESNO,         6820,  STR6820,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM,       DEV_ALL}, // [ ] - Fehler - Reset Historie
+  {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 3 - logged on OCI700 via LPB
+  {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 3
+  {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 3
+  {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
+  {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
+  {0x053D06DF,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6821,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 3 (6820 on display, mapped to 6821)
+  {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x053D0816,  CAT_FEHLER,           VT_ERRORCODE,     6821,  STR6805,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Fehlercode
+  {0x393D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x0D3D2FFC,  CAT_FEHLER,           VT_ERRORCODE,     6823,  STR6823_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 3. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x053D2FFB,  CAT_FEHLER,           VT_ERRORCODE,     6825,  STR6825,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 3
+  {0x053D2FFB,  CAT_FEHLER,           VT_UINT,          6825,  STR6825,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 3
+  {0x053D2FFA,  CAT_FEHLER,           VT_ENUM,          6826,  STR6826,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
+  // 4
+  {0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
+  {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
+  {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
+  {0x053D06E0,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6831,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 4 (6830 on display, mapped to 6831)
+  {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x053D0817,  CAT_FEHLER,           VT_ERRORCODE,     6831,  STR6807,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Fehlercode
+  {0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x113D3000,  CAT_FEHLER,           VT_ERRORCODE,     6833,  STR6833_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 4. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x053D2FFF,  CAT_FEHLER,           VT_ERRORCODE,     6835,  STR6835,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 4
+  {0x053D2FFF,  CAT_FEHLER,           VT_UINT,          6835,  STR6835,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 4
+  {0x053D2FFE,  CAT_FEHLER,           VT_ENUM,          6836,  STR6836,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 4 (6835 on display, mapped to 6836)
+  // 5
+  {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
+  {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 5
+  {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Historie 5
+  {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Historie 5
+  {0x053D06E1,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
+  {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 5 Fehlercode
+  {0x053D0818,  CAT_FEHLER,           VT_ERRORCODE,     6841,  STR6841,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehlercode 5 (6840 on display, mapped to 6841)
+  {0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x15053004,  CAT_FEHLER,           VT_ERRORCODE,     6843,  STR6843_2,sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_064_ALL}, // [ ] - Fehler - 5. Vergangenheitswert Albatros Fehlercode - logged on OCI700 via LPB
+  {0x053D3003,  CAT_FEHLER,           VT_ERRORCODE,     6845,  STR6845,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Software Diagnosecode 5
+  {0x053D3003,  CAT_FEHLER,           VT_UINT,          6845,  STR6845,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 5
+  {0x053D3002,  CAT_FEHLER,           VT_ENUM,          6846,  STR6846,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 5 (6845 on display, mapped to 6846)
+  // 6
+  {0x053D06D8,  CAT_FEHLER,           VT_DATETIME,      6850,  STR6850,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6
+  {0x053D0819,  CAT_FEHLER,           VT_ERRORCODE,     6851,  STR6851,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 6 Datum/Uhrzeit (6850 on display, mapped to 6851)
+  {0x053D3084,  CAT_FEHLER,           VT_ERRORCODE,     6855,  STR6855,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 6
+  {0x053D3084,  CAT_FEHLER,           VT_UINT,          6855,  STR6855,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 6
+  {0x053D3093,  CAT_FEHLER,           VT_ENUM,          6856,  STR6856,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 6 (6855 on display, mapped to 6856)
+  // 7
+  {0x053D06D9,  CAT_FEHLER,           VT_DATETIME,      6860,  STR6860,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7
+  {0x053D081A,  CAT_FEHLER,           VT_ERRORCODE,     6861,  STR6861,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 7 Datum/Uhrzeit (6860 on display, mapped to 6861)
+  {0x053D3085,  CAT_FEHLER,           VT_ERRORCODE,     6865,  STR6865,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 7
+  {0x053D3085,  CAT_FEHLER,           VT_UINT,          6865,  STR6865,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 7
+  {0x053D3094,  CAT_FEHLER,           VT_ENUM,          6866,  STR6866,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 7 (6865 on display, mapped to 6866)
+  // 8
+  {0x053D06DA,  CAT_FEHLER,           VT_DATETIME,      6870,  STR6870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8
+  {0x053D081B,  CAT_FEHLER,           VT_ERRORCODE,     6871,  STR6871,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 8 Datum/Uhrzeit (6870 on display, mapped to 6871)
+  {0x053D3086,  CAT_FEHLER,           VT_ERRORCODE,     6875,  STR6875,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 8
+  {0x053D3086,  CAT_FEHLER,           VT_UINT,          6875,  STR6875,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 8
+  {0x053D3095,  CAT_FEHLER,           VT_ENUM,          6876,  STR6876,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 8 (6875 on display, mapped to 6876)
+  // 9
+  {0x053D06DB,  CAT_FEHLER,           VT_DATETIME,      6880,  STR6880,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9
+  {0x053D081C,  CAT_FEHLER,           VT_ERRORCODE,     6881,  STR6881,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 9 Datum/Uhrzeit (6880 on display, mapped to 6881)
+  {0x053D3087,  CAT_FEHLER,           VT_ERRORCODE,     6885,  STR6885,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 9
+  {0x053D3087,  CAT_FEHLER,           VT_UINT,          6885,  STR6885,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 9
+  {0x053D3096,  CAT_FEHLER,           VT_ENUM,          6886,  STR6886,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 9 (6885 on display, mapped to 6886)
+  // 10
+  {0x053D06DC,  CAT_FEHLER,           VT_DATETIME,      6890,  STR6890,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10
+  {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6891,  STR6891,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler Historie 10 Datum/Uhrzeit (6890 on display, mapped to 6891)
+  {0x053D3088,  CAT_FEHLER,           VT_ERRORCODE,     6895,  STR6895,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // [ ] - Fehler Software Diagnosecode 10
+  {0x053D3088,  CAT_FEHLER,           VT_UINT,          6895,  STR6895,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Software Diagnosecode 10
+  {0x053D3097,  CAT_FEHLER,           VT_ENUM,          6896,  STR6896,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - FA Phase 10 (6895 on display, mapped to 6896)
+  // 11
+  {0x053D30A2,  CAT_FEHLER,           VT_DATETIME,      6900,  STR6900,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Datum/Zeit
+  {0x053D30AC,  CAT_FEHLER,           VT_ERRORCODE,     6901,  STR6901,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 11 Fehlercode
+  {0x053D3089,  CAT_FEHLER,           VT_UINT,          6905,  STR6905,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 11
+  {0x053D3098,  CAT_FEHLER,           VT_ENUM,          6906,  STR6906,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 11
+  // 12
+  {0x053D30A3,  CAT_FEHLER,           VT_DATETIME,      6910,  STR6910,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Datum/Zeit
+  {0x053D30AD,  CAT_FEHLER,           VT_ERRORCODE,     6911,  STR6911,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 12 Fehlercode
+  {0x053D308A,  CAT_FEHLER,           VT_UINT,          6915,  STR6915,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 12
+  {0x053D3099,  CAT_FEHLER,           VT_ENUM,          6916,  STR6916,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 12
+  // 13
+  {0x053D30A4,  CAT_FEHLER,           VT_DATETIME,      6920,  STR6920,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Datum/Zeit
+  {0x053D30AE,  CAT_FEHLER,           VT_ERRORCODE,     6921,  STR6921,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 13 Fehlercode
+  {0x053D308B,  CAT_FEHLER,           VT_UINT,          6925,  STR6925,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 13
+  {0x053D309A,  CAT_FEHLER,           VT_ENUM,          6926,  STR6926,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 13
+  // 14
+  {0x053D30A5,  CAT_FEHLER,           VT_DATETIME,      6930,  STR6930,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Datum/Zeit
+  {0x053D30AF,  CAT_FEHLER,           VT_ERRORCODE,     6931,  STR6931,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 14 Fehlercode
+  {0x053D308C,  CAT_FEHLER,           VT_UINT,          6935,  STR6935,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 14
+  {0x053D309B,  CAT_FEHLER,           VT_ENUM,          6936,  STR6936,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 14
+  // 15
+  {0x053D30A6,  CAT_FEHLER,           VT_DATETIME,      6940,  STR6940,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Datum/Zeit
+  {0x053D30B0,  CAT_FEHLER,           VT_ERRORCODE,     6941,  STR6941,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 15 Fehlercode
+  {0x053D308D,  CAT_FEHLER,           VT_UINT,          6945,  STR6945,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 15
+  {0x053D309C,  CAT_FEHLER,           VT_ENUM,          6946,  STR6946,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 15
+  // 16
+  {0x053D30A7,  CAT_FEHLER,           VT_DATETIME,      6950,  STR6950,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Datum/Zeit
+  {0x053D30B1,  CAT_FEHLER,           VT_ERRORCODE,     6951,  STR6951,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 16 Fehlercode
+  {0x053D308E,  CAT_FEHLER,           VT_UINT,          6955,  STR6955,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 16
+  {0x053D309D,  CAT_FEHLER,           VT_ENUM,          6956,  STR6956,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 16
+  // 17
+  {0x053D30A8,  CAT_FEHLER,           VT_DATETIME,      6960,  STR6960,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Datum/Zeit
+  {0x053D30B2,  CAT_FEHLER,           VT_ERRORCODE,     6961,  STR6961,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 17 Fehlercode
+  {0x053D308F,  CAT_FEHLER,           VT_UINT,          6965,  STR6965,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 17
+  {0x053D309E,  CAT_FEHLER,           VT_ENUM,          6966,  STR6966,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 17
+  // 18
+  {0x053D30A9,  CAT_FEHLER,           VT_DATETIME,      6970,  STR6970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Datum/Zeit
+  {0x053D30B3,  CAT_FEHLER,           VT_ERRORCODE,     6971,  STR6971,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 18 Fehlercode
+  {0x053D3090,  CAT_FEHLER,           VT_UINT,          6975,  STR6975,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 18
+  {0x053D309F,  CAT_FEHLER,           VT_ENUM,          6976,  STR6976,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 18
+  // 19
+  {0x053D30AA,  CAT_FEHLER,           VT_DATETIME,      6980,  STR6980,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Datum/Zeit
+  {0x053D30B4,  CAT_FEHLER,           VT_ERRORCODE,     6981,  STR6981,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 19 Fehlercode
+  {0x053D3091,  CAT_FEHLER,           VT_UINT,          6985,  STR6985,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 19
+  {0x053D30A0,  CAT_FEHLER,           VT_ENUM,          6986,  STR6986,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 19
+  // 20
+  {0x053D30AB,  CAT_FEHLER,           VT_DATETIME,      6990,  STR6990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Datum/Zeit
+  {0x053D30B5,  CAT_FEHLER,           VT_ERRORCODE,     6991,  STR6991,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Fehlercode
+  {0x053D3092,  CAT_FEHLER,           VT_UINT,          6995,  STR6995,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 20
+  {0x053D30A1,  CAT_FEHLER,           VT_ENUM,          6996,  STR6996,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
 
 // Wartung/Sonderbetrieb
 
