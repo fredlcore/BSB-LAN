@@ -4373,7 +4373,7 @@ void Ipwe() {
   for (i=0; i < numIPWESensors; i++) {
     query(ipwe_parameters[i]);
     counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>%s"), counter);
+    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
     printFmtToWebClient(PSTR("<br></td><td>%s"), lookup_descr(ipwe_parameters[i]));
     printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
     printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
