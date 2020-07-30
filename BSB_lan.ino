@@ -6145,11 +6145,6 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
-              if (!been_here) {
-                been_here = true;
-              } else {
-                printToWebClient(PSTR(",\n"));
-              }
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 uint16_t x=2;
@@ -6208,9 +6203,10 @@ uint8_t pps_offset = 0;
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i_line=findLine(json_parameter,0,&cmd);
                 if (i_line<0 || cmd == CMD_UNKNOWN) {
-                  been_here = false; //do not print ",\n" twice
                   continue;
                 }
+
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
 
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
                 printToWebClient(get_cmdtbl_desc(i_line));
@@ -6259,6 +6255,7 @@ uint8_t pps_offset = 0;
               }
 
               if (p[2]=='S') {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
 

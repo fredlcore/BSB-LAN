@@ -113,6 +113,7 @@
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
+#define DEV_123_231  123,231 // Baxi Luna Platinum+ 1.24
 #define DEV_133_ALL  133,255 // QAA75.910/349
 #define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
@@ -723,6 +724,7 @@ const char STR740[] PROGMEM = STR740_TEXT;
 const char STR741[] PROGMEM = STR741_TEXT;
 const char STR742[] PROGMEM = STR742_TEXT;
 const char STR744[] PROGMEM = STR744_TEXT;
+const char STR746[] PROGMEM = STR746_TEXT;
 const char STR750[] PROGMEM = STR750_TEXT;
 const char STR760[] PROGMEM = STR760_TEXT;
 const char STR761[] PROGMEM = STR761_TEXT;
@@ -736,6 +738,7 @@ const char STR800[] PROGMEM = STR800_TEXT;
 const char STR801[] PROGMEM = STR801_TEXT;
 const char STR809[] PROGMEM = STR809_TEXT;
 const char STR810[] PROGMEM = STR810_TEXT;
+const char STR812[] PROGMEM = STR812_TEXT;
 const char STR820[] PROGMEM = STR820_TEXT;
 const char STR830[] PROGMEM = STR830_TEXT;
 const char STR831[] PROGMEM = STR831_TEXT;
@@ -754,14 +757,17 @@ const char STR864[] PROGMEM = STR864_TEXT;
 const char STR870[] PROGMEM = STR870_TEXT;
 const char STR872[] PROGMEM = STR872_TEXT;
 const char STR880[] PROGMEM = STR880_TEXT;
+const char STR881[] PROGMEM = STR881_TEXT;
 const char STR882[] PROGMEM = STR882_TEXT;
 const char STR883[] PROGMEM = STR883_TEXT;
 const char STR884[] PROGMEM = STR884_TEXT;
 const char STR885[] PROGMEM = STR885_TEXT;
 const char STR886[] PROGMEM = STR886_TEXT;
+const char STR886_2[] PROGMEM = STR886_2_TEXT;
 const char STR887[] PROGMEM = STR887_TEXT;
 const char STR888[] PROGMEM = STR888_TEXT;
 const char STR888_2[] PROGMEM = STR888_2_TEXT;
+const char STR889[] PROGMEM = STR889_TEXT;
 const char STR890[] PROGMEM = STR890_TEXT;
 const char STR894[] PROGMEM = STR894_TEXT;
 const char STR895[] PROGMEM = STR895_TEXT;
@@ -1507,6 +1513,8 @@ const char STR5102[] PROGMEM = STR5102_TEXT;
 #define STR5103 STR2324
 #define STR5104 STR2325
 #define STR5105 STR2326
+const char STR5106[] PROGMEM = STR5106_TEXT;
+const char STR5107[] PROGMEM = STR5107_TEXT;
 const char STR5108[] PROGMEM = STR5108_TEXT;
 const char STR5109[] PROGMEM = STR5109_TEXT;
 #define STR5120 STR830
@@ -1519,6 +1527,9 @@ const char STR5139[] PROGMEM = STR5139_TEXT;
 const char STR5140[] PROGMEM = STR5140_TEXT;
 const char STR5141[] PROGMEM = STR5141_TEXT;
 const char STR5142[] PROGMEM = STR5142_TEXT;
+const char STR5143[] PROGMEM = STR5143_TEXT;
+const char STR5144[] PROGMEM = STR5144_TEXT;
+const char STR5145[] PROGMEM = STR5145_TEXT;
 const char STR5146[] PROGMEM = STR5146_TEXT;
 const char STR5148[] PROGMEM = STR5148_TEXT;
 const char STR5151[] PROGMEM = STR5151_TEXT;
@@ -4750,9 +4761,9 @@ const char ENUM6706[] PROGMEM_LATEST = {
 "\x0a " ENUM6706_0a_TEXT "\0"
 "\x0b " ENUM6706_0b_TEXT "\0"
 "\x0c " ENUM6706_0c_TEXT "\0"
-"\x14 " ENUM6706_14_TEXT "\0"
-"\x15 " ENUM6706_15_TEXT "\0"
-"\x16 " ENUM6706_16_TEXT "\0"
+"\x0e " ENUM6706_14_TEXT "\0"
+"\x0f " ENUM6706_15_TEXT "\0"
+"\x10 " ENUM6706_16_TEXT "\0"
 "\x63 " ENUM6706_63_TEXT
 };
 
@@ -5979,6 +5990,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
 {0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1, also used by Brötje IDA and FE ISR Plus
 {0x2D3D0D85,  CAT_HK1,              VT_PERCENT,       744,   STR744,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Soll Einschaltverh R'stat
+{0x213D17BB,  CAT_HK1,              VT_SECONDS_WORD,  746,   STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 1 - Verzög' Wärmeanforderung - Delay time in case it is used an external electrical valve zone
 {0x2D3D0603,  CAT_HK1,              VT_PERCENT,       750,   STR750,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Raumeinfluss
 {0x2D3D0614,  CAT_HK1,              VT_TEMP,          760,   STR760,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumtemperaturbegrenzung
 {0x053D0C9D,  CAT_HK1,              VT_PERCENT,       761,   STR761,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Heizgrenze Raumregler
@@ -5987,11 +5999,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D05FB,  CAT_HK1,              VT_BYTE,          781,   STR781,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Schnellabsenkung Faktor
 {0x2D3D0607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
 {0x2D3D0609,  CAT_HK1,              VT_MINUTES,       791,   STR791,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Ausschalt-Optimierung Max.
-{0x2D3D0609,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
+{0x2D3D0639,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
 {0x2D3D059E,  CAT_HK1,              VT_TEMP,          800,   STR800,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Begin
 {0x2D3D059D,  CAT_HK1,              VT_TEMP,          801,   STR801,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Ende
-{CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         809,   STR809,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
+{0x053D1289,  CAT_HK1,              VT_YESNO,         809,   STR809,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
 {0x213D063A,  CAT_HK1,              VT_YESNO,         810,   STR810,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{0x213D1181,  CAT_HK1,              VT_ONOFF,         812,   STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Vorlauffrostschutz
 {0x213D0674,  CAT_HK1,              VT_ONOFF,         820,   STR820,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Überhitzschutz Pumpenkreis
 {0x213D065D,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischerüberhöhung
 {0x213D0654,  CAT_HK1,              VT_YESNO,         832,   STR832,   sizeof(ENUM832),      ENUM832,      FL_RONLY, DEV_ALL}, // - Antrieb Typ
@@ -6022,14 +6035,18 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D07C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Pufferspeicher
 {0x2D3D07C5,  CAT_HK1,              VT_YESNO,         872,   STR872,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Vorregler/Zubring`pumpe
 {0x213D04AD,  CAT_HK1,              VT_ENUM,          880,   STR880,   sizeof(ENUM880),      ENUM880,      DEFAULT_FLAG, DEV_ALL}, // HK1 Pumpe Drehzahlreduktion
+{0x053D10D7,  CAT_HK1,              VT_PERCENT,       881,   STR881,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum // todo die ID gibt es, aber sie gehoert nicht zu diesem Parameter
 {0x053D115E,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
+{0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
 {0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x053D115F,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Maximum
 {0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
 {0x113D304F,  CAT_HK1,              VT_PERCENT5,      885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
 {0x113D04AB,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 885 Pumpe-PWM Minimum [%] - logged on OCI700 via LPB
+{0x053D10E1,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
 {0x193D2F88,  CAT_HK1,              VT_TEMP_SHORT,    886,   STR886,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 886 Norm Aussentemperatur [°C]
+{0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x053D3050,  CAT_HK1,              VT_TEMP_SHORT5_US,887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C]
 {0x393D2F82,  CAT_HK1,              VT_TEMP_WORD5_US, 887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C] - logged on OCI700 via LPB
 {0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD1, 888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
@@ -6046,6 +6063,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // dt Überhöhungsfaktor [%]
+{0x213D0E39,  CAT_HK1,              VT_MINUTES_SHORT, 889,   STR889,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x213D10C2,  CAT_HK1,              VT_YESNO,         890,   STR890,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
 {0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 894 dt Spreizung Norm Aussent. [°C]
 {0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 895 dt Spreizung Maximum [°C]
@@ -6110,6 +6128,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x223D0662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
 {0x223D0A88,  CAT_HK2,              VT_TEMP,          1042,  STR1042,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Raumthermostat // Command ID tbc
+{CMD_UNKNOWN, CAT_HK2,              VT_SECONDS_WORD,  1046,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 2 - Delay time in case it is used an external electrical valve zone
 {0x2E3D0603,  CAT_HK2,              VT_PERCENT,       1050,  STR1050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 2 (nur wenn aktiviert) - Raumeinfluss
 {0x2E3D0614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2E3D0602,  CAT_HK2,              VT_TEMP,          1070,  STR1070,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Schnellaufheizung
@@ -6121,6 +6140,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1109,  STR1109,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
 {0x223D063A,  CAT_HK2,              VT_YESNO,         1110,  STR1110,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{CMD_UNKNOWN, CAT_HK2,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 - Frostschutz Temperatur
 {0x223D0674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x223D065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {0x223D065D,  CAT_HK2,              VT_TEMP_WORD5_US, 1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung - logged on OCI700 via LPB
@@ -6170,6 +6190,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D0640,  CAT_HKP,              VT_TEMP,          1332,  STR1332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Tagesheizgrenze
 {0x233D0663,  CAT_HKP,              VT_TEMP,          1340,  STR1340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x233D0662,  CAT_HKP,              VT_TEMP,          1341,  STR1341,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Maximum
+{CMD_UNKNOWN, CAT_HKP,              VT_SECONDS_WORD,  1346,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 3/P - Delay time in case it is used an external electrical valve zone
 {0x233D0A88,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 3/P (nur wenn aktiviert) - Raumeinfluss
 {0x2F3D0614,  CAT_HKP,              VT_TEMP   ,       1360,  STR1360,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2F3D0602,  CAT_HKP,              VT_TEMP,          1370,  STR1370,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Schnellaufheizung
@@ -6180,6 +6201,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D059E,  CAT_HKP,              VT_TEMP,          1400,  STR1400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2F3D059D,  CAT_HKP,              VT_TEMP,          1401,  STR1401,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {0x233D063A,  CAT_HKP,              VT_YESNO,         1410,  STR1410,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{CMD_UNKNOWN, CAT_HKP,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P - Frostschutz Temperatur
 {0x233D0674,  CAT_HKP,              VT_ONOFF,         1420,  STR1420,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x233D065D,  CAT_HKP,              VT_TEMP,          1430,  STR1430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Mischerüberhöhung
 {0x233D065C,  CAT_HKP,              VT_TEMP,          1433,  STR1433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
@@ -6917,12 +6939,16 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D2F96,  CAT_TWSPEICHER,       VT_PERCENT,       5100,  STR5100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Pumpe-PWM Durchladung
 {0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Pumpendrehzahl Minimum %
+{0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Minimum %
 {0x253D08A2,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum %
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Pumpendrehzahl Maximum %
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Maximum %
 {0x253D0B19,  CAT_TWSPEICHER,       VT_TEMP,          5103,  STR5103,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5104,  STR5104,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
+{0x053D10E3,  CAT_TWSPEICHER,       VT_PERCENT,       5106,  STR5106,  0,                    NULL,         FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Minimum OEM
+{0x053D10E2,  CAT_TWSPEICHER,       VT_PERCENT,       5107,  STR5107,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Maximum OEM
 {0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
 {0x053D10DD,  CAT_TWSPEICHER,       VT_PERCENT,       5109,  STR5109,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anl'drehzahl Zwi'kreispumpe //Thision 19 Plus
 {0x253D072C,  CAT_TWSPEICHER,       VT_TEMP,          5120,  STR5120,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
@@ -6931,12 +6957,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D072A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5126,  STR5126,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130),     ENUM5130,     FL_OEM, DEV_ALL}, // Umladestrategie
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_195_002}, // Umladestrategie
+{0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ Umladestrategie
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131),     ENUM5131,     FL_OEM, DEV_ALL}, // Vergleichstemp Umladung
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_195_002}, // Vergleichstemp Umladung
+{0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ Vergleichstemp Umladung
 {0x253D10C9,  CAT_TWSPEICHER,       VT_TEMP,          5139,  STR5139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreisüberhöhung Nachladen //Thision 19 Plus
 {0x253D0E50,  CAT_TWSPEICHER,       VT_TEMP,          5140,  STR5140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zwischenkreisüberhöhung //Thision 19 Plus
 {0x253D0E68,  CAT_TWSPEICHER,       VT_TEMP,          5141,  STR5141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Überschreit Max //Thision 19 Plus
 {0x253D0E51,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5142,  STR5142,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollw'führung Verzög //Thision 19 Plus
+{0x253D0E53,  CAT_TWSPEICHER,       VT_TEMP,          5143,  STR5143,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Xp
+{0x253D0E54,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5144,  STR5144,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tn
+{0x253D0E55,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5145,  STR5145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tv
 {0x313D0E67,  CAT_TWSPEICHER,       VT_YESNO,         5146,  STR5146,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Durchladen mit B36 //Thision 19 Plus
 {0x253D0F94,  CAT_TWSPEICHER,       VT_TEMP,          5148,  STR5148,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Minimale Anlauftemp'diff Q33 //Thision 19 Plus
 {0x253D0FED,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5151,  STR5151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Übersch Verzög //Thision 19 Plus
