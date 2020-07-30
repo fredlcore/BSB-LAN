@@ -902,8 +902,8 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 const char STR1600[] PROGMEM = STR1600_TEXT;
 #define STR1600_2 STR700_TEXT
 const char STR1601[] PROGMEM = STR1601_TEXT;
-const char STR1601_2[] PROGMEM = STR1601_2_TEXT;
 const char STR1602[] PROGMEM = STR1602_TEXT;
+const char STR1603[] PROGMEM = STR1603_TEXT;
 const char STR1610[] PROGMEM = STR1610_TEXT;
 const char STR1612[] PROGMEM = STR1612_TEXT;
 const char STR1614[] PROGMEM = STR1614_TEXT;
@@ -6266,9 +6266,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600_2,sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsart [Aus, Ein, Eco]
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
-{0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601_2,sizeof(ENUM1601_2),   ENUM1601_2,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
+{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601,  sizeof(ENUM1601),     ENUM1601,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x313D0573,  CAT_TW,               VT_ONOFF,         1603,  STR1603,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
