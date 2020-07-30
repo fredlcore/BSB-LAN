@@ -20,7 +20,6 @@
 #undef UNIT_CEL_MIN_TEXT
 #undef UNIT_LITERPERHOUR_TEXT
 #undef UNIT_LITERPERMIN_TEXT
-
 #undef ENUM_CAT_00_TEXT
 #undef ENUM_CAT_01_TEXT
 #undef ENUM_CAT_02_TEXT
@@ -65,7 +64,6 @@
 #undef ENUM_CAT_29_TEXT
 #undef ENUM_CAT_2a_TEXT
 #undef ENUM_CAT_2b_TEXT
-
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
@@ -153,7 +151,6 @@
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
 #undef MENU_TEXT_LOT
-
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT
@@ -841,7 +838,6 @@
 #undef STR5146_TEXT
 #undef STR5148_TEXT
 #undef STR5151_TEXT
-
 #undef STR5406_TEXT
 #undef STR5420_TEXT
 #undef STR5430_TEXT
@@ -1747,7 +1743,6 @@
 #undef STR15066_TEXT
 #undef STR15067_TEXT
 #undef STR99999_TEXT
-
 #undef ENUM20_01_TEXT
 #undef ENUM20_02_TEXT
 #undef ENUM20_03_TEXT
@@ -2957,8 +2952,6 @@
 #undef ENUM_WEEKDAY_05_TEXT
 #undef ENUM_WEEKDAY_06_TEXT
 #undef ENUM_WEEKDAY_07_TEXT
-
-// These strings do not take space in Arduino memory. They are for external interfaces.
 #undef EXTIF_HOME_TEXT
 #undef EXTIF_MANAGEMENT_TEXT
 #undef EXTIF_MONITOR_TEXT

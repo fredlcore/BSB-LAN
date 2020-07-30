@@ -6462,9 +6462,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
-//Or 0x113D0E0C must be instead 0x113D0E0A for 2457?
-{0x113D0E0A,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschwingzeit HK's
-{0x113D0E0C,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Einschwingzeit HK's
+{0x113D0E0C,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschwingzeit HK's
 {0x0D3D2FBA,  CAT_KESSEL,           VT_SECONDS_SHORT, 2459,  STR2459,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2459 Sperrzeit dynam Schaltdiff [s]
 {0x113D0E05,  CAT_KESSEL,           VT_TEMP,          2460,  STR2460,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Ein TWW
 {0x113D0E06,  CAT_KESSEL,           VT_TEMP,          2461,  STR2461,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Aus Min TWW
@@ -6499,9 +6497,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D3079,  CAT_KESSEL,           VT_SECONDS_SHORT, 2655,  STR2655,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ein'dauer Entlüftung
 {0x113D307A,  CAT_KESSEL,           VT_SECONDS_SHORT, 2656,  STR2656,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Aus'dauer Entlüftung
 {0x113D307B,  CAT_KESSEL,           VT_BYTE,          2657,  STR2657,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl Wiederholungen
-//2662 Baxi Luna Platinum - VT_MINUTES_SHORT instead VT_SECONDS_SHORT. Typo error?
 {0x113D0F98,  CAT_KESSEL,           VT_MINUTES_SHORT, 2662,  STR2662,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Heizkreis
-//2663 Baxi Luna Platinum - VT_MINUTES_SHORT instead VT_SECONDS_SHORT. Typo error?
 {0x113D0F99,  CAT_KESSEL,           VT_MINUTES_SHORT, 2663,  STR2663,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entlüft'dauer Trinkwasser
 {0x053D0FFC,  CAT_KESSEL,           VT_ONOFF,         2670,  STR2670,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Activation of Super Over Temperature Function (SOT)
 {0x053D0FFE,  CAT_KESSEL,           VT_TEMP,          2672,  STR2672,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Increase of boiler setpoint for the control of SOT
