@@ -3015,7 +3015,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
 #define ENUM8009_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_02_TEXT ENUM2480_00_TEXT
-#define ENUM8009_09_TEXT ENUM6706_16_TEXT
+#define ENUM8009_09_TEXT ENUM6706_10_TEXT
 #define ENUM8009_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
 #define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
@@ -4761,9 +4761,9 @@ const char ENUM6706[] PROGMEM_LATEST = {
 "\x0a " ENUM6706_0a_TEXT "\0"
 "\x0b " ENUM6706_0b_TEXT "\0"
 "\x0c " ENUM6706_0c_TEXT "\0"
-"\x0e " ENUM6706_14_TEXT "\0"
-"\x0f " ENUM6706_15_TEXT "\0"
-"\x10 " ENUM6706_16_TEXT "\0"
+"\x0e " ENUM6706_0e_TEXT "\0"
+"\x0f " ENUM6706_0f_TEXT "\0"
+"\x10 " ENUM6706_10_TEXT "\0"
 "\x63 " ENUM6706_63_TEXT
 };
 
@@ -5999,7 +5999,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D05FB,  CAT_HK1,              VT_BYTE,          781,   STR781,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Schnellabsenkung Faktor
 {0x2D3D0607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
 {0x2D3D0609,  CAT_HK1,              VT_MINUTES,       791,   STR791,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Ausschalt-Optimierung Max.
-{0x2D3D0639,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
+{0x2D3D0609,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
+{0x2D3D0639,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
 {0x2D3D059E,  CAT_HK1,              VT_TEMP,          800,   STR800,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Begin
 {0x2D3D059D,  CAT_HK1,              VT_TEMP,          801,   STR801,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Ende
 {0x053D1289,  CAT_HK1,              VT_YESNO,         809,   STR809,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
@@ -6963,7 +6964,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D0E51,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5142,  STR5142,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollw'führung Verzög //Thision 19 Plus
 {0x253D0E53,  CAT_TWSPEICHER,       VT_TEMP,          5143,  STR5143,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Xp
 {0x253D0E54,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5144,  STR5144,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tn
-{0x253D0E55,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5145,  STR5145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tv
+{0x253D0E55,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5145,  STR5145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tv
 {0x313D0E67,  CAT_TWSPEICHER,       VT_YESNO,         5146,  STR5146,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Durchladen mit B36 //Thision 19 Plus
 {0x253D0F94,  CAT_TWSPEICHER,       VT_TEMP,          5148,  STR5148,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Minimale Anlauftemp'diff Q33 //Thision 19 Plus
 {0x253D0FED,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5151,  STR5151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Übersch Verzög //Thision 19 Plus
