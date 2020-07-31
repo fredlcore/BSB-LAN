@@ -109,6 +109,7 @@
 #define DEV_108_100  108,100 // Brötje BSW 8K
 #define DEV_108_160  108,160 // Elco AEROTOP T07-16 mit Logon B WP 61
 #define DEV_108_169  108,169 // Wärmepumpe CTA Optiheat 1-18es RVS61.843D/169
+#define DEV_108_217  108,217 // Elco Wärmepumpe RVS61.843E/560
 #define DEV_116_ALL  116,255 // Brötje ISR-SSR B
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
@@ -530,7 +531,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   3810, 3887,
   4102, 4204,
   4708, 4813,
-  5010, 5151,
+  5007, 5151,
   5400, 5544,
   5700, 6498,
   6600, 6699,
@@ -905,8 +906,10 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 
 // Trinkwasser
 const char STR1600[] PROGMEM = STR1600_TEXT;
+#define STR1600_2 STR700_TEXT
 const char STR1601[] PROGMEM = STR1601_TEXT;
 const char STR1602[] PROGMEM = STR1602_TEXT;
+const char STR1603[] PROGMEM = STR1603_TEXT;
 const char STR1610[] PROGMEM = STR1610_TEXT;
 const char STR1612[] PROGMEM = STR1612_TEXT;
 const char STR1614[] PROGMEM = STR1614_TEXT;
@@ -1478,13 +1481,18 @@ const char STR4796[] PROGMEM = STR4796_TEXT;
 const char STR4811[] PROGMEM = STR4811_TEXT;
 const char STR4813[] PROGMEM = STR4813_TEXT;
 // 5000 Trinkwasserspeicher
+const char STR5007[] PROGMEM = STR5007_TEXT;
+const char STR5008[] PROGMEM = STR5008_TEXT;
 const char STR5010[] PROGMEM = STR5010_TEXT;
 const char STR5011[] PROGMEM = STR5011_TEXT;
+const char STR5013[] PROGMEM = STR5013_TEXT;
+const char STR5016[] PROGMEM = STR5016_TEXT;
 const char STR5019[] PROGMEM = STR5019_TEXT;
 const char STR5020[] PROGMEM = STR5020_TEXT;
 const char STR5021[] PROGMEM = STR5021_TEXT;
 const char STR5022[] PROGMEM = STR5022_TEXT;
 const char STR5022_2[] PROGMEM = STR5022_2_TEXT;
+const char STR5023[] PROGMEM = STR5023_TEXT;
 const char STR5024[] PROGMEM = STR5024_TEXT;
 const char STR5025[] PROGMEM = STR5025_TEXT;
 const char STR5026[] PROGMEM = STR5026_TEXT;
@@ -1492,7 +1500,9 @@ const char STR5027[] PROGMEM = STR5027_TEXT;
 const char STR5028[] PROGMEM = STR5028_TEXT;
 const char STR5029[] PROGMEM = STR5029_TEXT;
 const char STR5030[] PROGMEM = STR5030_TEXT;
+const char STR5032[] PROGMEM = STR5032_TEXT;
 const char STR5040[] PROGMEM = STR5040_TEXT;
+const char STR5041[] PROGMEM = STR5041_TEXT;
 const char STR5050[] PROGMEM = STR5050_TEXT;
 const char STR5051[] PROGMEM = STR5051_TEXT;
 const char STR5055[] PROGMEM = STR5055_TEXT;
@@ -2566,6 +2576,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1300_03_TEXT ENUM700_03_TEXT
 #define ENUM1600_00_TEXT ENUM780_00_TEXT
 #define ENUM1600_01_TEXT MENU_TEXT_ON
+#define ENUM1601_00_TEXT ENUM48_00_TEXT
+#define ENUM1601_01_TEXT ENUM_CAT_1c_TEXT
 #define ENUM1620_2_00_TEXT ENUM1620_00_TEXT
 #define ENUM1620_2_01_TEXT ENUM1620_01_TEXT
 #define ENUM1620_2_04_TEXT ENUM1620_02_TEXT
@@ -2577,6 +2589,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1680_00_TEXT ENUM48_00_TEXT
 #define ENUM1680_01_TEXT ENUM780_00_TEXT
 #define ENUM1680_02_TEXT ENUM1600_01_TEXT
+#define ENUM1680_03_TEXT ENUM1600_02_TEXT
 #define ENUM2132_00_TEXT ENUM832_00_TEXT
 #define ENUM2132_01_TEXT ENUM832_01_TEXT
 #define ENUM2200_01_TEXT ENUM700_01_TEXT
@@ -2629,13 +2642,23 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM4810_01_TEXT ENUM861_01_TEXT
 #define ENUM4810_02_TEXT ENUM861_02_TEXT
 #define ENUM4813_01_TEXT ENUM4720_01_TEXT
+#define ENUM5007_02_TEXT ENUM4134_01_TEXT
+#define ENUM5007_03_TEXT ENUM4134_02_TEXT
+#define ENUM5013_00_TEXT MENU_TEXT_OFF
+#define ENUM5016_00_TEXT MENU_TEXT_OFF
+#define ENUM5016_01_TEXT ENUM5013_02_TEXT
+#define ENUM5022_01_TEXT ENUM4134_01_TEXT
 #define ENUM5040_00_TEXT ENUM780_00_TEXT
 #define ENUM5040_01_TEXT ENUM861_02_TEXT
+#define ENUM5041_01_TEXT ENUM4134_01_TEXT
+#define ENUM5041_02_TEXT ENUM4134_02_TEXT
 #define ENUM5057_00_TEXT ENUM780_00_TEXT
 #define ENUM5057_01_TEXT ENUM4757_01_TEXT
 #define ENUM5057_02_TEXT ENUM861_02_TEXT
 #define ENUM5060_02_TEXT ENUM4757_01_TEXT
 #define ENUM5060_03_TEXT ENUM861_02_TEXT
+#define ENUM5060_05_TEXT STR7141_TEXT
+#define ENUM5060_06_TEXT STR1640_TEXT
 #define ENUM5061_01_TEXT ENUM1620_00_TEXT
 #define ENUM5061_02_TEXT ENUM1660_02_TEXT
 #define ENUM5061_03_TEXT ENUM1620_02_TEXT
@@ -2953,6 +2976,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8003_18_TEXT ENUM8000_17_TEXT
 #define ENUM8003_19_TEXT ENUM780_00_TEXT
 #define ENUM8004_00_TEXT ENUM6040_03_TEXT
+#define ENUM8004_19_TEXT MENU_TEXT_OFF
+#define ENUM8004_77_TEXT MENU_TEXT_OFF
 #define ENUM8005_00_TEXT ENUM6040_03_TEXT
 #define ENUM8005_03_TEXT ENUM8000_03_TEXT
 #define ENUM8005_04_TEXT ENUM8000_04_TEXT
@@ -2970,6 +2995,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8006_11_TEXT ENUM8000_11_TEXT
 #define ENUM8006_18_TEXT ENUM8000_17_TEXT
 #define ENUM8006_19_TEXT ENUM780_00_TEXT
+#define ENUM8006_1a_TEXT STR7141_TEXT
 #define ENUM8006_89_TEXT ENUM861_01_TEXT
 #define ENUM8006_b0_TEXT ENUM8005_b0_TEXT
 #define ENUM8006_c6_TEXT ENUM8005_c6_TEXT
@@ -3281,6 +3307,11 @@ const char ENUM1600[] PROGMEM_LATEST = {
 "\x02 " ENUM1600_02_TEXT
 };
 
+const char ENUM1601[] PROGMEM_LATEST = {
+"\x00 " ENUM1601_00_TEXT "\0"
+"\x01 " ENUM1601_01_TEXT
+};
+
 const char ENUM1602[] PROGMEM_LATEST = {
 "\x00\x02 " ENUM1602_00_02_TEXT "\0"
 "\x02\x02 " ENUM1602_02_02_TEXT "\0"
@@ -3300,6 +3331,14 @@ const char ENUM1620_2[] PROGMEM_LATEST = {
 "\x01 " ENUM1620_2_01_TEXT "\0"
 "\x04 " ENUM1620_2_04_TEXT
 };
+const char ENUM1620_3[] PROGMEM_LATEST = {
+"\x00 " ENUM1620_00_TEXT "\0"
+"\x01 " ENUM1620_3_01_TEXT "\0"
+"\x02 " ENUM1620_02_TEXT "\0"
+"\x03 " ENUM1620_3_03_TEXT "\0"
+"\x04 " ENUM1620_3_04_TEXT
+};
+
 const char ENUM1630[] PROGMEM_LATEST = {
 "\x00 " ENUM1630_00_TEXT "\0"
 "\x01 " ENUM1630_01_TEXT "\0"
@@ -3321,7 +3360,8 @@ const char ENUM1660[] PROGMEM_LATEST = {
 const char ENUM1680[] PROGMEM_LATEST = {
 "\x00 " ENUM1680_00_TEXT "\0"
 "\x01 " ENUM1680_01_TEXT "\0"
-"\x02 " ENUM1680_02_TEXT
+"\x02 " ENUM1680_02_TEXT "\0"
+"\x03 " ENUM1680_03_TEXT
 };
 
 // Vorregler/Zubringerpumpe
@@ -3663,9 +3703,23 @@ const char ENUM4813[] PROGMEM_LATEST = {
 "\x02 " ENUM4813_02_TEXT
 };
 // Trinkwasserspeicher
+const char ENUM5007[] PROGMEM_LATEST = {
+"\x02 " ENUM5007_02_TEXT "\0"
+"\x03 " ENUM5007_03_TEXT
+};
 const char ENUM5010[] PROGMEM_LATEST = {
 "\x00 " ENUM5010_00_TEXT "\0"
 "\xff " ENUM5010_ff_TEXT
+};
+const char ENUM5013[] PROGMEM_LATEST = {
+"\x00 " ENUM5013_00_TEXT "\0"
+"\x01 " ENUM5013_01_TEXT "\0"
+"\x02 " ENUM5013_02_TEXT
+};
+const char ENUM5016[] PROGMEM_LATEST = {
+"\x00 " ENUM5016_00_TEXT "\0"
+"\x01 " ENUM5016_01_TEXT "\0"
+"\x02 " ENUM5016_02_TEXT
 };
 const char ENUM5022[] PROGMEM_LATEST = {
 "\x01 " ENUM5022_01_TEXT "\0"
@@ -3684,6 +3738,10 @@ const char ENUM5040[] PROGMEM_LATEST = {
 "\x01 " ENUM5040_01_TEXT "\0"
 "\x02 " ENUM5040_02_TEXT
 };
+const char ENUM5041[] PROGMEM_LATEST = {
+"\x01 " ENUM5041_01_TEXT "\0"
+"\x02 " ENUM5041_02_TEXT
+};
 const char ENUM5057[] PROGMEM_LATEST = {
 "\x00 " ENUM5057_00_TEXT "\0"
 "\x01 " ENUM5057_01_TEXT "\0"
@@ -3692,7 +3750,10 @@ const char ENUM5057[] PROGMEM_LATEST = {
 const char ENUM5060[] PROGMEM_LATEST = {
 "\x01 " ENUM5060_01_TEXT "\0"
 "\x02 " ENUM5060_02_TEXT "\0"
-"\x03 " ENUM5060_03_TEXT
+"\x03 " ENUM5060_03_TEXT "\0"
+"\x04 " ENUM5060_04_TEXT "\0"
+"\x05 " ENUM5060_05_TEXT "\0"
+"\x06 " ENUM5060_06_TEXT
 };
 const char ENUM5061[] PROGMEM_LATEST = {
 "\x01 " ENUM5061_01_TEXT "\0"
@@ -6226,15 +6287,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Einstellungen Trinkwasser
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600_2,sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsart [Aus, Ein, Eco]
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
-{0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601,  sizeof(ENUM1601),     ENUM1601,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x313D0573,  CAT_TW,               VT_ONOFF,         1603,  STR1603,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Freigabe
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_2),   ENUM1620_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser - Freigabe
+{0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_3),   ENUM1620_3,   DEFAULT_FLAG, DEV_108_217}, // [0] - Trinkwasser - Freigabe
 {0x313D0721,  CAT_TW,               VT_ENUM,          1630,  STR1630,  sizeof(ENUM1630),     ENUM1630,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Ladevorgang
 {0x313D0759,  CAT_TW,               VT_ENUM,          1640,  STR1640,  sizeof(ENUM1640),     ENUM1640,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Legionellenfunktion
 {0x313D0738,  CAT_TW,               VT_DAYS,          1641,  STR1641,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Tage ] - Trinkwasser - Legionellenfkt. Periodisch
@@ -6879,16 +6942,22 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
 
 // Trinkwasserspeicher
+{0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_ALL}, // Ladeanforderung
+{0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_ALL}, // Lad'anforderung zeitgeführt
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     FL_OEM, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
+{0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_ALL}, // Ladung opt Energie
+{0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_ALL}, // Ladung opt Energie Kontakt
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
-{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart  
+{0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
@@ -6916,7 +6985,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
 {0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
 {0x253D0731,  CAT_TWSPEICHER,       VT_MINUTES_WORD,  5030,  STR5030,  0,                    NULL,         FL_OEM, DEV_ALL}, // TW Ladezeitbegrenzung //FUJITSU
+{0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
+{0x253D116F,  CAT_TWSPEICHER,       VT_ENUM,          5041,  STR5041,  sizeof(ENUM5041),     ENUM5041,     FL_OEM, DEV_ALL}, // Entladeschutzfühler
 {0x253D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ladetemperatur Maximum
 {0x153D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Ladetemperatur Maximum - logged on OCI700 via LPB
 {0x253D08A7,  CAT_TWSPEICHER,       VT_TEMP,          5051,  STR5051,  0,                    NULL,         FL_OEM, DEV_ALL}, // Speichertemperatur Maximum
@@ -6943,7 +7014,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Maximum %
 {0x253D0B19,  CAT_TWSPEICHER,       VT_TEMP,          5103,  STR5103,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5104,  STR5104,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
-{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT4,5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+
 {0x053D10E3,  CAT_TWSPEICHER,       VT_PERCENT,       5106,  STR5106,  0,                    NULL,         FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Minimum OEM
 {0x053D10E2,  CAT_TWSPEICHER,       VT_PERCENT,       5107,  STR5107,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Maximum OEM
 {0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
@@ -9672,7 +9744,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x313D0216,  CAT_USER_DEFINED,     VT_UNKNOWN,       10516, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 09 0B
 {0x313D0686,  CAT_USER_DEFINED,     VT_UNKNOWN,       10517, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x313D0715,  CAT_USER_DEFINED,     VT_UNKNOWN,       10518, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x313D0757,  CAT_USER_DEFINED,     VT_UNKNOWN,       10519, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00
 
 // 0x493D....
 
