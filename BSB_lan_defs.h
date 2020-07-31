@@ -3041,7 +3041,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8009_00_TEXT ENUM8009_2_00_TEXT
 #define ENUM8009_01_TEXT ENUM2480_ff_TEXT
 #define ENUM8009_02_TEXT ENUM2480_00_TEXT
-#define ENUM8009_09_TEXT ENUM6706_10_TEXT
+#define ENUM8009_09_TEXT ENUM6706_16_TEXT
 #define ENUM8009_12_TEXT ENUM130_01_TEXT
 #define ENUM8009_D6_TEXT ENUM8009_2_D6_TEXT
 #define ENUM8009_DA_TEXT ENUM8009_2_DA_TEXT
@@ -4822,9 +4822,9 @@ const char ENUM6706[] PROGMEM_LATEST = {
 "\x0a " ENUM6706_0a_TEXT "\0"
 "\x0b " ENUM6706_0b_TEXT "\0"
 "\x0c " ENUM6706_0c_TEXT "\0"
-"\x0e " ENUM6706_0e_TEXT "\0"
-"\x0f " ENUM6706_0f_TEXT "\0"
-"\x10 " ENUM6706_10_TEXT "\0"
+"\x14 " ENUM6706_14_TEXT "\0"
+"\x15 " ENUM6706_15_TEXT "\0"
+"\x16 " ENUM6706_16_TEXT "\0"
 "\x63 " ENUM6706_63_TEXT
 };
 
@@ -6956,7 +6956,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
-{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart  
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
