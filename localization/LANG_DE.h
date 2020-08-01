@@ -2993,6 +2993,7 @@
 #define EXTIF_SAVE_TEXT "Speichern"
 #define EXTIF_CANTREADFILE_TEXT "Datei kann nicht gelesen werden! Fehlercode "
 #define EXTIF_CATNOTEXIST_TEXT "Fehler: Kategorie nicht vorhanden!"
+#define EXTIF_NOTEXIST_TEXT "nicht vorhanden!"
 #define EXTIF_FUNCNO_TEXT "Parameter #"
 #define EXTIF_CATNO_TEXT "Kategorie #"
 #define EXTIF_CHANGEPARAM1_TEXT "Parameter"

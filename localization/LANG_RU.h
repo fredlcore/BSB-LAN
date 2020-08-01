@@ -2789,6 +2789,7 @@
 #define EXTIF_SAVE_TEXT "Сохранить"
 #define EXTIF_CANTREADFILE_TEXT "Файл не может быть прочитан! код "
 #define EXTIF_CATNOTEXIST_TEXT "Ошибка: Категория не существует!"
+#define EXTIF_NOTEXIST_TEXT "не существует!"
 #define EXTIF_CATNO_TEXT "Категория №"
 #define EXTIF_FUNCNO_TEXT "Параметр №"
 #define EXTIF_CHANGEPARAM1_TEXT "Изменён параметр"
