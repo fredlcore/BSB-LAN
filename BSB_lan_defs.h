@@ -8037,7 +8037,56 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x073D040E,  CAT_IOTEST,           VT_PERCENT,       7724,  STR7724,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangstest UX3 //FUJITSU
 {0x073D1238,  CAT_IOTEST,           VT_VOLTAGE,       7725,  STR7725,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal U4 (Ux3) //FUJITSU
 {0x053D0470,  CAT_IOTEST,           VT_TEMP,          7730,  STR7730,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Aussentemperatur B9
-//{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+
+// DEV_ALL - (DEV_108_ALL, DEV_170_ALL) - clash with 7814 (DEV_108_ALL), 7973 DEV_170_ALL
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_023_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_029_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_049_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_050_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_052_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_085_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_091_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_092_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_094_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_095_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_101_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_107_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_116_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_118_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_133_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_136_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_137_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_164_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_165_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_171_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_184_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_188_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_191_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_206_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7732,  STR7732,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [°C ] - Ein-/Ausgangstest - vorlauftemperatur B1
+
 {0x053D08C6,  CAT_IOTEST,           VT_TEMP,          7734,  STR7734,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Vorlauftemperatur B12
 {0x053D0462,  CAT_IOTEST,           VT_TEMP,          7750,  STR7750,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Trinkwassertemperatur B3
 {0x053D0D86,  CAT_IOTEST,           VT_TEMP,          7750,  STR7750,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [°C ] - Ein-/Ausgangstest - Trinkwassertemperatur B3
@@ -8055,13 +8104,13 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1717,  CAT_IOTEST,           VT_UNKNOWN,       7789,  STR7787_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX22 Modul 2 PWM % // Teil 2 von 7787 abgelegt als 7789
 
 {0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7804,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1 Elco RVS61.843E/560
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
 {0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7805,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2 Elco RVS61.843E/560
 {0x053D0791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7806,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3 Elco RVS61.843E/560
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
 {0x053D08C6,  CAT_IOTEST,           VT_TEMP,          7807,  STR7807,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4 Elco RVS61.843E/560
 
-{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
 {0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7821,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
-{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7806,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
 {0x053D0792,  CAT_IOTEST,           VT_TEMP,          7807,  STR7823,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
 {0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7808,  STR7824,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // Fühlertemperatur BX5 //FUJITSU
 {0x053D1273,  CAT_IOTEST,           VT_TEMP,          7809,  STR7809,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX6 //FUJITSU
@@ -8074,9 +8123,106 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1577,  CAT_IOTEST,           VT_TEMP,          7816,  STR7816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX13 Elco RVS61.843E/560
 {0x053D1578,  CAT_IOTEST,           VT_TEMP,          7817,  STR7817,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX14 Elco RVS61.843E/560
 
-//{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+// DEV_ALL - (DEV_108_ALL, DEV_170_ALL) - clash with 7804 (DEV_108_ALL, DEV_170_ALL)
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_023_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_029_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_049_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_050_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_052_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_085_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_091_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_092_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_094_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_095_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_101_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_107_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_116_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_118_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_133_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_136_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_137_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_164_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_165_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_171_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_184_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_188_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_191_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_206_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
+
 {0x053D056C,  CAT_IOTEST,           VT_TEMP,          7821,  STR7821,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
-//{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+
+// DEV_ALL - (DEV_108_ALL, DEV_170_ALL) - clash with 7806 (DEV_108_ALL, DEV_170_ALL)
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_023_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_029_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_049_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_050_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_052_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_076_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_085_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_091_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_092_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_094_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_095_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_101_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_107_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_116_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_118_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_133_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_136_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_137_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_164_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_165_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_171_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_184_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_188_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_191_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_206_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+{0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
+
 {0x053D0792,  CAT_IOTEST,           VT_TEMP,          7823,  STR7823,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
 {0x053D07C9,  CAT_IOTEST,           VT_TEMP,          7824,  STR7824,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur BX5 //FUJITSU
 
