@@ -2020,13 +2020,17 @@ const char STR7432[] PROGMEM = STR7432_TEXT;
 // Ein-/Ausgangstest
 const char STR7700[] PROGMEM = STR7700_TEXT;
 const char STR7705[] PROGMEM = STR7705_TEXT;
+const char STR7705_2[] PROGMEM = STR7705_2_TEXT;
 const char STR7708[] PROGMEM = STR7708_TEXT;
+const char STR7708_2[] PROGMEM = STR7708_2_TEXT;
 const char STR7710[] PROGMEM = STR7710_TEXT;
 const char STR7711[] PROGMEM = STR7711_TEXT;
+const char STR7711_2[] PROGMEM = STR7711_2_TEXT;
 const char STR7712[] PROGMEM = STR7712_TEXT;
 const char STR7713[] PROGMEM = STR7713_TEXT;
 const char STR7714[] PROGMEM = STR7714_TEXT;
 const char STR7716[] PROGMEM = STR7716_TEXT;
+const char STR7717[] PROGMEM = STR7717_TEXT;
 const char STR7719[] PROGMEM = STR7719_TEXT;
 const char STR7720[] PROGMEM = STR7720_TEXT;
 const char STR7721[] PROGMEM = STR7721_TEXT;
@@ -8024,17 +8028,21 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG, DEV_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
 {0x05050082,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700),     ENUM7700,     DEFAULT_FLAG, DEV_064_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
 {0x053D0073,  CAT_IOTEST,           VT_ENUM,          7700,  STR7700,  sizeof(ENUM7700_2),   ENUM7700_2,   DEFAULT_FLAG, DEV_076_ALL}, // [0] - Ein-/Ausgangstest - Relaistest
+{0x053D0B32,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705_2,0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Mod'sollwert ZX4 Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Mod'sollwert QX3 Relaistest
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7705,  STR7705,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // Mod'sollwert QX3 Relaistest
+{0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708_2,0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Modulationssignal ZX4
 {0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Modulationssignal QX3
 {0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7708,  STR7708,  0,                    NULL,         FL_NO_CMD,    DEV_123_ALL}, // Modulationssignal QX3
 {0x053D040E,  CAT_IOTEST,           VT_PERCENT,       7710,  STR7710,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // Ausgangstest UX1 //FUJITSU
 {0x053D040E,  CAT_IOTEST,           VT_VOLTAGE,       7710,  STR7710,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangstest UX
+{0x053D1701,  CAT_IOTEST,           VT_PERCENT,       7711,  STR7711_2,0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Ausgangssignal UX1 - Signalart UX1 [Spannung V ¦ PWM %] - VT_PERCENT DEV_108_217 Elco Wärmepumpe RVS61.843E/560
 {0x053D0821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Spannungssignal UX
 {0x073D0B38,  CAT_IOTEST,           VT_PERCENT,       7712,  STR7712,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // PWM-Signal UX1 //FUJITSU
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7713,  STR7713,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Ausgangstest P1
 {0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7714,  STR7714,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // PWM-Signal P1
 {0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangstest UX2 //FUJITSU
+{0x063D1708,  CAT_IOTEST,           VT_PERCENT,       7717,  STR7717,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangssignal UX2 - Signalart UX2 [Spannung V ¦ PWM %] - VT_PERCENT DEV_108_217 Elco Wärmepumpe RVS61.843E/560
 {0x063D04A2,  CAT_IOTEST,           VT_PERCENT,       7719,  STR7719,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // PWM-Signal UX2 //FUJITSU
 {0x053D0D62,  CAT_IOTEST,           VT_UNKNOWN,       7720,  STR7720,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangstest Digital
 {0x053D0D81,  CAT_IOTEST,           VT_ONOFF,         7721,  STR7721,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Digitalausgang D01
