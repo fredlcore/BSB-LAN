@@ -1358,6 +1358,7 @@
 #define STR7915_TEXT "Eingang EX5"
 #define STR7916_TEXT "Eingang EX6"
 #define STR7917_TEXT "Eingang EX7"
+#define STR7919_TEXT "Eingang EX9"
 #define STR7945_TEXT "Eingang EX10"
 #define STR7946_TEXT "Eingang EX11"
 #define STR7950_TEXT "Eingang EX01 Modul 1"
