@@ -8,6 +8,7 @@
  * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *         (based on the code and work from many other developers. Many thanks!)
+ *         Special thanks to Sergey Dukachev for lots of helpful code optimizations and restructurings as well as providing a profound Russian localization since version 0.43
  *
  * see README and HOWTO files for more information
  *
@@ -59,6 +60,7 @@
  *
  * Changelog:
  *       version 1.0
+ *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
  *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
@@ -6140,11 +6142,6 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
-              if (!been_here) {
-                been_here = true;
-              } else {
-                printToWebClient(PSTR(",\n"));
-              }
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 uint16_t x=2;
@@ -6203,9 +6200,10 @@ uint8_t pps_offset = 0;
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i_line=findLine(json_parameter,0,&cmd);
                 if (i_line<0 || cmd == CMD_UNKNOWN) {
-                  been_here = false; //do not print ",\n" twice
                   continue;
                 }
+
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
 
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
                 printToWebClient(get_cmdtbl_desc(i_line));
@@ -6254,6 +6252,7 @@ uint8_t pps_offset = 0;
               }
 
               if (p[2]=='S') {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
 

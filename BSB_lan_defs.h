@@ -109,10 +109,12 @@
 #define DEV_108_100  108,100 // Brötje BSW 8K
 #define DEV_108_160  108,160 // Elco AEROTOP T07-16 mit Logon B WP 61
 #define DEV_108_169  108,169 // Wärmepumpe CTA Optiheat 1-18es RVS61.843D/169
+#define DEV_108_217  108,217 // Elco Wärmepumpe RVS61.843E/560
 #define DEV_116_ALL  116,255 // Brötje ISR-SSR B
 #define DEV_118_ALL  118,255 // AVS37.394/136 (Bedieneinheit von Thision S 17.1)
 #define DEV_119_ALL  119,255 // Waterstage WP 5kw
 #define DEV_123_ALL  123,255 // Brötje EcoTherm Kompakt WMS 24
+#define DEV_123_231  123,231 // Baxi Luna Platinum+ 1.24
 #define DEV_133_ALL  133,255 // QAA75.910/349
 #define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
@@ -529,7 +531,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   3810, 3887,
   4102, 4204,
   4708, 4813,
-  5010, 5151,
+  5007, 5151,
   5400, 5544,
   5700, 6498,
   6600, 6699,
@@ -723,6 +725,7 @@ const char STR740[] PROGMEM = STR740_TEXT;
 const char STR741[] PROGMEM = STR741_TEXT;
 const char STR742[] PROGMEM = STR742_TEXT;
 const char STR744[] PROGMEM = STR744_TEXT;
+const char STR746[] PROGMEM = STR746_TEXT;
 const char STR750[] PROGMEM = STR750_TEXT;
 const char STR760[] PROGMEM = STR760_TEXT;
 const char STR761[] PROGMEM = STR761_TEXT;
@@ -736,6 +739,7 @@ const char STR800[] PROGMEM = STR800_TEXT;
 const char STR801[] PROGMEM = STR801_TEXT;
 const char STR809[] PROGMEM = STR809_TEXT;
 const char STR810[] PROGMEM = STR810_TEXT;
+const char STR812[] PROGMEM = STR812_TEXT;
 const char STR820[] PROGMEM = STR820_TEXT;
 const char STR830[] PROGMEM = STR830_TEXT;
 const char STR831[] PROGMEM = STR831_TEXT;
@@ -754,14 +758,17 @@ const char STR864[] PROGMEM = STR864_TEXT;
 const char STR870[] PROGMEM = STR870_TEXT;
 const char STR872[] PROGMEM = STR872_TEXT;
 const char STR880[] PROGMEM = STR880_TEXT;
+const char STR881[] PROGMEM = STR881_TEXT;
 const char STR882[] PROGMEM = STR882_TEXT;
 const char STR883[] PROGMEM = STR883_TEXT;
 const char STR884[] PROGMEM = STR884_TEXT;
 const char STR885[] PROGMEM = STR885_TEXT;
 const char STR886[] PROGMEM = STR886_TEXT;
+const char STR886_2[] PROGMEM = STR886_2_TEXT;
 const char STR887[] PROGMEM = STR887_TEXT;
 const char STR888[] PROGMEM = STR888_TEXT;
 const char STR888_2[] PROGMEM = STR888_2_TEXT;
+const char STR889[] PROGMEM = STR889_TEXT;
 const char STR890[] PROGMEM = STR890_TEXT;
 const char STR894[] PROGMEM = STR894_TEXT;
 const char STR895[] PROGMEM = STR895_TEXT;
@@ -899,8 +906,10 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 
 // Trinkwasser
 const char STR1600[] PROGMEM = STR1600_TEXT;
+#define STR1600_2 STR700_TEXT
 const char STR1601[] PROGMEM = STR1601_TEXT;
 const char STR1602[] PROGMEM = STR1602_TEXT;
+const char STR1603[] PROGMEM = STR1603_TEXT;
 const char STR1610[] PROGMEM = STR1610_TEXT;
 const char STR1612[] PROGMEM = STR1612_TEXT;
 const char STR1614[] PROGMEM = STR1614_TEXT;
@@ -1472,13 +1481,18 @@ const char STR4796[] PROGMEM = STR4796_TEXT;
 const char STR4811[] PROGMEM = STR4811_TEXT;
 const char STR4813[] PROGMEM = STR4813_TEXT;
 // 5000 Trinkwasserspeicher
+const char STR5007[] PROGMEM = STR5007_TEXT;
+const char STR5008[] PROGMEM = STR5008_TEXT;
 const char STR5010[] PROGMEM = STR5010_TEXT;
 const char STR5011[] PROGMEM = STR5011_TEXT;
+const char STR5013[] PROGMEM = STR5013_TEXT;
+const char STR5016[] PROGMEM = STR5016_TEXT;
 const char STR5019[] PROGMEM = STR5019_TEXT;
 const char STR5020[] PROGMEM = STR5020_TEXT;
 const char STR5021[] PROGMEM = STR5021_TEXT;
 const char STR5022[] PROGMEM = STR5022_TEXT;
 const char STR5022_2[] PROGMEM = STR5022_2_TEXT;
+const char STR5023[] PROGMEM = STR5023_TEXT;
 const char STR5024[] PROGMEM = STR5024_TEXT;
 const char STR5025[] PROGMEM = STR5025_TEXT;
 const char STR5026[] PROGMEM = STR5026_TEXT;
@@ -1486,7 +1500,9 @@ const char STR5027[] PROGMEM = STR5027_TEXT;
 const char STR5028[] PROGMEM = STR5028_TEXT;
 const char STR5029[] PROGMEM = STR5029_TEXT;
 const char STR5030[] PROGMEM = STR5030_TEXT;
+const char STR5032[] PROGMEM = STR5032_TEXT;
 const char STR5040[] PROGMEM = STR5040_TEXT;
+const char STR5041[] PROGMEM = STR5041_TEXT;
 const char STR5050[] PROGMEM = STR5050_TEXT;
 const char STR5051[] PROGMEM = STR5051_TEXT;
 const char STR5055[] PROGMEM = STR5055_TEXT;
@@ -1507,6 +1523,8 @@ const char STR5102[] PROGMEM = STR5102_TEXT;
 #define STR5103 STR2324
 #define STR5104 STR2325
 #define STR5105 STR2326
+const char STR5106[] PROGMEM = STR5106_TEXT;
+const char STR5107[] PROGMEM = STR5107_TEXT;
 const char STR5108[] PROGMEM = STR5108_TEXT;
 const char STR5109[] PROGMEM = STR5109_TEXT;
 #define STR5120 STR830
@@ -1519,6 +1537,9 @@ const char STR5139[] PROGMEM = STR5139_TEXT;
 const char STR5140[] PROGMEM = STR5140_TEXT;
 const char STR5141[] PROGMEM = STR5141_TEXT;
 const char STR5142[] PROGMEM = STR5142_TEXT;
+const char STR5143[] PROGMEM = STR5143_TEXT;
+const char STR5144[] PROGMEM = STR5144_TEXT;
+const char STR5145[] PROGMEM = STR5145_TEXT;
 const char STR5146[] PROGMEM = STR5146_TEXT;
 const char STR5148[] PROGMEM = STR5148_TEXT;
 const char STR5151[] PROGMEM = STR5151_TEXT;
@@ -2555,6 +2576,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1300_03_TEXT ENUM700_03_TEXT
 #define ENUM1600_00_TEXT ENUM780_00_TEXT
 #define ENUM1600_01_TEXT MENU_TEXT_ON
+#define ENUM1601_00_TEXT ENUM48_00_TEXT
+#define ENUM1601_01_TEXT ENUM_CAT_1c_TEXT
 #define ENUM1620_2_00_TEXT ENUM1620_00_TEXT
 #define ENUM1620_2_01_TEXT ENUM1620_01_TEXT
 #define ENUM1620_2_04_TEXT ENUM1620_02_TEXT
@@ -2566,6 +2589,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1680_00_TEXT ENUM48_00_TEXT
 #define ENUM1680_01_TEXT ENUM780_00_TEXT
 #define ENUM1680_02_TEXT ENUM1600_01_TEXT
+#define ENUM1680_03_TEXT ENUM1600_02_TEXT
 #define ENUM2132_00_TEXT ENUM832_00_TEXT
 #define ENUM2132_01_TEXT ENUM832_01_TEXT
 #define ENUM2200_01_TEXT ENUM700_01_TEXT
@@ -2618,13 +2642,23 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM4810_01_TEXT ENUM861_01_TEXT
 #define ENUM4810_02_TEXT ENUM861_02_TEXT
 #define ENUM4813_01_TEXT ENUM4720_01_TEXT
+#define ENUM5007_02_TEXT ENUM4134_01_TEXT
+#define ENUM5007_03_TEXT ENUM4134_02_TEXT
+#define ENUM5013_00_TEXT MENU_TEXT_OFF
+#define ENUM5016_00_TEXT MENU_TEXT_OFF
+#define ENUM5016_01_TEXT ENUM5013_02_TEXT
+#define ENUM5022_01_TEXT ENUM4134_01_TEXT
 #define ENUM5040_00_TEXT ENUM780_00_TEXT
 #define ENUM5040_01_TEXT ENUM861_02_TEXT
+#define ENUM5041_01_TEXT ENUM4134_01_TEXT
+#define ENUM5041_02_TEXT ENUM4134_02_TEXT
 #define ENUM5057_00_TEXT ENUM780_00_TEXT
 #define ENUM5057_01_TEXT ENUM4757_01_TEXT
 #define ENUM5057_02_TEXT ENUM861_02_TEXT
 #define ENUM5060_02_TEXT ENUM4757_01_TEXT
 #define ENUM5060_03_TEXT ENUM861_02_TEXT
+#define ENUM5060_05_TEXT STR7141_TEXT
+#define ENUM5060_06_TEXT STR1640_TEXT
 #define ENUM5061_01_TEXT ENUM1620_00_TEXT
 #define ENUM5061_02_TEXT ENUM1660_02_TEXT
 #define ENUM5061_03_TEXT ENUM1620_02_TEXT
@@ -2942,6 +2976,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8003_18_TEXT ENUM8000_17_TEXT
 #define ENUM8003_19_TEXT ENUM780_00_TEXT
 #define ENUM8004_00_TEXT ENUM6040_03_TEXT
+#define ENUM8004_19_TEXT MENU_TEXT_OFF
+#define ENUM8004_77_TEXT MENU_TEXT_OFF
 #define ENUM8005_00_TEXT ENUM6040_03_TEXT
 #define ENUM8005_03_TEXT ENUM8000_03_TEXT
 #define ENUM8005_04_TEXT ENUM8000_04_TEXT
@@ -2959,6 +2995,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8006_11_TEXT ENUM8000_11_TEXT
 #define ENUM8006_18_TEXT ENUM8000_17_TEXT
 #define ENUM8006_19_TEXT ENUM780_00_TEXT
+#define ENUM8006_1a_TEXT STR7141_TEXT
 #define ENUM8006_89_TEXT ENUM861_01_TEXT
 #define ENUM8006_b0_TEXT ENUM8005_b0_TEXT
 #define ENUM8006_c6_TEXT ENUM8005_c6_TEXT
@@ -3270,6 +3307,11 @@ const char ENUM1600[] PROGMEM_LATEST = {
 "\x02 " ENUM1600_02_TEXT
 };
 
+const char ENUM1601[] PROGMEM_LATEST = {
+"\x00 " ENUM1601_00_TEXT "\0"
+"\x01 " ENUM1601_01_TEXT
+};
+
 const char ENUM1602[] PROGMEM_LATEST = {
 "\x00\x02 " ENUM1602_00_02_TEXT "\0"
 "\x02\x02 " ENUM1602_02_02_TEXT "\0"
@@ -3289,6 +3331,14 @@ const char ENUM1620_2[] PROGMEM_LATEST = {
 "\x01 " ENUM1620_2_01_TEXT "\0"
 "\x04 " ENUM1620_2_04_TEXT
 };
+const char ENUM1620_3[] PROGMEM_LATEST = {
+"\x00 " ENUM1620_00_TEXT "\0"
+"\x01 " ENUM1620_3_01_TEXT "\0"
+"\x02 " ENUM1620_02_TEXT "\0"
+"\x03 " ENUM1620_3_03_TEXT "\0"
+"\x04 " ENUM1620_3_04_TEXT
+};
+
 const char ENUM1630[] PROGMEM_LATEST = {
 "\x00 " ENUM1630_00_TEXT "\0"
 "\x01 " ENUM1630_01_TEXT "\0"
@@ -3310,7 +3360,8 @@ const char ENUM1660[] PROGMEM_LATEST = {
 const char ENUM1680[] PROGMEM_LATEST = {
 "\x00 " ENUM1680_00_TEXT "\0"
 "\x01 " ENUM1680_01_TEXT "\0"
-"\x02 " ENUM1680_02_TEXT
+"\x02 " ENUM1680_02_TEXT "\0"
+"\x03 " ENUM1680_03_TEXT
 };
 
 // Vorregler/Zubringerpumpe
@@ -3652,9 +3703,23 @@ const char ENUM4813[] PROGMEM_LATEST = {
 "\x02 " ENUM4813_02_TEXT
 };
 // Trinkwasserspeicher
+const char ENUM5007[] PROGMEM_LATEST = {
+"\x02 " ENUM5007_02_TEXT "\0"
+"\x03 " ENUM5007_03_TEXT
+};
 const char ENUM5010[] PROGMEM_LATEST = {
 "\x00 " ENUM5010_00_TEXT "\0"
 "\xff " ENUM5010_ff_TEXT
+};
+const char ENUM5013[] PROGMEM_LATEST = {
+"\x00 " ENUM5013_00_TEXT "\0"
+"\x01 " ENUM5013_01_TEXT "\0"
+"\x02 " ENUM5013_02_TEXT
+};
+const char ENUM5016[] PROGMEM_LATEST = {
+"\x00 " ENUM5016_00_TEXT "\0"
+"\x01 " ENUM5016_01_TEXT "\0"
+"\x02 " ENUM5016_02_TEXT
 };
 const char ENUM5022[] PROGMEM_LATEST = {
 "\x01 " ENUM5022_01_TEXT "\0"
@@ -3673,6 +3738,10 @@ const char ENUM5040[] PROGMEM_LATEST = {
 "\x01 " ENUM5040_01_TEXT "\0"
 "\x02 " ENUM5040_02_TEXT
 };
+const char ENUM5041[] PROGMEM_LATEST = {
+"\x01 " ENUM5041_01_TEXT "\0"
+"\x02 " ENUM5041_02_TEXT
+};
 const char ENUM5057[] PROGMEM_LATEST = {
 "\x00 " ENUM5057_00_TEXT "\0"
 "\x01 " ENUM5057_01_TEXT "\0"
@@ -3681,7 +3750,10 @@ const char ENUM5057[] PROGMEM_LATEST = {
 const char ENUM5060[] PROGMEM_LATEST = {
 "\x01 " ENUM5060_01_TEXT "\0"
 "\x02 " ENUM5060_02_TEXT "\0"
-"\x03 " ENUM5060_03_TEXT
+"\x03 " ENUM5060_03_TEXT "\0"
+"\x04 " ENUM5060_04_TEXT "\0"
+"\x05 " ENUM5060_05_TEXT "\0"
+"\x06 " ENUM5060_06_TEXT
 };
 const char ENUM5061[] PROGMEM_LATEST = {
 "\x01 " ENUM5061_01_TEXT "\0"
@@ -4739,9 +4811,9 @@ const char ENUM6640[] PROGMEM_LATEST = {
 
 // FA Phase
 const char ENUM6706[] PROGMEM_LATEST = {
+"\x00 " ENUM6706_00_TEXT "\0"
 "\x01 " ENUM6706_01_TEXT "\0"
 "\x02 " ENUM6706_02_TEXT "\0"
-"\x00 " ENUM6706_00_TEXT "\0"
 "\x03 " ENUM6706_03_TEXT "\0"
 "\x04 " ENUM6706_04_TEXT "\0"
 "\x05 " ENUM6706_05_TEXT "\0"
@@ -5979,6 +6051,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
 {0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1, also used by Brötje IDA and FE ISR Plus
 {0x2D3D0D85,  CAT_HK1,              VT_PERCENT,       744,   STR744,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Soll Einschaltverh R'stat
+{0x213D17BB,  CAT_HK1,              VT_SECONDS_WORD,  746,   STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 1 - Verzög' Wärmeanforderung - Delay time in case it is used an external electrical valve zone
 {0x2D3D0603,  CAT_HK1,              VT_PERCENT,       750,   STR750,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Raumeinfluss
 {0x2D3D0614,  CAT_HK1,              VT_TEMP,          760,   STR760,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumtemperaturbegrenzung
 {0x053D0C9D,  CAT_HK1,              VT_PERCENT,       761,   STR761,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Heizgrenze Raumregler
@@ -5988,10 +6061,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D0607,  CAT_HK1,              VT_MINUTES,       790,   STR790,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Einschalt-Optimierung Max.
 {0x2D3D0609,  CAT_HK1,              VT_MINUTES,       791,   STR791,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Min ] - Heizkreis 1 - Ausschalt-Optimierung Max.
 {0x2D3D0609,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
+{0x2D3D0639,  CAT_HK1,              VT_GRADIENT,      794,   STR794,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [min/K ] - Heizkreis 1 - Aufheizgradient
 {0x2D3D059E,  CAT_HK1,              VT_TEMP,          800,   STR800,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Begin
 {0x2D3D059D,  CAT_HK1,              VT_TEMP,          801,   STR801,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziert-Anhebung Ende
-{CMD_UNKNOWN, CAT_HK1,              VT_YESNO,         809,   STR809,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
+{0x053D1289,  CAT_HK1,              VT_YESNO,         809,   STR809,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Pumpendauerlauf HK1
 {0x213D063A,  CAT_HK1,              VT_YESNO,         810,   STR810,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{0x213D1181,  CAT_HK1,              VT_ONOFF,         812,   STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Vorlauffrostschutz
 {0x213D0674,  CAT_HK1,              VT_ONOFF,         820,   STR820,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 1 - Überhitzschutz Pumpenkreis
 {0x213D065D,  CAT_HK1,              VT_TEMP,          830,   STR830,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischerüberhöhung
 {0x213D0654,  CAT_HK1,              VT_YESNO,         832,   STR832,   sizeof(ENUM832),      ENUM832,      FL_RONLY, DEV_ALL}, // - Antrieb Typ
@@ -6022,14 +6097,20 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D07C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Pufferspeicher
 {0x2D3D07C5,  CAT_HK1,              VT_YESNO,         872,   STR872,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Vorregler/Zubring`pumpe
 {0x213D04AD,  CAT_HK1,              VT_ENUM,          880,   STR880,   sizeof(ENUM880),      ENUM880,      DEFAULT_FLAG, DEV_ALL}, // HK1 Pumpe Drehzahlreduktion
+{0x053D10D7,  CAT_HK1,              VT_PERCENT,       881,   STR881,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum // todo die ID gibt es, aber sie gehoert nicht zu diesem Parameter
 {0x053D115E,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
+{0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
 {0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x053D115F,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Maximum
 {0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
 {0x113D304F,  CAT_HK1,              VT_PERCENT5,      885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
 {0x113D04AB,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 885 Pumpe-PWM Minimum [%] - logged on OCI700 via LPB
+{0x053D10E1,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x053D10E1,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
 {0x193D2F88,  CAT_HK1,              VT_TEMP_SHORT,    886,   STR886,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 886 Norm Aussentemperatur [°C]
+{0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x053D3050,  CAT_HK1,              VT_TEMP_SHORT5_US,887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C]
 {0x393D2F82,  CAT_HK1,              VT_TEMP_WORD5_US, 887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C] - logged on OCI700 via LPB
 {0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD1, 888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
@@ -6046,6 +6127,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // dt Überhöhungsfaktor [%]
+{0x213D0E39,  CAT_HK1,              VT_MINUTES_SHORT, 889,   STR889,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x213D10C2,  CAT_HK1,              VT_YESNO,         890,   STR890,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
 {0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 894 dt Spreizung Norm Aussent. [°C]
 {0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 895 dt Spreizung Maximum [°C]
@@ -6110,6 +6192,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x223D0662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
 {0x223D0A88,  CAT_HK2,              VT_TEMP,          1042,  STR1042,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Raumthermostat // Command ID tbc
+{CMD_UNKNOWN, CAT_HK2,              VT_SECONDS_WORD,  1046,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 2 - Delay time in case it is used an external electrical valve zone
 {0x2E3D0603,  CAT_HK2,              VT_PERCENT,       1050,  STR1050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 2 (nur wenn aktiviert) - Raumeinfluss
 {0x2E3D0614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2E3D0602,  CAT_HK2,              VT_TEMP,          1070,  STR1070,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Schnellaufheizung
@@ -6121,6 +6204,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1109,  STR1109,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
 {0x223D063A,  CAT_HK2,              VT_YESNO,         1110,  STR1110,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{CMD_UNKNOWN, CAT_HK2,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 - Frostschutz Temperatur
 {0x223D0674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x223D065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {0x223D065D,  CAT_HK2,              VT_TEMP_WORD5_US, 1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung - logged on OCI700 via LPB
@@ -6170,6 +6254,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D0640,  CAT_HKP,              VT_TEMP,          1332,  STR1332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Tagesheizgrenze
 {0x233D0663,  CAT_HKP,              VT_TEMP,          1340,  STR1340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x233D0662,  CAT_HKP,              VT_TEMP,          1341,  STR1341,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Maximum
+{CMD_UNKNOWN, CAT_HKP,              VT_SECONDS_WORD,  1346,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 3/P - Delay time in case it is used an external electrical valve zone
 {0x233D0A88,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 3/P (nur wenn aktiviert) - Raumeinfluss
 {0x2F3D0614,  CAT_HKP,              VT_TEMP   ,       1360,  STR1360,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2F3D0602,  CAT_HKP,              VT_TEMP,          1370,  STR1370,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Schnellaufheizung
@@ -6180,6 +6265,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D059E,  CAT_HKP,              VT_TEMP,          1400,  STR1400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2F3D059D,  CAT_HKP,              VT_TEMP,          1401,  STR1401,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {0x233D063A,  CAT_HKP,              VT_YESNO,         1410,  STR1410,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
+{CMD_UNKNOWN, CAT_HKP,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P - Frostschutz Temperatur
 {0x233D0674,  CAT_HKP,              VT_ONOFF,         1420,  STR1420,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x233D065D,  CAT_HKP,              VT_TEMP,          1430,  STR1430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Mischerüberhöhung
 {0x233D065C,  CAT_HKP,              VT_TEMP,          1433,  STR1433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
@@ -6203,15 +6289,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Einstellungen Trinkwasser
 {0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
+{0x313D0571,  CAT_TW,               VT_ENUM,          1600,  STR1600_2,sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsart [Aus, Ein, Eco]
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
-{0x313D0573,  CAT_TW,               VT_ONOFF,         1601,  STR1601,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
-{0x313D0212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601,  sizeof(ENUM1601),     ENUM1601,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
+{0x313D0573,  CAT_TW,               VT_ONOFF,         1603,  STR1603,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Freigabe
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_2),   ENUM1620_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser - Freigabe
+{0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_3),   ENUM1620_3,   DEFAULT_FLAG, DEV_108_217}, // [0] - Trinkwasser - Freigabe
 {0x313D0721,  CAT_TW,               VT_ENUM,          1630,  STR1630,  sizeof(ENUM1630),     ENUM1630,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Ladevorgang
 {0x313D0759,  CAT_TW,               VT_ENUM,          1640,  STR1640,  sizeof(ENUM1640),     ENUM1640,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Legionellenfunktion
 {0x313D0738,  CAT_TW,               VT_DAYS,          1641,  STR1641,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [Tage ] - Trinkwasser - Legionellenfkt. Periodisch
@@ -6856,16 +6944,22 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
 
 // Trinkwasserspeicher
+{0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_ALL}, // Ladeanforderung
+{0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_ALL}, // Lad'anforderung zeitgeführt
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     FL_OEM, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
+{0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_ALL}, // Ladung opt Energie
+{0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_ALL}, // Ladung opt Energie Kontakt
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022,  sizeof(ENUM5022),     ENUM5022,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
 {0x253D087B,  CAT_TWSPEICHER,       VT_ENUM,          5022,  STR5022_2,sizeof(ENUM5022_2),   ENUM5022_2,   DEFAULT_FLAG, DEV_195_ALL}, // [0] - Trinkwasser-Speicher - Ladeart
+{0x313D0757,  CAT_TWSPEICHER,       VT_TEMP,          5023,  STR5023,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwertreduktion B31
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_090_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_095_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // TW Schaltdifferenz 1 ein
@@ -6893,7 +6987,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
 {0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
 {0x253D0731,  CAT_TWSPEICHER,       VT_MINUTES_WORD,  5030,  STR5030,  0,                    NULL,         FL_OEM, DEV_ALL}, // TW Ladezeitbegrenzung //FUJITSU
+{0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
+{0x253D116F,  CAT_TWSPEICHER,       VT_ENUM,          5041,  STR5041,  sizeof(ENUM5041),     ENUM5041,     FL_OEM, DEV_ALL}, // Entladeschutzfühler
 {0x253D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ladetemperatur Maximum
 {0x153D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Ladetemperatur Maximum - logged on OCI700 via LPB
 {0x253D08A7,  CAT_TWSPEICHER,       VT_TEMP,          5051,  STR5051,  0,                    NULL,         FL_OEM, DEV_ALL}, // Speichertemperatur Maximum
@@ -6913,12 +7009,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D2F96,  CAT_TWSPEICHER,       VT_PERCENT,       5100,  STR5100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Pumpe-PWM Durchladung
 {0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Pumpendrehzahl Minimum %
+{0x253D08A1,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Pumpendrehzahl Minimum %
 {0x053D115C,  CAT_TWSPEICHER,       VT_PERCENT,       5101,  STR5101,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Minimum %
 {0x253D08A2,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum %
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Pumpendrehzahl Maximum %
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT,       5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Maximum %
 {0x253D0B19,  CAT_TWSPEICHER,       VT_TEMP,          5103,  STR5103,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5104,  STR5104,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT4,5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+
+{0x053D10E3,  CAT_TWSPEICHER,       VT_PERCENT,       5106,  STR5106,  0,                    NULL,         FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Minimum OEM
+{0x053D10E2,  CAT_TWSPEICHER,       VT_PERCENT,       5107,  STR5107,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Maximum OEM
 {0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
 {0x053D10DD,  CAT_TWSPEICHER,       VT_PERCENT,       5109,  STR5109,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anl'drehzahl Zwi'kreispumpe //Thision 19 Plus
 {0x253D072C,  CAT_TWSPEICHER,       VT_TEMP,          5120,  STR5120,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
@@ -6927,12 +7028,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D072A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5126,  STR5126,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130),     ENUM5130,     FL_OEM, DEV_ALL}, // Umladestrategie
 {0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_195_002}, // Umladestrategie
+{0x253D0B53,  CAT_TWSPEICHER,       VT_ENUM,          5130,  STR5130,  sizeof(ENUM5130_2),   ENUM5130_2,   FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ Umladestrategie
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131),     ENUM5131,     FL_OEM, DEV_ALL}, // Vergleichstemp Umladung
 {0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_195_002}, // Vergleichstemp Umladung
+{0x253D0879,  CAT_TWSPEICHER,       VT_ENUM,          5131,  STR5131,  sizeof(ENUM5131_2),   ENUM5131_2,   FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ Vergleichstemp Umladung
 {0x253D10C9,  CAT_TWSPEICHER,       VT_TEMP,          5139,  STR5139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreisüberhöhung Nachladen //Thision 19 Plus
 {0x253D0E50,  CAT_TWSPEICHER,       VT_TEMP,          5140,  STR5140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zwischenkreisüberhöhung //Thision 19 Plus
 {0x253D0E68,  CAT_TWSPEICHER,       VT_TEMP,          5141,  STR5141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Überschreit Max //Thision 19 Plus
 {0x253D0E51,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5142,  STR5142,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlaufsollw'führung Verzög //Thision 19 Plus
+{0x253D0E53,  CAT_TWSPEICHER,       VT_TEMP,          5143,  STR5143,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Xp
+{0x253D0E54,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5144,  STR5144,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tn
+{0x253D0E55,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5145,  STR5145,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Vorlaufsollwertführung Tv
 {0x313D0E67,  CAT_TWSPEICHER,       VT_YESNO,         5146,  STR5146,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Durchladen mit B36 //Thision 19 Plus
 {0x253D0F94,  CAT_TWSPEICHER,       VT_TEMP,          5148,  STR5148,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Minimale Anlauftemp'diff Q33 //Thision 19 Plus
 {0x253D0FED,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5151,  STR5151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Übersch Verzög //Thision 19 Plus
@@ -7426,6 +7532,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Info 1 OEM
@@ -8026,6 +8133,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_123_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_138_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_162_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_163_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_170_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_171_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -8292,6 +8400,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
+{0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Startzähler Brenner
 {0x39ED093F,  CAT_DIAG_ERZEUGER,    VT_UINT5,         8337,  STR8337,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision Startzähler Brenner - logged on OCI700 via LPB
@@ -9640,7 +9749,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x313D0216,  CAT_USER_DEFINED,     VT_UNKNOWN,       10516, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 09 0B
 {0x313D0686,  CAT_USER_DEFINED,     VT_UNKNOWN,       10517, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x313D0715,  CAT_USER_DEFINED,     VT_UNKNOWN,       10518, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x313D0757,  CAT_USER_DEFINED,     VT_UNKNOWN,       10519, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00
 
 // 0x493D....
 
