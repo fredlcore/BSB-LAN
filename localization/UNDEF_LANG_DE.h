@@ -232,6 +232,7 @@
 #undef STR741_TEXT
 #undef STR742_TEXT
 #undef STR744_TEXT
+#undef STR746_TEXT
 #undef STR750_TEXT
 #undef STR760_TEXT
 #undef STR761_TEXT
@@ -245,6 +246,7 @@
 #undef STR801_TEXT
 #undef STR809_TEXT
 #undef STR810_TEXT
+#undef STR812_TEXT
 #undef STR820_TEXT
 #undef STR830_TEXT
 #undef STR831_TEXT
@@ -263,14 +265,17 @@
 #undef STR870_TEXT
 #undef STR872_TEXT
 #undef STR880_TEXT
+#undef STR881_TEXT
 #undef STR882_TEXT
 #undef STR883_TEXT
 #undef STR884_TEXT
 #undef STR885_TEXT
 #undef STR886_TEXT
+#undef STR886_2_TEXT
 #undef STR887_TEXT
 #undef STR888_TEXT
 #undef STR888_2_TEXT
+#undef STR889_TEXT
 #undef STR890_TEXT
 #undef STR894_TEXT
 #undef STR895_TEXT
@@ -835,6 +840,8 @@
 #undef STR5100_TEXT
 #undef STR5101_TEXT
 #undef STR5102_TEXT
+#undef STR5106_TEXT
+#undef STR5107_TEXT
 #undef STR5108_TEXT
 #undef STR5109_TEXT
 #undef STR5130_TEXT
@@ -843,6 +850,9 @@
 #undef STR5140_TEXT
 #undef STR5141_TEXT
 #undef STR5142_TEXT
+#undef STR5143_TEXT
+#undef STR5144_TEXT
+#undef STR5145_TEXT
 #undef STR5146_TEXT
 #undef STR5148_TEXT
 #undef STR5151_TEXT
