@@ -56,7 +56,7 @@
  *       0.42  - 21.03.2019
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
- *       1.0   -
+ *       1.0   - 02.08.2020
  *
  * Changelog:
  *       version 1.0
@@ -64,6 +64,11 @@
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
  *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
+ *        - removed WIFI configuration as it is no longer applicable for the Due
+ *        - lots of new parameters for various device families
+ *        - Code optimization and restructuring, general increase of speed
+ *        - new schemativs for board layout V3
+ *        - lots of bugfixes
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
