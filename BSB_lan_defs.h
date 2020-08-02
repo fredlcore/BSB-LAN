@@ -2988,6 +2988,11 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM7700_03_TEXT ENUM6040_03_TEXT
 #define ENUM7700_04_TEXT ENUM6085_02_TEXT
 #define ENUM7844_00_TEXT ENUM1630_02_TEXT
+#define ENUM7999_00_TEXT ENUM1630_02_TEXT
+#define ENUM7999_01_TEXT ENUM7844_01_TEXT
+#define ENUM7999_02_TEXT ENUM7844_02_TEXT
+#define ENUM7999_03_TEXT ENUM7844_03_TEXT
+#define ENUM7999_04_TEXT ENUM7844_04_TEXT
 #define ENUM8000_00_TEXT ENUM6040_03_TEXT
 #define ENUM8000_18_TEXT ENUM780_00_TEXT
 #define ENUM8003_00_TEXT ENUM6040_03_TEXT
@@ -4964,15 +4969,22 @@ const char ENUM7700_2[] PROGMEM_LATEST = {
 
 // [Kein ¦ Geschl' (ooo), Offen (---) ¦ Impulse ¦ Frequenz Hz ¦ Spannung V]
 const char ENUM7844[] PROGMEM_LATEST = {
-"\x00 " ENUM7844_00_TEXT "\0"
-"\x01 " ENUM7844_01_TEXT "\0"
-"\x02 " ENUM7844_02_TEXT "\0"
-"\x03 " ENUM7844_03_TEXT "\0"
-"\x04 " ENUM7844_04_TEXT
+"\x00\x00 " ENUM7844_00_TEXT "\0" // interpolation from specification
+"\x00\x01 " ENUM7844_01_TEXT "\0"
+"\x00\x02 " ENUM7844_02_TEXT "\0" // interpolation from specification
+"\x00\x03 " ENUM7844_03_TEXT "\0" // interpolation from specification
+"\x00\x04 " ENUM7844_04_TEXT      // interpolation from specification
 };
 #define ENUM7858 ENUM7844
+
 //Eingangssignal H33  //FUJITSU
-#define ENUM7999 ENUM7844
+const char ENUM7999[] PROGMEM_LATEST = {
+"\x00 " ENUM7999_00_TEXT "\0"
+"\x01 " ENUM7999_01_TEXT "\0"
+"\x02 " "?" ENUM7999_02_TEXT "\0"
+"\x03 " "?" ENUM7999_03_TEXT "\0"
+"\x04 " "?" ENUM7999_04_TEXT
+};
 
 // Status Heizkreis 1, 2, 3
 const char ENUM8000[] PROGMEM_LATEST = {
