@@ -2618,7 +2618,7 @@ void printTelegram(byte* msg, int query_line) {
                 decodedTelegram.error = 256;
                 }
               break;
-            case VT_CUSTOM_ENUM: // custom enum
+            case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
