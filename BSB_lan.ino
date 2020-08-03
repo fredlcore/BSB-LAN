@@ -56,11 +56,14 @@
  *       0.42  - 21.03.2019
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
- *       1.0   - 02.08.2020
+ *       1.0   - 03.08.2020
+ *       1.1   - 
  *
  * Changelog:
- *       version 1.0
+ *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
+ *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
  *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
