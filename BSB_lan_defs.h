@@ -844,6 +844,7 @@ const char STR1030[] PROGMEM = STR1030_TEXT;
 #define STR1040 STR740
 #define STR1041 STR741
 const char STR1042[] PROGMEM = STR1042_TEXT;
+#define STR1046 STR746
 #define STR1050 STR750
 #define STR1060 STR760
 #define STR1070 STR770
@@ -851,10 +852,12 @@ const char STR1042[] PROGMEM = STR1042_TEXT;
 #define STR1081 STR781
 #define STR1090 STR790
 #define STR1091 STR791
+#define STR1094 STR794
 #define STR1100 STR800
 #define STR1101 STR801
-const char STR1109[] PROGMEM = STR1109_TEXT;
+#define STR1109 STR809
 #define STR1110 STR810
+#define STR1112 STR812
 #define STR1120 STR820
 #define STR1130 STR830
 #define STR1131 STR831
@@ -873,8 +876,13 @@ const char STR1157[] PROGMEM = STR1157_TEXT;
 #define STR1170 STR870
 #define STR1172 STR872
 const char STR1180[] PROGMEM = STR1180_TEXT;
+#define STR1181 STR881
 #define STR1182 STR882
 #define STR1183 STR883
+#define STR1185 STR885
+#define STR1186 STR886
+#define STR1186_2 STR886_2
+#define STR1189 STR889
 #define STR1200 STR900
 
 // Heizkreis 3/P
@@ -891,6 +899,7 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 #define STR1332 STR732
 #define STR1340 STR740
 #define STR1341 STR741
+#define STR1346 STR746
 #define STR1350 STR750
 #define STR1360 STR760
 #define STR1370 STR770
@@ -898,9 +907,12 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 #define STR1381 STR781
 #define STR1390 STR790
 #define STR1391 STR791
+#define STR1394 STR794
 #define STR1400 STR1100
 #define STR1401 STR801
+#define STR1409 STR809
 #define STR1410 STR810
+#define STR1412 STR812
 #define STR1420 STR820
 #define STR1430 STR830
 #define STR1431 STR831
@@ -918,8 +930,13 @@ const char STR1180[] PROGMEM = STR1180_TEXT;
 #define STR1464 STR864
 #define STR1470 STR870
 #define STR1472 STR872
+#define STR1481 STR881
 #define STR1482 STR882
 #define STR1483 STR883
+#define STR1485 STR885
+#define STR1486 STR886
+#define STR1486_2 STR886_2
+#define STR1489 STR889
 #define STR1500 STR900
 
 // Trinkwasser
@@ -944,6 +961,27 @@ const char STR1660[] PROGMEM = STR1660_TEXT;
 const char STR1661[] PROGMEM = STR1661_TEXT;
 const char STR1663[] PROGMEM = STR1663_TEXT;
 const char STR1680[] PROGMEM = STR1680_TEXT;
+
+//Verbraucherkreis 1
+const char STR1859[] PROGMEM = STR1859_TEXT;
+#define STR1874 STR1630
+const char STR1875[] PROGMEM = STR1875_TEXT;
+#define STR1878 STR870
+#define STR1880 STR963
+
+//Verbraucherkreis 2
+#define STR1909 STR1859
+#define STR1924 STR1630
+#define STR1925 STR1875
+#define STR1928 STR1878
+#define STR1930 STR963
+
+//Schwimmbadkreis
+#define STR1959 STR1859
+#define STR1974 STR1630
+#define STR1975 STR1875
+#define STR1978 STR1878
+#define STR1980 STR963
 
 // Hx Pumpe
 const char STR2008[] PROGMEM = STR2008_TEXT;
@@ -4125,8 +4163,11 @@ const char ENUM5950_4[] PROGMEM_LATEST = {
 "\x32 " ENUM5950_4_32_TEXT "\0"
 "\x33 " ENUM5950_4_33_TEXT "\0"
 "\x34 " ENUM5950_4_34_TEXT "\0"
+"\x36 " ENUM5950_4_36_TEXT "\0" //Baxi Luna Platinum+: Druckmessung 10V
 "\x38 " ENUM5950_4_38_TEXT
 };
+
+#define ENUM5950_5_12_TEXT ENUM5950_4_38_TEXT
 
 const char ENUM5950_5[] PROGMEM_LATEST = {
 "\x01 " ENUM5950_5_01_TEXT "\0"
@@ -4145,7 +4186,7 @@ const char ENUM5950_5[] PROGMEM_LATEST = {
 "\x0e " ENUM5950_5_0e_TEXT "\0"
 "\x0f " ENUM5950_5_0f_TEXT "\0"
 "\x11 " ENUM5950_5_11_TEXT "\0"
-"\x12 Raumtemperatur 10V"};
+"\x12 " ENUM5950_5_12_TEXT};
 
 // Konfiguration - Funktion Eingang H1 RVA63.244
 const char ENUM5950_6[] PROGMEM_LATEST = {
@@ -6118,7 +6159,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10D7,  CAT_HK1,              VT_PERCENT,       881,   STR881,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum // todo die ID gibt es, aber sie gehoert nicht zu diesem Parameter
 {0x053D115E,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
-{0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
+{0x213D04AB,  CAT_HK1,              VT_PERCENT,       882,   STR882,   0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum+ [%] - Heizkreis 1 - Pumpendrehzahl Minimum
 {0x213D04AA,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x053D115F,  CAT_HK1,              VT_PERCENT,       883,   STR883,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Maximum
 {0x113D2F95,  CAT_HK1,              VT_BYTE,          884,   STR884,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 884 Drehzahlstufe Ausleg'punkt [1-50 9-13kW=16 17-25kW=19 35-50kW=24]
@@ -6210,7 +6251,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x223D0662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
 {0x223D0A88,  CAT_HK2,              VT_TEMP,          1042,  STR1042,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Raumthermostat // Command ID tbc
-{CMD_UNKNOWN, CAT_HK2,              VT_SECONDS_WORD,  1046,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 2 - Delay time in case it is used an external electrical valve zone
+{0x223D17BB,  CAT_HK2,              VT_SECONDS_WORD,  1046,  STR1046,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 2 - Delay time in case it is used an external electrical valve zone
 {0x2E3D0603,  CAT_HK2,              VT_PERCENT,       1050,  STR1050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 2 (nur wenn aktiviert) - Raumeinfluss
 {0x2E3D0614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2E3D0602,  CAT_HK2,              VT_TEMP,          1070,  STR1070,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Schnellaufheizung
@@ -6218,11 +6259,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D05FB,  CAT_HK2,              VT_BYTE,          1081,  STR1081,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2E3D0607,  CAT_HK2,              VT_MINUTES,       1090,  STR1090,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2E3D0609,  CAT_HK2,              VT_MINUTES,       1091,  STR1091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Ausschalt-Optimierung Max.
+{0x2E3D0639,  CAT_HK2,              VT_GRADIENT,      1094,  STR1094,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 2 - Aufheizgradient
 {0x2E3D059E,  CAT_HK2,              VT_TEMP,          1100,  STR1100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2E3D059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
-{CMD_UNKNOWN, CAT_HK2,              VT_YESNO,         1109,  STR1109,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
+{0x063D1289,  CAT_HK2,              VT_YESNO,         1109,  STR1109,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
 {0x223D063A,  CAT_HK2,              VT_YESNO,         1110,  STR1110,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
-{CMD_UNKNOWN, CAT_HK2,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 - Frostschutz Temperatur
+{0x223D1181,  CAT_HK2,              VT_ONOFF,         1112,  STR1112,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 - Frostschutz Temperatur
 {0x223D0674,  CAT_HK2,              VT_ONOFF,         1120,  STR1120,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 2 (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x223D065D,  CAT_HK2,              VT_TEMP,          1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung
 {0x223D065D,  CAT_HK2,              VT_TEMP_WORD5_US, 1130,  STR1130,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Mischerüberhöhung - logged on OCI700 via LPB
@@ -6253,10 +6295,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D07C4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
 {0x2E3D07C5,  CAT_HK2,              VT_YESNO,         1172,  STR1172,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
 {0x223D04AD,  CAT_HK2,              VT_ENUM,          1180,  STR1180,  sizeof(ENUM1180),     ENUM1180,     DEFAULT_FLAG, DEV_ALL}, // HK2 Pumpe Drehzahlreduktion
+{0x063D10D7,  CAT_HK2,              VT_PERCENT,       1181,  STR1181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
 {0x223D04AA,  CAT_HK2,              VT_PERCENT,       1183,  STR1183,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x063D10E1,  CAT_HK2,              VT_PERCENT,       1185,  STR1185,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x063D10E0,  CAT_HK2,              VT_PERCENT,       1186,  STR1186_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x223D0E39,  CAT_HK2,              VT_MINUTES_SHORT, 1189,  STR1189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),     ENUM1200,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200_2),   ENUM1200_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
+
+// Kühlkreis 2:  CAT_KUEHL2
 
 // Einstellungen Heizkreis P/3, only visible when Heizkreis P exists
 {0x2F3D0574,  CAT_HKP,              VT_ENUM,          1300,  STR1300,  sizeof(ENUM1300),     ENUM1300,     DEFAULT_FLAG, DEV_ALL}, // Betriebsart
@@ -6272,7 +6321,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D0640,  CAT_HKP,              VT_TEMP,          1332,  STR1332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Tagesheizgrenze
 {0x233D0663,  CAT_HKP,              VT_TEMP,          1340,  STR1340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x233D0662,  CAT_HKP,              VT_TEMP,          1341,  STR1341,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Maximum
-{CMD_UNKNOWN, CAT_HKP,              VT_SECONDS_WORD,  1346,  STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 3/P - Delay time in case it is used an external electrical valve zone
+{0x233D17BB,  CAT_HKP,              VT_SECONDS_WORD,  1346,  STR1346,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 3/P - Delay time in case it is used an external electrical valve zone
 {0x233D0A88,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 3/P (nur wenn aktiviert) - Raumeinfluss
 {0x2F3D0614,  CAT_HKP,              VT_TEMP   ,       1360,  STR1360,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x2F3D0602,  CAT_HKP,              VT_TEMP,          1370,  STR1370,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Schnellaufheizung
@@ -6280,10 +6329,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D05FB,  CAT_HKP,              VT_BYTE,          1381,  STR1381,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 3/P (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2F3D0607,  CAT_HKP,              VT_MINUTES,       1390,  STR1390,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2F3D0609,  CAT_HKP,              VT_MINUTES,       1391,  STR1391,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Ausschalt-Optimierung Max.
+{0x2F3D0639,  CAT_HKP,              VT_GRADIENT,      1394,  STR1394,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 3/P - Aufheizgradient
 {0x2F3D059E,  CAT_HKP,              VT_TEMP,          1400,  STR1400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2F3D059D,  CAT_HKP,              VT_TEMP,          1401,  STR1401,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Ende
+{0x073D1289,  CAT_HKP,              VT_YESNO,         1409,  STR1409,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P - Pumpendauerlauf HK3/P
 {0x233D063A,  CAT_HKP,              VT_YESNO,         1410,  STR1410,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anlagenfrostschutz HK-Pumpe
-{CMD_UNKNOWN, CAT_HKP,              VT_ONOFF,         1112,  STR812,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P - Frostschutz Temperatur
+{0x233D1181,  CAT_HKP,              VT_ONOFF,         1412,  STR1412,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P - Frostschutz Temperatur
 {0x233D0674,  CAT_HKP,              VT_ONOFF,         1420,  STR1420,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x233D065D,  CAT_HKP,              VT_TEMP,          1430,  STR1430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Mischerüberhöhung
 {0x233D065C,  CAT_HKP,              VT_TEMP,          1433,  STR1433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
@@ -6300,8 +6351,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x233D065E,  CAT_HKP,              VT_PERCENT,       1464,  STR1464,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2F3D07C4,  CAT_HKP,              VT_YESNO,         1470,  STR1470,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Pufferspeicher
 {0x2F3D07C5,  CAT_HKP,              VT_YESNO,         1472,  STR1472,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
+{0x073D10D7,  CAT_HKP,              VT_PERCENT,       1481,  STR1481,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 3 - Pumpendrehzahl Minimum
 {0x233D04AA,  CAT_HKP,              VT_PERCENT,       1483,  STR1483,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x073D10E1,  CAT_HKP,              VT_PERCENT,       1485,  STR1485,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x073D10E0,  CAT_HKP,              VT_PERCENT,       1486,  STR1486_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x233D0E39,  CAT_HKP,              VT_MINUTES_SHORT, 1489,  STR1489,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500),     ENUM1500,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500_2),   ENUM1500_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 
@@ -6331,6 +6387,27 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D0689,  CAT_TW,               VT_ONOFF,         1661,  STR1661,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Zirk`pumpe Taktbetrieb
 {0x253D077E,  CAT_TW,               VT_TEMP,          1663,  STR1663,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Zirkulations Sollwert
 {0x053D0E84,  CAT_TW,               VT_ENUM,          1680,  STR1680,  sizeof(ENUM1680),     ENUM1680,     DEFAULT_FLAG, DEV_ALL}, // Betriebsartumschaltung
+
+//Verbraucherkreis 1: CAT_VK1
+{0x293D0656,  CAT_VK1,              VT_TEMP,          1859,  STR1859,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Verbr'anfo
+{0x293D08E5,  CAT_VK1,              VT_YESNO,         1874,  STR1874,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // TWW-Ladevorrag
+{0x293D08CA,  CAT_VK1,              VT_ONOFF,         1875,  STR1875,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Übertemperaturabnahme
+{0x293D07C6,  CAT_VK1,              VT_YESNO,         1878,  STR1878,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // mit Pufferspeicher
+{0x293D07C7,  CAT_VK1,              VT_YESNO,         1880,  STR1880,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Mit Vorregler/Zubring'pumpe
+
+//Verbraucherkreis 2: CAT_VK2
+{0x2A3D0656,  CAT_VK2,              VT_TEMP,          1909,  STR1909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Verbr'anfo
+{0x2A3D08E5,  CAT_VK2,              VT_YESNO,         1924,  STR1924,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // TWW-Ladevorrag
+{0x2A3D08CA,  CAT_VK2,              VT_ONOFF,         1925,  STR1925,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Übertemperaturabnahme
+{0x2A3D07C6,  CAT_VK2,              VT_YESNO,         1928,  STR1928,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // mit Pufferspeicher
+{0x2A3D07C7,  CAT_VK2,              VT_YESNO,         1930,  STR1930,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Mit Vorregler/Zubring'pumpe
+
+//Schwimmbadkreis: CAT_SCHWIMMK
+{0x2B3D0656,  CAT_SCHWIMMK,         VT_TEMP,          1959,  STR1959,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Verbr'anfo
+{0x2B3D08E5,  CAT_SCHWIMMK,         VT_YESNO,         1974,  STR1974,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // TWW-Ladevorrag
+{0x2B3D08CA,  CAT_SCHWIMMK,         VT_ONOFF,         1975,  STR1975,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Übertemperaturabnahme
+{0x2B3D07C6,  CAT_SCHWIMMK,         VT_YESNO,         1978,  STR1978,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // mit Pufferspeicher
+{0x2B3D07C7,  CAT_SCHWIMMK,         VT_YESNO,         1980,  STR1980,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Mit Vorregler/Zubring'pumpe
 
 // Hx-Pumpe
 {CMD_UNKNOWN, CAT_HXPUMPE,          VT_YESNO,         2008,  STR2008,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // H1 TWW-Ladevorrang
@@ -6368,6 +6445,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE,   VT_UNKNOWN,       2135,  STR2135,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE,   VT_UNKNOWN,       2136,  STR2136,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {CMD_UNKNOWN, CAT_VORREGLERPUMPE,   VT_ENUM,          2150,  STR2150,  sizeof(ENUM2150),     ENUM2150,     DEFAULT_FLAG, DEV_ALL}, // Vorregler/Zubringerpumpe
+
+//Vorregler/Zubringerpumpe 2: CAT_VORREGLERPUMPE2
 
 // Kessel
 {0x0D3D0949,  CAT_KESSEL,           VT_ENUM,          2200,  STR2200,  sizeof(ENUM2200),     ENUM2200,     FL_OEM, DEV_ALL}, // Kessel - Betriebsart
@@ -7091,6 +7170,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
+
+// Allgemeine Funktionen: CAT_ALLGFUNKT
 
 // Konfiguration
 {0x053D0712,  CAT_KONFIG,           VT_ENUM,          5700,  STR5700,  sizeof(ENUM5700),     ENUM5700,     DEFAULT_FLAG, DEV_ALL}, // Voreinstellung //FUJITSU
@@ -9666,14 +9747,12 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x293D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10450, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00
 {0x293D0421,  CAT_USER_DEFINED,     VT_UNKNOWN,       10451, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x293D0641,  CAT_USER_DEFINED,     VT_UNKNOWN,       10452, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
-{0x293D07C7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10453, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 
 // 0x2A3D....
 
 {0x2A3D01F4,  CAT_USER_DEFINED,     VT_UNKNOWN,       10454, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00
 {0x2A3D0421,  CAT_USER_DEFINED,     VT_UNKNOWN,       10455, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x2A3D0641,  CAT_USER_DEFINED,     VT_UNKNOWN,       10456, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
-{0x2A3D07C7,  CAT_USER_DEFINED,     VT_UNKNOWN,       10457, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 
 // 0x2D3D.... (größtenteils Steuerung HK1)
 
