@@ -401,22 +401,25 @@
 //#define STR1680_TEXT "Trinkwasser Betriebsartumschaltung"
 #define STR1680_TEXT "Внешнее управление подготовкой горячей воды"
 
+#define STR1859_TEXT "Требуемая постоянная уставка температуры подачи"
+#define STR1875_TEXT "Завысить уставку температуры"
+
 #define STR2008_TEXT "H1 Приоритет загрузки ГВС"
-#define STR2010_TEXT "H1 снижение температуры"
+#define STR2010_TEXT "H1 завышение уставки температуры"
 #define STR2012_TEXT "H1 с теплоаккумулятором"
 #define STR2014_TEXT "H1 основной контроллер/главный насос"
 #define STR2015_TEXT "H1 запрос на охлаждение"
 
 
 #define STR2033_TEXT "H2 Приоритет загрузки ГВС"
-#define STR2035_TEXT "H2 снижение температуры"
+#define STR2035_TEXT "H2 завышение уставки температуры"
 #define STR2037_TEXT "H2 с теплоаккумулятором"
 #define STR2039_TEXT "H2 основной контроллер/главный насос"
 #define STR2040_TEXT "H2 запрос на охлаждение"
 
 
 #define STR2044_TEXT "H3 Приоритет загрузки ГВС"
-#define STR2046_TEXT "H3 снижение температуры"
+#define STR2046_TEXT "H3 завышение уставки температуры"
 #define STR2048_TEXT "H3 с теплоаккумулятором"
 #define STR2050_TEXT "H3 основной контроллер/главный насос"
 #define STR2051_TEXT "H3 запрос на охлаждение"

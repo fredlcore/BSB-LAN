@@ -338,6 +338,8 @@
 #define STR1661_TEXT "Zirk`pumpe Taktbetrieb"
 #define STR1663_TEXT "Zirkulations Sollwert"
 #define STR1680_TEXT "Trinkwasser Betriebsartumschaltung"
+#define STR1859_TEXT "Vorlaufsollwert Verbr'anfo"
+#define STR1875_TEXT "Übertemperaturabnahme"
 #define STR2008_TEXT "H1 TWW-Ladevorrang"
 #define STR2010_TEXT "H1 Übertemperaturabnahme"
 #define STR2012_TEXT "H1 mit Pufferspeicher"
