@@ -8,6 +8,7 @@
  * Authors Gero Schumacher (gero.schumacher@gmail.com) (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *         (based on the code and work from many other developers. Many thanks!)
+ *         Special thanks to Sergey Dukachev for lots of helpful code optimizations and restructurings as well as providing a profound Russian localization since version 0.43
  *
  * see README and HOWTO files for more information
  *
@@ -55,7 +56,7 @@
  *       0.42  - 21.03.2019
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
- *       1.0   -
+ *       1.0   - 02.08.2020
  *
  * Changelog:
  *       version 1.0
@@ -63,6 +64,11 @@
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
  *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
+ *        - removed WIFI configuration as it is no longer applicable for the Due
+ *        - lots of new parameters for various device families
+ *        - Code optimization and restructuring, general increase of speed
+ *        - new schemativs for board layout V3
+ *        - lots of bugfixes
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
@@ -2612,7 +2618,7 @@ void printTelegram(byte* msg, int query_line) {
                 decodedTelegram.error = 256;
                 }
               break;
-            case VT_CUSTOM_ENUM: // custom enum
+            case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
