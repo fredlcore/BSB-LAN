@@ -6259,8 +6259,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D05FB,  CAT_HK2,              VT_BYTE,          1081,  STR1081,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2E3D0607,  CAT_HK2,              VT_MINUTES,       1090,  STR1090,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2E3D0609,  CAT_HK2,              VT_MINUTES,       1091,  STR1091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 2 (nur wenn aktiviert) - Ausschalt-Optimierung Max.
-{CMD_UNKNOWN, CAT_HK2,              VT_GRADIENT,      1094,  STR1094,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 2 - Aufheizgradient
-{0x2E3D0639,  CAT_HK2,              VT_GRADIENT,      1094,  STR1094,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [min/K ] - Heizkreis 2 - Aufheizgradient
+{0x2E3D0639,  CAT_HK2,              VT_GRADIENT,      1094,  STR1094,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 2 - Aufheizgradient
 {0x2E3D059E,  CAT_HK2,              VT_TEMP,          1100,  STR1100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2E3D059D,  CAT_HK2,              VT_TEMP,          1101,  STR1101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {0x063D1289,  CAT_HK2,              VT_YESNO,         1109,  STR1109,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 - Pumpendauerlauf HK2
@@ -6298,13 +6297,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D04AD,  CAT_HK2,              VT_ENUM,          1180,  STR1180,  sizeof(ENUM1180),     ENUM1180,     DEFAULT_FLAG, DEV_ALL}, // HK2 Pumpe Drehzahlreduktion
 {0x063D10D7,  CAT_HK2,              VT_PERCENT,       1181,  STR1181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
-{CMD_UNKNOWN, CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
-{0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
+{0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
 {0x223D04AA,  CAT_HK2,              VT_PERCENT,       1183,  STR1183,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_HK2,              VT_PERCENT5,      1185,  STR1185,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
-{0x063D10E1,  CAT_HK2,              VT_PERCENT,       1185,  STR1185,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
-{CMD_UNKNOWN, CAT_HK2,              VT_TEMP_SHORT,    1186,  STR1186,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 886 Norm Aussentemperatur [°C]
-{0x063D10E0,  CAT_HK2,              VT_PERCENT,       1186,  STR1186_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x063D10E1,  CAT_HK2,              VT_PERCENT,       1185,  STR1185,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x063D10E0,  CAT_HK2,              VT_PERCENT,       1186,  STR1186_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x223D0E39,  CAT_HK2,              VT_MINUTES_SHORT, 1189,  STR1189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),     ENUM1200,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200_2),   ENUM1200_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
@@ -6333,8 +6329,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D05FB,  CAT_HKP,              VT_BYTE,          1381,  STR1381,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 3/P (nur wenn aktiviert) - Schnellabsenkung Faktor
 {0x2F3D0607,  CAT_HKP,              VT_MINUTES,       1390,  STR1390,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Einschalt-Optimierung Max.
 {0x2F3D0609,  CAT_HKP,              VT_MINUTES,       1391,  STR1391,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min] - Heizkreis 3/P (nur wenn aktiviert) - Ausschalt-Optimierung Max.
-{CMD_UNKNOWN, CAT_HKP,              VT_GRADIENT,      1394,  STR1394,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 3/P - Aufheizgradient
-{0x2F3D0639,  CAT_HKP,              VT_GRADIENT,      1394,  STR1394,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [min/K ] - Heizkreis 3/P - Aufheizgradient
+{0x2F3D0639,  CAT_HKP,              VT_GRADIENT,      1394,  STR1394,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [min/K ] - Heizkreis 3/P - Aufheizgradient
 {0x2F3D059E,  CAT_HKP,              VT_TEMP,          1400,  STR1400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Begin
 {0x2F3D059D,  CAT_HKP,              VT_TEMP,          1401,  STR1401,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziert-Anhebung Ende
 {0x073D1289,  CAT_HKP,              VT_YESNO,         1409,  STR1409,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P - Pumpendauerlauf HK3/P
@@ -6358,13 +6353,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D07C5,  CAT_HKP,              VT_YESNO,         1472,  STR1472,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
 {0x073D10D7,  CAT_HKP,              VT_PERCENT,       1481,  STR1481,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
-{CMD_UNKNOWN, CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 3 - Pumpendrehzahl Minimum
-{0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [%] - Heizkreis 3 - Pumpendrehzahl Minimum
+{0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 3 - Pumpendrehzahl Minimum
 {0x233D04AA,  CAT_HKP,              VT_PERCENT,       1483,  STR1483,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
-{CMD_UNKNOWN, CAT_HKP,              VT_PERCENT5,      1485,  STR1485,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
-{0x073D10E1,  CAT_HKP,              VT_PERCENT,       1485,  STR1485,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
-{CMD_UNKNOWN, CAT_HKP,              VT_TEMP_SHORT,    1486,  STR1486,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 886 Norm Aussentemperatur [°C]
-{0x073D10E0,  CAT_HKP,              VT_PERCENT,       1486,  STR1486_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x073D10E1,  CAT_HKP,              VT_PERCENT,       1485,  STR1485,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x073D10E0,  CAT_HKP,              VT_PERCENT,       1486,  STR1486_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x233D0E39,  CAT_HKP,              VT_MINUTES_SHORT, 1489,  STR1489,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500),     ENUM1500,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500_2),   ENUM1500_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
