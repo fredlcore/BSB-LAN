@@ -188,11 +188,16 @@ typedef enum{
   CAT_HK1,
   CAT_KUEHL1,
   CAT_HK2,
+  CAT_KUEHL2,
   CAT_HKP,
   CAT_TW,
+  CAT_VK1,
+  CAT_VK2,
+  CAT_SCHWIMMK,
   CAT_HXPUMPE,
   CAT_SCHWIMMBAD,
   CAT_VORREGLERPUMPE,
+  CAT_VORREGLERPUMPE2,
   CAT_KESSEL,
   CAT_SITHERM,
   CAT_WAERMEPUMPE,
@@ -204,6 +209,7 @@ typedef enum{
   CAT_PUFFERSPEICHER,
   CAT_TWSPEICHER,
   CAT_DRUCHLERHITZER,
+  CAT_ALLGFUNKT,
   CAT_KONFIG,
   CAT_LPB,
   CAT_FEHLER,
@@ -499,7 +505,13 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x28 " ENUM_CAT_28_TEXT "\0"
 "\x29 " ENUM_CAT_29_TEXT "\0"
 "\x2a " ENUM_CAT_2a_TEXT "\0"
-"\x2b " ENUM_CAT_2b_TEXT
+"\x2b " ENUM_CAT_2b_TEXT "\0"
+"\x2c " ENUM_CAT_2c_TEXT "\0"
+"\x2d " ENUM_CAT_2d_TEXT "\0"
+"\x2e " ENUM_CAT_2e_TEXT "\0"
+"\x2f " ENUM_CAT_2f_TEXT "\0"
+"\x30 " ENUM_CAT_30_TEXT "\0"
+"\x31 " ENUM_CAT_31_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -517,11 +529,16 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   700, 900,
   901, 969,
   1000, 1200,
+  1201, 1299,
   1300, 1500,
   1600, 1680,
+  1850, 1880,
+  1900, 1930,
+  1950, 1980,
   2008, 2051,
   2055, 2080,
   2110, 2150,
+  2160, 2160,
   2200, 2682,
   2700, 2753,
   2776, 3029,
@@ -533,6 +550,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   4708, 4813,
   5007, 5151,
   5400, 5544,
+  5570, 5608,
   5700, 6498,
   6600, 6699,
   6705, 6996,
@@ -4830,9 +4848,9 @@ const char ENUM6640[] PROGMEM_LATEST = {
 
 // FA Phase
 const char ENUM6706[] PROGMEM_LATEST = {
+"\x00 " ENUM6706_00_TEXT "\0"
 "\x01 " ENUM6706_01_TEXT "\0"
 "\x02 " ENUM6706_02_TEXT "\0"
-"\x00 " ENUM6706_00_TEXT "\0"
 "\x03 " ENUM6706_03_TEXT "\0"
 "\x04 " ENUM6706_04_TEXT "\0"
 "\x05 " ENUM6706_05_TEXT "\0"
@@ -6126,8 +6144,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D304F,  CAT_HK1,              VT_PERCENT5,      885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 885 Pumpe-PWM Minimum [%]
 {0x113D04AB,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 885 Pumpe-PWM Minimum [%] - logged on OCI700 via LPB
 {0x053D10E1,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
+{0x053D10E1,  CAT_HK1,              VT_PERCENT,       885,   STR885,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
 {0x193D2F88,  CAT_HK1,              VT_TEMP_SHORT,    886,   STR886,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 886 Norm Aussentemperatur [°C]
 {0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x053D3050,  CAT_HK1,              VT_TEMP_SHORT5_US,887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C]
 {0x393D2F82,  CAT_HK1,              VT_TEMP_WORD5_US, 887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C] - logged on OCI700 via LPB
 {0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD1, 888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
@@ -7570,6 +7590,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Info 1 OEM
+{0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_172_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Info 1 OEM
@@ -8170,6 +8191,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_123_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_138_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
+{0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_162_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_163_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_170_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
 {0x053D0DA4,  CAT_IOTEST,           VT_CLOSEDOPEN,    7845,  STR7846,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_171_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H2
@@ -8436,6 +8458,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
+{0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x093D3035,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8337,  STR8337,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Startzähler Brenner
 {0x39ED093F,  CAT_DIAG_ERZEUGER,    VT_UINT5,         8337,  STR8337,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision Startzähler Brenner - logged on OCI700 via LPB
