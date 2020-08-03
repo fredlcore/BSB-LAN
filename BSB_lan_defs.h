@@ -4124,6 +4124,7 @@ const char ENUM5950_4[] PROGMEM_LATEST = {
 "\x32 " ENUM5950_4_32_TEXT "\0"
 "\x33 " ENUM5950_4_33_TEXT "\0"
 "\x34 " ENUM5950_4_34_TEXT "\0"
+"\x36 " ENUM5950_4_36_TEXT "\0" //Baxi Luna Platinum+: Druckmessung 10V
 "\x38 " ENUM5950_4_38_TEXT
 };
 

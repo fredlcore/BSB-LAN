@@ -2172,6 +2172,7 @@
 #define ENUM5950_4_32_TEXT "Durchflussmessung Hz"
 #define ENUM5950_4_33_TEXT "Verbraucheranforderung VK1 10V"
 #define ENUM5950_4_34_TEXT "Verbraucheranforderung VK2 10V"
+#define ENUM5950_4_36_TEXT "Druckmessung 10V"
 #define ENUM5950_4_38_TEXT "Raumtemperatur 10V"
 #define ENUM5950_5_01_TEXT "BA-Umschaltung HK's + TWW"
 #define ENUM5950_5_0d_TEXT "Kälteanforderung"
