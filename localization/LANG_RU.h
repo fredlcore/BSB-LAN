@@ -366,7 +366,7 @@
 #define STR947_TEXT "Повышение температуры теплоносителя при достижении точки росы"
 #define STR948_TEXT "Vorl'anhebung Beginn bei r. F."
 #define STR950_TEXT "Vorlauftemp'diff Taupunkt"
-#define STR963_TEXT "Mit Vorregler/Zubring'pumpe"
+#define STR963_TEXT "С основным контроллером/насосом системы"
 #define STR1030_TEXT "Температура переключения режимов лето/зима"
 #define STR1042_TEXT "Фиксированная температура в контуре отопления"
 #define STR1109_TEXT "Pumpendauerlauf HK2"

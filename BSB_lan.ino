@@ -57,7 +57,7 @@
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
- *       1.1   - 
+ *       1.1   -
  *
  * Changelog:
  *       version 1.1
@@ -6169,7 +6169,7 @@ uint8_t pps_offset = 0;
                   cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
                   printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
-                  if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
+                  if (x < sizeof(ENUM_CAT)-1 && cat < CAT_UNKNOWN) {
                     cat++;
                     x += 3;
                     printToWebClient(PSTR(",\n"));
