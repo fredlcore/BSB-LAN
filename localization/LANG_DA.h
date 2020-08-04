@@ -4,7 +4,7 @@
 #define ENUM_CAT_04_TEXT "Tidsprogram varmekreds 2"
 #define ENUM_CAT_05_TEXT "Tidsprogram 3 / VKP"
 #define ENUM_CAT_06_TEXT "Time switch program DHW"
-#define ENUM_CAT_07_TEXT "Tidsprogram varmekreds 3"
+#define ENUM_CAT_07_TEXT "Tidsprogram varmekreds 5"
 #define ENUM_CAT_08_TEXT "Ferie varmekreds 1"
 #define ENUM_CAT_09_TEXT "Ferie varmekreds 2"
 #define ENUM_CAT_0b_TEXT "Varmekreds 1"
