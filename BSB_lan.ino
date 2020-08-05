@@ -5668,7 +5668,6 @@ uint8_t pps_offset = 0;
         if(p[1]=='K' && !isdigit(p[2])){
           //list categories
           webPrintHeader();
-          int len=sizeof(ENUM_CAT);
           printToWebClient(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
@@ -5682,24 +5681,18 @@ uint8_t pps_offset = 0;
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
-#if defined(__AVR__)
-              printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
-#else
-              printENUM(ENUM_CAT,len,cat,1);
-#endif
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
-              printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
-              DebugOutput.println();
 #if defined(__AVR__)
+              printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
               cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-#else
-              cat_min = ENUM_CAT_NR[cat*2];
-#endif
-#if defined(__AVR__)
               cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #else
+              printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
+              cat_min = ENUM_CAT_NR[cat*2];
               cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
+              printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+              DebugOutput.println();
               printFmtToWebClient(PSTR("</a></td><td>%hd - %hd</td></tr>\n"), cat_min, cat_max);
             }
           }
@@ -6152,31 +6145,22 @@ uint8_t pps_offset = 0;
               output = false;
 
               if (p[2]=='K' && !isdigit(p[4])) {
-                uint16_t x=2;
-                uint8_t cat=0;
-                while (x<sizeof(ENUM_CAT)) {
-                  printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
+                boolean notfirst = false;
+                for(int cat=0;cat<CAT_UNKNOWN;cat++){
+                  if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
+                    if (notfirst) {printToWebClient(PSTR(",\n"));} else {notfirst = true;}
+                    printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
-                  x += printToWebClient(pgm_get_far_address(ENUM_CAT)+x);
+                    printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
+                    cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
+                    cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #else
-                  x += printToWebClient(ENUM_CAT+x);
+                    printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
+                    cat_min = ENUM_CAT_NR[cat*2];
+                    cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
-#if defined(__AVR__)
-                  cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-                  cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
-#else
-                  cat_min = ENUM_CAT_NR[cat*2];
-                  cat_max = ENUM_CAT_NR[cat*2+1];
-#endif
-                  printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
-                  if (x < sizeof(ENUM_CAT)-1 && cat < CAT_UNKNOWN) {
-                    cat++;
-                    x += 3;
-                    printToWebClient(PSTR(",\n"));
-                    continue;
-                  } else {
-                    flushToWebClient();
-                    break;
+                    printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+                    printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
                   }
                 }
                 json_token = NULL;
