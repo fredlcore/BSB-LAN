@@ -4288,10 +4288,10 @@ void dht22(void) {
       printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
       _printFIXPOINT(tempBuf,hum,2);
-      printFmtToWebClient(PSTR("hum[%d]: "), i, tempBuf);
+      printFmtToWebClient(PSTR("hum[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
       _printFIXPOINT(tempBuf,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      printFmtToWebClient(PSTR("abs_hum[%d]: "), i, tempBuf);
+      printFmtToWebClient(PSTR("abs_hum[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
     }
   }
@@ -6725,11 +6725,7 @@ uint8_t pps_offset = 0;
                   max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
                 }
                 max_id[10] = '\0';
-                printFmtToWebClient(PSTR("<tr><td>%s (%lx): "), max_id, max_devices[x]);
-                _printFIXPOINT(tempBuf,max_cur_temp[x] / 10,2);
-                printFmtToWebClient(PSTR("%s / "), tempBuf);
-                _printFIXPOINT(tempBuf,max_dst_temp[x] / 2,2);
-                printToWebClient(tempBuf);
+                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_id, max_devices[x], max_cur_temp[x] / 10,max_dst_temp[x] / 2);
                 if (max_valve[x] > -1) {
                   printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
                 }
