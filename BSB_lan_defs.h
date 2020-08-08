@@ -1629,6 +1629,24 @@ const char STR5488[] PROGMEM = STR5488_TEXT;
 #define STR5545 STR835
 #define STR5546 STR836
 #define STR5547 STR2285
+
+// Allgemeine Funktionen
+const char STR5570[] PROGMEM = STR5570_TEXT;
+const char STR5571[] PROGMEM = STR5571_TEXT;
+const char STR5572[] PROGMEM = STR5572_TEXT;
+const char STR5573[] PROGMEM = STR5573_TEXT;
+const char STR5574[] PROGMEM = STR5574_TEXT;
+const char STR5575[] PROGMEM = STR5575_TEXT;
+const char STR5577[] PROGMEM = STR5577_TEXT;
+
+const char STR5580[] PROGMEM = STR5580_TEXT;
+const char STR5581[] PROGMEM = STR5581_TEXT;
+const char STR5582[] PROGMEM = STR5582_TEXT;
+const char STR5583[] PROGMEM = STR5583_TEXT;
+const char STR5584[] PROGMEM = STR5584_TEXT;
+const char STR5585[] PROGMEM = STR5585_TEXT;
+const char STR5587[] PROGMEM = STR5587_TEXT;
+
 // Konfiguration
 const char STR5700[] PROGMEM = STR5700_TEXT;
 const char STR5701[] PROGMEM = STR5701_TEXT;
@@ -2725,6 +2743,27 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM5715_00_TEXT ENUM780_00_TEXT
 #define ENUM5734_02_TEXT ENUM_CAT_0f_TEXT
 #define ENUM5760_01_TEXT ENUM2150_01_TEXT
+
+#define ENUM5573_00_TEXT ENUM1630_02_TEXT
+#define ENUM5573_01_TEXT ENUM4133_02_TEXT
+#define ENUM5573_02_TEXT ENUM5930_02_TEXT
+#define ENUM5573_03_TEXT ENUM5930_03_TEXT
+#define ENUM5573_04_TEXT ENUM5930_04_TEXT
+#define ENUM5573_05_TEXT ENUM4133_03_TEXT
+#define ENUM5573_06_TEXT ENUM4133_04_TEXT
+#define ENUM5573_07_TEXT ENUM5930_07_TEXT
+#define ENUM5573_08_TEXT ENUM5930_08_TEXT
+#define ENUM5573_09_TEXT ENUM5930_09_TEXT
+#define ENUM5573_0a_TEXT ENUM5930_0a_TEXT
+#define ENUM5573_0b_TEXT ENUM5930_0b_TEXT
+#define ENUM5573_0c_TEXT ENUM5930_0c_TEXT
+#define ENUM5573_0d_TEXT ENUM5930_0d_TEXT
+#define ENUM5573_0e_TEXT ENUM5930_0e_TEXT
+#define ENUM5573_10_TEXT ENUM5930_10_TEXT
+#define ENUM5573_11_TEXT ENUM5930_11_TEXT
+#define ENUM5573_12_TEXT ENUM8313_04_TEXT
+#define ENUM5573_15_TEXT ENUM6272_15_TEXT
+
 #define ENUM5840_01_TEXT ENUM5731_01_TEXT
 #define ENUM5840_02_TEXT ENUM5731_02_TEXT
 #define ENUM5841_01_TEXT ENUM48_03_TEXT
@@ -3837,6 +3876,44 @@ const char ENUM5131_2[] PROGMEM_LATEST = {
 "\x01 " ENUM5131_00_TEXT "\0"
 "\x02 " ENUM5131_01_TEXT
 };
+// Allgemeine Funktionen
+const char ENUM5573[] PROGMEM_LATEST = { //Fühler 1 dT-Regler 1 - Baxi Luna Platinum+
+"\x00 " ENUM5573_00_TEXT "\0" //none
+"\x01 " ENUM5573_01_TEXT "\0" //B31
+"\x02 " ENUM5573_02_TEXT "\0" //B6
+"\x03 " ENUM5573_03_TEXT "\0" //B7
+"\x04 " ENUM5573_04_TEXT "\0" //B39
+"\x05 " ENUM5573_03_TEXT "\0" //B4
+"\x06 " ENUM5573_04_TEXT "\0" //B41
+"\x07 " ENUM5573_07_TEXT "\0" //B8
+"\x08 " ENUM5573_08_TEXT "\0" //B10
+"\x09 " ENUM5573_09_TEXT "\0" //B22
+"\x0a " ENUM5573_0a_TEXT "\0" //B36
+"\x0b " ENUM5573_0b_TEXT "\0" //B42
+"\x0c " ENUM5573_0c_TEXT "\0" //B73
+"\x0d " ENUM5573_0d_TEXT "\0" //B70
+"\x0e " ENUM5573_0e_TEXT "\0" //B13
+"\x10 " ENUM5573_10_TEXT "\0" //B63
+"\x11 " ENUM5573_11_TEXT "\0" //B64
+"\x12 " ENUM5573_12_TEXT "\0" //B38
+"\x13 " ENUM5573_13_TEXT "\0" //B26 Primärtauscherfühler B26
+"\x15 " ENUM5573_15_TEXT "\0" //B2
+"\x16 " ENUM5573_16_TEXT "\0" //B62 Solarfühler ext.Tausch B62
+"\x18 " ENUM5573_18_TEXT "\0" //B3 Trinkwasserfühler B3
+"\x1b " ENUM5573_1b_TEXT "\0" //B9 Außentemperaturfühler B9
+"\x1c " ENUM5573_1c_TEXT "\0" //B15 Vorreglerfühler B15
+"\x1d " ENUM5573_1d_TEXT "\0" //B5 Raumfühler B5
+"\x1e " ENUM5573_1e_TEXT "\0" //B52 Raumfühler B52
+"\x1f " ENUM5573_1f_TEXT "\0" //B53 Raumfühler B53
+"\x20 " ENUM5573_20_TEXT "\0" //B1 Vorlauftemperaturfühler HK1 B1
+"\x21 " ENUM5573_21_TEXT "\0" //B12 Vorlauftemperaturfühler HK2 B12
+"\x22 " ENUM5573_22_TEXT //B14 Vorlauftemperaturfühler HK3 B14
+};
+
+#define ENUM5574 ENUM5573               // Fühler 2 dT-Regler 1
+#define ENUM5583 ENUM5573               // Fühler 1 dT-Regler 2
+#define ENUM5584 ENUM5573               // Fühler 2 dT-Regler 2
+
 // Konfiguration
 const char ENUM5700[] PROGMEM_LATEST = { //FUJITSU
 "\x01 " ENUM5700_01_TEXT "\0"
@@ -4063,23 +4140,23 @@ const char ENUM5920[] PROGMEM_LATEST = {
 // Konfiguration - Fuehlereingang BX1
 const char ENUM5930[] PROGMEM_LATEST = {
 "\x00 " ENUM5930_00_TEXT "\0"
-"\x01 " ENUM5930_01_TEXT "\0"
-"\x02 " ENUM5930_02_TEXT "\0"
-"\x03 " ENUM5930_03_TEXT "\0"
-"\x04 " ENUM5930_04_TEXT "\0"
-"\x05 " ENUM5930_05_TEXT "\0"
-"\x06 " ENUM5930_06_TEXT "\0"
-"\x07 " ENUM5930_07_TEXT "\0"
-"\x08 " ENUM5930_08_TEXT "\0"
-"\x09 " ENUM5930_09_TEXT "\0"
-"\x0a " ENUM5930_0a_TEXT "\0"
-"\x0b " ENUM5930_0b_TEXT "\0"
-"\x0c " ENUM5930_0c_TEXT "\0"
-"\x0d " ENUM5930_0d_TEXT "\0"
-"\x0e " ENUM5930_0e_TEXT "\0"
-"\x0f " ENUM5930_0f_TEXT "\0"
-"\x10 " ENUM5930_10_TEXT "\0"
-"\x11 " ENUM5930_11_TEXT
+"\x01 " ENUM5930_01_TEXT "\0" //B31
+"\x02 " ENUM5930_02_TEXT "\0" //B6
+"\x03 " ENUM5930_03_TEXT "\0" //B7
+"\x04 " ENUM5930_04_TEXT "\0" //B39
+"\x05 " ENUM5930_05_TEXT "\0" //B4
+"\x06 " ENUM5930_06_TEXT "\0" //B41
+"\x07 " ENUM5930_07_TEXT "\0" //B8
+"\x08 " ENUM5930_08_TEXT "\0" //B10
+"\x09 " ENUM5930_09_TEXT "\0" //B22
+"\x0a " ENUM5930_0a_TEXT "\0" //B36
+"\x0b " ENUM5930_0b_TEXT "\0" //B42
+"\x0c " ENUM5930_0c_TEXT "\0" //B73
+"\x0d " ENUM5930_0d_TEXT "\0" //B70
+"\x0e " ENUM5930_0e_TEXT "\0" //B13
+"\x0f " ENUM5930_0f_TEXT "\0" //B61
+"\x10 " ENUM5930_10_TEXT "\0" //B63
+"\x11 " ENUM5930_11_TEXT      //B64
 };
 
 #define ENUM5931 ENUM5930               // Konfiguration - Fühlereingang BX 2
@@ -7172,6 +7249,20 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
 
 // Allgemeine Funktionen: CAT_ALLGFUNKT
+{0x053D182A,  CAT_ALLGFUNKT,        VT_TEMP,          5570,  STR5570,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff EIN dT-Regler 1 [grad C]
+{0x053D182B,  CAT_ALLGFUNKT,        VT_TEMP,          5571,  STR5571,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff AUS dT-Regler 1 [grad C]
+{0x053D182C,  CAT_ALLGFUNKT,        VT_TEMP,          5572,  STR5572,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Einsch'temp Min dT-Regler 1 [grad C]
+{0x053D1828,  CAT_ALLGFUNKT,        VT_ENUM,          5573,  STR5573,  sizeof(ENUM5573),     ENUM5573,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [ENUM] - Fühler 1 dT-Regler 1
+{0x053D1829,  CAT_ALLGFUNKT,        VT_ENUM,          5574,  STR5574,  sizeof(ENUM5574),     ENUM5574,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [ENUM] - Fühler 1 dT-Regler 1
+{0x053D182D,  CAT_ALLGFUNKT,        VT_SECONDS_SHORT, 5575,  STR5575,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Einsch'dauer Min dT-Regler 1 [sec 0-250]
+{0x053D183D,  CAT_ALLGFUNKT,        VT_ONOFF,         5577,  STR5577,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Pumpen/Ventilkick K21
+{0x053D1830,  CAT_ALLGFUNKT,        VT_TEMP,          5580,  STR5580,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff EIN dT-Regler 2 [grad C]
+{0x053D1831,  CAT_ALLGFUNKT,        VT_TEMP,          5581,  STR5581,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff AUS dT-Regler 2 [grad C]
+{0x053D1832,  CAT_ALLGFUNKT,        VT_TEMP,          5582,  STR5582,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Einsch'temp Min dT-Regler 2 [grad C]
+{0x053D182E,  CAT_ALLGFUNKT,        VT_ENUM,          5583,  STR5583,  sizeof(ENUM5583),     ENUM5583,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [ENUM] - Fühler 1 dT-Regler 1
+{0x053D182F,  CAT_ALLGFUNKT,        VT_ENUM,          5584,  STR5584,  sizeof(ENUM5584),     ENUM5584,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [ENUM] - Fühler 1 dT-Regler 1
+{0x053D1833,  CAT_ALLGFUNKT,        VT_SECONDS_SHORT, 5585,  STR5585,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Einsch'dauer Min dT-Regler 1 [sec 0-250]
+{0x053D183E,  CAT_ALLGFUNKT,        VT_ONOFF,         5587,  STR5587,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Pumpen/Ventilkick K22
 
 // Konfiguration
 {0x053D0712,  CAT_KONFIG,           VT_ENUM,          5700,  STR5700,  sizeof(ENUM5700),     ENUM5700,     DEFAULT_FLAG, DEV_ALL}, // Voreinstellung //FUJITSU
