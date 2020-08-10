@@ -56,14 +56,22 @@
  *       0.42  - 21.03.2019
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
- *       1.0   -
+ *       1.0   - 03.08.2020
+ *       1.1   -
  *
  * Changelog:
- *       version 1.0
+ *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
+ *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
  *        - Logging telegrams (log parameter 30000) now writes to separate file (journal.txt). It can be reset with /D0 (same time with datalog.txt) command and dumped with /DJ command.
+ *        - removed WIFI configuration as it is no longer applicable for the Due
+ *        - lots of new parameters for various device families
+ *        - Code optimization and restructuring, general increase of speed
+ *        - new schemativs for board layout V3
+ *        - lots of bugfixes
  *       version 0.44
  *        - Added webserver functionality via SD card and various other improvements from GitHub user dukess
  *        - Added JSON output for MQTT
@@ -2613,7 +2621,7 @@ void printTelegram(byte* msg, int query_line) {
                 decodedTelegram.error = 256;
                 }
               break;
-            case VT_CUSTOM_ENUM: // custom enum
+            case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
@@ -4280,10 +4288,10 @@ void dht22(void) {
       printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
       _printFIXPOINT(tempBuf,hum,2);
-      printFmtToWebClient(PSTR("hum[%d]: "), i, tempBuf);
+      printFmtToWebClient(PSTR("hum[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
       _printFIXPOINT(tempBuf,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      printFmtToWebClient(PSTR("abs_hum[%d]: "), i, tempBuf);
+      printFmtToWebClient(PSTR("abs_hum[%d]: %s"), i, tempBuf);
       printToWebClient(PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
     }
   }
@@ -5660,7 +5668,6 @@ uint8_t pps_offset = 0;
         if(p[1]=='K' && !isdigit(p[2])){
           //list categories
           webPrintHeader();
-          int len=sizeof(ENUM_CAT);
           printToWebClient(PSTR("<table><tr><td><a href='/"));
           #ifdef PASSKEY
             printPassKey();
@@ -5674,24 +5681,18 @@ uint8_t pps_offset = 0;
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
-#if defined(__AVR__)
-              printENUM(pgm_get_far_address(ENUM_CAT),len,cat,1);
-#else
-              printENUM(ENUM_CAT,len,cat,1);
-#endif
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
-              printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
-              DebugOutput.println();
 #if defined(__AVR__)
+              printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
               cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-#else
-              cat_min = ENUM_CAT_NR[cat*2];
-#endif
-#if defined(__AVR__)
               cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #else
+              printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
+              cat_min = ENUM_CAT_NR[cat*2];
               cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
+              printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+              DebugOutput.println();
               printFmtToWebClient(PSTR("</a></td><td>%hd - %hd</td></tr>\n"), cat_min, cat_max);
             }
           }
@@ -6144,31 +6145,22 @@ uint8_t pps_offset = 0;
               output = false;
 
               if (p[2]=='K' && !isdigit(p[4])) {
-                uint16_t x=2;
-                uint8_t cat=0;
-                while (x<sizeof(ENUM_CAT)) {
-                  printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
+                boolean notfirst = false;
+                for(int cat=0;cat<CAT_UNKNOWN;cat++){
+                  if ((bus.getBusType() != BUS_PPS) || (bus.getBusType() == BUS_PPS && cat == CAT_PPS)) {
+                    if (notfirst) {printToWebClient(PSTR(",\n"));} else {notfirst = true;}
+                    printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
-                  x += printToWebClient(pgm_get_far_address(ENUM_CAT)+x);
+                    printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
+                    cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
+                    cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
 #else
-                  x += printToWebClient(ENUM_CAT+x);
+                    printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
+                    cat_min = ENUM_CAT_NR[cat*2];
+                    cat_max = ENUM_CAT_NR[cat*2+1];
 #endif
-#if defined(__AVR__)
-                  cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-                  cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
-#else
-                  cat_min = ENUM_CAT_NR[cat*2];
-                  cat_max = ENUM_CAT_NR[cat*2+1];
-#endif
-                  printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
-                  if (x < sizeof(ENUM_CAT)-1 && cat < 42) {
-                    cat++;
-                    x += 3;
-                    printToWebClient(PSTR(",\n"));
-                    continue;
-                  } else {
-                    flushToWebClient();
-                    break;
+                    printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+                    printFmtToWebClient(PSTR("\", \"min\": %d, \"max\": %d }"), cat_min, cat_max);
                   }
                 }
                 json_token = NULL;
@@ -6725,7 +6717,6 @@ uint8_t pps_offset = 0;
             float max_avg = 0;
             char max_id[11];
             for (int x=0;x<20;x++) {
-              char tempBuf[10];
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
@@ -6733,11 +6724,7 @@ uint8_t pps_offset = 0;
                   max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
                 }
                 max_id[10] = '\0';
-                printFmtToWebClient(PSTR("<tr><td>%s (%lx): "), max_id, max_devices[x]);
-                _printFIXPOINT(tempBuf,max_cur_temp[x] / 10,2);
-                printFmtToWebClient(PSTR("%s / "), tempBuf);
-                _printFIXPOINT(tempBuf,max_dst_temp[x] / 2,2);
-                printToWebClient(tempBuf);
+                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_id, max_devices[x], max_cur_temp[x] / 10,max_dst_temp[x] / 2);
                 if (max_valve[x] > -1) {
                   printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
                 }
