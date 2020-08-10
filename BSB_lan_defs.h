@@ -287,6 +287,7 @@ typedef enum{
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
+  VT_VOLTAGE_WORD,      //  3 Byte - 1 enable / volt z.B. 2.9V
   VT_CELMIN,            //  3 Byte - 1 enable / value
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
@@ -430,6 +431,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_VOLTAGE_WORD,   10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
 {VT_CELMIN,         1.0,    DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN)},
 {VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
 {VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
@@ -1656,11 +1658,14 @@ const char STR5712[] PROGMEM = STR5712_TEXT;
 const char STR5715[] PROGMEM = STR5715_TEXT;
 const char STR5721[] PROGMEM = STR5721_TEXT;
 const char STR5730[] PROGMEM = STR5730_TEXT;
+const char STR5730_2[] PROGMEM = STR5730_2_TEXT;
 const char STR5731[] PROGMEM = STR5731_TEXT;
 const char STR5732[] PROGMEM = STR5732_TEXT;
 const char STR5733[] PROGMEM = STR5733_TEXT;
 const char STR5734[] PROGMEM = STR5734_TEXT;
 const char STR5736[] PROGMEM = STR5736_TEXT;
+const char STR5737[] PROGMEM = STR5737_TEXT;
+const char STR5738[] PROGMEM = STR5738_TEXT;
 // const char STR5737[] PROGMEM = "Wirksinn TWW Umlenkventil";
 const char STR5740[] PROGMEM = STR5740_TEXT;
 #define STR5760 STR2150
@@ -1668,6 +1673,7 @@ const char STR5761[] PROGMEM = STR5761_TEXT;
 const char STR5770[] PROGMEM = STR5770_TEXT;
 const char STR5772[] PROGMEM = STR5772_TEXT;
 const char STR5774[] PROGMEM = STR5774_TEXT;
+const char STR5775[] PROGMEM = STR5775_TEXT;
 const char STR5800[] PROGMEM = STR5800_TEXT;
 const char STR5806[] PROGMEM = STR5806_TEXT;
 const char STR5807[] PROGMEM = STR5807_TEXT;
@@ -1720,6 +1726,7 @@ const char STR5961_2[] PROGMEM = STR5961_2_TEXT;
 const char STR5962_2[] PROGMEM = STR5962_2_TEXT;
 const char STR5963_2[] PROGMEM = STR5963_2_TEXT;
 const char STR5964_2[] PROGMEM = STR5964_2_TEXT;
+const char STR5964_3[] PROGMEM = STR5964_3_TEXT;
 const char STR5957[] PROGMEM = STR5957_TEXT;
 const char STR5960[] PROGMEM = STR5960_TEXT;
 const char STR5961[] PROGMEM = STR5961_TEXT;
@@ -1728,13 +1735,18 @@ const char STR5963[] PROGMEM = STR5963_TEXT;
 const char STR5964[] PROGMEM = STR5964_TEXT;
 const char STR5965[] PROGMEM = STR5965_TEXT;
 const char STR5966[] PROGMEM = STR5966_TEXT;
+const char STR5966_2[] PROGMEM = STR5966_2_TEXT;
 const char STR5970[] PROGMEM = STR5970_TEXT;
 const char STR5970_2[] PROGMEM = STR5970_2_TEXT;
 const char STR5971[] PROGMEM = STR5971_TEXT;
 const char STR5971_2[] PROGMEM = STR5971_2_TEXT;
 const char STR5973[] PROGMEM = STR5973_TEXT;
+const char STR5973_2[] PROGMEM = STR5973_2_TEXT;
+const char STR5974[] PROGMEM = STR5974_TEXT;
 const char STR5975[] PROGMEM = STR5975_TEXT;
+const char STR5975_2[] PROGMEM = STR5975_2_TEXT;
 const char STR5976[] PROGMEM = STR5976_TEXT;
+const char STR5976_2[] PROGMEM = STR5976_2_TEXT;
 const char STR5977[] PROGMEM = STR5977_TEXT;
 const char STR5978[] PROGMEM = STR5978_TEXT;
 const char STR5978_2[] PROGMEM = STR5978_2_TEXT;
@@ -3944,6 +3956,11 @@ const char ENUM5730[] PROGMEM_LATEST = {
 "\x00 " ENUM5730_00_TEXT "\0"
 "\x01 " ENUM5730_01_TEXT
 };
+const char ENUM5730_2[] PROGMEM_LATEST = {
+"\x01 " ENUM5730_2_01_TEXT "\0"
+"\x02 " ENUM5730_01_TEXT "\0"
+"\x03 " ENUM5730_2_03_TEXT
+};
 const char ENUM5731[] PROGMEM_LATEST = {
 "\x00 " ENUM5731_00_TEXT "\0"
 "\x01 " ENUM5731_01_TEXT "\0"
@@ -3954,6 +3971,11 @@ const char ENUM5734[] PROGMEM_LATEST = {
 "\x01 " ENUM5734_01_TEXT "\0"
 "\x02 " ENUM5734_02_TEXT
 };
+const char ENUM5737[] PROGMEM_LATEST = {
+"\x00 " ENUM5737_00_TEXT "\0"
+"\xff " ENUM5737_FF_TEXT
+};
+
 const char ENUM5760[] PROGMEM_LATEST = {
 "\x00 " ENUM5760_00_TEXT "\0"
 "\x01 " ENUM5760_01_TEXT
@@ -3990,7 +4012,14 @@ const char ENUM5840[] PROGMEM_LATEST = {
 "\x01 " ENUM5840_01_TEXT "\0"
 "\x02 " ENUM5840_02_TEXT
 };
+
 const char ENUM5841[] PROGMEM_LATEST = {
+"\x01 " ENUM5841_01_TEXT "\0"
+"\x02 " ENUM5841_02_TEXT "\0"
+"\x03 " ENUM5841_03_TEXT
+};
+
+const char ENUM5841_2[] PROGMEM_LATEST = {
 "\x01 " ENUM5841_01_TEXT "\0"
 "\x02 " ENUM5841_02_TEXT "\0"
 "\x03 " ENUM5841_03_TEXT
@@ -7275,20 +7304,25 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3D04C0,  CAT_KONFIG,           VT_ONOFF,         5715,  STR5715,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_064_ALL}, // [0] - Konfiguration - Heizkreis 2 - logged on OCI700 via LPB
 {0x073D04C0,  CAT_KONFIG,           VT_ONOFF,         5721,  STR5721,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Heizkreis 3
 {0x313D071E,  CAT_KONFIG,           VT_ENUM,          5730,  STR5730,  sizeof(ENUM5730),     ENUM5730,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser-Sensor B3
+{0x053D0D8F,  CAT_KONFIG,           VT_ENUM,          5730,  STR5730_2,sizeof(ENUM5730_2),   ENUM5730_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Trinkwasser-Sensor B3
 {0x253D071C,  CAT_KONFIG,           VT_ENUM,          5731,  STR5731,  sizeof(ENUM5731),     ENUM5731,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser-Stellglied Q3
 {0x113D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5732 TWW Pumpenpause Umsch UV [s]
 {0x393D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 5732 TWW Pumpenpause Umsch UV [s] - logged on OCI700 via LPB
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
 {0x113D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5733 TWW Pumpenpause Verzögerung [s]
 {0x393D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 5733 TWW Pumpenpause Verzögerung [s] - logged on OCI700 via LPB
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
 {0x053D0F7B,  CAT_KONFIG,           VT_ENUM,          5734,  STR5734,  sizeof(ENUM5734),     ENUM5734,     FL_RONLY,     DEV_ALL}, // Grundposition TWW Uml'ventil
 {0x053D0727,  CAT_KONFIG,           VT_ONOFF,         5736,  STR5736,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
-// {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5737,  STR5737,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wirksinn TW Umlenkventil
+{0x053D10EA,  CAT_KONFIG,           VT_ONOFF,         5737,  STR5737,  sizeof(ENUM5737),     ENUM5737,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn TW Umlenkventil
+{0x053D118C,  CAT_KONFIG,           VT_ONOFF,         5738,  STR5738,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
 {0x053D12BC,  CAT_KONFIG,           VT_ENERGY_WORD,   5740,  STR5740,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro TWW K6
 {0x053D079C,  CAT_KONFIG,           VT_ENUM,          5760,  STR5760,  sizeof(ENUM5760),     ENUM5760,     DEFAULT_FLAG, DEV_ALL}, // Vorregler/Zubringerpumpe [Vor Pufferspeicher | Nach Pufferspeicher] (Nach Pufferspeicher)
 {0x193D2FDC,  CAT_KONFIG,           VT_BIT,           5761,  STR5761,  sizeof(ENUM5761),     ENUM5761,     DEFAULT_FLAG, DEV_ALL}, // Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
 {0x053D0851,  CAT_KONFIG,           VT_ENUM,          5770,  STR5770,  sizeof(ENUM5770),     ENUM5770,     DEFAULT_FLAG, DEV_ALL}, // Erzeugertyp
 {0x053D07BF,  CAT_KONFIG,           VT_SECONDS_SHORT, 5772,  STR5772,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brenner Vorlaufzeit
 {0x053D0F9A,  CAT_KONFIG,           VT_ENUM,          5774,  STR5774,  sizeof(ENUM5774),     ENUM5774,     DEFAULT_FLAG, DEV_ALL}, // Steuerung Kesselpumpe/TWW Umlenkventil
+{0x113D1A8A,  CAT_KONFIG,           VT_ONOFF,         5775,  STR5775,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5800,  STR5800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmequelle
 {0x053D1119,  CAT_KONFIG,           VT_ENUM,          5806,  STR5806,  sizeof(ENUM5806),     ENUM5806,     DEFAULT_FLAG, DEV_ALL}, // Typ Elektroeinsatz Vorlauf //FUJITSU
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5807,  STR5807,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kälteerzeugung
@@ -7302,6 +7336,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // c)  two error messages "Solarstellglied Puffer fehlt" and "Solarstellglied Schwimmbad fehlt"
 {0x053D0827,  CAT_KONFIG,           VT_ENUM,          5840,  STR5840,  sizeof(ENUM5840),     ENUM5840,     DEFAULT_FLAG, DEV_ALL}, // Solarstellglied
 {0x053D0829,  CAT_KONFIG,           VT_ENUM,          5841,  STR5841,  sizeof(ENUM5841),     ENUM5841,     DEFAULT_FLAG, DEV_ALL}, // Externer Solartauscher
+{0x053D0829,  CAT_KONFIG,           VT_ENUM,          5841,  STR5841,  sizeof(ENUM5841_2),   ENUM5841_2,   DEFAULT_FLAG, DEV_123_ALL}, // Externer Solartauscher
 {0x253D071B,  CAT_KONFIG,           VT_YESNO,         5870,  STR5870,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Kombispeicher
 {0x053D0497,  CAT_KONFIG,           VT_ENUM,          5890,  STR5890,  sizeof(ENUM5890),     ENUM5890,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Relaisausgang QX1
 {0x053D0497,  CAT_KONFIG,           VT_ENUM,          5890,  STR5890_2,sizeof(ENUM5890_2),   ENUM5890_2,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Relaisausgang QX1
@@ -7382,6 +7417,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Spannungswert 1 H1
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Spannungswert 1 H1
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Spannungswert 1 H1
+{0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE_WORD,  5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Spannungswert 1 H1
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Spannungswert 1 H1
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Spannungswert 1 H1
 {0x053D0B7B,  CAT_KONFIG,           VT_VOLTAGE,       5953,  STR5953,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Spannungswert 1 H1
@@ -7394,6 +7430,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D0B7D,  CAT_KONFIG,           VT_SINT,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [just signed integer ] - Konfiguration -
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_138_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B7D,  CAT_KONFIG,           VT_TEMP,          5954,  STR5954_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
@@ -7411,6 +7448,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Spannungswert 2 H1
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Spannungswert 2 H1
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Spannungswert 2 H1
+{0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE_WORD,  5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Spannungswert 2 H1
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Spannungswert 2 H1
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Spannungswert 2 H1
 {0x053D0B7C,  CAT_KONFIG,           VT_VOLTAGE,       5955,  STR5955,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Spannungswert 2 H1
@@ -7421,6 +7459,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
+{0x053D0B83,  CAT_KONFIG,           VT_SINT,          5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // [just signed integer ] - Konfiguration
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_138_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
 {0x053D0B83,  CAT_KONFIG,           VT_UNKNOWN,       5956,  STR5956_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H1
@@ -7440,6 +7479,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_3,sizeof(ENUM5957_2),   ENUM5957_2,   DEFAULT_FLAG, DEV_076_ALL}, // BA-Umschaltung HK's+TWW
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5957,  STR5957_2,sizeof(ENUM5957),     ENUM5957,     DEFAULT_FLAG, DEV_096_ALL}, // BA-Umschaltung HK's+TWW
 {0x073D0807,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960,  sizeof(ENUM5960),     ENUM5960,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Funktion Eingang H3
+{0x053D0D95,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960,  sizeof(ENUM5960),     ENUM5960,     DEFAULT_FLAG, DEV_123_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_028_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_029_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_3),   ENUM5960_3,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H3
@@ -7447,18 +7487,21 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_2),   ENUM5960_2,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x053D0484,  CAT_KONFIG,           VT_ENUM,          5960,  STR5960_2,sizeof(ENUM5960_4),   ENUM5960_4,   DEFAULT_FLAG, DEV_211_ALL}, // [-] - Konfiguration - Funktion Eingang H3
 {0x073D0808,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
+{0x053D0DCC,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961,  sizeof(ENUM5961),     ENUM5961,     DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x053D0575,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961_2,sizeof(ENUM5961_2),   ENUM5961_2,   DEFAULT_FLAG, DEV_095_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 {0x053D0575,  CAT_KONFIG,           VT_ENUM,          5961,  STR5961_2,sizeof(ENUM5961_2),   ENUM5961_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H3
 // !FIXME! ProgNr 5962 is listed as 0x073d0656 in Python project
 {0x2B3D0656,  CAT_KONFIG,           VT_TEMP,          5962,  STR5962,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H3
 {0x2A3D0656,  CAT_KONFIG,           VT_TEMP,          5962,  STR5962_2,0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // [°C ] - Konfiguration - Minimaler Vorlaufsollwert H2
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5963,  STR5963,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 1 H3
+{0x073D0B7B,  CAT_KONFIG,           VT_VOLTAGE_WORD,  5963,  STR5963,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [V] Spannungswert 1 H3
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5963,  STR5963_2,0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // Spannungswert 1 H3
 {0x073D079F,  CAT_KONFIG,           VT_TEMP,          5964,  STR5964,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - Waermeanforderung 10V H3
 {0x063D079F,  CAT_KONFIG,           VT_TEMP,          5964,  STR5964_2,0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // [°C ] - Konfiguration - Temperaturwert 10V H2
+{0x073D0B7D,  CAT_KONFIG,           VT_SINT,          5964,  STR5964_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [just signed int ] - Konfiguration
 
-{CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5965,  STR5965,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 2 H3
+{0x073D0B7C,  CAT_KONFIG,           VT_VOLTAGE_WORD,  5965,  STR5965,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Spannungswert 2 H3
 {0x073D05DC,  CAT_KONFIG,           VT_PRESSURE,      5966,  STR5966,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [bar ] - Konfiguration - Druckwer 3.5V H3
+{0x073D0B83,  CAT_KONFIG,           VT_SINT,          5966,  STR5966_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [just signed int ] - Konfiguration
 {0x2D3D3073,  CAT_KONFIG,           VT_ENUM,          5970,  STR5970,  sizeof(ENUM5970),     ENUM5970,     DEFAULT_FLAG, DEV_ALL}, // Thision 5970 Konfig Raumthermostat 1 [enum]
 {0x053D0D96,  CAT_KONFIG,           VT_ENUM,          5970,  STR5970_2,sizeof(ENUM5970_2),   ENUM5970_2,   DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Funktion Kontakt H4
 {0x053D0D96,  CAT_KONFIG,           VT_ENUM,          5970,  STR5970_2,sizeof(ENUM5970_2),   ENUM5970_2,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Konfiguration - Funktion Kontakt H4
@@ -7475,9 +7518,13 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0DCD,  CAT_KONFIG,           VT_ENUM,          5971,  STR5971_2,sizeof(ENUM5971_2),   ENUM5971_2,   DEFAULT_FLAG, DEV_203_ALL}, // [0] - Konfiguration - Wirksinn Kontakt H4
 {0x053D3046,  CAT_KONFIG,           VT_ENUM,          5973,  STR5973,  sizeof(ENUM5973),     ENUM5973,     DEFAULT_FLAG, DEV_ALL}, // Thision 5973 Funktion Eingang RelCl [enum]
 {0x39050484,  CAT_KONFIG,           VT_ENUM,          5973,  STR5973,  sizeof(ENUM5973),     ENUM5973,     DEFAULT_FLAG, DEV_064_ALL}, // Thision 5973 Funktion Eingang RelCl [enum] - logged on OCI700 via LPB
+{0x053D0F70,  CAT_KONFIG,           VT_SINT,          5973,  STR5973_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [just signed int ] - Konfiguration
+{0x053D0F6E,  CAT_KONFIG,           VT_SINT,          5974,  STR5974,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [just signed int ] - Konfiguration
 {0x193D2FD2,  CAT_KONFIG,           VT_TEMP_WORD,     5975,  STR5975,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5975 Ext. Vorlaufsollwert Maximum [°C?]
+{0x053D0F71,  CAT_KONFIG,           VT_SINT,          5975,  STR5975_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [just signed int ] - Konfiguration
 {0x153D2FD3,  CAT_KONFIG,           VT_PERCENT,       5976,  STR5976,  0,                    NULL,         DEFAULT_FLAG, DEV_098_ALL}, // WGB Pro EVO 15C Ext. Leistungsvorg. Schwelle [%]
 {0x153D2FD3,  CAT_KONFIG,           VT_PERCENT,       5976,  STR5976,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // WGB Pro EVO 15C Ext. Leistungsvorg. Schwelle [%]
+{0x053D0F6F,  CAT_KONFIG,           VT_SINT,          5976,  STR5976_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [just signed int ] - Konfiguration
 {0x053D0D97,  CAT_KONFIG,           VT_ENUM,          5977,  STR5977,  sizeof(ENUM5970_2),   ENUM5970_2,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Funktion Kontakt H5
 {0x093D3054,  CAT_KONFIG,           VT_ENUM,          5978,  STR5978,  sizeof(ENUM5978),     ENUM5978,     DEFAULT_FLAG, DEV_ALL}, // Thision 5978 Funktion Eingang SolCl [enum]
 {0x25050480,  CAT_KONFIG,           VT_ENUM,          5978,  STR5978,  sizeof(ENUM5978),     ENUM5978,     DEFAULT_FLAG, DEV_064_ALL}, // Thision 5978 Funktion Eingang SolCl [enum] - logged on OCU700 via LPB
