@@ -8145,7 +8145,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1578,  CAT_IOTEST,           VT_TEMP,          7817,  STR7817,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX14 Elco RVS61.843E/560
 // FL_NO_CMD - clash with 7804
 {0x053D056B,  CAT_IOTEST,           VT_TEMP,          7820,  STR7820,  0,                    NULL,         FL_NO_CMD,    DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
-{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7821,  STR7821,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
+// FL_NO_CMD - clash with 7805
+{0x053D056C,  CAT_IOTEST,           VT_TEMP,          7821,  STR7821,  0,                    NULL,         FL_NO_CMD,    DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
 // FL_NO_CMD - clash with 7806
 {0x053D0791,  CAT_IOTEST,           VT_TEMP,          7822,  STR7822,  0,                    NULL,         FL_NO_CMD,    DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX3
 {0x053D0792,  CAT_IOTEST,           VT_TEMP,          7823,  STR7823,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX4
