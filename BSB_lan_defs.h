@@ -2139,9 +2139,11 @@ const char STR7785_2[] PROGMEM = STR7785_2_TEXT;
 const char STR7786[] PROGMEM = STR7786_TEXT;
 const char STR7787[] PROGMEM = STR7787_TEXT;
 const char STR7787_2[] PROGMEM = STR7787_2_TEXT;
+#define STR7804 STR7820
 #define STR7805 STR7821
 #define STR7806 STR7822
 #define STR7807 STR7823
+const char STR7809[] PROGMEM = STR7809_TEXT;
 const char STR7810[] PROGMEM = STR7810_TEXT;
 const char STR7811[] PROGMEM = STR7811_TEXT;
 const char STR7812[] PROGMEM = STR7812_TEXT;
@@ -2150,7 +2152,6 @@ const char STR7814[] PROGMEM = STR7814_TEXT;
 const char STR7815[] PROGMEM = STR7815_TEXT;
 const char STR7816[] PROGMEM = STR7816_TEXT;
 const char STR7817[] PROGMEM = STR7817_TEXT;
-const char STR7809[] PROGMEM = STR7809_TEXT;
 const char STR7820[] PROGMEM = STR7820_TEXT;
 const char STR7821[] PROGMEM = STR7821_TEXT;
 const char STR7822[] PROGMEM = STR7822_TEXT;
@@ -2187,6 +2188,9 @@ const char STR7914[] PROGMEM = STR7914_TEXT;
 const char STR7915[] PROGMEM = STR7915_TEXT;
 const char STR7916[] PROGMEM = STR7916_TEXT;
 const char STR7917[] PROGMEM = STR7917_TEXT;
+const char STR7919[] PROGMEM = STR7919_TEXT;
+const char STR7945[] PROGMEM = STR7945_TEXT;
+const char STR7946[] PROGMEM = STR7946_TEXT;
 const char STR7950[] PROGMEM = STR7950_TEXT;
 const char STR7951[] PROGMEM = STR7951_TEXT;
 const char STR7952[] PROGMEM = STR7952_TEXT;
@@ -8311,6 +8315,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D170A,  CAT_IOTEST,           VT_UNKNOWN,       7788,  STR7785_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2 PWM % // Teil 2 von 7785 abgelegt als 7788
 {0x053D1717,  CAT_IOTEST,           VT_UNKNOWN,       7789,  STR7787_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX22 Modul 2 PWM % // Teil 2 von 7787 abgelegt als 7789
 
+{0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7804,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1 Elco RVS61.843E/560
 {0x053D056B,  CAT_IOTEST,           VT_TEMP,          7804,  STR7820,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX1
 {0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7805,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2 Elco RVS61.843E/560
 {0x053D056C,  CAT_IOTEST,           VT_TEMP,          7805,  STR7821,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX2
@@ -8450,6 +8455,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D03FD,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7916,  STR7916,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX 6
 //following CommandID is just extrapolated from above ones...
 {0x053D03FE,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7917,  STR7917,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX 7
+{0x053D0403,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7919,  STR7919,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // [V ] - Ein-/Ausgangstest - Eingang EX10 Elco RVS61.843E/560
+{0x053D0404,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7945,  STR7945,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // [V ] - Ein-/Ausgangstest - Eingang EX10 Elco RVS61.843E/560
+{0x053D03F7,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7946,  STR7946,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_108_ALL}, // [V ] - Ein-/Ausgangstest - Eingang EX10 Elco RVS61.843E/560
 {0x053D1078,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7950,  STR7950,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX01 Modul 1
 {0x053D1079,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7951,  STR7951,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX01 Modul 2
 {0x053D107A,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7952,  STR7952,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX01 Modul 3
