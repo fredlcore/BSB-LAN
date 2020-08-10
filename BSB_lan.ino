@@ -6718,7 +6718,6 @@ uint8_t pps_offset = 0;
             float max_avg = 0;
             char max_id[11];
             for (int x=0;x<20;x++) {
-              char tempBuf[10];
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;

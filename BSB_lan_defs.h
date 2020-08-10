@@ -7373,6 +7373,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_090_ALL}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_097_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_098_ALL}, // [-] - Konfiguration - Funktion Eingang H1
+{0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_028_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_064_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_6),   ENUM5950_6,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H1
@@ -7819,11 +7820,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0072,  CAT_LPB,              VT_ONOFF,         6605,  STR6605,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Busspeisung Status
 {0x053D3053,  CAT_LPB,              VT_BIT,           6606,  STR6606,  sizeof(ENUM6606),     ENUM6606,     DEFAULT_FLAG, DEV_ALL}, // Thision 6606 LPB-Konfig. 0 [?]
 {0x053D006A,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // [0] - LPB - Anzeige Systemmeldungen
-{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_049_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_021_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_023_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_028_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_029_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_036_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_049_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_052_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_059_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_064_ALL}, // Anzeige Systemmeldungen
@@ -8911,6 +8913,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D08C8,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8931,  STR8931,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorreglersollwert
 {0x053D051F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur
 {0x053D021D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur - logged on OCI700 via LPB
+{0x053D021D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur - logged on OCI700 via LPB
 {0x053D021D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur - logged on OCI700 via LPB
 {0x053D021D,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8950,  STR8950,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemperatur - logged on OCI700 via LPB
 {0x053D0783,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8951,  STR8951,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlaufsollwert
