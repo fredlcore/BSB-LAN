@@ -3080,11 +3080,6 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM7700_02_TEXT ENUM6040_03_TEXT
 #define ENUM7700_03_TEXT ENUM6040_03_TEXT
 #define ENUM7700_04_TEXT ENUM6085_02_TEXT
-#define ENUM7844_00_TEXT ENUM1630_02_TEXT
-#define ENUM7844_01_TEXT ENUM7999_01_TEXT
-#define ENUM7844_02_TEXT ENUM7999_02_TEXT
-#define ENUM7844_03_TEXT ENUM7999_03_TEXT
-#define ENUM7844_04_TEXT ENUM7999_04_TEXT
 #define ENUM7999_00_TEXT ENUM48_00_TEXT
 #define ENUM8000_00_TEXT ENUM6040_03_TEXT
 #define ENUM8000_18_TEXT ENUM780_00_TEXT
@@ -5100,16 +5095,6 @@ const char ENUM7700_2[] PROGMEM_LATEST = {
 "\x08 " ENUM7700_2_08_TEXT "\0"
 "\x09 " ENUM7700_2_09_TEXT
 };
-
-// [Kein ¦ Geschl' (ooo), Offen (---) ¦ Impulse ¦ Frequenz Hz ¦ Spannung V]
-const char ENUM7844[] PROGMEM_LATEST = {
-"\x00\x00 " "?" ENUM7844_00_TEXT "\0" // interpolation from specification
-"\x00\x01 " ENUM7844_01_TEXT "\0"
-"\x00\x02 " "?" ENUM7844_02_TEXT "\0" // interpolation from specification
-"\x00\x03 " "?" ENUM7844_03_TEXT "\0" // interpolation from specification
-"\x00\x04 " "?" ENUM7844_04_TEXT      // interpolation from specification
-};
-#define ENUM7858 ENUM7844
 
 //Eingangssignal H33  //FUJITSU
 const char ENUM7999[] PROGMEM_LATEST = {
@@ -8378,11 +8363,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_203_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_205_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
 {0x053D0DA3,  CAT_IOTEST,           VT_CLOSEDOPEN,    7841,  STR7841,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_211_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H1
-
-// Elco Wärmepumpe RVS61.843E/560 - Signalart H1 [Kein ¦ Geschl' (ooo), Offen (---) ¦ Impulse ¦ Frequenz Hz ¦ Spannung V]
-// "---" == DC 80 0A 10 07 05 3D 17 1C 01 00 00 00 00 BF A0
-{0x053D171C,  CAT_IOTEST,           VT_CUSTOM_ENUM,   7844,  STR7844,  sizeof(ENUM7844),        ENUM7844,        FL_RONLY,     DEV_ALL}, // Eingangssignal H1
-
+{0x053D171C,  CAT_IOTEST,           VT_UNKNOWN,       7844,  STR7844,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Eingangssignal H1
 {0x053D057A,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
 {0x063D082F,  CAT_IOTEST,           VT_VOLTAGE,       7845,  STR7845,  0,                    NULL,         FL_RONLY,     DEV_103_ALL}, // [V ] - Ein-/Ausgangstest - Spannungssignal H2
@@ -8430,11 +8411,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 {0x073D082F,  CAT_IOTEST,           VT_VOLTAGE,       7854,  STR7854,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Spannungssignal H3
 {0x073D0809,  CAT_IOTEST,           VT_CLOSEDOPEN,    7855,  STR7855,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_ALL}, // Kontaktzustand H3
-
-// Elco Wärmepumpe RVS61.843E/560 - Signalart H1 [Kein ¦ Geschl' (ooo), Offen (---) ¦ Impulse ¦ Frequenz Hz ¦ Spannung V]
-// "---" == DC 80 0A 10 07 05 3D 17 4E 01 00 00 00 00 44 74 
-{0x053D174E,  CAT_IOTEST,           VT_CUSTOM_ENUM,   7858,  STR7858,  sizeof(ENUM7858),        ENUM7858,        FL_RONLY,     DEV_ALL}, // Eingangssignal H3
-
+{0x053D174E,  CAT_IOTEST,           VT_UNKNOWN,       7858,  STR7858,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Eingangssignal H3
 {0x053D0DA8,  CAT_IOTEST,           VT_CLOSEDOPEN,    7860,  STR7860,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H4
 {0x053D0DA9,  CAT_IOTEST,           VT_CLOSEDOPEN,    7865,  STR7865,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_ALL}, // [0] - Ein-/Ausgangstest - Kontaktzustand H5
 {0x053D03F6,  CAT_IOTEST,           VT_VOLTAGE,       7870,  STR7870,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [V] - Ein-/Ausgangstest - Brennerstörung S3
