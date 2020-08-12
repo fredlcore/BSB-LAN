@@ -920,7 +920,7 @@
 #define STR5734_TEXT "Grundposition TWW Umlenkventil"
 #define STR5736_TEXT "Trinkwasser Trennschaltung"
 #define STR5737_TEXT "Wirksinn TW Umlenkventil"
-#define STR5738_TEXT "Среднее положение отвод клап ГВС"
+#define STR5738_TEXT "Mittelposition TWW Umlenkventil"
 #define STR5740_TEXT "Leistung Elektro TWW K6"
 #define STR5761_TEXT "Zubringerpumpe Q8 Bit 0-3"
 #define STR5770_TEXT "Erzeugertyp"
