@@ -8332,7 +8332,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1572,  CAT_IOTEST,           VT_TEMP,          7811,  STR7811,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX8 Elco RVS61.843E/560
 {0x053D1573,  CAT_IOTEST,           VT_TEMP,          7812,  STR7812,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX9 Elco RVS61.843E/560
 {0x053D1574,  CAT_IOTEST,           VT_TEMP,          7813,  STR7813,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX10 Elco RVS61.843E/560
-{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7814,  STR7814,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX11 Elco RVS61.843E/560
+{0x053D08C5,  CAT_IOTEST,           VT_TEMP,          7814,  STR7814,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX11 Elco RVS61.843E/560
 {0x053D1576,  CAT_IOTEST,           VT_TEMP,          7815,  STR7815,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX12 Elco RVS61.843E/560
 {0x053D1577,  CAT_IOTEST,           VT_TEMP,          7816,  STR7816,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX13 Elco RVS61.843E/560
 {0x053D1578,  CAT_IOTEST,           VT_TEMP,          7817,  STR7817,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Ein-/Ausgangstest - Fühlertemperatur BX14 Elco RVS61.843E/560
