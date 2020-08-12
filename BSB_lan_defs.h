@@ -5103,11 +5103,11 @@ const char ENUM7700_2[] PROGMEM_LATEST = {
 
 // [Kein ¦ Geschl' (ooo), Offen (---) ¦ Impulse ¦ Frequenz Hz ¦ Spannung V]
 const char ENUM7844[] PROGMEM_LATEST = {
-"\x00\x00 " ENUM7844_00_TEXT "\0" // interpolation from specification
+"\x00\x00 " "?" ENUM7844_00_TEXT "\0" // interpolation from specification
 "\x00\x01 " ENUM7844_01_TEXT "\0"
-"\x00\x02 " ENUM7844_02_TEXT "\0" // interpolation from specification
-"\x00\x03 " ENUM7844_03_TEXT "\0" // interpolation from specification
-"\x00\x04 " ENUM7844_04_TEXT      // interpolation from specification
+"\x00\x02 " "?" ENUM7844_02_TEXT "\0" // interpolation from specification
+"\x00\x03 " "?" ENUM7844_03_TEXT "\0" // interpolation from specification
+"\x00\x04 " "?" ENUM7844_04_TEXT      // interpolation from specification
 };
 #define ENUM7858 ENUM7844
 
