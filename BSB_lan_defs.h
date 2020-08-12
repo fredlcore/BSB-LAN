@@ -4673,8 +4673,8 @@ const char ENUM6085[] PROGMEM_LATEST = {
 // Konfiguration - Fühlertyp Kollektor
 const char ENUM6097[] PROGMEM_LATEST = {
 "\x01 " ENUM6097_01_TEXT "\0"
-"\x01 " ENUM6097_02_TEXT "\0"
-"\x02 " ENUM6097_03_TEXT
+"\x02 " ENUM6097_02_TEXT "\0"
+"\x03 " ENUM6097_03_TEXT
 };
 #define ENUM6101 ENUM6097           // Fühlertyp Abgastemperatur
 
