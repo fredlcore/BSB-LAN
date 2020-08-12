@@ -1799,12 +1799,24 @@ const char STR6049_2[] PROGMEM = STR6049_2_TEXT;
 const char STR6050_2[] PROGMEM = STR6050_2_TEXT;
 const char STR6051[] PROGMEM = STR6051_TEXT;
 const char STR6052[] PROGMEM = STR6052_TEXT;
+const char STR6057[] PROGMEM = STR6057_TEXT;
+const char STR6058[] PROGMEM = STR6058_TEXT;
+const char STR6059[] PROGMEM = STR6059_TEXT;
+const char STR6060[] PROGMEM = STR6060_TEXT;
+const char STR6062[] PROGMEM = STR6062_TEXT;
+const char STR6063[] PROGMEM = STR6063_TEXT;
+const char STR6065[] PROGMEM = STR6065_TEXT;
+const char STR6066[] PROGMEM = STR6066_TEXT;
+const char STR6067[] PROGMEM = STR6067_TEXT;
+const char STR6068[] PROGMEM = STR6068_TEXT;
 const char STR6070[] PROGMEM = STR6070_TEXT;
 const char STR6071[] PROGMEM = STR6071_TEXT;
 const char STR6072[] PROGMEM = STR6072_TEXT;
 const char STR6075[] PROGMEM = STR6075_TEXT;
+const char STR6078[] PROGMEM = STR6078_TEXT;
 const char STR6085[] PROGMEM = STR6085_TEXT;
 const char STR6089[] PROGMEM = STR6089_TEXT;
+const char STR6089_2[] PROGMEM = STR6089_2_TEXT;
 const char STR6092[] PROGMEM = STR6092_TEXT;
 const char STR6097[] PROGMEM = STR6097_TEXT;
 const char STR6098[] PROGMEM = STR6098_TEXT;
@@ -1882,6 +1894,9 @@ const char STR6300[] PROGMEM = STR6300_TEXT;
 const char STR6300_2[] PROGMEM = STR6300_2_TEXT;
 const char STR6310[] PROGMEM = STR6310_TEXT;
 const char STR6330[] PROGMEM = STR6330_TEXT;
+const char STR6355[] PROGMEM = STR6355_TEXT;
+const char STR6356[] PROGMEM = STR6356_TEXT;
+const char STR6357[] PROGMEM = STR6357_TEXT;
 const char STR6375[] PROGMEM = STR6375_TEXT;
 const char STR6420[] PROGMEM = STR6420_TEXT;
 const char STR6421[] PROGMEM = STR6421_TEXT;
@@ -7754,10 +7769,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D045B,  CAT_KONFIG,           VT_ENUM,          6071,  STR6071,  sizeof(ENUM6071),     ENUM6071,     DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX Standard | Invertiert
 {0x053D0B29,  CAT_KONFIG,           VT_ENUM,          6072,  STR6072,  sizeof(ENUM7425),     ENUM7425,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Signal Ausg' UX - Baxi Luna Platinum
 {0x053D042B,  CAT_KONFIG,           VT_TEMP,          6075,  STR6075,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturwert 10V UX
-{0x053D1231,  CAT_KONFIG,           VT_ENUM,          6078,  STR6078,  sizeof(ENUM7423),     ENUM7423,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Signal Fkt' UX2 - Baxi Luna Platinum
+{0x053D1231,  CAT_KONFIG,           VT_ENUM,          6078,  STR6078,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Signal Fkt' UX2 - Baxi Luna Platinum
 {0x053D04A0,  CAT_KONFIG,           VT_ENUM,          6085,  STR6085,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // PWM-Ausgang P1
 {0x113D2F97,  CAT_KONFIG,           VT_BYTE,          6089,  STR6089,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6089 Mod Pumpe Drehzahlstufen [?]
-{0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM7423),     ENUM7423,     DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
+{0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x113D2FE1,  CAT_KONFIG,           VT_PERCENT,       6092,  STR6092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM [?]
 {0x053D075D,  CAT_KONFIG,           VT_ENUM,          6097,  STR6097,  sizeof(ENUM6097),     ENUM6097,     DEFAULT_FLAG, DEV_ALL}, // Fühlertyp Kollektor NTC|PT1000
 {0x053D08B6,  CAT_KONFIG,           VT_TEMP,          6098,  STR6098,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Kollektorfühler
