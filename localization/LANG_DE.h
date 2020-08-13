@@ -2925,10 +2925,12 @@
 #define ENUM_ERROR_77_TEXT "Fehler Druckschalter"
 #define ENUM_ERROR_79_TEXT "Vorlauftemperatur 1 (HK1) Überwachung"
 #define ENUM_ERROR_7a_TEXT "Vorlauftemperatur 2 (HK2) Überwachung"
+#define ENUM_ERROR_7d_TEXT "Boiler temp too high"
 #define ENUM_ERROR_7e_TEXT "Trinkwasser-Ladeüberwachung"
 #define ENUM_ERROR_7f_TEXT "Legionellentemperatur nicht erreicht"
 #define ENUM_ERROR_80_TEXT "Flammenausfall in Betrieb"
 #define ENUM_ERROR_81_TEXT "Drehzahlgrenze verletzt"
+#define ENUM_ERROR_82_TEXT "Flue gas temp too high (Flue temperature limit reached)"
 #define ENUM_ERROR_83_TEXT "Brennerstörung"
 #define ENUM_ERROR_84_TEXT "Gasdruckwächter- oder Luftdruckwächterfehler / offen"
 #define ENUM_ERROR_85_TEXT "Keine Flammenbildung nach Ablauf der Sicherheitszeit"
@@ -3013,13 +3015,132 @@
 #define ENUM_ERROR_01_73_TEXT "Vorlauftemperatur 3 (HK3) Überwachung"
 #define ENUM_ERROR_01_74_TEXT "Temperaturwächter HK3"
 #define ENUM_ERROR_01_75_TEXT "Erweiterungsmodul 3 Fehler (Sammelfehler)"
+#define ENUM_ERROR_01_76_TEXT "Sitherm Pro calculation"
+#define ENUM_ERROR_01_77_TEXT "BV stepper motor"
+#define ENUM_ERROR_01_78_TEXT "Drift test limit value"
+#define ENUM_ERROR_01_79_TEXT "Drift test prevented"
 #define ENUM_ERROR_01_7a_TEXT "Repetitionszähler interner Fehler abgelaufen"
 #define ENUM_ERROR_01_7e_TEXT "Repetitionszähler Gebläsefehler abgelaufen"
 #define ENUM_ERROR_01_80_TEXT "Fremdlicht"
 #define ENUM_ERROR_01_82_TEXT "Gebläsedrehzahl hat gültigen Bereich verlassen"
 #define ENUM_ERROR_01_83_TEXT "Luftdruckwächterfehler"
 #define ENUM_ERROR_01_ab_TEXT "Konfiguration Abgasklappe"
+#define ENUM_ERROR_01_ad_TEXT "Dyn water pres too high"
+#define ENUM_ERROR_01_ae_TEXT "Dyn water pres too low"
+#define ENUM_ERROR_01_af_TEXT "Primary exch sensor (aluminium exchanger)"
 #define ENUM_ERROR_01_b0_TEXT "Funktionserde X17 nicht angeschlossen"
+#define ENUM_ERROR_01_b1_TEXT "Heat exch temp"
+
+//Internal error codes for Baxi Luna Platinum
+#define ENUM_INTCODE_01_TEXT "Short circuit" //1
+#define ENUM_INTCODE_02_TEXT "Open circuit" //2
+#define ENUM_INTCODE_dd_TEXT "Fan speed out of range" //357 same as 221
+#define ENUM_INTCODE_01_45_TEXT "Software error" //325
+#define ENUM_INTCODE_01_46_TEXT "Software error" //326 same as 325
+#define ENUM_INTCODE_01_47_TEXT "Software error" //327 same as 325
+#define ENUM_INTCODE_01_48_TEXT "Software error" //328 same as 325
+#define ENUM_INTCODE_01_49_TEXT "Software error" //329 same as 325
+#define ENUM_INTCODE_01_4a_TEXT "Ingniter relay closing error" //330
+#define ENUM_INTCODE_01_4b_TEXT "Ingniter relay opening error" //331
+#define ENUM_INTCODE_01_4c_TEXT "Gas valve relay closing error" //332
+#define ENUM_INTCODE_01_4d_TEXT "Gas valve relay opening error" //333
+#define ENUM_INTCODE_01_4e_TEXT "Ingnition error of canal 2" //334
+#define ENUM_INTCODE_01_4f_TEXT "Swithing off error of canal 2" //335
+#define ENUM_INTCODE_01_50_TEXT "Safety relay closing error" //336
+#define ENUM_INTCODE_01_51_TEXT "Safety relay opening error" //337
+#define ENUM_INTCODE_01_52_TEXT "Ingnition error of canal 1" //338
+#define ENUM_INTCODE_01_53_TEXT "Swithing off error of canal 1" //339
+#define ENUM_INTCODE_01_59_TEXT "Software error on micro 1" //345
+#define ENUM_INTCODE_01_5a_TEXT "Gas type change error" //346
+#define ENUM_INTCODE_01_5b_TEXT "Max fan speed <= Max fan speed accepted" //347
+#define ENUM_INTCODE_01_5c_TEXT "Prepurge fan speed <= Prepurge fan speed accepted" //348
+#define ENUM_INTCODE_01_5d_TEXT "Minimum fan speed >= Minimum fan speed accepted" //349
+#define ENUM_INTCODE_01_5e_TEXT "Postpurge fan speed >= Postpurge fan speed accepted" //350
+#define ENUM_INTCODE_01_65_TEXT "Fan speed out of range" //357 same as 221
+#define ENUM_INTCODE_01_66_TEXT "Ionization or fan speed with electrode drift test not in the defined area. Problem: Power supply, blower-PWM setting" //358
+#define ENUM_INTCODE_01_67_TEXT "Control value out of range" //359
+#define ENUM_INTCODE_01_68_TEXT "Calculated value over the threshold" //360
+#define ENUM_INTCODE_01_69_TEXT "Calculated value under the threshold" //361
+#define ENUM_INTCODE_01_6a_TEXT "Gas valve stepper position over the threshold" //362
+#define ENUM_INTCODE_01_6b_TEXT "Gas valve stepper position under the threshold" //363
+#define ENUM_INTCODE_01_6c_TEXT "Ionization current out of range" //364
+#define ENUM_INTCODE_01_6d_TEXT "R value out of range" //365
+#define ENUM_INTCODE_01_6e_TEXT "Open contact on stepper motor" //366
+#define ENUM_INTCODE_01_6f_TEXT "Short circuit on stepper motor" //367
+#define ENUM_INTCODE_01_70_TEXT "Low supply voltage on stepper motor" //368
+#define ENUM_INTCODE_01_71_TEXT "High supply voltage on stepper motor" //369
+#define ENUM_INTCODE_01_72_TEXT "Prevention of startup for a stepper motor is interrupted" //370
+#define ENUM_INTCODE_01_73_TEXT "Too much corrrection of drift test" //371
+#define ENUM_INTCODE_01_74_TEXT "Too much corrrection of drift test" //372 same as 371
+#define ENUM_INTCODE_01_75_TEXT "Drift test performed 4 times consecutive (temporary error)" //373
+#define ENUM_INTCODE_01_a2_TEXT "Drift test counter monitor has excedded" //418
+#define ENUM_INTCODE_01_a3_TEXT "Maximum temperature of Electronic Safe Limit temperature" //419
+#define ENUM_INTCODE_01_a4_TEXT "Return temperature higher than flow temperature more than 10K (temporary error)" //420
+#define ENUM_INTCODE_01_a5_TEXT "Return temperature egual or higher than flow temperature more than 10K-2" //421
+#define ENUM_INTCODE_01_aa_TEXT "Temperature slope" //426
+#define ENUM_INTCODE_01_ab_TEXT "Unlock limit of temperature slope not reached" //427
+#define ENUM_INTCODE_01_ac_TEXT "Flow – return temperature higher than 56K (temporary error)" //428
+#define ENUM_INTCODE_01_ad_TEXT "Unlock limit of Flow – return temperature higher than 56K" //429
+#define ENUM_INTCODE_01_af_TEXT "Accepted times return temperature higher than flow temperature more than 10K reached (lockout error)" //431
+#define ENUM_INTCODE_01_b4_TEXT "Electronic Safe Limit temperature on return temperature" //436
+#define ENUM_INTCODE_01_b5_TEXT "Accepted times Temperature slope reached" //437
+#define ENUM_INTCODE_01_b6_TEXT "Accepted times Flow – return temperature higher than 56K reached (lockout error)" //438
+#define ENUM_INTCODE_01_f3_TEXT "Internal counter out of range" //499
+#define ENUM_INTCODE_01_f4_TEXT "Reached limit of flow temperature of flow setpoint plus 30K for 2 times in 10 minutes" //500
+#define ENUM_INTCODE_01_f5_TEXT "No flow temperature variation for 20 seconds" //501
+#define ENUM_INTCODE_01_f6_TEXT "No return temperature variation for 20 seconds" //502
+#define ENUM_INTCODE_01_f7_TEXT "Flatness 2 test on flow sensor" //503
+#define ENUM_INTCODE_01_f8_TEXT "Flatness 2 test on return sensor" //504
+#define ENUM_INTCODE_01_fa_TEXT "Short circuit (lockout)" //506
+#define ENUM_INTCODE_01_fb_TEXT "Temperature differential between flow temperature and exchanger temperature - Dry fire (lockout error)" //507
+#define ENUM_INTCODE_01_fc_TEXT "Exchanger temperature > 95°C (lockout error)" //508
+#define ENUM_INTCODE_01_fd_TEXT "Exchanger temperature > 95°C (temporary error)" //509
+#define ENUM_INTCODE_02_1b_TEXT "Short circuit (lockout)" //539 same as 506
+#define ENUM_INTCODE_02_1c_TEXT "Open circuit (lockout)" //540
+#define ENUM_INTCODE_02_1f_TEXT "Short circuit (temporary error)" //543
+#define ENUM_INTCODE_02_20_TEXT "Open circuit (temporary error)" //544
+#define ENUM_INTCODE_02_23_TEXT "Short circuit (lockout error)" //547
+#define ENUM_INTCODE_02_24_TEXT "Open circuit (lockout error)" //548
+#define ENUM_INTCODE_02_2d_TEXT "Dynamic pressure test failed (lockout error)" //557
+#define ENUM_INTCODE_02_2e_TEXT "Dynamic water pressure too high (lockout error)" //558
+#define ENUM_INTCODE_02_2f_TEXT "Dynamic test times excedded (lockout error)" //559
+#define ENUM_INTCODE_02_30_TEXT "Short circuit (temporary error)" //560 same as 543
+#define ENUM_INTCODE_02_31_TEXT "Flow pressure switch Central heating (lockout error)" //561
+#define ENUM_INTCODE_02_32_TEXT "Flow pressure switch Central heating (temporary error)" //562
+#define ENUM_INTCODE_02_33_TEXT "Water pressure limit (lockout error)" //563
+#define ENUM_INTCODE_02_34_TEXT "Water pressure limit (temporary error)" //564
+#define ENUM_INTCODE_02_35_TEXT "Static water pressure limit (lockout error)" //565
+#define ENUM_INTCODE_02_36_TEXT "Static water pressure limit (temporary error) > 2.8 bar" //566
+#define ENUM_INTCODE_02_3c_TEXT "Input HX parameterization: limit thermostat" //572
+#define ENUM_INTCODE_02_3d_TEXT "Input HX parameterization" //573
+#define ENUM_INTCODE_02_3e_TEXT "Input HX parameterization: air presure switch" //574
+#define ENUM_INTCODE_02_3f_TEXT "10V signal input parameterization" //575
+#define ENUM_INTCODE_02_40_TEXT "Input H6 with 2 different functions associated" //576
+#define ENUM_INTCODE_02_41_TEXT "Input H7 with 2 different functions associated" //577
+#define ENUM_INTCODE_02_42_TEXT "Input B4 with 2 different functions associated" //578
+#define ENUM_INTCODE_02_43_TEXT "Bypass pump Q12 parameterization" //579
+#define ENUM_INTCODE_02_44_TEXT "Cooling request K28 parameterization" //580
+#define ENUM_INTCODE_02_45_TEXT "Water filling K34 parameterization" //581
+#define ENUM_INTCODE_02_ea_TEXT "Feedback error from PCB (SR)" //746
+#define ENUM_INTCODE_02_eb_TEXT "Feedback error from gas valve relay (BV1)" //747
+#define ENUM_INTCODE_03_00_TEXT "Control value limit reached during the test drift" //768
+#define ENUM_INTCODE_03_01_TEXT "Ionization drift crash during testing" //769
+#define ENUM_INTCODE_03_17_TEXT "Water refill time for single refilling elapsed (lockout error)" //791
+#define ENUM_INTCODE_03_18_TEXT "Water refill time weekly elapsed (lockout error)" //792
+#define ENUM_INTCODE_03_19_TEXT "Automatic filling loop error (lockout)" //793
+#define ENUM_INTCODE_03_1b_TEXT "Water refill time elapsed (temporary error)" //795
+#define ENUM_INTCODE_03_1c_TEXT "Water refill time weekly elapsed (temporary error)" //796
+#define ENUM_INTCODE_03_1d_TEXT "Automatic filling loop error (temporary error)" //797
+#define ENUM_INTCODE_03_20_TEXT "Alarm contact input H1" //800
+#define ENUM_INTCODE_03_21_TEXT "Alarm contact input H2 of extension module 1" //801
+#define ENUM_INTCODE_03_22_TEXT "Alarm contact input H2 of extension module 2" //802
+#define ENUM_INTCODE_03_23_TEXT "Alarm contact input H2 of extension module 3" //803
+#define ENUM_INTCODE_03_24_TEXT "Alarm contact input H3" //804
+#define ENUM_INTCODE_03_25_TEXT "Alarm contact input H4" //805
+#define ENUM_INTCODE_03_26_TEXT "Alarm contact input H5" //806
+#define ENUM_INTCODE_03_27_TEXT "Alarm contact input H6" //807
+#define ENUM_INTCODE_03_28_TEXT "Alarm contact input H7" //808
+
 #define ENUM_SWCODE_11_TEXT "STB Unterbruch"
 #define ENUM_SWCODE_53_TEXT "Erlaubtes Drehzahlband für Zündlast wurde bei Inbetriebsetzung nicht erreicht."
 #define ENUM_SWCODE_5f_TEXT "Drehzahlnachstellung überprüfen, vorgeschriebenes Band wird nicht erreicht."
