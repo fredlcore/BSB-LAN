@@ -1382,6 +1382,7 @@
 #define STR7772_TEXT "Heissgastemperatur B81"
 #define STR7775_TEXT "Quelle Eintrittstemp B91"
 #define STR7777_TEXT "Fühlertemperatur B92, B84"
+#define STR7781_TEXT "Ausg'signal UX21 Modul"
 #define STR7784_TEXT "Ausgangstest UX21 Modul 2"
 #define STR7785_TEXT "Ausg'signal UX21 Modul 2"
 #define STR7785_2_TEXT "Ausg'signal UX21 Modul 2 PWM %"

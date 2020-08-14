@@ -2174,6 +2174,7 @@ const char STR7771[] PROGMEM = STR7771_TEXT;
 const char STR7772[] PROGMEM = STR7772_TEXT;
 const char STR7775[] PROGMEM = STR7775_TEXT;
 const char STR7777[] PROGMEM = STR7777_TEXT;
+const char STR7781[] PROGMEM = STR7781_TEXT;
 const char STR7784[] PROGMEM = STR7784_TEXT;
 const char STR7785[] PROGMEM = STR7785_TEXT;
 const char STR7785_2[] PROGMEM = STR7785_2_TEXT;
@@ -5920,7 +5921,7 @@ const char ENUM_INTCODE[] PROGMEM_LATEST = {
 "\x01\x4f " ENUM_INTCODE_01_4f_TEXT //335
 "\x01\x50 " ENUM_INTCODE_01_50_TEXT //336
 "\x01\x51 " ENUM_INTCODE_01_51_TEXT //337
-"\x01\x52 "ENUM_INTCODE_01_52_TEXT  //338
+"\x01\x52 " ENUM_INTCODE_01_52_TEXT  //338
 "\x01\x53 " ENUM_INTCODE_01_53_TEXT  //339
 "\x01\x59 " ENUM_INTCODE_01_59_TEXT  //345
 "\x01\x5a " ENUM_INTCODE_01_5a_TEXT  //346
@@ -5930,7 +5931,7 @@ const char ENUM_INTCODE[] PROGMEM_LATEST = {
 "\x01\x5e " ENUM_INTCODE_01_5e_TEXT  //350
 "\x01\x65 " ENUM_INTCODE_01_65_TEXT //357 same as 221
 "\x01\x66 " ENUM_INTCODE_01_66_TEXT  //358
-"\x01\x67 "ENUM_INTCODE_01_67_TEXT  //359
+"\x01\x67 " ENUM_INTCODE_01_67_TEXT  //359
 "\x01\x68 " ENUM_INTCODE_01_68_TEXT  //360
 "\x01\x69 " ENUM_INTCODE_01_69_TEXT  //361
 "\x01\x6a " ENUM_INTCODE_01_6a_TEXT  //362
@@ -8581,6 +8582,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7772,  STR7772,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur B81
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7775,  STR7775,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemp B91
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7777,  STR7777,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur B92 B84
+{0x053D1702,  CAT_IOTEST,           VT_PERCENT_WORD1, 7781,  STR7781,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangssignal UX21 Modul 1 
+//{0x053D1709,  CAT_IOTEST,           VT_ENUM,          7782,  STR7782,  sizeof(ENUM7782),     ENUM7782,     DEFAULT_FLAG, DEV_ALL}, // Ausgangssignal UX21 Modul 1 // Actually part of 7781, check if 7782 is used otherwise
 {0x053D15F7,  CAT_IOTEST,           VT_PERCENT,       7784,  STR7784,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangstest UX21 Modul 2
 {0x053D1703,  CAT_IOTEST,           VT_UNKNOWN,       7785,  STR7785,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2
 {0x053D15FA,  CAT_IOTEST,           VT_PERCENT,       7786,  STR7786,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangstest UX22 Modul 2
