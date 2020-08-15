@@ -245,6 +245,7 @@ typedef enum{
   VT_PERCENT,           //  2 Byte - 1 enable 0x06 / percent
   VT_PERCENT5,          //  2 Byte - 1 enable 0x01 / value/2
   VT_PRESSURE,          //  2 Byte - 1 enable 0x01 / bar/10.0     READ-ONLY
+  VT_PRESSURE50,        //  2 Byte - 1 enable 0x01 / bar/50.0
   VT_SECONDS_SHORT,     //  2 Byte - 1 enable / seconds
   VT_SECONDS_SHORT4,    //  2 Byte - 1 enable 0x01 / value/4 (signed?)
   VT_SECONDS_SHORT5,    //  2 Byte - 1 enable 0x01 / value/5 (signed?)
@@ -286,6 +287,7 @@ typedef enum{
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
+  VT_TEMP_WORD60,       //  3 Byte - 1 enable / value / 60
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
   VT_VOLTAGE_WORD,      //  3 Byte - 1 enable / volt z.B. 2.9V
   VT_CELMIN,            //  3 Byte - 1 enable / value
@@ -389,6 +391,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
 {VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
 {VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
+{VT_PRESSURE50,     50.0,   DT_VALS, 2,  U_BAR, sizeof(U_BAR)},
 {VT_SECONDS_SHORT,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
 {VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
@@ -430,6 +433,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
 {VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
+{VT_TEMP_WORD60,    60.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
 {VT_VOLTAGE_WORD,   10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
 {VT_CELMIN,         1.0,    DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN)},
@@ -3587,10 +3591,14 @@ const char ENUM2480[] PROGMEM_LATEST = {
 "\xff " ENUM2480_ff_TEXT
 };
 
+#define ENUM2490 ENUM2476
+
 const char ENUM2500[] PROGMEM_LATEST = {
 "\x00 " ENUM2500_00_TEXT "\0"
 "\x01 " ENUM2500_01_TEXT
 };
+
+#define ENUM2502 ENUM2476
 
 // Sitherm Pro
 const char ENUM2706[] PROGMEM_LATEST = {
@@ -6820,7 +6828,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D08FE,  CAT_KESSEL,           VT_ONOFF,         2260,  STR2260,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Verbraucher
 {0x113D093A,  CAT_KESSEL,           VT_ONOFF,         2261,  STR2261,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Kesselpumpe
 {0x053D0437,  CAT_KESSEL,           VT_ONOFF,         2262,  STR2262,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Einschaltoptimierung
-{0x0B063D05,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel - Antrieb Laufzeit
+{0x0B063D05,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Antrieb Laufzeit
+{0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
@@ -6857,6 +6866,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0D13,  CAT_KESSEL,           VT_SECONDS_SHORT4,2326,  STR2326,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
 {0x053D10E8,  CAT_KESSEL,           VT_PERCENT,       2327,  STR2327,  0,                    NULL,         FL_OEM, DEV_ALL}, // Baxi Luna Platinum+,  Pumpendrehzahl minimum OEM(%)
 {0x053D10E9,  CAT_KESSEL,           VT_PERCENT,       2328,  STR2328,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, // Baxi Luna Platinum+,  Pumpendrehzahl maximum OEM(%)
+{0x113D1124,  CAT_KESSEL,           VT_TEMP,          2329,  STR2329,  0,                    NULL,         FL_OEM, DEV_ALL}, // Baxi Luna Platinum+, Pumpensollw'reduktion
 {0x053D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2330,  STR2330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Nenn
 {0x053D2F70,  CAT_KESSEL,           VT_POWER_WORD,    2331,  STR2331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Grundstufe
 {0x053D10F4,  CAT_KESSEL,           VT_PERCENT_100,   2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
@@ -6865,7 +6875,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
 {0x0D3D2F94,  CAT_KESSEL,           VT_SPEED,         2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2441 Gebläsedrehzahl Hz Maximum
-{0x093D0F80,  CAT_KESSEL,           VT_SPEED2,        2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Gebläsedrehzahl Maximum RPM
+{0x093D0F80,  CAT_KESSEL,           VT_SPEED2,        2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum+ Gebläsedrehzahl Maximum RPM
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Gebläseleistung Heizen Max
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Gebläseleistung Heizen Max
 {0x093D120F,  CAT_KESSEL,           VT_POWER_WORD,    2441,  STR2441_2,0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Gebläseleistung Heizen Max
@@ -6879,7 +6889,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Gebl'leistung Durchladen Max
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Gebl'leistung Durchladen Max
 {0x093D1211,  CAT_KESSEL,           VT_POWER_WORD,    2442,  STR2442_2,0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Gebl'leistung Durchladen Max
-{0x093D10C7,  CAT_KESSEL,           VT_SPEED2,        2442,  STR2442_3,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pump Max speed RPM maximum heater power
+{0x093D10C7,  CAT_KESSEL,           VT_SPEED2,        2442,  STR2442_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum+ Pump Max speed RPM maximum heater power
 {0x2D3D2FD4,  CAT_KESSEL,           VT_PERCENT,       2443,  STR2443,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brötje 2443 Gebläse-PWM Startwert DLH
 {0x2E3D2FD4,  CAT_KESSEL,           VT_PERCENT,       2443,  STR2443,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Brötje 2443 Gebläse-PWM Startwert DLH - logged on OCI700 via LPB
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Gebl'leistung Startwert DLH
@@ -6888,7 +6898,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_178_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_195_ALL}, // Gebl'leistung Startwert DLH
 {0x093D1213,  CAT_KESSEL,           VT_POWER_WORD,    2443,  STR2443_2,0,                    NULL,         FL_RONLY, DEV_203_ALL}, // Gebl'leistung Startwert DLH
-{0x093D1140,  CAT_KESSEL,           VT_SPEED2,        2443,  STR2443_3,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pump Min speed RPM maximum heater power
+{0x093D1140,  CAT_KESSEL,           VT_SPEED2,        2443,  STR2443_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum+ Pump Min speed RPM maximum heater power
 {0x093D2F99,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2444 Leistung Minimum [kW]
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Gebläseleistung TWW Max
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Gebläseleistung TWW Max
@@ -6897,7 +6907,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D1212,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_2,0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Gebläseleistung TWW Max
 //2444 below need VT_SPEED2 instead VT_POWER_WORD?
 {0x093D1215,  CAT_KESSEL,           VT_POWER_WORD,    2444,  STR2444_3,0,                    NULL,         DEFAULT_FLAG, DEV_195_002}, // Gebläsedrehzahl TWW Max
-{0x093D1215,  CAT_KESSEL,           VT_SPEED2,        2444,  STR2444_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ Gebläsedrehzahl TWW Max
+{0x093D1215,  CAT_KESSEL,           VT_SPEED2,        2444,  STR2444_3,0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum+ Gebläsedrehzahl TWW Max
 {0x093D3066,  CAT_KESSEL,           VT_POWER,         2445,  STR2445,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2445 Leistung Nenn [kW]
 {0x223D2EF0,  CAT_KESSEL,           VT_POWER_WORD,    2445,  STR2445,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2444 Leistung Minimum [kW]
 {0x053D1123,  CAT_KESSEL,           VT_ONOFF,         2445,  STR2445_2,sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_123_ALL}, // Gebl'abschaltung Heizbetrieb
@@ -6970,7 +6980,18 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz. This parameter set with 0x06 cmd from Room Device, but can be set with 0x01
 {0x053D17B3,  CAT_KESSEL,           VT_SECONDS_SHORT5,2479,  STR2479,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x053D0FEB,  CAT_KESSEL,           VT_ENUM,          2480,  STR2480,  sizeof(ENUM2480),     ENUM2480,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Statisch' Drucküberw Absch'
+{0x053D0FE6,  CAT_KESSEL,           VT_ONOFF,         2490,  STR2490,  sizeof(ENUM2490),     ENUM2490,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Dynam' Drucküberw Abschalt
+{0x053D3068,  CAT_KESSEL,           VT_PRESSURE50,    2491,  STR2491,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ [pressure] Kessel - Dyn Überw Druckdiff Min
+{0x053D3069,  CAT_KESSEL,           VT_PRESSURE50,    2492,  STR2492,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ [pressure] Kessel - Dyn Überw Druckdiff Max
+{0x053D0FE7,  CAT_KESSEL,           VT_YESNO,         2494,  STR2494,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ Dyn Überw Druckanhebung
+{0x053D0FE5,  CAT_KESSEL,           VT_SECONDS_SHORT5,2495,  STR2495,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Dyn Drucküberw Überw'zeit
+{0x053D0FE2,  CAT_KESSEL,           VT_SECONDS_SHORT5,2496,  STR2496,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Dyn Drucküberw Zeitkonst
 {0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
+{0x053D0FEA,  CAT_KESSEL,           VT_ONOFF,         2502,  STR2500,  sizeof(ENUM2502),     ENUM2502,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Durchfl'schalter Abschaltung
+{0x053D0FE8,  CAT_KESSEL,           VT_SECONDS_SHORT5,2504,  STR2504,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Min Einschaltzeit Schalter
+{0x0D3D1121,  CAT_KESSEL,           VT_TEMP_WORD60,   2510,  STR2510,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschaltung Temp'grad (Bug in Baxi Luna: 0.8 shown twice)
+{0x0D3D1122,  CAT_KESSEL,           VT_SECONDS_SHORT, 2511,  STR2511,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw'zeit
+{0x0D3D1120,  CAT_KESSEL,           VT_ONOFF,         2512,  STR2512,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw' RT
 {0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
 {0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
@@ -9446,7 +9467,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D07EA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10253, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10254, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D08FC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10256, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 0A
-{0x053D0904,  CAT_USER_DEFINED,     VT_UNKNOWN,       10257, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 78
 {0x053D0905,  CAT_USER_DEFINED,     VT_UNKNOWN,       10258, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 14
 {0x053D0906,  CAT_USER_DEFINED,     VT_UNKNOWN,       10259, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D0951,  CAT_USER_DEFINED,     VT_UNKNOWN,       10261, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E 00 / on RVS43.222: 00 00 F0
