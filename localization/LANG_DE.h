@@ -2553,7 +2553,6 @@
 #define ENUM7147_02_TEXT "Heizkreis Getaktet"
 #define ENUM7147_03_TEXT "Trinkwasser Dauerlauf"
 #define ENUM7147_04_TEXT "Trinkwasser Getaktet"
-#define ENUM7244_00_TEXT "Keine"
 #define ENUM7244_01_TEXT "Mit Eingang H1"
 #define ENUM7244_02_TEXT "Mit Eingang H2 Modul 1"
 #define ENUM7244_03_TEXT "Mit Eingang H2 Modul 2"

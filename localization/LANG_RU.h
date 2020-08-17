@@ -2337,7 +2337,6 @@
 #define ENUM7147_02_TEXT "Работа на контур обогрева с тактованием"
 #define ENUM7147_03_TEXT "Непрерывная работа на ГВС"
 #define ENUM7147_04_TEXT "Работа на ГВС с тактованием"
-#define ENUM7244_00_TEXT "Отсутствует"
 #define ENUM7244_01_TEXT "Со входа H1"
 #define ENUM7244_02_TEXT "Со входа H2 модуль 1"
 #define ENUM7244_03_TEXT "Со входа H2 модуль 2"
