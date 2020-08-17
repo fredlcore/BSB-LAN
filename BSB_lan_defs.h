@@ -302,6 +302,7 @@ typedef enum{
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
+  VT_SECONDS_DWORD,     //  5 Byte - 1 enable 0x01 / seconds
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
   VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
   VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
@@ -448,6 +449,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_HOURS,          3600.0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
 {VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
+{VT_SECONDS_DWORD,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
 {VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
 {VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
 {VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
@@ -2121,10 +2123,21 @@ const char STR7150[] PROGMEM = STR7150_TEXT;
 const char STR7152[] PROGMEM = STR7152_TEXT;
 const char STR7153[] PROGMEM = STR7153_TEXT;
 const char STR7160[] PROGMEM = STR7160_TEXT;
+const char STR7165[] PROGMEM = STR7165_TEXT;
 const char STR7166[] PROGMEM = STR7166_TEXT;
 const char STR7170[] PROGMEM = STR7170_TEXT;
 const char STR7181[] PROGMEM = STR7181_TEXT;
 const char STR7183[] PROGMEM = STR7183_TEXT;
+const char STR7230[] PROGMEM = STR7230_TEXT;
+const char STR7231[] PROGMEM = STR7231_TEXT;
+const char STR7232[] PROGMEM = STR7232_TEXT;
+const char STR7233[] PROGMEM = STR7233_TEXT;
+const char STR7236[] PROGMEM = STR7236_TEXT;
+const char STR7237[] PROGMEM = STR7237_TEXT;
+const char STR7238[] PROGMEM = STR7238_TEXT;
+const char STR7239[] PROGMEM = STR7239_TEXT;
+const char STR7240[] PROGMEM = STR7240_TEXT;
+const char STR7244[] PROGMEM = STR7244_TEXT;
 const char STR7250[] PROGMEM = STR7250_TEXT;
 const char STR7251[] PROGMEM = STR7251_TEXT;
 const char STR7252[] PROGMEM = STR7252_TEXT;
@@ -2331,7 +2344,7 @@ const char STR8318[] PROGMEM = STR8318_TEXT;
 const char STR8319[] PROGMEM = STR8319_TEXT;
 const char STR8320[] PROGMEM = STR8320_TEXT;
 const char STR8321[] PROGMEM = STR8321_TEXT;
-const char STR8321_2[] PROGMEM = STR8321_TEXT;
+const char STR8321_2[] PROGMEM = STR8321_2_TEXT;
 const char STR8323[] PROGMEM = STR8323_TEXT;
 const char STR8324[] PROGMEM = STR8324_TEXT;
 const char STR8325[] PROGMEM = STR8325_TEXT;
@@ -5123,6 +5136,15 @@ const char ENUM7147[] PROGMEM_LATEST = {
 "\x03 " ENUM7147_03_TEXT "\0"
 "\x04 " ENUM7147_04_TEXT
 }; // todo Hinweis: x00 Keine ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+const char ENUM7244[] PROGMEM_LATEST = {
+"\x00 " ENUM6024_00_TEXT "\0" //"Keine"
+"\x01 " ENUM7244_01_TEXT "\0"
+"\x02 " ENUM7244_02_TEXT "\0"
+"\x03 " ENUM7244_03_TEXT "\0"
+"\x04 " ENUM7244_04_TEXT "\0"
+"\x05 " ENUM7244_05_TEXT
+};
 
 const char ENUM7252[] PROGMEM_LATEST = {
 "\x00 " ENUM7252_00_TEXT "\0"
@@ -8519,10 +8541,21 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D08D4,  CAT_WARTUNG,          VT_YESNO,         7152,  STR7152,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Abtauen auslösen
 {0x593D1679,  CAT_WARTUNG,          VT_YESNO,         7153,  STR7153,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // Kältemittel abpumpen
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7160,  STR7160,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Begrenzungszeiten
+{0x3D2D0215,  CAT_WARTUNG,          VT_ONOFF,         7165,  STR7165,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x113D1A9A,  CAT_WARTUNG,          VT_BYTE,          7166,  STR7166,  0,                    NULL,         FL_RONLY, DEV_ALL}, // [ ] Wartung/Sonderbetrieb - Inbetriebnahmefunktion
 {0x053D06E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Kundendienst
 {0x053D07B7,  CAT_WARTUNG,          VT_STRING,        7181,  STR7181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Zuständigkeit 1
 {0x053D07B8,  CAT_WARTUNG,          VT_STRING,        7183,  STR7183,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Zuständigkeit 2
+{0x053D11B1,  CAT_WARTUNG,          VT_YESNO,         7230,  STR7230,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Reset Wassernachfüllung
+{0x053D11B2,  CAT_WARTUNG,          VT_SECONDS_DWORD, 7231,  STR7231,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ [sec] Nachfülldauer aktuelle Woche
+{0x053D11AF,  CAT_WARTUNG,          VT_SECONDS_DWORD, 7232,  STR7232,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ [sec] Nachfülldauer Total
+{0x053D11B0,  CAT_WARTUNG,          VT_SECONDS_DWORD, 7233,  STR7233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ [sec] Anzahl Nachfüllungen Total
+{0x053D11B5,  CAT_WARTUNG,          VT_SECONDS_WORD,  7236,  STR7236,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [sec] Min Unt'druckdauer Nachfüll
+{0x053D125D,  CAT_WARTUNG,          VT_SECONDS_WORD,  7237,  STR7237,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [sec] Wartezeit Nachfüllung
+{0x053D11B3,  CAT_WARTUNG,          VT_SECONDS_WORD,  7238,  STR7238,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [sec] Maximale Nachfülldauer
+{0x053D11B4,  CAT_WARTUNG,          VT_MINUTES_WORD,  7239,  STR7239,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [sec] Max Nachfülldauer Woche
+{0x053D11B6,  CAT_WARTUNG,          VT_MINUTES_WORD,  7240,  STR7240,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ [sec] Nachfüllsperrzeit
+{0x053D125E,  CAT_WARTUNG,          VT_ENUM,          7244,  STR7244,  sizeof(ENUM7244),     ENUM7244,     DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ Drucküberw' Wassernachfüll
 {0x053D11DA,  CAT_WARTUNG,          VT_UNKNOWN,       7250,  STR7250,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Pos
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7251,  STR7251,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Bez Datensatz
 {0x053D11D9,  CAT_WARTUNG,          VT_ENUM,          7252,  STR7252,  sizeof(ENUM7252),     ENUM7252,     DEFAULT_FLAG, DEV_ALL}, // Pstick Befehl
