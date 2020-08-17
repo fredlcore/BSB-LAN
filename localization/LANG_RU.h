@@ -2344,8 +2344,8 @@
 #define ENUM7244_05_TEXT "Со входа H3"
 
 #define ENUM7252_00_TEXT "Бездействует"
-#define ENUM7252_01_TEXT "Lesen von Stick"
-#define ENUM7252_02_TEXT "Schreiben auf Stick"
+#define ENUM7252_01_TEXT "Чтение с карты"
+#define ENUM7252_02_TEXT "Запись на карту"
 #define ENUM7376_04_TEXT "Verbr'kreispumpe VK1 Q15"
 #define ENUM7425_00_TEXT "0..10В"
 #define ENUM7425_01_TEXT "ШИМ"

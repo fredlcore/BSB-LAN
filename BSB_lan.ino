@@ -2499,6 +2499,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_UINT: //  u16
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
+            case VT_TEMP_WORD60: //  u16 / 60
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
@@ -2507,6 +2508,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_POWER: // u32 / 10.0 kW
             case VT_ENERGY10: // u32 / 10.0 kWh
             case VT_ENERGY: // u32 / 1.0 kWh
+            case VT_SECONDS_DWORD: //u32? s
               printDWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_SINT: //  s16
@@ -2521,6 +2523,7 @@ void printTelegram(byte* msg, int query_line) {
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_PRESSURE: // u8 / 10.0 bar
+            case VT_PRESSURE50: // u8 / 50.0 bar
             case VT_PERCENT5: // u8 %
             case VT_TEMP_SHORT5_US: // u8 / 2 (unsigned)
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
@@ -2531,7 +2534,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
-            case VT_VOLTAGE_WORD: //unsigned? 
+            case VT_VOLTAGE_WORD: //unsigned?
             case VT_CELMIN: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
