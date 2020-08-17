@@ -7004,7 +7004,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz. This parameter set with 0x06 cmd from Room Device, but can be set with 0x01
 {0x053D17B3,  CAT_KESSEL,           VT_SECONDS_SHORT5,2479,  STR2479,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x053D0FEB,  CAT_KESSEL,           VT_ENUM,          2480,  STR2480,  sizeof(ENUM2480),     ENUM2480,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Statisch' Drucküberw Absch'
-{0x053D0FE6,  CAT_KESSEL,           VT_ONOFF,         2490,  STR2490,  sizeof(ENUM2490),     ENUM2490,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Dynam' Drucküberw Abschalt
+{0x053D0FE6,  CAT_KESSEL,           VT_ENUM,          2490,  STR2490,  sizeof(ENUM2490),     ENUM2490,     DEFAULT_FLAG, DEV_ALL}, // [enum] Kessel - Dynam' Drucküberw Abschalt
 {0x053D3068,  CAT_KESSEL,           VT_PRESSURE50,    2491,  STR2491,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ [pressure] Kessel - Dyn Überw Druckdiff Min
 {0x053D3069,  CAT_KESSEL,           VT_PRESSURE50,    2492,  STR2492,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ [pressure] Kessel - Dyn Überw Druckdiff Max
 {0x053D0FE7,  CAT_KESSEL,           VT_YESNO,         2494,  STR2494,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, //Baxi Luna Platinum+ Dyn Überw Druckanhebung
@@ -8604,19 +8604,19 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0821,  CAT_IOTEST,           VT_VOLTAGE,       7711,  STR7711,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Spannungssignal UX
 
 // 100.0 % PWM
-// HEIZ->DISP ANS 7711 Ein-/Ausgangstest - Ausgangssignal UX1: 00 03 E8 
+// HEIZ->DISP ANS 7711 Ein-/Ausgangstest - Ausgangssignal UX1: 00 03 E8
 // DC 80 0A 0E 07 05 3D 17 01 00 03 E8 DB EE
-{0x053D1701,  CAT_IOTEST,           VT_UINT10,        7711,  STR7711_2,0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Ausgangssignal UX1 - Signalart UX1 [Spannung V ¦ PWM %] - DEV_108_217 Elco Wärmepumpe RVS61.843E/560   
+{0x053D1701,  CAT_IOTEST,           VT_UINT10,        7711,  STR7711_2,0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Ausgangssignal UX1 - Signalart UX1 [Spannung V ¦ PWM %] - DEV_108_217 Elco Wärmepumpe RVS61.843E/560
 
 {0x073D0B38,  CAT_IOTEST,           VT_PERCENT,       7712,  STR7712,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // PWM-Signal UX1 //FUJITSU
 {0x053D040C,  CAT_IOTEST,           VT_PERCENT,       7713,  STR7713,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Ausgangstest P1
 {0x053D04A2,  CAT_IOTEST,           VT_PERCENT,       7714,  STR7714,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // PWM-Signal P1
 {0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangstest UX2 //FUJITSU
-{0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [%] Ausgangstest UX2 
+{0x063D040E,  CAT_IOTEST,           VT_PERCENT,       7716,  STR7716,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [%] Ausgangstest UX2
 
 // TODO Establish type
 // Value on dsiplay: 100.0 [% PWM]
-// HEIZ->DISP ANS 7717 Ein-/Ausgangstest - Ausgangssignal UX2: 00 05 
+// HEIZ->DISP ANS 7717 Ein-/Ausgangstest - Ausgangssignal UX2: 00 05
 // DC 80 0A 0D 07 06 3D 17 08 00 05 3C FC
 {0x063D1708,  CAT_IOTEST,           VT_UNKNOWN,       7717,  STR7717,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausgangssignal UX2 - Signalart UX2 [Spannung V ¦ PWM %] - Elco Wärmepumpe RVS61.843E/560
 
@@ -8638,7 +8638,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7772,  STR7772,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur B81
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7775,  STR7775,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemp B91
 {CMD_UNKNOWN, CAT_IOTEST,           VT_UNKNOWN,       7777,  STR7777,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur B92 B84
-{0x053D1702,  CAT_IOTEST,           VT_PERCENT_WORD1, 7781,  STR7781,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangssignal UX21 Modul 1 
+{0x053D1702,  CAT_IOTEST,           VT_PERCENT_WORD1, 7781,  STR7781,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangssignal UX21 Modul 1
 //{0x053D1709,  CAT_IOTEST,           VT_ENUM,          7782,  STR7782,  sizeof(ENUM7782),     ENUM7782,     DEFAULT_FLAG, DEV_ALL}, // Ausgangssignal UX21 Modul 1 // Actually part of 7781, check if 7782 is used otherwise
 {0x053D15F7,  CAT_IOTEST,           VT_PERCENT,       7784,  STR7784,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausgangstest UX21 Modul 2
 {0x053D1703,  CAT_IOTEST,           VT_UNKNOWN,       7785,  STR7785,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Ausg'signal UX21 Modul 2
