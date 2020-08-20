@@ -1724,6 +1724,7 @@
 #define STR8832_TEXT "Trinkwassertemperatur 2"
 #define STR8835_TEXT "TWW Zirkulationstemperatur"
 #define STR8836_TEXT "TWW Ladetemperatur"
+#define STR8837_TEXT "TWW Ladesollwert"
 #define STR8840_TEXT "Betr’stunden TWW-Pumpe"
 #define STR8841_TEXT "Startzähler TWW-Pumpe"
 #define STR8842_TEXT "Betr’stunden Elektro TWW"

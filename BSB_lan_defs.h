@@ -2542,6 +2542,7 @@ const char STR8831[] PROGMEM = STR8831_TEXT;
 const char STR8832[] PROGMEM = STR8832_TEXT;
 const char STR8835[] PROGMEM = STR8835_TEXT;
 const char STR8836[] PROGMEM = STR8836_TEXT;
+const char STR8837[] PROGMEM = STR8837_TEXT;
 const char STR8840[] PROGMEM = STR8840_TEXT;
 const char STR8841[] PROGMEM = STR8841_TEXT;
 const char STR8842[] PROGMEM = STR8842_TEXT;
@@ -9249,6 +9250,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // TWW Ladetemperatur
+{0x253D18CE,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8837,  STR8837,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // TWW Ladesollwert
 {0x253D06C2,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8840,  STR8840,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden TWW-Pumpe //FUJITSU
 {0x253D06BD,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8841,  STR8841,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler TWW-Pumpe //FUJITSU
 {0x253D06C3,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8842,  STR8842,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro TWW //FUJITSU
