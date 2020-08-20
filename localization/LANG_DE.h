@@ -1764,6 +1764,8 @@
 #define STR9010_TEXT "Messung Raumtemperatur 1"
 #define STR9011_TEXT "Messung Raumtemperatur 2"
 #define STR9012_TEXT "Messung Raumtemperatur 3"
+#define STR9016_TEXT "Sondertemperatur 1"
+#define STR9017_TEXT "Sondertemperatur 2"
 #define STR9037_TEXT "Relaisausgang QX7"
 #define STR9038_TEXT "Relaisausgang QX8"
 #define STR9056_TEXT "Relaisausgang QX21 Modul 3"

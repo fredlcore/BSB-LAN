@@ -2582,6 +2582,8 @@ const char STR9009[] PROGMEM = STR9009_TEXT;
 const char STR9010[] PROGMEM = STR9010_TEXT;
 const char STR9011[] PROGMEM = STR9011_TEXT;
 const char STR9012[] PROGMEM = STR9012_TEXT;
+const char STR9016[] PROGMEM = STR9016_TEXT;
+const char STR9017[] PROGMEM = STR9017_TEXT;
 #define STR9031 STR5890
 #define STR9032 STR5891
 #define STR9033 STR5892
@@ -9322,6 +9324,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9010,  STR9010,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 1
 {0x063D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9011,  STR9011,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 2
 {0x073D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9012,  STR9012,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 3
+{0x053D183A,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9016,  STR9016,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Sondertemperatur 1
+{0x053D183B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9017,  STR9017,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Sondertemperatur 2
 {0x053D09BA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9031,  STR9031,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX1
 {0x053D09BB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9032,  STR9032,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX2
 {0x053D09BC,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9033,  STR9033,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX3
