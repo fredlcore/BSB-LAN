@@ -7176,6 +7176,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Verdichtermod Laufzeit
 {0x053D0D00,  CAT_WAERMEPUMPE,      VT_ENUM,          2880,  STR2880,  sizeof(ENUM2880),     ENUM2880,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
+{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D02,  CAT_WAERMEPUMPE,      VT_UINT,          2882,  STR2882,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr. Elektro-Vorl °Cmin[0-500] //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
