@@ -2592,6 +2592,11 @@ const char STR9017[] PROGMEM = STR9017_TEXT;
 #define STR9036 STR5896
 const char STR9037[] PROGMEM = STR9037_TEXT;
 const char STR9038[] PROGMEM = STR9038_TEXT;
+const char STR9039[] PROGMEM = STR9039_TEXT;
+const char STR9040[] PROGMEM = STR9040_TEXT;
+const char STR9041[] PROGMEM = STR9041_TEXT;
+const char STR9042[] PROGMEM = STR9042_TEXT;
+const char STR9043[] PROGMEM = STR9043_TEXT;
 #define STR9050 STR6030
 #define STR9051 STR6031
 #define STR9052 STR6032
@@ -9334,6 +9339,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D082D,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9036,  STR9036,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX6
 {0x053D0D5E,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9037,  STR9037,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX7
 {0x053D0D5F,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9038,  STR9038,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX8
+{0x053D14F4,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9039,  STR9039,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX9
+{0x053D14F5,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9040,  STR9040,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX10
+{0x053D14F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9041,  STR9041,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX11
+{0x053D14F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9042,  STR9042,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX12
+{0x053D14F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9043,  STR9043,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX13
 {0x053D09F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
 {0x053D09F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
 {0x053D09F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
