@@ -1744,6 +1744,7 @@
 #define STR8950_TEXT "Schienenvorlauftemperatur"
 #define STR8951_TEXT "Schienenvorlaufsollwert"
 #define STR8952_TEXT "Schienenrücklauftemperatur"
+#define STR8956_TEXT "Schienenvorlauftemp 2"
 #define STR8957_TEXT "Schienenvorl'sollwert Kälte"
 #define STR8962_TEXT "Leistungssollwert Schiene"
 #define STR8970_TEXT "Elektroeinsatz Puffer"

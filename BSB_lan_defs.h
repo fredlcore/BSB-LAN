@@ -2562,6 +2562,7 @@ const char STR8931[] PROGMEM = STR8931_TEXT;
 const char STR8950[] PROGMEM = STR8950_TEXT;
 const char STR8951[] PROGMEM = STR8951_TEXT;
 const char STR8952[] PROGMEM = STR8952_TEXT;
+const char STR8956[] PROGMEM = STR8956_TEXT;
 const char STR8957[] PROGMEM = STR8957_TEXT;
 const char STR8962[] PROGMEM = STR8962_TEXT;
 const char STR8970[] PROGMEM = STR8970_TEXT;
@@ -9279,6 +9280,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
+{0x053D18E5,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8956,  STR8956,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemp 2
 {0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schienenvorl'sollwert Kälte //FUJITSU
 {0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungssollwert Schiene
 {0x053D09B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Elektroeinsatz Puffer
