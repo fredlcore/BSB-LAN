@@ -2344,8 +2344,8 @@ UIStrings["ENUM7244_04_TEXT"] = "Со входа H2 модуль 3";
 UIStrings["ENUM7244_05_TEXT"] = "Со входа H3";
 
 UIStrings["ENUM7252_00_TEXT"] = "Бездействует";
-UIStrings["ENUM7252_01_TEXT"] = "Lesen von Stick";
-UIStrings["ENUM7252_02_TEXT"] = "Schreiben auf Stick";
+UIStrings["ENUM7252_01_TEXT"] = "Чтение с карты";
+UIStrings["ENUM7252_02_TEXT"] = "Запись на карту";
 UIStrings["ENUM7376_04_TEXT"] = "Verbr'kreispumpe VK1 Q15";
 UIStrings["ENUM7425_00_TEXT"] = "0..10В";
 UIStrings["ENUM7425_01_TEXT"] = "ШИМ";
