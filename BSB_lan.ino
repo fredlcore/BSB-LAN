@@ -2496,6 +2496,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_WORD: //u16 min
             case VT_SECONDS_WORD: //u16 s
             case VT_GRADIENT: // u16
+            case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
