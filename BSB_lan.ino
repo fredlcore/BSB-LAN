@@ -2551,6 +2551,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
+            case VT_POWER100: //u32 / 100 kW
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100:  // u32 / 100
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
