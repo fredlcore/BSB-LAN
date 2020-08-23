@@ -1589,6 +1589,7 @@
 #define STR8429_TEXT "Quelle Austrittstemperatur"
 #define STR8430_TEXT "Quelle Austritt Min"
 #define STR8431_TEXT "Quellenzw'kreis Vorlauftemp"
+#define STR8432_TEXT "Quellenzw'kreis Rückl'temp"
 #define STR8434_TEXT "Sauggastemperatur"
 #define STR8435_TEXT "Verdampfungstemperatur"
 #define STR8435_1_TEXT "Verdampfungsdruck"
