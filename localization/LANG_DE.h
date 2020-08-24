@@ -723,6 +723,7 @@
 #define STR3193_TEXT "Zähl' intern Elektro Puffer"
 #define STR3195_TEXT "Elektr' Pump'leistung Heizen"
 #define STR3196_TEXT "Elektr' Pumpenleistung TWW"
+#define STR3257_TEXT "Durchfluss Quelle"
 #define STR3264_TEXT "Energiepreis HT"
 #define STR3265_TEXT "Energiepreis NT/SG-Wunsch"
 #define STR3266_TEXT "Energiepreis SG-Zwang"

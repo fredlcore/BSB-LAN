@@ -1419,6 +1419,7 @@ const char STR3192[] PROGMEM = STR3192_TEXT;
 const char STR3193[] PROGMEM = STR3193_TEXT;
 const char STR3195[] PROGMEM = STR3195_TEXT;
 const char STR3196[] PROGMEM = STR3196_TEXT;
+const char STR3257[] PROGMEM = STR3257_TEXT;
 const char STR3264[] PROGMEM = STR3264_TEXT;
 const char STR3265[] PROGMEM = STR3265_TEXT;
 const char STR3266[] PROGMEM = STR3266_TEXT;
@@ -7312,6 +7313,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D12BF,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3193,  STR3193,  sizeof(ENUM3193),     ENUM3193,     DEFAULT_FLAG, DEV_ALL}, // Zähl' intern Elektro Puffer
 {0x053D12C1,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3195,  STR3195,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektr' Pump'leistung Heizen
 {0x053D12C2,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3196,  STR3196,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektr' Pumpenleistung TWW
+{0x053D19A1,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3257,  STR3257,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Quelle
 {0x053D19BA,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3264,  STR3264,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis HT
 {0x053D19BB,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3265,  STR3265,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis NT/SG-Wunsch
 {0x053D19BC,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3266,  STR3266,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis SG-Zwang
