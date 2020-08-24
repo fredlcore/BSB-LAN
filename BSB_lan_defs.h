@@ -277,6 +277,7 @@ typedef enum{
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
+  VT_POWER_WORD100,     //  3 Byte - 1 enable / value/100 kW
   VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
   VT_ENERGY_CONTENT,    //  3 Byte - 1 enable / value/10 kWh/m³
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
@@ -425,6 +426,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_POWER_WORD100,  100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
 {VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3)},
 {VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},

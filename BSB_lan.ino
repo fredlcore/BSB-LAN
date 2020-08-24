@@ -2541,6 +2541,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
+            case VT_POWER_WORD100: // u16 / 100.0 kW           
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100
             case VT_CURRENT: // u16 / 100 uA
