@@ -7239,6 +7239,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1091,  CAT_ENERGIEZAEHLER,   VT_UINT,          3104,  STR3104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Nenner
 {0x053D1092,  CAT_ENERGIEZAEHLER,   VT_ENERGY_CONTENT,3106,  STR3106,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mittlerer Gasenergieinhalt
 {0x053D1092,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektrische Quellenleistung
+{0x053D1093,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Elektrische Quellenleistung
 {0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
 {0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
 {0x053D10B4,  CAT_ENERGIEZAEHLER,   VT_STRING,        3113,  STR3113,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingesetzte Energie
