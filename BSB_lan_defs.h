@@ -1413,6 +1413,7 @@ const char STR3188[] PROGMEM = STR3188_TEXT;
 const char STR3189[] PROGMEM = STR3189_TEXT;
 const char STR3190[] PROGMEM = STR3190_TEXT;
 const char STR3192[] PROGMEM = STR3192_TEXT;
+const char STR3193[] PROGMEM = STR3193_TEXT;
 const char STR3264[] PROGMEM = STR3264_TEXT;
 const char STR3265[] PROGMEM = STR3265_TEXT;
 const char STR3266[] PROGMEM = STR3266_TEXT;
@@ -3769,6 +3770,8 @@ const char ENUM3192[] PROGMEM_LATEST = {
 "\x02 " ENUM3192_02_TEXT "\0"
 "\x03 " ENUM3192_03_TEXT
 };
+
+#define ENUM3193 ENUM3192
 
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
@@ -7299,6 +7302,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1996,  CAT_ENERGIEZAEHLER,   VT_STRING,        3189,  STR3189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 10
 {0x053D1087,  CAT_ENERGIEZAEHLER,   VT_YESNO,         3190,  STR3190,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Reset Stichtagspeicher
 {0x053D12C0,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3192,  STR3192,  sizeof(ENUM3192),     ENUM3192,     DEFAULT_FLAG, DEV_ALL}, // Zählung intern Elektro TWW
+{0x053D12BF,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3193,  STR3193,  sizeof(ENUM3193),     ENUM3193,     DEFAULT_FLAG, DEV_ALL}, // Zähl' intern Elektro Puffer
 {0x053D19BA,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3264,  STR3264,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis HT
 {0x053D19BB,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3265,  STR3265,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis NT/SG-Wunsch
 {0x053D19BC,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3266,  STR3266,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis SG-Zwang

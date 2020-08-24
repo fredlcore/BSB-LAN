@@ -719,6 +719,7 @@
 #define STR3189_TEXT "Einges’ Energie Kühlen 10"
 #define STR3190_TEXT "Reset Stichtagspeicher"
 #define STR3192_TEXT "Zählung intern Elektro TWW"
+#define STR3193_TEXT "Zähl' intern Elektro Puffer"
 #define STR3264_TEXT "Energiepreis HT"
 #define STR3265_TEXT "Energiepreis NT/SG-Wunsch"
 #define STR3266_TEXT "Energiepreis SG-Zwang"
