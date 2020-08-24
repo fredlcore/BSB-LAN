@@ -1350,6 +1350,7 @@ const char STR3106[] PROGMEM = STR3106_TEXT;
 const char STR3108[] PROGMEM = STR3108_TEXT;
 const char STR3109[] PROGMEM = STR3109_TEXT;
 const char STR3110[] PROGMEM = STR3110_TEXT;
+const char STR3112[] PROGMEM = STR3112_TEXT;
 const char STR3113[] PROGMEM = STR3113_TEXT;
 const char STR3116[] PROGMEM = STR3116_TEXT;
 const char STR3119[] PROGMEM = STR3119_TEXT;
@@ -7242,6 +7243,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1093,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Elektrische Quellenleistung
 {0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
 {0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
+{0x053D196C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3112,  STR3112,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Aufgenommene Wärme Quelle
 {0x053D10B4,  CAT_ENERGIEZAEHLER,   VT_STRING,        3113,  STR3113,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingesetzte Energie
 {0x053D1083,  CAT_ENERGIEZAEHLER,   VT_UINT100,       3116,  STR3116,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Arbeitszahl
 {0x053D1080,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3119,  STR3119,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Stichtag Jahresarbeitszahl Tag / Monat // 30.06. wird als 00 FF 06 1E FF FF FF FF 17 codiert, 3.+4. Byte enthalten Monat und Tag

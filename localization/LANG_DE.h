@@ -654,6 +654,7 @@
 #define STR3108_TEXT "Elektrische Quellenleistung"
 #define STR3109_TEXT "Zählung Intern Elektro Vorl’"
 #define STR3110_TEXT "Abgegebene Wärme"
+#define STR3112_TEXT "Aufgenommene Wärme Quelle"
 #define STR3113_TEXT "Eingesetzte Energie"
 #define STR3116_TEXT "Arbeitszahl"
 #define STR3119_TEXT "Stichtag Jahresarbeitszahl Tag / Monat"
