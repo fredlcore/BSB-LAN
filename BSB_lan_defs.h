@@ -259,6 +259,7 @@ typedef enum{
   VT_VOLTAGEONOFF,      //  2 Byte - 1 enable / volt 0V (0x00) or 230V (0xFF)
   VT_WEEKDAY,           //  2 Byte - 1 enable 0x01 / weekday (1=Mo..7=So)
   VT_YESNO,             //  2 Byte - 1 enable 0x01 / 0=Nein 1=Ja (auch 0xff=Ja)
+  VT_SPF,               //  3 Byte -  / value / 100 
   VT_CURRENT,           //  3 Byte - 1 enable / value/100 uA
   VT_CURRENT1000,       //  3 Byte - 1 enable / value/1000 uA
   VT_DAYS_WORD,         //  3 Byte - 1 enable / day
@@ -276,6 +277,7 @@ typedef enum{
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
+  VT_POWER_WORD100,     //  3 Byte - 1 enable / value/100 kW
   VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
   VT_ENERGY_CONTENT,    //  3 Byte - 1 enable / value/10 kWh/m³
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
@@ -406,6 +408,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE)},
 {VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
+{VT_SPF,            100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
 {VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
 {VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
@@ -423,6 +426,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
 {VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
+{VT_POWER_WORD100,  100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
 {VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
 {VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3)},
 {VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
@@ -1346,6 +1350,7 @@ const char STR3106[] PROGMEM = STR3106_TEXT;
 const char STR3108[] PROGMEM = STR3108_TEXT;
 const char STR3109[] PROGMEM = STR3109_TEXT;
 const char STR3110[] PROGMEM = STR3110_TEXT;
+const char STR3112[] PROGMEM = STR3112_TEXT;
 const char STR3113[] PROGMEM = STR3113_TEXT;
 const char STR3116[] PROGMEM = STR3116_TEXT;
 const char STR3119[] PROGMEM = STR3119_TEXT;
@@ -1411,6 +1416,12 @@ const char STR3188[] PROGMEM = STR3188_TEXT;
 const char STR3189[] PROGMEM = STR3189_TEXT;
 const char STR3190[] PROGMEM = STR3190_TEXT;
 const char STR3192[] PROGMEM = STR3192_TEXT;
+const char STR3193[] PROGMEM = STR3193_TEXT;
+const char STR3195[] PROGMEM = STR3195_TEXT;
+const char STR3196[] PROGMEM = STR3196_TEXT;
+const char STR3257[] PROGMEM = STR3257_TEXT;
+#define STR3260 STR3880
+#define STR3261 STR3881
 const char STR3264[] PROGMEM = STR3264_TEXT;
 const char STR3265[] PROGMEM = STR3265_TEXT;
 const char STR3266[] PROGMEM = STR3266_TEXT;
@@ -2400,6 +2411,7 @@ const char STR8428[] PROGMEM = STR8428_TEXT;
 const char STR8429[] PROGMEM = STR8429_TEXT;
 const char STR8430[] PROGMEM = STR8430_TEXT;
 const char STR8431[] PROGMEM = STR8431_TEXT;
+const char STR8432[] PROGMEM = STR8432_TEXT;
 const char STR8434[] PROGMEM = STR8434_TEXT;
 const char STR8435[] PROGMEM = STR8435_TEXT;
 const char STR8435_1[] PROGMEM = STR8435_1_TEXT;
@@ -2542,6 +2554,7 @@ const char STR8831[] PROGMEM = STR8831_TEXT;
 const char STR8832[] PROGMEM = STR8832_TEXT;
 const char STR8835[] PROGMEM = STR8835_TEXT;
 const char STR8836[] PROGMEM = STR8836_TEXT;
+const char STR8837[] PROGMEM = STR8837_TEXT;
 const char STR8840[] PROGMEM = STR8840_TEXT;
 const char STR8841[] PROGMEM = STR8841_TEXT;
 const char STR8842[] PROGMEM = STR8842_TEXT;
@@ -2561,6 +2574,7 @@ const char STR8931[] PROGMEM = STR8931_TEXT;
 const char STR8950[] PROGMEM = STR8950_TEXT;
 const char STR8951[] PROGMEM = STR8951_TEXT;
 const char STR8952[] PROGMEM = STR8952_TEXT;
+const char STR8956[] PROGMEM = STR8956_TEXT;
 const char STR8957[] PROGMEM = STR8957_TEXT;
 const char STR8962[] PROGMEM = STR8962_TEXT;
 const char STR8970[] PROGMEM = STR8970_TEXT;
@@ -2577,6 +2591,11 @@ const char STR9004[] PROGMEM = STR9004_TEXT;
 const char STR9005[] PROGMEM = STR9005_TEXT;
 const char STR9006[] PROGMEM = STR9006_TEXT;
 const char STR9009[] PROGMEM = STR9009_TEXT;
+const char STR9010[] PROGMEM = STR9010_TEXT;
+const char STR9011[] PROGMEM = STR9011_TEXT;
+const char STR9012[] PROGMEM = STR9012_TEXT;
+const char STR9016[] PROGMEM = STR9016_TEXT;
+const char STR9017[] PROGMEM = STR9017_TEXT;
 #define STR9031 STR5890
 #define STR9032 STR5891
 #define STR9033 STR5892
@@ -2585,6 +2604,11 @@ const char STR9009[] PROGMEM = STR9009_TEXT;
 #define STR9036 STR5896
 const char STR9037[] PROGMEM = STR9037_TEXT;
 const char STR9038[] PROGMEM = STR9038_TEXT;
+const char STR9039[] PROGMEM = STR9039_TEXT;
+const char STR9040[] PROGMEM = STR9040_TEXT;
+const char STR9041[] PROGMEM = STR9041_TEXT;
+const char STR9042[] PROGMEM = STR9042_TEXT;
+const char STR9043[] PROGMEM = STR9043_TEXT;
 #define STR9050 STR6030
 #define STR9051 STR6031
 #define STR9052 STR6032
@@ -2731,7 +2755,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM1600_00_TEXT ENUM780_00_TEXT
 #define ENUM1600_01_TEXT MENU_TEXT_ON
 #define ENUM1601_00_TEXT ENUM48_00_TEXT
-#define ENUM1601_01_TEXT ENUM_CAT_1c_TEXT
+#define ENUM1601_01_TEXT ENUM_CAT_21_TEXT
 #define ENUM1620_2_00_TEXT ENUM1620_00_TEXT
 #define ENUM1620_2_01_TEXT ENUM1620_01_TEXT
 #define ENUM1620_2_04_TEXT ENUM1620_02_TEXT
@@ -2762,6 +2786,9 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2706_03_TEXT ENUM2206_01_TEXT
 #define ENUM2749_00_TEXT ENUM2740_00_TEXT
 #define ENUM2801_01_TEXT ENUM5040_02_TEXT
+#define ENUM2880_01_TEXT ENUM3692_01_TEXT
+#define ENUM2880_06_TEXT STR7141_TEXT
+#define ENUM2880_07_TEXT STR1640_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
@@ -2778,6 +2805,9 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM3102_00_TEXT ENUM48_00_TEXT
 #define ENUM3102_01_TEXT ENUM3092_00_TEXT
 #define ENUM3109_00_TEXT ENUM48_00_TEXT
+#define ENUM3192_00_TEXT ENUM48_00_TEXT
+#define ENUM3192_01_TEXT ENUM3109_01_TEXT
+#define ENUM3192_02_TEXT ENUM3109_02_TEXT
 #define ENUM3192_03_TEXT ENUM3109_03_TEXT
 #define ENUM3541_00_TEXT ENUM48_00_TEXT
 #define ENUM3822_00_TEXT ENUM1630_02_TEXT
@@ -3670,8 +3700,15 @@ const char ENUM2801[] PROGMEM_LATEST = {
 "\x03 " ENUM2801_03_TEXT
 };
 
+// [Ersatz, Ergänzung HK, Ergänzung TWW, Ergänzung HK+TWW, Beenden TWW Ladung, Notbetrieb, Legionellenfunktion]
 const char ENUM2880[] PROGMEM_LATEST = {
-"\x02 " ENUM2880_02_TEXT
+"\x01 " ENUM2880_01_TEXT "\0"
+"\x02 " ENUM2880_02_TEXT "\0"
+"\x03 " ENUM2880_03_TEXT "\0"
+"\x04 " ENUM2880_04_TEXT "\0"
+"\x05 " ENUM2880_05_TEXT "\0"
+"\x06 " ENUM2880_06_TEXT "\0"
+"\x07 " ENUM2880_07_TEXT
 };
 
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
@@ -3736,8 +3773,14 @@ const char ENUM3109[] PROGMEM_LATEST = {
 };
 
 const char ENUM3192[] PROGMEM_LATEST = {
+"\x00 " ENUM3192_00_TEXT "\0"
+"\x01 " ENUM3192_01_TEXT "\0"
+"\x02 " ENUM3192_02_TEXT "\0"
 "\x03 " ENUM3192_03_TEXT
 };
+
+#define ENUM3193 ENUM3192
+#define ENUM3260 ENUM3880
 
 // Kaskade
 const char ENUM3510[] PROGMEM_LATEST = {  // numerical values are hypothetical
@@ -7154,14 +7197,16 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Verdichtermod Laufzeit
 {0x053D0D00,  CAT_WAERMEPUMPE,      VT_ENUM,          2880,  STR2880,  sizeof(ENUM2880),     ENUM2880,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
+{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D02,  CAT_WAERMEPUMPE,      VT_UINT,          2882,  STR2882,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr. Elektro-Vorl °Cmin[0-500] //FUJITSU
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
+{0x053D0D03,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
 {0x593D0D2E,  CAT_WAERMEPUMPE,      VT_TEMP,          2884,  STR2884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freig Elektro-Vorl unter TA //FUJITSU
 {0x593D0436,  CAT_WAERMEPUMPE,      VT_ONOFF,         2886,  STR2886,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kompensation Wärmedefizit //FUJITSU
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2893,  STR2893,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl TWW-Ladeversuche
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2894,  STR2894,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Drehstr'fehler
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2895,  STR2895,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Ström'wächter
+{0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2912,  STR2912,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
@@ -7199,8 +7244,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1091,  CAT_ENERGIEZAEHLER,   VT_UINT,          3104,  STR3104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Nenner
 {0x053D1092,  CAT_ENERGIEZAEHLER,   VT_ENERGY_CONTENT,3106,  STR3106,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mittlerer Gasenergieinhalt
 {0x053D1092,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektrische Quellenleistung
+{0x053D1093,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Elektrische Quellenleistung
 {0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
 {0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
+{0x053D196C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3112,  STR3112,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Aufgenommene Wärme Quelle
 {0x053D10B4,  CAT_ENERGIEZAEHLER,   VT_STRING,        3113,  STR3113,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingesetzte Energie
 {0x053D1083,  CAT_ENERGIEZAEHLER,   VT_UINT100,       3116,  STR3116,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Arbeitszahl
 {0x053D1080,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3119,  STR3119,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Stichtag Jahresarbeitszahl Tag / Monat // 30.06. wird als 00 FF 06 1E FF FF FF FF 17 codiert, 3.+4. Byte enthalten Monat und Tag
@@ -7266,6 +7313,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1996,  CAT_ENERGIEZAEHLER,   VT_STRING,        3189,  STR3189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einges’ Energie Kühlen 10
 {0x053D1087,  CAT_ENERGIEZAEHLER,   VT_YESNO,         3190,  STR3190,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Reset Stichtagspeicher
 {0x053D12C0,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3192,  STR3192,  sizeof(ENUM3192),     ENUM3192,     DEFAULT_FLAG, DEV_ALL}, // Zählung intern Elektro TWW
+{0x053D12BF,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3193,  STR3193,  sizeof(ENUM3193),     ENUM3193,     DEFAULT_FLAG, DEV_ALL}, // Zähl' intern Elektro Puffer
+{0x053D12C1,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3195,  STR3195,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektr' Pump'leistung Heizen
+{0x053D12C2,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3196,  STR3196,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektr' Pumpenleistung TWW
+{0x053D19A1,  CAT_ENERGIEZAEHLER,   VT_LITERPERHOUR,  3257,  STR3257,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchfluss Quelle
+{0x053D19A2,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3260,  STR3260,  sizeof(ENUM3260),     ENUM3260,     DEFAULT_FLAG, DEV_ALL}, // Frostschutzmittle Quelle
+{0x053D19A3,  CAT_ENERGIEZAEHLER,   VT_PERCENT,       3261,  STR3261,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //Frost'mittel Konzentr Quelle
 {0x053D19BA,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3264,  STR3264,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis HT
 {0x053D19BB,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3265,  STR3265,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis NT/SG-Wunsch
 {0x053D19BC,  CAT_ENERGIEZAEHLER,   VT_UNKNOWN,       3266,  STR3266,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Energiepreis SG-Zwang
@@ -9022,8 +9075,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8390,  STR8390,  sizeof(ENUM8390),     ENUM8390,     FL_RONLY,     DEV_ALL}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
 {0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
+{0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Wärmeaufnahme Quelle
 {0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungsaufnahme in kW // Broetje BSW-K
-{0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_POWER_WORD,    8398,  STR8398,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungszahl
+{0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Leistungsaufnahme in kW 
+{0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_SPF,           8398,  STR8398,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungszahl
 
 // Diagnose Erzeuger - Wärmepumpe
 {0x053D09B5,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8400,  STR8400,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Verdichter 1 K1
@@ -9055,6 +9110,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Ausschaltschwelle 0x593D0766
 {0x593D1769,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8430,  STR8430,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Austritt Min
 {0x053D195A,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8431,  STR8431,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quellenzw'kreis Vorlauftemp
+{0x053D1959,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8432,  STR8432,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quellenzw'kreis Rückl'temp
 {0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8433,  STR8435_1, 0,                   NULL,         FL_RONLY,     DEV_186_ALL}, // Verdampfungsdruck // actually comes as second value with parameter 8435 on device family 186
 {0x053D163B,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8433,  STR8435_1, 0,                   NULL,         FL_NO_CMD,    DEV_ALL}, // Verdampfungsdruck
 {0x053D196D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8434,  STR8434,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sauggastemperatur
@@ -9249,6 +9305,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_205_ALL}, // TWW Ladetemperatur
 {0x253D0B25,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8836,  STR8836,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // TWW Ladetemperatur
+{0x253D18CE,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8837,  STR8837,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // TWW Ladesollwert
 {0x253D06C2,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8840,  STR8840,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden TWW-Pumpe //FUJITSU
 {0x253D06BD,  CAT_DIAG_VERBRAUCHER, VT_DWORD,         8841,  STR8841,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler TWW-Pumpe //FUJITSU
 {0x253D06C3,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8842,  STR8842,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro TWW //FUJITSU
@@ -9277,6 +9334,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
+{0x053D18E5,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8956,  STR8956,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemp 2
 {0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schienenvorl'sollwert Kälte //FUJITSU
 {0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungssollwert Schiene
 {0x053D09B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8970,  STR8970,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Elektroeinsatz Puffer
@@ -9312,6 +9370,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9005,  STR9005,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [bar ] - Diagnose Verbraucher - Wasserdruck H1
 {0x063D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9006,  STR9006,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [bar ] - Diagnose Verbraucher - Wasserdruck H2
 {0x073D0805,  CAT_DIAG_VERBRAUCHER, VT_PRESSURE_WORD, 9009,  STR9009,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [bar ] - Diagnose Verbraucher - Wasserdruck H3
+{0x053D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9010,  STR9010,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 1
+{0x063D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9011,  STR9011,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 2
+{0x073D0B84,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9012,  STR9012,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Messung Raumtemperatur 3
+{0x053D183A,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9016,  STR9016,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Sondertemperatur 1
+{0x053D183B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9017,  STR9017,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Sondertemperatur 2
 {0x053D09BA,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9031,  STR9031,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX1
 {0x053D09BB,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9032,  STR9032,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX2
 {0x053D09BC,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9033,  STR9033,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX3
@@ -9320,6 +9383,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D082D,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9036,  STR9036,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX6
 {0x053D0D5E,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9037,  STR9037,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX7
 {0x053D0D5F,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9038,  STR9038,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Relaisausgang QX8
+{0x053D14F4,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9039,  STR9039,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX9
+{0x053D14F5,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9040,  STR9040,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX10
+{0x053D14F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9041,  STR9041,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX11
+{0x053D14F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9042,  STR9042,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX12
+{0x053D14F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9043,  STR9043,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Diagnose Verbraucher - Relaisausgang QX13
 {0x053D09F6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9050,  STR9050,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX21 Modul 1
 {0x053D09F7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9051,  STR9051,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX22 Modul 1
 {0x053D09F8,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         9052,  STR9052,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Relaisausgang QX23 Modul 1
