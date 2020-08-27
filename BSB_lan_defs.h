@@ -17,6 +17,12 @@
 #define DebugOutput Serial
 #endif
 
+#ifdef BtSerial
+#define SerialOutput Serial2
+#else
+#define SerialOutput Serial
+#endif
+
 #include "localization/LANG_DE.h"
 #include "localization/UNDEF_LANG_EN.h"
 #include "localization/LANG_EN.h"
