@@ -63,6 +63,7 @@
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *        - Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V->5V, GND->GND, RX->TX2, TX->RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.
  *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
@@ -434,6 +435,8 @@ IPAddress subnet(SubnetIP);
 #ifdef MQTTBrokerIP
 IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
+
+Stream* SerialOutput;
 
 uint8_t myAddr = bus.getBusAddr();
 uint8_t* PPS_write_enabled = &myAddr;
@@ -2496,6 +2499,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_WORD: //u16 min
             case VT_SECONDS_WORD: //u16 s
             case VT_GRADIENT: // u16
+            case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
@@ -4052,11 +4056,11 @@ void query(int line)  // line (ProgNr)
 
               // Decode the rcv telegram and send it to the PC serial interface
               printTelegram(msg, line);
-              Serial.print(F("#"));
-              Serial.print(line);
-              Serial.print(F(": "));
-              Serial.println(build_pvalstr(0));
-              Serial.flush();
+              SerialOutput->print(F("#"));
+              SerialOutput->print(line);
+              SerialOutput->print(F(": "));
+              SerialOutput->println(build_pvalstr(0));
+              SerialOutput->flush();
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
@@ -4101,11 +4105,11 @@ void query(int line)  // line (ProgNr)
 */
           printTelegram(msg, line);
 
-          Serial.print(F("#"));
-          Serial.print(line);
-          Serial.print(F(": "));
-          Serial.println(build_pvalstr(0));
-          Serial.flush();
+          SerialOutput->print(F("#"));
+          SerialOutput->print(line);
+          SerialOutput->print(F(": "));
+          SerialOutput->println(build_pvalstr(0));
+          SerialOutput->flush();
         }
       }else{
         //DebugOutput.println(F("unknown command"));
@@ -4278,14 +4282,14 @@ void dht22(void) {
 
     float hum = DHT.humidity;
     float temp = DHT.temperature;
-    Serial.print(F("#dht_temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(temp);
-    Serial.print(F(", hum["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.println(hum);
+    SerialOutput->print(F("#dht_temp["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->print(temp);
+    SerialOutput->print(F(", hum["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->println(hum);
     if (hum > 0 && hum < 101) {
       char tempBuf[10];
       _printFIXPOINT(tempBuf,temp,2);
@@ -4329,11 +4333,11 @@ void ds18b20(void) {
 //  char device_ascii[17];
   for(i=0;i<numSensors;i++){
     float t=sensors.getTempCByIndex(i);
-    Serial.print(F("#1w_temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(t);
-    Serial.println();
+    SerialOutput->print(F("#1w_temp["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->print(t);
+    SerialOutput->println();
 
     sensors.getAddress(device_address, i);
 //    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
@@ -5209,7 +5213,7 @@ uint8_t pps_offset = 0;
 
   // Listen for incoming clients
   client = server.available();
-  if (client || Serial.available()) {
+  if (client || SerialOutput->available()) {
 
 #ifdef TRUSTED_IP
 #ifndef TRUSTED_IP2
@@ -5232,18 +5236,18 @@ uint8_t pps_offset = 0;
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
-    while (client.connected() || Serial.available()) {
-      if (client.available() || Serial.available()) {
+    while (client.connected() || SerialOutput->available()) {
+      if (client.available() || SerialOutput->available()) {
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
           DebugOutput.print(c);         // and send it to hardware UART
         }
-        if (Serial.available()) {
-          c = Serial.read();
+        if (SerialOutput->available()) {
+          c = SerialOutput->read();
           DebugOutput.print(c);         // and send it to hardware UART
           int timeout = 0;
-          while (Serial.available() == 0 && c!='\r' && c!='\n') {
+          while (SerialOutput->available() == 0 && c!='\r' && c!='\n') {
             delay(1);
             timeout++;
             if (timeout > 2000) {
@@ -6783,12 +6787,12 @@ uint8_t pps_offset = 0;
                   printToWebClient(decodedTelegram.unit);
                   printToWebClient(PSTR("</td></tr>\n"));
 
-                  Serial.print(F("#avg_"));
-                  Serial.print(avg_parameters[i]);
-                  Serial.print(F(": "));
-                  Serial.print(tempBuf);
-                  Serial.print(F(" "));
-                  Serial.println(decodedTelegram.unit);
+                  SerialOutput->print(F("#avg_"));
+                  SerialOutput->print(avg_parameters[i]);
+                  SerialOutput->print(F(": "));
+                  SerialOutput->print(tempBuf);
+                  SerialOutput->print(F(" "));
+                  SerialOutput->println(decodedTelegram.unit);
 
                 }
               }
@@ -7080,10 +7084,10 @@ uint8_t pps_offset = 0;
     // Close the json doc off
     MQTTPayload.concat(F("}}"));
       // debugging..
-      Serial.print(F("Output topic: "));
-      Serial.println(MQTTTopic.c_str());
-      Serial.print(F("Payload Output : "));
-      Serial.println(MQTTPayload.c_str());
+      DebugOutput.print(F("Output topic: "));
+      DebugOutput.println(MQTTTopic.c_str());
+      DebugOutput.print(F("Payload Output : "));
+      DebugOutput.println(MQTTPayload.c_str());
     // Now publish the json payload only once
     MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
 #endif
@@ -7494,12 +7498,17 @@ void setup() {
   pinMode(19, INPUT);
 #endif
 
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
+#ifdef BtSerial
+  SerialOutput = &Serial2;
+  Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
+#else
+  SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
-  Serial.println(F("READY"));
+#endif
+
+  SerialOutput->println(F("READY"));
  #ifdef DebugTelnet
-  Serial.println(F("Logging output to Telnet"));
+  SerialOutput->println(F("Logging output to Telnet"));
  #endif
   DebugOutput.print(F("Size of cmdtbl1: "));
   DebugOutput.println(sizeof(cmdtbl1));
@@ -7508,8 +7517,8 @@ void setup() {
   DebugOutput.print(F("free RAM:"));
   DebugOutput.println(freeRam());
 
-  while (Serial.available()) { // UART buffer often still contains characters after reset if power is not cut
-    DebugOutput.print(Serial.read());
+  while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
+    DebugOutput.print(SerialOutput->read());
   }
 
   bus.enableInterface();
@@ -7529,7 +7538,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println(F("WiFi shield not present"));
+    SerialOutput->println(F("WiFi shield not present"));
     // don't continue
     while (true);
   }
@@ -7540,14 +7549,14 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    Serial.print(F("Attempting to connect to WPA SSID: "));
-    Serial.println(ssid);
+    SerialOutput->print(F("Attempting to connect to WPA SSID: "));
+    SerialOutput->println(ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  Serial.println(F("You're connected to the network"));
+  SerialOutput->println(F("You're connected to the network"));
 
   printWifiStatus();
 #endif
@@ -7571,13 +7580,13 @@ void setup() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  Serial.print(F("Starting SD.."));
+  SerialOutput->print(F("Starting SD.."));
 #if defined(__AVR__)
-  if(!SD.begin(4)) Serial.println(F("failed"));
+  if(!SD.begin(4)) SerialOutput->println(F("failed"));
 #else
-  if(!SD.begin(4, SPI_DIV3_SPEED)) Serial.println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  if(!SD.begin(4, SPI_DIV3_SPEED)) SerialOutput->println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
 #endif
-  else Serial.println(F("ok"));
+  else SerialOutput->println(F("ok"));
 
 #else
   // enable w5100 SPI
@@ -7613,25 +7622,25 @@ void setup() {
   IPAddress ip = Ethernet.localIP();
 #endif
 #endif
-  Serial.println(ip);
+  SerialOutput->println(ip);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
 #endif
 
-  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  SerialOutput->println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
   #if defined LOGGER || defined WEBSERVER
-  Serial.print(F("Calculating free space on SD..."));
+  SerialOutput->print(F("Calculating free space on SD..."));
   uint32_t m = millis();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  Serial.print(fs);
-  Serial.print(F(" MB free\n"));
+  SerialOutput->print(fs);
+  SerialOutput->print(F(" MB free\n"));
   diff -= (millis() - m); //3 sec - delay
   #endif
   if(diff > 0)  delay(diff);
