@@ -562,7 +562,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   5570, 5608,
   5700, 6498,
   6600, 6699,
-  6705, 6996,
+  6704, 6996,
   7001, 7254,
   7300, 7500,
   7700, 7999,
@@ -1930,6 +1930,7 @@ const char STR6604[] PROGMEM = STR6604_TEXT;
 const char STR6605[] PROGMEM = STR6605_TEXT;
 const char STR6606[] PROGMEM = STR6606_TEXT;
 const char STR6610[] PROGMEM = STR6610_TEXT;
+const char STR6611[] PROGMEM = STR6611_TEXT;
 const char STR6612[] PROGMEM = STR6612_TEXT;
 const char STR6620[] PROGMEM = STR6620_TEXT;
 const char STR6621[] PROGMEM = STR6621_TEXT;
@@ -1946,6 +1947,7 @@ const char STR6699[] PROGMEM = STR6699_TEXT;
 
 // Fehler
 const char STR6705[] PROGMEM = STR6705_TEXT;
+#define STR6704 STR6705
 const char STR6706[] PROGMEM = STR6706_TEXT;
 const char STR6710[] PROGMEM = STR6710_TEXT;
 const char STR6711[] PROGMEM = STR6711_TEXT;
@@ -2615,32 +2617,56 @@ const char STR9075[] PROGMEM = STR9075_TEXT;
 
 // Feuerungsautomat
 const char STR9500[] PROGMEM = STR9500_TEXT;
+const char STR9501[] PROGMEM = STR9501_TEXT;
 const char STR9502[] PROGMEM = STR9502_TEXT;
 const char STR9504[] PROGMEM = STR9504_TEXT;
 const char STR9504_2[] PROGMEM = STR9504_2_TEXT;
+const char STR9505[] PROGMEM = STR9505_TEXT;
+const char STR9506[] PROGMEM = STR9506_TEXT;
 const char STR9510[] PROGMEM = STR9510_TEXT;
 const char STR9512[] PROGMEM = STR9512_TEXT;
 const char STR9512_2[] PROGMEM = STR9512_2_TEXT;
+const char STR9513[] PROGMEM = STR9513_TEXT;
+const char STR9514[] PROGMEM = STR9514_TEXT;
+const char STR9517[] PROGMEM = STR9517_TEXT;
+const char STR9518[] PROGMEM = STR9518_TEXT;
+const char STR9519[] PROGMEM = STR9519_TEXT;
 const char STR9520[] PROGMEM = STR9520_TEXT;
 const char STR9522[] PROGMEM = STR9522_TEXT;
+const char STR9523[] PROGMEM = STR9523_TEXT;
 const char STR9524[] PROGMEM = STR9524_TEXT;
 const char STR9524_2[] PROGMEM = STR9524_2_TEXT;
 const char STR9526[] PROGMEM = STR9526_TEXT;
 const char STR9527[] PROGMEM = STR9527_TEXT;
 const char STR9529[] PROGMEM = STR9529_TEXT;
 const char STR9529_2[] PROGMEM = STR9529_2_TEXT;
+const char STR9530[] PROGMEM = STR9530_TEXT;
 const char STR9531[] PROGMEM = STR9531_TEXT;
 const char STR9534[] PROGMEM = STR9534_TEXT;
 const char STR9540[] PROGMEM = STR9540_TEXT;
+const char STR9541[] PROGMEM = STR9541_TEXT;
 const char STR9542[] PROGMEM = STR9542_TEXT;
+const char STR9545[] PROGMEM = STR9545_TEXT;
 const char STR9550[] PROGMEM = STR9550_TEXT;
 const char STR9551[] PROGMEM = STR9551_TEXT;
 const char STR9560[] PROGMEM = STR9560_TEXT;
 const char STR9563[] PROGMEM = STR9563_TEXT;
+const char STR9610[] PROGMEM = STR9610_TEXT;
+const char STR9611[] PROGMEM = STR9611_TEXT;
+const char STR9612[] PROGMEM = STR9612_TEXT;
+const char STR9614[] PROGMEM = STR9614_TEXT;
 const char STR9615[] PROGMEM = STR9615_TEXT;
+const char STR9616[] PROGMEM = STR9616_TEXT;
+const char STR9617[] PROGMEM = STR9617_TEXT;
+const char STR9618[] PROGMEM = STR9618_TEXT;
+const char STR9619[] PROGMEM = STR9619_TEXT;
 const char STR9626[] PROGMEM = STR9626_TEXT;
 const char STR9627[] PROGMEM = STR9627_TEXT;
+const char STR9630[] PROGMEM = STR9630_TEXT;
+const char STR9631[] PROGMEM = STR9631_TEXT;
+const char STR9632[] PROGMEM = STR9632_TEXT;
 const char STR9650[] PROGMEM = STR9650_TEXT;
+const char STR9651[] PROGMEM = STR9651_TEXT;
 const char STR9652[] PROGMEM = STR9652_TEXT;
 
 
@@ -5772,6 +5798,30 @@ const char ENUM8749[] PROGMEM_LATEST = {     // numerical values unverified
 };
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
 
+//Here can be additional values
+const char ENUM9610[] PROGMEM_LATEST = {
+"\x00 " ENUM9610_00_TEXT "\0"
+"\x01 " "?" ENUM9610_01_TEXT
+};
+
+//Here can be additional values
+const char ENUM9611[] PROGMEM_LATEST = {
+"\x00 " ENUM9611_00_TEXT "\0"
+"\x01 " "?" ENUM9611_01_TEXT
+};
+
+//Here can be additional values
+const char ENUM9612[] PROGMEM_LATEST = {
+"\x00 " ENUM9612_00_TEXT "\0"
+"\x01 " "?" ENUM9612_01_TEXT
+};
+
+//Here can be additional values
+const char ENUM9614[] PROGMEM_LATEST = {
+"\x00 " ENUM9614_00_TEXT "\0"
+"\x01 " "?" ENUM9614_01_TEXT
+};
+
 // PPS Betriebsart
 const char ENUM15010[] PROGMEM_LATEST = {
 "\x00 " ENUM15010_00_TEXT "\0"
@@ -6885,6 +6935,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
+{0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0549,  CAT_KESSEL,           VT_TEMP,          2271,  STR2271,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Min OEM
@@ -8184,12 +8235,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_188_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_191_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_206_ALL}, // Anzeige Systemmeldungen
+{0x053D19F2,  CAT_LPB,              VT_YESNO,         6611,  STR6611,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, //
 {0x053D08D2,  CAT_LPB,              VT_MINUTES_SHORT, 6612,  STR6612,  0,                    NULL,         FL_OEM, DEV_ALL}, // Alarmverzögerung
 {0x053D0839,  CAT_LPB,              VT_YESNO,         6620,  STR6620,  sizeof(ENUM6620),     ENUM6620,     DEFAULT_FLAG, DEV_ALL}, // [ - ] - LPB - Wirkbereich Umschaltungen
 {0x2D3D0611,  CAT_LPB,              VT_YESNO,         6621,  STR6621,  sizeof(ENUM6621),     ENUM6621,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Sommerumschaltung
 {0x053D0B34,  CAT_LPB,              VT_ENUM,          6623,  STR6623,  sizeof(ENUM6623),     ENUM6623,     DEFAULT_FLAG, DEV_ALL}, // Betriebsartumschaltung
 {0x05050A86,  CAT_LPB,              VT_ENUM,          6624,  STR6624,  sizeof(ENUM6624),     ENUM6624,     DEFAULT_FLAG, DEV_ALL}, // Manuelle Erzeugersperre
 {0x053D0A86,  CAT_LPB,              VT_ENUM,          6624,  STR6624,  sizeof(ENUM6624),     ENUM6624,     DEFAULT_FLAG, DEV_138_ALL}, // Manuelle Erzeugersperre
+{0x053D0A86,  CAT_LPB,              VT_ENUM,          6624,  STR6624,  sizeof(ENUM6624),     ENUM6624,     DEFAULT_FLAG, DEV_123_ALL}, // Manuelle Erzeugersperre
 {0x253D074A,  CAT_LPB,              VT_ENUM,          6625,  STR6625,  sizeof(ENUM6625),     ENUM6625,     DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Trinkwasserzuordnung
 {0x053D0D04,  CAT_LPB,              VT_ENUM,          6627,  STR6627,  sizeof(ENUM6627),     ENUM6627,     DEFAULT_FLAG, DEV_ALL}, // Kälteanforderung
 {0x053D0ABB,  CAT_LPB,              VT_ENUM,          6630,  STR6630,  sizeof(ENUM6630),     ENUM6630,     FL_OEM, DEV_ALL}, // LPB - Kaskadenmaster
@@ -8216,6 +8269,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
   //Fehler
   {0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
   {0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
+  {0x053D127A,  CAT_FEHLER,           VT_YESNO,         6704,  STR6704,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
   {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
   {0x093D3008,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_064_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?] - logged on OCU700 via LPB
   {0x093D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
@@ -8235,6 +8289,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
   {0x113D05DE,  CAT_FEHLER,           VT_MINUTES_SHORT, 6743,  STR6743,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Kesseltemperatur Alarm
   {0x25050B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Trinkwasserladung Alarm
   {0x253D0B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Trinkwasserladung Alarm
+  {0x253D0B10,  CAT_FEHLER,           VT_HOURS_SHORT,   6745,  STR6745,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Trinkwasserladung Alarm
   {0x693D0B67,  CAT_FEHLER,           VT_MINUTES_SHORT, 6746,  STR6746,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlauftemp Kühlen 1 Alarm
   {0x053D06D3,  CAT_FEHLER,           VT_DATETIME,      6800,  STR6800,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 1 Datum/Zeit
   {0x053D2FF1,  CAT_FEHLER,           VT_BYTE,          6800,  STR6800_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 1 - logged on OCI700 via LPB
@@ -9420,6 +9475,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D10FE,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9500,  STR9500,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // Vorlüftzeit
 {0x093D10FE,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9500,  STR9500,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Vorlüftzeit
 {0x093D10FE,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9500,  STR9500,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Vorlüftzeit
+{0x093D0DDA,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9501,  STR9501,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Vorlüftzeit Min
 {0x213D3038,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9502,  STR9502,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Vorlüftung [%]
 {0x223D300E,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9502,  STR9502,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Vorlüftung [%] - logged on OCI700 via LPB
 {0x213D300F,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9504,  STR9504,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Vorlüftung [rpm]
@@ -9430,19 +9486,28 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Vorlüftung
 {0x093D120B,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9504,  STR9504_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Vorlüftung
 {0x093D10EB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9504,  STR9504,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Sollleistung Vorlüftung
+{0x093D0DDF,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9505,  STR9505,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Vorlüftung [rpm] - logged on OCI700 via LPB
+{0x093D0DE3,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9506,  STR9506,  0,                    NULL,         FL_RONLY,     DEV_ALL},  // [rpm]
 {0x0D3D3048,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Zündung [%]
 {0x0D3D2FC6,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9510,  STR9510,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Zündung [%] - logged on OCI700 via LPB
 {0x0D3D2FC9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Zündung [rpm]
-{0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Sollleistung Zündlast
+{0x093D10EC,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_123_231}, // Solldrehzahl Zündung [rpm]
+{0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Zündlast
 {0x093D120C,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9512,  STR9512_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Zündlast
 {0x093D10EC,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9512,  STR9512,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Zündlast
+{0x093D0DDE,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9513,  STR9513,  0,                    NULL,         FL_RONLY,     DEV_ALL},  // [rpm]
+{0x093D0DE0,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9514,  STR9514,  0,                    NULL,         FL_RONLY,     DEV_ALL},  // [rpm]
+{0x093D0DDB,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9517,  STR9517,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x093D0DDC,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9518,  STR9518,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x093D0DDD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9519,  STR9519,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 {0x0D3D3049,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Min [%]
 {0x0D3D2FC7,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9520,  STR9520,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Betrieb. Min [%] - logged on OCI700 via LPB
 {0x0D3D304A,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9522,  STR9522,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Betrieb. Max [%]
 {0x0D3D2FC8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT,       9522,  STR9522,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Betrieb. Max [%] - logged on OCI700 via LPB
+{0x093D10ED,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9523,  STR9523,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Solldrehzahl Betrieb
 {0x0D3D2FCA,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Min [rpm]
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Sollleistung Teillast
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Sollleistung Teillast
@@ -9451,10 +9516,13 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Sollleistung Teillast
 {0x093D120D,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9524,  STR9524_2,0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Sollleistung Teillast
 {0x093D10ED,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Teillast
+{0x093D0DE6,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9524,  STR9524,  0,                    NULL,         FL_RONLY,     DEV_123_231}, // Solldrehzahl Betrieb Min [rpm]
 {0x093D0DE2,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9526,  STR9526,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahltoleranz Teillast //Thision 19 Plus
 {0x0D3D2FCB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9527,  STR9527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Betrieb Max [rpm]
 {0x093D120E,  CAT_FEUERUNGSAUTOMAT, VT_POWER_WORD,    9529,  STR9529,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Sollleistung Vollast
 {0x093D10EE,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9529,  STR9529_2,0,                    NULL,         FL_RONLY,     DEV_195_002}, // Solldrehzahl Vollast
+{0x093D10EE,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9529,  STR9529_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Solldrehzahl Vollast
+{0x093D0DE5,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9530,  STR9530,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Vollast  Max
 {0x093D0DE1,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9531,  STR9531,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahltoleranz Volllast //Thision 19 Plus
 {0x093D0DEB,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9534,  STR9534,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betriebszeit mit Zündlast //Thision 19 Plus
 {0x2D3D304C,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit
@@ -9467,7 +9535,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Nachlüftzeit
+{0x053D2FB5,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_SHORT, 9541,  STR9541,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Max - Baxi Luna Platinum+
 {0x093D0DD9,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9542,  STR9542,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Min //Thision 19 Plus
+{0x093D19D3,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9545,  STR9545,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x093D0DEC,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9551,  STR9551,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Stillstand Max //Thision 19 Plus
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'ansteuerung Durchlad [%]
@@ -9476,10 +9546,23 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D2FE8,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9560,  STR9560,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Gebl'ansteuerung Durchlad [%]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
 {0x253D2FE9,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9563,  STR9563,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solldrehzahl Durchladung [rpm]
+{0x093D0DEA,  CAT_FEUERUNGSAUTOMAT, VT_ENUM,          9610,  STR9610,  sizeof(ENUM9610),     ENUM9610,     FL_RONLY,     DEV_ALL}, // Leistung
+{0x093D0DE4,  CAT_FEUERUNGSAUTOMAT, VT_ENUM,          9611,  STR9611,  sizeof(ENUM9611),     ENUM9611,     FL_RONLY,     DEV_ALL}, //
+{0x093D1116,  CAT_FEUERUNGSAUTOMAT, VT_ENUM,          9612,  STR9612,  sizeof(ENUM9612),     ENUM9612,     FL_RONLY,     DEV_ALL}, //
+{0x093D0DE8,  CAT_FEUERUNGSAUTOMAT, VT_ENUM,          9614,  STR9614,  sizeof(ENUM9614),     ENUM9614,     FL_RONLY,     DEV_ALL}, //
 {0x093D0DE9,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9615,  STR9615,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Zwangsvorlüften bei Fehler //Thision 19 Plus
+{0x093D0DFB,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9616,  STR9616,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x093D0DFC,  CAT_FEUERUNGSAUTOMAT, VT_BYTE,          9617,  STR9617,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x093D0DFE,  CAT_FEUERUNGSAUTOMAT, VT_CURRENT,       9618,  STR9618,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x093D0DFF,  CAT_FEUERUNGSAUTOMAT, VT_CURRENT,       9619,  STR9619,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 {0x093D12AF,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9626,  STR9626,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehz Steigerung
 {0x093D12B0,  CAT_FEUERUNGSAUTOMAT, VT_UINT10,        9627,  STR9627,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gebl'Leist/Drehl Y-Abschn
+{0x053D0C74,  CAT_FEUERUNGSAUTOMAT, VT_PROPVAL,       9630,  STR9630,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+{0x053D0C76,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD,  9631,  STR9631,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+//May be incorrect value: Baxi Luna Platinum+ return 0.00 sec, so here can be different divider
+{0x053D0C77,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9632,  STR9632,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 {0x093D0F87,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9650,  STR9650,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Kamintrocknung //Thision 19 Plus
+{0x093D0F88,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9651,  STR9651,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 {0x093D0F89,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_WORD,  9652,  STR9652,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Dauer Kamintrocknung //Thision 19 Plus
 
 //*** virtuelle Zeilen ***
