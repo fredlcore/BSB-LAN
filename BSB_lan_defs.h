@@ -7727,8 +7727,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_097_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_098_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_028_ALL}, // [-] - Konfiguration - Funktion Eingang H1
-{0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_059_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_064_ALL}, // [-] - Konfiguration - Funktion Eingang H1
+{0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_6),   ENUM5950_6,   DEFAULT_FLAG, DEV_059_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_6),   ENUM5950_6,   DEFAULT_FLAG, DEV_076_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_3),   ENUM5950_3,   DEFAULT_FLAG, DEV_096_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D0D91,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Konfiguration - Funktion Eingang H1
@@ -9380,9 +9380,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0B27,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8826,  STR8826,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl TWW Zw'kreispumpe
 {0x053D0B2A,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8827,  STR8827,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Dl'erhitzerpumpe
 {0x313D052F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
-{0x053D0222,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
 {0x053D0222,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
 {0x253D0516,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
+{0x253D0516,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8830,  STR8830,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 1
 {0x313D074B,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8831,  STR8831,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert
 {0x313D0532,  CAT_DIAG_VERBRAUCHER, VT_TEMP_WORD5_US, 8831,  STR8831,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassersollwert - logged on OCI700 via LPB
 {0x313D0530,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8832,  STR8832,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Trinkwassertemperatur 2
