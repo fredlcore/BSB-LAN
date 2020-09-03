@@ -6805,7 +6805,9 @@ uint8_t pps_offset = 0;
                   uint32_t c=0;
                   int line=findLine(avg_parameters[i],0,&c);
                   loadPrognrElementsFromTable(line);
-                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg%s: %s&nbsp;%s</td></tr>\n"), avg_parameters[i], decodedTelegram.prognrdescaddr, tempBuf, decodedTelegram.unit);
+                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
+                  printToWebClient(decodedTelegram.prognrdescaddr);
+                  printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
                   SerialOutput->print(F("#avg_"));
                   SerialOutput->print(avg_parameters[i]);
