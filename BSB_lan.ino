@@ -574,7 +574,7 @@ char unit[32]; //unit of measurement. former char div_unit[32];
 char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow save RAM
 } decodedTelegram;
 
-char *div_unit = decodedTelegram.unit;
+char *div_unit = decodedTelegram.unit; //deprecated
 
 // uint_farptr_t enumstr_offset = 0;
 
@@ -1312,6 +1312,8 @@ void SerialPrintRAW(byte* msg, byte len){
  *   decodedTelegram
  * *************************************************************** */
 void loadPrognrElementsFromTable(int i){
+  if (i<0) i = findLine(19999,0,NULL); // Using "Unknown command" if not found
+  decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
 
@@ -1989,9 +1991,9 @@ void __attribute__((deprecated)) printCHOICE(byte *msg,byte data_len, uint_farpt
         decodedTelegram.enumdescaddr = val1;
       }
 //      sprintf_P(decodedTelegram.value, PSTR("%d"), msg[bus.getPl_start()+1+pps_offset]);
-      sprintf_P(decodedTelegram.value, PSTR("%d"), msg[bus.getPl_start()+1]);
-      strcpy_PF(decodedTelegram.unit, decodedTelegram.enumdescaddr);
-      sprintf_P(outBuf, PSTR("%s - %s"),decodedTelegram.value,decodedTelegram.unit);
+      sprintf_P(outBuf, PSTR("%d - "),msg[bus.getPl_start()+1]);
+      DebugOutput.print(outBuf);
+      strcpy_PF(outBuf, decodedTelegram.enumdescaddr);
       DebugOutput.print(outBuf);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
@@ -2428,8 +2430,9 @@ void printTelegram(byte* msg, int query_line) {
 #endif
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
-    decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
+    loadPrognrElementsFromTable(i);
+
     DebugOutput.print(F(" - "));
     // print menue text
     strcpy_PF(buffer, decodedTelegram.prognrdescaddr);
@@ -2468,7 +2471,6 @@ void printTelegram(byte* msg, int query_line) {
   }else{
     if(data_len > 0){
       if(known){
-        loadPrognrElementsFromTable(i);
         if(decodedTelegram.msg_type==TYPE_ERR){
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
@@ -4391,23 +4393,26 @@ void Ipwe() {
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
 
-  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   for (i=0; i < numIPWESensors; i++) {
     query(ipwe_parameters[i]);
     counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-    printFmtToWebClient(PSTR("<br></td><td>%s"), lookup_descr(ipwe_parameters[i]));
-    printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
+    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+    printToWebClient(decodedTelegram.prognrdescaddr);
+    printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
     printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
+      uint32_t c=0;
+      loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-      printFmtToWebClient(PSTR("<br></td><td>Avg%s"), lookup_descr(avg_parameters[i]));
-      printFmtToWebClient(PSTR("<br></td><td>%.1f"), (avgValues[i]));
-// TODO: extract and display unit text from cmdtbl.type
+      printToWebClient(PSTR("<br></td><td>Avg"));
+      printToWebClient(decodedTelegram.prognrdescaddr);
+      printFmtToWebClient(PSTR("<br></td><td>%.1f&nbsp;"), (avgValues[i]));
+      printToWebClient(decodedTelegram.unit);
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
@@ -6029,10 +6034,28 @@ uint8_t pps_offset = 0;
           json_token = strtok(NULL, ",");
 
           printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
-          if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("ACIKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
+          }
+
+          if (p[2] == 'A'){ // print average values in JSON
+            for (int i=0; i<numAverages; i++) {
+              if (avg_parameters[i] > 0) {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                uint32_t c=0;
+                char p1[16];
+                loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+                _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
+                printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
+                printToWebClient(decodedTelegram.prognrdescaddr);
+                printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
+              }
+            }
+          printToWebClient(PSTR("\n}\n"));
+          forcedflushToWebClient();
+          break;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
@@ -6205,9 +6228,10 @@ uint8_t pps_offset = 0;
                 }
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
-
+                loadPrognrElementsFromTable(i_line);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
-                printToWebClient(get_cmdtbl_desc(i_line));
+
+                printToWebClient(decodedTelegram.prognrdescaddr);
                 printToWebClient(PSTR("\",\n"));
 
                 if (p[2]=='Q') {
@@ -6219,7 +6243,6 @@ uint8_t pps_offset = 0;
                 }
 
                 if (p[2] != 'Q') {
-                  loadPrognrElementsFromTable(i_line);
                   printToWebClient(PSTR("    \"possibleValues\": [\n"));
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
@@ -6780,13 +6803,12 @@ uint8_t pps_offset = 0;
                 if (avg_parameters[i] > 0) {
                   char tempBuf[10];
                   _printFIXPOINT(tempBuf,avgValues[i],1);
-                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg%s: %s "), avg_parameters[i], lookup_descr(avg_parameters[i]), tempBuf);
-
                   uint32_t c=0;
                   int line=findLine(avg_parameters[i],0,&c);
                   loadPrognrElementsFromTable(line);
-                  printToWebClient(decodedTelegram.unit);
-                  printToWebClient(PSTR("</td></tr>\n"));
+                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
+                  printToWebClient(decodedTelegram.prognrdescaddr);
+                  printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
                   SerialOutput->print(F("#avg_"));
                   SerialOutput->print(avg_parameters[i]);
