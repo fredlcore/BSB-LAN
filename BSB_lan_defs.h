@@ -63,6 +63,7 @@
 #define ADDR_SRVC  0x0B
 #define ADDR_OZW   0x31
 #define ADDR_FE    0x32
+#define ADDR_RC    0x36
 #define ADDR_LAN   0x42
 #define ADDR_ALL   0x7F
 

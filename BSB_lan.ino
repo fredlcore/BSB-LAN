@@ -1394,6 +1394,7 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_DISP: p = PSTR("DISP"); break;
     case ADDR_OZW: p = PSTR("OZW"); break;
     case ADDR_FE: p = PSTR("FE"); break;
+    case ADDR_RC: p = PSTR("REMO"); break;
     case ADDR_ALL: p = PSTR("ALL "); break;
     default: sprintf_P(device, PSTR("%02X"), addr); break;
   }
