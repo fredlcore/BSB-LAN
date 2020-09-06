@@ -63,6 +63,7 @@
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *        - Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V->5V, GND->GND, RX->TX2, TX->RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.
  *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
@@ -435,6 +436,8 @@ IPAddress subnet(SubnetIP);
 IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
 
+Stream* SerialOutput;
+
 uint8_t myAddr = bus.getBusAddr();
 uint8_t* PPS_write_enabled = &myAddr;
 uint8_t destAddr = bus.getBusDest();
@@ -571,7 +574,7 @@ char unit[32]; //unit of measurement. former char div_unit[32];
 char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow save RAM
 } decodedTelegram;
 
-char *div_unit = decodedTelegram.unit;
+char *div_unit = decodedTelegram.unit; //deprecated
 
 // uint_farptr_t enumstr_offset = 0;
 
@@ -1309,6 +1312,8 @@ void SerialPrintRAW(byte* msg, byte len){
  *   decodedTelegram
  * *************************************************************** */
 void loadPrognrElementsFromTable(int i){
+  if (i<0) i = findLine(19999,0,NULL); // Using "Unknown command" if not found
+  decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
 
@@ -1391,6 +1396,7 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_DISP: p = PSTR("DISP"); break;
     case ADDR_OZW: p = PSTR("OZW"); break;
     case ADDR_FE: p = PSTR("FE"); break;
+    case ADDR_RC: p = PSTR("REMO"); break;
     case ADDR_ALL: p = PSTR("ALL "); break;
     default: sprintf_P(device, PSTR("%02X"), addr); break;
   }
@@ -1985,9 +1991,9 @@ void __attribute__((deprecated)) printCHOICE(byte *msg,byte data_len, uint_farpt
         decodedTelegram.enumdescaddr = val1;
       }
 //      sprintf_P(decodedTelegram.value, PSTR("%d"), msg[bus.getPl_start()+1+pps_offset]);
-      sprintf_P(decodedTelegram.value, PSTR("%d"), msg[bus.getPl_start()+1]);
-      strcpy_PF(decodedTelegram.unit, decodedTelegram.enumdescaddr);
-      sprintf_P(outBuf, PSTR("%s - %s"),decodedTelegram.value,decodedTelegram.unit);
+      sprintf_P(outBuf, PSTR("%d - "),msg[bus.getPl_start()+1]);
+      DebugOutput.print(outBuf);
+      strcpy_PF(outBuf, decodedTelegram.enumdescaddr);
       DebugOutput.print(outBuf);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
@@ -2424,8 +2430,9 @@ void printTelegram(byte* msg, int query_line) {
 #endif
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
-    decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
+    loadPrognrElementsFromTable(i);
+
     DebugOutput.print(F(" - "));
     // print menue text
     strcpy_PF(buffer, decodedTelegram.prognrdescaddr);
@@ -2464,7 +2471,6 @@ void printTelegram(byte* msg, int query_line) {
   }else{
     if(data_len > 0){
       if(known){
-        loadPrognrElementsFromTable(i);
         if(decodedTelegram.msg_type==TYPE_ERR){
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
 //          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
@@ -2498,16 +2504,11 @@ void printTelegram(byte* msg, int query_line) {
             case VT_GRADIENT: // u16
             case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
-            case VT_UINT5: //  u16 / 5
-            case VT_UINT10: //  u16 / 10
-            case VT_TEMP_WORD60: //  u16 / 60
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
             case VT_DWORD: // s32
-            case VT_POWER: // u32 / 10.0 kW
-            case VT_ENERGY10: // u32 / 10.0 kWh
             case VT_ENERGY: // u32 / 1.0 kWh
             case VT_SECONDS_DWORD: //u32? s
               printDWORD(msg,data_len,decodedTelegram.operand);
@@ -2535,6 +2536,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_TEMP_WORD60: //  u16 / 60
             case VT_VOLTAGE_WORD: //unsigned?
             case VT_CELMIN: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
@@ -2558,6 +2560,10 @@ void printTelegram(byte* msg, int query_line) {
             case VT_POWER100: //u32 / 100 kW
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100:  // u32 / 100
+            case VT_UINT5: //  u16 / 5
+            case VT_UINT10: //  u16 / 10
+            case VT_POWER: // u32 / 10.0 kW
+            case VT_ENERGY10: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_ONOFF:
@@ -4057,11 +4063,11 @@ void query(int line)  // line (ProgNr)
 
               // Decode the rcv telegram and send it to the PC serial interface
               printTelegram(msg, line);
-              Serial.print(F("#"));
-              Serial.print(line);
-              Serial.print(F(": "));
-              Serial.println(build_pvalstr(0));
-              Serial.flush();
+              SerialOutput->print(F("#"));
+              SerialOutput->print(line);
+              SerialOutput->print(F(": "));
+              SerialOutput->println(build_pvalstr(0));
+              SerialOutput->flush();
 #ifdef LOGGER
               LogTelegram(msg);
 #endif
@@ -4106,11 +4112,11 @@ void query(int line)  // line (ProgNr)
 */
           printTelegram(msg, line);
 
-          Serial.print(F("#"));
-          Serial.print(line);
-          Serial.print(F(": "));
-          Serial.println(build_pvalstr(0));
-          Serial.flush();
+          SerialOutput->print(F("#"));
+          SerialOutput->print(line);
+          SerialOutput->print(F(": "));
+          SerialOutput->println(build_pvalstr(0));
+          SerialOutput->flush();
         }
       }else{
         //DebugOutput.println(F("unknown command"));
@@ -4283,14 +4289,14 @@ void dht22(void) {
 
     float hum = DHT.humidity;
     float temp = DHT.temperature;
-    Serial.print(F("#dht_temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(temp);
-    Serial.print(F(", hum["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.println(hum);
+    SerialOutput->print(F("#dht_temp["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->print(temp);
+    SerialOutput->print(F(", hum["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->println(hum);
     if (hum > 0 && hum < 101) {
       char tempBuf[10];
       _printFIXPOINT(tempBuf,temp,2);
@@ -4334,11 +4340,11 @@ void ds18b20(void) {
 //  char device_ascii[17];
   for(i=0;i<numSensors;i++){
     float t=sensors.getTempCByIndex(i);
-    Serial.print(F("#1w_temp["));
-    Serial.print(i);
-    Serial.print(F("]: "));
-    Serial.print(t);
-    Serial.println();
+    SerialOutput->print(F("#1w_temp["));
+    SerialOutput->print(i);
+    SerialOutput->print(F("]: "));
+    SerialOutput->print(t);
+    SerialOutput->println();
 
     sensors.getAddress(device_address, i);
 //    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
@@ -4391,23 +4397,26 @@ void Ipwe() {
   DebugOutput.print(F("IPWE sensors: "));
   DebugOutput.println(numIPWESensors);
 
-  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Temperatur</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   for (i=0; i < numIPWESensors; i++) {
     query(ipwe_parameters[i]);
     counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-    printFmtToWebClient(PSTR("<br></td><td>%s"), lookup_descr(ipwe_parameters[i]));
-    printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
+    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+    printToWebClient(decodedTelegram.prognrdescaddr);
+    printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
     printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
+      uint32_t c=0;
+      loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-      printFmtToWebClient(PSTR("<br></td><td>Avg%s"), lookup_descr(avg_parameters[i]));
-      printFmtToWebClient(PSTR("<br></td><td>%.1f"), (avgValues[i]));
-// TODO: extract and display unit text from cmdtbl.type
+      printToWebClient(PSTR("<br></td><td>Avg"));
+      printToWebClient(decodedTelegram.prognrdescaddr);
+      printFmtToWebClient(PSTR("<br></td><td>%.1f&nbsp;"), (avgValues[i]));
+      printToWebClient(decodedTelegram.unit);
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
@@ -5214,7 +5223,7 @@ uint8_t pps_offset = 0;
 
   // Listen for incoming clients
   client = server.available();
-  if (client || Serial.available()) {
+  if (client || SerialOutput->available()) {
 
 #ifdef TRUSTED_IP
 #ifndef TRUSTED_IP2
@@ -5237,18 +5246,18 @@ uint8_t pps_offset = 0;
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
-    while (client.connected() || Serial.available()) {
-      if (client.available() || Serial.available()) {
+    while (client.connected() || SerialOutput->available()) {
+      if (client.available() || SerialOutput->available()) {
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
           DebugOutput.print(c);         // and send it to hardware UART
         }
-        if (Serial.available()) {
-          c = Serial.read();
+        if (SerialOutput->available()) {
+          c = SerialOutput->read();
           DebugOutput.print(c);         // and send it to hardware UART
           int timeout = 0;
-          while (Serial.available() == 0 && c!='\r' && c!='\n') {
+          while (SerialOutput->available() == 0 && c!='\r' && c!='\n') {
             delay(1);
             timeout++;
             if (timeout > 2000) {
@@ -6029,10 +6038,28 @@ uint8_t pps_offset = 0;
           json_token = strtok(NULL, ",");
 
           printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
-          if(strchr("ICKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("ACIKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
+          }
+
+          if (p[2] == 'A'){ // print average values in JSON
+            for (int i=0; i<numAverages; i++) {
+              if (avg_parameters[i] > 0) {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                uint32_t c=0;
+                char p1[16];
+                loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+                _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
+                printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
+                printToWebClient(decodedTelegram.prognrdescaddr);
+                printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
+              }
+            }
+          printToWebClient(PSTR("\n}\n"));
+          forcedflushToWebClient();
+          break;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
@@ -6205,9 +6232,10 @@ uint8_t pps_offset = 0;
                 }
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
-
+                loadPrognrElementsFromTable(i_line);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
-                printToWebClient(get_cmdtbl_desc(i_line));
+
+                printToWebClient(decodedTelegram.prognrdescaddr);
                 printToWebClient(PSTR("\",\n"));
 
                 if (p[2]=='Q') {
@@ -6219,7 +6247,6 @@ uint8_t pps_offset = 0;
                 }
 
                 if (p[2] != 'Q') {
-                  loadPrognrElementsFromTable(i_line);
                   printToWebClient(PSTR("    \"possibleValues\": [\n"));
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
@@ -6780,20 +6807,19 @@ uint8_t pps_offset = 0;
                 if (avg_parameters[i] > 0) {
                   char tempBuf[10];
                   _printFIXPOINT(tempBuf,avgValues[i],1);
-                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg%s: %s "), avg_parameters[i], lookup_descr(avg_parameters[i]), tempBuf);
-
                   uint32_t c=0;
                   int line=findLine(avg_parameters[i],0,&c);
                   loadPrognrElementsFromTable(line);
-                  printToWebClient(decodedTelegram.unit);
-                  printToWebClient(PSTR("</td></tr>\n"));
+                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
+                  printToWebClient(decodedTelegram.prognrdescaddr);
+                  printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
-                  Serial.print(F("#avg_"));
-                  Serial.print(avg_parameters[i]);
-                  Serial.print(F(": "));
-                  Serial.print(tempBuf);
-                  Serial.print(F(" "));
-                  Serial.println(decodedTelegram.unit);
+                  SerialOutput->print(F("#avg_"));
+                  SerialOutput->print(avg_parameters[i]);
+                  SerialOutput->print(F(": "));
+                  SerialOutput->print(tempBuf);
+                  SerialOutput->print(F(" "));
+                  SerialOutput->println(decodedTelegram.unit);
 
                 }
               }
@@ -7085,10 +7111,10 @@ uint8_t pps_offset = 0;
     // Close the json doc off
     MQTTPayload.concat(F("}}"));
       // debugging..
-      Serial.print(F("Output topic: "));
-      Serial.println(MQTTTopic.c_str());
-      Serial.print(F("Payload Output : "));
-      Serial.println(MQTTPayload.c_str());
+      DebugOutput.print(F("Output topic: "));
+      DebugOutput.println(MQTTTopic.c_str());
+      DebugOutput.print(F("Payload Output : "));
+      DebugOutput.println(MQTTPayload.c_str());
     // Now publish the json payload only once
     MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
 #endif
@@ -7499,12 +7525,17 @@ void setup() {
   pinMode(19, INPUT);
 #endif
 
-  // The computer hardware serial interface #0:
-  //   115,800 bps, 8 data bits, no parity
+#ifdef BtSerial
+  SerialOutput = &Serial2;
+  Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
+#else
+  SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
-  Serial.println(F("READY"));
+#endif
+
+  SerialOutput->println(F("READY"));
  #ifdef DebugTelnet
-  Serial.println(F("Logging output to Telnet"));
+  SerialOutput->println(F("Logging output to Telnet"));
  #endif
   DebugOutput.print(F("Size of cmdtbl1: "));
   DebugOutput.println(sizeof(cmdtbl1));
@@ -7513,8 +7544,8 @@ void setup() {
   DebugOutput.print(F("free RAM:"));
   DebugOutput.println(freeRam());
 
-  while (Serial.available()) { // UART buffer often still contains characters after reset if power is not cut
-    DebugOutput.print(Serial.read());
+  while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
+    DebugOutput.print(SerialOutput->read());
   }
 
   bus.enableInterface();
@@ -7534,7 +7565,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println(F("WiFi shield not present"));
+    SerialOutput->println(F("WiFi shield not present"));
     // don't continue
     while (true);
   }
@@ -7545,14 +7576,14 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    Serial.print(F("Attempting to connect to WPA SSID: "));
-    Serial.println(ssid);
+    SerialOutput->print(F("Attempting to connect to WPA SSID: "));
+    SerialOutput->println(ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  Serial.println(F("You're connected to the network"));
+  SerialOutput->println(F("You're connected to the network"));
 
   printWifiStatus();
 #endif
@@ -7576,13 +7607,13 @@ void setup() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  Serial.print(F("Starting SD.."));
+  SerialOutput->print(F("Starting SD.."));
 #if defined(__AVR__)
-  if(!SD.begin(4)) Serial.println(F("failed"));
+  if(!SD.begin(4)) SerialOutput->println(F("failed"));
 #else
-  if(!SD.begin(4, SPI_DIV3_SPEED)) Serial.println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  if(!SD.begin(4, SPI_DIV3_SPEED)) SerialOutput->println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
 #endif
-  else Serial.println(F("ok"));
+  else SerialOutput->println(F("ok"));
 
 #else
   // enable w5100 SPI
@@ -7618,25 +7649,25 @@ void setup() {
   IPAddress ip = Ethernet.localIP();
 #endif
 #endif
-  Serial.println(ip);
+  SerialOutput->println(ip);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
 #endif
 
-  Serial.println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  SerialOutput->println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
   #if defined LOGGER || defined WEBSERVER
-  Serial.print(F("Calculating free space on SD..."));
+  SerialOutput->print(F("Calculating free space on SD..."));
   uint32_t m = millis();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  Serial.print(fs);
-  Serial.print(F(" MB free\n"));
+  SerialOutput->print(fs);
+  SerialOutput->print(F(" MB free\n"));
   diff -= (millis() - m); //3 sec - delay
   #endif
   if(diff > 0)  delay(diff);
