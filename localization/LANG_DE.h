@@ -551,7 +551,7 @@
 #define STR2820_TEXT "Nachlaufzeit Quelle"
 #define STR2821_TEXT "Quellen-Anlaufzeit Maximum"
 #define STR2822_TEXT "Zeit Begr Quellentemp Min Sole"
-#define STR2823_TEXT "Soll Temp'spreizungn Verda"
+#define STR2823_TEXT "Soll Temp'spreizung Verda"
 #define STR2824_TEXT "Max Abweich Spreiz Verda"
 #define STR2825_TEXT "Min Verdampf'temperatur"
 #define STR2826_TEXT "Max Verdampf'temperatur"
