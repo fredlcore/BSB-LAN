@@ -6431,15 +6431,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Zeitprogramm 5
 // {0x053D0AB3,  CAT_ZEITPROG_5,       VT_TIMEPROG,      600,   STR600,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 5 - Vorwahl / TODO: check hypothetical CommandID
+{0x053D0AB4,  CAT_ZEITPROG_5,       VT_TIMEPROG,      600,   STR600,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Vorwahl
 {0x053D0AB4,  CAT_ZEITPROG_5,       VT_TIMEPROG,      600,   STR600,   0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // [hh:mm ] - Zeitprogramm 5 - Vorwahl
 {0x053D0AB4,  CAT_ZEITPROG_5,       VT_TIMEPROG,      601,   STR601,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 1. Phase Ein
+{0x053D0AB5,  CAT_ZEITPROG_5,       VT_TIMEPROG,      601,   STR601,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 1. Phase Ein
 {0x053D0AB5,  CAT_ZEITPROG_5,       VT_TIMEPROG,      602,   STR602,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 1. Phase Aus
+{0x053D0AB6,  CAT_ZEITPROG_5,       VT_TIMEPROG,      602,   STR602,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 1. Phase Aus
 {0x053D0AB6,  CAT_ZEITPROG_5,       VT_TIMEPROG,      603,   STR603,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 2. Phase Ein
+{0x053D0AB7,  CAT_ZEITPROG_5,       VT_TIMEPROG,      603,   STR603,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 2. Phase Ein
 {0x053D0AB7,  CAT_ZEITPROG_5,       VT_TIMEPROG,      604,   STR604,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 2. Phase Aus
+{0x053D0AB8,  CAT_ZEITPROG_5,       VT_TIMEPROG,      604,   STR604,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 2. Phase Aus
 {0x053D0AB8,  CAT_ZEITPROG_5,       VT_TIMEPROG,      605,   STR605,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 3. Phase Ein
+{0x053D0AB9,  CAT_ZEITPROG_5,       VT_TIMEPROG,      605,   STR605,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 3. Phase Ein
 {0x053D0AB9,  CAT_ZEITPROG_5,       VT_TIMEPROG,      606,   STR606,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 3. Phase Aus
+{0x053D0ABA,  CAT_ZEITPROG_5,       VT_TIMEPROG,      606,   STR606,   0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // [hh:mm ] - Zeitprogramm 5 - Mo-So: 3. Phase Aus
 {0x053D0ABA,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_090_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
+{0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_119_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 
