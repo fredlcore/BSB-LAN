@@ -7247,6 +7247,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D05D2,  CAT_WAERMEPUMPE,      VT_TEMP,          2824,  STR2824,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Abweich Spreiz Verda
 {0x593D17B6,  CAT_WAERMEPUMPE,      VT_MINUTES_WORD,  2827,  STR2827,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit Begr Quelletemp
 {0x593D19AD,  CAT_WAERMEPUMPE,      VT_TEMP,          2829,  STR2829,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Erw Bereich min Verda'temp
+{0x593D19AE,  CAT_WAERMEPUMPE,      VT_HOURS_WORD,    2830,  STR2830,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Dauer erw Verda'temp
 {0x593D178C,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2839,  STR2839,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit Begr Quelletemp
 {0x593D05C1,  CAT_WAERMEPUMPE,      VT_TEMP,          2840,  STR2840,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiff Rücklauftemp
 {0x593D0B8B,  CAT_WAERMEPUMPE,      VT_YESNO,         2841,  STR2841,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Verd'laufzeit min einhalten
