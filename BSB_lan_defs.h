@@ -2314,7 +2314,7 @@ const char STR8066[] PROGMEM = STR8066_TEXT;
 const char STR8067[] PROGMEM = STR8067_TEXT;
 const char STR8068[] PROGMEM = STR8068_TEXT;
 #define STR8069 STR8067
-
+#define STR8070 STR6820
 const char STR8099[] PROGMEM = STR8099_TEXT;
 
 // Diagnose Kaskade
@@ -9036,7 +9036,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06FB,  CAT_STATUS,           VT_ENUM,          8067,  STR8067,  sizeof(ENUM8067),     ENUM8067,     FL_RONLY,     DEV_ALL}, // Statuscode Statushistorie 10
 {0x053D0706,  CAT_STATUS,           VT_DATETIME,      8068,  STR8068,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zeitstempel Statushistorie 10
 {0x053D06FC,  CAT_STATUS,           VT_ENUM,          8069,  STR8069,  sizeof(ENUM8069),     ENUM8069,     FL_RONLY,     DEV_ALL}, // Statuscode Statushistorie 10
-
+{0x053D06B6,  CAT_STATUS,           VT_YESNO,         8070,  STR8070,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Reset Historie
 {0x053D17DD,  CAT_STATUS,           VT_ENUM,          8099,  STR8099,  sizeof(ENUM8006),     ENUM8099,     FL_RONLY,     DEV_ALL}, // Status Wärmepumpe im Hauptdisplay, virtueller Parameter, BSW-K
 
 // Diagnose Kaskade
