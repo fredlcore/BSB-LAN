@@ -7258,9 +7258,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D04F1,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2842,  STR2842,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichterlaufzeit Minimum
 {0x593D04F2,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2843,  STR2843,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtersillstandszeit Min //FUJITSU
 {0x593D05CF,  CAT_WAERMEPUMPE,      VT_TEMP,          2844,  STR2844,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausschalttemp. max //FUJITSU
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2845,  STR2845,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reduktion Ausschaltemp Max
+{0x593D05A6,  CAT_WAERMEPUMPE,      VT_TEMP,          2845,  STR2845,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reduktion Ausschaltemp Max
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2846,  STR2846,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heissgastemp Max
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2852,  STR2852,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung beim Start
+{0x593D05A7,  CAT_WAERMEPUMPE,      VT_TEMP,          2848,  STR2848,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reduktion Heissgastemp Max
+{0x593D05AA,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2852,  STR2852,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung beim Start
+{0x593D0B8F,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2853,  STR2853,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung im Betrieb
 {0x593D0495,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2862,  STR2862,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Stufe/Mod //FUJITSU
 {0x593D0493,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2863,  STR2863,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr Stufe2/Mod
 {0x593D0494,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2864,  STR2864,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr Stufe2/Mod
