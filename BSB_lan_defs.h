@@ -8285,7 +8285,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D082A,  CAT_KONFIG,           VT_UNKNOWN,       6496,  STR6496,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Teilschema Schwimmbad
 {0x313D0B14,  CAT_KONFIG,           VT_UNKNOWN,       6497,  STR6497,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Teilschema Trinkwasser Durchlauferhitzer
 {0x493D061D,  CAT_KONFIG,           VT_UNKNOWN,       6498,  STR6498,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 // Teilschema Sonnenkollektor
+};
 
+PROGMEM_LATE const cmd_t cmdtbl2[]={
 // LPB-System
 {0x053D00C9,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
 {0x053D000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
@@ -8357,10 +8359,6 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - LPB - Aussentemperatur Lieferant - logged on OCI700 via LPB
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x413D000E,  CAT_LPB,              VT_FP1    ,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
-
-};
-
-PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 //Fehler
 {0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
@@ -9691,7 +9689,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Take your pick whether you assign 10000 (your choice) or 10109 (as in other sources) to this telegram
 // dc 86 00 0e 02 3d 2d 02 15 05 76 00 b0 e0   Note the command code! The command table must match it.
 {0x2D3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
-{0x2D3D021C,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_059}, // Raumtemperatur 1 (kann als INF geschickt werden)
+{0x2D3D021C,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
 {0x2E3E0215,  CAT_USER_DEFINED,     VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
 {0x2F3F0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
 {0x0500021F,  CAT_USER_DEFINED,     VT_TEMP,          10003, STR8700,  0,                    NULL,         DEFAULT_FLAG+FL_SPECIAL_INF, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt
