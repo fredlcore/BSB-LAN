@@ -250,7 +250,7 @@
 #define STR1134_TEXT "Czas przebiegu siłownika"
 #define STR1150_TEXT "Osuszanie jastrychu"
 #define STR1600_TEXT "Tryb pracy CWU"
-#define STR1601_TEXT "Ręczne CWU-Push"
+#define STR1601_TEXT "Wybór trybu pracy Eko"
 #define STR1602_TEXT "Stan CWU"
 #define STR1603_TEXT "Ręczne CWU-Push"
 #define STR1610_TEXT "Temperatura zadana"
