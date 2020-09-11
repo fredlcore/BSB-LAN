@@ -501,17 +501,12 @@ uint8_t json_types[20] = { 0 };
   #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9
-  // Setup a oneWire instance to communicate with any OneWire devices
-  OneWire oneWire(ONE_WIRE_BUS);
-  // Pass our oneWire reference to Dallas Temperature.
-  DallasTemperature sensors(&oneWire);
-
+  DallasTemperature *sensors;
   uint8_t numSensors;
 #endif
 
 #ifdef DHT_BUS
   #include "src/DHT/dht.h"
-  int DHT_Pins[] = {DHT_BUS};
   dht DHT;
 #endif
 
@@ -807,7 +802,7 @@ void ShowSockStatus()
     W5100.readSnDIPR(i, dip);
     SPI.endTransaction();
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-    printFmtToDebug(PSTR("%d.%d.%d.%d(%d)\n"), dip[0], dip[1], dip[2], dip[3], W5100.readSnDPORT(i));
+    printFmtToDebug(PSTR("%d.%d.%d.%d(%d)\r\n"), dip[0], dip[1], dip[2], dip[3], W5100.readSnDPORT(i));
     SPI.endTransaction();
   }
 }
@@ -823,12 +818,12 @@ void checkSockStatus()
 
     if((s == 0x14) || (s == 0x1C)) {
         if(thisTime - connectTime[i] > 30000UL) {
-          printFmtToDebug(PSTR("\r\nSocket frozen: %d\n"), i);
+          printFmtToDebug(PSTR("\r\nSocket frozen: %d\r\n"), i);
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
           W5100.execCmdSn(s, Sock_DISCON);
           SPI.endTransaction();
 
-          printToDebug(PSTR("Socket freed.\n"));
+          printlnToDebug(PSTR("Socket freed."));
           ShowSockStatus();
         }
     }
@@ -876,9 +871,9 @@ void checkSockStatus()
 
  void writelnToDebug(){
  #if defined(__AVR__)
-   strcpy_P(DebugBuff, PSTR("\n"));
+   strcpy_P(DebugBuff, PSTR("\r\n"));
  #else
-   strcpy(DebugBuff, PSTR("\n"));
+   strcpy(DebugBuff, PSTR("\r\n"));
  #endif
  switch(debug_mode){
    case 1: SerialOutput->print(DebugBuff); break;
@@ -1310,7 +1305,7 @@ uint8_t get_cmdtbl_flags(int i) {
 }
 
 void printcantalloc(void){
-  printToDebug(PSTR("Can't alloc memory\n"));
+  printlnToDebug(PSTR("Can't alloc memory"));
 }
 
 /** *****************************************************************
@@ -3359,7 +3354,8 @@ int set(int line      // the ProgNr of the heater parameter
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
-      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %du\n"), cmd_no, pps_values[cmd_no]);
+      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %du"), cmd_no, pps_values[cmd_no]);
+      writelnToDebug();
       EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
     }
     return 1;
@@ -3745,12 +3741,12 @@ int set(int line      // the ProgNr of the heater parameter
       int d,m,y,hour,min,sec;
       // The caller MUST provide six values for an event
       if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec)) {
-        printToDebug(PSTR("Too few/many arguments for date/time!\n"));
+        printlnToDebug(PSTR("Too few/many arguments for date/time!"));
         return 0;
       }
 
       // Send to the PC hardware serial interface (DEBUG)
-      printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\n"), d,m,y,hour,min,sec);
+      printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
 
       // Set up the command payload
       param[0]=0x01;
@@ -3860,7 +3856,7 @@ int set(int line      // the ProgNr of the heater parameter
       }
 
       if (data_len > 18) {
-        printFmtToDebug(PSTR("Set failed, invalid data length: %d\n"), data_len);
+        printFmtToDebug(PSTR("Set failed, invalid data length: %d\r\n"), data_len);
         return 0;
       }
 
@@ -3892,7 +3888,7 @@ int set(int line      // the ProgNr of the heater parameter
   // Send a message to PC hardware serial port
   printFmtToDebug(PSTR("setting line: %d val: "), line);
   SerialPrintRAW(param,param_len);
-  printToDebug(PSTR("\n"));
+  writelnToDebug();
 
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
 
@@ -3909,7 +3905,7 @@ int set(int line      // the ProgNr of the heater parameter
              , param_len   // payload length
              , setcmd))    // wait_for_reply
   {
-    printFmtToDebug(PSTR("set failed\n"));
+    printFmtToDebug(PSTR("set failed\r\n"));
     return 0;
   }
 
@@ -4024,9 +4020,7 @@ return outBuf;
  * *************************************************************** */
 void query_printHTML(){
   if (decodedTelegram.msg_type == TYPE_ERR) {
-#ifdef HIDE_UNKNOWN
-    if (decodedTelegram.error == 7) return;
-#endif
+    if (decodedTelegram.error == 7 && !show_unknown) return;
     printToWebClient(PSTR("<tr style='color: #7f7f7f'><td>"));
   } else {
     printToWebClient(PSTR("<tr><td>"));
@@ -4214,9 +4208,9 @@ void query(int line)  // line (ProgNr)
           } // endwhile, maximum number of retries reached
           if(retry==0) {
             if (bus.getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
-              printFmtToDebug(PSTR("error %d\n"), msg[9]); //%d
+              printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
             } else {
-              printFmtToDebug(PSTR("%d\n"), line); //%d
+              printFmtToDebug(PSTR("%d\r\n"), line); //%d
             }
           decodedTelegram.error = 261;
           }
@@ -4344,7 +4338,7 @@ void SetDevId() {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
   }
 */
-  printFmtToDebug(PSTR("Device family: %d\nDevice variant: %d\n"), my_dev_fam, my_dev_var);
+  printFmtToDebug(PSTR("Device family: %d\nDevice variant: %d\r\n"), my_dev_fam, my_dev_var);
 }
 
 /** *****************************************************************
@@ -4397,10 +4391,10 @@ void SetDateTime(){
  * *************************************************************** */
 void dht22(void) {
   int i;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
-  printFmtToDebug(PSTR("DHT22 sensors: %d\n"), numDHTSensors);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  printFmtToDebug(PSTR("DHT22 sensors: %d\r\n"), numDHTSensors);
     for(i=0;i<numDHTSensors;i++){
-
+    if(!DHT_Pins[i]) continue;
     int chk = DHT.read22(DHT_Pins[i]);
     switch (chk) {
       case DHTLIB_OK:
@@ -4465,18 +4459,18 @@ void dht22(void) {
 void ds18b20(void) {
   uint8_t i;
   //webPrintHeader();
-  sensors.requestTemperatures(); // Send the command to get temperatures
+  sensors->requestTemperatures(); // Send the command to get temperatures
   DeviceAddress device_address;
 //  char device_ascii[17];
   for(i=0;i<numSensors;i++){
-    float t=sensors.getTempCByIndex(i);
+    float t=sensors->getTempCByIndex(i);
     SerialOutput->print(F("#1w_temp["));
     SerialOutput->print(i);
     SerialOutput->print(F("]: "));
     SerialOutput->print(t);
     SerialOutput->println();
 
-    sensors.getAddress(device_address, i);
+    sensors->getAddress(device_address, i);
 //    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
 //    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
     char tempBuf[10];
@@ -4524,7 +4518,7 @@ void Ipwe() {
   int i;
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
-  printFmtToDebug(PSTR("IPWE sensors: %d\n"), numIPWESensors);
+  printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
 
   printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
   for (i=0; i < numIPWESensors; i++) {
@@ -4553,13 +4547,13 @@ void Ipwe() {
 
 #ifdef ONE_WIRE_BUS
   // output of one wire sensors
-  sensors.requestTemperatures();
+  sensors->requestTemperatures();
   DeviceAddress device_address;
   for(i=0;i<numSensors;i++){
     counter++;
     char tmpbuf[10];
-    _printFIXPOINT(tmpbuf, sensors.getTempCByIndex(i), 2);
-    sensors.getAddress(device_address, i);
+    _printFIXPOINT(tmpbuf, sensors->getTempCByIndex(i), 2);
+    sensors->getAddress(device_address, i);
 
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
     printFmtToWebClient(PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
@@ -4569,8 +4563,9 @@ void Ipwe() {
 
 #ifdef DHT_BUS
   // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(int);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
   for(i=0;i<numDHTSensors;i++){
+    if(!DHT_Pins[i]) continue;
     DHT.read22(DHT_Pins[i]);
     char tmpbuf[10];
     float hum = DHT.humidity;
@@ -4631,7 +4626,7 @@ void InitMaxDeviceList() {
           EEPROM.get(500 + 15 * z, max_addr);
         }
         max_devices[x] = max_addr;
-        printFmtToDebug(PSTR("Adding known Max ID to list:\n%08lX\n"), max_devices[x]);
+        printFmtToDebug(PSTR("Adding known Max ID to list:\r\n%08lX\r\n"), max_devices[x]);
         break;
       }
     }
@@ -4758,27 +4753,27 @@ void loop() {
     switch (Ethernet.maintain()) {
       case 1:
         //renewed fail
-        printToDebug(PSTR("Error: renewed fail\n"));
+        printlnToDebug(PSTR("Error: renewed fail"));
         break;
       case 2:
         //renewed success
-        printToDebug(PSTR("Renewed success\n"));
+        printlnToDebug(PSTR("Renewed success"));
         //print your local IP address:
         printToDebug(PSTR("My IP address: "));
         {IPAddress t = Ethernet.localIP();
-        printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
+        printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
         break;
       case 3:
         //rebind fail
-        printToDebug(PSTR("Error: rebind fail\n"));
+        printlnToDebug(PSTR("Error: rebind fail"));
         break;
       case 4:
         //rebind success
-        printToDebug(PSTR("Rebind success\n"));
+        printlnToDebug(PSTR("Rebind success"));
         //print your local IP address:
         printToDebug(PSTR("My IP address: "));
         {IPAddress t = Ethernet.localIP();
-        printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
+        printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
       break;
 
       default:
@@ -4824,7 +4819,7 @@ void loop() {
         }
 
         if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
-          printFmtToDebug(PSTR("INF: TWW-Status: %d\n"), msg[11]);      // assumed info byte
+          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);      // assumed info byte
 
           if( (msg[11]==0x4D && my_dev_fam != 97) || (msg[11]==0xCD && my_dev_fam == 97)) {  // TWW Ladung on BROETJE_SOB and THISION
             if(TWW_start==0){        // has not been timed
@@ -4848,7 +4843,7 @@ void loop() {
         if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
           unsigned long brenner_end;
           boolean reset_brenner_timer = 0;
-          printFmtToDebug(PSTR("INF: Brennerstatus: %d\n"), msg[bus.getPl_start()]);      // first payload byte
+          printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus.getPl_start()]);      // first payload byte
 
           if(msg[bus.getPl_start()]==0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
@@ -4921,11 +4916,7 @@ void loop() {
           switch (msg_cycle) {
             case 0:
               tx_msg[1] = 0x38; // Typ
-#ifdef QAA_TYPE
               if (pps_values[PPS_QTP] == 0) pps_values[PPS_QTP] = QAA_TYPE;
-#else
-              pps_values[PPS_QTP] = 0x53;                // QAA70 as default
-#endif
               tx_msg[7] = pps_values[PPS_QTP];
               break;
             case 1:
@@ -5295,7 +5286,7 @@ uint8_t pps_offset = 0;
                   for (int c=0;c<9+pps_offset;c++) {
                     printFmtToDebug(PSTR("%02x "), msg[c]);
                   }
-                  printToDebug(PSTR("\n"));
+                  writelnToDebug();
                   break;
               }
             }
@@ -5342,10 +5333,10 @@ uint8_t pps_offset = 0;
   client = server->available();
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
-    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr[0], remoteIP[0], 4)) &&
-       (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2[0], remoteIP[0], 4))){
+    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr, &remoteIP, 4)) &&
+       (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2, &remoteIP, 4))){
           // reject clients from unauthorized IP addresses;
-      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
+      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\r\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
       client.stop();
     }
 
@@ -5372,7 +5363,7 @@ uint8_t pps_offset = 0;
             }
           }
         }
-        
+
         if ((c!='\n') && (c!='\r') && (bPlaceInBuffer<MaxArrayElement)){
           cLineBuffer[bPlaceInBuffer++]=c;
           continue;
@@ -5412,16 +5403,12 @@ uint8_t pps_offset = 0;
                 httpflags |= 8;
                 strcpy(outBuf, buffer);
               }
-#ifdef USER_PASS_B64
              else
 #endif
-#endif
-#ifdef USER_PASS_B64
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & 1) && strstr_P(buffer,PSTR("Authorization: Basic"))!=0 && strstr(buffer,USER_PASS_B64)!=0) {
+              if (!(httpflags & 1) && USER_PASS_B64[0] && strstr_P(buffer,PSTR("Authorization: Basic"))!=0 && strstr(buffer,USER_PASS_B64)!=0) {
                 httpflags |= 1;
               }
-#endif
               memset(buffer,0, charcount);
               charcount=0;
             } else if (c != '\r') {
@@ -5430,9 +5417,8 @@ uint8_t pps_offset = 0;
             }
           }
         }
-#ifdef USER_PASS_B64
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (!(httpflags & 1)) {
+        if (USER_PASS_B64[0] && !(httpflags & 1)) {
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -5443,7 +5429,6 @@ uint8_t pps_offset = 0;
           break;
         }
         // otherwise continue like normal
-#endif
         // Flush any remaining bytes from the client buffer
 //        client.flush();
         // GET / HTTP/1.1 (anforderung website)
@@ -5455,7 +5440,7 @@ uint8_t pps_offset = 0;
 #endif
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
-        printToDebug(cLineBuffer);
+        printlnToDebug(cLineBuffer);
 
 // IPWE START
 #ifdef IPWE
@@ -5754,7 +5739,7 @@ uint8_t pps_offset = 0;
           token++;
           if (token[0] > 0) {
             int d_addr = atoi(token);
-            printFmtToDebug(PSTR("Setting temporary destination to %d\n"), d_addr);
+            printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
             bus.setBusType(bus.getBusType(), myAddr, d_addr);
           }
 
@@ -6027,7 +6012,7 @@ uint8_t pps_offset = 0;
               uint8_t dev_fam = get_cmdtbl_dev_fam(j);
               uint8_t dev_var = get_cmdtbl_dev_var(j);
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
-                printFmtToDebug(PSTR("%02x\n"), c);
+                printFmtToDebug(PSTR("%02x\r\n"), c);
                 if(!bus.Send(TYPE_QUR, c, msg, tx_msg)){
                   printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
                 } else {
@@ -6123,7 +6108,6 @@ uint8_t pps_offset = 0;
         }
 
         if (p[1]=='J') {
-          int i=0;
           uint32_t cmd=0;
           // Parse potential JSON payload
           char json_temp[11];
@@ -6170,6 +6154,7 @@ uint8_t pps_offset = 0;
           if (p[2] == 'I'){ // dump configuration in JSON
             int32_t freespace = 0;
             boolean not_first = false;
+            int i;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
 #endif
@@ -6194,10 +6179,22 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("  \"monitor\": %d,\n  \"verbose\": %d"), monitor, verbose);
 
             #ifdef ONE_WIRE_BUS
-            printFmtToWebClient(PSTR(",\n  \"onewirebus\": %d"), ONE_WIRE_BUS);
+            printFmtToWebClient(PSTR(",\n  \"onewirebus\": %d"), One_Wire_Pin);
             #endif
             #ifdef DHT_BUS
-            printFmtToWebClient(PSTR(",\n  \"dhtbus\": \"%d,%d\""), DHT_BUS);
+            printToWebClient(PSTR(",\n  \"dhtbus\": [\n"));
+            not_first = false;
+            int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+            for(i=0;i<numDHTSensors;i++){
+              if(DHT_Pins[i]) {
+                if(not_first)
+                  printToWebClient(PSTR(",\n"));
+                else
+                  not_first = true;
+                printFmtToWebClient(PSTR("    { \"pin\": %d }"), DHT_Pins[i]);
+              }
+            }
+            printToWebClient(PSTR("\n  ]"));
             #endif
 //protected GPIO
             if(anz_ex_gpio > 0){
@@ -6399,7 +6396,7 @@ uint8_t pps_offset = 0;
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\n"), json_parameter, json_value_string, json_type);
+                printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
@@ -6475,7 +6472,7 @@ uint8_t pps_offset = 0;
               transmitFile(dataFile);
               dataFile.close();
 
-              printFmtToDebug(PSTR("Duration: %lu\n"), millis()-startdump);
+              printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
             } else {
               printToWebClient(PSTR(MENU_TEXT_DTO "\n"));
             }
@@ -6497,6 +6494,8 @@ uint8_t pps_offset = 0;
           destAddr = bus.getBusDest();
           printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
           int bustype = bus.getBusType();
+          int i;
+          boolean not_first = false;
 
           switch (bustype) {
             case 0: printToWebClient(PSTR("BSB")); break;
@@ -6522,11 +6521,23 @@ uint8_t pps_offset = 0;
           printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
 
           #ifdef ONE_WIRE_BUS
-          printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d\n<BR>\n"), ONE_WIRE_BUS);
+          printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d\n<BR>\n"), One_Wire_Pin);
           #endif
 
           #ifdef DHT_BUS
-          printFmtToWebClient(PSTR(MENU_TEXT_DHP ": \n%d\n<BR>\n"), DHT_BUS);
+          printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
+          not_first = false;
+          int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+          for(i=0;i<numDHTSensors;i++){
+            if(DHT_Pins[i]) {
+              if(not_first)
+                printToWebClient(PSTR(", "));
+              else
+                not_first = true;
+              printFmtToWebClient(PSTR("%d"), i);
+            }
+          }
+          printToWebClient(PSTR("\n<BR>\n"));
           #endif
 
           printToWebClient(PSTR(MENU_TEXT_EXP ": \n"));
@@ -6686,7 +6697,7 @@ uint8_t pps_offset = 0;
           flushToWebClient();
 
 #if defined(__AVR__)
-          printToDebug(PSTR("EEPROM dump:\n"));
+          printlnToDebug(PSTR("EEPROM dump:"));
           for (uint16_t x=0; x<EEPROM.length(); x++) {
             printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
           }
@@ -6968,7 +6979,7 @@ uint8_t pps_offset = 0;
               if (dir_token!=NULL) {
                 if (*dir_token=='I') {
                   pinMode(pin, INPUT);
-                  printFmtToDebug(PSTR("Pin %d set to input.\n"), pin);
+                  printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
                 }
               }
               val=digitalRead(pin);
@@ -7059,7 +7070,7 @@ uint8_t pps_offset = 0;
       loopCount++;
       if(loopCount > 1000) {
         client.stop();
-        printToDebug(PSTR("\r\nTimeout\n"));
+        printlnToDebug(PSTR("\r\nTimeout"));
       }
 
     }
@@ -7094,12 +7105,12 @@ uint8_t pps_offset = 0;
           retries++;
           if (!MQTTClient.connected()) {
             delay(1000);
-            printToDebug(PSTR("Failed to connect to MQTT broker, retrying...\n"));
+            printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
           }
         }
       }
   #ifdef ONE_WIRE_BUS
-      sensors.requestTemperatures(); // Send the command to get temperatures
+      sensors->requestTemperatures(); // Send the command to get temperatures
   #endif
 
       // Declare local variables and start building json if enabled
@@ -7192,7 +7203,7 @@ uint8_t pps_offset = 0;
   #ifdef DHT_BUS
               int log_sensor = log_parameters[i] - 20100;
               int chk = DHT.read22(DHT_Pins[log_sensor]);
-              printFmtToDebug(PSTR("%d\n"), chk);
+              printFmtToDebug(PSTR("%d\r\n"), chk);
               float hum = DHT.humidity;
               float temp = DHT.temperature;
               if (hum > 0 && hum < 101) {
@@ -7206,7 +7217,7 @@ uint8_t pps_offset = 0;
             if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
   #ifdef ONE_WIRE_BUS
               int log_sensor = log_parameters[i] - 20200;
-              float t=sensors.getTempCByIndex(log_sensor);
+              float t=sensors->getTempCByIndex(log_sensor);
               _printFIXPOINT(smallbuf, t, 2);
               strcat_P(smallbuf, PSTR("\n"));
               MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
@@ -7222,7 +7233,7 @@ uint8_t pps_offset = 0;
         // debugging..
         printToDebug(PSTR("Output topic: "));
         printToDebug(MQTTTopic.c_str());
-        printToDebug(PSTR("\nPayload Output : "));
+        printToDebug(PSTR("\r\nPayload Output : "));
         printToDebug(MQTTPayload.c_str());
         writelnToDebug();
         // Now publish the json payload only once
@@ -7335,7 +7346,7 @@ uint8_t pps_offset = 0;
             if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
               int log_sensor = log_parameters[i] - 20100;
               int chk = DHT.read22(DHT_Pins[log_sensor]);
-              printFmtToDebug(PSTR("%d\n"), chk);
+              printFmtToDebug(PSTR("%d\r\n"), chk);
               float hum = DHT.humidity;
               float temp = DHT.temperature;
               if (hum > 0 && hum < 101) {
@@ -7357,8 +7368,8 @@ uint8_t pps_offset = 0;
 #ifdef ONE_WIRE_BUS
             if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
               int log_sensor = log_parameters[i] - 20200;
-              sensors.requestTemperatures(); // Send the command to get temperatures
-              float t=sensors.getTempCByIndex(log_sensor);
+              sensors->requestTemperatures(); // Send the command to get temperatures
+              float t=sensors->getTempCByIndex(log_sensor);
               dataFile.print(F("1W Temperature "));
               dataFile.print(log_sensor);
               dataFile.print(F(";"));
@@ -7371,7 +7382,7 @@ uint8_t pps_offset = 0;
       } else {
     // if the file isn't open, pop up an error:
         printToWebClient(PSTR(MENU_TEXT_DTO "\n"));
-        printFmtToDebug(PSTR("Error opening %s!\n"), datalogFileName);
+        printFmtToDebug(PSTR("Error opening %s!\r\n"), datalogFileName);
       }
       lastLogTime = millis();
     }
@@ -7391,7 +7402,7 @@ uint8_t pps_offset = 0;
       if (avg_parameters[i] > 0) {
         query(avg_parameters[i]);
         float reading = strtod(decodedTelegram.value,NULL);
-        printFmtToDebug(PSTR("%f\n"), reading);
+        printFmtToDebug(PSTR("%f\r\n"), reading);
         if (isnan(reading)) {} else {
           avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
           if (avgValues_Old[i] == -9999) {
@@ -7400,7 +7411,7 @@ uint8_t pps_offset = 0;
             avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
           }
         }
-        printFmtToDebug(PSTR("%f\n"), avgValues[i]);
+        printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
       }
     }
     avgCounter++;
@@ -7489,13 +7500,13 @@ uint8_t pps_offset = 0;
           max_id[x] = (char)strtoul(max_hex_str,NULL,16);
         }
         max_id[10] = '\0';
-        printFmtToDebug(PSTR("MAX device info received:\n%08lX\n%s\n"), max_addr, max_id);
+        printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
         int32_t max_addr_temp=0;
         for (int x=0;x<20;x++) {
           EEPROM.get(500 + 15 * x, max_addr_temp);
           if (max_addr_temp == max_addr) {
-            printToDebug(PSTR("Device already in EEPROM\n"));
+            printlnToDebug(PSTR("Device already in EEPROM"));
             known_eeprom = true;
             break;
           }
@@ -7515,7 +7526,7 @@ uint8_t pps_offset = 0;
               DebugOutput.println(temp1, HEX);
               DebugOutput.println(temp2);
 */
-              printToDebug(PSTR("Device stored in EEPROM\n"));
+              printlnToDebug(PSTR("Device stored in EEPROM"));
               InitMaxDeviceList();
               break;
             }
@@ -7527,7 +7538,7 @@ uint8_t pps_offset = 0;
         strncpy(max_hex_str, buffer+27, 2);
         max_hex_str[2]='\0';
         max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
-        printFmtToDebug(PSTR("Valve position from associated thermostat received:\n%08lX\n%lu\n"), max_addr, max_valve[max_idx]);
+        printFmtToDebug(PSTR("Valve position from associated thermostat received:\r\n%08lX\r\n%lu\r\n"), max_addr, max_valve[max_idx]);
       }
 
       if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
@@ -7543,7 +7554,7 @@ uint8_t pps_offset = 0;
         strncpy(max_hex_str, buffer+temp_str_offset, str_len);
         max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-        printFmtToDebug(PSTR("%d\n%08lX\n"), max_msg_len, max_temp_status);
+        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
         if (max_msg_type == 0x42) {
           max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
           max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -7554,8 +7565,8 @@ uint8_t pps_offset = 0;
           max_valve[max_idx] = (max_temp_status & 0xFF000000) >> 24;
         }
 
-        printToDebug(PSTR("MAX temperature message received:\n"));
-        printFmtToDebug(PSTR("%08lX\n%f\n%f\n%lu\n"), max_addr, ((float)max_cur_temp[max_idx] / 10), (float)(max_dst_temp[max_idx] / 2), max_valve[max_idx]);
+        printlnToDebug(PSTR("MAX temperature message received:"));
+        printFmtToDebug(PSTR("%08lX\r\n%f\r\n%f\r\n%lu\r\n"), max_addr, ((float)max_cur_temp[max_idx] / 10), (float)(max_dst_temp[max_idx] / 2), max_valve[max_idx]);
       }
       free(max_hex_str);
     }
@@ -7581,15 +7592,15 @@ uint8_t pps_offset = 0;
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  printFmtToDebug(PSTR("SSID: %s\n"), WiFi.SSID());
+  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
 
   // print your WiFi shield's IP address
   IPAddress t = WiFi.localIP();
-  printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);
+  printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
 
   // print the received signal strength
   long rssi = WiFi.RSSI();
-  printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\n"), rssi);
+  printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
 }
 #endif
 
@@ -7631,9 +7642,9 @@ void setup() {
   SerialOutput->println(F("READY"));
   if(debug_mode == 2)
     SerialOutput->println(F("Logging output to Telnet"));
-  printFmtToDebug(PSTR("Size of cmdtbl1: %d\n"),sizeof(cmdtbl1));
-  printFmtToDebug(PSTR("Size of cmdtbl2: %d\n"),sizeof(cmdtbl2));
-  printFmtToDebug(PSTR("free RAM: %d\n"), freeRam());
+  printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
+  printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
+  printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
     printFmtToDebug(PSTR("%c"), SerialOutput->read());
@@ -7680,18 +7691,26 @@ void setup() {
   printWifiStatus();
 #endif
 
-  printToDebug(PSTR("Reading EEPROM...\n"));
+  printlnToDebug(PSTR("Reading EEPROM..."));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     uint16_t f=0;
     if (EEPROM_ready) {
       EEPROM.get(sizeof(uint16_t)*i, f);
     }
     if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Reading %du from EEPROM slot %d\n"), f, i);
+      printFmtToDebug(PSTR("Reading %du from EEPROM slot %d\r\n"), f, i);
 
       pps_values[i] = f;
     }
   }
+
+#ifdef ONE_WIRE_BUS
+  printlnToDebug(PSTR("Init One Wire bus..."));
+  // Setup a oneWire instance to communicate with any OneWire devices
+  OneWire oneWire(One_Wire_Pin);
+  // Pass our oneWire reference to Dallas Temperature.
+  sensors = new DallasTemperature(&oneWire);
+#endif
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
@@ -7797,9 +7816,9 @@ if(debug_mode == 2)
 
 #ifdef ONE_WIRE_BUS
   // check ds18b20 sensors
-  sensors.begin();
-  numSensors=sensors.getDeviceCount();
-  printFmtToDebug(PSTR("numSensors: %d\n"), numSensors);
+  sensors->begin();
+  numSensors=sensors->getDeviceCount();
+  printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
 #endif
 
 /*
@@ -7945,9 +7964,9 @@ if (!SD.exists(datalogFileName)) {
 
 #ifdef MAX_CUL
   if (max_cul.connect({MAX_CUL}, 2323)) {
-    printToDebug(PSTR("Connected to max_cul\n"));
+    printlnToDebug(PSTR("Connected to max_cul"));
   } else {
-    printToDebug(PSTR("Connection to max_cul failed\n"));
+    printlnToDebug(PSTR("Connection to max_cul failed"));
   }
 
   InitMaxDeviceList();
