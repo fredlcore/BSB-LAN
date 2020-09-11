@@ -134,15 +134,16 @@ int log_parameters[40] = {
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
 
-// Activate sending log_parameters to MQTT broker every log_interval seconds
+// Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
+#define MQTT
+byte mqtt_mode = 0; //MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
+byte mqtt_broker_ip_addr[4] = {192,168,1,20};// Please use commas instead of dots!!!
 //#define MQTTBrokerIP 192,168,1,20	// Please use commas instead of dots!!!
-//#define MQTTUsername "User" // Set username for MQTT broker here or comment out if no username/password is used.
-//#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
-//#define MQTTTopicPrefix "BSB-LAN" 	// Optional: Choose the "topic" for MQTT messages here
-//#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging information printed to the mqtt topic
-//#define MQTTDeviceID "MyHeater"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
-// Payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
-
+char MQTTUsername[32] = "User"; // Set username for MQTT broker here or comment out if no username/password is used.
+char MQTTPassword[32] = "Pass"; // Set password for MQTT broker here or comment out if no password is used.
+char MQTTTopicPrefix[32] = "BSB-LAN"; 	// Optional: Choose the "topic" for MQTT messages here
+char MQTTDeviceID[32] = "MyHeater";	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
 
 // Compile IPWE extension
 #define IPWE
@@ -214,10 +215,10 @@ byte monitor = 0;
 #if ! defined(__AVR__)
 #define WEBSERVER
 #define DEBUG
-#define DebugTelnet 1
 #define VERSION_CHECK 1
 #define RESET
 #define IPWE
+#define MQTT
 #endif
 /************************************************************************************/
 /************************************************************************************/

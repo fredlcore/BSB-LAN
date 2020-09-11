@@ -395,7 +395,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
-#ifdef MQTTBrokerIP
+#ifdef MQTT
 #include "src/PubSubClient/src/PubSubClient.h"
 #endif
 #include "html_strings.h"
@@ -413,10 +413,6 @@ WiFiEspServer *telnetServer;
 #else
 EthernetServer *server;
 EthernetServer *telnetServer;
-#endif
-
-#ifdef MQTTBrokerIP
-IPAddress MQTTBroker(MQTTBrokerIP);
 #endif
 
 Stream* SerialOutput;
@@ -470,7 +466,7 @@ WiFiEspClient max_cul;
 EthernetClient max_cul;
 #endif
 
-#ifdef MQTTBrokerIP
+#ifdef MQTT
 PubSubClient MQTTClient(client);
 #endif
 boolean haveTelnetClient = false;
@@ -872,8 +868,8 @@ void checkSockStatus()
  #endif
    va_end(args);
    switch(debug_mode){
-     case 1: Serial.print(DebugBuff); break;
-     case 2: telnetClient.print(DebugBuff); break;
+     case 1: SerialOutput->print(DebugBuff); break;
+     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
    }
    return len;
  }
@@ -885,15 +881,15 @@ void checkSockStatus()
    strcpy(DebugBuff, PSTR("\n"));
  #endif
  switch(debug_mode){
-   case 1: Serial.print(DebugBuff); break;
-   case 2: telnetClient.print(DebugBuff); break;
+   case 1: SerialOutput->print(DebugBuff); break;
+   case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
  }
  }
 
  void printToDebug(char *format){
    switch(debug_mode){
-     case 1: Serial.print(format); break;
-     case 2: telnetClient.print(format); break;
+     case 1: SerialOutput->print(format); break;
+     case 2: if(haveTelnetClient)telnetClient.print(format); break;
    }
    return;
  }
@@ -902,13 +898,13 @@ void checkSockStatus()
    #if defined(__AVR__)
    strcpy_P(DebugBuff, format);
    switch(debug_mode){
-     case 1: Serial.print(DebugBuff); break;
-     case 2: telnetClient.print(DebugBuff); break;
+     case 1: SerialOutput->print(DebugBuff); break;
+     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
    }
    #else
    switch(debug_mode){
-     case 1: Serial.print(format); break;
-     case 2: telnetClient.print(format); break;
+     case 1: SerialOutput->print(format); break;
+     case 2: if(haveTelnetClient)telnetClient.print(format); break;
    }
    #endif
    return;
@@ -918,8 +914,8 @@ void checkSockStatus()
  void printToDebug(uint_farptr_t src){
    strcpy_PF(DebugBuff, src);
    switch(debug_mode){
-     case 1: Serial.print(DebugBuff); break;
-     case 2: telnetClient.print(DebugBuff); break;
+     case 1: SerialOutput->print(DebugBuff); break;
+     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
    }
    return;
  }
@@ -3123,13 +3119,14 @@ char *GetDateTime(char date[]){
  * Global resources used:
  *
  * *************************************************************** */
+#ifdef LOGGER
 void printTrailToFile(File *dataFile){
  char fileBuf[64];
  // get current time from heating system
  sprintf_P(fileBuf, PSTR("%lu;%s;"), millis(), GetDateTime(date));
  dataFile->print(fileBuf);
 }
-
+#endif
 /** *****************************************************************
  *  Function:  LogTelegram()
  *  Does:      Logs the telegram content in hex to the SD card,
@@ -4756,39 +4753,39 @@ void loop() {
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
 
-#ifndef IPAddr
 #ifndef WIFI
-  switch (Ethernet.maintain()) {
-    case 1:
-      //renewed fail
-      printlnToDebug(PSTR("Error: renewed fail"));
+ if(ip_addr[0] == 0 || useDHCP){
+    switch (Ethernet.maintain()) {
+      case 1:
+        //renewed fail
+        printToDebug(PSTR("Error: renewed fail\n"));
+        break;
+      case 2:
+        //renewed success
+        printToDebug(PSTR("Renewed success\n"));
+        //print your local IP address:
+        printToDebug(PSTR("My IP address: "));
+        {IPAddress t = Ethernet.localIP();
+        printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
+        break;
+      case 3:
+        //rebind fail
+        printToDebug(PSTR("Error: rebind fail\n"));
+        break;
+      case 4:
+        //rebind success
+        printToDebug(PSTR("Rebind success\n"));
+        //print your local IP address:
+        printToDebug(PSTR("My IP address: "));
+        {IPAddress t = Ethernet.localIP();
+        printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
       break;
-    case 2:
-      //renewed success
-      printlnToDebug(PSTR("Renewed success"));
-      //print your local IP address:
-      printToDebug(PSTR("My IP address: "));
-      {IPAddress t = Ethernet.localIP();
-      printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
-      break;
-    case 3:
-      //rebind fail
-      printlnToDebug(PSTR("Error: rebind fail"));
-      break;
-    case 4:
-      //rebind success
-      printlnToDebug(PSTR("Rebind success"));
-      //print your local IP address:
-      printToDebug(PSTR("My IP address: "));
-      {IPAddress t = Ethernet.localIP();
-      printFmtToDebug(PSTR("%d.%d.%d.%d\n"), t[0], t[1], t[2], t[3]);}
-    break;
 
-    default:
-      //nothing happened
-      break;
+      default:
+        //nothing happened
+        break;
+    }
   }
-#endif
 #endif
 
   // Monitor the bus and send incoming data to the PC hardware serial
@@ -5345,7 +5342,7 @@ uint8_t pps_offset = 0;
   client = server->available();
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
-    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr[0], remoteIP[0], 4)) ||
+    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr[0], remoteIP[0], 4)) &&
        (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2[0], remoteIP[0], 4))){
           // reject clients from unauthorized IP addresses;
       printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
@@ -5375,7 +5372,7 @@ uint8_t pps_offset = 0;
             }
           }
         }
-
+        
         if ((c!='\n') && (c!='\r') && (bPlaceInBuffer<MaxArrayElement)){
           cLineBuffer[bPlaceInBuffer++]=c;
           continue;
@@ -6571,13 +6568,15 @@ uint8_t pps_offset = 0;
           printToWebClient( PSTR("RESET"));
           j = 1;
           #endif
-          #ifdef MQTTBrokerIP
+          #ifdef MQTT
           if(j) printToWebClient(PSTR(", "));
-          #ifdef MQTT_JSON
-          printToWebClient(PSTR("MQTT JSON"));
-          #else
-          printToWebClient(PSTR("MQTT"));
-          #endif
+          printToWebClient(PSTR("MQTT: "));
+          switch(mqtt_mode){
+            case 0: printToWebClient(PSTR("Disabled")); break;
+            case 1: printToWebClient(PSTR("Plain text")); break;
+            case 2: printToWebClient(PSTR("JSON")); break;
+            default: printToWebClient(PSTR("Wrong mode")); break;
+          }
           j = 1;
           #endif
           #ifdef DEBUG
@@ -7071,170 +7070,166 @@ uint8_t pps_offset = 0;
   } // endif, client
 
 
-#ifdef MQTTBrokerIP
+#ifdef MQTT
+  if(mqtt_broker_ip_addr[0] && mqtt_mode){ //Address was set and MQTT was enabled
+    char* MQTTUser = NULL;
+    if(MQTTUsername[0])
+      MQTTUser = MQTTUsername;
 
-#ifdef MQTTUsername
-  const char MQTTUser[] = MQTTUsername;
-#else
-  const char* MQTTUser = NULL;
-#endif
-#ifdef MQTTPassword
-  const char MQTTPass[] = MQTTPassword;
-#else
-  const char* MQTTPass = NULL;
-#endif
+    const char* MQTTPass = NULL;
+    if(MQTTPassword[0])
+      MQTTPass = MQTTPassword;
 
-#ifdef MQTT_JSON
-  String MQTTPayload = "";
-#endif
-  String MQTTTopic = "";
+    String MQTTPayload = "";
+    String MQTTTopic = "";
 
-  if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
-    lastMQTTTime = millis();
-    if (!MQTTClient.connected()) {
-      MQTTClient.setServer(MQTTBroker, 1883);
-      int retries = 0;
-      while (!MQTTClient.connected() && retries < 3) {
-        MQTTClient.connect("BSB-LAN", MQTTUser, MQTTPass);
-        retries++;
-        if (!MQTTClient.connected()) {
-          delay(1000);
-          printToDebug(PSTR("Failed to connect to MQTT broker, retrying...\n"));
+    if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+      lastMQTTTime = millis();
+      if (!MQTTClient.connected()) {
+        IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
+        MQTTClient.setServer(MQTTBroker, 1883);
+        int retries = 0;
+        while (!MQTTClient.connected() && retries < 3) {
+          MQTTClient.connect("BSB-LAN", MQTTUser, MQTTPass);
+          retries++;
+          if (!MQTTClient.connected()) {
+            delay(1000);
+            printToDebug(PSTR("Failed to connect to MQTT broker, retrying...\n"));
+          }
         }
       }
-    }
-#ifdef ONE_WIRE_BUS
-    sensors.requestTemperatures(); // Send the command to get temperatures
-#endif
+  #ifdef ONE_WIRE_BUS
+      sensors.requestTemperatures(); // Send the command to get temperatures
+  #endif
 
-    // Declare local variables and start building json if enabled
-#ifdef MQTT_JSON
-     MQTTPayload = "";
-    // Build the json heading
-    MQTTPayload.concat(F("{\""));
-#ifdef MQTTDeviceID
-    MQTTPayload.concat(MQTTDeviceID);
-#else
-    MQTTPayload.concat(F("BSB-LAN"));
-#endif
-    MQTTPayload.concat(F("\":"));
-    MQTTPayload.concat(F("{\"status\":{"));
-#endif
+      // Declare local variables and start building json if enabled
+      if(mqtt_mode == 2){
+        MQTTPayload = "";
+        // Build the json heading
+        MQTTPayload.concat(F("{\""));
+        if(MQTTDeviceID[0])
+          MQTTPayload.concat(MQTTDeviceID);
+        else
+          MQTTPayload.concat(F("BSB-LAN"));
+        MQTTPayload.concat(F("\":"));
+        MQTTPayload.concat(F("{\"status\":{"));
+      }
 
-    for (int i=0; i < numLogValues; i++) {
-      if (log_parameters[i] > 0) {
-        if (MQTTClient.connected()) {
-/*
-          String MQTTPayload = "";
-          MQTTPayload.concat(F("{\""));
-          MQTTPayload.concat(lookup_descr(log_parameters[i]));
-          MQTTPayload.concat(F("\":\""));
-          MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
-          MQTTPayload.concat(F("\"}"));
-*/
+      for (int i=0; i < numLogValues; i++) {
+        if (log_parameters[i] > 0) {
+          if (MQTTClient.connected()) {
+  /*
+            String MQTTPayload = "";
+            MQTTPayload.concat(F("{\""));
+            MQTTPayload.concat(lookup_descr(log_parameters[i]));
+            MQTTPayload.concat(F("\":\""));
+            MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
+            MQTTPayload.concat(F("\"}"));
+  */
 
-#ifdef MQTTTopicPrefix
-          MQTTTopic = MQTTTopicPrefix;
-          MQTTTopic.concat(F("/"));
-#else
-          MQTTTopic = "BSB-LAN/";
-#endif
-
-// use the sub-topic "json" if json output is enabled
-#ifdef MQTT_JSON
-          MQTTTopic.concat(F("json"));
-#else
-          MQTTTopic.concat(String(log_parameters[i]));
-#endif
-
-          char smallbuf[20];
-          if (log_parameters[i] < 20000) {
-            query(log_parameters[i]);
-            char *pvalstr = build_pvalstr(0);
-            if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
-#ifdef MQTT_JSON  // Build the json doc on the fly
-              MQTTPayload.concat(F("\""));
-              MQTTPayload.concat(String(log_parameters[i]));
-              MQTTPayload.concat(F("\":\""));
-              MQTTPayload.concat(String(pvalstr));
-              if (i < numLogValues - 1) {
-                MQTTPayload.concat(F("\","));
-              } else {
-                MQTTPayload.concat(F("\"}"));
-              }
-#else
-              MQTTClient.publish(MQTTTopic.c_str(), pvalstr);
-#endif
-            } else {
-#ifdef MQTT_JSON  // Build the json doc on the fly
-              MQTTPayload.concat(F("\""));
-              MQTTPayload.concat(String(log_parameters[i]));
-              MQTTPayload.concat(F("\":\""));
-              MQTTPayload.concat(String(decodedTelegram.value));
-              if (i < numLogValues - 1) {
-                MQTTPayload.concat(F("\","));
-              } else {
-                MQTTPayload.concat(F("\"}"));
-              }
-#else
-              MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
-#endif
+            if(MQTTTopicPrefix[0]){
+              MQTTTopic = MQTTTopicPrefix;
+              MQTTTopic.concat(F("/"));
             }
-          }
-          if (log_parameters[i] >= 20000 && log_parameters[i] < 20006) {
-            uint32_t val = 0;
-            switch (log_parameters[i]) {
-              case 20000: val = brenner_duration; break;
-              case 20001: val = brenner_count; break;
-              case 20002: val = brenner_duration_2; break;
-              case 20003: val = brenner_count_2; break;
-              case 20004: val = TWW_duration; break;
-              case 20005: val = TWW_count; break;
+            else
+              MQTTTopic = "BSB-LAN/";
+
+  // use the sub-topic "json" if json output is enabled
+            if(mqtt_mode == 2)
+              MQTTTopic.concat(F("json"));
+            else
+              MQTTTopic.concat(String(log_parameters[i]));
+
+            char smallbuf[20];
+            if (log_parameters[i] < 20000) {
+              query(log_parameters[i]);
+              char *pvalstr = build_pvalstr(0);
+              if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+                if(mqtt_mode == 2){ // Build the json doc on the fly
+                  MQTTPayload.concat(F("\""));
+                  MQTTPayload.concat(String(log_parameters[i]));
+                  MQTTPayload.concat(F("\":\""));
+                  MQTTPayload.concat(String(pvalstr));
+                  if (i < numLogValues - 1) {
+                    MQTTPayload.concat(F("\","));
+                  } else {
+                    MQTTPayload.concat(F("\"}"));
+                  }
+                }
+                else
+                  MQTTClient.publish(MQTTTopic.c_str(), pvalstr);
+              } else {
+               // Build the json doc on the fly
+                if(mqtt_mode == 2){
+                  MQTTPayload.concat(F("\""));
+                  MQTTPayload.concat(String(log_parameters[i]));
+                  MQTTPayload.concat(F("\":\""));
+                  MQTTPayload.concat(String(decodedTelegram.value));
+                  if (i < numLogValues - 1) {
+                    MQTTPayload.concat(F("\","));
+                  } else {
+                    MQTTPayload.concat(F("\"}"));
+                  }
+                }
+                else
+                  MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
+              }
             }
-            sprintf_P(smallbuf, PSTR("%ld"), val);
-            MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
-          }
-          if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
-#ifdef DHT_BUS
-            int log_sensor = log_parameters[i] - 20100;
-            int chk = DHT.read22(DHT_Pins[log_sensor]);
-            printFmtToDebug(PSTR("%d\n"), chk);
-            float hum = DHT.humidity;
-            float temp = DHT.temperature;
-            if (hum > 0 && hum < 101) {
-              _printFIXPOINT(smallbuf, temp, 2);
-              strcat_P(smallbuf, PSTR(" / "));
-              _printFIXPOINT(smallbuf + strlen(smallbuf), hum, 2);
+            if (log_parameters[i] >= 20000 && log_parameters[i] < 20006) {
+              uint32_t val = 0;
+              switch (log_parameters[i]) {
+                case 20000: val = brenner_duration; break;
+                case 20001: val = brenner_count; break;
+                case 20002: val = brenner_duration_2; break;
+                case 20003: val = brenner_count_2; break;
+                case 20004: val = TWW_duration; break;
+                case 20005: val = TWW_count; break;
+              }
+              sprintf_P(smallbuf, PSTR("%ld"), val);
               MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
             }
-#endif
-          }
-          if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
-#ifdef ONE_WIRE_BUS
-            int log_sensor = log_parameters[i] - 20200;
-            float t=sensors.getTempCByIndex(log_sensor);
-            _printFIXPOINT(smallbuf, t, 2);
-            strcat_P(smallbuf, PSTR("\n"));
-            MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
-#endif
+            if (log_parameters[i] >= 20100 && log_parameters[i] < 20200) {
+  #ifdef DHT_BUS
+              int log_sensor = log_parameters[i] - 20100;
+              int chk = DHT.read22(DHT_Pins[log_sensor]);
+              printFmtToDebug(PSTR("%d\n"), chk);
+              float hum = DHT.humidity;
+              float temp = DHT.temperature;
+              if (hum > 0 && hum < 101) {
+                _printFIXPOINT(smallbuf, temp, 2);
+                strcat_P(smallbuf, PSTR(" / "));
+                _printFIXPOINT(smallbuf + strlen(smallbuf), hum, 2);
+                MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
+              }
+  #endif
+            }
+            if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
+  #ifdef ONE_WIRE_BUS
+              int log_sensor = log_parameters[i] - 20200;
+              float t=sensors.getTempCByIndex(log_sensor);
+              _printFIXPOINT(smallbuf, t, 2);
+              strcat_P(smallbuf, PSTR("\n"));
+              MQTTClient.publish(MQTTTopic.c_str(), smallbuf);
+  #endif
+            }
           }
         }
       }
+      // End of mqtt if loop so close off the json and publish
+      if(mqtt_mode == 2){
+        // Close the json doc off
+        MQTTPayload.concat(F("}}"));
+        // debugging..
+        printToDebug(PSTR("Output topic: "));
+        printToDebug(MQTTTopic.c_str());
+        printToDebug(PSTR("\nPayload Output : "));
+        printToDebug(MQTTPayload.c_str());
+        writelnToDebug();
+        // Now publish the json payload only once
+        MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+      }
+      MQTTClient.disconnect();
     }
-    // End of mqtt if loop so close off the json and publish
-#ifdef MQTT_JSON
-    // Close the json doc off
-    MQTTPayload.concat(F("}}"));
-      // debugging..
-      printToDebug(PSTR("Output topic: "));
-      printToDebug(MQTTTopic.c_str());
-      printToDebug(PSTR("\nPayload Output : "));
-      printToDebug(MQTTPayload.c_str());
-      writelnToDebug();
-    // Now publish the json payload only once
-    MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
-#endif
-    MQTTClient.disconnect();
   }
 #endif
 
@@ -7580,7 +7575,6 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-
 } // --- loop () ---
 
 #ifdef WIFI
@@ -7637,8 +7631,8 @@ void setup() {
   SerialOutput->println(F("READY"));
   if(debug_mode == 2)
     SerialOutput->println(F("Logging output to Telnet"));
-  printFmtToDebug(PSTR("Size of cmdtbl1: %du\n"),sizeof(cmdtbl1));
-  printFmtToDebug(PSTR("Size of cmdtbl2: %du\n"),sizeof(cmdtbl2));
+  printFmtToDebug(PSTR("Size of cmdtbl1: %d\n"),sizeof(cmdtbl1));
+  printFmtToDebug(PSTR("Size of cmdtbl2: %d\n"),sizeof(cmdtbl2));
   printFmtToDebug(PSTR("free RAM: %d\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
@@ -7723,7 +7717,7 @@ void setup() {
 
   // start the Ethernet connection and the server:
 #ifndef WIFI
-  if(ip_addr[0] || !useDHCP){
+  if(ip_addr[0] && !useDHCP){
     IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
     if(gateway_addr[0]){
       IPAddress gateway(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
@@ -7748,7 +7742,7 @@ void setup() {
     Ethernet.begin(mac);
 #endif
 
-if(ip_addr[0] || !useDHCP){
+if(ip_addr[0] && !useDHCP){
 #ifdef WIFI
   SerialOutput->println(WiFi.localIP());
 #else
@@ -7757,13 +7751,13 @@ if(ip_addr[0] || !useDHCP){
 }
 
 #ifdef WIFI
-server = &WiFiEspServer(HTTPPort);
+server = new WiFiEspServer(HTTPPort);
 if(debug_mode == 2)
-  telnetServer = &WiFiEspServer(23);
+  telnetServer = new WiFiEspServer(23);
 #else
-server = &EthernetServer(HTTPPort);
+server = new EthernetServer(HTTPPort);
 if(debug_mode == 2)
-  telnetServer = &EthernetServer(23);
+  telnetServer = new EthernetServer(23);
 #endif
 
 #if defined LOGGER || defined WEBSERVER
