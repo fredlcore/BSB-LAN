@@ -218,6 +218,7 @@ typedef enum{
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
   CAT_PPS,
+  CAT_USERSENSORS,
   CAT_UNKNOWN
 }category_t;
 
@@ -514,7 +515,8 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x2e " ENUM_CAT_2e_TEXT "\0"
 "\x2f " ENUM_CAT_2f_TEXT "\0"
 "\x30 " ENUM_CAT_30_TEXT "\0"
-"\x31 " ENUM_CAT_31_TEXT
+"\x31 " ENUM_CAT_31_TEXT "\0"
+"\x32 " ENUM_CAT_32_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -566,7 +568,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8700, 9075,
   9500, 9652,
   10000, 14999,
-  15000, 15067
+  15000, 15067,
+  20000, 20299 //Virtual category for durations, One Wire, DHT sensors
 };
 
  /* Menue Strings */
@@ -2730,6 +2733,15 @@ const char STR15065[] PROGMEM = STR15065_TEXT;
 const char STR15066[] PROGMEM = STR15066_TEXT;
 const char STR15067[] PROGMEM = STR15067_TEXT;
 
+const char STR20000[] PROGMEM = MENU_TEXT_BZ1;
+const char STR20001[] PROGMEM = MENU_TEXT_BT1;
+const char STR20002[] PROGMEM = MENU_TEXT_BZ2;
+const char STR20003[] PROGMEM = MENU_TEXT_BT2;
+const char STR20004[] PROGMEM = MENU_TEXT_TZ1;
+const char STR20005[] PROGMEM = MENU_TEXT_TT1;
+
+const char STR20100[] PROGMEM = STR20100_TEXT;
+const char STR20200[] PROGMEM = STR20200_TEXT;
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = STR99999_TEXT;
 
@@ -10572,6 +10584,17 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
 {0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
 {0x2D4F0043,  CAT_PPS,              VT_YESNO,         15067, STR15067, sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20000, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20001, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20002, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensors
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensors
+
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2

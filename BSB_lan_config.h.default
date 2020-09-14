@@ -133,11 +133,10 @@ int log_parameters[40] = {
 byte mqtt_mode = 0; //MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 byte mqtt_broker_ip_addr[4] = {192,168,1,20};// Please use commas instead of dots!!!
-//#define MQTTBrokerIP 192,168,1,20	// Please use commas instead of dots!!!
-char MQTTUsername[32] = "User"; // Set username for MQTT broker here or comment out if no username/password is used.
-char MQTTPassword[32] = "Pass"; // Set password for MQTT broker here or comment out if no password is used.
-char MQTTTopicPrefix[32] = "BSB-LAN"; 	// Optional: Choose the "topic" for MQTT messages here
-char MQTTDeviceID[32] = "MyHeater";	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
+char MQTTUsername[32] = "User"; // Set username for MQTT broker here or set zero-length string if no username/password is used.
+char MQTTPassword[32] = "Pass"; // Set password for MQTT broker here or set zero-length string if no password is used.
+char MQTTTopicPrefix[32] = "BSB-LAN"; 	// Optional: Choose the "topic" for MQTT messages here. If zero-length string here, default topic name used
+char MQTTDeviceID[32] = "MyHeater";	// Optional: Define a device name to use as header in json payload. If zero-length string here, "BSB-LAN" will be used.
 
 // Compile IPWE extension
 #define IPWE
@@ -157,12 +156,16 @@ int ipwe_parameters[40] = {
   8704                    // Aussentemperatur gemischt
 };
 
-//#define MAX_CUL 192,168,178,5                  // IP of CUNO/CUNX/modified MAX!Cube
 
-const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating thermostats that should be polled
-  "KEQ0502326"                                  // use MAX! serial numbers here which have to have exactly 10 characters
+// Compile CUNO/CUNX/modified MAX!Cube extension.
+//#define MAX_CUL
+boolean enable_max_cul = false;                //enable or disable connection to CUNO/CUNX/modified MAX!Cube;
+byte max_cul_ip_addr[4] = {192,168,178,5};     //  IP of CUNO/CUNX/modified MAX!Cube. Please use commas instead of dots!!!
+char max_device_list[220] = {                   // list of MAX! wall/heating thermostats that should be polled
+  "KEQ0502326"                                 // use MAX! serial numbers here which have to have exactly 10 characters
   "KEQ0505080"
 };
+
 
 // defines the number of retries for the query command
 #define QUERY_RETRIES  3
@@ -194,10 +197,16 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
 
 #if defined(__SAM3X8E__)
 // Protect these pins from accidental GPIO access
-constexpr byte exclude_GPIO[] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
-#else // Mega2560
+// bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
+//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
+byte protected_GPIO[10] = {0b00001011,0b00111100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
+//byte exclude_GPIO[70] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+#else  // Mega2560
 // Protect these pins from accidental GPIO access
-const byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+// bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
+//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
+byte protected_GPIO[10] = {0b00000000,0b00111100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
+//byte exclude_GPIO[70] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 #endif
 
 

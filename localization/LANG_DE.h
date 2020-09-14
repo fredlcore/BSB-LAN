@@ -70,7 +70,8 @@
 #define ENUM_CAT_2e_TEXT "Feuerungsautomat"
 #define ENUM_CAT_2f_TEXT "Benutzerdefiniert"
 #define ENUM_CAT_30_TEXT "PPS-Bus"
-#define ENUM_CAT_31_TEXT "unbekannte Kategorie"
+#define ENUM_CAT_31_TEXT "One Wire, DHT & MAX! Sensors"
+#define ENUM_CAT_32_TEXT "unbekannte Kategorie"
 
 #define MENU_TEXT_HFK "Heizungsfunktionen"
 #define MENU_TEXT_SNS "Sensoren"
@@ -1893,6 +1894,8 @@
 #define STR15065_TEXT "Nächstes Schaltprogramm"
 #define STR15066_TEXT "Manuelles Heizen"
 #define STR15067_TEXT "Verbindung unterbrochen"
+#define STR20100_TEXT "DHT22 Sensor"
+#define STR20200_TEXT "DS18B20 Sensor"
 #define STR99999_TEXT "UNKNOWN command code"
 
 #define ENUM20_01_TEXT "English"
