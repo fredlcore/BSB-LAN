@@ -496,9 +496,12 @@ uint8_t json_types[20] = { 0 };
 #ifdef ONE_WIRE_BUS
   #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
-  #define TEMPERATURE_PRECISION 9
+  #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
+//  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
   DallasTemperature *sensors;
   uint8_t numSensors;
+  unsigned long lastOneWireRequestTime = 0;
+  #define ONE_WIRE_REQUESTS_PERIOD 15000 //sensors->requestTemperatures() calling period
 #endif
 
 #ifdef DHT_BUS
@@ -509,10 +512,6 @@ uint8_t json_types[20] = { 0 };
 char date[20];
 
 unsigned long lastAvgTime = 0;
-#ifdef ONE_WIRE_BUS
-unsigned long lastOneWireRequestTime = 0;
-#define ONE_WIRE_REQUESTS_PERIOD 15000 //sensors->requestTemperatures() calling period
-#endif
 unsigned long lastLogTime = millis();
 unsigned long lastMQTTTime = millis();
 unsigned long custom_timer = millis();
@@ -4157,12 +4156,11 @@ if(data_len==3){
  * *************************************************************** */
 void queryVirtualPrognr(int line, int table_line){
     decodedTelegram.cat=get_cmdtbl_category(table_line);
-    int len=sizeof(ENUM_CAT);
 
 #if defined(__AVR__)
-    printENUM(pgm_get_far_address(ENUM_CAT),len,decodedTelegram.cat,0);
+    printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),decodedTelegram.cat,0);
 #else
-    printENUM(ENUM_CAT,len,decodedTelegram.cat,0);
+    printENUM(ENUM_CAT,sizeof(ENUM_CAT),decodedTelegram.cat,0);
 #endif
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
@@ -4184,38 +4182,42 @@ void queryVirtualPrognr(int line, int table_line){
    }
    if (line >= 20100 && line < 20200) {
 #ifdef DHT_BUS
-     size_t log_sensor = line - 20100;
-     strcpy_P(decodedTelegram.unit, PSTR(UNIT_DEG_TEXT "/ %"));
+     size_t log_sensor = (line - 20100);
      if(log_sensor >= sizeof(DHT_Pins) / sizeof(byte) || !DHT_Pins[log_sensor]){
        decodedTelegram.error = 7;
        return;
      }
      int chk = DHT.read22(DHT_Pins[log_sensor]);
-     printFmtToDebug(PSTR("%d\r\n"), chk);
+     printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), DHT_Pins[log_sensor]);
      switch (chk) {
        case DHTLIB_OK:
-//       printToDebug(PSTR("OK,\t"));
+       printToDebug(PSTR("OK,\t"));
        break;
        case DHTLIB_ERROR_CHECKSUM:
          decodedTelegram.error = 256;
-//       printToDebug(PSTR("Checksum error,\t"));
+       printToDebug(PSTR("Checksum error,\t"));
        break;
        case DHTLIB_ERROR_TIMEOUT:
          decodedTelegram.error = 261;
-//       printToDebug(PSTR("Time out error,\t"));
+       printToDebug(PSTR("Time out error,\t"));
        break;
        default:
          decodedTelegram.error = 1;
-//       printToDebug(PSTR("Unknown error,\t"));
+         printToDebug(PSTR("Unknown error,\t"));
        break;
      }
 
      float hum = DHT.humidity;
      float temp = DHT.temperature;
      if (hum > 0 && hum < 101) {
-       _printFIXPOINT(decodedTelegram.value, temp, 2);
-       strcat_P(decodedTelegram.value, PSTR("/"));
-       _printFIXPOINT(decodedTelegram.value + strlen(decodedTelegram.value), hum, 2);
+        _printFIXPOINT(decodedTelegram.value, temp, 2);
+        printFmtToDebug(PSTR("#dht_temp[%d]: %s, hum[%d]: "), log_sensor, decodedTelegram.value, log_sensor);
+        strcat_P(decodedTelegram.value, PSTR("|"));
+        _printFIXPOINT(decodedTelegram.value + strlen(decodedTelegram.value), hum, 2);
+        printlnToDebug(decodedTelegram.value + strlen(decodedTelegram.value));
+        strcat_P(decodedTelegram.value, PSTR("|"));
+         // abs humidity
+        _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
      }
      else
        undefinedValueToBuffer(decodedTelegram.value);
@@ -4238,7 +4240,7 @@ void queryVirtualPrognr(int line, int table_line){
        lastOneWireRequestTime = tempTime;
      }}
      float t=sensors->getTempCByIndex(log_sensor);
-     if(t == -127) { //device disconnected
+     if(t == DEVICE_DISCONNECTED_C) { //device disconnected
        decodedTelegram.error = 261;
        undefinedValueToBuffer(decodedTelegram.value);
        return;
@@ -4517,44 +4519,20 @@ void dht22(void) {
   printFmtToDebug(PSTR("DHT22 sensors: %d\r\n"), numDHTSensors);
     for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
-    int chk = DHT.read22(DHT_Pins[i]);
-    switch (chk) {
-      case DHTLIB_OK:
-      printToDebug(PSTR("OK,\t"));
-      break;
-      case DHTLIB_ERROR_CHECKSUM:
-      printToDebug(PSTR("Checksum error,\t"));
-      break;
-      case DHTLIB_ERROR_TIMEOUT:
-      printToDebug(PSTR("Time out error,\t"));
-      break;
-      default:
-      printToDebug(PSTR("Unknown error,\t"));
-      break;
-    }
-
-    float hum = DHT.humidity;
-    float temp = DHT.temperature;
-    SerialOutput->print(F("#dht_temp["));
-    SerialOutput->print(i);
-    SerialOutput->print(F("]: "));
-    SerialOutput->print(temp);
-    SerialOutput->print(F(", hum["));
-    SerialOutput->print(i);
-    SerialOutput->print(F("]: "));
-    SerialOutput->println(hum);
-    if (hum > 0 && hum < 101) {
-      char tempBuf[10];
-      _printFIXPOINT(tempBuf,temp,2);
-      printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s"), i, tempBuf);
+    query(20100 + i);
+    char *ptr2, *ptr3;
+    ptr2 = strstr_P(decodedTelegram.value, PSTR("|"));
+    ptr2[0] = 0;
+    ptr2++;
+    ptr3 = strstr_P(ptr2, PSTR("|"));
+    ptr3[0] = 0;
+    ptr3++;
+      printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s"), i, decodedTelegram.value);
       printToWebClient(PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
-      _printFIXPOINT(tempBuf,hum,2);
-      printFmtToWebClient(PSTR("hum[%d]: %s"), i, tempBuf);
+      printFmtToWebClient(PSTR("hum[%d]: %s"), i, ptr2);
       printToWebClient(PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
-      _printFIXPOINT(tempBuf,(216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))),2);
-      printFmtToWebClient(PSTR("abs_hum[%d]: %s"), i, tempBuf);
+      printFmtToWebClient(PSTR("abs_hum[%d]: %s"), i, ptr3);
       printToWebClient(PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
-    }
   }
   flushToWebClient();
 }
@@ -4581,28 +4559,17 @@ void dht22(void) {
 void ds18b20(void) {
   uint8_t i;
   //webPrintHeader();
-  {unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-  if(tempTime != lastOneWireRequestTime){
-    sensors->requestTemperatures(); //Send the command to get temperatures
-    lastOneWireRequestTime = tempTime;
-  }}
   DeviceAddress device_address;
-//  char device_ascii[17];
   for(i=0;i<numSensors;i++){
-    float t=sensors->getTempCByIndex(i);
+    query(i + 20200);
     SerialOutput->print(F("#1w_temp["));
     SerialOutput->print(i);
     SerialOutput->print(F("]: "));
-    SerialOutput->print(t);
+    SerialOutput->print(decodedTelegram.value);
     SerialOutput->println();
 
     sensors->getAddress(device_address, i);
-//    sprintf(device_ascii, "%02x%02x%02x%02x%02x%02x%02x%02x",device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-//    outBufLen+=sprintf(outBuf+outBufLen,"<tr><td>\n1w_temp[%d] %s: ",i, device_ascii);
-    char tempBuf[10];
-    _printFIXPOINT(tempBuf,t,2);
-    printFmtToWebClient(PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: %s"),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], tempBuf);
-    printToWebClient(PSTR(" &deg;C\n</td></tr>\n"));
+    printFmtToWebClient(PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: %s %s\n</td></tr>\n"),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], decodedTelegram.value, decodedTelegram.unit);
   }
 flushToWebClient();
   //webPrintFooter();
@@ -4673,21 +4640,14 @@ void Ipwe() {
 
 #ifdef ONE_WIRE_BUS
   // output of one wire sensors
-  {unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-  if(tempTime != lastOneWireRequestTime){
-    sensors->requestTemperatures(); //call it outside of here for more faster answers
-    lastOneWireRequestTime = tempTime;
-  }}
   DeviceAddress device_address;
   for(i=0;i<numSensors;i++){
-    counter++;
-    char tmpbuf[10];
-    _printFIXPOINT(tmpbuf, sensors->getTempCByIndex(i), 2);
+    query(i + 20200);
     sensors->getAddress(device_address, i);
 
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
     printFmtToWebClient(PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), tmpbuf);
+    printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), decodedTelegram.value);
   }
 #endif
 
@@ -4696,25 +4656,26 @@ void Ipwe() {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
   for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
-    DHT.read22(DHT_Pins[i]);
-    char tmpbuf[10];
-    float hum = DHT.humidity;
-    float temp = DHT.temperature;
-    if (hum > 0 && hum < 101) {
+    query(20100 + i);
+    char *ptr2, *ptr3;
+    ptr2 = strstr_P(decodedTelegram.value, PSTR("|"));
+    ptr2[0] = 0;
+    ptr2++;
+    ptr3 = strstr_P(ptr2, PSTR("|"));
+    ptr3[0] = 0;
+    ptr3++;
+
       counter++;
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
       printFmtToWebClient(PSTR("DHT sensor %d temperature"), i+1);
-      _printFIXPOINT(tmpbuf, temp, 2);
-      printFmtToWebClient(PSTR("<br></td><td>%s"), tmpbuf);
+      printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
       counter++;
       printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d"), counter);
       printToWebClient(PSTR("<br></td><td>"));
       printFmtToWebClient(PSTR("DHT sensor %d humidity"), i+1);
-      _printFIXPOINT(tmpbuf, hum, 2);
-      printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>%s"), tmpbuf);
+      printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>%s"), ptr2);
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
-    }
   }
 #endif
 
@@ -7248,13 +7209,6 @@ uint8_t pps_offset = 0;
           }
         }
       }
-  #ifdef ONE_WIRE_BUS
-      {unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-      if(tempTime != lastOneWireRequestTime){
-        sensors->requestTemperatures(); //Send the command to get temperatures
-        lastOneWireRequestTime = tempTime;
-      }}
-  #endif
 
       // Declare local variables and start building json if enabled
       if(mqtt_mode == 2){
