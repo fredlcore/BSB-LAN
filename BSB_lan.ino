@@ -468,10 +468,11 @@ PubSubClient MQTTClient(client);
 boolean haveTelnetClient = false;
 
 #ifdef MAX_CUL
-uint16_t max_cur_temp[20] = { 0 };
-uint8_t max_dst_temp[20] = { 0 };
-int8_t max_valve[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-int32_t max_devices[20] = { 0 };
+#define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
+uint16_t max_cur_temp[MAX_CUL_DEVICES] = { 0 };
+uint8_t max_dst_temp[MAX_CUL_DEVICES] = { 0 };
+int8_t max_valve[MAX_CUL_DEVICES] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #endif
 /*
 int16_t json_parameters[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
@@ -520,7 +521,6 @@ float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
 static const int numAverages = sizeof(avg_parameters) / sizeof(int);
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
-//static const int anz_ex_gpio = sizeof(exclude_GPIO) / sizeof(byte);
 static const int numLogValues = sizeof(log_parameters) / sizeof(int);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
@@ -713,12 +713,14 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PASSKEY,          CCAT_IPV4,     CPI_TEXT,      CDT_STRING,  CF_PASSKEY_TXT, 64},
   {CF_BASICAUTH,        CCAT_IPV4,     CPI_TEXT,      CDT_STRING,  CF_BASICAUTH_TXT, 64},
   {CF_ONEWIREBUS,       CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_ONEWIREBUS_TXT, 1},
-  {CF_ONEWIREBUS_DEVICES,CCAT_GENERAL, CPI_TEXT,      CDT_PROGNRLIST,  CF_ONEWIREBUS_DEVICES_TXT, 80},
+//not need
+  {CF_ONEWIREBUS_DEVICES,CCAT_GENERAL, CPI_TEXT,      CDT_PROGNRLIST,  CF_ONEWIREBUS_DEVICES_TXT, 80}, //not need
+//bus and pins: DHT_Pins
   {CF_DHTBUS,           CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,  CF_DHTBUS_TXT, 2},
   {CF_IPWE,             CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_IPWE_TXT, 1},
   {CF_IPWEVALUESLIST,   CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,  CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},
   {CF_MAX_IPADDRESS,    CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,  CF_MAX_IPADDRESS_TXT, 4},
-  {CF_MAX_DEVICES,      CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, 400},
+  {CF_MAX_DEVICES,      CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
   {CF_READONLY,         CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_READONLY_TXT, 1},
   {CF_DEBUG,            CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,  CF_DEBUG_TXT, 1},
   {CF_MQTT,             CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,  CF_MQTT_TXT, 1},
@@ -4316,10 +4318,8 @@ void query(int line)  // line (ProgNr)
 
               // Decode the rcv telegram and send it to the PC serial interface
               printTelegram(msg, line);
-              SerialOutput->print(F("#"));
-              SerialOutput->print(line);
-              SerialOutput->print(F(": "));
-              SerialOutput->println(build_pvalstr(0));
+              printFmtToDebug(PSTR("#%d: "), line);
+              printlnToDebug(build_pvalstr(0));
               SerialOutput->flush();
 #ifdef LOGGER
               LogTelegram(msg);
@@ -4364,10 +4364,8 @@ void query(int line)  // line (ProgNr)
 */
           printTelegram(msg, line);
 
-          SerialOutput->print(F("#"));
-          SerialOutput->print(line);
-          SerialOutput->print(F(": "));
-          SerialOutput->println(build_pvalstr(0));
+          printFmtToDebug(PSTR("#%d: "), line);
+          printlnToDebug(build_pvalstr(0));
           SerialOutput->flush();
         }
       }else{
@@ -4562,11 +4560,7 @@ void ds18b20(void) {
   DeviceAddress device_address;
   for(i=0;i<numSensors;i++){
     query(i + 20200);
-    SerialOutput->print(F("#1w_temp["));
-    SerialOutput->print(i);
-    SerialOutput->print(F("]: "));
-    SerialOutput->print(decodedTelegram.value);
-    SerialOutput->println();
+    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i, decodedTelegram.value);
 
     sensors->getAddress(device_address, i);
     printFmtToWebClient(PSTR("<tr><td>\n1w_temp[%d] %02x%02x%02x%02x%02x%02x%02x%02x: %s %s\n</td></tr>\n"),i,device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7], decodedTelegram.value, decodedTelegram.unit);
@@ -4701,18 +4695,14 @@ void Ipwe() {
 #ifdef MAX_CUL
 void InitMaxDeviceList() {
 
-  char max_id[11] = { 0 };
   char max_id_eeprom[11] = { 0 };
   int32_t max_addr = 0;
-  for (uint32_t x=0;x<(sizeof(max_device_list)/10);x++) {
-    for (int y=0;y<10;y++) {
-      max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
-    }
-    for (int z=0;z<20;z++) {
+  for (uint32_t x=0;x< MAX_CUL_DEVICES);x++) {
+    for (int z=0;z<MAX_CUL_DEVICES;z++) {
       if (EEPROM_ready) {
         EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
       }
-      if (!strcmp(max_id, max_id_eeprom)) {
+      if (!strcmp(max_device_list[x], max_id_eeprom)) {
         if (EEPROM_ready) {
           EEPROM.get(500 + 15 * z, max_addr);
         }
@@ -5884,8 +5874,9 @@ uint8_t pps_offset = 0;
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
 #if defined(__AVR__)
               printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-              cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-              cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+              uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
+              cat_min = pgm_read_word_far(tempAddr);
+              cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
               printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
               cat_min = ENUM_CAT_NR[cat*2];
@@ -6411,8 +6402,9 @@ uint8_t pps_offset = 0;
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
                     printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-                    cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2) * sizeof(ENUM_CAT_NR[0]));
-                    cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+                    uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
+                    cat_min = pgm_read_word_far(tempAddr);
+                    cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
                     printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
@@ -6430,8 +6422,9 @@ uint8_t pps_offset = 0;
                 if (cat_min<0) {
                   search_cat = atoi(&p[4]);
 #if defined(__AVR__)
-                  cat_min = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2) * sizeof(ENUM_CAT_NR[0]));
-                  cat_max = pgm_read_word_far(pgm_get_far_address(ENUM_CAT_NR) + (search_cat*2+1) * sizeof(ENUM_CAT_NR[0]));
+                  uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (search_cat) * sizeof(ENUM_CAT_NR[0]);
+                  cat_min = pgm_read_word_far(tempAddr);
+                  cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
                   cat_min = ENUM_CAT_NR[search_cat*2];
                   cat_max = ENUM_CAT_NR[search_cat*2+1];
@@ -6948,10 +6941,6 @@ uint8_t pps_offset = 0;
         // print queries
         webPrintHeader();
         char* range;
-        char* line_start;
-        char* line_end;
-        int start=-1;
-        int end=-1;
         range = strtok(p,"/");
         while(range!=0){
           if(range[0]=='T'){
@@ -6962,10 +6951,8 @@ uint8_t pps_offset = 0;
             dht22();
 #endif
           }else if(range[0]=='U'){ // output user-defined custom_array variable
-            char tempBuf[10];
             for(int i=0;i<numCustomFloats;i++){
-              _printFIXPOINT(tempBuf,custom_floats[i],2);
-              printFmtToWebClient(PSTR("<tr><td>\ncustom_float[%d]: %s\n</td></tr>\n"), i, tempBuf);
+              printFmtToWebClient(PSTR("<tr><td>\ncustom_float[%d]: %.2f\n</td></tr>\n"), i, custom_floats[i]);
             }
             for(int i=0;i<numCustomLongs;i++){
               printFmtToWebClient(PSTR("<tr><td>\ncustom_long[%d]: %ld\n</td></tr>\n"),i, custom_longs[i]);
@@ -6975,16 +6962,11 @@ uint8_t pps_offset = 0;
             if(enable_max_cul){
             int max_avg_count = 0;
             float max_avg = 0;
-            char max_id[11];
-            for (int x=0;x<20;x++) {
+            for (int x=0;x<MAX_CUL_DEVICES;x++) {
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
-                for (int y=0;y<10;y++) {
-                  max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(x*10)+y);
-                }
-                max_id[10] = '\0';
-                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_id, max_devices[x], max_cur_temp[x] / 10,max_dst_temp[x] / 2);
+                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], max_cur_temp[x] / 10,max_dst_temp[x] / 2);
                 if (max_valve[x] > -1) {
                   printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
                 }
@@ -6992,9 +6974,7 @@ uint8_t pps_offset = 0;
               }
             }
             if (max_avg_count > 0) {
-              char tempBuf[10];
-              _printFIXPOINT(tempBuf,max_avg / max_avg_count,2);
-              printFmtToWebClient(PSTR("<tr><td>AvgMax: %s</td></tr>\n"), tempBuf);
+              printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\n"), max_avg / max_avg_count);
             } else {
               printToWebClient(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
             }
@@ -7039,13 +7019,7 @@ uint8_t pps_offset = 0;
                   printToWebClient(decodedTelegram.prognrdescaddr);
                   printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
-                  SerialOutput->print(F("#avg_"));
-                  SerialOutput->print(avg_parameters[i]);
-                  SerialOutput->print(F(": "));
-                  SerialOutput->print(tempBuf);
-                  SerialOutput->print(F(" "));
-                  SerialOutput->println(decodedTelegram.unit);
-
+                  printFmtToDebug(PSTR("#avg_%d: %s %s\r\n"), avg_parameters[i], tempBuf, decodedTelegram.unit);
                 }
               }
             }
@@ -7119,36 +7093,20 @@ uint8_t pps_offset = 0;
               printToWebClient(PSTR("</td></tr>\n"));
             }
           }else{
+            char* line_start;
+            char* line_end;
+            int start=-1;
+            int end=-1;
             if(range[0]=='K'){
-              uint8_t cat,search_cat;
-              uint16_t line;
-              int i;
-              uint32_t c;
-              i=0;
-              start=-1;
-              end=-1;
-              search_cat=atoi(&range[1]);
-              c=get_cmdtbl_cmd(i);
-              while(c!=CMD_END){
-                cat=get_cmdtbl_category(i);
-                if(cat==search_cat){
-                  if(start<0){
-                    line=get_cmdtbl_line(i);
-                    start=line;
-                  }
-                }else{
-                  if(start>=0){
-                    line=get_cmdtbl_line(i-1);
-                    end=line;
-                    break;
-                  }
-                }
-                i++;
-                c=get_cmdtbl_cmd(i);
-              }
-              if(end<start){
-                end=start;
-              }
+              uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
+  #if defined(__AVR__)
+                uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
+                start = pgm_read_word_far(tempAddr);
+                end = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
+  #else
+                start = ENUM_CAT_NR[cat];
+                end = ENUM_CAT_NR[cat+1];
+  #endif
             }else{
               // split range
               line_start=range;
@@ -7356,14 +7314,8 @@ uint8_t pps_offset = 0;
 #ifdef MAX_CUL
             if (enable_max_cul && log_parameters[i] > 20006 && log_parameters[i] < 20010) {
               int max_idx = 0;
-              while (max_devices[max_idx] > 0) {
+              while (max_devices[max_idx] > 0 && max_idx < MAX_CUL_DEVICES) {
                 if ((log_parameters[i]<20009 && max_dst_temp[max_idx] > 0) || (log_parameters[i]==20009 && max_valve[max_idx] > -1)) {
-                  char max_id[11];
-                  for (int y=0;y<10;y++) {
-                    max_id[y] = pgm_read_byte_far(pgm_get_far_address(max_device_list)+(max_idx*10)+y);
-                  }
-                  max_id[10] = '\0';
-
                   printTrailToFile(&dataFile);
                   dataFile.print(log_parameters[i]);
                   dataFile.print(F(";"));
@@ -7372,7 +7324,7 @@ uint8_t pps_offset = 0;
                     case 20008: dataFile.print(F("MaxDstTemp_")); break;
                     case 20009: dataFile.print(F("MaxValvePc_")); break;
                   }
-                  dataFile.print(max_id);
+                  dataFile.print(max_device_list[max_idx]);
                   dataFile.print(F(";"));
                   switch (log_parameters[i]) {
                     case 20007: dataFile.println((float)max_cur_temp[max_idx]/10); break;
@@ -7399,6 +7351,7 @@ uint8_t pps_offset = 0;
 
 // Calculate 24h averages
   if (millis() / 60000 != lastAvgTime) {
+
     if (avgCounter == 1441) {
       for (int i=0; i<numAverages; i++) {
         avgValues_Old[i] = avgValues[i];
@@ -7495,7 +7448,7 @@ uint8_t pps_offset = 0;
       max_hex_str[6]='\0';
       int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);
       int max_idx=0;
-      for (max_idx=0;max_idx<20;max_idx++) {
+      for (max_idx=0;max_idx < MAX_CUL_DEVICES;max_idx++) {
         if (max_addr == max_devices[max_idx]) {
           known_addr = true;
           break;
@@ -7512,7 +7465,7 @@ uint8_t pps_offset = 0;
         printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
         int32_t max_addr_temp=0;
-        for (int x=0;x<20;x++) {
+        for (int x=0;x<MAX_CUL_DEVICES;x++) {
           EEPROM.get(500 + 15 * x, max_addr_temp);
           if (max_addr_temp == max_addr) {
             printlnToDebug(PSTR("Device already in EEPROM"));
@@ -7522,7 +7475,7 @@ uint8_t pps_offset = 0;
         }
 
         if (!known_eeprom) {
-          for (int x=0;x<20;x++) {
+          for (int x=0;x<MAX_CUL_DEVICES;x++) {
             EEPROM.get(500+15*x, max_addr_temp);
             if (max_addr_temp < 1) {
               EEPROM.put(500+15*x, max_addr);
@@ -8008,7 +7961,7 @@ if (!SD.exists(datalogFileName)) {
   InitMaxDeviceList();
 
 #endif
-printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used 
+printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
 

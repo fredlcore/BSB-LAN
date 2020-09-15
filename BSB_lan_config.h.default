@@ -162,8 +162,8 @@ int ipwe_parameters[40] = {
 //#define MAX_CUL
 boolean enable_max_cul = false;                //enable or disable connection to CUNO/CUNX/modified MAX!Cube;
 byte max_cul_ip_addr[4] = {192,168,178,5};     //  IP of CUNO/CUNX/modified MAX!Cube. Please use commas instead of dots!!!
-char max_device_list[220] = {                  // list of MAX! wall/heating thermostats that should be polled
-  "KEQ0502326"                                 // use MAX! serial numbers here which have to have exactly 10 characters
+char max_device_list[20][11] = {               // list of MAX! wall/heating thermostats that should be polled
+  "KEQ0502326",                                // use MAX! serial numbers here which have to have exactly 10 characters
   "KEQ0505080"
 };
 
