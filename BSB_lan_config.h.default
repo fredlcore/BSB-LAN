@@ -52,6 +52,7 @@ boolean show_unknown = true; // true - show all parameters, false - hide unknown
 /*
  * if PASSKEY length is non-zero, the URL has to contain the defined passkey as first element
  * e.g.
+ * char PASSKEY[64] = "1234";
  * http://192.168.178.88/1234/                - to view the main website (don't forget the trailing slash!)
  * http://192.168.178.88/1234/K               - to list all categories
  * http://192.168.178.88/1234/8700/8740/8741  - to list parameters 8700, 8740 and 8741 in one request
@@ -101,11 +102,11 @@ Does: log telegram to file
 // Logging von "rohen" Bus-Datentelegrammen
 // data saved into journal.txt on SD-card.
 // Telegrams logging on start:
-// LOGTELEGRAM_OFF - nothing to log,
-// LOGTELEGRAM_ON - log all telegrams,
-// LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY - log unknown telegrams,
-// LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY - log broadcast telegrams,
-// LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWNBROADCAST_ONLY - log unknown broadcast telegrams only;
+// int logTelegram = LOGTELEGRAM_OFF; // nothing to log,
+// int logTelegram = LOGTELEGRAM_ON; // log all telegrams,
+// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY; // log unknown telegrams,
+// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY; // log broadcast telegrams,
+// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWNBROADCAST_ONLY; // log unknown broadcast telegrams only;
 int logTelegram = LOGTELEGRAM_OFF;
 
 // Logging data from parameters
@@ -161,7 +162,7 @@ int ipwe_parameters[40] = {
 //#define MAX_CUL
 boolean enable_max_cul = false;                //enable or disable connection to CUNO/CUNX/modified MAX!Cube;
 byte max_cul_ip_addr[4] = {192,168,178,5};     //  IP of CUNO/CUNX/modified MAX!Cube. Please use commas instead of dots!!!
-char max_device_list[220] = {                   // list of MAX! wall/heating thermostats that should be polled
+char max_device_list[220] = {                  // list of MAX! wall/heating thermostats that should be polled
   "KEQ0502326"                                 // use MAX! serial numbers here which have to have exactly 10 characters
   "KEQ0505080"
 };
@@ -195,18 +196,18 @@ boolean pps_write = 0; // parameter 3
 byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
 
 
-#if defined(__SAM3X8E__)
-// Protect these pins from accidental GPIO access
-// bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
-//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00001011,0b00111100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-//byte exclude_GPIO[70] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
-#else  // Mega2560
+#if defined(__AVR__) // Mega2560
 // Protect these pins from accidental GPIO access
 // bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
 byte protected_GPIO[10] = {0b00000000,0b00111100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
 //byte exclude_GPIO[70] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+#else  // Duo
+// Protect these pins from accidental GPIO access
+// bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
+//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
+byte protected_GPIO[10] = {0b00001011,0b00111100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
+//byte exclude_GPIO[70] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 #endif
 
 
@@ -231,6 +232,19 @@ static const int fixed_device_variant = 0;
 //"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER
 
+//Variables for future use:
+//Compile room unit replacement extension
+#define ROOM_UNIT
+byte UdpIP[4] = {0,0,0,0}; //(destination IP address for sending UDP packets to, the room unit replacement of FHEM user @fabulous uses that)
+uint16_t UdpDelay = 15; //(seconds interval to send UDP packets)
+
+//Compile off-site logger extension
+#define OFF_SITE_LOGGER
+byte destinationServer[128] = ""; //URL string to periodically send values to an off-site logger
+uint16_t destinationPort = 80; //port number for abovementioned server
+uint32_t destinationDelay = 84600; //seconds interval to send values
+
+//All modules are compiled on Duo by default.
 #if ! defined(__AVR__)
 #define WEBSERVER
 #define DEBUG
@@ -238,6 +252,8 @@ static const int fixed_device_variant = 0;
 #define RESET
 #define IPWE
 #define MQTT
+#define ROOM_UNIT
+#define OFF_SITE_LOGGER
 #endif
 /************************************************************************************/
 /************************************************************************************/

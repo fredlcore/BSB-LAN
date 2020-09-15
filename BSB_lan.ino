@@ -4789,16 +4789,21 @@ void transmitFile(File dataFile) {
  * Global resources used:
  *   none
  * *************************************************************** */
+#ifdef RESET
 void resetBoard(){
 #if defined(__SAM3X8E__)
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
   rstc_start_software_reset(RSTC);
-#endif
-#if defined(__AVR__)
-  asm volatile ("  jmp 0");
-#endif
   while (1==1) {}
+#elif defined(__AVR__)
+  asm volatile ("  jmp 0");
+  while (1==1) {}
+#else
+  printlnToDebug(PSTR("Reset function not implementing"));
+#endif
+
 }
+#endif
 
 #ifdef LOGGER
 boolean createdatalogFileAndWriteHeader(){
@@ -7661,14 +7666,14 @@ void setup() {
     temp_bus_pins[0] = bus_pins[0];
     temp_bus_pins[1] = bus_pins[1];
   }else{
-#if defined(__SAM3X8E__)
-  // HardwareSerial
-  temp_bus_pins[0] = 19;
-  temp_bus_pins[1] = 18;
-#else  // Mega2560
+#if defined(__AVR__) // Mega2560
   //SoftwareSerial
   temp_bus_pins[0] = 68;
   temp_bus_pins[1] = 69;
+#else  // Duo
+  // HardwareSerial
+  temp_bus_pins[0] = 19;
+  temp_bus_pins[1] = 18;
 #endif
   }
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
@@ -8003,6 +8008,7 @@ if (!SD.exists(datalogFileName)) {
   InitMaxDeviceList();
 
 #endif
+printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used 
 
 #include "BSB_lan_custom_setup.h"
 
