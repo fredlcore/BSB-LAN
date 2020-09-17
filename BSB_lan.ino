@@ -471,7 +471,7 @@ boolean haveTelnetClient = false;
 #define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
 uint16_t max_cur_temp[MAX_CUL_DEVICES] = { 0 };
 uint8_t max_dst_temp[MAX_CUL_DEVICES] = { 0 };
-int8_t max_valve[MAX_CUL_DEVICES] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #endif
 /*
@@ -576,6 +576,7 @@ uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
 
+#ifdef WEBCONFIG
 typedef enum{
   CF_USEEEPROM, //Size: 1 byte. 1 read config from EEPROM. Other values - read predefined values from BSB_lan_config
   CF_BUSTYPE, //Size: 1 byte. Bus type at start (DROPDOWN selector)
@@ -770,6 +771,7 @@ void writeToEEPROM(uint8_t id){
   for(uint8_t i = 0; i < len; i++)
     EEPROM.update(i + options[id].eeprom_address, options[id].option_address[i]);
 }
+#endif
 
 #include "bsb-version.h"
 #define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
@@ -6196,11 +6198,8 @@ uint8_t pps_offset = 0;
         if (p[1]=='J') {
           uint32_t cmd=0;
           // Parse potential JSON payload
-          char json_temp[11];
-          char json_value_string[11];
-          uint8_t j_char_idx = 0;
+          char json_value_string[52];
           int json_parameter = 0;
-          float json_value = 0; json_value = json_value;   // to disable irrelevant compiler warning despite variable being used below
           boolean json_type = 0;
           boolean p_flag = false;
           boolean v_flag = false;
@@ -6255,11 +6254,11 @@ uint8_t pps_offset = 0;
             }
 
             switch (i) {
-              case 0: strcpy_P(json_temp, PSTR("BSB")); break; //reuse json_temp for lesser memory usage
-              case 1: strcpy_P(json_temp, PSTR("LPB")); break;
-              case 2: strcpy_P(json_temp, PSTR("PPS")); break;
+              case 0: strcpy_P(json_value_string, PSTR("BSB")); break; //reuse json_value_string for lesser memory usage
+              case 1: strcpy_P(json_value_string, PSTR("LPB")); break;
+              case 2: strcpy_P(json_value_string, PSTR("PPS")); break;
             }
-            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"), json_temp, json_parameter);
+            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"), json_value_string, json_parameter);
             printFmtToWebClient(PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"), bus->getBusAddr(), bus->getBusDest());
 //enabled options
             printFmtToWebClient(PSTR("  \"monitor\": %d,\n  \"verbose\": %d"), monitor, verbose);
@@ -6297,20 +6296,6 @@ uint8_t pps_offset = 0;
             }
             printToWebClient(PSTR("\n  ]"));
 
-/*
-            if(anz_ex_gpio > 0){
-            printToWebClient(PSTR(",\n  \"protectedGPIO\": [\n"));
-            not_first = false;
-            for (i=0; i<anz_ex_gpio; i++) {
-              if(not_first)
-                printToWebClient(PSTR(",\n"));
-              else
-                not_first = true;
-              printFmtToWebClient(PSTR("    { \"pin\": %d }"), exclude_GPIO[i]);
-              }
-              printToWebClient(PSTR("\n  ]"));
-              }
-*/
 //averages
             printToWebClient(PSTR(",\n  \"averages\": [\n"));
             not_first = false;
@@ -6360,20 +6345,27 @@ uint8_t pps_offset = 0;
               if (c == 'V' || c == 'v') { v_flag = true; }
               if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
-              if (isdigit(c) || c=='-') {
-                while (client.available() && j_char_idx < 10 && (isdigit(c) || c=='.' || c=='-')) {
-                  json_temp[j_char_idx] = c;
+              if( p_flag || v_flag || t_flag){ //rewind to ":"
+                uint8_t stage = 0;
+                uint8_t j_char_idx = 0;
+                char json_temp[sizeof(json_value_string)];
+                while (client.available() && stage < 3){
                   c = client.read();
+                  if(c == '\"' || c == ':') stage++;
+                }
+                if(stage != 3) break;
+                while (client.available() && j_char_idx < sizeof(json_temp)) {
+                  c = client.read();
+                  if(c == '\"') break; //read until "
+                  json_temp[j_char_idx] = c;
                   j_char_idx++;
                 }
                 json_temp[j_char_idx] = '\0';
-                j_char_idx = 0;
                 if (p_flag == true) {
                   json_parameter = atoi(json_temp);
                   p_flag = false;
                 }
                 if (v_flag == true) {
-                  json_value = strtod(json_temp, NULL);
                   strcpy(json_value_string, json_temp);
                   v_flag = false;
                 }
@@ -6643,10 +6635,6 @@ uint8_t pps_offset = 0;
           #endif
 
           printToWebClient(PSTR(MENU_TEXT_EXP ": \n"));
-/*          for (int i=0; i<anz_ex_gpio; i++) {
-            printFmtToWebClient(PSTR("%d "), exclude_GPIO[i]);
-          }
-*/
           for (i=0; i<anz_ex_gpio; i++) {
             if(bitRead(protected_GPIO[i / 8], i % 8)){
               printFmtToWebClient(PSTR("%d "), i);
@@ -6999,9 +6987,8 @@ uint8_t pps_offset = 0;
                 printToWebClient(PSTR(MENU_TEXT_24N ": "));
               }
               while (avg_token!=0) {
-                int avg_parameter = atoi(avg_token);
                 if (token_counter < numAverages) {
-                  avg_parameters[token_counter] = avg_parameter;
+                  avg_parameters[token_counter] = atoi(avg_token);
                   printFmtToWebClient(PSTR("%d \n"), avg_parameters[token_counter]);
                   token_counter++;
                 }
@@ -7037,19 +7024,6 @@ uint8_t pps_offset = 0;
               printToWebClient(PSTR(MENU_TEXT_ER7 "\n"));
               break;
             }
-
-/*
-            for (int i=0; i < anz_ex_gpio; i++) {
-              if (pin==exclude_GPIO[i]) {
-                error = true;
-                break;
-              }
-            }
-            if (error==true) {
-              printToWebClient(PSTR(MENU_TEXT_ER7 "\n"));
-              break;
-            }
-            */
 
             char* dir_token = strchr(range,',');
             dir_token++;
