@@ -34,7 +34,7 @@ byte dns_addr[4] = {192,168,178,1}; //  DNS server. Please note the commas inste
 byte subnet_addr[4] = {255,255,255,0}; // Please use commas instead of dots!!! Ignored, when first value is 0
 
 
-#define DEBUG //Compile DEBUG module if defined
+#define DEBUG //Compile verbose DEBUG module if defined
 byte debug_mode = 2; //Debug: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1; // If set to 1, all messages on the bus are printed to debug interface
 byte monitor = 0; //bus monitor mode
@@ -85,6 +85,8 @@ byte One_Wire_Pin = 3; //Define the pin for one wire temperature sensors
 // Define the pins for DHT temperature/humidity sensors (Up to 10)
 byte DHT_Pins[10] = {2, 3};
 
+// Compile module for calculation 24h averages for selected programs
+#define AVERAGES
 // Create 24h averages from these parameters
 int avg_parameters[40] = {
   8700,                   // Außentemperatur
@@ -96,7 +98,7 @@ Requires a FAT32-formatted Micro-SD card inserted
 into the Ethernet-Shield's card slot
 Does: log telegram to file
       Log selected values to file
-      Calculate, store and load selected 24h averages*/
+      store to SD and load selected 24h averages*/
 #define LOGGER
 
 // Logging von "rohen" Bus-Datentelegrammen
@@ -112,8 +114,8 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command when run time
 // Data will be write to "datalog.txt"
-boolean logCurrentValues = true;
-unsigned long log_interval = 3600;    // logging interval in seconds
+boolean logCurrentValues = true;      // save data into datalog.txt on SD-card.
+unsigned long log_interval = 3600;    // logging interval (to SD card and MQTT broker) in seconds
 int log_parameters[40] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
@@ -249,15 +251,17 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 
 //All modules are compiled on Duo by default.
 #if ! defined(__AVR__)
-#define WEBSERVER
+#define AVERAGES
 #define DEBUG
-#define VERSION_CHECK
-#define RESET
 #define IPWE
 #define MQTT
-#define ROOM_UNIT
 #define OFF_SITE_LOGGER
+#define RESET
+#define ROOM_UNIT
+#define VERSION_CHECK
 #define WEBCONFIG
+#define WEBSERVER
+
 #endif
 /************************************************************************************/
 /************************************************************************************/

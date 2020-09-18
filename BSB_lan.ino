@@ -514,20 +514,25 @@ char date[20];
 
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
+#ifdef MQTT
 unsigned long lastMQTTTime = millis();
+#endif
 unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
-static const int numAverages = sizeof(avg_parameters) / sizeof(int);
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(int);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
+
+#ifdef AVERAGES
+static const int numAverages = sizeof(avg_parameters) / sizeof(int);
 float *avgValues_Old = new float[numAverages];
 float *avgValues = new float[numAverages];
 float *avgValues_Current = new float[numAverages];
 int avgCounter = 1;
+#endif
 int loopCount = 0;
 
 struct decodedTelegram_t {
@@ -3290,6 +3295,7 @@ void LogTelegram(byte* msg){
 }
 #else
 void LogTelegram(byte* msg){
+  msg = msg; //disable compiler warning
 }
 #endif
 
@@ -4620,6 +4626,7 @@ void Ipwe() {
     printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
+#ifdef AVERAGES
   for (int i=0; i<numAverages; i++) {
     if (avg_parameters[i] > 0) {
       counter++;
@@ -4633,6 +4640,7 @@ void Ipwe() {
       printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     }
   }
+#endif
 
 #ifdef ONE_WIRE_BUS
   // output of one wire sensors
@@ -4699,8 +4707,8 @@ void InitMaxDeviceList() {
 
   char max_id_eeprom[11] = { 0 };
   int32_t max_addr = 0;
-  for (uint32_t x=0;x< MAX_CUL_DEVICES);x++) {
-    for (int z=0;z<MAX_CUL_DEVICES;z++) {
+  for (uint16_t x=0;x< MAX_CUL_DEVICES;x++) {
+    for (uint16_t z=0;z<MAX_CUL_DEVICES;z++) {
       if (EEPROM_ready) {
         EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
       }
@@ -4733,9 +4741,11 @@ void InitMaxDeviceList() {
 uint16_t setPPS(uint8_t pps_index, uint16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
-    for (int i=0; i < numLogValues; i++) {
-      if (log_parameters[i] == 15000 + pps_index) {
-        log_parameter = log_parameters[i];
+    if(logCurrentValues){
+      for (int i=0; i < numLogValues; i++) {
+        if (log_parameters[i] == 15000 + pps_index) {
+          log_parameter = log_parameters[i];
+        }
       }
     }
     pps_values[pps_index] = value;
@@ -6219,6 +6229,7 @@ uint8_t pps_offset = 0;
           }
 
           if (p[2] == 'A'){ // print average values in JSON
+#ifdef AVERAGES
             for (int i=0; i<numAverages; i++) {
               if (avg_parameters[i] > 0) {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
@@ -6231,6 +6242,7 @@ uint8_t pps_offset = 0;
                 printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
               }
             }
+#endif
           printToWebClient(PSTR("\n}\n"));
           forcedflushToWebClient();
           break;
@@ -6297,6 +6309,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\n  ]"));
 
 //averages
+#ifdef AVERAGES
             printToWebClient(PSTR(",\n  \"averages\": [\n"));
             not_first = false;
             for (i=0; i<numAverages; i++) {
@@ -6309,9 +6322,10 @@ uint8_t pps_offset = 0;
               }
             }
             printToWebClient(PSTR("\n  ]"));
+#endif
 // logged parameters
           #ifdef LOGGER
-            printFmtToWebClient(PSTR(",\n  \"loginterval\": %d,\n  \"logged\": [\n"), log_interval);
+            printFmtToWebClient(PSTR(",\n  \"logvalues\": %d,\n  \"loginterval\": %d,\n  \"logged\": [\n"), logCurrentValues, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
@@ -6686,17 +6700,19 @@ uint8_t pps_offset = 0;
           }
           j = 1;
           #endif
-          #ifdef DEBUG
           if(j) printToWebClient(PSTR(", "));
           j = 1;
+          #ifdef DEBUG
+          printToWebClient(PSTR("Verbose DEBUG: "));
+          #else
           printToWebClient(PSTR("DEBUG: "));
+          #endif
           switch(debug_mode){
             case 0: printToWebClient(PSTR("Off")); break;
             case 1: printToWebClient(PSTR("Serial")); break;
             case 2: printToWebClient(PSTR("Telnet")); break;
             default: printToWebClient(PSTR("Wrong mode")); break;
           }
-          #endif
           #ifdef LOGGER
           if(j) printToWebClient(PSTR(", "));
           printToWebClient(PSTR("LOGGER"));
@@ -6722,7 +6738,7 @@ uint8_t pps_offset = 0;
           uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
           printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
 #endif
-
+#ifdef AVERAGES
           printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\n"));
           for (int i=0; i<numAverages; i++) {
             if (avg_parameters[i] > 0) {
@@ -6730,9 +6746,11 @@ uint8_t pps_offset = 0;
             }
           }
           printToWebClient(PSTR("<BR>"));
-
+#endif
           #ifdef LOGGER
           printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
+          printToWebClient(PSTR("Store parameters on disk: <BR>\n"));
+          printyesno(logCurrentValues); //log_bc_only
           printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
           for (int i=0; i<numLogValues; i++) {
             if (log_parameters[i] > 0) {
@@ -6752,16 +6770,18 @@ uint8_t pps_offset = 0;
                 if (log_parameters[i] == 20009) {
                   printToWebClient(PSTR(MENU_TEXT_MXV));
                 }
-                if (logTelegram) {
-                  printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
-                  printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY)); //log_unknown_only
-                  printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-                  printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
-                }
               }
               printToWebClient(PSTR("<BR>\n"));
             }
           }
+
+        if (logTelegram) {
+          printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+          printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY)); //log_unknown_only
+          printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+          printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
+          }
+        printToWebClient(PSTR("<BR>\n"));
           #endif
 
           printToWebClient(PSTR("<BR>\n"));
@@ -6811,7 +6831,9 @@ uint8_t pps_offset = 0;
                 log_interval = atoi(log_token);
 //                if (log_interval < 10) {log_interval = 10;}
                 lastLogTime = millis();
+#ifdef MQTT
                 lastMQTTTime = millis();
+#endif
                 printFmtToWebClient(PSTR(MENU_TEXT_LGI ": %d"), log_interval);
                 printToWebClient(PSTR(" " MENU_TEXT_SEC "<BR>\n"));
               }
@@ -6950,7 +6972,7 @@ uint8_t pps_offset = 0;
             if(enable_max_cul){
             int max_avg_count = 0;
             float max_avg = 0;
-            for (int x=0;x<MAX_CUL_DEVICES;x++) {
+            for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
@@ -6969,6 +6991,7 @@ uint8_t pps_offset = 0;
             }
 #endif
           }else if(range[0]=='A') { // handle average command
+#ifdef AVERAGES
             if (range[1]=='=') {
               char* avg_token = strtok(range,"=,");  // drop everything before "="
               avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
@@ -7010,6 +7033,9 @@ uint8_t pps_offset = 0;
                 }
               }
             }
+#else
+            printToWebClient("AVERAGES module not compiled\n");
+#endif
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
             uint8_t pin;
@@ -7244,7 +7270,7 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-  if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
+  if(logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
 
@@ -7266,6 +7292,7 @@ uint8_t pps_offset = 0;
             dataFile.print(F(";"));
             dataFile.println(decodedTelegram.unit);
           } else {
+#ifdef AVERAGES
             if (log_parameters[i] == 20006) {
               for (int i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
@@ -7285,9 +7312,10 @@ uint8_t pps_offset = 0;
                 }
               }
             }
+#endif
 #ifdef MAX_CUL
             if (enable_max_cul && log_parameters[i] > 20006 && log_parameters[i] < 20010) {
-              int max_idx = 0;
+              uint16_t max_idx = 0;
               while (max_devices[max_idx] > 0 && max_idx < MAX_CUL_DEVICES) {
                 if ((log_parameters[i]<20009 && max_dst_temp[max_idx] > 0) || (log_parameters[i]==20009 && max_valve[max_idx] > -1)) {
                   printTrailToFile(&dataFile);
@@ -7324,6 +7352,7 @@ uint8_t pps_offset = 0;
 #endif
 
 // Calculate 24h averages
+#ifdef AVERAGES
   if (millis() / 60000 != lastAvgTime) {
 
     if (avgCounter == 1441) {
@@ -7370,6 +7399,7 @@ uint8_t pps_offset = 0;
     }
 #endif
   }
+#endif
 
 #ifdef WATCH_SOCKETS
   ShowSockStatus();
@@ -7421,7 +7451,7 @@ uint8_t pps_offset = 0;
       }
       max_hex_str[6]='\0';
       int32_t max_addr = (int32_t)strtoul(max_hex_str,NULL,16);
-      int max_idx=0;
+      uint16_t max_idx=0;
       for (max_idx=0;max_idx < MAX_CUL_DEVICES;max_idx++) {
         if (max_addr == max_devices[max_idx]) {
           known_addr = true;
@@ -7439,7 +7469,7 @@ uint8_t pps_offset = 0;
         printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
         int32_t max_addr_temp=0;
-        for (int x=0;x<MAX_CUL_DEVICES;x++) {
+        for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
           EEPROM.get(500 + 15 * x, max_addr_temp);
           if (max_addr_temp == max_addr) {
             printlnToDebug(PSTR("Device already in EEPROM"));
@@ -7449,7 +7479,7 @@ uint8_t pps_offset = 0;
         }
 
         if (!known_eeprom) {
-          for (int x=0;x<MAX_CUL_DEVICES;x++) {
+          for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
             EEPROM.get(500+15*x, max_addr_temp);
             if (max_addr_temp < 1) {
               EEPROM.put(500+15*x, max_addr);
@@ -7840,12 +7870,13 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 */
 
 // initialize average calculation
-
+#ifdef AVERAGES
   for (int i=0; i<numAverages; i++) {
     avgValues[i] = 0;
     avgValues_Old[i] = -9999;
     avgValues_Current[i] = 0;
   }
+#endif
 
 #ifdef WATCH_SOCKETS
   unsigned long thisTime = millis();
@@ -7858,7 +7889,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
 #ifdef LOGGER
 
 // restore average
-
+#ifdef AVERAGES
   if (SD.exists(averagesFileName)) {
     File avgfile = SD.open(averagesFileName, FILE_READ);
     if (avgfile) {
@@ -7909,6 +7940,7 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
     }
     avgfile.close();
   }
+#endif
 
 if (!SD.exists(datalogFileName)) {
   createdatalogFileAndWriteHeader();
@@ -7925,7 +7957,7 @@ if (!SD.exists(datalogFileName)) {
 
 #ifdef MAX_CUL
   if(enable_max_cul){
-  if (max_cul.connect(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3], 2323)) {
+  if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("Connected to max_cul"));
   } else {
     printlnToDebug(PSTR("Connection to max_cul failed"));
