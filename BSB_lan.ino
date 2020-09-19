@@ -4177,6 +4177,9 @@ void queryVirtualPrognr(int line, int table_line){
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
    loadPrognrElementsFromTable(table_line);
 
+   printFmtToDebug(PSTR("\r\nVirtual parameter %d queried. Table line %d\r\n"), line, table_line);
+   decodedTelegram.msg_type = TYPE_ANS;
+
 
    if (line >= 20000 && line < 20006) {
      uint32_t val = 0;
@@ -4189,11 +4192,15 @@ void queryVirtualPrognr(int line, int table_line){
        case 20005: val = TWW_count; break;
      }
    sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
+   decodedTelegram.prognr = line;
+   return;
    }
    if (line >= 20100 && line < 20200) {
 #ifdef DHT_BUS
      size_t log_sensor = (line - 20100);
+     decodedTelegram.prognr = line;
      if(log_sensor >= sizeof(DHT_Pins) / sizeof(byte) || !DHT_Pins[log_sensor]){
+       decodedTelegram.msg_type = TYPE_ERR;
        decodedTelegram.error = 7;
        return;
      }
@@ -4233,6 +4240,8 @@ void queryVirtualPrognr(int line, int table_line){
        undefinedValueToBuffer(decodedTelegram.value);
      return;
 #else
+   decodedTelegram.prognr = line;
+   decodedTelegram.msg_type = TYPE_ERR;
    decodedTelegram.error = 7;
    return;
 #endif
@@ -4240,8 +4249,10 @@ void queryVirtualPrognr(int line, int table_line){
    if (line>= 20200 && line < 20300) {
 #ifdef ONE_WIRE_BUS
      int log_sensor = line - 20200;
+     decodedTelegram.prognr = line;
      if(log_sensor >= numSensors){
        decodedTelegram.error = 7;
+       decodedTelegram.msg_type = TYPE_ERR;
        return;
      }
      {unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
@@ -4259,11 +4270,14 @@ void queryVirtualPrognr(int line, int table_line){
      return;
 #else
    decodedTelegram.error = 7;
+   decodedTelegram.msg_type = TYPE_ERR;
+   decodedTelegram.prognr = line;
    return;
 #endif
    }
 
    decodedTelegram.error = 7;
+   decodedTelegram.msg_type = TYPE_ERR;
    return;
  }
 /** *****************************************************************
@@ -4302,7 +4316,7 @@ void query(int line)  // line (ProgNr)
       decodedTelegram.type = get_cmdtbl_type(i);
 
 // virtual programs
-      if((line >= 20100 && line < 20300) || (line >= 20000 && line < 20006))
+      if((line >= 20000 && line < 20300))
         {
           queryVirtualPrognr(line, i);
           return;
@@ -5886,7 +5900,7 @@ uint8_t pps_offset = 0;
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
 #if defined(__AVR__)
               printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-              uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
+              uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
               cat_min = pgm_read_word_far(tempAddr);
               cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
@@ -6216,7 +6230,6 @@ uint8_t pps_offset = 0;
           boolean t_flag = false;
           boolean output = false;
           boolean been_here = false;
-          int8_t search_cat = -1;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
@@ -6393,7 +6406,7 @@ uint8_t pps_offset = 0;
             }
             if (output || json_token != NULL) {
               int i_line=findLine(json_parameter,0,&cmd);
-              if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || cmd == CMD_UNKNOWN)) {
+              if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000))) { //CMD_UNKNOWN except virtual programs
                 json_token = strtok(NULL,",");
                 continue;
               }
@@ -6408,7 +6421,7 @@ uint8_t pps_offset = 0;
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
                     printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-                    uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
+                    uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
                     cat_min = pgm_read_word_far(tempAddr);
                     cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
@@ -6426,14 +6439,15 @@ uint8_t pps_offset = 0;
               if (p[2]=='K' && isdigit(p[4])) {
                 cat_param++;
                 if (cat_min<0) {
-                  search_cat = atoi(&p[4]);
+                  int8_t search_cat = -1;
+                  search_cat = atoi(&p[4]) * 2;
 #if defined(__AVR__)
                   uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (search_cat) * sizeof(ENUM_CAT_NR[0]);
                   cat_min = pgm_read_word_far(tempAddr);
                   cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
 #else
-                  cat_min = ENUM_CAT_NR[search_cat*2];
-                  cat_max = ENUM_CAT_NR[search_cat*2+1];
+                  cat_min = ENUM_CAT_NR[search_cat];
+                  cat_max = ENUM_CAT_NR[search_cat+1];
 #endif
                   cat_param = cat_min;
                 }
@@ -6449,7 +6463,7 @@ uint8_t pps_offset = 0;
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 i_line=findLine(json_parameter,0,&cmd);
-                if (i_line<0 || cmd == CMD_UNKNOWN) {
+                if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
 
@@ -6629,7 +6643,7 @@ uint8_t pps_offset = 0;
           printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
 
           #ifdef ONE_WIRE_BUS
-          printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d, " MENU_TEXT_SNS "%d\n<BR>\n"), One_Wire_Pin, numSensors);
+          printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d, " MENU_TEXT_SNS ": %d\n<BR>\n"), One_Wire_Pin, numSensors);
           #endif
 
           #ifdef DHT_BUS
@@ -6749,8 +6763,8 @@ uint8_t pps_offset = 0;
 #endif
           #ifdef LOGGER
           printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
-          printToWebClient(PSTR("Store parameters on disk: <BR>\n"));
-          printyesno(logCurrentValues); //log_bc_only
+          printToWebClient(PSTR("<BR>Store parameters on disk: \n"));
+          printyesno(logCurrentValues);
           printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
           for (int i=0; i<numLogValues; i++) {
             if (log_parameters[i] > 0) {

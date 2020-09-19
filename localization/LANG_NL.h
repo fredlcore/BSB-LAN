@@ -38,7 +38,7 @@
 #define ENUM_CAT_2d_TEXT "Diagnose verbruiker"
 #define ENUM_CAT_2e_TEXT "Branderautomaat"
 #define ENUM_CAT_30_TEXT "PPS bus"
-#define ENUM_CAT_31_TEXT "Onbenkende categorie"
+#define ENUM_CAT_32_TEXT "Onbenkende categorie"
 
 #define MENU_TEXT_HFK "Verwarmingsfuncties"
 #define MENU_TEXT_SN1 "DS18B20 Sensor"

@@ -48,7 +48,8 @@
 #define ENUM_CAT_2e_TEXT "Burner control"
 #define ENUM_CAT_2f_TEXT "User defined"
 #define ENUM_CAT_30_TEXT "PPS bus"
-#define ENUM_CAT_31_TEXT "Unknown category"
+#define ENUM_CAT_31_TEXT "One Wire, DHT & MAX! Sensors"
+#define ENUM_CAT_32_TEXT "Unknown category"
 
 #define MENU_TEXT_HFK "Heater functions"
 #define MENU_TEXT_SNS "Sensors"
