@@ -78,6 +78,7 @@ char USER_PASS_B64[64] = ""; // HTTP-Auth will be disabled if USER_PASS_B64 stri
 
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
+boolean enableOneWireBus = true; //true - enable oneWire bus, false - disable
 byte One_Wire_Pin = 3; //Define the pin for one wire temperature sensors
 
 // Compile module with DHT temperature/humidity sensors support
@@ -87,6 +88,7 @@ byte DHT_Pins[10] = {2, 3};
 
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
+boolean logAverageValues = true;      // calculate and save data into averages.txt on SD-card.
 // Create 24h averages from these parameters
 int avg_parameters[40] = {
   8700,                   // Außentemperatur

@@ -393,6 +393,9 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
+#ifdef WEBCONFIG
+#include <CRC32.h>
+#endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #ifdef MQTT
@@ -544,19 +547,20 @@ uint_farptr_t prognrdescaddr; //prognr description string address
 uint_farptr_t enumdescaddr; //enum description string address
 uint_farptr_t enumstr; //address of first element of enum
 uint16_t enumstr_len;  //enum length
+uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
-uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed
 uint8_t readonly; // 0 - read/write, 1 - read only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
-uint8_t unit_len;//optbl[?].unit_len
+uint8_t sensorid; //id of external (OneWire, DHT, MAX!) sensor for virtual programs. Must be zero for real program numbers.
+// uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
 char value[64]; //decoded value from telegram to string
 char unit[32]; //unit of measurement. former char div_unit[32];
-char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow save RAM
+char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow to save RAM
 } decodedTelegram;
 
 uint8_t my_dev_fam = 0;
@@ -582,9 +586,26 @@ boolean time_set = false;
 uint8_t current_switchday = 0;
 
 #ifdef WEBCONFIG
+byte UseEEPROM = 0;
+
 typedef enum{
-  CF_USEEEPROM, //Size: 1 byte. 1 read config from EEPROM. Other values - read predefined values from BSB_lan_config
+// Version 0 (header)
+  CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
+  CF_VERSION, //Size: 2 byte. Config version
+  CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
+// Version 1 (parameters which can be changed by URL commands)
   CF_BUSTYPE, //Size: 1 byte. Bus type at start (DROPDOWN selector)
+  CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42)
+  CF_OWN_LPBADDR, ///Size: 1 byte. LPB bus device address (0x42)
+  CF_DEST_LPBADDR, ///Size: 1 byte. LPB bus destination address (0x0)
+  CF_PPS_WRITE, ///Size: 1 byte. PPS can write
+  CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
+  CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
+  CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
+  CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
+  CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+// Version 2
   CF_MAC, //Size: 6 bytes. MAC address
   CF_DHCP, //Size: 1 byte. DHCP: 0 - disabled, 1 - enabled
   CF_IPADDRESS, //Size: 4 bytes. IP v4 address
@@ -594,21 +615,15 @@ typedef enum{
   CF_WWWPORT, //Size: 2 bytes. Port number, 1-65535
   CF_TRUSTEDIPADDRESS,//Size: 4 bytes. First trusted IP v4 address. 0 - disabled
   CF_TRUSTEDIPADDRESS2,//Size: 4 bytes. Second trusted IP v4 address. 0 - disabled
-  CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
-  CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
-  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
-  CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
-  CF_WEBSERVER, //Size: 1 byte. External (read files from SD card) webserver: 0 - disabled, 1 - enabled
-  CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_PASSKEY, //Size 64 bytes. String with PASSKEY
   CF_BASICAUTH, //Size 64 bytes. String with USER_PASS_B64
+  CF_WEBSERVER, //Size: 1 byte. External (read files from SD card) webserver: 0 - disabled, 1 - enabled
   CF_ONEWIREBUS, //Size: 1 byte. One wire bus pin. 0 will be ignored
-  CF_ONEWIREBUS_DEVICES, //Size: 8 * 10 bytes. Array of One Wire devices, 8 bytes per device
-  CF_DHTBUS, //Size: 2 bytes. DHT temperature/humidity bus pins. 0 will be ignored
+  CF_DHTBUS, //Size: 10 bytes (sizeof(DHT_Pins)). DHT temperature/humidity bus pins. 0 will be ignored
   CF_IPWE, //Size: 1 byte. IPWE extension: 0 - disabled, 1 - enabled
   CF_IPWEVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube. 0.0.0.0 - disabled
+  CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
+  CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
   CF_MAX_DEVICES, //Size 10 * 40 bytes.
   CF_READONLY, //Size: 1 byte. All parameters will be FL_RONLY
   CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
@@ -616,12 +631,14 @@ typedef enum{
   CF_MQTT_IPADDRESS, //Size: 4 bytes. MQTT broker IP v4 address
   CF_MQTT_USERNAME, //Size: 32 bytes.
   CF_MQTT_PASSWORD, //Size: 32 bytes.
-  CF_MQTT_TOPIC //Size: 32 bytes.
+  CF_MQTT_TOPIC, //Size: 32 bytes.
+  CF_MQTT_DEVICE //Size: 32 bytes.
 } cf_params;
 
 
 //according to input_type in configuration_struct
 typedef enum {
+  CPI_NOTHING,
   CPI_TEXT, // general text field
   CPI_SWITCH,
   CPI_DROPDOWN
@@ -629,6 +646,7 @@ typedef enum {
 
 //according to var_type in configuration_struct
 typedef enum {
+  CDT_VOID,
   CDT_BYTE,
   CDT_UINT16, //CPI_TEXT field with format for unsigned integer
   CDT_UINT32, //CPI_TEXT field with format for unsigned long integer
@@ -650,6 +668,8 @@ typedef enum {
 
 typedef struct {
 	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
+  uint8_t version; //config version which can manage this parameter
+  boolean needreboot; //true - value can be apply after reboot only.
   uint8_t category;	// for grouping configuration options (cdt_params)
   uint8_t input_type;	// input type (text, dropdown etc.) 0 - text field, 1 - switch, 2 - dropdown
 	uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
@@ -659,12 +679,16 @@ typedef struct {
 
 typedef struct{
   uint16_t eeprom_address;//start address in EEPROM
-  byte *option_address; //
+  byte *option_address; //pointer to parameter variable
 } addressesOfConfigOptions;
 addressesOfConfigOptions options[sizeof(cf_params)/sizeof(CF_USEEEPROM)];
 
 const char CF_USEEEPROM_TXT[] PROGMEM = ("Read config from EEPROM");
 const char CF_BUSTYPE_TXT[] PROGMEM = ("Bus type at start");
+const char CF_OWN_BSBADDR_TXT[] PROGMEM = ("Own BSB address");
+const char CF_OWN_LPBADDR_TXT[] PROGMEM = ("Own LPB address");
+const char CF_DEST_LPBADDR_TXT[] PROGMEM = ("Dest LPB address");
+const char CF_PPS_WRITE_TXT[] PROGMEM = ("Enable PPS bus write");
 const char CF_MAC_TXT[] PROGMEM = ("MAC address");
 const char CF_DHCP_TXT[] PROGMEM = ("Use DHCP");
 const char CF_IPADDRESS_TXT[] PROGMEM = ("IP address");
@@ -687,6 +711,7 @@ const char CF_ONEWIREBUS_DEVICES_TXT[] PROGMEM = ("List of One Wire devices");
 const char CF_DHTBUS_TXT[] PROGMEM = ("Use DHT bus on pins");
 const char CF_IPWE_TXT[] PROGMEM = ("Enable IPWE");
 const char CF_IPWEVALUESLIST_TXT[] PROGMEM = ("Programs for displaying with IPWE");
+const char CF_MAX_TXT[] PROGMEM = ("Enable MAX");
 const char CF_MAX_IPADDRESS_TXT[] PROGMEM = ("CUNO/CUNX/modified MAX!Cube IP address");
 const char CF_MAX_DEVICES_TXT[] PROGMEM = ("MAX! devices");
 const char CF_READONLY_TXT[] PROGMEM = ("All parameters is read only");
@@ -698,83 +723,126 @@ const char CF_MQTT_PASSWORD_TXT[] PROGMEM = ("Password");
 const char CF_MQTT_TOPIC_TXT[] PROGMEM = ("Topic prefix");
 
 PROGMEM_LATE const configuration_struct config[]={
-  {CF_USEEEPROM,        CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_USEEEPROM_TXT, 1},
-  {CF_BUSTYPE,          CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,  CF_BUSTYPE_TXT, 1},
-  {CF_MAC,              CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,  CF_MAC_TXT, 6},
-  {CF_DHCP,             CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,  CF_DHCP_TXT, 1},
-  {CF_IPADDRESS,        CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_IPADDRESS_TXT, 4},
-  {CF_MASK,             CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_MASK_TXT, 4},
-  {CF_GATEWAY,          CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_GATEWAY_TXT, 4},
-  {CF_DNS,              CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_DNS_TXT, 4},
-  {CF_WWWPORT,          CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,CF_WWWPORT_TXT, 2},
-  {CF_TRUSTEDIPADDRESS, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_TRUSTEDIPADDRESS_TXT, 4},
-  {CF_TRUSTEDIPADDRESS2,CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,  CF_TRUSTEDIPADDRESS_TXT, 4},
-  {CF_LOGTELEGRAM,      CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,  CF_LOGTELEGRAM_TXT, 1},
-  {CF_LOGAVERAGES,      CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_LOGAVERAGES_TXT, 1},
-  {CF_LOGCURRVALUES,    CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_LOGCURRVALUES_TXT, 1},
-  {CF_LOGCURRINTERVAL,  CCAT_GENERAL,  CPI_TEXT,      CDT_UINT32,CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},
-  {CF_WEBSERVER,        CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_WEBSERVER_TXT, 1},
-  {CF_AVERAGESLIST,     CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,  CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},
-  {CF_CURRVALUESLIST,   CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,  CF_CURRVALUESLIST_TXT, sizeof(log_parameters)},
-  {CF_PASSKEY,          CCAT_IPV4,     CPI_TEXT,      CDT_STRING,  CF_PASSKEY_TXT, 64},
-  {CF_BASICAUTH,        CCAT_IPV4,     CPI_TEXT,      CDT_STRING,  CF_BASICAUTH_TXT, 64},
-  {CF_ONEWIREBUS,       CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_ONEWIREBUS_TXT, 1},
-//not need
-  {CF_ONEWIREBUS_DEVICES,CCAT_GENERAL, CPI_TEXT,      CDT_PROGNRLIST,  CF_ONEWIREBUS_DEVICES_TXT, 80}, //not need
+  {CF_USEEEPROM,        0, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)},
+  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 2},
+  {CF_CRC32,            0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
+  {CF_BUSTYPE,          1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},
+  {CF_OWN_BSBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(bus_type)},
+  {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(bus_type)},
+  {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(bus_type)},
+  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(bus_type)},
+  {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_MAC_TXT, sizeof(mac)},
+  {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
+  {CF_IPADDRESS,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_IPADDRESS_TXT, sizeof(ip_addr)},
+  {CF_MASK,             2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_MASK_TXT, sizeof(subnet_addr)},
+  {CF_GATEWAY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_GATEWAY_TXT, sizeof(gateway_addr)},
+  {CF_DNS,              2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_DNS_TXT, sizeof(dns_addr)},
+  {CF_WWWPORT,          2, true,  CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         CF_WWWPORT_TXT, sizeof(HTTPPort)},
+  {CF_TRUSTEDIPADDRESS, 2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)},
+  {CF_TRUSTEDIPADDRESS2,2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},
+  {CF_LOGTELEGRAM,      1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},
+  {CF_LOGAVERAGES,      1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},
+  {CF_AVERAGESLIST,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},
+  {CF_LOGCURRVALUES,    1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},
+  {CF_LOGCURRINTERVAL,  1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_UINT32,         CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},
+  {CF_CURRVALUESLIST,   1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_CURRVALUESLIST_TXT, sizeof(log_parameters)},
+  {CF_PASSKEY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},
+  {CF_BASICAUTH,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},
+  {CF_WEBSERVER,        2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
+  {CF_ONEWIREBUS,       2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)},
 //bus and pins: DHT_Pins
-  {CF_DHTBUS,           CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,  CF_DHTBUS_TXT, 2},
-  {CF_IPWE,             CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_IPWE_TXT, 1},
-  {CF_IPWEVALUESLIST,   CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,  CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},
-  {CF_MAX_IPADDRESS,    CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,  CF_MAX_IPADDRESS_TXT, 4},
-  {CF_MAX_DEVICES,      CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
-  {CF_READONLY,         CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,  CF_READONLY_TXT, 1},
-  {CF_DEBUG,            CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,  CF_DEBUG_TXT, 1},
-  {CF_MQTT,             CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,  CF_MQTT_TXT, 1},
-  {CF_MQTT_IPADDRESS,   CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,  CF_MQTT_IPADDRESS_TXT, 4},
-  {CF_MQTT_USERNAME,    CCAT_MQTT,     CPI_TEXT,      CDT_STRING,  CF_MQTT_USERNAME_TXT, 32},
-  {CF_MQTT_PASSWORD,    CCAT_MQTT,     CPI_TEXT,      CDT_STRING,  CF_MQTT_PASSWORD_TXT, 32},
-  {CF_MQTT_TOPIC,       CCAT_MQTT,     CPI_TEXT,      CDT_STRING,  CF_MQTT_TOPIC_TXT, 32}
+  {CF_DHTBUS,           2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)},
+  {CF_IPWE,             2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},
+  {CF_IPWEVALUESLIST,   2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},
+  {CF_MAX,              2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},
+  {CF_MAX_IPADDRESS,    2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)},
+  {CF_MAX_DEVICES,      2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
+  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,            CF_READONLY_TXT, 1},
+  {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,            CF_DEBUG_TXT, 1},
+  {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,            CF_MQTT_TXT, sizeof(mqtt_mode)},
+  {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,            CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},
+  {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},
+  {CF_MQTT_PASSWORD,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},
+  {CF_MQTT_TOPIC,       2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},
+  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}
 };
 
 static int baseConfigAddrInEEPROM = 1024; // first Kb used by MAX!
-void initConfigTable(void) {
+uint32_t initConfigTable(uint8_t version) {
+  CRC32 crc;
+  boolean allowedversion = false;
   for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
     int addr = baseConfigAddrInEEPROM;
     for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
-      if(i == config[j].id)
+      #if defined(__AVR__)
+      if(i == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
+        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= version) allowedversion = true;
         break;
-      else
-        addr += config[j].size + 2;
+      } else
+        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= version) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0])) + 2;}
+    #else
+      if(i == config[j].id){
+        if(config[j].version <= version) allowedversion = true;
+        break;
+      } else
+        if(config[j].version <= version) {addr += config[j].size + 2;}
+      #endif
     }
-    options[i].eeprom_address = addr;
+    if(allowedversion) {
+      options[i].eeprom_address = addr;
+      for(uint8_t k = 0; k < sizeof(addr); k++){
+        crc.update(((byte *)&addr)[k]);
+      }
+    }
   }
+  return crc.finalize();
 }
 void registerConfigVariable(uint8_t id, byte *ptr){
   options[id].option_address = ptr;
 }
 
+void unregisterConfigVariable(uint8_t id){
+  options[id].option_address = NULL;
+}
 void readFromEEPROM(uint8_t id){
   if (!EEPROM_ready) return;
   if(!options[id].option_address) return;
-  int len = 0;
+  uint16_t len = 0;
   for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
+#if defined(__AVR__)
+    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0])))
+      len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
+#else
     if(id == config[j].id)
       len = config[j].size;
+#endif
   }
-  for(uint8_t i = 0; i < len; i++)
+  for(uint16_t i = 0; i < len; i++)
     options[id].option_address[i] = EEPROM.read(i + options[id].eeprom_address);
 }
 
-void writeToEEPROM(uint8_t id){
-  if (!EEPROM_ready) return;
-  if(!options[id].option_address) return;
-  int len = 0;
+//return true if EEPROM was updated with new value
+boolean writeToEEPROM(uint8_t id){
+  if (!EEPROM_ready) return false;
+  boolean EEPROMwasChanged = false;
+  if(!options[id].option_address) return false;
+  uint16_t len = 0;
   for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
+#if defined(__AVR__)
+    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0])))
+      len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
+#else
     if(id == config[j].id)
       len = config[j].size;
+#endif
   }
-  for(uint8_t i = 0; i < len; i++)
-    EEPROM.update(i + options[id].eeprom_address, options[id].option_address[i]);
+  for(uint16_t i = 0; i < len; i++){
+    if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
+      EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
+      EEPROMwasChanged = true;
+    }
+  }
+  return EEPROMwasChanged;
 }
 #endif
 
@@ -1343,8 +1411,10 @@ int findLine(uint16_t line
   uint16_t l;
 
   //virtual progNrs
-  if (line >= 20100 && line < 20200) {line = 20100;}
-  if (line >= 20200 && line < 20300) {line = 20200;}
+  if(line > 20000){
+    if (line >= 20100 && line < 20200) {line = 20100;}
+    if (line >= 20200 && line < 20300) {line = 20200;}
+  }
 
   // binary search for the line in cmdtbl
 
@@ -1554,7 +1624,6 @@ void loadPrognrElementsFromTable(int i){
   decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
-
   if ((flags & FL_RONLY) == FL_RONLY)
     decodedTelegram.readonly = 1;
   else
@@ -1566,11 +1635,11 @@ void loadPrognrElementsFromTable(int i){
   decodedTelegram.operand=optbl[decodedTelegram.type].operand;
   #endif
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
   #if defined(__AVR__)
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
   #else
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, decodedTelegram.unit_len);
+  uint8_t unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
+  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, unit_len);
   #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
@@ -1589,7 +1658,7 @@ void resetDecodedTelegram(){
   decodedTelegram.enumdescaddr = 0;
   decodedTelegram.type = 0;
   decodedTelegram.data_type = 0;
-  decodedTelegram.unit_len = 0;
+//  decodedTelegram.unit_len = 0;
   decodedTelegram.precision = 1;
   decodedTelegram.error = 0;
   decodedTelegram.readonly = 0;
@@ -1601,6 +1670,7 @@ void resetDecodedTelegram(){
   decodedTelegram.msg_type = 0;
   decodedTelegram.tlg_addr = 0;
   decodedTelegram.operand = 1;
+  decodedTelegram.sensorid = 0;
   if(decodedTelegram.telegramDump) {free(decodedTelegram.telegramDump); decodedTelegram.telegramDump = NULL;} //free memory before new telegram
 }
 /** *****************************************************************
@@ -2608,6 +2678,9 @@ void printTelegram(byte* msg, int query_line) {
     printToDebug(PSTR(" - "));
     // print menue text
     printToDebug(decodedTelegram.prognrdescaddr);
+    if(decodedTelegram.sensorid){
+      printFmtToDebug(PSTR(" #%d"), decodedTelegram.sensorid);
+    }
     printToDebug(PSTR(": "));
   }
 
@@ -3091,6 +3164,204 @@ void webPrintSite() {
 
   webPrintFooter();
 } // --- webPrintSite() ---
+
+void generateConfigPage(void){
+  printToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
+//          client.println(F("BSB pins: "));
+//          client.println(bus);
+//          client.println(F("<BR><BR>"));
+
+  printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
+  printFmtToWebClient(PSTR("%d Bytes <BR>\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
+  printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
+  int bustype = bus->getBusType();
+  int i;
+  boolean not_first = false;
+
+  switch (bustype) {
+    case 0: printToWebClient(PSTR("BSB")); break;
+    case 1: printToWebClient(PSTR("LPB")); break;
+    case 2: printToWebClient(PSTR("PPS")); break;
+  }
+  if (bustype != BUS_PPS) {
+    printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
+
+    if (DEFAULT_FLAG == FL_RONLY) {
+      printToWebClient(PSTR(MENU_TEXT_BRO));
+    } else {
+      printToWebClient(PSTR(MENU_TEXT_BRW));
+    }
+  } else {
+    if (pps_write == 1) {
+      printToWebClient(PSTR(" (" MENU_TEXT_BRW ")"));
+    } else {
+      printToWebClient(PSTR(" (" MENU_TEXT_BRO ")"));
+    }
+  }
+  printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_MMD ": %d"), monitor);
+  printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
+
+  #ifdef ONE_WIRE_BUS
+  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d, " MENU_TEXT_SNS ": %d\n<BR>\n"), One_Wire_Pin, numSensors);
+  #endif
+
+  #ifdef DHT_BUS
+  printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
+  not_first = false;
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  for(i=0;i<numDHTSensors;i++){
+    if(DHT_Pins[i]) {
+      if(not_first)
+        printToWebClient(PSTR(", "));
+      else
+        not_first = true;
+      printFmtToWebClient(PSTR("%d"), DHT_Pins[i]);
+    }
+  }
+  printToWebClient(PSTR("\n<BR>\n"));
+  #endif
+
+  printToWebClient(PSTR(MENU_TEXT_EXP ": \n"));
+  for (i=0; i<anz_ex_gpio; i++) {
+    if(bitRead(protected_GPIO[i / 8], i % 8)){
+      printFmtToWebClient(PSTR("%d "), i);
+    }
+  }
+  printToWebClient(PSTR("<BR>\n"));
+
+  printToWebClient(PSTR(MENU_TEXT_MAC ": \n"));
+  for (int i=0; i<=5; i++) {
+    printFmtToWebClient(PSTR("%02X"), mac[i]);
+    if(i != 5) printToWebClient(PSTR(":"));
+  }
+  printToWebClient(PSTR("<BR><BR>\n"));
+/*
+  client.println(F("IP address: "));
+  client.println(ip);
+  client.println(F("<BR>"));
+*/
+// list of enabled modules
+  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\n"));
+  boolean j = 0;
+  #ifdef WEBSERVER
+  printToWebClient(PSTR("WEBSERVER"));
+  j = 1;
+  #endif
+  #ifdef IPWE
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("IPWE"));
+  j = 1;
+  #endif
+  #ifdef CUSTOM_COMMANDS
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("CUSTOM_COMMANDS"));
+  j = 1;
+  #endif
+  #ifdef RESET
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient( PSTR("RESET"));
+  j = 1;
+  #endif
+  #ifdef MQTT
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("MQTT: "));
+  switch(mqtt_mode){
+    case 0: printToWebClient(PSTR("Disabled")); break;
+    case 1: printToWebClient(PSTR("Plain text")); break;
+    case 2: printToWebClient(PSTR("JSON")); break;
+    default: printToWebClient(PSTR("Wrong mode")); break;
+  }
+  j = 1;
+  #endif
+  if(j) printToWebClient(PSTR(", "));
+  j = 1;
+  #ifdef DEBUG
+  printToWebClient(PSTR("Verbose DEBUG: "));
+  #else
+  printToWebClient(PSTR("DEBUG: "));
+  #endif
+  switch(debug_mode){
+    case 0: printToWebClient(PSTR("Off")); break;
+    case 1: printToWebClient(PSTR("Serial")); break;
+    case 2: printToWebClient(PSTR("Telnet")); break;
+    default: printToWebClient(PSTR("Wrong mode")); break;
+  }
+  #ifdef LOGGER
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("LOGGER"));
+  j = 1;
+  #endif
+  #ifdef VERSION_CHECK
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("VERSION_CHECK: "));
+  if(enable_version_check)
+    printToWebClient(PSTR("enabled"));
+  else
+    printToWebClient(PSTR("disabled"));
+  j = 1;
+  #endif
+  if(j == 0)
+    printToWebClient(PSTR("NONE"));
+  printToWebClient(PSTR("<BR><BR>\n"));
+  // end of list of enabled modules
+
+#if defined LOGGER || defined WEBSERVER
+  uint32_t m = micros();
+  uint32_t volFree = SD.vol()->freeClusterCount();
+  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
+  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
+#endif
+#ifdef AVERAGES
+  if(logAverageValues){
+    printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\n"));
+    for (int i=0; i<numAverages; i++) {
+      if (avg_parameters[i] > 0) {
+        printFmtToWebClient(PSTR("%d - %s<BR>\n"), avg_parameters[i], lookup_descr(avg_parameters[i]));//outBuf will be overwrited here
+      }
+    }
+    printToWebClient(PSTR("<BR>"));
+  }
+#endif
+  #ifdef LOGGER
+  printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
+  printToWebClient(PSTR("<BR>Store parameters on disk: \n"));
+  printyesno(logCurrentValues);
+  printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
+  for (int i=0; i<numLogValues; i++) {
+    if (log_parameters[i] > 0) {
+      printFmtToWebClient(PSTR("%d - "), log_parameters[i]);
+      if (log_parameters[i] < 20000 || (log_parameters[i] >= 20000 && log_parameters[i] < 20006) || (log_parameters[i] >= 20100 && log_parameters[i] < 20300)) {
+        printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
+      } else {
+        if (log_parameters[i] == 20006) {
+          printToWebClient(PSTR(MENU_TEXT_24A));
+        }
+        if (log_parameters[i] == 20007) {
+          printToWebClient(PSTR(MENU_TEXT_MXI));
+        }
+        if (log_parameters[i] == 20008) {
+          printToWebClient(PSTR(MENU_TEXT_MXS));
+        }
+        if (log_parameters[i] == 20009) {
+          printToWebClient(PSTR(MENU_TEXT_MXV));
+        }
+      }
+      printToWebClient(PSTR("<BR>\n"));
+    }
+  }
+
+if (logTelegram) {
+  printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+  printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY)); //log_unknown_only
+  printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+  printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
+  }
+printToWebClient(PSTR("<BR>\n"));
+  #endif
+
+  printToWebClient(PSTR("<BR>\n"));
+
+}
 
 /** *****************************************************************
  *  Function:  GetDateTime()
@@ -3973,6 +4244,9 @@ char *build_pvalstr(boolean extended){
   len+=strlen(outBuf + len);
   strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
   len+=strlen(outBuf + len);
+  if(decodedTelegram.sensorid){
+    len+=sprintf_P(outBuf, PSTR(" #%d"), decodedTelegram.sensorid);
+  }
   strcpy_P(outBuf + len, PSTR(":"));
   len+=strlen(outBuf + len);
   }
@@ -4198,6 +4472,7 @@ void queryVirtualPrognr(int line, int table_line){
    if (line >= 20100 && line < 20200) {
 #ifdef DHT_BUS
      size_t log_sensor = (line - 20100);
+     decodedTelegram.sensorid = log_sensor;
      decodedTelegram.prognr = line;
      if(log_sensor >= sizeof(DHT_Pins) / sizeof(byte) || !DHT_Pins[log_sensor]){
        decodedTelegram.msg_type = TYPE_ERR;
@@ -4240,6 +4515,7 @@ void queryVirtualPrognr(int line, int table_line){
        undefinedValueToBuffer(decodedTelegram.value);
      return;
 #else
+   decodedTelegram.sensorid = line - 20100;
    decodedTelegram.prognr = line;
    decodedTelegram.msg_type = TYPE_ERR;
    decodedTelegram.error = 7;
@@ -4248,32 +4524,38 @@ void queryVirtualPrognr(int line, int table_line){
    }
    if (line>= 20200 && line < 20300) {
 #ifdef ONE_WIRE_BUS
-     int log_sensor = line - 20200;
-     decodedTelegram.prognr = line;
-     if(log_sensor >= numSensors){
+     if(enableOneWireBus){
+       int log_sensor = line - 20200;
+       decodedTelegram.sensorid = log_sensor;
+       decodedTelegram.prognr = line;
+       if(log_sensor >= numSensors){
+         decodedTelegram.error = 7;
+         decodedTelegram.msg_type = TYPE_ERR;
+         return;
+       }
+       unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
+       if(tempTime != lastOneWireRequestTime){
+         sensors->requestTemperatures(); //call it outside of here for more faster answers
+         lastOneWireRequestTime = tempTime;
+       }
+       float t=sensors->getTempCByIndex(log_sensor);
+       if(t == DEVICE_DISCONNECTED_C) { //device disconnected
+         decodedTelegram.error = 261;
+         undefinedValueToBuffer(decodedTelegram.value);
+         return;
+       }
+       _printFIXPOINT(decodedTelegram.value, t, 2);
+       return;
+     }
+   else
+#endif
+     {
+       decodedTelegram.sensorid = line - 20200;
        decodedTelegram.error = 7;
        decodedTelegram.msg_type = TYPE_ERR;
+       decodedTelegram.prognr = line;
        return;
      }
-     {unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-     if(tempTime != lastOneWireRequestTime){
-       sensors->requestTemperatures(); //call it outside of here for more faster answers
-       lastOneWireRequestTime = tempTime;
-     }}
-     float t=sensors->getTempCByIndex(log_sensor);
-     if(t == DEVICE_DISCONNECTED_C) { //device disconnected
-       decodedTelegram.error = 261;
-       undefinedValueToBuffer(decodedTelegram.value);
-       return;
-     }
-     _printFIXPOINT(decodedTelegram.value, t, 2);
-     return;
-#else
-   decodedTelegram.error = 7;
-   decodedTelegram.msg_type = TYPE_ERR;
-   decodedTelegram.prognr = line;
-   return;
-#endif
    }
 
    decodedTelegram.error = 7;
@@ -4602,6 +4884,13 @@ char *lookup_descr(uint16_t line) {
   return outBuf;
 }
 
+void printToWebClient_prognrdescaddr(){
+  printToWebClient(decodedTelegram.prognrdescaddr);
+  if(decodedTelegram.sensorid){
+    printFmtToWebClient(PSTR(" #%d"), decodedTelegram.sensorid);
+  }
+}
+
 #ifdef IPWE
 
 /*************************** IPWE Extension **************************************/
@@ -4635,37 +4924,41 @@ void Ipwe() {
     query(ipwe_parameters[i]);
     counter++;
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printToWebClient(decodedTelegram.prognrdescaddr);
+    printToWebClient_prognrdescaddr();
     printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
     printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
   }
 
 #ifdef AVERAGES
-  for (int i=0; i<numAverages; i++) {
-    if (avg_parameters[i] > 0) {
-      counter++;
-      uint32_t c=0;
-      loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
-      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-      printToWebClient(PSTR("<br></td><td>Avg"));
-      printToWebClient(decodedTelegram.prognrdescaddr);
-      printFmtToWebClient(PSTR("<br></td><td>%.1f&nbsp;"), (avgValues[i]));
-      printToWebClient(decodedTelegram.unit);
-      printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+  if(logAverageValues){
+    for (int i=0; i<numAverages; i++) {
+      if (avg_parameters[i] > 0) {
+        counter++;
+        uint32_t c=0;
+        loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
+        printToWebClient(PSTR("<br></td><td>Avg"));
+        printToWebClient_prognrdescaddr();
+        printFmtToWebClient(PSTR("<br></td><td>%.1f&nbsp;"), (avgValues[i]));
+        printToWebClient(decodedTelegram.unit);
+        printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
+      }
     }
   }
 #endif
 
 #ifdef ONE_WIRE_BUS
-  // output of one wire sensors
-  DeviceAddress device_address;
-  for(i=0;i<numSensors;i++){
-    query(i + 20200);
-    sensors->getAddress(device_address, i);
+  if(enableOneWireBus){
+    // output of one wire sensors
+    DeviceAddress device_address;
+    for(i=0;i<numSensors;i++){
+      query(i + 20200);
+      sensors->getAddress(device_address, i);
 
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printFmtToWebClient(PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-    printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), decodedTelegram.value);
+      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+      printFmtToWebClient(PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+      printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), decodedTelegram.value);
+    }
   }
 #endif
 
@@ -6149,7 +6442,7 @@ uint8_t pps_offset = 0;
                         printFmtToWebClient(PSTR("<BR>\n%hu - "), l);
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
-                        printToWebClient(decodedTelegram.prognrdescaddr);
+                        printToWebClient_prognrdescaddr();
                         printFmtToWebClient(PSTR("<BR>\n0x%08X"), c);
                         printToWebClient(PSTR("\n<br>\n"));
                         for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
@@ -6243,16 +6536,18 @@ uint8_t pps_offset = 0;
 
           if (p[2] == 'A'){ // print average values in JSON
 #ifdef AVERAGES
-            for (int i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) {
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
-                uint32_t c=0;
-                char p1[16];
-                loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
-                _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
-                printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
-                printToWebClient(decodedTelegram.prognrdescaddr);
-                printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
+            if(logAverageValues){
+              for (int i=0; i<numAverages; i++) {
+                if (avg_parameters[i] > 0) {
+                  if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                  uint32_t c=0;
+                  char p1[16];
+                  loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+                  _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
+                  printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
+                  printToWebClient_prognrdescaddr();
+                  printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
+                }
               }
             }
 #endif
@@ -6323,18 +6618,20 @@ uint8_t pps_offset = 0;
 
 //averages
 #ifdef AVERAGES
-            printToWebClient(PSTR(",\n  \"averages\": [\n"));
-            not_first = false;
-            for (i=0; i<numAverages; i++) {
-              if (avg_parameters[i] > 0) {
-                if(not_first)
-                  printToWebClient(PSTR(",\n"));
-                else
-                  not_first = true;
-                printFmtToWebClient(PSTR("    { \"parameter\": %d }"), avg_parameters[i]);
+            if(logAverageValues){
+              printToWebClient(PSTR(",\n  \"averages\": [\n"));
+              not_first = false;
+              for (i=0; i<numAverages; i++) {
+                if (avg_parameters[i] > 0) {
+                  if(not_first)
+                    printToWebClient(PSTR(",\n"));
+                  else
+                    not_first = true;
+                  printFmtToWebClient(PSTR("    { \"parameter\": %d }"), avg_parameters[i]);
+                }
               }
+              printToWebClient(PSTR("\n  ]"));
             }
-            printToWebClient(PSTR("\n  ]"));
 #endif
 // logged parameters
           #ifdef LOGGER
@@ -6470,8 +6767,7 @@ uint8_t pps_offset = 0;
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
                 loadPrognrElementsFromTable(i_line);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
-
-                printToWebClient(decodedTelegram.prognrdescaddr);
+                printToWebClient_prognrdescaddr();
                 printToWebClient(PSTR("\",\n"));
 
                 if (p[2]=='Q') {
@@ -6607,198 +6903,29 @@ uint8_t pps_offset = 0;
 #endif
         if (p[1]=='C'){ // dump configuration
           if(!(httpflags & 128)) webPrintHeader();
-          printToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
-//          client.println(F("BSB pins: "));
-//          client.println(bus);
-//          client.println(F("<BR><BR>"));
 
-          printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
-          printFmtToWebClient(PSTR("%d Bytes <BR>\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
-          printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
-          int bustype = bus->getBusType();
-          int i;
-          boolean not_first = false;
-
-          switch (bustype) {
-            case 0: printToWebClient(PSTR("BSB")); break;
-            case 1: printToWebClient(PSTR("LPB")); break;
-            case 2: printToWebClient(PSTR("PPS")); break;
-          }
-          if (bustype != BUS_PPS) {
-            printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
-
-            if (DEFAULT_FLAG == FL_RONLY) {
-              printToWebClient(PSTR(MENU_TEXT_BRO));
-            } else {
-              printToWebClient(PSTR(MENU_TEXT_BRW));
-            }
-          } else {
-            if (pps_write == 1) {
-              printToWebClient(PSTR(" (" MENU_TEXT_BRW ")"));
-            } else {
-              printToWebClient(PSTR(" (" MENU_TEXT_BRO ")"));
-            }
-          }
-          printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_MMD ": %d"), monitor);
-          printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
-
-          #ifdef ONE_WIRE_BUS
-          printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d, " MENU_TEXT_SNS ": %d\n<BR>\n"), One_Wire_Pin, numSensors);
-          #endif
-
-          #ifdef DHT_BUS
-          printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
-          not_first = false;
-          int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
-          for(i=0;i<numDHTSensors;i++){
-            if(DHT_Pins[i]) {
-              if(not_first)
-                printToWebClient(PSTR(", "));
-              else
-                not_first = true;
-              printFmtToWebClient(PSTR("%d"), DHT_Pins[i]);
-            }
-          }
-          printToWebClient(PSTR("\n<BR>\n"));
-          #endif
-
-          printToWebClient(PSTR(MENU_TEXT_EXP ": \n"));
-          for (i=0; i<anz_ex_gpio; i++) {
-            if(bitRead(protected_GPIO[i / 8], i % 8)){
-              printFmtToWebClient(PSTR("%d "), i);
-            }
-          }
-          printToWebClient(PSTR("<BR>\n"));
-
-          printToWebClient(PSTR(MENU_TEXT_MAC ": \n"));
-          for (int i=0; i<=5; i++) {
-            printFmtToWebClient(PSTR("%02X"), mac[i]);
-            if(i != 5) printToWebClient(PSTR(":"));
-          }
-          printToWebClient(PSTR("<BR><BR>\n"));
-/*
-          client.println(F("IP address: "));
-          client.println(ip);
-          client.println(F("<BR>"));
-*/
-// list of enabled modules
-          printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\n"));
-          boolean j = 0;
-          #ifdef WEBSERVER
-          printToWebClient(PSTR("WEBSERVER"));
-          j = 1;
-          #endif
-          #ifdef IPWE
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient(PSTR("IPWE"));
-          j = 1;
-          #endif
-          #ifdef CUSTOM_COMMANDS
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient(PSTR("CUSTOM_COMMANDS"));
-          j = 1;
-          #endif
-          #ifdef RESET
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient( PSTR("RESET"));
-          j = 1;
-          #endif
-          #ifdef MQTT
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient(PSTR("MQTT: "));
-          switch(mqtt_mode){
-            case 0: printToWebClient(PSTR("Disabled")); break;
-            case 1: printToWebClient(PSTR("Plain text")); break;
-            case 2: printToWebClient(PSTR("JSON")); break;
-            default: printToWebClient(PSTR("Wrong mode")); break;
-          }
-          j = 1;
-          #endif
-          if(j) printToWebClient(PSTR(", "));
-          j = 1;
-          #ifdef DEBUG
-          printToWebClient(PSTR("Verbose DEBUG: "));
-          #else
-          printToWebClient(PSTR("DEBUG: "));
-          #endif
-          switch(debug_mode){
-            case 0: printToWebClient(PSTR("Off")); break;
-            case 1: printToWebClient(PSTR("Serial")); break;
-            case 2: printToWebClient(PSTR("Telnet")); break;
-            default: printToWebClient(PSTR("Wrong mode")); break;
-          }
-          #ifdef LOGGER
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient(PSTR("LOGGER"));
-          j = 1;
-          #endif
-          #ifdef VERSION_CHECK
-          if(j) printToWebClient(PSTR(", "));
-          printToWebClient(PSTR("VERSION_CHECK: "));
-          if(enable_version_check)
-            printToWebClient(PSTR("enabled"));
-          else
-            printToWebClient(PSTR("disabled"));
-          j = 1;
-          #endif
-          if(j == 0)
-            printToWebClient(PSTR("NONE"));
-          printToWebClient(PSTR("<BR><BR>\n"));
-          // end of list of enabled modules
-
-#if defined LOGGER || defined WEBSERVER
-          uint32_t m = micros();
-          uint32_t volFree = SD.vol()->freeClusterCount();
-          uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-          printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
-#endif
-#ifdef AVERAGES
-          printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\n"));
-          for (int i=0; i<numAverages; i++) {
-            if (avg_parameters[i] > 0) {
-              printFmtToWebClient(PSTR("%d - %s<BR>\n"), avg_parameters[i], lookup_descr(avg_parameters[i]));//outBuf will be overwrited here
-            }
-          }
-          printToWebClient(PSTR("<BR>"));
-#endif
-          #ifdef LOGGER
-          printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
-          printToWebClient(PSTR("<BR>Store parameters on disk: \n"));
-          printyesno(logCurrentValues);
-          printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
-          for (int i=0; i<numLogValues; i++) {
-            if (log_parameters[i] > 0) {
-              printFmtToWebClient(PSTR("%d - "), log_parameters[i]);
-              if (log_parameters[i] < 20000 || (log_parameters[i] >= 20000 && log_parameters[i] < 20006) || (log_parameters[i] >= 20100 && log_parameters[i] < 20300)) {
-                printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
-              } else {
-                if (log_parameters[i] == 20006) {
-                  printToWebClient(PSTR(MENU_TEXT_24A));
+          switch(p[2]){
+            case 'E':
+              if (p[3]=='='){
+                if (p[4]=='1') { //Use EEPROM
+                  UseEEPROM = 0x96;
+                } else {   //Use _config.h
+                  UseEEPROM = 0;
                 }
-                if (log_parameters[i] == 20007) {
-                  printToWebClient(PSTR(MENU_TEXT_MXI));
-                }
-                if (log_parameters[i] == 20008) {
-                  printToWebClient(PSTR(MENU_TEXT_MXS));
-                }
-                if (log_parameters[i] == 20009) {
-                  printToWebClient(PSTR(MENU_TEXT_MXV));
-                }
+//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+                printyesno(UseEEPROM) ;
               }
-              printToWebClient(PSTR("<BR>\n"));
+              break;
+            case 'S': //save config to EEPROM
+                for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+                  writeToEEPROM(i);
+                }
+//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+//                printyesno(UseEEPROM) ;
+              break;
+              default: generateConfigPage(); break;
             }
-          }
 
-        if (logTelegram) {
-          printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
-          printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY)); //log_unknown_only
-          printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-          printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
-          }
-        printToWebClient(PSTR("<BR>\n"));
-          #endif
-
-          printToWebClient(PSTR("<BR>\n"));
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
 
@@ -6814,6 +6941,17 @@ uint8_t pps_offset = 0;
         if (p[1]=='L'){
           webPrintHeader();
           switch(p[2]){
+            case 'C':
+              if (p[3]=='='){
+                if (p[4]=='1') {
+                  logCurrentValues = true;
+                } else {
+                  logCurrentValues = false;
+                }
+//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+                printyesno(logCurrentValues) ;
+              }
+              break;
             case 'B':
               if (p[3]=='='){
                 if (p[4]=='1') {
@@ -6969,7 +7107,8 @@ uint8_t pps_offset = 0;
         while(range!=0){
           if(range[0]=='T'){
 #ifdef ONE_WIRE_BUS
-            ds18b20();
+            if(enableOneWireBus)
+              ds18b20();
 #endif
 #ifdef DHT_BUS
             dht22();
@@ -7006,44 +7145,51 @@ uint8_t pps_offset = 0;
 #endif
           }else if(range[0]=='A') { // handle average command
 #ifdef AVERAGES
-            if (range[1]=='=') {
-              char* avg_token = strtok(range,"=,");  // drop everything before "="
-              avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
-              int token_counter = 0;
-              if (avg_token != 0) {
-                for (int i=0;i<numAverages;i++) {
-                  avg_parameters[i] = 0;
-                  avgValues[i] = 0;
-                  avgValues_Old[i] = -9999;
-                  avgValues_Current[i] = 0;
+            if (range[1]=='D') { //Disable 24h average calculation temporarily
+              logAverageValues = false;
+            } else if (range[1]=='E') {  //Enable 24h average calculation temporarily
+              logAverageValues = true;
+            }
+            if(logAverageValues){
+              if (range[1]=='=') {
+                char* avg_token = strtok(range,"=,");  // drop everything before "="
+                avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
+                int token_counter = 0;
+                if (avg_token != 0) {
+                  for (int i=0;i<numAverages;i++) {
+                    avg_parameters[i] = 0;
+                    avgValues[i] = 0;
+                    avgValues_Old[i] = -9999;
+                    avgValues_Current[i] = 0;
+                  }
+                  avgCounter = 1;
+  #ifdef LOGGER
+                  SD.remove(averagesFileName);
+  #endif
+                  printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
-                avgCounter = 1;
-#ifdef LOGGER
-                SD.remove(averagesFileName);
-#endif
-                printToWebClient(PSTR(MENU_TEXT_24N ": "));
-              }
-              while (avg_token!=0) {
-                if (token_counter < numAverages) {
-                  avg_parameters[token_counter] = atoi(avg_token);
-                  printFmtToWebClient(PSTR("%d \n"), avg_parameters[token_counter]);
-                  token_counter++;
+                while (avg_token!=0) {
+                  if (token_counter < numAverages) {
+                    avg_parameters[token_counter] = atoi(avg_token);
+                    printFmtToWebClient(PSTR("%d \n"), avg_parameters[token_counter]);
+                    token_counter++;
+                  }
+                  avg_token = strtok(NULL,"=,");
                 }
-                avg_token = strtok(NULL,"=,");
-              }
-            } else {
-              for (int i=0; i<numAverages; i++) {
-                if (avg_parameters[i] > 0) {
-                  char tempBuf[10];
-                  _printFIXPOINT(tempBuf,avgValues[i],1);
-                  uint32_t c=0;
-                  int line=findLine(avg_parameters[i],0,&c);
-                  loadPrognrElementsFromTable(line);
-                  printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
-                  printToWebClient(decodedTelegram.prognrdescaddr);
-                  printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
+              } else {
+                for (int i=0; i<numAverages; i++) {
+                  if (avg_parameters[i] > 0) {
+                    char tempBuf[10];
+                    _printFIXPOINT(tempBuf,avgValues[i],1);
+                    uint32_t c=0;
+                    int line=findLine(avg_parameters[i],0,&c);
+                    loadPrognrElementsFromTable(line);
+                    printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
+                    printToWebClient_prognrdescaddr();
+                    printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
-                  printFmtToDebug(PSTR("#avg_%d: %s %s\r\n"), avg_parameters[i], tempBuf, decodedTelegram.unit);
+                    printFmtToDebug(PSTR("#avg_%d: %s %s\r\n"), avg_parameters[i], tempBuf, decodedTelegram.unit);
+                  }
                 }
               }
             }
@@ -7307,22 +7453,28 @@ uint8_t pps_offset = 0;
             dataFile.println(decodedTelegram.unit);
           } else {
 #ifdef AVERAGES
-            if (log_parameters[i] == 20006) {
-              for (int i=0; i<numAverages; i++) {
-                if (avg_parameters[i] > 0) {
-                  printTrailToFile(&dataFile);
-                  uint32_t c=0;
-                  int line=findLine(avg_parameters[i],0,&c);
-                  loadPrognrElementsFromTable(line);
-                  dataFile.print(avg_parameters[i]);
-                  dataFile.print(F(";Avg_"));
-                  dataFile.print(lookup_descr(avg_parameters[i])); //outBuf will be overwrited here
-//                  dataFile.print(decodedTelegram.prognrdescaddr);
-                  dataFile.print(F(";"));
-                  float rounded = round(avgValues[i]*10);
-                  dataFile.print(rounded/10);
-                  dataFile.print(F(";"));
-                  dataFile.println(decodedTelegram.unit);
+            if(logAverageValues){
+              if (log_parameters[i] == 20006) {
+                for (int i=0; i<numAverages; i++) {
+                  if (avg_parameters[i] > 0) {
+                    printTrailToFile(&dataFile);
+                    uint32_t c=0;
+                    int line=findLine(avg_parameters[i],0,&c);
+                    loadPrognrElementsFromTable(line);
+                    dataFile.print(avg_parameters[i]);
+                    dataFile.print(F(";Avg_"));
+                    dataFile.print(lookup_descr(avg_parameters[i])); //outBuf will be overwrited here
+                    if(decodedTelegram.sensorid){
+                      dataFile.print(F("#%d"));
+                      dataFile.print(decodedTelegram.sensorid);
+                    }
+  //                  dataFile.print(decodedTelegram.prognrdescaddr);
+                    dataFile.print(F(";"));
+                    float rounded = round(avgValues[i]*10);
+                    dataFile.print(rounded/10);
+                    dataFile.print(F(";"));
+                    dataFile.println(decodedTelegram.unit);
+                  }
                 }
               }
             }
@@ -7367,51 +7519,54 @@ uint8_t pps_offset = 0;
 
 // Calculate 24h averages
 #ifdef AVERAGES
-  if (millis() / 60000 != lastAvgTime) {
-
-    if (avgCounter == 1441) {
-      for (int i=0; i<numAverages; i++) {
-        avgValues_Old[i] = avgValues[i];
-        avgValues_Current[i] = 0;
-      }
-      avgCounter = 1;
-    }
-    for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i] > 0) {
-        query(avg_parameters[i]);
-        float reading = strtod(decodedTelegram.value,NULL);
-        printFmtToDebug(PSTR("%f\r\n"), reading);
-        if (isnan(reading)) {} else {
-          avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
-          if (avgValues_Old[i] == -9999) {
-            avgValues[i] = avgValues_Current[i];
-          } else {
-            avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
-          }
-        }
-        printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
-      }
-    }
-    avgCounter++;
-    lastAvgTime = millis() / 60000;
-
-#ifdef LOGGER
-
-// write averages to SD card to protect from power off
-    if (avg_parameters[0] > 0) { //write averages if at least one value is set
-      File avgfile = SD.open(averagesFileName, FILE_WRITE);
-      if (avgfile) {
-        avgfile.seek(0);
+  if (logAverageValues){
+    if(millis() / 60000 != lastAvgTime) {
+      if (avgCounter == 1441) {
         for (int i=0; i<numAverages; i++) {
-          avgfile.println(avgValues[i]);
-          avgfile.println(avgValues_Old[i]);
-          avgfile.println(avgValues_Current[i]);
+          avgValues_Old[i] = avgValues[i];
+          avgValues_Current[i] = 0;
         }
-        avgfile.println(avgCounter);
-        avgfile.close();
+        avgCounter = 1;
       }
-    }
-#endif
+      for (int i=0; i<numAverages; i++) {
+        if (avg_parameters[i] > 0) {
+          query(avg_parameters[i]);
+          float reading = strtod(decodedTelegram.value,NULL);
+          printFmtToDebug(PSTR("%f\r\n"), reading);
+          if (isnan(reading)) {} else {
+            avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
+            if (avgValues_Old[i] == -9999) {
+              avgValues[i] = avgValues_Current[i];
+            } else {
+              avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
+            }
+          }
+          printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
+        }
+      }
+      avgCounter++;
+      lastAvgTime = millis() / 60000;
+
+  #ifdef LOGGER
+
+  // write averages to SD card to protect from power off
+      if (avg_parameters[0] > 0) { //write averages if at least one value is set
+        File avgfile = SD.open(averagesFileName, FILE_WRITE);
+        if (avgfile) {
+          avgfile.seek(0);
+          for (int i=0; i<numAverages; i++) {
+            avgfile.println(avgValues[i]);
+            avgfile.println(avgValues_Old[i]);
+            avgfile.println(avgValues_Current[i]);
+          }
+          avgfile.println(avgCounter);
+          avgfile.close();
+        }
+      }
+  #endif
+  }
+  } else {
+    avgCounter = 0;
   }
 #endif
 
@@ -7709,12 +7864,101 @@ void setup() {
     }
   }
 
+//Read config parameters from EEPROM
+#ifdef WEBCONFIG
+
+uint8_t EEPROMversion = 0;
+uint32_t crc;
+//Read "Header"
+initConfigTable(0);
+registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
+registerConfigVariable(CF_VERSION, (byte *)&EEPROMversion);
+registerConfigVariable(CF_CRC32, (byte *)&crc);
+readFromEEPROM(CF_USEEEPROM);
+if(UseEEPROM == 0x96){
+  readFromEEPROM(CF_VERSION);
+  readFromEEPROM(CF_CRC32);
+  if(crc == initConfigTable(EEPROMversion)){
+//link parameters
+registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
+registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
+registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
+registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
+registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
+registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
+registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
+registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
+registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
+registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
+#if !defined(__AVR__)
+    registerConfigVariable(CF_MAC, (byte *)mac);
+    registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
+    registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
+    registerConfigVariable(CF_MASK, (byte *)subnet_addr);
+    registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
+    registerConfigVariable(CF_DNS, (byte *)dns_addr);
+    registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
+    registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
+    registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+    registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
+    registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+//    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
+    registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
+    registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
+    registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
+    registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
+    registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
+    registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
+    registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
+//    registerConfigVariable(CF_READONLY, (byte *)mac);
+//    registerConfigVariable(CF_DEBUG, (byte *)mac);
+    registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
+    registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+    registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
+    registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
+    registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
+    registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+#endif
+
+//read parameters
+    for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+      readFromEEPROM(i);
+    }
+
+//calculate maximal version
+    uint8_t maxconfversion = 0;
+    for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+#if defined(__AVR__)
+      if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+#else
+      if(config[i].version > maxconfversion) maxconfversion = config[i].version;
+#endif
+    }
+
+
+    if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+      crc = initConfigTable(maxconfversion); //store new CRC32
+      EEPROMversion = maxconfversion; //store new version
+      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+        writeToEEPROM(i);
+      }
+    }
+    unregisterConfigVariable(CF_VERSION);
+    unregisterConfigVariable(CF_CRC32);
+  }
+}
+
+#endif
+
 #ifdef ONE_WIRE_BUS
-  printlnToDebug(PSTR("Init One Wire bus..."));
-  // Setup a oneWire instance to communicate with any OneWire devices
-  OneWire oneWire(One_Wire_Pin);
-  // Pass our oneWire reference to Dallas Temperature.
-  sensors = new DallasTemperature(&oneWire);
+  if(enableOneWireBus){
+    printlnToDebug(PSTR("Init One Wire bus..."));
+    // Setup a oneWire instance to communicate with any OneWire devices
+    OneWire oneWire(One_Wire_Pin);
+    // Pass our oneWire reference to Dallas Temperature.
+    sensors = new DallasTemperature(&oneWire);
+  }
 #endif
 
 #if defined LOGGER || defined WEBSERVER
@@ -7741,29 +7985,26 @@ void setup() {
 
   // start the Ethernet connection and the server:
 #ifndef WIFI
-  if(ip_addr[0] && !useDHCP){
-    IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
-    if(gateway_addr[0]){
-      IPAddress gateway(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
-      IPAddress dnsserver;
-      if(dns_addr[0]){
-        IPAddress temp(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
-        dnsserver = temp;
-      }
-      else
-        dnsserver = gateway;
+    if(!useDHCP && ip_addr[0]){
+      IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
+      Ethernet.begin(mac, ip);
+//      Ethernet.setLocalIP(ip);
       if(subnet_addr[0]){
         IPAddress subnet(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
-        Ethernet.begin(mac, ip, gateway, dnsserver, subnet);
+        Ethernet.setSubnetMask(subnet);
       }
-      else
-        Ethernet.begin(mac, ip, gateway, dnsserver);
+      if(gateway_addr[0]){
+        IPAddress gateway(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
+        Ethernet.setGatewayIP(gateway);
+        if(!dns_addr[0]) Ethernet.setDnsServerIP(gateway);
       }
-    else
-      Ethernet.begin(mac, ip);
-  }
-  else
-    Ethernet.begin(mac);
+      if(dns_addr[0]){
+        IPAddress dnsserver(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+        Ethernet.setDnsServerIP(dnsserver);
+      }
+    } else {
+      Ethernet.begin(mac);
+    }
 #endif
 
 if(ip_addr[0] && !useDHCP){
@@ -7820,10 +8061,12 @@ if(debug_mode == 2)
   telnetServer->begin();
 
 #ifdef ONE_WIRE_BUS
-  // check ds18b20 sensors
-  sensors->begin();
-  numSensors=sensors->getDeviceCount();
-  printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
+  if(enableOneWireBus){
+    // check ds18b20 sensors
+    sensors->begin();
+    numSensors=sensors->getDeviceCount();
+    printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
+  }
 #endif
 
 /*
