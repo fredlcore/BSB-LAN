@@ -2797,7 +2797,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
-            case VT_POWER_WORD100: // u16 / 100.0 kW           
+            case VT_POWER_WORD100: // u16 / 100.0 kW
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100
             case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
@@ -3053,7 +3053,6 @@ void webPrintHeader(void){
   printPassKey();
   printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
   printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
-#ifdef PASSKEY
   printPassKey();
   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
