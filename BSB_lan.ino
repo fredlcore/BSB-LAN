@@ -2801,13 +2801,13 @@ void webPrintHeader(void){
   printPassKey();
 #endif
   printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
-  printToWebClient(PSTR("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
+  printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
 #ifdef PASSKEY
   printPassKey();
 #endif
   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-  printToWebClient(PSTR("</a></td><td width=20% align=center>"));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
 #ifdef PASSKEY
@@ -2815,7 +2815,7 @@ void webPrintHeader(void){
 #endif
   printToWebClient(PSTR("T'>" MENU_TEXT_SNS "</a>"));
 
-  printToWebClient(PSTR("</td><td width=20% align=center>"));
+  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
 
 #ifndef LOGGER
   printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
@@ -2827,7 +2827,7 @@ void webPrintHeader(void){
   printToWebClient(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
 #endif
 
-  printToWebClient(PSTR("</td><td width=20% align=center>"));
+  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
 #ifdef PASSKEY
@@ -2836,7 +2836,7 @@ void webPrintHeader(void){
   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
 
   printToWebClient(PSTR("</td></tr>\n"));
-  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td width=20% align=center>"));
+  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
 #ifdef PASSKEY
@@ -2845,12 +2845,12 @@ void webPrintHeader(void){
   printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
 //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td width=20% align=center>"));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
+  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  printToWebClient(PSTR("</tr></table><p></p><table align=center width=80%><tr><td>\n"));
+  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\n"));
   flushToWebClient();
 } // --- webPrintHeader() ---
 
