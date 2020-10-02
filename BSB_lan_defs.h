@@ -140,7 +140,7 @@
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
 #define DEV_206_ALL  206,255 // AVS74.261/109
-#define DEV_206_ALL  209,255 // QAA74.611/101
+#define DEV_209_ALL  209,255 // QAA74.611/101
 #define DEV_211_ALL  211,255 // Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteidentifikation: RVS21.831F/127)
 #define DEV_ALL      255,255 // All devices
 #define DEV_NONE     0,0
