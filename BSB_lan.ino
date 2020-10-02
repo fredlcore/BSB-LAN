@@ -393,9 +393,7 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
-#ifdef WEBCONFIG
 #include <CRC32.h>
-#endif
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #ifdef MQTT
@@ -585,7 +583,6 @@ uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
 
-#ifdef WEBCONFIG
 byte UseEEPROM = 0;
 
 typedef enum{
@@ -593,6 +590,9 @@ typedef enum{
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
   CF_VERSION, //Size: 2 byte. Config version
   CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
+  CF_MAX_DEVICES, //Size 11 * 20 bytes.
+  CF_MAX_DEVADDR, //Size 4 * 20 bytes.
+  CF_PPS_VALUES, //
 // Version 1 (parameters which can be changed by URL commands)
   CF_BUSTYPE, //Size: 1 byte. Bus type at start (DROPDOWN selector)
   CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42)
@@ -605,7 +605,7 @@ typedef enum{
   CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
   CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
   CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-// Version 2
+// Version 2 (Web-config)
   CF_MAC, //Size: 6 bytes. MAC address
   CF_DHCP, //Size: 1 byte. DHCP: 0 - disabled, 1 - enabled
   CF_IPADDRESS, //Size: 4 bytes. IP v4 address
@@ -624,7 +624,6 @@ typedef enum{
   CF_IPWEVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
   CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
-  CF_MAX_DEVICES, //Size 10 * 40 bytes.
   CF_READONLY, //Size: 1 byte. All parameters will be FL_RONLY
   CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
   CF_MQTT, //Size: 1 byte. MQTT: 0 - disabled, 1 - enabled, plain text, 2 - enabled, JSON
@@ -634,7 +633,6 @@ typedef enum{
   CF_MQTT_TOPIC, //Size: 32 bytes.
   CF_MQTT_DEVICE //Size: 32 bytes.
 } cf_params;
-
 
 //according to input_type in configuration_struct
 typedef enum {
@@ -731,6 +729,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(bus_type)},
   {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(bus_type)},
   {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(bus_type)},
+#ifdef WEBCONFIG
   {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_MAC_TXT, sizeof(mac)},
   {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
   {CF_IPADDRESS,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_IPADDRESS_TXT, sizeof(ip_addr)},
@@ -740,12 +739,14 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_WWWPORT,          2, true,  CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         CF_WWWPORT_TXT, sizeof(HTTPPort)},
   {CF_TRUSTEDIPADDRESS, 2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)},
   {CF_TRUSTEDIPADDRESS2,2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},
+#endif
   {CF_LOGTELEGRAM,      1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},
   {CF_LOGAVERAGES,      1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},
   {CF_AVERAGESLIST,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},
   {CF_LOGCURRVALUES,    1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},
   {CF_LOGCURRINTERVAL,  1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_UINT32,         CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},
   {CF_CURRVALUESLIST,   1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_CURRVALUESLIST_TXT, sizeof(log_parameters)},
+#ifdef WEBCONFIG
   {CF_PASSKEY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},
   {CF_BASICAUTH,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},
   {CF_WEBSERVER,        2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
@@ -756,15 +757,22 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_IPWEVALUESLIST,   2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},
   {CF_MAX,              2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},
   {CF_MAX_IPADDRESS,    2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)},
-  {CF_MAX_DEVICES,      2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
-  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,            CF_READONLY_TXT, 1},
-  {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,            CF_DEBUG_TXT, 1},
-  {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,            CF_MQTT_TXT, sizeof(mqtt_mode)},
-  {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,            CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},
-  {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},
-  {CF_MQTT_PASSWORD,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},
-  {CF_MQTT_TOPIC,       2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},
-  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,          CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}
+#endif
+#ifdef MAX_CUL
+  {CF_MAX_DEVICES,      0, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
+  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(max_devices)},
+#endif
+  {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)},
+#ifdef WEBCONFIG
+  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, 1},
+  {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_DEBUG_TXT, 1},
+  {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           CF_MQTT_TXT, sizeof(mqtt_mode)},
+  {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},
+  {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},
+  {CF_MQTT_PASSWORD,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},
+  {CF_MQTT_TOPIC,       2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},
+  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}
+#endif
 };
 
 static int baseConfigAddrInEEPROM = 1024; // first Kb used by MAX!
@@ -804,6 +812,10 @@ void registerConfigVariable(uint8_t id, byte *ptr){
 void unregisterConfigVariable(uint8_t id){
   options[id].option_address = NULL;
 }
+uint16_t getEEPROMaddress(uint8_t id){
+  return options[id].eeprom_address;
+}
+
 void readFromEEPROM(uint8_t id){
   if (!EEPROM_ready) return;
   if(!options[id].option_address) return;
@@ -844,7 +856,6 @@ boolean writeToEEPROM(uint8_t id){
   }
   return EEPROMwasChanged;
 }
-#endif
 
 #include "bsb-version.h"
 #define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
@@ -3639,7 +3650,7 @@ int set(int line      // the ProgNr of the heater parameter
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %du"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
-      EEPROM.put(sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
+      EEPROM.put(getEEPROMaddress(CF_PPS_VALUES) + sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
     }
     return 1;
   }
@@ -5014,14 +5025,15 @@ void InitMaxDeviceList() {
 
   char max_id_eeprom[11] = { 0 };
   int32_t max_addr = 0;
+
   for (uint16_t x=0;x< MAX_CUL_DEVICES;x++) {
     for (uint16_t z=0;z<MAX_CUL_DEVICES;z++) {
       if (EEPROM_ready) {
-        EEPROM.get(500 + 15 * z + 4, max_id_eeprom);
+        EEPROM.get(getEEPROMaddress(CF_MAX_DEVICES) + 11 * z, max_id_eeprom);
       }
       if (!strcmp(max_device_list[x], max_id_eeprom)) {
         if (EEPROM_ready) {
-          EEPROM.get(500 + 15 * z, max_addr);
+          EEPROM.get(getEEPROMaddress(CF_MAX_DEVADDR) + 4 * z, max_addr);
         }
         max_devices[x] = max_addr;
         printFmtToDebug(PSTR("Adding known Max ID to list:\r\n%08lX\r\n"), max_devices[x]);
@@ -7637,10 +7649,8 @@ uint8_t pps_offset = 0;
         max_id[10] = '\0';
         printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
-        int32_t max_addr_temp=0;
         for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
-          EEPROM.get(500 + 15 * x, max_addr_temp);
-          if (max_addr_temp == max_addr) {
+          if (max_devices[x] == max_addr) {
             printlnToDebug(PSTR("Device already in EEPROM"));
             known_eeprom = true;
             break;
@@ -7649,10 +7659,9 @@ uint8_t pps_offset = 0;
 
         if (!known_eeprom) {
           for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
-            EEPROM.get(500+15*x, max_addr_temp);
-            if (max_addr_temp < 1) {
-              EEPROM.put(500+15*x, max_addr);
-              EEPROM.put(500+15*x+4, max_id);
+            if (max_devices[x] < 1) {
+              strcpy(max_device_list[x], max_id);
+              max_devices[x] = max_addr;
 /*
               int32_t temp1;
               char temp2[11] = { 0 };
@@ -7661,6 +7670,8 @@ uint8_t pps_offset = 0;
               DebugOutput.println(temp1, HEX);
               DebugOutput.println(temp2);
 */
+              writeToEEPROM(CF_MAX_DEVICES);
+              writeToEEPROM(CF_MAX_DEVADDR);
               printlnToDebug(PSTR("Device stored in EEPROM"));
               InitMaxDeviceList();
               break;
@@ -7776,6 +7787,108 @@ void setup() {
 #endif
 
   SerialOutput->println(F("READY"));
+
+  //Read config parameters from EEPROM
+  SerialOutput->print(F("Reading EEPROM..."));
+  uint8_t EEPROMversion = 0;
+  uint32_t crc;
+  //Read "Header"
+  initConfigTable(0);
+#ifdef MAX_CUL
+  registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
+  registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
+#endif
+  registerConfigVariable(CF_PPS_VALUES, (byte *)pps_values);
+  registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
+  registerConfigVariable(CF_VERSION, (byte *)&EEPROMversion);
+  registerConfigVariable(CF_CRC32, (byte *)&crc);
+
+  readFromEEPROM(CF_PPS_VALUES);
+
+  readFromEEPROM(CF_USEEEPROM);
+  if(UseEEPROM == 0x96){
+    readFromEEPROM(CF_VERSION);
+    readFromEEPROM(CF_CRC32);
+    if(crc == initConfigTable(EEPROMversion)){
+  //link parameters
+      registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
+      registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
+      registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
+      registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
+      registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+      registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
+      registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
+      registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
+      registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
+      registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
+      registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
+  #ifdef WEBCONFIG
+      registerConfigVariable(CF_MAC, (byte *)mac);
+      registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
+      registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
+      registerConfigVariable(CF_MASK, (byte *)subnet_addr);
+      registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
+      registerConfigVariable(CF_DNS, (byte *)dns_addr);
+      registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
+      registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
+      registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+      registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
+      registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+  //    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
+      registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
+      registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
+      registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
+      registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
+      registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
+      registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
+      registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
+  //    registerConfigVariable(CF_READONLY, (byte *)mac);
+  //    registerConfigVariable(CF_DEBUG, (byte *)mac);
+      registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
+      registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+      registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
+      registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
+      registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
+      registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  #endif
+
+  //read parameters
+      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+  //read if parameter version is non-zero
+#if defined(__AVR__)
+        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0) readFromEEPROM(i);
+#else
+        if(config[i].version > 0) readFromEEPROM(i);
+#endif
+      }
+
+  //calculate maximal version
+      uint8_t maxconfversion = 0;
+      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+  #if defined(__AVR__)
+        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+  #else
+        if(config[i].version > maxconfversion) maxconfversion = config[i].version;
+  #endif
+      }
+
+
+      if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+        crc = initConfigTable(maxconfversion); //store new CRC32
+        EEPROMversion = maxconfversion; //store new version
+        for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+          writeToEEPROM(i);
+        }
+      }
+      unregisterConfigVariable(CF_VERSION);
+      unregisterConfigVariable(CF_CRC32);
+    }
+  }
+
+  SerialOutput->print(F("done.\n"));
+
+
+
   if(debug_mode == 2)
     SerialOutput->println(F("Logging output to Telnet"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
@@ -7851,7 +7964,7 @@ void setup() {
   printWifiStatus();
 #endif
 
-  printlnToDebug(PSTR("Reading EEPROM..."));
+/*  printlnToDebug(PSTR("Reading EEPROM..."));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     uint16_t f=0;
     if (EEPROM_ready) {
@@ -7863,93 +7976,7 @@ void setup() {
       pps_values[i] = f;
     }
   }
-
-//Read config parameters from EEPROM
-#ifdef WEBCONFIG
-
-uint8_t EEPROMversion = 0;
-uint32_t crc;
-//Read "Header"
-initConfigTable(0);
-registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
-registerConfigVariable(CF_VERSION, (byte *)&EEPROMversion);
-registerConfigVariable(CF_CRC32, (byte *)&crc);
-readFromEEPROM(CF_USEEEPROM);
-if(UseEEPROM == 0x96){
-  readFromEEPROM(CF_VERSION);
-  readFromEEPROM(CF_CRC32);
-  if(crc == initConfigTable(EEPROMversion)){
-//link parameters
-registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
-registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
-registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
-registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
-registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
-registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
-registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
-registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
-registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
-registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
-registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
-#if !defined(__AVR__)
-    registerConfigVariable(CF_MAC, (byte *)mac);
-    registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
-    registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
-    registerConfigVariable(CF_MASK, (byte *)subnet_addr);
-    registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
-    registerConfigVariable(CF_DNS, (byte *)dns_addr);
-    registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
-    registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
-    registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
-    registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
-    registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
-//    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
-    registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
-    registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
-    registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
-    registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
-    registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
-    registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
-    registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
-//    registerConfigVariable(CF_READONLY, (byte *)mac);
-//    registerConfigVariable(CF_DEBUG, (byte *)mac);
-    registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
-    registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
-    registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
-    registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
-    registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
-    registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
-#endif
-
-//read parameters
-    for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-      readFromEEPROM(i);
-    }
-
-//calculate maximal version
-    uint8_t maxconfversion = 0;
-    for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-#if defined(__AVR__)
-      if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
-#else
-      if(config[i].version > maxconfversion) maxconfversion = config[i].version;
-#endif
-    }
-
-
-    if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
-      crc = initConfigTable(maxconfversion); //store new CRC32
-      EEPROMversion = maxconfversion; //store new version
-      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-        writeToEEPROM(i);
-      }
-    }
-    unregisterConfigVariable(CF_VERSION);
-    unregisterConfigVariable(CF_CRC32);
-  }
-}
-
-#endif
+*/
 
 #ifdef ONE_WIRE_BUS
   if(enableOneWireBus){
