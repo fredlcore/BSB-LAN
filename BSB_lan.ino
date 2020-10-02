@@ -7157,10 +7157,11 @@ uint8_t pps_offset = 0;
 #endif
           }else if(range[0]=='A') { // handle average command
 #ifdef AVERAGES
-            if (range[1]=='D') { //Disable 24h average calculation temporarily
-              logAverageValues = false;
-            } else if (range[1]=='E') {  //Enable 24h average calculation temporarily
-              logAverageValues = true;
+            if (range[1]=='C' && range[2]=='=') { //24h average calculation on/off
+              if (range[3]=='0') //Disable 24h average calculation temporarily
+                logAverageValues = false;
+              else  //Enable 24h average calculation temporarily
+                logAverageValues = true;
             }
             if(logAverageValues){
               if (range[1]=='=') {
