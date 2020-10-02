@@ -1715,6 +1715,7 @@ char *TranslateAddr(byte addr, char *device){
     case ADDR_DISP: p = PSTR("DISP"); break;
     case ADDR_OZW: p = PSTR("OZW"); break;
     case ADDR_FE: p = PSTR("FE"); break;
+    case ADDR_RC: p = PSTR("REMO"); break;
     case ADDR_ALL: p = PSTR("ALL "); break;
     default: sprintf_P(device, PSTR("%02X"), addr); break;
   }
@@ -2796,7 +2797,10 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
+            case VT_POWER_WORD100: // u16 / 100.0 kW           
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
+            case VT_SPF: // u16 / 100
+            case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
             case VT_CURRENT: // u16 / 100 uA
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
@@ -2806,6 +2810,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
+            case VT_POWER100: //u32 / 100 kW
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100:  // u32 / 100
             case VT_UINT5: //  u16 / 5
@@ -3047,17 +3052,18 @@ void webPrintHeader(void){
 
   printPassKey();
   printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
-  printToWebClient(PSTR("<table width=80% align=center><tr bgcolor=#f0f0f0><td width=20% align=center><a href='/"));
+  printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
+#ifdef PASSKEY
   printPassKey();
   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-  printToWebClient(PSTR("</a></td><td width=20% align=center>"));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
   printPassKey();
   printToWebClient(PSTR("T'>" MENU_TEXT_SNS "</a>"));
 
-  printToWebClient(PSTR("</td><td width=20% align=center>"));
+  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
 
   if(!logCurrentValues)
   printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
@@ -3067,26 +3073,26 @@ void webPrintHeader(void){
   printToWebClient(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
   }
 
-  printToWebClient(PSTR("</td><td width=20% align=center>"));
+  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
   printPassKey();
   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
 
   printToWebClient(PSTR("</td></tr>\n"));
-  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td width=20% align=center>"));
+  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
   printPassKey();
   printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
 //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td width=20% align=center>"));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
+  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  printToWebClient(PSTR("</tr></table><p></p><table align=center width=80%><tr><td>\n"));
+  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\n"));
   flushToWebClient();
 } // --- webPrintHeader() ---
 
