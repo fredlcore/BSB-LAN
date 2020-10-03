@@ -468,18 +468,13 @@ PubSubClient MQTTClient(client);
 #endif
 boolean haveTelnetClient = false;
 
-#ifdef MAX_CUL
 #define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
+#ifdef MAX_CUL
 uint16_t max_cur_temp[MAX_CUL_DEVICES] = { 0 };
 uint8_t max_dst_temp[MAX_CUL_DEVICES] = { 0 };
 int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #endif
-/*
-int16_t json_parameters[20] = { -1 , -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
-double json_values[20] = { 0 };
-uint8_t json_types[20] = { 0 };
-*/
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
 // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
@@ -503,15 +498,13 @@ uint8_t json_types[20] = { 0 };
   DallasTemperature *sensors;
   uint8_t numSensors;
   unsigned long lastOneWireRequestTime = 0;
-  #define ONE_WIRE_REQUESTS_PERIOD 15000 //sensors->requestTemperatures() calling period
+  #define ONE_WIRE_REQUESTS_PERIOD 25000 //sensors->requestTemperatures() calling period
 #endif
 
 #ifdef DHT_BUS
   #include "src/DHT/dht.h"
   dht DHT;
 #endif
-
-char date[20];
 
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
@@ -586,7 +579,7 @@ uint8_t current_switchday = 0;
 byte UseEEPROM = 0;
 
 typedef enum{
-// Version 0 (header)
+// Version 0 (header + PPS values + space for MAX! devices)
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
   CF_VERSION, //Size: 2 byte. Config version
   CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
@@ -681,12 +674,36 @@ typedef struct{
 } addressesOfConfigOptions;
 addressesOfConfigOptions options[sizeof(cf_params)/sizeof(CF_USEEEPROM)];
 
+//Mega not enough space for useless strings.
+#if defined(__AVR__)
+#define CF_USEEEPROM_TXT NULL
+#define CF_BUSTYPE_TXT NULL
+#define CF_OWN_BSBADDR_TXT NULL
+#define CF_OWN_LPBADDR_TXT NULL
+#define CF_DEST_LPBADDR_TXT NULL
+#define CF_PPS_WRITE_TXT NULL
+#define CF_LOGTELEGRAM_TXT NULL
+#define CF_LOGAVERAGES_TXT NULL
+#define CF_LOGCURRVALUES_TXT NULL
+#define CF_LOGCURRINTERVAL_TXT NULL
+#define CF_AVERAGESLIST_TXT NULL
+#define CF_CURRVALUESLIST_TXT NULL
+#define CF_MAX_DEVICES_TXT NULL
+#else
 const char CF_USEEEPROM_TXT[] PROGMEM = ("Read config from EEPROM");
 const char CF_BUSTYPE_TXT[] PROGMEM = ("Bus type at start");
 const char CF_OWN_BSBADDR_TXT[] PROGMEM = ("Own BSB address");
 const char CF_OWN_LPBADDR_TXT[] PROGMEM = ("Own LPB address");
 const char CF_DEST_LPBADDR_TXT[] PROGMEM = ("Dest LPB address");
 const char CF_PPS_WRITE_TXT[] PROGMEM = ("Enable PPS bus write");
+const char CF_LOGTELEGRAM_TXT[] PROGMEM = ("Log telegrams");
+const char CF_LOGAVERAGES_TXT[] PROGMEM = ("Calculate and log 24h average values");
+const char CF_LOGCURRVALUES_TXT[] PROGMEM = ("Log current values");
+const char CF_LOGCURRINTERVAL_TXT[] PROGMEM = ("Log interval");
+const char CF_AVERAGESLIST_TXT[] PROGMEM = ("Programs for averages calculation");
+const char CF_CURRVALUESLIST_TXT[] PROGMEM = ("Programs for logging");
+const char CF_MAX_DEVICES_TXT[] PROGMEM = ("MAX! devices");
+#endif
 const char CF_MAC_TXT[] PROGMEM = ("MAC address");
 const char CF_DHCP_TXT[] PROGMEM = ("Use DHCP");
 const char CF_IPADDRESS_TXT[] PROGMEM = ("IP address");
@@ -695,13 +712,7 @@ const char CF_MASK_TXT[] PROGMEM = ("Network mask");
 const char CF_GATEWAY_TXT[] PROGMEM = ("Gateway");
 const char CF_DNS_TXT[] PROGMEM = ("DNS server");
 const char CF_WWWPORT_TXT[] PROGMEM = ("WWW port");
-const char CF_LOGTELEGRAM_TXT[] PROGMEM = ("Log telegrams");
-const char CF_LOGAVERAGES_TXT[] PROGMEM = ("Calculate and log 24h average values");
-const char CF_LOGCURRVALUES_TXT[] PROGMEM = ("Log current values");
-const char CF_LOGCURRINTERVAL_TXT[] PROGMEM = ("Log interval");
 const char CF_WEBSERVER_TXT[] PROGMEM = ("Webserver 4 SD card");
-const char CF_AVERAGESLIST_TXT[] PROGMEM = ("Programs for averages calculation");
-const char CF_CURRVALUESLIST_TXT[] PROGMEM = ("Programs for logging");
 const char CF_PASSKEY_TXT[] PROGMEM = ("URL passkey");
 const char CF_BASICAUTH_TXT[] PROGMEM = ("Basic AUTH data");
 const char CF_ONEWIREBUS_TXT[] PROGMEM = ("Use One Wire bus on pin");
@@ -711,7 +722,6 @@ const char CF_IPWE_TXT[] PROGMEM = ("Enable IPWE");
 const char CF_IPWEVALUESLIST_TXT[] PROGMEM = ("Programs for displaying with IPWE");
 const char CF_MAX_TXT[] PROGMEM = ("Enable MAX");
 const char CF_MAX_IPADDRESS_TXT[] PROGMEM = ("CUNO/CUNX/modified MAX!Cube IP address");
-const char CF_MAX_DEVICES_TXT[] PROGMEM = ("MAX! devices");
 const char CF_READONLY_TXT[] PROGMEM = ("All parameters is read only");
 const char CF_DEBUG_TXT[] PROGMEM = ("Debug");
 const char CF_MQTT_TXT[] PROGMEM = ("Using MQTT");
@@ -758,10 +768,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MAX,              2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},
   {CF_MAX_IPADDRESS,    2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)},
 #endif
-#ifdef MAX_CUL
   {CF_MAX_DEVICES,      0, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
-  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(max_devices)},
-#endif
+  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(int32_t) * MAX_CUL_DEVICES},
   {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)},
 #ifdef WEBCONFIG
   {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, 1},
@@ -3392,7 +3400,7 @@ printToWebClient(PSTR("<BR>\n"));
  * Global resources used:
  *   none
  * *************************************************************** */
-char *GetDateTime(char date[]){
+char *GetDateTime(char *date){
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
   date[19] = 0;
   return date;
@@ -3415,6 +3423,7 @@ char *GetDateTime(char date[]){
 #ifdef LOGGER
 void printTrailToFile(File *dataFile){
  char fileBuf[64];
+ char date[20];
  // get current time from heating system
  sprintf_P(fileBuf, PSTR("%lu;%s;"), millis(), GetDateTime(date));
  dataFile->print(fileBuf);
@@ -7163,10 +7172,10 @@ uint8_t pps_offset = 0;
           }else if(range[0]=='A') { // handle average command
 #ifdef AVERAGES
             if (range[1]=='C' && range[2]=='=') { //24h average calculation on/off
-              if (range[3]=='0') //Disable 24h average calculation temporarily
-                logAverageValues = false;
-              else  //Enable 24h average calculation temporarily
+              if (range[3]=='1') //Enable 24h average calculation temporarily
                 logAverageValues = true;
+              else  //Disable 24h average calculation temporarily
+                logAverageValues = false;
             }
             if(logAverageValues){
               if (range[1]=='=') {
@@ -7860,7 +7869,7 @@ void setup() {
 
   //read parameters
       for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-  //read if parameter version is non-zero
+  //read parameter if it version is non-zero
 #if defined(__AVR__)
         if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0) readFromEEPROM(i);
 #else
@@ -7882,9 +7891,15 @@ void setup() {
       if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
         crc = initConfigTable(maxconfversion); //store new CRC32
         EEPROMversion = maxconfversion; //store new version
+        writeToEEPROM(CF_VERSION);
+        writeToEEPROM(CF_CRC32);
         for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-          writeToEEPROM(i);
-        }
+          #if defined(__AVR__)
+                  if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0) writeToEEPROM(i);
+          #else
+                  if(config[i].version > 0) writeToEEPROM(i);
+          #endif
+         }
       }
       unregisterConfigVariable(CF_VERSION);
       unregisterConfigVariable(CF_CRC32);
