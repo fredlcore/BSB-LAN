@@ -7305,6 +7305,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CE6,  CAT_WAERMEPUMPE,      VT_BYTE,          2893,  STR2893,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl TWW-Ladeversuche
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2894,  STR2894,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Drehstr'fehler
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2895,  STR2895,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Ström'wächter
+{0x053D19EC,  CAT_WAERMEPUMPE,      VT_LITERPERHOUR,  2898,  STR2898,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [l/h] Min Fluss Str'wächter Quelle
+{0x053D19ED,  CAT_WAERMEPUMPE,      VT_LITERPERHOUR,  2899,  STR2899,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [l/h] Min Fluss Str'wächter Verbr
 {0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
