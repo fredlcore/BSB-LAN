@@ -2060,6 +2060,7 @@
 #define ENUM2903_02_TEXT "Energiepreis"
 #define ENUM2903_03_TEXT "Leist'zahl und Energiepreis"
 #define ENUM2903_04_TEXT "Leist'zahl oder Energiepreis"
+#define ENUM2908_00_TEXT "Ignorieren"
 #define ENUM2920_01_TEXT "Freigegeben"
 #define ENUM3090_00_TEXT "Keine (Mit Eingang)"
 #define ENUM3092_00_TEXT "kWh"

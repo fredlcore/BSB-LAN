@@ -2823,6 +2823,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2880_07_TEXT STR1640_TEXT
 #define ENUM2900_00_TEXT ENUM1630_02_TEXT
 #define ENUM2903_01_TEXT STR8398_TEXT
+#define ENUM2908_01_TEXT ENUM3694_01_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
@@ -3773,6 +3774,11 @@ const char ENUM2903[] PROGMEM_LATEST = {
 "\x02 " ENUM2903_02_TEXT "\0"
 "\x03 " ENUM2903_03_TEXT "\0"
 "\x04 " ENUM2903_04_TEXT
+};
+
+const char ENUM2908[] PROGMEM_LATEST = {
+"\x00 " ENUM2908_00_TEXT "\0"
+"\x01 " ENUM2908_01_TEXT
 };
 
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
@@ -7343,6 +7349,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D1639,  CAT_WAERMEPUMPE,      VT_ENUM,          2900,  STR2900,  sizeof(ENUM2900),     ENUM2900,     FL_OEM, DEV_ALL}, // Kältemittel
 {0x593D19B0,  CAT_WAERMEPUMPE,      VT_ENUM,          2903,  STR2903,  sizeof(ENUM2903),     ENUM2903,     FL_OEM, DEV_ALL}, // Freigabestrategie
 {0x593D19B1,  CAT_WAERMEPUMPE,      VT_BYTE,          2904,  STR2904,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Freigabe Leistungszahl
+{0x593D15B3,  CAT_WAERMEPUMPE,      VT_ENUM,          2908,  STR2908,  sizeof(ENUM2908),     ENUM2908,     DEFAULT_FLAG, DEV_ALL}, // TA Grenzen bei TWW
 {0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
