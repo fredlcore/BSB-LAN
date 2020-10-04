@@ -86,7 +86,7 @@
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
 #define DEV_029_ALL  29,255 // Grünenwald RVA63.280/109
 #define DEV_036_ALL  36,255 // RVL472
-#define DEV_044_ALL   44,255 // RVD230
+#define DEV_044_ALL  44,255 // RVD230
 #define DEV_049_ALL  49,255 // Weishaupt WRS-CPU-B1
 #define DEV_050_ALL  50,255 // Weishaupt
 #define DEV_052_ALL  52,255 // Weishaupt WRS-BE
@@ -6973,6 +6973,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0437,  CAT_KESSEL,           VT_ONOFF,         2262,  STR2262,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Einschaltoptimierung
 {0x0B063D05,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Antrieb Laufzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_059_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
+{0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_096_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_134_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_162_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
@@ -7121,6 +7122,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D17BC,  CAT_KESSEL,           VT_SECONDS_WORD,  2470,  STR2470,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [s] Kessel - Verz' Wärmeanfo Sonderbet
 {0x113D3051,  CAT_KESSEL,           VT_MINUTES_SHORT, 2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min]
 {0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_WORD,  2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min] - logged on OCI700 via LPB
+{0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_WORD,  2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min] - logged on OCI700 via LPB
 {0x113D0BCC,  CAT_KESSEL,           VT_MINUTES_WORD,  2471,  STR2471,  0,                    NULL,         DEFAULT_FLAG, DEV_134_ALL}, // Thision 2471 Pumpennachlaufzeit HK's [min] - logged on OCI700 via LPB
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2472 Pumpennachlauftemp TWW - logged on OCI700 via LPB
@@ -8217,6 +8219,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0D24,  CAT_KONFIG,           VT_PERCENT,       6138,  STR6138,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Luftentfeuchter r. F. SD
 {0x053DD800,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck Maximum
 {0x093D2FA6,  CAT_KONFIG,           VT_PRESSURE_WORD, 6140,  STR6140,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Wasserdruck Maximum
+{0x053D05D8,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // Wasserdruck Maximum - Baxi Luna Platinum
+{0x053D05D8,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // Wasserdruck Maximum - Baxi Luna Platinum
 {0x053D05D8,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Wasserdruck Maximum - Baxi Luna Platinum
 {0x053D05D8,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         DEFAULT_FLAG, DEV_134_ALL}, // Wasserdruck Maximum - Baxi Luna Platinum
 {0x053D05D8,  CAT_KONFIG,           VT_PRESSURE,      6140,  STR6140,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Wasserdruck Maximum - Baxi Luna Platinum
@@ -8227,6 +8231,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D05D9,  CAT_KONFIG,           VT_PRESSURE,      6141,  STR6141,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck minimum
 {0x093D2FA5,  CAT_KONFIG,           VT_PRESSURE_WORD, 6141,  STR6141,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Wasserdruck minimum
 {0x053DDA00,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck kritisch Min
+{0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_096_ALL}, // Wasserdruck kritisch Min
+{0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_097_ALL}, // Wasserdruck kritisch Min
 {0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Wasserdruck kritisch Min
 {0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_134_ALL}, // Wasserdruck kritisch Min
 {0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Wasserdruck kritisch Min
@@ -8309,6 +8315,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D11E3,  CAT_KONFIG,           VT_MINUTES_SHORT, 6273,  STR6273,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Dauer Min.
 {0x153D2FA2,  CAT_KONFIG,           VT_BIT,           6280,  STR6280,  sizeof(ENUM6280),     ENUM6280,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
+};
+
+PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Info 1 OEM
@@ -8342,9 +8351,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D082A,  CAT_KONFIG,           VT_UNKNOWN,       6496,  STR6496,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Teilschema Schwimmbad
 {0x313D0B14,  CAT_KONFIG,           VT_UNKNOWN,       6497,  STR6497,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Teilschema Trinkwasser Durchlauferhitzer
 {0x493D061D,  CAT_KONFIG,           VT_UNKNOWN,       6498,  STR6498,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 // Teilschema Sonnenkollektor
-};
 
-PROGMEM_LATE const cmd_t cmdtbl2[]={
 // LPB-System
 {0x053D00C9,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
 {0x053D000C,  CAT_LPB,              VT_BYTE,          6600,  STR6600,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Geraeteadresse
@@ -8573,6 +8580,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 3 - logged on OCI700 via LPB
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 3
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 3
+{0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
 {0x053D06D5,  CAT_FEHLER,           VT_DATETIME,      6820,  STR6804,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 3 Datum/Zeit
@@ -8595,6 +8603,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FFA,  CAT_FEHLER,           VT_ENUM,          6826,  STR6826,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - THISION: FA Phase 3 (6825 on display, mapped to 6826)
 // 4
 {0x053D2FFD,  CAT_FEHLER,           VT_BYTE,          6830,  STR6830,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 4
+{0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
 {0x053D06D6,  CAT_FEHLER,           VT_DATETIME,      6830,  STR6806,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - Fehler - Historie 4 Datum/Zeit
@@ -8618,6 +8627,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // 5
 {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - THISION: Fehler Historie 5
 {0x053D3001,  CAT_FEHLER,           VT_BYTE,          6840,  STR6840_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 5
+{0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // [ ] - Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // [ ] - Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // [ ] - Fehler Historie 5
 {0x053D06D7,  CAT_FEHLER,           VT_DATETIME,      6840,  STR6840,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // [ ] - THISION: Fehler Historie 5
@@ -9096,6 +9106,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0F66,  CAT_STATUS,           VT_ENUM,          8009,  STR8009,  sizeof(ENUM8009_2),   ENUM8009_2,   FL_RONLY,     DEV_ALL}, // [] - Status - Status Brenner Brötje BSW
 {0x0D3D0945,  CAT_STATUS,           VT_UINT,          8009,  STR8009,  0,                    0,            FL_RONLY,     DEV_028_ALL}, // [] - Status - Status Brenner RVS63, not sure if bit-encoded parameter or ENUM
 {0x0D3D0945,  CAT_STATUS,           VT_UINT,          8009,  STR8009,  0,                    0,            FL_RONLY,     DEV_059_ALL}, // [] - Status - Status Brenner RVS63, not sure if bit-encoded parameter or ENUM
+{0x0D3D0945,  CAT_STATUS,           VT_UINT,          8009,  STR8009,  0,                    0,            FL_RONLY,     DEV_096_ALL}, // [] - Status - Status Brenner RVS63, not sure if bit-encoded parameter or ENUM
 {0x0D3D0945,  CAT_STATUS,           VT_UINT,          8009,  STR8009,  0,                    0,            FL_RONLY,     DEV_134_ALL}, // [] - Status - Status Brenner RVS63, not sure if bit-encoded parameter or ENUM
 {0x053D07AB,  CAT_STATUS,           VT_ENUM,          8010,  STR8010,  sizeof(ENUM8010),     ENUM8010,     FL_RONLY,     DEV_ALL}, // [] - Status - Status Pufferspeicher
 {0x053D0AFC,  CAT_STATUS,           VT_ENUM,          8011,  STR8011,  sizeof(ENUM8011),     ENUM8011,     FL_RONLY,     DEV_ALL}, // Status Schwimmbad
@@ -9287,6 +9298,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_059_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
+{0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
