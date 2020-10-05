@@ -3812,6 +3812,11 @@ const char ENUM2923[] PROGMEM_LATEST = {
 "\x03 " ENUM2923_03_TEXT
 };
 
+const char ENUM2941[] PROGMEM_LATEST = {
+"\x01 " ENUM2941_01_TEXT "\0"
+"\x02 " ENUM2941_02_TEXT
+};
+
 // Energiezähler
 
 // "Durchflussmessung Wärme"
@@ -7383,6 +7388,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
 {0x593D1178,  CAT_WAERMEPUMPE,      VT_ENUM,          2922,  STR2922,  sizeof(ENUM2922),     ENUM2922,     FL_OEM, DEV_ALL}, // Kondensatorüberhitzschutz
 {0x593D117A,  CAT_WAERMEPUMPE,      VT_ENUM,          2923,  STR2923,  sizeof(ENUM2923),     ENUM2923,     FL_OEM, DEV_ALL}, // Kond'schutz Pufferfühler
+{0x053D17B7,  CAT_WAERMEPUMPE,      VT_ENUM,          2941,  STR2941,  sizeof(ENUM2941),     ENUM2941,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Uml'ventil Y28
 {0x593D08D5,  CAT_WAERMEPUMPE,      VT_TEMP,          2951,  STR2951,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaufreigabe unterhalb TA
 {0x593D08D6,  CAT_WAERMEPUMPE,      VT_TEMP,          2952,  STR2952,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Abtauen
 {0x593D08D8,  CAT_WAERMEPUMPE,      VT_TEMP,          2954,  STR2954,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verdampfertemp Abtau-Ende
