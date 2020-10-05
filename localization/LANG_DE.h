@@ -2062,6 +2062,8 @@
 #define ENUM2903_04_TEXT "Leist'zahl oder Energiepreis"
 #define ENUM2908_00_TEXT "Ignorieren"
 #define ENUM2920_01_TEXT "Freigegeben"
+#define ENUM2922_01_TEXT "Auskühlen"
+#define ENUM2922_02_TEXT "Einschaltsperre + Auskühlen"
 #define ENUM3090_00_TEXT "Keine (Mit Eingang)"
 #define ENUM3092_00_TEXT "kWh"
 #define ENUM3095_01_TEXT "Mit Eingang H1"

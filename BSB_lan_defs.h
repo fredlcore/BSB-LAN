@@ -2827,6 +2827,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2911_00_TEXT ENUM2476_ff_TEXT
 #define ENUM2911_01_TEXT ENUM2920_01_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
+#define ENUM2922_00_TEXT MENU_TEXT_OFF
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_01_TEXT ENUM3095_01_TEXT
@@ -3792,6 +3793,12 @@ const char ENUM2911[] PROGMEM_LATEST = {
 const char ENUM2920[] PROGMEM_LATEST = {
 "\x00 " ENUM2920_00_TEXT "\0"
 "\x01 " ENUM2920_01_TEXT
+};
+
+const char ENUM2922[] PROGMEM_LATEST = {
+"\x00 " ENUM2922_00_TEXT "\0"
+"\x01 " ENUM2922_01_TEXT "\0"
+"\x02 " ENUM2922_02_TEXT
 };
 
 // Energiezähler
@@ -7363,6 +7370,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CFF,  CAT_WAERMEPUMPE,      VT_ONOFF,         2912,  STR2912,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
 {0x593D12F3,  CAT_WAERMEPUMPE,      VT_TEMP,          2916,  STR2916,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert WP Max TWW //FUJITSU
 {0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
+{0x593D1178,  CAT_WAERMEPUMPE,      VT_ENUM,          2922,  STR2922,  sizeof(ENUM2922),     ENUM2922,     FL_OEM, DEV_ALL}, // Kondensatorüberhitzschutz
 {0x593D08D5,  CAT_WAERMEPUMPE,      VT_TEMP,          2951,  STR2951,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaufreigabe unterhalb TA
 {0x593D08D6,  CAT_WAERMEPUMPE,      VT_TEMP,          2952,  STR2952,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Abtauen
 {0x593D08D8,  CAT_WAERMEPUMPE,      VT_TEMP,          2954,  STR2954,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verdampfertemp Abtau-Ende
