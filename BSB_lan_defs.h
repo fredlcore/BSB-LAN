@@ -2824,6 +2824,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2900_00_TEXT ENUM1630_02_TEXT
 #define ENUM2903_01_TEXT STR8398_TEXT
 #define ENUM2908_01_TEXT ENUM3694_01_TEXT
+#define ENUM2911_00_TEXT ENUM2476_ff_TEXT
+#define ENUM2911_01_TEXT ENUM2920_01_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
@@ -3779,6 +3781,11 @@ const char ENUM2903[] PROGMEM_LATEST = {
 const char ENUM2908[] PROGMEM_LATEST = {
 "\x00 " ENUM2908_00_TEXT "\0"
 "\x01 " ENUM2908_01_TEXT
+};
+
+const char ENUM2911[] PROGMEM_LATEST = {
+"\x00 " ENUM2911_00_TEXT "\0"
+"\x01 " ENUM2911_01_TEXT
 };
 
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
@@ -7352,7 +7359,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D15B3,  CAT_WAERMEPUMPE,      VT_ENUM,          2908,  STR2908,  sizeof(ENUM2908),     ENUM2908,     DEFAULT_FLAG, DEV_ALL}, // TA Grenzen bei TWW
 {0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
+{0x593D0CEB,  CAT_WAERMEPUMPE,      VT_ENUM,          2911,  STR2911,  sizeof(ENUM2911),     ENUM2911,     DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2912,  STR2912,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
 {0x593D12F3,  CAT_WAERMEPUMPE,      VT_TEMP,          2916,  STR2916,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert WP Max TWW //FUJITSU
 {0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
