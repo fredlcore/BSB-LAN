@@ -2070,6 +2070,8 @@
 #define ENUM2922_02_TEXT "Einschaltsperre + Auskühlen"
 #define ENUM2941_01_TEXT "Passiv Kühlen"
 #define ENUM2941_02_TEXT "Aktiv und Passiv Kühlen"
+#define ENUM3007_00_TEXT "Kondensatorpumpe aus"
+#define ENUM3007_01_TEXT "Kondensatorpumpe ein"
 #define ENUM3009_01_TEXT "Verdichterleistung"
 #define ENUM3090_00_TEXT "Keine (Mit Eingang)"
 #define ENUM3092_00_TEXT "kWh"
