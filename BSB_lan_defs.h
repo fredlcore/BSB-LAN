@@ -1343,6 +1343,10 @@ const char STR3026[] PROGMEM = STR3026_TEXT;
 const char STR3027[] PROGMEM = STR3027_TEXT;
 const char STR3028[] PROGMEM = STR3028_TEXT;
 const char STR3029[] PROGMEM = STR3029_TEXT;
+const char STR3030[] PROGMEM = STR3030_TEXT;
+const char STR3031[] PROGMEM = STR3031_TEXT;
+const char STR3032[] PROGMEM = STR3032_TEXT;
+const char STR3033[] PROGMEM = STR3033_TEXT;
 
 // Energiezähler (Fujitsu Waterstage)
 const char STR3090[] PROGMEM = STR3090_TEXT;
@@ -2838,6 +2842,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2923_03_TEXT ENUM4795_03_TEXT
 #define ENUM3009_00_TEXT ENUM48_00_TEXT
 #define ENUM3009_02_TEXT STR8426_TEXT
+#define ENUM3030_00_TEXT MENU_TEXT_OFF
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_01_TEXT ENUM3095_01_TEXT
@@ -3832,6 +3837,19 @@ const char ENUM3009[] PROGMEM_LATEST = {
 "\x00 " ENUM3009_00_TEXT "\0"
 "\x01 " ENUM3009_01_TEXT "\0"
 "\x02 " ENUM3009_02_TEXT
+};
+
+const char ENUM3030[] PROGMEM_LATEST = {
+"\x00 " ENUM3030_00_TEXT "\0"
+"\x01 " ENUM3030_01_TEXT "\0"
+"\x02 " ENUM3030_02_TEXT
+};
+
+const char ENUM3033[] PROGMEM_LATEST = {
+"\x00 " ENUM3033_00_TEXT "\0"
+"\x01 " ENUM3033_01_TEXT "\0"
+"\x02 " ENUM3033_02_TEXT "\0"
+"\x03 " ENUM3033_03_TEXT
 };
 
 // Energiezähler
@@ -7434,6 +7452,10 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Aus
 {0x593D1796,  CAT_WAERMEPUMPE,      VT_TEMP,          3028,  STR3028,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Beginn
 {0x593D1797,  CAT_WAERMEPUMPE,      VT_TEMP,          3029,  STR3029,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Ende
+{0x053D10CC,  CAT_WAERMEPUMPE,      VT_ENUM,          3030,  STR3030,  sizeof(ENUM3030),     ENUM3030,     DEFAULT_FLAG, DEV_ALL}, // Autokorr WP Kondens'fühler
+{0x053D1085,  CAT_WAERMEPUMPE,      VT_TEMP,          3031,  STR3031,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur WP Vorlauffühler
+{0x053D1086,  CAT_WAERMEPUMPE,      VT_TEMP,          3032,  STR3032,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur WP Rückl'fühler
+{0x053D10CD,  CAT_WAERMEPUMPE,      VT_ENUM,          3033,  STR3033,  sizeof(ENUM3033),     ENUM3033,     DEFAULT_FLAG, DEV_ALL}, // Korrekturstatus
 
 // Energiezähler (Fujitsu Waterstage)
 {0x053D1088,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3090,  STR3090,  sizeof(ENUM3090),     ENUM3090,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Wärme
