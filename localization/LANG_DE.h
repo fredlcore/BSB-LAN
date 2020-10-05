@@ -636,6 +636,8 @@
 #define STR3012_TEXT "Quelle Aus unter Temp B83"
 #define STR3014_TEXT "Schaltdifferenz Quelle Aus"
 #define STR3015_TEXT "Beginn Drehzahlreg B83"
+#define STR3016_TEXT "Ende Drehzahlregelung B83"
+#define STR3017_TEXT "Sperrzeit Drehzahlregelung"
 #define STR3025_TEXT "Silent Mode Drehzahl Max"
 #define STR3026_TEXT "Silent Mode Ein"
 #define STR3027_TEXT "Silent Mode Aus"
