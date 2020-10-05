@@ -7412,6 +7412,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz max V'lator/Q'Pump
 {0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz min V'lator/Q'Pump
 {0x593D0CF6,  CAT_WAERMEPUMPE,      VT_TEMP,          3012,  STR3012,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quelle Aus unter Temp B83
+{0x593D0CF7,  CAT_WAERMEPUMPE,      VT_TEMP,          3014,  STR3014,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Quelle Aus
 {0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Drehzahl Max
 {0x593D17A8,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3026,  STR3026,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Ein
 {0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Aus
