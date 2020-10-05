@@ -2832,6 +2832,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2923_01_TEXT ENUM4137_01_TEXT
 #define ENUM2923_02_TEXT ENUM4795_02_TEXT
 #define ENUM2923_03_TEXT ENUM4795_03_TEXT
+#define ENUM3009_00_TEXT ENUM48_00_TEXT
+#define ENUM3009_02_TEXT STR8426_TEXT
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_01_TEXT ENUM3095_01_TEXT
@@ -3815,6 +3817,12 @@ const char ENUM2923[] PROGMEM_LATEST = {
 const char ENUM2941[] PROGMEM_LATEST = {
 "\x01 " ENUM2941_01_TEXT "\0"
 "\x02 " ENUM2941_02_TEXT
+};
+
+const char ENUM3009[] PROGMEM_LATEST = {
+"\x00 " ENUM3009_00_TEXT "\0"
+"\x01 " ENUM3009_01_TEXT "\0"
+"\x02 " ENUM3009_02_TEXT
 };
 
 // Energiezähler
@@ -7400,6 +7408,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CF1,  CAT_WAERMEPUMPE,      VT_TEMP,          3002,  STR3002,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quellentemp min Kühlbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
+{0x593D1790,  CAT_WAERMEPUMPE,      VT_ENUM,          3009,  STR3009,  sizeof(ENUM3009),     ENUM3009,     FL_OEM, DEV_ALL}, // Modulation V'lator/Q'pump
 {0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz max V'lator/Q'Pump
 {0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz min V'lator/Q'Pump
 {0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Drehzahl Max
