@@ -1337,6 +1337,7 @@ const char STR3014[] PROGMEM = STR3014_TEXT;
 const char STR3015[] PROGMEM = STR3015_TEXT;
 const char STR3016[] PROGMEM = STR3016_TEXT;
 const char STR3017[] PROGMEM = STR3017_TEXT;
+const char STR3019[] PROGMEM = STR3019_TEXT;
 const char STR3025[] PROGMEM = STR3025_TEXT;
 const char STR3026[] PROGMEM = STR3026_TEXT;
 const char STR3027[] PROGMEM = STR3027_TEXT;
@@ -7419,6 +7420,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CF8,  CAT_WAERMEPUMPE,      VT_TEMP,          3015,  STR3015,  0,                    NULL,         FL_OEM, DEV_ALL}, // Beginn Drehzahlreg B83
 {0x593D0CF9,  CAT_WAERMEPUMPE,      VT_TEMP,          3016,  STR3016,  0,                    NULL,         FL_OEM, DEV_ALL}, // Ende Drehzahlregelung B83
 {0x593D0CFA,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 3017,  STR3017,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit Drehzahlregelung
+{0x593D1791,  CAT_WAERMEPUMPE,      VT_PERCENT,       3019,  STR3019,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anl'drehzahl V'lator/Q'pump
 {0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Drehzahl Max
 {0x593D17A8,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3026,  STR3026,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Ein
 {0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Aus
