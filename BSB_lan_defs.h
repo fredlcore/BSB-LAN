@@ -7419,6 +7419,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0CF5,  CAT_WAERMEPUMPE,      VT_TEMP,          3004,  STR3004,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SD Umschalt Kühlen Pas/Akt
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
 {0x593D0D1F,  CAT_WAERMEPUMPE,      VT_ENUM,          3007,  STR3007,  sizeof(ENUM3007),     ENUM3007,     DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
+{0x593D0D29,  CAT_WAERMEPUMPE,      VT_TEMP,          3008,  STR3008,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreizung Konden Kühlbetr
 {0x593D1790,  CAT_WAERMEPUMPE,      VT_ENUM,          3009,  STR3009,  sizeof(ENUM3009),     ENUM3009,     FL_OEM, DEV_ALL}, // Modulation V'lator/Q'pump
 {0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz max V'lator/Q'Pump
 {0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz min V'lator/Q'Pump
