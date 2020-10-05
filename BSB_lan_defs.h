@@ -7409,6 +7409,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D08DE,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2965,  STR2965,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtropfdauer Verdampfer
 {0x593D08DF,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2966,  STR2966,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abkühldauer Verdampfer
 {0x593D08E0,  CAT_WAERMEPUMPE,      VT_TEMP,          2970,  STR2970,  0,                    NULL,         FL_OEM, DEV_ALL}, // Ausschalttemp Minimum
+{0x593D0A7F,  CAT_WAERMEPUMPE,      VT_TEMP,          3000,  STR3000,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausschalttemp Max Kühlen
 {0x593D0CF1,  CAT_WAERMEPUMPE,      VT_TEMP,          3002,  STR3002,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quellentemp min Kühlbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
