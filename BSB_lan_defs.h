@@ -236,6 +236,7 @@ typedef enum{
 typedef enum{
   VT_BIT,               //  2 Byte - 1 enable 0x01 / value
   VT_BYTE,              //  2 Byte - 1 enable 0x01 / value
+  VT_BYTE10,            //  2 Byte - 1 enable 0x01 / value/10
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
   VT_DAYS,              //  2 Byte - 1 enable 0x01 / day
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
@@ -387,6 +388,7 @@ typedef enum {
 PROGMEM_LATE const units optbl[]={
 {VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_BYTE10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
@@ -7413,7 +7415,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D19ED,  CAT_WAERMEPUMPE,      VT_LITERPERHOUR,  2899,  STR2899,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [l/h] Min Fluss Str'wächter Verbr
 {0x593D1639,  CAT_WAERMEPUMPE,      VT_ENUM,          2900,  STR2900,  sizeof(ENUM2900),     ENUM2900,     FL_OEM, DEV_ALL}, // Kältemittel
 {0x593D19B0,  CAT_WAERMEPUMPE,      VT_ENUM,          2903,  STR2903,  sizeof(ENUM2903),     ENUM2903,     FL_OEM, DEV_ALL}, // Freigabestrategie
-{0x593D19B1,  CAT_WAERMEPUMPE,      VT_BYTE,          2904,  STR2904,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Freigabe Leistungszahl
+{0x593D19B1,  CAT_WAERMEPUMPE,      VT_BYTE10,        2904,  STR2904,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Freigabe Leistungszahl
 {0x593D15B3,  CAT_WAERMEPUMPE,      VT_ENUM,          2908,  STR2908,  sizeof(ENUM2908),     ENUM2908,     DEFAULT_FLAG, DEV_ALL}, // TA Grenzen bei TWW
 {0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
