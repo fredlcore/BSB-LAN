@@ -8403,6 +8403,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6180,  STR6180,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Maximum
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
 {0x073D05DA,  CAT_KONFIG,           VT_PRESSURE,      6182,  STR6182,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 kritisch Min
+};
+
+PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Fühler Speichern
 {0x053D0BBF,  CAT_KONFIG,           VT_YESNO,         6201,  STR6201,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Fühler löschen //FUJITSU
 {0x053D05D4,  CAT_KONFIG,           VT_YESNO,         6204,  STR6204,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // [-] - Konfiguration - Parameter speichern
@@ -8467,9 +8470,6 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D11E3,  CAT_KONFIG,           VT_MINUTES_SHORT, 6273,  STR6273,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Dauer Min.
 {0x153D2FA2,  CAT_KONFIG,           VT_BIT,           6280,  STR6280,  sizeof(ENUM6280),     ENUM6280,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA3,  CAT_KONFIG,           VT_BIT,           6290,  STR6290,  sizeof(ENUM6290),     ENUM6290,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
-};
-
-PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FA4,  CAT_KONFIG,           VT_BIT,           6300,  STR6300,  sizeof(ENUM6300),     ENUM6300,     DEFAULT_FLAG, DEV_ALL}, // Thision 6300 KonfigRg7 Bit 0-7 [?]
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Info 1 OEM
