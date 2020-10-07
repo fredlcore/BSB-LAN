@@ -2828,6 +2828,9 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2740_00_TEXT MENU_TEXT_NO
 #define ENUM2706_03_TEXT ENUM2206_01_TEXT
 #define ENUM2749_00_TEXT ENUM2740_00_TEXT
+#define ENUM2790_00_TEXT ENUM48_00_TEXT
+#define ENUM2790_02_TEXT ENUM3009_01_TEXT
+#define ENUM2790_03_TEXT STR8425_TEXT
 #define ENUM2801_01_TEXT ENUM5040_02_TEXT
 #define ENUM2880_01_TEXT ENUM3692_01_TEXT
 #define ENUM2880_06_TEXT STR7141_TEXT
@@ -3749,6 +3752,13 @@ const char ENUM2749[] PROGMEM_LATEST = {
 "\x01 " ENUM2749_01_TEXT "\0"
 "\x02 " ENUM2749_02_TEXT
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
+
+const char ENUM2790[] PROGMEM_LATEST = {
+"\x00 " ENUM2790_00_TEXT "\0"
+"\x01 " ENUM2790_01_TEXT "\0"
+"\x02 " ENUM2790_02_TEXT "\0"
+"\x03 " ENUM2790_03_TEXT
+};
 
 const char ENUM2801[] PROGMEM_LATEST = {
 "\x01 " ENUM2801_01_TEXT "\0"
@@ -7338,6 +7348,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 //end OEM
 {0x593D1788,  CAT_WAERMEPUMPE,      VT_ONOFF,         2789,  STR2789,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kondensatorpumpe bei TWW
 {0x593D1676,  CAT_WAERMEPUMPE,      VT_TEMP_SHORT,    2790,  STR2790,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modulation Kondensatorpumpe // Temp'Spreizung Kondensator
+{0x593D1676,  CAT_WAERMEPUMPE,      VT_ENUM,          2790,  STR2790,  sizeof(ENUM2790),     ENUM2790,     DEFAULT_FLAG, DEV_108_ALL}, // Modulation Kondensatorpumpe
 {0x593D1675,  CAT_WAERMEPUMPE,      VT_PERCENT,       2792,  STR2792,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x113D04AB,  CAT_WAERMEPUMPE,      VT_PERCENT,       2792,  STR2792,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Pumpendrehzahl Minimum
 {0x593D1674,  CAT_WAERMEPUMPE,      VT_PERCENT,       2793,  STR2793,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum

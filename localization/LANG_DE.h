@@ -2040,6 +2040,7 @@
 #define ENUM2740_09_TEXT "Punkt 7"
 #define ENUM2749_01_TEXT "Neue Elektrode"
 #define ENUM2749_02_TEXT "Gebrauchte Elektrode"
+#define ENUM2790_01_TEXT "Wärmepumpensollwert"
 #define ENUM2801_02_TEXT "Temperaturanforderung"
 #define ENUM2801_03_TEXT "Parallel Verdichterbetrieb"
 #define ENUM2880_02_TEXT "Ergänzungsbetrieb HK"
