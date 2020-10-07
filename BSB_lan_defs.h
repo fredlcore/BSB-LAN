@@ -237,6 +237,7 @@ typedef enum{
 typedef enum{
   VT_BIT,               //  2 Byte - 1 enable 0x01 / value
   VT_BYTE,              //  2 Byte - 1 enable 0x01 / value
+  VT_BYTE10,            //  2 Byte - 1 enable 0x01 / value/10
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
   VT_DAYS,              //  2 Byte - 1 enable 0x01 / day
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
@@ -388,6 +389,7 @@ typedef enum {
 PROGMEM_LATE const units optbl[]={
 {VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_BYTE10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 {VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
 {VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
 {VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
@@ -1303,6 +1305,7 @@ const char STR2895[] PROGMEM = STR2895_TEXT;
 const char STR2896[] PROGMEM = STR2896_TEXT;
 const char STR2898[] PROGMEM = STR2898_TEXT;
 const char STR2899[] PROGMEM = STR2899_TEXT;
+const char STR2900[] PROGMEM = STR2900_TEXT;
 const char STR2903[] PROGMEM = STR2903_TEXT;
 const char STR2904[] PROGMEM = STR2904_TEXT;
 const char STR2908[] PROGMEM = STR2908_TEXT;
@@ -1334,11 +1337,19 @@ const char STR3010[] PROGMEM = STR3010_TEXT;
 const char STR3011[] PROGMEM = STR3011_TEXT;
 const char STR3012[] PROGMEM = STR3012_TEXT;
 const char STR3014[] PROGMEM = STR3014_TEXT;
+const char STR3015[] PROGMEM = STR3015_TEXT;
+const char STR3016[] PROGMEM = STR3016_TEXT;
+const char STR3017[] PROGMEM = STR3017_TEXT;
+const char STR3019[] PROGMEM = STR3019_TEXT;
 const char STR3025[] PROGMEM = STR3025_TEXT;
 const char STR3026[] PROGMEM = STR3026_TEXT;
 const char STR3027[] PROGMEM = STR3027_TEXT;
 const char STR3028[] PROGMEM = STR3028_TEXT;
 const char STR3029[] PROGMEM = STR3029_TEXT;
+const char STR3030[] PROGMEM = STR3030_TEXT;
+const char STR3031[] PROGMEM = STR3031_TEXT;
+const char STR3032[] PROGMEM = STR3032_TEXT;
+const char STR3033[] PROGMEM = STR3033_TEXT;
 
 // Energiezähler (Fujitsu Waterstage)
 const char STR3090[] PROGMEM = STR3090_TEXT;
@@ -2817,11 +2828,27 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM2740_00_TEXT MENU_TEXT_NO
 #define ENUM2706_03_TEXT ENUM2206_01_TEXT
 #define ENUM2749_00_TEXT ENUM2740_00_TEXT
+#define ENUM2790_00_TEXT ENUM48_00_TEXT
+#define ENUM2790_02_TEXT ENUM3009_01_TEXT
+#define ENUM2790_03_TEXT STR8425_TEXT
 #define ENUM2801_01_TEXT ENUM5040_02_TEXT
 #define ENUM2880_01_TEXT ENUM3692_01_TEXT
 #define ENUM2880_06_TEXT STR7141_TEXT
 #define ENUM2880_07_TEXT STR1640_TEXT
+#define ENUM2900_00_TEXT ENUM1630_02_TEXT
+#define ENUM2903_01_TEXT STR8398_TEXT
+#define ENUM2908_01_TEXT ENUM3694_01_TEXT
+#define ENUM2911_00_TEXT ENUM2476_ff_TEXT
+#define ENUM2911_01_TEXT ENUM2920_01_TEXT
 #define ENUM2920_00_TEXT ENUM2706_00_TEXT
+#define ENUM2922_00_TEXT MENU_TEXT_OFF
+#define ENUM2923_00_TEXT ENUM1630_02_TEXT
+#define ENUM2923_01_TEXT ENUM4137_01_TEXT
+#define ENUM2923_02_TEXT ENUM4795_02_TEXT
+#define ENUM2923_03_TEXT ENUM4795_03_TEXT
+#define ENUM3009_00_TEXT ENUM48_00_TEXT
+#define ENUM3009_02_TEXT STR8426_TEXT
+#define ENUM3030_00_TEXT MENU_TEXT_OFF
 #define ENUM3095_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_00_TEXT ENUM48_00_TEXT
 #define ENUM3100_01_TEXT ENUM3095_01_TEXT
@@ -3726,6 +3753,13 @@ const char ENUM2749[] PROGMEM_LATEST = {
 "\x02 " ENUM2749_02_TEXT
 }; // todo Hinweis: x00 Nein ist definitiv richtig. Die anderen muessen noch verifiziert werden.
 
+const char ENUM2790[] PROGMEM_LATEST = {
+"\x00 " ENUM2790_00_TEXT "\0"
+"\x01 " ENUM2790_01_TEXT "\0"
+"\x02 " ENUM2790_02_TEXT "\0"
+"\x03 " ENUM2790_03_TEXT
+};
+
 const char ENUM2801[] PROGMEM_LATEST = {
 "\x01 " ENUM2801_01_TEXT "\0"
 "\x02 " ENUM2801_02_TEXT "\0"
@@ -3743,10 +3777,92 @@ const char ENUM2880[] PROGMEM_LATEST = {
 "\x07 " ENUM2880_07_TEXT
 };
 
+const char ENUM2900[] PROGMEM_LATEST = {
+"\x00 " ENUM2900_00_TEXT "\0"
+"\x01 " ENUM2900_01_TEXT "\0"
+"\x02 " ENUM2900_02_TEXT "\0"
+"\x03 " ENUM2900_03_TEXT "\0"
+"\x04 " ENUM2900_04_TEXT "\0"
+"\x05 " ENUM2900_05_TEXT "\0"
+"\x06 " ENUM2900_06_TEXT "\0"
+"\x07 " ENUM2900_07_TEXT "\0"
+"\x08 " ENUM2900_08_TEXT "\0"
+"\x09 " ENUM2900_09_TEXT "\0"
+"\x10 " ENUM2900_10_TEXT "\0"
+"\x11 " ENUM2900_11_TEXT "\0"
+"\x12 " ENUM2900_12_TEXT "\0"
+"\x13 " ENUM2900_13_TEXT "\0"
+"\x14 " ENUM2900_14_TEXT "\0"
+"\x15 " ENUM2900_15_TEXT "\0"
+"\x16 " ENUM2900_16_TEXT "\0"
+"\x17 " ENUM2900_17_TEXT "\0"
+"\x18 " ENUM2900_18_TEXT "\0"
+"\x19 " ENUM2900_19_TEXT
+};
+
+const char ENUM2903[] PROGMEM_LATEST = {
+"\x01 " ENUM2903_01_TEXT "\0"
+"\x02 " ENUM2903_02_TEXT "\0"
+"\x03 " ENUM2903_03_TEXT "\0"
+"\x04 " ENUM2903_04_TEXT
+};
+
+const char ENUM2908[] PROGMEM_LATEST = {
+"\x00 " ENUM2908_00_TEXT "\0"
+"\x01 " ENUM2908_01_TEXT
+};
+
+const char ENUM2911[] PROGMEM_LATEST = {
+"\x00 " ENUM2911_00_TEXT "\0"
+"\x01 " ENUM2911_01_TEXT
+};
+
 // ProgNr 2920 "Bei EW Sperre" FUJITSU
 const char ENUM2920[] PROGMEM_LATEST = {
 "\x00 " ENUM2920_00_TEXT "\0"
 "\x01 " ENUM2920_01_TEXT
+};
+
+const char ENUM2922[] PROGMEM_LATEST = {
+"\x00 " ENUM2922_00_TEXT "\0"
+"\x01 " ENUM2922_01_TEXT "\0"
+"\x02 " ENUM2922_02_TEXT
+};
+
+const char ENUM2923[] PROGMEM_LATEST = {
+"\x00 " ENUM2923_00_TEXT "\0"
+"\x01 " ENUM2923_01_TEXT "\0"
+"\x02 " ENUM2923_02_TEXT "\0"
+"\x03 " ENUM2923_03_TEXT
+};
+
+const char ENUM2941[] PROGMEM_LATEST = {
+"\x01 " ENUM2941_01_TEXT "\0"
+"\x02 " ENUM2941_02_TEXT
+};
+
+const char ENUM3007[] PROGMEM_LATEST = {
+"\x00 " ENUM3007_00_TEXT "\0"
+"\x01 " ENUM3007_01_TEXT
+};
+
+const char ENUM3009[] PROGMEM_LATEST = {
+"\x00 " ENUM3009_00_TEXT "\0"
+"\x01 " ENUM3009_01_TEXT "\0"
+"\x02 " ENUM3009_02_TEXT
+};
+
+const char ENUM3030[] PROGMEM_LATEST = {
+"\x00 " ENUM3030_00_TEXT "\0"
+"\x01 " ENUM3030_01_TEXT "\0"
+"\x02 " ENUM3030_02_TEXT
+};
+
+const char ENUM3033[] PROGMEM_LATEST = {
+"\x00 " ENUM3033_00_TEXT "\0"
+"\x01 " ENUM3033_01_TEXT "\0"
+"\x02 " ENUM3033_02_TEXT "\0"
+"\x03 " ENUM3033_03_TEXT
 };
 
 // Energiezähler
@@ -7232,6 +7348,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 //end OEM
 {0x593D1788,  CAT_WAERMEPUMPE,      VT_ONOFF,         2789,  STR2789,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kondensatorpumpe bei TWW
 {0x593D1676,  CAT_WAERMEPUMPE,      VT_TEMP_SHORT,    2790,  STR2790,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modulation Kondensatorpumpe // Temp'Spreizung Kondensator
+{0x593D1676,  CAT_WAERMEPUMPE,      VT_ENUM,          2790,  STR2790,  sizeof(ENUM2790),     ENUM2790,     DEFAULT_FLAG, DEV_108_ALL}, // Modulation Kondensatorpumpe
 {0x593D1675,  CAT_WAERMEPUMPE,      VT_PERCENT,       2792,  STR2792,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x113D04AB,  CAT_WAERMEPUMPE,      VT_PERCENT,       2792,  STR2792,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Pumpendrehzahl Minimum
 {0x593D1674,  CAT_WAERMEPUMPE,      VT_PERCENT,       2793,  STR2793,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
@@ -7304,15 +7421,25 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0D03,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
 {0x593D0D2E,  CAT_WAERMEPUMPE,      VT_TEMP,          2884,  STR2884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freig Elektro-Vorl unter TA //FUJITSU
 {0x593D0436,  CAT_WAERMEPUMPE,      VT_ONOFF,         2886,  STR2886,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kompensation Wärmedefizit //FUJITSU
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2893,  STR2893,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl TWW-Ladeversuche
+{0x593D05C4,  CAT_WAERMEPUMPE,      VT_HOURS_SHORT,   2889,  STR2889,  0,                    NULL,         FL_OEM, DEV_ALL}, // [h] Dauer Fehlerwiederholung
+{0x593D0CE6,  CAT_WAERMEPUMPE,      VT_BYTE,          2893,  STR2893,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl TWW-Ladeversuche
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2894,  STR2894,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Drehstr'fehler
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2895,  STR2895,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Ström'wächter
+{0x053D19EC,  CAT_WAERMEPUMPE,      VT_LITERPERHOUR,  2898,  STR2898,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [l/h] Min Fluss Str'wächter Quelle
+{0x053D19ED,  CAT_WAERMEPUMPE,      VT_LITERPERHOUR,  2899,  STR2899,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [l/h] Min Fluss Str'wächter Verbr
+{0x593D1639,  CAT_WAERMEPUMPE,      VT_ENUM,          2900,  STR2900,  sizeof(ENUM2900),     ENUM2900,     FL_OEM, DEV_ALL}, // Kältemittel
+{0x593D19B0,  CAT_WAERMEPUMPE,      VT_ENUM,          2903,  STR2903,  sizeof(ENUM2903),     ENUM2903,     FL_OEM, DEV_ALL}, // Freigabestrategie
+{0x593D19B1,  CAT_WAERMEPUMPE,      VT_BYTE10,        2904,  STR2904,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [-] - Freigabe Leistungszahl
+{0x593D15B3,  CAT_WAERMEPUMPE,      VT_ENUM,          2908,  STR2908,  sizeof(ENUM2908),     ENUM2908,     DEFAULT_FLAG, DEV_ALL}, // TA Grenzen bei TWW
 {0x593D15AF,  CAT_WAERMEPUMPE,      VT_TEMP,          2909,  STR2909,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C] - Freigabe unter Aussentemp
 {0x593D0CEA,  CAT_WAERMEPUMPE,      VT_TEMP,          2910,  STR2910,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabe oberhalb TA
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2911,  STR2911,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2912,  STR2912,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
+{0x593D0CEB,  CAT_WAERMEPUMPE,      VT_ENUM,          2911,  STR2911,  sizeof(ENUM2911),     ENUM2911,     DEFAULT_FLAG, DEV_ALL}, // Für Pufferzwangsladung
+{0x593D0CFF,  CAT_WAERMEPUMPE,      VT_ONOFF,         2912,  STR2912,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Durchladung Pufferspeicher
 {0x593D12F3,  CAT_WAERMEPUMPE,      VT_TEMP,          2916,  STR2916,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert WP Max TWW //FUJITSU
 {0x593D0DF3,  CAT_WAERMEPUMPE,      VT_ENUM,          2920,  STR2920,  sizeof(ENUM2920),     ENUM2920,     DEFAULT_FLAG, DEV_ALL}, // Bei EW Sperre //FUJITSU
+{0x593D1178,  CAT_WAERMEPUMPE,      VT_ENUM,          2922,  STR2922,  sizeof(ENUM2922),     ENUM2922,     FL_OEM, DEV_ALL}, // Kondensatorüberhitzschutz
+{0x593D117A,  CAT_WAERMEPUMPE,      VT_ENUM,          2923,  STR2923,  sizeof(ENUM2923),     ENUM2923,     FL_OEM, DEV_ALL}, // Kond'schutz Pufferfühler
+{0x053D17B7,  CAT_WAERMEPUMPE,      VT_ENUM,          2941,  STR2941,  sizeof(ENUM2941),     ENUM2941,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Uml'ventil Y28
 {0x593D08D5,  CAT_WAERMEPUMPE,      VT_TEMP,          2951,  STR2951,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaufreigabe unterhalb TA
 {0x593D08D6,  CAT_WAERMEPUMPE,      VT_TEMP,          2952,  STR2952,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Abtauen
 {0x593D08D8,  CAT_WAERMEPUMPE,      VT_TEMP,          2954,  STR2954,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verdampfertemp Abtau-Ende
@@ -7320,16 +7447,31 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D08DD,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2964,  STR2964,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaudauer Maximal
 {0x593D08DE,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2965,  STR2965,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtropfdauer Verdampfer
 {0x593D08DF,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2966,  STR2966,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abkühldauer Verdampfer
+{0x593D08E0,  CAT_WAERMEPUMPE,      VT_TEMP,          2970,  STR2970,  0,                    NULL,         FL_OEM, DEV_ALL}, // Ausschalttemp Minimum
+{0x593D0A7F,  CAT_WAERMEPUMPE,      VT_TEMP,          3000,  STR3000,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ausschalttemp Max Kühlen
 {0x593D0CF1,  CAT_WAERMEPUMPE,      VT_TEMP,          3002,  STR3002,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quellentemp min Kühlbetrieb
+{0x593D0CF5,  CAT_WAERMEPUMPE,      VT_TEMP,          3004,  STR3004,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SD Umschalt Kühlen Pas/Akt
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3006,  STR3006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Während Verdichterbetrieb
-{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       3007,  STR3007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
+{0x593D0D1F,  CAT_WAERMEPUMPE,      VT_ENUM,          3007,  STR3007,  sizeof(ENUM3007),     ENUM3007,     DEFAULT_FLAG, DEV_ALL}, // Im passiven Kühlbetrieb
+{0x593D0D29,  CAT_WAERMEPUMPE,      VT_TEMP,          3008,  STR3008,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreizung Konden Kühlbetr
+{0x593D1790,  CAT_WAERMEPUMPE,      VT_ENUM,          3009,  STR3009,  sizeof(ENUM3009),     ENUM3009,     FL_OEM, DEV_ALL}, // Modulation V'lator/Q'pump
 {0x593D0CF3,  CAT_WAERMEPUMPE,      VT_PERCENT,       3010,  STR3010,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz max V'lator/Q'Pump
 {0x593D0CF4,  CAT_WAERMEPUMPE,      VT_PERCENT,       3011,  STR3011,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehz min V'lator/Q'Pump
+{0x593D0CF6,  CAT_WAERMEPUMPE,      VT_TEMP,          3012,  STR3012,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quelle Aus unter Temp B83
+{0x593D0CF7,  CAT_WAERMEPUMPE,      VT_TEMP,          3014,  STR3014,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Quelle Aus
+{0x593D0CF8,  CAT_WAERMEPUMPE,      VT_TEMP,          3015,  STR3015,  0,                    NULL,         FL_OEM, DEV_ALL}, // Beginn Drehzahlreg B83
+{0x593D0CF9,  CAT_WAERMEPUMPE,      VT_TEMP,          3016,  STR3016,  0,                    NULL,         FL_OEM, DEV_ALL}, // Ende Drehzahlregelung B83
+{0x593D0CFA,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 3017,  STR3017,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit Drehzahlregelung
+{0x593D1791,  CAT_WAERMEPUMPE,      VT_PERCENT,       3019,  STR3019,  0,                    NULL,         FL_OEM, DEV_ALL}, // Anl'drehzahl V'lator/Q'pump
 {0x593D1795,  CAT_WAERMEPUMPE,      VT_PERCENT,       3025,  STR3025,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Drehzahl Max
 {0x593D17A8,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3026,  STR3026,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Ein
 {0x593D17A9,  CAT_WAERMEPUMPE,      VT_HOUR_MINUTES,  3027,  STR3027,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent Mode Aus
 {0x593D1796,  CAT_WAERMEPUMPE,      VT_TEMP,          3028,  STR3028,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Beginn
 {0x593D1797,  CAT_WAERMEPUMPE,      VT_TEMP,          3029,  STR3029,  0,                    NULL,         FL_OEM, DEV_ALL}, // Silent'M Drehz'anheb Ende
+{0x053D10CC,  CAT_WAERMEPUMPE,      VT_ENUM,          3030,  STR3030,  sizeof(ENUM3030),     ENUM3030,     DEFAULT_FLAG, DEV_ALL}, // Autokorr WP Kondens'fühler
+{0x053D1085,  CAT_WAERMEPUMPE,      VT_TEMP,          3031,  STR3031,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur WP Vorlauffühler
+{0x053D1086,  CAT_WAERMEPUMPE,      VT_TEMP,          3032,  STR3032,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur WP Rückl'fühler
+{0x053D10CD,  CAT_WAERMEPUMPE,      VT_ENUM,          3033,  STR3033,  sizeof(ENUM3033),     ENUM3033,     DEFAULT_FLAG, DEV_ALL}, // Korrekturstatus
 
 // Energiezähler (Fujitsu Waterstage)
 {0x053D1088,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3090,  STR3090,  sizeof(ENUM3090),     ENUM3090,     DEFAULT_FLAG, DEV_ALL}, // Impulszählung Wärme
