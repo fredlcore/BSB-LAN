@@ -20,6 +20,7 @@
 #define UNIT_CEL_MIN_TEXT "&deg;Cmin"
 #define UNIT_LITERPERHOUR_TEXT "l/h"
 #define UNIT_LITERPERMIN_TEXT "l/min"
+#define UNIT_GR_PER_CUBM_TEXT "g/m³"
 
 #define ENUM_CAT_00_TEXT "Uhrzeit und Datum"
 #define ENUM_CAT_01_TEXT "Bedieneinheit"
@@ -1904,6 +1905,7 @@
 #define STR20100_TEXT "DHT22 Sensor ID"
 #define STR20101_TEXT "DHT22 Sensor Temperatur"
 #define STR20102_TEXT "DHT22 Sensor Luftfeuchtigkeit"
+#define STR20103_TEXT "DHT22 Sensor Abs Luftfeuchtigkeit"
 #define STR20200_TEXT "DS18B20 Sensor ID"
 #define STR20201_TEXT "DS18B20 Sensor Temperatur"
 #define STR20300_TEXT "MAX! Sensor ID"

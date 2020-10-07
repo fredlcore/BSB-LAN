@@ -393,7 +393,8 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
-#include <CRC32.h>
+//#include <CRC32.h>
+#include "src/CRC32/CRC32.h"
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
 #ifdef MQTT
@@ -581,7 +582,7 @@ byte UseEEPROM = 0;
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
-  CF_VERSION, //Size: 2 byte. Config version
+  CF_VERSION, //Size: 1 byte. Config version
   CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
   CF_MAX_DEVICES, //Size 11 * 20 bytes.
   CF_MAX_DEVADDR, //Size 4 * 20 bytes.
@@ -624,7 +625,8 @@ typedef enum{
   CF_MQTT_USERNAME, //Size: 32 bytes.
   CF_MQTT_PASSWORD, //Size: 32 bytes.
   CF_MQTT_TOPIC, //Size: 32 bytes.
-  CF_MQTT_DEVICE //Size: 32 bytes.
+  CF_MQTT_DEVICE, //Size: 32 bytes.
+  CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
 //according to input_type in configuration_struct
@@ -668,12 +670,6 @@ typedef struct {
   uint16_t size; //data length in EEPROM
 } configuration_struct;
 
-typedef struct{
-  uint16_t eeprom_address;//start address in EEPROM
-  byte *option_address; //pointer to parameter variable
-} addressesOfConfigOptions;
-addressesOfConfigOptions options[sizeof(cf_params)/sizeof(CF_USEEEPROM)];
-
 //Mega not enough space for useless strings.
 #if defined(__AVR__)
 #define CF_USEEEPROM_TXT NULL
@@ -704,6 +700,7 @@ const char CF_AVERAGESLIST_TXT[] PROGMEM = ("Programs for averages calculation")
 const char CF_CURRVALUESLIST_TXT[] PROGMEM = ("Programs for logging");
 const char CF_MAX_DEVICES_TXT[] PROGMEM = ("MAX! devices");
 #endif
+
 const char CF_MAC_TXT[] PROGMEM = ("MAC address");
 const char CF_DHCP_TXT[] PROGMEM = ("Use DHCP");
 const char CF_IPADDRESS_TXT[] PROGMEM = ("IP address");
@@ -732,7 +729,7 @@ const char CF_MQTT_TOPIC_TXT[] PROGMEM = ("Topic prefix");
 
 PROGMEM_LATE const configuration_struct config[]={
   {CF_USEEEPROM,        0, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)},
-  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 2},
+  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 1},
   {CF_CRC32,            0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
 #ifdef CONFIG_IN_EEPROM
   {CF_BUSTYPE,          1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},
@@ -787,31 +784,38 @@ PROGMEM_LATE const configuration_struct config[]={
 #endif
 };
 
-static int baseConfigAddrInEEPROM = 1024; // first Kb used by MAX!
+typedef struct{
+  uint16_t eeprom_address;//start address in EEPROM
+  byte *option_address; //pointer to parameter variable
+} addressesOfConfigOptions;
+addressesOfConfigOptions options[sizeof(config)/sizeof(config[0])];
+
+static int baseConfigAddrInEEPROM = 1024; //offset from start address 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
-  boolean allowedversion = false;
-  for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-    int addr = baseConfigAddrInEEPROM;
-    for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
-      #if defined(__AVR__)
-      if(i == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= version) allowedversion = true;
-        break;
-      } else
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= version) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0])) + 2;}
-    #else
-      if(i == config[j].id){
-        if(config[j].version <= version) allowedversion = true;
-        break;
-      } else
-        if(config[j].version <= version) {addr += config[j].size + 2;}
-      #endif
-    }
-    if(allowedversion) {
-      options[i].eeprom_address = addr;
-      for(uint8_t k = 0; k < sizeof(addr); k++){
-        crc.update(((byte *)&addr)[k]);
+  for (uint8_t v = 0; v <= version; v++){
+    for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+      boolean allowedversion = false;
+      int addr = baseConfigAddrInEEPROM;
+      for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
+  #if defined(__AVR__)
+        uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
+        if(i == temp_id){
+          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v) allowedversion = true;
+        } else
+          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v && i > temp_id) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
+  #else
+        if(i == config[j].id){
+          if(config[j].version <= v) allowedversion = true;
+        } else
+          if(config[j].version <= v && i > config[j].id) {addr += config[j].size;}
+  #endif
+      }
+      if(allowedversion) {
+        options[i].eeprom_address = addr;
+        for(uint8_t k = 0; k < sizeof(addr); k++){
+          crc.update(((byte *)&addr)[k]);
+        }
       }
     }
   }
@@ -832,7 +836,7 @@ void readFromEEPROM(uint8_t id){
   if (!EEPROM_ready) return;
   if(!options[id].option_address) return;
   uint16_t len = 0;
-  for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
+  for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
 #if defined(__AVR__)
     if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0])))
       len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
@@ -851,13 +855,17 @@ boolean writeToEEPROM(uint8_t id){
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
   uint16_t len = 0;
-  for(uint8_t j = 0; j < sizeof(cf_params)/sizeof(CF_USEEEPROM); j++){
+  for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
 #if defined(__AVR__)
-    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0])))
+    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
       len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
+      break;
+    }
 #else
-    if(id == config[j].id)
+    if(id == config[j].id){
       len = config[j].size;
+      break;
+    }
 #endif
   }
   for(uint16_t i = 0; i < len; i++){
@@ -1407,6 +1415,28 @@ void printcantalloc(void){
 }
 
 /** *****************************************************************
+ *  Function:  recognizeVirtualFunctionGroup(int)
+ *  Does:      Calculate and return virtual function "group id"
+ *             for code readability
+ *  Pass parameters:
+ *   int nr - program number
+ *  Parameters passed back:
+ *   none
+ *  Function value returned:
+ *   "group"
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
+  if(nr >= 20000 && nr < 20006){ return 1;}
+  else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
+  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(byte) * 4) {return 3;} //20100 - 20299
+  else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
+  else if (nr >= 20500 && nr < 20500 + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
+  return 0;
+}
+
+/** *****************************************************************
  *  Function: findLine()
  *  Does:     Scans the command table struct for a matching line
  *            number (ProgNr) and returns the command code.
@@ -1433,14 +1463,27 @@ int findLine(uint16_t line
   uint32_t c, save_c;
   uint16_t l;
 
-  //virtual progNrs
+  //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
   if(line >= 20000 && line < 20700){
-    if(line >= 20050 && line < 20100){line = avg_parameters[line - 20050];}
-    else if (line >= 20100 && line < 20100 + sizeof(DHT_Pins) / sizeof(byte) * 4) {line = 20100 + ((line - 20100) % 4);}
-    else if (line >= 20300 && line < 20300 + numSensors * 2) {line = 20300 + ((line - 20300) % 2);}
-    else if (line >= 20500 && line < 20500 + MAX_CUL_DEVICES * 4) {line = 20500 + ((line - 20500) % 4);}
-    else{
-      return -1;
+    switch(recognizeVirtualFunctionGroup(line)){
+      case 1: break;
+      case 2:  line = avg_parameters[line - 20050]; if(line == 0) return -1; else break;
+      case 3: {
+        if(DHT_Pins[(line - 20100) / 4 ] == 0) //pin not assigned to DHT sensor
+          return -1;
+        else
+          line = 20100 + ((line - 20100) % 4);
+        break;
+      }
+      case 4: line = 20300 + ((line - 20300) % 2); break;
+      case 5:{
+        if(max_device_list[(line - 20500) / 4][0] == 0) //device not set
+          return -1;
+        else
+          line = 20500 + ((line - 20500) % 4);
+        break;
+      }
+      default: return -1;
     }
   }
 
@@ -1633,21 +1676,22 @@ void SerialPrintRAW(byte* msg, byte len){
   }
 }
 
-/** *****************************************************************
- *  Function:  loadPrognrElementsFromTable(int)
- *  Does:      Get flags and data from tables and fill with this data
- *             decodedTelegram structure.
- *             Always called in query();. User can call the function when need it
- *  Pass parameters:
- *   int i - program number
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   decodedTelegram
- * *************************************************************** */
-void loadPrognrElementsFromTable(int i){
+ /** *****************************************************************
+  *  Function:  loadPrognrElementsFromTable(int, int)
+  *  Does:      Get flags and data from tables and fill with this data
+  *             decodedTelegram structure.
+  *             Always called in query();. User can call the function when need it
+  *  Pass parameters:
+  *   int nr - program number
+  *   int i - program line
+  * Parameters passed back:
+  *   none
+  * Function value returned:
+  *   none
+  * Global resources used:
+  *   decodedTelegram
+  * *************************************************************** */
+void loadPrognrElementsFromTable(int nr, int i){
   if (i<0) i = findLine(19999,0,NULL); // Using "Unknown command" if not found
   decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
@@ -1674,6 +1718,17 @@ void loadPrognrElementsFromTable(int i){
     decodedTelegram.isswitch = 1;
   } else {
     decodedTelegram.isswitch = 0;
+  }
+
+  decodedTelegram.sensorid = 0;
+  if(nr >= 20000){ //Virtual programs. do not forget sync changes with findline()
+    decodedTelegram.readonly = 1;
+    decodedTelegram.prognr = nr;
+    switch(recognizeVirtualFunctionGroup(nr)){
+      case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
+      case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
+      case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
+    }
   }
 }
 
@@ -2702,18 +2757,11 @@ void printTelegram(byte* msg, int query_line) {
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
-    loadPrognrElementsFromTable(i);
+    loadPrognrElementsFromTable(query_line, i);
 
     printToDebug(PSTR(" - "));
     // print menue text
-    if ((decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100)) { //Averages
-      printToDebug(PSTR(MENU_TEXT_24A_2));
-      printToDebug(PSTR(". "));
-    }
     printToDebug(decodedTelegram.prognrdescaddr);
-    if(decodedTelegram.sensorid){
-      printFmtToDebug(PSTR(" #%d"), decodedTelegram.sensorid);
-    }
     printToDebug(PSTR(": "));
   }
 
@@ -3662,7 +3710,7 @@ int set(int line      // the ProgNr of the heater parameter
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %du"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
-      EEPROM.put(getEEPROMaddress(CF_PPS_VALUES) + sizeof(uint16_t)*cmd_no, pps_values[cmd_no]);
+      writeToEEPROM(CF_PPS_VALUES);
     }
     return 1;
   }
@@ -4265,7 +4313,7 @@ char *build_pvalstr(boolean extended){
   len+=strlen(outBuf + len);
   strcpy_P(outBuf + len, PSTR(" - "));
   len+=strlen(outBuf + len);
-  if ((decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100)) {
+  if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
     strcpy_P(outBuf + len, PSTR(MENU_TEXT_24A_2));
     len+=strlen(outBuf + len);
     strcpy_P(outBuf + len, PSTR(". "));
@@ -4274,7 +4322,7 @@ char *build_pvalstr(boolean extended){
   strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
   len+=strlen(outBuf + len);
   if(decodedTelegram.sensorid){
-    len+=sprintf_P(outBuf, PSTR(" #%d"), decodedTelegram.sensorid);
+    len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
   }
   strcpy_P(outBuf + len, PSTR(":"));
   len+=strlen(outBuf + len);
@@ -4468,6 +4516,7 @@ if(data_len==3){
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void queryVirtualPrognr(int line, int table_line){
+    loadPrognrElementsFromTable(line, table_line);
     decodedTelegram.cat=get_cmdtbl_category(table_line);
 
 #if defined(__AVR__)
@@ -4478,191 +4527,150 @@ void queryVirtualPrognr(int line, int table_line){
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
-   loadPrognrElementsFromTable(table_line);
 
    printFmtToDebug(PSTR("\r\nVirtual parameter %d queried. Table line %d\r\n"), line, table_line);
    decodedTelegram.msg_type = TYPE_ANS;
-
-
-   if (line >= 20000 && line < 20006) {
-     uint32_t val = 0;
-     switch (line) {
-       case 20000: val = brenner_duration; break;
-       case 20001: val = brenner_count; break;
-       case 20002: val = brenner_duration_2; break;
-       case 20003: val = brenner_count_2; break;
-       case 20004: val = TWW_duration; break;
-       case 20005: val = TWW_count; break;
-     }
-   sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
    decodedTelegram.prognr = line;
-   return;
-   }
-   if (line >= 20050 && line < 20050 + numAverages) { //Averages
-     size_t tempLine = line - 20050;
-     decodedTelegram.sensorid = tempLine + 1;
-     decodedTelegram.prognr = line;
-#ifdef AVERAGES
-     if(avg_parameters[tempLine] == 0){
-       decodedTelegram.msg_type = TYPE_ERR;
-       decodedTelegram.error = 7;
+   switch(recognizeVirtualFunctionGroup(line)){
+     case 1: {
+       uint32_t val = 0;
+       switch (line) {
+         case 20000: val = brenner_duration; break;
+         case 20001: val = brenner_count; break;
+         case 20002: val = brenner_duration_2; break;
+         case 20003: val = brenner_count_2; break;
+         case 20004: val = TWW_duration; break;
+         case 20005: val = TWW_count; break;
+       }
+       sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
        return;
      }
-     _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
-     return;
- #else
-    decodedTelegram.msg_type = TYPE_ERR;
-    decodedTelegram.error = 7;
-    return;
- #endif
-   }
-   if (line >= 20100 && line < 20300) {
-     size_t tempLine = line - 20100;
-     size_t log_sensor = tempLine / 4;
-     decodedTelegram.sensorid = log_sensor + 1;
-     decodedTelegram.prognr = line;
+     case 2: {
+       size_t tempLine = line - 20050;
+  #ifdef AVERAGES
+       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
+       return;
+   #endif
+       break;
+     }
+     case 3: {
+       size_t tempLine = line - 20100;
+       size_t log_sensor = tempLine / 4;
 #ifdef DHT_BUS
-     if(log_sensor >= sizeof(DHT_Pins) / sizeof(byte) || !DHT_Pins[log_sensor]){
-       decodedTelegram.msg_type = TYPE_ERR;
-       decodedTelegram.error = 7;
-       return;
-     }
-
-     if(tempLine % 4 == 0){ //print sensor ID
-       sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
-       return;
-     }
-
-     int chk = DHT.read22(DHT_Pins[log_sensor]);
-     printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), DHT_Pins[log_sensor]);
-     switch (chk) {
-       case DHTLIB_OK:
-       printToDebug(PSTR("OK,\t"));
-       break;
-       case DHTLIB_ERROR_CHECKSUM:
-         decodedTelegram.error = 256;
-       printToDebug(PSTR("Checksum error,\t"));
-       break;
-       case DHTLIB_ERROR_TIMEOUT:
-         decodedTelegram.error = 261;
-       printToDebug(PSTR("Time out error,\t"));
-       break;
-       default:
-         decodedTelegram.error = 1;
-         printToDebug(PSTR("Unknown error,\t"));
-       break;
-     }
-
-     float hum = DHT.humidity;
-     float temp = DHT.temperature;
-     if (hum > 0 && hum < 101) {
-       printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\n"), log_sensor, temp, log_sensor, hum);
-
-       if(tempLine % 4 == 1){ //print sensor Current temperature
-         _printFIXPOINT(decodedTelegram.value, temp, 2);
-       } else if(tempLine % 4 == 2){ //print sensor Humidity
-         _printFIXPOINT(decodedTelegram.value, hum, 2);
-       } else if(tempLine % 4 == 3){ //print sensor Humidity
-         // abs humidity
-        _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
-       }
-     }
-     else
-       undefinedValueToBuffer(decodedTelegram.value);
-     return;
-#else
-   decodedTelegram.msg_type = TYPE_ERR;
-   decodedTelegram.error = 7;
-   return;
-#endif
-   }
-   if (line>= 20300 && line < 20500) {
-     size_t tempLine = line - 20300;
-     int log_sensor = tempLine / 2;
-     decodedTelegram.sensorid = log_sensor + 1;
-     decodedTelegram.prognr = line;
-#ifdef ONE_WIRE_BUS
-     if(enableOneWireBus){
-       if(log_sensor >= numSensors){
-         decodedTelegram.error = 7;
-         decodedTelegram.msg_type = TYPE_ERR;
+       if(tempLine % 4 == 0){ //print sensor ID
+         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
          return;
        }
-       if(tempLine % 2 == 0){ //print sensor ID
-         DeviceAddress device_address;
-         sensors->getAddress(device_address, log_sensor);
-         sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-         return;
+
+       int chk = DHT.read22(DHT_Pins[log_sensor]);
+       printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), DHT_Pins[log_sensor]);
+       switch (chk) {
+         case DHTLIB_OK:
+           printToDebug(PSTR("OK,\t"));
+           break;
+         case DHTLIB_ERROR_CHECKSUM:
+           decodedTelegram.error = 256;
+           printToDebug(PSTR("Checksum error,\t"));
+           break;
+         case DHTLIB_ERROR_TIMEOUT:
+           decodedTelegram.error = 261;
+           printToDebug(PSTR("Time out error,\t"));
+          break;
+         default:
+           decodedTelegram.error = 1;
+           printToDebug(PSTR("Unknown error,\t"));
+         break;
        }
-       unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-       if(tempTime != lastOneWireRequestTime){
-         sensors->requestTemperatures(); //call it outside of here for more faster answers
-         lastOneWireRequestTime = tempTime;
+
+       float hum = DHT.humidity;
+       float temp = DHT.temperature;
+       if (hum > 0 && hum < 101) {
+         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\n"), log_sensor, temp, log_sensor, hum);
+
+         if(tempLine % 4 == 1){ //print sensor Current temperature
+           _printFIXPOINT(decodedTelegram.value, temp, 2);
+         } else if(tempLine % 4 == 2){ //print sensor Humidity
+           _printFIXPOINT(decodedTelegram.value, hum, 2);
+         } else if(tempLine % 4 == 3){ //print sensor Abs Humidity
+          _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
+         }
        }
-       float t=sensors->getTempCByIndex(log_sensor);
-       if(t == DEVICE_DISCONNECTED_C) { //device disconnected
-         decodedTelegram.error = 261;
+       else
          undefinedValueToBuffer(decodedTelegram.value);
+       return;
+#endif
+     break;
+     }
+     case 4: {
+       size_t tempLine = line - 20300;
+       int log_sensor = tempLine / 2;
+  #ifdef ONE_WIRE_BUS
+       if(enableOneWireBus){
+         if(tempLine % 2 == 0){ //print sensor ID
+           DeviceAddress device_address;
+           sensors->getAddress(device_address, log_sensor);
+           sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+           return;
+         }
+         unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
+         if(tempTime != lastOneWireRequestTime){
+           sensors->requestTemperatures(); //call it outside of here for more faster answers
+           lastOneWireRequestTime = tempTime;
+         }
+         float t=sensors->getTempCByIndex(log_sensor);
+         if(t == DEVICE_DISCONNECTED_C) { //device disconnected
+           decodedTelegram.error = 261;
+           undefinedValueToBuffer(decodedTelegram.value);
+           return;
+         }
+         _printFIXPOINT(decodedTelegram.value, t, 2);
          return;
        }
-       _printFIXPOINT(decodedTelegram.value, t, 2);
-       return;
+  #endif
+     break;
      }
-   else
-#endif
-     {
-       decodedTelegram.error = 7;
-       decodedTelegram.msg_type = TYPE_ERR;
-       return;
+     case 5: {
+       size_t tempLine = line - 20500;
+       size_t log_sensor = tempLine / 4;
+  #ifdef MAX_CUL
+        if(enable_max_cul){
+          if(tempLine % 4 == 0){ //print sensor ID
+            strcpy(decodedTelegram.value, max_device_list[log_sensor]);
+            return;
+          }
+          if(max_devices[log_sensor]){
+            switch(tempLine % 4){ //print sensor values
+              case 1:
+                if (max_dst_temp[log_sensor] > 0)
+                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_cur_temp[log_sensor]);
+                else{
+                  decodedTelegram.error = 261;
+                  undefinedValueToBuffer(decodedTelegram.value);
+                }
+                break;
+              case 2:
+                if (max_dst_temp[log_sensor] > 0)
+                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_dst_temp[log_sensor]);
+                else{
+                  decodedTelegram.error = 261;
+                  undefinedValueToBuffer(decodedTelegram.value);
+                }
+                break;
+              case 3:
+                if (max_valve[log_sensor] > -1)
+                  sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
+                else{
+                  decodedTelegram.error = 261;
+                  undefinedValueToBuffer(decodedTelegram.value);
+                }
+                break;
+            }
+            return;
+          }
+        }
+  #endif
+      break;
      }
-   }
-   if (line>= 20500 && line < 20700) {
-     size_t tempLine = line - 20500;
-     size_t log_sensor = tempLine / 4;
-     decodedTelegram.sensorid = log_sensor + 1;
-     decodedTelegram.prognr = line;
-#ifdef MAX_CUL
-      if(max_devices[log_sensor] == 0 || log_sensor >= MAX_CUL_DEVICES || !enable_max_cul){
-        decodedTelegram.msg_type = TYPE_ERR;
-        decodedTelegram.error = 7;
-        return;
-      }
-
-      switch(tempLine % 4){ //print sensor ID
-        case 0:
-          strcpy(decodedTelegram.value, max_device_list[log_sensor]);
-          break;
-        case 1:
-          if (max_dst_temp[log_sensor] > 0)
-            sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_cur_temp[log_sensor]);
-          else{
-            decodedTelegram.error = 261;
-            undefinedValueToBuffer(decodedTelegram.value);
-          }
-          break;
-        case 2:
-          if (max_dst_temp[log_sensor] > 0)
-            sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_dst_temp[log_sensor]);
-          else{
-            decodedTelegram.error = 261;
-            undefinedValueToBuffer(decodedTelegram.value);
-          }
-          break;
-        case 3:
-          if (max_valve[log_sensor] > -1)
-            sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
-          else{
-            decodedTelegram.error = 261;
-            undefinedValueToBuffer(decodedTelegram.value);
-          }
-          break;
-      }
-      return;
-#else
-   decodedTelegram.msg_type = TYPE_ERR;
-   decodedTelegram.error = 7;
-   return;
-#endif
    }
    decodedTelegram.error = 7;
    decodedTelegram.msg_type = TYPE_ERR;
@@ -4928,14 +4936,14 @@ void dht22(void) {
     for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
     query(20101 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s"), i, decodedTelegram.value);
-    printToWebClient(PSTR(" &deg;C\n</td></tr>\n<tr><td>\n"));
+    printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
+    printToWebClient(PSTR("\n</td></tr>\n<tr><td>\n"));
     query(20102 + i * 4);
-    printFmtToWebClient(PSTR("hum[%d]: %s"), i, decodedTelegram.value);
-    printToWebClient(PSTR(" &#037;\n</td></tr>\n<tr><td>\n"));
+    printFmtToWebClient(PSTR("hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
+    printToWebClient(PSTR("\n</td></tr>\n<tr><td>\n"));
     query(20103 + i * 4);
-    printFmtToWebClient(PSTR("abs_hum[%d]: %s"), i, decodedTelegram.value);
-    printToWebClient(PSTR(" g/m<sup>3</sup>\n</td></tr>\n"));
+    printFmtToWebClient(PSTR("abs_hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
+    printToWebClient(PSTR("\n</td></tr>\n"));
   }
   flushToWebClient();
 }
@@ -4985,6 +4993,10 @@ char *lookup_descr(uint16_t line) {
 }
 
 void printToWebClient_prognrdescaddr(){
+  if(decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100){
+    printToWebClient(PSTR(MENU_TEXT_24A_2));
+    printToWebClient(PSTR(". "));
+  }
   printToWebClient(decodedTelegram.prognrdescaddr);
   if(decodedTelegram.sensorid){
     printFmtToWebClient(PSTR(" #%d"), decodedTelegram.sensorid);
@@ -5034,15 +5046,11 @@ void Ipwe() {
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
         counter++;
-        uint32_t c=0;
-        loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+        query(20050 + i);
         printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
         printToWebClient(PSTR("<br></td><td>"));
-        printToWebClient(PSTR(MENU_TEXT_24A_2));
-        printToWebClient(PSTR(". "));
         printToWebClient_prognrdescaddr();
-        printFmtToWebClient(PSTR("<br></td><td>%.1f&nbsp;"), (avgValues[i]));
-        printToWebClient(decodedTelegram.unit);
+        printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
         printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
       }
     }
@@ -5067,14 +5075,14 @@ void Ipwe() {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
   for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
-    query(20101 + i * 3);
+    query(20101 + i * 4);
     counter++;
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
     printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
     printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
     printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
     counter++;
-    query(20102 + i * 3);
+    query(20102 + i * 4);
     printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d"), counter);
     printToWebClient(PSTR("<br></td><td>"));
     printFmtToWebClient(PSTR("DHT sensor %d humidity"), DHT_Pins[i]);
@@ -5491,6 +5499,7 @@ void loop() {
                 msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
             }
+            break;
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
               tx_msg[6] = pps_values[PPS_RTS] >> 8;
@@ -6636,7 +6645,7 @@ uint8_t pps_offset = 0;
                   if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
                   uint32_t c=0;
                   char p1[16];
-                  loadPrognrElementsFromTable(findLine(avg_parameters[i],0,&c));
+                  loadPrognrElementsFromTable(20050 + i, findLine(20050 + i,0,&c));
                   _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
                   printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
                   printToWebClient_prognrdescaddr();
@@ -6859,7 +6868,7 @@ uint8_t pps_offset = 0;
                 }
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
-                loadPrognrElementsFromTable(i_line);
+                loadPrognrElementsFromTable(json_parameter, i_line);
                 printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
                 printToWebClient(PSTR("\",\n"));
@@ -7012,7 +7021,7 @@ uint8_t pps_offset = 0;
               }
               break;
             case 'S': //save config to EEPROM
-                for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+                for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
                   writeToEEPROM(i);
                 }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
@@ -7280,8 +7289,8 @@ uint8_t pps_offset = 0;
                     _printFIXPOINT(tempBuf,avgValues[i],1);
                     uint32_t c=0;
                     int line=findLine(avg_parameters[i],0,&c);
-                    loadPrognrElementsFromTable(line);
-                    printFmtToWebClient(PSTR("<tr><td>\n %d  Avg"), avg_parameters[i]);
+                    loadPrognrElementsFromTable(avg_parameters[i], line);
+                    printFmtToWebClient(PSTR("<tr><td>\n %d "), avg_parameters[i]);
                     printToWebClient_prognrdescaddr();
                     printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
 
@@ -7845,62 +7854,65 @@ void setup() {
   if(UseEEPROM == 0x96){
     readFromEEPROM(CF_VERSION);
     readFromEEPROM(CF_CRC32);
-    if(crc == initConfigTable(EEPROMversion)){
-  //link parameters
-      registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
-      registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
-      registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
-      registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
-      registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
-      registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
-      registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
-      registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
-      registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
-      registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
-      registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
-  #ifdef WEBCONFIG
-      registerConfigVariable(CF_MAC, (byte *)mac);
-      registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
-      registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
-      registerConfigVariable(CF_MASK, (byte *)subnet_addr);
-      registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
-      registerConfigVariable(CF_DNS, (byte *)dns_addr);
-      registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
-      registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
-      registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
-      registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
-      registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
-  //    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
-      registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
-      registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
-      registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
-      registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
-      registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
-      registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
-      registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
-  //    registerConfigVariable(CF_READONLY, (byte *)mac);
-  //    registerConfigVariable(CF_DEBUG, (byte *)mac);
-      registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
-      registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
-      registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
-      registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
-      registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
-      registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
-  #endif
 
+  //link parameters
+    registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
+    registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
+    registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
+    registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
+    registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+    registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
+    registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
+    registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
+    registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
+    registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
+    registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
+#ifdef WEBCONFIG
+    registerConfigVariable(CF_MAC, (byte *)mac);
+    registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
+    registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
+    registerConfigVariable(CF_MASK, (byte *)subnet_addr);
+    registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
+    registerConfigVariable(CF_DNS, (byte *)dns_addr);
+    registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
+    registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
+    registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+    registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
+    registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+//    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
+    registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
+    registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
+    registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
+    registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
+    registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
+    registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
+    registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
+//    registerConfigVariable(CF_READONLY, (byte *)mac);
+//    registerConfigVariable(CF_DEBUG, (byte *)mac);
+    registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
+    registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+    registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
+    registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
+    registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
+    registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+#endif
+
+    if(crc == initConfigTable(EEPROMversion)){
   //read parameters
-      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+      for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   //read parameter if it version is non-zero
 #if defined(__AVR__)
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0) readFromEEPROM(i);
+        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0 &&
+           pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) <= EEPROMversion)
+             readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
 #else
-        if(config[i].version > 0) readFromEEPROM(i);
+        if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-
+    }
   //calculate maximal version
       uint8_t maxconfversion = 0;
-      for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
+      for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   #if defined(__AVR__)
         if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
   #else
@@ -7908,23 +7920,17 @@ void setup() {
   #endif
       }
 
-
       if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
         crc = initConfigTable(maxconfversion); //store new CRC32
         EEPROMversion = maxconfversion; //store new version
-        writeToEEPROM(CF_VERSION);
-        writeToEEPROM(CF_CRC32);
-        for(uint8_t i = 0; i < sizeof(cf_params)/sizeof(CF_USEEEPROM); i++){
-          #if defined(__AVR__)
-                  if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0) writeToEEPROM(i);
-          #else
-                  if(config[i].version > 0) writeToEEPROM(i);
-          #endif
+        for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+          //do not write here MAX! settings
+          if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) writeToEEPROM(i);
          }
       }
       unregisterConfigVariable(CF_VERSION);
       unregisterConfigVariable(CF_CRC32);
-    }
+
   }
 
 #endif

@@ -316,6 +316,7 @@ typedef enum{
   VT_STRING,            //* x Byte - 1 enable / string
   VT_CUSTOM_ENUM,       //* x Byte - 1 Byte Position, 1 Byte Parameter-Wert, Space, Text
   VT_CUSTOM_BYTE,       //* x Byte - 1 Byte Position, 1 Byte Länge Parameter, Space (!) (nötig für Erkennung)
+  VT_GR_PER_CUBM,       //Virtual (DHT22): Gram per cubic meter (Abs humidity)
   VT_UNKNOWN
 }vt_type_t;
 
@@ -340,6 +341,7 @@ const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
 const char U_CEL_MIN[] PROGMEM = UNIT_CEL_MIN_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
+const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -465,6 +467,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_GR_PER_CUBM,    1.0,    DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM)},
 {VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 };
 
@@ -2758,6 +2761,7 @@ const char STR20005[] PROGMEM = MENU_TEXT_TT1;
 const char STR20100[] PROGMEM = STR20100_TEXT;
 const char STR20101[] PROGMEM = STR20101_TEXT;
 const char STR20102[] PROGMEM = STR20102_TEXT;
+const char STR20103[] PROGMEM = STR20103_TEXT;
 const char STR20200[] PROGMEM = STR20200_TEXT;
 const char STR20201[] PROGMEM = STR20201_TEXT;
 const char STR20300[] PROGMEM = STR20300_TEXT;
@@ -10800,6 +10804,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20201, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
