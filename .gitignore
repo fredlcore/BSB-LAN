@@ -2,6 +2,7 @@
 .gitattributes
 .DS_Store
 arduino.sh
+due.sh
 build/
 BSB_lan_config.h
 BSB_lan_custom.h

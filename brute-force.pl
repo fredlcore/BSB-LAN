@@ -14,7 +14,7 @@ use strict;
 # before running tests. Some of them are specific to certain features (such
 # as solar or cooling), so it won't make sense for you to test this group.
 # 
-# Log output will be appended to brute-force-log.txt
+# Log output will be appended to defs-brute-force-<Heater-ID>.h
 # Please note that BSB_lan_defs.h has to be in the same folder as this script.
 # Testing one major category will take approx. 18 hours, more if you increase
 # the delay between queries via the sleep command (now at 1/4 second).
@@ -38,11 +38,11 @@ my $len=0;
 my $payload_start=0;
 
 
-my $bus = `wget -q -O - $URL/C | grep Bus-System`;
-$bus =~ /.*: (.*) \((.*), (.*)\)/;
+my $bus = `wget -q -O - $URL/JI | grep "\"bus\""`;
+$bus =~ /.*: "(.*)"/;
 $bus = $1;
-my $orig = $2;
-my $dest = $3;
+my $orig = sprintf("%02X", $2);;
+my $dest = sprintf("%02X", $3+0x80);
 if ($bus ne "BSB" && $bus ne "LPB") {
   print "Brute-force querying only works on BSB and LPB.\n";
   exit;
@@ -52,7 +52,7 @@ my $heater = `wget -q -O - $URL/JQ=6224 | grep "value"`;
 $heater =~ /.*: "(.*)"/;
 $heater = $1;
 $heater =~ s/\//-/g;
-print "Running scan on $bus for Command ID range ";
+print "Running scan on $bus (source: 0x$orig, dest: 0x$dest) for Command ID range ";
 printf("%02X", $baseID);
 print " on $heater...\n";
 
@@ -73,11 +73,11 @@ for ($counter; $counter < 65536; $counter++) {
     while ($answer le " " && $retries < 3) {
       print "$ID\n";
       if ($bus eq "BSB") {
-        $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC 8$dest 0$orig"`;
+        $answer = `wget -q -O - $URL/Y06,0x$ID | grep "DC $dest $orig"`;
       } else {
         $answer = `wget -q -O - $URL/Y06,0x$ID | grep "0C 02 00 14"`;
       }
-      if ((($bus eq "BSB" && $answer !~ /DC 8$dest 0$orig 0C 08/ && $answer !~ /DC 8. 0A/) || ($bus eq "LPB" && $answer =~ /02 00 14 .7/)) && $answer gt " ") {
+      if ((($bus eq "BSB" && $answer !~ /DC $dest $orig 0C 08/ && $answer !~ /DC 8. 0A/) || ($bus eq "LPB" && $answer =~ /02 00 14 .7/)) && $answer gt " ") {
 
         my @msg = split(" ", $answer);
         if ($bus eq "BSB") {

@@ -1,3 +1,4 @@
+#if defined(__AVR__)
 /*--------------------------------------------------------------------
 This file is part of the Arduino WiFiEsp library.
 
@@ -779,7 +780,7 @@ int EspDrv::getDataBuf(uint8_t connId, uint8_t *buf, uint16_t bufSize)
 	if(_bufPos<bufSize)
 		bufSize = _bufPos;
 	
-	for(int i=0; i<bufSize; i++)
+	for(uint16_t i=0; i<bufSize; i++)
 	{
 		int c = timedRead();
 		//LOGDEBUG(c);
@@ -840,7 +841,7 @@ bool EspDrv::sendData(uint8_t sock, const __FlashStringHelper *data, uint16_t le
 
 	//espSerial->write(data, len);
 	PGM_P p = reinterpret_cast<PGM_P>(data);
-	for (int i=0; i<len; i++)
+	for (uint16_t i=0; i<len; i++)
 	{
 		unsigned char c = pgm_read_byte(p++);
 		espSerial->write(c);
@@ -1125,3 +1126,4 @@ int EspDrv::timedRead()
 
 
 EspDrv espDrv;
+#endif

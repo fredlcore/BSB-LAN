@@ -1,4 +1,8 @@
+#if defined(__AVR__)
 const byte favicon [] PROGMEM_LATE = { 
+#else
+const char favicon [] PROGMEM_LATE = { 
+#endif
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x91, 0x68,
   0x36, 0x00, 0x00, 0x00, 0x6c, 0x49, 0x44, 0x41, 0x54, 0x28, 0xcf, 0x95, 0x52, 0x41, 0x0e, 0xc0,
@@ -268,14 +272,19 @@ const char header_html[] PROGMEM_LATE =
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">\n"
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
+  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">\n"
   "<title>BSB-LAN Web</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
+  "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
+  "td {vertical-align: top;}\n"
+  "td.header {vertical-align: middle;}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
   "</head><body>\n"
   "<script>function set(line){\n"
   "var value = document.getElementById('value'+line).value.replace(\":\", \".\");\n"
-  "if(isNaN(value)==false){\n"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+document.getElementById('value'+line).value,'_self');\n"
+  "value = value.replace(\"---\", \"\");\n"
+  "if(isNaN(value)==false || value == ''){\n"
+  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
   "}}\n"
   "function setbit(line){\n"
   "var x=document.getElementById('value'+line); var value=0;\n"
@@ -287,3 +296,13 @@ const char header_html[] PROGMEM_LATE =
   "}</script>\n"
   "<font face='Arial'>\n"
   "<center><h1><A ID=main_link HREF='/";
+
+const char auth_req_html[] PROGMEM_LATE = 
+  "HTTP/1.1 401 Authorization Required\n"
+  "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
+  "Content-Type: text/html\n"
+  "Connnection: close\n"
+  "\n"
+  "<!DOCTYPE HTML>\n"
+  "<HTML><HEAD><TITLE>Error</TITLE>\n"
+  "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>\n";

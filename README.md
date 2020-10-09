@@ -2,75 +2,56 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-LAN Interface for Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-Point-Interface (PPS) designed for Arduino Mega 2560 with Ethernet-Shield for web-based controlling Elco Thision, Brötje and similar heating systems, including logging to Micro-SD-card.
+LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#21-bsb-and-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#22-pps) designed for Arduino Due with Ethernet-Shield for web-based controlling (locally via LAN or if so desiread also via the internet) heating systems such as Elco Thision, Brötje and similar systems, including logging to Micro-SD-card. This project supports more than 1300 parameters on various heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
-<B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.
+<B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.  
+   
+***Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!***  
+*A quick installation guide is available [here](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap16.html).* 
+   
+With the usage of the BSB-LPB-LAN adapter and the BSB-LAN software, various functions, values and parameters can now be easily monitored, logged and (if wanted) web-based controlled and changed.
+An optional integration into existing SmartHome systems such as [FHEM](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#111-fhem), [openHAB](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#112-openhab), [HomeMatic](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#113-homematic-eq3), [IoBroker](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#114-iobroker), [Loxone](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#115-loxone), [IP-Symcon](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#116-ip-symcon), [EDOMI](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.md#1110-edomi) or [Home Assistant](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.md#1111-home-assistant) can be done via [HTTPMOD](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#1112-integration-via-httpmod-module), [JSON](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#824-retrieving-and-controlling-via-json) or [MQTT](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#117-mqtt-influxdb-telegraf-and-grafana).
+In addition, the use of the adapter as a [standalone logger](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap09.html#91-usage-of-the-adapter-as-a-standalone-logger-with-bsb-lan) without LAN or Internet connection when using a microSD card is also possible.
+Furthermore, optional [temperature and humidity sensors](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap12.html#123-usage-of-optional-sensors-dht22-and-ds18b20) can be connected and their data also logged and evaluated. By using an Arduino and the ability to integrate your own code into the BSB-LAN software, there is also a wide range of expansion options.
+   
+The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. As a basic rule we can say, that the controller types of the last years which are named with an **S** at the end (RV**S** and LM**S**) are comaptible with BSB-LAN and offer (mostly) the full range of funtionality. For further and more detailed informations about the different [controllers](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#32-detailed-listing-and-description-of-the-supported-controllers) and the [connection](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap02.html#23-connecting-the-adapter-to-the-controller) see the corresponding chapters.  
+   
+**Gas-fired heating systems controllers:**  
+- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3211-lmu-controllers) and [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3212-lms-controllers) (latest models), connection via BSB, complete functionality  
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3211-lmu-controllers), connection via PPS, limited functionality  
+   
+**Oil-fired heating systems controllers / solarthermic controllers / zone controllers:**  
+- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via BSB, full functionality  
+- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3221-rva-and-rvp-controllers), connection via PPS (modelspecific sometimes LPB), limited functionality 
+   
+**Heat pump controllers:**  
+- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via BSB, full functionality  
+   
+**Weishaupt (model WTU):**  
+- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#3222-rvs-controllers), connection via LPB, (nearly) full functionality  
+     
+**In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
+- Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
+- Atlantic: Alféa Excellia, Extensa  
+- Austria Email: LWPK  
+- Baxi: Luna Platinum
+- CTA: Optiheat  
+- Froeling: Rendagas Plus
+- Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
+- Gruenenwald: Greenheat
+- MHG: Procon E
+- Olymp: SHS, WHS
+- Thermital: TBox Clima TOP
+- Weishaupt: WTU
+   
+***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
+- **[Broetje](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#311-broetje)**  
+- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#312-elco)**  
+- **[Other Manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.html#313-other-manufacturers)**  
 
-This hardware/software combination should in principle work with all BSB- and LPB-based heating systems and has been tested in real life with the following heating systems:
-
-- Atlantic Alféa Extensa + [RVS21.831F] (heat pump)
-- Austria Email LWPK 8 [RVS21.831] (heat pump)
-- Baxi Luna Platinum + [LMS15] (gas-fired) 
-- Brötje BBK 22E [LMS14] (gas-fired)
-- Brötje BBK 22F [LMS14] (gas-fired)
-- Brötje BBS Pro Evo 15C [LMU74] (gas-fired)
-- Brötje BSK 20 [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 15E [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 20E [LMS14] (gas-fired)
-- Brötje EcoCondens BBS 28C [LMU7] (gas-fired)
-- Brötje EcoCondens BBS EVO 20G [LMS15] (gas-fired)  
-- Brötje EcoSolar Kompakt BMR 20/24 [LMS15] (gas-fired + solar)  
-- Brötje EcoTherm Kompakt WMS 12 [LMS 15] (gas-fired)
-- Brötje EcoTherm Kompakt WMS 24 [LMS 15] (gas-fired)
-- Brötje EcoTherm Plus BBS2N.28 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
-- Brötje EcoTherm Plus WGB2N.20 [LMU 64] (gas-fired) (by usage of OCI420 via LPB!)
-- Brötje ISR-SSR [RVS63.283]
-- Brötje ISR-ZR1 [RVS46.530]
-- Brötje LogoBloc Unit L-UB 25C [RVS43.122] (oil-fired)
-- Brötje NovoCondens BOB 20 [RVS43.325] (oil-fired)
-- Brötje NovoCondens SOB 26 [RVA63.242] (oil-fired) {LPB_only} 
-- Brötje NovoCondens SOB 22C [RVS43.222] (oil-fired)
-- Brötje NovoCondens SOB 26C [RVS43.222] (oil-fired) + EWM [RVS75.390]
-- Brötje NovoCondens WOB 20D [RVS43.325] (oil-fired)
-- Brötje SensoTherm BLW 12B [RVS21.825] (heat pump)
-- Brötje SensoTherm BLW 15B [RVS21.825] (heat pump)
-- Brötje SensoTherm BSW 10E [RVS61.843] (heat pump)
-- Brötje SensoTherm BSW-K [RVS61.843] (heat pump)
-- Brötje TrioCondens BGB 20E [LMS14] (gas-fired)
-- Brötje WBS 14D [LMU74] (gas-fired)
-- Brötje WBS 14F [LMS14] (gas-fired)
-- Brötje WBS 22E [LMS14] (gas-fired)
-- Brötje WGB 15E [LMS14] (gas-fired)
-- Brötje WGB 20C [LMU74] (gas-fired)
-- Brötje WGB-C 20/24H [LMS14] (gas-fired)
-- Brötje WGB EVO 20H [LMS15] (gas-fired)
-- Brötje WGB EVO 15I [LMS15] (gas-fired)
-- Brötje WGB Pro EVO 20C [LMU75] (gas-fired)
-- Brötje WGB S 17/20E EcoTherm Plus [LMS14] (gas-fired)
-- Brötje WGB-U 15H [LMS14] (gas-fired)
-- CTC 380 IC [RVS43.143] (oil-fired)
-- Deville 9981 [RVA53.140] (oil-fired) {PPS_only}
-- Elco Aerotop G07-14 [RVS61.843] (heat pump)
-- Elco Aerotop T07-16 [RVS61.843] (heat pump)
-- Elco Aerotop T10C [RVS61.843] (heat pump)
-- Elco Aquatop 8es [RVS51.843] (corresponds to CTA Optihead OH1-8es) (heat pump)
-- Elco Straton 21 [RVS63.283] (oil-fired)
-- Elco Thision S Plus 13 [LMS14] (gas-fired)
-- Elco Thision S 13.1 [LMU7] (gas-fired)
-- Elco Thision S 17.1 [LMU74.100] & [RVS63.283] (gas-fired)
-- Elco Thision S 25.1 [RSV63.283] (gas-fired) + MM [AVS75.390] 
-- Fröling Rendagas Plus [RVA63.244] (gas-fired)
-- Fujitsu Waterstage Comfort 10 [RVS21.827] (heat pump)
-- Fujitsu Waterstage WSHA 050 DA [RVS41.813] (heat pump)
-- Fujitsu Waterstage WSYK 160 DC 9 [RVS21.827] (heat pump)
-- Fujitsu Waterstage WSYP 100 DG 6 [RVS21.831] (heat pump)
-- MHG Procon E 25 HS [LMS14] (gas-fired)
-- Sieger TG11 [RVP54.100] (oil-fired) {PPS_only}
-- Weishaupt WTU-25 G with WRS-CPU B2/E [RVS23.220] (oil-fired) {LPB_only}
-
-- PPS-based heating systems (e.g. RVP digital Serie D, RVP54…, ALBATROS RVA…, LGM11… and such as those using a QAA50 / QAA70 or similar like Brötje WGB 15 / WGB 20 / Triobloc E23 (Eurocontrol K), Weishaupt WRD 0.2 / 1.1, Sieger TG11 (with Siegermatic S42DB), Olymp THR 5-25C, Schäfer Interdomo (with DomoCommand DC 225)), albeit with PPS-typical limited functionality compared to BSB/LPB.
 
 Please note: General parameters should work on all devices, more specific parameters are subsequently added. Your help might be needed if you have a heating system that works on the BSB, LPB or PPS but for which we don't have the more specific parameters added. See <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ.md#my-heating-system-has-parameters-that-are-not-supported-in-the-software-yet-can-i-help-adding-these-parameters">here</A> how to help us.
 
@@ -78,7 +59,7 @@ Please note: General parameters should work on all devices, more specific parame
 Some companies which previously used BSB/LPB in their heating systems have now switched to other systems for their lower-cost devices. Examples are Brötje's WLC/WLS/BOK series. These are not compatible with BSB/LPB and only allow very limited parameters to be configured by the user. If you have one of these heating systems, you are so far out of luck to configure and monitor your heating system as it can be done with the more expensive (but BSB/LPB compatible) devices mentioned above among others.
 <BR><BR>
 
-Instructions on how to configure etc. can be found in the <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/HOWTO.md">HowTo</A>.<BR>
+Instructions on how to configure etc. can be found in the <A HREF="https://1coderookie.github.io/BSB-LPB-LAN_EN">manual</A>.<BR>
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
 
@@ -91,8 +72,5 @@ Web-Interface screenshots:
 BSB-Board plain, with location of CL+ and CL- connectors:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
 
-BSB-Board and Ethernet Shield plugged into the Arduino Mega 2560:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Mega%202560.jpg" size="50%">
-
-BSB-Board on Raspberry Pi 2:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Raspberry%20Pi%202.jpg" size="50%">
+BSB-Board and Ethernet Shield plugged into the Arduino Due:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">

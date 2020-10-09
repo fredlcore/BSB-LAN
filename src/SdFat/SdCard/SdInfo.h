@@ -1,21 +1,26 @@
-/* Arduino SdCard Library
- * Copyright (C) 2016 by William Greiman
+/**
+ * Copyright (c) 2011-2018 Bill Greiman
+ * This file is part of the SdFat library for SD memory cards.
  *
- * This file is part of the Arduino SdSpiCard Library
+ * MIT License
  *
- * This Library is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
  *
- * This Library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * The above copyright notice and this permission notice shall be included
+ * in all copies or substantial portions of the Software.
  *
- * You should have received a copy of the GNU General Public License
- * along with the Arduino SdSpiCard Library.  If not, see
- * <http://www.gnu.org/licenses/>.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 #ifndef SdInfo_h
 #define SdInfo_h
@@ -67,6 +72,7 @@ typedef enum {
 
   // Read/write errors
   SD_CARD_ERROR_READ = 0X50,
+  SD_CARD_ERROR_READ_CRC,
   SD_CARD_ERROR_READ_FIFO,
   SD_CARD_ERROR_READ_REG,
   SD_CARD_ERROR_READ_START,
@@ -75,6 +81,7 @@ typedef enum {
   SD_CARD_ERROR_WRITE,
   SD_CARD_ERROR_WRITE_FIFO,
   SD_CARD_ERROR_WRITE_START,
+  SD_CARD_ERROR_FLASH_PROGRAMMING,
   SD_CARD_ERROR_WRITE_TIMEOUT,
 
     // Misc errors.
@@ -113,14 +120,18 @@ const uint8_t SD_CARD_TYPE_SDHC = 3;
 #define SPI_SIXTEENTH_SPEED SD_SCK_HZ(F_CPU/32)
 //------------------------------------------------------------------------------
 // SD operation timeouts
+/** CMD0 retry count */
+const uint8_t SD_CMD0_RETRY = 10;
+/** command timeout ms */
+const uint16_t SD_CMD_TIMEOUT = 300;
 /** init timeout ms */
 const uint16_t SD_INIT_TIMEOUT = 2000;
 /** erase timeout ms */
 const uint16_t SD_ERASE_TIMEOUT = 10000;
 /** read timeout ms */
-const uint16_t SD_READ_TIMEOUT = 300;
+const uint16_t SD_READ_TIMEOUT = 1000;
 /** write time out ms */
-const uint16_t SD_WRITE_TIMEOUT = 600;
+const uint16_t SD_WRITE_TIMEOUT = 2000;
 //------------------------------------------------------------------------------
 // SD card commands
 /** GO_IDLE_STATE - init card in spi mode if CS low */

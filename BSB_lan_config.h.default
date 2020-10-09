@@ -15,24 +15,20 @@
 #define Port 80
 #define IPAddr 192,168,178,88   // please note the commas instead of dots!!! Remove this line when you want DHCP
 //#define GatewayIP 192,168,178,1 // Optional: this is usually your router's IP address. Please note the commas instead of dots!!!
-//#define GatewayIP 192,168,178,1 // this is usually your router's IP address. It is assumed that gateway and DNS are the same. Please note the commas instead of dots!!!
-//#define SubnetIP 255,255,255,0  // Please use commas insteaf of dots!!!
+//#define DNSIP 192,168,178,1 // Only set this variable if your DNS server is different from your router's IP address (GatewayIP). Please note the commas instead of dots!!!
+//#define SubnetIP 255,255,255,0  // Please use commas instead of dots!!!
 
 /* Select language; so far German is the most complete, with English following.
- * Available languages are: Czech (CZ), German (DE), Danish (DK), English (EN), Spanish (ES), Finnish (FI),
- * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SE), 
+ * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
+ * French (FR), Greek (EL), Hungarian (HU), Italian (IT), Dutch (NL), Polish (PL), Russian (RU), Swedish (SV),
  * Slovenian (SI) and Turkish (TR).
- * Incomplete languages will automagically be filled up with English translations first, and if no English translation
- * is available, fallback will take place to German. 
+ * Incomplete languages will automatically be filled up with English translations first, and if no English translation
+ * is available, fallback will take place to German.
 */
 #define LANG DE
 
-//#define WIFI  // activate if you are using an ESP8266 AT-firmware based WiFi module
-char ssid[] = "Your_WiFi_name_goes_here";            // your network SSID (name)
-char pass[] = "Your_WiFi_password_goes_here";        // your network password
-
 /* SECURITY OPTIONS
- * There are several options to control and protect access to your heating system. However, keep  
+ * There are several options to control and protect access to your heating system. However, keep
  * in mind, that even activating all three options are no guarantee that a versatile intruder with
  * access to your (W)LAN won't be able to gain access. In any case, no encryption of data streams
  * is provided from the Arduino itself. Use VPN or a SSL proxy if that is a must for you and connect
@@ -51,12 +47,12 @@ char pass[] = "Your_WiFi_password_goes_here";        // your network password
 
 /* activate IP-address-based access. Only the last segment of the client's IP address is matched, as it is assumed that
  * requests are made from the same subnet only. So if your trusted client's IP is 192.168.178.20, you have to set
- * TRUSTED_IP to 20. 
+ * TRUSTED_IP to 20.
 */
 //#define TRUSTED_IP 20
 //#define TRUSTED_IP2 30
 
-/* activate HTTP-Auth authentification to provide username/password based access. No encryption!
+/* activate HTTP-Auth authentication to provide username/password based access. No encryption!
  * Default sets username to "atari" and password to "800xl". Visit a website like
  * https://www.base64encode.org/
  * to encode your own username/password combination in the format username:password
@@ -65,12 +61,12 @@ char pass[] = "Your_WiFi_password_goes_here";        // your network password
 //#define USER_PASS_B64 "YXRhcmk6ODAweGw="
 
 /* select your heating system (default may work for other systems)
- * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here 
- * if autodetect does not work or heating system is not running when Arduino is powered on
+ * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
+ * if auto-detect does not work or heating system is not running when Arduino is powered on
  * You may use other device family numbers to test commands from other heating systems at your own risk
 */
-const int fixed_device_family = 0;
-const int fixed_device_variant = 0;
+static const int fixed_device_family = 0;
+static const int fixed_device_variant = 0;
 
 // Hide unknown parameters from web display (parameters will still be queried!)
 //#define HIDE_UNKNOWN
@@ -91,9 +87,19 @@ int avg_parameters[20] = {
 
 /* activate logging on SD-card. Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot */
 #define LOGGER
+// Logging von "rohen" Bus-Datentelegrammen
+// Telegrams logging. False - disabled on start, true - enabled on start.
+#define LOGTELEGRAM false
+// You can enable logging with URL /LE command or disable it with /LD command when run time.
+// Data will be write to "journal.txt"
+boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
+boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
+
+// Logging data from parameters
+// Interval and list of parameters can be redefined through /L command when run time
+// Data will be write to "datalog.txt"
 int log_parameters[20] = {
-//  30000,                  // Logging von "rohen" Bus-Datentelegrammen (macht nur als alleiniger Parameter Sinn)
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -104,19 +110,19 @@ int log_parameters[20] = {
 //  20004,                  // Spezialparameter: TWW-Laufzeit (/B)
 //  20005,                  // Spezialparameter: TWW-Takte (/B)
 //  20006,                  // Spezialparameter: 24h-Durchschnittswerte (/A)
-//  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/H)
+//  20101,                  // Spezialparameter 20100-20199: DHT22-Sensoren 1-100 (/T)
 //  20200                   // Spezialparameter 20200-20299: DS18B20-Sensoren 1-100 (/T)
 };
-
 unsigned long log_interval = 3600;    // logging interval in seconds
-boolean log_unknown_only = 1;         // should we log only unknown commands when logging bus telegrams?
-boolean log_bc_only = 0;              // should we log only broadcast commands (dest = 0x7f) when logging bus telegrams?
 
 // Activate sending log_parameters to MQTT broker every log_interval seconds
-//#define MQTTBrokerIP 192,168,1,20	// Please use commas insteaf of dots!!!
+//#define MQTTBrokerIP 192,168,1,20	// Please use commas instead of dots!!!
 //#define MQTTUsername "User" // Set username for MQTT broker here or comment out if no username/password is used.
 //#define MQTTPassword "Pass" // Set password for MQTT broker here or comment out if no password is used.
-//#define MQTTTopicPrefix "BSB-LAN" // Choose the "topic" for MQTT messages here
+//#define MQTTTopicPrefix "BSB-LAN" 	// Optional: Choose the "topic" for MQTT messages here
+//#define MQTT_JSON 					// Optional: Use this if you want a json package of your logging information printed to the mqtt topic
+//#define MQTTDeviceID "MyHeater"	// Optional: Define a device name to use as header in json payload. If not defined, BSB-LAN will be used.
+// Payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 
 
 // Activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
@@ -153,26 +159,26 @@ const char max_device_list[] PROGMEM = {        // list of MAX! wall/heating the
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
 */
-byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
+static byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus pins and bus type
 // Bus bus (RX pin, TX pin, parameter 3, parameter 4)
-// Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
-// W5100 ethernet shield uses the following pins: 10, 50-53
-// BSB: 
-// - optional third parameter sets own address, defaults to 0x09 (BSBL in serial monitor)
+// Hardware Serial is always pin 19 (RX) and pin 18 (TX). On the Arduino Due this is the only way to connect to the bus.
+// Software Serial needs special pins for RX (68) and TX (69); this is now deprecated and should only be used on older installations running on the Arduino Mega.
+// BSB:
+// - optional third parameter sets own address, defaults to 0x42 (LAN in serial monitor)
 // - use BSB bus(68,69,6) to define device as RGT1
-// LPB: 
+// LPB:
 // - optional third and fourth parameter set own and destination address (high nibble = segment, low nibble = device minus 1)
-// - defaults to 0x09 for own address and 0x00 for destination address, i.e. segment 0, device 10 for Arduino/BSB-LAN and segment 0, device 1 for heating system
+// - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
 // PPS:
 // - optional third parameter set to "1" enables writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active. Fourth parameter does not have any effect.
-BSB bus(68,69);
-uint8_t bus_type = bus.setBusType(0);  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+BSB bus(19,18); // BSB bus(68,69); // pin 68,69 = SoftwareSerial
+constexpr uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 //#define QAA_TYPE  0x53  // 0x53 = QAA70, 0x52 = QAA50
 
 // Protect these pins from accidental GPIO access
-const byte exclude_GPIO[] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
+constexpr byte exclude_GPIO[] = {0, 1, 4, 10, 11, 12, 13, 18, 19, 20, 21, 22, 23, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
 
 // If set to 1, all messages on the bus are printed to the PC
 // hardware serial interface
@@ -185,7 +191,14 @@ byte monitor = 0;
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop
 //#define CUSTOM_COMMANDS
 
+// Check for new versions when accessing BSB-LAN's main page
+#define VERSION_CHECK 1
+
 //#define DEBUG
+//#define DebugTelnet 1   // Uncomment this to send debug messages to telnet client instead of serial port
+
+//"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
+//#define WEBSERVER
 
 /************************************************************************************/
 /************************************************************************************/

@@ -1,3 +1,4 @@
+#undef LANGUAGENAME_TEXT
 #undef ENUM_CAT_00_TEXT
 #undef ENUM_CAT_01_TEXT
 #undef ENUM_CAT_02_TEXT
@@ -15,16 +16,13 @@
 #undef ENUM_CAT_0e_TEXT
 #undef ENUM_CAT_0f_TEXT
 #undef ENUM_CAT_10_TEXT
-#undef ENUM_CAT_11_TEXT
-#undef ENUM_CAT_12_TEXT
-#undef ENUM_CAT_13_TEXT
 #undef ENUM_CAT_14_TEXT
 #undef ENUM_CAT_15_TEXT
 #undef ENUM_CAT_16_TEXT
 #undef ENUM_CAT_17_TEXT
 #undef ENUM_CAT_18_TEXT
 #undef ENUM_CAT_19_TEXT
-#undef ENUM_CAT_19_TEXT
+#undef ENUM_CAT_1a_TEXT
 #undef ENUM_CAT_1b_TEXT
 #undef ENUM_CAT_1c_TEXT
 #undef ENUM_CAT_1d_TEXT
@@ -33,7 +31,6 @@
 #undef ENUM_CAT_20_TEXT
 #undef ENUM_CAT_21_TEXT
 #undef ENUM_CAT_22_TEXT
-#undef ENUM_CAT_23_TEXT
 #undef ENUM_CAT_24_TEXT
 #undef ENUM_CAT_25_TEXT
 #undef ENUM_CAT_26_TEXT
@@ -42,3 +39,9 @@
 #undef ENUM_CAT_29_TEXT
 #undef ENUM_CAT_2a_TEXT
 #undef ENUM_CAT_2b_TEXT
+#undef ENUM_CAT_2c_TEXT
+#undef ENUM_CAT_2d_TEXT
+#undef ENUM_CAT_2e_TEXT
+#undef ENUM_CAT_2f_TEXT
+#undef ENUM_CAT_30_TEXT
+#undef ENUM_CAT_31_TEXT
