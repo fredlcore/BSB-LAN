@@ -790,7 +790,7 @@ typedef struct{
 } addressesOfConfigOptions;
 addressesOfConfigOptions options[sizeof(config)/sizeof(config[0])];
 
-static int baseConfigAddrInEEPROM = 1024; //offset from start address 
+static int baseConfigAddrInEEPROM = 1024; //offset from start address
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
   for (uint8_t v = 0; v <= version; v++){
@@ -7451,19 +7451,11 @@ uint8_t pps_offset = 0;
         MQTTPayload.concat(F("\":"));
         MQTTPayload.concat(F("{\"status\":{"));
       }
-
+      boolean is_first = true;
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
           if (MQTTClient.connected()) {
-  /*
-            String MQTTPayload = "";
-            MQTTPayload.concat(F("{\""));
-            MQTTPayload.concat(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
-            MQTTPayload.concat(F("\":\""));
-            MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
-            MQTTPayload.concat(F("\"}"));
-  */
-
+            if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
               MQTTTopic = MQTTTopicPrefix;
               MQTTTopic.concat(F("/"));
@@ -7486,11 +7478,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(String(log_parameters[i]));
                 MQTTPayload.concat(F("\":\""));
                 MQTTPayload.concat(String(pvalstr));
-                if (i < numLogValues - 1) {
-                  MQTTPayload.concat(F("\","));
-                } else {
-                  MQTTPayload.concat(F("\"}"));
-                }
+                MQTTPayload.concat(F("\""));
               }
               else
                 MQTTClient.publish(MQTTTopic.c_str(), pvalstr);
@@ -7502,11 +7490,7 @@ uint8_t pps_offset = 0;
                 MQTTPayload.concat(String(log_parameters[i]));
                 MQTTPayload.concat(F("\":\""));
                 MQTTPayload.concat(String(decodedTelegram.value));
-                if (i < numLogValues - 1) {
-                  MQTTPayload.concat(F("\","));
-                } else {
-                  MQTTPayload.concat(F("\"}"));
-                }
+                MQTTPayload.concat(F("\""));
               }
               else
                 MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
@@ -7517,7 +7501,7 @@ uint8_t pps_offset = 0;
       // End of mqtt if loop so close off the json and publish
       if(mqtt_mode == 2){
         // Close the json doc off
-        MQTTPayload.concat(F("}}"));
+        MQTTPayload.concat(F("}}}"));
         // debugging..
         printToDebug(PSTR("Output topic: "));
         printToDebug(MQTTTopic.c_str());
