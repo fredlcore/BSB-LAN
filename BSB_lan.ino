@@ -7006,19 +7006,11 @@ uint8_t pps_offset = 0;
     MQTTPayload.concat(F("\":"));
     MQTTPayload.concat(F("{\"status\":{"));
 #endif
-
+    boolean is_first = true;
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
         if (MQTTClient.connected()) {
-/*
-          String MQTTPayload = "";
-          MQTTPayload.concat(F("{\""));
-          MQTTPayload.concat(lookup_descr(log_parameters[i]));
-          MQTTPayload.concat(F("\":\""));
-          MQTTPayload.concat(strtok(query(log_parameters[i],log_parameters[i],1)," "));
-          MQTTPayload.concat(F("\"}"));
-*/
-
+          if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
 #ifdef MQTTTopicPrefix
           MQTTTopic = MQTTTopicPrefix;
           MQTTTopic.concat(F("/"));
@@ -7043,11 +7035,7 @@ uint8_t pps_offset = 0;
               MQTTPayload.concat(String(log_parameters[i]));
               MQTTPayload.concat(F("\":\""));
               MQTTPayload.concat(String(pvalstr));
-              if (i < numLogValues - 1) {
-                MQTTPayload.concat(F("\","));
-              } else {
-                MQTTPayload.concat(F("\"}"));
-              }
+              MQTTPayload.concat(F("\""));
 #else
               MQTTClient.publish(MQTTTopic.c_str(), pvalstr);
 #endif
@@ -7057,11 +7045,7 @@ uint8_t pps_offset = 0;
               MQTTPayload.concat(String(log_parameters[i]));
               MQTTPayload.concat(F("\":\""));
               MQTTPayload.concat(String(decodedTelegram.value));
-              if (i < numLogValues - 1) {
-                MQTTPayload.concat(F("\","));
-              } else {
-                MQTTPayload.concat(F("\"}"));
-              }
+              MQTTPayload.concat(F("\""));
 #else
               MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
 #endif
@@ -7110,7 +7094,7 @@ uint8_t pps_offset = 0;
     // End of mqtt if loop so close off the json and publish
 #ifdef MQTT_JSON
     // Close the json doc off
-    MQTTPayload.concat(F("}}"));
+    MQTTPayload.concat(F("}}}"));
       // debugging..
       DebugOutput.print(F("Output topic: "));
       DebugOutput.println(MQTTTopic.c_str());
