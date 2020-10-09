@@ -7034,12 +7034,12 @@ uint8_t pps_offset = 0;
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
 
-#if defined(__AVR__)
-          printlnToDebug(PSTR("EEPROM dump:"));
-          for (uint16_t x=0; x<EEPROM.length(); x++) {
-            printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
+          if(EEPROM_ready){
+            printlnToDebug(PSTR("EEPROM dump:"));
+            for (uint16_t x=0; x<EEPROM.length(); x++) {
+              printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
+            }
           }
-#endif
 
           break;
         }
@@ -7448,8 +7448,7 @@ uint8_t pps_offset = 0;
           MQTTPayload.concat(MQTTDeviceID);
         else
           MQTTPayload.concat(F("BSB-LAN"));
-        MQTTPayload.concat(F("\":"));
-        MQTTPayload.concat(F("{\"status\":{"));
+        MQTTPayload.concat(F("\":{\"status\":{"));
       }
       boolean is_first = true;
       for (int i=0; i < numLogValues; i++) {
@@ -7470,27 +7469,21 @@ uint8_t pps_offset = 0;
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
-//---- we really do need it? ----
-            char *pvalstr = build_pvalstr(0);
-            if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
-              if(mqtt_mode == 2){ // Build the json doc on the fly
-                MQTTPayload.concat(F("\""));
-                MQTTPayload.concat(String(log_parameters[i]));
-                MQTTPayload.concat(F("\":\""));
-                MQTTPayload.concat(String(pvalstr));
-                MQTTPayload.concat(F("\""));
-              }
-              else
-                MQTTClient.publish(MQTTTopic.c_str(), pvalstr);
-//---- End of we really do need it? ----
-            } else {
-             // Build the json doc on the fly
-              if(mqtt_mode == 2){
-                MQTTPayload.concat(F("\""));
-                MQTTPayload.concat(String(log_parameters[i]));
-                MQTTPayload.concat(F("\":\""));
+            if(mqtt_mode == 2){ // Build the json doc on the fly
+              char tbuf[20];
+              sprintf_P(tbuf, PSTR("\"%d\":\""), log_parameters[i]);
+              MQTTPayload.concat(tbuf);
+              if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+                MQTTPayload.concat(String(build_pvalstr(0)));
+              } else {
                 MQTTPayload.concat(String(decodedTelegram.value));
-                MQTTPayload.concat(F("\""));
+              }
+              MQTTPayload.concat(F("\""));
+            } else { //plain text
+              if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+                MQTTClient.publish(MQTTTopic.c_str(), build_pvalstr(0));
               }
               else
                 MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
@@ -7797,12 +7790,14 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
+  SerialOutput->println(F("READY"));
 
 #if defined(__SAM3X8E__)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
-  }
+    SerialOutput->println(F("EEPROM not ready"));
+    }
   pinMode(19, INPUT);
 #endif
 
@@ -7813,8 +7808,6 @@ void setup() {
   SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
 #endif
-
-  SerialOutput->println(F("READY"));
 
   //Read config parameters from EEPROM
   SerialOutput->print(F("Reading EEPROM..."));
