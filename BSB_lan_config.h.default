@@ -233,6 +233,7 @@ static const int fixed_device_variant = 0;
 
 // Check for new versions when accessing BSB-LAN's main page
 #define VERSION_CHECK
+boolean enable_version_check = true;
 
 //"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER

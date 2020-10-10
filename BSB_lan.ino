@@ -3231,6 +3231,16 @@ void webPrintSite() {
   webPrintFooter();
 } // --- webPrintSite() ---
 
+char *lookup_descr(uint16_t line) {
+  int i=findLine(line,0,NULL);
+  if (i<0) {                    // Not found (for this heating system)?
+    strcpy_PF(outBuf, get_cmdtbl_desc(findLine(19999,0,NULL))); // Unknown command has line no. 19999
+  } else {
+    strcpy_PF(outBuf, get_cmdtbl_desc(i));
+  }
+  return outBuf;
+}
+
 void generateConfigPage(void){
   printToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
   printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
@@ -4958,16 +4968,6 @@ flushToWebClient();
   //webPrintFooter();
 } // --- ds18b20() ---
 #endif   // ifdef ONE_WIRE_BUS
-
-char *lookup_descr(uint16_t line) {
-  int i=findLine(line,0,NULL);
-  if (i<0) {                    // Not found (for this heating system)?
-    strcpy_PF(outBuf, get_cmdtbl_desc(findLine(19999,0,NULL))); // Unknown command has line no. 19999
-  } else {
-    strcpy_PF(outBuf, get_cmdtbl_desc(i));
-  }
-  return outBuf;
-}
 
 void printToWebClient_prognrdescaddr(){
   if(decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100){
