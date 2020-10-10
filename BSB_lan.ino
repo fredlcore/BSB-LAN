@@ -2827,6 +2827,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_TEMP_PER_MIN: // s8
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
+            case VT_BYTE10: // u8 / 10.0
             case VT_PRESSURE: // u8 / 10.0 bar
             case VT_PRESSURE50: // u8 / 50.0 bar
             case VT_PERCENT5: // u8 %
@@ -7439,7 +7440,7 @@ uint8_t pps_offset = 0;
             else
               MQTTTopic = "BSB-LAN/";
 
-  // use the sub-topic "json" if json output is enabled
+// use the sub-topic "json" if json output is enabled
             if(mqtt_mode == 2)
               MQTTTopic.concat(F("json"));
             else
