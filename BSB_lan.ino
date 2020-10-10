@@ -789,13 +789,30 @@ typedef struct{
 } addressesOfConfigOptions;
 addressesOfConfigOptions options[sizeof(config)/sizeof(config[0])];
 
-static int baseConfigAddrInEEPROM = 1024; //offset from start address
+static int baseConfigAddrInEEPROM = 0; //offset from start address
+
+/** *****************************************************************
+ *  Function: initConfigTable(uint8_t)
+ *  Does: creating config parameters address table.
+ *  result table is sorted by parameters versions
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ * *************************************************************** */
+
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
+  // look for parameters vith selected version
   for (uint8_t v = 0; v <= version; v++){
+    //select config parameter
     for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
       boolean allowedversion = false;
       int addr = baseConfigAddrInEEPROM;
+      //look for config parameter in parameters table
       for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
   #if defined(__AVR__)
         uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
@@ -820,17 +837,22 @@ uint32_t initConfigTable(uint8_t version) {
   }
   return crc.finalize();
 }
+
+//register pointer to variable of selected config option in config parameters address table
 void registerConfigVariable(uint8_t id, byte *ptr){
   options[id].option_address = ptr;
 }
 
+//remove variable address of selected config option from config parameters address table
 void unregisterConfigVariable(uint8_t id){
   options[id].option_address = NULL;
 }
+//return EEPROM address for selected config option
 uint16_t getEEPROMaddress(uint8_t id){
   return options[id].eeprom_address;
 }
 
+//copy config option data from EEPROM to variable
 void readFromEEPROM(uint8_t id){
   if (!EEPROM_ready) return;
   if(!options[id].option_address) return;
@@ -848,6 +870,7 @@ void readFromEEPROM(uint8_t id){
     options[id].option_address[i] = EEPROM.read(i + options[id].eeprom_address);
 }
 
+//copy config option data from variable to EEPROM
 //return true if EEPROM was updated with new value
 boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;

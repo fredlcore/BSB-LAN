@@ -83,7 +83,7 @@
 #define ENUM_CAT_2e_TEXT "Автомат горения"
 #define ENUM_CAT_2f_TEXT "Заданные пользователем"
 #define ENUM_CAT_30_TEXT "Шина PPS"
-#define ENUM_CAT_31_TEXT "Пользовательские датчики"
+#define ENUM_CAT_31_TEXT "Пользовательские датчики (DHT, Dallas, MAX!)"
 #define ENUM_CAT_32_TEXT "Неизвестная категория"
 
 #define MENU_TEXT_TOC "Руководство (на английском языке)"
