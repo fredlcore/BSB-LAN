@@ -383,6 +383,7 @@
 //#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
+ //Mega
 #if defined(__AVR__)
 #include <EEPROM.h>
 #else // __SAM3X8E__
@@ -426,7 +427,6 @@ BSB *bus;
 /* buffer to print output lines and to load PROGMEM values in RAM*/
 #define OUTBUF_LEN  450
 char outBuf[OUTBUF_LEN] = { 0 };
-int outBufLen=0;
 
 // big output buffer with automatic flushing. Do not do direct access
 #if defined(__AVR__)
@@ -488,7 +488,6 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 // do not forget set it up after SdFat upgrading
   #include "src/SdFat/SdFat.h"
   SdFat SD;
-  File Logfile;
 #endif
 
 #ifdef ONE_WIRE_BUS
@@ -1170,23 +1169,6 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
 #endif
 }
 
-/**  ****************************************************************
- *  Function: outBufclear()
- *  Does:     Sets ouBufLen = 0 and puts the end-of-string character
- *            into the first buffer position.
- *  Pass parameters:
- *   none
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- * Global resources used:
- *   char outBuf[]
- * *************************************************************** */
-void outBufclear(void){
-  outBufLen=0;
-  outBuf[0]='\0';
-}
 /** *****************************************************************
  *  Function: dayofweek()
  *  Does:     Accepts a date as day / month / year and calculates
@@ -2596,7 +2578,6 @@ void remove_char(char* str, char c) {
  *  values from decodedTelegram structure after printTelegram() calling
  * *************************************************************** */
 void printTelegram(byte* msg, int query_line) {
-  outBufclear();
   resetDecodedTelegram();
 /*
 #if !DEBUG
@@ -3252,10 +3233,6 @@ void webPrintSite() {
 
 void generateConfigPage(void){
   printToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
-//          client.println(F("BSB pins: "));
-//          client.println(bus);
-//          client.println(F("<BR><BR>"));
-
   printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
   printFmtToWebClient(PSTR("%d Bytes <BR>\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
   printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
@@ -5952,7 +5929,7 @@ uint8_t pps_offset = 0;
 
 // IPWE START
 #ifdef IPWE
-        if (urlString == "/ipwe.cgi" && enable_ipwe) {
+        if (enable_ipwe && urlString == "/ipwe.cgi") {
           Ipwe();
           break;
         }
@@ -7028,19 +7005,19 @@ uint8_t pps_offset = 0;
 //                printyesno(UseEEPROM) ;
               break;
 #endif
-              default: generateConfigPage(); break;
+            default:
+              generateConfigPage();
+              if(EEPROM_ready){
+                printlnToDebug(PSTR("EEPROM dump:"));
+                for (uint16_t x=0; x<EEPROM.length(); x++) {
+                  printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
+                }
+              }
+              break;
             }
 
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
-
-          if(EEPROM_ready){
-            printlnToDebug(PSTR("EEPROM dump:"));
-            for (uint16_t x=0; x<EEPROM.length(); x++) {
-              printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
-            }
-          }
-
           break;
         }
         if (p[1]=='L'){
@@ -7790,16 +7767,6 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  SerialOutput->println(F("READY"));
-
-#if defined(__SAM3X8E__)
-  Wire.begin();
-  if (!EEPROM.ready()) {
-    EEPROM_ready = false;
-    SerialOutput->println(F("EEPROM not ready"));
-    }
-  pinMode(19, INPUT);
-#endif
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -7808,6 +7775,17 @@ void setup() {
   SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
 #endif
+
+  SerialOutput->println(F("READY"));
+
+  #if defined(__SAM3X8E__)
+  Wire.begin();
+  if (!EEPROM.ready()) {
+    EEPROM_ready = false;
+    SerialOutput->println(F("EEPROM not ready"));
+    }
+  pinMode(19, INPUT);
+  #endif
 
   //Read config parameters from EEPROM
   SerialOutput->print(F("Reading EEPROM..."));
