@@ -1730,9 +1730,11 @@ void loadPrognrElementsFromTable(int nr, int i){
     decodedTelegram.readonly = 1;
     decodedTelegram.prognr = nr;
     switch(recognizeVirtualFunctionGroup(nr)){
-      case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
-      case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
-      case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
+      case 1: decodedTelegram.cat=CAT_USERSENSORS; break;
+      case 2: decodedTelegram.cat=CAT_USERSENSORS; break;
+      case 3: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
+      case 4: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
+      case 5: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
     }
   }
 }
@@ -2751,6 +2753,7 @@ void printTelegram(byte* msg, int query_line) {
 
     // print category
     decodedTelegram.cat=get_cmdtbl_category(i);
+    loadPrognrElementsFromTable(query_line, i);
     int len=sizeof(ENUM_CAT);
 
 #if defined(__AVR__)
@@ -2761,7 +2764,6 @@ void printTelegram(byte* msg, int query_line) {
     decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
     decodedTelegram.enumdescaddr = 0;
     decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
-    loadPrognrElementsFromTable(query_line, i);
 
     printToDebug(PSTR(" - "));
     // print menue text
@@ -4528,7 +4530,6 @@ if(data_len==3){
  * *************************************************************** */
 void queryVirtualPrognr(int line, int table_line){
     loadPrognrElementsFromTable(line, table_line);
-    decodedTelegram.cat=get_cmdtbl_category(table_line);
 
 #if defined(__AVR__)
     printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),decodedTelegram.cat,0);
