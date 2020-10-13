@@ -44,4 +44,4 @@ UIStrings["ENUM_CAT_2d_TEXT"] = "Διάγνωση καταναλωτή";
 UIStrings["ENUM_CAT_2e_TEXT"] = "Έλεγχος καυστήρα";
 UIStrings["ENUM_CAT_2f_TEXT"] = "Ορισμένη από το χρήστη";
 UIStrings["ENUM_CAT_30_TEXT"] = "Αρτηρία PPS";
-UIStrings["ENUM_CAT_31_TEXT"] = "Άγνωστη κατηγορία";
+UIStrings["ENUM_CAT_32_TEXT"] = "Άγνωστη κατηγορία";

@@ -20,6 +20,7 @@ UIStrings["UNIT_TEMP_PER_MIN_TEXT"] = "&deg;C/min";
 UIStrings["UNIT_CEL_MIN_TEXT"] = "&deg;Cmin";
 UIStrings["UNIT_LITERPERHOUR_TEXT"] = "l/h";
 UIStrings["UNIT_LITERPERMIN_TEXT"] = "l/min";
+UIStrings["UNIT_GR_PER_CUBM_TEXT"] = "g/m³";
 
 UIStrings["ENUM_CAT_00_TEXT"] = "Uhrzeit und Datum";
 UIStrings["ENUM_CAT_01_TEXT"] = "Bedieneinheit";
@@ -70,7 +71,8 @@ UIStrings["ENUM_CAT_2d_TEXT"] = "Diagnose Verbraucher";
 UIStrings["ENUM_CAT_2e_TEXT"] = "Feuerungsautomat";
 UIStrings["ENUM_CAT_2f_TEXT"] = "Benutzerdefiniert";
 UIStrings["ENUM_CAT_30_TEXT"] = "PPS-Bus";
-UIStrings["ENUM_CAT_31_TEXT"] = "unbekannte Kategorie";
+UIStrings["ENUM_CAT_31_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_32_TEXT"] = "unbekannte Kategorie";
 
 UIStrings["MENU_TEXT_HFK"] = "Heizungsfunktionen";
 UIStrings["MENU_TEXT_SNS"] = "Sensoren";
@@ -108,6 +110,7 @@ UIStrings["MENU_TEXT_ER7"] = "FEHLER: Geschützter GPIO Pin!";
 UIStrings["MENU_TEXT_BST"] = "Brennerstatistik";
 UIStrings["MENU_TEXT_BRS"] = "Heizkessel- und TWW-Laufzeit auf null gesetzt";
 UIStrings["MENU_TEXT_24A"] = "24h Durchschnittswerte";
+UIStrings["MENU_TEXT_24A_2"] = "24h Durchschnittswert";
 UIStrings["MENU_TEXT_24N"] = "Neue Durchschnitts-Parameter";
 UIStrings["MENU_TEXT_DTR"] = ": datei was entfernt und neu generiert.";
 UIStrings["MENU_TEXT_DTD"] = "Daten herunterladen";
@@ -1908,6 +1911,17 @@ UIStrings["STR15064_TEXT"] = "Zieltemperatur";
 UIStrings["STR15065_TEXT"] = "Nächstes Schaltprogramm";
 UIStrings["STR15066_TEXT"] = "Manuelles Heizen";
 UIStrings["STR15067_TEXT"] = "Verbindung unterbrochen";
+UIStrings["STR20100_TEXT"] = "DHT22 Sensor ID";
+UIStrings["STR20101_TEXT"] = "DHT22 Sensor Temperatur";
+UIStrings["STR20102_TEXT"] = "DHT22 Sensor Luftfeuchtigkeit";
+UIStrings["STR20103_TEXT"] = "DHT22 Sensor Abs Luftfeuchtigkeit";
+UIStrings["STR20200_TEXT"] = "DS18B20 Sensor ID";
+UIStrings["STR20201_TEXT"] = "DS18B20 Sensor Temperatur";
+UIStrings["STR20300_TEXT"] = "MAX! Sensor ID";
+UIStrings["STR20301_TEXT"] = "MAX! Sensor Ist Temperatur";
+UIStrings["STR20302_TEXT"] = "MAX! Sensor Soll-Temperatur";
+UIStrings["STR20303_TEXT"] = "MAX! Sensor Ventilöffnung";
+
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
 UIStrings["ENUM20_01_TEXT"] = "English";

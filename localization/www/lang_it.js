@@ -44,7 +44,7 @@ UIStrings["ENUM_CAT_2d_TEXT"] = "Diagnostica utenze";
 UIStrings["ENUM_CAT_2e_TEXT"] = "Bruciatore automatico";
 UIStrings["ENUM_CAT_2f_TEXT"] = "Personalizzato";
 UIStrings["ENUM_CAT_30_TEXT"] = "Bus PPS";
-UIStrings["ENUM_CAT_31_TEXT"] = "categoria sconosciuta";
+UIStrings["ENUM_CAT_32_TEXT"] = "categoria sconosciuta";
 
 UIStrings["MENU_TEXT_HFK"] = "Funzioni di riscaldamento";
 UIStrings["MENU_TEXT_SNS"] = "Sensori";
