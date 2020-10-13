@@ -136,6 +136,7 @@
 #define MENU_TEXT_BST "Статистика нагревателя"
 #define MENU_TEXT_BRS "Длительность работы горелки и системы ГВС обнулена"
 #define MENU_TEXT_24A "среднесуточные значения"
+#define MENU_TEXT_24A_2 "Среднесуточное значение"
 #define MENU_TEXT_24N "Новые среднесуточные параметры"
 #define MENU_TEXT_DTR ": файл был удалён и создан заново."
 #define MENU_TEXT_DTD "Загрузка данных"
