@@ -18,6 +18,7 @@ jobs:
              localization/json/*.json
              localization/www/*.*
              localization/UNDEF_LANG_*.h
+             localization/LANG_C.h
            commit-msg: Update language resources
            github-token: ${{ secrets.GITHUB_TOKEN }}
            
