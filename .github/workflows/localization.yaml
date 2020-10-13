@@ -12,6 +12,7 @@ jobs:
 
       - name: Start process
         run: ./create-undefs.pl
+        uses: ./
          with:
            file-path: |
              localization/json/*.json
