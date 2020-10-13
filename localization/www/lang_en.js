@@ -101,6 +101,7 @@ UIStrings["MENU_TEXT_ER7"] = "ERROR: protected GPIO pin!";
 UIStrings["MENU_TEXT_BST"] = "Heater statistics";
 UIStrings["MENU_TEXT_BRS"] = "Furnace and hot water duration is set to zero";
 UIStrings["MENU_TEXT_24A"] = "24h averages";
+UIStrings["MENU_TEXT_24A_2"] = "24h average";
 UIStrings["MENU_TEXT_24N"] = "New average parameters";
 UIStrings["MENU_TEXT_DTR"] = ": file was removed and recreated.";
 UIStrings["MENU_TEXT_DTD"] = "Download data";
