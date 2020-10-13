@@ -1,0 +1,22 @@
+name: Build localization
+on:
+  push:
+  pull_request:
+
+jobs:
+  localizator:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Change directory  
+        run: cd localization
+
+      - name: Start process
+        run: ./create-undefs.pl
+         with:
+           file-path: |
+             localization/json/*.json
+             localization/www/*.*
+             localization/UNDEF_LANG_*.h
+           commit-msg: Update language resources
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+           
