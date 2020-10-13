@@ -4327,7 +4327,7 @@ char *build_pvalstr(boolean extended){
   strcpy_P(outBuf + len, PSTR(" - "));
   len+=strlen(outBuf + len);
   if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
-    strcpy_P(outBuf + len, PSTR(MENU_TEXT_24A_2));
+    strcpy_P(outBuf + len, PSTR(STR_24A_TEXT));
     len+=strlen(outBuf + len);
     strcpy_P(outBuf + len, PSTR(". "));
     len+=strlen(outBuf + len);
@@ -4996,7 +4996,7 @@ flushToWebClient();
 
 void printToWebClient_prognrdescaddr(){
   if(decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100){
-    printToWebClient(PSTR(MENU_TEXT_24A_2));
+    printToWebClient(PSTR(STR_24A_TEXT));
     printToWebClient(PSTR(". "));
   }
   printToWebClient(decodedTelegram.prognrdescaddr);
@@ -7528,7 +7528,7 @@ uint8_t pps_offset = 0;
             dataFile.print(F(";"));
             query(log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
-              dataFile.print(F(MENU_TEXT_24A_2));
+              dataFile.print(F(STR_24A_TEXT));
               dataFile.print(F(". "));
             }
             dataFile.print(lookup_descr(log_parameters[i])); //outBuf will be overwrited here

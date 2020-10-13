@@ -101,7 +101,6 @@
 #define MENU_TEXT_BST "Heater statistics"
 #define MENU_TEXT_BRS "Furnace and hot water duration is set to zero"
 #define MENU_TEXT_24A "24h averages"
-#define MENU_TEXT_24A_2 "24h average"
 #define MENU_TEXT_24N "New average parameters"
 #define MENU_TEXT_DTR ": file was removed and recreated."
 #define MENU_TEXT_DTD "Download data"
@@ -136,6 +135,8 @@
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
 #define MENU_TEXT_LOT "Log of telegrams"
+
+#define STR_24A_TEXT "24h average"
 
 #define STR516_TEXT "Standard values TSP heating circuit 1"
 #define STR536_TEXT "Standard values TSP heating circuit 2 "
