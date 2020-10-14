@@ -136,7 +136,6 @@ UIStrings["MENU_TEXT_ER7"] = "ОШИБКА: защищённый контакт 
 UIStrings["MENU_TEXT_BST"] = "Статистика нагревателя";
 UIStrings["MENU_TEXT_BRS"] = "Длительность работы горелки и системы ГВС обнулена";
 UIStrings["MENU_TEXT_24A"] = "среднесуточные значения";
-UIStrings["MENU_TEXT_24A_2"] = "Среднесуточное значение";
 UIStrings["MENU_TEXT_24N"] = "Новые среднесуточные параметры";
 UIStrings["MENU_TEXT_DTR"] = ": файл был удалён и создан заново.";
 UIStrings["MENU_TEXT_DTD"] = "Загрузка данных";
@@ -171,6 +170,8 @@ UIStrings["MENU_TEXT_LBO"] = "Журналировать только широк
 UIStrings["MENU_TEXT_LGI"] = "Новый интервал журналирования списка параметров";
 UIStrings["MENU_TEXT_LGN"] = "Новые параметры для журналирования";
 UIStrings["MENU_TEXT_LOT"] = "Журналирование телеграмм";
+
+UIStrings["STR_24A_TEXT"] = "Среднесуточное значение";
 
 UIStrings["STR0_TEXT"] = "Дата/время";
 UIStrings["STR1_TEXT"] = "Часы/минуты";

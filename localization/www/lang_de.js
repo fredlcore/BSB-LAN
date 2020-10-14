@@ -110,7 +110,6 @@ UIStrings["MENU_TEXT_ER7"] = "FEHLER: Geschützter GPIO Pin!";
 UIStrings["MENU_TEXT_BST"] = "Brennerstatistik";
 UIStrings["MENU_TEXT_BRS"] = "Heizkessel- und TWW-Laufzeit auf null gesetzt";
 UIStrings["MENU_TEXT_24A"] = "24h Durchschnittswerte";
-UIStrings["MENU_TEXT_24A_2"] = "24h Durchschnittswert";
 UIStrings["MENU_TEXT_24N"] = "Neue Durchschnitts-Parameter";
 UIStrings["MENU_TEXT_DTR"] = ": datei was entfernt und neu generiert.";
 UIStrings["MENU_TEXT_DTD"] = "Daten herunterladen";
@@ -162,6 +161,8 @@ UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsv
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
+
+UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
