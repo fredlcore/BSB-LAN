@@ -119,7 +119,6 @@
 #undef MENU_TEXT_BST
 #undef MENU_TEXT_BRS
 #undef MENU_TEXT_24A
-#undef MENU_TEXT_24A_2
 #undef MENU_TEXT_24N
 #undef MENU_TEXT_DTR
 #undef MENU_TEXT_DTD
@@ -154,6 +153,7 @@
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
 #undef MENU_TEXT_LOT
+#undef STR_24A_TEXT
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT
