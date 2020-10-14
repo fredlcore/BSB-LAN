@@ -12,7 +12,7 @@ jobs:
       - name: Build UNDEFs, json and js files
         run: cd localization && ./create-undefs.pl && cd ..
       - name: Copy files to repo
-        uses: test-room-7/action-update-file/tree/create-blob@v1
+        uses: test-room-7/action-update-file@create-blob
         with:
            file-path: |
              localization/json/*.json
