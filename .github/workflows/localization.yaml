@@ -1,7 +1,7 @@
 name: Build localization
 on:
   push:
-
+  pull_request: 
 jobs:
   localizator:
     name: Build language resourses
