@@ -3029,7 +3029,7 @@ void printTelegram(byte* msg, int query_line) {
                 case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
                 case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
-                default: getfarstrings = ""; break;
+                default: getfarstrings = PSTR(""); break;
               }
               strcat_P(decodedTelegram.value, getfarstrings);
               q = strlen(decodedTelegram.value);
@@ -3061,10 +3061,8 @@ void printTelegram(byte* msg, int query_line) {
             case VT_UNKNOWN:
             default:
               prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
-              int len = 0;
-              for (int i=0; i < data_len; i++) {
-                len += sprintf_P(decodedTelegram.value + len,PSTR("%02X"),msg[bus->getPl_start()+i]);
-              }
+              if(decodedTelegram.telegramDump)
+                strcpy(decodedTelegram.value, decodedTelegram.telegramDump);
               decodedTelegram.error = 260;
               break;
           }
@@ -3466,29 +3464,6 @@ char *GetDateTime(char *date){
 }
 
 /** *****************************************************************
- *  Function:  printTrailToFile()
- *  Does:      print to file current date/time and time since start.
- *             starting at position null. It stops
- *             when it has sent the requested number of message bytes.
- *  Pass parameters:
- *   File dataFile - opened file handler
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *
- * *************************************************************** */
-#ifdef LOGGER
-void printTrailToFile(File *dataFile){
- char fileBuf[64];
- char date[20];
- // get current time from heating system
- sprintf_P(fileBuf, PSTR("%lu;%s;"), millis(), GetDateTime(date));
- dataFile->print(fileBuf);
-}
-#endif
-/** *****************************************************************
  *  Function:  LogTelegram()
  *  Does:      Logs the telegram content in hex to the SD card,
  *             starting at position null. It stops
@@ -3506,7 +3481,6 @@ void printTrailToFile(File *dataFile){
 void LogTelegram(byte* msg){
   if(!(logTelegram & LOGTELEGRAM_ON)) return;
   File dataFile;
-  char device[5];
   uint32_t cmd;
   int i=0;        // begin with line 0
   int save_i=0;
@@ -3567,54 +3541,49 @@ void LogTelegram(byte* msg){
   if (logThis) {
     dataFile = SD.open(journalFileName, FILE_WRITE);
     if (dataFile) {
-      printTrailToFile(&dataFile);
-
+      int outBufLen = 0;
+      outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
       if(!known){                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        dataFile.print(F("UNKNOWN"));
+        strcat_P(outBuf + outBufLen, PSTR("UNKNOWN"));
+        outBufLen += strlen(outBuf + outBufLen);
       }else{
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
         cmd_type=get_cmdtbl_type(i);
-        dataFile.print(line);             // the ProgNr
-      }
+        outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%d"), line);
+        }
 
       uint8_t msg_len = 0;
       if (bus->getBusType() != BUS_PPS) {
-        dataFile.print(F(";"));
-        dataFile.print(TranslateAddr(msg[1+(bus->getBusType()*2)], device));
-        dataFile.print(F("->"));
-        dataFile.print(TranslateAddr(msg[2], device));
-        dataFile.print(F(" "));
-        dataFile.print(TranslateType(msg[4+(bus->getBusType()*4)], device));
-        dataFile.print(F(";"));
+        outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s->%s %s;"), TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+(bus->getBusType()*4)], outBuf + outBufLen + 60));
         msg_len = msg[bus->getLen_idx()]+bus->getBusType();
       } else {
-        dataFile.print(F(";"));
+        strcat_P(outBuf + outBufLen, PSTR(";"));
+        const char *getfarstrings;
         switch (msg[0]) {
-          case 0x1D: dataFile.print(F("HEIZ->QAA INF")); break;
-          case 0x1E: dataFile.print(F("HEIZ->QAA REQ")); break;
-          case 0x17: dataFile.print(F("HEIZ->QAA RTS")); break;
-          case 0xFD: dataFile.print(F("QAA->HEIZ ANS")); break;
-          default: break;
+          case 0x1D: getfarstrings = PSTR("HEIZ->QAA INF"); break;
+          case 0x1E: getfarstrings = PSTR("HEIZ->QAA REQ"); break;
+          case 0x17: getfarstrings = PSTR("HEIZ->QAA RTS"); break;
+          case 0xFD: getfarstrings = PSTR("QAA->HEIZ ANS"); break;
+          default: getfarstrings = PSTR(""); break;
         }
-        dataFile.print(F(";"));
+        strcat_P(outBuf + outBufLen, getfarstrings);
+        strcat_P(outBuf + outBufLen, PSTR(";"));
+        outBufLen += strlen(outBuf + outBufLen);
 //            msg_len = 9+(msg[0]==0x17 && pps_write != 1);
         msg_len = 9;
       }
 
       for(int i=0;i<msg_len;i++){
-        if (i > 0) {
-          dataFile.print(F(" "));
-        }
-        if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
-        dataFile.print(msg[i], HEX);
+        outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%02X "), msg[i]);
       }
-
+      outBuf[--outBufLen] = 0; //erase last space
       // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
       if (bus->getBusType() != BUS_PPS && (msg[4+(bus->getBusType()*4)] == TYPE_INF || msg[4+(bus->getBusType()*4)] == TYPE_SET || msg[4+(bus->getBusType()*4)] == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
-        dataFile.print(F(";"));
+        strcat_P(outBuf + outBufLen, PSTR(";"));
+        outBufLen += strlen(outBuf + outBufLen);;
         if (bus->getBusType() == BUS_LPB) {
           data_len=msg[1]-14;
         } else {
@@ -3636,14 +3605,14 @@ void LogTelegram(byte* msg){
           }
         }
         dval = dval / operand;
-        char p1[16];
-        _printFIXPOINT(p1, dval, precision);
+        _printFIXPOINT(outBuf + outBufLen, dval, precision);
         // print ',' instead '.'
-        char *p = strchr(p1,'.');
+        char *p = strchr(outBuf + outBufLen,'.');
         if (p != NULL) *p=',';
-        dataFile.print(p1);
+        outBufLen += strlen(outBuf + outBufLen);
       }
-      dataFile.println();
+      strcat_P(outBuf + outBufLen, PSTR("\n"));
+      dataFile.print(outBuf);
       dataFile.close();
     }
   }
@@ -5659,16 +5628,13 @@ void loop() {
 /*
                 File dataFile = SD.open(journalFileName, FILE_WRITE);
                 if (dataFile) {
-                  printTrailToFile(&dataFile);
-                  dataFile.print(F("Unknown PPS telegram;"));
+                  int outBufLen = 0;
+                  outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;Unknown PPS telegram;"), millis(), GetDateTime(outBuf + outBufLen + 80));
                   for(int i=0;i<9+(pps_write!=1 && msg[0] == 0x17);i++){
-                    if (i > 0) {
-                      dataFile.print(F(" "));
-                    }
-                    if (msg[i] < 16) dataFile.print(F("0"));  // add a leading zero to single-digit values
-                    dataFile.print(msg[i], HEX);
+                    outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%02X "), msg[i]);
                   }
-                  dataFile.println();
+                  outBuf[--outBufLen] = 0;
+                  dataFile.println(outBuf);
                 }
                 dataFile.close();
 */
@@ -6935,12 +6901,12 @@ uint8_t pps_offset = 0;
 
 #ifdef LOGGER
         if(p[1]=='D'){ // access datalog file
-          if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
+          if ((p[2]=='D' || p[2]=='J') && p[3]=='0') {  // remove datalog file
             webPrintHeader();
             File dataFile;
             boolean filewasrecreated = false;
 //recreate journal file for telegram logging
-            if(p[2]=='J' || p[2]=='0'){
+            if(p[2]=='J'){
               SD.remove(journalFileName);
               dataFile = SD.open(journalFileName, FILE_WRITE);
               if (dataFile) {
@@ -6951,11 +6917,7 @@ uint8_t pps_offset = 0;
               }
             }
 //recreate datalog file for programs values logging
-            if(p[2]=='D' || p[2]=='0'){
-              if(p[2]=='0') {
-                printToDebug(PSTR(", "));
-                printToWebClient(PSTR(", "));
-              }
+            if(p[2]=='D'){
               SD.remove(datalogFileName);
               if (createdatalogFileAndWriteHeader()) {
                 filewasrecreated = true;
@@ -6965,7 +6927,7 @@ uint8_t pps_offset = 0;
             }
             if(filewasrecreated){
               printToWebClient(PSTR(MENU_TEXT_DTR "\n"));
-              printToDebug(PSTR(": file(s) was removed and recreated."));
+              printToDebug(PSTR(": file was removed and recreated."));
             } else {
               printToWebClient(PSTR(MENU_TEXT_DTF "\n"));
             }
@@ -7181,28 +7143,30 @@ uint8_t pps_offset = 0;
           webPrintFooter();
           break;
         }
-        if (p[1]=='N'){           // Reset Arduino and clear EEPROM
+        if (p[1]=='N'){           // Reset Arduino...
 #ifdef RESET
           webPrintHeader();
           if (p[2]=='E') {
             printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\n"));
           }
-          webPrintFooter();
-          client.stop();
+
 #ifdef LOGGER
+          // what doing this fragment? Just opened and closed file? We really need it?
           File dataFile = SD.open(datalogFileName, FILE_WRITE);
           if (dataFile) {
             dataFile.close();
           }
 #endif
-          if (p[2]=='E' && EEPROM_ready) {
+          if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
             for (uint16_t x=0; x<EEPROM.length(); x++) {
               EEPROM.write(x, 0);
             }
             printlnToDebug(PSTR("Cleared EEPROM"));
           }
           printToWebClient(PSTR("Restarting Arduino...\n"));
+          webPrintFooter();
           forcedflushToWebClient();
+          client.stop();
           resetBoard();
 #endif
           break;
@@ -7522,24 +7486,21 @@ uint8_t pps_offset = 0;
 
       if (dataFile) {
         for (int i=0; i < numLogValues; i++) {
+          int outBufLen = 0;
           if (log_parameters[i] > 0) {
-            printTrailToFile(&dataFile);
-            dataFile.print(log_parameters[i]);
-            dataFile.print(F(";"));
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             query(log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
-              dataFile.print(F(STR_24A_TEXT));
-              dataFile.print(F(". "));
+              outBufLen += sprintf_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
             }
+            dataFile.print(outBuf);
+            outBufLen = 0;
             dataFile.print(lookup_descr(log_parameters[i])); //outBuf will be overwrited here
             if(decodedTelegram.sensorid){
-              dataFile.print(F("#%d"));
-              dataFile.print(decodedTelegram.sensorid);
+              outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
             }
-            dataFile.print(F(";"));
-            dataFile.print(decodedTelegram.value);
-            dataFile.print(F(";"));
-            dataFile.println(decodedTelegram.unit);
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s"), decodedTelegram.value, decodedTelegram.unit);
+            dataFile.print(outBuf);
           }
         }
         dataFile.close();
@@ -7591,9 +7552,8 @@ uint8_t pps_offset = 0;
         if (avgfile) {
           avgfile.seek(0);
           for (int i=0; i<numAverages; i++) {
-            avgfile.println(avgValues[i]);
-            avgfile.println(avgValues_Old[i]);
-            avgfile.println(avgValues_Current[i]);
+            sprintf_P(outBuf, PSTR("%f\n%f\n%f\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
+            avgfile.print(outBuf);
           }
           avgfile.println(avgCounter);
           avgfile.close();
