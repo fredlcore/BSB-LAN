@@ -7491,7 +7491,8 @@ uint8_t pps_offset = 0;
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             query(log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
-              outBufLen += sprintf_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
+              strcat_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
+              outBufLen += strlen(outBuf + outBufLen);
             }
             dataFile.print(outBuf);
             outBufLen = 0;
