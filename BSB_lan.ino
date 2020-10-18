@@ -7010,7 +7010,9 @@ uint8_t pps_offset = 0;
     for (int i=0; i < numLogValues; i++) {
       if (log_parameters[i] > 0) {
         if (MQTTClient.connected()) {
+#ifdef MQTT_JSON
           if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
+#endif
 #ifdef MQTTTopicPrefix
           MQTTTopic = MQTTTopicPrefix;
           MQTTTopic.concat(F("/"));
