@@ -1,0 +1,1 @@
+../../BSB_lan_config.h.default

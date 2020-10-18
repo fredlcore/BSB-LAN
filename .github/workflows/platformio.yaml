@@ -12,6 +12,10 @@ jobs:
         - "3.6"
         - "3.7"
         - "3.8"
+        bsb_lan_config:
+        - BSB_lan_config_default.h
+        - BSB_lan_config_mqtt.h
+        - BSB_lan_config_mqtt_json.h
 
     steps:
     - name: Checkout
@@ -41,8 +45,7 @@ jobs:
 
     - name: Setup config
       run: |
-        # Use default config
-        cp BSB_lan_config.h.default BSB_lan_config.h
+        cp tests/config/${{ matrix.bsb_lan_config }} BSB_lan_config.h
 
     - name: Run PlatformIO CI
       run: platformio ci --board=due .
