@@ -7427,7 +7427,6 @@ uint8_t pps_offset = 0;
             }
             else
               MQTTTopic = "BSB-LAN/";
-
 // use the sub-topic "json" if json output is enabled
             if(mqtt_mode == 2)
               MQTTTopic.concat(F("json"));
