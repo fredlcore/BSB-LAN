@@ -135,7 +135,7 @@ int log_parameters[40] = {
 };
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
-#define MQTT
+//#define MQTT
 byte mqtt_mode = 0; //MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
 byte mqtt_broker_ip_addr[4] = {192,168,1,20};// Please use commas instead of dots!!!

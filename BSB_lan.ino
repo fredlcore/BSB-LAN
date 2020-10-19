@@ -465,7 +465,7 @@ EthernetClient max_cul;
 #endif
 
 #ifdef MQTT
-PubSubClient MQTTClient(client);
+PubSubClient *MQTTClient;
 #endif
 boolean haveTelnetClient = false;
 
@@ -7391,14 +7391,14 @@ uint8_t pps_offset = 0;
 
     if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
       lastMQTTTime = millis();
-      if (!MQTTClient.connected()) {
+      if (!MQTTClient->connected()) {
         IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-        MQTTClient.setServer(MQTTBroker, 1883);
+        MQTTClient->setServer(MQTTBroker, 1883);
         int retries = 0;
-        while (!MQTTClient.connected() && retries < 3) {
-          MQTTClient.connect("BSB-LAN", MQTTUser, MQTTPass);
+        while (!MQTTClient->connected() && retries < 3) {
+          MQTTClient->connect("BSB-LAN", MQTTUser, MQTTPass);
           retries++;
-          if (!MQTTClient.connected()) {
+          if (!MQTTClient->connected()) {
             delay(1000);
             printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
           }
@@ -7419,7 +7419,7 @@ uint8_t pps_offset = 0;
       boolean is_first = true;
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
-          if (MQTTClient.connected()) {
+          if (MQTTClient->connected()) {
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
               MQTTTopic = MQTTTopicPrefix;
@@ -7448,10 +7448,10 @@ uint8_t pps_offset = 0;
             } else { //plain text
               if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-                MQTTClient.publish(MQTTTopic.c_str(), build_pvalstr(0));
+                MQTTClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
               }
               else
-                MQTTClient.publish(MQTTTopic.c_str(), decodedTelegram.value);
+                MQTTClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
             }
           }
         }
@@ -7467,9 +7467,9 @@ uint8_t pps_offset = 0;
         printToDebug(MQTTPayload.c_str());
         writelnToDebug();
         // Now publish the json payload only once
-        MQTTClient.publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+        MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
       }
-      MQTTClient.disconnect();
+      MQTTClient->disconnect();
     }
   }
 #endif
@@ -8241,6 +8241,16 @@ if (!SD.exists(datalogFileName)) {
 
 #endif
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
+
+#ifdef MQTT
+MQTTClient = new PubSubClient(client);
+if(mqtt_mode){
+  MQTTClient->setBufferSize(1024);
+} else {
+//shrink buffer size when MQTT not used
+  MQTTClient->setBufferSize(16);
+}
+#endif
 
 #include "BSB_lan_custom_setup.h"
 
