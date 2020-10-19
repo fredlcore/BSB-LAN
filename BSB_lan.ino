@@ -7385,6 +7385,10 @@ uint8_t pps_offset = 0;
     const char* MQTTPass = NULL;
     if(MQTTPassword[0])
       MQTTPass = MQTTPassword;
+    if(MQTTClient == NULL){
+      MQTTClient = new PubSubClient(client);
+      MQTTClient->setBufferSize(1024);
+    }
 
     String MQTTPayload = "";
     String MQTTTopic = "";
@@ -7471,6 +7475,9 @@ uint8_t pps_offset = 0;
       }
       MQTTClient->disconnect();
     }
+  }
+  if(!mqtt_mode && MQTTClient){
+    delete MQTTClient;
   }
 #endif
 
@@ -8241,16 +8248,6 @@ if (!SD.exists(datalogFileName)) {
 
 #endif
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
-
-#ifdef MQTT
-MQTTClient = new PubSubClient(client);
-if(mqtt_mode){
-  MQTTClient->setBufferSize(1024);
-} else {
-//shrink buffer size when MQTT not used
-  MQTTClient->setBufferSize(16);
-}
-#endif
 
 #include "BSB_lan_custom_setup.h"
 
