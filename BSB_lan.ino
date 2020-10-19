@@ -1464,8 +1464,8 @@ int findLine(uint16_t line
 {
   uint8_t found = 0;
   int i = -1;
-  int save_i;
-  uint32_t c, save_c;
+  int save_i = 0;
+  uint32_t c, save_c = 0;
   uint16_t l;
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
@@ -4623,7 +4623,7 @@ void queryVirtualPrognr(int line, int table_line){
             switch(tempLine % 4){ //print sensor values
               case 1:
                 if (max_dst_temp[log_sensor] > 0)
-                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_cur_temp[log_sensor]);
+                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
                 else{
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
@@ -4631,7 +4631,7 @@ void queryVirtualPrognr(int line, int table_line){
                 break;
               case 2:
                 if (max_dst_temp[log_sensor] > 0)
-                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), max_dst_temp[log_sensor]);
+                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
                 else{
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
@@ -7200,7 +7200,7 @@ uint8_t pps_offset = 0;
               if (max_cur_temp[x] > 0) {
                 max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                 max_avg_count++;
-                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], max_cur_temp[x] / 10,max_dst_temp[x] / 2);
+                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
                 if (max_valve[x] > -1) {
                   printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
                 }
