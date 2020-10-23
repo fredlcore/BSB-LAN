@@ -2894,6 +2894,7 @@ void webPrintSite() {
   printToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG "\n"));
   printToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL "\n"));
 
+#if !defined(__AVR__)
 #ifdef VERSION_CHECK
   printToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>\n"));
   flushToWebClient();
@@ -2934,6 +2935,7 @@ void webPrintSite() {
   } else {
     printToWebClient(PSTR(MENU_TEXT_NVN "\n"));
   }
+#endif
 #endif
 
   webPrintFooter();
