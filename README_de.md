@@ -67,7 +67,7 @@ Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface.png" size="50%">
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface2.png" size="50%">
 
-BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL-:
+BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL- sowie den zwingend benötigten Pin-Anschlüssen in roter Umrandung:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
 
 BSB-Adapterplatine und Ethernet-Shield auf dem Arduino Due:
