@@ -7495,18 +7495,21 @@ uint8_t pps_offset = 0;
           int outBufLen = 0;
           if (log_parameters[i] > 0) {
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
-            query(log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
+             //avregares
               strcat_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
               outBufLen += strlen(outBuf + outBufLen);
             }
             dataFile.print(outBuf);
+            query(log_parameters[i]);
             outBufLen = 0;
-            dataFile.print(lookup_descr(log_parameters[i])); //outBuf will be overwrited here
+            strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
+            dataFile.print(outBuf);
+            outBufLen = 0;
             if(decodedTelegram.sensorid){
               outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
             }
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s"), decodedTelegram.value, decodedTelegram.unit);
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\n"), decodedTelegram.value, decodedTelegram.unit);
             dataFile.print(outBuf);
           }
         }
