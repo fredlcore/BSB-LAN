@@ -6367,6 +6367,39 @@ const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 "\x07 " ENUM_WEEKDAY_07_TEXT
 };
 
+//WEBCONFIG
+//Read/write config in EEPROM
+const char ENUM_EEPROM_ONOFF[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x96 " MENU_TEXT_ON
+};
+
+const char ENUM_BUSTYPE[] PROGMEM_LATEST = {
+"\x00 " "BSB" "\0"
+"\x01 " "LPB" "\0"
+"\x02 " "PPS"
+};
+const char ENUM_LOGTELEGRAM[] PROGMEM_LATEST = {
+"\x00 " "Off" "\0"
+"\x01 " "All" "\0"
+"\x02 " "log unknown telegrams (off)" "\0"
+"\x03 " "log unknown telegrams" "\0"
+"\x04 " "log broadcast telegrams (off)" "\0"
+"\x05 " "log broadcast telegrams" "\0"
+"\x06 " "log unknown broadcast telegrams only (off)" "\0"
+"\x07 " "log unknown broadcast telegrams only"
+};
+const char ENUM_DEBUG[] PROGMEM_LATEST = {
+"\x00 " "Disabled" "\0"
+"\x01 " "Enabled" "\0"
+"\x02 " "Something"
+};
+const char ENUM_MQTT[] PROGMEM_LATEST = {
+"\x00 " "None" "\0"
+"\x01 " "Plain" "\0"
+"\x02 " "JSON"
+};
+
 //Choices for YES/NO, ON/OFF, CLOSED/OPEN, voltage ON/OFF
 const char ENUM_ONOFF[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OFF "\0"

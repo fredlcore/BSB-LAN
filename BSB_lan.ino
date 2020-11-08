@@ -691,7 +691,7 @@ typedef struct {
 #define CF_MAX_DEVICES_TXT NULL
 #else
 const char CF_USEEEPROM_TXT[] PROGMEM = ("Read config from EEPROM");
-const char CF_BUSTYPE_TXT[] PROGMEM = ("Bus type at start");
+const char CF_BUSTYPE_TXT[] PROGMEM = ("Bus type");
 const char CF_OWN_BSBADDR_TXT[] PROGMEM = ("Own BSB address");
 const char CF_OWN_LPBADDR_TXT[] PROGMEM = ("Own LPB address");
 const char CF_DEST_LPBADDR_TXT[] PROGMEM = ("Dest LPB address");
@@ -751,7 +751,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_OWN_BSBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(own_bsb_address)},
   {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(own_lpb_address)},
   {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},
-  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},
+  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},
 #ifdef WEBCONFIG
   {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)},
   {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
@@ -3526,22 +3526,65 @@ void generateChangeConfigPage(){
      case CDT_BYTE:
        switch(cfg.input_type){
          case CPI_TEXT: printFmtToWebClient(PSTR("%d"), (int)variable[0]); break;
-         case CPI_SWITCH:
-         case CPI_DROPDOWN:
-           for(uint16_t j = 0; j < 2; j++){
-             printFmtToWebClient(PSTR("<option value='%d'"), j);
-             if(j == variable[0]){
-               printToWebClient(PSTR(" SELECTED>"));
-             } else {
-               printToWebClient(PSTR(">"));
+         case CPI_SWITCH:{
+           for(uint16_t j = 0; j < 256; j++){
+             decodedTelegram.error = 0;
+             switch(cfg.id){
+               case CF_USEEEPROM:
+                 printENUM(ENUM_EEPROM_ONOFF,sizeof(ENUM_EEPROM_ONOFF), j, 0);
+                 break;
+               default:
+                 printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF), j, 0);
+                 break;
              }
-             printFmtToWebClient(PSTR("%d</option>"), j);
+             if(decodedTelegram.error == 0){
+               printFmtToWebClient(PSTR("<option value='%d'"), j);
+               if(j == variable[0] || (j == 1 && variable[0])){
+                 printToWebClient(PSTR(" selected>"));
+               } else {
+                 printToWebClient(PSTR(">"));
+               }
+               printToWebClient(decodedTelegram.enumdescaddr);
+               printToWebClient(PSTR("</option>"));
+             }
            }
-           break;
+           break;}
+         case CPI_DROPDOWN:{
+           for(uint16_t j = 0; j < 256; j++){
+             decodedTelegram.error = 0;
+             switch(cfg.id){
+               case CF_BUSTYPE:
+                 printENUM(ENUM_BUSTYPE,sizeof(ENUM_BUSTYPE), j, 0);
+                 break;
+               case CF_LOGTELEGRAM:
+                 printENUM(ENUM_LOGTELEGRAM,sizeof(ENUM_LOGTELEGRAM), j, 0);
+                 break;
+               case CF_DEBUG:
+                 printENUM(ENUM_DEBUG,sizeof(ENUM_DEBUG), j, 0);
+                 break;
+               case CF_MQTT:
+                 printENUM(ENUM_MQTT,sizeof(ENUM_MQTT), j, 0);
+                 break;
+               default:
+                 decodedTelegram.error = 258;
+                 break;
+             }
+             if(decodedTelegram.error == 0){
+               printFmtToWebClient(PSTR("<option value='%d'"), j);
+               if(j == variable[0]){
+                 printToWebClient(PSTR(" selected>"));
+               } else {
+                 printToWebClient(PSTR(">"));
+               }
+               printToWebClient(decodedTelegram.enumdescaddr);
+               printToWebClient(PSTR("</option>"));
+             }
+           }
+           break;}
          }
        break;
      case CDT_UINT16:
-       printFmtToWebClient(PSTR("%du"), ((uint16_t *)variable)[0]);
+       printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]);
        break;
      case CDT_UINT32:
        printFmtToWebClient(PSTR("%lu"), ((uint32_t *)variable)[0]);
@@ -3553,7 +3596,7 @@ void generateChangeConfigPage(){
        printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
        break;
      case CDT_IPV4:
-       printFmtToWebClient(PSTR("%du.%du.%du.%du"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
+       printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
        break;
      case CDT_PROGNRLIST:{
        boolean isFirst = true;
@@ -3562,6 +3605,16 @@ void generateChangeConfigPage(){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
+         }
+       }
+       break;}
+     case CDT_DHTBUS:{
+       boolean isFirst = true;
+       for(uint16_t j = 0; j < cfg.size; j++){
+         if(variable[j]){
+           if(!isFirst) printToWebClient(PSTR(","));
+           isFirst = false;
+           printFmtToWebClient(PSTR("%d"), variable[j]);
          }
        }
        break;}
@@ -3575,7 +3628,6 @@ void generateChangeConfigPage(){
          }
        }
        break;}
-     case CDT_DHTBUS: break;
      default: break;
    }
 //Closing tag
@@ -3836,7 +3888,7 @@ int set(int line      // the ProgNr of the heater parameter
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
-      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %du"), cmd_no, pps_values[cmd_no]);
+      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
     }
@@ -7140,7 +7192,7 @@ uint8_t pps_offset = 0;
 #endif
             default:
               generateConfigPage();
-//#ifdef WEBCONFIG              
+//#ifdef WEBCONFIG
               generateChangeConfigPage();
 //#endif
               if(EEPROM_ready){
@@ -8119,7 +8171,7 @@ void setup() {
       EEPROM.get(sizeof(uint16_t)*i, f);
     }
     if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Reading %du from EEPROM slot %d\r\n"), f, i);
+      printFmtToDebug(PSTR("Reading %u from EEPROM slot %d\r\n"), f, i);
 
       pps_values[i] = f;
     }
