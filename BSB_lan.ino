@@ -669,6 +669,11 @@ typedef struct {
   uint16_t size; //data length in EEPROM
 } configuration_struct;
 
+typedef struct {
+	uint8_t id;		// a unique identifier of param Category
+  const char* desc;	// pointer to text to be displayed for category of option - is text length necessary if we just read until NULL?
+} category_list_struct;
+
 //Mega not enough space for useless strings.
 #if defined(__AVR__)
 #define CF_USEEEPROM_TXT NULL
@@ -726,18 +731,29 @@ const char CF_MQTT_USERNAME_TXT[] PROGMEM = ("User name");
 const char CF_MQTT_PASSWORD_TXT[] PROGMEM = ("Password");
 const char CF_MQTT_TOPIC_TXT[] PROGMEM = ("Topic prefix");
 
+
+const char CAT_GENERAL_TXT[] PROGMEM = ("General");
+const char CAT_IPV4_TXT[] PROGMEM = ("IP settings");
+const char CAT_MQTT_TXT[] PROGMEM = ("MQTT settings");
+
+PROGMEM_LATE const category_list_struct catalist[]={
+  {CCAT_GENERAL,        CAT_GENERAL_TXT},
+  {CCAT_IPV4,           CAT_IPV4_TXT},
+  {CCAT_MQTT,           CAT_MQTT_TXT}
+};
+
 PROGMEM_LATE const configuration_struct config[]={
   {CF_USEEEPROM,        0, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)},
   {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 1},
   {CF_CRC32,            0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
 #ifdef CONFIG_IN_EEPROM
   {CF_BUSTYPE,          1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},
-  {CF_OWN_BSBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(bus_type)},
-  {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(bus_type)},
-  {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(bus_type)},
-  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(bus_type)},
+  {CF_OWN_BSBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(own_bsb_address)},
+  {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(own_lpb_address)},
+  {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},
+  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},
 #ifdef WEBCONFIG
-  {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_MAC_TXT, sizeof(mac)},
+  {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)},
   {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
   {CF_IPADDRESS,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_IPADDRESS_TXT, sizeof(ip_addr)},
   {CF_MASK,             2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_MASK_TXT, sizeof(subnet_addr)},
@@ -853,21 +869,34 @@ uint16_t getEEPROMaddress(uint8_t id){
 }
 
 //copy config option data from EEPROM to variable
-void readFromEEPROM(uint8_t id){
-  if (!EEPROM_ready) return;
-  if(!options[id].option_address) return;
+boolean readFromEEPROM(uint8_t id){
+  return readFromEEPROM(id, options[id].option_address);
+}
+
+boolean readFromEEPROM(uint8_t id, byte *ptr){
+  if (!EEPROM_ready) return false;
+  if(!options[id].option_address) return false;
   uint16_t len = 0;
+  boolean test = false;
   for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
 #if defined(__AVR__)
-    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0])))
+    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
       len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
+      test = true;
+      break;
+    }
 #else
-    if(id == config[j].id)
+    if(id == config[j].id){
       len = config[j].size;
+      test = true;
+      break;
+    }
 #endif
   }
+  if(!test) return false;
   for(uint16_t i = 0; i < len; i++)
-    options[id].option_address[i] = EEPROM.read(i + options[id].eeprom_address);
+    ptr[i] = EEPROM.read(i + options[id].eeprom_address);
+    return true;
 }
 
 //copy config option data from variable to EEPROM
@@ -3442,6 +3471,123 @@ printToWebClient(PSTR("<BR>\n"));
 
   printToWebClient(PSTR("<BR>\n"));
 
+}
+
+
+void generateChangeConfigPage(){
+  for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
+#if defined(__AVR__)
+    if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
+#else
+    if(config[i].var_type == CDT_VOID) continue;
+#endif
+
+    configuration_struct cfg;
+
+#if defined(__AVR__)
+    memcpy_PF(&cfg, pgm_get_far_address(config[0]) + i * sizeof(config[0]), sizeof(cfg));
+#else
+    memcpy(&cfg, &config[i], sizeof(cfg));
+#endif
+    byte *variable = (byte *)malloc(cfg.size);
+    if(!variable) return;
+    if(!readFromEEPROM(cfg.id, variable)) continue;
+
+    printToWebClient(PSTR("<tr><td>"));
+//Print param category
+#if defined(__AVR__)
+    printToWebClient(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0]));
+#else
+    printToWebClient(catalist[cfg.category].desc);
+#endif
+
+    printToWebClient(PSTR("</td><td>\n"));
+//Param Name
+    printToWebClient(cfg.desc);
+    printToWebClient(PSTR("</td><td>\n"));
+//Param Value
+
+//Open tag
+   switch(cfg.input_type){
+     case CPI_TEXT:
+     printFmtToWebClient(PSTR("<input type=text id='configoption%d' VALUE='"), cfg.id);
+     break;
+     case CPI_SWITCH:
+     printFmtToWebClient(PSTR("<select id='configoption%d'>\n"), cfg.id);
+     break;
+     case CPI_DROPDOWN:
+     printFmtToWebClient(PSTR("<select id='configoption%d'>\n"), cfg.id);
+     break;
+     default: break;
+   }
+
+   switch(cfg.var_type){
+     case CDT_VOID: break;
+     case CDT_BYTE:
+       switch(cfg.input_type){
+         case CPI_TEXT: printFmtToWebClient(PSTR("%d"), (int)variable[0]); break;
+         case CPI_SWITCH:
+         case CPI_DROPDOWN:
+           for(uint16_t j = 0; j < 2; j++){
+             printFmtToWebClient(PSTR("<option value='%d'"), j);
+             if(j == variable[0]){
+               printToWebClient(PSTR(" SELECTED>"));
+             } else {
+               printToWebClient(PSTR(">"));
+             }
+             printFmtToWebClient(PSTR("%d</option>"), j);
+           }
+           break;
+         }
+       break;
+     case CDT_UINT16:
+       printFmtToWebClient(PSTR("%du"), ((uint16_t *)variable)[0]);
+       break;
+     case CDT_UINT32:
+       printFmtToWebClient(PSTR("%lu"), ((uint32_t *)variable)[0]);
+       break;
+     case CDT_STRING:
+       printFmtToWebClient(PSTR("%s"), (char *)variable);
+       break;
+     case CDT_MAC:
+       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
+       break;
+     case CDT_IPV4:
+       printFmtToWebClient(PSTR("%du.%du.%du.%du"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
+       break;
+     case CDT_PROGNRLIST:{
+       boolean isFirst = true;
+       for(uint16_t j = 0; j < cfg.size/sizeof(int); j++){
+         if(((int *)variable)[j]){
+           if(!isFirst) printToWebClient(PSTR(","));
+           isFirst = false;
+           printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
+         }
+       }
+       break;}
+     case CDT_MAXDEVICELIST:{
+       boolean isFirst = true;
+       for(uint16_t j = 0; j < cfg.size; j+=11){
+         if(variable[j]){
+           if(!isFirst) printToWebClient(PSTR(","));
+           isFirst = false;
+           printFmtToWebClient(PSTR("%s"), &variable[j]);
+         }
+       }
+       break;}
+     case CDT_DHTBUS: break;
+     default: break;
+   }
+//Closing tag
+   switch(cfg.input_type){
+     case CPI_TEXT: printToWebClient(PSTR("'>")); break;
+     case CPI_SWITCH: printToWebClient(PSTR("</select>")); break;
+     case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
+     default: break;
+   }
+     free(variable);
+    printToWebClient(PSTR("</td></td>\n"));
+  }
 }
 
 /** *****************************************************************
@@ -6994,6 +7140,9 @@ uint8_t pps_offset = 0;
 #endif
             default:
               generateConfigPage();
+//#ifdef WEBCONFIG              
+              generateChangeConfigPage();
+//#endif
               if(EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
