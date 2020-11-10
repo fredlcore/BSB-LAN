@@ -57,13 +57,21 @@
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
- *       1.1   -
+ *       1.1   - 10.11.2020
  *
  * Changelog:
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *        - /JA URL command outputs average values
+ *        - Many new parameters decoded
+ *        - New parameters for device families 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211
+ *        - Improved mobile display of webinterface
  *        - Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V->5V, GND->GND, RX->TX2, TX->RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.
+ *        - Lots of added Polish translations
+ *        - New data types VT_BYTE10, VT_SPF
+ *        - Bugfix for PPS bus regarding display of heating time programs
+ *        - Bugfix for MQTT
  *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
@@ -3016,6 +3024,7 @@ void webPrintSite() {
   printToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG "\n"));
   printToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL "\n"));
 
+#if !defined(__AVR__)
 #ifdef VERSION_CHECK
   if(enable_version_check){
     printToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>\n"));
@@ -3058,6 +3067,7 @@ void webPrintSite() {
       printToWebClient(PSTR(MENU_TEXT_NVN "\n"));
     }
   }
+#endif
 #endif
 
   webPrintFooter();
@@ -7681,6 +7691,9 @@ uint8_t pps_offset = 0;
   if(logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
+#ifdef ONE_WIRE_BUS
+      sensors.requestTemperatures(); // Send the command to get temperatures
+#endif
 
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
