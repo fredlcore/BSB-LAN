@@ -57,13 +57,14 @@
  *       0.43  - 20.02.2020
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
- *       1.1   -
+ *       1.1   - 10.11.2020
  *
  * Changelog:
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
  *        - Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V->5V, GND->GND, RX->TX2, TX->RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.
+ *        - Bugfix for PPS bus regarding display of heating time programs
  *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
@@ -7117,6 +7118,9 @@ uint8_t pps_offset = 0;
   if(SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
+#ifdef ONE_WIRE_BUS
+      sensors.requestTemperatures(); // Send the command to get temperatures
+#endif
 
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
@@ -7236,7 +7240,6 @@ uint8_t pps_offset = 0;
 #ifdef ONE_WIRE_BUS
             if (log_parameters[i] >= 20200 && log_parameters[i] < 20300) {
               int log_sensor = log_parameters[i] - 20200;
-              sensors.requestTemperatures(); // Send the command to get temperatures
               float t=sensors.getTempCByIndex(log_sensor);
               dataFile.print(F("1W Temperature "));
               dataFile.print(log_sensor);
