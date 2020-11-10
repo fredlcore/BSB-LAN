@@ -15,7 +15,6 @@ jobs:
         bsb_lan_config:
         - BSB_lan_config_default.h
         - BSB_lan_config_mqtt.h
-        - BSB_lan_config_mqtt_json.h
 
     steps:
     - name: Checkout

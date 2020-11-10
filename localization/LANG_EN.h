@@ -48,7 +48,8 @@
 #define ENUM_CAT_2e_TEXT "Burner control"
 #define ENUM_CAT_2f_TEXT "User defined"
 #define ENUM_CAT_30_TEXT "PPS bus"
-#define ENUM_CAT_31_TEXT "Unknown category"
+#define ENUM_CAT_31_TEXT "One Wire, DHT & MAX! Sensors"
+#define ENUM_CAT_32_TEXT "Unknown category"
 
 #define MENU_TEXT_HFK "Heater functions"
 #define MENU_TEXT_SNS "Sensors"
@@ -134,6 +135,8 @@
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
 #define MENU_TEXT_LOT "Log of telegrams"
+
+#define STR_24A_TEXT "24h average"
 
 #define STR516_TEXT "Standard values TSP heating circuit 1"
 #define STR536_TEXT "Standard values TSP heating circuit 2 "

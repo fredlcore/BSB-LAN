@@ -38,7 +38,7 @@
 #undef ENUM_CAT_2d_TEXT
 #undef ENUM_CAT_2e_TEXT
 #undef ENUM_CAT_30_TEXT
-#undef ENUM_CAT_31_TEXT
+#undef ENUM_CAT_32_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SN1
 #undef MENU_TEXT_SN2

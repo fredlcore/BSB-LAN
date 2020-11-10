@@ -1,0 +1,23 @@
+name: Build localization
+on:
+  push:
+jobs:
+  localizator:
+    name: Build language resourses
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+      - name: Build UNDEFs, json and js files
+        run: cd localization && ./create-undefs.pl && cd ..
+      - name: Copy files to repo
+        uses: test-room-7/action-update-file@v1
+        with:
+           file-path: |
+             localization/json/*.json
+             localization/www/*.*
+             localization/UNDEF_LANG_*.h
+             localization/LANG_C.h
+           commit-msg: Update language resources
+           github-token: ${{ secrets.GITHUB_TOKEN }}
+           

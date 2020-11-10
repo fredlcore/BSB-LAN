@@ -49,6 +49,7 @@
 #undef ENUM_CAT_2f_TEXT
 #undef ENUM_CAT_30_TEXT
 #undef ENUM_CAT_31_TEXT
+#undef ENUM_CAT_32_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
@@ -132,6 +133,7 @@
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
 #undef MENU_TEXT_LOT
+#undef STR_24A_TEXT
 #undef STR516_TEXT
 #undef STR536_TEXT
 #undef STR556_TEXT

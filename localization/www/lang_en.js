@@ -48,7 +48,8 @@ UIStrings["ENUM_CAT_2d_TEXT"] = "Diagnosis consumer";
 UIStrings["ENUM_CAT_2e_TEXT"] = "Burner control";
 UIStrings["ENUM_CAT_2f_TEXT"] = "User defined";
 UIStrings["ENUM_CAT_30_TEXT"] = "PPS bus";
-UIStrings["ENUM_CAT_31_TEXT"] = "Unknown category";
+UIStrings["ENUM_CAT_31_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_32_TEXT"] = "Unknown category";
 
 UIStrings["MENU_TEXT_HFK"] = "Heater functions";
 UIStrings["MENU_TEXT_SNS"] = "Sensors";
@@ -134,6 +135,8 @@ UIStrings["MENU_TEXT_LBO"] = "Log broadcast bus-telegrams only";
 UIStrings["MENU_TEXT_LGI"] = "New logging interval";
 UIStrings["MENU_TEXT_LGN"] = "New logging parameters";
 UIStrings["MENU_TEXT_LOT"] = "Log of telegrams";
+
+UIStrings["STR_24A_TEXT"] = "24h average";
 
 UIStrings["STR516_TEXT"] = "Standard values TSP heating circuit 1";
 UIStrings["STR536_TEXT"] = "Standard values TSP heating circuit 2 ";

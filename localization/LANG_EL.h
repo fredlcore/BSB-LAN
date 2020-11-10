@@ -44,4 +44,4 @@
 #define ENUM_CAT_2e_TEXT "Έλεγχος καυστήρα"
 #define ENUM_CAT_2f_TEXT "Ορισμένη από το χρήστη"
 #define ENUM_CAT_30_TEXT "Αρτηρία PPS"
-#define ENUM_CAT_31_TEXT "Άγνωστη κατηγορία"
+#define ENUM_CAT_32_TEXT "Άγνωστη κατηγορία"

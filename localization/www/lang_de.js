@@ -20,6 +20,7 @@ UIStrings["UNIT_TEMP_PER_MIN_TEXT"] = "&deg;C/min";
 UIStrings["UNIT_CEL_MIN_TEXT"] = "&deg;Cmin";
 UIStrings["UNIT_LITERPERHOUR_TEXT"] = "l/h";
 UIStrings["UNIT_LITERPERMIN_TEXT"] = "l/min";
+UIStrings["UNIT_GR_PER_CUBM_TEXT"] = "g/m³";
 
 UIStrings["ENUM_CAT_00_TEXT"] = "Uhrzeit und Datum";
 UIStrings["ENUM_CAT_01_TEXT"] = "Bedieneinheit";
@@ -70,7 +71,8 @@ UIStrings["ENUM_CAT_2d_TEXT"] = "Diagnose Verbraucher";
 UIStrings["ENUM_CAT_2e_TEXT"] = "Feuerungsautomat";
 UIStrings["ENUM_CAT_2f_TEXT"] = "Benutzerdefiniert";
 UIStrings["ENUM_CAT_30_TEXT"] = "PPS-Bus";
-UIStrings["ENUM_CAT_31_TEXT"] = "unbekannte Kategorie";
+UIStrings["ENUM_CAT_31_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_32_TEXT"] = "unbekannte Kategorie";
 
 UIStrings["MENU_TEXT_HFK"] = "Heizungsfunktionen";
 UIStrings["MENU_TEXT_SNS"] = "Sensoren";
@@ -134,7 +136,9 @@ UIStrings["MENU_TEXT_MXS"] = "MAX!-Soll-Temperatur";
 UIStrings["MENU_TEXT_MXV"] = "MAX!-Ventilöffnung";
 UIStrings["MENU_TEXT_MXN"] = "Noch keine MAX!-Daten empfangen.";
 UIStrings["MENU_TEXT_BDT"] = "BSB-Datentelegramme (unabhängig vom Intervall)";
+UIStrings["MENU_TEXT_LAT"] = "Alle Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_BUT"] = "Nur unbekannte Bus-Telegramme loggen";
+UIStrings["MENU_TEXT_UBT"] = "Nur unbekannte Broadcast Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_MMD"] = "Monitor Modus";
 UIStrings["MENU_TEXT_VBL"] = "Verbositäts-Level";
 UIStrings["MENU_TEXT_AVT"] = "Berechnung von 24h-Mittelwerten für die folgenden Parameter";
@@ -159,6 +163,53 @@ UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsv
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
+
+UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
+
+//WEBCONFIG
+UIStrings["CF_USEEEPROM_TEXT"] = "Read config from EEPROM";
+UIStrings["CF_BUSTYPE_TEXT"] = "Bus type";
+UIStrings["CF_OWN_BSBADDR_TEXT"] = "Own BSB address";
+UIStrings["CF_OWN_LPBADDR_TEXT"] = "Own LPB address";
+UIStrings["CF_DEST_LPBADDR_TEXT"] = "Dest LPB address";
+UIStrings["CF_PPS_WRITE_TEXT"] = "Enable PPS bus write";
+UIStrings["CF_LOGTELEGRAM_TEXT"] = "Log telegrams";
+UIStrings["CF_LOGAVERAGES_TEXT"] = "Calculate and log 24h average values";
+UIStrings["CF_LOGCURRVALUES_TEXT"] = "Log current values";
+UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Log interval";
+UIStrings["CF_AVERAGESLIST_TEXT"] = "Programs for averages calculation";
+UIStrings["CF_CURRVALUESLIST_TEXT"] = "Programs for logging";
+UIStrings["CF_MAX_DEVICES_TEXT"] = "MAX! devices";
+UIStrings["CF_MAC_TEXT"] = "MAC address";
+UIStrings["CF_DHCP_TEXT"] = "Use DHCP";
+UIStrings["CF_IPADDRESS_TEXT"] = "IP address";
+UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Trusted IP address";
+UIStrings["CF_MASK_TEXT"] = "Network mask";
+UIStrings["CF_GATEWAY_TEXT"] = "Gateway";
+UIStrings["CF_DNS_TEXT"] = "DNS server";
+UIStrings["CF_WWWPORT_TEXT"] = "WWW port";
+UIStrings["CF_WEBSERVER_TEXT"] = "Webserver 4 SD card";
+UIStrings["CF_PASSKEY_TEXT"] = "URL passkey";
+UIStrings["CF_BASICAUTH_TEXT"] = "Basic AUTH data";
+UIStrings["CF_ONEWIREBUS_TEXT"] = "Use One Wire bus on pin";
+UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "List of One Wire devices";
+UIStrings["CF_DHTBUS_TEXT"] = "Use DHT bus on pins";
+UIStrings["CF_IPWE_TEXT"] = "Enable IPWE";
+UIStrings["CF_IPWEVALUESLIST_TEXT"] = "Programs for displaying with IPWE";
+UIStrings["CF_MAX_TEXT"] = "Enable MAX";
+UIStrings["CF_MAX_IPADDRESS_TEXT"] = "CUNO/CUNX/modified MAX!Cube IP address";
+UIStrings["CF_READONLY_TEXT"] = "All parameters is read only";
+UIStrings["CF_DEBUG_TEXT"] = "Debug";
+UIStrings["CF_MQTT_TEXT"] = "Using MQTT";
+UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "MQTT broker IP address";
+UIStrings["CF_MQTT_USERNAME_TEXT"] = "User name";
+UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
+UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
+
+UIStrings["CAT_GENERAL_TEXT"] = "General";
+UIStrings["CAT_IPV4_TEXT"] = "IP settings";
+UIStrings["CAT_MQTT_TEXT"] = "MQTT settings";
+
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
@@ -1918,7 +1969,24 @@ UIStrings["STR15064_TEXT"] = "Zieltemperatur";
 UIStrings["STR15065_TEXT"] = "Nächstes Schaltprogramm";
 UIStrings["STR15066_TEXT"] = "Manuelles Heizen";
 UIStrings["STR15067_TEXT"] = "Verbindung unterbrochen";
+UIStrings["STR20100_TEXT"] = "DHT22 Sensor ID";
+UIStrings["STR20101_TEXT"] = "DHT22 Sensor Temperatur";
+UIStrings["STR20102_TEXT"] = "DHT22 Sensor Luftfeuchtigkeit";
+UIStrings["STR20103_TEXT"] = "DHT22 Sensor Abs Luftfeuchtigkeit";
+UIStrings["STR20200_TEXT"] = "DS18B20 Sensor ID";
+UIStrings["STR20201_TEXT"] = "DS18B20 Sensor Temperatur";
+UIStrings["STR20300_TEXT"] = "MAX! Sensor ID";
+UIStrings["STR20301_TEXT"] = "MAX! Sensor Ist Temperatur";
+UIStrings["STR20302_TEXT"] = "MAX! Sensor Soll-Temperatur";
+UIStrings["STR20303_TEXT"] = "MAX! Sensor Ventilöffnung";
+
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
+
+
+UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "Serial";
+UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
+UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
+UIStrings["ENUM_MQTT_JSON_TEXT"] = "JSON";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";

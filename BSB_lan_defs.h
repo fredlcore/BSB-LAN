@@ -11,12 +11,6 @@
 #define LANG EN
 #endif
 
-#ifdef DebugTelnet
-#define DebugOutput telnetClient
-#else
-#define DebugOutput Serial
-#endif
-
 #include "localization/LANG_DE.h"
 #include "localization/UNDEF_LANG_EN.h"
 #include "localization/LANG_EN.h"
@@ -232,6 +226,7 @@ typedef enum{
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
   CAT_PPS,
+  CAT_USERSENSORS,
   CAT_UNKNOWN
 }category_t;
 
@@ -269,7 +264,7 @@ typedef enum{
   VT_VOLTAGEONOFF,      //  2 Byte - 1 enable / volt 0V (0x00) or 230V (0xFF)
   VT_WEEKDAY,           //  2 Byte - 1 enable 0x01 / weekday (1=Mo..7=So)
   VT_YESNO,             //  2 Byte - 1 enable 0x01 / 0=Nein 1=Ja (auch 0xff=Ja)
-  VT_SPF,               //  3 Byte -  / value / 100 
+  VT_SPF,               //  3 Byte -  / value / 100
   VT_CURRENT,           //  3 Byte - 1 enable / value/100 uA
   VT_CURRENT1000,       //  3 Byte - 1 enable / value/1000 uA
   VT_DAYS_WORD,         //  3 Byte - 1 enable / day
@@ -327,6 +322,7 @@ typedef enum{
   VT_STRING,            //* x Byte - 1 enable / string
   VT_CUSTOM_ENUM,       //* x Byte - 1 Byte Position, 1 Byte Parameter-Wert, Space, Text
   VT_CUSTOM_BYTE,       //* x Byte - 1 Byte Position, 1 Byte Länge Parameter, Space (!) (nötig für Erkennung)
+  VT_GR_PER_CUBM,       //Virtual (DHT22): Gram per cubic meter (Abs humidity)
   VT_UNKNOWN
 }vt_type_t;
 
@@ -351,6 +347,7 @@ const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
 const char U_CEL_MIN[] PROGMEM = UNIT_CEL_MIN_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
+const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -477,6 +474,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
 {VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
+{VT_GR_PER_CUBM,    1.0,    DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM)},
 {VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
 };
 
@@ -534,7 +532,8 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x2e " ENUM_CAT_2e_TEXT "\0"
 "\x2f " ENUM_CAT_2f_TEXT "\0"
 "\x30 " ENUM_CAT_30_TEXT "\0"
-"\x31 " ENUM_CAT_31_TEXT
+"\x31 " ENUM_CAT_31_TEXT "\0"
+"\x32 " ENUM_CAT_32_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -586,8 +585,72 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8700, 9075,
   9500, 9652,
   10000, 14999,
-  15000, 15067
+  15000, 15067,
+  20000, 20699 //Virtual category for durations, One Wire, DHT sensors
 };
+
+
+//Mega not enough space for useless strings.
+#if defined(__AVR__)
+#define CF_USEEEPROM_TEXT ""
+#define CF_BUSTYPE_TEXT ""
+#define CF_OWN_BSBADDR_TEXT ""
+#define CF_OWN_LPBADDR_TEXT ""
+#define CF_DEST_LPBADDR_TEXT ""
+#define CF_PPS_WRITE_TEXT ""
+#define CF_LOGTELEGRAM_TEXT ""
+#define CF_LOGAVERAGES_TEXT ""
+#define CF_LOGCURRVALUES_TEXT ""
+#define CF_LOGCURRINTERVAL_TEXT ""
+#define CF_AVERAGESLIST_TEXT ""
+#define CF_CURRVALUESLIST_TEXT ""
+#define CF_MAX_DEVICES_TEXT ""
+#endif
+
+//WEBCONFIG
+const char CF_USEEEPROM_TXT[] PROGMEM = CF_USEEEPROM_TEXT;
+const char CF_BUSTYPE_TXT[] PROGMEM = CF_BUSTYPE_TEXT;
+const char CF_OWN_BSBADDR_TXT[] PROGMEM = CF_OWN_BSBADDR_TEXT;
+const char CF_OWN_LPBADDR_TXT[] PROGMEM = CF_OWN_LPBADDR_TEXT;
+const char CF_DEST_LPBADDR_TXT[] PROGMEM = CF_DEST_LPBADDR_TEXT;
+const char CF_PPS_WRITE_TXT[] PROGMEM = CF_PPS_WRITE_TEXT;
+const char CF_LOGTELEGRAM_TXT[] PROGMEM = CF_LOGTELEGRAM_TEXT;
+const char CF_LOGAVERAGES_TXT[] PROGMEM = CF_LOGAVERAGES_TEXT;
+const char CF_LOGCURRVALUES_TXT[] PROGMEM = CF_LOGCURRVALUES_TEXT;
+const char CF_LOGCURRINTERVAL_TXT[] PROGMEM = CF_LOGCURRINTERVAL_TEXT;
+const char CF_AVERAGESLIST_TXT[] PROGMEM = CF_AVERAGESLIST_TEXT;
+const char CF_CURRVALUESLIST_TXT[] PROGMEM = CF_CURRVALUESLIST_TEXT;
+const char CF_MAX_DEVICES_TXT[] PROGMEM = CF_MAX_DEVICES_TEXT;
+const char CF_MAC_TXT[] PROGMEM = CF_MAC_TEXT;
+const char CF_DHCP_TXT[] PROGMEM = CF_DHCP_TEXT;
+const char CF_IPADDRESS_TXT[] PROGMEM = CF_IPADDRESS_TEXT;
+const char CF_TRUSTEDIPADDRESS_TXT[] PROGMEM = CF_TRUSTEDIPADDRESS_TEXT;
+const char CF_MASK_TXT[] PROGMEM = CF_MASK_TEXT;
+const char CF_GATEWAY_TXT[] PROGMEM = CF_GATEWAY_TEXT;
+const char CF_DNS_TXT[] PROGMEM = CF_DNS_TEXT;
+const char CF_WWWPORT_TXT[] PROGMEM = CF_WWWPORT_TEXT;
+const char CF_WEBSERVER_TXT[] PROGMEM = CF_WEBSERVER_TEXT;
+const char CF_PASSKEY_TXT[] PROGMEM = CF_PASSKEY_TEXT;
+const char CF_BASICAUTH_TXT[] PROGMEM = CF_BASICAUTH_TEXT;
+const char CF_ONEWIREBUS_TXT[] PROGMEM = CF_ONEWIREBUS_TEXT;
+const char CF_ONEWIREBUS_DEVICES_TXT[] PROGMEM = CF_ONEWIREBUS_DEVICES_TEXT;
+const char CF_DHTBUS_TXT[] PROGMEM = CF_DHTBUS_TEXT;
+const char CF_IPWE_TXT[] PROGMEM = CF_IPWE_TEXT;
+const char CF_IPWEVALUESLIST_TXT[] PROGMEM = CF_IPWEVALUESLIST_TEXT;
+const char CF_MAX_TXT[] PROGMEM = CF_MAX_TEXT;
+const char CF_MAX_IPADDRESS_TXT[] PROGMEM = CF_MAX_IPADDRESS_TEXT;
+const char CF_READONLY_TXT[] PROGMEM = CF_READONLY_TEXT;
+const char CF_DEBUG_TXT[] PROGMEM = CF_DEBUG_TEXT;
+const char CF_MQTT_TXT[] PROGMEM = CF_MQTT_TEXT;
+const char CF_MQTT_IPADDRESS_TXT[] PROGMEM = CF_MQTT_IPADDRESS_TEXT;
+const char CF_MQTT_USERNAME_TXT[] PROGMEM = CF_MQTT_USERNAME_TEXT;
+const char CF_MQTT_PASSWORD_TXT[] PROGMEM = CF_MQTT_PASSWORD_TEXT;
+const char CF_MQTT_TOPIC_TXT[] PROGMEM = CF_MQTT_TOPIC_TEXT;
+
+const char CAT_GENERAL_TXT[] PROGMEM = CAT_GENERAL_TEXT;
+const char CAT_IPV4_TXT[] PROGMEM = CAT_IPV4_TEXT;
+const char CAT_MQTT_TXT[] PROGMEM = CAT_MQTT_TEXT;
+
 
  /* Menue Strings */
 const char STR0[] PROGMEM = STR0_TEXT;
@@ -2777,6 +2840,23 @@ const char STR15065[] PROGMEM = STR15065_TEXT;
 const char STR15066[] PROGMEM = STR15066_TEXT;
 const char STR15067[] PROGMEM = STR15067_TEXT;
 
+const char STR20000[] PROGMEM = MENU_TEXT_BZ1;
+const char STR20001[] PROGMEM = MENU_TEXT_BT1;
+const char STR20002[] PROGMEM = MENU_TEXT_BZ2;
+const char STR20003[] PROGMEM = MENU_TEXT_BT2;
+const char STR20004[] PROGMEM = MENU_TEXT_TZ1;
+const char STR20005[] PROGMEM = MENU_TEXT_TT1;
+
+const char STR20100[] PROGMEM = STR20100_TEXT;
+const char STR20101[] PROGMEM = STR20101_TEXT;
+const char STR20102[] PROGMEM = STR20102_TEXT;
+const char STR20103[] PROGMEM = STR20103_TEXT;
+const char STR20200[] PROGMEM = STR20200_TEXT;
+const char STR20201[] PROGMEM = STR20201_TEXT;
+const char STR20300[] PROGMEM = STR20300_TEXT;
+const char STR20301[] PROGMEM = STR20301_TEXT;
+const char STR20302[] PROGMEM = STR20302_TEXT;
+const char STR20303[] PROGMEM = STR20303_TEXT;
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = STR99999_TEXT;
 
@@ -6363,6 +6443,39 @@ const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 "\x07 " ENUM_WEEKDAY_07_TEXT
 };
 
+//WEBCONFIG
+//Read/write config in EEPROM
+const char ENUM_EEPROM_ONOFF[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x96 " MENU_TEXT_ON
+};
+
+const char ENUM_BUSTYPE[] PROGMEM_LATEST = {
+"\x00 " "BSB" "\0"
+"\x01 " "LPB" "\0"
+"\x02 " "PPS"
+};
+const char ENUM_LOGTELEGRAM[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " MENU_TEXT_LAT "\0"
+"\x02 " MENU_TEXT_BUT " (" MENU_TEXT_OFF ")" "\0"
+"\x03 " MENU_TEXT_BUT "\0"
+"\x04 " MENU_TEXT_LBO " (" MENU_TEXT_OFF ")" "\0"
+"\x05 " MENU_TEXT_LBO "\0"
+"\x06 " MENU_TEXT_UBT " (" MENU_TEXT_OFF ")" "\0"
+"\x07 " MENU_TEXT_UBT
+};
+const char ENUM_DEBUG[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " ENUM_DEBUG_SERIAL_TEXT "\0"
+"\x02 " ENUM_DEBUG_TELNET_TEXT
+};
+const char ENUM_MQTT[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " ENUM_MQTT_PLAIN_TEXT "\0"
+"\x02 " ENUM_MQTT_JSON_TEXT
+};
+
 //Choices for YES/NO, ON/OFF, CLOSED/OPEN, voltage ON/OFF
 const char ENUM_ONOFF[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OFF "\0"
@@ -9605,7 +9718,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Wärmeaufnahme Quelle
 {0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungsaufnahme in kW // Broetje BSW-K
-{0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Leistungsaufnahme in kW 
+{0x053D19D9,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8397,  STR8397,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // Leistungsaufnahme in kW
 {0x053D19DB,  CAT_DIAG_ERZEUGER,    VT_SPF,           8398,  STR8398,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungszahl
 
 // Diagnose Erzeuger - Wärmepumpe
@@ -11073,6 +11186,25 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
 {0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
 {0x2D4F0043,  CAT_PPS,              VT_YESNO,         15067, STR15067, sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20000, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20001, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20002, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20201, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20302, STR20302, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20303, STR20303, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2

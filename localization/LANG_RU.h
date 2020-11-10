@@ -83,7 +83,8 @@
 #define ENUM_CAT_2e_TEXT "Автомат горения"
 #define ENUM_CAT_2f_TEXT "Заданные пользователем"
 #define ENUM_CAT_30_TEXT "Шина PPS"
-#define ENUM_CAT_31_TEXT "Неизвестная категория"
+#define ENUM_CAT_31_TEXT "Пользовательские датчики (DHT, Dallas, MAX!)"
+#define ENUM_CAT_32_TEXT "Неизвестная категория"
 
 #define MENU_TEXT_TOC "Руководство (на английском языке)"
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
@@ -150,10 +151,10 @@
 #define MENU_TEXT_MAC "MAC-адрес"
 #define MENU_TEXT_LGP "Записывать указанные параметры в журнал каждые"
 #define MENU_TEXT_SEC "секунд"
-#define MENU_TEXT_BZ1 "Время работы горелки, уровень 1"
-#define MENU_TEXT_BT1 "Количество включений горелки, уровень 1"
-#define MENU_TEXT_BZ2 "Время работы горелки, уровень 2"
-#define MENU_TEXT_BT2 "Количество включений горелки, уровень 2"
+#define MENU_TEXT_BZ1 "Время работы горелки, ступень 1"
+#define MENU_TEXT_BT1 "Количество включений горелки, ступень 1"
+#define MENU_TEXT_BZ2 "Время работы горелки, ступень 2"
+#define MENU_TEXT_BT2 "Количество включений горелки, ступень 2"
 #define MENU_TEXT_TZ1 "Время работы ГВС"
 #define MENU_TEXT_TT1 "Количество циклов ГВС"
 #define MENU_TEXT_MXI "MAX! текущая температура"
@@ -161,14 +162,18 @@
 #define MENU_TEXT_MXV "MAX! открытие клапана"
 #define MENU_TEXT_MXN "Нет данных от MAX!."
 #define MENU_TEXT_BDT "Телеграммы BSB (независимо от интервала)"
+#define MENU_TEXT_LAT "Журналировать все телеграммы"
 #define MENU_TEXT_BUT "Журналировать только неизвестные телеграммы"
+#define MENU_TEXT_UBT "Журналировать только неизвестные широковещательные телеграммы"
 #define MENU_TEXT_MMD "Режим монитора"
 #define MENU_TEXT_VBL "Подробный режим"
 #define MENU_TEXT_AVT "Подсчитывать среднесуточные значения для следующих параметров"
 #define MENU_TEXT_LBO "Журналировать только широковещательные телеграммы"
-#define MENU_TEXT_LGI "Новый интервал журналирования"
+#define MENU_TEXT_LGI "Новый интервал журналирования списка параметров"
 #define MENU_TEXT_LGN "Новые параметры для журналирования"
 #define MENU_TEXT_LOT "Журналирование телеграмм"
+
+#define STR_24A_TEXT "Среднесуточное значение"
 
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"
@@ -1612,6 +1617,8 @@
 
 #define STR10000_TEXT "Текущее значение температуры помещения 1"
 
+#define STR10200_TEXT "Неизвестная команда"
+
 #define STR15004_TEXT "Температура подачи смесительного узла"
 #define STR15019_TEXT "Понедельник. Период отопления 1. Начало"
 #define STR15020_TEXT "Понедельник. Период отопления 1. Конец"
@@ -1657,6 +1664,9 @@
 #define STR15060_TEXT "Воскресенье. Период отопления 3. Конец"
 
 #define STR15064_TEXT "Целевая температура"
+
+#define STR20100_TEXT "Датчик DHT22"
+#define STR20200_TEXT "Датчик DS18B20"
 
 #define STR99999_TEXT "НЕИЗВЕСТНАЯ команда"
 
