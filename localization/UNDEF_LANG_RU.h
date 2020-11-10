@@ -145,7 +145,9 @@
 #undef MENU_TEXT_MXV
 #undef MENU_TEXT_MXN
 #undef MENU_TEXT_BDT
+#undef MENU_TEXT_LAT
 #undef MENU_TEXT_BUT
+#undef MENU_TEXT_UBT
 #undef MENU_TEXT_MMD
 #undef MENU_TEXT_VBL
 #undef MENU_TEXT_AVT
