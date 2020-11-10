@@ -578,232 +578,7 @@ uint8_t current_switchday = 0;
 
 byte UseEEPROM = 0;
 
-typedef enum{
-// Version 0 (header + PPS values + space for MAX! devices)
-  CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
-  CF_VERSION, //Size: 1 byte. Config version
-  CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
-  CF_MAX_DEVICES, //Size 11 * 20 bytes.
-  CF_MAX_DEVADDR, //Size 4 * 20 bytes.
-  CF_PPS_VALUES, //
-// Version 1 (parameters which can be changed by URL commands)
-  CF_BUSTYPE, //Size: 1 byte. Bus type at start (DROPDOWN selector)
-  CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42)
-  CF_OWN_LPBADDR, ///Size: 1 byte. LPB bus device address (0x42)
-  CF_DEST_LPBADDR, ///Size: 1 byte. LPB bus destination address (0x0)
-  CF_PPS_WRITE, ///Size: 1 byte. PPS can write
-  CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
-  CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
-  CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
-  CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
-  CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-// Version 2 (Web-config)
-  CF_MAC, //Size: 6 bytes. MAC address
-  CF_DHCP, //Size: 1 byte. DHCP: 0 - disabled, 1 - enabled
-  CF_IPADDRESS, //Size: 4 bytes. IP v4 address
-  CF_MASK, //Size: 4 bytes. Network mask
-  CF_GATEWAY, //Size: 4 bytes. Gateway
-  CF_DNS, //Size: 4 bytes. DNS server address
-  CF_WWWPORT, //Size: 2 bytes. Port number, 1-65535
-  CF_TRUSTEDIPADDRESS,//Size: 4 bytes. First trusted IP v4 address. 0 - disabled
-  CF_TRUSTEDIPADDRESS2,//Size: 4 bytes. Second trusted IP v4 address. 0 - disabled
-  CF_PASSKEY, //Size 64 bytes. String with PASSKEY
-  CF_BASICAUTH, //Size 64 bytes. String with USER_PASS_B64
-  CF_WEBSERVER, //Size: 1 byte. External (read files from SD card) webserver: 0 - disabled, 1 - enabled
-  CF_ONEWIREBUS, //Size: 1 byte. One wire bus pin. 0 will be ignored
-  CF_DHTBUS, //Size: 10 bytes (sizeof(DHT_Pins)). DHT temperature/humidity bus pins. 0 will be ignored
-  CF_IPWE, //Size: 1 byte. IPWE extension: 0 - disabled, 1 - enabled
-  CF_IPWEVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
-  CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
-  CF_READONLY, //Size: 1 byte. All parameters will be FL_RONLY
-  CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
-  CF_MQTT, //Size: 1 byte. MQTT: 0 - disabled, 1 - enabled, plain text, 2 - enabled, JSON
-  CF_MQTT_IPADDRESS, //Size: 4 bytes. MQTT broker IP v4 address
-  CF_MQTT_USERNAME, //Size: 32 bytes.
-  CF_MQTT_PASSWORD, //Size: 32 bytes.
-  CF_MQTT_TOPIC, //Size: 32 bytes.
-  CF_MQTT_DEVICE, //Size: 32 bytes.
-  CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
-} cf_params;
-
-//according to input_type in configuration_struct
-typedef enum {
-  CPI_NOTHING,
-  CPI_TEXT, // general text field
-  CPI_SWITCH,
-  CPI_DROPDOWN
-} cpi_params;
-
-//according to var_type in configuration_struct
-typedef enum {
-  CDT_VOID,
-  CDT_BYTE,
-  CDT_UINT16, //CPI_TEXT field with format for unsigned integer
-  CDT_UINT32, //CPI_TEXT field with format for unsigned long integer
-  CDT_STRING,
-  CDT_MAC, //CPI_TEXT field with format for MAC input/output
-  CDT_IPV4, //CPI_TEXT field with format for IPv4 input/output
-  CDT_PROGNRLIST, //CPI_TEXT field with format for programs list input/output
-  CDT_MAXDEVICELIST,//CPI_TEXT field with format for MAX! devices list input/output
-  CDT_DHTBUS //CPI_TEXT field with format for DHT bus
-} cdt_params;
-
-//according to category in configuration_struct
-typedef enum {
-  CCAT_GENERAL,
-  CCAT_IPV4,
-  CCAT_MQTT
-} ccat_params;
-
-
-typedef struct {
-	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
-  uint8_t version; //config version which can manage this parameter
-  boolean needreboot; //true - value can be apply after reboot only.
-  uint8_t category;	// for grouping configuration options (cdt_params)
-  uint8_t input_type;	// input type (text, dropdown etc.) 0 - text field, 1 - switch, 2 - dropdown
-	uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
-	const char* desc;	// pointer to text to be displayed for option - is text length necessary if we just read until NULL?
-  uint16_t size; //data length in EEPROM
-} configuration_struct;
-
-typedef struct {
-	uint8_t id;		// a unique identifier of param Category
-  const char* desc;	// pointer to text to be displayed for category of option - is text length necessary if we just read until NULL?
-} category_list_struct;
-
-//Mega not enough space for useless strings.
-#if defined(__AVR__)
-#define CF_USEEEPROM_TXT NULL
-#define CF_BUSTYPE_TXT NULL
-#define CF_OWN_BSBADDR_TXT NULL
-#define CF_OWN_LPBADDR_TXT NULL
-#define CF_DEST_LPBADDR_TXT NULL
-#define CF_PPS_WRITE_TXT NULL
-#define CF_LOGTELEGRAM_TXT NULL
-#define CF_LOGAVERAGES_TXT NULL
-#define CF_LOGCURRVALUES_TXT NULL
-#define CF_LOGCURRINTERVAL_TXT NULL
-#define CF_AVERAGESLIST_TXT NULL
-#define CF_CURRVALUESLIST_TXT NULL
-#define CF_MAX_DEVICES_TXT NULL
-#else
-const char CF_USEEEPROM_TXT[] PROGMEM = ("Read config from EEPROM");
-const char CF_BUSTYPE_TXT[] PROGMEM = ("Bus type");
-const char CF_OWN_BSBADDR_TXT[] PROGMEM = ("Own BSB address");
-const char CF_OWN_LPBADDR_TXT[] PROGMEM = ("Own LPB address");
-const char CF_DEST_LPBADDR_TXT[] PROGMEM = ("Dest LPB address");
-const char CF_PPS_WRITE_TXT[] PROGMEM = ("Enable PPS bus write");
-const char CF_LOGTELEGRAM_TXT[] PROGMEM = ("Log telegrams");
-const char CF_LOGAVERAGES_TXT[] PROGMEM = ("Calculate and log 24h average values");
-const char CF_LOGCURRVALUES_TXT[] PROGMEM = ("Log current values");
-const char CF_LOGCURRINTERVAL_TXT[] PROGMEM = ("Log interval");
-const char CF_AVERAGESLIST_TXT[] PROGMEM = ("Programs for averages calculation");
-const char CF_CURRVALUESLIST_TXT[] PROGMEM = ("Programs for logging");
-const char CF_MAX_DEVICES_TXT[] PROGMEM = ("MAX! devices");
-#endif
-
-const char CF_MAC_TXT[] PROGMEM = ("MAC address");
-const char CF_DHCP_TXT[] PROGMEM = ("Use DHCP");
-const char CF_IPADDRESS_TXT[] PROGMEM = ("IP address");
-const char CF_TRUSTEDIPADDRESS_TXT[] PROGMEM = ("Trusted IP address");
-const char CF_MASK_TXT[] PROGMEM = ("Network mask");
-const char CF_GATEWAY_TXT[] PROGMEM = ("Gateway");
-const char CF_DNS_TXT[] PROGMEM = ("DNS server");
-const char CF_WWWPORT_TXT[] PROGMEM = ("WWW port");
-const char CF_WEBSERVER_TXT[] PROGMEM = ("Webserver 4 SD card");
-const char CF_PASSKEY_TXT[] PROGMEM = ("URL passkey");
-const char CF_BASICAUTH_TXT[] PROGMEM = ("Basic AUTH data");
-const char CF_ONEWIREBUS_TXT[] PROGMEM = ("Use One Wire bus on pin");
-const char CF_ONEWIREBUS_DEVICES_TXT[] PROGMEM = ("List of One Wire devices");
-const char CF_DHTBUS_TXT[] PROGMEM = ("Use DHT bus on pins");
-const char CF_IPWE_TXT[] PROGMEM = ("Enable IPWE");
-const char CF_IPWEVALUESLIST_TXT[] PROGMEM = ("Programs for displaying with IPWE");
-const char CF_MAX_TXT[] PROGMEM = ("Enable MAX");
-const char CF_MAX_IPADDRESS_TXT[] PROGMEM = ("CUNO/CUNX/modified MAX!Cube IP address");
-const char CF_READONLY_TXT[] PROGMEM = ("All parameters is read only");
-const char CF_DEBUG_TXT[] PROGMEM = ("Debug");
-const char CF_MQTT_TXT[] PROGMEM = ("Using MQTT");
-const char CF_MQTT_IPADDRESS_TXT[] PROGMEM = ("MQTT broker IP address");
-const char CF_MQTT_USERNAME_TXT[] PROGMEM = ("User name");
-const char CF_MQTT_PASSWORD_TXT[] PROGMEM = ("Password");
-const char CF_MQTT_TOPIC_TXT[] PROGMEM = ("Topic prefix");
-
-
-const char CAT_GENERAL_TXT[] PROGMEM = ("General");
-const char CAT_IPV4_TXT[] PROGMEM = ("IP settings");
-const char CAT_MQTT_TXT[] PROGMEM = ("MQTT settings");
-
-PROGMEM_LATE const category_list_struct catalist[]={
-  {CCAT_GENERAL,        CAT_GENERAL_TXT},
-  {CCAT_IPV4,           CAT_IPV4_TXT},
-  {CCAT_MQTT,           CAT_MQTT_TXT}
-};
-
-PROGMEM_LATE const configuration_struct config[]={
-  {CF_USEEEPROM,        0, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)},
-  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 1},
-  {CF_CRC32,            0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
-#ifdef CONFIG_IN_EEPROM
-  {CF_BUSTYPE,          1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},
-  {CF_OWN_BSBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(own_bsb_address)},
-  {CF_OWN_LPBADDR,      1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(own_lpb_address)},
-  {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},
-  {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},
-#ifdef WEBCONFIG
-  {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)},
-  {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
-  {CF_IPADDRESS,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_IPADDRESS_TXT, sizeof(ip_addr)},
-  {CF_MASK,             2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_MASK_TXT, sizeof(subnet_addr)},
-  {CF_GATEWAY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_GATEWAY_TXT, sizeof(gateway_addr)},
-  {CF_DNS,              2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_DNS_TXT, sizeof(dns_addr)},
-  {CF_WWWPORT,          2, true,  CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         CF_WWWPORT_TXT, sizeof(HTTPPort)},
-  {CF_TRUSTEDIPADDRESS, 2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)},
-  {CF_TRUSTEDIPADDRESS2,2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},
-#endif
-  {CF_LOGTELEGRAM,      1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},
-  {CF_LOGAVERAGES,      1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},
-  {CF_AVERAGESLIST,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},
-  {CF_LOGCURRVALUES,    1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},
-  {CF_LOGCURRINTERVAL,  1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_UINT32,         CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},
-  {CF_CURRVALUESLIST,   1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_CURRVALUESLIST_TXT, sizeof(log_parameters)},
-#ifdef WEBCONFIG
-  {CF_PASSKEY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},
-  {CF_BASICAUTH,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},
-  {CF_WEBSERVER,        2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
-  {CF_ONEWIREBUS,       2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)},
-//bus and pins: DHT_Pins
-  {CF_DHTBUS,           2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)},
-  {CF_IPWE,             2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},
-  {CF_IPWEVALUESLIST,   2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},
-  {CF_MAX,              2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},
-  {CF_MAX_IPADDRESS,    2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)},
-#endif
-#endif
-  {CF_MAX_DEVICES,      0, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
-  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(int32_t) * MAX_CUL_DEVICES},
-  {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)},
-#ifdef CONFIG_IN_EEPROM
-#ifdef WEBCONFIG
-  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, 1},
-  {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_DEBUG_TXT, 1},
-  {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           CF_MQTT_TXT, sizeof(mqtt_mode)},
-  {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},
-  {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},
-  {CF_MQTT_PASSWORD,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},
-  {CF_MQTT_TOPIC,       2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},
-  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}
-#endif
-#endif
-};
-
-typedef struct{
-  uint16_t eeprom_address;//start address in EEPROM
-  byte *option_address; //pointer to parameter variable
-} addressesOfConfigOptions;
-addressesOfConfigOptions options[sizeof(config)/sizeof(config[0])];
+#include "BSB_lan_EEPROMconfig.h"
 
 static int baseConfigAddrInEEPROM = 0; //offset from start address
 
@@ -873,30 +648,32 @@ boolean readFromEEPROM(uint8_t id){
   return readFromEEPROM(id, options[id].option_address);
 }
 
-boolean readFromEEPROM(uint8_t id, byte *ptr){
-  if (!EEPROM_ready) return false;
-  if(!options[id].option_address) return false;
+uint16_t getVariableSize(uint8_t id){
   uint16_t len = 0;
-  boolean test = false;
   for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
 #if defined(__AVR__)
     if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
       len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
-      test = true;
       break;
     }
 #else
     if(id == config[j].id){
       len = config[j].size;
-      test = true;
       break;
     }
 #endif
   }
-  if(!test) return false;
+return len;
+}
+
+boolean readFromEEPROM(uint8_t id, byte *ptr){
+  if (!EEPROM_ready) return false;
+  if(!options[id].option_address) return false;
+  uint16_t len = getVariableSize(id);
+  if(!len) return false;
   for(uint16_t i = 0; i < len; i++)
     ptr[i] = EEPROM.read(i + options[id].eeprom_address);
-    return true;
+  return true;
 }
 
 //copy config option data from variable to EEPROM
@@ -905,20 +682,7 @@ boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
-  uint16_t len = 0;
-  for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
-#if defined(__AVR__)
-    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
-      len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
-      break;
-    }
-#else
-    if(id == config[j].id){
-      len = config[j].size;
-      break;
-    }
-#endif
-  }
+  uint16_t len = getVariableSize(id);
   for(uint16_t i = 0; i < len; i++){
     if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
@@ -926,6 +690,20 @@ boolean writeToEEPROM(uint8_t id){
     }
   }
   return EEPROMwasChanged;
+}
+
+boolean writeToConfigVariable(uint8_t id, byte *ptr){
+  if(!options[id].option_address) return false;
+  uint16_t len = getVariableSize(id);
+  memcpy(options[id].option_address, ptr, len);
+  return true;
+}
+
+boolean readFromConfigVariable(uint8_t id, byte *ptr){
+  if(!options[id].option_address) return false;
+  uint16_t len = getVariableSize(id);
+  memcpy(ptr, options[id].option_address, len);
+  return true;
 }
 
 #include "bsb-version.h"
@@ -3474,7 +3252,170 @@ printToWebClient(PSTR("<BR>\n"));
 }
 
 
+void implementConfig(){
+  boolean k_flag = false;
+  int i = 0;
+  int option_id = 0;
+  while (client.available()) {
+    char c = client.read();
+    if(!k_flag && i == OUTBUF_LEN - 2) { //buffer filled. trash in buffer?
+      for(int j = 0; j < 16; j++){
+        outBuf[j] = outBuf[i - 16 + j];
+      }
+      i = 16;
+    }
+
+    if(c == '='){ //key/value delimiter
+      char *ptr = strstr_P(outBuf, PSTR("option_"));
+      if(!ptr) continue;
+      ptr += 7; //len of "option_" string
+      option_id = atoi(ptr) - 1;
+      printFmtToDebug(PSTR("Option ID: %d\r\n"), option_id);
+      k_flag = true;
+      i = 0;
+      outBuf[i] = 0;
+      continue;
+    }
+    if(k_flag && (c == '&' || i == OUTBUF_LEN - 2 || !client.available())) { //new pair key=value or buffer filled or last symbol was reading
+      boolean finded = false;
+      configuration_struct cfg;
+      if(!client.available()){ //copy last symbol to buffer
+        outBuf[i++] = c;
+        outBuf[i] = 0;
+      }
+
+      for(uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++){
+        #if defined(__AVR__)
+            if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + f * sizeof(config[0])) == CDT_VOID) continue;
+        #else
+            if(config[f].var_type == CDT_VOID) continue;
+        #endif
+
+        #if defined(__AVR__)
+            memcpy_PF(&cfg, pgm_get_far_address(config[0]) + f * sizeof(config[0]), sizeof(cfg));
+        #else
+            memcpy(&cfg, &config[f], sizeof(cfg));
+        #endif
+        if(cfg.id == option_id) {finded  = true; break;}
+      }
+      if(!finded){
+      k_flag = false;
+      i = 0;
+      outBuf[i] = 0;
+      continue;
+      }
+      printFmtToDebug(PSTR("Option value: %s\r\n"), outBuf);
+
+      byte *variable = (byte *)malloc(cfg.size);
+      if(!variable) return;
+      memset(variable, 0, cfg.size);
+
+      switch(cfg.var_type){
+        case CDT_VOID: break;
+        case CDT_BYTE:
+          variable[0] = (byte) atoi(outBuf);
+          writeToConfigVariable(option_id, variable);
+          break;
+        case CDT_UINT16:
+          ((uint16_t *)variable)[0] = (uint16_t) atoi(outBuf);
+          writeToConfigVariable(option_id, variable);
+          break;
+        case CDT_UINT32:
+          ((uint32_t *)variable)[0] = (uint32_t) atoi(outBuf);
+          writeToConfigVariable(option_id, variable);
+          break;
+        case CDT_STRING:
+          strcpy((char *)variable, outBuf);
+          writeToConfigVariable(option_id, variable);
+          break;
+        case CDT_MAC:{
+          unsigned int i0, i1, i2, i3, i4, i5;
+          sscanf(outBuf, "%02x:%02x:%02x:%02x:%02x:%02x", &i0, &i1, &i2, &i3, &i4, &i5);
+          variable[0] = (byte)i0;
+          variable[1] = (byte)i1;
+          variable[2] = (byte)i2;
+          variable[3] = (byte)i3;
+          variable[4] = (byte)i4;
+          variable[5] = (byte)i5;
+          writeToConfigVariable(option_id, variable);
+          break;
+        }
+        case CDT_IPV4:{
+          unsigned int i0, i1, i2, i3;
+          sscanf(outBuf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
+          variable[0] = (byte)i0;
+          variable[1] = (byte)i1;
+          variable[2] = (byte)i2;
+          variable[3] = (byte)i3;
+          writeToConfigVariable(option_id, variable);
+          break;
+        }
+        case CDT_PROGNRLIST:{
+          uint16_t j = 0;
+          char *ptr = outBuf;
+          do{
+            char *ptr_t = ptr;
+            ptr = strstr_P(ptr, PSTR(","));
+            if(ptr) {ptr[0] = 0; ptr++;}
+            ((int *)variable)[j] = atoi(ptr_t);
+            j++;
+            if(j >= cfg.size/sizeof(int)) break; //buffer overflow protection
+          }while(ptr);
+          writeToConfigVariable(option_id, variable);
+          break;}
+        case CDT_DHTBUS:{
+          uint16_t j = 0;
+          char *ptr = outBuf;
+          do{
+            char *ptr_t = ptr;
+            ptr = strstr_P(ptr, PSTR(","));
+            if(ptr) {ptr[0] = 0; ptr++;}
+            variable[j] = (byte)atoi(ptr_t);
+            j++;
+            if(j >= cfg.size/sizeof(byte)) break; //buffer overflow protection
+          }while(ptr);
+          writeToConfigVariable(option_id, variable);
+          break;}
+        case CDT_MAXDEVICELIST:{
+          uint16_t j = 0;
+          char *ptr = outBuf;
+          do{
+            char *ptr_t = ptr;
+            ptr = strstr_P(ptr, PSTR(","));
+            if(ptr) {ptr[0] = 0; ptr++;}
+            strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
+            j++;
+            if(j >= cfg.size/sizeof(sizeof(max_device_list[0]))) break; //buffer overflow protection
+          }while(ptr);
+          writeToConfigVariable(option_id, variable);
+          break;}
+        default: break;
+      }
+
+      free(variable);
+      k_flag = false;
+      i = 0;
+      continue;
+    }
+
+    if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
+      if(client.available()){outBuf[i] = client.read();}
+      if(client.available()){outBuf[i + 1] = client.read();}
+      outBuf[i + 2] = 0;
+      sscanf(outBuf + i, "%02x", &c);
+    }
+
+    outBuf[i++] = c;
+    outBuf[i] = 0;
+  }
+
+}
+
+
 void generateChangeConfigPage(){
+  printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
+  if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
+  printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\n"));
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
 #if defined(__AVR__)
     if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
@@ -3491,7 +3432,7 @@ void generateChangeConfigPage(){
 #endif
     byte *variable = (byte *)malloc(cfg.size);
     if(!variable) return;
-    if(!readFromEEPROM(cfg.id, variable)) continue;
+    if(!readFromConfigVariable(cfg.id, variable)) continue;
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
@@ -3510,13 +3451,22 @@ void generateChangeConfigPage(){
 //Open tag
    switch(cfg.input_type){
      case CPI_TEXT:
-     printFmtToWebClient(PSTR("<input type=text id='configoption%d' VALUE='"), cfg.id);
+     printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
+     switch(cfg.var_type){
+       case CDT_MAC:
+         printToWebClient(PSTR("pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'"));
+         break;
+       case CDT_IPV4:
+         printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
+         break;
+       }
+     printToWebClient(PSTR(" VALUE='"));
      break;
      case CPI_SWITCH:
-     printFmtToWebClient(PSTR("<select id='configoption%d'>\n"), cfg.id);
+     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\n"), cfg.id + 1, cfg.id + 1);
      break;
      case CPI_DROPDOWN:
-     printFmtToWebClient(PSTR("<select id='configoption%d'>\n"), cfg.id);
+     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\n"), cfg.id + 1, cfg.id + 1);
      break;
      default: break;
    }
@@ -3531,10 +3481,18 @@ void generateChangeConfigPage(){
              decodedTelegram.error = 0;
              switch(cfg.id){
                case CF_USEEEPROM:
-                 printENUM(ENUM_EEPROM_ONOFF,sizeof(ENUM_EEPROM_ONOFF), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_EEPROM_ONOFF),sizeof(ENUM_EEPROM_ONOFF), j, 0);
+               #else
+                   printENUM(ENUM_EEPROM_ONOFF,sizeof(ENUM_EEPROM_ONOFF), j, 0);
+               #endif
                  break;
                default:
-                 printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF), j, 0);
+               #else
+                   printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF), j, 0);
+               #endif
                  break;
              }
              if(decodedTelegram.error == 0){
@@ -3554,16 +3512,32 @@ void generateChangeConfigPage(){
              decodedTelegram.error = 0;
              switch(cfg.id){
                case CF_BUSTYPE:
-                 printENUM(ENUM_BUSTYPE,sizeof(ENUM_BUSTYPE), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_BUSTYPE),sizeof(ENUM_BUSTYPE), j, 0);
+               #else
+                   printENUM(ENUM_BUSTYPE,sizeof(ENUM_BUSTYPE), j, 0);
+               #endif
                  break;
                case CF_LOGTELEGRAM:
-                 printENUM(ENUM_LOGTELEGRAM,sizeof(ENUM_LOGTELEGRAM), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_LOGTELEGRAM),sizeof(ENUM_LOGTELEGRAM), j, 0);
+               #else
+                   printENUM(ENUM_LOGTELEGRAM,sizeof(ENUM_LOGTELEGRAM), j, 0);
+               #endif
                  break;
                case CF_DEBUG:
-                 printENUM(ENUM_DEBUG,sizeof(ENUM_DEBUG), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_DEBUG),sizeof(ENUM_DEBUG), j, 0);
+               #else
+                   printENUM(ENUM_DEBUG,sizeof(ENUM_DEBUG), j, 0);
+               #endif
                  break;
                case CF_MQTT:
-                 printENUM(ENUM_MQTT,sizeof(ENUM_MQTT), j, 0);
+               #if defined(__AVR__)
+                   printENUM(pgm_get_far_address(ENUM_MQTT),sizeof(ENUM_MQTT), j, 0);
+               #else
+                   printENUM(ENUM_MQTT,sizeof(ENUM_MQTT), j, 0);
+               #endif
                  break;
                default:
                  decodedTelegram.error = 258;
@@ -3640,6 +3614,7 @@ void generateChangeConfigPage(){
      free(variable);
     printToWebClient(PSTR("</td></td>\n"));
   }
+  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\n</form>\n"));
 }
 
 /** *****************************************************************
@@ -4941,12 +4916,16 @@ void query(int line)  // line (ProgNr)
           uint16_t temp_val = 0;
           switch (decodedTelegram.type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val); break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
+            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val); decodedTelegram.isswitch = 1; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
-            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
-            default: temp_val = pps_values[(line-15000)]; break;
+//            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
+            case VT_HOUR_MINUTES: {
+              temp_val = pps_values[line-15000];
+              sprintf_P(decodedTelegram.value, PSTR("%02d:%02d"), pps_values[line-15000] / 6, (pps_values[line-15000] % 6) * 10); break;
+            }
+            default: temp_val = pps_values[(line-15000)]; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val);  break;
           }
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
@@ -7190,11 +7169,21 @@ uint8_t pps_offset = 0;
 //                printyesno(UseEEPROM) ;
               break;
 #endif
+#ifdef WEBCONFIG
+            case 'I': //Parse HTTP form and implement changes
+              implementConfig();
+              //save new values from RAM to EEPROM
+/*              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+                writeToEEPROM(i);
+              }
+*/
+              //no break here.
+#endif
             default:
               generateConfigPage();
-//#ifdef WEBCONFIG
+#ifdef WEBCONFIG
               generateChangeConfigPage();
-//#endif
+#endif
               if(EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
@@ -7206,6 +7195,14 @@ uint8_t pps_offset = 0;
 
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
+/*
+#ifdef WEBCONFIG
+          if (p[2]=='I'){
+            client.stop();
+            resetBoard();
+          }
+#endif
+*/
           break;
         }
         if (p[1]=='L'){
