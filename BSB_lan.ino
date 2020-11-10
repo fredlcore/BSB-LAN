@@ -63,8 +63,15 @@
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
+ *        - /JA URL command outputs average values
+ *        - Many new parameters decoded
+ *        - New parameters for device families 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211 
+ *        - Improved mobile display of webinterface
  *        - Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V->5V, GND->GND, RX->TX2, TX->RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.
+ *        - Lots of added Polish translations
+ *        - New data types VT_BYTE10, VT_SPF
  *        - Bugfix for PPS bus regarding display of heating time programs
+ *        - Bugfix for MQTT
  *       version 1.0
  *        - /JI URL command outputs configuration in JSON structure
  *        - /JC URL command gets list of possible values from user-defined list of functions. Example: /JC=505,700,701,702,711,1600,1602
