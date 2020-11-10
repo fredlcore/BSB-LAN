@@ -7691,10 +7691,12 @@ uint8_t pps_offset = 0;
   if(logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
+/*
+//Sync request or async is better?
 #ifdef ONE_WIRE_BUS
       sensors.requestTemperatures(); // Send the command to get temperatures
 #endif
-
+*/
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
 
