@@ -2319,14 +2319,15 @@ void printTimeProg(byte *msg,byte data_len){
 void printTime(byte *msg,byte data_len){
 
   if(data_len == 3){
-    if(msg[bus->getPl_start()]==0){
-      sprintf_P(decodedTelegram.value,PSTR("%02d:%02d"),msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
-    } else {
-      strcpy_P(decodedTelegram.value,PSTR("--:--"));
-    }
     if (bus->getBusType() == BUS_PPS) {
+      sprintf_P(decodedTelegram.value,PSTR("%02d:%02d"),msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10);
       printFmtToDebug(PSTR("%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d"), msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10, msg[bus->getPl_start()] / 6, (msg[bus->getPl_start()] % 6) * 10, msg[bus->getPl_start()-1] / 6, (msg[bus->getPl_start()-1] % 6) * 10, msg[bus->getPl_start()-2] / 6, (msg[bus->getPl_start()-2] % 6) * 10, msg[bus->getPl_start()-3] / 6, (msg[bus->getPl_start()-3] % 6) * 10, msg[bus->getPl_start()-4] / 6, (msg[bus->getPl_start()-4] % 6) * 10);
     } else {
+      if(msg[bus->getPl_start()]==0){
+        sprintf_P(decodedTelegram.value,PSTR("%02d:%02d"),msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
+      } else {
+        strcpy_P(decodedTelegram.value,PSTR("--:--"));
+      }
       printToDebug(decodedTelegram.value);
     }
   }else{
@@ -2494,7 +2495,7 @@ void printTelegram(byte* msg, int query_line) {
   c=get_cmdtbl_cmd(i);
   line = get_cmdtbl_line(i);
   while(c!=CMD_END){
-    if(c == cmd){
+    if(c == cmd || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))){
       uint8_t dev_fam = get_cmdtbl_dev_fam(i);
       uint8_t dev_var = get_cmdtbl_dev_var(i);
       uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -4916,16 +4917,12 @@ void query(int line)  // line (ProgNr)
           uint16_t temp_val = 0;
           switch (decodedTelegram.type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val); break;
+            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val); decodedTelegram.isswitch = 1; break;
+            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
 //            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
-            case VT_HOUR_MINUTES: {
-              temp_val = pps_values[line-15000];
-              sprintf_P(decodedTelegram.value, PSTR("%02d:%02d"), pps_values[line-15000] / 6, (pps_values[line-15000] % 6) * 10); break;
-            }
-            default: temp_val = pps_values[(line-15000)]; sprintf_P(decodedTelegram.value, PSTR("%d"), temp_val);  break;
+            default: temp_val = pps_values[(line-15000)]; break;
           }
 
           msg[1] = ((cmd & 0x00FF0000) >> 16);
