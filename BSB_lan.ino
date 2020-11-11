@@ -3424,8 +3424,6 @@ void generateChangeConfigPage(){
   if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
   printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\n"));
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
-    printlnToDebug(PSTR("ST 1"));
-
 #if defined(__AVR__)
     if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
 #else
@@ -3433,7 +3431,6 @@ void generateChangeConfigPage(){
 #endif
 
     configuration_struct cfg;
-    printlnToDebug(PSTR("ST 2"));
 
 #if defined(__AVR__)
     memcpy_PF(&cfg, pgm_get_far_address(config[0].id) + i * sizeof(config[0]), sizeof(cfg));
@@ -3441,13 +3438,10 @@ void generateChangeConfigPage(){
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
     byte *variable = (byte *)malloc(cfg.size);
-    printlnToDebug(PSTR("ST 3"));
 
     if(!variable) return;
-    printlnToDebug(PSTR("ST 4"));
 
     if(!readFromConfigVariable(cfg.id, variable)) {free(variable); continue;}
-    printlnToDebug(PSTR("ST 5"));
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
@@ -3456,14 +3450,12 @@ void generateChangeConfigPage(){
 #else
     printToWebClient(catalist[cfg.category].desc);
 #endif
-printlnToDebug(PSTR("ST 6"));
 
     printToWebClient(PSTR("</td><td>\n"));
 //Param Name
     printToWebClient(cfg.desc);
     printToWebClient(PSTR("</td><td>\n"));
 //Param Value
-printlnToDebug(PSTR("ST 7"));
 
 //Open tag
    switch(cfg.input_type){
