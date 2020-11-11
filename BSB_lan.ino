@@ -584,8 +584,6 @@ uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
 
-byte UseEEPROM = 0;
-
 #include "BSB_lan_EEPROMconfig.h"
 
 static int baseConfigAddrInEEPROM = 0; //offset from start address
@@ -690,8 +688,7 @@ boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  for(uint16_t i = 0; i < len; i++){
+  for(uint16_t i = 0; i < getVariableSize(id); i++){
     if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
       EEPROMwasChanged = true;
@@ -702,15 +699,13 @@ boolean writeToEEPROM(uint8_t id){
 
 boolean writeToConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  memcpy(options[id].option_address, ptr, len);
+  memcpy(options[id].option_address, ptr, getVariableSize(id));
   return true;
 }
 
 boolean readFromConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  memcpy(ptr, options[id].option_address, len);
+  memcpy(ptr, options[id].option_address, getVariableSize(id));
   return true;
 }
 
@@ -904,15 +899,14 @@ int writelnToWebClient(){
 #else
   strcpy(bigBuff + bigBuffPos, PSTR("\n"));
 #endif
-//  int len = strlen(bigBuff + bigBuffPos);
-  int len = 1; //"\n" string length
+  int len = strlen(bigBuff + bigBuffPos);
+//  int len = 1; //"\n" string length
   bigBuffPos += len;
   return len;
 }
 
 int printToWebClient(char *format){
-  strcpy(bigBuff + bigBuffPos, format);
-  int len = strlen(bigBuff + bigBuffPos);
+  int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -922,11 +916,10 @@ int printToWebClient(char *format){
 
 int printToWebClient(const char *format){
   #if defined(__AVR__)
-  strcpy_P(bigBuff + bigBuffPos, format);
+  int len = strlen(strcpy_P(bigBuff + bigBuffPos, format));
   #else
-  strcpy(bigBuff + bigBuffPos, format);
+  int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   #endif
-  int len = strlen(bigBuff + bigBuffPos);
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -936,8 +929,7 @@ int printToWebClient(const char *format){
 
 #if defined(__AVR__)
 int printToWebClient(uint_farptr_t src){
-  strcpy_PF(bigBuff + bigBuffPos, src);
-  int len = strlen(bigBuff + bigBuffPos);
+  int len = strlen(strcpy_PF(bigBuff + bigBuffPos, src));
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -1235,11 +1227,11 @@ void printcantalloc(void){
 }
 
 /** *****************************************************************
- *  Function:  recognizeVirtualFunctionGroup(int)
+ *  Function:  recognizeVirtualFunctionGroup(uint16_t)
  *  Does:      Calculate and return virtual function "group id"
  *             for code readability
  *  Pass parameters:
- *   int nr - program number
+ *   uint16_t nr - program number
  *  Parameters passed back:
  *   none
  *  Function value returned:
@@ -1249,9 +1241,13 @@ void printcantalloc(void){
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
   if(nr >= 20000 && nr < 20006){ return 1;}
+#ifdef AVERAGES
   else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
+#endif
   else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(byte) * 4) {return 3;} //20100 - 20299
+#ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
+#endif
   else if (nr >= 20500 && nr < 20500 + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
   return 0;
 }
@@ -2908,11 +2904,10 @@ void printTelegram(byte* msg, int query_line) {
 
 
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
-  int htmlbuflen = OUTBUF_LEN * 2;
   for (uint16_t x=0;x<outstr_len-1;x++) {
     bigBuff[bigBuffPos] = pgm_read_byte_far(outstr+x);
     bigBuffPos++;
-    if (bigBuffPos>=htmlbuflen) {
+    if (bigBuffPos >= OUTBUF_USEFUL_LEN + OUTBUF_LEN) {
       flushToWebClient();
     }
   }
@@ -3090,7 +3085,6 @@ void generateConfigPage(void){
   printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
   int bustype = bus->getBusType();
   int i;
-  boolean not_first = false;
 
   switch (bustype) {
     case 0: printToWebClient(PSTR("BSB")); break;
@@ -3121,7 +3115,7 @@ void generateConfigPage(void){
 
   #ifdef DHT_BUS
   printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
-  not_first = false;
+  boolean not_first = false;
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
   for(i=0;i<numDHTSensors;i++){
     if(DHT_Pins[i]) {
@@ -3237,10 +3231,10 @@ void generateConfigPage(void){
   }
 #endif
   #ifdef LOGGER
-  printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
-  printToWebClient(PSTR("<BR>Store parameters on disk: \n"));
+  printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \n%d"), log_interval);
+  printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
   printyesno(logCurrentValues);
-  printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
+  printToWebClient(PSTR("<BR>\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
       printFmtToWebClient(PSTR("%d - "), log_parameters[i]);
@@ -3412,8 +3406,10 @@ void implementConfig(){
     if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if(client.available()){outBuf[i] = client.read();}
       if(client.available()){outBuf[i + 1] = client.read();}
+      unsigned int symbol;
       outBuf[i + 2] = 0;
-      sscanf(outBuf + i, "%02x", &c);
+      sscanf(outBuf + i, "%x", &symbol);
+      c = symbol & 0xFF;
     }
 
     outBuf[i++] = c;
@@ -3428,6 +3424,8 @@ void generateChangeConfigPage(){
   if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
   printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\n"));
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
+    printlnToDebug(PSTR("ST 1"));
+
 #if defined(__AVR__)
     if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
 #else
@@ -3435,15 +3433,21 @@ void generateChangeConfigPage(){
 #endif
 
     configuration_struct cfg;
+    printlnToDebug(PSTR("ST 2"));
 
 #if defined(__AVR__)
-    memcpy_PF(&cfg, pgm_get_far_address(config[0]) + i * sizeof(config[0]), sizeof(cfg));
+    memcpy_PF(&cfg, pgm_get_far_address(config[0].id) + i * sizeof(config[0]), sizeof(cfg));
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
     byte *variable = (byte *)malloc(cfg.size);
+    printlnToDebug(PSTR("ST 3"));
+
     if(!variable) return;
-    if(!readFromConfigVariable(cfg.id, variable)) continue;
+    printlnToDebug(PSTR("ST 4"));
+
+    if(!readFromConfigVariable(cfg.id, variable)) {free(variable); continue;}
+    printlnToDebug(PSTR("ST 5"));
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
@@ -3452,12 +3456,14 @@ void generateChangeConfigPage(){
 #else
     printToWebClient(catalist[cfg.category].desc);
 #endif
+printlnToDebug(PSTR("ST 6"));
 
     printToWebClient(PSTR("</td><td>\n"));
 //Param Name
     printToWebClient(cfg.desc);
     printToWebClient(PSTR("</td><td>\n"));
 //Param Value
+printlnToDebug(PSTR("ST 7"));
 
 //Open tag
    switch(cfg.input_type){
@@ -3595,7 +3601,7 @@ void generateChangeConfigPage(){
        break;}
      case CDT_DHTBUS:{
        boolean isFirst = true;
-       for(uint16_t j = 0; j < cfg.size; j++){
+       for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
@@ -3605,7 +3611,7 @@ void generateChangeConfigPage(){
        break;}
      case CDT_MAXDEVICELIST:{
        boolean isFirst = true;
-       for(uint16_t j = 0; j < cfg.size; j+=11){
+       for(uint16_t j = 0; j < cfg.size; j += sizeof(max_device_list[0])){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
@@ -4711,17 +4717,17 @@ void queryVirtualPrognr(int line, int table_line){
        return;
      }
      case 2: {
-       size_t tempLine = line - 20050;
   #ifdef AVERAGES
+       size_t tempLine = line - 20050;
        _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
        return;
    #endif
        break;
      }
      case 3: {
+#ifdef DHT_BUS
        size_t tempLine = line - 20100;
        size_t log_sensor = tempLine / 4;
-#ifdef DHT_BUS
        if(tempLine % 4 == 0){ //print sensor ID
          sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
          return;
@@ -4767,9 +4773,9 @@ void queryVirtualPrognr(int line, int table_line){
      break;
      }
      case 4: {
+#ifdef ONE_WIRE_BUS
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
-  #ifdef ONE_WIRE_BUS
        if(enableOneWireBus){
          if(tempLine % 2 == 0){ //print sensor ID
            DeviceAddress device_address;
@@ -4795,9 +4801,9 @@ void queryVirtualPrognr(int line, int table_line){
      break;
      }
      case 5: {
+#ifdef MAX_CUL
        size_t tempLine = line - 20500;
        size_t log_sensor = tempLine / 4;
-  #ifdef MAX_CUL
         if(enable_max_cul){
           if(tempLine % 4 == 0){ //print sensor ID
             strcpy(decodedTelegram.value, max_device_list[log_sensor]);
@@ -6204,7 +6210,7 @@ uint8_t pps_offset = 0;
             byte dayval = 0;
             unsigned long filesize = dataFile.size();
             if (dataFile.dirEntry(&d)) {
-              lastWrtYr = (FAT_YEAR(d.lastWriteDate));
+              lastWrtYr = FAT_YEAR(d.lastWriteDate);
               monthval = FAT_MONTH(d.lastWriteDate);
               dayval = FAT_DAY(d.lastWriteDate);
               }
@@ -7681,7 +7687,7 @@ uint8_t pps_offset = 0;
       MQTTClient->disconnect();
     }
   }
-  if(!mqtt_mode && MQTTClient){
+  if(MQTTClient){
     delete MQTTClient;
   }
 #endif
@@ -8009,9 +8015,9 @@ void setup() {
   registerConfigVariable(CF_CRC32, (byte *)&crc);
 
   readFromEEPROM(CF_PPS_VALUES);
-
-  readFromEEPROM(CF_USEEEPROM);
-  if(UseEEPROM == 0x96){
+  if(UseEEPROM) //Read EEPROM when it allowed from config file
+    readFromEEPROM(CF_USEEEPROM);
+  if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
     readFromEEPROM(CF_VERSION);
     readFromEEPROM(CF_CRC32);
 
@@ -8039,7 +8045,6 @@ void setup() {
     registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
     registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
     registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
-//    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
     registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
     registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
     registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
@@ -8223,23 +8228,28 @@ void setup() {
 #ifndef WIFI
     if(!useDHCP && ip_addr[0]){
       IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
-      Ethernet.begin(mac, ip);
-//      Ethernet.setLocalIP(ip);
+      IPAddress subnet;
+      IPAddress gateway;
+      IPAddress dnsserver;
       if(subnet_addr[0]){
-        IPAddress subnet(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
-        Ethernet.setSubnetMask(subnet);
+        subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
+      }
+      else {
+        subnet = IPAddress(255, 255, 255, 0);
       }
       if(gateway_addr[0]){
-        IPAddress gateway(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
-        Ethernet.setGatewayIP(gateway);
-        if(!dns_addr[0]) Ethernet.setDnsServerIP(gateway);
+        gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
+      } else {
+        gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
       if(dns_addr[0]){
-        IPAddress dnsserver(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
-        Ethernet.setDnsServerIP(dnsserver);
+        dnsserver = IPAddress (dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+      } else {
+        dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
+      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
     } else {
-      Ethernet.begin(mac);
+      Ethernet.begin(mac); //DHCP
     }
 #endif
 
@@ -8277,7 +8287,7 @@ if(debug_mode == 2)
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
   SerialOutput->print(fs);
-  SerialOutput->print(F(" MB free\n"));
+  SerialOutput->print(F(" MB free\r\n"));
   diff -= (millis() - m); //3 sec - delay
   #endif
   if(diff > 0)  delay(diff);
