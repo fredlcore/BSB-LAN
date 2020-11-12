@@ -503,6 +503,7 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
 //  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
+  OneWire *oneWire;
   DallasTemperature *sensors;
   uint8_t numSensors;
   unsigned long lastOneWireRequestTime = 0;
@@ -524,12 +525,12 @@ unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
-static const int numLogValues = sizeof(log_parameters) / sizeof(int);
-static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
-static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
+static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
+static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
+static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
 #ifdef AVERAGES
-static const int numAverages = sizeof(avg_parameters) / sizeof(int);
+static const int numAverages = sizeof(avg_parameters) / sizeof(avg_parameters[0]);
 float *avgValues_Old = new float[numAverages];
 float *avgValues = new float[numAverages];
 float *avgValues_Current = new float[numAverages];
@@ -613,10 +614,11 @@ uint32_t initConfigTable(uint8_t version) {
       for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
   #if defined(__AVR__)
         uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
+        uint8_t temp_version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0]));
         if(i == temp_id){
-          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v) allowedversion = true;
+          if(temp_version <= v) allowedversion = true;
         } else
-          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v && i > temp_id) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
+          if(temp_version <= v && i > temp_id) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
   #else
         if(i == config[j].id){
           if(config[j].version <= v) allowedversion = true;
@@ -674,7 +676,7 @@ return len;
 
 boolean readFromEEPROM(uint8_t id, byte *ptr){
   if (!EEPROM_ready) return false;
-  if(!options[id].option_address) return false;
+  if(!ptr) return false;
   uint16_t len = getVariableSize(id);
   if(!len) return false;
   for(uint16_t i = 0; i < len; i++)
@@ -800,9 +802,11 @@ void checkSockStatus()
    int len = vsnprintf(DebugBuff, sizeof(DebugBuff), format, args);
  #endif
    va_end(args);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(DebugBuff);
+     else
+       SerialOutput->print(DebugBuff);
    }
    return len;
  }
@@ -813,16 +817,20 @@ void checkSockStatus()
  #else
    strcpy(DebugBuff, PSTR("\r\n"));
  #endif
- switch(debug_mode){
-   case 1: SerialOutput->print(DebugBuff); break;
-   case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
- }
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(DebugBuff);
+     else
+       SerialOutput->print(DebugBuff);
+   }
  }
 
  void printToDebug(char *format){
-   switch(debug_mode){
-     case 1: SerialOutput->print(format); break;
-     case 2: if(haveTelnetClient)telnetClient.print(format); break;
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(format);
+     else
+       SerialOutput->print(format);
    }
    return;
  }
@@ -830,14 +838,18 @@ void checkSockStatus()
  void printToDebug(const char *format){
    #if defined(__AVR__)
    strcpy_P(DebugBuff, format);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(DebugBuff);
+     else
+       SerialOutput->print(DebugBuff);
    }
    #else
-   switch(debug_mode){
-     case 1: SerialOutput->print(format); break;
-     case 2: if(haveTelnetClient)telnetClient.print(format); break;
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(format);
+     else
+       SerialOutput->print(format);
    }
    #endif
    return;
@@ -846,9 +858,11 @@ void checkSockStatus()
  #if defined(__AVR__)
  void printToDebug(uint_farptr_t src){
    strcpy_PF(DebugBuff, src);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+   if(debug_mode){
+     if(debug_mode == 2 && haveTelnetClient)
+       telnetClient.print(DebugBuff);
+     else
+       SerialOutput->print(DebugBuff);
    }
    return;
  }
@@ -1031,6 +1045,7 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
 uint32_t get_cmdtbl_cmd(int i) {
   uint32_t c = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
 #if defined(__AVR__)
@@ -1038,11 +1053,17 @@ uint32_t get_cmdtbl_cmd(int i) {
 #else
     c = cmdtbl1[i].cmd;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
+    c = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     c = cmdtbl2[i-entries1].cmd;
+#endif
+   } else {
+#if defined(__AVR__)
+    c = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].cmd) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    c = cmdtbl3[i-entries2].cmd;
 #endif
   }
   return c;
@@ -1051,6 +1072,7 @@ uint32_t get_cmdtbl_cmd(int i) {
 uint16_t get_cmdtbl_line(int i) {
   uint16_t l = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
 #if defined(__AVR__)
@@ -1058,11 +1080,17 @@ uint16_t get_cmdtbl_line(int i) {
 #else
     l = cmdtbl1[i].line;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
+    l = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     l = cmdtbl2[i-entries1].line;
+#endif
+   } else {
+#if defined(__AVR__)
+    l = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].line) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    l = cmdtbl3[i-entries2].line;
 #endif
   }
   return l;
@@ -1071,17 +1099,24 @@ uint16_t get_cmdtbl_line(int i) {
 uint_farptr_t get_cmdtbl_desc(int i) {
   uint_farptr_t desc = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
 #else
     desc = cmdtbl1[i].desc;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
+    desc = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     desc = cmdtbl2[i-entries1].desc;
+#endif
+   } else {
+#if defined(__AVR__)
+    desc = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].desc) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    desc = cmdtbl3[i-entries2].desc;
 #endif
   }
   return desc;
@@ -1090,17 +1125,24 @@ uint_farptr_t get_cmdtbl_desc(int i) {
 uint_farptr_t get_cmdtbl_enumstr(int i) {
   uint_farptr_t enumstr = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr = cmdtbl1[i].enumstr;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr = cmdtbl2[i-entries1].enumstr;
+#endif
+   } else {
+#if defined(__AVR__)
+    enumstr = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].enumstr) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr = cmdtbl3[i-entries2].enumstr;
 #endif
   }
   return enumstr;
@@ -1109,17 +1151,24 @@ uint_farptr_t get_cmdtbl_enumstr(int i) {
 uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr_len = cmdtbl1[i].enumstr_len;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr_len = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr_len = cmdtbl2[i-entries1].enumstr_len;
+#endif
+   } else {
+#if defined(__AVR__)
+    enumstr_len = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].enumstr_len) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr_len = cmdtbl3[i-entries2].enumstr_len;
 #endif
   }
   return enumstr_len;
@@ -1129,6 +1178,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
 uint8_t get_cmdtbl_category(int i) {
   uint8_t cat = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
 #if defined(__AVR__)
@@ -1136,11 +1186,17 @@ uint8_t get_cmdtbl_category(int i) {
 #else
     cat = cmdtbl1[i].category;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     cat = cmdtbl2[i-entries1].category;
+#endif
+   } else {
+#if defined(__AVR__)
+    cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].category) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    cat = cmdtbl3[i-entries2].category;
 #endif
   }
   return cat;
@@ -1149,17 +1205,24 @@ uint8_t get_cmdtbl_category(int i) {
 uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
 #else
     type = cmdtbl1[i].type;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     type = cmdtbl2[i-entries1].type;
+#endif
+   } else {
+#if defined(__AVR__)
+    type = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].type) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    type = cmdtbl3[i-entries2].type;
 #endif
   }
   return type;
@@ -1168,17 +1231,24 @@ uint8_t get_cmdtbl_type(int i) {
 uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
 #else
     dev_fam = cmdtbl1[i].dev_fam;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_fam = cmdtbl2[i-entries1].dev_fam;
+#endif
+   } else {
+#if defined(__AVR__)
+    dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_fam) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_fam = cmdtbl3[i-entries2].dev_fam;
 #endif
   }
   return dev_fam;
@@ -1187,36 +1257,51 @@ uint8_t get_cmdtbl_dev_fam(int i) {
 uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
 #else
     dev_var = cmdtbl1[i].dev_var;
 #endif
-  } else {
+  } else if (i < entries2){
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_var = cmdtbl2[i-entries1].dev_var;
 #endif
+  } else {
+#if defined(__AVR__)
+    dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_var) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_var = cmdtbl3[i-entries2].dev_var;
+#endif
   }
+
   return dev_var;
 }
 
 uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
 #else
     flags = cmdtbl1[i].flags;
 #endif
-  } else {
+} else if (i < entries2) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     flags = cmdtbl2[i-entries1].flags;
+#endif
+  } else {
+#if defined(__AVR__)
+    flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].flags) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    flags = cmdtbl3[i-entries2].flags;
 #endif
   }
   return flags;
@@ -1244,7 +1329,7 @@ uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
 #ifdef AVERAGES
   else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
 #endif
-  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(byte) * 4) {return 3;} //20100 - 20299
+  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20299
 #ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
 #endif
@@ -1306,7 +1391,7 @@ int findLine(uint16_t line
   // binary search for the line in cmdtbl
 
   int left = start_idx;
-  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1);
+  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1);
   int mid = 0;
   while (!(left >= right))
     {
@@ -1516,18 +1601,16 @@ void loadPrognrElementsFromTable(int nr, int i){
     decodedTelegram.readonly = 1;
   else
     decodedTelegram.readonly = 0;
+  #if defined(__AVR__)
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
-  #if defined(__AVR__)
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
-  #else
-  decodedTelegram.operand=optbl[decodedTelegram.type].operand;
-  #endif
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
-  #if defined(__AVR__)
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
   #else
-  uint8_t unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, unit_len);
+  decodedTelegram.data_type=optbl[decodedTelegram.type].data_type;
+  decodedTelegram.operand=optbl[decodedTelegram.type].operand;
+  decodedTelegram.precision=optbl[decodedTelegram.type].precision;
+  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
   #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
@@ -3116,7 +3199,7 @@ void generateConfigPage(void){
   #ifdef DHT_BUS
   printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
   boolean not_first = false;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(i=0;i<numDHTSensors;i++){
     if(DHT_Pins[i]) {
       if(not_first)
@@ -3256,7 +3339,7 @@ printToWebClient(PSTR("<BR>\n"));
 
 }
 
-
+#ifdef WEBCONFIG
 void implementConfig(){
   boolean k_flag = false;
   int i = 0;
@@ -3292,15 +3375,12 @@ void implementConfig(){
       for(uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++){
         #if defined(__AVR__)
             if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + f * sizeof(config[0])) == CDT_VOID) continue;
-        #else
-            if(config[f].var_type == CDT_VOID) continue;
-        #endif
-
-        #if defined(__AVR__)
             memcpy_PF(&cfg, pgm_get_far_address(config[0]) + f * sizeof(config[0]), sizeof(cfg));
         #else
+            if(config[f].var_type == CDT_VOID) continue;
             memcpy(&cfg, &config[f], sizeof(cfg));
         #endif
+
         if(cfg.id == option_id) {finded  = true; break;}
       }
       if(!finded){
@@ -3335,23 +3415,23 @@ void implementConfig(){
           break;
         case CDT_MAC:{
           unsigned int i0, i1, i2, i3, i4, i5;
-          sscanf(outBuf, "%02x:%02x:%02x:%02x:%02x:%02x", &i0, &i1, &i2, &i3, &i4, &i5);
-          variable[0] = (byte)i0;
-          variable[1] = (byte)i1;
-          variable[2] = (byte)i2;
-          variable[3] = (byte)i3;
-          variable[4] = (byte)i4;
-          variable[5] = (byte)i5;
+          sscanf(outBuf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
+          variable[0] = (byte)(i0 & 0xFF);
+          variable[1] = (byte)(i1 & 0xFF);
+          variable[2] = (byte)(i2 & 0xFF);
+          variable[3] = (byte)(i3 & 0xFF);
+          variable[4] = (byte)(i4 & 0xFF);
+          variable[5] = (byte)(i5 & 0xFF);
           writeToConfigVariable(option_id, variable);
           break;
         }
         case CDT_IPV4:{
           unsigned int i0, i1, i2, i3;
           sscanf(outBuf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
-          variable[0] = (byte)i0;
-          variable[1] = (byte)i1;
-          variable[2] = (byte)i2;
-          variable[3] = (byte)i3;
+          variable[0] = (byte)(i0 & 0xFF);
+          variable[1] = (byte)(i1 & 0xFF);
+          variable[2] = (byte)(i2 & 0xFF);
+          variable[3] = (byte)(i3 & 0xFF);
           writeToConfigVariable(option_id, variable);
           break;
         }
@@ -3364,8 +3444,7 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             ((int *)variable)[j] = atoi(ptr_t);
             j++;
-            if(j >= cfg.size/sizeof(int)) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(int));
           writeToConfigVariable(option_id, variable);
           break;}
         case CDT_DHTBUS:{
@@ -3377,10 +3456,10 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             variable[j] = (byte)atoi(ptr_t);
             j++;
-            if(j >= cfg.size/sizeof(byte)) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(byte));
           writeToConfigVariable(option_id, variable);
           break;}
+#ifdef MAX_CUL
         case CDT_MAXDEVICELIST:{
           uint16_t j = 0;
           char *ptr = outBuf;
@@ -3390,10 +3469,11 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
             j++;
-            if(j >= cfg.size/sizeof(sizeof(max_device_list[0]))) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(max_device_list[0]));
           writeToConfigVariable(option_id, variable);
+          UpdateMaxDeviceList();
           break;}
+#endif
         default: break;
       }
 
@@ -3406,8 +3486,8 @@ void implementConfig(){
     if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if(client.available()){outBuf[i] = client.read();}
       if(client.available()){outBuf[i + 1] = client.read();}
-      unsigned int symbol;
       outBuf[i + 2] = 0;
+      unsigned int symbol;
       sscanf(outBuf + i, "%x", &symbol);
       c = symbol & 0xFF;
     }
@@ -3603,11 +3683,11 @@ void generateChangeConfigPage(){
        break;}
      case CDT_MAXDEVICELIST:{
        boolean isFirst = true;
-       for(uint16_t j = 0; j < cfg.size; j += sizeof(max_device_list[0])){
+       for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
-           printFmtToWebClient(PSTR("%s"), &variable[j]);
+           printFmtToWebClient(PSTR("%s"), variable + j);
          }
        }
        break;}
@@ -3625,6 +3705,9 @@ void generateChangeConfigPage(){
   }
   printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\n</form>\n"));
 }
+#endif  //WEBCONFIG
+
+
 
 /** *****************************************************************
  *  Function:  GetDateTime()
@@ -5094,7 +5177,7 @@ void SetDateTime(){
  * *************************************************************** */
 void dht22(void) {
   int i;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   printFmtToDebug(PSTR("DHT22 sensors: %d\r\n"), numDHTSensors);
     for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
@@ -5180,7 +5263,7 @@ void Ipwe() {
 
   int i;
   int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
+  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
   printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
 
   printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
@@ -5225,7 +5308,7 @@ void Ipwe() {
 
 #ifdef DHT_BUS
   // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
     query(20101 + i * 4);
@@ -5251,7 +5334,7 @@ void Ipwe() {
 #endif    // --- Ipwe() ---
 
 /** *****************************************************************
- *  Function: InitMaxDeviceList()
+ *  Function: UpdateMaxDeviceList()
  *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
  * Pass parameters:
  *  none
@@ -5264,27 +5347,34 @@ void Ipwe() {
  * *************************************************************** */
 
 #ifdef MAX_CUL
-void InitMaxDeviceList() {
 
-  char max_id_eeprom[11] = { 0 };
+void UpdateMaxDeviceList() {
+  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
   int32_t max_addr = 0;
 
-  for (uint16_t x=0;x< MAX_CUL_DEVICES;x++) {
-    for (uint16_t z=0;z<MAX_CUL_DEVICES;z++) {
+    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
       if (EEPROM_ready) {
-        EEPROM.get(getEEPROMaddress(CF_MAX_DEVICES) + 11 * z, max_id_eeprom);
-      }
-      if (!strcmp(max_device_list[x], max_id_eeprom)) {
-        if (EEPROM_ready) {
-          EEPROM.get(getEEPROMaddress(CF_MAX_DEVADDR) + 4 * z, max_addr);
+        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
+          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
         }
-        max_devices[x] = max_addr;
-        printFmtToDebug(PSTR("Adding known Max ID to list:\r\n%08lX\r\n"), max_devices[x]);
-        break;
+        max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
+      }
+      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+        if (!strcmp(max_device_list[x], max_id_eeprom)) {
+          if (EEPROM_ready) {
+            for(uint16_t i = 0; i < sizeof(max_addr); i++){
+             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+            }
+            max_devices[x] = max_addr;
+            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+          }
+          break;
+        }
       }
     }
+  writeToEEPROM(CF_MAX_DEVICES);
+  writeToEEPROM(CF_MAX_DEVADDR);
   }
-}
 #endif
 
 /** *****************************************************************
@@ -5842,7 +5932,7 @@ ich mir da nicht)
 uint8_t pps_offset = 0;
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
             uint16_t temp = (msg[6] << 8) + msg[7];
-            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) - 1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
+            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1;
             while (i > 0 && get_cmdtbl_line(i) >= 15000) {
               uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
@@ -6843,7 +6933,7 @@ uint8_t pps_offset = 0;
             #ifdef DHT_BUS
             printToWebClient(PSTR(",\n  \"dhtbus\": [\n"));
             not_first = false;
-            int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+            int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
             for(i=0;i<numDHTSensors;i++){
               if(DHT_Pins[i]) {
                 if(not_first)
@@ -7816,7 +7906,7 @@ uint8_t pps_offset = 0;
   if (max_str_index > 0) {
     if (outBuf[0] == 'Z') {
       char max_hex_str[9];
-      char max_id[11] = { 0 };
+      char max_id[sizeof(max_device_list[0])] = { 0 };
       boolean known_addr = false;
       boolean known_eeprom = false;
 
@@ -7848,7 +7938,7 @@ uint8_t pps_offset = 0;
           max_hex_str[2]='\0';
           max_id[x] = (char)strtoul(max_hex_str,NULL,16);
         }
-        max_id[10] = '\0';
+        max_id[sizeof(max_device_list[0]) - 1] = '\0';
         printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
         for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
@@ -7864,18 +7954,10 @@ uint8_t pps_offset = 0;
             if (max_devices[x] < 1) {
               strcpy(max_device_list[x], max_id);
               max_devices[x] = max_addr;
-/*
-              int32_t temp1;
-              char temp2[11] = { 0 };
-              EEPROM.get(500+15*x, temp1);
-              EEPROM.get(500+15*x+4, temp2);
-              DebugOutput.println(temp1, HEX);
-              DebugOutput.println(temp2);
-*/
+
               writeToEEPROM(CF_MAX_DEVICES);
               writeToEEPROM(CF_MAX_DEVADDR);
               printlnToDebug(PSTR("Device stored in EEPROM"));
-              InitMaxDeviceList();
               break;
             }
           }
@@ -7989,10 +8071,11 @@ void setup() {
     }
   pinMode(19, INPUT);
   #endif
-
   //Read config parameters from EEPROM
   SerialOutput->print(F("Reading EEPROM..."));
+
   //Read "Header"
+
   initConfigTable(0);
 #ifdef MAX_CUL
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
@@ -8043,15 +8126,14 @@ void setup() {
     registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
     registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
     registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
-    registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
-//    registerConfigVariable(CF_READONLY, (byte *)mac);
-//    registerConfigVariable(CF_DEBUG, (byte *)mac);
     registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
     registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
     registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
     registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
     registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
     registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+//    registerConfigVariable(CF_READONLY, (byte *)mac);
+//    registerConfigVariable(CF_DEBUG, (byte *)mac);
 #endif
 
     if(crc == initConfigTable(EEPROMversion)){
@@ -8059,8 +8141,8 @@ void setup() {
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   //read parameter if it version is non-zero
 #if defined(__AVR__)
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0 &&
-           pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) <= EEPROMversion)
+        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        if(version > 0 && version <= EEPROMversion)
              readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
 #else
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
@@ -8071,7 +8153,8 @@ void setup() {
       uint8_t maxconfversion = 0;
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   #if defined(__AVR__)
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        if(version > maxconfversion) maxconfversion = version;
   #else
         if(config[i].version > maxconfversion) maxconfversion = config[i].version;
   #endif
@@ -8091,7 +8174,8 @@ void setup() {
   }
 
 #endif
-  SerialOutput->print(F("done.\n"));
+
+  SerialOutput->print(F("done.\r\n"));
 
 
 
@@ -8099,6 +8183,7 @@ void setup() {
     SerialOutput->println(F("Logging output to Telnet"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
   printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
+  printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
@@ -8131,6 +8216,20 @@ void setup() {
   }
 
   bus->enableInterface();
+
+  #ifdef ONE_WIRE_BUS
+    if(enableOneWireBus){
+      printlnToDebug(PSTR("Init One Wire bus..."));
+      // Setup a oneWire instance to communicate with any OneWire devices
+      oneWire = new OneWire(One_Wire_Pin);
+      // Pass our oneWire reference to Dallas Temperature.
+      sensors = new DallasTemperature(oneWire);
+      // check ds18b20 sensors
+      sensors->begin();
+      numSensors=sensors->getDeviceCount();
+      printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
+    }
+  #endif
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
@@ -8184,16 +8283,6 @@ void setup() {
   }
 */
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    printlnToDebug(PSTR("Init One Wire bus..."));
-    // Setup a oneWire instance to communicate with any OneWire devices
-    OneWire oneWire(One_Wire_Pin);
-    // Pass our oneWire reference to Dallas Temperature.
-    sensors = new DallasTemperature(&oneWire);
-  }
-#endif
-
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
@@ -8235,7 +8324,7 @@ void setup() {
         gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
       if(dns_addr[0]){
-        dnsserver = IPAddress (dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+        dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
       } else {
         dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
@@ -8250,6 +8339,8 @@ if(ip_addr[0] && !useDHCP){
   SerialOutput->println(WiFi.localIP());
 #else
   SerialOutput->println(Ethernet.localIP());
+  SerialOutput->println(Ethernet.subnetMask());
+  SerialOutput->println(Ethernet.gatewayIP());
 #endif
 }
 
@@ -8298,14 +8389,6 @@ if(debug_mode == 2)
 if(debug_mode == 2)
   telnetServer->begin();
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    // check ds18b20 sensors
-    sensors->begin();
-    numSensors=sensors->getDeviceCount();
-    printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
-  }
-#endif
 
 /*
 // figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and LAST_ENUM_NR).
@@ -8452,14 +8535,14 @@ if (!SD.exists(datalogFileName)) {
 
 #ifdef MAX_CUL
   if(enable_max_cul){
-  if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
-    printlnToDebug(PSTR("Connected to max_cul"));
-  } else {
-    printlnToDebug(PSTR("Connection to max_cul failed"));
+    UpdateMaxDeviceList();
+    printToDebug(PSTR("Connection to max_cul: "));
+    if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
+      printlnToDebug(PSTR("established"));
+    } else {
+      printlnToDebug(PSTR("failed"));
+    }
   }
-  }
-
-  InitMaxDeviceList();
 
 #endif
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used

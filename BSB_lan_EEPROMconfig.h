@@ -102,7 +102,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
 
 PROGMEM_LATE const configuration_struct config[]={
   {CF_USEEEPROM,        0, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)},
-  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 1},
+  {CF_VERSION,          0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(byte)},
   {CF_CRC32,            0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
 #ifdef CONFIG_IN_EEPROM
   {CF_BUSTYPE,          1, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},
@@ -141,7 +141,7 @@ PROGMEM_LATE const configuration_struct config[]={
 #endif
 #endif
   {CF_MAX_DEVICES,      0, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
-  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(int32_t) * MAX_CUL_DEVICES},
+  {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
   {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)},
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
@@ -161,4 +161,4 @@ typedef struct{
   uint16_t eeprom_address;//start address in EEPROM
   byte *option_address; //pointer to parameter variable
 } addressesOfConfigOptions;
-addressesOfConfigOptions options[sizeof(config)/sizeof(config[0])];
+addressesOfConfigOptions options[CF_LAST_OPTION];
