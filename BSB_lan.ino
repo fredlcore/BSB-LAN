@@ -693,15 +693,15 @@ boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
-  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
+//  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
   for(uint16_t i = 0; i < getVariableSize(id); i++){
     if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
-      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
+//      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
       EEPROMwasChanged = true;
     }
   }
-  printToDebug(PSTR("\r\n"));
+//  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
 
