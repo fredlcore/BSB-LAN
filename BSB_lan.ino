@@ -466,10 +466,12 @@ EthernetClient httpclient;
 EthernetClient telnetClient;
 #endif
 
+#ifdef MAX_CUL
 #ifdef WIFI
 WiFiEspClient max_cul;
 #else
 EthernetClient max_cul;
+#endif
 #endif
 
 #ifdef MQTT
@@ -587,7 +589,7 @@ uint8_t current_switchday = 0;
 
 #include "BSB_lan_EEPROMconfig.h"
 
-static int baseConfigAddrInEEPROM = 0; //offset from start address
+static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
 
 /** *****************************************************************
  *  Function: initConfigTable(uint8_t)
@@ -609,7 +611,7 @@ uint32_t initConfigTable(uint8_t version) {
     //select config parameter
     for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
       boolean allowedversion = false;
-      int addr = baseConfigAddrInEEPROM;
+      uint16_t addr = baseConfigAddrInEEPROM;
       //look for config parameter in parameters table
       for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
   #if defined(__AVR__)
@@ -618,7 +620,7 @@ uint32_t initConfigTable(uint8_t version) {
         if(i == temp_id){
           if(temp_version <= v) allowedversion = true;
         } else
-          if(temp_version <= v && i > temp_id) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
+          if(temp_version <= v && i > temp_id) {addr += (uint16_t)pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
   #else
         if(i == config[j].id){
           if(config[j].version <= v) allowedversion = true;
@@ -651,11 +653,6 @@ uint16_t getEEPROMaddress(uint8_t id){
   return options[id].eeprom_address;
 }
 
-//copy config option data from EEPROM to variable
-boolean readFromEEPROM(uint8_t id){
-  return readFromEEPROM(id, options[id].option_address);
-}
-
 uint16_t getVariableSize(uint8_t id){
   uint16_t len = 0;
   for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
@@ -674,6 +671,12 @@ uint16_t getVariableSize(uint8_t id){
 return len;
 }
 
+//copy config option data from EEPROM to variable
+boolean readFromEEPROM(uint8_t id){
+  return readFromEEPROM(id, options[id].option_address);
+}
+
+//copy config option data from EEPROM to variable
 boolean readFromEEPROM(uint8_t id, byte *ptr){
   if (!EEPROM_ready) return false;
   if(!ptr) return false;
@@ -690,12 +693,15 @@ boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
+  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
   for(uint16_t i = 0; i < getVariableSize(id); i++){
     if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
+      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
       EEPROMwasChanged = true;
     }
   }
+  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
 
@@ -794,81 +800,69 @@ void checkSockStatus()
  *   bigBuffPos and bigBuff variable
  * *************************************************************** */
  int printFmtToDebug(const char *format, ...){
-   va_list args;
-   va_start(args, format);
- #if defined(__AVR__)
-   int len = vsnprintf_P(DebugBuff, sizeof(DebugBuff), format, args);
- #else
-   int len = vsnprintf(DebugBuff, sizeof(DebugBuff), format, args);
- #endif
-   va_end(args);
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(DebugBuff);
-     else
-       SerialOutput->print(DebugBuff);
-   }
-   return len;
- }
+  va_list args;
+  va_start(args, format);
+#if defined(__AVR__)
+  int len = vsnprintf_P(DebugBuff, sizeof(DebugBuff), format, args);
+#else
+  int len = vsnprintf(DebugBuff, sizeof(DebugBuff), format, args);
+#endif
+  va_end(args);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  return len;
+}
 
- void writelnToDebug(){
- #if defined(__AVR__)
-   strcpy_P(DebugBuff, PSTR("\r\n"));
- #else
-   strcpy(DebugBuff, PSTR("\r\n"));
- #endif
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(DebugBuff);
-     else
-       SerialOutput->print(DebugBuff);
-   }
- }
+void writelnToDebug(){
+#if defined(__AVR__)
+  strcpy_P(DebugBuff, PSTR("\r\n"));
+#else
+  strcpy(DebugBuff, PSTR("\r\n"));
+#endif
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+}
 
- void printToDebug(char *format){
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(format);
-     else
-       SerialOutput->print(format);
-   }
-   return;
- }
+void printToDebug(char *format){
+  switch(debug_mode){
+    case 1: SerialOutput->print(format); break;
+    case 2: if(haveTelnetClient)telnetClient.print(format); break;
+  }
+  return;
+}
 
- void printToDebug(const char *format){
-   #if defined(__AVR__)
-   strcpy_P(DebugBuff, format);
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(DebugBuff);
-     else
-       SerialOutput->print(DebugBuff);
-   }
-   #else
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(format);
-     else
-       SerialOutput->print(format);
-   }
-   #endif
-   return;
- }
+void printToDebug(const char *format){
+  #if defined(__AVR__)
+  strcpy_P(DebugBuff, format);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  #else
+  switch(debug_mode){
+    case 1: SerialOutput->print(format); break;
+    case 2: if(haveTelnetClient)telnetClient.print(format); break;
+  }
+  #endif
+  return;
+}
 
- #if defined(__AVR__)
- void printToDebug(uint_farptr_t src){
-   strcpy_PF(DebugBuff, src);
-   if(debug_mode){
-     if(debug_mode == 2 && haveTelnetClient)
-       telnetClient.print(DebugBuff);
-     else
-       SerialOutput->print(DebugBuff);
-   }
-   return;
- }
- #endif
+#if defined(__AVR__)
+void printToDebug(uint_farptr_t src){
+  strcpy_PF(DebugBuff, src);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  return;
+}
+#endif
 
- #define printlnToDebug(format) printToDebug(format); writelnToDebug()
+#define printlnToDebug(format) {printToDebug(format); writelnToDebug();}
 
 
 /* Functions for management "Ring" output buffer */
@@ -1040,6 +1034,64 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
       year--;
    }
    return (((13*month+3)/5 + day + year + year/4 - year/100 + year/400) % 7) + 1;
+}
+
+/** *****************************************************************
+ *  Function: listEnumValues()
+ *  Does:     Print to web client list of values and descriptions from enum
+* Pass parameters:
+uint_farptr_t enumstr - ENUM address
+uint16_t enumstr_len - ENUM length
+const char *prefix - print string before enum element
+ const char *delimiter - print string between value and description
+ const char *alt_delimiter - alternative delimiter. see below.
+ const char *suffix - print string after  enum element
+ const char *string_delimiter - if string_delimiter is set, string_delimiter will be print between enum elements
+ uint16_t value - if alt_delimiter is set then alt_delimiter will be print when "value" will be found in enum
+ boolean desc_first - if true, then description will be print first; if false, then value print first
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  none
+ * *************************************************************** */
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first){
+  uint16_t val;
+  uint16_t c=0;
+  boolean isFirst = true;
+  while(c<enumstr_len){
+    if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+      val=pgm_read_word_far(enumstr+c);
+      c++;
+    }else{
+      val=uint16_t(pgm_read_byte_far(enumstr+c));
+    }
+    //skip leading space
+    c+=2;
+
+    if(isFirst){isFirst = false;} else{if(string_delimiter) printToWebClient(string_delimiter);}
+    if(prefix) printToWebClient(prefix);
+
+    if(desc_first){
+      c += printToWebClient(enumstr + c) + 1;
+      if(alt_delimiter && value == val) {
+        printToWebClient(alt_delimiter);
+      }else {
+        if(delimiter) printToWebClient(delimiter);
+      }
+    }
+    printFmtToWebClient(PSTR("%d"), val);
+    if(!desc_first){
+      if(alt_delimiter && value == val) {
+        printToWebClient(alt_delimiter);
+      } else {
+        if(delimiter) printToWebClient(delimiter);
+      }
+      c += printToWebClient(enumstr + c) + 1;
+    }
+    if(suffix) printToWebClient(suffix);
+  }
 }
 
 uint32_t get_cmdtbl_cmd(int i) {
@@ -1676,7 +1728,7 @@ void resetDecodedTelegram(){
  * *************************************************************** */
 char *TranslateAddr(byte addr, char *device){
   const char *p = NULL;
-  switch(addr&0x7F){
+  switch(addr & 0x7F){
     case ADDR_HEIZ: p = PSTR("HEIZ"); break;
     case ADDR_EM1: p = PSTR("EM1"); break;
     case ADDR_EM2: p = PSTR("EM2"); break;
@@ -2814,6 +2866,10 @@ void printTelegram(byte* msg, int query_line) {
             case VT_TIMEPROG:
               printTimeProg(msg,data_len);
               break;
+/*
+//VT_WEEKDAY is ENUM
+// ENUM_WEEKDAY used in one program 1642 as enum
+//VT_WEEKDAY defined as DT_WDAY but DT_WDAY nowhere used
             case VT_WEEKDAY: // enum
               if(data_len == 2){
                 if(msg[bus->getPl_start()]==0){
@@ -2833,6 +2889,7 @@ void printTelegram(byte* msg, int query_line) {
                 decodedTelegram.error = 256;
                 }
               break;
+*/
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
                 if((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
@@ -3381,7 +3438,7 @@ void implementConfig(){
             memcpy(&cfg, &config[f], sizeof(cfg));
         #endif
 
-        if(cfg.id == option_id) {finded  = true; break;}
+        if(cfg.id == option_id) {finded = true; break;}
       }
       if(!finded){
       k_flag = false;
@@ -3478,11 +3535,11 @@ void implementConfig(){
       }
 
       free(variable);
+
       k_flag = false;
       i = 0;
       continue;
     }
-
     if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if(client.available()){outBuf[i] = client.read();}
       if(client.available()){outBuf[i + 1] = client.read();}
@@ -3560,88 +3617,49 @@ void generateChangeConfigPage(){
      default: break;
    }
 
+
    switch(cfg.var_type){
      case CDT_VOID: break;
      case CDT_BYTE:
        switch(cfg.input_type){
          case CPI_TEXT: printFmtToWebClient(PSTR("%d"), (int)variable[0]); break;
          case CPI_SWITCH:{
-           for(uint16_t j = 0; j < 256; j++){
-             decodedTelegram.error = 0;
-             switch(cfg.id){
-               case CF_USEEEPROM:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_EEPROM_ONOFF),sizeof(ENUM_EEPROM_ONOFF), j, 0);
-               #else
-                   printENUM(ENUM_EEPROM_ONOFF,sizeof(ENUM_EEPROM_ONOFF), j, 0);
-               #endif
-                 break;
-               default:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF), j, 0);
-               #else
-                   printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF), j, 0);
-               #endif
-                 break;
-             }
-             if(decodedTelegram.error == 0){
-               printFmtToWebClient(PSTR("<option value='%d'"), j);
-               if(j == variable[0] || (j == 1 && variable[0])){
-                 printToWebClient(PSTR(" selected>"));
-               } else {
-                 printToWebClient(PSTR(">"));
-               }
-               printToWebClient(decodedTelegram.enumdescaddr);
-               printToWebClient(PSTR("</option>"));
-             }
+           int i;
+           switch(cfg.id){
+             case CF_USEEEPROM:
+               i=findLine(65534,0,NULL); //return ENUM_EEPROM_ONOFF
+               break;
+             default:
+               i=findLine(65533,0,NULL); //return ENUM_ONOFF
+               break;
            }
+           uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+           uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, (uint16_t)variable[0], 0);
            break;}
          case CPI_DROPDOWN:{
-           for(uint16_t j = 0; j < 256; j++){
-             decodedTelegram.error = 0;
-             switch(cfg.id){
-               case CF_BUSTYPE:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_BUSTYPE),sizeof(ENUM_BUSTYPE), j, 0);
-               #else
-                   printENUM(ENUM_BUSTYPE,sizeof(ENUM_BUSTYPE), j, 0);
-               #endif
-                 break;
-               case CF_LOGTELEGRAM:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_LOGTELEGRAM),sizeof(ENUM_LOGTELEGRAM), j, 0);
-               #else
-                   printENUM(ENUM_LOGTELEGRAM,sizeof(ENUM_LOGTELEGRAM), j, 0);
-               #endif
-                 break;
-               case CF_DEBUG:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_DEBUG),sizeof(ENUM_DEBUG), j, 0);
-               #else
-                   printENUM(ENUM_DEBUG,sizeof(ENUM_DEBUG), j, 0);
-               #endif
-                 break;
-               case CF_MQTT:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_MQTT),sizeof(ENUM_MQTT), j, 0);
-               #else
-                   printENUM(ENUM_MQTT,sizeof(ENUM_MQTT), j, 0);
-               #endif
-                 break;
-               default:
-                 decodedTelegram.error = 258;
-                 break;
-             }
-             if(decodedTelegram.error == 0){
-               printFmtToWebClient(PSTR("<option value='%d'"), j);
-               if(j == variable[0]){
-                 printToWebClient(PSTR(" selected>"));
-               } else {
-                 printToWebClient(PSTR(">"));
-               }
-               printToWebClient(decodedTelegram.enumdescaddr);
-               printToWebClient(PSTR("</option>"));
-             }
+           int i;
+           switch(cfg.id){
+             case CF_BUSTYPE:
+               i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+               break;
+             case CF_LOGTELEGRAM:
+               i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+               break;
+             case CF_DEBUG:
+             i=findLine(65530,0,NULL); //return ENUM_DEBUG
+               break;
+             case CF_MQTT:
+               i=findLine(65529,0,NULL); //return ENUM_MQTT
+               break;
+             default:
+               i = -1;
+               break;
+           }
+           if(i > 0){
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, variable[0], 0);
            }
            break;}
          }
@@ -3693,6 +3711,7 @@ void generateChangeConfigPage(){
        break;}
      default: break;
    }
+
 //Closing tag
    switch(cfg.input_type){
      case CPI_TEXT: printToWebClient(PSTR("'>")); break;
@@ -3792,7 +3811,6 @@ void LogTelegram(byte* msg){
     }
     i++;
     c=get_cmdtbl_cmd(i);
-//      c=pgm_read_dword(&cmdtbl[i].cmd);
   }
   if(cmd <= 0) return;
   boolean logThis = false;
@@ -3928,7 +3946,6 @@ int set(int line      // the ProgNr of the heater parameter
 
   // Check for readonly parameter
   if((get_cmdtbl_flags(i) & FL_RONLY) == FL_RONLY) {
-//  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
@@ -3964,7 +3981,6 @@ int set(int line      // the ProgNr of the heater parameter
 
   // Get the parameter type from the table row[i]
   switch(type) {
-//  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
     // 8-bit unsigned integer representation
     // Months or minutes
@@ -4851,7 +4867,7 @@ void queryVirtualPrognr(int line, int table_line){
 #ifdef ONE_WIRE_BUS
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
-       if(enableOneWireBus){
+       if(enableOneWireBus && numSensors){
          if(tempLine % 2 == 0){ //print sensor ID
            DeviceAddress device_address;
            sensors->getAddress(device_address, log_sensor);
@@ -5351,16 +5367,18 @@ void Ipwe() {
 void UpdateMaxDeviceList() {
   char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
   int32_t max_addr = 0;
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
+  }
 
     for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
       if (EEPROM_ready) {
         for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
           max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
         }
-        max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
       }
       for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
-        if (!strcmp(max_device_list[x], max_id_eeprom)) {
+        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
           if (EEPROM_ready) {
             for(uint16_t i = 0; i < sizeof(max_addr); i++){
              ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
@@ -6230,11 +6248,11 @@ uint8_t pps_offset = 0;
           break;
         }
         *p='\0';     // mark end of string
-        if(strcmp(cLineBuffer+1, PASSKEY)){
+        if(strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))){
           printlnToDebug(PSTR("no matching passkey"));
           client.flush();
-          webPrintHeader();
-          webPrintFooter();
+          client.stop();
+          //do not print header and footer. It is security breach
           break;
         }
         *p='/';
@@ -6564,23 +6582,7 @@ uint8_t pps_offset = 0;
               if(get_cmdtbl_type(i)==VT_ENUM) {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-
-              uint16_t val;
-              uint16_t c=0;
-              while(c<enumstr_len){
-                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
-                  val=pgm_read_word_far(enumstr+c);
-                  c++;
-                }else{
-                  val=uint16_t(pgm_read_byte_far(enumstr+c));
-                }
-                //skip leading space
-                c+=2;
-
-                printFmtToWebClient(PSTR("%d - "), val);
-                c += printToWebClient(enumstr + c) + 1;
-                printToWebClient(PSTR("<br>\n"));
-              }
+              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\n"), NULL, 0, 0);
 
             }else{
               printToWebClient(PSTR(MENU_TEXT_ER5));
@@ -7126,26 +7128,7 @@ uint8_t pps_offset = 0;
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
-                      uint16_t x = 0;
-                      uint16_t val = 0;
-                      been_here=false;
-
-                      while (x < enumstr_len) {
-                        if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || decodedTelegram.type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                          val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
-                          x++;
-                        }else{
-                          val=uint16_t(pgm_read_byte_far(enumstr+x));
-                        }
-                        if(been_here) printToWebClient(PSTR(",\n")); //do not print ",\n" if it first enumValue
-                        printFmtToWebClient(PSTR("      { \"enumValue\": %d, \"desc\": \""), val);
-                        if (!been_here) been_here = true;
-                        //skip leading space
-                        x = x + 2;
-                        x += printToWebClient(enumstr+x);
-                        printToWebClient(PSTR("\" }"));
-                        x++;
-                      }
+                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\n"), 0, 0);
                     }
 
                   printFmtToWebClient(PSTR("\n    ],\n    \"isswitch\": %d,\n"), decodedTelegram.isswitch);
@@ -7267,11 +7250,18 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
             case 'I': //Parse HTTP form and implement changes
               implementConfig();
+              generateConfigPage();
+              generateChangeConfigPage();
               //save new values from RAM to EEPROM
 /*              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
                 writeToEEPROM(i);
               }
+            if(!(httpflags & 128)) webPrintFooter();
+            flushToWebClient();
+            client.stop();
+            resetBoard();
 */
+            break;
               //no break here.
 #endif
             default:
@@ -7290,14 +7280,6 @@ uint8_t pps_offset = 0;
 
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
-/*
-#ifdef WEBCONFIG
-          if (p[2]=='I'){
-            client.stop();
-            resetBoard();
-          }
-#endif
-*/
           break;
         }
         if (p[1]=='L'){
@@ -7769,8 +7751,9 @@ uint8_t pps_offset = 0;
       MQTTClient->disconnect();
     }
   }
-  if(MQTTClient){
+  if(MQTTClient && mqtt_mode == 0){
     delete MQTTClient;
+    MQTTClient = NULL;
   }
 #endif
 
@@ -8072,10 +8055,8 @@ void setup() {
   pinMode(19, INPUT);
   #endif
   //Read config parameters from EEPROM
-  SerialOutput->print(F("Reading EEPROM..."));
 
   //Read "Header"
-
   initConfigTable(0);
 #ifdef MAX_CUL
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
@@ -8088,14 +8069,6 @@ void setup() {
   registerConfigVariable(CF_VERSION, (byte *)&EEPROMversion);
   uint32_t crc;
   registerConfigVariable(CF_CRC32, (byte *)&crc);
-
-  readFromEEPROM(CF_PPS_VALUES);
-  if(UseEEPROM) //Read EEPROM when it allowed from config file
-    readFromEEPROM(CF_USEEEPROM);
-  if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
-    readFromEEPROM(CF_VERSION);
-    readFromEEPROM(CF_CRC32);
-
   //link parameters
     registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
     registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
@@ -8136,6 +8109,18 @@ void setup() {
 //    registerConfigVariable(CF_DEBUG, (byte *)mac);
 #endif
 
+
+
+  readFromEEPROM(CF_PPS_VALUES);
+  if(UseEEPROM){ //Read EEPROM when it allowed from config file
+    SerialOutput->print(F("Reading EEPROM..."));
+    readFromEEPROM(CF_USEEEPROM);
+  } else {
+    SerialOutput->print(F("Using settings from config file\r\n"));
+  }
+  if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
+    readFromEEPROM(CF_VERSION);
+    readFromEEPROM(CF_CRC32);
     if(crc == initConfigTable(EEPROMversion)){
   //read parameters
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
@@ -8148,7 +8133,10 @@ void setup() {
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-    }
+    } else SerialOutput->print(F("EEPROM schema CRC mismatch\r\n"));
+  }
+  SerialOutput->print(F("done.\r\n"));
+
   //calculate maximal version
       uint8_t maxconfversion = 0;
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
@@ -8159,28 +8147,37 @@ void setup() {
         if(config[i].version > maxconfversion) maxconfversion = config[i].version;
   #endif
       }
+    SerialOutput->print(F("EEPROM schema v."));
+    SerialOutput->print(EEPROMversion);
+    SerialOutput->print(F(" Program schema v."));
+    SerialOutput->println(maxconfversion);
 
-      if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
-        crc = initConfigTable(maxconfversion); //store new CRC32
-        EEPROMversion = maxconfversion; //store new version
+    if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+      crc = initConfigTable(maxconfversion); //store new CRC32
+      EEPROMversion = maxconfversion; //store new version
+      if(UseEEPROM == 0x96){//Update EEPROM when EEPROM contain magic byte (stored configuration)
+        SerialOutput->print(F("Update EEPROM schema\r\n"));
         for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
           //do not write here MAX! settings
           if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) writeToEEPROM(i);
          }
-      }
-      unregisterConfigVariable(CF_VERSION);
-      unregisterConfigVariable(CF_CRC32);
+       }
+    }
 
-  }
 
+  unregisterConfigVariable(CF_VERSION);
+  unregisterConfigVariable(CF_CRC32);
 #endif
 
-  SerialOutput->print(F("done.\r\n"));
+ byte save_debug_mode = debug_mode; //save debug_mode until setup is end.
+ debug_mode = 1; //force using Serial debug until setup is end.
 
+for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+  printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
+}
 
-
-  if(debug_mode == 2)
-    SerialOutput->println(F("Logging output to Telnet"));
+  if(save_debug_mode == 2)
+    printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
   printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
   printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
@@ -8219,7 +8216,7 @@ void setup() {
 
   #ifdef ONE_WIRE_BUS
     if(enableOneWireBus){
-      printlnToDebug(PSTR("Init One Wire bus..."));
+      printToDebug(PSTR("Init One Wire bus...\r\n"));
       // Setup a oneWire instance to communicate with any OneWire devices
       oneWire = new OneWire(One_Wire_Pin);
       // Pass our oneWire reference to Dallas Temperature.
@@ -8245,7 +8242,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    SerialOutput->println(F("WiFi shield not present"));
+    printToDebug(PSTR("WiFi shield not present\r\n"));
     // don't continue
     while (true);
   }
@@ -8257,14 +8254,13 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    SerialOutput->print(F("Attempting to connect to WPA SSID: "));
-    SerialOutput->println(ssid);
+    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  SerialOutput->println(F("You're connected to the network"));
+  printToDebug(PSTR("You're connected to the network\r\n"));
 
   printWifiStatus();
 #endif
@@ -8287,13 +8283,13 @@ void setup() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  SerialOutput->print(F("Starting SD.."));
+  printToDebug(PSTR("Starting SD.."));
 #if defined(__AVR__)
-  if(!SD.begin(4)) SerialOutput->println(F("failed"));
+  if(!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
 #else
-  if(!SD.begin(4, SPI_DIV3_SPEED)) SerialOutput->println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  if(!SD.begin(4, SPI_DIV3_SPEED)) printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
 #endif
-  else SerialOutput->println(F("ok"));
+  else printToDebug(PSTR("ok\r\n"));
 
 #else
   // enable w5100 SPI
@@ -8345,12 +8341,12 @@ if(ip_addr[0] && !useDHCP){
 }
 
 #ifdef WIFI
-server = new WiFiEspServer(HTTPPort);
-if(debug_mode == 2)
+  server = new WiFiEspServer(HTTPPort);
+if(save_debug_mode == 2)
   telnetServer = new WiFiEspServer(23);
 #else
-server = new EthernetServer(HTTPPort);
-if(debug_mode == 2)
+  server = new EthernetServer(HTTPPort);
+if(save_debug_mode == 2)
   telnetServer = new EthernetServer(23);
 #endif
 
@@ -8358,19 +8354,18 @@ if(debug_mode == 2)
   digitalWrite(10,HIGH);
 #endif
 
-  SerialOutput->println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
   #if defined LOGGER || defined WEBSERVER
-  SerialOutput->print(F("Calculating free space on SD..."));
+  printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  SerialOutput->print(fs);
-  SerialOutput->print(F(" MB free\r\n"));
+  printFmtToDebug(PSTR("%d MB free\r\n"), fs);
   diff -= (millis() - m); //3 sec - delay
   #endif
   if(diff > 0)  delay(diff);
@@ -8384,9 +8379,11 @@ if(debug_mode == 2)
   }
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
   //end of decoration
+
+  printlnToDebug(PSTR("Start network services"));
   server->begin();
 
-if(debug_mode == 2)
+if(save_debug_mode == 2)
   telnetServer->begin();
 
 
@@ -8548,5 +8545,6 @@ if (!SD.exists(datalogFileName)) {
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
-
+printlnToDebug(PSTR("Setup complete"));
+debug_mode = save_debug_mode; //restore actual debug mode
 }

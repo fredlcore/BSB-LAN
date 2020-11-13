@@ -591,7 +591,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
 
 
 //Mega not enough space for useless strings.
-#if defined(__AVR__)
+#if defined(__AVR__) && not defined WEBCONFIG
 #define CF_USEEEPROM_TEXT ""
 #define CF_BUSTYPE_TEXT ""
 #define CF_OWN_BSBADDR_TEXT ""
@@ -9090,6 +9090,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D30B5,  CAT_FEHLER,           VT_ERRORCODE,     6991,  STR6991,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Fehlercode
 {0x053D3092,  CAT_FEHLER,           VT_UINT,          6995,  STR6995,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 20
 {0x053D30A1,  CAT_FEHLER,           VT_ENUM,          6996,  STR6996,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
+};
+
+PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 // Wartung/Sonderbetrieb
 
@@ -9850,9 +9853,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x513D0892,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8570,  STR8570,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betr'std Feststoffkessel. Can be resetted
 {0x053D14A0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8585,  STR8585,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Regeltemperatur
 {0x053D149F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8586,  STR8586,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Zusatzerzeugersollwert // // actually comes as second value with parameter 8585 on device family 186
-};
-
-PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 // Diagnose Verbraucher
 {0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
@@ -11288,6 +11288,14 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 */
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
+
+//Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, "",       sizeof(ENUM_DEBUG),   ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, "",       sizeof(ENUM_LOGTELEGRAM),   ENUM_LOGTELEGRAM,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65532, "",       sizeof(ENUM_BUSTYPE),   ENUM_BUSTYPE,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65533, "",       sizeof(ENUM_ONOFF),   ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65534, "",       sizeof(ENUM_EEPROM_ONOFF),ENUM_EEPROM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 };
