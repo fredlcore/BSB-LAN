@@ -466,10 +466,12 @@ EthernetClient httpclient;
 EthernetClient telnetClient;
 #endif
 
+#ifdef MAX_CUL
 #ifdef WIFI
 WiFiEspClient max_cul;
 #else
 EthernetClient max_cul;
+#endif
 #endif
 
 #ifdef MQTT
@@ -503,6 +505,7 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
 //  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
+  OneWire *oneWire;
   DallasTemperature *sensors;
   uint8_t numSensors;
   unsigned long lastOneWireRequestTime = 0;
@@ -524,12 +527,12 @@ unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
-static const int numLogValues = sizeof(log_parameters) / sizeof(int);
-static const int numCustomFloats = sizeof(custom_floats) / sizeof(float);
-static const int numCustomLongs = sizeof(custom_longs) / sizeof(long);
+static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
+static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
+static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
 #ifdef AVERAGES
-static const int numAverages = sizeof(avg_parameters) / sizeof(int);
+static const int numAverages = sizeof(avg_parameters) / sizeof(avg_parameters[0]);
 float *avgValues_Old = new float[numAverages];
 float *avgValues = new float[numAverages];
 float *avgValues_Current = new float[numAverages];
@@ -584,11 +587,9 @@ uint16_t pps_values[PPS_ANZ] = { 0 };
 boolean time_set = false;
 uint8_t current_switchday = 0;
 
-byte UseEEPROM = 0;
-
 #include "BSB_lan_EEPROMconfig.h"
 
-static int baseConfigAddrInEEPROM = 0; //offset from start address
+static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
 
 /** *****************************************************************
  *  Function: initConfigTable(uint8_t)
@@ -610,15 +611,16 @@ uint32_t initConfigTable(uint8_t version) {
     //select config parameter
     for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
       boolean allowedversion = false;
-      int addr = baseConfigAddrInEEPROM;
+      uint16_t addr = baseConfigAddrInEEPROM;
       //look for config parameter in parameters table
       for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
   #if defined(__AVR__)
         uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
+        uint8_t temp_version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0]));
         if(i == temp_id){
-          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v) allowedversion = true;
+          if(temp_version <= v) allowedversion = true;
         } else
-          if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0])) <= v && i > temp_id) {addr += pgm_read_byte_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
+          if(temp_version <= v && i > temp_id) {addr += (uint16_t)pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
   #else
         if(i == config[j].id){
           if(config[j].version <= v) allowedversion = true;
@@ -651,11 +653,6 @@ uint16_t getEEPROMaddress(uint8_t id){
   return options[id].eeprom_address;
 }
 
-//copy config option data from EEPROM to variable
-boolean readFromEEPROM(uint8_t id){
-  return readFromEEPROM(id, options[id].option_address);
-}
-
 uint16_t getVariableSize(uint8_t id){
   uint16_t len = 0;
   for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
@@ -674,9 +671,15 @@ uint16_t getVariableSize(uint8_t id){
 return len;
 }
 
+//copy config option data from EEPROM to variable
+boolean readFromEEPROM(uint8_t id){
+  return readFromEEPROM(id, options[id].option_address);
+}
+
+//copy config option data from EEPROM to variable
 boolean readFromEEPROM(uint8_t id, byte *ptr){
   if (!EEPROM_ready) return false;
-  if(!options[id].option_address) return false;
+  if(!ptr) return false;
   uint16_t len = getVariableSize(id);
   if(!len) return false;
   for(uint16_t i = 0; i < len; i++)
@@ -690,27 +693,27 @@ boolean writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
   boolean EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  for(uint16_t i = 0; i < len; i++){
+//  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
+  for(uint16_t i = 0; i < getVariableSize(id); i++){
     if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
+//      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
       EEPROMwasChanged = true;
     }
   }
+//  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
 
 boolean writeToConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  memcpy(options[id].option_address, ptr, len);
+  memcpy(options[id].option_address, ptr, getVariableSize(id));
   return true;
 }
 
 boolean readFromConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
-  uint16_t len = getVariableSize(id);
-  memcpy(ptr, options[id].option_address, len);
+  memcpy(ptr, options[id].option_address, getVariableSize(id));
   return true;
 }
 
@@ -797,69 +800,69 @@ void checkSockStatus()
  *   bigBuffPos and bigBuff variable
  * *************************************************************** */
  int printFmtToDebug(const char *format, ...){
-   va_list args;
-   va_start(args, format);
- #if defined(__AVR__)
-   int len = vsnprintf_P(DebugBuff, sizeof(DebugBuff), format, args);
- #else
-   int len = vsnprintf(DebugBuff, sizeof(DebugBuff), format, args);
- #endif
-   va_end(args);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
-   }
-   return len;
- }
+  va_list args;
+  va_start(args, format);
+#if defined(__AVR__)
+  int len = vsnprintf_P(DebugBuff, sizeof(DebugBuff), format, args);
+#else
+  int len = vsnprintf(DebugBuff, sizeof(DebugBuff), format, args);
+#endif
+  va_end(args);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  return len;
+}
 
- void writelnToDebug(){
- #if defined(__AVR__)
-   strcpy_P(DebugBuff, PSTR("\r\n"));
- #else
-   strcpy(DebugBuff, PSTR("\r\n"));
- #endif
- switch(debug_mode){
-   case 1: SerialOutput->print(DebugBuff); break;
-   case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
- }
- }
+void writelnToDebug(){
+#if defined(__AVR__)
+  strcpy_P(DebugBuff, PSTR("\r\n"));
+#else
+  strcpy(DebugBuff, PSTR("\r\n"));
+#endif
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+}
 
- void printToDebug(char *format){
-   switch(debug_mode){
-     case 1: SerialOutput->print(format); break;
-     case 2: if(haveTelnetClient)telnetClient.print(format); break;
-   }
-   return;
- }
+void printToDebug(char *format){
+  switch(debug_mode){
+    case 1: SerialOutput->print(format); break;
+    case 2: if(haveTelnetClient)telnetClient.print(format); break;
+  }
+  return;
+}
 
- void printToDebug(const char *format){
-   #if defined(__AVR__)
-   strcpy_P(DebugBuff, format);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
-   }
-   #else
-   switch(debug_mode){
-     case 1: SerialOutput->print(format); break;
-     case 2: if(haveTelnetClient)telnetClient.print(format); break;
-   }
-   #endif
-   return;
- }
+void printToDebug(const char *format){
+  #if defined(__AVR__)
+  strcpy_P(DebugBuff, format);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  #else
+  switch(debug_mode){
+    case 1: SerialOutput->print(format); break;
+    case 2: if(haveTelnetClient)telnetClient.print(format); break;
+  }
+  #endif
+  return;
+}
 
- #if defined(__AVR__)
- void printToDebug(uint_farptr_t src){
-   strcpy_PF(DebugBuff, src);
-   switch(debug_mode){
-     case 1: SerialOutput->print(DebugBuff); break;
-     case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
-   }
-   return;
- }
- #endif
+#if defined(__AVR__)
+void printToDebug(uint_farptr_t src){
+  strcpy_PF(DebugBuff, src);
+  switch(debug_mode){
+    case 1: SerialOutput->print(DebugBuff); break;
+    case 2: if(haveTelnetClient)telnetClient.print(DebugBuff); break;
+  }
+  return;
+}
+#endif
 
- #define printlnToDebug(format) printToDebug(format); writelnToDebug()
+#define printlnToDebug(format) {printToDebug(format); writelnToDebug();}
 
 
 /* Functions for management "Ring" output buffer */
@@ -904,15 +907,14 @@ int writelnToWebClient(){
 #else
   strcpy(bigBuff + bigBuffPos, PSTR("\n"));
 #endif
-//  int len = strlen(bigBuff + bigBuffPos);
-  int len = 1; //"\n" string length
+  int len = strlen(bigBuff + bigBuffPos);
+//  int len = 1; //"\n" string length
   bigBuffPos += len;
   return len;
 }
 
 int printToWebClient(char *format){
-  strcpy(bigBuff + bigBuffPos, format);
-  int len = strlen(bigBuff + bigBuffPos);
+  int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -922,11 +924,10 @@ int printToWebClient(char *format){
 
 int printToWebClient(const char *format){
   #if defined(__AVR__)
-  strcpy_P(bigBuff + bigBuffPos, format);
+  int len = strlen(strcpy_P(bigBuff + bigBuffPos, format));
   #else
-  strcpy(bigBuff + bigBuffPos, format);
+  int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   #endif
-  int len = strlen(bigBuff + bigBuffPos);
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -936,8 +937,7 @@ int printToWebClient(const char *format){
 
 #if defined(__AVR__)
 int printToWebClient(uint_farptr_t src){
-  strcpy_PF(bigBuff + bigBuffPos, src);
-  int len = strlen(bigBuff + bigBuffPos);
+  int len = strlen(strcpy_PF(bigBuff + bigBuffPos, src));
   bigBuffPos += len;
   if(bigBuffPos > OUTBUF_USEFUL_LEN){
     flushToWebClient();
@@ -1036,9 +1036,68 @@ int dayofweek(uint8_t day, uint8_t month, uint16_t year)
    return (((13*month+3)/5 + day + year + year/4 - year/100 + year/400) % 7) + 1;
 }
 
+/** *****************************************************************
+ *  Function: listEnumValues()
+ *  Does:     Print to web client list of values and descriptions from enum
+* Pass parameters:
+uint_farptr_t enumstr - ENUM address
+uint16_t enumstr_len - ENUM length
+const char *prefix - print string before enum element
+ const char *delimiter - print string between value and description
+ const char *alt_delimiter - alternative delimiter. see below.
+ const char *suffix - print string after  enum element
+ const char *string_delimiter - if string_delimiter is set, string_delimiter will be print between enum elements
+ uint16_t value - if alt_delimiter is set then alt_delimiter will be print when "value" will be found in enum
+ boolean desc_first - if true, then description will be print first; if false, then value print first
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  none
+ * *************************************************************** */
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first){
+  uint16_t val;
+  uint16_t c=0;
+  boolean isFirst = true;
+  while(c<enumstr_len){
+    if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+      val=pgm_read_word_far(enumstr+c);
+      c++;
+    }else{
+      val=uint16_t(pgm_read_byte_far(enumstr+c));
+    }
+    //skip leading space
+    c+=2;
+
+    if(isFirst){isFirst = false;} else{if(string_delimiter) printToWebClient(string_delimiter);}
+    if(prefix) printToWebClient(prefix);
+
+    if(desc_first){
+      c += printToWebClient(enumstr + c) + 1;
+      if(alt_delimiter && value == val) {
+        printToWebClient(alt_delimiter);
+      }else {
+        if(delimiter) printToWebClient(delimiter);
+      }
+    }
+    printFmtToWebClient(PSTR("%d"), val);
+    if(!desc_first){
+      if(alt_delimiter && value == val) {
+        printToWebClient(alt_delimiter);
+      } else {
+        if(delimiter) printToWebClient(delimiter);
+      }
+      c += printToWebClient(enumstr + c) + 1;
+    }
+    if(suffix) printToWebClient(suffix);
+  }
+}
+
 uint32_t get_cmdtbl_cmd(int i) {
   uint32_t c = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
 #if defined(__AVR__)
@@ -1046,11 +1105,17 @@ uint32_t get_cmdtbl_cmd(int i) {
 #else
     c = cmdtbl1[i].cmd;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
+    c = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     c = cmdtbl2[i-entries1].cmd;
+#endif
+   } else {
+#if defined(__AVR__)
+    c = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].cmd) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    c = cmdtbl3[i-entries2].cmd;
 #endif
   }
   return c;
@@ -1059,6 +1124,7 @@ uint32_t get_cmdtbl_cmd(int i) {
 uint16_t get_cmdtbl_line(int i) {
   uint16_t l = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
 #if defined(__AVR__)
@@ -1066,11 +1132,17 @@ uint16_t get_cmdtbl_line(int i) {
 #else
     l = cmdtbl1[i].line;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
+    l = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     l = cmdtbl2[i-entries1].line;
+#endif
+   } else {
+#if defined(__AVR__)
+    l = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].line) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    l = cmdtbl3[i-entries2].line;
 #endif
   }
   return l;
@@ -1079,17 +1151,24 @@ uint16_t get_cmdtbl_line(int i) {
 uint_farptr_t get_cmdtbl_desc(int i) {
   uint_farptr_t desc = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
 #else
     desc = cmdtbl1[i].desc;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
+    desc = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     desc = cmdtbl2[i-entries1].desc;
+#endif
+   } else {
+#if defined(__AVR__)
+    desc = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].desc) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    desc = cmdtbl3[i-entries2].desc;
 #endif
   }
   return desc;
@@ -1098,17 +1177,24 @@ uint_farptr_t get_cmdtbl_desc(int i) {
 uint_farptr_t get_cmdtbl_enumstr(int i) {
   uint_farptr_t enumstr = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr = cmdtbl1[i].enumstr;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr = cmdtbl2[i-entries1].enumstr;
+#endif
+   } else {
+#if defined(__AVR__)
+    enumstr = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].enumstr) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr = cmdtbl3[i-entries2].enumstr;
 #endif
   }
   return enumstr;
@@ -1117,17 +1203,24 @@ uint_farptr_t get_cmdtbl_enumstr(int i) {
 uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr_len = cmdtbl1[i].enumstr_len;
 #endif
-  } else {
+   } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr_len = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr_len = cmdtbl2[i-entries1].enumstr_len;
+#endif
+   } else {
+#if defined(__AVR__)
+    enumstr_len = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].enumstr_len) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr_len = cmdtbl3[i-entries2].enumstr_len;
 #endif
   }
   return enumstr_len;
@@ -1137,6 +1230,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
 uint8_t get_cmdtbl_category(int i) {
   uint8_t cat = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
 #if defined(__AVR__)
@@ -1144,11 +1238,17 @@ uint8_t get_cmdtbl_category(int i) {
 #else
     cat = cmdtbl1[i].category;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     cat = cmdtbl2[i-entries1].category;
+#endif
+   } else {
+#if defined(__AVR__)
+    cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].category) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    cat = cmdtbl3[i-entries2].category;
 #endif
   }
   return cat;
@@ -1157,17 +1257,24 @@ uint8_t get_cmdtbl_category(int i) {
 uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
 #else
     type = cmdtbl1[i].type;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     type = cmdtbl2[i-entries1].type;
+#endif
+   } else {
+#if defined(__AVR__)
+    type = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].type) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    type = cmdtbl3[i-entries2].type;
 #endif
   }
   return type;
@@ -1176,17 +1283,24 @@ uint8_t get_cmdtbl_type(int i) {
 uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
 #else
     dev_fam = cmdtbl1[i].dev_fam;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_fam = cmdtbl2[i-entries1].dev_fam;
+#endif
+   } else {
+#if defined(__AVR__)
+    dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_fam) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_fam = cmdtbl3[i-entries2].dev_fam;
 #endif
   }
   return dev_fam;
@@ -1195,36 +1309,51 @@ uint8_t get_cmdtbl_dev_fam(int i) {
 uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
 #else
     dev_var = cmdtbl1[i].dev_var;
 #endif
-  } else {
+  } else if (i < entries2){
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_var = cmdtbl2[i-entries1].dev_var;
 #endif
+  } else {
+#if defined(__AVR__)
+    dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_var) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_var = cmdtbl3[i-entries2].dev_var;
+#endif
   }
+
   return dev_var;
 }
 
 uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
 #else
     flags = cmdtbl1[i].flags;
 #endif
-  } else {
+} else if (i < entries2) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     flags = cmdtbl2[i-entries1].flags;
+#endif
+  } else {
+#if defined(__AVR__)
+    flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].flags) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    flags = cmdtbl3[i-entries2].flags;
 #endif
   }
   return flags;
@@ -1235,11 +1364,11 @@ void printcantalloc(void){
 }
 
 /** *****************************************************************
- *  Function:  recognizeVirtualFunctionGroup(int)
+ *  Function:  recognizeVirtualFunctionGroup(uint16_t)
  *  Does:      Calculate and return virtual function "group id"
  *             for code readability
  *  Pass parameters:
- *   int nr - program number
+ *   uint16_t nr - program number
  *  Parameters passed back:
  *   none
  *  Function value returned:
@@ -1249,9 +1378,13 @@ void printcantalloc(void){
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
   if(nr >= 20000 && nr < 20006){ return 1;}
+#ifdef AVERAGES
   else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
-  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(byte) * 4) {return 3;} //20100 - 20299
+#endif
+  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20299
+#ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
+#endif
   else if (nr >= 20500 && nr < 20500 + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
   return 0;
 }
@@ -1310,7 +1443,7 @@ int findLine(uint16_t line
   // binary search for the line in cmdtbl
 
   int left = start_idx;
-  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1);
+  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1);
   int mid = 0;
   while (!(left >= right))
     {
@@ -1520,18 +1653,16 @@ void loadPrognrElementsFromTable(int nr, int i){
     decodedTelegram.readonly = 1;
   else
     decodedTelegram.readonly = 0;
+  #if defined(__AVR__)
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
-  #if defined(__AVR__)
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
-  #else
-  decodedTelegram.operand=optbl[decodedTelegram.type].operand;
-  #endif
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
-  #if defined(__AVR__)
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
   #else
-  uint8_t unit_len=pgm_read_byte_far(pgm_get_far_address(optbl[0].unit_len) + decodedTelegram.type * sizeof(optbl[0]));
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, unit_len);
+  decodedTelegram.data_type=optbl[decodedTelegram.type].data_type;
+  decodedTelegram.operand=optbl[decodedTelegram.type].operand;
+  decodedTelegram.precision=optbl[decodedTelegram.type].precision;
+  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
   #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
@@ -1597,7 +1728,7 @@ void resetDecodedTelegram(){
  * *************************************************************** */
 char *TranslateAddr(byte addr, char *device){
   const char *p = NULL;
-  switch(addr&0x7F){
+  switch(addr & 0x7F){
     case ADDR_HEIZ: p = PSTR("HEIZ"); break;
     case ADDR_EM1: p = PSTR("EM1"); break;
     case ADDR_EM2: p = PSTR("EM2"); break;
@@ -2735,6 +2866,10 @@ void printTelegram(byte* msg, int query_line) {
             case VT_TIMEPROG:
               printTimeProg(msg,data_len);
               break;
+/*
+//VT_WEEKDAY is ENUM
+// ENUM_WEEKDAY used in one program 1642 as enum
+//VT_WEEKDAY defined as DT_WDAY but DT_WDAY nowhere used
             case VT_WEEKDAY: // enum
               if(data_len == 2){
                 if(msg[bus->getPl_start()]==0){
@@ -2754,6 +2889,7 @@ void printTelegram(byte* msg, int query_line) {
                 decodedTelegram.error = 256;
                 }
               break;
+*/
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
                 if((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
@@ -2908,11 +3044,10 @@ void printTelegram(byte* msg, int query_line) {
 
 
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
-  int htmlbuflen = OUTBUF_LEN * 2;
   for (uint16_t x=0;x<outstr_len-1;x++) {
     bigBuff[bigBuffPos] = pgm_read_byte_far(outstr+x);
     bigBuffPos++;
-    if (bigBuffPos>=htmlbuflen) {
+    if (bigBuffPos >= OUTBUF_USEFUL_LEN + OUTBUF_LEN) {
       flushToWebClient();
     }
   }
@@ -3090,7 +3225,6 @@ void generateConfigPage(void){
   printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
   int bustype = bus->getBusType();
   int i;
-  boolean not_first = false;
 
   switch (bustype) {
     case 0: printToWebClient(PSTR("BSB")); break;
@@ -3121,8 +3255,8 @@ void generateConfigPage(void){
 
   #ifdef DHT_BUS
   printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
-  not_first = false;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  boolean not_first = false;
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(i=0;i<numDHTSensors;i++){
     if(DHT_Pins[i]) {
       if(not_first)
@@ -3237,10 +3371,10 @@ void generateConfigPage(void){
   }
 #endif
   #ifdef LOGGER
-  printFmtToWebClient(PSTR(MENU_TEXT_LGP " \n%d"), log_interval);
-  printToWebClient(PSTR("<BR>Store parameters on disk: \n"));
+  printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \n%d"), log_interval);
+  printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
   printyesno(logCurrentValues);
-  printToWebClient(PSTR(" " MENU_TEXT_SEC ": <BR>\n"));
+  printToWebClient(PSTR("<BR>\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
       printFmtToWebClient(PSTR("%d - "), log_parameters[i]);
@@ -3262,7 +3396,7 @@ printToWebClient(PSTR("<BR>\n"));
 
 }
 
-
+#ifdef WEBCONFIG
 void implementConfig(){
   boolean k_flag = false;
   int i = 0;
@@ -3298,16 +3432,13 @@ void implementConfig(){
       for(uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++){
         #if defined(__AVR__)
             if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + f * sizeof(config[0])) == CDT_VOID) continue;
-        #else
-            if(config[f].var_type == CDT_VOID) continue;
-        #endif
-
-        #if defined(__AVR__)
             memcpy_PF(&cfg, pgm_get_far_address(config[0]) + f * sizeof(config[0]), sizeof(cfg));
         #else
+            if(config[f].var_type == CDT_VOID) continue;
             memcpy(&cfg, &config[f], sizeof(cfg));
         #endif
-        if(cfg.id == option_id) {finded  = true; break;}
+
+        if(cfg.id == option_id) {finded = true; break;}
       }
       if(!finded){
       k_flag = false;
@@ -3341,23 +3472,23 @@ void implementConfig(){
           break;
         case CDT_MAC:{
           unsigned int i0, i1, i2, i3, i4, i5;
-          sscanf(outBuf, "%02x:%02x:%02x:%02x:%02x:%02x", &i0, &i1, &i2, &i3, &i4, &i5);
-          variable[0] = (byte)i0;
-          variable[1] = (byte)i1;
-          variable[2] = (byte)i2;
-          variable[3] = (byte)i3;
-          variable[4] = (byte)i4;
-          variable[5] = (byte)i5;
+          sscanf(outBuf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
+          variable[0] = (byte)(i0 & 0xFF);
+          variable[1] = (byte)(i1 & 0xFF);
+          variable[2] = (byte)(i2 & 0xFF);
+          variable[3] = (byte)(i3 & 0xFF);
+          variable[4] = (byte)(i4 & 0xFF);
+          variable[5] = (byte)(i5 & 0xFF);
           writeToConfigVariable(option_id, variable);
           break;
         }
         case CDT_IPV4:{
           unsigned int i0, i1, i2, i3;
           sscanf(outBuf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
-          variable[0] = (byte)i0;
-          variable[1] = (byte)i1;
-          variable[2] = (byte)i2;
-          variable[3] = (byte)i3;
+          variable[0] = (byte)(i0 & 0xFF);
+          variable[1] = (byte)(i1 & 0xFF);
+          variable[2] = (byte)(i2 & 0xFF);
+          variable[3] = (byte)(i3 & 0xFF);
           writeToConfigVariable(option_id, variable);
           break;
         }
@@ -3370,8 +3501,7 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             ((int *)variable)[j] = atoi(ptr_t);
             j++;
-            if(j >= cfg.size/sizeof(int)) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(int));
           writeToConfigVariable(option_id, variable);
           break;}
         case CDT_DHTBUS:{
@@ -3383,10 +3513,10 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             variable[j] = (byte)atoi(ptr_t);
             j++;
-            if(j >= cfg.size/sizeof(byte)) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(byte));
           writeToConfigVariable(option_id, variable);
           break;}
+#ifdef MAX_CUL
         case CDT_MAXDEVICELIST:{
           uint16_t j = 0;
           char *ptr = outBuf;
@@ -3396,24 +3526,27 @@ void implementConfig(){
             if(ptr) {ptr[0] = 0; ptr++;}
             strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
             j++;
-            if(j >= cfg.size/sizeof(sizeof(max_device_list[0]))) break; //buffer overflow protection
-          }while(ptr);
+          }while(ptr && j < cfg.size/sizeof(max_device_list[0]));
           writeToConfigVariable(option_id, variable);
+          UpdateMaxDeviceList();
           break;}
+#endif
         default: break;
       }
 
       free(variable);
+
       k_flag = false;
       i = 0;
       continue;
     }
-
     if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if(client.available()){outBuf[i] = client.read();}
       if(client.available()){outBuf[i + 1] = client.read();}
       outBuf[i + 2] = 0;
-      sscanf(outBuf + i, "%02x", &c);
+      unsigned int symbol;
+      sscanf(outBuf + i, "%x", &symbol);
+      c = symbol & 0xFF;
     }
 
     outBuf[i++] = c;
@@ -3437,13 +3570,15 @@ void generateChangeConfigPage(){
     configuration_struct cfg;
 
 #if defined(__AVR__)
-    memcpy_PF(&cfg, pgm_get_far_address(config[0]) + i * sizeof(config[0]), sizeof(cfg));
+    memcpy_PF(&cfg, pgm_get_far_address(config[0].id) + i * sizeof(config[0]), sizeof(cfg));
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
     byte *variable = (byte *)malloc(cfg.size);
+
     if(!variable) return;
-    if(!readFromConfigVariable(cfg.id, variable)) continue;
+
+    if(!readFromConfigVariable(cfg.id, variable)) {free(variable); continue;}
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
@@ -3482,88 +3617,49 @@ void generateChangeConfigPage(){
      default: break;
    }
 
+
    switch(cfg.var_type){
      case CDT_VOID: break;
      case CDT_BYTE:
        switch(cfg.input_type){
          case CPI_TEXT: printFmtToWebClient(PSTR("%d"), (int)variable[0]); break;
          case CPI_SWITCH:{
-           for(uint16_t j = 0; j < 256; j++){
-             decodedTelegram.error = 0;
-             switch(cfg.id){
-               case CF_USEEEPROM:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_EEPROM_ONOFF),sizeof(ENUM_EEPROM_ONOFF), j, 0);
-               #else
-                   printENUM(ENUM_EEPROM_ONOFF,sizeof(ENUM_EEPROM_ONOFF), j, 0);
-               #endif
-                 break;
-               default:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF), j, 0);
-               #else
-                   printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF), j, 0);
-               #endif
-                 break;
-             }
-             if(decodedTelegram.error == 0){
-               printFmtToWebClient(PSTR("<option value='%d'"), j);
-               if(j == variable[0] || (j == 1 && variable[0])){
-                 printToWebClient(PSTR(" selected>"));
-               } else {
-                 printToWebClient(PSTR(">"));
-               }
-               printToWebClient(decodedTelegram.enumdescaddr);
-               printToWebClient(PSTR("</option>"));
-             }
+           int i;
+           switch(cfg.id){
+             case CF_USEEEPROM:
+               i=findLine(65534,0,NULL); //return ENUM_EEPROM_ONOFF
+               break;
+             default:
+               i=findLine(65533,0,NULL); //return ENUM_ONOFF
+               break;
            }
+           uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+           uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, (uint16_t)variable[0], 0);
            break;}
          case CPI_DROPDOWN:{
-           for(uint16_t j = 0; j < 256; j++){
-             decodedTelegram.error = 0;
-             switch(cfg.id){
-               case CF_BUSTYPE:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_BUSTYPE),sizeof(ENUM_BUSTYPE), j, 0);
-               #else
-                   printENUM(ENUM_BUSTYPE,sizeof(ENUM_BUSTYPE), j, 0);
-               #endif
-                 break;
-               case CF_LOGTELEGRAM:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_LOGTELEGRAM),sizeof(ENUM_LOGTELEGRAM), j, 0);
-               #else
-                   printENUM(ENUM_LOGTELEGRAM,sizeof(ENUM_LOGTELEGRAM), j, 0);
-               #endif
-                 break;
-               case CF_DEBUG:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_DEBUG),sizeof(ENUM_DEBUG), j, 0);
-               #else
-                   printENUM(ENUM_DEBUG,sizeof(ENUM_DEBUG), j, 0);
-               #endif
-                 break;
-               case CF_MQTT:
-               #if defined(__AVR__)
-                   printENUM(pgm_get_far_address(ENUM_MQTT),sizeof(ENUM_MQTT), j, 0);
-               #else
-                   printENUM(ENUM_MQTT,sizeof(ENUM_MQTT), j, 0);
-               #endif
-                 break;
-               default:
-                 decodedTelegram.error = 258;
-                 break;
-             }
-             if(decodedTelegram.error == 0){
-               printFmtToWebClient(PSTR("<option value='%d'"), j);
-               if(j == variable[0]){
-                 printToWebClient(PSTR(" selected>"));
-               } else {
-                 printToWebClient(PSTR(">"));
-               }
-               printToWebClient(decodedTelegram.enumdescaddr);
-               printToWebClient(PSTR("</option>"));
-             }
+           int i;
+           switch(cfg.id){
+             case CF_BUSTYPE:
+               i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+               break;
+             case CF_LOGTELEGRAM:
+               i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+               break;
+             case CF_DEBUG:
+             i=findLine(65530,0,NULL); //return ENUM_DEBUG
+               break;
+             case CF_MQTT:
+               i=findLine(65529,0,NULL); //return ENUM_MQTT
+               break;
+             default:
+               i = -1;
+               break;
+           }
+           if(i > 0){
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, variable[0], 0);
            }
            break;}
          }
@@ -3595,7 +3691,7 @@ void generateChangeConfigPage(){
        break;}
      case CDT_DHTBUS:{
        boolean isFirst = true;
-       for(uint16_t j = 0; j < cfg.size; j++){
+       for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
@@ -3605,16 +3701,17 @@ void generateChangeConfigPage(){
        break;}
      case CDT_MAXDEVICELIST:{
        boolean isFirst = true;
-       for(uint16_t j = 0; j < cfg.size; j+=11){
+       for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
-           printFmtToWebClient(PSTR("%s"), &variable[j]);
+           printFmtToWebClient(PSTR("%s"), variable + j);
          }
        }
        break;}
      default: break;
    }
+
 //Closing tag
    switch(cfg.input_type){
      case CPI_TEXT: printToWebClient(PSTR("'>")); break;
@@ -3627,6 +3724,9 @@ void generateChangeConfigPage(){
   }
   printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\n</form>\n"));
 }
+#endif  //WEBCONFIG
+
+
 
 /** *****************************************************************
  *  Function:  GetDateTime()
@@ -3711,7 +3811,6 @@ void LogTelegram(byte* msg){
     }
     i++;
     c=get_cmdtbl_cmd(i);
-//      c=pgm_read_dword(&cmdtbl[i].cmd);
   }
   if(cmd <= 0) return;
   boolean logThis = false;
@@ -3847,7 +3946,6 @@ int set(int line      // the ProgNr of the heater parameter
 
   // Check for readonly parameter
   if((get_cmdtbl_flags(i) & FL_RONLY) == FL_RONLY) {
-//  if (pgm_read_byte(&cmdtbl[i].flags) == 1) {
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
@@ -3883,7 +3981,6 @@ int set(int line      // the ProgNr of the heater parameter
 
   // Get the parameter type from the table row[i]
   switch(type) {
-//  switch(pgm_read_byte(&cmdtbl[i].type)){
     // ---------------------------------------------
     // 8-bit unsigned integer representation
     // Months or minutes
@@ -4711,17 +4808,17 @@ void queryVirtualPrognr(int line, int table_line){
        return;
      }
      case 2: {
-       size_t tempLine = line - 20050;
   #ifdef AVERAGES
+       size_t tempLine = line - 20050;
        _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
        return;
    #endif
        break;
      }
      case 3: {
+#ifdef DHT_BUS
        size_t tempLine = line - 20100;
        size_t log_sensor = tempLine / 4;
-#ifdef DHT_BUS
        if(tempLine % 4 == 0){ //print sensor ID
          sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
          return;
@@ -4767,10 +4864,10 @@ void queryVirtualPrognr(int line, int table_line){
      break;
      }
      case 4: {
+#ifdef ONE_WIRE_BUS
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
-  #ifdef ONE_WIRE_BUS
-       if(enableOneWireBus){
+       if(enableOneWireBus && numSensors){
          if(tempLine % 2 == 0){ //print sensor ID
            DeviceAddress device_address;
            sensors->getAddress(device_address, log_sensor);
@@ -4795,9 +4892,9 @@ void queryVirtualPrognr(int line, int table_line){
      break;
      }
      case 5: {
+#ifdef MAX_CUL
        size_t tempLine = line - 20500;
        size_t log_sensor = tempLine / 4;
-  #ifdef MAX_CUL
         if(enable_max_cul){
           if(tempLine % 4 == 0){ //print sensor ID
             strcpy(decodedTelegram.value, max_device_list[log_sensor]);
@@ -5096,7 +5193,7 @@ void SetDateTime(){
  * *************************************************************** */
 void dht22(void) {
   int i;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   printFmtToDebug(PSTR("DHT22 sensors: %d\r\n"), numDHTSensors);
     for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
@@ -5182,7 +5279,7 @@ void Ipwe() {
 
   int i;
   int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(int);
+  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
   printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
 
   printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
@@ -5227,7 +5324,7 @@ void Ipwe() {
 
 #ifdef DHT_BUS
   // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
     query(20101 + i * 4);
@@ -5253,7 +5350,7 @@ void Ipwe() {
 #endif    // --- Ipwe() ---
 
 /** *****************************************************************
- *  Function: InitMaxDeviceList()
+ *  Function: UpdateMaxDeviceList()
  *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
  * Pass parameters:
  *  none
@@ -5266,27 +5363,36 @@ void Ipwe() {
  * *************************************************************** */
 
 #ifdef MAX_CUL
-void InitMaxDeviceList() {
 
-  char max_id_eeprom[11] = { 0 };
+void UpdateMaxDeviceList() {
+  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
   int32_t max_addr = 0;
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
+  }
 
-  for (uint16_t x=0;x< MAX_CUL_DEVICES;x++) {
-    for (uint16_t z=0;z<MAX_CUL_DEVICES;z++) {
+    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
       if (EEPROM_ready) {
-        EEPROM.get(getEEPROMaddress(CF_MAX_DEVICES) + 11 * z, max_id_eeprom);
-      }
-      if (!strcmp(max_device_list[x], max_id_eeprom)) {
-        if (EEPROM_ready) {
-          EEPROM.get(getEEPROMaddress(CF_MAX_DEVADDR) + 4 * z, max_addr);
+        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
+          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
         }
-        max_devices[x] = max_addr;
-        printFmtToDebug(PSTR("Adding known Max ID to list:\r\n%08lX\r\n"), max_devices[x]);
-        break;
+      }
+      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
+          if (EEPROM_ready) {
+            for(uint16_t i = 0; i < sizeof(max_addr); i++){
+             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+            }
+            max_devices[x] = max_addr;
+            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+          }
+          break;
+        }
       }
     }
+  writeToEEPROM(CF_MAX_DEVICES);
+  writeToEEPROM(CF_MAX_DEVADDR);
   }
-}
 #endif
 
 /** *****************************************************************
@@ -5844,7 +5950,7 @@ ich mir da nicht)
 uint8_t pps_offset = 0;
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
             uint16_t temp = (msg[6] << 8) + msg[7];
-            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) - 1 + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
+            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1;
             while (i > 0 && get_cmdtbl_line(i) >= 15000) {
               uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
@@ -6142,11 +6248,11 @@ uint8_t pps_offset = 0;
           break;
         }
         *p='\0';     // mark end of string
-        if(strcmp(cLineBuffer+1, PASSKEY)){
+        if(strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))){
           printlnToDebug(PSTR("no matching passkey"));
           client.flush();
-          webPrintHeader();
-          webPrintFooter();
+          client.stop();
+          //do not print header and footer. It is security breach
           break;
         }
         *p='/';
@@ -6204,7 +6310,7 @@ uint8_t pps_offset = 0;
             byte dayval = 0;
             unsigned long filesize = dataFile.size();
             if (dataFile.dirEntry(&d)) {
-              lastWrtYr = (FAT_YEAR(d.lastWriteDate));
+              lastWrtYr = FAT_YEAR(d.lastWriteDate);
               monthval = FAT_MONTH(d.lastWriteDate);
               dayval = FAT_DAY(d.lastWriteDate);
               }
@@ -6476,23 +6582,7 @@ uint8_t pps_offset = 0;
               if(get_cmdtbl_type(i)==VT_ENUM) {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-
-              uint16_t val;
-              uint16_t c=0;
-              while(c<enumstr_len){
-                if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
-                  val=pgm_read_word_far(enumstr+c);
-                  c++;
-                }else{
-                  val=uint16_t(pgm_read_byte_far(enumstr+c));
-                }
-                //skip leading space
-                c+=2;
-
-                printFmtToWebClient(PSTR("%d - "), val);
-                c += printToWebClient(enumstr + c) + 1;
-                printToWebClient(PSTR("<br>\n"));
-              }
+              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\n"), NULL, 0, 0);
 
             }else{
               printToWebClient(PSTR(MENU_TEXT_ER5));
@@ -6845,7 +6935,7 @@ uint8_t pps_offset = 0;
             #ifdef DHT_BUS
             printToWebClient(PSTR(",\n  \"dhtbus\": [\n"));
             not_first = false;
-            int numDHTSensors = sizeof(DHT_Pins) / sizeof(byte);
+            int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
             for(i=0;i<numDHTSensors;i++){
               if(DHT_Pins[i]) {
                 if(not_first)
@@ -7038,26 +7128,7 @@ uint8_t pps_offset = 0;
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
-                      uint16_t x = 0;
-                      uint16_t val = 0;
-                      been_here=false;
-
-                      while (x < enumstr_len) {
-                        if((byte)(pgm_read_byte_far(enumstr+x+1))!=' ' || decodedTelegram.type == VT_BIT) {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                          val=uint16_t((pgm_read_byte_far(enumstr+x) << 8)) | uint16_t(pgm_read_byte_far(enumstr+x+1));
-                          x++;
-                        }else{
-                          val=uint16_t(pgm_read_byte_far(enumstr+x));
-                        }
-                        if(been_here) printToWebClient(PSTR(",\n")); //do not print ",\n" if it first enumValue
-                        printFmtToWebClient(PSTR("      { \"enumValue\": %d, \"desc\": \""), val);
-                        if (!been_here) been_here = true;
-                        //skip leading space
-                        x = x + 2;
-                        x += printToWebClient(enumstr+x);
-                        printToWebClient(PSTR("\" }"));
-                        x++;
-                      }
+                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\n"), 0, 0);
                     }
 
                   printFmtToWebClient(PSTR("\n    ],\n    \"isswitch\": %d,\n"), decodedTelegram.isswitch);
@@ -7179,11 +7250,18 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
             case 'I': //Parse HTTP form and implement changes
               implementConfig();
+              generateConfigPage();
+              generateChangeConfigPage();
               //save new values from RAM to EEPROM
 /*              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
                 writeToEEPROM(i);
               }
+            if(!(httpflags & 128)) webPrintFooter();
+            flushToWebClient();
+            client.stop();
+            resetBoard();
 */
+            break;
               //no break here.
 #endif
             default:
@@ -7202,14 +7280,6 @@ uint8_t pps_offset = 0;
 
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
-/*
-#ifdef WEBCONFIG
-          if (p[2]=='I'){
-            client.stop();
-            resetBoard();
-          }
-#endif
-*/
           break;
         }
         if (p[1]=='L'){
@@ -7681,8 +7751,9 @@ uint8_t pps_offset = 0;
       MQTTClient->disconnect();
     }
   }
-  if(!mqtt_mode && MQTTClient){
+  if(MQTTClient && mqtt_mode == 0){
     delete MQTTClient;
+    MQTTClient = NULL;
   }
 #endif
 
@@ -7818,7 +7889,7 @@ uint8_t pps_offset = 0;
   if (max_str_index > 0) {
     if (outBuf[0] == 'Z') {
       char max_hex_str[9];
-      char max_id[11] = { 0 };
+      char max_id[sizeof(max_device_list[0])] = { 0 };
       boolean known_addr = false;
       boolean known_eeprom = false;
 
@@ -7850,7 +7921,7 @@ uint8_t pps_offset = 0;
           max_hex_str[2]='\0';
           max_id[x] = (char)strtoul(max_hex_str,NULL,16);
         }
-        max_id[10] = '\0';
+        max_id[sizeof(max_device_list[0]) - 1] = '\0';
         printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
 
         for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
@@ -7866,18 +7937,10 @@ uint8_t pps_offset = 0;
             if (max_devices[x] < 1) {
               strcpy(max_device_list[x], max_id);
               max_devices[x] = max_addr;
-/*
-              int32_t temp1;
-              char temp2[11] = { 0 };
-              EEPROM.get(500+15*x, temp1);
-              EEPROM.get(500+15*x+4, temp2);
-              DebugOutput.println(temp1, HEX);
-              DebugOutput.println(temp2);
-*/
+
               writeToEEPROM(CF_MAX_DEVICES);
               writeToEEPROM(CF_MAX_DEVADDR);
               printlnToDebug(PSTR("Device stored in EEPROM"));
-              InitMaxDeviceList();
               break;
             }
           }
@@ -7991,9 +8054,8 @@ void setup() {
     }
   pinMode(19, INPUT);
   #endif
-
   //Read config parameters from EEPROM
-  SerialOutput->print(F("Reading EEPROM..."));
+
   //Read "Header"
   initConfigTable(0);
 #ifdef MAX_CUL
@@ -8007,14 +8069,6 @@ void setup() {
   registerConfigVariable(CF_VERSION, (byte *)&EEPROMversion);
   uint32_t crc;
   registerConfigVariable(CF_CRC32, (byte *)&crc);
-
-  readFromEEPROM(CF_PPS_VALUES);
-
-  readFromEEPROM(CF_USEEEPROM);
-  if(UseEEPROM == 0x96){
-    readFromEEPROM(CF_VERSION);
-    readFromEEPROM(CF_CRC32);
-
   //link parameters
     registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
     registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
@@ -8039,69 +8093,94 @@ void setup() {
     registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
     registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
     registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
-//    registerConfigVariable(CF_WEBSERVER, (byte *)&mac);
     registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
     registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
     registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
     registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
     registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
     registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
-    registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
-//    registerConfigVariable(CF_READONLY, (byte *)mac);
-//    registerConfigVariable(CF_DEBUG, (byte *)mac);
     registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
     registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
     registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
     registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
     registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
     registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+//    registerConfigVariable(CF_READONLY, (byte *)mac);
+//    registerConfigVariable(CF_DEBUG, (byte *)mac);
 #endif
 
+
+
+  readFromEEPROM(CF_PPS_VALUES);
+  if(UseEEPROM){ //Read EEPROM when it allowed from config file
+    SerialOutput->print(F("Reading EEPROM..."));
+    readFromEEPROM(CF_USEEEPROM);
+  } else {
+    SerialOutput->print(F("Using settings from config file\r\n"));
+  }
+  if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
+    readFromEEPROM(CF_VERSION);
+    readFromEEPROM(CF_CRC32);
     if(crc == initConfigTable(EEPROMversion)){
   //read parameters
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   //read parameter if it version is non-zero
 #if defined(__AVR__)
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > 0 &&
-           pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) <= EEPROMversion)
+        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        if(version > 0 && version <= EEPROMversion)
              readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
 #else
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-    }
+    } else SerialOutput->print(F("EEPROM schema CRC mismatch\r\n"));
+  }
+  SerialOutput->print(F("done.\r\n"));
+
   //calculate maximal version
       uint8_t maxconfversion = 0;
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   #if defined(__AVR__)
-        if(pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0])) > maxconfversion) maxconfversion = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+        if(version > maxconfversion) maxconfversion = version;
   #else
         if(config[i].version > maxconfversion) maxconfversion = config[i].version;
   #endif
       }
+    SerialOutput->print(F("EEPROM schema v."));
+    SerialOutput->print(EEPROMversion);
+    SerialOutput->print(F(" Program schema v."));
+    SerialOutput->println(maxconfversion);
 
-      if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
-        crc = initConfigTable(maxconfversion); //store new CRC32
-        EEPROMversion = maxconfversion; //store new version
+    if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+      crc = initConfigTable(maxconfversion); //store new CRC32
+      EEPROMversion = maxconfversion; //store new version
+      if(UseEEPROM == 0x96){//Update EEPROM when EEPROM contain magic byte (stored configuration)
+        SerialOutput->print(F("Update EEPROM schema\r\n"));
         for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
           //do not write here MAX! settings
           if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) writeToEEPROM(i);
          }
-      }
-      unregisterConfigVariable(CF_VERSION);
-      unregisterConfigVariable(CF_CRC32);
+       }
+    }
 
-  }
 
+  unregisterConfigVariable(CF_VERSION);
+  unregisterConfigVariable(CF_CRC32);
 #endif
-  SerialOutput->print(F("done.\n"));
 
+ byte save_debug_mode = debug_mode; //save debug_mode until setup is end.
+ debug_mode = 1; //force using Serial debug until setup is end.
 
+for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+  printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
+}
 
-  if(debug_mode == 2)
-    SerialOutput->println(F("Logging output to Telnet"));
+  if(save_debug_mode == 2)
+    printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
   printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
+  printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
@@ -8135,6 +8214,20 @@ void setup() {
 
   bus->enableInterface();
 
+  #ifdef ONE_WIRE_BUS
+    if(enableOneWireBus){
+      printToDebug(PSTR("Init One Wire bus...\r\n"));
+      // Setup a oneWire instance to communicate with any OneWire devices
+      oneWire = new OneWire(One_Wire_Pin);
+      // Pass our oneWire reference to Dallas Temperature.
+      sensors = new DallasTemperature(oneWire);
+      // check ds18b20 sensors
+      sensors->begin();
+      numSensors=sensors->getDeviceCount();
+      printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
+    }
+  #endif
+
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
   // initialize serial for ESP module
@@ -8149,7 +8242,7 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    SerialOutput->println(F("WiFi shield not present"));
+    printToDebug(PSTR("WiFi shield not present\r\n"));
     // don't continue
     while (true);
   }
@@ -8161,14 +8254,13 @@ void setup() {
 
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    SerialOutput->print(F("Attempting to connect to WPA SSID: "));
-    SerialOutput->println(ssid);
+    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), ssid);
     // Connect to WPA/WPA2 network
     status = WiFi.begin(ssid, pass);
   }
 
   // you're connected now, so print out the data
-  SerialOutput->println(F("You're connected to the network"));
+  printToDebug(PSTR("You're connected to the network\r\n"));
 
   printWifiStatus();
 #endif
@@ -8187,27 +8279,17 @@ void setup() {
   }
 */
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    printlnToDebug(PSTR("Init One Wire bus..."));
-    // Setup a oneWire instance to communicate with any OneWire devices
-    OneWire oneWire(One_Wire_Pin);
-    // Pass our oneWire reference to Dallas Temperature.
-    sensors = new DallasTemperature(&oneWire);
-  }
-#endif
-
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  SerialOutput->print(F("Starting SD.."));
+  printToDebug(PSTR("Starting SD.."));
 #if defined(__AVR__)
-  if(!SD.begin(4)) SerialOutput->println(F("failed"));
+  if(!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
 #else
-  if(!SD.begin(4, SPI_DIV3_SPEED)) SerialOutput->println(F("failed")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  if(!SD.begin(4, SPI_DIV3_SPEED)) printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
 #endif
-  else SerialOutput->println(F("ok"));
+  else printToDebug(PSTR("ok\r\n"));
 
 #else
   // enable w5100 SPI
@@ -8223,23 +8305,28 @@ void setup() {
 #ifndef WIFI
     if(!useDHCP && ip_addr[0]){
       IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
-      Ethernet.begin(mac, ip);
-//      Ethernet.setLocalIP(ip);
+      IPAddress subnet;
+      IPAddress gateway;
+      IPAddress dnsserver;
       if(subnet_addr[0]){
-        IPAddress subnet(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
-        Ethernet.setSubnetMask(subnet);
+        subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
+      }
+      else {
+        subnet = IPAddress(255, 255, 255, 0);
       }
       if(gateway_addr[0]){
-        IPAddress gateway(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
-        Ethernet.setGatewayIP(gateway);
-        if(!dns_addr[0]) Ethernet.setDnsServerIP(gateway);
+        gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
+      } else {
+        gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
       if(dns_addr[0]){
-        IPAddress dnsserver(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
-        Ethernet.setDnsServerIP(dnsserver);
+        dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+      } else {
+        dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
       }
+      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
     } else {
-      Ethernet.begin(mac);
+      Ethernet.begin(mac); //DHCP
     }
 #endif
 
@@ -8248,16 +8335,18 @@ if(ip_addr[0] && !useDHCP){
   SerialOutput->println(WiFi.localIP());
 #else
   SerialOutput->println(Ethernet.localIP());
+  SerialOutput->println(Ethernet.subnetMask());
+  SerialOutput->println(Ethernet.gatewayIP());
 #endif
 }
 
 #ifdef WIFI
-server = new WiFiEspServer(HTTPPort);
-if(debug_mode == 2)
+  server = new WiFiEspServer(HTTPPort);
+if(save_debug_mode == 2)
   telnetServer = new WiFiEspServer(23);
 #else
-server = new EthernetServer(HTTPPort);
-if(debug_mode == 2)
+  server = new EthernetServer(HTTPPort);
+if(save_debug_mode == 2)
   telnetServer = new EthernetServer(23);
 #endif
 
@@ -8265,19 +8354,18 @@ if(debug_mode == 2)
   digitalWrite(10,HIGH);
 #endif
 
-  SerialOutput->println(F("Waiting 3 seconds to give Ethernet shield time to get ready..."));
+  printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
   #if defined LOGGER || defined WEBSERVER
-  SerialOutput->print(F("Calculating free space on SD..."));
+  printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  SerialOutput->print(fs);
-  SerialOutput->print(F(" MB free\n"));
+  printFmtToDebug(PSTR("%d MB free\r\n"), fs);
   diff -= (millis() - m); //3 sec - delay
   #endif
   if(diff > 0)  delay(diff);
@@ -8291,19 +8379,13 @@ if(debug_mode == 2)
   }
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
   //end of decoration
+
+  printlnToDebug(PSTR("Start network services"));
   server->begin();
 
-if(debug_mode == 2)
+if(save_debug_mode == 2)
   telnetServer->begin();
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    // check ds18b20 sensors
-    sensors->begin();
-    numSensors=sensors->getDeviceCount();
-    printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
-  }
-#endif
 
 /*
 // figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and LAST_ENUM_NR).
@@ -8450,18 +8532,19 @@ if (!SD.exists(datalogFileName)) {
 
 #ifdef MAX_CUL
   if(enable_max_cul){
-  if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
-    printlnToDebug(PSTR("Connected to max_cul"));
-  } else {
-    printlnToDebug(PSTR("Connection to max_cul failed"));
+    UpdateMaxDeviceList();
+    printToDebug(PSTR("Connection to max_cul: "));
+    if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
+      printlnToDebug(PSTR("established"));
+    } else {
+      printlnToDebug(PSTR("failed"));
+    }
   }
-  }
-
-  InitMaxDeviceList();
 
 #endif
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
-
+printlnToDebug(PSTR("Setup complete"));
+debug_mode = save_debug_mode; //restore actual debug mode
 }

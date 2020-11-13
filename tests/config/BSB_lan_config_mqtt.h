@@ -16,6 +16,16 @@
 #define LANG DE
 
 /*
+Allow to init program by settings in EEPROM
+byte UseEEPROM = 0; //Program settings reading from this config file.
+They can be stored in EEPROM but will not used while UseEEPROM is zero.
+Set zero for fallback startup when EEPROM config is broken.
+byte UseEEPROM = 1; //Program settings will be read from EEPROM
+Normal startup.
+*/
+byte UseEEPROM = 1;
+
+/*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
 */
 byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
