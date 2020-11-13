@@ -3195,7 +3195,7 @@ void webPrintSite() {
         }
       }
     }
-    if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
+    if ((major > atoi(MAJOR)) || (major == atoi(MAJOR) && minor > atoi(MINOR)) || (major == atoi(MAJOR) && minor == atoi(MINOR) && patch > atoi(PATCH))) {
       printToWebClient(PSTR(MENU_TEXT_NVA ": "));
       printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\n"), major, minor, patch);
     } else {
