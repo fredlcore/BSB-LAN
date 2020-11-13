@@ -7423,10 +7423,12 @@ uint8_t pps_offset = 0;
           webPrintHeader();
           if (p[2]=='E') {
             printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\n"));
+            forcedflushToWebClient();
           }
 
 #ifdef LOGGER
           // what doing this fragment? Just opened and closed file? We really need it?
+          // FH: Before, it seemed to be necessary to have the file properly closed. And since I thought you can only properly close it when it's opened before, I was opening it.
           File dataFile = SD.open(datalogFileName, FILE_WRITE);
           if (dataFile) {
             dataFile.close();
