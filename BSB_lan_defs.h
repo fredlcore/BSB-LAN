@@ -2851,12 +2851,12 @@ const char STR20100[] PROGMEM = STR20100_TEXT;
 const char STR20101[] PROGMEM = STR20101_TEXT;
 const char STR20102[] PROGMEM = STR20102_TEXT;
 const char STR20103[] PROGMEM = STR20103_TEXT;
-const char STR20200[] PROGMEM = STR20200_TEXT;
-const char STR20201[] PROGMEM = STR20201_TEXT;
 const char STR20300[] PROGMEM = STR20300_TEXT;
 const char STR20301[] PROGMEM = STR20301_TEXT;
-const char STR20302[] PROGMEM = STR20302_TEXT;
-const char STR20303[] PROGMEM = STR20303_TEXT;
+const char STR20500[] PROGMEM = STR20500_TEXT;
+const char STR20501[] PROGMEM = STR20501_TEXT;
+const char STR20502[] PROGMEM = STR20502_TEXT;
+const char STR20503[] PROGMEM = STR20503_TEXT;
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = STR99999_TEXT;
 
@@ -11200,12 +11200,12 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20201, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20302, STR20302, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20303, STR20303, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20500, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20501, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 
 #define PPS_AT  0
 #define PPS_ATG 1

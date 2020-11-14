@@ -903,9 +903,9 @@ void forcedflushToWebClient(){
 
 int writelnToWebClient(){
 #if defined(__AVR__)
-  strcpy_P(bigBuff + bigBuffPos, PSTR("\n"));
+  strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n"));
 #else
-  strcpy(bigBuff + bigBuffPos, PSTR("\n"));
+  strcpy(bigBuff + bigBuffPos, PSTR("\r\n"));
 #endif
   int len = strlen(bigBuff + bigBuffPos);
 //  int len = 1; //"\n" string length
@@ -1893,7 +1893,7 @@ void printyesno(boolean i){
   } else {
     printToWebClient(PSTR(MENU_TEXT_NO "<BR>"));
   }
-  printToWebClient(PSTR("\n"));
+  printToWebClient(PSTR("\r\n"));
 }
 
 /** *****************************************************************
@@ -3076,7 +3076,7 @@ void webPrintHeader(void){
 #endif
 
   printPassKey();
-  printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\n"));
+  printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\r\n"));
   printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
   printPassKey();
   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
@@ -3103,7 +3103,7 @@ void webPrintHeader(void){
   printPassKey();
   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
 
-  printToWebClient(PSTR("</td></tr>\n"));
+  printToWebClient(PSTR("</td></tr>\r\n"));
   printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center>"));
 
   printToWebClient(PSTR("<a href='/"));
@@ -3116,7 +3116,7 @@ void webPrintHeader(void){
 
   printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\n"));
+  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
   flushToWebClient();
 } // --- webPrintHeader() ---
 
@@ -3133,7 +3133,7 @@ void webPrintHeader(void){
  *   client object
  * *************************************************************** */
 void webPrintFooter(void){
-  printToWebClient(PSTR("</td></tr></table>\n</body>\n</html>\n\n"));
+  printToWebClient(PSTR("</td></tr></table>\r\n</body>\r\n</html>\r\n\r\n"));
   flushToWebClient();
 } // --- webPrintFooter() ---
 
@@ -3152,17 +3152,17 @@ void webPrintFooter(void){
 void webPrintSite() {
   webPrintHeader();
 
-  printToWebClient(PSTR("<p>\n"));
+  printlnToWebClient(PSTR("<p>"));
   printToWebClient(PSTR("BSB-LAN Web, Version "));
   printToWebClient(PSTR(BSB_VERSION));
-  printToWebClient(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK "\n"));
-  printToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG "\n"));
-  printToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL "\n"));
+  printlnToWebClient(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK ));
+  printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
+  printlnToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL ));
 
 #if !defined(__AVR__)
 #ifdef VERSION_CHECK
   if(enable_version_check){
-    printToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>\n"));
+    printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
     flushToWebClient();
     httpclient.connect("bsb-lan.de", 80);
     httpclient.println("GET /bsb-version.h");
@@ -3197,9 +3197,9 @@ void webPrintSite() {
     }
     if ((major > atoi(MAJOR)) || (major == atoi(MAJOR) && minor > atoi(MINOR)) || (major == atoi(MAJOR) && minor == atoi(MINOR) && patch > atoi(PATCH))) {
       printToWebClient(PSTR(MENU_TEXT_NVA ": "));
-      printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\n"), major, minor, patch);
+      printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\r\n"), major, minor, patch);
     } else {
-      printToWebClient(PSTR(MENU_TEXT_NVN "\n"));
+      printlnToWebClient(PSTR(MENU_TEXT_NVN));
     }
   }
 #endif
@@ -3219,10 +3219,10 @@ char *lookup_descr(uint16_t line) {
 }
 
 void generateConfigPage(void){
-  printToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>\n"));
-  printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\n" MENU_TEXT_RAM ": "));
-  printFmtToWebClient(PSTR("%d Bytes <BR>\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
-  printToWebClient(PSTR("<BR>\n" MENU_TEXT_BUS ": \n"));
+  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>"));
+  printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\r\n" MENU_TEXT_RAM ": "));
+  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
+  printlnToWebClient(PSTR("<BR>\r\n" MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
   int i;
 
@@ -3246,15 +3246,15 @@ void generateConfigPage(void){
       printToWebClient(PSTR(" (" MENU_TEXT_BRO ")"));
     }
   }
-  printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_MMD ": %d"), monitor);
-  printFmtToWebClient(PSTR("<BR>\n" MENU_TEXT_VBL ": %d<BR>\n"), verbose);
+  printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_MMD ": %d"), monitor);
+  printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_VBL ": %d<BR>\r\n"), verbose);
 
   #ifdef ONE_WIRE_BUS
-  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \n%d, " MENU_TEXT_SNS ": %d\n<BR>\n"), One_Wire_Pin, numSensors);
+  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, " MENU_TEXT_SNS ": %d\r\n<BR>\r\n"), One_Wire_Pin, numSensors);
   #endif
 
   #ifdef DHT_BUS
-  printToWebClient(PSTR(MENU_TEXT_DHP ": \n"));
+  printlnToWebClient(PSTR(MENU_TEXT_DHP ": "));
   boolean not_first = false;
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(i=0;i<numDHTSensors;i++){
@@ -3266,30 +3266,30 @@ void generateConfigPage(void){
       printFmtToWebClient(PSTR("%d"), DHT_Pins[i]);
     }
   }
-  printToWebClient(PSTR("\n<BR>\n"));
+  printToWebClient(PSTR("\r\n<BR>\r\n"));
   #endif
 
-  printToWebClient(PSTR(MENU_TEXT_EXP ": \n"));
+  printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
   for (i=0; i<anz_ex_gpio; i++) {
     if(bitRead(protected_GPIO[i / 8], i % 8)){
       printFmtToWebClient(PSTR("%d "), i);
     }
   }
-  printToWebClient(PSTR("<BR>\n"));
+  printToWebClient(PSTR("<BR>\r\n"));
 
-  printToWebClient(PSTR(MENU_TEXT_MAC ": \n"));
+  printToWebClient(PSTR(MENU_TEXT_MAC ": \r\n"));
   for (int i=0; i<=5; i++) {
     printFmtToWebClient(PSTR("%02X"), mac[i]);
     if(i != 5) printToWebClient(PSTR(":"));
   }
-  printToWebClient(PSTR("<BR><BR>\n"));
+  printToWebClient(PSTR("<BR><BR>\r\n"));
 /*
   client.println(F("IP address: "));
   client.println(ip);
   client.println(F("<BR>"));
 */
 // list of enabled modules
-  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\n"));
+  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"));
   boolean j = 0;
   #ifdef WEBSERVER
   printToWebClient(PSTR("WEBSERVER"));
@@ -3350,49 +3350,49 @@ void generateConfigPage(void){
   #endif
   if(j == 0)
     printToWebClient(PSTR("NONE"));
-  printToWebClient(PSTR("<BR><BR>\n"));
+  printToWebClient(PSTR("<BR><BR>\r\n"));
   // end of list of enabled modules
 
 #if defined LOGGER || defined WEBSERVER
   uint32_t m = micros();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\n"), fs, volFree, micros() - m);
+  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
 #ifdef AVERAGES
   if(logAverageValues){
-    printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\n"));
+    printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\r\n"));
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
-        printFmtToWebClient(PSTR("%d - %s: %d<BR>\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), 20050 + i);//outBuf will be overwrited here
+        printFmtToWebClient(PSTR("%d - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), 20050 + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
   }
 #endif
   #ifdef LOGGER
-  printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \n%d"), log_interval);
+  printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \r\n%d"), log_interval);
   printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
   printyesno(logCurrentValues);
-  printToWebClient(PSTR("<BR>\n"));
+  printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
       printFmtToWebClient(PSTR("%d - "), log_parameters[i]);
       printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
-      printToWebClient(PSTR("<BR>\n"));
+      printToWebClient(PSTR("<BR>\r\n"));
     }
   }
 
 if (logTelegram) {
-  printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\n" MENU_TEXT_BUT ": "));
+  printToWebClient(PSTR(MENU_TEXT_BDT "<BR>\r\n" MENU_TEXT_BUT ": "));
   printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY)); //log_unknown_only
   printToWebClient(PSTR(MENU_TEXT_LBO ": "));
   printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
   }
-printToWebClient(PSTR("<BR>\n"));
+printToWebClient(PSTR("<BR>\r\n"));
   #endif
 
-  printToWebClient(PSTR("<BR>\n"));
+  printToWebClient(PSTR("<BR>\r\n"));
 
 }
 
@@ -3559,7 +3559,7 @@ void implementConfig(){
 void generateChangeConfigPage(){
   printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
   if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
-  printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\n"));
+  printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\r\n"));
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
 #if defined(__AVR__)
     if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
@@ -3588,10 +3588,10 @@ void generateChangeConfigPage(){
     printToWebClient(catalist[cfg.category].desc);
 #endif
 
-    printToWebClient(PSTR("</td><td>\n"));
+    printToWebClient(PSTR("</td><td>\r\n"));
 //Param Name
     printToWebClient(cfg.desc);
-    printToWebClient(PSTR("</td><td>\n"));
+    printToWebClient(PSTR("</td><td>\r\n"));
 //Param Value
 
 //Open tag
@@ -3609,10 +3609,10 @@ void generateChangeConfigPage(){
      printToWebClient(PSTR(" VALUE='"));
      break;
      case CPI_SWITCH:
-     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\n"), cfg.id + 1, cfg.id + 1);
+     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
      break;
      case CPI_DROPDOWN:
-     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\n"), cfg.id + 1, cfg.id + 1);
+     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
      break;
      default: break;
    }
@@ -3635,7 +3635,7 @@ void generateChangeConfigPage(){
            }
            uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
            uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, (uint16_t)variable[0], 0);
+           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)variable[0], 0);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -3659,13 +3659,31 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\n"), NULL, variable[0], 0);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, variable[0], 0);
            }
            break;}
          }
        break;
      case CDT_UINT16:
-       printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]);
+       switch(cfg.input_type){
+         case CPI_TEXT: printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]); break;
+         case CPI_DROPDOWN:{
+           int i;
+           switch(cfg.id){
+             case CF_ROOM_DEVICE:
+               i=findLine(15000 + PPS_QTP,0,NULL); //return ENUM15062 (device type)
+               break;
+             default:
+               i = -1;
+               break;
+           }
+           if(i > 0){
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0);
+           }
+           break;}
+         }
        break;
      case CDT_UINT32:
        printFmtToWebClient(PSTR("%lu"), ((uint32_t *)variable)[0]);
@@ -3720,9 +3738,9 @@ void generateChangeConfigPage(){
      default: break;
    }
      free(variable);
-    printToWebClient(PSTR("</td></td>\n"));
+    printToWebClient(PSTR("</td></td>\r\n"));
   }
-  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\n</form>\n"));
+  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\r\n</form>\r\n"));
 }
 #endif  //WEBCONFIG
 
@@ -4671,14 +4689,14 @@ void query_printHTML(){
         }
       }
 */
-      printToWebClient(PSTR("</td><td>\n"));
+      printToWebClient(PSTR("</td><td>\r\n"));
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
           printToWebClient(PSTR("<select "));
           if (decodedTelegram.type == VT_BIT) {
             printToWebClient(PSTR("multiple "));
           }
-          printFmtToWebClient(PSTR("id='value%ld'>\n"), decodedTelegram.prognr);
+          printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
 
             uint16_t val;
             uint16_t c=0;
@@ -4847,7 +4865,7 @@ void queryVirtualPrognr(int line, int table_line){
        float hum = DHT.humidity;
        float temp = DHT.temperature;
        if (hum > 0 && hum < 101) {
-         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\n"), log_sensor, temp, log_sensor, hum);
+         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
 
          if(tempLine % 4 == 1){ //print sensor Current temperature
            _printFIXPOINT(decodedTelegram.value, temp, 2);
@@ -4868,16 +4886,11 @@ void queryVirtualPrognr(int line, int table_line){
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
        if(enableOneWireBus && numSensors){
-         if(tempLine % 2 == 0){ //print sensor ID
+         if(tempLine & 1 == 0){ //print sensor ID
            DeviceAddress device_address;
            sensors->getAddress(device_address, log_sensor);
            sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
            return;
-         }
-         unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-         if(tempTime != lastOneWireRequestTime){
-           sensors->requestTemperatures(); //call it outside of here for more faster answers
-           lastOneWireRequestTime = tempTime;
          }
          float t=sensors->getTempCByIndex(log_sensor);
          if(t == DEVICE_DISCONNECTED_C) { //device disconnected
@@ -5140,7 +5153,7 @@ void SetDevId() {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
   }
 */
-  printFmtToDebug(PSTR("Device family: %d\nDevice variant: %d\r\n"), my_dev_fam, my_dev_var);
+  printFmtToDebug(PSTR("Device family: %d\r\nDevice variant: %d\r\n"), my_dev_fam, my_dev_var);
 }
 
 /** *****************************************************************
@@ -5198,14 +5211,14 @@ void dht22(void) {
     for(i=0;i<numDHTSensors;i++){
     if(!DHT_Pins[i]) continue;
     query(20101 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>\ntemp[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\n</td></tr>\n<tr><td>\n"));
+    printFmtToWebClient(PSTR("<tr><td>\r\ntemp[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
+    printToWebClient(PSTR("\r\n</td></tr>\r\n<tr><td>\r\n"));
     query(20102 + i * 4);
     printFmtToWebClient(PSTR("hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\n</td></tr>\n<tr><td>\n"));
+    printToWebClient(PSTR("\r\n</td></tr>\r\n<tr><td>\r\n"));
     query(20103 + i * 4);
     printFmtToWebClient(PSTR("abs_hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\n</td></tr>\n"));
+    printToWebClient(PSTR("\r\n</td></tr>\r\n"));
   }
   flushToWebClient();
 }
@@ -5234,10 +5247,10 @@ void ds18b20(void) {
   //webPrintHeader();
   for(i=0;i<numSensors * 2;i+=2){
     query(i + 20300);
-    printFmtToWebClient(PSTR("<tr><td>\n1w_temp[%d] %s: "),i, decodedTelegram.value);
+    printFmtToWebClient(PSTR("<tr><td>\r\n1w_temp[%d] %s: "),i/2, decodedTelegram.value);
     query(i + 20301);
-    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i, decodedTelegram.value);
-    printFmtToWebClient(PSTR("%s %s\n</td></tr>\n"), decodedTelegram.value, decodedTelegram.unit);
+    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i/2, decodedTelegram.value);
+    printFmtToWebClient(PSTR("%s %s\r\n</td></tr>\r\n"), decodedTelegram.value, decodedTelegram.unit);
   }
 flushToWebClient();
   //webPrintFooter();
@@ -5275,7 +5288,7 @@ void printToWebClient_prognrdescaddr(){
  *    led0   output pin 3
  * *************************************************************** */
 void Ipwe() {
-  printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: text/html; charset=utf-8\n\n"));
+  printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n"));
 
   int i;
   int counter = 0;
@@ -6218,7 +6231,7 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (urlString == "/favicon.ico") {
-          printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: image/x-icon\n\n"));
+          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: image/x-icon\r\n\r\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(urlString + 1);
           if (dataFile) {
@@ -6328,27 +6341,27 @@ uint8_t pps_offset = 0;
 
             printToWebClient(PSTR("HTTP/1.1 ")); // 10 bytes with zero
             if((httpflags & 8))
-              printToWebClient(PSTR("304 Not Modified\n")); // 18 bytes with zero
+              printToWebClient(PSTR("304 Not Modified\r\n")); // 18 bytes with zero
             else
-              printToWebClient(PSTR("200 OK\n")); // 8 bytes with zero
+              printToWebClient(PSTR("200 OK\r\n")); // 8 bytes with zero
             printToWebClient(PSTR("Content-Type: ")); // 15 bytes with zero
             switch(mimetype){
-              case 1: getfarstrings = PSTR("text/html\n"); break;
-              case 2: getfarstrings = PSTR("text/css\n"); break;
-              case 3: getfarstrings = PSTR("application/x-javascript\n"); break;
-              case 4: getfarstrings = PSTR("application/xml\n"); break;
+              case 1: getfarstrings = PSTR("text/html\r\n"); break;
+              case 2: getfarstrings = PSTR("text/css\r\n"); break;
+              case 3: getfarstrings = PSTR("application/x-javascript\r\n"); break;
+              case 4: getfarstrings = PSTR("application/xml\r\n"); break;
               // case 5 below
-              case 101: getfarstrings = PSTR("image/jpeg\n"); break;
-              case 102: getfarstrings = PSTR("image/gif\n"); break;
-              case 103: getfarstrings = PSTR("image/svg\n"); break;
-              case 104: getfarstrings = PSTR("image/png\n"); break;
-              case 105: getfarstrings = PSTR("image/x-icon\n"); break;
-              case 201: getfarstrings = PSTR("application/x-gzip\n"); break;
+              case 101: getfarstrings = PSTR("image/jpeg\r\n"); break;
+              case 102: getfarstrings = PSTR("image/gif\r\n"); break;
+              case 103: getfarstrings = PSTR("image/svg\r\n"); break;
+              case 104: getfarstrings = PSTR("image/png\r\n"); break;
+              case 105: getfarstrings = PSTR("image/x-icon\r\n"); break;
+              case 201: getfarstrings = PSTR("application/x-gzip\r\n"); break;
               case 5:
-              default: getfarstrings = PSTR("text\n");
+              default: getfarstrings = PSTR("text\r\n");
             }
             printToWebClient(getfarstrings);
-            if((httpflags & 2)) printToWebClient(PSTR("Content-Encoding: gzip\n"));
+            if((httpflags & 2)) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6382,10 +6395,10 @@ uint8_t pps_offset = 0;
                 default: getfarstrings = PSTR("ERR"); break;
               }
               strcpy_P(monthname, getfarstrings);
-              printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
+              printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
-            //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \n
-            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\nContent-Length: %lu\nCache-Control: max-age=300, public\n\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
+            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=300, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & 8) && !(httpflags & 4)) {
@@ -6402,7 +6415,7 @@ uint8_t pps_offset = 0;
               webPrintSite();
               break;
             }
-            int x = printToWebClient(PSTR("HTTP/1.1 404 Not Found\nContent-Type: text/html\n\n<h2>File not found!</h2><br>File name: "));
+            int x = printToWebClient(PSTR("HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h2>File not found!</h2><br>File name: "));
             urlString.toCharArray(bigBuff + x, OUTBUF_LEN * 3 - x);
             flushToWebClient();
            }
@@ -6447,7 +6460,7 @@ uint8_t pps_offset = 0;
           }else{
             printToWebClient(PSTR(MENU_TEXT_VB2 "<BR>"));
           }
-          printToWebClient(PSTR("\n" MENU_TEXT_VB3 "\n"));
+          printToWebClient(PSTR("\r\n" MENU_TEXT_VB3 "\r\n"));
           webPrintFooter();
           break;
         }
@@ -6462,7 +6475,7 @@ uint8_t pps_offset = 0;
           }else{
             printToWebClient(PSTR(MENU_TEXT_SR2));
           }
-          printToWebClient(PSTR("\n" MENU_TEXT_SR3 "\n"));
+          printToWebClient(PSTR("\r\n" MENU_TEXT_SR3 "\r\n"));
           webPrintFooter();
           break;
         }
@@ -6484,7 +6497,7 @@ uint8_t pps_offset = 0;
           p+=2;               // third position in cLineBuffer
           if(!isdigit(*p)){   // now we check for digits - nice
             if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER1 "\n"));
+            printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
             if(!(httpflags & 128)) webPrintFooter();
             flushToWebClient();
             break;
@@ -6493,7 +6506,7 @@ uint8_t pps_offset = 0;
           p=strchr(p,'=');    // search for '=' sign
           if(p==NULL){        // no match
             if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER2 "\n"));
+            printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
             if(!(httpflags & 128)) webPrintFooter();
             flushToWebClient();
             break;
@@ -6514,9 +6527,9 @@ uint8_t pps_offset = 0;
 
           if(setresult!=1){
             if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER3 "\n"));
+            printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             if (setresult == 2) {
-              printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\n"));
+              printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
             }
             if(!(httpflags & 128)) webPrintFooter();
             flushToWebClient();
@@ -6544,10 +6557,10 @@ uint8_t pps_offset = 0;
           webPrintHeader();
           printToWebClient(PSTR("<table><tr><td><a href='/"));
           printPassKey();
-          printToWebClient(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\n<tr><td><a href='/"));
+          printToWebClient(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\r\n<tr><td><a href='/"));
           printPassKey();
           printToWebClient(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
-          printToWebClient(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\n"));
+          printToWebClient(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && cat == CAT_PPS)) {
@@ -6564,7 +6577,7 @@ uint8_t pps_offset = 0;
 #endif
               printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
               writelnToDebug();
-              printFmtToWebClient(PSTR("</a></td><td>%hd - %hd</td></tr>\n"), cat_min, cat_max);
+              printFmtToWebClient(PSTR("</a></td><td>%hd - %hd</td></tr>\r\n"), cat_min, cat_max);
             }
           }
           printToWebClient(PSTR("</table>"));
@@ -6582,7 +6595,7 @@ uint8_t pps_offset = 0;
               if(get_cmdtbl_type(i)==VT_ENUM) {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\n"), NULL, 0, 0);
+              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, 0);
 
             }else{
               printToWebClient(PSTR(MENU_TEXT_ER5));
@@ -6600,11 +6613,11 @@ uint8_t pps_offset = 0;
           int line = atoi(&p[2]);
           int i=findLine(line,0,&c);
           if(i<0){
-            printToWebClient(PSTR(MENU_TEXT_ER6 "\n"));
+            printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
           }else{
             if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
               printlnToDebug(PSTR("set failed"));  // to PC hardware serial I/F
-              printToWebClient(PSTR(MENU_TEXT_ER3 "\n"));
+              printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             }else{
 
               // Decode the xmit telegram and send it to the PC serial interface
@@ -6638,7 +6651,7 @@ uint8_t pps_offset = 0;
           uint8_t destAddr = bus->getBusDest();
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
           printToWebClient(PSTR(BSB_VERSION));
-          printToWebClient(PSTR("<BR>\n"));
+          printToWebClient(PSTR("<BR>\r\n"));
           printToWebClient(PSTR(MENU_TEXT_QSC "...<BR>"));
           switch(bus->getBusType()) {
             case BUS_BSB: bus->setBusType(BUS_BSB, myAddr, 0x7F); break;
@@ -6671,7 +6684,7 @@ uint8_t pps_offset = 0;
                   }
                 }
                 if (!found) {
-                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu<BR>\n"),found_id);
+                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu<BR>\r\n"),found_id);
                   flushToWebClient();
                 }
               }
@@ -6686,7 +6699,7 @@ uint8_t pps_offset = 0;
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu...<BR>\n"), found_ids[x]);
+            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu...<BR>\r\n"), found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
@@ -6695,62 +6708,62 @@ uint8_t pps_offset = 0;
             int orig_dev_var = my_dev_var;
             query(6225);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR(STR6225_TEXT ": %s\n"), decodedTelegram.value);
+            printFmtToWebClient(PSTR(STR6225_TEXT ": %s\r\n"), decodedTelegram.value);
             query(6226);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR("<BR>" STR6226_TEXT ": %s\n"), decodedTelegram.value);
+            printFmtToWebClient(PSTR("<BR>" STR6226_TEXT ": %s\r\n"), decodedTelegram.value);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
             printToWebClient(PSTR("<BR>" STR6224_TEXT ": "));
             query(6224); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6220_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6220_TEXT ": "));
             query(6220); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6221_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6221_TEXT ": "));
             query(6221); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6227_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6227_TEXT ": "));
             query(6227); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6228_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6228_TEXT ": "));
             query(6228); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6229_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6229_TEXT ": "));
             query(6229); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6231_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6231_TEXT ": "));
             query(6231); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6232_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6232_TEXT ": "));
             query(6232); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6233_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6233_TEXT ": "));
             query(6233); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6234_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6234_TEXT ": "));
             query(6234); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6235_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6235_TEXT ": "));
             query(6235); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
             query(6223); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6236_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6236_TEXT ": "));
             query(6236); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR6223_TEXT ": "));
+            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
             query(6237); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10003): "));
+            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10003): "));
             query(10003); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR>" STR8700_TEXT " (10004): "));
+            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10004): "));
             query(10004); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\n<BR><BR>\n"));
+            printToWebClient(PSTR("\r\n<BR><BR>\r\n"));
             flushToWebClient();
 
             int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
             for (int i=0; i<15; i++) {
               printFmtToWebClient(PSTR("%d;"), params[i]);
             }
-            printToWebClient(PSTR("<BR>\n"));
+            printToWebClient(PSTR("<BR>\r\n"));
             for (int i=0; i<15; i++) {
               query(params[i]); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
             }
 
-            printToWebClient(PSTR("<BR><BR>\n"));
+            printToWebClient(PSTR("<BR><BR>\r\n"));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
-            printToWebClient(PSTR("<BR>" MENU_TEXT_QST "...<BR>\n"));
+            printToWebClient(PSTR("<BR>" MENU_TEXT_QST "...<BR>\r\n"));
             flushToWebClient();
             for (int j=0;j<10000;j++) {
               if (get_cmdtbl_cmd(j) == c) {
@@ -6784,20 +6797,20 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("<BR>\n%hu - "), l);
+                        printFmtToWebClient(PSTR("<BR>\r\n%hu - "), l);
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
                         printToWebClient_prognrdescaddr();
-                        printFmtToWebClient(PSTR("<BR>\n0x%08X"), c);
-                        printToWebClient(PSTR("\n<br>\n"));
+                        printFmtToWebClient(PSTR("<BR>\r\n0x%08X"), c);
+                        printToWebClient(PSTR("\r\n<br>\r\n"));
                         for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\n"));
+                        printToWebClient(PSTR("<br>\r\n"));
                         for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\n"));
+                        printToWebClient(PSTR("<br>\r\n"));
                       }
                       forcedflushToWebClient(); //browser will build page immediately
                     }
@@ -6805,11 +6818,11 @@ uint8_t pps_offset = 0;
                 }
               }
             }
-            printToWebClient(PSTR("<BR>\n" MENU_TEXT_QTE ".<BR>\n"));
+            printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_QTE ".<BR>\r\n"));
             flushToWebClient();
           }
 
-          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\n"));
+          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
           if(!(httpflags & 128)) webPrintFooter();
           forcedflushToWebClient();
@@ -6846,7 +6859,7 @@ uint8_t pps_offset = 0;
             for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
               printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
             }
-            printToWebClient(PSTR("\n<br>\n"));
+            printToWebClient(PSTR("\r\n<br>\r\n"));
             for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
               printFmtToWebClient(PSTR("%02X "), msg[i]);
             }
@@ -6872,7 +6885,7 @@ uint8_t pps_offset = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: application/json; charset=utf-8\n\n{\n"));
+          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n{\r\n"));
           if(strchr("ACIKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
@@ -6884,19 +6897,19 @@ uint8_t pps_offset = 0;
             if(logAverageValues){
               for (int i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
-                  if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                  if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                   uint32_t c=0;
                   char p1[16];
                   loadPrognrElementsFromTable(20050 + i, findLine(20050 + i,0,&c));
                   _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
-                  printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), avg_parameters[i]);
+                  printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), avg_parameters[i]);
                   printToWebClient_prognrdescaddr();
-                  printFmtToWebClient(PSTR("\",\n    \"value\": \"%s\",\n    \"unit\": \"%s\"\n  }"), p1, decodedTelegram.unit);
+                  printFmtToWebClient(PSTR("\",\r\n    \"value\": \"%s\",\r\n    \"unit\": \"%s\"\r\n  }"), p1, decodedTelegram.unit);
                 }
               }
             }
 #endif
-          printToWebClient(PSTR("\n}\n"));
+          printToWebClient(PSTR("\r\n}\r\n"));
           forcedflushToWebClient();
           break;
           }
@@ -6908,7 +6921,7 @@ uint8_t pps_offset = 0;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
 #endif
-            printFmtToWebClient(PSTR("  \"name\": \"BSB-LAN\",\n  \"version\": \"" BSB_VERSION "\",\n  \"freeram\": %d,\n  \"uptime\": %lu,\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\n  \"freespace\": %ld,\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
+            printFmtToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \"" BSB_VERSION "\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %ld,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
@@ -6923,77 +6936,77 @@ uint8_t pps_offset = 0;
               case 1: strcpy_P(json_value_string, PSTR("LPB")); break;
               case 2: strcpy_P(json_value_string, PSTR("PPS")); break;
             }
-            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\n  \"buswritable\": %d,\n"), json_value_string, json_parameter);
-            printFmtToWebClient(PSTR("  \"busaddr\": %d,\n  \"busdest\": %d,\n"), bus->getBusAddr(), bus->getBusDest());
+            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
+            printFmtToWebClient(PSTR("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n"), bus->getBusAddr(), bus->getBusDest());
 //enabled options
-            printFmtToWebClient(PSTR("  \"monitor\": %d,\n  \"verbose\": %d"), monitor, verbose);
+            printFmtToWebClient(PSTR("  \"monitor\": %d,\r\n  \"verbose\": %d"), monitor, verbose);
 
             #ifdef ONE_WIRE_BUS
-            printFmtToWebClient(PSTR(",\n  \"onewirebus\": %d"), One_Wire_Pin);
-            printFmtToWebClient(PSTR(",\n  \"onewiresensors\": %d"), numSensors);
+            printFmtToWebClient(PSTR(",\r\n  \"onewirebus\": %d"), One_Wire_Pin);
+            printFmtToWebClient(PSTR(",\r\n  \"onewiresensors\": %d"), numSensors);
             #endif
             #ifdef DHT_BUS
-            printToWebClient(PSTR(",\n  \"dhtbus\": [\n"));
+            printToWebClient(PSTR(",\r\n  \"dhtbus\": [\r\n"));
             not_first = false;
             int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
             for(i=0;i<numDHTSensors;i++){
               if(DHT_Pins[i]) {
                 if(not_first)
-                  printToWebClient(PSTR(",\n"));
+                  printToWebClient(PSTR(",\r\n"));
                 else
                   not_first = true;
                 printFmtToWebClient(PSTR("    { \"pin\": %d }"), DHT_Pins[i]);
               }
             }
-            printToWebClient(PSTR("\n  ]"));
+            printToWebClient(PSTR("\r\n  ]"));
             #endif
 //protected GPIO
-            printToWebClient(PSTR(",\n  \"protectedGPIO\": [\n"));
+            printToWebClient(PSTR(",\r\n  \"protectedGPIO\": [\r\n"));
             not_first = false;
             for (i=0; i<anz_ex_gpio; i++) {
               if(bitRead(protected_GPIO[i / 8], i % 8)){
                 if(not_first)
-                  printToWebClient(PSTR(",\n"));
+                  printToWebClient(PSTR(",\r\n"));
                 else
                   not_first = true;
               printFmtToWebClient(PSTR("    { \"pin\": %d }"), i);
               }
             }
-            printToWebClient(PSTR("\n  ]"));
+            printToWebClient(PSTR("\r\n  ]"));
 
 //averages
 #ifdef AVERAGES
             if(logAverageValues){
-              printToWebClient(PSTR(",\n  \"averages\": [\n"));
+              printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
                   if(not_first)
-                    printToWebClient(PSTR(",\n"));
+                    printToWebClient(PSTR(",\r\n"));
                   else
                     not_first = true;
                   printFmtToWebClient(PSTR("    { \"parameter\": %d }"), avg_parameters[i]);
                 }
               }
-              printToWebClient(PSTR("\n  ]"));
+              printToWebClient(PSTR("\r\n  ]"));
             }
 #endif
 // logged parameters
           #ifdef LOGGER
-            printFmtToWebClient(PSTR(",\n  \"logvalues\": %d,\n  \"loginterval\": %d,\n  \"logged\": [\n"), logCurrentValues, log_interval);
+            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), logCurrentValues, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
                 if(not_first)
-                  printToWebClient(PSTR(",\n"));
+                  printToWebClient(PSTR(",\r\n"));
                 else
                   not_first = true;
                 printFmtToWebClient(PSTR("    { \"parameter\": %d }"), log_parameters[i]);
               }
             }
-            printToWebClient(PSTR("\n  ]"));
+            printToWebClient(PSTR("\r\n  ]"));
           #endif
-            printToWebClient(PSTR("\n}\n"));
+            printToWebClient(PSTR("\r\n}\r\n"));
             forcedflushToWebClient();
             break;
           }
@@ -7059,7 +7072,7 @@ uint8_t pps_offset = 0;
                 boolean notfirst = false;
                 for(int cat=0;cat<CAT_UNKNOWN;cat++){
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && cat == CAT_PPS)) {
-                    if (notfirst) {printToWebClient(PSTR(",\n"));} else {notfirst = true;}
+                    if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
                     printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
@@ -7109,38 +7122,38 @@ uint8_t pps_offset = 0;
                   continue;
                 }
 
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 loadPrognrElementsFromTable(json_parameter, i_line);
-                printFmtToWebClient(PSTR("  \"%d\": {\n    \"name\": \""), json_parameter);
+                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
-                printToWebClient(PSTR("\",\n"));
+                printToWebClient(PSTR("\",\r\n"));
 
                 if (p[2]=='Q') {
                   query(json_parameter);
-                  printFmtToWebClient(PSTR("    \"error\": %d,\n    \"value\": \"%s\",\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
+                  printFmtToWebClient(PSTR("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
                   if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr)
                     printToWebClient(decodedTelegram.enumdescaddr);
-                  printToWebClient(PSTR("\",\n"));
+                  printToWebClient(PSTR("\",\r\n"));
                 }
 
                 if (p[2] != 'Q') {
-                  printToWebClient(PSTR("    \"possibleValues\": [\n"));
+                  printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
-                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\n"), 0, 0);
+                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, 0);
                     }
 
-                  printFmtToWebClient(PSTR("\n    ],\n    \"isswitch\": %d,\n"), decodedTelegram.isswitch);
+                  printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
                 }
 
-                printFmtToWebClient(PSTR("    \"dataType\": %d,\n    \"readonly\": %d,\n    \"unit\": \"%s\"\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
+                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\n"));
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 int status = set(json_parameter, json_value_string, json_type);
-                printFmtToWebClient(PSTR("  \"%d\": {\n    \"status\": %d\n  }"), json_parameter, status);
+                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
                 printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
@@ -7149,7 +7162,7 @@ uint8_t pps_offset = 0;
               }
             }
           }
-          printFmtToWebClient(PSTR("\n}\n"));
+          printFmtToWebClient(PSTR("\r\n}\r\n"));
           forcedflushToWebClient();
           break;
         }
@@ -7181,15 +7194,15 @@ uint8_t pps_offset = 0;
               }
             }
             if(filewasrecreated){
-              printToWebClient(PSTR(MENU_TEXT_DTR "\n"));
+              printToWebClient(PSTR(MENU_TEXT_DTR "\r\n"));
               printToDebug(PSTR(": file was removed and recreated."));
             } else {
-              printToWebClient(PSTR(MENU_TEXT_DTF "\n"));
+              printToWebClient(PSTR(MENU_TEXT_DTF "\r\n"));
             }
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
-            printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\n"));
+            printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\r\n"));
 #if defined(__AVR__)
             printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
 #else
@@ -7197,7 +7210,7 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            printToWebClient(PSTR("HTTP/1.1 200 OK\nContent-Type: text/plain; charset=utf-8\n\n"));
+            printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n"));
             flushToWebClient();
             File dataFile;
             if (p[2]=='J') { //journal
@@ -7216,7 +7229,7 @@ uint8_t pps_offset = 0;
 
               printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
             } else {
-              printToWebClient(PSTR(MENU_TEXT_DTO "\n"));
+              printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
             }
           }
           flushToWebClient();
@@ -7331,7 +7344,7 @@ uint8_t pps_offset = 0;
                 lastMQTTTime = millis();
 #endif
                 printFmtToWebClient(PSTR(MENU_TEXT_LGI ": %d"), log_interval);
-                printToWebClient(PSTR(" " MENU_TEXT_SEC "<BR>\n"));
+                printToWebClient(PSTR(" " MENU_TEXT_SEC "<BR>\r\n"));
               }
               log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
               int token_counter = 0;
@@ -7345,7 +7358,7 @@ uint8_t pps_offset = 0;
                 int log_parameter = atoi(log_token);
                 if (token_counter < numLogValues) {
                   log_parameters[token_counter] = log_parameter;
-                  printFmtToWebClient(PSTR("%d \n"), log_parameters[token_counter]);
+                  printFmtToWebClient(PSTR("%d \r\n"), log_parameters[token_counter]);
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
@@ -7402,7 +7415,7 @@ uint8_t pps_offset = 0;
             bus->setBusType(BUS_PPS, myAddr);
             printToWebClient(PSTR("PPS"));
           }
-          printToWebClient(PSTR("\n"));
+          printToWebClient(PSTR("\r\n"));
           if (bus->getBusType() != BUS_PPS) {
             printFmtToWebClient(PSTR(" (%d, %d)"), myAddr, destAddr);
           } else {
@@ -7411,7 +7424,7 @@ uint8_t pps_offset = 0;
             } else {
               printToWebClient(PSTR(" " MENU_TEXT_BRO));
             }
-            printToWebClient(PSTR("\n"));
+            printToWebClient(PSTR("\r\n"));
           }
 
           SetDevId();
@@ -7422,7 +7435,7 @@ uint8_t pps_offset = 0;
 #ifdef RESET
           webPrintHeader();
           if (p[2]=='E') {
-            printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\n"));
+            printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\r\n"));
             forcedflushToWebClient();
           }
 
@@ -7440,7 +7453,7 @@ uint8_t pps_offset = 0;
             }
             printlnToDebug(PSTR("Cleared EEPROM"));
           }
-          printToWebClient(PSTR("Restarting Arduino...\n"));
+          printToWebClient(PSTR("Restarting Arduino...\r\n"));
           webPrintFooter();
           forcedflushToWebClient();
           client.stop();
@@ -7463,10 +7476,10 @@ uint8_t pps_offset = 0;
 #endif
           }else if(range[0]=='U'){ // output user-defined custom_array variable
             for(int i=0;i<numCustomFloats;i++){
-              printFmtToWebClient(PSTR("<tr><td>\ncustom_float[%d]: %.2f\n</td></tr>\n"), i, custom_floats[i]);
+              printFmtToWebClient(PSTR("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n"), i, custom_floats[i]);
             }
             for(int i=0;i<numCustomLongs;i++){
-              printFmtToWebClient(PSTR("<tr><td>\ncustom_long[%d]: %ld\n</td></tr>\n"),i, custom_longs[i]);
+              printFmtToWebClient(PSTR("<tr><td>\r\ncustom_long[%d]: %ld\r\n</td></tr>\r\n"),i, custom_longs[i]);
             }
           }else if(range[0]=='X'){ // handle MAX command
 #ifdef MAX_CUL
@@ -7485,7 +7498,7 @@ uint8_t pps_offset = 0;
               }
             }
             if (max_avg_count > 0) {
-              printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\n"), max_avg / max_avg_count);
+              printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\r\n"), max_avg / max_avg_count);
             } else {
               printToWebClient(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
             }
@@ -7520,7 +7533,7 @@ uint8_t pps_offset = 0;
                 while (avg_token!=0) {
                   if (token_counter < numAverages) {
                     avg_parameters[token_counter] = atoi(avg_token);
-                    printFmtToWebClient(PSTR("%d \n"), avg_parameters[token_counter]);
+                    printFmtToWebClient(PSTR("%d \r\n"), avg_parameters[token_counter]);
                     token_counter++;
                   }
                   avg_token = strtok(NULL,"=,");
@@ -7533,9 +7546,9 @@ uint8_t pps_offset = 0;
                     uint32_t c=0;
                     int line=findLine(avg_parameters[i],0,&c);
                     loadPrognrElementsFromTable(avg_parameters[i], line);
-                    printFmtToWebClient(PSTR("<tr><td>\n %d "), avg_parameters[i]);
+                    printFmtToWebClient(PSTR("<tr><td>\r\n %d "), avg_parameters[i]);
                     printToWebClient_prognrdescaddr();
-                    printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\n"), tempBuf, decodedTelegram.unit);
+                    printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\r\n"), tempBuf, decodedTelegram.unit);
 
                     printFmtToDebug(PSTR("#avg_%d: %s %s\r\n"), avg_parameters[i], tempBuf, decodedTelegram.unit);
                   }
@@ -7543,7 +7556,7 @@ uint8_t pps_offset = 0;
               }
             }
 #else
-            printToWebClient("AVERAGES module not compiled\n");
+            printToWebClient("AVERAGES module not compiled\r\n");
 #endif
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
@@ -7551,12 +7564,12 @@ uint8_t pps_offset = 0;
 //            bool error = false;
             p=range+1;
             if(!isdigit(*p)){   // now we check for digits
-              printToWebClient(PSTR(MENU_TEXT_ER1 "\n"));
+              printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
             if(bitRead(protected_GPIO[pin / 8], pin % 8)){
-              printToWebClient(PSTR(MENU_TEXT_ER7 "\n"));
+              printToWebClient(PSTR(MENU_TEXT_ER7 "\r\n"));
               break;
             }
 
@@ -7584,7 +7597,7 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
-              printToWebClient(PSTR(MENU_TEXT_BRS ".<br>\n"));
+              printToWebClient(PSTR(MENU_TEXT_BRS ".<br>\r\n"));
               brenner_duration=0;
               brenner_count=0;
               brenner_duration_2=0;
@@ -7594,12 +7607,12 @@ uint8_t pps_offset = 0;
             }else{
               // query brenner duration
               printFmtToWebClient(PSTR("<tr><td>Brenner Laufzeit Stufe 1: %lu"), brenner_duration);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 1: %lu"), brenner_count);
-              printFmtToWebClient(PSTR("</td></tr>\n<tr><td>Brenner Laufzeit Stufe 2: %lu"), brenner_duration_2);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\nBrenner Takte Stufe 2: %lu"), brenner_count_2);
-              printFmtToWebClient(PSTR("</td></tr>\n<tr><td>TWW Laufzeit: %lu"), TWW_duration);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\nTWW Takte: %lu"), TWW_count);
-              printToWebClient(PSTR("</td></tr>\n"));
+              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nBrenner Takte Stufe 1: %lu"), brenner_count);
+              printFmtToWebClient(PSTR("</td></tr>\r\n<tr><td>Brenner Laufzeit Stufe 2: %lu"), brenner_duration_2);
+              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nBrenner Takte Stufe 2: %lu"), brenner_count_2);
+              printFmtToWebClient(PSTR("</td></tr>\r\n<tr><td>TWW Laufzeit: %lu"), TWW_duration);
+              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nTWW Takte: %lu"), TWW_count);
+              printToWebClient(PSTR("</td></tr>\r\n"));
             }
           }else{
             char* line_start;
@@ -7792,14 +7805,14 @@ uint8_t pps_offset = 0;
             if(decodedTelegram.sensorid){
               outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
             }
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\n"), decodedTelegram.value, decodedTelegram.unit);
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\r\n"), decodedTelegram.value, decodedTelegram.unit);
             dataFile.print(outBuf);
           }
         }
         dataFile.close();
       } else {
     // if the file isn't open, pop up an error:
-        printToWebClient(PSTR(MENU_TEXT_DTO "\n"));
+        printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
         printFmtToDebug(PSTR("Error opening %s!\r\n"), datalogFileName);
       }
       lastLogTime = millis();
@@ -7845,7 +7858,7 @@ uint8_t pps_offset = 0;
         if (avgfile) {
           avgfile.seek(0);
           for (int i=0; i<numAverages; i++) {
-            sprintf_P(outBuf, PSTR("%f\n%f\n%f\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
+            sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
           avgfile.println(avgCounter);
@@ -7856,6 +7869,16 @@ uint8_t pps_offset = 0;
   }
   } else {
     avgCounter = 0;
+  }
+#endif
+
+#ifdef ONE_WIRE_BUS
+  {
+    unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
+    if(tempTime != lastOneWireRequestTime){
+      sensors->requestTemperatures(); //call it outside of here for more faster answers
+      lastOneWireRequestTime = tempTime;
+    }
   }
 #endif
 
@@ -8064,7 +8087,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)pps_values);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
@@ -8084,6 +8107,7 @@ void setup() {
     registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
     registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
 #ifdef WEBCONFIG
+    registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
     registerConfigVariable(CF_MAC, (byte *)mac);
     registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
     registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
@@ -8280,6 +8304,14 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
     }
   }
 */
+
+printToDebug(PSTR("PPS settings:\r\n"));
+  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
+    if(pps_values[i] == 0xFFFF) pps_values[i] = 0;
+    if (pps_values[i] > 0 && pps_values[i]< 0xFFFF && i != PPS_RTI) {
+      printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+    }
+  }
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD

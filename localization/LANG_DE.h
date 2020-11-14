@@ -1973,12 +1973,12 @@
 #define STR20101_TEXT "DHT22 Sensor Temperatur"
 #define STR20102_TEXT "DHT22 Sensor Luftfeuchtigkeit"
 #define STR20103_TEXT "DHT22 Sensor Abs Luftfeuchtigkeit"
-#define STR20200_TEXT "DS18B20 Sensor ID"
-#define STR20201_TEXT "DS18B20 Sensor Temperatur"
-#define STR20300_TEXT "MAX! Sensor ID"
-#define STR20301_TEXT "MAX! Sensor Ist Temperatur"
-#define STR20302_TEXT "MAX! Sensor Soll-Temperatur"
-#define STR20303_TEXT "MAX! Sensor Ventilöffnung"
+#define STR20300_TEXT "DS18B20 Sensor ID"
+#define STR20301_TEXT "DS18B20 Sensor Temperatur"
+#define STR20500_TEXT "MAX! Sensor ID"
+#define STR20501_TEXT "MAX! Sensor Ist Temperatur"
+#define STR20502_TEXT "MAX! Sensor Soll-Temperatur"
+#define STR20503_TEXT "MAX! Sensor Ventilöffnung"
 
 #define STR99999_TEXT "UNKNOWN command code"
 
