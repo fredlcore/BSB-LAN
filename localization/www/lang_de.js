@@ -1973,12 +1973,12 @@ UIStrings["STR20100_TEXT"] = "DHT22 Sensor ID";
 UIStrings["STR20101_TEXT"] = "DHT22 Sensor Temperatur";
 UIStrings["STR20102_TEXT"] = "DHT22 Sensor Luftfeuchtigkeit";
 UIStrings["STR20103_TEXT"] = "DHT22 Sensor Abs Luftfeuchtigkeit";
-UIStrings["STR20200_TEXT"] = "DS18B20 Sensor ID";
-UIStrings["STR20201_TEXT"] = "DS18B20 Sensor Temperatur";
-UIStrings["STR20300_TEXT"] = "MAX! Sensor ID";
-UIStrings["STR20301_TEXT"] = "MAX! Sensor Ist Temperatur";
-UIStrings["STR20302_TEXT"] = "MAX! Sensor Soll-Temperatur";
-UIStrings["STR20303_TEXT"] = "MAX! Sensor Ventilöffnung";
+UIStrings["STR20300_TEXT"] = "DS18B20 Sensor ID";
+UIStrings["STR20301_TEXT"] = "DS18B20 Sensor Temperatur";
+UIStrings["STR20500_TEXT"] = "MAX! Sensor ID";
+UIStrings["STR20501_TEXT"] = "MAX! Sensor Ist Temperatur";
+UIStrings["STR20502_TEXT"] = "MAX! Sensor Soll-Temperatur";
+UIStrings["STR20503_TEXT"] = "MAX! Sensor Ventilöffnung";
 
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
