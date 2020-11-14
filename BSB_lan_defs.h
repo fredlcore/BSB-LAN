@@ -11120,93 +11120,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2E3D302F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10533, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 
 //PPS-Bus commands
-
-{0x2D290000,  CAT_PPS,              VT_TEMP,          15000, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
-{0x2D570001,  CAT_PPS,              VT_TEMP,          15001, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
-{0x2D2E0002,  CAT_PPS,              VT_TEMP,          15002, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
-{0x2D0E0003,  CAT_PPS,              VT_TEMP,          15003, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
-{0x2D2C0004,  CAT_PPS,              VT_TEMP,          15004, STR15004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
-{0x2D570005,  CAT_PPS,              VT_ONOFF,         15005, STR5010,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Trinkwasserladung
-{0x2D2B0006,  CAT_PPS,              VT_TEMP,          15006, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0007,  CAT_PPS,              VT_TEMP,          15007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0008,  CAT_PPS,              VT_TEMP,          15008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
-{0x2D180009,  CAT_PPS,              VT_TEMP,          15009, STR15009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
-{0x2D49000A,  CAT_PPS,              VT_ENUM,          15010, STR700,   sizeof(ENUM15010),    ENUM15010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         15011, STR15011, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
-{0x2D7C000C,  CAT_PPS,              VT_BYTE,          15012, STR15012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
-{0x2D08000E,  CAT_PPS,              VT_TEMP,          15014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
-{0x2D09000F,  CAT_PPS,              VT_TEMP,          15015, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
-{0x2D1B0010,  CAT_PPS,              VT_TEMP,          15016, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
-{0x2D1B0011,  CAT_PPS,              VT_TEMP,          15017, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
-{0x2D280012,  CAT_PPS,              VT_TEMP,          15018, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
-{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  15019, STR15019, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
-{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  15020, STR15020, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
-{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  15021, STR15021, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
-{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  15022, STR15022, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
-{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  15023, STR15023, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
-{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  15024, STR15024, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
-{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  15025, STR15025, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
-{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  15026, STR15026, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
-{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  15027, STR15027, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
-{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  15028, STR15028, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
-{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  15029, STR15029, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
-{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  15030, STR15030, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
-{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  15031, STR15031, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
-{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  15032, STR15032, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
-{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  15033, STR15033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
-{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  15034, STR15034, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
-{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  15035, STR15035, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
-{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  15036, STR15036, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
-{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  15037, STR15037, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
-{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  15038, STR15038, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
-{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  15039, STR15039, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
-{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  15040, STR15040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
-{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  15041, STR15041, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
-{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  15042, STR15042, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
-{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  15043, STR15043, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
-{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  15044, STR15044, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
-{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  15045, STR15045, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
-{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  15046, STR15046, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
-{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  15047, STR15047, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
-{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  15048, STR15048, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
-{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  15049, STR15049, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
-{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  15050, STR15050, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
-{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  15051, STR15051, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
-{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  15052, STR15052, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
-{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  15053, STR15053, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
-{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  15054, STR15054, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
-{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  15055, STR15055, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
-{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  15056, STR15056, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
-{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  15057, STR15057, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
-{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  15058, STR15058, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
-{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  15059, STR15059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
-{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
-{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      15061, STR15061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
-{0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM15062),    ENUM15062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
-{0x2D4D003F,  CAT_PPS,              VT_BIT,           15063, STR8009,  sizeof(ENUM15063),    ENUM15063,    FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
-{0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
-{0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
-{0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
-{0x2D4F0043,  CAT_PPS,              VT_YESNO,         15067, STR15067, sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
-
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20000, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20001, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20002, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20500, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20501, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
-
 #define PPS_AT  0
 #define PPS_ATG 1
 #define PPS_KVT 2
@@ -11280,6 +11193,73 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 #define LAST_ENUM_NR 15063
 #define LAST_ENUM ENUM15063
 
+{0x2D290000,  CAT_PPS,              VT_TEMP,          15000, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
+{0x2D570001,  CAT_PPS,              VT_TEMP,          15001, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
+{0x2D2E0002,  CAT_PPS,              VT_TEMP,          15002, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D0E0003,  CAT_PPS,              VT_TEMP,          15003, STR8744,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur Soll
+{0x2D2C0004,  CAT_PPS,              VT_TEMP,          15004, STR15004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
+{0x2D570005,  CAT_PPS,              VT_ONOFF,         15005, STR5010,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Trinkwasserladung
+{0x2D2B0006,  CAT_PPS,              VT_TEMP,          15006, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
+{0x2D1E0007,  CAT_PPS,              VT_TEMP,          15007, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
+{0x2D0B0008,  CAT_PPS,              VT_TEMP,          15008, STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D180009,  CAT_PPS,              VT_TEMP,          15009, STR15009, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Drehknopf
+{0x2D49000A,  CAT_PPS,              VT_ENUM,          15010, STR700,   sizeof(ENUM15010),    ENUM15010,    DEFAULT_FLAG, DEV_ALL}, // Betriebsart
+{0x2D4C000B,  CAT_PPS,              VT_ONOFF,         15011, STR15011, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Anwesenheit
+{0x2D7C000C,  CAT_PPS,              VT_BYTE,          15012, STR15012, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verbleibende Feriendauer in Tagen
+{0x2D08000E,  CAT_PPS,              VT_TEMP,          15014, STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Soll
+{0x2D09000F,  CAT_PPS,              VT_TEMP,          15015, STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
+{0x2D1B0010,  CAT_PPS,              VT_TEMP,          15016, STR714,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Frostschutz-Sollwert
+{0x2D1B0011,  CAT_PPS,              VT_TEMP,          15017, STR2212,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sollwert-Maximum
+{0x2D280012,  CAT_PPS,              VT_TEMP,          15018, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
+{0x2D600013,  CAT_PPS,              VT_HOUR_MINUTES,  15019, STR15019, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Start
+{0x2D600014,  CAT_PPS,              VT_HOUR_MINUTES,  15020, STR15020, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Montag Ende
+{0x2D600015,  CAT_PPS,              VT_HOUR_MINUTES,  15021, STR15021, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Start
+{0x2D600016,  CAT_PPS,              VT_HOUR_MINUTES,  15022, STR15022, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Montag Ende
+{0x2D600017,  CAT_PPS,              VT_HOUR_MINUTES,  15023, STR15023, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Start
+{0x2D600018,  CAT_PPS,              VT_HOUR_MINUTES,  15024, STR15024, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Montag Ende
+{0x2D610019,  CAT_PPS,              VT_HOUR_MINUTES,  15025, STR15025, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Start
+{0x2D61001A,  CAT_PPS,              VT_HOUR_MINUTES,  15026, STR15026, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
+{0x2D61001B,  CAT_PPS,              VT_HOUR_MINUTES,  15027, STR15027, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Start
+{0x2D61001C,  CAT_PPS,              VT_HOUR_MINUTES,  15028, STR15028, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
+{0x2D61001D,  CAT_PPS,              VT_HOUR_MINUTES,  15029, STR15029, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Start
+{0x2D61001E,  CAT_PPS,              VT_HOUR_MINUTES,  15030, STR15030, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
+{0x2D62001F,  CAT_PPS,              VT_HOUR_MINUTES,  15031, STR15031, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
+{0x2D620020,  CAT_PPS,              VT_HOUR_MINUTES,  15032, STR15032, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
+{0x2D620021,  CAT_PPS,              VT_HOUR_MINUTES,  15033, STR15033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
+{0x2D620022,  CAT_PPS,              VT_HOUR_MINUTES,  15034, STR15034, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
+{0x2D620023,  CAT_PPS,              VT_HOUR_MINUTES,  15035, STR15035, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
+{0x2D620024,  CAT_PPS,              VT_HOUR_MINUTES,  15036, STR15036, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
+{0x2D630025,  CAT_PPS,              VT_HOUR_MINUTES,  15037, STR15037, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
+{0x2D630026,  CAT_PPS,              VT_HOUR_MINUTES,  15038, STR15038, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
+{0x2D630027,  CAT_PPS,              VT_HOUR_MINUTES,  15039, STR15039, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
+{0x2D630028,  CAT_PPS,              VT_HOUR_MINUTES,  15040, STR15040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
+{0x2D630029,  CAT_PPS,              VT_HOUR_MINUTES,  15041, STR15041, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
+{0x2D63002A,  CAT_PPS,              VT_HOUR_MINUTES,  15042, STR15042, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
+{0x2D64002B,  CAT_PPS,              VT_HOUR_MINUTES,  15043, STR15043, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Start
+{0x2D64002C,  CAT_PPS,              VT_HOUR_MINUTES,  15044, STR15044, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Freitag Ende
+{0x2D64002D,  CAT_PPS,              VT_HOUR_MINUTES,  15045, STR15045, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Start
+{0x2D64002E,  CAT_PPS,              VT_HOUR_MINUTES,  15046, STR15046, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Freitag Ende
+{0x2D64002F,  CAT_PPS,              VT_HOUR_MINUTES,  15047, STR15047, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Start
+{0x2D640030,  CAT_PPS,              VT_HOUR_MINUTES,  15048, STR15048, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Freitag Ende
+{0x2D650031,  CAT_PPS,              VT_HOUR_MINUTES,  15049, STR15049, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Start
+{0x2D650032,  CAT_PPS,              VT_HOUR_MINUTES,  15050, STR15050, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Samstag Ende
+{0x2D650033,  CAT_PPS,              VT_HOUR_MINUTES,  15051, STR15051, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Start
+{0x2D650034,  CAT_PPS,              VT_HOUR_MINUTES,  15052, STR15052, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Samstag Ende
+{0x2D650035,  CAT_PPS,              VT_HOUR_MINUTES,  15053, STR15053, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Start
+{0x2D650036,  CAT_PPS,              VT_HOUR_MINUTES,  15054, STR15054, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Samstag Ende
+{0x2D660037,  CAT_PPS,              VT_HOUR_MINUTES,  15055, STR15055, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Start
+{0x2D660038,  CAT_PPS,              VT_HOUR_MINUTES,  15056, STR15056, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
+{0x2D660039,  CAT_PPS,              VT_HOUR_MINUTES,  15057, STR15057, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Start
+{0x2D66003A,  CAT_PPS,              VT_HOUR_MINUTES,  15058, STR15058, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
+{0x2D66003B,  CAT_PPS,              VT_HOUR_MINUTES,  15059, STR15059, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Start
+{0x2D66003C,  CAT_PPS,              VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
+{0x2D79003D,  CAT_PPS,              VT_PPS_TIME,      15061, STR15061, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Heater time and day of week
+{0x2D38003E,  CAT_PPS,              VT_ENUM,          15062, STR15062, sizeof(ENUM15062),    ENUM15062,    DEFAULT_FLAG, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
+{0x2D4D003F,  CAT_PPS,              VT_BIT,           15063, STR8009,  sizeof(ENUM15063),    ENUM15063,    FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
+{0x2D190040,  CAT_PPS,              VT_TEMP,          15064, STR15064, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
+{0x2D690041,  CAT_PPS,              VT_TEMP,          15065, STR15065, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
+{0x2D480042,  CAT_PPS,              VT_ONOFF,         15066, STR15066, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
+{0x2D4F0043,  CAT_PPS,              VT_YESNO,         15067, STR15067, sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 //PPS-Bus commands end
 
 /*
@@ -11288,6 +11268,25 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 */
 // Placeholder to keep the compiler happy with STR99999:
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
+
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20000, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20001, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20002, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20500, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20501, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 
 //Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
