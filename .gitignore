@@ -7,6 +7,8 @@ due_bsb.sh
 due_pps.sh
 build/
 BSB_lan_config.h
+BSB_lan_config.mega.h
+BSB_lan_config.due.h
 BSB_lan_custom.h
 conv-bf-log.pl
 nohup.out
