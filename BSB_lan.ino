@@ -3652,9 +3652,6 @@ void generateChangeConfigPage(){
              case CF_MQTT:
                i=findLine(65529,0,NULL); //return ENUM_MQTT
                break;
-             case CF_ROOM_DEVICE:
-               i=findLine(15062,0,NULL); //return ENUM15062 (device type)
-               break;
              default:
                i = -1;
                break;
@@ -3674,7 +3671,7 @@ void generateChangeConfigPage(){
            int i;
            switch(cfg.id){
              case CF_ROOM_DEVICE:
-               i=findLine(15062,0,NULL); //return ENUM15062 (device type)
+               i=findLine(15000 + PPS_QTP,0,NULL); //return ENUM15062 (device type)
                break;
              default:
                i = -1;
@@ -4889,16 +4886,11 @@ void queryVirtualPrognr(int line, int table_line){
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
        if(enableOneWireBus && numSensors){
-         if(tempLine % 2 == 0){ //print sensor ID
+         if(tempLine & 1 == 0){ //print sensor ID
            DeviceAddress device_address;
            sensors->getAddress(device_address, log_sensor);
            sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
            return;
-         }
-         unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-         if(tempTime != lastOneWireRequestTime){
-           sensors->requestTemperatures(); //call it outside of here for more faster answers
-           lastOneWireRequestTime = tempTime;
          }
          float t=sensors->getTempCByIndex(log_sensor);
          if(t == DEVICE_DISCONNECTED_C) { //device disconnected
@@ -5255,9 +5247,9 @@ void ds18b20(void) {
   //webPrintHeader();
   for(i=0;i<numSensors * 2;i+=2){
     query(i + 20300);
-    printFmtToWebClient(PSTR("<tr><td>\r\n1w_temp[%d] %s: "),i, decodedTelegram.value);
+    printFmtToWebClient(PSTR("<tr><td>\r\n1w_temp[%d] %s: "),i/2, decodedTelegram.value);
     query(i + 20301);
-    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i, decodedTelegram.value);
+    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i/2, decodedTelegram.value);
     printFmtToWebClient(PSTR("%s %s\r\n</td></tr>\r\n"), decodedTelegram.value, decodedTelegram.unit);
   }
 flushToWebClient();
@@ -7877,6 +7869,16 @@ uint8_t pps_offset = 0;
   }
   } else {
     avgCounter = 0;
+  }
+#endif
+
+#ifdef ONE_WIRE_BUS
+  {
+    unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
+    if(tempTime != lastOneWireRequestTime){
+      sensors->requestTemperatures(); //call it outside of here for more faster answers
+      lastOneWireRequestTime = tempTime;
+    }
   }
 #endif
 
