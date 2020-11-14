@@ -4866,13 +4866,16 @@ void queryVirtualPrognr(int line, int table_line){
        float temp = DHT.temperature;
        if (hum > 0 && hum < 101) {
          printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
-
-         if(tempLine % 4 == 1){ //print sensor Current temperature
-           _printFIXPOINT(decodedTelegram.value, temp, 2);
-         } else if(tempLine % 4 == 2){ //print sensor Humidity
-           _printFIXPOINT(decodedTelegram.value, hum, 2);
-         } else if(tempLine % 4 == 3){ //print sensor Abs Humidity
-          _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
+         switch (tempLine % 4) {
+          case 1: //print sensor Current temperature
+            _printFIXPOINT(decodedTelegram.value, temp, 2);
+            break;
+          case 2: //print sensor Humidity
+            _printFIXPOINT(decodedTelegram.value, hum, 2);
+            break;
+          case 3: //print sensor Abs Humidity
+            _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
+            break;
          }
        }
        else
@@ -4886,19 +4889,24 @@ void queryVirtualPrognr(int line, int table_line){
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
        if(enableOneWireBus && numSensors){
-         if(tempLine & 1 == 0){ //print sensor ID
-           DeviceAddress device_address;
-           sensors->getAddress(device_address, log_sensor);
-           sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-           return;
+         switch (tempLine % 2) {
+           case 0: //print sensor ID
+             DeviceAddress device_address;
+             sensors->getAddress(device_address, log_sensor);
+             sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+             break;
+           case 1: {
+             float t=sensors->getTempCByIndex(log_sensor);
+             if(t == DEVICE_DISCONNECTED_C) { //device disconnected
+               decodedTelegram.error = 261;
+               undefinedValueToBuffer(decodedTelegram.value);
+               return;
+             }
+             _printFIXPOINT(decodedTelegram.value, t, 2);
+             }
+             break;
+           default: break;
          }
-         float t=sensors->getTempCByIndex(log_sensor);
-         if(t == DEVICE_DISCONNECTED_C) { //device disconnected
-           decodedTelegram.error = 261;
-           undefinedValueToBuffer(decodedTelegram.value);
-           return;
-         }
-         _printFIXPOINT(decodedTelegram.value, t, 2);
          return;
        }
   #endif
@@ -4909,12 +4917,11 @@ void queryVirtualPrognr(int line, int table_line){
        size_t tempLine = line - 20500;
        size_t log_sensor = tempLine / 4;
         if(enable_max_cul){
-          if(tempLine % 4 == 0){ //print sensor ID
-            strcpy(decodedTelegram.value, max_device_list[log_sensor]);
-            return;
-          }
           if(max_devices[log_sensor]){
             switch(tempLine % 4){ //print sensor values
+              case 0:  //print sensor ID
+                strcpy(decodedTelegram.value, max_device_list[log_sensor]);
+                break;
               case 1:
                 if (max_dst_temp[log_sensor] > 0)
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));

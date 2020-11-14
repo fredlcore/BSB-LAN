@@ -133,7 +133,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PASSKEY,          2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},
   {CF_BASICAUTH,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},
   {CF_WEBSERVER,        2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
-  {CF_ONEWIREBUS,       2, true,  CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)},
+  {CF_ONEWIREBUS,       2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)},
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, true,  CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)},
   {CF_IPWE,             2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},
