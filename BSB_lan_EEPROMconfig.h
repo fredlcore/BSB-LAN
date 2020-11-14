@@ -45,6 +45,7 @@ typedef enum{
   CF_MQTT_PASSWORD, //Size: 32 bytes.
   CF_MQTT_TOPIC, //Size: 32 bytes.
   CF_MQTT_DEVICE, //Size: 32 bytes.
+  CF_ROOM_DEVICE, //Size: 2 bytes. 0x53 = QAA70, 0x52 = QAA50
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -111,6 +112,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_DEST_LPBADDR,     1, false, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},
   {CF_PPS_WRITE,        1, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},
 #ifdef WEBCONFIG
+  {CF_ROOM_DEVICE,      2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_UINT16,         STR15062, sizeof(pps_values[PPS_QTP])},
   {CF_MAC,              2, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)},
   {CF_DHCP,             2, true,  CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)},
   {CF_IPADDRESS,        2, false, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_IPADDRESS_TXT, sizeof(ip_addr)},
@@ -142,7 +144,7 @@ PROGMEM_LATE const configuration_struct config[]={
 #endif
   {CF_MAX_DEVICES,      0, false, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)},
   {CF_MAX_DEVADDR,      0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
-  {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)},
+  {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
   {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, 1},

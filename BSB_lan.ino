@@ -3652,6 +3652,9 @@ void generateChangeConfigPage(){
              case CF_MQTT:
                i=findLine(65529,0,NULL); //return ENUM_MQTT
                break;
+             case CF_ROOM_DEVICE:
+               i=findLine(15062,0,NULL); //return ENUM15062 (device type)
+               break;
              default:
                i = -1;
                break;
@@ -3665,7 +3668,25 @@ void generateChangeConfigPage(){
          }
        break;
      case CDT_UINT16:
-       printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]);
+       switch(cfg.input_type){
+         case CPI_TEXT: printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]); break;
+         case CPI_DROPDOWN:{
+           int i;
+           switch(cfg.id){
+             case CF_ROOM_DEVICE:
+               i=findLine(15062,0,NULL); //return ENUM15062 (device type)
+               break;
+             default:
+               i = -1;
+               break;
+           }
+           if(i > 0){
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0);
+           }
+           break;}
+         }
        break;
      case CDT_UINT32:
        printFmtToWebClient(PSTR("%lu"), ((uint32_t *)variable)[0]);
@@ -8062,7 +8083,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)pps_values);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
@@ -8082,6 +8103,7 @@ void setup() {
     registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
     registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
 #ifdef WEBCONFIG
+    registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
     registerConfigVariable(CF_MAC, (byte *)mac);
     registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
     registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
@@ -8278,6 +8300,14 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
     }
   }
 */
+
+printToDebug(PSTR("PPS settings:\r\n"));
+  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
+    if(pps_values[i] == 0xFFFF) pps_values[i] = 0;
+    if (pps_values[i] > 0 && pps_values[i]< 0xFFFF && i != PPS_RTI) {
+      printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+    }
+  }
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
