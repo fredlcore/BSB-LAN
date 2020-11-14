@@ -4895,7 +4895,7 @@ void queryVirtualPrognr(int line, int table_line){
              sensors->getAddress(device_address, log_sensor);
              sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
              break;
-           case 1:
+           case 1: {
              float t=sensors->getTempCByIndex(log_sensor);
              if(t == DEVICE_DISCONNECTED_C) { //device disconnected
                decodedTelegram.error = 261;
@@ -4903,6 +4903,7 @@ void queryVirtualPrognr(int line, int table_line){
                return;
              }
              _printFIXPOINT(decodedTelegram.value, t, 2);
+             }
              break;
            default: break;
          }
