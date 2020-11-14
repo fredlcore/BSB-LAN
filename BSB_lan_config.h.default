@@ -45,7 +45,7 @@ byte subnet_addr[4] = {255,255,255,0}; // Please use commas instead of dots!!! I
 
 
 #define DEBUG //Compile verbose DEBUG module if defined
-byte debug_mode = 2; //Debug: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
+byte debug_mode = 1; //Debug: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1; // If set to 1, all messages on the bus are printed to debug interface
 byte monitor = 0; //bus monitor mode
 boolean show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried!)
@@ -89,7 +89,7 @@ char USER_PASS_B64[64] = ""; // HTTP-Auth will be disabled if USER_PASS_B64 stri
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
 boolean enableOneWireBus = true; //true - enable oneWire bus, false - disable
-byte One_Wire_Pin = 3; //Define the pin for one wire temperature sensors
+byte One_Wire_Pin = 7; //Define the pin for one wire temperature sensors
 
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS
@@ -148,7 +148,7 @@ int log_parameters[40] = {
 //#define MQTT
 byte mqtt_mode = 0; //MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
-byte mqtt_broker_ip_addr[4] = {192,168,1,20};// Please use commas instead of dots!!!
+byte mqtt_broker_ip_addr[4] = {192,168,178,20};// Please use commas instead of dots!!!
 char MQTTUsername[32] = "User"; // Set username for MQTT broker here or set zero-length string if no username/password is used.
 char MQTTPassword[32] = "Pass"; // Set password for MQTT broker here or set zero-length string if no password is used.
 char MQTTTopicPrefix[32] = "BSB-LAN"; 	// Optional: Choose the "topic" for MQTT messages here. If zero-length string here, default topic name used
@@ -194,7 +194,7 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
 // Software Serial needs special pins for RX: 10-13, 50-53, 62(A8)-69(A15)
 // W5100 ethernet shield uses the following pins: 10, 50-53
 
-byte bus_pins[2] = {0,0}; //First value - RX pin, second - TX pin. 0,0 - auto select (19,18 for Duo and 68,69 for Mega)
+byte bus_pins[2] = {0,0}; //First value - RX pin, second - TX pin. 0,0 - auto select (19,18 for Due and 68,69 for Mega)
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_bsb_address' sets own address, defaults to 0x42 (LAN in serial monitor)
@@ -217,7 +217,7 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
 byte protected_GPIO[10] = {0b00000000,0b00111100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
 //byte exclude_GPIO[70] = {10, 11, 12, 13, 50, 51, 52, 53, 62, 63, 64, 65, 66, 67, 68, 69};
-#else  // Duo
+#else  // Due
 // Protect these pins from accidental GPIO access
 // bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
@@ -264,7 +264,7 @@ byte destinationServer[128] = ""; //URL string to periodically send values to an
 uint16_t destinationPort = 80; //port number for abovementioned server
 uint32_t destinationDelay = 84600; //seconds interval to send values
 
-//All modules are compiled on Duo by default.
+//All modules are compiled on Due by default.
 #if ! defined(__AVR__)
 #define CONFIG_IN_EEPROM
 #define WEBCONFIG

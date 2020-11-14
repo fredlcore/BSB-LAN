@@ -3195,7 +3195,7 @@ void webPrintSite() {
         }
       }
     }
-    if ((major > atoi(MAJOR)) || (minor > atoi(MINOR)) || (patch > atoi(PATCH))) {
+    if ((major > atoi(MAJOR)) || (major == atoi(MAJOR) && minor > atoi(MINOR)) || (major == atoi(MAJOR) && minor == atoi(MINOR) && patch > atoi(PATCH))) {
       printToWebClient(PSTR(MENU_TEXT_NVA ": "));
       printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\r\n"), major, minor, patch);
     } else {
@@ -7444,10 +7444,12 @@ uint8_t pps_offset = 0;
           webPrintHeader();
           if (p[2]=='E') {
             printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\r\n"));
+            forcedflushToWebClient();
           }
 
 #ifdef LOGGER
           // what doing this fragment? Just opened and closed file? We really need it?
+          // FH: Before, it seemed to be necessary to have the file properly closed. And since I thought you can only properly close it when it's opened before, I was opening it.
           File dataFile = SD.open(datalogFileName, FILE_WRITE);
           if (dataFile) {
             dataFile.close();
@@ -7798,7 +7800,7 @@ uint8_t pps_offset = 0;
           if (log_parameters[i] > 0) {
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
-             //avregares
+             //averages
               strcat_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
               outBufLen += strlen(outBuf + outBufLen);
             }
