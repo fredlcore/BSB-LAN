@@ -1007,6 +1007,15 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
 #endif
 }
 
+void setBusType(){
+  switch(bus_type){
+    default:
+    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
+    case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
+    case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
+  }
+}
+
 /** *****************************************************************
  *  Function: dayofweek()
  *  Does:     Accepts a date as day / month / year and calculates
@@ -7200,19 +7209,53 @@ uint8_t pps_offset = 0;
               break;
 #endif
 #ifdef WEBCONFIG
-            case 'I': //Parse HTTP form and implement changes
+            case 'I': {//Parse HTTP form and implement changes
               implementConfig();
               generateConfigPage();
               generateChangeConfigPage();
+              UpdateMaxDeviceList(); //Update list MAX! devices
+              if(!(httpflags & 128)) webPrintFooter();
+              flushToWebClient();
+
+              boolean buschanged = false;
               //save new values from RAM to EEPROM
-/*              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-                writeToEEPROM(i);
+              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+                if(writeToEEPROM(i)){
+                  switch(i){
+                    case CF_BUSTYPE:
+                    case CF_OWN_BSBADDR:
+                    case CF_OWN_LPBADDR:
+                    case CF_DEST_LPBADDR:
+                    case CF_PPS_WRITE:
+                      if(!buschanged) {setBusType(); buschanged = true;} break;
+                    case CF_MAC:
+                    case CF_DHCP:
+                    case CF_IPADDRESS:
+                    case CF_MASK:
+                    case CF_GATEWAY:
+                    case CF_DNS:
+                    case CF_MAX_IPADDRESS:
+                    case CF_ONEWIREBUS:
+                    case CF_WWWPORT:
+                      client.stop();
+                      resetBoard();
+                      break;
+#ifdef MQTT                      
+                    case CF_MQTT:
+                    case CF_MQTT_IPADDRESS:
+                      if(MQTTClient){
+                        delete MQTTClient;
+                        MQTTClient = NULL;
+                      }
+                      break;
+#endif
+                    default: break;
+                  }
+                }
               }
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            client.stop();
-            resetBoard();
-*/
+//            client.stop();
+//            resetBoard();
+            }
             break;
               //no break here.
 #endif
@@ -7338,22 +7381,27 @@ uint8_t pps_offset = 0;
           }
 
           printToWebClient(PSTR(MENU_TEXT_BUS ": "));
-          if (p[2]=='0') {
-            own_bsb_address = myAddr;
-            bus->setBusType(BUS_BSB, myAddr);
-            printToWebClient(PSTR("BSB"));
+          uint8_t savedbus = bus_type;
+          bus_type = p[2] - '0';
+          switch (bus_type){
+            case 0:
+              own_bsb_address = myAddr;
+              printToWebClient(PSTR("BSB"));
+              break;
+            case 1:
+              own_lpb_address = myAddr;
+              dest_lpb_address = destAddr;
+              printToWebClient(PSTR("LPB"));
+              break;
+            case 2:
+              pps_write = myAddr;
+              printToWebClient(PSTR("PPS"));
+              break;
+            default:
+              bus_type = savedbus;
+              break;
           }
-          if (p[2]=='1') {
-            own_lpb_address = myAddr;
-            dest_lpb_address = destAddr;
-            bus->setBusType(BUS_LPB, myAddr, destAddr);
-            printToWebClient(PSTR("LPB"));
-          }
-          if (p[2]=='2') {
-            pps_write = myAddr;
-            bus->setBusType(BUS_PPS, myAddr);
-            printToWebClient(PSTR("PPS"));
-          }
+          setBusType(); //Apply changes
           printToWebClient(PSTR("\r\n"));
           if (bus->getBusType() != BUS_PPS) {
             printFmtToWebClient(PSTR(" (%d, %d)"), myAddr, destAddr);
@@ -8163,12 +8211,7 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
   }
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
 
-  switch(bus_type){
-    default:
-    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
-    case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
-    case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
-  }
+  setBusType(); //set BSB/LPB/PPS mode
 
   bus->enableInterface();
 

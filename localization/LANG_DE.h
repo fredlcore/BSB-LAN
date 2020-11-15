@@ -176,7 +176,7 @@
 #define CF_LOGTELEGRAM_TEXT "Log telegrams"
 #define CF_LOGAVERAGES_TEXT "Calculate and log 24h average values"
 #define CF_LOGCURRVALUES_TEXT "Log current values"
-#define CF_LOGCURRINTERVAL_TEXT "Log interval"
+#define CF_LOGCURRINTERVAL_TEXT "Log interval, seconds"
 #define CF_AVERAGESLIST_TEXT "Programs for averages calculation"
 #define CF_CURRVALUESLIST_TEXT "Programs for logging"
 #define CF_MAX_DEVICES_TEXT "MAX! devices"
