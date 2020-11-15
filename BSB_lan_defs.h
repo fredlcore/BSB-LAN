@@ -11295,3 +11295,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 };
+
+PROGMEM_LATE const cmd_t cmdtbl3[]={
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
+};
