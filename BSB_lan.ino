@@ -1381,7 +1381,9 @@ uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
 #ifdef AVERAGES
   else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
 #endif
+#ifdef DHT_BUS
   else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20299
+#endif
 #ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
 #endif
@@ -7784,12 +7786,6 @@ uint8_t pps_offset = 0;
   if(logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
-/*
-//Sync request or async is better?
-#ifdef ONE_WIRE_BUS
-      sensors.requestTemperatures(); // Send the command to get temperatures
-#endif
-*/
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
 
