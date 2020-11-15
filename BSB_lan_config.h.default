@@ -278,7 +278,7 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 #define VERSION_CHECK
 #define WEBCONFIG
 #define WEBSERVER
-
+#define MAX_CUL
 #endif
 /************************************************************************************/
 /************************************************************************************/
