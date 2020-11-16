@@ -3208,10 +3208,13 @@ char *lookup_descr(uint16_t line) {
 void generateConfigPage(void){
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>"));
   printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\r\n" MENU_TEXT_RAM ": "));
+#ifdef WEBCONFIG
+  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
+
+#else
   printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
   printlnToWebClient(PSTR("<BR>\r\n" MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
-  int i;
 
   switch (bustype) {
     case 0: printToWebClient(PSTR("BSB")); break;
@@ -3236,15 +3239,18 @@ void generateConfigPage(void){
   printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_MMD ": %d"), monitor);
   printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_VBL ": %d<BR>\r\n"), verbose);
 
-  #ifdef ONE_WIRE_BUS
-  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, " MENU_TEXT_SNS ": %d\r\n<BR>\r\n"), One_Wire_Pin, numSensors);
-  #endif
+  printToWebClient(PSTR(MENU_TEXT_MAC ": \r\n"));
+  for (int i=0; i<=5; i++) {
+  printFmtToWebClient(PSTR("%02X"), mac[i]);
+  if(i != 5) printToWebClient(PSTR(":"));
+  }
+  printToWebClient(PSTR("<BR>\r\n"));
 
   #ifdef DHT_BUS
   printlnToWebClient(PSTR(MENU_TEXT_DHP ": "));
   boolean not_first = false;
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
-  for(i=0;i<numDHTSensors;i++){
+  for(int i=0;i<numDHTSensors;i++){
     if(DHT_Pins[i]) {
       if(not_first)
         printToWebClient(PSTR(", "));
@@ -3255,20 +3261,18 @@ void generateConfigPage(void){
   }
   printToWebClient(PSTR("\r\n<BR>\r\n"));
   #endif
+  #endif
 
+  #ifdef ONE_WIRE_BUS
+  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, " MENU_TEXT_SNS ": %d\r\n<BR>\r\n"), One_Wire_Pin, numSensors);
+  #endif
   printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
-  for (i=0; i<anz_ex_gpio; i++) {
+  for (int i=0; i<anz_ex_gpio; i++) {
     if(bitRead(protected_GPIO[i / 8], i % 8)){
       printFmtToWebClient(PSTR("%d "), i);
     }
   }
-  printToWebClient(PSTR("<BR>\r\n"));
 
-  printToWebClient(PSTR(MENU_TEXT_MAC ": \r\n"));
-  for (int i=0; i<=5; i++) {
-    printFmtToWebClient(PSTR("%02X"), mac[i]);
-    if(i != 5) printToWebClient(PSTR(":"));
-  }
   printToWebClient(PSTR("<BR><BR>\r\n"));
 /*
   client.println(F("IP address: "));
@@ -3299,28 +3303,16 @@ void generateConfigPage(void){
   #endif
   #ifdef MQTT
   if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("MQTT: "));
-  switch(mqtt_mode){
-    case 0: printToWebClient(PSTR("Disabled")); break;
-    case 1: printToWebClient(PSTR("Plain text")); break;
-    case 2: printToWebClient(PSTR("JSON")); break;
-    default: printToWebClient(PSTR("Wrong mode")); break;
-  }
+  printToWebClient(PSTR("MQTT"));
   j = 1;
   #endif
   if(j) printToWebClient(PSTR(", "));
   j = 1;
   #ifdef DEBUG
-  printToWebClient(PSTR("Verbose DEBUG: "));
+  printToWebClient(PSTR("Verbose DEBUG"));
   #else
-  printToWebClient(PSTR("DEBUG: "));
+  printToWebClient(PSTR("DEBUG"));
   #endif
-  switch(debug_mode){
-    case 0: printToWebClient(PSTR("Off")); break;
-    case 1: printToWebClient(PSTR("Serial")); break;
-    case 2: printToWebClient(PSTR("Telnet")); break;
-    default: printToWebClient(PSTR("Wrong mode")); break;
-  }
   #ifdef LOGGER
   if(j) printToWebClient(PSTR(", "));
   printToWebClient(PSTR("LOGGER"));
@@ -3328,11 +3320,42 @@ void generateConfigPage(void){
   #endif
   #ifdef VERSION_CHECK
   if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("VERSION_CHECK: "));
-  if(enable_version_check)
-    printToWebClient(PSTR("enabled"));
-  else
-    printToWebClient(PSTR("disabled"));
+  printToWebClient(PSTR("VERSION_CHECK"));
+  j = 1;
+  #endif
+  #ifdef AVERAGES
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("AVERAGES"));
+  j = 1;
+  #endif
+  #ifdef MAX_CUL
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("MAX_CUL"));
+  j = 1;
+  #endif
+  #ifdef ONE_WIRE_BUS
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("ONE_WIRE_BUS"));
+  j = 1;
+  #endif
+  #ifdef DHT_BUS
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("DHT_BUS"));
+  j = 1;
+  #endif
+  #ifdef CUSTOM_COMMANDS
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("CUSTOM_COMMANDS"));
+  j = 1;
+  #endif
+  #ifdef CONFIG_IN_EEPROM
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("CONFIG_IN_EEPROM"));
+  j = 1;
+  #endif
+  #ifdef WEBCONFIG
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("WEBCONFIG"));
   j = 1;
   #endif
   if(j == 0)
@@ -3341,11 +3364,15 @@ void generateConfigPage(void){
   // end of list of enabled modules
 
 #if defined LOGGER || defined WEBSERVER
-  uint32_t m = micros();
+//  uint32_t m = micros();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
+  printFmtToWebClient(PSTR("Free space: %lu MB<br>\r\n"), fs);
+//  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
+printToWebClient(PSTR("<BR>\r\n"));
+
+#ifndef WEBCONFIG
 #ifdef AVERAGES
   if(logAverageValues){
     printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\r\n"));
@@ -3376,11 +3403,9 @@ if (logTelegram) {
   printToWebClient(PSTR(MENU_TEXT_LBO ": "));
   printyesno(logTelegram & (LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY)); //log_bc_only
   }
-printToWebClient(PSTR("<BR>\r\n"));
-  #endif
-
+#endif
+#endif
   printToWebClient(PSTR("<BR>\r\n"));
-
 }
 
 #ifdef WEBCONFIG
@@ -8124,6 +8149,7 @@ void setup() {
     registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
     registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
     registerConfigVariable(CF_MONITOR, (byte *)&monitor);
+    registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
 #endif
 
 
