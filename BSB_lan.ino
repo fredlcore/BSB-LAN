@@ -2983,6 +2983,51 @@ void printTelegram(byte* msg, int query_line) {
   }
 }
 
+/** *****************************************************************
+ *  Function: UpdateMaxDeviceList()
+ *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  max_device_list, max_devices
+ * *************************************************************** */
+
+#ifdef MAX_CUL
+
+void UpdateMaxDeviceList() {
+  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
+  int32_t max_addr = 0;
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
+  }
+
+    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+      if (EEPROM_ready) {
+        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
+          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
+        }
+      }
+      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
+          if (EEPROM_ready) {
+            for(uint16_t i = 0; i < sizeof(max_addr); i++){
+             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+            }
+            max_devices[x] = max_addr;
+            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+          }
+          break;
+        }
+      }
+    }
+  writeToEEPROM(CF_MAX_DEVICES);
+  writeToEEPROM(CF_MAX_DEVADDR);
+  }
+#endif
 
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   for (uint16_t x=0;x<outstr_len-1;x++) {
@@ -5311,52 +5356,6 @@ void Ipwe() {
 #endif    // --- Ipwe() ---
 
 /** *****************************************************************
- *  Function: UpdateMaxDeviceList()
- *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
- * Pass parameters:
- *  none
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  max_device_list, max_devices
- * *************************************************************** */
-
-#ifdef MAX_CUL
-
-void UpdateMaxDeviceList() {
-  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
-  int32_t max_addr = 0;
-  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
-  }
-
-    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-      if (EEPROM_ready) {
-        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
-          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
-        }
-      }
-      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
-        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
-          if (EEPROM_ready) {
-            for(uint16_t i = 0; i < sizeof(max_addr); i++){
-             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
-            }
-            max_devices[x] = max_addr;
-            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
-          }
-          break;
-        }
-      }
-    }
-  writeToEEPROM(CF_MAX_DEVICES);
-  writeToEEPROM(CF_MAX_DEVADDR);
-  }
-#endif
-
-/** *****************************************************************
  *  Function: setPPS()
  *  Does:     stores a PPS parameter received from the heater
  * Pass parameters:
@@ -7218,6 +7217,7 @@ uint8_t pps_offset = 0;
               flushToWebClient();
 
               boolean buschanged = false;
+              boolean needReboot = false;
               //save new values from RAM to EEPROM
               for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
                 if(writeToEEPROM(i)){
@@ -7237,10 +7237,9 @@ uint8_t pps_offset = 0;
                     case CF_MAX_IPADDRESS:
                     case CF_ONEWIREBUS:
                     case CF_WWWPORT:
-                      client.stop();
-                      resetBoard();
+                      needReboot = true;
                       break;
-#ifdef MQTT                      
+#ifdef MQTT
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
                       if(MQTTClient){
@@ -7253,8 +7252,10 @@ uint8_t pps_offset = 0;
                   }
                 }
               }
-//            client.stop();
-//            resetBoard();
+              if(needReboot == true){
+                client.stop();
+                resetBoard();
+              }
             }
             break;
               //no break here.
