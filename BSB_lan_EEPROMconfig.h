@@ -49,7 +49,7 @@ typedef enum{
 //Version 3 (Web-config, some forgotten options)
   CF_MONITOR, //Size: 1 byte. bus monitor mode
   CF_VERBOSE, //Size: 1 byte. If set to 1, all messages on the bus are printed to debug interface
-
+  CF_CHECKUPDATE, //Size: 1 byte. If set to 1, check for new version
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -160,7 +160,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_TOPIC,       2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
-  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)} //immediately apply
+  {CF_MQTT_DEVICE,      2, false, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}, //immediately apply
+  {CF_CHECKUPDATE,      3, false, CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           CF_CHECKUPDATE_TXT, sizeof(enable_version_check)} //immediately apply
+
 #endif
 #endif
 };
