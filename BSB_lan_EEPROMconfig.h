@@ -153,8 +153,8 @@ PROGMEM_LATE const configuration_struct config[]={
 #ifdef WEBCONFIG
   {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, sizeof(readOnlyMode)},
   {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_DEBUG_TXT, sizeof(debug_mode)},
-  {CF_VERBOSE,          3, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
-  {CF_MONITOR,          3, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)},
+  {CF_VERBOSE,          3, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
+  {CF_MONITOR,          3, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)},
   {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           CF_MQTT_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
   {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply

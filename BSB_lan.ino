@@ -3634,9 +3634,6 @@ void generateChangeConfigPage(){
                i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
                break;
              case CF_DEBUG:
-             case CF_VERBOSE:
-             case CF_MONITOR:
-             case CF_READONLY:
              i=findLine(65530,0,NULL); //return ENUM_DEBUG
                break;
              case CF_MQTT:
