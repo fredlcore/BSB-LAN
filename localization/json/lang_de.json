@@ -172,7 +172,7 @@
   "CF_LOGTELEGRAM_TEXT": "Log telegrams",
   "CF_LOGAVERAGES_TEXT": "Calculate and log 24h average values",
   "CF_LOGCURRVALUES_TEXT": "Log current values",
-  "CF_LOGCURRINTERVAL_TEXT": "Log interval",
+  "CF_LOGCURRINTERVAL_TEXT": "Log interval, seconds",
   "CF_AVERAGESLIST_TEXT": "Programs for averages calculation",
   "CF_CURRVALUESLIST_TEXT": "Programs for logging",
   "CF_MAX_DEVICES_TEXT": "MAX! devices",
