@@ -46,6 +46,10 @@ typedef enum{
   CF_MQTT_TOPIC, //Size: 32 bytes.
   CF_MQTT_DEVICE, //Size: 32 bytes.
   CF_ROOM_DEVICE, //Size: 2 bytes. 0x53 = QAA70, 0x52 = QAA50
+//Version 3 (Web-config, some forgotten options)
+  CF_MONITOR, //Size: 1 byte. bus monitor mode
+  CF_VERBOSE, //Size: 1 byte. If set to 1, all messages on the bus are printed to debug interface
+
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -147,8 +151,10 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PPS_VALUES,       0, false, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
-  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, 1},
+  {CF_READONLY,         2, false, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, sizeof(readOnlyMode)},
   {CF_DEBUG,            2, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_DEBUG_TXT, sizeof(debug_mode)},
+  {CF_VERBOSE,          3, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
+  {CF_MONITOR,          3, false, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)},
   {CF_MQTT,             2, false, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           CF_MQTT_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_IPADDRESS,   2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
   {CF_MQTT_USERNAME,    2, true,  CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply

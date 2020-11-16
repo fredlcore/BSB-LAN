@@ -72,7 +72,7 @@
 #define FL_NO_CMD   2
 #define FL_OEM      5    // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
 #define FL_SPECIAL_INF  8 // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
-
+#define FL_SW_CTL_RONLY  128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 /* heating systems */
 
 #define DEV_021_ALL  21,255 // RVL470
@@ -641,6 +641,8 @@ const char CF_MAX_TXT[] PROGMEM = CF_MAX_TEXT;
 const char CF_MAX_IPADDRESS_TXT[] PROGMEM = CF_MAX_IPADDRESS_TEXT;
 const char CF_READONLY_TXT[] PROGMEM = CF_READONLY_TEXT;
 const char CF_DEBUG_TXT[] PROGMEM = CF_DEBUG_TEXT;
+const char CF_VERBOSE_TXT[] PROGMEM = MENU_TEXT_VBL;
+const char CF_MONITOR_TXT[] PROGMEM = MENU_TEXT_MMD;
 const char CF_MQTT_TXT[] PROGMEM = CF_MQTT_TEXT;
 const char CF_MQTT_IPADDRESS_TXT[] PROGMEM = CF_MQTT_IPADDRESS_TEXT;
 const char CF_MQTT_USERNAME_TXT[] PROGMEM = CF_MQTT_USERNAME_TEXT;
@@ -11286,7 +11288,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 
 //Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_MQTT,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, "",       sizeof(ENUM_DEBUG),   ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, "",       sizeof(ENUM_LOGTELEGRAM),   ENUM_LOGTELEGRAM,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65532, "",       sizeof(ENUM_BUSTYPE),   ENUM_BUSTYPE,         DEFAULT_FLAG, DEV_ALL}, //
