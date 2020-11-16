@@ -7536,9 +7536,14 @@ uint8_t pps_offset = 0;
           }
 #endif
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
+#if defined(__AVR__)
             for (uint16_t x=0; x<EEPROM.length(); x++) {
               EEPROM.write(x, 0);
             }
+#else
+            uint8_t empty_block[4097] = { 0 };
+            EEPROM.fastBlockWrite(0, &empty_block, 4096);
+#endif
             printlnToDebug(PSTR("Cleared EEPROM"));
           }
           printToWebClient(PSTR("Restarting Arduino...\r\n"));
