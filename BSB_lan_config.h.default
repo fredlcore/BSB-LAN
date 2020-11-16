@@ -236,6 +236,7 @@ static const int fixed_device_family = 0;
 static const int fixed_device_variant = 0;
 
 // defines default flag for parameters (use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
+// if #define DEFAULT_FLAG FL_SW_CTL_RONLY is set then the program will control the ability to write values
 #define DEFAULT_FLAG FL_RONLY
 
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop

@@ -417,6 +417,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 boolean EEPROM_ready = true;
+byte readOnlyMode = 1;
 
 #ifdef WIFI
 WiFiEspServer *server;
@@ -1005,6 +1006,15 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
 #else
   return enum_addr;
 #endif
+}
+
+void setBusType(){
+  switch(bus_type){
+    default:
+    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
+    case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
+    case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
+  }
 }
 
 /** *****************************************************************
@@ -1651,7 +1661,7 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
-  if ((flags & FL_RONLY) == FL_RONLY)
+  if ((flags & FL_RONLY) == FL_RONLY || ((flags & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode))
     decodedTelegram.readonly = 1;
   else
     decodedTelegram.readonly = 0;
@@ -3044,6 +3054,51 @@ void printTelegram(byte* msg, int query_line) {
   }
 }
 
+/** *****************************************************************
+ *  Function: UpdateMaxDeviceList()
+ *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  max_device_list, max_devices
+ * *************************************************************** */
+
+#ifdef MAX_CUL
+
+void UpdateMaxDeviceList() {
+  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
+  int32_t max_addr = 0;
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
+  }
+
+    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+      if (EEPROM_ready) {
+        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
+          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
+        }
+      }
+      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
+          if (EEPROM_ready) {
+            for(uint16_t i = 0; i < sizeof(max_addr); i++){
+             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+            }
+            max_devices[x] = max_addr;
+            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+          }
+          break;
+        }
+      }
+    }
+  writeToEEPROM(CF_MAX_DEVICES);
+  writeToEEPROM(CF_MAX_DEVADDR);
+  }
+#endif
 
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   for (uint16_t x=0;x<outstr_len-1;x++) {
@@ -3236,7 +3291,7 @@ void generateConfigPage(void){
   if (bustype != BUS_PPS) {
     printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
 
-    if (DEFAULT_FLAG == FL_RONLY) {
+    if (DEFAULT_FLAG == FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
       printToWebClient(PSTR(MENU_TEXT_BRO));
     } else {
       printToWebClient(PSTR(MENU_TEXT_BRW));
@@ -3965,10 +4020,12 @@ int set(int line      // the ProgNr of the heater parameter
   if(i<0) return 0;        // no match
 
   // Check for readonly parameter
-  if((get_cmdtbl_flags(i) & FL_RONLY) == FL_RONLY) {
+  param_len = get_cmdtbl_flags(i);
+  if((param_len & FL_RONLY) == FL_RONLY || ((param_len & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
+  param_len = 0;
 
   uint8_t type=get_cmdtbl_type(i);
 
@@ -5372,52 +5429,6 @@ void Ipwe() {
 #endif    // --- Ipwe() ---
 
 /** *****************************************************************
- *  Function: UpdateMaxDeviceList()
- *  Does:     Reads the MAX! device list serial numbers and populates a reference list with the internal IDs
- * Pass parameters:
- *  none
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  max_device_list, max_devices
- * *************************************************************** */
-
-#ifdef MAX_CUL
-
-void UpdateMaxDeviceList() {
-  char max_id_eeprom[sizeof(max_device_list[0])] = { 0 };
-  int32_t max_addr = 0;
-  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-    max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
-  }
-
-    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-      if (EEPROM_ready) {
-        for(uint16_t i = 0; i < sizeof(max_id_eeprom); i++){
-          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
-        }
-      }
-      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
-        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
-          if (EEPROM_ready) {
-            for(uint16_t i = 0; i < sizeof(max_addr); i++){
-             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
-            }
-            max_devices[x] = max_addr;
-            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
-          }
-          break;
-        }
-      }
-    }
-  writeToEEPROM(CF_MAX_DEVICES);
-  writeToEEPROM(CF_MAX_DEVADDR);
-  }
-#endif
-
-/** *****************************************************************
  *  Function: setPPS()
  *  Does:     stores a PPS parameter received from the heater
  * Pass parameters:
@@ -5983,7 +5994,7 @@ uint8_t pps_offset = 0;
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-            if ((flags & FL_RONLY) == FL_RONLY || pps_write != 1) {
+            if ((flags & FL_RONLY) == FL_RONLY || pps_write != 1 || ((flags & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
@@ -6935,7 +6946,7 @@ uint8_t pps_offset = 0;
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
             if (i != BUS_PPS) {
-              if (DEFAULT_FLAG != FL_RONLY) json_parameter = 1;
+              if (DEFAULT_FLAG != FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !readOnlyMode)) json_parameter = 1;
             } else {
               if (pps_write == 1)  json_parameter = 1;
             }
@@ -7270,19 +7281,57 @@ uint8_t pps_offset = 0;
               break;
 #endif
 #ifdef WEBCONFIG
-            case 'I': //Parse HTTP form and implement changes
+            case 'I': {//Parse HTTP form and implement changes
               implementConfig();
               generateConfigPage();
               generateChangeConfigPage();
+#ifdef MAX_CUL
+              UpdateMaxDeviceList(); //Update list MAX! devices
+#endif
+              if(!(httpflags & 128)) webPrintFooter();
+              flushToWebClient();
+
+              boolean buschanged = false;
+              boolean needReboot = false;
               //save new values from RAM to EEPROM
-/*              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-                writeToEEPROM(i);
+              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+                if(writeToEEPROM(i)){
+                  switch(i){
+                    case CF_BUSTYPE:
+                    case CF_OWN_BSBADDR:
+                    case CF_OWN_LPBADDR:
+                    case CF_DEST_LPBADDR:
+                    case CF_PPS_WRITE:
+                      if(!buschanged) {setBusType(); buschanged = true;} break;
+                    case CF_MAC:
+                    case CF_DHCP:
+                    case CF_IPADDRESS:
+                    case CF_MASK:
+                    case CF_GATEWAY:
+                    case CF_DNS:
+                    case CF_MAX_IPADDRESS:
+                    case CF_ONEWIREBUS:
+                    case CF_WWWPORT:
+                      needReboot = true;
+                      break;
+#ifdef MQTT
+                    case CF_MQTT:
+                    case CF_MQTT_IPADDRESS:
+                      if(MQTTClient){
+                        delete MQTTClient;
+                        MQTTClient = NULL;
+                      }
+                      break;
+#endif
+                    default: break;
+                  }
+                }
               }
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            client.stop();
-            resetBoard();
-*/
+              if(needReboot == true){
+                client.stop();
+                resetBoard();
+              }
+            }
             break;
               //no break here.
 #endif
@@ -7408,22 +7457,27 @@ uint8_t pps_offset = 0;
           }
 
           printToWebClient(PSTR(MENU_TEXT_BUS ": "));
-          if (p[2]=='0') {
-            own_bsb_address = myAddr;
-            bus->setBusType(BUS_BSB, myAddr);
-            printToWebClient(PSTR("BSB"));
+          uint8_t savedbus = bus_type;
+          bus_type = p[2] - '0';
+          switch (bus_type){
+            case 0:
+              own_bsb_address = myAddr;
+              printToWebClient(PSTR("BSB"));
+              break;
+            case 1:
+              own_lpb_address = myAddr;
+              dest_lpb_address = destAddr;
+              printToWebClient(PSTR("LPB"));
+              break;
+            case 2:
+              pps_write = myAddr;
+              printToWebClient(PSTR("PPS"));
+              break;
+            default:
+              bus_type = savedbus;
+              break;
           }
-          if (p[2]=='1') {
-            own_lpb_address = myAddr;
-            dest_lpb_address = destAddr;
-            bus->setBusType(BUS_LPB, myAddr, destAddr);
-            printToWebClient(PSTR("LPB"));
-          }
-          if (p[2]=='2') {
-            pps_write = myAddr;
-            bus->setBusType(BUS_PPS, myAddr);
-            printToWebClient(PSTR("PPS"));
-          }
+          setBusType(); //Apply changes
           printToWebClient(PSTR("\r\n"));
           if (bus->getBusType() != BUS_PPS) {
             printFmtToWebClient(PSTR(" (%d, %d)"), myAddr, destAddr);
@@ -8134,8 +8188,12 @@ void setup() {
     registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
     registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
     registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
-//    registerConfigVariable(CF_READONLY, (byte *)mac);
-//    registerConfigVariable(CF_DEBUG, (byte *)mac);
+    if(DEFAULT_FLAG & FL_SW_CTL_RONLY) {
+      registerConfigVariable(CF_READONLY, (byte *)&readOnlyMode);
+    }
+    registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
+    registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
+    registerConfigVariable(CF_MONITOR, (byte *)&monitor);
 #endif
 
 
@@ -8234,12 +8292,7 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
   }
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
 
-  switch(bus_type){
-    default:
-    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
-    case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
-    case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
-  }
+  setBusType(); //set BSB/LPB/PPS mode
 
   bus->enableInterface();
 
