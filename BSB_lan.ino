@@ -7144,12 +7144,12 @@ uint8_t pps_offset = 0;
 
 #ifdef LOGGER
         if(p[1]=='D'){ // access datalog file
-          if ((p[2]=='D' || p[2]=='J') && p[3]=='0') {  // remove datalog file
+          if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
             webPrintHeader();
             File dataFile;
             boolean filewasrecreated = false;
 //recreate journal file for telegram logging
-            if(p[2]=='J'){
+            if(p[2]=='J' || p[2]=='0'){
               SD.remove(journalFileName);
               dataFile = SD.open(journalFileName, FILE_WRITE);
               if (dataFile) {
@@ -7160,7 +7160,11 @@ uint8_t pps_offset = 0;
               }
             }
 //recreate datalog file for programs values logging
-            if(p[2]=='D'){
+              if(p[2]=='D' || p[2]=='0'){
+                if(p[2]=='0') {
+                  printToDebug(PSTR(", "));
+                  printToWebClient(PSTR(", "));
+                }
               SD.remove(datalogFileName);
               if (createdatalogFileAndWriteHeader()) {
                 filewasrecreated = true;
@@ -7170,7 +7174,7 @@ uint8_t pps_offset = 0;
             }
             if(filewasrecreated){
               printToWebClient(PSTR(MENU_TEXT_DTR "\r\n"));
-              printToDebug(PSTR(": file was removed and recreated."));
+              printToDebug(PSTR(": file(s) was removed and recreated."));
             } else {
               printToWebClient(PSTR(MENU_TEXT_DTF "\r\n"));
             }
