@@ -592,6 +592,19 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
+#undef CF_USEEEPROM_TEXT
+#undef CF_BUSTYPE_TEXT
+#undef CF_OWN_BSBADDR_TEXT
+#undef CF_OWN_LPBADDR_TEXT
+#undef CF_DEST_LPBADDR_TEXT
+#undef CF_PPS_WRITE_TEXT
+#undef CF_LOGTELEGRAM_TEXT
+#undef CF_LOGAVERAGES_TEXT
+#undef CF_LOGCURRVALUES_TEXT
+#undef CF_LOGCURRINTERVAL_TEXT
+#undef CF_AVERAGESLIST_TEXT
+#undef CF_CURRVALUESLIST_TEXT
+#undef CF_MAX_DEVICES_TEXT
 #define CF_USEEEPROM_TEXT ""
 #define CF_BUSTYPE_TEXT ""
 #define CF_OWN_BSBADDR_TEXT ""
