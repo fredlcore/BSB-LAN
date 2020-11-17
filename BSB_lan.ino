@@ -3366,11 +3366,6 @@ void generateConfigPage(void){
   printToWebClient(PSTR("CUSTOM_COMMANDS"));
   j = 1;
   #endif
-  #ifdef RESET
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient( PSTR("RESET"));
-  j = 1;
-  #endif
   #ifdef MQTT
   if(j) printToWebClient(PSTR(", "));
   printToWebClient(PSTR("MQTT"));
@@ -5519,7 +5514,6 @@ void transmitFile(File dataFile) {
  * Global resources used:
  *   none
  * *************************************************************** */
-#ifdef RESET
 void resetBoard(){
 #if defined(__SAM3X8E__)
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
@@ -5533,7 +5527,6 @@ void resetBoard(){
 #endif
 
 }
-#endif
 
 #ifdef LOGGER
 boolean createdatalogFileAndWriteHeader(){
