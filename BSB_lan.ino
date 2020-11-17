@@ -8449,7 +8449,6 @@ printToDebug(PSTR("PPS settings:\r\n"));
     }
 #endif
 
-if(ip_addr[0] && !useDHCP){
 #ifdef WIFI
   SerialOutput->println(WiFi.localIP());
 #else
@@ -8457,7 +8456,6 @@ if(ip_addr[0] && !useDHCP){
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
 #endif
-}
 
 #ifdef WIFI
   server = new WiFiEspServer(HTTPPort);
