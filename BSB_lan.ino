@@ -5466,7 +5466,7 @@ void Ipwe() {
  *  pps_values[]
  * *************************************************************** */
 
-uint16_t setPPS(uint8_t pps_index, uint16_t value) {
+uint16_t setPPS(uint8_t pps_index, int16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
     if(logCurrentValues){
@@ -5777,7 +5777,7 @@ void loop() {
               if (time_set == true) {
                 boolean found = false;
                 boolean next_active = true;
-                uint16_t current_time = hour() * 6 + minute() / 10;
+                int16_t current_time = hour() * 6 + minute() / 10;
                 int8_t PPS_weekday = weekday() - 1;
                 uint8_t next_switchday = 0;
                 uint8_t next_switchtime = 0;
@@ -7520,7 +7520,6 @@ uint8_t pps_offset = 0;
           break;
         }
         if (p[1]=='N'){           // Reset Arduino...
-#ifdef RESET
           webPrintHeader();
           if (p[2]=='E') {
             printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\r\n"));
@@ -7551,7 +7550,6 @@ uint8_t pps_offset = 0;
           forcedflushToWebClient();
           client.stop();
           resetBoard();
-#endif
           break;
         }
         // print queries
@@ -8394,8 +8392,8 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
 
 printToDebug(PSTR("PPS settings:\r\n"));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
-    if(pps_values[i] == 0xFFFF) pps_values[i] = 0;
-    if (pps_values[i] > 0 && pps_values[i]< 0xFFFF && i != PPS_RTI) {
+    if(pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
+    if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
     }
   }
