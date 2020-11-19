@@ -4619,11 +4619,10 @@ char *build_pvalstr(boolean extended){
   if(decodedTelegram.sensorid){
     len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
   }
-  strcpy_P(outBuf + len, PSTR(":"));
+  strcpy_P(outBuf + len, PSTR(": "));
   len+=strlen(outBuf + len);
   }
 if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  strcpy_P(outBuf + len, PSTR(" "));
   strcat(outBuf + len, decodedTelegram.value);
   len+=strlen(outBuf + len);
 }
