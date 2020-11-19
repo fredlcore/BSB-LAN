@@ -7720,6 +7720,8 @@ uint8_t pps_offset = 0;
         }
       }
 
+      for (int i=0; i < numLogValues; i++) {
+
       // Declare local variables and start building json if enabled
       if(mqtt_mode == 2){
         MQTTPayload = "";
@@ -7732,7 +7734,7 @@ uint8_t pps_offset = 0;
         MQTTPayload.concat(F("\":{\"status\":{"));
       }
       boolean is_first = true;
-      for (int i=0; i < numLogValues; i++) {
+      /*for (int i=0; i < numLogValues; i++) */{
         if (log_parameters[i] > 0) {
           if (MQTTClient->connected()) {
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
@@ -7783,6 +7785,7 @@ uint8_t pps_offset = 0;
         writelnToDebug();
         // Now publish the json payload only once
         MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+      }
       }
       MQTTClient->disconnect();
     }
