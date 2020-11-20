@@ -4667,6 +4667,7 @@ int set(int line      // the ProgNr of the heater parameter
   * *************************************************************** */
 char *build_pvalstr(boolean extended){
   int len = 0;
+  outBuf[len] = 0;
   if(extended){
   len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
   strcpy_PF(outBuf + len, decodedTelegram.catdescaddr);
