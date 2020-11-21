@@ -1985,6 +1985,7 @@
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"
 #define ENUM_MQTT_JSON_TEXT "JSON"
+#define ENUM_MQTT_JSON2_TEXT "Rich JSON"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"

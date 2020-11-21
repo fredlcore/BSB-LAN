@@ -7835,15 +7835,15 @@ uint8_t pps_offset = 0;
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
               outbuf[len] = 0;
-              len += sprintf(outBuf + len, "%d\",\"parametername\":\"", log_parameters[i]);
+              len += sprintf_P(outBuf + len, PSTR("%d\",\"parametername\":\""), log_parameters[i]);
               strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
               len += strlen(outBuf + len);
-              len += sprintf(outBuf + len, "\",\"value\": \"%s\",\"desc\": \"", decodedTelegram.value);
+              len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
               if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
                 strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr);
                 len += strlen(outBuf + len);
               }
-              len += sprintf(outBuf + len, "\",\"unit\": \"%s\",\"error\": %d", decodedTelegram.unit, decodedTelegram.error);
+              len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
               MQTTPayload.concat(outBuf);
             } else if(mqtt_mode == 2){ // Build the json doc on the fly
               char tbuf[20];
