@@ -7834,7 +7834,7 @@ uint8_t pps_offset = 0;
             query(log_parameters[i]);
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
-              outbuf[len] = 0;
+              outBuf[len] = 0;
               len += sprintf_P(outBuf + len, PSTR("%d\",\"parametername\":\""), log_parameters[i]);
               strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
               len += strlen(outBuf + len);
