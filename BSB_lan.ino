@@ -7801,7 +7801,7 @@ uint8_t pps_offset = 0;
       for (int i=0; i < numLogValues; i++) {
 
       // Declare local variables and start building json if enabled
-      if(mqtt_mode == 2){
+      if(mqtt_mode == 2 || mqtt_mode == 3){
         MQTTPayload = "";
         // Build the json heading
         MQTTPayload.concat(F("{\""));
@@ -7809,7 +7809,10 @@ uint8_t pps_offset = 0;
           MQTTPayload.concat(MQTTDeviceID);
         else
           MQTTPayload.concat(F("BSB-LAN"));
-        MQTTPayload.concat(F("\":{\"status\":{"));
+        if(mqtt_mode == 2)
+          MQTTPayload.concat(F("\":{\"status\":{"));
+        if(mqtt_mode == 3)
+          MQTTPayload.concat(F("\":{\"parameterid\":"));
       }
       boolean is_first = true;
       /*for (int i=0; i < numLogValues; i++) */{
@@ -7823,13 +7826,26 @@ uint8_t pps_offset = 0;
             else
               MQTTTopic = "BSB-LAN/";
 // use the sub-topic "json" if json output is enabled
-            if(mqtt_mode == 2)
+            if(mqtt_mode == 2 || mqtt_mode == 3)
               MQTTTopic.concat(F("json"));
             else
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
-            if(mqtt_mode == 2){ // Build the json doc on the fly
+            if(mqtt_mode == 3){ // Build the json doc on the fly
+              int len = 0;
+              outbuf[len] = 0;
+              len += sprintf(outBuf + len, "%d\",\"parametername\":\"", log_parameters[i]);
+              strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
+              len += strlen(outBuf + len);
+              len += sprintf(outBuf + len, "\",\"value\": \"%s\",\"desc\": \"", decodedTelegram.value);
+              if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
+                strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr);
+                len += strlen(outBuf + len);
+              }
+              len += sprintf(outBuf + len, "\",\"unit\": \"%s\",\"error\": %d", decodedTelegram.unit, decodedTelegram.error);
+              MQTTPayload.concat(outBuf);
+            } else if(mqtt_mode == 2){ // Build the json doc on the fly
               char tbuf[20];
               sprintf_P(tbuf, PSTR("\"%d\":\""), log_parameters[i]);
               MQTTPayload.concat(tbuf);
@@ -7852,9 +7868,12 @@ uint8_t pps_offset = 0;
         }
       }
       // End of mqtt if loop so close off the json and publish
-      if(mqtt_mode == 2){
+      if(mqtt_mode == 2 || mqtt_mode == 3){
         // Close the json doc off
-        MQTTPayload.concat(F("}}}"));
+        if(mqtt_mode == 2)
+          MQTTPayload.concat(F("}}}"));
+        else
+          MQTTPayload.concat(F("}}"));
         // debugging..
         printToDebug(PSTR("Output topic: "));
         printToDebug(MQTTTopic.c_str());
