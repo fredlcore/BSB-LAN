@@ -6,7 +6,7 @@
 
 // Upon first installation, rename this file from BSB_lan_config.h.default to BSB_lan_config.h and adjust settings accordingly
 // Users who still use Arduino Mega2560 boards instead of Arduin Due: Please have a look at the very end of this configuration
-// where certain modules are disabled by default due to limited flash memory. 
+// where certain modules are disabled by default due to limited flash memory.
 
 /* Select language; so far German is the most complete, with English following.
  * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
@@ -147,8 +147,9 @@ int log_parameters[40] = {
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
 #define MQTT
-byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
-// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1","log_param2":"value2"}, ...}}
+byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
+// rich JSON payload will be of the structure: {"MQTTDeviceID": {"parameterid": one_of_logvalues, "parametername": "name", "value": "query_result", "desc": "enum value description", "unit": "unit of measurement", "error", error_code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
 char MQTTUsername[32] = "User";                 // Set username for MQTT broker here or set zero-length string if no username/password is used.
 char MQTTPassword[32] = "Pass";                 // Set password for MQTT broker here or set zero-length string if no password is used.
@@ -235,8 +236,8 @@ static const int fixed_device_variant = 0;
 //#define CUSTOM_COMMANDS
 
 /*
- * Check for new versions when accessing BSB-LAN's main page. 
- * Doing so will poll the most recent version number from the BSB-LAN server. 
+ * Check for new versions when accessing BSB-LAN's main page.
+ * Doing so will poll the most recent version number from the BSB-LAN server.
  * In this process, it is unavoidable that your IP address will be transferred to the server, obviously.
  * We nevertheless mention this here because this constitutes as 'personal data' and this feature is therefore disabled by default.
  * Activating this feature means you are consenting to transmitting your IP address to the BSB-LAN server where it will be stored

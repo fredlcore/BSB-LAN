@@ -6489,7 +6489,8 @@ const char ENUM_DEBUG[] PROGMEM_LATEST = {
 const char ENUM_MQTT[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " ENUM_MQTT_PLAIN_TEXT "\0"
-"\x02 " ENUM_MQTT_JSON_TEXT
+"\x02 " ENUM_MQTT_JSON_TEXT "\0"
+"\x03 " ENUM_MQTT_JSON2_TEXT
 };
 
 //Choices for YES/NO, ON/OFF, CLOSED/OPEN, voltage ON/OFF
@@ -11305,17 +11306,16 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 
-//Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+//{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
+};
+
+PROGMEM_LATE const cmd_t cmdtbl3[]={
+  //Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_MQTT,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, "",       sizeof(ENUM_DEBUG),   ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, "",       sizeof(ENUM_LOGTELEGRAM),   ENUM_LOGTELEGRAM,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65532, "",       sizeof(ENUM_BUSTYPE),   ENUM_BUSTYPE,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65533, "",       sizeof(ENUM_ONOFF),   ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65534, "",       sizeof(ENUM_EEPROM_ONOFF),ENUM_EEPROM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
-
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
-};
-
-PROGMEM_LATE const cmd_t cmdtbl3[]={
 {CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 };
