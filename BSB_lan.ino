@@ -1107,6 +1107,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
 uint32_t get_cmdtbl_cmd(int i) {
   uint32_t c = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  c=pgm_read_dword(&cmdtbl[i].cmd);  // command code
 #if defined(__AVR__)
@@ -1114,11 +1115,17 @@ uint32_t get_cmdtbl_cmd(int i) {
 #else
     c = cmdtbl1[i].cmd;
 #endif
-   } else {
+} else if (i < entries2) {
 #if defined(__AVR__)
-    c = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
+    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl2[0].cmd) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     c = cmdtbl2[i-entries1].cmd;
+#endif
+  } else {
+#if defined(__AVR__)
+    c = pgm_read_dword_far(pgm_get_far_address(cmdtbl3[0].cmd) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    c = cmdtbl3[i-entries2].cmd;
 #endif
   }
   return c;
@@ -1127,6 +1134,7 @@ uint32_t get_cmdtbl_cmd(int i) {
 uint16_t get_cmdtbl_line(int i) {
   uint16_t l = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //  l=pgm_read_word(&cmdtbl[i].line);  // ProgNr
 #if defined(__AVR__)
@@ -1134,11 +1142,17 @@ uint16_t get_cmdtbl_line(int i) {
 #else
     l = cmdtbl1[i].line;
 #endif
-   } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
-    l = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
+    l = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].line) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     l = cmdtbl2[i-entries1].line;
+#endif
+  } else {
+#if defined(__AVR__)
+    l = pgm_read_word_far(pgm_get_far_address(cmdtbl3[0].line) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    l = cmdtbl3[i-entries2].line;
 #endif
   }
   return l;
@@ -1147,17 +1161,24 @@ uint16_t get_cmdtbl_line(int i) {
 uint_farptr_t get_cmdtbl_desc(int i) {
   uint_farptr_t desc = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     desc = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].desc) + i * sizeof(cmdtbl1[0]));
 #else
     desc = cmdtbl1[i].desc;
 #endif
-   } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
-    desc = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
+    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].desc) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     desc = cmdtbl2[i-entries1].desc;
+#endif
+  } else {
+#if defined(__AVR__)
+    desc = pgm_read_word_far(pgm_get_far_address(cmdtbl3[0].desc) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    desc = cmdtbl3[i-entries2].desc;
 #endif
   }
   return desc;
@@ -1166,17 +1187,24 @@ uint_farptr_t get_cmdtbl_desc(int i) {
 uint_farptr_t get_cmdtbl_enumstr(int i) {
   uint_farptr_t enumstr = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr = cmdtbl1[i].enumstr;
 #endif
-   } else  {
+  } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr = cmdtbl2[i-entries1].enumstr;
+#endif
+  } else {
+#if defined(__AVR__)
+    enumstr = pgm_read_word_far(pgm_get_far_address(cmdtbl3[0].enumstr) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr = cmdtbl3[i-entries2].enumstr;
 #endif
   }
   return enumstr;
@@ -1185,17 +1213,24 @@ uint_farptr_t get_cmdtbl_enumstr(int i) {
 uint16_t get_cmdtbl_enumstr_len(int i) {
   uint16_t enumstr_len = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl1[0].enumstr_len) + i * sizeof(cmdtbl1[0]));
 #else
     enumstr_len = cmdtbl1[i].enumstr_len;
 #endif
-   } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
-    enumstr_len = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
+    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl2[0].enumstr_len) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     enumstr_len = cmdtbl2[i-entries1].enumstr_len;
+#endif
+  } else {
+#if defined(__AVR__)
+    enumstr_len = pgm_read_word_far(pgm_get_far_address(cmdtbl3[0].enumstr_len) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    enumstr_len = cmdtbl3[i-entries2].enumstr_len;
 #endif
   }
   return enumstr_len;
@@ -1205,6 +1240,7 @@ uint16_t get_cmdtbl_enumstr_len(int i) {
 uint8_t get_cmdtbl_category(int i) {
   uint8_t cat = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 //   cat=pgm_read_byte(&cmdtbl[i].category);
 #if defined(__AVR__)
@@ -1212,11 +1248,17 @@ uint8_t get_cmdtbl_category(int i) {
 #else
     cat = cmdtbl1[i].category;
 #endif
-  } else {
+  } else if (i < entries2){
 #if defined(__AVR__)
     cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].category) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     cat = cmdtbl2[i-entries1].category;
+#endif
+  } else {
+#if defined(__AVR__)
+    cat = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].category) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    cat = cmdtbl3[i-entries2].category;
 #endif
   }
   return cat;
@@ -1225,17 +1267,24 @@ uint8_t get_cmdtbl_category(int i) {
 uint8_t get_cmdtbl_type(int i) {
   uint8_t type = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].type) + i * sizeof(cmdtbl1[0]));
 #else
     type = cmdtbl1[i].type;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     type = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].type) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     type = cmdtbl2[i-entries1].type;
+#endif
+  } else {
+#if defined(__AVR__)
+    type = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].type) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    type = cmdtbl3[i-entries2].type;
 #endif
   }
   return type;
@@ -1244,17 +1293,24 @@ uint8_t get_cmdtbl_type(int i) {
 uint8_t get_cmdtbl_dev_fam(int i) {
   uint8_t dev_fam = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_fam) + i * sizeof(cmdtbl1[0]));
 #else
     dev_fam = cmdtbl1[i].dev_fam;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_fam) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_fam = cmdtbl2[i-entries1].dev_fam;
+#endif
+  } else {
+#if defined(__AVR__)
+    dev_fam = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_fam) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_fam = cmdtbl3[i-entries2].dev_fam;
 #endif
   }
   return dev_fam;
@@ -1263,37 +1319,50 @@ uint8_t get_cmdtbl_dev_fam(int i) {
 uint8_t get_cmdtbl_dev_var(int i) {
   uint8_t dev_var = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].dev_var) + i * sizeof(cmdtbl1[0]));
 #else
     dev_var = cmdtbl1[i].dev_var;
 #endif
-  } else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].dev_var) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     dev_var = cmdtbl2[i-entries1].dev_var;
 #endif
+  } else {
+#if defined(__AVR__)
+    dev_var = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].dev_var) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    dev_var = cmdtbl3[i-entries2].dev_var;
+#endif
   }
-
   return dev_var;
 }
 
 uint8_t get_cmdtbl_flags(int i) {
   uint8_t flags = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
+  int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl1[0].flags) + i * sizeof(cmdtbl1[0]));
 #else
     flags = cmdtbl1[i].flags;
 #endif
-} else {
+  } else if (i < entries2) {
 #if defined(__AVR__)
     flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl2[0].flags) + (i - entries1) * sizeof(cmdtbl2[0]));
 #else
     flags = cmdtbl2[i-entries1].flags;
+#endif
+  } else {
+#if defined(__AVR__)
+    flags = pgm_read_byte_far(pgm_get_far_address(cmdtbl3[0].flags) + (i - entries2) * sizeof(cmdtbl3[0]));
+#else
+    flags = cmdtbl3[i-entries2].flags;
 #endif
   }
   return flags;
@@ -1357,6 +1426,7 @@ int findLine(uint16_t line
   int save_i = 0;
   uint32_t c, save_c = 0;
   uint16_t l;
+//  printFmtToDebug(PSTR("line = %d\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
   if(line >= 20000 && line < 20700){
@@ -1385,13 +1455,14 @@ int findLine(uint16_t line
   // binary search for the line in cmdtbl
 
   int left = start_idx;
-  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1);
+  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1);
   int mid = 0;
   while (!(left >= right))
     {
     if (get_cmdtbl_line(left) == line){ i = left; break; }
     mid = left + (right - left) / 2;
     uint16_t temp = get_cmdtbl_line(mid);
+//    printFmtToDebug(PSTR("get_cmdtbl_line: left = %d, mid = %d\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
     if (temp == line)
       {
       if (mid == left + 1)
@@ -1403,8 +1474,9 @@ int findLine(uint16_t line
       right = mid;
     else
       left = mid + 1;
+//    printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
     }
-
+//  printFmtToDebug(PSTR("i = %d\r\n"), i);
   if(i == -1) return i;
 
   l = get_cmdtbl_line(i);
@@ -1413,6 +1485,7 @@ int findLine(uint16_t line
     uint8_t dev_fam = get_cmdtbl_dev_fam(i);
     uint8_t dev_var = get_cmdtbl_dev_var(i);
     uint8_t dev_flags = get_cmdtbl_flags(i);
+//    printFmtToDebug(PSTR("l = %d, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n"), l, dev_fam, dev_var, dev_flags);
 
     if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
       if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
@@ -3207,6 +3280,12 @@ char *lookup_descr(uint16_t line) {
 
 void generateConfigPage(void){
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>"));
+  printToWebClient(PSTR("Hardware: "));
+#if defined(__AVR__)
+  printToWebClient(PSTR("Mega 2560<BR>\r\n"));
+#else
+  printToWebClient(PSTR("Due<BR>\r\n"));
+#endif
   printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\r\n" MENU_TEXT_RAM ": "));
 #ifdef WEBCONFIG
   printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
@@ -3590,7 +3669,7 @@ void generateChangeConfigPage(){
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
 #if defined(__AVR__)
-    printToWebClient(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0]));
+    printToWebClient(pgm_read_word_far(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0])));
 #else
     printToWebClient(catalist[cfg.category].desc);
 #endif
@@ -5931,7 +6010,7 @@ ich mir da nicht)
 uint8_t pps_offset = 0;
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
             uint16_t temp = (msg[6] << 8) + msg[7];
-            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) - 1;
+            uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1;
             while (i > 0 && get_cmdtbl_line(i) >= 15000) {
               uint32_t cmd = get_cmdtbl_cmd(i);
               cmd = (cmd & 0x00FF0000) >> 16;
@@ -7028,10 +7107,12 @@ uint8_t pps_offset = 0;
               json_parameter = atoi(json_token);
             }
             if (output || json_token != NULL) {
-              int i_line=findLine(json_parameter,0,&cmd);
-              if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000))) { //CMD_UNKNOWN except virtual programs
-                json_token = strtok(NULL,",");
-                continue;
+              if (p[2] != 'K') {
+                int i_line=findLine(json_parameter,0,&cmd);
+                if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000))) { //CMD_UNKNOWN except virtual programs
+                  json_token = strtok(NULL,",");
+                  continue;
+                }
               }
 
               output = false;
@@ -7085,7 +7166,7 @@ uint8_t pps_offset = 0;
               }
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
-                i_line=findLine(json_parameter,0,&cmd);
+                int i_line=findLine(json_parameter,0,&cmd);
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
@@ -8226,6 +8307,7 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
     printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
   printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
+  printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
