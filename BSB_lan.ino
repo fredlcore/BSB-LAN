@@ -903,12 +903,10 @@ void forcedflushToWebClient(){
 
 int writelnToWebClient(){
 #if defined(__AVR__)
-  strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n"));
+  int len = strlen(strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n")));
 #else
-  strcpy(bigBuff + bigBuffPos, PSTR("\r\n"));
+  int len = strlen(strcpy(bigBuff + bigBuffPos, PSTR("\r\n")));
 #endif
-  int len = strlen(bigBuff + bigBuffPos);
-//  int len = 1; //"\n" string length
   bigBuffPos += len;
   return len;
 }
@@ -2435,17 +2433,18 @@ void printTimeProg(byte *msg,byte data_len){
 
   if(data_len == 12){
     for(byte i = 0; i < 3; i++){
+      if(i){
+        decodedTelegram.value[len] = ' ';
+        len++;
+      }
       len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
       if(msg[k]<24){
         len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       }else{
+//        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
         strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
         len += 13;
-      }
-      if(i<2){
-        decodedTelegram.value[len] = ' ';
-        len++;
       }
     }
     decodedTelegram.value[len] = 0;
@@ -2997,8 +2996,7 @@ void printTelegram(byte* msg, int query_line) {
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
                 default: getfarstrings = PSTR(""); break;
               }
-              strcpy_P(decodedTelegram.value, getfarstrings);
-              q = strlen(decodedTelegram.value);
+              q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
               sprintf_P(decodedTelegram.value + q, PSTR(", %02d:%02d:%02d"), hour(), minute(), second());
               printToDebug(decodedTelegram.value);
               break;
@@ -3690,6 +3688,9 @@ void generateChangeConfigPage(){
        case CDT_IPV4:
          printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
          break;
+       case CDT_PROGNRLIST:
+         printToWebClient(PSTR("pattern='((^|,)((\\d){1,5}))'"));
+         break;
        }
      printToWebClient(PSTR(" VALUE='"));
      break;
@@ -3931,8 +3932,7 @@ void LogTelegram(byte* msg){
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
       if(!known){                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN"));
-        outBufLen += strlen(outBuf + outBufLen);
+        outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN")));
       }else{
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
@@ -4677,28 +4677,21 @@ char *build_pvalstr(boolean extended){
   int len = 0;
   outBuf[len] = 0;
   if(extended){
-  len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
-  strcpy_PF(outBuf + len, decodedTelegram.catdescaddr);
-  len+=strlen(outBuf + len);
-  strcpy_P(outBuf + len, PSTR(" - "));
-  len+=strlen(outBuf + len);
-  if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
-    strcpy_P(outBuf + len, PSTR(STR_24A_TEXT));
-    len+=strlen(outBuf + len);
-    strcpy_P(outBuf + len, PSTR(". "));
-    len+=strlen(outBuf + len);
-  }
-  strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
-  len+=strlen(outBuf + len);
-  if(decodedTelegram.sensorid){
-    len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
-  }
-  strcpy_P(outBuf + len, PSTR(": "));
-  len+=strlen(outBuf + len);
+    len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
+    len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
+    len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
+    if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
+      len+=strlen(strcpy_P(outBuf + len, PSTR(STR_24A_TEXT)));
+      len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
+    }
+    len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
+    if(decodedTelegram.sensorid){
+      len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
+    }
+    len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
   }
 if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  strcpy(outBuf + len, decodedTelegram.value);
-  len+=strlen(outBuf + len);
+  len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
 }
 if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
   if(decodedTelegram.enumdescaddr){
@@ -7838,12 +7831,10 @@ uint8_t pps_offset = 0;
               int len = 0;
               outBuf[len] = 0;
               len += sprintf_P(outBuf + len, PSTR("%d\",\"parametername\":\""), log_parameters[i]);
-              strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
-              len += strlen(outBuf + len);
+              len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
               len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
               if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
-                strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr);
-                len += strlen(outBuf + len);
+                len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
               }
               len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
               MQTTPayload.concat(outBuf);
@@ -7910,8 +7901,7 @@ uint8_t pps_offset = 0;
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
              //averages
-              strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
-              outBufLen += strlen(outBuf + outBufLen);
+              outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
             }
             dataFile.print(outBuf);
             query(log_parameters[i]);
