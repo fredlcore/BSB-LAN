@@ -469,9 +469,9 @@ EthernetClient telnetClient;
 
 #ifdef MAX_CUL
 #ifdef WIFI
-WiFiEspClient max_cul;
+WiFiEspClient *max_cul;
 #else
-EthernetClient max_cul;
+EthernetClient *max_cul;
 #endif
 #endif
 
@@ -5543,6 +5543,23 @@ boolean createdatalogFileAndWriteHeader(){
 }
 #endif
 
+#ifdef MAX_CUL
+void connectToMaxCul() {
+  if(max_cul){
+    delete max_cul;
+    max_cul = NULL;
+    if(!enable_max_cul) return;
+  }
+
+  max_cul = new EthernetClient();
+  printToDebug(PSTR("Connection to max_cul: "));
+  if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
+    printlnToDebug(PSTR("established"));
+  } else {
+    printlnToDebug(PSTR("failed"));
+  }
+}
+#endif
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -7327,18 +7344,31 @@ uint8_t pps_offset = 0;
                     case CF_OWN_LPBADDR:
                     case CF_DEST_LPBADDR:
                     case CF_PPS_WRITE:
-                      if(!buschanged) {setBusType(); buschanged = true;} break;
+                      buschanged = true;
+                      break;
+                    //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
+                    // so here no reason do dynamic reconfiguration.
+                    // Topic: Possible to STOP an ethernet server once started and release resources ?
+                    // https://forum.arduino.cc/index.php?topic=395827.0
+                    // Topic: Dynamically changing IP address of Ethernet Shield (not DHCP and without reboot)
+                    // https://forum.arduino.cc/index.php?topic=89469.0
+                    // Resume: it possible but can cause unpredicable effects
                     case CF_MAC:
                     case CF_DHCP:
                     case CF_IPADDRESS:
                     case CF_MASK:
                     case CF_GATEWAY:
                     case CF_DNS:
-                    case CF_MAX_IPADDRESS:
                     case CF_ONEWIREBUS:
                     case CF_WWWPORT:
                       needReboot = true;
                       break;
+#ifdef MAX_CUL
+                    case CF_MAX:
+                    case CF_MAX_IPADDRESS:
+                      connectToMaxCul();
+                      break;
+#endif
 #ifdef MQTT
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
@@ -7356,6 +7386,7 @@ uint8_t pps_offset = 0;
                 client.stop();
                 resetBoard();
               }
+              if(!buschanged) {setBusType(); }
             }
             break;
               //no break here.
@@ -7367,7 +7398,7 @@ uint8_t pps_offset = 0;
 #endif
               if(!(httpflags & 128)) webPrintFooter();
               flushToWebClient();
-// EEPROM dump require ~3 sec so let it be last operation. 
+// EEPROM dump require ~3 sec so let it be last operation.
               if(EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
@@ -8012,8 +8043,8 @@ uint8_t pps_offset = 0;
 #error "OUTBUF_LEN must be at least 60. In other case MAX! will not work."
 #endif
 
-  while (max_cul.available() && EEPROM_ready) {
-    c = max_cul.read();
+  while (max_cul->available() && EEPROM_ready) {
+    c = max_cul->read();
 //    printFmtToDebug(PSTR("%c"), c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
       outBuf[max_str_index++]=c;
@@ -8676,15 +8707,10 @@ if (!SD.exists(datalogFileName)) {
 #ifdef MAX_CUL
   if(enable_max_cul){
     UpdateMaxDeviceList();
-    printToDebug(PSTR("Connection to max_cul: "));
-    if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
-      printlnToDebug(PSTR("established"));
-    } else {
-      printlnToDebug(PSTR("failed"));
-    }
+    connectToMaxCul();
   }
-
 #endif
+
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
