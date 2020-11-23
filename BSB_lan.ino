@@ -469,9 +469,9 @@ EthernetClient telnetClient;
 
 #ifdef MAX_CUL
 #ifdef WIFI
-WiFiEspClient max_cul;
+WiFiEspClient *max_cul;
 #else
-EthernetClient max_cul;
+EthernetClient *max_cul;
 #endif
 #endif
 
@@ -903,12 +903,10 @@ void forcedflushToWebClient(){
 
 int writelnToWebClient(){
 #if defined(__AVR__)
-  strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n"));
+  int len = strlen(strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n")));
 #else
-  strcpy(bigBuff + bigBuffPos, PSTR("\r\n"));
+  int len = strlen(strcpy(bigBuff + bigBuffPos, PSTR("\r\n")));
 #endif
-  int len = strlen(bigBuff + bigBuffPos);
-//  int len = 1; //"\n" string length
   bigBuffPos += len;
   return len;
 }
@@ -2435,17 +2433,18 @@ void printTimeProg(byte *msg,byte data_len){
 
   if(data_len == 12){
     for(byte i = 0; i < 3; i++){
+      if(i){
+        decodedTelegram.value[len] = ' ';
+        len++;
+      }
       len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
       if(msg[k]<24){
         len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       }else{
+//        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
         strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
         len += 13;
-      }
-      if(i<2){
-        decodedTelegram.value[len] = ' ';
-        len++;
       }
     }
     decodedTelegram.value[len] = 0;
@@ -2997,8 +2996,7 @@ void printTelegram(byte* msg, int query_line) {
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
                 default: getfarstrings = PSTR(""); break;
               }
-              strcpy_P(decodedTelegram.value, getfarstrings);
-              q = strlen(decodedTelegram.value);
+              q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
               sprintf_P(decodedTelegram.value + q, PSTR(", %02d:%02d:%02d"), hour(), minute(), second());
               printToDebug(decodedTelegram.value);
               break;
@@ -3690,6 +3688,9 @@ void generateChangeConfigPage(){
        case CDT_IPV4:
          printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
          break;
+       case CDT_PROGNRLIST:
+         printToWebClient(PSTR("pattern='((^|,)((\\d){1,5}))'"));
+         break;
        }
      printToWebClient(PSTR(" VALUE='"));
      break;
@@ -3931,8 +3932,7 @@ void LogTelegram(byte* msg){
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
       if(!known){                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN"));
-        outBufLen += strlen(outBuf + outBufLen);
+        outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN")));
       }else{
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
@@ -4677,28 +4677,21 @@ char *build_pvalstr(boolean extended){
   int len = 0;
   outBuf[len] = 0;
   if(extended){
-  len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
-  strcpy_PF(outBuf + len, decodedTelegram.catdescaddr);
-  len+=strlen(outBuf + len);
-  strcpy_P(outBuf + len, PSTR(" - "));
-  len+=strlen(outBuf + len);
-  if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
-    strcpy_P(outBuf + len, PSTR(STR_24A_TEXT));
-    len+=strlen(outBuf + len);
-    strcpy_P(outBuf + len, PSTR(". "));
-    len+=strlen(outBuf + len);
-  }
-  strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
-  len+=strlen(outBuf + len);
-  if(decodedTelegram.sensorid){
-    len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
-  }
-  strcpy_P(outBuf + len, PSTR(": "));
-  len+=strlen(outBuf + len);
+    len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
+    len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
+    len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
+    if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
+      len+=strlen(strcpy_P(outBuf + len, PSTR(STR_24A_TEXT)));
+      len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
+    }
+    len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
+    if(decodedTelegram.sensorid){
+      len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
+    }
+    len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
   }
 if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  strcpy(outBuf + len, decodedTelegram.value);
-  len+=strlen(outBuf + len);
+  len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
 }
 if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
   if(decodedTelegram.enumdescaddr){
@@ -5550,6 +5543,23 @@ boolean createdatalogFileAndWriteHeader(){
 }
 #endif
 
+#ifdef MAX_CUL
+void connectToMaxCul() {
+  if(max_cul){
+    delete max_cul;
+    max_cul = NULL;
+    if(!enable_max_cul) return;
+  }
+
+  max_cul = new EthernetClient();
+  printToDebug(PSTR("Connection to max_cul: "));
+  if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
+    printlnToDebug(PSTR("established"));
+  } else {
+    printlnToDebug(PSTR("failed"));
+  }
+}
+#endif
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -7334,18 +7344,31 @@ uint8_t pps_offset = 0;
                     case CF_OWN_LPBADDR:
                     case CF_DEST_LPBADDR:
                     case CF_PPS_WRITE:
-                      if(!buschanged) {setBusType(); buschanged = true;} break;
+                      buschanged = true;
+                      break;
+                    //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
+                    // so here no reason do dynamic reconfiguration.
+                    // Topic: Possible to STOP an ethernet server once started and release resources ?
+                    // https://forum.arduino.cc/index.php?topic=395827.0
+                    // Topic: Dynamically changing IP address of Ethernet Shield (not DHCP and without reboot)
+                    // https://forum.arduino.cc/index.php?topic=89469.0
+                    // Resume: it possible but can cause unpredicable effects
                     case CF_MAC:
                     case CF_DHCP:
                     case CF_IPADDRESS:
                     case CF_MASK:
                     case CF_GATEWAY:
                     case CF_DNS:
-                    case CF_MAX_IPADDRESS:
                     case CF_ONEWIREBUS:
                     case CF_WWWPORT:
                       needReboot = true;
                       break;
+#ifdef MAX_CUL
+                    case CF_MAX:
+                    case CF_MAX_IPADDRESS:
+                      connectToMaxCul();
+                      break;
+#endif
 #ifdef MQTT
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
@@ -7363,6 +7386,7 @@ uint8_t pps_offset = 0;
                 client.stop();
                 resetBoard();
               }
+              if(buschanged) {setBusType(); }
             }
             break;
               //no break here.
@@ -7372,6 +7396,9 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
               generateChangeConfigPage();
 #endif
+              if(!(httpflags & 128)) webPrintFooter();
+              flushToWebClient();
+// EEPROM dump require ~3 sec so let it be last operation.
               if(EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
@@ -7380,9 +7407,6 @@ uint8_t pps_offset = 0;
               }
               break;
             }
-
-          if(!(httpflags & 128)) webPrintFooter();
-          flushToWebClient();
           break;
         }
         if (p[1]=='L'){
@@ -7798,24 +7822,22 @@ uint8_t pps_offset = 0;
       }
 
       for (int i=0; i < numLogValues; i++) {
-
-      // Declare local variables and start building json if enabled
-      if(mqtt_mode == 2 || mqtt_mode == 3){
-        MQTTPayload = "";
-        // Build the json heading
-        MQTTPayload.concat(F("{\""));
-        if(MQTTDeviceID[0])
-          MQTTPayload.concat(MQTTDeviceID);
-        else
-          MQTTPayload.concat(F("BSB-LAN"));
-        if(mqtt_mode == 2)
-          MQTTPayload.concat(F("\":{\"status\":{"));
-        if(mqtt_mode == 3)
-          MQTTPayload.concat(F("\":{\"parameterid\":"));
-      }
-      boolean is_first = true;
-      /*for (int i=0; i < numLogValues; i++) */{
         if (log_parameters[i] > 0) {
+          // Declare local variables and start building json if enabled
+          if(mqtt_mode == 2 || mqtt_mode == 3){
+            MQTTPayload = "";
+            // Build the json heading
+            MQTTPayload.concat(F("{\""));
+            if(MQTTDeviceID[0])
+              MQTTPayload.concat(MQTTDeviceID);
+            else
+              MQTTPayload.concat(F("BSB-LAN"));
+            if(mqtt_mode == 2)
+              MQTTPayload.concat(F("\":{\"status\":{"));
+            if(mqtt_mode == 3)
+              MQTTPayload.concat(F("\":{\"id\":"));
+          }
+          boolean is_first = true;
           if (MQTTClient->connected()) {
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
@@ -7831,19 +7853,14 @@ uint8_t pps_offset = 0;
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
-            if(decodedTelegram.error){ //If query() get any error then MQTT send to broker "---" as value.
-              undefinedValueToBuffer(decodedTelegram.value);
-            }
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
               outBuf[len] = 0;
-              len += sprintf_P(outBuf + len, PSTR("%d\",\"parametername\":\""), log_parameters[i]);
-              strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr);
-              len += strlen(outBuf + len);
+              len += sprintf_P(outBuf + len, PSTR("%d\",\"name\":\""), log_parameters[i]);
+              len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
               len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
               if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
-                strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr);
-                len += strlen(outBuf + len);
+                len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
               }
               len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
               MQTTPayload.concat(outBuf);
@@ -7867,24 +7884,23 @@ uint8_t pps_offset = 0;
                 MQTTClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
             }
           }
+          // End of mqtt if loop so close off the json and publish
+          if(mqtt_mode == 2 || mqtt_mode == 3){
+            // Close the json doc off
+            if(mqtt_mode == 2)
+              MQTTPayload.concat(F("}}}"));
+            else
+              MQTTPayload.concat(F("}}"));
+            // debugging..
+            printToDebug(PSTR("Output topic: "));
+            printToDebug(MQTTTopic.c_str());
+            printToDebug(PSTR("\r\nPayload Output : "));
+            printToDebug(MQTTPayload.c_str());
+            writelnToDebug();
+            // Now publish the json payload only once
+            MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+          }
         }
-      }
-      // End of mqtt if loop so close off the json and publish
-      if(mqtt_mode == 2 || mqtt_mode == 3){
-        // Close the json doc off
-        if(mqtt_mode == 2)
-          MQTTPayload.concat(F("}}}"));
-        else
-          MQTTPayload.concat(F("}}"));
-        // debugging..
-        printToDebug(PSTR("Output topic: "));
-        printToDebug(MQTTTopic.c_str());
-        printToDebug(PSTR("\r\nPayload Output : "));
-        printToDebug(MQTTPayload.c_str());
-        writelnToDebug();
-        // Now publish the json payload only once
-        MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
-      }
       }
       MQTTClient->disconnect();
     }
@@ -7910,8 +7926,7 @@ uint8_t pps_offset = 0;
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
              //averages
-              strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
-              outBufLen += strlen(outBuf + outBufLen);
+              outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
             }
             dataFile.print(outBuf);
             query(log_parameters[i]);
@@ -8022,8 +8037,8 @@ uint8_t pps_offset = 0;
 #error "OUTBUF_LEN must be at least 60. In other case MAX! will not work."
 #endif
 
-  while (max_cul.available() && EEPROM_ready) {
-    c = max_cul.read();
+  while (max_cul->available() && EEPROM_ready) {
+    c = max_cul->read();
 //    printFmtToDebug(PSTR("%c"), c);
     if ((c!='\n') && (c!='\r') && (max_str_index<60)){
       outBuf[max_str_index++]=c;
@@ -8686,15 +8701,10 @@ if (!SD.exists(datalogFileName)) {
 #ifdef MAX_CUL
   if(enable_max_cul){
     UpdateMaxDeviceList();
-    printToDebug(PSTR("Connection to max_cul: "));
-    if (max_cul.connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
-      printlnToDebug(PSTR("established"));
-    } else {
-      printlnToDebug(PSTR("failed"));
-    }
+    connectToMaxCul();
   }
-
 #endif
+
 printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
