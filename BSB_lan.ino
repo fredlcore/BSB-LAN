@@ -7365,6 +7365,9 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
               generateChangeConfigPage();
 #endif
+              if(!(httpflags & 128)) webPrintFooter();
+              flushToWebClient();
+// EEPROM dump require ~3 sec so let it be last operation. 
               if(EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
@@ -7373,9 +7376,6 @@ uint8_t pps_offset = 0;
               }
               break;
             }
-
-          if(!(httpflags & 128)) webPrintFooter();
-          flushToWebClient();
           break;
         }
         if (p[1]=='L'){
