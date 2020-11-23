@@ -7822,24 +7822,22 @@ uint8_t pps_offset = 0;
       }
 
       for (int i=0; i < numLogValues; i++) {
-
-      // Declare local variables and start building json if enabled
-      if(mqtt_mode == 2 || mqtt_mode == 3){
-        MQTTPayload = "";
-        // Build the json heading
-        MQTTPayload.concat(F("{\""));
-        if(MQTTDeviceID[0])
-          MQTTPayload.concat(MQTTDeviceID);
-        else
-          MQTTPayload.concat(F("BSB-LAN"));
-        if(mqtt_mode == 2)
-          MQTTPayload.concat(F("\":{\"status\":{"));
-        if(mqtt_mode == 3)
-          MQTTPayload.concat(F("\":{\"parameterid\":"));
-      }
-      boolean is_first = true;
-      /*for (int i=0; i < numLogValues; i++) */{
         if (log_parameters[i] > 0) {
+          // Declare local variables and start building json if enabled
+          if(mqtt_mode == 2 || mqtt_mode == 3){
+            MQTTPayload = "";
+            // Build the json heading
+            MQTTPayload.concat(F("{\""));
+            if(MQTTDeviceID[0])
+              MQTTPayload.concat(MQTTDeviceID);
+            else
+              MQTTPayload.concat(F("BSB-LAN"));
+            if(mqtt_mode == 2)
+              MQTTPayload.concat(F("\":{\"status\":{"));
+            if(mqtt_mode == 3)
+              MQTTPayload.concat(F("\":{\"id\":"));
+          }
+          boolean is_first = true;
           if (MQTTClient->connected()) {
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
@@ -7855,13 +7853,10 @@ uint8_t pps_offset = 0;
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
-            if(decodedTelegram.error){ //If query() get any error then MQTT send to broker "---" as value.
-              undefinedValueToBuffer(decodedTelegram.value);
-            }
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
               outBuf[len] = 0;
-              len += sprintf_P(outBuf + len, PSTR("%d\",\"parametername\":\""), log_parameters[i]);
+              len += sprintf_P(outBuf + len, PSTR("%d\",\"name\":\""), log_parameters[i]);
               len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
               len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
               if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
@@ -7889,24 +7884,23 @@ uint8_t pps_offset = 0;
                 MQTTClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
             }
           }
+          // End of mqtt if loop so close off the json and publish
+          if(mqtt_mode == 2 || mqtt_mode == 3){
+            // Close the json doc off
+            if(mqtt_mode == 2)
+              MQTTPayload.concat(F("}}}"));
+            else
+              MQTTPayload.concat(F("}}"));
+            // debugging..
+            printToDebug(PSTR("Output topic: "));
+            printToDebug(MQTTTopic.c_str());
+            printToDebug(PSTR("\r\nPayload Output : "));
+            printToDebug(MQTTPayload.c_str());
+            writelnToDebug();
+            // Now publish the json payload only once
+            MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+          }
         }
-      }
-      // End of mqtt if loop so close off the json and publish
-      if(mqtt_mode == 2 || mqtt_mode == 3){
-        // Close the json doc off
-        if(mqtt_mode == 2)
-          MQTTPayload.concat(F("}}}"));
-        else
-          MQTTPayload.concat(F("}}"));
-        // debugging..
-        printToDebug(PSTR("Output topic: "));
-        printToDebug(MQTTTopic.c_str());
-        printToDebug(PSTR("\r\nPayload Output : "));
-        printToDebug(MQTTPayload.c_str());
-        writelnToDebug();
-        // Now publish the json payload only once
-        MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
-      }
       }
       MQTTClient->disconnect();
     }
