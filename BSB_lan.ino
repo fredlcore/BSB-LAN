@@ -7386,7 +7386,7 @@ uint8_t pps_offset = 0;
                 client.stop();
                 resetBoard();
               }
-              if(!buschanged) {setBusType(); }
+              if(buschanged) {setBusType(); }
             }
             break;
               //no break here.
