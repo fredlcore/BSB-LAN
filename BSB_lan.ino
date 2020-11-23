@@ -788,8 +788,7 @@ void checkSockStatus()
 /** *****************************************************************
  *  Function: printToWebClient(char *), printToWebClient(const char *), printToWebClient(uint_farptr_t), printFmtToWebClient()
  *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
- *         flushToWebClient() can be called when you want.
- *         forcedflushToWebClient() must be called before end of connection
+ *
  *  Pass parameters:
  *  WiFiEspClient/EthernetClient telnetClient
  *  Serial
@@ -798,7 +797,7 @@ void checkSockStatus()
  * Function value returned:
  *   none
  * Global resources used:
- *   bigBuffPos and bigBuff variable
+ *   DebugBuff variable
  * *************************************************************** */
  int printFmtToDebug(const char *format, ...){
   va_list args;
@@ -2998,7 +2997,7 @@ void printTelegram(byte* msg, int query_line) {
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
                 default: getfarstrings = PSTR(""); break;
               }
-              strcat_P(decodedTelegram.value, getfarstrings);
+              strcpy_P(decodedTelegram.value, getfarstrings);
               q = strlen(decodedTelegram.value);
               sprintf_P(decodedTelegram.value + q, PSTR(", %02d:%02d:%02d"), hour(), minute(), second());
               printToDebug(decodedTelegram.value);
@@ -3932,7 +3931,7 @@ void LogTelegram(byte* msg){
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
       if(!known){                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        strcat_P(outBuf + outBufLen, PSTR("UNKNOWN"));
+        strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN"));
         outBufLen += strlen(outBuf + outBufLen);
       }else{
         // Entry in command table is a documented command code
@@ -4698,7 +4697,7 @@ char *build_pvalstr(boolean extended){
   len+=strlen(outBuf + len);
   }
 if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  strcat(outBuf + len, decodedTelegram.value);
+  strcpy(outBuf + len, decodedTelegram.value);
   len+=strlen(outBuf + len);
 }
 if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
@@ -7832,6 +7831,9 @@ uint8_t pps_offset = 0;
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
+            if(decodedTelegram.error){ //If query() get any error then MQTT send to broker "---" as value.
+              undefinedValueToBuffer(decodedTelegram.value);
+            }
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
               outBuf[len] = 0;
@@ -7908,7 +7910,7 @@ uint8_t pps_offset = 0;
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
             if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
              //averages
-              strcat_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
+              strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". "));
               outBufLen += strlen(outBuf + outBufLen);
             }
             dataFile.print(outBuf);
@@ -8016,6 +8018,10 @@ uint8_t pps_offset = 0;
 #ifdef MAX_CUL
   if(enable_max_cul){
   byte max_str_index = 0;
+#if OUTBUF_LEN < 60
+#error "OUTBUF_LEN must be at least 60. In other case MAX! will not work."
+#endif
+
   while (max_cul.available() && EEPROM_ready) {
     c = max_cul.read();
 //    printFmtToDebug(PSTR("%c"), c);
