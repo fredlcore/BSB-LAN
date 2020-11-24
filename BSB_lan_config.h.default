@@ -149,7 +149,7 @@ int log_parameters[40] = {
 #define MQTT
 byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
-// rich JSON payload will be of the structure: {"MQTTDeviceID": {"parameterid": one_of_logvalues, "parametername": "name", "value": "query_result", "desc": "enum value description", "unit": "unit of measurement", "error", error_code}}
+// rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": one_of_logvalues, "name": "name_of_program_from_logvalues", "value": "query_result", "desc": "enum value description", "unit": "unit of measurement", "error", error_code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
 char MQTTUsername[32] = "User";                 // Set username for MQTT broker here or set zero-length string if no username/password is used.
 char MQTTPassword[32] = "Pass";                 // Set password for MQTT broker here or set zero-length string if no password is used.
