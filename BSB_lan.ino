@@ -7398,7 +7398,8 @@ uint8_t pps_offset = 0;
               if(!(httpflags & 128)) webPrintFooter();
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
-              if(EEPROM_ready){
+// Dump when serial debug active or have telnet client
+              if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
                   printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
