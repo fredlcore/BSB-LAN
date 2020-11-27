@@ -786,7 +786,7 @@ void checkSockStatus()
 
 /* Functions for management "Ring" debug buffer */
 /** *****************************************************************
- *  Function: printToWebClient(char *), printToWebClient(const char *), printToWebClient(uint_farptr_t), printFmtToWebClient()
+ *  Function: printToDebug(char *), printToDebug(const char *), printToDebug(uint_farptr_t), printFmtToDebug()
  *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
  *
  *  Pass parameters:
@@ -3968,8 +3968,7 @@ void LogTelegram(byte* msg){
       // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
       if (bus->getBusType() != BUS_PPS && (msg[4+(bus->getBusType()*4)] == TYPE_INF || msg[4+(bus->getBusType()*4)] == TYPE_SET || msg[4+(bus->getBusType()*4)] == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
-        strcat_P(outBuf + outBufLen, PSTR(";"));
-        outBufLen += strlen(outBuf + outBufLen);;
+        outBufLen += strlen(strcat_P(outBuf + outBufLen, PSTR(";")));
         if (bus->getBusType() == BUS_LPB) {
           data_len=msg[1]-14;
         } else {
@@ -3997,7 +3996,7 @@ void LogTelegram(byte* msg){
         if (p != NULL) *p=',';
         outBufLen += strlen(outBuf + outBufLen);
       }
-      strcat_P(outBuf + outBufLen, PSTR("\n"));
+      strcat_P(outBuf + outBufLen, PSTR("\r\n"));
       dataFile.print(outBuf);
       dataFile.close();
     }
@@ -7399,7 +7398,8 @@ uint8_t pps_offset = 0;
               if(!(httpflags & 128)) webPrintFooter();
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
-              if(EEPROM_ready){
+// Dump when serial debug active or have telnet client
+              if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
                 printlnToDebug(PSTR("EEPROM dump:"));
                 for (uint16_t x=0; x<EEPROM.length(); x++) {
                   printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
