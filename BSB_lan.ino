@@ -3689,7 +3689,7 @@ void generateChangeConfigPage(){
          printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
          break;
        case CDT_PROGNRLIST:
-         printToWebClient(PSTR("pattern='((^|,)((\\d){1,5}))'"));
+         printToWebClient(PSTR("pattern='(((^|,)((\d){1,5})))*'"));
          break;
        }
      printToWebClient(PSTR(" VALUE='"));
