@@ -4151,6 +4151,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SINT:
     case VT_PERCENT_WORD1:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
+    case VT_SECONDS_WORD:
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
       {
       if(val[0]!='\0'){
