@@ -3689,7 +3689,7 @@ void generateChangeConfigPage(){
          printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
          break;
        case CDT_PROGNRLIST:
-         printToWebClient(PSTR("pattern='((^|,)((\\d){1,5}))'"));
+         printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})))*'"));
          break;
        }
      printToWebClient(PSTR(" VALUE='"));
@@ -4201,6 +4201,7 @@ int set(int line      // the ProgNr of the heater parameter
 
     // ---------------------------------------------
     // 16-bit unsigned integer representation
+    case VT_SECONDS_WORD:
     // Temperature values
     case VT_TEMP_WORD:
     case VT_CELMIN:
