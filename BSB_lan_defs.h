@@ -68,11 +68,12 @@
 /* special command ids */
 #define CMD_UNKNOWN 0x00000000u
 #define CMD_END     0xffffffffu
-#define FL_RONLY    1
-#define FL_NO_CMD   2
-#define FL_OEM      5    // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
-#define FL_SPECIAL_INF  8 // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
-#define FL_SW_CTL_RONLY  128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
+#define FL_WRITEABLE    0
+#define FL_RONLY        1
+#define FL_NO_CMD       2
+#define FL_OEM          5   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
+#define FL_SPECIAL_INF  8   // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
+#define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 /* heating systems */
 
 #define DEV_021_ALL  21,255 // RVL470

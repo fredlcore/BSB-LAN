@@ -1973,6 +1973,7 @@
   "ENUM_DEBUG_TELNET_TEXT": "Telnet",
   "ENUM_MQTT_PLAIN_TEXT": "Plain text",
   "ENUM_MQTT_JSON_TEXT": "JSON",
+  "ENUM_MQTT_JSON2_TEXT": "Rich JSON",
   "ENUM20_01_TEXT": "English",
   "ENUM20_02_TEXT": "Deutsch",
   "ENUM20_03_TEXT": "Francais",

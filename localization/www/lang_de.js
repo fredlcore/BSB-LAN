@@ -1985,6 +1985,7 @@ UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "Serial";
 UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
 UIStrings["ENUM_MQTT_JSON_TEXT"] = "JSON";
+UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Rich JSON";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";
