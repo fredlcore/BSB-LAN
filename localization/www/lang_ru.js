@@ -204,7 +204,7 @@ UIStrings["CF_IPWE_TEXT"] = "Включить IPWE";
 UIStrings["CF_IPWEVALUESLIST_TEXT"] = "Значения программ, отображаемых через IPWE";
 UIStrings["CF_MAX_TEXT"] = "Использовать MAX!";
 UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP-адрес устройства CUNO/CUNX/мод. MAX!Cube";
-UIStrings["CF_READONLY_TEXT"] = "Все параметры только для чтения";
+UIStrings["CF_WRITEMODE_TEXT"] = "Запись параметров в систему";
 UIStrings["CF_DEBUG_TEXT"] = "Отладка";
 UIStrings["CF_MQTT_TEXT"] = "Использовать MQTT";
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-адрес брокера MQTT";
@@ -1720,6 +1720,9 @@ UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Обычный текст";
 UIStrings["ENUM_MQTT_JSON_TEXT"] = "JSON";
 UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Подробный JSON";
+
+UIStrings["ENUM_WRITE_ENG_TEXT"] = "Вкл. (Инженерные)";
+UIStrings["ENUM_WRITE_OEM_TEXT"] = "Вкл. (Инженерные + OEM)";
 
 UIStrings["ENUM20_01_TEXT"] = "Английский";
 UIStrings["ENUM20_02_TEXT"] = "Немецкий";
