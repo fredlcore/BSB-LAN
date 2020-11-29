@@ -653,7 +653,7 @@ const char CF_IPWE_TXT[] PROGMEM = CF_IPWE_TEXT;
 const char CF_IPWEVALUESLIST_TXT[] PROGMEM = CF_IPWEVALUESLIST_TEXT;
 const char CF_MAX_TXT[] PROGMEM = CF_MAX_TEXT;
 const char CF_MAX_IPADDRESS_TXT[] PROGMEM = CF_MAX_IPADDRESS_TEXT;
-const char CF_READONLY_TXT[] PROGMEM = CF_READONLY_TEXT;
+const char CF_WRITEMODE_TXT[] PROGMEM = CF_WRITEMODE_TEXT;
 const char CF_DEBUG_TXT[] PROGMEM = CF_DEBUG_TEXT;
 const char CF_VERBOSE_TXT[] PROGMEM = MENU_TEXT_VBL;
 const char CF_MONITOR_TXT[] PROGMEM = MENU_TEXT_MMD;
@@ -6494,6 +6494,11 @@ const char ENUM_MQTT[] PROGMEM_LATEST = {
 "\x03 " ENUM_MQTT_JSON2_TEXT
 };
 
+const char ENUM_WRITEMODE[] PROGMEM_LATEST = {
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " ENUM_WRITE_ENG_TEXT "\0"
+"\x02 " ENUM_WRITE_OEM_TEXT
+};
 //Choices for YES/NO, ON/OFF, CLOSED/OPEN, voltage ON/OFF
 const char ENUM_ONOFF[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OFF "\0"
@@ -11311,7 +11316,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 };
 
 PROGMEM_LATE const cmd_t cmdtbl3[]={
-  //Prognr 65529 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+  //Prognr 65528 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65528, "",       sizeof(ENUM_WRITEMODE),   ENUM_WRITEMODE,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_MQTT,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, "",       sizeof(ENUM_DEBUG),   ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, "",       sizeof(ENUM_LOGTELEGRAM),   ENUM_LOGTELEGRAM,         DEFAULT_FLAG, DEV_ALL}, //

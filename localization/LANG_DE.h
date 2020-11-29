@@ -196,7 +196,7 @@
 #define CF_IPWEVALUESLIST_TEXT "Programs for displaying with IPWE"
 #define CF_MAX_TEXT "Enable MAX"
 #define CF_MAX_IPADDRESS_TEXT "CUNO/CUNX/modified MAX!Cube IP address"
-#define CF_READONLY_TEXT "All parameters is read only"
+#define CF_WRITEMODE_TEXT "Write parameters to system"
 #define CF_DEBUG_TEXT "Debug"
 #define CF_MQTT_TEXT "Using MQTT"
 #define CF_MQTT_IPADDRESS_TEXT "MQTT broker IP address"
@@ -1986,6 +1986,9 @@
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"
 #define ENUM_MQTT_JSON_TEXT "JSON"
 #define ENUM_MQTT_JSON2_TEXT "Rich JSON"
+
+#define ENUM_WRITE_ENG_TEXT "Ein (Engineer)"
+#define ENUM_WRITE_OEM_TEXT "Ein (Engineer + OEM)"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"
