@@ -37,7 +37,7 @@ typedef enum{
   CF_IPWEVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
   CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
-  CF_READONLY, //Size: 1 byte. All parameters will be FL_RONLY
+  CF_WRITEMODE, //Size: 1 byte. 0 - all parameters will be FL_RONLY, 1 - write ordinary programs, 2 - write OEM programs
   CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
   CF_MQTT, //Size: 1 byte. MQTT: 0 - disabled, 1 - enabled, plain text, 2 - enabled, JSON
   CF_MQTT_IPADDRESS, //Size: 4 bytes. MQTT broker IP v4 address
@@ -150,7 +150,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
-  {CF_READONLY,         2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_READONLY_TXT, sizeof(readOnlyMode)},
+  {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_DEBUG,            2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_DEBUG_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
   {CF_MONITOR,          3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)},

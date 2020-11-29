@@ -417,7 +417,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 boolean EEPROM_ready = true;
-byte readOnlyMode = 1;
+byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
 #ifdef WIFI
 WiFiEspServer *server;
@@ -1641,6 +1641,20 @@ void SerialPrintRAW(byte* msg, byte len){
   }
 }
 
+
+boolean programIsreadOnly(uint8_t param_len){
+  if((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY){ //software-controlled
+    switch(programWriteMode) {
+      case 0: return true; //All read-only.
+      case 1: if((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
+      case 2: if((param_len & FL_RONLY) == FL_RONLY && (param_len & FL_OEM) != FL_OEM) return true; else return false; //All writable except read-only
+    }
+  } else{ //defs-controlled.
+    if((param_len & FL_RONLY) == FL_RONLY) return true;
+  }
+  return false;
+}
+
  /** *****************************************************************
   *  Function:  loadPrognrElementsFromTable(int, int)
   *  Does:      Get flags and data from tables and fill with this data
@@ -1661,7 +1675,7 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
   uint8_t flags=get_cmdtbl_flags(i);
-  if ((flags & FL_RONLY) == FL_RONLY || ((flags & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode))
+  if (programIsreadOnly(flags))
     decodedTelegram.readonly = 1;
   else
     decodedTelegram.readonly = 0;
@@ -3300,7 +3314,7 @@ void generateConfigPage(void){
   if (bustype != BUS_PPS) {
     printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
 
-    if (DEFAULT_FLAG == FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
+    if ((DEFAULT_FLAG & FL_RONLY) == FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !programWriteMode)) {
       printToWebClient(PSTR(MENU_TEXT_BRO));
     } else {
       printToWebClient(PSTR(MENU_TEXT_BRW));
@@ -3738,6 +3752,9 @@ void generateChangeConfigPage(){
              case CF_MQTT:
                i=findLine(65529,0,NULL); //return ENUM_MQTT
                break;
+             case CF_WRITEMODE:
+               i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+               break;
              default:
                i = -1;
                break;
@@ -4040,19 +4057,17 @@ int set(int line      // the ProgNr of the heater parameter
   int i;
   uint32_t c;              // command code
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
-  uint8_t param_len;
+  uint8_t param_len = 0;
 
   // Search the command table from the start for a matching line nbr.
   i=findLine(line,0,&c);   // find the ProgNr and get the command code
   if(i<0) return 0;        // no match
 
   // Check for readonly parameter
-  param_len = get_cmdtbl_flags(i);
-  if((param_len & FL_RONLY) == FL_RONLY || ((param_len & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
+  if(programIsreadOnly(get_cmdtbl_flags(i))){
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
-  param_len = 0;
 
   uint8_t type=get_cmdtbl_type(i);
 
@@ -6030,7 +6045,7 @@ uint8_t pps_offset = 0;
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-            if ((flags & FL_RONLY) == FL_RONLY || pps_write != 1 || ((flags & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && readOnlyMode)) {
+            if (programIsreadOnly(flags) || pps_write != 1) {
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
@@ -6982,7 +6997,7 @@ uint8_t pps_offset = 0;
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
             if (i != BUS_PPS) {
-              if (DEFAULT_FLAG != FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !readOnlyMode)) json_parameter = 1;
+              if ((DEFAULT_FLAG & FL_RONLY) != FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode)) json_parameter = 1;
             } else {
               if (pps_write == 1)  json_parameter = 1;
             }
@@ -8269,7 +8284,7 @@ void setup() {
     registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
     registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
     if(DEFAULT_FLAG & FL_SW_CTL_RONLY) {
-      registerConfigVariable(CF_READONLY, (byte *)&readOnlyMode);
+      registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
     }
     registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
     registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
