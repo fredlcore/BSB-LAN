@@ -1641,6 +1641,14 @@ void SerialPrintRAW(byte* msg, byte len){
   }
 }
 
+void EEPROM_dump() {
+  if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
+    printlnToDebug(PSTR("EEPROM dump:"));
+    for (uint16_t x=0; x<EEPROM.length(); x++) {
+      printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
+    }
+  }
+}
 
 boolean programIsreadOnly(uint8_t param_len){
   if((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY){ //software-controlled
@@ -7397,6 +7405,10 @@ uint8_t pps_offset = 0;
                   }
                 }
               }
+              // EEPROM dump require ~3 sec so let it be last operation.
+              // Dump when serial debug active or have telnet client
+              EEPROM_dump();
+
               if(needReboot == true){
                 client.stop();
                 resetBoard();
@@ -7415,12 +7427,7 @@ uint8_t pps_offset = 0;
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
 // Dump when serial debug active or have telnet client
-              if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
-                printlnToDebug(PSTR("EEPROM dump:"));
-                for (uint16_t x=0; x<EEPROM.length(); x++) {
-                  printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
-                }
-              }
+              EEPROM_dump();
               break;
             }
           break;
