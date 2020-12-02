@@ -6463,7 +6463,7 @@ const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 //WEBCONFIG
 //Read/write config in EEPROM
 const char ENUM_EEPROM_ONOFF[] PROGMEM_LATEST = {
-"\x00 " MENU_TEXT_OFF "\0"
+"\x69 " MENU_TEXT_OFF "\0"
 "\x96 " MENU_TEXT_ON
 };
 

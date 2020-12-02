@@ -7333,11 +7333,14 @@ uint8_t pps_offset = 0;
                 if (p[4]=='1') { //Use EEPROM
                   UseEEPROM = 0x96;
                 } else {   //Use _config.h
-                  UseEEPROM = 0;
+                  UseEEPROM = 0x69;
                 }
               }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-                printyesno(UseEEPROM) ;
+              if(UseEEPROM == 0x96)
+                printyesno(1) ;
+              else
+                printyesno(0) ;
               break;
             case 'S': //save config to EEPROM
                 for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
@@ -8248,6 +8251,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
+  pps_values[PPS_QTP] = QAA_TYPE;
   registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
@@ -8328,6 +8332,7 @@ void setup() {
     } else SerialOutput->println(F("EEPROM schema CRC mismatch"));
   } else {
     SerialOutput->println(F("Using settings from config file"));
+    initConfigTable(EEPROMversion); //Need to init config table in any case because we can change opinion and can enable store config in EEPROM.
   }
   SerialOutput->println(F("Reading done."));
 
@@ -8350,7 +8355,7 @@ void setup() {
       crc = initConfigTable(maxconfversion); //store new CRC32
       EEPROMversion = maxconfversion; //store new version
       if(UseEEPROM_in_config_h == 0x01){//Update EEPROM when config file contain UseEEPROM = 1
-        if(UseEEPROM) UseEEPROM = 0x96;
+        if(UseEEPROM != 0x69 && UseEEPROM != 0x96) UseEEPROM = 0x96;
         SerialOutput->println(F("Update EEPROM schema"));
         for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
           //do not write here MAX! settings
