@@ -607,6 +607,7 @@ static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
+  if(version == 0xFF) version--; //protection fromm infinite loop
   // look for parameters vith selected version
   for (uint8_t v = 0; v <= version; v++){
     //select config parameter
@@ -3506,6 +3507,7 @@ void implementConfig(){
   boolean k_flag = false;
   int i = 0;
   int option_id = 0;
+
   while (client.available()) {
     char c = client.read();
     if(!k_flag && i == OUTBUF_LEN - 2) { //buffer filled. trash in buffer?
@@ -7333,9 +7335,9 @@ uint8_t pps_offset = 0;
                 } else {   //Use _config.h
                   UseEEPROM = 0;
                 }
+              }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
                 printyesno(UseEEPROM) ;
-              }
               break;
             case 'S': //save config to EEPROM
                 for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
@@ -7591,10 +7593,10 @@ uint8_t pps_offset = 0;
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
 #if defined(__AVR__)
             for (uint16_t x=0; x<EEPROM.length(); x++) {
-              EEPROM.write(x, 0);
+              EEPROM.write(x, 0xFF);
             }
 #else
-            uint8_t empty_block[4097] = { 0 };
+            uint8_t empty_block[4097] = { 0xFF };
             EEPROM.fastBlockWrite(0, &empty_block, 4096);
 #endif
             printlnToDebug(PSTR("Cleared EEPROM"));
@@ -8302,18 +8304,18 @@ void setup() {
 
 
   readFromEEPROM(CF_PPS_VALUES);
+  byte UseEEPROM_in_config_h = UseEEPROM;
   if(UseEEPROM){ //Read EEPROM when it allowed from config file
-    SerialOutput->print(F("Reading EEPROM..."));
+    SerialOutput->println(F("Reading EEPROM"));
     readFromEEPROM(CF_USEEEPROM);
-  } else {
-    SerialOutput->print(F("Using settings from config file\r\n"));
+    readFromEEPROM(CF_VERSION);
   }
   if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
-    readFromEEPROM(CF_VERSION);
     readFromEEPROM(CF_CRC32);
     if(crc == initConfigTable(EEPROMversion)){
   //read parameters
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
+//        SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
   //read parameter if it version is non-zero
 #if defined(__AVR__)
         uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
@@ -8323,9 +8325,11 @@ void setup() {
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-    } else SerialOutput->print(F("EEPROM schema CRC mismatch\r\n"));
+    } else SerialOutput->println(F("EEPROM schema CRC mismatch"));
+  } else {
+    SerialOutput->println(F("Using settings from config file"));
   }
-  SerialOutput->print(F("done.\r\n"));
+  SerialOutput->println(F("Reading done."));
 
   //calculate maximal version
       uint8_t maxconfversion = 0;
@@ -8345,11 +8349,15 @@ void setup() {
     if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
       crc = initConfigTable(maxconfversion); //store new CRC32
       EEPROMversion = maxconfversion; //store new version
-      if(UseEEPROM == 0x96){//Update EEPROM when EEPROM contain magic byte (stored configuration)
-        SerialOutput->print(F("Update EEPROM schema\r\n"));
+      if(UseEEPROM_in_config_h == 0x01){//Update EEPROM when config file contain UseEEPROM = 1
+        if(UseEEPROM) UseEEPROM = 0x96;
+        SerialOutput->println(F("Update EEPROM schema"));
         for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
           //do not write here MAX! settings
-          if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) writeToEEPROM(i);
+          if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) {
+            writeToEEPROM(i);
+//            SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
+          }
          }
        }
     }

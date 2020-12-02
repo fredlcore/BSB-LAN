@@ -1,7 +1,7 @@
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
-  CF_VERSION, //Size: 1 byte. Config version
+  CF_VERSION, //Size: 1 byte. Config version Values: 0-254
   CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
   CF_MAX_DEVICES, //Size 11 * 20 bytes.
   CF_MAX_DEVADDR, //Size 4 * 20 bytes.
@@ -50,6 +50,9 @@ typedef enum{
   CF_MONITOR, //Size: 1 byte. bus monitor mode
   CF_VERBOSE, //Size: 1 byte. If set to 1, all messages on the bus are printed to debug interface
   CF_CHECKUPDATE, //Size: 1 byte. If set to 1, check for new version
+
+//Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
+//Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -105,7 +108,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
 };
 
 PROGMEM_LATE const configuration_struct config[]={
-  {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(byte)}, //immediately apply
+  {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_USEEEPROM_TXT, sizeof(UseEEPROM)}, //immediately apply
   {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(byte)},
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, 4},
 #ifdef CONFIG_IN_EEPROM
