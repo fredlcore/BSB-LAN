@@ -8248,6 +8248,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
+  pps_values[PPS_QTP] = QAA_TYPE;
   registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
