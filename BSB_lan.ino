@@ -8479,11 +8479,14 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
 printToDebug(PSTR("PPS settings:\r\n"));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     if(pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
-    if(pps_values[PPS_QTP] == 0) pps_values[PPS_QTP] = QAA_TYPE;
     if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
     }
   }
+  if(pps_values[PPS_QTP] == 0) {
+    pps_values[PPS_QTP] = QAA_TYPE;
+    writeToEEPROM(CF_ROOM_DEVICE);
+  }  
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
