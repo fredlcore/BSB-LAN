@@ -8483,10 +8483,10 @@ printToDebug(PSTR("PPS settings:\r\n"));
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
     }
   }
-  if(pps_values[PPS_QTP] == 0) {
+  if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
     pps_values[PPS_QTP] = QAA_TYPE;
     writeToEEPROM(CF_ROOM_DEVICE);
-  }  
+  }
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
