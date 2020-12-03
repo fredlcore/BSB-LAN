@@ -8251,7 +8251,6 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  pps_values[PPS_QTP] = QAA_TYPE;
   registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
@@ -8483,6 +8482,10 @@ printToDebug(PSTR("PPS settings:\r\n"));
     if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
     }
+  }
+  if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
+    pps_values[PPS_QTP] = QAA_TYPE;
+    writeToEEPROM(CF_ROOM_DEVICE);
   }
 
 #if defined LOGGER || defined WEBSERVER
