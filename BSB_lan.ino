@@ -4081,7 +4081,7 @@ int set(int line      // the ProgNr of the heater parameter
 
   uint8_t type=get_cmdtbl_type(i);
 
-  if (bus->getBusType() == BUS_PPS && line >= 15000) {  // PPS-Bus set parameter
+  if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
     int cmd_no = line - 15000;
     switch (type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
@@ -6644,7 +6644,7 @@ uint8_t pps_offset = 0;
           printToWebClient(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
-            if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && cat == CAT_PPS)) {
+            if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
 #if defined(__AVR__)
               printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
@@ -7154,7 +7154,7 @@ uint8_t pps_offset = 0;
               if (p[2]=='K' && !isdigit(p[4])) {
                 boolean notfirst = false;
                 for(int cat=0;cat<CAT_UNKNOWN;cat++){
-                  if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && cat == CAT_PPS)) {
+                  if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
 #if defined(__AVR__)
