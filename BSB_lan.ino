@@ -1070,7 +1070,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   boolean isFirst = true;
   while(c<enumstr_len){
     if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
-      val=pgm_read_word_far(enumstr+c);
+      val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
       c++;
     }else{
       val=uint16_t(pgm_read_byte_far(enumstr+c));
