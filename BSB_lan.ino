@@ -3165,7 +3165,7 @@ void webPrintHeader(void){
 
   printToWebClient(PSTR("<a href='/"));
   printPassKey();
-  printToWebClient(PSTR("T'>" MENU_TEXT_SNS "</a>"));
+  printToWebClient(PSTR("K49'>" MENU_TEXT_SNS "</a>"));
 
   printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
 
@@ -5298,77 +5298,6 @@ void SetDateTime(){
   }
 }
 
-#ifdef DHT_BUS
-
-/** *****************************************************************
- *  Function:  dht22()
- *  Does:      Reads a DHT22 sensor
- *  Pass parameters:
- *   none
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- *  Global resources used:
- *    DHT_Pins  array with pins to use
- *    bigBuff[]
- *    Serial   the hardware serial interface to a PC
- *    DHT  class which handles sensors
- *    client object
- * *************************************************************** */
-void dht22(void) {
-  int i;
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
-  printFmtToDebug(PSTR("DHT22 sensors: %d\r\n"), numDHTSensors);
-    for(i=0;i<numDHTSensors;i++){
-    if(!DHT_Pins[i]) continue;
-    query(20101 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>\r\ntemp[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\r\n</td></tr>\r\n<tr><td>\r\n"));
-    query(20102 + i * 4);
-    printFmtToWebClient(PSTR("hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\r\n</td></tr>\r\n<tr><td>\r\n"));
-    query(20103 + i * 4);
-    printFmtToWebClient(PSTR("abs_hum[%d]: %s %s"), i, decodedTelegram.value, decodedTelegram.unit);
-    printToWebClient(PSTR("\r\n</td></tr>\r\n"));
-  }
-  flushToWebClient();
-}
-#endif  //ifdef DHT_BUS
-
-#ifdef ONE_WIRE_BUS
-
-/** *****************************************************************
- *  Function:  ds18b20()
- *  Does:      Reads a DS18B20 temperature sensor
- *  Pass parameters:
- *   none
- *  Parameters passed back:
- *   none
- *  Function value returned:
- *   none
- *  Global resources used:
- *    int numSensors
- *    bigBuff[]
- *    Serial   the hardware serial interface to a PC
- *    sensors  class which handles sensors
- *    client object
- * *************************************************************** */
-void ds18b20(void) {
-  uint8_t i;
-  //webPrintHeader();
-  for(i=0;i<numSensors * 2;i+=2){
-    query(i + 20300);
-    printFmtToWebClient(PSTR("<tr><td>\r\n1w_temp[%d] %s: "),i/2, decodedTelegram.value);
-    query(i + 20301);
-    printFmtToDebug(PSTR("#1w_temp[%d]: %s\r\n"), i/2, decodedTelegram.value);
-    printFmtToWebClient(PSTR("%s %s\r\n</td></tr>\r\n"), decodedTelegram.value, decodedTelegram.unit);
-  }
-flushToWebClient();
-  //webPrintFooter();
-} // --- ds18b20() ---
-#endif   // ifdef ONE_WIRE_BUS
-
 void printToWebClient_prognrdescaddr(){
   if(decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100){
     printToWebClient(PSTR(STR_24A_TEXT));
@@ -5553,6 +5482,22 @@ void resetBoard(){
 #endif
 
 }
+
+#ifdef AVERAGES
+void resetAverageCalculation(){
+  for (int i=0;i<numAverages;i++) {
+    avg_parameters[i] = 0;
+    avgValues[i] = 0;
+    avgValues_Old[i] = -9999;
+    avgValues_Current[i] = 0;
+  }
+  avgCounter = 1;
+  #ifdef LOGGER
+  SD.remove(averagesFileName);
+  #endif
+}
+#endif
+
 
 #ifdef LOGGER
 boolean createdatalogFileAndWriteHeader(){
@@ -6636,12 +6581,7 @@ uint8_t pps_offset = 0;
         if(p[1]=='K' && !isdigit(p[2])){
           //list categories
           webPrintHeader();
-          printToWebClient(PSTR("<table><tr><td><a href='/"));
-          printPassKey();
-          printToWebClient(PSTR("B'>" MENU_TEXT_BST "</A><BR></td><td></td></tr>\r\n<tr><td><a href='/"));
-          printPassKey();
-          printToWebClient(PSTR("A'>" MENU_TEXT_24A "</a></td><td></td></tr>"));
-          printToWebClient(PSTR("<tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
+          printToWebClient(PSTR("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
           int16_t cat_min = -1, cat_max = -1;
           for(int cat=0;cat<CAT_UNKNOWN;cat++){
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
@@ -6971,28 +6911,6 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
-          }
-
-          if (p[2] == 'A'){ // print average values in JSON
-#ifdef AVERAGES
-            if(logAverageValues){
-              for (int i=0; i<numAverages; i++) {
-                if (avg_parameters[i] > 0) {
-                  if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                  uint32_t c=0;
-                  char p1[16];
-                  loadPrognrElementsFromTable(20050 + i, findLine(20050 + i,0,&c));
-                  _printFIXPOINT(p1, avgValues[i], decodedTelegram.precision);
-                  printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), avg_parameters[i]);
-                  printToWebClient_prognrdescaddr();
-                  printFmtToWebClient(PSTR("\",\r\n    \"value\": \"%s\",\r\n    \"unit\": \"%s\"\r\n  }"), p1, decodedTelegram.unit);
-                }
-              }
-            }
-#endif
-          printToWebClient(PSTR("\r\n}\r\n"));
-          forcedflushToWebClient();
-          break;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
@@ -7391,6 +7309,11 @@ uint8_t pps_offset = 0;
                     case CF_WWWPORT:
                       needReboot = true;
                       break;
+#ifdef AVERAGES
+                    case CF_AVERAGESLIST:
+                      resetAverageCalculation();
+                      break;
+#endif
 #ifdef MAX_CUL
                     case CF_MAX:
                     case CF_MAX_IPADDRESS:
@@ -7437,6 +7360,7 @@ uint8_t pps_offset = 0;
             }
           break;
         }
+#if !defined(I_DO_NOT_WANT_URL_CONFIG)
         if (p[1]=='L'){
           webPrintHeader();
           switch(p[2]){
@@ -7578,6 +7502,7 @@ uint8_t pps_offset = 0;
           webPrintFooter();
           break;
         }
+#endif
         if (p[1]=='N'){           // Reset Arduino...
           webPrintHeader();
           if (p[2]=='E') {
@@ -7616,15 +7541,7 @@ uint8_t pps_offset = 0;
         char* range;
         range = strtok(p,"/");
         while(range!=0){
-          if(range[0]=='T'){
-#ifdef ONE_WIRE_BUS
-            if(enableOneWireBus)
-              ds18b20();
-#endif
-#ifdef DHT_BUS
-            dht22();
-#endif
-          }else if(range[0]=='U'){ // output user-defined custom_array variable
+          if(range[0]=='U'){ // output user-defined custom_array variable
             for(int i=0;i<numCustomFloats;i++){
               printFmtToWebClient(PSTR("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n"), i, custom_floats[i]);
             }
@@ -7654,6 +7571,7 @@ uint8_t pps_offset = 0;
             }
             }
 #endif
+#if !defined(I_DO_NOT_WANT_URL_CONFIG)
           }else if(range[0]=='A') { // handle average command
 #ifdef AVERAGES
             if (range[1]=='C' && range[2]=='=') { //24h average calculation on/off
@@ -7668,16 +7586,7 @@ uint8_t pps_offset = 0;
                 avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
                 int token_counter = 0;
                 if (avg_token != 0) {
-                  for (int i=0;i<numAverages;i++) {
-                    avg_parameters[i] = 0;
-                    avgValues[i] = 0;
-                    avgValues_Old[i] = -9999;
-                    avgValues_Current[i] = 0;
-                  }
-                  avgCounter = 1;
-  #ifdef LOGGER
-                  SD.remove(averagesFileName);
-  #endif
+                  resetAverageCalculation();
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
                 while (avg_token!=0) {
@@ -7688,25 +7597,11 @@ uint8_t pps_offset = 0;
                   }
                   avg_token = strtok(NULL,"=,");
                 }
-              } else {
-                for (int i=0; i<numAverages; i++) {
-                  if (avg_parameters[i] > 0) {
-                    char tempBuf[10];
-                    _printFIXPOINT(tempBuf,avgValues[i],1);
-                    uint32_t c=0;
-                    int line=findLine(avg_parameters[i],0,&c);
-                    loadPrognrElementsFromTable(avg_parameters[i], line);
-                    printFmtToWebClient(PSTR("<tr><td>\r\n %d "), avg_parameters[i]);
-                    printToWebClient_prognrdescaddr();
-                    printFmtToWebClient(PSTR(": %s&nbsp;%s</td></tr>\r\n"), tempBuf, decodedTelegram.unit);
-
-                    printFmtToDebug(PSTR("#avg_%d: %s %s\r\n"), avg_parameters[i], tempBuf, decodedTelegram.unit);
-                  }
-                }
               }
             }
 #else
             printToWebClient("AVERAGES module not compiled\r\n");
+#endif
 #endif
           }else if(range[0]=='G'){ // handle gpio command
             uint8_t val;
@@ -7754,15 +7649,6 @@ uint8_t pps_offset = 0;
               brenner_count_2=0;
               TWW_duration=0;
               TWW_count=0;
-            }else{
-              // query brenner duration
-              printFmtToWebClient(PSTR("<tr><td>Brenner Laufzeit Stufe 1: %lu"), brenner_duration);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nBrenner Takte Stufe 1: %lu"), brenner_count);
-              printFmtToWebClient(PSTR("</td></tr>\r\n<tr><td>Brenner Laufzeit Stufe 2: %lu"), brenner_duration_2);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nBrenner Takte Stufe 2: %lu"), brenner_count_2);
-              printFmtToWebClient(PSTR("</td></tr>\r\n<tr><td>TWW Laufzeit: %lu"), TWW_duration);
-              printFmtToWebClient(PSTR("</td></tr><tr><td>\r\nTWW Takte: %lu"), TWW_count);
-              printToWebClient(PSTR("</td></tr>\r\n"));
             }
           }else{
             char* line_start;
