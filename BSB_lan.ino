@@ -7207,11 +7207,15 @@ uint8_t pps_offset = 0;
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
+#if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
             printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\r\n"));
 #if defined(__AVR__)
             printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
 #else
             printPStr(graph_html, sizeof(graph_html));
+#endif
+#else
+            printToWebClient(PSTR("/DG command disabled because I_WILL_USE_EXTERNAL_INTERFACE defined<br>\r\n"));
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file

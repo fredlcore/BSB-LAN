@@ -1,7 +1,7 @@
 #if defined(__AVR__)
-const byte favicon [] PROGMEM_LATE = { 
+const byte favicon [] PROGMEM_LATE = {
 #else
-const char favicon [] PROGMEM_LATE = { 
+const char favicon [] PROGMEM_LATE = {
 #endif
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x08, 0x02, 0x00, 0x00, 0x00, 0x90, 0x91, 0x68,
@@ -16,6 +16,7 @@ const char favicon [] PROGMEM_LATE = {
   0x44, 0xae, 0x42, 0x60, 0x82
 };
 
+#if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 "<!--\n"
 "/*\n"
@@ -262,8 +263,9 @@ const char graph_html[] PROGMEM_LATE =
 "});\n"
 "\n"
 "</script>\n";
+#endif
 
-const char header_html[] PROGMEM_LATE = 
+const char header_html[] PROGMEM_LATE =
   "HTTP/1.1 200 OK\n"
   "Content-Type: text/html\n"
   "Cache-Control: no-cache, no-store, must-revalidate\n"
@@ -297,7 +299,7 @@ const char header_html[] PROGMEM_LATE =
   "<font face='Arial'>\n"
   "<center><h1><A ID=main_link HREF='/";
 
-const char auth_req_html[] PROGMEM_LATE = 
+const char auth_req_html[] PROGMEM_LATE =
   "HTTP/1.1 401 Authorization Required\n"
   "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
   "Content-Type: text/html\n"
