@@ -327,6 +327,18 @@ typedef enum{
   VT_UNKNOWN
 }vt_type_t;
 
+typedef enum {
+  DT_VALS,    // plain value
+  DT_ENUM,    // value (8/16 Bit) followed by space followed by text
+  DT_BITS,    // bit value followed by bitmask followed by text
+  DT_WDAY,    // weekday
+  DT_HHMM,    // hour:minute
+  DT_DTTM,    // date and time
+  DT_DDMM,    // day and month
+  DT_STRN,    // string
+  DT_DWHM     // PPS time (day of week, hour:minute)
+} dt_types_t;
+
 const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
 const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
 const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
@@ -352,6 +364,16 @@ const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
+  uint8_t   type;             // message type (e.g. VT_TEMP)
+  float     operand;          // both for divisors as well as factors (1/divisor)
+  uint8_t   data_type;        // Value, String, Date...
+  uint8_t   precision;        // decimal places
+  const char  *unit;
+  uint8_t unit_len;
+  const char  *type_text;
+} units;
+
+typedef struct {
   uint32_t    cmd;                 // the command or fieldID
   uint8_t     category;            // the menu category
   uint8_t     type;                // the message type
@@ -366,26 +388,21 @@ typedef struct {
 } cmd_t;
 
 typedef struct {
-  uint8_t   type;             // message type (e.g. VT_TEMP)
-  float     operand;          // both for divisors as well as factors (1/divisor)
-  uint8_t   data_type;        // Value, String, Date...
-  uint8_t   precision;        // decimal places
-  const char  *unit;
-  uint8_t unit_len;
+  uint8_t type;
   const char  *type_text;
-} units;
+} dt_types;
 
-typedef enum {
-  DT_VALS,    // plain value
-  DT_ENUM,    // value (8/16 Bit) followed by space followed by text
-  DT_BITS,    // bit value followed by bitmask followed by text
-  DT_WDAY,    // weekday
-  DT_HHMM,    // hour:minute
-  DT_DTTM,    // date and time
-  DT_DDMM,    // day and month
-  DT_STRN,    // string
-  DT_DWHM     // PPS time (day of week, hour:minute)
-} dt_types_t;
+PROGMEM_LATE const dt_types dt_types_text[]={
+  {DT_VALS, "VALS"},
+  {DT_ENUM, "ENUM"},
+  {DT_BITS, "BITS"},
+  {DT_WDAY, "WDAY"},
+  {DT_HHMM, "HHMM"},
+  {DT_DTTM, "DTTM"},
+  {DT_DDMM, "DDMM"},
+  {DT_STRN, "STRN"},
+  {DT_DWHM, "DWHM"}
+};
 
 /* order of types must according to vt_type_t enum */
 PROGMEM_LATE const units optbl[]={
