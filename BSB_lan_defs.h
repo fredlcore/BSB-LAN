@@ -3363,6 +3363,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8005_17_TEXT ENUM8000_16_TEXT
 #define ENUM8005_18_TEXT ENUM8000_17_TEXT
 #define ENUM8005_19_TEXT ENUM780_00_TEXT
+#define ENUM8005_dc_TEXT ENUM_SWCODE_a9_TEXT
 #define ENUM8006_00_TEXT ENUM6040_03_TEXT
 #define ENUM8006_02_TEXT ENUM8005_02_TEXT
 #define ENUM8006_0A_TEXT ENUM2706_00_TEXT
@@ -5693,7 +5694,8 @@ const char ENUM8005[] PROGMEM_LATEST = {
 "\xae " ENUM8005_ae_TEXT "\0"
 "\xaf " ENUM8005_af_TEXT "\0"
 "\xb0 " ENUM8005_b0_TEXT "\0"
-"\xc6 " ENUM8005_c6_TEXT
+"\xc6 " ENUM8005_c6_TEXT "\0"
+"\xdc " ENUM8005_dc_TEXT
 };
 
 //Status Waermepumpe  //FUJITSU
@@ -9669,13 +9671,13 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x113D305F,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8326,  STR8326,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Brennermodulation
 {0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Wasserdruck
 {0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_005}, // Wasserdruck LMS14.001A100
-{0x113D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_014}, // Wasserdruck LMS14.001A100
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Wasserdruck
+{0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_014}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_171_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_195_002}, // Wasserdruck
