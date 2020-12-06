@@ -7147,7 +7147,18 @@ uint8_t pps_offset = 0;
 
                   printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
                 }
-
+                if(decodedTelegram.data_type == DT_VALS){
+                  char pre_buf[10];
+                  pre_buf[0] = 0;
+                  if(decodedTelegram.precision != 0){
+                    strcpy_P(pre_buf, PSTR("0."));
+                    for(uint8_t j = 1; j < decodedTelegram.precision; j ++){
+                      strcat_P(pre_buf, PSTR("0"));
+                    }
+                  }
+                  strcat_P(pre_buf, PSTR("1"));
+                  printFmtToWebClient(PSTR("    \"precision\": %s,\r\n"), pre_buf);
+                }
                 printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
               }
 
