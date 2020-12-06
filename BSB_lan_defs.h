@@ -339,6 +339,105 @@ typedef enum {
   DT_DWHM     // PPS time (day of week, hour:minute)
 } dt_types_t;
 
+const char STR_VALS[] PROGMEM = "VALS";
+const char STR_ENUM[] PROGMEM = "ENUM";
+const char STR_BITS[] PROGMEM = "BITS";
+const char STR_WDAY[] PROGMEM = "WDAY";
+const char STR_HHMM[] PROGMEM = "HHMM";
+const char STR_DTTM[] PROGMEM = "DTTM";
+const char STR_DDMM[] PROGMEM = "DDMM";
+const char STR_STRN[] PROGMEM = "STRN";
+const char STR_DWHM[] PROGMEM = "DWHM";
+
+const char STR_BIT[] PROGMEM = "BIT";
+const char STR_BYTE[] PROGMEM = "BYTE";
+const char STR_BYTE10[] PROGMEM = "BYTE10";
+const char STR_CLOSEDOPEN[] PROGMEM = "CLOSEDOPEN";
+const char STR_DAYS[] PROGMEM = "DAYS";
+const char STR_GRADIENT_SHORT[] PROGMEM = "GRADIENT_SHORT";
+const char STR_HOURS_SHORT[] PROGMEM = "HOURS_SHORT";
+const char STR_LPBADDR[] PROGMEM = "LPBADDR";
+const char STR_MINUTES_SHORT[] PROGMEM = "MINUTES_SHORT";
+const char STR_MONTHS[] PROGMEM = "MONTHS";
+const char STR_ONOFF[] PROGMEM = "ONOFF";
+const char STR_PERCENT[] PROGMEM = "PERCENT";
+const char STR_PERCENT5[] PROGMEM = "PERCENT5";
+const char STR_PRESSURE[] PROGMEM = "PRESSURE";
+const char STR_PRESSURE50[] PROGMEM = "PRESSURE50";
+const char STR_SECONDS_SHORT[] PROGMEM = "SECONDS_SHORT";
+const char STR_SECONDS_SHORT4[] PROGMEM = "SECONDS_SHORT4";
+const char STR_SECONDS_SHORT5[] PROGMEM = "SECONDS_SHORT5";
+const char STR_TEMP_SHORT[] PROGMEM = "TEMP_SHORT";
+const char STR_TEMP_SHORT_US[] PROGMEM = "TEMP_SHORT_US";
+const char STR_TEMP_SHORT5[] PROGMEM = "TEMP_SHORT5";
+const char STR_TEMP_SHORT5_US[] PROGMEM = "TEMP_SHORT5_US";
+const char STR_TEMP_SHORT64[] PROGMEM = "TEMP_SHORT64";
+const char STR_TEMP_PER_MIN[] PROGMEM = "TEMP_PER_MIN";
+const char STR_VOLTAGE[] PROGMEM = "VOLTAGE";
+const char STR_VOLTAGEONOFF[] PROGMEM = "VOLTAGEONOFF";
+const char STR_WEEKDAY[] PROGMEM = "WEEKDAY";
+const char STR_YESNO[] PROGMEM = "YESNO";
+const char STR_SPF[] PROGMEM = "SPF";
+const char STR_CURRENT[] PROGMEM = "CURRENT";
+const char STR_CURRENT1000[] PROGMEM = "CURRENT1000";
+const char STR_DAYS_WORD[] PROGMEM = "DAYS_WORD";
+const char STR_ERRORCODE[] PROGMEM = "ERRORCODE";
+const char STR_FP1[] PROGMEM = "FP1";
+const char STR_FP02[] PROGMEM = "FP02";
+const char STR_GRADIENT[] PROGMEM = "GRADIENT";
+const char STR_INTEGRAL[] PROGMEM = "INTEGRAL";
+const char STR_MONTHS_WORD[] PROGMEM = "MONTHS_WORD";
+const char STR_HOUR_MINUTES[] PROGMEM = "HOUR_MINUTES";
+const char STR_HOURS_WORD[] PROGMEM = "HOURS_WORD";
+const char STR_MINUTES_WORD[] PROGMEM = "MINUTES_WORD";
+const char STR_MINUTES_WORD10[] PROGMEM = "MINUTES_WORD10";
+const char STR_PERCENT_WORD1[] PROGMEM = "PERCENT_WORD1";
+const char STR_PERCENT_WORD[] PROGMEM = "PERCENT_WORD";
+const char STR_PERCENT_100[] PROGMEM = "PERCENT_100";
+const char STR_POWER_WORD[] PROGMEM = "POWER_WORD";
+const char STR_POWER_WORD100[] PROGMEM = "POWER_WORD100";
+const char STR_ENERGY_WORD[] PROGMEM = "ENERGY_WORD";
+const char STR_ENERGY_CONTENT[] PROGMEM = "ENERGY_CONTENT";
+const char STR_PRESSURE_WORD[] PROGMEM = "PRESSURE_WORD";
+const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
+const char STR_PROPVAL[] PROGMEM = "PROPVAL";
+const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
+const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
+const char STR_SPEED[] PROGMEM = "SPEED";
+const char STR_SPEED2[] PROGMEM = "SPEED2";
+const char STR_TEMP[] PROGMEM = "TEMP";
+const char STR_TEMP_WORD[] PROGMEM = "TEMP_WORD";
+const char STR_TEMP_WORD60[] PROGMEM = "TEMP_WORD60";
+const char STR_TEMP_WORD5_US[] PROGMEM = "TEMP_WORD5_US";
+const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
+const char STR_CELMIN[] PROGMEM = "CELMIN";
+const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
+const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
+const char STR_UINT[] PROGMEM = "UINT";
+const char STR_UINT5[] PROGMEM = "UINT5";
+const char STR_UINT10[] PROGMEM = "UINT10";
+const char STR_SINT[] PROGMEM = "SINT";
+const char STR_SINT1000[] PROGMEM = "SINT1000";
+const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
+const char STR_DWORD[] PROGMEM = "DWORD";
+const char STR_HOURS[] PROGMEM = "HOURS";
+const char STR_MINUTES[] PROGMEM = "MINUTES";
+const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
+const char STR_POWER[] PROGMEM = "POWER";
+const char STR_POWER100[] PROGMEM = "POWER100";
+const char STR_ENERGY10[] PROGMEM = "ENERGY10";
+const char STR_ENERGY[] PROGMEM = "ENERGY";
+const char STR_UINT100[] PROGMEM = "UINT100";
+const char STR_DATETIME[] PROGMEM = "DATETIME";
+const char STR_SUMMERPERIOD[] PROGMEM = "SUMMERPERIOD";
+const char STR_VACATIONPROG[] PROGMEM = "VACATIONPROG";
+const char STR_TIMEPROG[] PROGMEM = "TIMEPROG";
+const char STR_STRING[] PROGMEM = "STRING";
+const char STR_CUSTOM_ENUM[] PROGMEM = "CUSTOM_ENUM";
+const char STR_CUSTOM_BYTE[] PROGMEM = "CUSTOM_BYTE";
+const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
+const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
+
 const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
 const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
 const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
@@ -393,108 +492,108 @@ typedef struct {
 } dt_types;
 
 PROGMEM_LATE const dt_types dt_types_text[]={
-  {DT_VALS, "VALS"},
-  {DT_ENUM, "ENUM"},
-  {DT_BITS, "BITS"},
-  {DT_WDAY, "WDAY"},
-  {DT_HHMM, "HHMM"},
-  {DT_DTTM, "DTTM"},
-  {DT_DDMM, "DDMM"},
-  {DT_STRN, "STRN"},
-  {DT_DWHM, "DWHM"}
+  {DT_VALS, STR_VALS},
+  {DT_ENUM, STR_ENUM},
+  {DT_BITS, STR_BITS},
+  {DT_WDAY, STR_WDAY},
+  {DT_HHMM, STR_HHMM},
+  {DT_DTTM, STR_DTTM},
+  {DT_DDMM, STR_DDMM},
+  {DT_STRN, STR_STRN},
+  {DT_DWHM, STR_DWHM}
 };
 
 /* order of types must according to vt_type_t enum */
 PROGMEM_LATE const units optbl[]={
-{VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE), "BIT"},
-{VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "BYTE"},
-{VT_BYTE10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), "BYTE10"},
-{VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "CLOSEDOPEN"},
-{VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), "DAYS"},
-{VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "ENUM"},
-{VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), "GRADIENT_SHORT"},
-{VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), "HOURS_SHORT"},
-{VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "LPBADDR"},
-{VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), "MINUTES_SHORT"},
-{VT_MONTHS,         1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), "MONTHS"},
-{VT_ONOFF,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "ONOFF"},
-{VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC), "PERCENT"},
-{VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC), "PERCENT5"},
-{VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR), "PRESSURE"},
-{VT_PRESSURE50,     50.0,   DT_VALS, 2,  U_BAR, sizeof(U_BAR), "PRESSURE50"},
-{VT_SECONDS_SHORT,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), "SECONDS_SHORT"},
-{VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC), "SECONDS_SHORT4"},
-{VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC), "SECONDS_SHORT5"},
-{VT_TEMP_SHORT,     1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG), "TEMP_SHORT"},
-{VT_TEMP_SHORT_US,  1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG), "TEMP_SHORT_US"},
-{VT_TEMP_SHORT5,    2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP_SHORT5"},
-{VT_TEMP_SHORT5_US, 2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP_SHORT5_US"},
-{VT_TEMP_SHORT64,   64.0,   DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), "TEMP_SHORT64"},
-{VT_TEMP_PER_MIN,   1.0,    DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), "TEMP_PER_MIN"},
-{VT_VOLTAGE,        10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), "VOLTAGE"},
-{VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "VOLTAGEONOFF"},
-{VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE), "WEEKDAY"},
-{VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "YESNO"},
-{VT_SPF,            100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE), "SPF"},
-{VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR), "CURRENT"},
-{VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), "CURRENT1000"},
-{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), "DAYS_WORD"},
-{VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "ERRORCODE"},
-{VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), "FP1"},
-{VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE), "FP02"},
-{VT_GRADIENT,       1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), "GRADIENT"},
-{VT_INTEGRAL,       1.0,    DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), "INTEGRAL"},
-{VT_MONTHS_WORD,    1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), "MONTHS_WORD"},
-{VT_HOUR_MINUTES,   1.0,    DT_HHMM, 0,  U_NONE, sizeof(U_NONE), "HOUR_MINUTES"},
-{VT_HOURS_WORD,     1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), "HOURS_WORD"},
-{VT_MINUTES_WORD,   1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), "MINUTES_WORD"},
-{VT_MINUTES_WORD10, 0.1,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), "MINUTES_WORD10"},
-{VT_PERCENT_WORD1,  1.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC), "PERCENT_WORD1"},
-{VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC), "PERCENT_WORD"},
-{VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC), "PERCENT_100"},
-{VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW), "POWER_WORD"},
-{VT_POWER_WORD100,  100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW), "POWER_WORD100"},
-{VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH), "ENERGY_WORD"},
-{VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), "ENERGY_CONTENT"},
-{VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR), "PRESSURE_WORD"},
-{VT_PRESSURE_1000,  1000.0, DT_VALS, 1,  U_BAR, sizeof(U_BAR), "PRESSURE_1000"},
-{VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE), "PROPVAL"},
-{VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), "SECONDS_WORD"},
-{VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), "SECONDS_WORD5"},
-{VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM), "SPEED"},
-{VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM), "SPEED2"},
-{VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP"},
-{VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP_WORD"},
-{VT_TEMP_WORD60,    60.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP_WORD60"},
-{VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), "TEMP_WORD5_US"},
-{VT_VOLTAGE_WORD,   10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), "VOLTAGE_WORD"},
-{VT_CELMIN,         1.0,    DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), "CELMIN"},
-{VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), "LITERPERHOUR"},
-{VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), "LITERPERMIN"},
-{VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "UINT"},
-{VT_UINT5,          5.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "UINT5"},
-{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), "UINT10"},
-{VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "SINT"},
-{VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE), "SINT1000"},
-{VT_PPS_TIME,       1.0,    DT_DWHM, 0,  U_NONE, sizeof(U_NONE), "PPS_TIME"},
-{VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "DWORD"},
-{VT_HOURS,          3600.0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), "HOURS"},
-{VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN), "MINUTES"},
-{VT_SECONDS_DWORD,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), "SECONDS_DWORD"},
-{VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW), "POWER"},
-{VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW), "POWER100"},
-{VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH), "ENERGY10"},
-{VT_ENERGY,         1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH), "ENERGY"},
-{VT_UINT100,        100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE), "UINT100"},
-{VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE), "DATETIME"},
-{VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE), "SUMMERPERIOD"},
-{VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE), "VACATIONPROG"},
-{VT_TIMEPROG,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE), "TIMEPROG"},
-{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE), "STRING"},
-{VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), "CUSTOM_ENUM"},
-{VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), "CUSTOM_BYTE"},
-{VT_GR_PER_CUBM,    1.0,    DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), "GR_PER_CUBM"},
-{VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE), "UNKNOWN"},
+{VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
+{VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
+{VT_BYTE10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
+{VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
+{VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
+{VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
+{VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
+{VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
+{VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
+{VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
+{VT_MONTHS,         1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
+{VT_ONOFF,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
+{VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
+{VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT5},
+{VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE},
+{VT_PRESSURE50,     50.0,   DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
+{VT_SECONDS_SHORT,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
+{VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
+{VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
+{VT_TEMP_SHORT,     1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
+{VT_TEMP_SHORT_US,  1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT_US},
+{VT_TEMP_SHORT5,    2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5},
+{VT_TEMP_SHORT5_US, 2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5_US},
+{VT_TEMP_SHORT64,   64.0,   DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), STR_TEMP_SHORT64},
+{VT_TEMP_PER_MIN,   1.0,    DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
+{VT_VOLTAGE,        10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
+{VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
+{VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
+{VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
+{VT_SPF,            100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
+{VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
+{VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
+{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
+{VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
+{VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
+{VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
+{VT_GRADIENT,       1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
+{VT_INTEGRAL,       1.0,    DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
+{VT_MONTHS_WORD,    1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
+{VT_HOUR_MINUTES,   1.0,    DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
+{VT_HOURS_WORD,     1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
+{VT_MINUTES_WORD,   1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
+{VT_MINUTES_WORD10, 0.1,    DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
+{VT_PERCENT_WORD1,  1.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
+{VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
+{VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
+{VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
+{VT_POWER_WORD100,  100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
+{VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
+{VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
+{VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
+{VT_PRESSURE_1000,  1000.0, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
+{VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
+{VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
+{VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
+{VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
+{VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
+{VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
+{VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
+{VT_TEMP_WORD60,    60.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
+{VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
+{VT_VOLTAGE_WORD,   10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
+{VT_CELMIN,         1.0,    DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
+{VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
+{VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
+{VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
+{VT_UINT5,          5.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
+{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
+{VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
+{VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
+{VT_PPS_TIME,       1.0,    DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
+{VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
+{VT_HOURS,          3600.0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
+{VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
+{VT_SECONDS_DWORD,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
+{VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
+{VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
+{VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
+{VT_ENERGY,         1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_UINT100,        100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
+{VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_SUMMERPERIOD},
+{VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
+{VT_TIMEPROG,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
+{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
+{VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
+{VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
+{VT_GR_PER_CUBM,    1.0,    DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
+{VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
 /****************************************************/
