@@ -4681,6 +4681,51 @@ int set(int line      // the ProgNr of the heater parameter
   return 1;
 } // --- set() ---
 
+/**  *****************************************************************
+ *  Function: reset()
+ *  Does:     This routine reset parameters to their default values.
+ * Pass parameters:
+ *  uint16  line     the line number (ProgNr)
+ *  byte  * msg     telegram
+ *  byte *tx_msg      telegram
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *  0         failure (incomplete input data, ..)
+ *
+ * Global resources used:
+ *  Serial instance
+ *  bus    instance
+ * *************************************************************** */
+int reset(uint16 line, byte *msg, byte *tx_msg){
+  uint32_t c;
+  resetDecodedTelegram();
+  int i=findLine(line,0,&c);
+  if( i < 0){
+    decodedTelegram.error = 258; //not found
+    return 0;
+  }else{
+    if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
+      decodedTelegram.error = 261; //query failed
+      return 0;
+    }else{
+      // Decode the xmit telegram and send it to the PC serial interface
+      if(verbose) {
+        printTelegram(tx_msg, line);
+#ifdef LOGGER
+        LogTelegram(tx_msg);
+#endif
+      }
+
+      // Decode the rcv telegram and send it to the PC serial interface
+      printTelegram(msg, line);   // send to hardware serial interface
+#ifdef LOGGER
+      LogTelegram(msg);
+#endif
+    }
+  }
+  return 1;
+}
 
 /**  *****************************************************************
  *  Function: build_pvalstr()
@@ -6629,37 +6674,20 @@ uint8_t pps_offset = 0;
         }
         // query reset value
         if(p[1]=='R'){
-          uint32_t c;
           webPrintHeader();
-          int line = atoi(&p[2]);
-          int i=findLine(line,0,&c);
-          if(i<0){
-            printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
-          }else{
-            if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
+          if(!reset(atoi(&p[2]), msg, tx_msg)){
+            if(decodedTelegram.error == 258)
+              printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
+            else if(decodedTelegram.error == 261) {
               printlnToDebug(PSTR("set failed"));  // to PC hardware serial I/F
               printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
-            }else{
-
-              // Decode the xmit telegram and send it to the PC serial interface
-              if(verbose) {
-                printTelegram(tx_msg, line);
-#ifdef LOGGER
-                LogTelegram(tx_msg);
-#endif
-              }
-
-              // Decode the rcv telegram and send it to the PC serial interface
-              printTelegram(msg, line);   // send to hardware serial interface
-#ifdef LOGGER
-              LogTelegram(msg);
-#endif
+            }
+          } else{
 // TODO: replace pvalstr with data from decodedTelegram structure
-              build_pvalstr(0);
-              if(outBuf[0]>0){
-                printToWebClient(outBuf);
-                printToWebClient(PSTR("<br>"));
-              }
+            build_pvalstr(0);
+            if(outBuf[0]>0){
+              printToWebClient(outBuf);
+              printToWebClient(PSTR("<br>"));
             }
           }
           webPrintFooter();
@@ -6907,7 +6935,7 @@ uint8_t pps_offset = 0;
           json_token = strtok(NULL, ",");
 
           printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n{\r\n"));
-          if(strchr("ACIKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
@@ -7169,6 +7197,15 @@ uint8_t pps_offset = 0;
 
                 printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
+
+              if (p[2]=='R') {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                int status = reset(json_parameter, msg, tx_msg);
+                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
+
+                printFmtToDebug(PSTR("Reset parameter %d to value %s\r\n"), json_parameter, decodedTelegram.value);
+              }
+
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
                 json_token = strtok(NULL,",");
               }
