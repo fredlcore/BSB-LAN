@@ -41,6 +41,7 @@
 #define TYPE_ERR  0x08 // error
 #define TYPE_QRV  0x0F // query  reset value
 #define TYPE_ARV  0x10 // answer reset value
+#define TYPE_QRE  0x11 // query reset value failed (1 byte payload of unknown meaning)
 #define TYPE_IQ1  0x12 // internal query type 1 (still undecoded)
 #define TYPE_IA1  0x13 // internal answer type 1 (still undecoded)
 #define TYPE_IQ2  0x14 // internal query type 2 (still undecoded)

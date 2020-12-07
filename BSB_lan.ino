@@ -1831,6 +1831,7 @@ char *TranslateType(byte type, char *mtype){
     case TYPE_QRV: p = PSTR("QRV"); break;
     case TYPE_ARV: p = PSTR("ARV"); break;
     case TYPE_ERR: p = PSTR("ERR"); break;
+    case TYPE_QRE: p = PSTR("QRE"); break;
     case TYPE_IQ1: p = PSTR("IQ1"); break;
     case TYPE_IA1: p = PSTR("IA1"); break;
     case TYPE_IQ2: p = PSTR("IQ2"); break;
