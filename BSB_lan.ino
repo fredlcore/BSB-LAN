@@ -2862,6 +2862,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SPF: // u16 / 100
             case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
             case VT_CURRENT: // u16 / 100 uA
+            case VT_CURRENT1000:
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
             case VT_SPEED2: // u16
