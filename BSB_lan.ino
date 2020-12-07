@@ -4697,7 +4697,7 @@ int set(int line      // the ProgNr of the heater parameter
  *  Serial instance
  *  bus    instance
  * *************************************************************** */
-int reset(uint16 line, byte *msg, byte *tx_msg){
+int reset(uint16_t line, byte *msg, byte *tx_msg){
   uint32_t c;
   resetDecodedTelegram();
   int i=findLine(line,0,&c);
@@ -7196,17 +7196,18 @@ uint8_t pps_offset = 0;
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
                 printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
+                json_token = NULL; //prevent infinite looping when command was /JS=progNr
               }
 
               if (p[2]=='R') {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 int status = reset(json_parameter, msg, tx_msg);
-                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
+                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
                 printFmtToDebug(PSTR("Reset parameter %d to value %s\r\n"), json_parameter, decodedTelegram.value);
               }
 
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
                 json_token = strtok(NULL,",");
               }
             }
