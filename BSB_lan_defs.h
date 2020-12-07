@@ -8922,8 +8922,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_178_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_203_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
-{0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
+{0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
+{0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Reset Wärmepumpe //FUJITSU
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm - logged on OCI700 via LPB
 {0x223D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
@@ -9819,8 +9819,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Ionisationsstrom [uA?]
 {0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe. Can be resetted
 {0x053D08A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe. Can be resetted
-{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
-{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
+{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
+{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_025_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
@@ -9859,12 +9859,12 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // WGBS Betriebsstunden TWW
 {0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden TWW
 {0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Zonen
-{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8378,  STR8378,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Heizen
-{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8379,  STR8379,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Trinkwasser
-{0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8380,  STR8380,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie
-{0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8381,  STR8381,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Heizen (Reset?)
-{0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8382,  STR8382,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Trinkwasser (Reset?)
-{0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8383,  STR8383,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie
+{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8378,  STR8378,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gesamt Gasenergie Heizen
+{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8379,  STR8379,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gesamt Gasenergie Trinkwasser
+{0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8380,  STR8380,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gesamt Gasenergie
+{0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8381,  STR8381,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gasenergie Heizen
+{0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8382,  STR8382,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gasenergie Trinkwasser
+{0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8383,  STR8383,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gasenergie
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8390,  STR8390,  sizeof(ENUM8390),     ENUM8390,     FL_RONLY,     DEV_ALL}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
 {0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
 {0x053D19DA,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8396,  STR8396,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe Quelle in kW // Broetje BSW-K
@@ -9921,7 +9921,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D0BD7,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8443,  STR8443,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 2 Laufzeit Min
 {0x593D0BCB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8444,  STR8444,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Begr Quelle TempMin
 {0x593D05C9,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8446,  STR8446,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdichterfolge // 1- 2 ??
-{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr'std erw Verdampf'temp // RESET ?
+{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betr'std erw Verdampf'temp
 {0x593D189B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8449,  STR8449,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr'stunden Kältekreis
 {0x593D0897,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8450,  STR8450,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Verdichter 1 //FUJITSU
 {0x593D089B,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8451,  STR8451,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Verdichter 1
@@ -10009,8 +10009,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 //{0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_097_100}, // [°C ] - Diagnose Verbraucher - Aussentemperatur // different reports for 97/100, one time 0x053D0521, then 0x0500021F
-{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Minimum
-{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Maximum
+{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur Minimum
+{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur Maximum
 {0x053D05F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
 {0x053D05F2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8704,  STR8704,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gemischt
 // Virtueller Parameter aus ACS700
@@ -10144,7 +10144,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert
 {0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
 {0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichertemperatur 3
-{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert Reset?
+{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeichersollwert
 {0x053D06C4,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8990,  STR8990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro Puffer
 {0x053D06BF,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Puffer
 {0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_085_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1

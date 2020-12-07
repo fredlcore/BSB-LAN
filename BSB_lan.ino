@@ -4284,6 +4284,26 @@ int set(int line      // the ProgNr of the heater parameter
       }
       break;
 
+    case VT_ENERGY:
+      {
+      if(val[0]!='\0'){
+        uint32_t t=atoi(val);
+        param[0]=0x01;  //enable
+        param[1]=(t >> 24) & 0xff;
+        param[2]=(t >> 16) & 0xff;
+        param[3]=(t >> 8) & 0xff;
+        param[4]= t & 0xff;
+      }else{
+        param[0]=0x00;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+        param[3]=0x00;
+        param[4]=0x00;
+      }
+      param_len=5;
+      }
+      break;
+
     // ---------------------------------------------
     // 8-bit unsigned integer representation
     // No input values sanity check
