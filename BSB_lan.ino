@@ -550,6 +550,7 @@ uint_farptr_t prognrdescaddr; //prognr description string address
 uint_farptr_t enumdescaddr; //enum description string address
 uint_farptr_t enumstr; //address of first element of enum
 uint_farptr_t progtypedescaddr; //program type description string address
+uint_farptr_t data_type_descaddr; //data type description DT_*, dt_types_text[?].type_text
 uint16_t enumstr_len;  //enum length
 uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed
 uint8_t msg_type; //telegram type
@@ -558,7 +559,6 @@ uint8_t readonly; // 0 - read/write, 1 - read only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
-uint8_t data_type_descaddr; //data type description DT_*, dt_types_text[?].type_text
 uint8_t precision;//optbl[?].precision
 uint8_t enable_byte;//optbl[?].enable_byte
 uint8_t sensorid; //id of external (OneWire, DHT, MAX!) sensor for virtual programs. Must be zero for real program numbers.
