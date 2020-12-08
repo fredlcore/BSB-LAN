@@ -4512,6 +4512,51 @@ int set(int line      // the ProgNr of the heater parameter
   return 1;
 } // --- set() ---
 
+/**  *****************************************************************
+ *  Function: reset()
+ *  Does:     This routine reset parameters to their default values.
+ * Pass parameters:
+ *  uint16  line     the line number (ProgNr)
+ *  byte  * msg     telegram
+ *  byte *tx_msg      telegram
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *  0         failure (incomplete input data, ..)
+ *
+ * Global resources used:
+ *  Serial instance
+ *  bus    instance
+ * *************************************************************** */
+int reset(uint16_t line, byte *msg, byte *tx_msg){
+  uint32_t c;
+  resetDecodedTelegram();
+  int i=findLine(line,0,&c);
+  if( i < 0){
+    decodedTelegram.error = 258; //not found
+    return 0;
+  }else{
+    if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
+      decodedTelegram.error = 261; //query failed
+      return 0;
+    }else{
+      // Decode the xmit telegram and send it to the PC serial interface
+      if(verbose) {
+        printTelegram(tx_msg, line);
+#ifdef LOGGER
+        LogTelegram(tx_msg);
+#endif
+      }
+
+      // Decode the rcv telegram and send it to the PC serial interface
+      printTelegram(msg, line);   // send to hardware serial interface
+#ifdef LOGGER
+      LogTelegram(msg);
+#endif
+    }
+  }
+  return 1;
+}
 
 /**  *****************************************************************
  *  Function: build_pvalstr()
@@ -6352,60 +6397,51 @@ uint8_t pps_offset = 0;
           bool setcmd= (p[1]=='S'); // True if SET command
           uint8_t destAddr = bus->getBusDest();
           p+=2;               // third position in cLineBuffer
+          if(!(httpflags & 128)) webPrintHeader();
+
           if(!isdigit(*p)){   // now we check for digits - nice
-            if(!(httpflags & 128)) webPrintHeader();
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
-          }
-          line=atoi(p);       // convert until non-digit char is found
-          p=strchr(p,'=');    // search for '=' sign
-          if(p==NULL){        // no match
-            if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
-          }
-          p++;                   // position pointer past the '=' sign
-          char* token = strchr(p, '!');
-          token++;
-          if (token[0] > 0) {
-            int d_addr = atoi(token);
-            printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-          }
+          } else {
+            line=atoi(p);       // convert until non-digit char is found
+            p=strchr(p,'=');    // search for '=' sign
+            if(p==NULL){        // no match
+                printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
+            } else {
+              p++;                   // position pointer past the '=' sign
+              char* token = strchr(p, '!');
+              token++;
+              if (token[0] > 0) {
+                int d_addr = atoi(token);
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              }
 
-          printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
-          // Now send it out to the bus
-          int setresult = 0;
-          setresult = set(line,p,setcmd);
+              printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
+              // Now send it out to the bus
+              int setresult = 0;
+              setresult = set(line,p,setcmd);
 
-          if(setresult!=1){
-            if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
-            if (setresult == 2) {
-              printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
+              if(setresult!=1){
+                printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
+                if (setresult == 2) {
+                  printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
+                }
+              } else {
+                if(setcmd){            // was this a SET command?
+                  // Query controller for this value
+                  query(line);  // read value back
+                  query_printHTML();
+                } else { // INF command
+
+                }
+              }
+              if (token[0] > 0) {
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              }
             }
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
           }
-          if(setcmd){            // was this a SET command?
-            if(!(httpflags & 128)) webPrintHeader();
-            // Query controller for this value
-            query(line);  // read value back
-            query_printHTML();
-            if(!(httpflags & 128)) webPrintFooter();
-          }else{
-            if(!(httpflags & 128)) webPrintHeader();
-            if(!(httpflags & 128)) webPrintFooter();
-          }
+          if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
-          if (token[0] > 0) {
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-          }
           break;
         }
         // list categories
@@ -6460,37 +6496,20 @@ uint8_t pps_offset = 0;
         }
         // query reset value
         if(p[1]=='R'){
-          uint32_t c;
           webPrintHeader();
-          int line = atoi(&p[2]);
-          int i=findLine(line,0,&c);
-          if(i<0){
-            printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
-          }else{
-            if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
+          if(!reset(atoi(&p[2]), msg, tx_msg)){
+            if(decodedTelegram.error == 258)
+              printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
+            else if(decodedTelegram.error == 261) {
               printlnToDebug(PSTR("set failed"));  // to PC hardware serial I/F
               printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
-            }else{
-
-              // Decode the xmit telegram and send it to the PC serial interface
-              if(verbose) {
-                printTelegram(tx_msg, line);
-#ifdef LOGGER
-                LogTelegram(tx_msg);
-#endif
-              }
-
-              // Decode the rcv telegram and send it to the PC serial interface
-              printTelegram(msg, line);   // send to hardware serial interface
-#ifdef LOGGER
-              LogTelegram(msg);
-#endif
+            }
+          } else{
 // TODO: replace pvalstr with data from decodedTelegram structure
-              build_pvalstr(0);
-              if(outBuf[0]>0){
-                printToWebClient(outBuf);
-                printToWebClient(PSTR("<br>"));
-              }
+            build_pvalstr(0);
+            if(outBuf[0]>0){
+              printToWebClient(outBuf);
+              printToWebClient(PSTR("<br>"));
             }
           }
           webPrintFooter();
@@ -6738,7 +6757,7 @@ uint8_t pps_offset = 0;
           json_token = strtok(NULL, ",");
 
           printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n{\r\n"));
-          if(strchr("ACIKQS",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
@@ -6887,7 +6906,11 @@ uint8_t pps_offset = 0;
                 }
               }
             } else {
-              json_parameter = atoi(json_token);
+              if (p[2] == 'S') {
+                json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
+              } else {
+                json_parameter = atoi(json_token);
+              }
             }
             if (output || json_token != NULL) {
               if (p[2] != 'K') {
@@ -7000,7 +7023,16 @@ uint8_t pps_offset = 0;
 
                 printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C')) {
+
+              if (p[2]=='R') {
+                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                int status = reset(json_parameter, msg, tx_msg);
+                printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
+
+                printFmtToDebug(PSTR("Reset parameter %d to value %s\r\n"), json_parameter, decodedTelegram.value);
+              }
+
+              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
                 json_token = strtok(NULL,",");
               }
             }
