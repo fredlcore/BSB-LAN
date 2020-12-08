@@ -41,6 +41,7 @@
 #define TYPE_ERR  0x08 // error
 #define TYPE_QRV  0x0F // query  reset value
 #define TYPE_ARV  0x10 // answer reset value
+#define TYPE_QRE  0x11 // query reset value failed (1 byte payload of unknown meaning)
 #define TYPE_IQ1  0x12 // internal query type 1 (still undecoded)
 #define TYPE_IA1  0x13 // internal answer type 1 (still undecoded)
 #define TYPE_IQ2  0x14 // internal query type 2 (still undecoded)
@@ -327,6 +328,117 @@ typedef enum{
   VT_UNKNOWN
 }vt_type_t;
 
+typedef enum {
+  DT_VALS,    // plain value
+  DT_ENUM,    // value (8/16 Bit) followed by space followed by text
+  DT_BITS,    // bit value followed by bitmask followed by text
+  DT_WDAY,    // weekday
+  DT_HHMM,    // hour:minute
+  DT_DTTM,    // date and time
+  DT_DDMM,    // day and month
+  DT_STRN,    // string
+  DT_DWHM     // PPS time (day of week, hour:minute)
+} dt_types_t;
+
+const char STR_VALS[] PROGMEM = "VALS";
+const char STR_ENUM[] PROGMEM = "ENUM";
+const char STR_BITS[] PROGMEM = "BITS";
+const char STR_WDAY[] PROGMEM = "WDAY";
+const char STR_HHMM[] PROGMEM = "HHMM";
+const char STR_DTTM[] PROGMEM = "DTTM";
+const char STR_DDMM[] PROGMEM = "DDMM";
+const char STR_STRN[] PROGMEM = "STRN";
+const char STR_DWHM[] PROGMEM = "DWHM";
+
+const char STR_BIT[] PROGMEM = "BIT";
+const char STR_BYTE[] PROGMEM = "BYTE";
+const char STR_BYTE10[] PROGMEM = "BYTE10";
+const char STR_CLOSEDOPEN[] PROGMEM = "CLOSEDOPEN";
+const char STR_DAYS[] PROGMEM = "DAYS";
+const char STR_GRADIENT_SHORT[] PROGMEM = "GRADIENT_SHORT";
+const char STR_HOURS_SHORT[] PROGMEM = "HOURS_SHORT";
+const char STR_LPBADDR[] PROGMEM = "LPBADDR";
+const char STR_MINUTES_SHORT[] PROGMEM = "MINUTES_SHORT";
+const char STR_MONTHS[] PROGMEM = "MONTHS";
+const char STR_ONOFF[] PROGMEM = "ONOFF";
+const char STR_PERCENT[] PROGMEM = "PERCENT";
+const char STR_PERCENT5[] PROGMEM = "PERCENT5";
+const char STR_PRESSURE[] PROGMEM = "PRESSURE";
+const char STR_PRESSURE50[] PROGMEM = "PRESSURE50";
+const char STR_SECONDS_SHORT[] PROGMEM = "SECONDS_SHORT";
+const char STR_SECONDS_SHORT4[] PROGMEM = "SECONDS_SHORT4";
+const char STR_SECONDS_SHORT5[] PROGMEM = "SECONDS_SHORT5";
+const char STR_TEMP_SHORT[] PROGMEM = "TEMP_SHORT";
+const char STR_TEMP_SHORT_US[] PROGMEM = "TEMP_SHORT_US";
+const char STR_TEMP_SHORT5[] PROGMEM = "TEMP_SHORT5";
+const char STR_TEMP_SHORT5_US[] PROGMEM = "TEMP_SHORT5_US";
+const char STR_TEMP_SHORT64[] PROGMEM = "TEMP_SHORT64";
+const char STR_TEMP_PER_MIN[] PROGMEM = "TEMP_PER_MIN";
+const char STR_VOLTAGE[] PROGMEM = "VOLTAGE";
+const char STR_VOLTAGEONOFF[] PROGMEM = "VOLTAGEONOFF";
+const char STR_WEEKDAY[] PROGMEM = "WEEKDAY";
+const char STR_YESNO[] PROGMEM = "YESNO";
+const char STR_SPF[] PROGMEM = "SPF";
+const char STR_CURRENT[] PROGMEM = "CURRENT";
+const char STR_CURRENT1000[] PROGMEM = "CURRENT1000";
+const char STR_DAYS_WORD[] PROGMEM = "DAYS_WORD";
+const char STR_ERRORCODE[] PROGMEM = "ERRORCODE";
+const char STR_FP1[] PROGMEM = "FP1";
+const char STR_FP02[] PROGMEM = "FP02";
+const char STR_GRADIENT[] PROGMEM = "GRADIENT";
+const char STR_INTEGRAL[] PROGMEM = "INTEGRAL";
+const char STR_MONTHS_WORD[] PROGMEM = "MONTHS_WORD";
+const char STR_HOUR_MINUTES[] PROGMEM = "HOUR_MINUTES";
+const char STR_HOURS_WORD[] PROGMEM = "HOURS_WORD";
+const char STR_MINUTES_WORD[] PROGMEM = "MINUTES_WORD";
+const char STR_MINUTES_WORD10[] PROGMEM = "MINUTES_WORD10";
+const char STR_PERCENT_WORD1[] PROGMEM = "PERCENT_WORD1";
+const char STR_PERCENT_WORD[] PROGMEM = "PERCENT_WORD";
+const char STR_PERCENT_100[] PROGMEM = "PERCENT_100";
+const char STR_POWER_WORD[] PROGMEM = "POWER_WORD";
+const char STR_POWER_WORD100[] PROGMEM = "POWER_WORD100";
+const char STR_ENERGY_WORD[] PROGMEM = "ENERGY_WORD";
+const char STR_ENERGY_CONTENT[] PROGMEM = "ENERGY_CONTENT";
+const char STR_PRESSURE_WORD[] PROGMEM = "PRESSURE_WORD";
+const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
+const char STR_PROPVAL[] PROGMEM = "PROPVAL";
+const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
+const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
+const char STR_SPEED[] PROGMEM = "SPEED";
+const char STR_SPEED2[] PROGMEM = "SPEED2";
+const char STR_TEMP[] PROGMEM = "TEMP";
+const char STR_TEMP_WORD[] PROGMEM = "TEMP_WORD";
+const char STR_TEMP_WORD60[] PROGMEM = "TEMP_WORD60";
+const char STR_TEMP_WORD5_US[] PROGMEM = "TEMP_WORD5_US";
+const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
+const char STR_CELMIN[] PROGMEM = "CELMIN";
+const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
+const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
+const char STR_UINT[] PROGMEM = "UINT";
+const char STR_UINT5[] PROGMEM = "UINT5";
+const char STR_UINT10[] PROGMEM = "UINT10";
+const char STR_SINT[] PROGMEM = "SINT";
+const char STR_SINT1000[] PROGMEM = "SINT1000";
+const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
+const char STR_DWORD[] PROGMEM = "DWORD";
+const char STR_HOURS[] PROGMEM = "HOURS";
+const char STR_MINUTES[] PROGMEM = "MINUTES";
+const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
+const char STR_POWER[] PROGMEM = "POWER";
+const char STR_POWER100[] PROGMEM = "POWER100";
+const char STR_ENERGY10[] PROGMEM = "ENERGY10";
+const char STR_ENERGY[] PROGMEM = "ENERGY";
+const char STR_UINT100[] PROGMEM = "UINT100";
+const char STR_DATETIME[] PROGMEM = "DATETIME";
+const char STR_SUMMERPERIOD[] PROGMEM = "SUMMERPERIOD";
+const char STR_VACATIONPROG[] PROGMEM = "VACATIONPROG";
+const char STR_TIMEPROG[] PROGMEM = "TIMEPROG";
+const char STR_STRING[] PROGMEM = "STRING";
+const char STR_CUSTOM_ENUM[] PROGMEM = "CUSTOM_ENUM";
+const char STR_CUSTOM_BYTE[] PROGMEM = "CUSTOM_BYTE";
+const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
+const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
+
 const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
 const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
 const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
@@ -352,6 +464,17 @@ const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
+  uint8_t   type;             // message type (e.g. VT_TEMP)
+  float     operand;          // both for divisors as well as factors (1/divisor)
+  uint8_t   enable_byte;      // for regular commands either 1 or 6. 8 indicates data type does not use enable. 0 indicates no set telegram has been logged to determine correct enable byte.
+  uint8_t   data_type;        // Value, String, Date...
+  uint8_t   precision;        // decimal places
+  const char  *unit;
+  uint8_t unit_len;
+  const char  *type_text;
+} units;
+
+typedef struct {
   uint32_t    cmd;                 // the command or fieldID
   uint8_t     category;            // the menu category
   uint8_t     type;                // the message type
@@ -366,117 +489,113 @@ typedef struct {
 } cmd_t;
 
 typedef struct {
-  uint8_t   type;             // message type (e.g. VT_TEMP)
-  float     operand;          // both for divisors as well as factors (1/divisor)
-  uint8_t   data_type;        // Value, String, Date...
-  uint8_t   precision;        // decimal places
-  const char   *unit;
-  uint8_t unit_len;
-} units;
+  uint8_t type;
+  const char  *type_text;
+} dt_types;
 
-typedef enum {
-  DT_VALS,    // plain value
-  DT_ENUM,    // value (8/16 Bit) followed by space followed by text
-  DT_BITS,    // bit value followed by bitmask followed by text
-  DT_WDAY,    // weekday
-  DT_HHMM,    // hour:minute
-  DT_DTTM,    // date and time
-  DT_DDMM,    // day and month
-  DT_STRN,    // string
-  DT_DWHM     // PPS time (day of week, hour:minute)
-} dt_types_t;
+PROGMEM_LATE const dt_types dt_types_text[]={
+  {DT_VALS, STR_VALS},
+  {DT_ENUM, STR_ENUM},
+  {DT_BITS, STR_BITS},
+  {DT_WDAY, STR_WDAY},
+  {DT_HHMM, STR_HHMM},
+  {DT_DTTM, STR_DTTM},
+  {DT_DDMM, STR_DDMM},
+  {DT_STRN, STR_STRN},
+  {DT_DWHM, STR_DWHM}
+};
 
 /* order of types must according to vt_type_t enum */
 PROGMEM_LATE const units optbl[]={
-{VT_BIT,            1.0,    DT_BITS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_BYTE,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_BYTE10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
-{VT_CLOSEDOPEN,     1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_DAYS,           1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
-{VT_ENUM,           1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_GRADIENT_SHORT, 1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
-{VT_HOURS_SHORT,    1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
-{VT_LPBADDR,        1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_MINUTES_SHORT,  1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
-{VT_MONTHS,         1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS)},
-{VT_ONOFF,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_PERCENT,        1.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
-{VT_PERCENT5,       2.0,    DT_VALS, 0,  U_PERC, sizeof(U_PERC)},
-{VT_PRESSURE,       10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
-{VT_PRESSURE50,     50.0,   DT_VALS, 2,  U_BAR, sizeof(U_BAR)},
-{VT_SECONDS_SHORT,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_SHORT4, 4.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_SHORT5, 5.0,    DT_VALS, 1,  U_SEC, sizeof(U_SEC)},
-{VT_TEMP_SHORT,     1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT_US,  1.0,    DT_VALS, 0,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT5,    2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT5_US, 2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_SHORT64,   64.0,   DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS)},
-{VT_TEMP_PER_MIN,   1.0,    DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN)},
-{VT_VOLTAGE,        10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
-{VT_VOLTAGEONOFF,   1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_WEEKDAY,        1.0,    DT_WDAY, 0,  U_NONE, sizeof(U_NONE)},
-{VT_YESNO,          1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_SPF,            100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
-{VT_CURRENT,        100.0,  DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
-{VT_CURRENT1000,    1000.0, DT_VALS, 2,  U_CURR, sizeof(U_CURR)},
-{VT_DAYS_WORD,      1.0,    DT_VALS, 0,  U_DAYS, sizeof(U_DAYS)},
-{VT_ERRORCODE,      1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_FP1,            10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
-{VT_FP02,           50.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
-{VT_GRADIENT,       1.0,    DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT)},
-{VT_INTEGRAL,       1.0,    DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL)},
-{VT_MONTHS_WORD,    1.0,    DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS)},
-{VT_HOUR_MINUTES,   1.0,    DT_HHMM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS_WORD,     1.0,    DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
-{VT_MINUTES_WORD,   1.0,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
-{VT_MINUTES_WORD10, 0.1,    DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
-{VT_PERCENT_WORD1,  1.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
-{VT_PERCENT_WORD,   2.0,    DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
-{VT_PERCENT_100,    100.0,  DT_VALS, 1,  U_PERC, sizeof(U_PERC)},
-{VT_POWER_WORD,     10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
-{VT_POWER_WORD100,  100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
-{VT_ENERGY_WORD,    10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
-{VT_ENERGY_CONTENT, 10.0,   DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3)},
-{VT_PRESSURE_WORD,  10.0,   DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
-{VT_PRESSURE_1000,  1000.0, DT_VALS, 1,  U_BAR, sizeof(U_BAR)},
-{VT_PROPVAL,        16.0,   DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
-{VT_SECONDS_WORD,   1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_SECONDS_WORD5,  2.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_SPEED,          0.02,   DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
-{VT_SPEED2,         1.0,    DT_VALS, 0,  U_RPM, sizeof(U_RPM)},
-{VT_TEMP,           64.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_WORD,      1.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_WORD60,    60.0,   DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_TEMP_WORD5_US,  2.0,    DT_VALS, 1,  U_DEG, sizeof(U_DEG)},
-{VT_VOLTAGE_WORD,   10.0,   DT_VALS, 1,  U_VOLT, sizeof(U_VOLT)},
-{VT_CELMIN,         1.0,    DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN)},
-{VT_LITERPERHOUR,   1.0,    DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR)},
-{VT_LITERPERMIN,    10.0,   DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN)},
-{VT_UINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT5,          5.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_UINT10,         10.0,   DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
-{VT_SINT,           1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_SINT1000,       1000,   DT_VALS, 3,  U_NONE, sizeof(U_NONE)},
-{VT_PPS_TIME,       1.0,    DT_DWHM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_DWORD,          1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_HOURS,          3600.0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR)},
-{VT_MINUTES,        60.0,   DT_VALS, 0,  U_MIN, sizeof(U_MIN)},
-{VT_SECONDS_DWORD,  1.0,    DT_VALS, 0,  U_SEC, sizeof(U_SEC)},
-{VT_POWER,          10.0,   DT_VALS, 1,  U_KW, sizeof(U_KW)},
-{VT_POWER100,       100.0,  DT_VALS, 2,  U_KW, sizeof(U_KW)},
-{VT_ENERGY10,       10.0,   DT_VALS, 1,  U_KWH, sizeof(U_KWH)},
-{VT_ENERGY,         1.0,    DT_VALS, 0,  U_KWH, sizeof(U_KWH)},
-{VT_UINT100,        100.0,  DT_VALS, 2,  U_NONE, sizeof(U_NONE)},
-{VT_DATETIME,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_SUMMERPERIOD,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_VACATIONPROG,   1.0,    DT_DDMM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_TIMEPROG,       1.0,    DT_DTTM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_STRING,         1.0,    DT_STRN, 0,  U_NONE, sizeof(U_NONE)},
-{VT_CUSTOM_ENUM,    1.0,    DT_ENUM, 0,  U_NONE, sizeof(U_NONE)},
-{VT_CUSTOM_BYTE,    1.0,    DT_VALS, 0,  U_NONE, sizeof(U_NONE)},
-{VT_GR_PER_CUBM,    1.0,    DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM)},
-{VT_UNKNOWN,        1.0,    DT_VALS, 1,  U_NONE, sizeof(U_NONE)},
+{VT_BIT,            1.0,    1, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
+{VT_BYTE,           1.0,    1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
+{VT_BYTE10,         10.0,   0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
+{VT_CLOSEDOPEN,     1.0,    1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
+{VT_DAYS,           1.0,    1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
+{VT_ENUM,           1.0,    1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
+{VT_GRADIENT_SHORT, 1.0,    0, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
+{VT_HOURS_SHORT,    1.0,    1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
+{VT_LPBADDR,        1.0,    0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
+{VT_MINUTES_SHORT,  1.0,    6, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
+{VT_MONTHS,         1.0,    6, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
+{VT_ONOFF,          1.0,    1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
+{VT_PERCENT,        1.0,    6, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
+{VT_PERCENT5,       2.0,    1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT5},
+{VT_PRESSURE,       10.0,   1, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE},
+{VT_PRESSURE50,     50.0,   0, DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
+{VT_SECONDS_SHORT,  1.0,    0, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
+{VT_SECONDS_SHORT4, 4.0,    1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
+{VT_SECONDS_SHORT5, 5.0,    1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
+{VT_TEMP_SHORT,     1.0,    1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
+{VT_TEMP_SHORT_US,  1.0,    1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT_US},
+{VT_TEMP_SHORT5,    2.0,    1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5},
+{VT_TEMP_SHORT5_US, 2.0,    1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5_US},
+{VT_TEMP_SHORT64,   64.0,   1, DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), STR_TEMP_SHORT64},
+{VT_TEMP_PER_MIN,   1.0,    6, DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
+{VT_VOLTAGE,        10.0,   0, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
+{VT_VOLTAGEONOFF,   1.0,    0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
+{VT_WEEKDAY,        1.0,    1, DT_WDAY, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
+{VT_YESNO,          1.0,    1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
+{VT_SPF,            100.0,  0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
+{VT_CURRENT,        100.0,  0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
+{VT_CURRENT1000,    1000.0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
+{VT_DAYS_WORD,      1.0,    0, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
+{VT_ERRORCODE,      1.0,    0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
+{VT_FP1,            10.0,   0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
+{VT_FP02,           50.0,   1, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
+{VT_GRADIENT,       1.0,    0, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
+{VT_INTEGRAL,       1.0,    0, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
+{VT_MONTHS_WORD,    1.0,    0, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
+{VT_HOUR_MINUTES,   1.0,    6, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
+{VT_HOURS_WORD,     1.0,    6, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
+{VT_MINUTES_WORD,   1.0,    6, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
+{VT_MINUTES_WORD10, 0.1,    0, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
+{VT_PERCENT_WORD1,  1.0,    6, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
+{VT_PERCENT_WORD,   2.0,    1, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
+{VT_PERCENT_100,    100.0,  1, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
+{VT_POWER_WORD,     10.0,   0, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
+{VT_POWER_WORD100,  100.0,  0, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
+{VT_ENERGY_WORD,    10.0,   0, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
+{VT_ENERGY_CONTENT, 10.0,   0, DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
+{VT_PRESSURE_WORD,  10.0,   0, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
+{VT_PRESSURE_1000,  1000.0, 0, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
+{VT_PROPVAL,        16.0,   0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
+{VT_SECONDS_WORD,   1.0,    1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
+{VT_SECONDS_WORD5,  2.0,    1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
+{VT_SPEED,          0.02,   0, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
+{VT_SPEED2,         1.0,    0, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
+{VT_TEMP,           64.0,   1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
+{VT_TEMP_WORD,      1.0,    1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
+{VT_TEMP_WORD60,    60.0,   0, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
+{VT_TEMP_WORD5_US,  2.0,    1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
+{VT_VOLTAGE_WORD,   10.0,   0, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
+{VT_CELMIN,         1.0,    1, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
+{VT_LITERPERHOUR,   1.0,    0, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
+{VT_LITERPERMIN,    10.0,   0, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
+{VT_UINT,           1.0,    6, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
+{VT_UINT5,          5.0,    6, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
+{VT_UINT10,         10.0,   6, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
+{VT_SINT,           1.0,    6, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
+{VT_SINT1000,       1000,   1, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
+{VT_PPS_TIME,       1.0,    0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
+{VT_DWORD,          1.0,    6, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
+{VT_HOURS,          3600.0, 0, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
+{VT_MINUTES,        60.0,   1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
+{VT_SECONDS_DWORD,  1.0,    0, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
+{VT_POWER,          10.0,   0, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
+{VT_POWER100,       100.0,  0, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
+{VT_ENERGY10,       10.0,   0, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
+{VT_ENERGY,         1.0,    1, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_UINT100,        100.0,  6, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_DATETIME,       1.0,    6, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
+{VT_SUMMERPERIOD,   1.0,    1, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_SUMMERPERIOD},
+{VT_VACATIONPROG,   1.0,    6, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
+{VT_TIMEPROG,       1.0,    8, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
+{VT_STRING,         1.0,    8, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
+{VT_CUSTOM_ENUM,    1.0,    8, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
+{VT_CUSTOM_BYTE,    1.0,    0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
+{VT_GR_PER_CUBM,    1.0,    0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
+{VT_UNKNOWN,        1.0,    0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
 /****************************************************/
@@ -3343,6 +3462,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM7999_00_TEXT ENUM48_00_TEXT
 #define ENUM8000_00_TEXT ENUM6040_03_TEXT
 #define ENUM8000_18_TEXT ENUM780_00_TEXT
+#define ENUM8000_f8_TEXT STR809_TEXT
 #define ENUM8003_00_TEXT ENUM6040_03_TEXT
 #define ENUM8003_03_TEXT ENUM8000_03_TEXT
 #define ENUM8003_04_TEXT ENUM8000_04_TEXT
@@ -5573,7 +5693,9 @@ const char ENUM8000[] PROGMEM_LATEST = {
 "\x77 " ENUM8000_77_TEXT "\0"
 "\x78 " ENUM8000_78_TEXT "\0"
 "\x79 " ENUM8000_79_TEXT "\0"
-"\x7a " ENUM8000_7a_TEXT};
+"\x7a " ENUM8000_7a_TEXT "\0"
+"\xf8 " ENUM8000_f8_TEXT
+};
 
 #define ENUM8001 ENUM8000               // Status - Status Heizkreis 2
 #define ENUM8002 ENUM8000               // Status - Status Heizkreis P/3
@@ -8528,6 +8650,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D2F97,  CAT_KONFIG,           VT_BYTE,          6089,  STR6089,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6089 Mod Pumpe Drehzahlstufen [?]
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_108_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_123_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
+{0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_162_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_163_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_165_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_170_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
@@ -8800,8 +8923,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_178_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_195_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
 {0x053D3072,  CAT_FEHLER,           VT_ENUM,          6706,  STR6706,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_203_ALL}, // Thision 6705 FA Phase Störstellung - mapped to parameter 6706 according to Brötje manual
-{0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
-{0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY,     DEV_ALL}, // Reset Wärmepumpe //FUJITSU
+{0x053D05D6,  CAT_FEHLER,           VT_YESNO,         6710,  STR6710,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Fehler - Reset Alarmrelais
+{0x593D06AC,  CAT_FEHLER,           VT_YESNO,         6711,  STR6711,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Reset Wärmepumpe //FUJITSU
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm
 {0x213D069D,  CAT_FEHLER,           VT_MINUTES_WORD,  6740,  STR6740,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [min ] - Fehler - Vorlauftemperatur 1 Alarm - logged on OCI700 via LPB
 {0x223D069D,  CAT_FEHLER,           VT_MINUTES_SHORT, 6741,  STR6741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [min ] - Fehler - Vorlauftemperatur 2 Alarm
@@ -9674,6 +9797,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // Wasserdruck
+{0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_NO_CMD,    DEV_162_014}, // Wasserdruck
 {0x053D19F0,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_134_ALL}, // Wasserdruck
 {0x053D3063,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_1000, 8327,  STR8327,  0,                    NULL,         FL_RONLY,     DEV_138_ALL}, // Wasserdruck
@@ -9696,8 +9820,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x153D2FF0,  CAT_DIAG_ERZEUGER,    VT_CURRENT,       8329,  STR8329,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Ionisationsstrom [uA?]
 {0x0D3D093B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8330,  STR8330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebstunden 1.Stufe. Can be resetted
 {0x053D08A5,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8331,  STR8331,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 1.Stufe. Can be resetted
-{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
-{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
+{0x0D3D093D,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8332,  STR8332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Diagnose Erzeuger - Betriebsstunden 2. Stufe
+{0x053D08A6,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8333,  STR8333,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Diagnose Erzeuger - Startzaehler 2.Stufe
 {0x093D3036,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Brenner
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_025_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
 {0x053D0011,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8336,  STR8336,  0,                    NULL,         FL_RONLY,     DEV_028_ALL}, // Thision Betriebsstunden Brenner - logged on OCI700 via LPB
@@ -9736,11 +9860,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // WGBS Betriebsstunden TWW
 {0x193D2FEC,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8339,  STR8339,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden TWW
 {0x193D2FED,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8340,  STR8340,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Betriebsstunden Zonen
-{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8378,  STR8378,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Heizen
-{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8379,  STR8379,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie Trinkwasser
+{0x053D1A7A,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8378,  STR8378,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gesamt Gasenergie Heizen
+{0x053D1A7B,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8379,  STR8379,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gesamt Gasenergie Trinkwasser
 {0x053D1A7C,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8380,  STR8380,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamt Gasenergie
-{0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8381,  STR8381,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Heizen (Reset?)
-{0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8382,  STR8382,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie Trinkwasser (Reset?)
+{0x053D1A7D,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8381,  STR8381,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gasenergie Heizen
+{0x053D1A7E,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8382,  STR8382,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gasenergie Trinkwasser
 {0x053D1A7F,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8383,  STR8383,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gasenergie
 {0x093D0DFD,  CAT_DIAG_ERZEUGER,    VT_ENUM,          8390,  STR8390,  sizeof(ENUM8390),     ENUM8390,     FL_RONLY,     DEV_ALL}, // Aktuelle Phasennummer - Broetje NovoCondens WOB20-25
 {0x053D19D8,  CAT_DIAG_ERZEUGER,    VT_POWER100,      8395,  STR8395,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Wärmeabgabe in kW // Broetje BSW-K
@@ -9798,7 +9922,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D0BD7,  CAT_DIAG_ERZEUGER,    VT_MINUTES_SHORT, 8443,  STR8443,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Rest Stufe 2 Laufzeit Min
 {0x593D0BCB,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8444,  STR8444,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Restzeit Begr Quelle TempMin
 {0x593D05C9,  CAT_DIAG_ERZEUGER,    VT_UNKNOWN,       8446,  STR8446,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Verdichterfolge // 1- 2 ??
-{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr'std erw Verdampf'temp // RESET ?
+{0x593D19AF,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8448,  STR8448,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Betr'std erw Verdampf'temp
 {0x593D189B,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8449,  STR8449,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr'stunden Kältekreis
 {0x593D0897,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8450,  STR8450,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Verdichter 1 //FUJITSU
 {0x593D089B,  CAT_DIAG_ERZEUGER,    VT_DWORD,         8451,  STR8451,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Verdichter 1
@@ -9886,8 +10010,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 //{0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_097_100}, // [°C ] - Diagnose Verbraucher - Aussentemperatur // different reports for 97/100, one time 0x053D0521, then 0x0500021F
-{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Minimum
-{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Außentemperatur Maximum
+{0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur Minimum
+{0x053D056E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8702,  STR8702,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur Maximum
 {0x053D05F0,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8703,  STR8703,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gedaempft
 {0x053D05F2,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8704,  STR8704,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur gemischt
 // Virtueller Parameter aus ACS700
@@ -10021,7 +10145,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0883,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8981,  STR8981,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert
 {0x053D0535,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8982,  STR8982,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Pufferspeichertemperatur 2
 {0x053D0536,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8983,  STR8983,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichertemperatur 3
-{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Pufferspeichersollwert Reset?
+{0x053D06B7,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8984,  STR8984,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeichersollwert
 {0x053D06C4,  CAT_DIAG_VERBRAUCHER, VT_HOURS,         8990,  STR8990,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Betr’stunden Elektro Puffer
 {0x053D06BF,  CAT_DIAG_VERBRAUCHER, VT_UNKNOWN,       8991,  STR8991,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Startzähler Elektro Puffer
 {0x053D0576,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          9000,  STR9000,  0,                    NULL,         FL_RONLY,     DEV_085_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert H1

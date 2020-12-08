@@ -271,8 +271,7 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 //You can enable I_DO_NOT_WANT_URL_CONFIG for saving space (~1.2Kb).
 //This will disable configuration through URL commands (/A, /L, /P)
 //#define I_DO_NOT_WANT_URL_CONFIG
-//If You defined WEBSERVER and use external web interface on SD-card then you can
-//enable I_DO_NOT_WANT_URL_CONFIG for saving space (~6,8Kb). /DG command will be disabled
+//Enable I_WILL_USE_EXTERNAL_INTERFACE for saving space (~6,8Kb). /DG command will be disabled
 //#define I_WILL_USE_EXTERNAL_INTERFACE
 
 // Disable modules due to lack of memory for Arduino Mega. This overwrites any definements above.

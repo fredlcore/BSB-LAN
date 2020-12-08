@@ -744,7 +744,7 @@ void ShowSockStatus()
     uint8_t s = W5100.readSnSR(i);
     SPI.endTransaction();
     socketStat[i] = s;
-    printFmtToDebug(PSTR(":0x%02x %d D:"), s, W5100.readSnPORT(i));
+    printFmtToDebug(PSTR(":0x%02X %d D:"), s, W5100.readSnPORT(i));
     uint8_t dip[4];
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     W5100.readSnDIPR(i, dip);
@@ -1560,7 +1560,7 @@ int freeRam () {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex(byte val) {
-  printFmtToDebug(PSTR("%02x"), val);  // add a leading zero to single-digit values
+  printFmtToDebug(PSTR("%02X"), val);  // add a leading zero to single-digit values
 }
 
 /** *****************************************************************
@@ -1646,7 +1646,7 @@ void EEPROM_dump() {
   if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
     printlnToDebug(PSTR("EEPROM dump:"));
     for (uint16_t x=0; x<EEPROM.length(); x++) {
-      printFmtToDebug(PSTR("%02x "), EEPROM.read(x));
+      printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
     }
   }
 }
@@ -1831,6 +1831,7 @@ char *TranslateType(byte type, char *mtype){
     case TYPE_QRV: p = PSTR("QRV"); break;
     case TYPE_ARV: p = PSTR("ARV"); break;
     case TYPE_ERR: p = PSTR("ERR"); break;
+    case TYPE_QRE: p = PSTR("QRE"); break;
     case TYPE_IQ1: p = PSTR("IQ1"); break;
     case TYPE_IA1: p = PSTR("IA1"); break;
     case TYPE_IQ2: p = PSTR("IQ2"); break;
@@ -2861,6 +2862,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SPF: // u16 / 100
             case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
             case VT_CURRENT: // u16 / 100 uA
+            case VT_CURRENT1000:
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
             case VT_SPEED2: // u16
@@ -4080,6 +4082,13 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
   uint8_t type=get_cmdtbl_type(i);
+#if defined(__AVR__)
+  uint8_t enable_byte=pgm_read_float_far(pgm_get_far_address(optbl[0].enable_byte) + type * sizeof(optbl[0]));
+  uint8_t operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + type * sizeof(optbl[0]));
+#else
+  uint8_t enable_byte=optbl[type].enable_byte;
+  uint8_t operand=optbl[type].operand;
+#endif
 
   if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
     int cmd_no = line - 15000;
@@ -4111,29 +4120,11 @@ int set(int line      // the ProgNr of the heater parameter
   // Get the parameter type from the table row[i]
   switch(type) {
     // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Months or minutes
+    // 8-bit representations
     // No input values sanity check
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=t;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-      }
-      param_len=2;
-      }
-      break;
-
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // All enumeration (list) types
-    // No input values sanity check
     case VT_ENUM:          // enumeration types
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
@@ -4145,115 +4136,73 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_BYTE:
     case VT_TEMP_SHORT:
     case VT_TEMP_SHORT_US:
-      {
-      uint8_t t=atoi(val);
-      param[0]=0x01;  //enable
-      param[1]= t;
-      param_len=2;
-      }
-      break;
-
     case VT_TEMP_PER_MIN:
+    case VT_TEMP_SHORT5_US:
+    case VT_TEMP_SHORT5:
+    case VT_PERCENT5:
+    case VT_TEMP_SHORT64:
+    case VT_SECONDS_SHORT4:
+    case VT_SECONDS_SHORT5:
+    case VT_PRESSURE:
       {
       if(val[0]!='\0'){
-        uint8_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]= t;
+        uint8_t t=atoi(val)*operand;
+        param[0]=enable_byte;  //enable
+        param[1]=t;
       }else{
-        param[0]=0x05;  // disable
+        param[0]=enable_byte-1;  // disable
         param[1]=0x00;
       }
       param_len=2;
       }
       break;
 
-
     // ---------------------------------------------
-    // 16-bit unsigned integer representation
-    // Example: Brennerstarts Intervall/Brennerstarts seit Wartung
+    // 16-bit unsigned representations
     // No input values sanity check
     case VT_UINT:
     case VT_SINT:
     case VT_PERCENT_WORD1:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val);
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-
     case VT_UINT5:
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val)/5;
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-
     case VT_UINT10:
-      {
-      if(val[0]!='\0'){
-        uint16_t t=atoi(val)*10;
-        param[0]=0x06;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }else{
-        param[0]=0x05;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-      }
-      param_len=3;
-      }
-      break;
-
-    // ---------------------------------------------
-    // 16-bit unsigned integer representation
     case VT_SECONDS_WORD:
-    // Temperature values
     case VT_TEMP_WORD:
     case VT_CELMIN:
-      {
-      uint16_t t=atoi(val);     // TODO: Isn't VT_TEMP_WORD a signed number?
+    case VT_PERCENT_100:
+    case VT_PERCENT_WORD:
+    case VT_FP02:
+    case VT_SECONDS_WORD5:
+    case VT_TEMP_WORD5_US:
+     {
       if(val[0]!='\0'){
-        param[0]=0x01;
+        uint16_t t=atoi(val)*operand;
+        param[0]=enable_byte;  //enable
         param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }                         // TODO: Do we need a disable section here as well?
+      }else{
+        param[0]=enable_byte-1;  // disable
+        param[1]=0x00;
+        param[2]=0x00;
+      }
       param_len=3;
       }
       break;
 
     // ---------------------------------------------
-    // 32-bit unsigned integer representation
-    case VT_DWORD:
+    // 32-bit representation
+    case VT_DWORD:      // can this be merged with the next one?
       {
       if(val[0]!='\0'){
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
-        param[0]=0x06;  //enable
+        param[0]=enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
         param[3]=(t >> 8) & 0xff;
         param[4]= t & 0xff;
       }else{
-        param[0]=0x05;  // disable
+        param[0]=enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
         param[3]=0x00;
@@ -4264,16 +4213,18 @@ int set(int line      // the ProgNr of the heater parameter
       break;
 
     case VT_UINT100:
+    case VT_ENERGY:
+    case VT_MINUTES:
       {
       if(val[0]!='\0'){
-        uint32_t t=atoi(val) * 100;
-        param[0]=0x06;  //enable
+        uint32_t t=atoi(val) * operand;
+        param[0]=enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
         param[3]=(t >> 8) & 0xff;
         param[4]= t & 0xff;
       }else{
-        param[0]=0x05;  // disable
+        param[0]=enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
         param[3]=0x00;
@@ -4283,9 +4234,8 @@ int set(int line      // the ProgNr of the heater parameter
       }
       break;
 
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // No input values sanity check
+    // Special parameters
+ 
     case VT_HOUR_MINUTES: //TODO test it
       {
       if(val[0]!='\0'){
@@ -4296,11 +4246,11 @@ int set(int line      // the ProgNr of the heater parameter
           val++;
           m=atoi(val);
         }
-        param[0]=0x06;  //enable
+        param[0]=enable_byte;  //enable
         param[1]= h;
         param[2]= m;
       }else{
-        param[0]=0x05;  // disable
+        param[0]=enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
       }
@@ -4322,7 +4272,7 @@ int set(int line      // the ProgNr of the heater parameter
       {
       uint16_t t=atof(val)*1000.0;
       if(setcmd){
-        param[0]=0x01;
+        param[0]=enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       }else{ // INF message type (e.g. for room temperature)
@@ -4339,14 +4289,14 @@ int set(int line      // the ProgNr of the heater parameter
     // Temperature values, mult=64
     case VT_TEMP:
       {
-      uint16_t t=atof(val)*64.0;
+      uint16_t t=atof(val)*operand;
       if(setcmd){
-        param[0]=0x01;
+        param[0]=enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       }else{ // INF message type
         if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
-          param[0]=0x00;
+          param[0]=enable_byte-1;
           param[1]=(t >> 8);
           param[2]= t & 0xff;
         } else {  // Case for room temperature
@@ -4356,127 +4306,6 @@ int set(int line      // the ProgNr of the heater parameter
         }
       }
       param_len=3;
-      }
-      break;
-
-    case VT_TEMP_SHORT5_US:
-    case VT_TEMP_SHORT5:
-    case VT_PERCENT5:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atof(val);
-        param[0]=0x01;  //enable
-        param[1]=t*2;
-      }
-      param_len=2;
-      }
-      break;
-    case VT_TEMP_SHORT64:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atof(val);
-        param[0]=0x01;  //enable
-        param[1]=t*64;
-      }
-      param_len=2;
-      }
-      break;
-
-    case VT_PERCENT_100:
-      {
-      uint16_t t=atof(val)*100.0;
-      param[0]=0x01;
-      param[1]=(t >> 8);
-      param[2]= t & 0xff;
-      param_len=3;
-      }
-      break;
-
-    case VT_PERCENT_WORD:
-      {
-      uint16_t t=atof(val)*2.0;
-      param[0]=0x01;
-      param[1]=(t >> 8);
-      param[2]= t & 0xff;
-      param_len=3;
-      }
-      break;
-
-    // ---------------------------------------------
-    // 2-byte floating point representation
-    // Example: Kennlinie Steilheit, mult=50
-    // No input values sanity check
-    case VT_FP02:
-      {
-      uint16_t t=atof(val)*50.0;
-      param[0]=0x01;
-      param[1]=(t >> 8);
-      param[2]= t & 0xff;
-      param_len=3;
-      }
-      break;
-    // ---------------------------------------------
-    // 8-bit unsigned integer representation
-    // Example: pressure value, mult=10
-    // No input values sanity check
-    case VT_PRESSURE:
-      {
-      uint8_t t=atof(val)*10.0;
-      param[0]=0x01;
-      param[1]= t;
-      param_len=2;
-      }
-      break;
-
-    // ---------------------------------------------
-    // 32-bit unsigned integer representation
-    // Minutes, mult=60
-    // Example: HK1 - Einschaltoptimierung
-    // No input values sanity check
-    case VT_MINUTES:
-      {
-      uint32_t t=atoi(val)*60;
-      param[0]=0x01;
-      param[1]=(t >> 24) & 0xff;
-      param[2]=(t >> 16) & 0xff;
-      param[3]=(t >> 8) & 0xff;
-      param[4]= t & 0xff;
-      param_len=5;
-      }
-      break;
-
-    case VT_SECONDS_WORD5:
-    case VT_TEMP_WORD5_US:
-      {
-      uint16_t t=atoi(val)*2;
-      if(val[0]!='\0'){
-        param[0]=0x01;
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      }                         // TODO: Do we need a disable section here as well?
-      param_len=3;
-      }
-      break;
-
-    case VT_SECONDS_SHORT4:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atof(val);
-        param[0]=0x01;  //enable
-        param[1]=t*4;
-      }
-      param_len=2;
-      }
-      break;
-
-    case VT_SECONDS_SHORT5:
-      {
-      if(val[0]!='\0'){
-        uint8_t t=atof(val);
-        param[0]=0x01;  //enable
-        param[1]=t*5;
-      }
-      param_len=2;
       }
       break;
 
@@ -4496,7 +4325,7 @@ int set(int line      // the ProgNr of the heater parameter
       printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
 
       // Set up the command payload
-      param[0]=0x01;
+      param[0]=enable_byte;
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
@@ -4559,11 +4388,11 @@ int set(int line      // the ProgNr of the heater parameter
           int d,m;
           if(2!=sscanf(val,"%d.%d.",&d,&m))
             return 0;      // incomplete input data
-          param[0]=0x06;   // flag = enabled
+          param[0]=enable_byte;   // flag = enabled
           param[2]=m;
           param[3]=d;
       }else{
-          param[0]=0x05;   // flag = disabled
+          param[0]=enable_byte-1;   // flag = disabled
           param[2]=1;
           param[3]=1;
       }
@@ -4578,7 +4407,7 @@ int set(int line      // the ProgNr of the heater parameter
       int d,m;
       if(2!=sscanf(val,"%d.%d",&d,&m))
         return 0;
-      param[0]=0x01;
+      param[0]=enable_byte;
       param[1]=0xff;
       param[2]=m;
       param[3]=d;
@@ -4619,6 +4448,7 @@ int set(int line      // the ProgNr of the heater parameter
       break;
     }
     // ---------------------------------------------
+/*
     case VT_HOURS: // (read only)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
     case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
@@ -4626,6 +4456,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_FP1: // read only (SW-Version)
     case VT_ERRORCODE: // read only
     case VT_UNKNOWN:
+*/
     default:
       printlnToDebug(PSTR("Unknown type or read-only parameter"));
       return 2;
@@ -5043,7 +4874,7 @@ void queryVirtualPrognr(int line, int table_line){
            case 0: //print sensor ID
              DeviceAddress device_address;
              sensors->getAddress(device_address, log_sensor);
-             sprintf_P(decodedTelegram.value, PSTR("%02x%02x%02x%02x%02x%02x%02x%02x"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
              break;
            case 1: {
              float t=sensors->getTempCByIndex(log_sensor);
@@ -5995,7 +5826,7 @@ void loop() {
               default:
                  printToDebug(PSTR("Unknown request: "));
                 for (int c=0;c<9;c++) {
-                  printFmtToDebug(PSTR("%02x "), msg[c]);
+                  printFmtToDebug(PSTR("%02X "), msg[c]);
                 }
                 writelnToDebug();
 #ifdef LOGGER
@@ -6134,7 +5965,7 @@ uint8_t pps_offset = 0;
                 default:
                   printToDebug(PSTR("Unknown telegram: "));
                   for (int c=0;c<9+pps_offset;c++) {
-                    printFmtToDebug(PSTR("%02x "), msg[c]);
+                    printFmtToDebug(PSTR("%02X "), msg[c]);
                   }
                   writelnToDebug();
                   break;
@@ -6815,7 +6646,7 @@ uint8_t pps_offset = 0;
               uint8_t dev_fam = get_cmdtbl_dev_fam(j);
               uint8_t dev_var = get_cmdtbl_dev_var(j);
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
-                printFmtToDebug(PSTR("%02x\r\n"), c);
+                printFmtToDebug(PSTR("%02X\r\n"), c);
                 if(!bus->Send(TYPE_QUR, c, msg, tx_msg)){
                   printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
                 } else {
@@ -8631,6 +8462,9 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
         }
         num[x]='\0';
         avgValues_Old[i] = atof(num);
+        if (isnan(avgValues_Old[i])) {
+          avgValues_Old[i] = -9999;
+        }
 
         c = avgfile.read();
         x = 0;
