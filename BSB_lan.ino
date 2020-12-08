@@ -7084,8 +7084,11 @@ uint8_t pps_offset = 0;
                 }
               }
             } else {
-              json_parameter = atoi(json_token);
-              if (p[2] == 'S') json_parameter = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
+              if (p[2] == 'S') {
+                json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
+              } else {
+                json_parameter = atoi(json_token);
+              }
             }
             if (output || json_token != NULL) {
               if (p[2] != 'K') {
