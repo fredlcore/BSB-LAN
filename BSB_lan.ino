@@ -6566,57 +6566,51 @@ uint8_t pps_offset = 0;
           bool setcmd= (p[1]=='S'); // True if SET command
           uint8_t destAddr = bus->getBusDest();
           p+=2;               // third position in cLineBuffer
-          if(!isdigit(*p)){   // now we check for digits - nice
-            if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
-          }
-          line=atoi(p);       // convert until non-digit char is found
-          p=strchr(p,'=');    // search for '=' sign
-          if(p==NULL){        // no match
-            if(!(httpflags & 128)) webPrintHeader();
-            printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
-          }
-          p++;                   // position pointer past the '=' sign
-          char* token = strchr(p, '!');
-          token++;
-          if (token[0] > 0) {
-            int d_addr = atoi(token);
-            printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-          }
-
-          printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
-          // Now send it out to the bus
-          int setresult = 0;
-          setresult = set(line,p,setcmd);
-
           if(!(httpflags & 128)) webPrintHeader();
 
-          if(setresult!=1){
-            printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
-            if (setresult == 2) {
-              printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
-            }
+          if(!isdigit(*p)){   // now we check for digits - nice
+            printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
           } else {
-            if(setcmd){            // was this a SET command?
-              // Query controller for this value
-              query(line);  // read value back
-              query_printHTML();
-            } else { // INF command
+            line=atoi(p);       // convert until non-digit char is found
+            p=strchr(p,'=');    // search for '=' sign
+            if(p==NULL){        // no match
+                printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
+            } else {
+              p++;                   // position pointer past the '=' sign
+              char* token = strchr(p, '!');
+              token++;
+              if (token[0] > 0) {
+                int d_addr = atoi(token);
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              }
 
+              printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
+              // Now send it out to the bus
+              int setresult = 0;
+              setresult = set(line,p,setcmd);
+
+              if(setresult!=1){
+                printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
+                if (setresult == 2) {
+                  printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
+                }
+              } else {
+                if(setcmd){            // was this a SET command?
+                  // Query controller for this value
+                  query(line);  // read value back
+                  query_printHTML();
+                } else { // INF command
+
+                }
+              }
+              if (token[0] > 0) {
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              }
             }
           }
           if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
-          if (token[0] > 0) {
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-          }
           break;
         }
         // list categories
