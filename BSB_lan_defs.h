@@ -4846,7 +4846,7 @@ const char ENUM5960_3[] PROGMEM_LATEST = {
 "\x00 " ENUM5960_3_00_TEXT "\0"
 "\x01 " ENUM5960_3_01_TEXT "\0"
 "\x02 " ENUM5960_3_02_TEXT "\0"
-"\x03 " ENUM5960_3_03_TEXT "\0"
+"\x03 " ENUM5960_3_03_TEXT
 };
 
 const char ENUM5960_4[] PROGMEM_LATEST = {
@@ -6311,7 +6311,7 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xb7 " ENUM_ERROR_b7_TEXT "\0"
 "\xb8 " ENUM_ERROR_b8_TEXT "\0"
 "\xb9 " ENUM_ERROR_b9_TEXT "\0"
-"\xb3 " ENUM_ERROR_be_TEXT "\0"
+"\xbe " ENUM_ERROR_be_TEXT "\0"
 "\xbf " ENUM_ERROR_bf_TEXT "\0"
 "\xc0 " ENUM_ERROR_c0_TEXT "\0"
 "\xc1 " ENUM_ERROR_c1_TEXT "\0"
