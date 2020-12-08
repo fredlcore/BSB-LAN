@@ -1697,8 +1697,8 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + decodedTelegram.type * sizeof(optbl[0]));
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
-  decodedTelegram.progtypedescaddr = pgm_read_word_far(pgm_get_far_address(optbl[0].type_text) + decodedTelegram.type * sizeof(optbl[0])));
-  decodedTelegram.data_type_descaddr = pgm_read_word_far(pgm_get_far_address(dt_types_text[0].type_text) + decodedTelegram.data_type * sizeof(dt_types_text[0])));
+  decodedTelegram.progtypedescaddr = pgm_read_word_far(pgm_get_far_address(optbl[0].type_text) + decodedTelegram.type * sizeof(optbl[0]));
+  decodedTelegram.data_type_descaddr = pgm_read_word_far(pgm_get_far_address(dt_types_text[0].type_text) + decodedTelegram.data_type * sizeof(dt_types_text[0]));
   #else
   decodedTelegram.data_type=optbl[decodedTelegram.type].data_type;
   decodedTelegram.operand=optbl[decodedTelegram.type].operand;
