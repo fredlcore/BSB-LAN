@@ -7085,6 +7085,7 @@ uint8_t pps_offset = 0;
               }
             } else {
               json_parameter = atoi(json_token);
+              if (p[2] == 'S') json_parameter = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
             }
             if (output || json_token != NULL) {
               if (p[2] != 'K') {
@@ -7196,7 +7197,6 @@ uint8_t pps_offset = 0;
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
                 printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
-                json_token = NULL; //prevent infinite looping when command was /JS=progNr
               }
 
               if (p[2]=='R') {
