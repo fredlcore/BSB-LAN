@@ -6596,26 +6596,23 @@ uint8_t pps_offset = 0;
           int setresult = 0;
           setresult = set(line,p,setcmd);
 
+          if(!(httpflags & 128)) webPrintHeader();
+
           if(setresult!=1){
-            if(!(httpflags & 128)) webPrintHeader();
             printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             if (setresult == 2) {
               printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
             }
-            if(!(httpflags & 128)) webPrintFooter();
-            flushToWebClient();
-            break;
+          } else {
+            if(setcmd){            // was this a SET command?
+              // Query controller for this value
+              query(line);  // read value back
+              query_printHTML();
+            } else { // INF command
+
+            }
           }
-          if(setcmd){            // was this a SET command?
-            if(!(httpflags & 128)) webPrintHeader();
-            // Query controller for this value
-            query(line);  // read value back
-            query_printHTML();
-            if(!(httpflags & 128)) webPrintFooter();
-          }else{
-            if(!(httpflags & 128)) webPrintHeader();
-            if(!(httpflags & 128)) webPrintFooter();
-          }
+          if(!(httpflags & 128)) webPrintFooter();
           flushToWebClient();
           if (token[0] > 0) {
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
