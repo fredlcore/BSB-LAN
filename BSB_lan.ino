@@ -549,6 +549,8 @@ uint_farptr_t catdescaddr; //category description string address
 uint_farptr_t prognrdescaddr; //prognr description string address
 uint_farptr_t enumdescaddr; //enum description string address
 uint_farptr_t enumstr; //address of first element of enum
+uint_farptr_t progtypedescaddr; //program type description string address
+uint_farptr_t data_type_descaddr; //data type description DT_*, dt_types_text[?].type_text
 uint16_t enumstr_len;  //enum length
 uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed
 uint8_t msg_type; //telegram type
@@ -558,6 +560,7 @@ uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
+uint8_t enable_byte;//optbl[?].enable_byte
 uint8_t sensorid; //id of external (OneWire, DHT, MAX!) sensor for virtual programs. Must be zero for real program numbers.
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
@@ -1692,12 +1695,18 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
+  decodedTelegram.enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + decodedTelegram.type * sizeof(optbl[0]));
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
+  decodedTelegram.progtypedescaddr = pgm_read_word_far(pgm_get_far_address(optbl[0].type_text) + decodedTelegram.type * sizeof(optbl[0]));
+  decodedTelegram.data_type_descaddr = pgm_read_word_far(pgm_get_far_address(dt_types_text[0].type_text) + decodedTelegram.data_type * sizeof(dt_types_text[0]));
   #else
   decodedTelegram.data_type=optbl[decodedTelegram.type].data_type;
   decodedTelegram.operand=optbl[decodedTelegram.type].operand;
   decodedTelegram.precision=optbl[decodedTelegram.type].precision;
+  decodedTelegram.enable_byte=optbl[decodedTelegram.type].enable_byte;
   memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
+  decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
+  decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
   #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
@@ -1727,10 +1736,13 @@ void resetDecodedTelegram(){
   decodedTelegram.catdescaddr = 0;
   decodedTelegram.prognrdescaddr = 0;
   decodedTelegram.enumdescaddr = 0;
+  decodedTelegram.progtypedescaddr = 0;
   decodedTelegram.type = 0;
   decodedTelegram.data_type = 0;
+  decodedTelegram.data_type_descaddr = 0;
 //  decodedTelegram.unit_len = 0;
   decodedTelegram.precision = 1;
+  decodedTelegram.enable_byte = 0;
   decodedTelegram.error = 0;
   decodedTelegram.readonly = 0;
   decodedTelegram.isswitch = 0;
@@ -4083,11 +4095,11 @@ int set(int line      // the ProgNr of the heater parameter
 
   uint8_t type=get_cmdtbl_type(i);
 #if defined(__AVR__)
-  uint8_t enable_byte=pgm_read_float_far(pgm_get_far_address(optbl[0].enable_byte) + type * sizeof(optbl[0]));
-  uint8_t operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + type * sizeof(optbl[0]));
+  uint8_t enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + type * sizeof(optbl[0]));
+  float operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + type * sizeof(optbl[0]));
 #else
   uint8_t enable_byte=optbl[type].enable_byte;
-  uint8_t operand=optbl[type].operand;
+  float operand=optbl[type].operand;
 #endif
 
   if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
@@ -4235,7 +4247,7 @@ int set(int line      // the ProgNr of the heater parameter
       break;
 
     // Special parameters
- 
+
     case VT_HOUR_MINUTES: //TODO test it
       {
       if(val[0]!='\0'){
@@ -6981,6 +6993,12 @@ uint8_t pps_offset = 0;
                 loadPrognrElementsFromTable(json_parameter, i_line);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
+                printToWebClient(PSTR("\",\r\n"));
+                printToWebClient(PSTR("    \"dataType_name\": \""));
+                printToWebClient(decodedTelegram.progtypedescaddr);
+                printToWebClient(PSTR("\",\r\n"));
+                printToWebClient(PSTR("    \"dataType_family\": \""));
+                printToWebClient(decodedTelegram.data_type_descaddr);
                 printToWebClient(PSTR("\",\r\n"));
 
                 if (p[2]=='Q') {
