@@ -6311,7 +6311,7 @@ const char ENUM_ERROR[] PROGMEM_LATEST = {
 "\xb7 " ENUM_ERROR_b7_TEXT "\0"
 "\xb8 " ENUM_ERROR_b8_TEXT "\0"
 "\xb9 " ENUM_ERROR_b9_TEXT "\0"
-"\xb3 " ENUM_ERROR_be_TEXT "\0"
+"\xbe " ENUM_ERROR_be_TEXT "\0"
 "\xbf " ENUM_ERROR_bf_TEXT "\0"
 "\xc0 " ENUM_ERROR_c0_TEXT "\0"
 "\xc1 " ENUM_ERROR_c1_TEXT "\0"
