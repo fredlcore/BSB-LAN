@@ -4144,6 +4144,11 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SECONDS_SHORT4:
     case VT_SECONDS_SHORT5:
     case VT_PRESSURE:
+    case VT_GRADIENT_SHORT:
+    case VT_LPBADDR:
+    case VT_SECONDS_SHORT:
+    case VT_VOLTAGE:
+    case VT_MONTHS_WORD:
       {
       if(val[0]!='\0'){
         uint8_t t=atoi(val)*operand;
@@ -4175,6 +4180,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_FP02:
     case VT_SECONDS_WORD5:
     case VT_TEMP_WORD5_US:
+    case VT_GRADIENT:
+    case VT_POWER_WORD:
      {
       if(val[0]!='\0'){
         uint16_t t=atoi(val)*operand;
