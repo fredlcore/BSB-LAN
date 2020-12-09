@@ -6898,8 +6898,7 @@ uint8_t pps_offset = 0;
           while (client.available() || json_token!=NULL) {
             if (client.available()) {
               char c = client.read();
-Serial.print(c);
-                            if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
+              if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
               if (c == 'V' || c == 'v') { v_flag = true; }
               if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
@@ -6909,13 +6908,11 @@ Serial.print(c);
                 char json_temp[sizeof(json_value_string)];
                 while (client.available() && stage < 3){
                   c = client.read();
-Serial.print(c);
                   if(c == '\"' || c == ':') stage++;
                 }
                 if(stage != 3) break;
                 while (client.available() && j_char_idx < sizeof(json_temp)) {
                   c = client.read();
-Serial.print(c);
                   if(c == '\"') break; //read until "
                   json_temp[j_char_idx] = c;
                   j_char_idx++;
