@@ -2294,7 +2294,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' ' || search_val > 255){
         val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
       }else{
@@ -4160,7 +4160,6 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_LPBADDR:
     case VT_SECONDS_SHORT:
     case VT_VOLTAGE:
-    case VT_MONTHS_WORD:
       {
       if(val[0]!='\0'){
         uint8_t t=atoi(val)*operand;
@@ -4194,6 +4193,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_TEMP_WORD5_US:
     case VT_GRADIENT:
     case VT_POWER_WORD:
+    case VT_MONTHS_WORD:
      {
       if(val[0]!='\0'){
         uint16_t t=atoi(val)*operand;
