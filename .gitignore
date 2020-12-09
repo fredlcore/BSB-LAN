@@ -19,6 +19,7 @@ src/BSB/BSBSoftwareSerial.h.old
 *.bak
 defs-brute-force-*.h
 check-existing.pl
+find_unknown_sets.pl
 remove_doubles.pl
 remove_double_enums.pl
 replace_defs.pl
