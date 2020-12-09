@@ -561,6 +561,7 @@ uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
 uint8_t enable_byte;//optbl[?].enable_byte
+uint8_t payload_length;//optbl[?].payload_length
 uint8_t sensorid; //id of external (OneWire, DHT, MAX!) sensor for virtual programs. Must be zero for real program numbers.
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
@@ -1696,6 +1697,7 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + decodedTelegram.type * sizeof(optbl[0]));
+  decodedTelegram.payload_length=pgm_read_byte_far(pgm_get_far_address(optbl[0].payload_length) + decodedTelegram.type * sizeof(optbl[0]));
   strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
   decodedTelegram.progtypedescaddr = pgm_read_word_far(pgm_get_far_address(optbl[0].type_text) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.data_type_descaddr = pgm_read_word_far(pgm_get_far_address(dt_types_text[0].type_text) + decodedTelegram.data_type * sizeof(dt_types_text[0]));
@@ -1704,6 +1706,7 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.operand=optbl[decodedTelegram.type].operand;
   decodedTelegram.precision=optbl[decodedTelegram.type].precision;
   decodedTelegram.enable_byte=optbl[decodedTelegram.type].enable_byte;
+  decodedTelegram.payload_length=optbl[decodedTelegram.type].payload_length;
   memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
   decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
   decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
@@ -1743,6 +1746,7 @@ void resetDecodedTelegram(){
 //  decodedTelegram.unit_len = 0;
   decodedTelegram.precision = 1;
   decodedTelegram.enable_byte = 0;
+  decodedTelegram.payload_length = 0;
   decodedTelegram.error = 0;
   decodedTelegram.readonly = 0;
   decodedTelegram.isswitch = 0;
@@ -4096,9 +4100,11 @@ int set(int line      // the ProgNr of the heater parameter
   uint8_t type=get_cmdtbl_type(i);
 #if defined(__AVR__)
   uint8_t enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + type * sizeof(optbl[0]));
+  uint8_t payload_length=pgm_read_byte_far(pgm_get_far_address(optbl[0].payload_length) + type * sizeof(optbl[0]));
   float operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + type * sizeof(optbl[0]));
 #else
   uint8_t enable_byte=optbl[type].enable_byte;
+  uint8_t payload_length=optbl[type].payload_length;
   float operand=optbl[type].operand;
 #endif
 
@@ -4161,15 +4167,16 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SECONDS_SHORT:
     case VT_VOLTAGE:
       {
+      uint32_t t=atoi(val)*operand;
+      for (int x=payload_length;x>0;x--) {
+        param[x] = (t >> ((x-1)*8)) & 0xff;
+      }
       if(val[0]!='\0'){
-        uint8_t t=atoi(val)*operand;
         param[0]=enable_byte;  //enable
-        param[1]=t;
       }else{
         param[0]=enable_byte-1;  // disable
-        param[1]=0x00;
       }
-      param_len=2;
+      param_len=payload_length + 1;
       }
       break;
 
@@ -6891,7 +6898,8 @@ uint8_t pps_offset = 0;
           while (client.available() || json_token!=NULL) {
             if (client.available()) {
               char c = client.read();
-              if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
+Serial.print(c);
+                            if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
               if (c == 'V' || c == 'v') { v_flag = true; }
               if (c == 'T' || c == 't') { t_flag = true; }
               if (c == '}') { output = true; }
@@ -6901,11 +6909,13 @@ uint8_t pps_offset = 0;
                 char json_temp[sizeof(json_value_string)];
                 while (client.available() && stage < 3){
                   c = client.read();
+Serial.print(c);
                   if(c == '\"' || c == ':') stage++;
                 }
                 if(stage != 3) break;
                 while (client.available() && j_char_idx < sizeof(json_temp)) {
                   c = client.read();
+Serial.print(c);
                   if(c == '\"') break; //read until "
                   json_temp[j_char_idx] = c;
                   j_char_idx++;
