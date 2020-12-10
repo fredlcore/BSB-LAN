@@ -2298,10 +2298,10 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' ' || search_val > 255){
+      if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
         val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
-      }else{
+      }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
         val=uint16_t(pgm_read_byte_far(enumstr+c));
       }
       //skip leading space
