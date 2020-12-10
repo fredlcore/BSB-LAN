@@ -1072,10 +1072,10 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   uint16_t c=0;
   boolean isFirst = true;
   while(c<enumstr_len){
-    if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+    if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
       val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
       c++;
-    }else{
+    }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
       val=uint16_t(pgm_read_byte_far(enumstr+c));
     }
     //skip leading space
@@ -2294,10 +2294,10 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+      if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
         val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
-      }else{
+      }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
         val=uint16_t(pgm_read_byte_far(enumstr+c));
       }
       //skip leading space
@@ -6978,6 +6978,7 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
+              if(json_parameter == -1) continue; 
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 boolean notfirst = false;
