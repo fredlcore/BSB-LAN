@@ -1073,10 +1073,10 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   uint16_t c=0;
   boolean isFirst = true;
   while(c<enumstr_len){
-    if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+    if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
       val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
       c++;
-    }else{
+    }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
       val=uint16_t(pgm_read_byte_far(enumstr+c));
     }
     //skip leading space
@@ -2298,10 +2298,10 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   if(enumstr!=0){
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)(pgm_read_byte_far(enumstr+c+1))!=' ' || search_val > 255){
+      if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
         val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
-      }else{
+      }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
         val=uint16_t(pgm_read_byte_far(enumstr+c));
       }
       //skip leading space
@@ -6904,6 +6904,7 @@ uint8_t pps_offset = 0;
             }
           }
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
+            json_value_string[0] = 0;
             if (client.available()) {
               boolean opening_quotation = false;
               while (client.available()){
@@ -6991,6 +6992,7 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
+              if(json_parameter == -1) continue; 
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 boolean notfirst = false;
@@ -7096,7 +7098,7 @@ uint8_t pps_offset = 0;
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
+                printFmtToDebug(PSTR("Setting parameter %d to \"%s\" with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
 
               if (p[2]=='R') {
@@ -7104,7 +7106,7 @@ uint8_t pps_offset = 0;
                 int status = reset(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Reset parameter %d to value %s\r\n"), json_parameter, decodedTelegram.value);
+                printFmtToDebug(PSTR("Reset parameter %d to value \"%s\"\r\n"), json_parameter, decodedTelegram.value);
               }
 
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
