@@ -1073,10 +1073,10 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   uint16_t c=0;
   boolean isFirst = true;
   while(c<enumstr_len){
-    if((byte)(pgm_read_byte_far(enumstr+c+1))!=' '){
+    if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
       val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
       c++;
-    }else{
+    }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
       val=uint16_t(pgm_read_byte_far(enumstr+c));
     }
     //skip leading space
@@ -4086,7 +4086,9 @@ int set(int line      // the ProgNr of the heater parameter
   uint32_t c;              // command code
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
   uint8_t param_len = 0;
-
+  if (line < 0){
+    return 0;
+  }
   // Search the command table from the start for a matching line nbr.
   i=findLine(line,0,&c);   // find the ProgNr and get the command code
   if(i<0) return 0;        // no match
@@ -4554,9 +4556,13 @@ int set(int line      // the ProgNr of the heater parameter
  *  Serial instance
  *  bus    instance
  * *************************************************************** */
-int reset(uint16_t line, byte *msg, byte *tx_msg){
+int reset(int line, byte *msg, byte *tx_msg){
   uint32_t c;
   resetDecodedTelegram();
+  if (line < 0){
+    decodedTelegram.error = 258; //not found
+    return 0;
+  }
   int i=findLine(line,0,&c);
   if( i < 0){
     decodedTelegram.error = 258; //not found
@@ -6771,7 +6777,7 @@ uint8_t pps_offset = 0;
           uint32_t cmd=0;
           // Parse potential JSON payload
           char json_value_string[52];
-          int json_parameter = 0;
+          int json_parameter = -1;
           boolean json_type = 0;
           boolean p_flag = false;
           boolean v_flag = false;
@@ -6779,6 +6785,7 @@ uint8_t pps_offset = 0;
           boolean output = false;
           boolean been_here = false;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
+          uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
@@ -6892,44 +6899,81 @@ uint8_t pps_offset = 0;
           }*/
           while (client.available()) {
             if (client.read()=='{') {
+              opening_brackets++;
               break;
             }
           }
-          while (client.available() || json_token!=NULL) {
+          while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
+            json_value_string[0] = 0;
             if (client.available()) {
-              char c = client.read();
-              if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
-              if (c == 'V' || c == 'v') { v_flag = true; }
-              if (c == 'T' || c == 't') { t_flag = true; }
-              if (c == '}') { output = true; }
-              if( p_flag || v_flag || t_flag){ //rewind to ":"
-                uint8_t stage = 0;
-                uint8_t j_char_idx = 0;
-                char json_temp[sizeof(json_value_string)];
-                while (client.available() && stage < 3){
-                  c = client.read();
-                  if(c == '\"' || c == ':') stage++;
+              boolean opening_quotation = false;
+              while (client.available()){
+                char c = client.read();
+                if (c == '{') {
+                  opening_brackets++;
+                  if(opening_brackets > 2) {//JSON too complex. Broken JSON?
+                    opening_brackets = 0;
+                    break;
+                  }
                 }
-                if(stage != 3) break;
-                while (client.available() && j_char_idx < sizeof(json_temp)) {
-                  c = client.read();
-                  if(c == '\"') break; //read until "
-                  json_temp[j_char_idx] = c;
-                  j_char_idx++;
+                if (c == '}') { output = true; opening_brackets--;}
+                if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
+                if(opening_quotation){
+                  if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
+                  if (c == 'V' || c == 'v') { v_flag = true; }
+                  if (c == 'T' || c == 't') { t_flag = true; }
+                  if( p_flag || v_flag || t_flag){
+                    uint8_t stage_f = 0; //field name
+                    boolean stage_v = 0; //field value
+                    uint8_t j_char_idx = 0;
+                    char json_temp[sizeof(json_value_string)];
+                    while (client.available()){ //rewind to \":
+                      c = client.read();
+                      if(c == '\"') stage_f++;
+                      if(stage_f == 1 && c == ':') stage_f+=16;
+                      if(stage_f > 1) break; //quotation marks or/and colons found
+                    }
+                    if(stage_f != 17) { //Unexpected end of JSON or broken JSON: multiple quotation marks or colons or wrong order in field name
+                      while (client.available()){client.read();} //drop broken JSON
+                      break;
+                    } else {
+                      opening_quotation = false;
+                    }
+                    while (client.available() && j_char_idx < sizeof(json_temp)) {
+                      c = client.read();
+                      if(!stage_v && (c == ' ' || c == ',' || c == '}' || c == '\n' || c == '\r')) { //if it not a string value then we try to find end markers and drop spaces
+                        if (c == ' ') continue;
+                        if (c == '}') { output = true; opening_brackets--;}
+                      break;
+                      }
+                      if(c == '\"'){ //It is string value?
+                        if(!stage_v) { //start read from next char after quotation mark if it found
+                          stage_v = true;
+                          j_char_idx = 0;
+                          continue;
+                        } else { //read until quotation mark
+                          break;
+                        }
+                      }
+                      json_temp[j_char_idx] = c;
+                      j_char_idx++;
+                    }
+                    json_temp[j_char_idx] = '\0';
+                    if (p_flag == true) {
+                      json_parameter = atoi(json_temp);
+                      p_flag = false;
+                    }
+                    if (v_flag == true) {
+                      strcpy(json_value_string, json_temp);
+                      v_flag = false;
+                    }
+                    if (t_flag == true) {
+                      json_type = atoi(json_temp);
+                      t_flag = false;
+                    }
+                  }
                 }
-                json_temp[j_char_idx] = '\0';
-                if (p_flag == true) {
-                  json_parameter = atoi(json_temp);
-                  p_flag = false;
-                }
-                if (v_flag == true) {
-                  strcpy(json_value_string, json_temp);
-                  v_flag = false;
-                }
-                if (t_flag == true) {
-                  json_type = atoi(json_temp);
-                  t_flag = false;
-                }
+                if (output) break;
               }
             } else {
               if (p[2] == 'S') {
@@ -6948,6 +6992,7 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
+              if(json_parameter == -1) continue; 
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 boolean notfirst = false;
@@ -7053,7 +7098,7 @@ uint8_t pps_offset = 0;
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %d to %s with type %d\r\n"), json_parameter, json_value_string, json_type);
+                printFmtToDebug(PSTR("Setting parameter %d to \"%s\" with type %d\r\n"), json_parameter, json_value_string, json_type);
               }
 
               if (p[2]=='R') {
@@ -7061,13 +7106,14 @@ uint8_t pps_offset = 0;
                 int status = reset(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Reset parameter %d to value %s\r\n"), json_parameter, decodedTelegram.value);
+                printFmtToDebug(PSTR("Reset parameter %d to value \"%s\"\r\n"), json_parameter, decodedTelegram.value);
               }
 
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
                 json_token = strtok(NULL,",");
               }
             }
+            json_parameter = -1;
           }
           printFmtToWebClient(PSTR("\r\n}\r\n"));
           forcedflushToWebClient();
