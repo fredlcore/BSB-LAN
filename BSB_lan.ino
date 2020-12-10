@@ -439,8 +439,10 @@ char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
 #if defined(__AVR__)
+#undef OUTBUF_USEFUL_LEN
 #define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
 #else
+#undef OUTBUF_USEFUL_LEN
 #define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
 #endif
 char bigBuff[OUTBUF_USEFUL_LEN + OUTBUF_LEN] = { 0 };
@@ -1069,7 +1071,7 @@ const char *prefix - print string before enum element
  *  none
  * *************************************************************** */
 void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first){
-  uint16_t val;
+  uint16_t val = 0;
   uint16_t c=0;
   boolean isFirst = true;
   while(c<enumstr_len){
@@ -2291,7 +2293,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
  *
  * *************************************************************** */
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
-  uint16_t val;
+  uint16_t val = 0;
   decodedTelegram.enumstr = enumstr;
   decodedTelegram.enumstr_len = enumstr_len;
   decodedTelegram.enumdescaddr = 0;
@@ -7103,7 +7105,7 @@ uint8_t pps_offset = 0;
 
               if (p[2]=='R') {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                int status = reset(json_parameter, msg, tx_msg);
+                reset(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
                 printFmtToDebug(PSTR("Reset parameter %d to value \"%s\"\r\n"), json_parameter, decodedTelegram.value);
