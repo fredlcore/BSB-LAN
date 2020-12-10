@@ -6915,7 +6915,7 @@ uint8_t pps_offset = 0;
                     while (client.available()){ //rewind to \":
                       c = client.read();
                       if(c == '\"') stage_f++;
-                      if(c == ':') stage_f+=16;
+                      if(stage_f == 1 && c == ':') stage_f+=16;
                       if(stage_f > 1) break; //quotation marks or/and colons found
                     }
                     if(stage_f != 17) { //Unexpected end of JSON or broken JSON: multiple quotation marks or colons or wrong order in field name
