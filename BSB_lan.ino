@@ -4142,8 +4142,9 @@ int set(int line      // the ProgNr of the heater parameter
   // Get the parameter type from the table row[i]
   switch(type) {
     // ---------------------------------------------
-    // 8-bit representations
     // No input values sanity check
+
+    // 8-bit representations
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
@@ -4170,23 +4171,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_LPBADDR:
     case VT_SECONDS_SHORT:
     case VT_VOLTAGE:
-      {
-      uint32_t t=atoi(val)*operand;
-      for (int x=payload_length;x>0;x--) {
-        param[x] = (t >> ((x-1)*8)) & 0xff;
-      }
-      if(val[0]!='\0'){
-        param[0]=enable_byte;  //enable
-      }else{
-        param[0]=enable_byte-1;  // disable
-      }
-      param_len=payload_length + 1;
-      }
-      break;
 
-    // ---------------------------------------------
-    // 16-bit unsigned representations
-    // No input values sanity check
+    // 16-bit representations
     case VT_UINT:
     case VT_SINT:
     case VT_PERCENT_WORD1:
@@ -4205,49 +4191,31 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_GRADIENT:
     case VT_POWER_WORD:
     case VT_MONTHS_WORD:
-     {
+
+    // 32-bit representations
+    case VT_UINT100:
+    case VT_ENERGY:
+    case VT_MINUTES:
+      {
+      uint32_t t=atoi(val)*operand;
+      for (int x=payload_length;x>0;x--) {
+        param[x] = (t >> ((x-1)*8)) & 0xff;
+      }
       if(val[0]!='\0'){
-        uint16_t t=atoi(val)*operand;
         param[0]=enable_byte;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
       }else{
         param[0]=enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
       }
-      param_len=3;
+      param_len=payload_length + 1;
       }
       break;
 
     // ---------------------------------------------
     // 32-bit representation
-    case VT_DWORD:      // can this be merged with the next one?
+    case VT_DWORD:      // can this be merged with the 32-bit above?
       {
       if(val[0]!='\0'){
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
-        param[0]=enable_byte;  //enable
-        param[1]=(t >> 24) & 0xff;
-        param[2]=(t >> 16) & 0xff;
-        param[3]=(t >> 8) & 0xff;
-        param[4]= t & 0xff;
-      }else{
-        param[0]=enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
-      }
-      break;
-
-    case VT_UINT100:
-    case VT_ENERGY:
-    case VT_MINUTES:
-      {
-      if(val[0]!='\0'){
-        uint32_t t=atoi(val) * operand;
         param[0]=enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
