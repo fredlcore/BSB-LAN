@@ -540,7 +540,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SPF,            100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
 {VT_CURRENT,        100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
 {VT_CURRENT1000,    1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
-{VT_DAYS_WORD,      1.0,    0, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
+{VT_DAYS_WORD,      1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
 {VT_ERRORCODE,      1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
 {VT_FP1,            10.0,   0, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
 {VT_FP02,           50.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
