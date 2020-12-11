@@ -4191,6 +4191,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_GRADIENT:
     case VT_POWER_WORD:
     case VT_MONTHS_WORD:
+    case VT_DAYS_WORD:
 
     // 32-bit representations
     case VT_UINT100:
@@ -4199,7 +4200,7 @@ int set(int line      // the ProgNr of the heater parameter
       {
       uint32_t t=atoi(val)*operand;
       for (int x=payload_length;x>0;x--) {
-        param[x] = (t >> ((x-1)*8)) & 0xff;
+        param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
       if(val[0]!='\0'){
         param[0]=enable_byte;  //enable
