@@ -4198,7 +4198,12 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ENERGY:
     case VT_MINUTES:
       {
-      uint32_t t=atoi(val)*operand;
+      uint32_t t = 0;
+      if (val[0] == '-') {
+        t=((int)(atof(val)*operand));
+      } else {
+        t=atoi(val)*operand;
+      }
       for (int x=payload_length;x>0;x--) {
         param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
@@ -4288,7 +4293,7 @@ int set(int line      // the ProgNr of the heater parameter
     // Temperature values, mult=64
     case VT_TEMP:
       {
-      uint16_t t=atof(val)*operand;
+      uint32_t t=((int)(atof(val)*operand));
       if(setcmd){
         param[0]=enable_byte;
         param[1]=(t >> 8);
