@@ -45,6 +45,7 @@ The following overview shows the most common used controllers of the different h
 - MHG: Procon E
 - Olymp: SHS, WHS
 - Thermital: TBox Clima TOP
+- Viessmann: Vitotwin 300-W
 - Weishaupt: WTU
    
 ***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
