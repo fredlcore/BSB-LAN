@@ -2948,22 +2948,25 @@ void printTelegram(byte* msg, int query_line) {
 */
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
+                uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+                uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
                 if((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
-                  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-                  if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
+                  if(enumstr!=0) {
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus->getPl_start()+1],1);
+                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       uint8_t pps_offset = 0;
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
+                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   }else{
-                    printToDebug(PSTR("no enum str "));
-                    SerialPrintData(msg);
                     decodedTelegram.error = 259;
+                    printToDebug(printError(decodedTelegram.error));
+                    SerialPrintData(msg);
                   }
                 }else{
+                  decodedTelegram.enumstr = enumstr;
+                  decodedTelegram.enumstr_len = enumstr_len;
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
@@ -2981,9 +2984,9 @@ void printTelegram(byte* msg, int query_line) {
                 uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
                 printCustomENUM(enumstr_ptr,enumstr_len,msg[bus->getPl_start()+idx],1);
               }else{
-                printToDebug(PSTR("no enum str "));
-                SerialPrintData(msg);
                 decodedTelegram.error = 259;
+                printToDebug(printError(decodedTelegram.error));
+                SerialPrintData(msg);
               }
               break;
             }
@@ -3002,9 +3005,9 @@ void printTelegram(byte* msg, int query_line) {
                 sprintf_P(decodedTelegram.value,PSTR("%lu"),val);
                 printToDebug(decodedTelegram.value);
               }else{
-                printToDebug(PSTR("no enum str "));
-                SerialPrintData(msg);
                 decodedTelegram.error = 259;
+                printToDebug(printError(decodedTelegram.error));
+                SerialPrintData(msg);
               }
               break;
             }
@@ -4566,6 +4569,22 @@ int reset(int line, byte *msg, byte *tx_msg){
   return 1;
 }
 
+const char* printError(uint16_t error){
+  const char *errormsgptr;
+  switch(error){
+    case 0: errormsgptr =  PSTR(""); break;
+    case 7: errormsgptr = PSTR(" (parameter not supported)"); break;
+    case 256: errormsgptr = PSTR(" - decoding error"); break;
+    case 257: errormsgptr =  PSTR(" unknown command"); break;
+    case 258: errormsgptr = PSTR(" - not found"); break;
+    case 259: errormsgptr = PSTR(" no enum str"); break;
+    case 260: errormsgptr = PSTR(" - unknown type"); break;
+    case 261: errormsgptr =  PSTR(" query failed"); break;
+    default: if(error < 256) errormsgptr = PSTR(" (bus error)"); else errormsgptr = PSTR(" (??? error)"); break;
+  }
+  return errormsgptr;
+}
+
 /**  *****************************************************************
  *  Function: build_pvalstr()
  *  Does:     Legacy. Function for compatibility.
@@ -4620,19 +4639,8 @@ if(decodedTelegram.telegramDump){
   strcat(outBuf + len, decodedTelegram.telegramDump);
   len+=strlen(outBuf + len);
 }
-const char *errormsgptr;
-switch(decodedTelegram.error){
-  case 0: errormsgptr =  PSTR(""); break;
-  case 7: errormsgptr = PSTR(" (parameter not supported)"); break;
-  case 256: errormsgptr = PSTR(" - decoding error"); break;
-  case 257: errormsgptr =  PSTR(" unknown command"); break;
-  case 258: errormsgptr = PSTR(" - not found"); break;
-  case 259: errormsgptr = PSTR(" no enum str"); break;
-  case 260: errormsgptr = PSTR(" - unknown type"); break;
-  case 261: errormsgptr =  PSTR(" query failed"); break;
-  default: if(decodedTelegram.error < 256) errormsgptr = PSTR(" (bus error)"); else errormsgptr = PSTR(" (??? error)"); break;
-}
-strcpy_P(outBuf + len, errormsgptr);
+
+strcpy_P(outBuf + len, printError(decodedTelegram.error));
 return outBuf;
 }
 
@@ -5015,7 +5023,7 @@ void query(int line)  // line (ProgNr)
 #endif
               break;   // success, break out of while loop
             }else{
-              printlnToDebug(PSTR("query failed"));
+              printlnToDebug(printError(261)); //query failed
               retry--;          // decrement number of attempts
             }
           } // endwhile, maximum number of retries reached
