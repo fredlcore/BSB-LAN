@@ -439,8 +439,10 @@ char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
 #if defined(__AVR__)
+#undef OUTBUF_USEFUL_LEN
 #define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
 #else
+#undef OUTBUF_USEFUL_LEN
 #define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
 #endif
 char bigBuff[OUTBUF_USEFUL_LEN + OUTBUF_LEN] = { 0 };
@@ -1069,7 +1071,7 @@ const char *prefix - print string before enum element
  *  none
  * *************************************************************** */
 void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first, boolean canBeDisabled){
-  uint16_t val;
+  uint16_t val = 0;
   uint16_t c=0;
   boolean isFirst = true;
   while(c<enumstr_len){
@@ -2305,7 +2307,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
  *
  * *************************************************************** */
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
-  uint16_t val;
+  uint16_t val = 0;
   decodedTelegram.enumstr = enumstr;
   decodedTelegram.enumstr_len = enumstr_len;
   decodedTelegram.enumdescaddr = 0;
@@ -4163,8 +4165,9 @@ int set(int line      // the ProgNr of the heater parameter
   // Get the parameter type from the table row[i]
   switch(type) {
     // ---------------------------------------------
-    // 8-bit representations
     // No input values sanity check
+
+    // 8-bit representations
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
@@ -4191,23 +4194,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_LPBADDR:
     case VT_SECONDS_SHORT:
     case VT_VOLTAGE:
-      {
-      uint32_t t=atoi(val)*operand;
-      for (int x=payload_length;x>0;x--) {
-        param[x] = (t >> ((x-1)*8)) & 0xff;
-      }
-      if(val[0]!='\0'){
-        param[0]=enable_byte;  //enable
-      }else{
-        param[0]=enable_byte-1;  // disable
-      }
-      param_len=payload_length + 1;
-      }
-      break;
 
-    // ---------------------------------------------
-    // 16-bit unsigned representations
-    // No input values sanity check
+    // 16-bit representations
     case VT_UINT:
     case VT_SINT:
     case VT_PERCENT_WORD1:
@@ -4226,49 +4214,37 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_GRADIENT:
     case VT_POWER_WORD:
     case VT_MONTHS_WORD:
-     {
+    case VT_DAYS_WORD:
+
+    // 32-bit representations
+    case VT_UINT100:
+    case VT_ENERGY:
+    case VT_MINUTES:
+      {
+      uint32_t t = 0;
+      if (val[0] == '-') {
+        t=((int)(atof(val)*operand));
+      } else {
+        t=atoi(val)*operand;
+      }
+      for (int x=payload_length;x>0;x--) {
+        param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
+      }
       if(val[0]!='\0'){
-        uint16_t t=atoi(val)*operand;
         param[0]=enable_byte;  //enable
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
       }else{
         param[0]=enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
       }
-      param_len=3;
+      param_len=payload_length + 1;
       }
       break;
 
     // ---------------------------------------------
     // 32-bit representation
-    case VT_DWORD:      // can this be merged with the next one?
+    case VT_DWORD:      // can this be merged with the 32-bit above?
       {
       if(val[0]!='\0'){
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
-        param[0]=enable_byte;  //enable
-        param[1]=(t >> 24) & 0xff;
-        param[2]=(t >> 16) & 0xff;
-        param[3]=(t >> 8) & 0xff;
-        param[4]= t & 0xff;
-      }else{
-        param[0]=enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
-      }
-      break;
-
-    case VT_UINT100:
-    case VT_ENERGY:
-    case VT_MINUTES:
-      {
-      if(val[0]!='\0'){
-        uint32_t t=atoi(val) * operand;
         param[0]=enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
@@ -4340,7 +4316,7 @@ int set(int line      // the ProgNr of the heater parameter
     // Temperature values, mult=64
     case VT_TEMP:
       {
-      uint16_t t=atof(val)*operand;
+      uint32_t t=((int)(atof(val)*operand));
       if(setcmd){
         param[0]=enable_byte;
         param[1]=(t >> 8);
@@ -5077,9 +5053,10 @@ void query(int line)  // line (ProgNr)
           uint16_t temp_val = 0;
           switch (decodedTelegram.type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+//            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+//            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
+            case VT_YESNO: temp_val = pps_values[(line-15000)]; decodedTelegram.isswitch = 1; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
 //            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
@@ -7123,7 +7100,7 @@ uint8_t pps_offset = 0;
 
               if (p[2]=='R') {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                int status = reset(json_parameter, msg, tx_msg);
+                reset(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
                 printFmtToDebug(PSTR("Reset parameter %d to value \"%s\"\r\n"), json_parameter, decodedTelegram.value);

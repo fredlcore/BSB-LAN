@@ -47,6 +47,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - MHG: Procon E
 - Olymp: SHS, WHS
 - Thermital: TBox Clima TOP
+- Viessmann: Vitotwin 300-W
 - Weishaupt: WTU
    
 ***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
