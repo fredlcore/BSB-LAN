@@ -1068,7 +1068,7 @@ const char *prefix - print string before enum element
  * Global resources used:
  *  none
  * *************************************************************** */
-void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first){
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first, boolean canBeDisabled){
   uint16_t val;
   uint16_t c=0;
   boolean isFirst = true;
@@ -1084,9 +1084,17 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
 
     if(isFirst){isFirst = false;} else{if(string_delimiter) printToWebClient(string_delimiter);}
     if(prefix) printToWebClient(prefix);
+    uint_farptr_t descAddr;
+    if(canBeDisabled){
+      val = 65535;
+      descAddr = F("---");
+    } else{
+      val = 65535;
+      descAddr = enumstr + c;
+    }
 
     if(desc_first){
-      c += printToWebClient(enumstr + c) + 1;
+      c += printToWebClient(descAddr) + 1;
       if(alt_delimiter && value == val) {
         printToWebClient(alt_delimiter);
       }else {
@@ -1100,9 +1108,11 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
       } else {
         if(delimiter) printToWebClient(delimiter);
       }
-      c += printToWebClient(enumstr + c) + 1;
+      c += printToWebClient(descAddr) + 1;
     }
     if(suffix) printToWebClient(suffix);
+    if(canBeDisabled) {canBeDisabled = false; c = 0;}
+
   }
 }
 
@@ -2965,7 +2975,9 @@ void printTelegram(byte* msg, int query_line) {
                 }else{
                   decodedTelegram.enumstr = enumstr;
                   decodedTelegram.enumstr_len = enumstr_len;
-                  undefinedValueToBuffer(decodedTelegram.value);
+                  strcpy_P(decodedTelegram.value, PSTR("65535"));
+                  decodedTelegram.enumdescaddr = F("---");
+//                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
               } else {
@@ -3766,7 +3778,7 @@ void generateChangeConfigPage(){
            }
            uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
            uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)variable[0], 0);
+           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)variable[0], 0, false);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -3793,7 +3805,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, variable[0], 0);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, variable[0], 0, false);
            }
            break;}
          }
@@ -3814,7 +3826,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0);
+             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0, false);
            }
            break;}
          }
@@ -6523,7 +6535,7 @@ uint8_t pps_offset = 0;
               if(get_cmdtbl_type(i)==VT_ENUM) {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, 0);
+              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, 0, true);
 
             }else{
               printToWebClient(PSTR(MENU_TEXT_ER5));
@@ -7081,7 +7093,7 @@ uint8_t pps_offset = 0;
                     uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
                     uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
                     if (enumstr_len > 0) {
-                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, 0);
+                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, 0, decodedTelegram.type==VT_ENUM?true:false);
                     }
 
                   printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
