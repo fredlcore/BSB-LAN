@@ -4745,6 +4745,9 @@ void query_printHTML(){
               c++;
             }
           } else {
+            if((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0){
+              num_pvalstr = 1;
+            }
             listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
           }
           printToWebClient(PSTR("</select></td><td>"));
