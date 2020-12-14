@@ -4738,15 +4738,13 @@ void query_printHTML(){
             printToWebClient(PSTR("multiple "));
           }
           printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
-
+          if (decodedTelegram.type == DT_BITS) {
             uint16_t val;
             uint16_t c=0;
             uint8_t bitmask=0;
             uint8_t bitvalue = 0;
-            if (decodedTelegram.type == VT_BIT) {
-              for (int i = 0; i < 8; i++){
-                if(decodedTelegram.value[i] == '1') bitvalue+=1<<(7-i);
-              }
+            for (int i = 0; i < 8; i++){
+              if(decodedTelegram.value[i] == '1') bitvalue+=1<<(7-i);
             }
             while(c<decodedTelegram.enumstr_len){
               if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
@@ -4755,20 +4753,13 @@ void query_printHTML(){
                   bitmask = val & 0xff;
                   val = val >> 8 & 0xff;
                 }
-                if (decodedTelegram.type == VT_CUSTOM_ENUM) {
-                  val=uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
-                }
                 c++;
-              }else if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+1)) == ' '){
-                val=uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c));
               }
               //skip leading space
               c+=2;
 
               printFmtToWebClient(PSTR("<option value='%d"), val);
-              if (((decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_ERRORCODE) && num_pvalstr == val)
-                || ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && ((num_pvalstr != 0 && val != 0) || num_pvalstr == val))
-                || (decodedTelegram.type == VT_BIT && (bitvalue & bitmask) == (val & bitmask))) {
+              if ((bitvalue & bitmask) == (val & bitmask)) {
                 printToWebClient(PSTR("' SELECTED>"));
               } else {
                 printToWebClient(PSTR("'>"));
@@ -4777,8 +4768,9 @@ void query_printHTML(){
               printToWebClient(PSTR("</option>"));
               c++;
             }
-
-
+          } else {
+            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
+          }
           printToWebClient(PSTR("</select></td><td>"));
           if (!decodedTelegram.readonly) {
             printToWebClient(PSTR("<input type=button value='Set' onclick=\"set"));
