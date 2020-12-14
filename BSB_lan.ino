@@ -2958,9 +2958,9 @@ void printTelegram(byte* msg, int query_line) {
                       printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   }else{
-                    printToDebug(PSTR("no enum str "));
-                    SerialPrintData(msg);
                     decodedTelegram.error = 259;
+                    printToDebug(printError(decodedTelegram.error));
+                    SerialPrintData(msg);
                   }
                 }else{
                   decodedTelegram.enumstr = enumstr;
@@ -2982,9 +2982,9 @@ void printTelegram(byte* msg, int query_line) {
                 uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
                 printCustomENUM(enumstr_ptr,enumstr_len,msg[bus->getPl_start()+idx],1);
               }else{
-                printToDebug(PSTR("no enum str "));
-                SerialPrintData(msg);
                 decodedTelegram.error = 259;
+                printToDebug(printError(decodedTelegram.error));
+                SerialPrintData(msg);
               }
               break;
             }
@@ -3003,9 +3003,9 @@ void printTelegram(byte* msg, int query_line) {
                 sprintf_P(decodedTelegram.value,PSTR("%lu"),val);
                 printToDebug(decodedTelegram.value);
               }else{
-                printToDebug(PSTR("no enum str "));
-                SerialPrintData(msg);
                 decodedTelegram.error = 259;
+                printToDebug(printError(decodedTelegram.error));
+                SerialPrintData(msg);
               }
               break;
             }
@@ -4593,6 +4593,22 @@ int reset(int line, byte *msg, byte *tx_msg){
   return 1;
 }
 
+const char* printError(uint16_t error){
+  const char *errormsgptr;
+  switch(error){
+    case 0: errormsgptr =  PSTR(""); break;
+    case 7: errormsgptr = PSTR(" (parameter not supported)"); break;
+    case 256: errormsgptr = PSTR(" - decoding error"); break;
+    case 257: errormsgptr =  PSTR(" unknown command"); break;
+    case 258: errormsgptr = PSTR(" - not found"); break;
+    case 259: errormsgptr = PSTR(" no enum str"); break;
+    case 260: errormsgptr = PSTR(" - unknown type"); break;
+    case 261: errormsgptr =  PSTR(" query failed"); break;
+    default: if(error < 256) errormsgptr = PSTR(" (bus error)"); else errormsgptr = PSTR(" (??? error)"); break;
+  }
+  return errormsgptr;
+}
+
 /**  *****************************************************************
  *  Function: build_pvalstr()
  *  Does:     Legacy. Function for compatibility.
@@ -4647,19 +4663,8 @@ if(decodedTelegram.telegramDump){
   strcat(outBuf + len, decodedTelegram.telegramDump);
   len+=strlen(outBuf + len);
 }
-const char *errormsgptr;
-switch(decodedTelegram.error){
-  case 0: errormsgptr =  PSTR(""); break;
-  case 7: errormsgptr = PSTR(" (parameter not supported)"); break;
-  case 256: errormsgptr = PSTR(" - decoding error"); break;
-  case 257: errormsgptr =  PSTR(" unknown command"); break;
-  case 258: errormsgptr = PSTR(" - not found"); break;
-  case 259: errormsgptr = PSTR(" no enum str"); break;
-  case 260: errormsgptr = PSTR(" - unknown type"); break;
-  case 261: errormsgptr =  PSTR(" query failed"); break;
-  default: if(decodedTelegram.error < 256) errormsgptr = PSTR(" (bus error)"); else errormsgptr = PSTR(" (??? error)"); break;
-}
-strcpy_P(outBuf + len, errormsgptr);
+
+strcpy_P(outBuf + len, printError(decodedTelegram.error));
 return outBuf;
 }
 
@@ -5042,7 +5047,7 @@ void query(int line)  // line (ProgNr)
 #endif
               break;   // success, break out of while loop
             }else{
-              printlnToDebug(PSTR("query failed"));
+              printlnToDebug(printError(261)); //query failed
               retry--;          // decrement number of attempts
             }
           } // endwhile, maximum number of retries reached
