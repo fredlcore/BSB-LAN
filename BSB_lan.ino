@@ -1095,7 +1095,6 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
       descAddr = PSTR("---");
 #endif
     } else{
-      val = 65535;
       descAddr = enumstr + c;
     }
 
