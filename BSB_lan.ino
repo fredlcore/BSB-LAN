@@ -2946,15 +2946,16 @@ void printTelegram(byte* msg, int query_line) {
 */
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
+                uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+                uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
                 if((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
-                  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-                  if(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len)!=0) {
+                  if(enumstr!=0) {
                     if (data_len == 2) {
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus->getPl_start()+1],1);
+                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       uint8_t pps_offset = 0;
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
-                      printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
+                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   }else{
                     printToDebug(PSTR("no enum str "));
@@ -2962,6 +2963,8 @@ void printTelegram(byte* msg, int query_line) {
                     decodedTelegram.error = 259;
                   }
                 }else{
+                  decodedTelegram.enumstr = enumstr;
+                  decodedTelegram.enumstr_len = enumstr_len;
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
