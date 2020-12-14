@@ -5033,9 +5033,10 @@ void query(int line)  // line (ProgNr)
           uint16_t temp_val = 0;
           switch (decodedTelegram.type) {
 //            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+//            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+//            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
             case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
+            case VT_YESNO: temp_val = pps_values[(line-15000)]; decodedTelegram.isswitch = 1; break;
 //            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
 //            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
             default: temp_val = pps_values[(line-15000)]; break;
