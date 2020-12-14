@@ -4707,7 +4707,7 @@ void query_printHTML(){
               }
             }
             while(c<decodedTelegram.enumstr_len){
-              if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+1))!=' ' || decodedTelegram.type == VT_BIT){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+              if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                 val=uint16_t((pgm_read_byte_far(decodedTelegram.enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
                 if (decodedTelegram.type == VT_BIT) {
                   bitmask = val & 0xff;
@@ -4717,7 +4717,7 @@ void query_printHTML(){
                   val=uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
                 }
                 c++;
-              }else{
+              }else if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+1)) == ' '){
                 val=uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c));
               }
               //skip leading space
@@ -6978,7 +6978,7 @@ uint8_t pps_offset = 0;
               }
 
               output = false;
-              if(json_parameter == -1) continue; 
+              if(json_parameter == -1) continue;
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 boolean notfirst = false;

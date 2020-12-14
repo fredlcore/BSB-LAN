@@ -706,7 +706,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   9500, 9652,
   10000, 14999,
   15000, 15067,
-  20000, 20699 //Virtual category for durations, One Wire, DHT sensors
+  20000, 20699 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors
 };
 
 
