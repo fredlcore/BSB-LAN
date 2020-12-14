@@ -3587,6 +3587,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8304_ff_TEXT ENUM1600_01_TEXT
 #define ENUM8304_01_00_TEXT ENUM5890_2_00_TEXT
 #define ENUM8749_01_TEXT ENUM2320_01_TEXT
+#define ENUM10100_01_TEXT EXTIF_ERROR_TEXT
 #define ENUM15010_00_TEXT ENUM5040_02_TEXT
 #define ENUM15010_01_TEXT ENUM850_05_TEXT
 #define ENUM15010_02_TEXT ENUM780_00_TEXT
@@ -3706,9 +3707,9 @@ const char ENUM700[] PROGMEM_LATEST = {
 // Parameters 702 and 703 are virtual Weishaupt parameters based on one and the same command ID, using new data type VT_CUSTOM_ENUM
 
 const char ENUM702[] PROGMEM_LATEST = {
-"\x00\x00 " ENUM702_00_TEXT "\0"
 "\x00\x01 " ENUM702_01_TEXT "\0"
 "\x00\x02 " ENUM702_02_TEXT "\0"
+"\x00\x00 " ENUM702_00_TEXT "\0"
 "\x00\x03 " ENUM702_03_TEXT "\0"
 "\x00\x04 " ENUM702_04_TEXT "\0"
 "\x00\x05 " ENUM702_05_TEXT "\0"
@@ -6197,6 +6198,17 @@ const char ENUM9612[] PROGMEM_LATEST = {
 const char ENUM9614[] PROGMEM_LATEST = {
 "\x00 " ENUM9614_00_TEXT "\0"
 "\x01 " "?" ENUM9614_01_TEXT
+};
+
+const char ENUM10100[] PROGMEM_LATEST = {
+"\x00\x01\x01" ENUM10100_01_TEXT "\0"
+"\x00\x02\x02" ENUM10100_02_TEXT "\0"
+"\x00\x04\x04" ENUM10100_04_TEXT "\0"
+"\x00\x08\x08" ENUM10100_08_TEXT "\0"
+"\x00\x10\x10" ENUM10100_10_TEXT "\0"
+"\x00\x20\x20" ENUM10100_20_TEXT "\0"
+"\x00\x40\x40" ENUM10100_40_TEXT "\0"
+"\x00\x80\x80" ENUM10100_80_TEXT
 };
 
 // PPS Betriebsart
@@ -10356,8 +10368,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x31000210,  CAT_USER_DEFINED,     VT_UNKNOWN,       10058, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 03 00
 
 // Lines below seem to have found an explanation.
-{0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
-{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
+{0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,   10100, STR10100, sizeof(ENUM10100),    ENUM10100,    DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
+//{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
