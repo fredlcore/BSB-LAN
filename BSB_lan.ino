@@ -58,8 +58,16 @@
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
  *       1.1   - 10.11.2020
+ *       2.0   - 
  *
  * Changelog:
+ *       version 2.0
+ *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
+ *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
+ *        - New categories added, subsequent categories have been shifted up
+ *        - Lots of new parameters added
+ *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -5510,7 +5518,7 @@ void loop() {
           LogTelegram(msg);
         }
 
-        // Filter Brenner Status messages (attention: partially undocumented enum values)
+        // Filter Brenner Status messages
 
         uint32_t cmd;
         cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
@@ -5518,10 +5526,10 @@ void loop() {
           setTime(msg[bus->getPl_start()+5], msg[bus->getPl_start()+6], msg[bus->getPl_start()+7], msg[bus->getPl_start()+3], msg[bus->getPl_start()+2], msg[bus->getPl_start()+1]+1900);
         }
 
-        if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
-          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);      // assumed info byte
+        if(cmd==0x31000212) {    // TWW Status
+          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]); 
 
-          if( (msg[11]==0x4D && my_dev_fam != 97) || (msg[11]==0xCD && my_dev_fam == 97)) {  // TWW Ladung on BROETJE_SOB and THISION
+          if((msg[11] & 0x08) == 0x08) {  // See parameter 1602
             if(TWW_start==0){        // has not been timed
               TWW_start=millis();   // keep current timestamp
               TWW_count++;          // increment number of starts
@@ -5545,7 +5553,7 @@ void loop() {
           boolean reset_brenner_timer = 0;
           printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus->getPl_start()]);      // first payload byte
 
-          if(msg[bus->getPl_start()]==0x04) {       // Stufe 1
+          if((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
@@ -5555,7 +5563,7 @@ void loop() {
             }
             brenner_stufe=1;
           }
-          if(msg[bus->getPl_start()]==0x14) {       // Stufe 2 (only oil furnace)
+          if((msg[bus->getPl_start()] & 0x10) == 0x10) {       // Stufe 2 (only oil furnace)
             if(brenner_start_2==0){        // has not been timed
               brenner_start_2=millis();   // keep current timestamp
               brenner_count_2++;          // increment number of starts
@@ -5585,7 +5593,7 @@ void loop() {
             }
             reset_brenner_timer = 0;
           }
-          if (msg[bus->getPl_start()]==0x00) {    // brenner off
+          if ((msg[bus->getPl_start()] & 0x04) != 0x04) {    // brenner off
             brenner_end=millis();      // timestamp the end
             brenner_stufe=0;
             if(brenner_start!=0){        // start has been timed
