@@ -1087,7 +1087,11 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     uint_farptr_t descAddr;
     if(canBeDisabled){
       val = 65535;
+#if defined(__AVR__)
       descAddr = F("---");
+#else
+      descAddr = PSTR("---");
+#endif
     } else{
       val = 65535;
       descAddr = enumstr + c;
@@ -2976,7 +2980,11 @@ void printTelegram(byte* msg, int query_line) {
                   decodedTelegram.enumstr = enumstr;
                   decodedTelegram.enumstr_len = enumstr_len;
                   strcpy_P(decodedTelegram.value, PSTR("65535"));
+#if defined(__AVR__)
                   decodedTelegram.enumdescaddr = F("---");
+#else
+                  decodedTelegram.enumdescaddr = PSTR("---");
+#endif
 //                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
