@@ -129,7 +129,7 @@
 #define MENU_TEXT_SR3 "Применятеся только к выводу через COM-порт."
 #define MENU_TEXT_ER1 "ОШИБКА: неверный параметр!"
 #define MENU_TEXT_ER2 "ОШИБКА: неверное значение параметра!"
-#define MENU_TEXT_ER3 "ОШИБКА: не удалось применить!"
+#define MENU_TEXT_ER3 "ОШИБКА при запросе значения!"
 #define MENU_TEXT_ER4 "параметр только для чтения."
 #define MENU_TEXT_ER5 "ОШИБКА: неверный тип!"
 #define MENU_TEXT_ER6 "ОШИБКА: не найден заголовок!"
