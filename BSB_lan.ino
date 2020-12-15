@@ -1090,14 +1090,13 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     if(canBeDisabled){
       val = 65535;
 #if defined(__AVR__)
-      descAddr = F("---");
+      descAddr = pgm_get_far_address(STR_DISABLED);
 #else
-      descAddr = PSTR("---");
+      descAddr = STR_DISABLED;
 #endif
     } else{
       descAddr = enumstr + c;
     }
-
     if(desc_first){
       c += printToWebClient(descAddr) + 1;
       if(alt_delimiter && value == val) {
@@ -1106,7 +1105,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
         if(delimiter) printToWebClient(delimiter);
       }
     }
-    printFmtToWebClient(PSTR("%d"), val);
+    printFmtToWebClient(PSTR("%u"), val);
     if(!desc_first){
       if(alt_delimiter && value == val) {
         printToWebClient(alt_delimiter);
@@ -1932,7 +1931,11 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift){
  *
  * *************************************************************** */
 int undefinedValueToBuffer(char *p){
-  strcpy_P(p, PSTR("---"));
+  #if defined(__AVR__)
+                    strcpy_PF(p, pgm_get_far_address(STR_DISABLED));
+  #else
+                    strcpy(p, STR_DISABLED);
+  #endif
   return 3;
 }
 
@@ -2982,9 +2985,9 @@ void printTelegram(byte* msg, int query_line) {
                   decodedTelegram.enumstr_len = enumstr_len;
                   strcpy_P(decodedTelegram.value, PSTR("65535"));
 #if defined(__AVR__)
-                  decodedTelegram.enumdescaddr = F("---");
+                  decodedTelegram.enumdescaddr = pgm_get_far_address(STR_DISABLED);
 #else
-                  decodedTelegram.enumdescaddr = PSTR("---");
+                  decodedTelegram.enumdescaddr = STR_DISABLED;
 #endif
 //                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
