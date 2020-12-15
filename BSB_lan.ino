@@ -4550,7 +4550,7 @@ int set(int line      // the ProgNr of the heater parameter
 } // --- set() ---
 
 /**  *****************************************************************
- *  Function: reset()
+ *  Function: queryDefaultValue()
  *  Does:     This routine reset parameters to their default values.
  * Pass parameters:
  *  uint16  line     the line number (ProgNr)
@@ -4565,7 +4565,7 @@ int set(int line      // the ProgNr of the heater parameter
  *  Serial instance
  *  bus    instance
  * *************************************************************** */
-int reset(int line, byte *msg, byte *tx_msg){
+int queryDefaultValue(int line, byte *msg, byte *tx_msg){
   uint32_t c;
   resetDecodedTelegram();
   if (line < 0){
@@ -4581,7 +4581,7 @@ int reset(int line, byte *msg, byte *tx_msg){
       decodedTelegram.error = 261; //query failed
       return 0;
     }else{
-      // Decode the xmit telegram and send it to the PC serial interface
+      // Decode the xmit telegram and send it to the debug interface
       if(verbose) {
         printTelegram(tx_msg, line);
 #ifdef LOGGER
@@ -4589,8 +4589,8 @@ int reset(int line, byte *msg, byte *tx_msg){
 #endif
       }
 
-      // Decode the rcv telegram and send it to the PC serial interface
-      printTelegram(msg, line);   // send to hardware serial interface
+      // Decode the rcv telegram and send it to the debug interface
+      printTelegram(msg, line);   // send to debug interface
 #ifdef LOGGER
       LogTelegram(msg);
 #endif
@@ -4725,7 +4725,7 @@ void query_printHTML(){
           }
           printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
           if (decodedTelegram.type == DT_BITS) {
-            uint16_t val;
+            uint16_t val = 0;
             uint16_t c=0;
             uint8_t bitmask=0;
             uint8_t bitvalue = 0;
@@ -6539,11 +6539,11 @@ uint8_t pps_offset = 0;
         // query reset value
         if(p[1]=='R'){
           webPrintHeader();
-          if(!reset(atoi(&p[2]), msg, tx_msg)){
+          if(!queryDefaultValue(atoi(&p[2]), msg, tx_msg)){
             if(decodedTelegram.error == 258)
               printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
             else if(decodedTelegram.error == 261) {
-              printlnToDebug(PSTR("set failed"));  // to PC hardware serial I/F
+              printlnToDebug(printError(decodedTelegram.error));  // to PC hardware serial I/F
               printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             }
           } else{
@@ -7113,10 +7113,10 @@ uint8_t pps_offset = 0;
 
               if (p[2]=='R') {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                reset(json_parameter, msg, tx_msg);
+                queryDefaultValue(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Reset parameter %d to value \"%s\"\r\n"), json_parameter, decodedTelegram.value);
+                printFmtToDebug(PSTR("Default value of parameter %d is \"%s\"\r\n"), json_parameter, decodedTelegram.value);
               }
 
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
