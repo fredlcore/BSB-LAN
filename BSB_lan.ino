@@ -4717,7 +4717,7 @@ void query_printHTML(){
           }
           printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
           if (decodedTelegram.type == DT_BITS) {
-            uint16_t val;
+            uint16_t val = 0;
             uint16_t c=0;
             uint8_t bitmask=0;
             uint8_t bitvalue = 0;
