@@ -349,6 +349,7 @@ const char STR_DTTM[] PROGMEM = "DTTM";
 const char STR_DDMM[] PROGMEM = "DDMM";
 const char STR_STRN[] PROGMEM = "STRN";
 const char STR_DWHM[] PROGMEM = "DWHM";
+const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_BIT[] PROGMEM = "BIT";
 const char STR_BYTE[] PROGMEM = "BYTE";
