@@ -4235,7 +4235,7 @@ int set(int line      // the ProgNr of the heater parameter
       if (val[0] == '-') {
         t=((int)(atof(val)*operand));
       } else {
-        t=atoi(val)*operand;
+        t=atof(val)*operand;
       }
       for (int x=payload_length;x>0;x--) {
         param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
