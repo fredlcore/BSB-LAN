@@ -4619,7 +4619,7 @@ const char* printError(uint16_t error){
  *  Function: build_pvalstr()
  *  Does:     Legacy. Function for compatibility.
  *            Build pvalstr from decodedTelegram structure.
-              format like in old query() function
+ *            format like in old query() function
  * Pass parameters:
  *  boolean extended
  *
@@ -4630,7 +4630,7 @@ const char* printError(uint16_t error){
  *
  * Global resources used:
  *  outBuf
-  * *************************************************************** */
+ ** *************************************************************** */
 char *build_pvalstr(boolean extended){
   int len = 0;
   outBuf[len] = 0;
@@ -4648,30 +4648,30 @@ char *build_pvalstr(boolean extended){
     }
     len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
   }
-if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
-}
-if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-  if(decodedTelegram.enumdescaddr){
-    strcpy_P(outBuf + len, PSTR(" - "));
-    strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
-    len+=strlen(outBuf + len);
-   }
-} else{
-  if(decodedTelegram.unit[0] != 0){
+  if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
+    len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
+  }
+  if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
+    if(decodedTelegram.enumdescaddr){
+      strcpy_P(outBuf + len, PSTR(" - "));
+      strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
+      len+=strlen(outBuf + len);
+     }
+  } else{
+    if(decodedTelegram.unit[0] != 0){
+      strcpy_P(outBuf + len, PSTR(" "));
+      strcat(outBuf + len, decodedTelegram.unit);
+      len+=strlen(outBuf + len);
+    }
+  }
+  if(decodedTelegram.telegramDump){
     strcpy_P(outBuf + len, PSTR(" "));
-    strcat(outBuf + len, decodedTelegram.unit);
+    strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
-}
-if(decodedTelegram.telegramDump){
-  strcpy_P(outBuf + len, PSTR(" "));
-  strcat(outBuf + len, decodedTelegram.telegramDump);
-  len+=strlen(outBuf + len);
-}
-
-strcpy_P(outBuf + len, printError(decodedTelegram.error));
-return outBuf;
+  
+  strcpy_P(outBuf + len, printError(decodedTelegram.error));
+  return outBuf;
 }
 
 /** *****************************************************************
