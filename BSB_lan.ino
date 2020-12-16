@@ -4240,10 +4240,10 @@ int set(int line      // the ProgNr of the heater parameter
       for (int x=payload_length;x>0;x--) {
         param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
-      if(val[0]!='\0'){
-        param[0]=enable_byte;  //enable
-      }else{
+      if(val[0] == '\0' || (type == VT_ENUM && t == 0xFFFF)){
         param[0]=enable_byte-1;  // disable
+      }else{
+        param[0]=enable_byte;  //enable
       }
       param_len=payload_length + 1;
       }
