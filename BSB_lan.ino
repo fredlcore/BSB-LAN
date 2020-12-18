@@ -389,6 +389,11 @@
 #define LOGTELEGRAM_BROADCAST_ONLY 4
 #define LOGTELEGRAM_UNKNOWNBROADCAST_ONLY 6
 
+#define HTTP_AUTH 1
+#define HTTP_GZIP 2
+#define HTTP_HEAD 4
+#define HTTP_ETAG 8
+#define HTTP_FRAG 128
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -6119,18 +6124,18 @@ uint8_t pps_offset = 0;
               currentLineIsBlank = true;
 #ifdef WEBSERVER
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & 2) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
-                httpflags |= 2;
+              if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
+                httpflags |= HTTP_GZIP;
               }
-              else if (!(httpflags & 8) && strstr_P(outBuf + buffershift,PSTR("If-None-Match:")) != 0) {
-                httpflags |= 8;
+              else if (!(httpflags & HTTP_ETAG) && strstr_P(outBuf + buffershift,PSTR("If-None-Match:")) != 0) {
+                httpflags |= HTTP_ETAG;
                 strcpy(outBuf, outBuf + buffershift);
               }
              else
 #endif
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & 1) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
-                httpflags |= 1;
+              if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
+                httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
               charcount=buffershift; //Reserve space in buffer for ETag
@@ -6141,7 +6146,7 @@ uint8_t pps_offset = 0;
           }
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (USER_PASS_B64[0] && !(httpflags & 1)) {
+        if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -6159,7 +6164,7 @@ uint8_t pps_offset = 0;
         String urlString = String(cLineBuffer);
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
-        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) httpflags |= 4;
+        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) httpflags |= HTTP_HEAD;
 #endif
         urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
         urlString.toCharArray(cLineBuffer, MaxArrayElement);
@@ -6253,10 +6258,10 @@ uint8_t pps_offset = 0;
           const char *getfarstrings;
 
           // client browser accept gzip
-          if ((httpflags & 2)) dataFile = SD.open(urlString + ".gz");
+          if ((httpflags & HTTP_GZIP)) dataFile = SD.open(urlString + ".gz");
           if (!dataFile) {
             // reuse httpflags
-            bitClear(httpflags, 1); //can't use gzip because no gzipped file
+            bitClear(httpflags, HTTP_AUTH); //can't use gzip because no gzipped file
             dataFile = SD.open(urlString);
           }
           // if the file is available, read from it:
@@ -6272,10 +6277,10 @@ uint8_t pps_offset = 0;
               dayval = FAT_DAY(d.lastWriteDate);
               }
 
-            if ((httpflags & 8))  { //Compare ETag if presented
+            if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
               if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize) + 1)) {
                 // reuse httpflags
-                bitClear(httpflags, 3); //ETag not match
+                bitClear(httpflags, HTTP_AUTH+HTTP_GZIP); //ETag not match
               }
             }
 
@@ -6284,7 +6289,7 @@ uint8_t pps_offset = 0;
             printToDebug(DebugBuff);
 
             printToWebClient(PSTR("HTTP/1.1 ")); // 10 bytes with zero
-            if((httpflags & 8))
+            if((httpflags & HTTP_ETAG))
               printToWebClient(PSTR("304 Not Modified\r\n")); // 18 bytes with zero
             else
               printToWebClient(PSTR("200 OK\r\n")); // 8 bytes with zero
@@ -6305,7 +6310,7 @@ uint8_t pps_offset = 0;
               default: getfarstrings = PSTR("text\r\n");
             }
             printToWebClient(getfarstrings);
-            if((httpflags & 2)) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+            if((httpflags & HTTP_GZIP)) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6345,10 +6350,10 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=300, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
-            if (!(httpflags & 8) && !(httpflags & 4)) {
+            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
               transmitFile(dataFile);
             }
-            printToDebug((httpflags & 4)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
+            printToDebug((httpflags & HTTP_HEAD)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
           }
@@ -6390,7 +6395,7 @@ uint8_t pps_offset = 0;
         //Send HTML pages without header and footer (For external interface)
         if(p[1]=='W'){
           p++;
-          httpflags |= 128;
+          httpflags |= HTTP_FRAG;
         }
 #endif
 
@@ -6439,7 +6444,7 @@ uint8_t pps_offset = 0;
           bool setcmd= (p[1]=='S'); // True if SET command
           uint8_t destAddr = bus->getBusDest();
           p+=2;               // third position in cLineBuffer
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
           if(!isdigit(*p)){   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
@@ -6482,7 +6487,7 @@ uint8_t pps_offset = 0;
               }
             }
           }
-          if(!(httpflags & 128)) webPrintFooter();
+          if(!(httpflags & HTTP_FRAG)) webPrintFooter();
           flushToWebClient();
           break;
         }
@@ -6559,7 +6564,7 @@ uint8_t pps_offset = 0;
         }
 
         if(p[1]=='Q') {
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
@@ -6737,7 +6742,7 @@ uint8_t pps_offset = 0;
 
           printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-          if(!(httpflags & 128)) webPrintFooter();
+          if(!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
         }
@@ -7208,7 +7213,7 @@ uint8_t pps_offset = 0;
         }
 #endif
         if (p[1]=='C'){ // dump configuration
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
           switch(p[2]){
 #ifdef CONFIG_IN_EEPROM
@@ -7242,7 +7247,7 @@ uint8_t pps_offset = 0;
 #ifdef MAX_CUL
               UpdateMaxDeviceList(); //Update list MAX! devices
 #endif
-              if(!(httpflags & 128)) webPrintFooter();
+              if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
 
               boolean buschanged = false;
@@ -7317,7 +7322,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
               generateChangeConfigPage();
 #endif
-              if(!(httpflags & 128)) webPrintFooter();
+              if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
 // Dump when serial debug active or have telnet client
