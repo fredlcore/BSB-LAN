@@ -970,6 +970,70 @@ int printFmtToWebClient(const char *format, ...){
 }
 
 
+void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip){
+  const char *getfarstrings;
+  printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
+  switch(code){
+    case 200: printToWebClient(PSTR("OK")); break;
+    case 304: printToWebClient(PSTR("Not Modified")); break;
+    case 401: printToWebClient(PSTR("Authorization Required")); break;
+    case 404: printToWebClient(PSTR("Not Found")); break;
+    default: break;
+  }
+  printToWebClient(PSTR("\r\nContent-Type: ")); // 17 bytes with zero
+  switch(mimetype){
+    case 1: getfarstrings = PSTR("text/html"); break;
+    case 2: getfarstrings = PSTR("text/css"); break;
+    case 3: getfarstrings = PSTR("application/x-javascript"); break;
+    case 4: getfarstrings = PSTR("application/xml"); break;
+    // case 5 below
+    case 6: getfarstrings = PSTR("application/json"); break;
+    case 7: getfarstrings = PSTR("text/plain"); break;
+    case 101: getfarstrings = PSTR("image/jpeg"); break;
+    case 102: getfarstrings = PSTR("image/gif"); break;
+    case 103: getfarstrings = PSTR("image/svg"); break;
+    case 104: getfarstrings = PSTR("image/png"); break;
+    case 105: getfarstrings = PSTR("image/x-icon"); break;
+    case 201: getfarstrings = PSTR("application/x-gzip"); break;
+    case 5:
+    default: getfarstrings = PSTR("text");
+  }
+  printToWebClient(getfarstrings);
+  if(addcharset)printToWebClient(PSTR("; charset=utf-8"));
+  printToWebClient(PSTR("\r\n"));
+if(isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+}
+
+int recognize_mime(char *str) {
+//        if(strlen(dot)) {
+  char mimebuf[32];
+  int i = 0;
+  int mimetype = 0;
+  if(!str) return mimetype;
+
+  strncpy(mimebuf, str, sizeof(mimebuf));
+
+  while(mimebuf[i]){
+    mimebuf[i] |= 0x20; //to lower case
+    i++;
+  }
+
+  if (!strcmp_P(mimebuf, PSTR("html")) || !strcmp_P(mimebuf, PSTR("htm"))) mimetype = 1;
+  else if(!strcmp_P(mimebuf, PSTR("css"))) mimetype = 2;
+  else if(!strcmp_P(mimebuf, PSTR("js"))) mimetype = 3;
+  else if(!strcmp_P(mimebuf, PSTR("xml"))) mimetype = 4;
+  else if(!strcmp_P(mimebuf, PSTR("txt"))) mimetype = 5;
+  else if(!strcmp_P(mimebuf, PSTR("jpg"))) mimetype = 101;
+  else if(!strcmp_P(mimebuf, PSTR("gif"))) mimetype = 102;
+  else if(!strcmp_P(mimebuf, PSTR("svg"))) mimetype = 103;
+  else if(!strcmp_P(mimebuf, PSTR("png"))) mimetype = 104;
+  else if(!strcmp_P(mimebuf, PSTR("ico"))) mimetype = 105;
+  else if(!strcmp_P(mimebuf, PSTR("gz"))) mimetype = 201;
+//          else mimetype = 0;
+  // You can add more MIME types here
+  return mimetype;
+  }
+
 /** *****************************************************************
  *  Function: calc_enum_offset()
  *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
@@ -3180,6 +3244,18 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 //  if (bigBuffPos > 0) flushToWebClient();
 }
 
+void print_header_TD(void){
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+}
+void print_header_close_TD(void){
+  printToWebClient(PSTR("</a></td>"));
+}
+void print_aHref(void){
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+}
+
+
 /** *****************************************************************
  *  Function:  webPrintHeader()
  *  Does:      Sets up the HTML code to start a web page
@@ -3192,58 +3268,75 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  *  Global resources used:
  *   client object
  * *************************************************************** */
-void webPrintHeader(void){
-  flushToWebClient();
-#if defined(__AVR__)
-  printPStr(pgm_get_far_address(header_html), sizeof(header_html));
-#else
-  printPStr(header_html, sizeof(header_html));
-#endif
+ void webPrintHeader(void){
+   flushToWebClient();
+   printHTTPheader(200, 1, true, false);
+ #if defined(__AVR__)
+   printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+ #else
+   printPStr(header_html, sizeof(header_html));
+ #endif
 
-  printPassKey();
-  printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\r\n"));
-  printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
+   print_aHref();
+   printToWebClient(PSTR("' ID=main_link>BSB-LAN Web</A></h1></center>\r\n"));
+   printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
+   print_header_TD();
 
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
+   print_aHref();
+   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("K49'>" MENU_TEXT_SNS "</a>"));
+   print_header_close_TD();
+   print_header_TD();
+   print_aHref();
+   printToWebClient(PSTR("K49'>" MENU_TEXT_SNS));
 
-  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
+   print_header_close_TD();
+   print_header_TD();
 
-  if(!logCurrentValues)
-  printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
-  else{
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
-  }
+   if(!logCurrentValues)
+   printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
+   else{
+   print_aHref();
+   printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
+   print_header_close_TD();
+   }
 
-  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
+   print_header_TD();
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
+   print_aHref();
+   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK));
+   print_header_close_TD();
 
-  printToWebClient(PSTR("</td></tr>\r\n"));
-  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
+   print_header_TD();
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
+   print_aHref();
+   printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
-//  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
+ //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+ print_header_close_TD();
+   print_header_TD();
 
-  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
-//  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
-  flushToWebClient();
-} // --- webPrintHeader() ---
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+
+   print_header_close_TD();
+   print_header_TD();
+
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC));
+   print_header_close_TD();
+   print_header_TD();
+
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ));
+   print_header_close_TD();
+
+ //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
+   printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
+   flushToWebClient();
+ } // --- webPrintHeader() ---
+
 
 /** *****************************************************************
  *  Function:  webPrintFooter()
@@ -5002,7 +5095,6 @@ void query(int line)  // line (ProgNr)
     if(i>=0){
       uint8_t flags = get_cmdtbl_flags(i);
       decodedTelegram.type = get_cmdtbl_type(i);
-
 // virtual programs
       if((line >= 20000 && line < 20700))
         {
@@ -5038,6 +5130,7 @@ void query(int line)  // line (ProgNr)
             }else{
               printlnToDebug(printError(261)); //query failed
               retry--;          // decrement number of attempts
+
             }
           } // endwhile, maximum number of retries reached
           if(retry==0) {
@@ -5046,6 +5139,7 @@ void query(int line)  // line (ProgNr)
             } else {
               printFmtToDebug(PSTR("%d\r\n"), line); //%d
             }
+          loadPrognrElementsFromTable(line, i);
           decodedTelegram.error = 261;
           }
         } else { // bus type is PPS
@@ -5234,80 +5328,93 @@ void printToWebClient_prognrdescaddr(){
  *    client object
  *    led0   output pin 3
  * *************************************************************** */
-void Ipwe() {
-  printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n"));
+ void Ipwe() {
+   int i;
+   int counter = 0;
+   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
+   printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
+   printHTTPheader(200, 1, true, false);
+   printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+   for (i=0; i < numIPWESensors; i++) {
+     if(!ipwe_parameters[i]) continue;
+     query(ipwe_parameters[i]);
+     counter++;
+     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+     printToWebClient_prognrdescaddr();
+     printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+   }
 
-  int i;
-  int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
-  printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
+ #ifdef AVERAGES
+   if(logAverageValues){
+     for (int i=0; i<numAverages; i++) {
+       if (avg_parameters[i] > 0) {
+         counter++;
+         query(20050 + i);
+         printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
+         printToWebClient(PSTR("<br></td><td>"));
+         printToWebClient_prognrdescaddr();
+         printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(PSTR("</tr>"));
+       }
+     }
+   }
+ #endif
 
-  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (i=0; i < numIPWESensors; i++) {
-    if(!ipwe_parameters[i]) continue;
-    query(ipwe_parameters[i]);
-    counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printToWebClient_prognrdescaddr();
-    printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
-    printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-  }
+ #ifdef ONE_WIRE_BUS
+   if(enableOneWireBus){
+     // output of one wire sensors
+     for(i=0;i<numSensors * 2;i += 2){
+       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+       query(i + 20300);
+       printToWebClient(decodedTelegram.value);
+       query(i + 20301);
+       printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(PSTR("</tr>"));
+     }
+   }
+ #endif
 
-#ifdef AVERAGES
-  if(logAverageValues){
-    for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i] > 0) {
-        counter++;
-        query(20050 + i);
-        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-        printToWebClient(PSTR("<br></td><td>"));
-        printToWebClient_prognrdescaddr();
-        printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
-        printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-      }
-    }
-  }
-#endif
+ #ifdef DHT_BUS
+   // output of DHT sensors
+   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
+   for(i=0;i<numDHTSensors;i++){
+     if(!DHT_Pins[i]) continue;
+     query(20101 + i * 4);
+     counter++;
+     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+     printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
+     printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+     counter++;
+     query(20102 + i * 4);
+     printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d<br></td><td>"), counter);
+     printFmtToWebClient(PSTR("DHT sensor %d humidity<br></td>"), DHT_Pins[i]);
+     printToWebClient(STR_IPWEZERO);
+     printFmtToWebClient(PSTR("<td>%s<br></td>"), decodedTelegram.value);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+   }
+ #endif
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    // output of one wire sensors
-    for(i=0;i<numSensors * 2;i += 2){
-      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-      query(i + 20300);
-      printToWebClient(decodedTelegram.value);
-      query(i + 20301);
-      printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), decodedTelegram.value);
-    }
-  }
-#endif
+   printToWebClient(PSTR("</tbody></table></form></body></html>\r\n\r\n"));
+   forcedflushToWebClient();
+ }
 
-#ifdef DHT_BUS
-  // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
-  for(i=0;i<numDHTSensors;i++){
-    if(!DHT_Pins[i]) continue;
-    query(20101 + i * 4);
-    counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
-    printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
-    printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-    counter++;
-    query(20102 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d"), counter);
-    printToWebClient(PSTR("<br></td><td>"));
-    printFmtToWebClient(PSTR("DHT sensor %d humidity"), DHT_Pins[i]);
-    printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>%s"), decodedTelegram.value);
-    printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
-  }
-#endif
-
-  printToWebClient(PSTR("</tbody></table></form>"));
-  flushToWebClient();
-}
-
-#endif    // --- Ipwe() ---
+ #endif    // --- Ipwe() ---
 
 /** *****************************************************************
  *  Function: setPPS()
@@ -6130,6 +6237,7 @@ uint8_t pps_offset = 0;
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & 1)) {
+          printHTTPheader(401, 1, true, false);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -6144,28 +6252,30 @@ uint8_t pps_offset = 0;
 //        client.flush();
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
-        String urlString = String(cLineBuffer);
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
-        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) httpflags |= 4;
+        if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
+          httpflags |= 4;
 #endif
-        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-        urlString.toCharArray(cLineBuffer, MaxArrayElement);
+        char *u_s = strchr(cLineBuffer,' ');
+        char *u_e = strchr(u_s + 1,' ');
+        if(u_e) u_e[0] = 0;
+        strcpy(cLineBuffer, u_s + 1);
         printlnToDebug(cLineBuffer);
-
 // IPWE START
 #ifdef IPWE
-        if (enable_ipwe && urlString == "/ipwe.cgi") {
+        if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
           Ipwe();
           break;
         }
 #endif
 // IPWE END
 
-        if (urlString == "/favicon.ico") {
-          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: image/x-icon\r\n\r\n"));
+        if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
+          printHTTPheader(200, 105, false, false);
+          printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
-          File dataFile = SD.open(urlString + 1);
+          File dataFile = SD.open(cLineBuffer + 1);
           if (dataFile) {
             flushToWebClient();
             transmitFile(dataFile);
@@ -6205,47 +6315,36 @@ uint8_t pps_offset = 0;
 
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
-        if(!strcmp(p,"/")){
-          urlString = F("index.html");
-          printlnToDebug(PSTR("index.html"));
+        if(!strcmp_P(p, PSTR("/"))){
+          strcpy_P(p + 1, PSTR("index.html"));
         }
-        else {
-          urlString = String(p + 1);
-          printlnToDebug(p + 1);
+          printlnToDebug(p);
+        char *dot = strchr(p, '.');
+        char *dot_t = NULL;
+        while(dot){
+          dot_t = ++dot;//next symbol after dot
+          dot = strchr(dot, '.');
         }
-        int mimetype = urlString.lastIndexOf('.'); //0 = unknown MIME type
-        //local reuse mimetype variable
-        if(mimetype > -1) {
-          mimetype++; //next symbol after dot
-          String str = urlString.substring(mimetype);
-          str.toLowerCase();
-          mimetype = 0; // unknown MIME type
-          if (str.equals(F("html")) || str.equals(F("htm"))) mimetype = 1;
-          else if(str.equals(F("css"))) mimetype = 2;
-          else if(str.equals(F("js"))) mimetype = 3;
-          else if(str.equals(F("xml"))) mimetype = 4;
-          else if(str.equals(F("txt"))) mimetype = 5;
-          else if(str.equals(F("jpg"))) mimetype = 101;
-          else if(str.equals(F("gif"))) mimetype = 102;
-          else if(str.equals(F("svg"))) mimetype = 103;
-          else if(str.equals(F("png"))) mimetype = 104;
-          else if(str.equals(F("ico"))) mimetype = 105;
-          else if(str.equals(F("gz"))) mimetype = 201;
-          // You can add more MIME types here
-          }
-        else
-          mimetype = 0; // unknown MIME type
+        dot = dot_t;
+
+        int mimetype = recognize_mime(dot); //0 = unknown MIME type
 
         if(mimetype)  {
           File dataFile;
           const char *getfarstrings;
 
           // client browser accept gzip
-          if ((httpflags & 2)) dataFile = SD.open(urlString + ".gz");
+          int suffix = 0;
+          if ((httpflags & 2)) {
+            suffix = strlen(p);
+            strcpy_P(p + suffix, PSTR(".gz"));
+            dataFile = SD.open(p);
+          }
           if (!dataFile) {
             // reuse httpflags
+            if(suffix) p[suffix] = 0;
             bitClear(httpflags, 1); //can't use gzip because no gzipped file
-            dataFile = SD.open(urlString);
+            dataFile = SD.open(p);
           }
           // if the file is available, read from it:
           if (dataFile) {
@@ -6268,32 +6367,15 @@ uint8_t pps_offset = 0;
             }
 
             printToDebug(PSTR("File opened from SD: "));
-            urlString.toCharArray(DebugBuff, OUTBUF_LEN);
-            printToDebug(DebugBuff);
+            printToDebug(p);
 
-            printToWebClient(PSTR("HTTP/1.1 ")); // 10 bytes with zero
+            uint16_t code = 0;
             if((httpflags & 8))
-              printToWebClient(PSTR("304 Not Modified\r\n")); // 18 bytes with zero
+              code = 304;
             else
-              printToWebClient(PSTR("200 OK\r\n")); // 8 bytes with zero
-            printToWebClient(PSTR("Content-Type: ")); // 15 bytes with zero
-            switch(mimetype){
-              case 1: getfarstrings = PSTR("text/html\r\n"); break;
-              case 2: getfarstrings = PSTR("text/css\r\n"); break;
-              case 3: getfarstrings = PSTR("application/x-javascript\r\n"); break;
-              case 4: getfarstrings = PSTR("application/xml\r\n"); break;
-              // case 5 below
-              case 101: getfarstrings = PSTR("image/jpeg\r\n"); break;
-              case 102: getfarstrings = PSTR("image/gif\r\n"); break;
-              case 103: getfarstrings = PSTR("image/svg\r\n"); break;
-              case 104: getfarstrings = PSTR("image/png\r\n"); break;
-              case 105: getfarstrings = PSTR("image/x-icon\r\n"); break;
-              case 201: getfarstrings = PSTR("application/x-gzip\r\n"); break;
-              case 5:
-              default: getfarstrings = PSTR("text\r\n");
-            }
-            printToWebClient(getfarstrings);
-            if((httpflags & 2)) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+              code = 200;
+            printHTTPheader(code, mimetype, false, (httpflags & 2));
+
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6330,7 +6412,7 @@ uint8_t pps_offset = 0;
               printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
-            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=300, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=3600, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & 8) && !(httpflags & 4)) {
@@ -6343,12 +6425,13 @@ uint8_t pps_offset = 0;
           else
           {
           // simply print the website if no index.html on SD card
-            if(!strcmp(p,"/")){
+            if(!strcmp_P(p, PSTR("/"))){
               webPrintSite();
               break;
             }
-            int x = printToWebClient(PSTR("HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h2>File not found!</h2><br>File name: "));
-            urlString.toCharArray(bigBuff + x, OUTBUF_LEN * 3 - x);
+            printHTTPheader(404, 1, true, false);
+            printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
+            printToWebClient(p);
             flushToWebClient();
            }
           client.flush();
@@ -6361,7 +6444,7 @@ uint8_t pps_offset = 0;
         }
 #ifndef WEBSERVER
         // simply print the website
-        if(!strcmp(p,"/")){
+        if(!strcmp_P(p, PSTR("/"))){
           webPrintSite();
           break;
         }
@@ -6787,7 +6870,8 @@ uint8_t pps_offset = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n{\r\n"));
+          printHTTPheader(200, 6, true, false);
+          printToWebClient(PSTR("\r\n{\r\n"));
           if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
@@ -7169,7 +7253,8 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n"));
+            printHTTPheader(200, 7, true, false);
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
             if (p[2]=='J') { //journal

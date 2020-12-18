@@ -351,6 +351,9 @@ const char STR_STRN[] PROGMEM = "STRN";
 const char STR_DWHM[] PROGMEM = "DWHM";
 const char STR_DISABLED[] PROGMEM = "---";
 
+const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
+
+
 const char STR_BIT[] PROGMEM = "BIT";
 const char STR_BYTE[] PROGMEM = "BYTE";
 const char STR_BYTE10[] PROGMEM = "BYTE10";
