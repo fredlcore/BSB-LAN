@@ -969,6 +969,16 @@ int printFmtToWebClient(const char *format, ...){
   return len;
 }
 
+void query_program_and_print_result(int line, const char* prefix, const char* suffix){
+  if(prefix) printToWebClient(prefix);
+  query(line);
+  printToWebClient_prognrdescaddr();
+  if(suffix)
+    printToWebClient(suffix);
+  else
+    printToWebClient(PSTR(": "));
+  printToWebClient(build_pvalstr(0));
+}
 
 void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip){
   const char *getfarstrings;
@@ -3232,6 +3242,10 @@ void UpdateMaxDeviceList() {
   }
 #endif
 
+void print_bus_send_failed(void){
+  printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+}
+
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   for (uint16_t x=0;x<outstr_len-1;x++) {
     bigBuff[bigBuffPos] = pgm_read_byte_far(outstr+x);
@@ -3857,8 +3871,6 @@ void generateChangeConfigPage(){
      printToWebClient(PSTR(" VALUE='"));
      break;
      case CPI_SWITCH:
-     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
-     break;
      case CPI_DROPDOWN:
      printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
      break;
@@ -3883,7 +3895,7 @@ void generateChangeConfigPage(){
            }
            uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
            uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)variable[0], 0, false);
+           listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)variable[0], 0, false);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -3910,7 +3922,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, variable[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, variable[0], 0, false);
            }
            break;}
          }
@@ -3931,7 +3943,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, ((uint16_t *)variable)[0], 0, false);
            }
            break;}
          }
@@ -3943,7 +3955,12 @@ void generateChangeConfigPage(){
        printFmtToWebClient(PSTR("%s"), (char *)variable);
        break;
      case CDT_MAC:
-       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
+       {boolean isFirst = true;
+       for(uint8_t z = 0; z < 6; z++){
+         if(isFirst) isFirst = false; else printToWebClient(PSTR(":"));
+         printFmtToWebClient(PSTR("%02X"), (int)variable[z]);
+       }}
+  //       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
        break;
      case CDT_IPV4:
        printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
@@ -3984,7 +4001,7 @@ void generateChangeConfigPage(){
 //Closing tag
    switch(cfg.input_type){
      case CPI_TEXT: printToWebClient(PSTR("'>")); break;
-     case CPI_SWITCH: printToWebClient(PSTR("</select>")); break;
+     case CPI_SWITCH:
      case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
      default: break;
    }
@@ -4825,7 +4842,8 @@ void query_printHTML(){
               //skip leading space
               c+=2;
 
-              printFmtToWebClient(PSTR("<option value='%d"), val);
+              printToWebClient(STR_OPTION_VALUE);
+              printFmtToWebClient(PSTR("%d"), val);
               if ((bitvalue & bitmask) == (val & bitmask)) {
                 printToWebClient(PSTR("' SELECTED>"));
               } else {
@@ -4839,7 +4857,7 @@ void query_printHTML(){
             if((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0){
               num_pvalstr = 1;
             }
-            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
+            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
           }
           printToWebClient(PSTR("</select></td><td>"));
           if (!decodedTelegram.readonly) {
@@ -4996,7 +5014,10 @@ void queryVirtualPrognr(int line, int table_line){
            case 0: //print sensor ID
              DeviceAddress device_address;
              sensors->getAddress(device_address, log_sensor);
-             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+             for(uint8_t z = 0; z < 8; z++){
+               sprintf_P(&decodedTelegram.value[z*2], PSTR("%02"), device_address[z]);
+             }
+//             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
              break;
            case 1: {
              float t=sensors->getTempCByIndex(log_sensor);
@@ -6683,63 +6704,52 @@ uint8_t pps_offset = 0;
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu...<BR>\r\n"), found_ids[x]);
+            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
             uint16_t l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
-            query(6225);
+            query_program_and_print_result(6225, PSTR("<BR>\r\n"), NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR(STR6225_TEXT ": %s\r\n"), decodedTelegram.value);
-            query(6226);
+            query_program_and_print_result(6226, PSTR("<BR>\r\n"), NULL);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR("<BR>" STR6226_TEXT ": %s\r\n"), decodedTelegram.value);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
-            printToWebClient(PSTR("<BR>" STR6224_TEXT ": "));
-            query(6224); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6220_TEXT ": "));
-            query(6220); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6221_TEXT ": "));
-            query(6221); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6227_TEXT ": "));
-            query(6227); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6228_TEXT ": "));
-            query(6228); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6229_TEXT ": "));
-            query(6229); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6231_TEXT ": "));
-            query(6231); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6232_TEXT ": "));
-            query(6232); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6233_TEXT ": "));
-            query(6233); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6234_TEXT ": "));
-            query(6234); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6235_TEXT ": "));
-            query(6235); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
-            query(6223); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6236_TEXT ": "));
-            query(6236); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
-            query(6237); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10003): "));
-            query(10003); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10004): "));
-            query(10004); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR><BR>\r\n"));
+
+            for(uint16_t q = 0; q < sizeof(proglist4q)/sizeof(int); q++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(proglist4q) + (q) * sizeof(proglist4q[0]));
+#else
+              prognr = proglist4q[q];
+#endif
+              query_program_and_print_result(prognr, PSTR("<BR>\r\n"), NULL);
+            }
+            query_program_and_print_result(10003, PSTR("<BR>\r\n"), PSTR(" (10003): "));
+            query_program_and_print_result(10004, PSTR("<BR>\r\n"), PSTR(" (10004): "));
+            printToWebClient(PSTR("<BR>\r\n"));
             flushToWebClient();
 
-            int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
-            for (int i=0; i<15; i++) {
-              printFmtToWebClient(PSTR("%d;"), params[i]);
+            for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
+#else
+              prognr = params4q[i];
+#endif
+              printFmtToWebClient(PSTR("%d;"), prognr);
             }
             printToWebClient(PSTR("<BR>\r\n"));
-            for (int i=0; i<15; i++) {
-              query(params[i]); printToWebClient(decodedTelegram.value);
+            for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
+#else
+              prognr = params4q[i];
+#endif
+              query(prognr); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
             }
 
@@ -6761,7 +6771,7 @@ uint8_t pps_offset = 0;
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
                 printFmtToDebug(PSTR("%02X\r\n"), c);
                 if(!bus->Send(TYPE_QUR, c, msg, tx_msg)){
-                  printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+                  print_bus_send_failed();
                 } else {
                   if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
                     // Decode the xmit telegram and send it to the PC serial interface
@@ -6820,7 +6830,7 @@ uint8_t pps_offset = 0;
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
             if(!bus->Send(type, c, msg, tx_msg)){
-              printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+              print_bus_send_failed();
             }else{
               // Decode the xmit telegram and send it to the PC serial interface
               printTelegram(tx_msg, -1);

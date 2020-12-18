@@ -352,6 +352,9 @@ const char STR_DWHM[] PROGMEM = "DWHM";
 const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
+const char STR_OPTION_VALUE[] PROGMEM = "<option value='";
+const char STR_OPTION[] PROGMEM = "</option>\r\n";
+const char STR_SELECTED[] PROGMEM = "' selected>";
 
 
 const char STR_BIT[] PROGMEM = "BIT";
@@ -714,6 +717,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20699 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors
 };
 
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
