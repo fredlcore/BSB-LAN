@@ -5015,7 +5015,7 @@ void queryVirtualPrognr(int line, int table_line){
              DeviceAddress device_address;
              sensors->getAddress(device_address, log_sensor);
              for(uint8_t z = 0; z < 8; z++){
-               sprintf_P(&decodedTelegram.value[z*2], PSTR("%02"), device_address[z]);
+               sprintf_P(&decodedTelegram.value[z*2], PSTR("%02X"), device_address[z]);
              }
 //             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
              break;
