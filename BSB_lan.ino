@@ -470,12 +470,14 @@ const char *journalFileName = "journal.txt";
 
 #ifdef WIFI
 WiFiEspClient client;
+WiFiEspClient mqtt_client;  //Luposoft: own instance 
 #ifdef VERSION_CHECK
 WiFiEspClient httpclient;
 #endif
 WiFiEspClient telnetClient;
 #else
 EthernetClient client;
+EthernetClient mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
 EthernetClient httpclient;
 #endif
@@ -623,6 +625,7 @@ static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
  *   none
  * Global resources used:
  * *************************************************************** */
+ void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
@@ -7683,16 +7686,20 @@ uint8_t pps_offset = 0;
     if(MQTTPassword[0])
       MQTTPass = MQTTPassword;
     if(MQTTClient == NULL){
-      MQTTClient = new PubSubClient(client);
+      MQTTClient = new PubSubClient(mqtt_client);  //Luposoft: change instance
       MQTTClient->setBufferSize(1024);
     }
 
     String MQTTPayload = "";
     String MQTTTopic = "";
+    
+    mqtt_connect();        //Luposoft, connect to mqtt
+    MQTTClient->loop();    //Luposoft: listen to incoming messages
 
     if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
       lastMQTTTime = millis();
-      if (!MQTTClient->connected()) {
+
+/*      if (!MQTTClient->connected()) {
         IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
         MQTTClient->setServer(MQTTBroker, 1883);
         int retries = 0;
@@ -7705,7 +7712,7 @@ uint8_t pps_offset = 0;
           }
         }
       }
-
+*/
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
           // Declare local variables and start building json if enabled
@@ -7723,7 +7730,7 @@ uint8_t pps_offset = 0;
               MQTTPayload.concat(F("\":{\"id\":"));
           }
           boolean is_first = true;
-          if (MQTTClient->connected()) {
+          if (mqtt_connect()) {              //Luposoft, new function
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
               MQTTTopic = MQTTTopicPrefix;
@@ -7787,7 +7794,7 @@ uint8_t pps_offset = 0;
           }
         }
       }
-      MQTTClient->disconnect();
+      //MQTTClient->disconnect();   //Luposoft: no needing to disconnect anymore
     }
   }
   if(MQTTClient && mqtt_mode == 0){
@@ -8046,6 +8053,124 @@ uint8_t pps_offset = 0;
     }
   }
 } // --- loop () ---
+//Luposoft: Funktionen mqtt_connect
+/*  Function: mqtt_connect()
+ *  Does:     connect to mqtt broker
+ 
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  boolean
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ *  MQTT instance
+ * *************************************************************** */
+#ifdef MQTT
+boolean mqtt_connect()
+{
+  if (!MQTTClient->connected())
+  {
+    IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
+    MQTTClient->setServer(MQTTBroker, 1883);
+    int retries = 0;
+    while (!MQTTClient->connected() && retries < 3)
+    {
+      MQTTClient->connect("BSB-LAN", MQTTUser, MQTTPass);
+      retries++;
+      if (!MQTTClient->connected())
+      {
+        delay(1000);
+        printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
+      } 
+      else
+      {
+        printlnToDebug(PSTR("Connect to MQTT broker"));
+        MQTTClient->subscribe("fromFHEM");   //Luposoft: set the topic listen to
+        MQTTClient->setKeepAlive(120);       //Luposoft: just for savety
+        MQTTClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+        return true;
+      }
+    }
+  }
+  else
+  {
+    return true;
+  }
+return false;
+}
+#endif
+//Luposoft: Funktionen mqtt_callback
+/*  Function: mqtt_callback()
+ *  Does:     wird durch MQTTClient.loop() bei angekommenen MQTT-Nachrichten aufgerufen
+ *            Beispielaufruf in Fhem: set <mqtt2Server> publish fromFHEM S700=1
+              sendet das Kommando an die Heizung und gibt eine MQTT-Bestätigung an Fhem zurück
+ * Pass parameters:
+ *  topic,payload,length
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ * *************************************************************** */
+#ifdef MQTT
+void mqtt_callback(char* topic, byte* payload, unsigned int length)
+{
+  boolean setcmd;
+  printlnToDebug(PSTR("##MQTT#############################"));
+  printToDebug(PSTR("mqtt-message arrived ["));
+  printToDebug(topic);
+  printlnToDebug(PSTR("] "));
+  char buf[20];
+  char C_value[24];
+  String("ACK_").toCharArray(C_value, 24);
+  
+  switch ((char)payload[0])
+  {
+  case 'I':setcmd=false;break;
+  case 'S':setcmd=true;break;
+  default:
+  printlnToDebug(PSTR("mqtt_callback: missing 'I' or 'S' at start"));
+  return;
+  break;}
+  
+  for (unsigned int i=0;i<length;i++)
+  {
+  buf[i]=char(payload[i]);
+  C_value[i+4]=buf[i];
+  }
+  buf[length]='\0';  //0-terminating
+  C_value[length+4]='\0';
+  char*C_payload=buf;
+  C_payload++;
+  int I_line=atoi(C_payload);
+  C_payload=strchr(C_payload,'=');
+  C_payload++;
+  if (setcmd) {printToDebug(PSTR("S"));} else {printToDebug(PSTR("I"));}
+  String S_line=String(I_line);
+  char*C_line=S_line.c_str();
+  printToDebug(C_line);
+  printToDebug(PSTR("="));
+  printToDebug(C_payload);
+  printlnToDebug(PSTR(" "));
+  set(I_line,C_payload,setcmd);  //Steuerbefehl
+  String mqtt_Topic;
+  if(MQTTTopicPrefix[0])
+  {
+    mqtt_Topic = MQTTTopicPrefix;
+    mqtt_Topic.concat(F("/"));
+  }
+  else mqtt_Topic = "BSB-LAN/";
+  mqtt_Topic.concat(F("MQTT"));
+  MQTTClient->publish(mqtt_Topic.c_str(), C_value);
+  printlnToDebug(PSTR("##MQTT#############################"));
+}
+#endif
+
 
 #ifdef WIFI
 void printWifiStatus()
