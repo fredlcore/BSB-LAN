@@ -6261,7 +6261,7 @@ uint8_t pps_offset = 0;
           if ((httpflags & HTTP_GZIP)) dataFile = SD.open(urlString + ".gz");
           if (!dataFile) {
             // reuse httpflags
-            bitClear(httpflags, HTTP_AUTH); //can't use gzip because no gzipped file
+            bitClear(httpflags, 1); //HTTP_GZIP bit. can't use gzip because no gzipped file
             dataFile = SD.open(urlString);
           }
           // if the file is available, read from it:
@@ -6280,7 +6280,7 @@ uint8_t pps_offset = 0;
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
               if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize) + 1)) {
                 // reuse httpflags
-                bitClear(httpflags, HTTP_AUTH+HTTP_GZIP); //ETag not match
+                bitClear(httpflags, 3); //HTTP_ETAG bit. ETag not match
               }
             }
 
