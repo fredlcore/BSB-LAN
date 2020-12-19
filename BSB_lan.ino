@@ -58,7 +58,7 @@
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
  *       1.1   - 10.11.2020
- *       2.0   - 
+ *       2.0   -
  *
  * Changelog:
  *       version 2.0
@@ -982,8 +982,9 @@ int printFmtToWebClient(const char *format, ...){
   return len;
 }
 
-void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip){
+void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip, long cachingTime){
   const char *getfarstrings;
+  long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
   printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
   switch(code){
     case 200: printToWebClient(PSTR("OK")); break;
@@ -997,23 +998,32 @@ void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean is
     case 1: getfarstrings = PSTR("text/html"); break;
     case 2: getfarstrings = PSTR("text/css"); break;
     case 3: getfarstrings = PSTR("application/x-javascript"); break;
-    case 4: getfarstrings = PSTR("application/xml"); break;
+    case 4: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = -1; break;
     // case 5 below
-    case 6: getfarstrings = PSTR("application/json"); break;
-    case 7: getfarstrings = PSTR("text/plain"); break;
+    case 6: getfarstrings = PSTR("application/json"); autoDetectCachingTime = -1; break;
+    case 7: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = -1; break;
     case 101: getfarstrings = PSTR("image/jpeg"); break;
     case 102: getfarstrings = PSTR("image/gif"); break;
     case 103: getfarstrings = PSTR("image/svg"); break;
     case 104: getfarstrings = PSTR("image/png"); break;
-    case 105: getfarstrings = PSTR("image/x-icon"); break;
+    case 105: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
     case 201: getfarstrings = PSTR("application/x-gzip"); break;
     case 5:
-    default: getfarstrings = PSTR("text");
+    default: getfarstrings = PSTR("text"); autoDetectCachingTime = -1; break;
   }
   printToWebClient(getfarstrings);
+  if(cachingTime == 0)cachingTime = autoDetectCachingTime;
   if(addcharset)printToWebClient(PSTR("; charset=utf-8"));
   printToWebClient(PSTR("\r\n"));
 if(isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+printToWebClient(PSTR("Cache-Control: "));
+if(cachingTime > 0){
+  //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
+  printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
+} else {
+  printToWebClient(PSTR("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0"));
+}
+printToWebClient(PSTR("\r\n"));
 }
 
 int recognize_mime(char *str) {
@@ -3286,7 +3296,7 @@ void print_aHref(void){
  * *************************************************************** */
  void webPrintHeader(void){
    flushToWebClient();
-   printHTTPheader(200, 1, true, false);
+   printHTTPheader(200, 1, true, false, -1);
  #if defined(__AVR__)
    printPStr(pgm_get_far_address(header_html), sizeof(header_html));
  #else
@@ -4769,7 +4779,7 @@ char *build_pvalstr(boolean extended){
     strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
-  
+
   strcpy_P(outBuf + len, printError(decodedTelegram.error));
   return outBuf;
 }
@@ -5367,7 +5377,7 @@ void printToWebClient_prognrdescaddr(){
    int counter = 0;
    int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
    printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
-   printHTTPheader(200, 1, true, false);
+   printHTTPheader(200, 1, true, false, -1);
    printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
    for (i=0; i < numIPWESensors; i++) {
      if(!ipwe_parameters[i]) continue;
@@ -5673,7 +5683,7 @@ void loop() {
         }
 
         if(cmd==0x31000212) {    // TWW Status
-          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]); 
+          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);
 
           if((msg[11] & 0x08) == 0x08) {  // See parameter 1602
             if(TWW_start==0){        // has not been timed
@@ -6271,7 +6281,7 @@ uint8_t pps_offset = 0;
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
-          printHTTPheader(401, 1, true, false);
+          printHTTPheader(401, 1, true, false, -1);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -6306,7 +6316,7 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
-          printHTTPheader(200, 105, false, false);
+          printHTTPheader(200, 105, false, false, 0);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(cLineBuffer + 1);
@@ -6408,7 +6418,7 @@ uint8_t pps_offset = 0;
               code = 304;
             else
               code = 200;
-            printHTTPheader(code, mimetype, false, (httpflags & HTTP_GZIP));
+            printHTTPheader(code, mimetype, false, (httpflags & HTTP_GZIP), 0);
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6445,7 +6455,7 @@ uint8_t pps_offset = 0;
               printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
-            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=3600, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
@@ -6462,7 +6472,7 @@ uint8_t pps_offset = 0;
               webPrintSite();
               break;
             }
-            printHTTPheader(404, 1, true, false);
+            printHTTPheader(404, 1, true, false, -1);
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
             flushToWebClient();
@@ -6892,7 +6902,7 @@ uint8_t pps_offset = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          printHTTPheader(200, 6, true, false);
+          printHTTPheader(200, 6, true, false, -1);
           printToWebClient(PSTR("\r\n{\r\n"));
           if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
@@ -7275,7 +7285,7 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            printHTTPheader(200, 7, true, false);
+            printHTTPheader(200, 7, true, false, 0);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
