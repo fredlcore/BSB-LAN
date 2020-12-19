@@ -969,17 +969,6 @@ int printFmtToWebClient(const char *format, ...){
   return len;
 }
 
-void query_program_and_print_result(int line, const char* prefix, const char* suffix){
-  if(prefix) printToWebClient(prefix);
-  query(line);
-  printToWebClient_prognrdescaddr();
-  if(suffix)
-    printToWebClient(suffix);
-  else
-    printToWebClient(PSTR(": "));
-  printToWebClient(build_pvalstr(0));
-}
-
 void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip){
   const char *getfarstrings;
   printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
@@ -4770,6 +4759,17 @@ if(decodedTelegram.telegramDump){
 
 strcpy_P(outBuf + len, printError(decodedTelegram.error));
 return outBuf;
+}
+
+void query_program_and_print_result(int line, const char* prefix, const char* suffix){
+  if(prefix) printToWebClient(prefix);
+  query(line);
+  printToWebClient_prognrdescaddr();
+  if(suffix)
+    printToWebClient(suffix);
+  else
+    printToWebClient(PSTR(": "));
+  printToWebClient(build_pvalstr(0));
 }
 
 /** *****************************************************************
