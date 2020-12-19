@@ -435,6 +435,14 @@
 #define ENUM8004_cd_TEXT "Locked, source"
 #define ENUM8004_ce_TEXT "Locked, buffer"
 
+#define ENUM10100_02_TEXT "Maintenance"
+#define ENUM10100_04_TEXT "Burner 1 active"
+#define ENUM10100_08_TEXT "Direct display"
+#define ENUM10100_10_TEXT "Burner 2 active"
+#define ENUM10100_20_TEXT "Radio: Clock not adjustable"
+#define ENUM10100_40_TEXT "Radio: Invalid time"
+#define ENUM10100_80_TEXT "Radio: Clock adjusted"
+
 // These strings do not take space in Arduino memory. They are for external interfaces.
 #define EXTIF_HOME_TEXT "Home"
 #define EXTIF_MANAGEMENT_TEXT "Management"

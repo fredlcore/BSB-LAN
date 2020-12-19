@@ -58,8 +58,16 @@
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
  *       1.1   - 10.11.2020
+ *       2.0   - 
  *
  * Changelog:
+ *       version 2.0
+ *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
+ *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
+ *        - New categories added, subsequent categories have been shifted up
+ *        - Lots of new parameters added
+ *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -381,6 +389,11 @@
 #define LOGTELEGRAM_BROADCAST_ONLY 4
 #define LOGTELEGRAM_UNKNOWNBROADCAST_ONLY 6
 
+#define HTTP_AUTH 1
+#define HTTP_GZIP 2
+#define HTTP_HEAD 4
+#define HTTP_ETAG 8
+#define HTTP_FRAG 128
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -4706,7 +4719,7 @@ const char* printError(uint16_t error){
  *  Function: build_pvalstr()
  *  Does:     Legacy. Function for compatibility.
  *            Build pvalstr from decodedTelegram structure.
-              format like in old query() function
+ *            format like in old query() function
  * Pass parameters:
  *  boolean extended
  *
@@ -4717,7 +4730,7 @@ const char* printError(uint16_t error){
  *
  * Global resources used:
  *  outBuf
-  * *************************************************************** */
+ ** *************************************************************** */
 char *build_pvalstr(boolean extended){
   int len = 0;
   outBuf[len] = 0;
@@ -4735,30 +4748,30 @@ char *build_pvalstr(boolean extended){
     }
     len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
   }
-if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
-  len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
-}
-if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-  if(decodedTelegram.enumdescaddr){
-    strcpy_P(outBuf + len, PSTR(" - "));
-    strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
-    len+=strlen(outBuf + len);
-   }
-} else{
-  if(decodedTelegram.unit[0] != 0){
+  if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
+    len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
+  }
+  if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
+    if(decodedTelegram.enumdescaddr){
+      strcpy_P(outBuf + len, PSTR(" - "));
+      strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
+      len+=strlen(outBuf + len);
+     }
+  } else{
+    if(decodedTelegram.unit[0] != 0){
+      strcpy_P(outBuf + len, PSTR(" "));
+      strcat(outBuf + len, decodedTelegram.unit);
+      len+=strlen(outBuf + len);
+    }
+  }
+  if(decodedTelegram.telegramDump){
     strcpy_P(outBuf + len, PSTR(" "));
-    strcat(outBuf + len, decodedTelegram.unit);
+    strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
-}
-if(decodedTelegram.telegramDump){
-  strcpy_P(outBuf + len, PSTR(" "));
-  strcat(outBuf + len, decodedTelegram.telegramDump);
-  len+=strlen(outBuf + len);
-}
-
-strcpy_P(outBuf + len, printError(decodedTelegram.error));
-return outBuf;
+  
+  strcpy_P(outBuf + len, printError(decodedTelegram.error));
+  return outBuf;
 }
 
 void query_program_and_print_result(int line, const char* prefix, const char* suffix){
@@ -5651,7 +5664,7 @@ void loop() {
           LogTelegram(msg);
         }
 
-        // Filter Brenner Status messages (attention: partially undocumented enum values)
+        // Filter Brenner Status messages
 
         uint32_t cmd;
         cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
@@ -5659,10 +5672,10 @@ void loop() {
           setTime(msg[bus->getPl_start()+5], msg[bus->getPl_start()+6], msg[bus->getPl_start()+7], msg[bus->getPl_start()+3], msg[bus->getPl_start()+2], msg[bus->getPl_start()+1]+1900);
         }
 
-        if(cmd==0x31000212) {    // TWW Status Elco / Brötje SOB
-          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);      // assumed info byte
+        if(cmd==0x31000212) {    // TWW Status
+          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]); 
 
-          if( (msg[11]==0x4D && my_dev_fam != 97) || (msg[11]==0xCD && my_dev_fam == 97)) {  // TWW Ladung on BROETJE_SOB and THISION
+          if((msg[11] & 0x08) == 0x08) {  // See parameter 1602
             if(TWW_start==0){        // has not been timed
               TWW_start=millis();   // keep current timestamp
               TWW_count++;          // increment number of starts
@@ -5686,7 +5699,7 @@ void loop() {
           boolean reset_brenner_timer = 0;
           printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus->getPl_start()]);      // first payload byte
 
-          if(msg[bus->getPl_start()]==0x04) {       // Stufe 1
+          if((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
             if(brenner_start==0){        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
@@ -5696,7 +5709,7 @@ void loop() {
             }
             brenner_stufe=1;
           }
-          if(msg[bus->getPl_start()]==0x14) {       // Stufe 2 (only oil furnace)
+          if((msg[bus->getPl_start()] & 0x10) == 0x10) {       // Stufe 2 (only oil furnace)
             if(brenner_start_2==0){        // has not been timed
               brenner_start_2=millis();   // keep current timestamp
               brenner_count_2++;          // increment number of starts
@@ -5726,7 +5739,7 @@ void loop() {
             }
             reset_brenner_timer = 0;
           }
-          if (msg[bus->getPl_start()]==0x00) {    // brenner off
+          if ((msg[bus->getPl_start()] & 0x04) != 0x04) {    // brenner off
             brenner_end=millis();      // timestamp the end
             brenner_stufe=0;
             if(brenner_start!=0){        // start has been timed
@@ -6235,18 +6248,18 @@ uint8_t pps_offset = 0;
               currentLineIsBlank = true;
 #ifdef WEBSERVER
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & 2) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
-                httpflags |= 2;
+              if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
+                httpflags |= HTTP_GZIP;
               }
-              else if (!(httpflags & 8) && strstr_P(outBuf + buffershift,PSTR("If-None-Match:")) != 0) {
-                httpflags |= 8;
+              else if (!(httpflags & HTTP_ETAG) && strstr_P(outBuf + buffershift,PSTR("If-None-Match:")) != 0) {
+                httpflags |= HTTP_ETAG;
                 strcpy(outBuf, outBuf + buffershift);
               }
              else
 #endif
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & 1) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
-                httpflags |= 1;
+              if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
+                httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
               charcount=buffershift; //Reserve space in buffer for ETag
@@ -6257,7 +6270,7 @@ uint8_t pps_offset = 0;
           }
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (USER_PASS_B64[0] && !(httpflags & 1)) {
+        if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(401, 1, true, false);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
@@ -6276,7 +6289,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
         if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
-          httpflags |= 4;
+          httpflags |= HTTP_HEAD;
 #endif
         char *u_s = strchr(cLineBuffer,' ');
         char *u_e = strchr(u_s + 1,' ');
@@ -6356,7 +6369,7 @@ uint8_t pps_offset = 0;
 
           // client browser accept gzip
           int suffix = 0;
-          if ((httpflags & 2)) {
+          if ((httpflags & HTTP_GZIP)) {
             suffix = strlen(p);
             strcpy_P(p + suffix, PSTR(".gz"));
             dataFile = SD.open(p);
@@ -6380,7 +6393,7 @@ uint8_t pps_offset = 0;
               dayval = FAT_DAY(d.lastWriteDate);
               }
 
-            if ((httpflags & 8))  { //Compare ETag if presented
+            if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
               if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize) + 1)) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
@@ -6395,8 +6408,7 @@ uint8_t pps_offset = 0;
               code = 304;
             else
               code = 200;
-            printHTTPheader(code, mimetype, false, (httpflags & 2));
-
+            printHTTPheader(code, mimetype, false, (httpflags & HTTP_GZIP));
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6436,10 +6448,10 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=3600, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
-            if (!(httpflags & 8) && !(httpflags & 4)) {
+            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
               transmitFile(dataFile);
             }
-            printToDebug((httpflags & 4)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
+            printToDebug((httpflags & HTTP_HEAD)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
           }
@@ -6482,7 +6494,7 @@ uint8_t pps_offset = 0;
         //Send HTML pages without header and footer (For external interface)
         if(p[1]=='W'){
           p++;
-          httpflags |= 128;
+          httpflags |= HTTP_FRAG;
         }
 #endif
 
@@ -6531,7 +6543,7 @@ uint8_t pps_offset = 0;
           bool setcmd= (p[1]=='S'); // True if SET command
           uint8_t destAddr = bus->getBusDest();
           p+=2;               // third position in cLineBuffer
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
           if(!isdigit(*p)){   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
@@ -6574,7 +6586,7 @@ uint8_t pps_offset = 0;
               }
             }
           }
-          if(!(httpflags & 128)) webPrintFooter();
+          if(!(httpflags & HTTP_FRAG)) webPrintFooter();
           flushToWebClient();
           break;
         }
@@ -6651,7 +6663,7 @@ uint8_t pps_offset = 0;
         }
 
         if(p[1]=='Q') {
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
@@ -6818,7 +6830,7 @@ uint8_t pps_offset = 0;
 
           printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-          if(!(httpflags & 128)) webPrintFooter();
+          if(!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
         }
@@ -7291,7 +7303,7 @@ uint8_t pps_offset = 0;
         }
 #endif
         if (p[1]=='C'){ // dump configuration
-          if(!(httpflags & 128)) webPrintHeader();
+          if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
           switch(p[2]){
 #ifdef CONFIG_IN_EEPROM
@@ -7325,7 +7337,7 @@ uint8_t pps_offset = 0;
 #ifdef MAX_CUL
               UpdateMaxDeviceList(); //Update list MAX! devices
 #endif
-              if(!(httpflags & 128)) webPrintFooter();
+              if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
 
               boolean buschanged = false;
@@ -7400,7 +7412,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
               generateChangeConfigPage();
 #endif
-              if(!(httpflags & 128)) webPrintFooter();
+              if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
 // Dump when serial debug active or have telnet client
