@@ -324,6 +324,7 @@ typedef enum{
   VT_STRING,            //* x Byte - 1 enable / string
   VT_CUSTOM_ENUM,       //* x Byte - 1 Byte Position, 1 Byte Parameter-Wert, Space, Text
   VT_CUSTOM_BYTE,       //* x Byte - 1 Byte Position, 1 Byte Länge Parameter, Space (!) (nötig für Erkennung)
+  VT_CUSTOM_BIT,        //* x Byte - 1st Byte position, then 1 Byte bit value, 1 Byte bitmask, space, text
   VT_GR_PER_CUBM,       //Virtual (DHT22): Gram per cubic meter (Abs humidity)
   VT_UNKNOWN
 }vt_type_t;
@@ -443,6 +444,7 @@ const char STR_TIMEPROG[] PROGMEM = "TIMEPROG";
 const char STR_STRING[] PROGMEM = "STRING";
 const char STR_CUSTOM_ENUM[] PROGMEM = "CUSTOM_ENUM";
 const char STR_CUSTOM_BYTE[] PROGMEM = "CUSTOM_BYTE";
+const char STR_CUSTOM_BIT[] PROGMEM = "CUSTOM_BIT";
 const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
 const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
 
@@ -600,8 +602,9 @@ PROGMEM_LATE const units optbl[]={
 {VT_VACATIONPROG,   1.0,    6, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
 {VT_TIMEPROG,       1.0,    8, 11+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
 {VT_STRING,         1.0,    8, 22+64, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
-{VT_CUSTOM_ENUM,    1.0,    8, 22+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
-{VT_CUSTOM_BYTE,    1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
+{VT_CUSTOM_ENUM,    1.0,    8, 22+32+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
+{VT_CUSTOM_BYTE,    1.0,    0, 22+32+64, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
+{VT_CUSTOM_BIT,     1.0,    0, 22+32+64, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BIT},
 {VT_GR_PER_CUBM,    1.0,    0, 0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
 {VT_UNKNOWN,        1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
@@ -6210,14 +6213,15 @@ const char ENUM9614[] PROGMEM_LATEST = {
 };
 
 const char ENUM10100[] PROGMEM_LATEST = {
-"\x00\x01\x01" ENUM10100_01_TEXT "\0"
-"\x00\x02\x02" ENUM10100_02_TEXT "\0"
-"\x00\x04\x04" ENUM10100_04_TEXT "\0"
-"\x00\x08\x08" ENUM10100_08_TEXT "\0"
-"\x00\x10\x10" ENUM10100_10_TEXT "\0"
-"\x00\x20\x20" ENUM10100_20_TEXT "\0"
-"\x00\x40\x40" ENUM10100_40_TEXT "\0"
-"\x00\x80\x80" ENUM10100_80_TEXT
+"\x00" // index for payload byte
+"\x01\x01 " ENUM10100_01_TEXT "\0"
+"\x02\x02 " ENUM10100_02_TEXT "\0"
+"\x04\x04 " ENUM10100_04_TEXT "\0"
+"\x08\x08 " ENUM10100_08_TEXT "\0"
+"\x10\x10 " ENUM10100_10_TEXT "\0"
+"\x20\x20 " ENUM10100_20_TEXT "\0"
+"\x40\x40 " ENUM10100_40_TEXT "\0"
+"\x80\x80 " ENUM10100_80_TEXT
 };
 
 // PPS Betriebsart
@@ -10383,7 +10387,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x31000210,  CAT_USER_DEFINED,     VT_UNKNOWN,       10058, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Captured from Weishaupt WRS-CPU-B1, data payload: 00 03 00
 
 // Lines below seem to have found an explanation.
-{0x053D0213,  CAT_USER_DEFINED,     VT_UNKNOWN,   10100, STR10100, sizeof(ENUM10100),    ENUM10100,    DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
+{0x053D0213,  CAT_USER_DEFINED,     VT_CUSTOM_BIT,    10100, STR10100, sizeof(ENUM10100),    ENUM10100,    FL_RONLY, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 //{0x05000213,  CAT_USER_DEFINED,     VT_UNKNOWN,       10100, STR10100, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO Brenner broadcast 00 to 7F
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
