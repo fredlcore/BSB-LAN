@@ -266,11 +266,7 @@ const char graph_html[] PROGMEM_LATE =
 #endif
 
 const char header_html[] PROGMEM_LATE =
-  "HTTP/1.1 200 OK\n"
-  "Content-Type: text/html\n"
-  "Cache-Control: no-cache, no-store, must-revalidate\n"
-  "Pragma: no-cache\n"
-  "Expires: 0\n\n"
+  "\n"
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">\n"
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
@@ -297,12 +293,10 @@ const char header_html[] PROGMEM_LATE =
   "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
   "}</script>\n"
   "<font face='Arial'>\n"
-  "<center><h1><A ID=main_link HREF='/";
+  "<center><h1>";
 
 const char auth_req_html[] PROGMEM_LATE =
-  "HTTP/1.1 401 Authorization Required\n"
   "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
-  "Content-Type: text/html\n"
   "Connnection: close\n"
   "\n"
   "<!DOCTYPE HTML>\n"

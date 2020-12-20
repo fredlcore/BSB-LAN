@@ -58,7 +58,7 @@
  *       0.44  - 11.05.2020
  *       1.0   - 03.08.2020
  *       1.1   - 10.11.2020
- *       2.0   - 
+ *       2.0   -
  *
  * Changelog:
  *       version 2.0
@@ -394,6 +394,34 @@
 #define HTTP_HEAD 4
 #define HTTP_ETAG 8
 #define HTTP_FRAG 128
+
+#define HTTP_FILE_NOT_GZIPPED false
+#define HTTP_FILE_GZIPPED true
+
+#define HTTP_ADD_CHARSET_TO_HEADER true
+#define HTTP_DO_NOT_ADD_CHARSET_TO_HEADER false
+#define HTTP_DO_NOT_CACHE -1
+#define HTTP_AUTO_CACHE_AGE 0
+
+#define HTTP_OK 200
+#define HTTP_NOT_MODIFIED 304
+#define HTTP_AUTH_REQUIRED 401
+#define HTTP_NOT_FOUND 404
+
+#define MIME_TYPE_TEXT_HTML 1
+#define MIME_TYPE_TEXT_CSS 2
+#define MIME_TYPE_APP_JS 3
+#define MIME_TYPE_APP_XML 4
+#define MIME_TYPE_TEXT_TEXT 5
+#define MIME_TYPE_APP_JSON 6
+#define MIME_TYPE_TEXT_PLAIN 7
+#define MIME_TYPE_IMAGE_JPEG 101
+#define MIME_TYPE_IMAGE_GIF 102
+#define MIME_TYPE_IMAGE_SVG 103
+#define MIME_TYPE_IMAGE_PNG 104
+#define MIME_TYPE_IMAGE_ICON 105
+#define MIME_TYPE_APP_GZ 201
+
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -982,6 +1010,79 @@ int printFmtToWebClient(const char *format, ...){
   return len;
 }
 
+void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip, long cachingTime){
+  const char *getfarstrings;
+  long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
+  printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
+  switch(code){
+    case HTTP_OK: printToWebClient(PSTR("OK")); break;
+    case HTTP_NOT_MODIFIED: printToWebClient(PSTR("Not Modified")); break;
+    case HTTP_AUTH_REQUIRED: printToWebClient(PSTR("Authorization Required")); break;
+    case HTTP_NOT_FOUND: printToWebClient(PSTR("Not Found")); break;
+    default: break;
+  }
+  printToWebClient(PSTR("\r\nContent-Type: ")); // 17 bytes with zero
+  switch(mimetype){
+    case MIME_TYPE_TEXT_HTML: getfarstrings = PSTR("text/html"); break;
+    case MIME_TYPE_TEXT_CSS: getfarstrings = PSTR("text/css"); break;
+    case MIME_TYPE_APP_JS: getfarstrings = PSTR("application/x-javascript"); break;
+    case MIME_TYPE_APP_XML: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    // case 5 below
+    case MIME_TYPE_APP_JSON: getfarstrings = PSTR("application/json"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
+    case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
+    case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg"); break;
+    case MIME_TYPE_IMAGE_PNG: getfarstrings = PSTR("image/png"); break;
+    case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
+    case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
+    case MIME_TYPE_TEXT_TEXT:
+    default: getfarstrings = PSTR("text"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+  }
+  printToWebClient(getfarstrings);
+  if(cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
+  if(addcharset)printToWebClient(PSTR("; charset=utf-8"));
+  printToWebClient(PSTR("\r\n"));
+if(isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+printToWebClient(PSTR("Cache-Control: "));
+if(cachingTime > 0){
+  //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
+  printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
+} else {
+  printToWebClient(PSTR("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0"));
+}
+printToWebClient(PSTR("\r\n"));
+}
+
+int recognize_mime(char *str) {
+//        if(strlen(dot)) {
+  char mimebuf[32];
+  int i = 0;
+  int mimetype = 0;
+  if(!str) return mimetype;
+
+  strncpy(mimebuf, str, sizeof(mimebuf));
+
+  while(mimebuf[i]){
+    mimebuf[i] |= 0x20; //to lower case
+    i++;
+  }
+
+  if (!strcmp_P(mimebuf, PSTR("html")) || !strcmp_P(mimebuf, PSTR("htm"))) mimetype = MIME_TYPE_TEXT_HTML;
+  else if(!strcmp_P(mimebuf, PSTR("css"))) mimetype = MIME_TYPE_TEXT_CSS;
+  else if(!strcmp_P(mimebuf, PSTR("js"))) mimetype = MIME_TYPE_APP_JS;
+  else if(!strcmp_P(mimebuf, PSTR("xml"))) mimetype = MIME_TYPE_APP_XML;
+  else if(!strcmp_P(mimebuf, PSTR("txt"))) mimetype = MIME_TYPE_TEXT_TEXT;
+  else if(!strcmp_P(mimebuf, PSTR("jpg"))) mimetype = MIME_TYPE_IMAGE_JPEG;
+  else if(!strcmp_P(mimebuf, PSTR("gif"))) mimetype = MIME_TYPE_IMAGE_GIF;
+  else if(!strcmp_P(mimebuf, PSTR("svg"))) mimetype = MIME_TYPE_IMAGE_SVG;
+  else if(!strcmp_P(mimebuf, PSTR("png"))) mimetype = MIME_TYPE_IMAGE_PNG;
+  else if(!strcmp_P(mimebuf, PSTR("ico"))) mimetype = MIME_TYPE_IMAGE_ICON;
+  else if(!strcmp_P(mimebuf, PSTR("gz"))) mimetype = MIME_TYPE_APP_GZ;
+//          else mimetype = 0;
+  // You can add more MIME types here
+  return mimetype;
+  }
 
 /** *****************************************************************
  *  Function: calc_enum_offset()
@@ -3181,6 +3282,10 @@ void UpdateMaxDeviceList() {
   }
 #endif
 
+void print_bus_send_failed(void){
+  printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+}
+
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   for (uint16_t x=0;x<outstr_len-1;x++) {
     bigBuff[bigBuffPos] = pgm_read_byte_far(outstr+x);
@@ -3192,6 +3297,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 //  final packet writing must be called from outside but it can be uncommented here for ensure.
 //  if (bigBuffPos > 0) flushToWebClient();
 }
+
 
 /** *****************************************************************
  *  Function:  webPrintHeader()
@@ -3205,58 +3311,81 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  *  Global resources used:
  *   client object
  * *************************************************************** */
-void webPrintHeader(void){
-  flushToWebClient();
-#if defined(__AVR__)
-  printPStr(pgm_get_far_address(header_html), sizeof(header_html));
-#else
-  printPStr(header_html, sizeof(header_html));
-#endif
+ void webPrintHeader(void){
+   flushToWebClient();
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+ #if defined(__AVR__)
+   printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+ #else
+   printPStr(header_html, sizeof(header_html));
+ #endif
 
-  printPassKey();
-  printToWebClient(PSTR("'>BSB-LAN Web</A></h1></center>\r\n"));
-  printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center><a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("' ID=main_link>BSB-LAN Web</A></h1></center>\r\n"));
+   printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("K49'>" MENU_TEXT_SNS "</a>"));
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("K49'>" MENU_TEXT_SNS));
 
-  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-  if(!logCurrentValues)
-  printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font>"));
-  else{
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("DG'>" MENU_TEXT_SLG "</a>"));
-  }
+   if(!logCurrentValues)
+   printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
+   else{
+     printToWebClient(PSTR("<a href='/"));
+     printPassKey();
+     printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
+     printToWebClient(PSTR("</a></td>"));
+   }
 
-  printToWebClient(PSTR("</td><td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("Q'>" MENU_TEXT_CHK "</a>"));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK));
+   printToWebClient(PSTR("</a></td>"));
 
-  printToWebClient(PSTR("</td></tr>\r\n"));
-  printToWebClient(PSTR("<tr bgcolor=#f0f0f0><td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-  printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
-//  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
-  printToWebClient(PSTR("</a></td><td class=\"header\" width=20% align=center>"));
+   //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-  printToWebClient(PSTR("<a href='" MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC "</a></td><td class=\"header\" width=20% align=center><a href='" MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ "</a></td>"));
-//  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-  printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
-  flushToWebClient();
-} // --- webPrintHeader() ---
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC));
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+
+   printToWebClient(PSTR("<a href='"));
+   printToWebClient(PSTR(MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ));
+   printToWebClient(PSTR("</a></td>"));
+
+ //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
+   printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
+   flushToWebClient();
+ } // --- webPrintHeader() ---
+
 
 /** *****************************************************************
  *  Function:  webPrintFooter()
@@ -3777,8 +3906,6 @@ void generateChangeConfigPage(){
      printToWebClient(PSTR(" VALUE='"));
      break;
      case CPI_SWITCH:
-     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
-     break;
      case CPI_DROPDOWN:
      printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
      break;
@@ -3803,7 +3930,7 @@ void generateChangeConfigPage(){
            }
            uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
            uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)variable[0], 0, false);
+           listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)variable[0], 0, false);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -3830,7 +3957,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, variable[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, variable[0], 0, false);
            }
            break;}
          }
@@ -3851,7 +3978,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, ((uint16_t *)variable)[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, ((uint16_t *)variable)[0], 0, false);
            }
            break;}
          }
@@ -3863,7 +3990,12 @@ void generateChangeConfigPage(){
        printFmtToWebClient(PSTR("%s"), (char *)variable);
        break;
      case CDT_MAC:
-       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
+       {boolean isFirst = true;
+       for(uint8_t z = 0; z < 6; z++){
+         if(isFirst) isFirst = false; else printToWebClient(PSTR(":"));
+         printFmtToWebClient(PSTR("%02X"), (int)variable[z]);
+       }}
+  //       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
        break;
      case CDT_IPV4:
        printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
@@ -3904,7 +4036,7 @@ void generateChangeConfigPage(){
 //Closing tag
    switch(cfg.input_type){
      case CPI_TEXT: printToWebClient(PSTR("'>")); break;
-     case CPI_SWITCH: printToWebClient(PSTR("</select>")); break;
+     case CPI_SWITCH:
      case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
      default: break;
    }
@@ -4674,9 +4806,20 @@ char *build_pvalstr(boolean extended){
     strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
-  
+
   strcpy_P(outBuf + len, printError(decodedTelegram.error));
   return outBuf;
+}
+
+void query_program_and_print_result(int line, const char* prefix, const char* suffix){
+  if(prefix) printToWebClient(prefix);
+  query(line);
+  printToWebClient_prognrdescaddr();
+  if(suffix)
+    printToWebClient(suffix);
+  else
+    printToWebClient(PSTR(": "));
+  printToWebClient(build_pvalstr(0));
 }
 
 /** *****************************************************************
@@ -4749,7 +4892,8 @@ void query_printHTML(){
               //skip leading space
               c+=2;
 
-              printFmtToWebClient(PSTR("<option value='%d"), val);
+              printToWebClient(STR_OPTION_VALUE);
+              printFmtToWebClient(PSTR("%d"), val);
               if ((bitvalue & bitmask) == (val & bitmask)) {
                 printToWebClient(PSTR("' SELECTED>"));
               } else {
@@ -4763,7 +4907,7 @@ void query_printHTML(){
             if((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0){
               num_pvalstr = 1;
             }
-            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("<option value='"), PSTR("'>"), PSTR("' selected>"), PSTR("</option>\r\n"), NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
+            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
           }
           printToWebClient(PSTR("</select></td><td>"));
           if (!decodedTelegram.readonly) {
@@ -4920,7 +5064,10 @@ void queryVirtualPrognr(int line, int table_line){
            case 0: //print sensor ID
              DeviceAddress device_address;
              sensors->getAddress(device_address, log_sensor);
-             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+             for(uint8_t z = 0; z < 8; z++){
+               sprintf_P(&decodedTelegram.value[z*2], PSTR("%02X"), device_address[z]);
+             }
+//             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
              break;
            case 1: {
              float t=sensors->getTempCByIndex(log_sensor);
@@ -5019,7 +5166,6 @@ void query(int line)  // line (ProgNr)
     if(i>=0){
       uint8_t flags = get_cmdtbl_flags(i);
       decodedTelegram.type = get_cmdtbl_type(i);
-
 // virtual programs
       if((line >= 20000 && line < 20700))
         {
@@ -5055,6 +5201,7 @@ void query(int line)  // line (ProgNr)
             }else{
               printlnToDebug(printError(261)); //query failed
               retry--;          // decrement number of attempts
+
             }
           } // endwhile, maximum number of retries reached
           if(retry==0) {
@@ -5063,6 +5210,7 @@ void query(int line)  // line (ProgNr)
             } else {
               printFmtToDebug(PSTR("%d\r\n"), line); //%d
             }
+          loadPrognrElementsFromTable(line, i);
           decodedTelegram.error = 261;
           }
         } else { // bus type is PPS
@@ -5251,80 +5399,93 @@ void printToWebClient_prognrdescaddr(){
  *    client object
  *    led0   output pin 3
  * *************************************************************** */
-void Ipwe() {
-  printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n"));
+ void Ipwe() {
+   int i;
+   int counter = 0;
+   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
+   printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+   printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+   for (i=0; i < numIPWESensors; i++) {
+     if(!ipwe_parameters[i]) continue;
+     query(ipwe_parameters[i]);
+     counter++;
+     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+     printToWebClient_prognrdescaddr();
+     printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+   }
 
-  int i;
-  int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
-  printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
+ #ifdef AVERAGES
+   if(logAverageValues){
+     for (int i=0; i<numAverages; i++) {
+       if (avg_parameters[i] > 0) {
+         counter++;
+         query(20050 + i);
+         printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
+         printToWebClient(PSTR("<br></td><td>"));
+         printToWebClient_prognrdescaddr();
+         printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(STR_IPWEZERO);
+         printToWebClient(PSTR("</tr>"));
+       }
+     }
+   }
+ #endif
 
-  printToWebClient(PSTR("<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
-  for (i=0; i < numIPWESensors; i++) {
-    if(!ipwe_parameters[i]) continue;
-    query(ipwe_parameters[i]);
-    counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printToWebClient_prognrdescaddr();
-    printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
-    printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-  }
+ #ifdef ONE_WIRE_BUS
+   if(enableOneWireBus){
+     // output of one wire sensors
+     for(i=0;i<numSensors * 2;i += 2){
+       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+       query(i + 20300);
+       printToWebClient(decodedTelegram.value);
+       query(i + 20301);
+       printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(STR_IPWEZERO);
+       printToWebClient(PSTR("</tr>"));
+     }
+   }
+ #endif
 
-#ifdef AVERAGES
-  if(logAverageValues){
-    for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i] > 0) {
-        counter++;
-        query(20050 + i);
-        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-        printToWebClient(PSTR("<br></td><td>"));
-        printToWebClient_prognrdescaddr();
-        printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s"), decodedTelegram.value, decodedTelegram.unit);
-        printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-      }
-    }
-  }
-#endif
+ #ifdef DHT_BUS
+   // output of DHT sensors
+   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
+   for(i=0;i<numDHTSensors;i++){
+     if(!DHT_Pins[i]) continue;
+     query(20101 + i * 4);
+     counter++;
+     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+     printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
+     printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+     counter++;
+     query(20102 + i * 4);
+     printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d<br></td><td>"), counter);
+     printFmtToWebClient(PSTR("DHT sensor %d humidity<br></td>"), DHT_Pins[i]);
+     printToWebClient(STR_IPWEZERO);
+     printFmtToWebClient(PSTR("<td>%s<br></td>"), decodedTelegram.value);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(STR_IPWEZERO);
+     printToWebClient(PSTR("</tr>"));
+   }
+ #endif
 
-#ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
-    // output of one wire sensors
-    for(i=0;i<numSensors * 2;i += 2){
-      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-      query(i + 20300);
-      printToWebClient(decodedTelegram.value);
-      query(i + 20301);
-      printFmtToWebClient(PSTR("<br></td><td>%s<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"), decodedTelegram.value);
-    }
-  }
-#endif
+   printToWebClient(PSTR("</tbody></table></form></body></html>\r\n\r\n"));
+   forcedflushToWebClient();
+ }
 
-#ifdef DHT_BUS
-  // output of DHT sensors
-  int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
-  for(i=0;i<numDHTSensors;i++){
-    if(!DHT_Pins[i]) continue;
-    query(20101 + i * 4);
-    counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
-    printFmtToWebClient(PSTR("<br></td><td>%s"), decodedTelegram.value);
-    printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td><td>0<br></td></tr>"));
-    counter++;
-    query(20102 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d"), counter);
-    printToWebClient(PSTR("<br></td><td>"));
-    printFmtToWebClient(PSTR("DHT sensor %d humidity"), DHT_Pins[i]);
-    printFmtToWebClient(PSTR("<br></td><td>0<br></td><td>%s"), decodedTelegram.value);
-    printToWebClient(PSTR("<br></td><td>0<br></td><td>0<br></td></tr>"));
-  }
-#endif
-
-  printToWebClient(PSTR("</tbody></table></form>"));
-  flushToWebClient();
-}
-
-#endif    // --- Ipwe() ---
+ #endif    // --- Ipwe() ---
 
 /** *****************************************************************
  *  Function: setPPS()
@@ -5549,7 +5710,7 @@ void loop() {
         }
 
         if(cmd==0x31000212) {    // TWW Status
-          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]); 
+          printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);
 
           if((msg[11] & 0x08) == 0x08) {  // See parameter 1602
             if(TWW_start==0){        // has not been timed
@@ -6147,6 +6308,7 @@ uint8_t pps_offset = 0;
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
+          printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -6161,28 +6323,30 @@ uint8_t pps_offset = 0;
 //        client.flush();
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
-        String urlString = String(cLineBuffer);
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
-        if (urlString.substring(0, urlString.indexOf('/')).indexOf("HEAD") != -1 ) httpflags |= HTTP_HEAD;
+        if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
+          httpflags |= HTTP_HEAD;
 #endif
-        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-        urlString.toCharArray(cLineBuffer, MaxArrayElement);
+        char *u_s = strchr(cLineBuffer,' ');
+        char *u_e = strchr(u_s + 1,' ');
+        if(u_e) u_e[0] = 0;
+        strcpy(cLineBuffer, u_s + 1);
         printlnToDebug(cLineBuffer);
-
 // IPWE START
 #ifdef IPWE
-        if (enable_ipwe && urlString == "/ipwe.cgi") {
+        if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
           Ipwe();
           break;
         }
 #endif
 // IPWE END
 
-        if (urlString == "/favicon.ico") {
-          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: image/x-icon\r\n\r\n"));
+        if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
+          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
-          File dataFile = SD.open(urlString + 1);
+          File dataFile = SD.open(cLineBuffer + 1);
           if (dataFile) {
             flushToWebClient();
             transmitFile(dataFile);
@@ -6222,47 +6386,36 @@ uint8_t pps_offset = 0;
 
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
-        if(!strcmp(p,"/")){
-          urlString = F("index.html");
-          printlnToDebug(PSTR("index.html"));
+        if(!strcmp_P(p, PSTR("/"))){
+          strcpy_P(p + 1, PSTR("index.html"));
         }
-        else {
-          urlString = String(p + 1);
-          printlnToDebug(p + 1);
+          printlnToDebug(p);
+        char *dot = strchr(p, '.');
+        char *dot_t = NULL;
+        while(dot){
+          dot_t = ++dot;//next symbol after dot
+          dot = strchr(dot, '.');
         }
-        int mimetype = urlString.lastIndexOf('.'); //0 = unknown MIME type
-        //local reuse mimetype variable
-        if(mimetype > -1) {
-          mimetype++; //next symbol after dot
-          String str = urlString.substring(mimetype);
-          str.toLowerCase();
-          mimetype = 0; // unknown MIME type
-          if (str.equals(F("html")) || str.equals(F("htm"))) mimetype = 1;
-          else if(str.equals(F("css"))) mimetype = 2;
-          else if(str.equals(F("js"))) mimetype = 3;
-          else if(str.equals(F("xml"))) mimetype = 4;
-          else if(str.equals(F("txt"))) mimetype = 5;
-          else if(str.equals(F("jpg"))) mimetype = 101;
-          else if(str.equals(F("gif"))) mimetype = 102;
-          else if(str.equals(F("svg"))) mimetype = 103;
-          else if(str.equals(F("png"))) mimetype = 104;
-          else if(str.equals(F("ico"))) mimetype = 105;
-          else if(str.equals(F("gz"))) mimetype = 201;
-          // You can add more MIME types here
-          }
-        else
-          mimetype = 0; // unknown MIME type
+        dot = dot_t;
+
+        int mimetype = recognize_mime(dot); //0 = unknown MIME type
 
         if(mimetype)  {
           File dataFile;
           const char *getfarstrings;
 
           // client browser accept gzip
-          if ((httpflags & HTTP_GZIP)) dataFile = SD.open(urlString + ".gz");
+          int suffix = 0;
+          if ((httpflags & HTTP_GZIP)) {
+            suffix = strlen(p);
+            strcpy_P(p + suffix, PSTR(".gz"));
+            dataFile = SD.open(p);
+          }
           if (!dataFile) {
             // reuse httpflags
-            bitClear(httpflags, HTTP_AUTH); //can't use gzip because no gzipped file
-            dataFile = SD.open(urlString);
+            if(suffix) p[suffix] = 0;
+            httpflags &= ~HTTP_GZIP; //can't use gzip because no gzipped file
+            dataFile = SD.open(p);
           }
           // if the file is available, read from it:
           if (dataFile) {
@@ -6280,37 +6433,19 @@ uint8_t pps_offset = 0;
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
               if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize) + 1)) {
                 // reuse httpflags
-                bitClear(httpflags, HTTP_AUTH+HTTP_GZIP); //ETag not match
+                httpflags &= ~HTTP_ETAG; //ETag not match
               }
             }
 
             printToDebug(PSTR("File opened from SD: "));
-            urlString.toCharArray(DebugBuff, OUTBUF_LEN);
-            printToDebug(DebugBuff);
+            printToDebug(p);
 
-            printToWebClient(PSTR("HTTP/1.1 ")); // 10 bytes with zero
-            if((httpflags & HTTP_ETAG))
-              printToWebClient(PSTR("304 Not Modified\r\n")); // 18 bytes with zero
+            uint16_t code = 0;
+            if((httpflags & 8))
+              code = HTTP_NOT_MODIFIED;
             else
-              printToWebClient(PSTR("200 OK\r\n")); // 8 bytes with zero
-            printToWebClient(PSTR("Content-Type: ")); // 15 bytes with zero
-            switch(mimetype){
-              case 1: getfarstrings = PSTR("text/html\r\n"); break;
-              case 2: getfarstrings = PSTR("text/css\r\n"); break;
-              case 3: getfarstrings = PSTR("application/x-javascript\r\n"); break;
-              case 4: getfarstrings = PSTR("application/xml\r\n"); break;
-              // case 5 below
-              case 101: getfarstrings = PSTR("image/jpeg\r\n"); break;
-              case 102: getfarstrings = PSTR("image/gif\r\n"); break;
-              case 103: getfarstrings = PSTR("image/svg\r\n"); break;
-              case 104: getfarstrings = PSTR("image/png\r\n"); break;
-              case 105: getfarstrings = PSTR("image/x-icon\r\n"); break;
-              case 201: getfarstrings = PSTR("application/x-gzip\r\n"); break;
-              case 5:
-              default: getfarstrings = PSTR("text\r\n");
-            }
-            printToWebClient(getfarstrings);
-            if((httpflags & HTTP_GZIP)) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+              code = HTTP_OK;
+            printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_AUTO_CACHE_AGE);
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6347,7 +6482,7 @@ uint8_t pps_offset = 0;
               printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
-            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\nCache-Control: max-age=300, public\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
@@ -6360,12 +6495,13 @@ uint8_t pps_offset = 0;
           else
           {
           // simply print the website if no index.html on SD card
-            if(!strcmp(p,"/")){
+            if(!strcmp_P(p, PSTR("/"))){
               webPrintSite();
               break;
             }
-            int x = printToWebClient(PSTR("HTTP/1.1 404 Not Found\r\nContent-Type: text/html\r\n\r\n<h2>File not found!</h2><br>File name: "));
-            urlString.toCharArray(bigBuff + x, OUTBUF_LEN * 3 - x);
+            printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+            printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
+            printToWebClient(p);
             flushToWebClient();
            }
           client.flush();
@@ -6378,7 +6514,7 @@ uint8_t pps_offset = 0;
         }
 #ifndef WEBSERVER
         // simply print the website
-        if(!strcmp(p,"/")){
+        if(!strcmp_P(p, PSTR("/"))){
           webPrintSite();
           break;
         }
@@ -6617,63 +6753,52 @@ uint8_t pps_offset = 0;
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu...<BR>\r\n"), found_ids[x]);
+            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
             uint16_t l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
-            query(6225);
+            query_program_and_print_result(6225, PSTR("<BR>\r\n"), NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR(STR6225_TEXT ": %s\r\n"), decodedTelegram.value);
-            query(6226);
+            query_program_and_print_result(6226, PSTR("<BR>\r\n"), NULL);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
-            printFmtToWebClient(PSTR("<BR>" STR6226_TEXT ": %s\r\n"), decodedTelegram.value);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
-            printToWebClient(PSTR("<BR>" STR6224_TEXT ": "));
-            query(6224); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6220_TEXT ": "));
-            query(6220); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6221_TEXT ": "));
-            query(6221); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6227_TEXT ": "));
-            query(6227); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6228_TEXT ": "));
-            query(6228); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6229_TEXT ": "));
-            query(6229); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6231_TEXT ": "));
-            query(6231); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6232_TEXT ": "));
-            query(6232); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6233_TEXT ": "));
-            query(6233); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6234_TEXT ": "));
-            query(6234); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6235_TEXT ": "));
-            query(6235); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
-            query(6223); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6236_TEXT ": "));
-            query(6236); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR6223_TEXT ": "));
-            query(6237); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10003): "));
-            query(10003); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR>" STR8700_TEXT " (10004): "));
-            query(10004); printToWebClient(build_pvalstr(0));
-            printToWebClient(PSTR("\r\n<BR><BR>\r\n"));
+
+            for(uint16_t q = 0; q < sizeof(proglist4q)/sizeof(int); q++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(proglist4q) + (q) * sizeof(proglist4q[0]));
+#else
+              prognr = proglist4q[q];
+#endif
+              query_program_and_print_result(prognr, PSTR("<BR>\r\n"), NULL);
+            }
+            query_program_and_print_result(10003, PSTR("<BR>\r\n"), PSTR(" (10003): "));
+            query_program_and_print_result(10004, PSTR("<BR>\r\n"), PSTR(" (10004): "));
+            printToWebClient(PSTR("<BR>\r\n"));
             flushToWebClient();
 
-            int params[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
-            for (int i=0; i<15; i++) {
-              printFmtToWebClient(PSTR("%d;"), params[i]);
+            for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
+#else
+              prognr = params4q[i];
+#endif
+              printFmtToWebClient(PSTR("%d;"), prognr);
             }
             printToWebClient(PSTR("<BR>\r\n"));
-            for (int i=0; i<15; i++) {
-              query(params[i]); printToWebClient(decodedTelegram.value);
+            for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
+              int prognr = 0;
+#if defined(__AVR__)
+              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
+#else
+              prognr = params4q[i];
+#endif
+              query(prognr); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
             }
 
@@ -6695,7 +6820,7 @@ uint8_t pps_offset = 0;
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
                 printFmtToDebug(PSTR("%02X\r\n"), c);
                 if(!bus->Send(TYPE_QUR, c, msg, tx_msg)){
-                  printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+                  print_bus_send_failed();
                 } else {
                   if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
                     // Decode the xmit telegram and send it to the PC serial interface
@@ -6754,7 +6879,7 @@ uint8_t pps_offset = 0;
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
             if(!bus->Send(type, c, msg, tx_msg)){
-              printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+              print_bus_send_failed();
             }else{
               // Decode the xmit telegram and send it to the PC serial interface
               printTelegram(tx_msg, -1);
@@ -6804,7 +6929,8 @@ uint8_t pps_offset = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: application/json; charset=utf-8\r\n\r\n{\r\n"));
+          printHTTPheader(HTTP_OK, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+          printToWebClient(PSTR("\r\n{\r\n"));
           if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
@@ -7186,7 +7312,8 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            printToWebClient(PSTR("HTTP/1.1 200 OK\r\nContent-Type: text/plain; charset=utf-8\r\n\r\n"));
+            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
             if (p[2]=='J') { //journal
