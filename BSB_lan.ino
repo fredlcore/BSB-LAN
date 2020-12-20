@@ -6441,7 +6441,7 @@ uint8_t pps_offset = 0;
             printToDebug(p);
 
             uint16_t code = 0;
-            if((httpflags & 8))
+            if((httpflags & HTTP_ETAG))
               code = HTTP_NOT_MODIFIED;
             else
               code = HTTP_OK;
