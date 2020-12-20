@@ -353,7 +353,7 @@ const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
 const char STR_OPTION_VALUE[] PROGMEM = "<option value='";
-const char STR_OPTION[] PROGMEM = "</option>\r\n";
+const char STR_CLOSE_OPTION[] PROGMEM = "</option>\r\n";
 const char STR_SELECTED[] PROGMEM = "' selected>";
 
 

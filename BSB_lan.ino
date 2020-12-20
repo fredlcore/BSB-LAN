@@ -3930,7 +3930,7 @@ void generateChangeConfigPage(){
            }
            uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
            uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)variable[0], 0, false);
+           listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)variable[0], 0, false);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -3957,7 +3957,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, variable[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, variable[0], 0, false);
            }
            break;}
          }
@@ -3978,7 +3978,7 @@ void generateChangeConfigPage(){
            if(i > 0){
              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, ((uint16_t *)variable)[0], 0, false);
+             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, ((uint16_t *)variable)[0], 0, false);
            }
            break;}
          }
@@ -4895,19 +4895,19 @@ void query_printHTML(){
               printToWebClient(STR_OPTION_VALUE);
               printFmtToWebClient(PSTR("%d"), val);
               if ((bitvalue & bitmask) == (val & bitmask)) {
-                printToWebClient(PSTR("' SELECTED>"));
+                printToWebClient(STR_SELECTED);
               } else {
                 printToWebClient(PSTR("'>"));
               }
               c += printToWebClient(decodedTelegram.enumstr+c);
-              printToWebClient(PSTR("</option>"));
+              printToWebClient(STR_CLOSE_OPTION);
               c++;
             }
           } else {
             if((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0){
               num_pvalstr = 1;
             }
-            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_OPTION, NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
+            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)num_pvalstr, 0, decodedTelegram.type==VT_ENUM?true:false);
           }
           printToWebClient(PSTR("</select></td><td>"));
           if (!decodedTelegram.readonly) {
