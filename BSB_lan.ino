@@ -395,6 +395,34 @@
 #define HTTP_ETAG 8
 #define HTTP_FRAG 128
 
+#define HTTP_FILE_NOT_GZIPPED false
+#define HTTP_FILE_GZIPPED true
+
+#define HTTP_ADD_CHARSET_TO_HEADER true
+#define HTTP_DO_NOT_ADD_CHARSET_TO_HEADER false
+#define HTTP_DO_NOT_CACHE -1
+#define HTTP_AUTO_CACHE_AGE 0
+
+#define HTTP_OK 200
+#define HTTP_NOT_MODIFIED 304
+#define HTTP_AUTH_REQUIRED 401
+#define HTTP_NOT_FOUND 404
+
+#define MIME_TYPE_TEXT_HTML 1
+#define MIME_TYPE_TEXT_CSS 2
+#define MIME_TYPE_APP_JS 3
+#define MIME_TYPE_APP_XML 4
+#define MIME_TYPE_TEXT_TEXT 5
+#define MIME_TYPE_APP_JSON 6
+#define MIME_TYPE_TEXT_PLAIN 7
+#define MIME_TYPE_IMAGE_JPEG 101
+#define MIME_TYPE_IMAGE_GIF 102
+#define MIME_TYPE_IMAGE_SVG 103
+#define MIME_TYPE_IMAGE_PNG 104
+#define MIME_TYPE_IMAGE_ICON 105
+#define MIME_TYPE_APP_GZ 201
+
+
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
@@ -987,32 +1015,32 @@ void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean is
   long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
   printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
   switch(code){
-    case 200: printToWebClient(PSTR("OK")); break;
-    case 304: printToWebClient(PSTR("Not Modified")); break;
-    case 401: printToWebClient(PSTR("Authorization Required")); break;
-    case 404: printToWebClient(PSTR("Not Found")); break;
+    case HTTP_OK: printToWebClient(PSTR("OK")); break;
+    case HTTP_NOT_MODIFIED: printToWebClient(PSTR("Not Modified")); break;
+    case HTTP_AUTH_REQUIRED: printToWebClient(PSTR("Authorization Required")); break;
+    case HTTP_NOT_FOUND: printToWebClient(PSTR("Not Found")); break;
     default: break;
   }
   printToWebClient(PSTR("\r\nContent-Type: ")); // 17 bytes with zero
   switch(mimetype){
-    case 1: getfarstrings = PSTR("text/html"); break;
-    case 2: getfarstrings = PSTR("text/css"); break;
-    case 3: getfarstrings = PSTR("application/x-javascript"); break;
-    case 4: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = -1; break;
+    case MIME_TYPE_TEXT_HTML: getfarstrings = PSTR("text/html"); break;
+    case MIME_TYPE_TEXT_CSS: getfarstrings = PSTR("text/css"); break;
+    case MIME_TYPE_APP_JS: getfarstrings = PSTR("application/x-javascript"); break;
+    case MIME_TYPE_APP_XML: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
     // case 5 below
-    case 6: getfarstrings = PSTR("application/json"); autoDetectCachingTime = -1; break;
-    case 7: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = -1; break;
-    case 101: getfarstrings = PSTR("image/jpeg"); break;
-    case 102: getfarstrings = PSTR("image/gif"); break;
-    case 103: getfarstrings = PSTR("image/svg"); break;
-    case 104: getfarstrings = PSTR("image/png"); break;
-    case 105: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
-    case 201: getfarstrings = PSTR("application/x-gzip"); break;
-    case 5:
-    default: getfarstrings = PSTR("text"); autoDetectCachingTime = -1; break;
+    case MIME_TYPE_APP_JSON: getfarstrings = PSTR("application/json"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
+    case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
+    case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg"); break;
+    case MIME_TYPE_IMAGE_PNG: getfarstrings = PSTR("image/png"); break;
+    case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
+    case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
+    case MIME_TYPE_TEXT_TEXT:
+    default: getfarstrings = PSTR("text"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
   }
   printToWebClient(getfarstrings);
-  if(cachingTime == 0)cachingTime = autoDetectCachingTime;
+  if(cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
   if(addcharset)printToWebClient(PSTR("; charset=utf-8"));
   printToWebClient(PSTR("\r\n"));
 if(isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
@@ -1040,17 +1068,17 @@ int recognize_mime(char *str) {
     i++;
   }
 
-  if (!strcmp_P(mimebuf, PSTR("html")) || !strcmp_P(mimebuf, PSTR("htm"))) mimetype = 1;
-  else if(!strcmp_P(mimebuf, PSTR("css"))) mimetype = 2;
-  else if(!strcmp_P(mimebuf, PSTR("js"))) mimetype = 3;
-  else if(!strcmp_P(mimebuf, PSTR("xml"))) mimetype = 4;
-  else if(!strcmp_P(mimebuf, PSTR("txt"))) mimetype = 5;
-  else if(!strcmp_P(mimebuf, PSTR("jpg"))) mimetype = 101;
-  else if(!strcmp_P(mimebuf, PSTR("gif"))) mimetype = 102;
-  else if(!strcmp_P(mimebuf, PSTR("svg"))) mimetype = 103;
-  else if(!strcmp_P(mimebuf, PSTR("png"))) mimetype = 104;
-  else if(!strcmp_P(mimebuf, PSTR("ico"))) mimetype = 105;
-  else if(!strcmp_P(mimebuf, PSTR("gz"))) mimetype = 201;
+  if (!strcmp_P(mimebuf, PSTR("html")) || !strcmp_P(mimebuf, PSTR("htm"))) mimetype = MIME_TYPE_TEXT_HTML;
+  else if(!strcmp_P(mimebuf, PSTR("css"))) mimetype = MIME_TYPE_TEXT_CSS;
+  else if(!strcmp_P(mimebuf, PSTR("js"))) mimetype = MIME_TYPE_APP_JS;
+  else if(!strcmp_P(mimebuf, PSTR("xml"))) mimetype = MIME_TYPE_APP_XML;
+  else if(!strcmp_P(mimebuf, PSTR("txt"))) mimetype = MIME_TYPE_TEXT_TEXT;
+  else if(!strcmp_P(mimebuf, PSTR("jpg"))) mimetype = MIME_TYPE_IMAGE_JPEG;
+  else if(!strcmp_P(mimebuf, PSTR("gif"))) mimetype = MIME_TYPE_IMAGE_GIF;
+  else if(!strcmp_P(mimebuf, PSTR("svg"))) mimetype = MIME_TYPE_IMAGE_SVG;
+  else if(!strcmp_P(mimebuf, PSTR("png"))) mimetype = MIME_TYPE_IMAGE_PNG;
+  else if(!strcmp_P(mimebuf, PSTR("ico"))) mimetype = MIME_TYPE_IMAGE_ICON;
+  else if(!strcmp_P(mimebuf, PSTR("gz"))) mimetype = MIME_TYPE_APP_GZ;
 //          else mimetype = 0;
   // You can add more MIME types here
   return mimetype;
@@ -3270,17 +3298,6 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 //  if (bigBuffPos > 0) flushToWebClient();
 }
 
-void print_header_TD(void){
-  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
-}
-void print_header_close_TD(void){
-  printToWebClient(PSTR("</a></td>"));
-}
-void print_aHref(void){
-  printToWebClient(PSTR("<a href='/"));
-  printPassKey();
-}
-
 
 /** *****************************************************************
  *  Function:  webPrintHeader()
@@ -3296,67 +3313,73 @@ void print_aHref(void){
  * *************************************************************** */
  void webPrintHeader(void){
    flushToWebClient();
-   printHTTPheader(200, 1, true, false, -1);
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
  #if defined(__AVR__)
    printPStr(pgm_get_far_address(header_html), sizeof(header_html));
  #else
    printPStr(header_html, sizeof(header_html));
  #endif
 
-   print_aHref();
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
    printToWebClient(PSTR("' ID=main_link>BSB-LAN Web</A></h1></center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
-   print_header_TD();
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   print_aHref();
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
    printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-   print_header_close_TD();
-   print_header_TD();
-   print_aHref();
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
    printToWebClient(PSTR("K49'>" MENU_TEXT_SNS));
 
-   print_header_close_TD();
-   print_header_TD();
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
    if(!logCurrentValues)
    printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
    else{
-   print_aHref();
-   printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
-   print_header_close_TD();
+     printToWebClient(PSTR("<a href='/"));
+     printPassKey();
+     printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
+     printToWebClient(PSTR("</a></td>"));
    }
 
-   print_header_TD();
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   print_aHref();
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
    printToWebClient(PSTR("Q'>" MENU_TEXT_CHK));
-   print_header_close_TD();
+   printToWebClient(PSTR("</a></td>"));
 
    printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
-   print_header_TD();
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   print_aHref();
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
    printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
- //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
- print_header_close_TD();
-   print_header_TD();
+   //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
    printToWebClient(PSTR("<a href='"));
    printToWebClient(PSTR(MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
 
-   print_header_close_TD();
-   print_header_TD();
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
    printToWebClient(PSTR("<a href='"));
    printToWebClient(PSTR(MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC));
-   print_header_close_TD();
-   print_header_TD();
+   printToWebClient(PSTR("</a></td>"));
+   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
    printToWebClient(PSTR("<a href='"));
    printToWebClient(PSTR(MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ));
-   print_header_close_TD();
+   printToWebClient(PSTR("</a></td>"));
 
  //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
    printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
@@ -4346,7 +4369,11 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MINUTES:
       {
       uint32_t t = 0;
-      t=atof(val)*operand;
+      if (val[0] == '-') {
+        t=((int)(atof(val)*operand));
+      } else {
+        t=atof(val)*operand;
+      }
       for (int x=payload_length;x>0;x--) {
         param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
@@ -4436,7 +4463,7 @@ int set(int line      // the ProgNr of the heater parameter
     // Temperature values, mult=64
     case VT_TEMP:
       {
-      uint32_t t=atof(val)*operand;
+      uint32_t t=((int)(atof(val)*operand));
       if(setcmd){
         param[0]=enable_byte;
         param[1]=(t >> 8);
@@ -5377,7 +5404,7 @@ void printToWebClient_prognrdescaddr(){
    int counter = 0;
    int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
    printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
-   printHTTPheader(200, 1, true, false, -1);
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
    printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
    for (i=0; i < numIPWESensors; i++) {
      if(!ipwe_parameters[i]) continue;
@@ -6281,7 +6308,7 @@ uint8_t pps_offset = 0;
         }
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
-          printHTTPheader(401, 1, true, false, -1);
+          printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
 #else
@@ -6316,7 +6343,7 @@ uint8_t pps_offset = 0;
 // IPWE END
 
         if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
-          printHTTPheader(200, 105, false, false, 0);
+          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(cLineBuffer + 1);
@@ -6415,10 +6442,10 @@ uint8_t pps_offset = 0;
 
             uint16_t code = 0;
             if((httpflags & 8))
-              code = 304;
+              code = HTTP_NOT_MODIFIED;
             else
-              code = 200;
-            printHTTPheader(code, mimetype, false, (httpflags & HTTP_GZIP), 0);
+              code = HTTP_OK;
+            printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_AUTO_CACHE_AGE);
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -6472,7 +6499,7 @@ uint8_t pps_offset = 0;
               webPrintSite();
               break;
             }
-            printHTTPheader(404, 1, true, false, -1);
+            printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
             flushToWebClient();
@@ -6902,7 +6929,7 @@ uint8_t pps_offset = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
 
-          printHTTPheader(200, 6, true, false, -1);
+          printHTTPheader(HTTP_OK, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
           printToWebClient(PSTR("\r\n{\r\n"));
           if(strchr("ACIKQRS",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
@@ -7285,7 +7312,7 @@ uint8_t pps_offset = 0;
 #endif
             webPrintFooter();
           } else {  // dump datalog or journal file
-            printHTTPheader(200, 7, true, false, 0);
+            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
