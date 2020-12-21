@@ -410,6 +410,7 @@ UIStrings["STR9527_TEXT"] = "Speed required at high-fire";
 UIStrings["STR9540_TEXT"] = "After-ventilation time";
 UIStrings["STR9560_TEXT"] = "Fan modulation for full charging of strat. tank";
 UIStrings["STR9563_TEXT"] = "Fan speed for full charging of stratific. tank";
+UIStrings["STR10100_TEXT"] = "System status";
 
 UIStrings["ENUM8004_02_TEXT"] = "Fault";
 UIStrings["ENUM8004_04_TEXT"] = "Manual control active";
