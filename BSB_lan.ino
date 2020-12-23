@@ -393,6 +393,7 @@
 #define HTTP_GZIP 2
 #define HTTP_HEAD 4
 #define HTTP_ETAG 8
+#define HTTP_GET_ROOT 16
 #define HTTP_FRAG 128
 
 #define HTTP_FILE_NOT_GZIPPED false
@@ -1522,7 +1523,7 @@ void printcantalloc(void){
  *   none
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
-  if(nr >= 20000 && nr < 20006){ return 1;}
+  if(nr >= 20000 && nr < 20007){ return 1;}
 #ifdef AVERAGES
   else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
 #endif
@@ -1821,6 +1822,9 @@ void loadPrognrElementsFromTable(int nr, int i){
   if (i<0) i = findLine(19999,0,NULL); // Using "Unknown command" if not found
   decodedTelegram.prognrdescaddr = get_cmdtbl_desc(i);
   decodedTelegram.type = get_cmdtbl_type(i);
+  decodedTelegram.cat=get_cmdtbl_category(i);
+  decodedTelegram.enumstr_len=get_cmdtbl_enumstr_len(i);
+  decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
   uint8_t flags=get_cmdtbl_flags(i);
   if (programIsreadOnly(flags))
     decodedTelegram.readonly = 1;
@@ -1854,14 +1858,13 @@ void loadPrognrElementsFromTable(int nr, int i){
 
   decodedTelegram.sensorid = 0;
   if(nr >= 20000){ //Virtual programs. do not forget sync changes with findline()
-    decodedTelegram.readonly = 1;
     decodedTelegram.prognr = nr;
     switch(recognizeVirtualFunctionGroup(nr)){
-      case 1: decodedTelegram.cat=CAT_USERSENSORS; break;
-      case 2: decodedTelegram.cat=CAT_USERSENSORS; break;
-      case 3: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
-      case 4: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
-      case 5: decodedTelegram.cat=CAT_USERSENSORS; decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
+      case 1: break;
+      case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readonly = 1; break; //overwrite native program categories with CAT_USERSENSORS
+      case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
+      case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
+      case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
     }
   }
 }
@@ -2430,8 +2433,6 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
  * *************************************************************** */
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint16_t val = 0;
-  decodedTelegram.enumstr = enumstr;
-  decodedTelegram.enumstr_len = enumstr_len;
   decodedTelegram.enumdescaddr = 0;
   if(enumstr!=0){
     uint16_t c=0;
@@ -2718,6 +2719,28 @@ void remove_char(char* str, char c) {
   *pw = '\0';
 }
 
+void resetDurations(){
+  brenner_duration=0;
+  brenner_count=0;
+  brenner_duration_2=0;
+  brenner_count_2=0;
+  TWW_duration=0;
+  TWW_count=0;
+}
+
+//Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
+void loadCategoryDescAddr(){
+#if defined(__AVR__)
+  printENUM(pgm_get_far_address(ENUM_CAT), sizeof(ENUM_CAT), decodedTelegram.cat, 0);
+#else
+  printENUM(ENUM_CAT, sizeof(ENUM_CAT), decodedTelegram.cat, 0);
+#endif
+  decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
+  decodedTelegram.enumdescaddr = 0;
+  decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
+}
+
+
 /** *****************************************************************
  *  Function:  printTelegram()
  *  Does:      Send the decoded telegram content to the hardware
@@ -2890,18 +2913,8 @@ void printTelegram(byte* msg, int query_line) {
     printFmtToDebug(PSTR("%4ld "),decodedTelegram.prognr);
 
     // print category
-    decodedTelegram.cat=get_cmdtbl_category(i);
     loadPrognrElementsFromTable(query_line, i);
-    int len=sizeof(ENUM_CAT);
-
-#if defined(__AVR__)
-    printENUM(pgm_get_far_address(ENUM_CAT),len,decodedTelegram.cat,0);
-#else
-    printENUM(ENUM_CAT,len,decodedTelegram.cat,0);
-#endif
-    decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
-    decodedTelegram.enumdescaddr = 0;
-    decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
+    loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
 
     printToDebug(PSTR(" - "));
     // print menue text
@@ -3084,16 +3097,14 @@ void printTelegram(byte* msg, int query_line) {
 */
             case VT_ENUM: // enum
               if(data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
-                uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-                uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
                 if((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
-                  if(enumstr!=0) {
+                  if(decodedTelegram.enumstr!=0) {
                     if (data_len == 2) {
-                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+1],1);
+                      printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+1],1);
                     } else {                            // Fujitsu: data_len == 3
                       uint8_t pps_offset = 0;
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
-                      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
+                      printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   }else{
                     decodedTelegram.error = 259;
@@ -3101,8 +3112,6 @@ void printTelegram(byte* msg, int query_line) {
                     SerialPrintData(msg);
                   }
                 }else{
-                  decodedTelegram.enumstr = enumstr;
-                  decodedTelegram.enumstr_len = enumstr_len;
                   strcpy_P(decodedTelegram.value, PSTR("65535"));
 #if defined(__AVR__)
                   decodedTelegram.enumdescaddr = pgm_get_far_address(STR_DISABLED);
@@ -3198,8 +3207,7 @@ void printTelegram(byte* msg, int query_line) {
                   } else {
                     lval=long(msg[bus->getPl_start()+1]);
                   }
-                  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-                  printENUM(calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len),enumstr_len,lval,1);
+                  printENUM(decodedTelegram.enumstr, decodedTelegram.enumstr_len,lval,1);
                 } else {
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
@@ -4526,20 +4534,19 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
-  uint8_t type=get_cmdtbl_type(i);
-#if defined(__AVR__)
-  uint8_t enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + type * sizeof(optbl[0]));
-  uint8_t payload_length=pgm_read_byte_far(pgm_get_far_address(optbl[0].payload_length) + type * sizeof(optbl[0]));
-  float operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + type * sizeof(optbl[0]));
-#else
-  uint8_t enable_byte=optbl[type].enable_byte;
-  uint8_t payload_length=optbl[type].payload_length;
-  float operand=optbl[type].operand;
-#endif
+  loadPrognrElementsFromTable(line, i);
+
+  if((line >= 20000 && line < 20700)) //virtual functions handler
+    {
+      switch(line){
+        case 20006: if(atoi(val)) resetDurations(); return 1; // reset furnace duration
+      }
+      return 2;
+    }
 
   if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
     int cmd_no = line - 15000;
-    switch (type) {
+    switch (decodedTelegram.type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
       case VT_HOUR_MINUTES:
       {
@@ -4565,7 +4572,7 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
   // Get the parameter type from the table row[i]
-  switch(type) {
+  switch(decodedTelegram.type) {
     // ---------------------------------------------
     // No input values sanity check
 
@@ -4625,19 +4632,19 @@ int set(int line      // the ProgNr of the heater parameter
       {
       uint32_t t = 0;
       if (val[0] == '-') {
-        t=((int)(atof(val)*operand));
+        t=((int)(atof(val)*decodedTelegram.operand));
       } else {
-        t=atof(val)*operand;
+        t=atof(val)*decodedTelegram.operand;
       }
-      for (int x=payload_length;x>0;x--) {
-        param[payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
+      for (int x=decodedTelegram.payload_length;x>0;x--) {
+        param[decodedTelegram.payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
-      if(val[0] == '\0' || (type == VT_ENUM && t == 0xFFFF)){
-        param[0]=enable_byte-1;  // disable
+      if(val[0] == '\0' || (decodedTelegram.type == VT_ENUM && t == 0xFFFF)){
+        param[0]=decodedTelegram.enable_byte-1;  // disable
       }else{
-        param[0]=enable_byte;  //enable
+        param[0]=decodedTelegram.enable_byte;  //enable
       }
-      param_len=payload_length + 1;
+      param_len=decodedTelegram.payload_length + 1;
       }
       break;
 
@@ -4647,13 +4654,13 @@ int set(int line      // the ProgNr of the heater parameter
       {
       if(val[0]!='\0'){
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
-        param[0]=enable_byte;  //enable
+        param[0]=decodedTelegram.enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
         param[3]=(t >> 8) & 0xff;
         param[4]= t & 0xff;
       }else{
-        param[0]=enable_byte-1;  // disable
+        param[0]=decodedTelegram.enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
         param[3]=0x00;
@@ -4675,11 +4682,11 @@ int set(int line      // the ProgNr of the heater parameter
           val++;
           m=atoi(val);
         }
-        param[0]=enable_byte;  //enable
+        param[0]=decodedTelegram.enable_byte;  //enable
         param[1]= h;
         param[2]= m;
       }else{
-        param[0]=enable_byte-1;  // disable
+        param[0]=decodedTelegram.enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
       }
@@ -4701,7 +4708,7 @@ int set(int line      // the ProgNr of the heater parameter
       {
       uint16_t t=atof(val)*1000.0;
       if(setcmd){
-        param[0]=enable_byte;
+        param[0]=decodedTelegram.enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       }else{ // INF message type (e.g. for room temperature)
@@ -4718,14 +4725,14 @@ int set(int line      // the ProgNr of the heater parameter
     // Temperature values, mult=64
     case VT_TEMP:
       {
-      uint32_t t=((int)(atof(val)*operand));
+      uint32_t t=((int)(atof(val)*decodedTelegram.operand));
       if(setcmd){
-        param[0]=enable_byte;
+        param[0]=decodedTelegram.enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       }else{ // INF message type
         if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
-          param[0]=enable_byte-1;
+          param[0]=decodedTelegram.enable_byte-1;
           param[1]=(t >> 8);
           param[2]= t & 0xff;
         } else {  // Case for room temperature
@@ -4754,7 +4761,7 @@ int set(int line      // the ProgNr of the heater parameter
       printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
 
       // Set up the command payload
-      param[0]=enable_byte;
+      param[0]=decodedTelegram.enable_byte;
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
@@ -4817,11 +4824,11 @@ int set(int line      // the ProgNr of the heater parameter
           int d,m;
           if(2!=sscanf(val,"%d.%d.",&d,&m))
             return 0;      // incomplete input data
-          param[0]=enable_byte;   // flag = enabled
+          param[0]=decodedTelegram.enable_byte;   // flag = enabled
           param[2]=m;
           param[3]=d;
       }else{
-          param[0]=enable_byte-1;   // flag = disabled
+          param[0]=decodedTelegram.enable_byte-1;   // flag = disabled
           param[2]=1;
           param[3]=1;
       }
@@ -4836,7 +4843,7 @@ int set(int line      // the ProgNr of the heater parameter
       int d,m;
       if(2!=sscanf(val,"%d.%d",&d,&m))
         return 0;
-      param[0]=enable_byte;
+      param[0]=decodedTelegram.enable_byte;
       param[1]=0xff;
       param[2]=m;
       param[3]=d;
@@ -4865,9 +4872,7 @@ int set(int line      // the ProgNr of the heater parameter
         return 0;
       }
 
-      uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-      uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-      uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
+      uint8_t idx = pgm_read_byte_far(decodedTelegram.enumstr+0);
 
       for (int x=bus->getPl_start();x<bus->getPl_start()+data_len;x++) {
         param[x-bus->getPl_start()] = msg[x];
@@ -5223,17 +5228,7 @@ if(data_len==3){
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void queryVirtualPrognr(int line, int table_line){
-    loadPrognrElementsFromTable(line, table_line);
-
-#if defined(__AVR__)
-    printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),decodedTelegram.cat,0);
-#else
-    printENUM(ENUM_CAT,sizeof(ENUM_CAT),decodedTelegram.cat,0);
-#endif
-    decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
-    decodedTelegram.enumdescaddr = 0;
-    decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
-
+   loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
    printFmtToDebug(PSTR("\r\nVirtual parameter %d queried. Table line %d\r\n"), line, table_line);
    decodedTelegram.msg_type = TYPE_ANS;
    decodedTelegram.prognr = line;
@@ -5247,6 +5242,7 @@ void queryVirtualPrognr(int line, int table_line){
          case 20003: val = brenner_count_2; break;
          case 20004: val = TWW_duration; break;
          case 20005: val = TWW_count; break;
+         case 20006: val = 0; break;
        }
        sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
        return;
@@ -5419,8 +5415,10 @@ void query(int line)  // line (ProgNr)
     i=findLine(line,0,&c);
 
     if(i>=0){
+      loadPrognrElementsFromTable(line, i);
+
       uint8_t flags = get_cmdtbl_flags(i);
-      decodedTelegram.type = get_cmdtbl_type(i);
+
 // virtual programs
       if((line >= 20000 && line < 20700))
         {
@@ -5465,7 +5463,6 @@ void query(int line)  // line (ProgNr)
             } else {
               printFmtToDebug(PSTR("%d\r\n"), line); //%d
             }
-          loadPrognrElementsFromTable(line, i);
           decodedTelegram.error = 261;
           }
         } else { // bus type is PPS
@@ -6642,6 +6639,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
         if(!strcmp_P(p, PSTR("/"))){
+          httpflags |= HTTP_GET_ROOT;
           strcpy_P(p + 1, PSTR("index.html"));
         }
           printlnToDebug(p);
@@ -6750,7 +6748,7 @@ uint8_t pps_offset = 0;
           else
           {
           // simply print the website if no index.html on SD card
-            if(!strcmp_P(p, PSTR("/"))){
+            if((httpflags & HTTP_GET_ROOT)){
               webPrintSite();
               break;
             }
@@ -7466,7 +7464,11 @@ uint8_t pps_offset = 0;
                 }
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                loadPrognrElementsFromTable(json_parameter, i_line);
+                if (p[2]=='Q') {
+                  query(json_parameter);
+                } else {
+                  loadPrognrElementsFromTable(json_parameter, i_line);
+                }
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
                 printToWebClient(PSTR("\",\r\n"));
@@ -7478,7 +7480,6 @@ uint8_t pps_offset = 0;
                 printToWebClient(PSTR("\",\r\n"));
 
                 if (p[2]=='Q') {
-                  query(json_parameter);
                   printFmtToWebClient(PSTR("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
                   if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr)
                     printToWebClient(decodedTelegram.enumdescaddr);
@@ -7971,13 +7972,9 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
-              printToWebClient(PSTR(MENU_TEXT_BRS ".<br>\r\n"));
-              brenner_duration=0;
-              brenner_count=0;
-              brenner_duration_2=0;
-              brenner_count_2=0;
-              TWW_duration=0;
-              TWW_count=0;
+              printToWebClient(STR20006);
+              printToWebClient(PSTR(".<br>\r\n"));
+              resetDurations();
             }
           }else{
             char* line_start;
