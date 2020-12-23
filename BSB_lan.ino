@@ -2153,6 +2153,27 @@ void printBIT(byte *msg,byte data_len){
  * Global resources used:
  *
  * *************************************************************** */
+void printCustomBIT(byte *msg,byte idx){
+  int len = 0;
+  for (int i=7;i>=0;i--) {
+    len += sprintf_P(decodedTelegram.value+len,PSTR("%d"),msg[bus->getPl_start()+idx] >> i & 1);
+  }
+  printToDebug(decodedTelegram.value);
+}
+
+
+/** *****************************************************************
+ *  Function:
+ *  Does:
+ *  Pass parameters:
+ *
+ * Parameters passed back:
+ *
+ * Function value returned:
+ *
+ * Global resources used:
+ *
+ * *************************************************************** */
 void printBYTE(byte *msg,byte data_len){
 //  uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1 && bus->getBusType() == BUS_PPS);
 
@@ -3160,6 +3181,14 @@ void printTelegram(byte* msg, int query_line) {
                 printToDebug(printError(decodedTelegram.error));
                 SerialPrintData(msg);
               }
+              break;
+            }
+            case VT_CUSTOM_BIT: // u8
+            {
+              decodedTelegram.enumstr_len = get_cmdtbl_enumstr_len(i);
+              decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
+              uint8_t bit_index = (byte)pgm_read_byte_far(decodedTelegram.enumstr);
+              printCustomBIT(msg,bit_index);
               break;
             }
             case VT_STRING: // string
@@ -5128,11 +5157,11 @@ void query_printHTML(){
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
           printToWebClient(PSTR("<select "));
-          if (decodedTelegram.type == VT_BIT) {
+          if (decodedTelegram.data_type == DT_BITS) {
             printToWebClient(PSTR("multiple "));
           }
           printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
-          if (decodedTelegram.type == DT_BITS) {
+          if (decodedTelegram.data_type == DT_BITS) {
             uint16_t val = 0;
             uint16_t c=0;
             uint8_t bitmask=0;
@@ -5140,10 +5169,13 @@ void query_printHTML(){
             for (int i = 0; i < 8; i++){
               if(decodedTelegram.value[i] == '1') bitvalue+=1<<(7-i);
             }
+            if (decodedTelegram.type == VT_CUSTOM_BIT) {
+              c=1;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
+            }
             while(c<decodedTelegram.enumstr_len){
               if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                 val=uint16_t((pgm_read_byte_far(decodedTelegram.enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
-                if (decodedTelegram.type == VT_BIT) {
+                if (decodedTelegram.data_type == DT_BITS) {
                   bitmask = val & 0xff;
                   val = val >> 8 & 0xff;
                 }
@@ -5151,7 +5183,6 @@ void query_printHTML(){
               }
               //skip leading space
               c+=2;
-
               printToWebClient(STR_OPTION_VALUE);
               printFmtToWebClient(PSTR("%d"), val);
               if ((bitvalue & bitmask) == (val & bitmask)) {
@@ -6694,7 +6725,7 @@ uint8_t pps_offset = 0;
             printToDebug(p);
 
             uint16_t code = 0;
-            if((httpflags & 8))
+            if((httpflags & HTTP_ETAG))
               code = HTTP_NOT_MODIFIED;
             else
               code = HTTP_OK;

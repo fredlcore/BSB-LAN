@@ -1909,7 +1909,7 @@
 #define STR9651_TEXT "Solldrehzahl Stillstand Max"
 #define STR9652_TEXT "Dauer Kamintrocknung"
 #define STR10000_TEXT "Raumtemperatur 1"
-#define STR10100_TEXT "INFO Brenner"
+#define STR10100_TEXT "Systemstatus"
 #define STR10101_TEXT "INFO Trinkwasserbereitung"
 #define STR10102_TEXT "INFO HK1 - TBD"
 #define STR10103_TEXT "INFO HK2 - TBD"

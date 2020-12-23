@@ -410,6 +410,7 @@
 #define STR9540_TEXT "After-ventilation time"
 #define STR9560_TEXT "Fan modulation for full charging of strat. tank"
 #define STR9563_TEXT "Fan speed for full charging of stratific. tank"
+#define STR10100_TEXT "System status"
 
 #define ENUM8004_02_TEXT "Fault"
 #define ENUM8004_04_TEXT "Manual control active"

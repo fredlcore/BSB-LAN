@@ -407,6 +407,7 @@
   "STR9540_TEXT": "After-ventilation time",
   "STR9560_TEXT": "Fan modulation for full charging of strat. tank",
   "STR9563_TEXT": "Fan speed for full charging of stratific. tank",
+  "STR10100_TEXT": "System status",
   "ENUM8004_02_TEXT": "Fault",
   "ENUM8004_04_TEXT": "Manual control active",
   "ENUM8004_11_TEXT": "Overrun active",

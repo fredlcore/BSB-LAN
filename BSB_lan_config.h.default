@@ -248,7 +248,7 @@ static const int fixed_device_variant = 0;
 boolean enable_version_check = false;
 
 //"External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
-#define WEBSERVER
+//#define WEBSERVER
 // Configuration will be store in EEPROM
 #define CONFIG_IN_EEPROM
 // Compile web-based configuration and EEPROM config store module extension.
