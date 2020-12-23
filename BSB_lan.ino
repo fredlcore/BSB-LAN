@@ -3673,6 +3673,16 @@ void generateConfigPage(void){
   printToWebClient(PSTR("WEBCONFIG"));
   j = 1;
   #endif
+  #ifdef JSONCONFIG
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("JSONCONFIG"));
+  j = 1;
+  #endif
+  #ifdef URLCONFIG
+  if(j) printToWebClient(PSTR(", "));
+  printToWebClient(PSTR("URLCONFIG"));
+  j = 1;
+  #endif
   if(j == 0)
     printToWebClient(PSTR("NONE"));
   printToWebClient(PSTR("<BR><BR>\r\n"));
