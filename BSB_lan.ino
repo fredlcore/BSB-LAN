@@ -1195,9 +1195,12 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   uint16_t val = 0;
   uint16_t c=0;
   boolean isFirst = true;
+  if(decodedTelegram.type == VT_CUSTOM_BIT) c++;
+
   while(c<enumstr_len){
     if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
-      val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
+      val = uint16_t(pgm_read_byte_far(enumstr+c+1));
+      if(decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
       c++;
     }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
       val=uint16_t(pgm_read_byte_far(enumstr+c));
@@ -2530,8 +2533,6 @@ void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enums
  * *************************************************************** */
 void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint8_t val;
-  decodedTelegram.enumstr = enumstr;
-  decodedTelegram.enumstr_len = enumstr_len;
   decodedTelegram.enumdescaddr = 0;
   if(enumstr!=0){
     uint16_t c=0;
@@ -2982,8 +2983,6 @@ void printTelegram(byte* msg, int query_line) {
           switch(decodedTelegram.type) {
             case VT_BIT: // u8
               printBIT(msg,data_len);
-              decodedTelegram.enumstr_len = get_cmdtbl_enumstr_len(i);
-              decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
               break;
             case VT_MONTHS: // u8 Monate
             case VT_DAYS: // u8 Tage
@@ -3072,8 +3071,6 @@ void printTelegram(byte* msg, int query_line) {
             case VT_YESNO:
             case VT_CLOSEDOPEN:
             case VT_VOLTAGEONOFF:
-              decodedTelegram.enumstr_len = get_cmdtbl_enumstr_len(i);
-              decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
               printCHOICE(msg,data_len, decodedTelegram.enumstr, decodedTelegram.enumstr_len);
               break;
             case VT_LPBADDR: //decoding unklar 00 f0 -> 15.01
@@ -3150,11 +3147,9 @@ void printTelegram(byte* msg, int query_line) {
               break;
             case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
-              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-              uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-              if(enumstr_ptr!=0) {
-                uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
-                printCustomENUM(enumstr_ptr,enumstr_len,msg[bus->getPl_start()+idx],1);
+              if(decodedTelegram.enumstr!=0) {
+                uint8_t idx = pgm_read_byte_far(decodedTelegram.enumstr+0);
+                printCustomENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+idx],1);
               }else{
                 decodedTelegram.error = 259;
                 printToDebug(printError(decodedTelegram.error));
@@ -3164,11 +3159,9 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_CUSTOM_BYTE: // custom byte
             {
-              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-              uint_farptr_t enumstr_ptr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-              if(enumstr_ptr!=0) {
-                uint8_t idx = pgm_read_byte_far(enumstr_ptr+0);
-                uint8_t len = pgm_read_byte_far(enumstr_ptr+1);
+              if(decodedTelegram.enumstr!=0) {
+                uint8_t idx = pgm_read_byte_far(decodedTelegram.enumstr+0);
+                uint8_t len = pgm_read_byte_far(decodedTelegram.enumstr+1);
                 uint32_t val = 0;
                 for (int x=0; x<len; x++) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
@@ -3185,8 +3178,6 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_CUSTOM_BIT: // u8
             {
-              decodedTelegram.enumstr_len = get_cmdtbl_enumstr_len(i);
-              decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
               uint8_t bit_index = (byte)pgm_read_byte_far(decodedTelegram.enumstr);
               printCustomBIT(msg,bit_index);
               break;
