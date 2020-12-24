@@ -253,6 +253,8 @@ boolean enable_version_check = false;
 #define CONFIG_IN_EEPROM
 // Compile web-based configuration and EEPROM config store module extension.
 #define WEBCONFIG
+// Compile JSON-based configuration and EEPROM config store module extension.
+#define JSONCONFIG
 
 //Variables for future use:
 //Compile room unit replacement extension
@@ -279,6 +281,7 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 #if defined(__AVR__)
 //#undef CONFIG_IN_EEPROM
 //#undef WEBCONFIG
+#undef JSONCONFIG
 //#undef WEBSERVER
 #undef AVERAGES
 #undef DEBUG
