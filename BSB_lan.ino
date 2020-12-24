@@ -3615,7 +3615,7 @@ void generateConfigPage(void){
   #define ANY_MODULE_COMPILED
   #endif
   #ifdef DEBUG
-  "Verbose"
+  "Verbose "
   #endif
   "DEBUG"
 
@@ -7623,7 +7623,7 @@ uint8_t pps_offset = 0;
                 int status = takeNewConfigValueFromUI_andWriteToEEPROM(json_parameter, outBuf);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %d to \"%s\"\r\n"), json_parameter, json_value_string);
+                printFmtToDebug(PSTR("Setting parameter %d to \"%s\"\r\n"), json_parameter, outBuf);
               }
 #endif
 
