@@ -1104,7 +1104,7 @@ int recognize_mime(char *str) {
  *  enumstr_offset
  * *************************************************************** */
 
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len, uint_farptr_t shift) {
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len, int shift) {
 #if defined(__AVR__)
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
