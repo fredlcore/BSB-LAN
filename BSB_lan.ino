@@ -3600,92 +3600,146 @@ void generateConfigPage(void){
   client.println(F("<BR>"));
 */
 // list of enabled modules
-  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"));
-  boolean j = 0;
+  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
+
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef DEBUG
+  "Verbose"
+  #endif
+  "DEBUG"
+
   #ifdef WEBSERVER
-  printToWebClient(PSTR("WEBSERVER"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "WEBSERVER"
   #endif
   #ifdef IPWE
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("IPWE"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "IPWE"
   #endif
   #ifdef CUSTOM_COMMANDS
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("CUSTOM_COMMANDS"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "CUSTOM_COMMANDS"
   #endif
   #ifdef MQTT
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("MQTT"));
-  j = 1;
-  #endif
-  if(j) printToWebClient(PSTR(", "));
-  j = 1;
-  #ifdef DEBUG
-  printToWebClient(PSTR("Verbose DEBUG"));
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
   #else
-  printToWebClient(PSTR("DEBUG"));
+  #define ANY_MODULE_COMPILED
+  #endif
+  "MQTT"
   #endif
   #ifdef LOGGER
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("LOGGER"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "LOGGER"
   #endif
   #ifdef VERSION_CHECK
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("VERSION_CHECK"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "VERSION_CHECK"
   #endif
   #ifdef AVERAGES
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("AVERAGES"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "AVERAGES"
   #endif
   #ifdef MAX_CUL
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("MAX_CUL"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "MAX_CUL"
   #endif
   #ifdef ONE_WIRE_BUS
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("ONE_WIRE_BUS"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "ONE_WIRE_BUS"
   #endif
   #ifdef DHT_BUS
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("DHT_BUS"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "DHT_BUS"
   #endif
   #ifdef CUSTOM_COMMANDS
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("CUSTOM_COMMANDS"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "CUSTOM_COMMANDS"
   #endif
   #ifdef CONFIG_IN_EEPROM
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("CONFIG_IN_EEPROM"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "CONFIG_IN_EEPROM"
   #endif
   #ifdef WEBCONFIG
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("WEBCONFIG"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "WEBCONFIG"
   #endif
   #ifdef JSONCONFIG
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("JSONCONFIG"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
   #endif
+  "JSONCONFIG"
+  #endif
+
   #ifdef URLCONFIG
-  if(j) printToWebClient(PSTR(", "));
-  printToWebClient(PSTR("URLCONFIG"));
-  j = 1;
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
   #endif
-  if(j == 0)
-    printToWebClient(PSTR("NONE"));
-  printToWebClient(PSTR("<BR><BR>\r\n"));
+  "URLCONFIG"
+  #endif
+
+
+  #if !defined (ANY_MODULE_COMPILED)
+  "NONE"
+  #endif
+  "<BR><BR>\r\n"));
+
   // end of list of enabled modules
 
 #if defined LOGGER || defined WEBSERVER
