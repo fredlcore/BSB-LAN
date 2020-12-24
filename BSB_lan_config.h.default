@@ -281,7 +281,7 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 #if defined(__AVR__)
 //#undef CONFIG_IN_EEPROM
 //#undef WEBCONFIG
-//#undef JSONCONFIG
+#undef JSONCONFIG
 //#undef WEBSERVER
 #undef AVERAGES
 #undef DEBUG
