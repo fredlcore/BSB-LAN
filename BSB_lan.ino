@@ -1094,6 +1094,8 @@ int recognize_mime(char *str) {
  *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
  * Pass parameters:
  *  enum_addr
+ *  enumstr_len
+ *  shift . 0 for normal operation, 1 for VT_CUSTOM_BIT
  * Parameters passed back:
  *  enum_addr
  * Function value returned:
@@ -1102,12 +1104,12 @@ int recognize_mime(char *str) {
  *  enumstr_offset
  * *************************************************************** */
 
-uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len, uint_farptr_t shift) {
 #if defined(__AVR__)
   uint_farptr_t page = 0x10000;
   while (page < 0x40000) {
-    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1);
-    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2);
+    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1 + shift);
+    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2 + shift);
     uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
 
     if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
@@ -1129,6 +1131,10 @@ uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
 #else
   return enum_addr;
 #endif
+}
+
+inline uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
+  return calc_enum_offset(enum_addr, enumstr_len, 0);
 }
 
 void setBusType(){
@@ -1827,7 +1833,8 @@ void loadPrognrElementsFromTable(int nr, int i){
   decodedTelegram.type = get_cmdtbl_type(i);
   decodedTelegram.cat=get_cmdtbl_category(i);
   decodedTelegram.enumstr_len=get_cmdtbl_enumstr_len(i);
-  decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len);
+  //calc_enum_offset() MUST be after decodedTelegram.type = get_cmdtbl_type() because depend from it (VT_CUSTOM_BIT)
+  decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len, decodedTelegram.type == VT_CUSTOM_BIT?1:0);
   uint8_t flags=get_cmdtbl_flags(i);
   if (programIsreadOnly(flags))
     decodedTelegram.readonly = 1;
@@ -4019,6 +4026,13 @@ void implementConfig(){
 
 }
 
+void printConfigWebPossibleValues(int i, uint16_t temp_value){
+  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+  uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
+  listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+
+}
+
 void generateChangeConfigPage(){
   printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
   if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
@@ -4097,9 +4111,7 @@ void generateChangeConfigPage(){
                i=findLine(65533,0,NULL); //return ENUM_ONOFF
                break;
            }
-           uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-           uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)variable[0], PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+           printConfigWebPossibleValues(i, (uint16_t)variable[0]);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -4124,9 +4136,7 @@ void generateChangeConfigPage(){
                break;
            }
            if(i > 0){
-             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, variable[0], PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+             printConfigWebPossibleValues(i, variable[0]);
            }
            break;}
          }
@@ -4145,9 +4155,7 @@ void generateChangeConfigPage(){
                break;
            }
            if(i > 0){
-             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, ((uint16_t *)variable)[0], PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+             printConfigWebPossibleValues(i, ((uint16_t *)variable)[0]);
            }
            break;}
          }
@@ -4218,6 +4226,14 @@ void generateChangeConfigPage(){
 
 
 #if defined(JSONCONFIG)
+void printConfigJSONPossibleValues(int i){
+  printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
+  uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+  uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
+  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+  printToWebClient(PSTR("\r\n    ]"));
+}
+
 void generateJSONwithConfig(){
   boolean notFirst = false;
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
@@ -4271,12 +4287,7 @@ void generateJSONwithConfig(){
                break;
            }
            printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
-
-           printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
-           uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-           uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-           listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-           printToWebClient(PSTR("\r\n    ]"));
+           printConfigJSONPossibleValues(i);
            break;}
          case CPI_DROPDOWN:{
            int i;
@@ -4302,13 +4313,8 @@ void generateJSONwithConfig(){
            }
            if(i > 0){
              printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
-
-             printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
-             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-             printToWebClient(PSTR("\r\n    ]"));
-            }
+             printConfigJSONPossibleValues(i);
+           }
            break;}
          }
        break;
@@ -4327,12 +4333,7 @@ void generateJSONwithConfig(){
            }
            if(i > 0){
              printFmtToWebClient(PSTR("%d\",\r\n"), ((uint16_t *)variable)[0]);
-
-             printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
-             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-             listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-             printToWebClient(PSTR("\r\n    ]"));
+             printConfigJSONPossibleValues(i);
            }
            break;}
          }
@@ -7001,12 +7002,17 @@ uint8_t pps_offset = 0;
           uint16_t line = atoi(&p[2]);
           int i=findLine(line,0,NULL);
           if(i>=0){
+            loadPrognrElementsFromTable(line, i);
+            uint8_t flag = 0;
             // check type
-              if(get_cmdtbl_type(i)==VT_ENUM) {
-              uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
-              uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len);
-              listEnumValues(enumstr, enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE_FIRST, PRINT_DISABLED_VALUE);
-
+            switch(decodedTelegram.type){
+              case VT_ENUM: flag = PRINT_DISABLED_VALUE + 1; break;
+              case VT_CUSTOM_ENUM:
+              case VT_CUSTOM_BIT:
+              case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
+            }
+            if(flag) {
+              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE_FIRST, flag - 1);
             }else{
               printToWebClient(PSTR(MENU_TEXT_ER5));
             }
@@ -7574,10 +7580,8 @@ uint8_t pps_offset = 0;
 
                 if (p[2] != 'Q') {
                   printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
-                    uint16_t enumstr_len = get_cmdtbl_enumstr_len(i_line);
-                    uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i_line), enumstr_len);
-                    if (enumstr_len > 0) {
-                      listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+                    if (decodedTelegram.enumstr_len > 0) {
+                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
                     }
 
                   printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
