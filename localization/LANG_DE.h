@@ -186,6 +186,7 @@
 #define CF_GATEWAY_TEXT "Gateway"
 #define CF_DNS_TEXT "DNS server"
 #define CF_WWWPORT_TEXT "WWW port"
+#define CF_WIFI_SSID_TXT "SSID"
 #define CF_WEBSERVER_TEXT "Webserver 4 SD card"
 #define CF_PASSKEY_TEXT "URL passkey"
 #define CF_BASICAUTH_TEXT "Basic AUTH data"

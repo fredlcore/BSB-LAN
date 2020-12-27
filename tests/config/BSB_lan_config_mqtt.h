@@ -28,7 +28,7 @@ byte UseEEPROM = 1;
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
 */
-byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
+byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 /*
  * Initialize the Ethernet server library
@@ -43,6 +43,10 @@ byte gateway_addr[4] = {192,168,178,1}; // this is usually your router's IP addr
 byte dns_addr[4] = {192,168,178,1}; //  DNS server. Please note the commas instead of dots!!! Ignored, when first value is 0
 byte subnet_addr[4] = {255,255,255,0}; // Please use commas instead of dots!!! Ignored, when first value is 0
 
+
+//#define WIFI                           // activate this definement if you want to use WiFi
+char wifi_ssid[32] = "YourWiFiNetwork";   // enter your WiFi network name (SSID) here
+char wifi_pass[64] = "YourWiFiPassword";  // enter your WiFi password here
 
 #define DEBUG //Compile verbose DEBUG module if defined
 byte debug_mode = 2; //Debug: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client

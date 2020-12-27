@@ -50,6 +50,9 @@ typedef enum{
   CF_MONITOR, //Size: 1 byte. bus monitor mode
   CF_VERBOSE, //Size: 1 byte. If set to 1, all messages on the bus are printed to debug interface
   CF_CHECKUPDATE, //Size: 1 byte. If set to 1, check for new version
+// Version 4 (WiFi options)
+  CF_WIFI_SSID, //Size: 32 byte by standart.
+  CF_WIFI_PASSWORD, //Size 64 bytes.
 
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
@@ -128,6 +131,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_WWWPORT,          2, CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         CF_WWWPORT_TXT, sizeof(HTTPPort)}, //need reboot - can't destroy EthernetServer object
   {CF_TRUSTEDIPADDRESS, 2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)}, //immediately apply
   {CF_TRUSTEDIPADDRESS2,2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},//immediately apply
+  {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
+  {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TEXT, sizeof(wifi_pass)},//need reboot
 #endif
   {CF_LOGTELEGRAM,      1, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
   {CF_LOGAVERAGES,      1, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
