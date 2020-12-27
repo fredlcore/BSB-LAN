@@ -3933,6 +3933,8 @@ void SaveConfigFromRAMtoEEPROM(){
         case CF_DNS:
         case CF_ONEWIREBUS:
         case CF_WWWPORT:
+        case CF_WIFI_SSID:
+        case CF_WIFI_PASSWORD:
           needReboot = true;
           break;
 #ifdef AVERAGES
@@ -8583,6 +8585,8 @@ void setup() {
   registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
   registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
   registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+  registerConfigVariable(CF_WIFI_SSID, (byte *)wifi_ssid);
+  registerConfigVariable(CF_WIFI_PASSWORD, (byte *)wifi_pass);
   registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
   registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
   registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
@@ -8907,14 +8911,14 @@ if(save_debug_mode == 2)
   DebugOutput.println(pgm_get_far_address(ENUM8007), HEX);
   DebugOutput.println(pgm_get_far_address(ENUM8006), HEX);
   DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
-  
+
   DebugOutput.println((uint32_t)&ENUM20, HEX);
   DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
   DebugOutput.println((uint32_t)&LAST_ENUM, HEX);
   DebugOutput.println(pgm_get_far_address(ENUMLASTENUM), HEX);
   //DebugOutput.println(temp_offset1, HEX);
   DebugOutput.println(temp_offset2, HEX);
-  
+
   index_first_enum = 0;
   for (int i=0; i<=LAST_ENUM_NR; i++) {
     index_first_enum=findLine(i, 0, &c);
