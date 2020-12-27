@@ -186,6 +186,7 @@ UIStrings["CF_MASK_TEXT"] = "Network mask";
 UIStrings["CF_GATEWAY_TEXT"] = "Gateway";
 UIStrings["CF_DNS_TEXT"] = "DNS server";
 UIStrings["CF_WWWPORT_TEXT"] = "WWW port";
+UIStrings["CF_WIFI_SSID_TXT"] = "SSID";
 UIStrings["CF_WEBSERVER_TEXT"] = "Webserver 4 SD card";
 UIStrings["CF_PASSKEY_TEXT"] = "URL passkey";
 UIStrings["CF_BASICAUTH_TEXT"] = "Basic AUTH data";
