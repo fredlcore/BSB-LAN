@@ -3615,7 +3615,7 @@ void generateConfigPage(void){
   #define ANY_MODULE_COMPILED
   #endif
   #ifdef DEBUG
-  "Verbose"
+  "Verbose "
   #endif
   "DEBUG"
 
@@ -3821,24 +3821,24 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
   switch(cfg.var_type){
     case CDT_VOID: break;
     case CDT_BYTE:
-      variable[0] = (byte) atoi(outBuf);
+      variable[0] = (byte) atoi(buf);
       writeToConfigVariable(option_id, variable);
       break;
     case CDT_UINT16:
-      ((uint16_t *)variable)[0] = (uint16_t) atoi(outBuf);
+      ((uint16_t *)variable)[0] = (uint16_t) atoi(buf);
       writeToConfigVariable(option_id, variable);
       break;
     case CDT_UINT32:
-      ((uint32_t *)variable)[0] = (uint32_t) atoi(outBuf);
+      ((uint32_t *)variable)[0] = (uint32_t) atoi(buf);
       writeToConfigVariable(option_id, variable);
       break;
     case CDT_STRING:
-      strcpy((char *)variable, outBuf);
+      strcpy((char *)variable, buf);
       writeToConfigVariable(option_id, variable);
       break;
     case CDT_MAC:{
       unsigned int i0, i1, i2, i3, i4, i5;
-      sscanf(outBuf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
+      sscanf(buf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
       variable[2] = (byte)(i2 & 0xFF);
@@ -3850,7 +3850,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     }
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
-      sscanf(outBuf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
+      sscanf(buf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
       variable[2] = (byte)(i2 & 0xFF);
@@ -3860,7 +3860,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     }
     case CDT_PROGNRLIST:{
       uint16_t j = 0;
-      char *ptr = outBuf;
+      char *ptr = buf;
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
@@ -3872,7 +3872,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       break;}
     case CDT_DHTBUS:{
       uint16_t j = 0;
-      char *ptr = outBuf;
+      char *ptr = buf;
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
@@ -3885,7 +3885,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
 #ifdef MAX_CUL
     case CDT_MAXDEVICELIST:{
       uint16_t j = 0;
-      char *ptr = outBuf;
+      char *ptr = buf;
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
@@ -3933,6 +3933,8 @@ void SaveConfigFromRAMtoEEPROM(){
         case CF_DNS:
         case CF_ONEWIREBUS:
         case CF_WWWPORT:
+        case CF_WIFI_SSID:
+        case CF_WIFI_PASSWORD:
           needReboot = true;
           break;
 #ifdef AVERAGES
@@ -7623,7 +7625,7 @@ uint8_t pps_offset = 0;
                 int status = takeNewConfigValueFromUI_andWriteToEEPROM(json_parameter, outBuf);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %d to \"%s\"\r\n"), json_parameter, json_value_string);
+                printFmtToDebug(PSTR("Setting parameter %d to \"%s\"\r\n"), json_parameter, outBuf);
               }
 #endif
 
@@ -8583,6 +8585,8 @@ void setup() {
   registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
   registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
   registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+  registerConfigVariable(CF_WIFI_SSID, (byte *)wifi_ssid);
+  registerConfigVariable(CF_WIFI_PASSWORD, (byte *)wifi_pass);
   registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
   registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
   registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
@@ -8907,14 +8911,14 @@ if(save_debug_mode == 2)
   DebugOutput.println(pgm_get_far_address(ENUM8007), HEX);
   DebugOutput.println(pgm_get_far_address(ENUM8006), HEX);
   DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
-  
+
   DebugOutput.println((uint32_t)&ENUM20, HEX);
   DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
   DebugOutput.println((uint32_t)&LAST_ENUM, HEX);
   DebugOutput.println(pgm_get_far_address(ENUMLASTENUM), HEX);
   //DebugOutput.println(temp_offset1, HEX);
   DebugOutput.println(temp_offset2, HEX);
-  
+
   index_first_enum = 0;
   for (int i=0; i<=LAST_ENUM_NR; i++) {
     index_first_enum=findLine(i, 0, &c);
