@@ -454,15 +454,15 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 
 #include <Ethernet.h>
 #ifdef WIFI
-#include "src/WiFiEsp/src/WiFiEsp.h"
+#include "src/WiFiSpi/src/WiFiSpi.h"
 #endif
 
 boolean EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
 #ifdef WIFI
-WiFiEspServer *server;
-WiFiEspServer *telnetServer;
+WiFiSpiServer *server;
+WiFiSpiServer *telnetServer;
 #else
 EthernetServer *server;
 EthernetServer *telnetServer;
@@ -497,11 +497,11 @@ const char *datalogFileName = "datalog.txt";
 const char *journalFileName = "journal.txt";
 
 #ifdef WIFI
-WiFiEspClient client;
+WiFiSpiClient client;
 #ifdef VERSION_CHECK
-WiFiEspClient httpclient;
+WiFiSpiClient httpclient;
 #endif
-WiFiEspClient telnetClient;
+WiFiSpiClient telnetClient;
 #else
 EthernetClient client;
 #ifdef VERSION_CHECK
@@ -512,7 +512,7 @@ EthernetClient telnetClient;
 
 #ifdef MAX_CUL
 #ifdef WIFI
-WiFiEspClient *max_cul;
+WiFiSpiClient *max_cul;
 #else
 EthernetClient *max_cul;
 #endif
@@ -838,7 +838,7 @@ void checkSockStatus()
  *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
  *
  *  Pass parameters:
- *  WiFiEspClient/EthernetClient telnetClient
+ *  WiFiSpiClient/EthernetClient telnetClient
  *  Serial
  * Parameters passed back:
  *   none
@@ -920,7 +920,7 @@ void printToDebug(uint_farptr_t src){
  *         flushToWebClient() can be called when you want.
  *         forcedflushToWebClient() must be called before end of connection
  *  Pass parameters:
- *  WiFiEspClient/EthernetClient &cl
+ *  WiFiSpiClient/EthernetClient &cl
  * Parameters passed back:
  *   none
  * Function value returned:
@@ -6252,6 +6252,7 @@ uint8_t pps_offset = 0;
   // Listen for incoming clients
   client = server->available();
   if (client || SerialOutput->available()) {
+#ifndef WIFI
     IPAddress remoteIP = client.remoteIP();
     if((trusted_ip_addr[0] && memcmp(trusted_ip_addr, &remoteIP, 4)) &&
        (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2, &remoteIP, 4))){
@@ -6259,6 +6260,7 @@ uint8_t pps_offset = 0;
       printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\r\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
       client.stop();
     }
+#endif
 
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
@@ -8209,14 +8211,14 @@ uint8_t pps_offset = 0;
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
-
+//  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
+  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFiSpi.SSID());
   // print your WiFi shield's IP address
-  IPAddress t = WiFi.localIP();
+  IPAddress t = WiFiSpi.localIP();
   printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
 
   // print the received signal strength
-  long rssi = WiFi.RSSI();
+  long rssi = WiFiSpi.RSSI();
   printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
 }
 #endif
@@ -8255,7 +8257,7 @@ void setup() {
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
     SerialOutput->println(F("EEPROM not ready"));
-    }
+  }
   pinMode(19, INPUT);
   #endif
   //Read config parameters from EEPROM
@@ -8274,52 +8276,50 @@ void setup() {
   uint32_t crc;
   registerConfigVariable(CF_CRC32, (byte *)&crc);
   //link parameters
-    registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
-    registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
-    registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
-    registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
-    registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
-    registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
-    registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
-    registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
-    registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
-    registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
-    registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
+  registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
+  registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
+  registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
+  registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
+  registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+  registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
+  registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
+  registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
+  registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
+  registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
+  registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
 #ifdef WEBCONFIG
-    registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
-    registerConfigVariable(CF_MAC, (byte *)mac);
-    registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
-    registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
-    registerConfigVariable(CF_MASK, (byte *)subnet_addr);
-    registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
-    registerConfigVariable(CF_DNS, (byte *)dns_addr);
-    registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
-    registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
-    registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
-    registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
-    registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
-    registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
-    registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
-    registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
-    registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
-    registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
-    registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
-    registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
-    registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
-    registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
-    registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
-    registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
-    registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
-    if(DEFAULT_FLAG & FL_SW_CTL_RONLY) {
-      registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
-    }
-    registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
-    registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
-    registerConfigVariable(CF_MONITOR, (byte *)&monitor);
-    registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
+  registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
+  registerConfigVariable(CF_MAC, (byte *)mac);
+  registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
+  registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
+  registerConfigVariable(CF_MASK, (byte *)subnet_addr);
+  registerConfigVariable(CF_GATEWAY, (byte *)gateway_addr);
+  registerConfigVariable(CF_DNS, (byte *)dns_addr);
+  registerConfigVariable(CF_WWWPORT, (byte *)&HTTPPort);
+  registerConfigVariable(CF_TRUSTEDIPADDRESS, (byte *)trusted_ip_addr);
+  registerConfigVariable(CF_TRUSTEDIPADDRESS2, (byte *)trusted_ip_addr2);
+  registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
+  registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+  registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
+  registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
+  registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
+  registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
+  registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
+  registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
+  registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
+  registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+  registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
+  registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
+  registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
+  registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  if(DEFAULT_FLAG & FL_SW_CTL_RONLY) {
+    registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
+  }
+  registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
+  registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
+  registerConfigVariable(CF_MONITOR, (byte *)&monitor);
+  registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
 #endif
-
-
 
   readFromEEPROM(CF_PPS_VALUES);
   byte UseEEPROM_in_config_h = UseEEPROM;
@@ -8338,7 +8338,7 @@ void setup() {
 #if defined(__AVR__)
         uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
         if(version > 0 && version <= EEPROMversion)
-             readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
+          readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
 #else
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
@@ -8351,50 +8351,48 @@ void setup() {
   SerialOutput->println(F("Reading done."));
 
   //calculate maximal version
-      uint8_t maxconfversion = 0;
-      for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
+  uint8_t maxconfversion = 0;
+  for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
   #if defined(__AVR__)
-        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
-        if(version > maxconfversion) maxconfversion = version;
+    uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
+    if(version > maxconfversion) maxconfversion = version;
   #else
-        if(config[i].version > maxconfversion) maxconfversion = config[i].version;
+    if(config[i].version > maxconfversion) maxconfversion = config[i].version;
   #endif
+  }
+  SerialOutput->print(F("EEPROM schema v."));
+  SerialOutput->print(EEPROMversion);
+  SerialOutput->print(F(" Program schema v."));
+  SerialOutput->println(maxconfversion);
+
+  if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+    crc = initConfigTable(maxconfversion); //store new CRC32
+    EEPROMversion = maxconfversion; //store new version
+    if(UseEEPROM_in_config_h == 0x01){//Update EEPROM when config file contain UseEEPROM = 1
+      if(UseEEPROM != 0x69 && UseEEPROM != 0x96) UseEEPROM = 0x96;
+      SerialOutput->println(F("Update EEPROM schema"));
+      for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+        //do not write here MAX! settings
+        if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) {
+          writeToEEPROM(i);
+//          SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
+        }
       }
-    SerialOutput->print(F("EEPROM schema v."));
-    SerialOutput->print(EEPROMversion);
-    SerialOutput->print(F(" Program schema v."));
-    SerialOutput->println(maxconfversion);
-
-    if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
-      crc = initConfigTable(maxconfversion); //store new CRC32
-      EEPROMversion = maxconfversion; //store new version
-      if(UseEEPROM_in_config_h == 0x01){//Update EEPROM when config file contain UseEEPROM = 1
-        if(UseEEPROM != 0x69 && UseEEPROM != 0x96) UseEEPROM = 0x96;
-        SerialOutput->println(F("Update EEPROM schema"));
-        for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-          //do not write here MAX! settings
-          if(i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) {
-            writeToEEPROM(i);
-//            SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
-          }
-         }
-       }
     }
-
+  }
 
   unregisterConfigVariable(CF_VERSION);
   unregisterConfigVariable(CF_CRC32);
 #endif
 
- byte save_debug_mode = debug_mode; //save debug_mode until setup is end.
- debug_mode = 1; //force using Serial debug until setup is end.
+  byte save_debug_mode = debug_mode; //save debug_mode until setup is end.
+  debug_mode = 1; //force using Serial debug until setup is end.
 
-for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-  printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
-}
+  for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+    printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
+  }
 
-  if(save_debug_mode == 2)
-    printToDebug(PSTR("Logging output to Telnet\r\n"));
+  if(save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
   printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
   printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
@@ -8409,72 +8407,33 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
   if(bus_pins[0] && bus_pins[1]){
     temp_bus_pins[0] = bus_pins[0];
     temp_bus_pins[1] = bus_pins[1];
-  }else{
+  } else {
 #if defined(__AVR__) // Mega2560
-  //SoftwareSerial
-  temp_bus_pins[0] = 68;
-  temp_bus_pins[1] = 69;
-#else  // Duo
-  // HardwareSerial
-  temp_bus_pins[0] = 19;
-  temp_bus_pins[1] = 18;
+    // SoftwareSerial
+    temp_bus_pins[0] = 68;
+    temp_bus_pins[1] = 69;
+#else  // Due
+    // HardwareSerial
+    temp_bus_pins[0] = 19;
+    temp_bus_pins[1] = 18;
 #endif
   }
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
-
   setBusType(); //set BSB/LPB/PPS mode
-
   bus->enableInterface();
 
-  #ifdef ONE_WIRE_BUS
-    if(enableOneWireBus){
-      printToDebug(PSTR("Init One Wire bus...\r\n"));
-      // Setup a oneWire instance to communicate with any OneWire devices
-      oneWire = new OneWire(One_Wire_Pin);
-      // Pass our oneWire reference to Dallas Temperature.
-      sensors = new DallasTemperature(oneWire);
-      // check ds18b20 sensors
-      sensors->begin();
-      numSensors=sensors->getDeviceCount();
-      printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
-    }
-  #endif
-
-#ifdef WIFI
-  int status = WL_IDLE_STATUS;
-  // initialize serial for ESP module
-  Serial3.begin(115200);
-/*
-  delay(500);
-  Serial3.println(F("AT+UART_CUR=230400,8,1,0,0"));
-  Serial3.begin(223400);
-*/
-  // initialize ESP module
-  WiFi.init(&Serial3);
-
-  // check for the presence of the shield
-  if (WiFi.status() == WL_NO_SHIELD) {
-    printToDebug(PSTR("WiFi shield not present\r\n"));
-    // don't continue
-    while (true);
+#ifdef ONE_WIRE_BUS
+  if(enableOneWireBus){
+    printToDebug(PSTR("Init One Wire bus...\r\n"));
+    // Setup a oneWire instance to communicate with any OneWire devices
+    oneWire = new OneWire(One_Wire_Pin);
+    // Pass our oneWire reference to Dallas Temperature.
+    sensors = new DallasTemperature(oneWire);
+    // check ds18b20 sensors
+    sensors->begin();
+    numSensors=sensors->getDeviceCount();
+    printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
   }
-
-  if(!useDHCP){
-    IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3);
-    WiFi.config(ip);
-  }
-
-  // attempt to connect to WiFi network
-  while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), ssid);
-    // Connect to WPA/WPA2 network
-    status = WiFi.begin(ssid, pass);
-  }
-
-  // you're connected now, so print out the data
-  printToDebug(PSTR("You're connected to the network\r\n"));
-
-  printWifiStatus();
 #endif
 
 /*  printlnToDebug(PSTR("Reading EEPROM..."));
@@ -8491,7 +8450,7 @@ for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
   }
 */
 
-printToDebug(PSTR("PPS settings:\r\n"));
+  printToDebug(PSTR("PPS settings:\r\n"));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     if(pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
     if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
@@ -8525,47 +8484,65 @@ printToDebug(PSTR("PPS settings:\r\n"));
   digitalWrite(4,HIGH);
 #endif
 
-  // start the Ethernet connection and the server:
-#ifndef WIFI
-    if(!useDHCP && ip_addr[0]){
-      IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
-      IPAddress subnet;
-      IPAddress gateway;
-      IPAddress dnsserver;
-      if(subnet_addr[0]){
-        subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
-      }
-      else {
-        subnet = IPAddress(255, 255, 255, 0);
-      }
-      if(gateway_addr[0]){
-        gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
-      } else {
-        gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
-      }
-      if(dns_addr[0]){
-        dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
-      } else {
-        dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
-      }
-      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
-    } else {
-      Ethernet.begin(mac); //DHCP
-    }
+#ifdef WIFI
+  int status = WL_IDLE_STATUS;
+  WiFiSpi.init(13);     // SS signal is on Due pin 13
+
+  // check for the presence of the shield
+  if (WiFiSpi.status() == WL_NO_SHIELD) {
+    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
+    // don't continue
+    while (true);
+  }
 #endif
 
-#ifdef WIFI
-  SerialOutput->println(WiFi.localIP());
-#else
+  // setup IP addresses
+  if(!useDHCP && ip_addr[0]){
+    IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
+    IPAddress subnet;
+    IPAddress gateway;
+    IPAddress dnsserver;
+    if(subnet_addr[0]){
+      subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
+    } else {
+      subnet = IPAddress(255, 255, 255, 0);
+    }
+    if(gateway_addr[0]){
+      gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
+    } else {
+      gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
+    }
+    if(dns_addr[0]){
+      dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+    } else {
+      dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
+    }
+#ifndef WIFI
+    Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
+  } else {
+    Ethernet.begin(mac); //DHCP
+  }
   SerialOutput->println(Ethernet.localIP());
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
+#else
+    WiFiSpi.config(ip, dnsserver, gateway, subnet);
+  }
+  // attempt to connect to WiFi network
+  while ( status != WL_CONNECTED) {
+    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), ssid);
+    // Connect to WPA/WPA2 network
+    status = WiFiSpi.begin(ssid, pass);
+  }
+  // you're connected now, so print out the data
+  printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+  printWifiStatus();
 #endif
 
 #ifdef WIFI
-  server = new WiFiEspServer(HTTPPort);
+  server = new WiFiSpiServer(HTTPPort);
 if(save_debug_mode == 2)
-  telnetServer = new WiFiEspServer(23);
+  telnetServer = new WiFiSpiServer(23);
 #else
   server = new EthernetServer(HTTPPort);
 if(save_debug_mode == 2)
@@ -8608,7 +8585,6 @@ if(save_debug_mode == 2)
 if(save_debug_mode == 2)
   telnetServer->begin();
 
-
 /*
 // figure out which ENUM string has a lower memory address: The first one or the last one (hard coded to ENUM20 and LAST_ENUM_NR).
 // Then use this as refernce to later determine if a page boundary >64kb has occurred.
@@ -8636,34 +8612,34 @@ if(save_debug_mode == 2)
 */
 
 /*
-DebugOutput.println(enum_page, HEX);
-DebugOutput.println(temp_offset1, HEX);
-DebugOutput.println(temp_offset2, HEX);
-DebugOutput.println(pgm_get_far_address(LAST_ENUM), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM10513), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM10510), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM8008), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM8007), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM8006), HEX);
-DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
-
-DebugOutput.println((uint32_t)&ENUM20, HEX);
-DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
-DebugOutput.println((uint32_t)&LAST_ENUM, HEX);
-DebugOutput.println(pgm_get_far_address(ENUMLASTENUM), HEX);
-//DebugOutput.println(temp_offset1, HEX);
-DebugOutput.println(temp_offset2, HEX);
-
-index_first_enum = 0;
-for (int i=0; i<=LAST_ENUM_NR; i++) {
-  index_first_enum=findLine(i, 0, &c);
-  temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
-  if (temp_offset1 > 0 && temp_offset1 < 65535) {
-    DebugOutput.print(i);
-    DebugOutput.print(F("\t"));
-    DebugOutput.println(temp_offset1, HEX);
+  DebugOutput.println(enum_page, HEX);
+  DebugOutput.println(temp_offset1, HEX);
+  DebugOutput.println(temp_offset2, HEX);
+  DebugOutput.println(pgm_get_far_address(LAST_ENUM), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM10513), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM10510), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM8008), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM8007), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM8006), HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
+  
+  DebugOutput.println((uint32_t)&ENUM20, HEX);
+  DebugOutput.println(pgm_get_far_address(ENUM20), HEX);
+  DebugOutput.println((uint32_t)&LAST_ENUM, HEX);
+  DebugOutput.println(pgm_get_far_address(ENUMLASTENUM), HEX);
+  //DebugOutput.println(temp_offset1, HEX);
+  DebugOutput.println(temp_offset2, HEX);
+  
+  index_first_enum = 0;
+  for (int i=0; i<=LAST_ENUM_NR; i++) {
+    index_first_enum=findLine(i, 0, &c);
+    temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
+    if (temp_offset1 > 0 && temp_offset1 < 65535) {
+      DebugOutput.print(i);
+      DebugOutput.print(F("\t"));
+      DebugOutput.println(temp_offset1, HEX);
+    }
   }
-}
 */
 
 // initialize average calculation
@@ -8742,9 +8718,9 @@ for (int i=0; i<=LAST_ENUM_NR; i++) {
   }
 #endif
 
-if (!SD.exists(datalogFileName)) {
-  createdatalogFileAndWriteHeader();
-}
+  if (!SD.exists(datalogFileName)) {
+    createdatalogFileAndWriteHeader();
+  }
 #endif
 
   if (bus->getBusType() != BUS_PPS) {
@@ -8762,9 +8738,9 @@ if (!SD.exists(datalogFileName)) {
   }
 #endif
 
-printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
+  printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #include "BSB_lan_custom_setup.h"
-printlnToDebug(PSTR("Setup complete"));
-debug_mode = save_debug_mode; //restore actual debug mode
+  printlnToDebug(PSTR("Setup complete"));
+  debug_mode = save_debug_mode; //restore actual debug mode
 }
