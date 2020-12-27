@@ -1653,7 +1653,11 @@
 #define STR9615_TEXT "Принудительная продувка в случае ошибки"
 
 #define STR10000_TEXT "Текущее значение температуры помещения 1"
-
+#define STR10100_TEXT "ИНФО горелка"
+#define STR10101_TEXT "ИНФО водоподготовка"
+#define STR10102_TEXT "ИНФО контур отопления 1 - TBD"
+#define STR10103_TEXT "ИНФО контур отопления 2 - TBD"
+#define STR10104_TEXT "ИНФО контур отопления 3/P - TBD"
 #define STR10200_TEXT "Неизвестная команда"
 
 #define STR15004_TEXT "Температура подачи смесительного узла"
@@ -1699,8 +1703,12 @@
 #define STR15058_TEXT "Воскресенье. Период отопления 2. Конец"
 #define STR15059_TEXT "Воскресенье. Период отопления 3. Начало"
 #define STR15060_TEXT "Воскресенье. Период отопления 3. Конец"
-
+#define STR15061_TEXT "Время"
+#define STR15062_TEXT "Модель QAA"
 #define STR15064_TEXT "Целевая температура"
+#define STR15065_TEXT "Следующая программа переключения"
+#define STR15066_TEXT "Ручной нагрев"
+#define STR15067_TEXT "Соединение прервано"
 
 #define STR20100_TEXT "Идентификатор датчика DHT22"
 #define STR20101_TEXT "Температура датчика DHT22"
@@ -2775,6 +2783,13 @@
 #define ENUM9612_01_TEXT "GP подключён"
 #define ENUM9614_00_TEXT "Работа"
 #define ENUM9614_01_TEXT "???"
+#define ENUM10100_02_TEXT "Техническое обслуживание"
+#define ENUM10100_04_TEXT "1-я ступень горелки включена"
+#define ENUM10100_08_TEXT "Прямое отображение"
+#define ENUM10100_10_TEXT "2-я ступень горелки включена"
+#define ENUM10100_20_TEXT "Функции: Время не может быть установлено"
+#define ENUM10100_40_TEXT "Функции: Неверное время"
+#define ENUM10100_80_TEXT "Функции: Время установлено"
 #define ENUM15062_52_TEXT "QAA 50"
 #define ENUM15062_53_TEXT "QAA 70"
 #define ENUM15063_00_02_TEXT "Auto-Mode: aus"

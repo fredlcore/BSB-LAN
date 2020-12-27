@@ -354,7 +354,7 @@ const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
 const char STR_OPTION_VALUE[] PROGMEM = "<option value='";
-const char STR_OPTION[] PROGMEM = "</option>\r\n";
+const char STR_CLOSE_OPTION[] PROGMEM = "</option>\r\n";
 const char STR_SELECTED[] PROGMEM = "' selected>";
 
 
@@ -2995,6 +2995,7 @@ const char STR20002[] PROGMEM = MENU_TEXT_BZ2;
 const char STR20003[] PROGMEM = MENU_TEXT_BT2;
 const char STR20004[] PROGMEM = MENU_TEXT_TZ1;
 const char STR20005[] PROGMEM = MENU_TEXT_TT1;
+const char STR20006[] PROGMEM = MENU_TEXT_BRS;
 
 const char STR20100[] PROGMEM = STR20100_TEXT;
 const char STR20101[] PROGMEM = STR20101_TEXT;
@@ -11458,6 +11459,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ONOFF,         20006, STR20006, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
 
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
