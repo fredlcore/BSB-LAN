@@ -33,6 +33,7 @@ extern "C" {
 #include "WiFiSpiClient.h"
 #include "utility/wifi_spi.h"
 #include "utility/srvspi_drv.h"
+#include "utility/wifispi_drv.h"
 
 
 WiFiSpiClient::WiFiSpiClient() : _sock(SOCK_NOT_AVAIL) {
@@ -231,4 +232,32 @@ uint8_t WiFiSpiClient::verifySSL(uint8_t* fingerprint, const char *host) {
         return 0;
 
     return ServerSpiDrv::verifySSLClient(_sock, fingerprint, host);
+}
+
+/*
+ * 
+ */
+IPAddress WiFiSpiClient::remoteIP()
+{
+    uint8_t _remoteIp[4];
+    uint16_t _remotePort;
+
+    if (WiFiSpiDrv::getRemoteData(_sock, _remoteIp, &_remotePort))
+        return IPAddress(_remoteIp);
+    else
+        return IPAddress(0UL);
+}
+
+/*
+ * 
+ */
+uint16_t WiFiSpiClient::remotePort()
+{
+    uint8_t _remoteIp[4];
+    uint16_t _remotePort;
+
+    if (WiFiSpiDrv::getRemoteData(_sock, _remoteIp, &_remotePort))
+        return _remotePort;
+    else
+        return 0;
 }
