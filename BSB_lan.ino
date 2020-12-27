@@ -6560,7 +6560,6 @@ uint8_t pps_offset = 0;
   // Listen for incoming clients
   client = server->available();
   if (client || SerialOutput->available()) {
-#ifndef WIFI
     IPAddress remoteIP = client.remoteIP();
     if((trusted_ip_addr[0] && memcmp(trusted_ip_addr, &remoteIP, 4)) &&
        (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2, &remoteIP, 4))){
@@ -6568,7 +6567,6 @@ uint8_t pps_offset = 0;
       printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\r\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
       client.stop();
     }
-#endif
 
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
