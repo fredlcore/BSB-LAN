@@ -30,7 +30,7 @@ byte UseEEPROM = 1;
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
  *  Change this if you have more than one BSB-LAN adapter in your LAN, so that there aren't any address conflicts.
 */
-byte mac[] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
+byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 /*
  * Initialize the Ethernet server library
