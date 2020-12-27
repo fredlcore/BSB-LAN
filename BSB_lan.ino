@@ -64,6 +64,7 @@
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU
  *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
@@ -3509,6 +3510,7 @@ void webPrintSite() {
     } else {
       printlnToWebClient(PSTR(MENU_TEXT_NVN));
     }
+    httpclient.stop();
   }
 #endif
 #endif
