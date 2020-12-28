@@ -8778,7 +8778,7 @@ void setup() {
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
-  WiFiSpi.init(13);     // SS signal is on Due pin 13
+  WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
   if (WiFiSpi.status() == WL_NO_SHIELD) {

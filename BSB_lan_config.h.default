@@ -45,9 +45,10 @@ byte gateway_addr[4] = {192,168,178,1}; // Gateway address. This is usually your
 byte dns_addr[4] = {192,168,178,1};     // DNS server. Please note the commas instead of dots!!! Ignored if first value is 0.
 byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas instead of dots!!! Ignored if first value is 0.
 
-//#define WIFI                           // activate this definement if you want to use WiFi
-char wifi_ssid[32] = "YourWiFiNetwork";   // enter your WiFi network name (SSID) here
-char wifi_pass[64] = "YourWiFiPassword";  // enter your WiFi password here
+//#define WIFI                          // activate this definement if you want to use WiFi
+char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) here
+char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
+#define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for ESP8266
 
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
