@@ -7,6 +7,11 @@
 // Upon first installation, rename this file from BSB_lan_config.h.default to BSB_lan_config.h and adjust settings accordingly
 // Users who still use Arduino Mega2560 boards instead of Arduin Due: Please have a look at the very end of this configuration
 // where certain modules are disabled by default due to limited flash memory.
+// Also you can reduce size of some variables for freeing RAM or enlarge their size if You need. Ex: PASSKEY[], avg_parameters[], log_parameters[],
+// ipwe_parameters[], max_device_list[].
+// But be aware: if You change size of variables on configured system your configuration will be lost and default values will be loaded from this file.
+// You can backup configuration to JSON and restore it. (JSONCONFIG module needed). 
+
 
 /* Select language; so far German is the most complete, with English following.
  * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
