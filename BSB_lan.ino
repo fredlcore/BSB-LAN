@@ -5948,7 +5948,11 @@ void connectToMaxCul() {
     if(!enable_max_cul) return;
   }
 
+#ifdef WIFI
+  max_cul = new WiFiSpiClient();
+#else
   max_cul = new EthernetClient();
+#endif
   printToDebug(PSTR("Connection to max_cul: "));
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("established"));
