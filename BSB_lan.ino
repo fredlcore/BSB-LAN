@@ -3361,8 +3361,16 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
  #if defined(__AVR__)
    printPStr(pgm_get_far_address(header_html), sizeof(header_html));
+ #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+   printPStr(pgm_get_far_address(header_html2), sizeof(header_html2));
+ #endif
+   printPStr(pgm_get_far_address(header_html3), sizeof(header_html3));
  #else
    printPStr(header_html, sizeof(header_html));
+ #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+   printPStr(header_html2, sizeof(header_html2));
+ #endif
+   printPStr(header_html3, sizeof(header_html3));
  #endif
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printToWebClient(PSTR("<a href='/"));
