@@ -33,7 +33,7 @@ extern "C" {
 #include "WiFiSpiClient.h"
 #include "utility/wifi_spi.h"
 #include "utility/srvspi_drv.h"
-
+#include "utility/wifispi_drv.h"
 
 WiFiSpiClient::WiFiSpiClient() : _sock(SOCK_NOT_AVAIL) {
 }
@@ -89,6 +89,8 @@ int WiFiSpiClient::connectSSL(IPAddress ip, uint16_t port)
 int WiFiSpiClient::_connect(IPAddress ip, uint16_t port, bool isSSL)
 {
     _sock = WiFiSpiClass::getSocket();
+Serial.print("Socket: ");
+Serial.println(_sock);
     if (_sock != SOCK_NOT_AVAIL)
     {
         if (! ServerSpiDrv::startClient(uint32_t(ip), port, _sock, (isSSL ? TCP_MODE_WITH_TLS : TCP_MODE)))
