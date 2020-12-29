@@ -182,7 +182,7 @@
   "CF_GATEWAY_TEXT": "Gateway",
   "CF_DNS_TEXT": "DNS server",
   "CF_WWWPORT_TEXT": "WWW port",
-  "CF_WIFI_SSID_TXT": "SSID",
+  "CF_WIFI_SSID_TEXT": "SSID",
   "CF_WEBSERVER_TEXT": "Webserver 4 SD card",
   "CF_PASSKEY_TEXT": "URL passkey",
   "CF_BASICAUTH_TEXT": "Basic AUTH data",
