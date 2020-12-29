@@ -3820,31 +3820,27 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     return 2;
   }
 
-  byte *variable = (byte *)malloc(cfg.size);
-  if(!variable) return 0;
-  memset(variable, 0, cfg.size);
-
   switch(cfg.var_type){
     case CDT_VOID: break;
-    case CDT_BYTE:
-      variable[0] = (byte) atoi(buf);
-      writeToConfigVariable(option_id, variable);
-      break;
-    case CDT_UINT16:
-      ((uint16_t *)variable)[0] = (uint16_t) atoi(buf);
-      writeToConfigVariable(option_id, variable);
-      break;
-    case CDT_UINT32:
-      ((uint32_t *)variable)[0] = (uint32_t) atoi(buf);
-      writeToConfigVariable(option_id, variable);
-      break;
+    case CDT_BYTE:{
+      byte variable = atoi(buf);
+      writeToConfigVariable(option_id, (byte *)&variable);
+      break;}
+    case CDT_UINT16:{
+      uint16_t variable = atoi(buf);
+      writeToConfigVariable(option_id, (byte *)&variable);
+      break;}
+    case CDT_UINT32:{
+      uint32_t variable = atoi(buf);
+      writeToConfigVariable(option_id, (byte *)&variable);
+      break;}
     case CDT_STRING:
-      strcpy((char *)variable, buf);
-      writeToConfigVariable(option_id, variable);
+      writeToConfigVariable(option_id, (byte *)buf);
       break;
     case CDT_MAC:{
       unsigned int i0, i1, i2, i3, i4, i5;
       sscanf(buf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
+      byte variable[6];
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
       variable[2] = (byte)(i2 & 0xFF);
@@ -3857,6 +3853,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
       sscanf(buf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
+      byte variable[4];
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
       variable[2] = (byte)(i2 & 0xFF);
@@ -3867,46 +3864,55 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     case CDT_PROGNRLIST:{
       uint16_t j = 0;
       char *ptr = buf;
+      byte *variable = getConfigVariableAddress(option_id);
+      memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
-        if(ptr) {ptr[0] = 0; ptr++;}
+        if(ptr) ptr[0] = 0;
         ((int *)variable)[j] = atoi(ptr_t);
+        if(ptr) {ptr[0] = ','; ptr++;}
         j++;
       }while(ptr && j < cfg.size/sizeof(int));
-      writeToConfigVariable(option_id, variable);
+      // writeToConfigVariable(option_id, variable); not needed here
       break;}
     case CDT_DHTBUS:{
       uint16_t j = 0;
       char *ptr = buf;
+      byte *variable = getConfigVariableAddress(option_id);
+      memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
-        if(ptr) {ptr[0] = 0; ptr++;}
+        if(ptr) ptr[0] = 0;
         variable[j] = (byte)atoi(ptr_t);
+        if(ptr) {ptr[0] = ','; ptr++;}
+
         j++;
       }while(ptr && j < cfg.size/sizeof(byte));
-      writeToConfigVariable(option_id, variable);
+      // writeToConfigVariable(option_id, variable); not needed here
       break;}
 #ifdef MAX_CUL
     case CDT_MAXDEVICELIST:{
       uint16_t j = 0;
       char *ptr = buf;
+      byte *variable = getConfigVariableAddress(option_id);
+      memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
         ptr = strstr_P(ptr, PSTR(","));
-        if(ptr) {ptr[0] = 0; ptr++;}
+        if(ptr) ptr[0] = 0;
         strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
+        if(ptr) {ptr[0] = ','; ptr++;}
         j++;
       }while(ptr && j < cfg.size/sizeof(max_device_list[0]));
-      writeToConfigVariable(option_id, variable);
+      // writeToConfigVariable(option_id, variable); not needed here
       UpdateMaxDeviceList();
       break;}
 #endif
     default: break;
   }
 
-free(variable);
 return 1;
 }
 
