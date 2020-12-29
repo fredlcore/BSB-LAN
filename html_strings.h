@@ -16,7 +16,7 @@ const char favicon [] PROGMEM_LATE = {
   0x44, 0xae, 0x42, 0x60, 0x82
 };
 
-#if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
+#if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 "<!--\n"
 "/*\n"
@@ -277,7 +277,8 @@ const char header_html[] PROGMEM_LATE =
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
-  "</head><body>\n"
+  "</head><body>\n";
+const char header_html2[] PROGMEM_LATE =
   "<script>function set(line){\n"
   "var value = document.getElementById('value'+line).value.replace(\":\", \".\");\n"
   "value = value.replace(\"---\", \"\");\n"
@@ -291,7 +292,8 @@ const char header_html[] PROGMEM_LATE =
   "value=value+eval(x.options[i].value);\n"
   "}}\n"
   "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
-  "}</script>\n"
+  "}</script>\n";
+const char header_html3[] PROGMEM_LATE =
   "<font face='Arial'>\n"
   "<center><h1>";
 
