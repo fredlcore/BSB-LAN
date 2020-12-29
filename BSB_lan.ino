@@ -458,9 +458,10 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 #include "html_strings.h"
 
-#include <Ethernet.h>
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpi.h"
+#else
+#include <Ethernet.h>
 #endif
 
 boolean EEPROM_ready = true;
@@ -5943,6 +5944,7 @@ boolean createdatalogFileAndWriteHeader(){
 #ifdef MAX_CUL
 void connectToMaxCul() {
   if(max_cul){
+    max_cul->stop();
     delete max_cul;
     max_cul = NULL;
     if(!enable_max_cul) return;
