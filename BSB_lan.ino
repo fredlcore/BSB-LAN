@@ -64,6 +64,7 @@
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU
  *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
@@ -3517,6 +3518,7 @@ void webPrintSite() {
         }
       }
     }
+    httpclient.stop();
     if ((major > atoi(MAJOR)) || (major == atoi(MAJOR) && minor > atoi(MINOR)) || (major == atoi(MAJOR) && minor == atoi(MINOR) && patch > atoi(PATCH))) {
       printToWebClient(PSTR(MENU_TEXT_NVA ": "));
       printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\r\n"), major, minor, patch);
@@ -5959,7 +5961,11 @@ void connectToMaxCul() {
     if(!enable_max_cul) return;
   }
 
+#ifdef WIFI
+  max_cul = new WiFiSpiClient();
+#else
   max_cul = new EthernetClient();
+#endif
   printToDebug(PSTR("Connection to max_cul: "));
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("established"));
@@ -8142,6 +8148,7 @@ uint8_t pps_offset = 0;
     // give the web browser time to receive the data
     delay(1);
     // close the connection:
+    client.flush();
     client.stop();
   } // endif, client
 
@@ -8801,7 +8808,7 @@ void setup() {
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
-  WiFiSpi.init(13);     // SS signal is on Due pin 13
+  WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
   if (WiFiSpi.status() == WL_NO_SHIELD) {
@@ -8845,9 +8852,9 @@ void setup() {
   }
   // attempt to connect to WiFi network
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), ssid);
+    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
     // Connect to WPA/WPA2 network
-    status = WiFiSpi.begin(ssid, pass);
+    status = WiFiSpi.begin(wifi_ssid, wifi_pass);
   }
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
