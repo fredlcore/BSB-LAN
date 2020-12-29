@@ -5945,12 +5945,9 @@ boolean createdatalogFileAndWriteHeader(){
 #ifdef MAX_CUL
 void connectToMaxCul() {
   if(max_cul){
-    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
     max_cul->stop();
-    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
     delete max_cul;
     max_cul = NULL;
-    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
     if(!enable_max_cul) return;
   }
 
