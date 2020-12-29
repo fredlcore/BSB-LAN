@@ -28,7 +28,7 @@
 // Uncomment the following define if the safe reset circuit (https://github.com/JiriBilek/WiFiSpiESP/issues/6)
 // is connected to SS pin on ESP8266. This allows the SS signal to behave exactly
 // according SPI specification (goes low before transmission and high after)
-//#define ESP8266_SAFE_RESET_IMPLEMENTED
+#define ESP8266_SAFE_RESET_IMPLEMENTED
 
 // Allow debugging information to be print on Serial
 #define ESPSPI_DEBUG_OPTION

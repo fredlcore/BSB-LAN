@@ -33,7 +33,6 @@ extern "C" {
 #include "WiFiSpiClient.h"
 #include "utility/wifi_spi.h"
 #include "utility/srvspi_drv.h"
-#include "utility/wifispi_drv.h"
 
 
 WiFiSpiClient::WiFiSpiClient() : _sock(SOCK_NOT_AVAIL) {
