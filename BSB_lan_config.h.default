@@ -10,7 +10,7 @@
 // Also you can reduce size of some variables for freeing RAM or enlarge their size if You need. Ex: PASSKEY[], avg_parameters[], log_parameters[],
 // ipwe_parameters[], max_device_list[].
 // But be aware: if You change size of variables on configured system your configuration will be lost and default values will be loaded from this file.
-// You can backup configuration to JSON and restore it. (JSONCONFIG module needed). 
+// You can backup configuration to JSON and restore it. (JSONCONFIG module needed).
 
 
 /* Select language; so far German is the most complete, with English following.
@@ -283,6 +283,10 @@ uint32_t destinationDelay = 84600; //seconds interval to send values
 //#define I_DO_NOT_WANT_URL_CONFIG
 //Enable I_WILL_USE_EXTERNAL_INTERFACE for saving space (~6,8Kb). /DG command will be disabled
 //#define I_WILL_USE_EXTERNAL_INTERFACE
+// Enabling I_DO_NOT_NEED_NATIVE_WEB_INTERFACE will eliminate native web interface and save up to 13 Kb flash.
+// /N[E] and /Q command still work
+// You can do it if You using third-party software for BSB-LAN management. Do not forget to enable according modules (JSONCONFIG, MQTT, WEBSERVER).
+//#define I_DO_NOT_NEED_NATIVE_WEB_INTERFACE
 
 // Disable modules due to lack of memory for Arduino Mega. This overwrites any definements above.
 // You are of course free to change the modules so that they fit your needs and the Mega's memory constraints.

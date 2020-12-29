@@ -702,6 +702,10 @@ void registerConfigVariable(uint8_t id, byte *ptr){
 void unregisterConfigVariable(uint8_t id){
   options[id].option_address = NULL;
 }
+
+byte *getConfigVariableAddress(uint8_t id){
+  return options[id].option_address;
+}
 //return EEPROM address for selected config option
 uint16_t getEEPROMaddress(uint8_t id){
   return options[id].eeprom_address;
@@ -3360,7 +3364,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  #else
    printPStr(header_html, sizeof(header_html));
  #endif
-
+ #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
    printToWebClient(PSTR("' ID=main_link>BSB-LAN Web</A></h1></center>\r\n"));
@@ -3423,7 +3427,9 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("</a></td>"));
 
  //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-   printToWebClient(PSTR("</tr></table><p></p><table align=center><tr><td class=\"header\">\r\n"));
+   printToWebClient(PSTR("</tr></table>"));
+#endif
+   printToWebClient(PSTR("<p></p><table align=center><tr><td class=\"header\">\r\n"));
    flushToWebClient();
  } // --- webPrintHeader() ---
 
@@ -4053,11 +4059,8 @@ void generateChangeConfigPage(){
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
-    byte *variable = (byte *)malloc(cfg.size);
-
-    if(!variable) return;
-
-    if(!readFromConfigVariable(cfg.id, variable)) {free(variable); continue;}
+    byte *variable = getConfigVariableAddress(cfg.id);
+    if(!variable) continue;
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
@@ -4219,7 +4222,6 @@ void generateChangeConfigPage(){
      case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
      default: break;
    }
-     free(variable);
     printToWebClient(PSTR("</td></td>\r\n"));
   }
   printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\r\n</form>\r\n"));
@@ -4233,7 +4235,7 @@ void printConfigJSONPossibleValues(int i){
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
   listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-  printToWebClient(PSTR("\r\n    ]"));
+  printToWebClient(PSTR("\r\n      ]"));
 }
 
 void generateJSONwithConfig(){
@@ -4252,11 +4254,8 @@ void generateJSONwithConfig(){
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
-    byte *variable = (byte *)malloc(cfg.size);
-
-    if(!variable) return;
-
-    if(!readFromConfigVariable(cfg.id, variable)) {free(variable); continue;}
+    byte *variable = getConfigVariableAddress(cfg.id);
+    if(!variable) continue;
     if(notFirst){printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
 
     printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"id\": \"%d\",\r\n    \"type\": \"%d\",\r\n    \"format\": \"%d\",\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
@@ -4393,7 +4392,6 @@ void generateJSONwithConfig(){
        break;}
      default: break;
    }
-     free(variable);
   }
   printToWebClient(PSTR("\r\n    }\r\n"));
 }
@@ -5941,8 +5939,12 @@ boolean createdatalogFileAndWriteHeader(){
 #ifdef MAX_CUL
 void connectToMaxCul() {
   if(max_cul){
+    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
+    max_cul->stop();
+    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
     delete max_cul;
     max_cul = NULL;
+    printFmtToDebug(PSTR("Free RAM: %d\r\n"), freeRam());
     if(!enable_max_cul) return;
   }
 
@@ -6694,10 +6696,12 @@ uint8_t pps_offset = 0;
             dataFile.close();
           } else {
 #endif
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 #if defined(__AVR__)
             printPStr(pgm_get_far_address(favicon), sizeof(favicon));
 #else
             printPStr(favicon, sizeof(favicon));
+#endif
 #endif
             flushToWebClient();
 #ifdef WEBSERVER
@@ -6780,7 +6784,7 @@ uint8_t pps_offset = 0;
             }
 
             printToDebug(PSTR("File opened from SD: "));
-            printToDebug(p);
+            printlnToDebug(p);
 
             uint16_t code = 0;
             if((httpflags & HTTP_ETAG))
@@ -6836,11 +6840,13 @@ uint8_t pps_offset = 0;
           }
           else
           {
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           // simply print the website if no index.html on SD card
             if((httpflags & HTTP_GET_ROOT)){
               webPrintSite();
               break;
             }
+#endif
             printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
@@ -6855,11 +6861,14 @@ uint8_t pps_offset = 0;
           client.flush();
         }
 #ifndef WEBSERVER
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         // simply print the website
         if(!strcmp_P(p, PSTR("/"))){
           webPrintSite();
           break;
         }
+#else
+#endif
 #endif
 
         // Answer to unknown requests
@@ -6877,6 +6886,7 @@ uint8_t pps_offset = 0;
         }
 #endif
 
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         // setting verbosity level
         if(p[1]=='V'){
           p+=2;
@@ -7045,6 +7055,7 @@ uint8_t pps_offset = 0;
           webPrintFooter();
           break;
         }
+#endif
 
         if(p[1]=='Q') {
           if(!(httpflags & HTTP_FRAG)) webPrintHeader();
@@ -7685,6 +7696,7 @@ uint8_t pps_offset = 0;
               printToWebClient(PSTR(MENU_TEXT_DTF "\r\n"));
             }
             webPrintFooter();
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           } else if (p[2]=='G') {
             webPrintHeader();
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
@@ -7698,6 +7710,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("/DG command disabled because I_WILL_USE_EXTERNAL_INTERFACE defined<br>\r\n"));
 #endif
             webPrintFooter();
+#endif
           } else {  // dump datalog or journal file
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
@@ -7726,6 +7739,7 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         if (p[1]=='C'){ // dump configuration
           if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
@@ -7782,6 +7796,7 @@ uint8_t pps_offset = 0;
             }
           break;
         }
+#endif
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
         if (p[1]=='L'){
           webPrintHeader();
