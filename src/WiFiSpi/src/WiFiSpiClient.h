@@ -38,6 +38,7 @@ private:
 public:
     WiFiSpiClient();
     WiFiSpiClient(uint8_t sock);
+    virtual ~WiFiSpiClient() {};
 
     uint8_t status();
     virtual int connect(IPAddress ip, uint16_t port);
