@@ -190,8 +190,10 @@ void WiFiSpiClient::stop() {
   while (status() != CLOSED && ++count < 500)
     delay(10);
 
-  WiFiSpiClass::_state[_sock] = NA_STATE;
-  _sock = SOCK_NOT_AVAIL;
+  if (WiFiSpiClass::_state[_sock] < 128) {
+    WiFiSpiClass::_state[_sock] = NA_STATE;
+    _sock = SOCK_NOT_AVAIL;
+  }
 }
 
 /*
