@@ -464,7 +464,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include <Ethernet.h>
 #endif
 
-boolean EEPROM_ready = true;
+bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
 #ifdef WIFI
@@ -528,7 +528,7 @@ EthernetClient *max_cul;
 #ifdef MQTT
 PubSubClient *MQTTClient;
 #endif
-boolean haveTelnetClient = false;
+bool haveTelnetClient = false;
 
 #define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
 #ifdef MAX_CUL
@@ -639,7 +639,7 @@ unsigned long TWW_count   = 0;
 uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 int16_t pps_values[PPS_ANZ] = { 0 };
-boolean time_set = false;
+bool time_set = false;
 uint8_t current_switchday = 0;
 
 #include "BSB_lan_EEPROMconfig.h"
@@ -666,7 +666,7 @@ uint32_t initConfigTable(uint8_t version) {
   for (uint8_t v = 0; v <= version; v++){
     //select config parameter
     for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-      boolean allowedversion = false;
+      bool allowedversion = false;
       uint16_t addr = baseConfigAddrInEEPROM;
       //look for config parameter in parameters table
       for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
@@ -732,12 +732,12 @@ return len;
 }
 
 //copy config option data from EEPROM to variable
-boolean readFromEEPROM(uint8_t id){
+bool readFromEEPROM(uint8_t id){
   return readFromEEPROM(id, options[id].option_address);
 }
 
 //copy config option data from EEPROM to variable
-boolean readFromEEPROM(uint8_t id, byte *ptr){
+bool readFromEEPROM(uint8_t id, byte *ptr){
   if (!EEPROM_ready) return false;
   if(!ptr) return false;
   uint16_t len = getVariableSize(id);
@@ -749,9 +749,9 @@ boolean readFromEEPROM(uint8_t id, byte *ptr){
 
 //copy config option data from variable to EEPROM
 //return true if EEPROM was updated with new value
-boolean writeToEEPROM(uint8_t id){
+bool writeToEEPROM(uint8_t id){
   if (!EEPROM_ready) return false;
-  boolean EEPROMwasChanged = false;
+  bool EEPROMwasChanged = false;
   if(!options[id].option_address) return false;
 //  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
   for(uint16_t i = 0; i < getVariableSize(id); i++){
@@ -765,13 +765,13 @@ boolean writeToEEPROM(uint8_t id){
   return EEPROMwasChanged;
 }
 
-boolean writeToConfigVariable(uint8_t id, byte *ptr){
+bool writeToConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
   memcpy(options[id].option_address, ptr, getVariableSize(id));
   return true;
 }
 
-boolean readFromConfigVariable(uint8_t id, byte *ptr){
+bool readFromConfigVariable(uint8_t id, byte *ptr){
   if(!options[id].option_address) return false;
   memcpy(ptr, options[id].option_address, getVariableSize(id));
   return true;
@@ -1021,7 +1021,7 @@ int printFmtToWebClient(const char *format, ...){
   return len;
 }
 
-void printHTTPheader(uint16_t code, int mimetype, boolean addcharset, boolean isGzip, long cachingTime){
+void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, long cachingTime){
   const char *getfarstrings;
   long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
   printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
@@ -1193,8 +1193,8 @@ const char *prefix - print string before enum element
  const char *suffix - print string after  enum element
  const char *string_delimiter - if string_delimiter is set, string_delimiter will be print between enum elements
  uint16_t value - if alt_delimiter is set then alt_delimiter will be print when "value" will be found in enum
- boolean desc_first - if true, then description will be print first; if false, then value print first
- boolean canBeDisabled - if true, then "---" value will be print
+ bool desc_first - if true, then description will be print first; if false, then value print first
+ bool canBeDisabled - if true, then "---" value will be print
 
  * Parameters passed back:
  *  none
@@ -1203,10 +1203,10 @@ const char *prefix - print string before enum element
  * Global resources used:
  *  none
  * *************************************************************** */
-void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, boolean desc_first, boolean canBeDisabled){
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, bool desc_first, bool canBeDisabled){
   uint16_t val = 0;
   uint16_t c=0;
-  boolean isFirst = true;
+  bool isFirst = true;
   if(decodedTelegram.type == VT_CUSTOM_BIT) c++;
 
   while(c<enumstr_len){
@@ -1805,7 +1805,7 @@ void EEPROM_dump() {
   }
 }
 
-boolean programIsreadOnly(uint8_t param_len){
+bool programIsreadOnly(uint8_t param_len){
   if((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY){ //software-controlled
     switch(programWriteMode) {
       case 0: return true; //All read-only.
@@ -2096,7 +2096,7 @@ void printPassKey(void){
  * Global resources used:
  *   client variable
  * *************************************************************** */
-void printyesno(boolean i){
+void printyesno(bool i){
   if (i) {
     printToWebClient(PSTR(MENU_TEXT_YES "<BR>"));
   } else {
@@ -2859,7 +2859,7 @@ void printTelegram(byte* msg, int query_line) {
   // search for the command code in cmdtbl
   int i=0;        // begin with line 0
   int save_i=0;
-  boolean known=0;
+  bool known=0;
   uint8_t score = 0;
   uint32_t c = 0;     // command code
   if(query_line != -1){
@@ -3592,7 +3592,7 @@ void generateConfigPage(void){
 
   #ifdef DHT_BUS
   printlnToWebClient(PSTR(MENU_TEXT_DHP ": "));
-  boolean not_first = false;
+  bool not_first = false;
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for(int i=0;i<numDHTSensors;i++){
     if(DHT_Pins[i]) {
@@ -3813,7 +3813,7 @@ if (logTelegram) {
 
 #if defined(WEBCONFIG) || defined(JSONCONFIG)
 uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
-  boolean finded = false;
+  bool finded = false;
   configuration_struct cfg;
 
   for(uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++){
@@ -3928,8 +3928,8 @@ return 1;
 }
 
 void SaveConfigFromRAMtoEEPROM(){
-  boolean buschanged = false;
-  boolean needReboot = false;
+  bool buschanged = false;
+  bool needReboot = false;
   //save new values from RAM to EEPROM
   for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
     if(writeToEEPROM(i)){
@@ -3998,7 +3998,7 @@ void SaveConfigFromRAMtoEEPROM(){
 
 #ifdef WEBCONFIG
 void implementConfig(){
-  boolean k_flag = false;
+  bool k_flag = false;
   int i = 0;
   int option_id = 0;
 
@@ -4189,7 +4189,7 @@ void generateChangeConfigPage(){
        printFmtToWebClient(PSTR("%s"), (char *)variable);
        break;
      case CDT_MAC:
-       {boolean isFirst = true;
+       {bool isFirst = true;
        for(uint8_t z = 0; z < 6; z++){
          if(isFirst) isFirst = false; else printToWebClient(PSTR(":"));
          printFmtToWebClient(PSTR("%02X"), (int)variable[z]);
@@ -4200,7 +4200,7 @@ void generateChangeConfigPage(){
        printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
        break;
      case CDT_PROGNRLIST:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(int); j++){
          if(((int *)variable)[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4210,7 +4210,7 @@ void generateChangeConfigPage(){
        }
        break;}
      case CDT_DHTBUS:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4220,7 +4220,7 @@ void generateChangeConfigPage(){
        }
        break;}
      case CDT_MAXDEVICELIST:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4256,7 +4256,7 @@ void printConfigJSONPossibleValues(int i){
 }
 
 void generateJSONwithConfig(){
-  boolean notFirst = false;
+  bool notFirst = false;
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
 #if defined(__AVR__)
     if(pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
@@ -4363,7 +4363,7 @@ void generateJSONwithConfig(){
        printFmtToWebClient(PSTR("%s\""), (char *)variable);
        break;
      case CDT_MAC:
-       {boolean isFirst = true;
+       {bool isFirst = true;
        for(uint8_t z = 0; z < 6; z++){
          if(isFirst) isFirst = false; else printToWebClient(PSTR(":"));
          printFmtToWebClient(PSTR("%02X"), (int)variable[z]);
@@ -4375,7 +4375,7 @@ void generateJSONwithConfig(){
        printFmtToWebClient(PSTR("%u.%u.%u.%u\""), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
        break;
      case CDT_PROGNRLIST:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(int); j++){
          if(((int *)variable)[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4386,7 +4386,7 @@ void generateJSONwithConfig(){
        printToWebClient(PSTR("\""));
        break;}
      case CDT_DHTBUS:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4397,7 +4397,7 @@ void generateJSONwithConfig(){
        printToWebClient(PSTR("\""));
        break;}
      case CDT_MAXDEVICELIST:{
-       boolean isFirst = true;
+       bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
          if(variable[j]){
            if(!isFirst) printToWebClient(PSTR(","));
@@ -4454,7 +4454,7 @@ void LogTelegram(byte* msg){
   uint32_t cmd;
   int i=0;        // begin with line 0
   int save_i=0;
-  boolean known=0;
+  bool known=0;
   uint32_t c;     // command code
   uint8_t cmd_type=0;
   float operand=1;
@@ -4499,7 +4499,7 @@ void LogTelegram(byte* msg){
     c=get_cmdtbl_cmd(i);
   }
   if(cmd <= 0) return;
-  boolean logThis = false;
+  bool logThis = false;
   switch(logTelegram){
     case LOGTELEGRAM_ON: logThis = true; break;
     case LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY: if(known == 0)  logThis = true; break;
@@ -5120,7 +5120,7 @@ const char* printError(uint16_t error){
  *            Build pvalstr from decodedTelegram structure.
  *            format like in old query() function
  * Pass parameters:
- *  boolean extended
+ *  bool extended
  *
  * Parameters passed back:
  *
@@ -5130,7 +5130,7 @@ const char* printError(uint16_t error){
  * Global resources used:
  *  outBuf
  ** *************************************************************** */
-char *build_pvalstr(boolean extended){
+char *build_pvalstr(bool extended){
   int len = 0;
   outBuf[len] = 0;
   if(extended){
@@ -5635,7 +5635,7 @@ void query(int line)  // line (ProgNr)
  * *************************************************************** */
 void query(int line_start  // begin at this line (ProgNr)
           , int line_end    // end with this line (ProgNr)
-          , boolean no_print)    // display in web client?
+          , bool no_print)    // display in web client?
 {
   int line;     // ProgNr
    for(line=line_start;line<=line_end;line++){
@@ -5940,7 +5940,7 @@ void resetAverageCalculation(){
 
 
 #ifdef LOGGER
-boolean createdatalogFileAndWriteHeader(){
+bool createdatalogFileAndWriteHeader(){
   File dataFile = SD.open(datalogFileName, FILE_WRITE);
   if (dataFile) {
     strcpy_P(outBuf, PSTR("Milliseconds;Date;Parameter;Description;Value;Unit"));
@@ -6038,7 +6038,7 @@ void loop() {
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
   // Separate telegrams after a pause of more than one character time.
-  boolean busmsg = false;
+  bool busmsg = false;
   if(monitor){
     busmsg=bus->Monitor(msg);
     if (busmsg==true) {
@@ -6094,7 +6094,7 @@ void loop() {
 
         if(cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
           unsigned long brenner_end;
-          boolean reset_brenner_timer = 0;
+          bool reset_brenner_timer = 0;
           printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus->getPl_start()]);      // first payload byte
 
           if((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
@@ -6201,8 +6201,8 @@ void loop() {
             case 7:
             {
               if (time_set == true) {
-                boolean found = false;
-                boolean next_active = true;
+                bool found = false;
+                bool next_active = true;
                 int16_t current_time = hour() * 6 + minute() / 10;
                 int8_t PPS_weekday = weekday() - 1;
                 uint8_t next_switchday = 0;
@@ -6632,7 +6632,7 @@ uint8_t pps_offset = 0;
                                //...
                                //bit 7 - send HTML fragment only, without header and footer. For external webserver. 0 - full HTML, 128 - fragment
         memset(outBuf,0,sizeof(outBuf));
-        boolean currentLineIsBlank = false;
+        bool currentLineIsBlank = false;
         while (client.connected()) {
           if (client.available()) {
             char c = client.read();
@@ -7096,7 +7096,7 @@ uint8_t pps_offset = 0;
             while (millis() - startquery < 10000) {
               if (bus->GetMessage(msg)) {
                 uint8_t found_id = 0;
-                boolean found = false;
+                bool found = false;
                 if (bus->getBusType() == BUS_BSB && msg[4] == 0x02) {
                   found_id = msg[1] & 0x7F;
                 }
@@ -7294,12 +7294,12 @@ uint8_t pps_offset = 0;
           // Parse potential JSON payload
           char json_value_string[52];
           int json_parameter = -1;
-          boolean json_type = 0;
-          boolean p_flag = false;
-          boolean v_flag = false;
-          boolean t_flag = false;
-          boolean output = false;
-          boolean been_here = false;
+          bool json_type = 0;
+          bool p_flag = false;
+          bool v_flag = false;
+          bool t_flag = false;
+          bool output = false;
+          bool been_here = false;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
@@ -7315,7 +7315,7 @@ uint8_t pps_offset = 0;
 
           if (p[2] == 'I'){ // dump configuration in JSON
             int32_t freespace = 0;
-            boolean not_first = false;
+            bool not_first = false;
             int i;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
@@ -7430,7 +7430,7 @@ uint8_t pps_offset = 0;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
             json_value_string[0] = 0;
             if (client.available()) {
-              boolean opening_quotation = false;
+              bool opening_quotation = false;
               while (client.available()){
                 char c = client.read();
                 if (c == '{') {
@@ -7448,7 +7448,7 @@ uint8_t pps_offset = 0;
                   if (c == 'T' || c == 't') { t_flag = true; }
                   if( p_flag || v_flag || t_flag){
                     uint8_t stage_f = 0; //field name
-                    boolean stage_v = 0; //field value
+                    bool stage_v = 0; //field value
                     uint8_t j_char_idx = 0;
                     char json_temp[sizeof(json_value_string)];
                     while (client.available()){ //rewind to \":
@@ -7533,7 +7533,7 @@ uint8_t pps_offset = 0;
               if(json_parameter == -1) continue;
 
               if (p[2]=='K' && !isdigit(p[4])) {
-                boolean notfirst = false;
+                bool notfirst = false;
                 for(int cat=0;cat<CAT_UNKNOWN;cat++){
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
@@ -7682,7 +7682,7 @@ uint8_t pps_offset = 0;
           if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
             webPrintHeader();
             File dataFile;
-            boolean filewasrecreated = false;
+            bool filewasrecreated = false;
 //recreate journal file for telegram logging
             if(p[2]=='J' || p[2]=='0'){
               SD.remove(journalFileName);
@@ -8203,7 +8203,7 @@ uint8_t pps_offset = 0;
             if(mqtt_mode == 3)
               MQTTPayload.concat(F("\":{\"id\":"));
           }
-          boolean is_first = true;
+          bool is_first = true;
           if (MQTTClient->connected()) {
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
@@ -8417,8 +8417,8 @@ uint8_t pps_offset = 0;
     if (outBuf[0] == 'Z') {
       char max_hex_str[9];
       char max_id[sizeof(max_device_list[0])] = { 0 };
-      boolean known_addr = false;
-      boolean known_eeprom = false;
+      bool known_addr = false;
+      bool known_eeprom = false;
 
       strncpy(max_hex_str, outBuf+7, 2);
       max_hex_str[2]='\0';
