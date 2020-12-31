@@ -16,6 +16,7 @@
 
 open (DEFS, "BSB_lan_defs.h");
 while ($line = <DEFS>) {
+  $line_printed = 0;
   if ($line !~ /, *DEV\_\d\d\d\_/) {
     print $line;
   } else {
@@ -23,7 +24,14 @@ while ($line = <DEFS>) {
       $devfam = sprintf("%03d", $devfam);
       if ($line =~ /, *DEV\_$devfam\_/) {
         print $line;
+        $line_printed = 1;
       }
+    }
+    if ($line_printed == 0) {
+      $lines_removed = $lines_removed + 1;
+      $bytes_saved = $bytes_saved + 17;
     }
   }
 }
+$bytes_saved = $bytes_saved / 1000;
+print "$lines_removed lines have been removed, saving approx. $bytes_saved kB.\n";
