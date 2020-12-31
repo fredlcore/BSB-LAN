@@ -8032,8 +8032,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x513D08A0,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4202,  STR4202,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x513D11C0,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4203,  STR4203,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x513D11C2,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4204,  STR4204,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+};
 
-
+PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Pufferspeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4708,  STR4708,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsollwert Kühlen
 {0x053D0B2F,  CAT_PUFFERSPEICHER,   VT_TEMP,          4709,  STR4709,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsoll Heizen Min
@@ -8833,9 +8834,6 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6180,  STR6180,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Maximum
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
 {0x073D05DA,  CAT_KONFIG,           VT_PRESSURE,      6182,  STR6182,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 kritisch Min
-};
-
-PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D06AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Fühler Speichern
 {0x053D0BBF,  CAT_KONFIG,           VT_YESNO,         6201,  STR6201,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Fühler löschen //FUJITSU
 {0x053D05D4,  CAT_KONFIG,           VT_YESNO,         6204,  STR6204,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // [-] - Konfiguration - Parameter speichern
@@ -9741,7 +9739,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1270,  CAT_IOTEST,           VT_TEMP,          7978,  STR7978,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur BX36 //FUJITSU
 {0x053D1285,  CAT_IOTEST,           VT_CLOSEDOPEN,    7996,  STR7996,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_ALL}, // Zustand Kontakt H33 //FUJITSU
 {0x053D175F,  CAT_IOTEST,           VT_ENUM,          7999,  STR7999,  sizeof(ENUM7999),     ENUM7999,     FL_RONLY,     DEV_ALL}, // Eingangssignal H33 //FUJITSU
+};
 
+PROGMEM_LATE const cmd_t cmdtbl3[]={
 //Status
 {0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1
 {0x053D07A4,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1  // gleiche Funktion in eigener CommandID
@@ -11608,9 +11608,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 
 //{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
-};
 
-PROGMEM_LATE const cmd_t cmdtbl3[]={
   //Prognr 65528 - 65534 is a dirty trick for reducing enumerations addresses to the same type
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65528, "",       sizeof(ENUM_WRITEMODE),   ENUM_WRITEMODE,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),   ENUM_MQTT,         DEFAULT_FLAG, DEV_ALL}, //
