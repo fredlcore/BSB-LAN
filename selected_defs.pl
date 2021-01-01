@@ -14,7 +14,7 @@
 # This will save between 10-20kB of flash memory which may be especially
 # useful for Arduino Mega2560 users with tighter memory constraints.
 
-open (DEFS, "BSB_lan_defs.h");
+open (DEFS, "BSB_lan_defs.h") || die "BSB_lan_defs.h not found in current directory!\n";
 while ($line = <DEFS>) {
   $line_printed = 0;
   if ($line !~ /, *DEV\_\d\d\d\_/) {
@@ -34,4 +34,4 @@ while ($line = <DEFS>) {
   }
 }
 $bytes_saved = $bytes_saved / 1000;
-print "$lines_removed lines have been removed, saving approx. $bytes_saved kB.\n";
+print "// $lines_removed lines have been removed, saving approx. $bytes_saved kB.\n";
