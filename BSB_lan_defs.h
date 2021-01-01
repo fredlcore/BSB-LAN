@@ -333,7 +333,7 @@ typedef enum {
   DT_VALS,    // plain value
   DT_ENUM,    // value (8/16 Bit) followed by space followed by text
   DT_BITS,    // bit value followed by bitmask followed by text
-  DT_WDAY,    // weekday
+  DT_WDAY,    // weekday. Not used but must leaved here. Or replaced with new data type in future
   DT_HHMM,    // hour:minute
   DT_DTTM,    // date and time
   DT_DDMM,    // day and month
