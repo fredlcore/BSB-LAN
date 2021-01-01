@@ -65,6 +65,7 @@
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
+ *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
@@ -8006,24 +8007,24 @@ uint8_t pps_offset = 0;
           }else if(range[0]=='X'){ // handle MAX command
 #ifdef MAX_CUL
             if(enable_max_cul){
-            int max_avg_count = 0;
-            float max_avg = 0;
-            for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
-              if (max_cur_temp[x] > 0) {
-                max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
-                max_avg_count++;
-                printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
-                if (max_valve[x] > -1) {
-                  printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
+              int max_avg_count = 0;
+              float max_avg = 0;
+              for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
+                if (max_cur_temp[x] > 0) {
+                  max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
+                  max_avg_count++;
+                  printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
+                  if (max_valve[x] > -1) {
+                    printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
+                  }
+                  printToWebClient(PSTR("</td></tr>"));
                 }
-                printToWebClient(PSTR("</td></tr>"));
               }
-            }
-            if (max_avg_count > 0) {
-              printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\r\n"), max_avg / max_avg_count);
-            } else {
-              printToWebClient(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
-            }
+              if (max_avg_count > 0) {
+                printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\r\n"), max_avg / max_avg_count);
+              } else {
+                printToWebClient(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
+              }
             }
 #endif
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
@@ -8106,6 +8107,7 @@ uint8_t pps_offset = 0;
             char* line_end;
             int start=-1;
             int end=-1;
+            uint8_t destAddr = bus->getBusDest();
             if(range[0]=='K'){
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
   #if defined(__AVR__)
@@ -8126,10 +8128,22 @@ uint8_t pps_offset = 0;
                 *line_end='\0';
                 line_end++;
               }
+
+              char* token = strchr(range, '!');
+              token++;
+              if (token[0] > 0) {
+                int d_addr = atoi(token);
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              }
+
               start=atoi(line_start);
               end=atoi(line_end);
             }
             query(start,end,0);
+            if (bus->getBusDest() != destAddr) {
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+            }
           }
 
           range = strtok(NULL,"/");
