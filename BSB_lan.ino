@@ -7299,8 +7299,12 @@ uint8_t pps_offset = 0;
           bool p_flag = false;
           bool v_flag = false;
           bool t_flag = false;
+          bool d_flag = false;
           bool output = false;
           bool been_here = false;
+          uint8_t destAddr = bus->getBusDest();
+          uint8_t tempDestAddr = 0;
+          uint8_t tempDestAddrOnPrevIteration = 0;
           int16_t cat_min = -1, cat_max = -1, cat_param=0;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
@@ -7428,10 +7432,13 @@ uint8_t pps_offset = 0;
               break;
             }
           }
+          tempDestAddr = destAddr;
+          tempDestAddrOnPrevIteration = destAddr;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
             json_value_string[0] = 0;
             if (client.available()) {
               bool opening_quotation = false;
+              tempDestAddr = destAddr;
               while (client.available()){
                 char c = client.read();
                 if (c == '{') {
@@ -7444,10 +7451,11 @@ uint8_t pps_offset = 0;
                 if (c == '}') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
                 if(opening_quotation){
-                  if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; }
-                  if (c == 'V' || c == 'v') { v_flag = true; }
-                  if (c == 'T' || c == 't') { t_flag = true; }
-                  if( p_flag || v_flag || t_flag){
+                  if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; } //Parameter
+                  if (c == 'V' || c == 'v') { v_flag = true; } //Value
+                  if (c == 'T' || c == 't') { t_flag = true; } //Type
+                  if ((c == 'D' || c == 'd') && t_flag != true) { d_flag = true; } //Destination
+                  if( p_flag || v_flag || t_flag || d_flag){
                     uint8_t stage_f = 0; //field name
                     bool stage_v = 0; //field value
                     uint8_t j_char_idx = 0;
@@ -7510,6 +7518,10 @@ uint8_t pps_offset = 0;
                       json_type = atoi(jptr);
                       t_flag = false;
                     }
+                    if (d_flag == true) {
+                      tempDestAddr = atoi(jptr);
+                      d_flag = false;
+                    }
                   }
                 }
                 if (output) break;
@@ -7521,6 +7533,8 @@ uint8_t pps_offset = 0;
                 json_parameter = atoi(json_token);
               }
             }
+            if(tempDestAddr != tempDestAddrOnPrevIteration)
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), tempDestAddr);
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter,0,&cmd);
@@ -7663,8 +7677,11 @@ uint8_t pps_offset = 0;
                 json_token = strtok(NULL,",");
               }
             }
+            tempDestAddrOnPrevIteration = tempDestAddr;
             json_parameter = -1;
           }
+          if(tempDestAddr != destAddr)
+            bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
 #if defined(JSONCONFIG)
           if (p[2]=='W') {
             SaveConfigFromRAMtoEEPROM();
