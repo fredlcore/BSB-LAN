@@ -39,6 +39,7 @@ The following overview shows the most common used controllers of the different h
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
 - CTA: Optiheat  
+- Domostar: GBK 25H/SH
 - Froeling: Rendagas Plus
 - Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
 - Gruenenwald: Greenheat
