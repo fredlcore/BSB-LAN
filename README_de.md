@@ -41,6 +41,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
 - CTA: Optiheat  
+- Domostar: GBK 25H/SH
 - Fröling: Rendagas Plus
 - Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
 - Grünenwald: Greenheat
