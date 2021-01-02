@@ -38,6 +38,7 @@ private:
 public:
     WiFiSpiClient();
     WiFiSpiClient(uint8_t sock);
+    virtual ~WiFiSpiClient() {};
 
     uint8_t status();
     virtual int connect(IPAddress ip, uint16_t port);
@@ -66,10 +67,10 @@ public:
     using Print::write;
 
     // Return the IP address of the host who sent the current incoming packet
-    virtual IPAddress remoteIP();
+    IPAddress remoteIP();
   
     // Return the port of the host who sent the current incoming packet
-    virtual uint16_t remotePort();
+    uint16_t remotePort();
 
 private:
     int _connect(IPAddress ip, uint16_t port, bool isSSL);
