@@ -439,6 +439,7 @@
 //#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
+#include <strings.h>
  //Mega
 #if defined(__AVR__)
 #include <EEPROM.h>
