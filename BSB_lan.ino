@@ -3816,6 +3816,7 @@ if (logTelegram) {
 uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
   bool finded = false;
   configuration_struct cfg;
+  char sscanf_buf[24];
 
   for(uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++){
     #if defined(__AVR__)
@@ -3851,7 +3852,8 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       break;
     case CDT_MAC:{
       unsigned int i0, i1, i2, i3, i4, i5;
-      sscanf(buf, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5);
+      strcpy_P(sscanf_buf, PSTR("%x:%x:%x:%x:%x:%x"));
+      sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5);
       byte variable[6];
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
@@ -3864,7 +3866,8 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
     }
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
-      sscanf(buf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
+      strcpy_P(sscanf_buf, PSTR("%u.%u.%u.%u"));
+      sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3);
       byte variable[4];
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
@@ -4624,6 +4627,8 @@ int set(int line      // the ProgNr of the heater parameter
   uint32_t c;              // command code
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
   uint8_t param_len = 0;
+  char sscanf_buf[36]; //Max format length is VT_TIMEPROG
+
   if (line < 0){
     return 0;
   }
@@ -4855,7 +4860,8 @@ int set(int line      // the ProgNr of the heater parameter
       // /S0=dd.mm.yyyy_mm:hh:ss
       int d,m,y,hour,min,sec;
       // The caller MUST provide six values for an event
-      if(6!=sscanf(val,"%d.%d.%d_%d:%d:%d",&d,&m,&y,&hour,&min,&sec)) {
+      strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
+      if(6!=sscanf(val,sscanf_buf,&d,&m,&y,&hour,&min,&sec)) {
         printlnToDebug(PSTR("Too few/many arguments for date/time!"));
         return 0;
       }
@@ -4888,7 +4894,8 @@ int set(int line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      strcpy_P(sscanf_buf, PSTR("%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d"));
+      ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
       if(ret<4)      // BEGIN hour/minute and END hour/minute
         return 0;
@@ -4925,7 +4932,8 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=9;
       if(val[0]!='\0'){
           int d,m;
-          if(2!=sscanf(val,"%d.%d.",&d,&m))
+          strcpy_P(sscanf_buf, PSTR("%d.%d."));
+          if(2!=sscanf(val,sscanf_buf,&d,&m))
             return 0;      // incomplete input data
           param[0]=decodedTelegram.enable_byte;   // flag = enabled
           param[2]=m;
@@ -4944,7 +4952,8 @@ int set(int line      // the ProgNr of the heater parameter
     // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
     // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
       int d,m;
-      if(2!=sscanf(val,"%d.%d",&d,&m))
+      strcpy_P(sscanf_buf, PSTR("%d.%d"));
+      if(2!=sscanf(val,sscanf_buf,&d,&m))
         return 0;
       param[0]=decodedTelegram.enable_byte;
       param[1]=0xff;
