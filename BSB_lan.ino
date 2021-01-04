@@ -2620,7 +2620,7 @@ void printDate(byte *msg,byte data_len){
 
   if(data_len == 9){
     if(msg[bus->getPl_start()]==0){
-      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -4926,7 +4926,7 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=9;
       if(val[0]!='\0'){
           int d,m;
-          if(2!=sscanf(val,"%d.%d.",&d,&m))
+          if(2!=sscanf(val,"%d.%d",&d,&m))
             return 0;      // incomplete input data
           param[0]=decodedTelegram.enable_byte;   // flag = enabled
           param[2]=m;
