@@ -44,6 +44,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Fröling: Rendagas Plus
 - Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
 - Grünenwald: Greenheat
+- Interdomo: Domostar GBK 25H/SH
 - MHG: Procon E
 - Olymp: SHS, WHS
 - Thermital: TBox Clima TOP
