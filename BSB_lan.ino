@@ -435,6 +435,8 @@
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
+int	strncasecmp(const char *, const char *, size_t) __pure;  // for some reasaon, PlatformIO under VS Code complains that strncasecmp is not defined, although compiles without a problem. This should fix the warning.
+
 #include <avr/pgmspace.h>
 //#include <avr/wdt.h>
 #include <Arduino.h>
@@ -2619,7 +2621,7 @@ void printDate(byte *msg,byte data_len){
 
   if(data_len == 9){
     if(msg[bus->getPl_start()]==0){
-      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -4932,7 +4934,7 @@ int set(int line      // the ProgNr of the heater parameter
       param_len=9;
       if(val[0]!='\0'){
           int d,m;
-          strcpy_P(sscanf_buf, PSTR("%d.%d."));
+          strcpy_P(sscanf_buf, PSTR("%d.%d"));
           if(2!=sscanf(val,sscanf_buf,&d,&m))
             return 0;      // incomplete input data
           param[0]=decodedTelegram.enable_byte;   // flag = enabled

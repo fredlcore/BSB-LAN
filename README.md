@@ -42,6 +42,7 @@ The following overview shows the most common used controllers of the different h
 - Froeling: Rendagas Plus
 - Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
 - Gruenenwald: Greenheat
+- Interdomo: Domostar GBK 25H/SH
 - MHG: Procon E
 - Olymp: SHS, WHS
 - Thermital: TBox Clima TOP

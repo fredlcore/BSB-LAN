@@ -26,3 +26,4 @@ replace_defs.pl
 replace_enums.pl
 tidy_enums.pl
 localization/conv-csv.pl
+OEM-Codes.txt
