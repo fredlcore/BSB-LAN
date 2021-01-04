@@ -435,6 +435,8 @@
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
+int	strncasecmp(const char *, const char *, size_t) __pure;  // for some reasaon, PlatformIO under VS Code complains that strncasecmp is not defined, although compiles without a problem. This should fix the warning.
+
 #include <avr/pgmspace.h>
 //#include <avr/wdt.h>
 #include <Arduino.h>
