@@ -435,8 +435,6 @@
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
-int	strncasecmp(const char *, const char *, size_t) __pure;  // for some reasaon, PlatformIO under VS Code complains that strncasecmp is not defined, although compiles without a problem. This should fix the warning.
-
 #include <avr/pgmspace.h>
 //#include <avr/wdt.h>
 #include <Arduino.h>
@@ -780,6 +778,7 @@ bool readFromConfigVariable(uint8_t id, byte *ptr){
   return true;
 }
 
+#include "json-api-version.h"
 #include "bsb-version.h"
 #define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
 
@@ -7323,8 +7322,14 @@ uint8_t pps_offset = 0;
 
           printHTTPheader(HTTP_OK, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
           printToWebClient(PSTR("\r\n{\r\n"));
-          if(strchr("CIKLQRSW",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("CIKLQRSVW",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
+            forcedflushToWebClient();
+            break;
+          }
+
+          if (p[2] == 'V'){ // JSON API version
+            printFmtToWebClient(PSTR("{\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"}"));
             forcedflushToWebClient();
             break;
           }
@@ -8115,7 +8120,12 @@ uint8_t pps_offset = 0;
               val=digitalRead(pin);
             }else{ // set value
               p++;
-              if(!strncasecmp(p,"on",2) || !strncasecmp(p,"high",2) || *p=='1'){
+              uint16_t i = 0;
+              while(p[i]){
+                p[i] |= 0x20; //to lower case
+                i++;
+              }
+              if(!strncmp_P(p, PSTR("on"), 2) || !strncmp_P(p, PSTR("high"), 2) || *p=='1'){
                 val=HIGH;
               }else{
                 val=LOW;
