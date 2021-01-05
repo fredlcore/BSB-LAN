@@ -161,7 +161,7 @@
 #define MENU_TEXT_NVN "Installierte Version ist aktuell."
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
-#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/anhang_b.html"
+#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
