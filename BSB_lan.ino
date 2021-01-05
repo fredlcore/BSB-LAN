@@ -7323,7 +7323,7 @@ uint8_t pps_offset = 0;
 
           printHTTPheader(HTTP_OK, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
           printToWebClient(PSTR("\r\n{\r\n"));
-          if(strchr("ACIKLQRSW",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr("CIKLQRSW",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
