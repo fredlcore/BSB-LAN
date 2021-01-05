@@ -7329,7 +7329,7 @@ uint8_t pps_offset = 0;
           }
 
           if (p[2] == 'V'){ // JSON API version
-            printFmtToWebClient(PSTR("{\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"}"));
+            printFmtToWebClient(PSTR("\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"\r\n}"));
             forcedflushToWebClient();
             break;
           }
