@@ -271,7 +271,7 @@ const char header_html[] PROGMEM_LATE =
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
   "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">\n"
-  "<title>BSB-LAN Web</title>\n"
+  "<title>BSB-LAN</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
@@ -303,5 +303,5 @@ const char auth_req_html[] PROGMEM_LATE =
   "Connnection: close\n"
   "\n"
   "<!DOCTYPE HTML>\n"
-  "<HTML><HEAD><TITLE>Error</TITLE>\n"
+  "<HTML><HEAD><TITLE>BSB-LAN</TITLE>\n"
   "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>\n";

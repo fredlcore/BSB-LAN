@@ -9,8 +9,9 @@
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *         (based on the code and work from many other developers. Many thanks!)
  *         Special thanks to Sergey Dukachev for lots of helpful code optimizations and restructurings as well as providing a profound Russian localization since version 0.43
- *
- * see README and HOWTO files for more information
+ *         Manual by Ulf Dieckmann (adapter@quantentunnel.de):
+ *         German: https://1coderookie.github.io/BSB-LPB-LAN/
+ *         English: https://1coderookie.github.io/BSB-LPB-LAN_EN/
  *
  * Version:
  *       0.1  - 21.01.2015 - initial version
@@ -66,7 +67,7 @@
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
- *        - URL command /T has been removed as all sensors can now be accessed via parameter numbers 20000 and above.
+ *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
@@ -3379,7 +3380,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("' ID=main_link>BSB-LAN Web</A></h1></center>\r\n"));
+   printToWebClient(PSTR("' ID=main_link>BSB-LAN</A></h1></center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
@@ -3479,7 +3480,7 @@ void webPrintSite() {
   webPrintHeader();
 
   printlnToWebClient(PSTR("<p>"));
-  printToWebClient(PSTR("BSB-LAN Web, Version "));
+  printToWebClient(PSTR("BSB-LAN, Version "));
   printToWebClient(BSB_VERSION);
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
@@ -4843,7 +4844,7 @@ int set(int line      // the ProgNr of the heater parameter
         param[2]= t & 0xff;
       }else{ // INF message type
         if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
-          param[0]=decodedTelegram.enable_byte-1;
+          param[0]=0;
           param[1]=(t >> 8);
           param[2]= t & 0xff;
         } else {  // Case for room temperature
