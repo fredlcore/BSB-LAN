@@ -780,7 +780,7 @@ bool readFromConfigVariable(uint8_t id, byte *ptr){
 
 #include "json-api-version.h"
 #include "bsb-version.h"
-#define BSB_VERSION MAJOR "." MINOR "." PATCH "-" COMPILETIME
+const char BSB_VERSION[] PROGMEM = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
 #include "BSB_lan_custom_global.h"
 
@@ -3480,7 +3480,7 @@ void webPrintSite() {
 
   printlnToWebClient(PSTR("<p>"));
   printToWebClient(PSTR("BSB-LAN Web, Version "));
-  printToWebClient(PSTR(BSB_VERSION));
+  printToWebClient(BSB_VERSION);
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL ));
@@ -3553,7 +3553,9 @@ void generateConfigPage(void){
 #else
   printToWebClient(PSTR("Due<BR>\r\n"));
 #endif
-  printToWebClient(PSTR("" MENU_TEXT_VER ": " BSB_VERSION "<BR>\r\n" MENU_TEXT_RAM ": "));
+  printToWebClient(PSTR("" MENU_TEXT_VER ": "));
+  printToWebClient(BSB_VERSION);
+  printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": "));
 #ifdef WEBCONFIG
   printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
 
@@ -6634,8 +6636,8 @@ uint8_t pps_offset = 0;
 
         // perform HTTP-Authentification by reading the remaining client data and look for credentials
         // Parsing headers
-        static int buffershift = 32;
-        size_t charcount=buffershift;  //Reserve space in buffer for ETag (Max 27 chars)
+        static int buffershift = 38;
+        size_t charcount=buffershift;  //Reserve space in buffer for ETag (Max 32 chars)
         uint8_t httpflags = 0; //bit 0 - authenticated: 0 - no, 1 - yes
                                //bit 1 - client browser accept gzip: 0 - no, 2 - yes
                                //bit 2 - HEAD request received from client: 0 - no, 4 - yes
@@ -6648,7 +6650,7 @@ uint8_t pps_offset = 0;
           if (client.available()) {
             char c = client.read();
             outBuf[charcount]=c;
-            if (charcount < sizeof(outBuf)-1-32) charcount++; //Minus reserverd space for ETag
+            if (charcount < sizeof(outBuf)-1-buffershift) charcount++; //Minus reserverd space for ETag
             if (c == '\n' && currentLineIsBlank) {
               break;
             }
@@ -6660,12 +6662,21 @@ uint8_t pps_offset = 0;
               if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
                 httpflags |= HTTP_GZIP;
               }
-              else if (!(httpflags & HTTP_ETAG) && strstr_P(outBuf + buffershift,PSTR("If-None-Match:")) != 0) {
-                httpflags |= HTTP_ETAG;
-                strcpy(outBuf, outBuf + buffershift);
+              else
+#endif
+              if (!(httpflags & HTTP_ETAG)) {
+                char *ptr = strstr_P(outBuf + buffershift, PSTR("If-None-Match:"));
+                if(ptr != 0){
+                  httpflags |= HTTP_ETAG;
+                  ptr = strchr(ptr, ':');
+                  do{
+                    ptr++;
+                  } while (ptr[0] == ' ');
+                  strcpy(outBuf, ptr); //Copy ETag to buffer. Note: '\r\n' present at end
+//                  printFmtToDebug(PSTR("ETag string: %s\r\n"), outBuf);
+                }
               }
              else
-#endif
               //Execute only if flag not set because strstr more expensive than bitwise operation
               if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
                 httpflags |= HTTP_AUTH;
@@ -6806,7 +6817,7 @@ uint8_t pps_offset = 0;
               }
 
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize) + 1)) {
+              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\"") + 1, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
               }
@@ -6888,6 +6899,16 @@ uint8_t pps_offset = 0;
 
         if (p[1] != 'J') {
           client.flush();
+        } else {
+          if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
+            strcpy_P(outBuf + buffershift, PSTR("\""));
+            strcat_P(outBuf + buffershift, BSB_VERSION);
+            strcat_P(outBuf + buffershift, PSTR("\""));
+            if (memcmp(outBuf, outBuf + buffershift, strlen(outBuf + buffershift))) {
+              // reuse httpflags
+              httpflags &= ~HTTP_ETAG; //ETag not match
+            }
+          }
         }
 #ifndef WEBSERVER
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
@@ -7091,7 +7112,7 @@ uint8_t pps_offset = 0;
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
-          printToWebClient(PSTR(BSB_VERSION));
+          printToWebClient(BSB_VERSION);
           printToWebClient(PSTR("<BR>\r\n"));
           printToWebClient(PSTR(MENU_TEXT_QSC "...<BR>"));
           switch(bus->getBusType()) {
@@ -7319,9 +7340,29 @@ uint8_t pps_offset = 0;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
+          {//local variable scope
+            int16_t http_code = HTTP_OK;
+            long cache_time = HTTP_DO_NOT_CACHE;
 
-          printHTTPheader(HTTP_OK, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
-          printToWebClient(PSTR("\r\n{\r\n"));
+            if(p[2] == 'C' || p[2] == 'K') {
+              cache_time = 300; //5 min
+              if((httpflags & HTTP_ETAG))
+                http_code = HTTP_NOT_MODIFIED;
+            }
+
+            printHTTPheader(http_code, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, cache_time);
+            if(cache_time != HTTP_DO_NOT_CACHE){
+              printToWebClient(PSTR("ETag: \""));
+              printToWebClient(BSB_VERSION);
+              printToWebClient(PSTR("\"\r\n"));
+            }
+            printToWebClient(PSTR("\r\n"));
+            if(http_code == HTTP_NOT_MODIFIED){
+              forcedflushToWebClient();
+              break;
+            }
+          }
+          printToWebClient(PSTR("{\r\n"));
           if(strchr("CIKLQRSVW",p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
@@ -7341,7 +7382,9 @@ uint8_t pps_offset = 0;
 #if defined LOGGER || defined WEBSERVER
             freespace = SD.vol()->freeClusterCount();
 #endif
-            printFmtToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \"" BSB_VERSION "\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %ld,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
+            printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
+            printToWebClient(BSB_VERSION);
+            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %ld,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
@@ -8274,7 +8317,7 @@ uint8_t pps_offset = 0;
             if(mqtt_mode == 3){ // Build the json doc on the fly
               int len = 0;
               outBuf[len] = 0;
-              len += sprintf_P(outBuf + len, PSTR("%d\",\"name\":\""), log_parameters[i]);
+              len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), log_parameters[i]);
               len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
               len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
               if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
@@ -8570,8 +8613,9 @@ uint8_t pps_offset = 0;
 
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
-      telnetClient.println(F("Version: " BSB_VERSION));
       haveTelnetClient = true;
+      printToDebug(PSTR("Version: "));
+      printlnToDebug(BSB_VERSION);
     }
     if (!telnetClient.connected()) {
       haveTelnetClient = false;
