@@ -783,7 +783,9 @@ bool readFromConfigVariable(uint8_t id, byte *ptr){
 #include "bsb-version.h"
 const char BSB_VERSION[] PROGMEM = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
+#ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_global.h"
+#endif
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -9160,7 +9162,9 @@ if(save_debug_mode == 2)
 
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
+#ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_setup.h"
+#endif
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
 }
