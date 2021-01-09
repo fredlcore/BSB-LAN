@@ -4283,7 +4283,7 @@ void generateJSONwithConfig(){
     if(!variable) continue;
     if(notFirst){printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
 
-    printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"id\": \"%d\",\r\n    \"type\": \"%d\",\r\n    \"format\": \"%d\",\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
+    printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
 //Print param category
 #if defined(__AVR__)
     printToWebClient(pgm_read_word_far(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0])));
