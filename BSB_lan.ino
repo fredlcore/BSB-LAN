@@ -463,14 +463,18 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpi.h"
+#else
+#include <Ethernet.h>
+#endif
+
+#ifdef MDNS_HOSTNAME
+#ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
 #else
-#include <Ethernet.h>
 #include <EthernetUDP.h>
 EthernetUDP udp;
 #endif
-#ifdef MDNS_HOSTNAME
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
 #endif
