@@ -50,6 +50,8 @@ char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) h
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for ESP8266
 
+#define MDNS_HOSTNAME "BSB-LAN"             // Advertises the hostname in the local network 
+
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
