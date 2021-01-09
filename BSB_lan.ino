@@ -66,6 +66,7 @@
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
+ *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
@@ -462,8 +463,16 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpi.h"
+#include "src/WiFiSpi/src/WiFiSpiUdp.h"
+WiFiSpiUdp udp;
 #else
 #include <Ethernet.h>
+#include <EthernetUDP.h>
+EthernetUDP udp;
+#endif
+#ifdef MDNS_HOSTNAME
+#include "src/ArduinoMDNS/ArduinoMDNS.h"
+MDNS mdns(udp);
 #endif
 
 bool EEPROM_ready = true;
@@ -8625,6 +8634,9 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
+#ifdef MDNS_HOSTNAME
+  mdns.run();
+#endif
 } // --- loop () ---
 
 #ifdef WIFI
@@ -9161,6 +9173,15 @@ if(save_debug_mode == 2)
 #endif
 
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
+
+#ifdef MDNS_HOSTNAME
+#ifdef WIFI
+  mdns.begin(WiFiSpi.localIP(), MDNS_HOSTNAME);
+#else
+  mdns.begin(Ethernet.localIP(), MDNS_HOSTNAME);
+#endif
+mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+#endif
 
 #ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_setup.h"
