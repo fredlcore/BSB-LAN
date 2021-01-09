@@ -612,6 +612,7 @@ uint8_t current_switchday = 0;
 #include "BSB_lan_EEPROMconfig.h"
 
 static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
+void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 
 /** *****************************************************************
  *  Function: initConfigTable(uint8_t)
@@ -625,7 +626,7 @@ static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
  *   none
  * Global resources used:
  * *************************************************************** */
- void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
+ 
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
@@ -7678,18 +7679,6 @@ uint8_t pps_offset = 0;
 
 #ifdef MQTT
   if(mqtt_broker_ip_addr[0] && mqtt_mode){ //Address was set and MQTT was enabled
-    char* MQTTUser = NULL;
-    if(MQTTUsername[0])
-      MQTTUser = MQTTUsername;
-
-    const char* MQTTPass = NULL;
-    if(MQTTPassword[0])
-      MQTTPass = MQTTPassword;
-    if(MQTTClient == NULL){
-      MQTTClient = new PubSubClient(mqtt_client);  //Luposoft: change instance
-      MQTTClient->setBufferSize(1024);
-    }
-
     String MQTTPayload = "";
     String MQTTTopic = "";
     
@@ -7794,7 +7783,15 @@ uint8_t pps_offset = 0;
           }
         }
       }
-      //MQTTClient->disconnect();   //Luposoft: no needing to disconnect anymore
+      //MQTTClient->disconnect();   //Luposoft: no needing to disconnect anymore  
+      if(MQTTClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
+      {
+        if (MQTTClient->connected()) 
+        {
+          MQTTClient->disconnect();
+          printlnToDebug(PSTR("MQTT was disconnected on order through web interface"));
+        }
+      }
     }
   }
   if(MQTTClient && mqtt_mode == 0){
@@ -8071,6 +8068,17 @@ uint8_t pps_offset = 0;
 #ifdef MQTT
 boolean mqtt_connect()
 {
+  char* MQTTUser = NULL;
+  if(MQTTUsername[0])
+    MQTTUser = MQTTUsername;
+  const char* MQTTPass = NULL;
+  if(MQTTPassword[0])
+    MQTTPass = MQTTPassword;
+  if(MQTTClient == NULL)
+  {
+    MQTTClient = new PubSubClient(mqtt_client);  //Luposoft: change instance
+    MQTTClient->setBufferSize(1024);
+  }
   if (!MQTTClient->connected())
   {
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
@@ -8088,7 +8096,9 @@ boolean mqtt_connect()
       else
       {
         printlnToDebug(PSTR("Connect to MQTT broker"));
-        MQTTClient->subscribe("fromFHEM");   //Luposoft: set the topic listen to
+        const char* mqtt_subscr;
+        if(MQTTTopicPrefix[0]){mqtt_subscr = MQTTTopicPrefix;}else {mqtt_subscr="fromBroker";}
+        MQTTClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
         MQTTClient->setKeepAlive(120);       //Luposoft: just for savety
         MQTTClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
         return true;
@@ -8104,9 +8114,9 @@ return false;
 #endif
 //Luposoft: Funktionen mqtt_callback
 /*  Function: mqtt_callback()
- *  Does:     wird durch MQTTClient.loop() bei angekommenen MQTT-Nachrichten aufgerufen
- *            Beispielaufruf in Fhem: set <mqtt2Server> publish fromFHEM S700=1
-              sendet das Kommando an die Heizung und gibt eine MQTT-Bestätigung an Fhem zurück
+ *  Does:     will call by MQTTClient.loop() when incomming mqtt-message from broker
+ *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
+              send command to heater and return an acknowledge to broker
  * Pass parameters:
  *  topic,payload,length
  * Parameters passed back:
@@ -8125,39 +8135,36 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   printToDebug(PSTR("mqtt-message arrived ["));
   printToDebug(topic);
   printlnToDebug(PSTR("] "));
-  char buf[20];
   char C_value[24];
-  String("ACK_").toCharArray(C_value, 24);
-  
+  strcpy_P(C_value, PSTR("ACK_"));   //dukess
   switch ((char)payload[0])
   {
-  case 'I':setcmd=false;break;
-  case 'S':setcmd=true;break;
-  default:
-  printlnToDebug(PSTR("mqtt_callback: missing 'I' or 'S' at start"));
-  return;
-  break;}
-  
-  for (unsigned int i=0;i<length;i++)
-  {
-  buf[i]=char(payload[i]);
-  C_value[i+4]=buf[i];
+    case 'I':setcmd=false;break;
+    case 'S':setcmd=true;break;
+    default:
+      printlnToDebug(PSTR("mqtt_callback: missing 'I' or 'S' at start"));
+      return;
+      break;
   }
-  buf[length]='\0';  //0-terminating
+  //buffer overflow protection    //dukess
+  if(length > sizeof(C_value) - 4)
+  {
+    length = sizeof(C_value) - 4;
+    printlnToDebug(PSTR("payload too big"));
+  }
+    for (unsigned int i=0;i<length;i++)
+  {
+    C_value[i+4]=char(payload[i]);
+  }
   C_value[length+4]='\0';
-  char*C_payload=buf;
+  char*C_payload=C_value+ 4;  //dukess
   C_payload++;
   int I_line=atoi(C_payload);
   C_payload=strchr(C_payload,'=');
   C_payload++;
   if (setcmd) {printToDebug(PSTR("S"));} else {printToDebug(PSTR("I"));}
-  String S_line=String(I_line);
-  char*C_line=S_line.c_str();
-  printToDebug(C_line);
-  printToDebug(PSTR("="));
-  printToDebug(C_payload);
-  printlnToDebug(PSTR(" "));
-  set(I_line,C_payload,setcmd);  //Steuerbefehl
+  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+  set(I_line,C_payload,setcmd);  //command to heater
   String mqtt_Topic;
   if(MQTTTopicPrefix[0])
   {
