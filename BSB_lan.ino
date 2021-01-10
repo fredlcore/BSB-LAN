@@ -7301,6 +7301,7 @@ uint8_t pps_offset = 0;
                       if(MQTTClient){
                         delete MQTTClient;
                         MQTTClient = NULL;
+                        mqtt_client->stop();
                         delete mqtt_client;
                       }
                       break;
@@ -7783,6 +7784,7 @@ uint8_t pps_offset = 0;
   if(MQTTClient && mqtt_mode == 0){
     delete MQTTClient;
     MQTTClient = NULL;
+    mqtt_client->stop();
     delete mqtt_client;
   }
 #endif
