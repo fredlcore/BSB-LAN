@@ -472,7 +472,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
 #else
-#include <EthernetUDP.h>
+#include <EthernetUdp.h>
 EthernetUDP udp;
 #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
