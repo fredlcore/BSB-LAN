@@ -47,6 +47,9 @@ byte subnet_addr[4] = {255,255,255,0}; // Please use commas instead of dots!!! I
 //#define WIFI                           // activate this definement if you want to use WiFi
 char wifi_ssid[32] = "YourWiFiNetwork";   // enter your WiFi network name (SSID) here
 char wifi_pass[64] = "YourWiFiPassword";  // enter your WiFi password here
+#define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for Arduino-ESP8266 connection
+
+#define MDNS_HOSTNAME "BSB-LAN"             // Advertises the hostname in the local network 
 
 #define DEBUG //Compile verbose DEBUG module if defined
 byte debug_mode = 2; //Debug: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
