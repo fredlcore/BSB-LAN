@@ -3022,6 +3022,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_SHORT: //u8 min
             case VT_SECONDS_SHORT: //u8 s
             case VT_PERCENT: // u8 %
+            case VT_PERCENT1: // u8 %
             case VT_BYTE: // u8
 //            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printBYTE(msg,data_len);
@@ -4707,6 +4708,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
+    case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
