@@ -470,14 +470,14 @@ const char *journalFileName = "journal.txt";
 
 #ifdef WIFI
 WiFiEspClient client;
-WiFiEspClient mqtt_client;  //Luposoft: own instance 
+WiFiEspClient *mqtt_client;  //Luposoft: own instance 
 #ifdef VERSION_CHECK
 WiFiEspClient httpclient;
 #endif
 WiFiEspClient telnetClient;
 #else
 EthernetClient client;
-EthernetClient mqtt_client;   //Luposoft: own instance
+EthernetClient *mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
 EthernetClient httpclient;
 #endif
@@ -7299,8 +7299,9 @@ uint8_t pps_offset = 0;
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
                       if(MQTTClient){
-                        delete MQTTClient;
                         MQTTClient = NULL;
+                        delete MQTTClient;
+                        delete mqtt_client;
                       }
                       break;
 #endif
@@ -7795,8 +7796,9 @@ uint8_t pps_offset = 0;
     }
   }
   if(MQTTClient && mqtt_mode == 0){
-    delete MQTTClient;
     MQTTClient = NULL;
+    delete MQTTClient;
+    delete mqtt_client;
   }
 #endif
 
@@ -8076,7 +8078,8 @@ boolean mqtt_connect()
     MQTTPass = MQTTPassword;
   if(MQTTClient == NULL)
   {
-    MQTTClient = new PubSubClient(mqtt_client);  //Luposoft: change instance
+    mqtt_client = new EthernetClient();
+    MQTTClient = new PubSubClient(mqtt_client[0]);
     MQTTClient->setBufferSize(1024);
   }
   if (!MQTTClient->connected())
