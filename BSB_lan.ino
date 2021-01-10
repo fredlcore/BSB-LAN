@@ -7299,8 +7299,8 @@ uint8_t pps_offset = 0;
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
                       if(MQTTClient){
-                        MQTTClient = NULL;
                         delete MQTTClient;
+                        MQTTClient = NULL;
                         delete mqtt_client;
                       }
                       break;
@@ -7688,21 +7688,6 @@ uint8_t pps_offset = 0;
 
     if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
       lastMQTTTime = millis();
-
-/*      if (!MQTTClient->connected()) {
-        IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-        MQTTClient->setServer(MQTTBroker, 1883);
-        int retries = 0;
-        while (!MQTTClient->connected() && retries < 3) {
-          MQTTClient->connect("BSB-LAN", MQTTUser, MQTTPass);
-          retries++;
-          if (!MQTTClient->connected()) {
-            delay(1000);
-            printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
-          }
-        }
-      }
-*/
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
           // Declare local variables and start building json if enabled
@@ -7796,8 +7781,8 @@ uint8_t pps_offset = 0;
     }
   }
   if(MQTTClient && mqtt_mode == 0){
-    MQTTClient = NULL;
     delete MQTTClient;
+    MQTTClient = NULL;
     delete mqtt_client;
   }
 #endif
