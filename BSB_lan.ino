@@ -3022,6 +3022,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_SHORT: //u8 min
             case VT_SECONDS_SHORT: //u8 s
             case VT_PERCENT: // u8 %
+            case VT_PERCENT1: // u8 %
             case VT_BYTE: // u8
 //            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printBYTE(msg,data_len);
@@ -4298,7 +4299,7 @@ void generateJSONwithConfig(){
     if(!variable) continue;
     if(notFirst){printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
 
-    printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"id\": \"%d\",\r\n    \"type\": \"%d\",\r\n    \"format\": \"%d\",\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
+    printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
 //Print param category
 #if defined(__AVR__)
     printToWebClient(pgm_read_word_far(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0])));
@@ -4707,6 +4708,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
+    case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen

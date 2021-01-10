@@ -69,11 +69,11 @@ typedef enum {
 
 //according to var_type in configuration_struct
 typedef enum {
-  CDT_VOID,
-  CDT_BYTE,
+  CDT_VOID, // byte array
+  CDT_BYTE, // unsigned byte. can be various format
   CDT_UINT16, //CPI_TEXT field with format for unsigned integer
   CDT_UINT32, //CPI_TEXT field with format for unsigned long integer
-  CDT_STRING,
+  CDT_STRING, //CPI_TEXT field
   CDT_MAC, //CPI_TEXT field with format for MAC input/output
   CDT_IPV4, //CPI_TEXT field with format for IPv4 input/output
   CDT_PROGNRLIST, //CPI_TEXT field with format for programs list input/output
@@ -93,7 +93,7 @@ typedef struct {
 	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
   uint8_t version; //config version which can manage this parameter
   uint8_t category;	// for grouping configuration options (cdt_params)
-  uint8_t input_type;	// input type (text, dropdown etc.) 0 - text field, 1 - switch, 2 - dropdown
+  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown
 	uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
 	const char* desc;	// pointer to text to be displayed for option - is text length necessary if we just read until NULL?
   uint16_t size; //data length in EEPROM
