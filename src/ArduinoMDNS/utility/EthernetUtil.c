@@ -18,7 +18,7 @@
 //  <http://www.gnu.org/licenses/>.
 //
 
-#include "src/ArduinoMDNS/utility/EthernetUtil.h"
+#include "EthernetUtil.h"
 
 #if defined(__ETHERNET_UTIL_BONJOUR__)
 
