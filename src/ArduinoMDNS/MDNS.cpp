@@ -27,7 +27,7 @@
 #include <Udp.h>
 
 extern "C" {
-   #include "src/ArduinoMDNS/utility/EthernetUtil.h"
+   #include "utility/EthernetUtil.h"
 }
 
 #include "MDNS.h"
