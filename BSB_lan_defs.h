@@ -3019,6 +3019,8 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM48_01_TEXT ENUM_CAT_0b_TEXT
 #define ENUM48_02_TEXT ENUM_CAT_0d_TEXT
 #define ENUM700_02_TEXT ENUM648_01_TEXT
+#define ENUM701_01_TEXT ENUM700_01_TEXT
+#define ENUM701_02_TEXT ENUM700_02_TEXT
 #define ENUM780_00_TEXT MENU_TEXT_OFF
 #define ENUM850_00_TEXT ENUM780_00_TEXT
 #define ENUM861_00_TEXT ENUM780_00_TEXT
@@ -3719,6 +3721,11 @@ const char ENUM700[] PROGMEM_LATEST = {
 "\x01 " ENUM700_01_TEXT "\0"
 "\x02 " ENUM700_02_TEXT "\0"
 "\x03 " ENUM700_03_TEXT
+};
+
+const char ENUM701[] PROGMEM_LATEST = {
+"\x01 " ENUM701_01_TEXT "\0"
+"\x02 " ENUM701_02_TEXT "\0"
 };
 
 // Parameters 702 and 703 are virtual Weishaupt parameters based on one and the same command ID, using new data type VT_CUSTOM_ENUM
@@ -6970,6 +6977,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_036_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_064_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D3D0572,  CAT_HK1,              VT_ONOFF,         701,   STR701,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2D3D0572,  CAT_HK1,              VT_ENUM,          701,   STR701,   sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG, DEV_162_ALL}, // [-] - Heizkreis 1 - Präsenztaste // Logged from DEV_162_014, so DEV_162_ALL may still be the same as DEV_ALL
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
 {0x393D2F80,  CAT_HK1,              VT_TEMP_SHORT5,   709,   STR709,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Min
