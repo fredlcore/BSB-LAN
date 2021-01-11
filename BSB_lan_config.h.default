@@ -203,7 +203,9 @@ uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_bsb_address' sets own address, defaults to 0x42 (LAN in serial monitor)
 // - set 'own_bsb_address' to 0x06 to define device as RGT1
+// - 'dest_bsb_address' sets destination address, defaults to 0 for heating system.
 byte own_bsb_address = 0x42;
+byte dest_bsb_address = 0x00;
 // LPB:
 // - 'own_lpb_address and 'dest_lpb_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system

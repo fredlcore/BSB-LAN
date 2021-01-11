@@ -1164,7 +1164,7 @@ inline uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_
 void setBusType(){
   switch(bus_type){
     default:
-    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
+    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address, dest_bsb_address); break;
     case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
     case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
   }
@@ -7012,11 +7012,13 @@ uint8_t pps_offset = 0;
             } else {
               p++;                   // position pointer past the '=' sign
               char* token = strchr(p, '!');
-              token++;
-              if (token[0] > 0) {
-                int d_addr = atoi(token);
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                }
               }
 
               printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
@@ -7038,7 +7040,7 @@ uint8_t pps_offset = 0;
 
                 }
               }
-              if (token[0] > 0) {
+              if (bus->getBusDest() != destAddr) {
                 bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
               }
             }
@@ -8020,6 +8022,7 @@ uint8_t pps_offset = 0;
           switch (bus_type){
             case 0:
               own_bsb_address = myAddr;
+              dest_bsb_address = destAddr;
               printToWebClient(PSTR("BSB"));
               break;
             case 1:
@@ -8229,11 +8232,13 @@ uint8_t pps_offset = 0;
               }
 
               char* token = strchr(range, '!');
-              token++;
-              if (token[0] > 0) {
-                int d_addr = atoi(token);
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                }
               }
 
               start=atoi(line_start);
