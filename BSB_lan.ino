@@ -8065,7 +8065,11 @@ boolean mqtt_connect()
     MQTTPass = MQTTPassword;
   if(MQTTClient == NULL)
   {
-    mqtt_client = new EthernetClient();
+    #ifdef WIFI
+      mqtt_client= new WiFiSpiClient();
+    #else
+      mqtt_client= new EthernetClient();
+    #endif
     MQTTClient = new PubSubClient(mqtt_client[0]);
     MQTTClient->setBufferSize(1024);
   }
