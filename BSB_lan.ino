@@ -1164,8 +1164,8 @@ inline uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_
 void setBusType(){
   switch(bus_type){
     default:
-    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address, dest_bsb_address); break;
-    case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
+    case BUS_BSB:
+    case BUS_LPB:  bus->setBusType(bus_type, own_address, dest_address); break;
     case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
   }
 }
@@ -3959,9 +3959,8 @@ void SaveConfigFromRAMtoEEPROM(){
     if(writeToEEPROM(i)){
       switch(i){
         case CF_BUSTYPE:
-        case CF_OWN_BSBADDR:
-        case CF_OWN_LPBADDR:
-        case CF_DEST_LPBADDR:
+        case CF_OWN_BSBLPBADDR:
+        case CF_DEST_BSBLPBADDR:
         case CF_PPS_WRITE:
           buschanged = true;
           break;
@@ -8021,13 +8020,13 @@ uint8_t pps_offset = 0;
           bus_type = p[2] - '0';
           switch (bus_type){
             case 0:
-              own_bsb_address = myAddr;
-              dest_bsb_address = destAddr;
+              own_address = myAddr;
+              dest_address = destAddr;
               printToWebClient(PSTR("BSB"));
               break;
             case 1:
-              own_lpb_address = myAddr;
-              dest_lpb_address = destAddr;
+              own_address = myAddr;
+              dest_address = destAddr;
               printToWebClient(PSTR("LPB"));
               break;
             case 2:
@@ -8720,9 +8719,8 @@ void setup() {
   registerConfigVariable(CF_CRC32, (byte *)&crc);
   //link parameters
   registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
-  registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
-  registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
-  registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
+  registerConfigVariable(CF_OWN_BSBLPBADDR, (byte *)&own_address);
+  registerConfigVariable(CF_DEST_BSBLPBADDR, (byte *)&dest_address);
   registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
   registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
   registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
