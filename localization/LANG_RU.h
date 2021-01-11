@@ -179,8 +179,9 @@
 //WEBCONFIG
 #define CF_USEEEPROM_TEXT "Читать настройки из EEPROM"
 #define CF_BUSTYPE_TEXT "Тип шины"
-#define CF_OWN_ADDR_TEXT "Адрес устройства на шине BSB/LPB"
-#define CF_DEST_ADDR_TEXT "Адрес назначения на шине BSB/LPB"
+#define CF_OWN_BSBADDR_TEXT "Адрес устройства на шине BSB"
+#define CF_OWN_LPBADDR_TEXT "Адрес устройства на шине LPB"
+#define CF_DEST_LPBADDR_TEXT "Адрес назначения на шине LPB"
 #define CF_PPS_WRITE_TEXT "Включить запись на шине PPS"
 #define CF_LOGTELEGRAM_TEXT "Журналировать телеграммы в journal.txt"
 #define CF_LOGCURRVALUES_TEXT "Записывать в datalog.txt текущие значения программ"

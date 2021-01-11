@@ -8,9 +8,9 @@ typedef enum{
   CF_PPS_VALUES, //
 // Version 1 (parameters which can be changed by URL commands)
   CF_BUSTYPE, //Size: 1 byte. Bus type at start (DROPDOWN selector)
-  CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42). Not used. Leaved for compatibility
-  CF_OWN_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus device address (0x42)
-  CF_DEST_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus destination address (0x0)
+  CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42)
+  CF_OWN_LPBADDR, ///Size: 1 byte. LPB bus device address (0x42)
+  CF_DEST_LPBADDR, ///Size: 1 byte. LPB bus destination address (0x0)
   CF_PPS_WRITE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
   CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
@@ -116,9 +116,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(uint32_t)},
 #ifdef CONFIG_IN_EEPROM
   {CF_BUSTYPE,          1, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
-  {CF_OWN_BSBADDR,      1, CCAT_GENERAL,  CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
-  {CF_OWN_BSBLPBADDR,   1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
-  {CF_DEST_BSBLPBADDR,  1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
+  {CF_OWN_BSBADDR,      1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(own_bsb_address)},//need handler
+  {CF_OWN_LPBADDR,      1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(own_lpb_address)},//need handler
+  {CF_DEST_LPBADDR,     1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},//need handler
   {CF_PPS_WRITE,        1, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
 #ifdef WEBCONFIG
   {CF_ROOM_DEVICE,      2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_UINT16,         STR15062, sizeof(pps_values[PPS_QTP])},//immediately apply
