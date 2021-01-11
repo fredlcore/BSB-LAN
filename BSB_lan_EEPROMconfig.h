@@ -53,8 +53,6 @@ typedef enum{
 // Version 4 (WiFi options)
   CF_WIFI_SSID, //Size: 32 byte by standart.
   CF_WIFI_PASSWORD, //Size 64 bytes.
-// Version 5 (BSB dest address)
-  CF_DEST_BSBADDR, ///Size: 1 byte. BSB bus destination address (0x0)
 
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
@@ -119,7 +117,6 @@ PROGMEM_LATE const configuration_struct config[]={
 #ifdef CONFIG_IN_EEPROM
   {CF_BUSTYPE,          1, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
   {CF_OWN_BSBADDR,      1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBADDR_TXT, sizeof(own_bsb_address)},//need handler
-  {CF_DEST_BSBADDR,     5, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBADDR_TXT, sizeof(dest_bsb_address)},//need handler
   {CF_OWN_LPBADDR,      1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_LPBADDR_TXT, sizeof(own_lpb_address)},//need handler
   {CF_DEST_LPBADDR,     1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_LPBADDR_TXT, sizeof(dest_lpb_address)},//need handler
   {CF_PPS_WRITE,        1, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
