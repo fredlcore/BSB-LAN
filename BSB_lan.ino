@@ -66,6 +66,7 @@
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
+ *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
@@ -466,6 +467,18 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include <Ethernet.h>
 #endif
 
+#ifdef MDNS_HOSTNAME
+#ifdef WIFI
+#include "src/WiFiSpi/src/WiFiSpiUdp.h"
+WiFiSpiUdp udp;
+#else
+#include <EthernetUdp.h>
+EthernetUDP udp;
+#endif
+#include "src/ArduinoMDNS/ArduinoMDNS.h"
+MDNS mdns(udp);
+#endif
+
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
@@ -783,7 +796,9 @@ bool readFromConfigVariable(uint8_t id, byte *ptr){
 #include "bsb-version.h"
 const char BSB_VERSION[] PROGMEM = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
+#ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_global.h"
+#endif
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -1149,7 +1164,7 @@ inline uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_
 void setBusType(){
   switch(bus_type){
     default:
-    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address); break;
+    case BUS_BSB:  bus->setBusType(bus_type, own_bsb_address, dest_bsb_address); break;
     case BUS_LPB:  bus->setBusType(bus_type, own_lpb_address, dest_lpb_address); break;
     case BUS_PPS:  bus->setBusType(bus_type, pps_write); break;
   }
@@ -3007,6 +3022,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_MINUTES_SHORT: //u8 min
             case VT_SECONDS_SHORT: //u8 s
             case VT_PERCENT: // u8 %
+            case VT_PERCENT1: // u8 %
             case VT_BYTE: // u8
 //            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printBYTE(msg,data_len);
@@ -4692,6 +4708,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MONTHS: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_PERCENT:
+    case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
@@ -6995,11 +7012,13 @@ uint8_t pps_offset = 0;
             } else {
               p++;                   // position pointer past the '=' sign
               char* token = strchr(p, '!');
-              token++;
-              if (token[0] > 0) {
-                int d_addr = atoi(token);
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                }
               }
 
               printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
@@ -7021,7 +7040,7 @@ uint8_t pps_offset = 0;
 
                 }
               }
-              if (token[0] > 0) {
+              if (bus->getBusDest() != destAddr) {
                 bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
               }
             }
@@ -8003,6 +8022,7 @@ uint8_t pps_offset = 0;
           switch (bus_type){
             case 0:
               own_bsb_address = myAddr;
+              dest_bsb_address = destAddr;
               printToWebClient(PSTR("BSB"));
               break;
             case 1:
@@ -8212,11 +8232,13 @@ uint8_t pps_offset = 0;
               }
 
               char* token = strchr(range, '!');
-              token++;
-              if (token[0] > 0) {
-                int d_addr = atoi(token);
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                }
               }
 
               start=atoi(line_start);
@@ -8623,6 +8645,9 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
+#ifdef MDNS_HOSTNAME
+  mdns.run();
+#endif
 } // --- loop () ---
 
 #ifdef WIFI
@@ -9160,7 +9185,18 @@ if(save_debug_mode == 2)
 
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
+#ifdef MDNS_HOSTNAME
+#ifdef WIFI
+  mdns.begin(WiFiSpi.localIP(), MDNS_HOSTNAME);
+#else
+  mdns.begin(Ethernet.localIP(), MDNS_HOSTNAME);
+#endif
+mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+#endif
+
+#ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_setup.h"
+#endif
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
 }

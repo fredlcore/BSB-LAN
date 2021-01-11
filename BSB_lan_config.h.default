@@ -51,6 +51,10 @@ char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) h
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for Arduino-ESP8266 connection
 
+#ifndef WIFI                            // mDNS currently does not work with the WiFiSpi library
+#define MDNS_HOSTNAME "BSB-LAN"         // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+#endif
+
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
@@ -84,7 +88,7 @@ byte trusted_ip_addr[4] = {0,0,0,0};
 byte trusted_ip_addr2[4] = {0,0,0,0};
 
 /* Activate HTTP-Auth authentication to provide username/password based access. No encryption!
- * Default sets username to "atari" and password to "800xl". Visit a website like
+ * The example in the comment below sets username to "atari" and password to "800xl". Visit a website like
  * https://www.base64encode.org/
  * to encode your own username/password combination in the format username:password
  * and replace the YXRhcmk6ODAweGw= string below accordingly.
@@ -199,7 +203,9 @@ uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_bsb_address' sets own address, defaults to 0x42 (LAN in serial monitor)
 // - set 'own_bsb_address' to 0x06 to define device as RGT1
+// - 'dest_bsb_address' sets destination address, defaults to 0 for heating system.
 byte own_bsb_address = 0x42;
+byte dest_bsb_address = 0x00;
 // LPB:
 // - 'own_lpb_address and 'dest_lpb_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
 // - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
@@ -303,6 +309,7 @@ uint32_t destinationDelay = 84600;  // interval in seconds to send values
 #undef DEBUG
 #undef IPWE
 #undef MQTT
+#undef MDNS_HOST
 #undef OFF_SITE_LOGGER
 #undef ROOM_UNIT
 #undef VERSION_CHECK
