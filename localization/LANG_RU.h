@@ -180,6 +180,7 @@
 #define CF_USEEEPROM_TEXT "Читать настройки из EEPROM"
 #define CF_BUSTYPE_TEXT "Тип шины"
 #define CF_OWN_BSBADDR_TEXT "Адрес устройства на шине BSB"
+#define CF_DEST_BSBADDR_TEXT "Адрес назначения на шине BSB"
 #define CF_OWN_LPBADDR_TEXT "Адрес устройства на шине LPB"
 #define CF_DEST_LPBADDR_TEXT "Адрес назначения на шине LPB"
 #define CF_PPS_WRITE_TEXT "Включить запись на шине PPS"

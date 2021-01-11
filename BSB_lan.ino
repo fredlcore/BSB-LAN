@@ -3960,6 +3960,7 @@ void SaveConfigFromRAMtoEEPROM(){
       switch(i){
         case CF_BUSTYPE:
         case CF_OWN_BSBADDR:
+        case CF_DEST_BSBADDR:
         case CF_OWN_LPBADDR:
         case CF_DEST_LPBADDR:
         case CF_PPS_WRITE:
@@ -8721,6 +8722,7 @@ void setup() {
   //link parameters
   registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
   registerConfigVariable(CF_OWN_BSBADDR, (byte *)&own_bsb_address);
+  registerConfigVariable(CF_DEST_BSBADDR, (byte *)&dest_bsb_address);
   registerConfigVariable(CF_OWN_LPBADDR, (byte *)&own_lpb_address);
   registerConfigVariable(CF_DEST_LPBADDR, (byte *)&dest_lpb_address);
   registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
