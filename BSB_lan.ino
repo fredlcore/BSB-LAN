@@ -432,6 +432,9 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
+
+#define EEPROM_ERASING_PIN 51
+
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
@@ -6005,6 +6008,29 @@ void connectToMaxCul() {
   }
 }
 #endif
+
+void clearEEPROM(void){
+#if defined(__AVR__)
+  for (uint16_t x=0; x<EEPROM.length(); x++) {
+    EEPROM.write(x, 0xFF);
+  }
+#else
+  uint8_t empty_block[4097] = { 0xFF };
+  EEPROM.fastBlockWrite(0, &empty_block, 4096);
+#endif
+  printlnToDebug(PSTR("Cleared EEPROM"));
+}
+
+void internalLEDBlinking(uint16_t period, uint16_t count){
+  for (int i=0; i<count; i++) {
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(period);
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(period);
+  }
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+}
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -8071,15 +8097,7 @@ uint8_t pps_offset = 0;
           }
 #endif
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
-#if defined(__AVR__)
-            for (uint16_t x=0; x<EEPROM.length(); x++) {
-              EEPROM.write(x, 0xFF);
-            }
-#else
-            uint8_t empty_block[4097] = { 0xFF };
-            EEPROM.fastBlockWrite(0, &empty_block, 4096);
-#endif
-            printlnToDebug(PSTR("Cleared EEPROM"));
+            clearEEPROM();
           }
           printToWebClient(PSTR("Restarting Arduino...\r\n"));
           webPrintFooter();
@@ -8683,6 +8701,7 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -8702,6 +8721,14 @@ void setup() {
   }
   pinMode(19, INPUT);
   #endif
+
+//EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
+  if(!digitalRead(EEPROM_ERASING_PIN)){
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    clearEEPROM();
+    internalLEDBlinking(125, 16); //pause 4 sec for user informing and button release
+  }
+
   //Read config parameters from EEPROM
 
   //Read "Header"
@@ -9013,13 +9040,7 @@ if(save_debug_mode == 2)
   if(diff > 0)  delay(diff);
 
   //decoration: double blink by LED before start. wait for a second
-  for (int i=0; i<2; i++) {
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(250);
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(250);
-  }
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  internalLEDBlinking(250, 2);
   //end of decoration
 
   printlnToDebug(PSTR("Start network services"));

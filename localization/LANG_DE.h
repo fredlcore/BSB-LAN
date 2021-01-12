@@ -2115,7 +2115,7 @@
 #define ENUM2706_0b_TEXT "Drifttest aktiv"
 #define ENUM2706_0c_TEXT "Drifttest fällig"
 #define ENUM2706_0d_TEXT "Drifttest überfällig"
-#define ENUM2706_12_TEXT "ADA Intervall 1 fällig"
+#define ENUM2706_12_TEXT "ADA Intervall 1 bis 3 fällig"
 #define ENUM2721_01_TEXT "Erdgas"
 #define ENUM2721_02_TEXT "Flüssiggas"
 #define ENUM2727_01_TEXT "Bereich 1"
