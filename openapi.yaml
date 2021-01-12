@@ -8,7 +8,7 @@ info:
     name: BSB-LAN
     url: 'https://github.com/fredlcore/bsb_lan'
 servers:
-  - url: http:/bsblan
+  - url: http://bsblan
 tags:
   - name: 'General'
   - name: 'Parameter'
