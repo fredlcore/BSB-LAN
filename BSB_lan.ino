@@ -7389,7 +7389,7 @@ uint8_t pps_offset = 0;
             int16_t http_code = HTTP_OK;
             long cache_time = HTTP_DO_NOT_CACHE;
 
-            if(p[2] == 'C' || p[2] == 'K') {
+            if((p[2] == 'C' || p[2] == 'K') && json_token!=NULL) {
               cache_time = 300; //5 min
               if((httpflags & HTTP_ETAG))
                 http_code = HTTP_NOT_MODIFIED;
