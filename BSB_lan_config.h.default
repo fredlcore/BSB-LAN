@@ -100,7 +100,7 @@ char USER_PASS_B64[64] = "";      // HTTP-Auth will be disabled if USER_PASS_B64
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
 bool enableOneWireBus = true;  //true - enable oneWire bus, false - disable
-byte One_Wire_Pin = 7;            // Define the pin for one wire temperature sensors
+byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensors
 
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS
@@ -162,7 +162,7 @@ byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Pleas
 char MQTTUsername[32] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[32] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
-char MQTTDeviceID[32] = "MyHeater";	            // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
+char MQTTDeviceID[32] = "MyHeater";	        // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
 
 // Compile IPWE extension
 #define IPWE
@@ -228,7 +228,6 @@ byte protected_GPIO[10] = {0b00001011,0b00111100,0b11111100,0b00000000,0b0000000
 #endif
 
 
-
 /* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
  * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
  * if heating system is not running when Arduino is powered on.
@@ -238,7 +237,7 @@ static const int fixed_device_variant = 0;
 
 // defines default flag for parameters
 // use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
-// use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable)
+// use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
 // use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
 
@@ -259,10 +258,13 @@ bool enable_version_check = false;
 
 // "External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER
-// Configuration will be store in EEPROM
+
+// Configuration will be stored in EEPROM
 #define CONFIG_IN_EEPROM
+
 // Compile web-based configuration and EEPROM config store module extension.
 #define WEBCONFIG
+
 // Compile JSON-based configuration and EEPROM config store module extension.
 #define JSONCONFIG
 
