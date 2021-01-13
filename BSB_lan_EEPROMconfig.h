@@ -85,7 +85,10 @@ typedef enum {
 typedef enum {
   CCAT_GENERAL,
   CCAT_IPV4,
-  CCAT_MQTT
+  CCAT_MQTT,
+  CCAT_BUS,
+  CCAT_SENSORS,
+  CCAT_IPWE
 } ccat_params;
 
 
@@ -107,7 +110,10 @@ typedef struct {
 PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_GENERAL,        CAT_GENERAL_TXT},
   {CCAT_IPV4,           CAT_IPV4_TXT},
-  {CCAT_MQTT,           CAT_MQTT_TXT}
+  {CCAT_MQTT,           CAT_MQTT_TXT},
+  {CCAT_BUS,            CAT_BUS_TXT},
+  {CCAT_SENSORS,        CAT_SENSORS_TXT},
+  {CCAT_IPWE,        CAT_IPWE_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -115,11 +121,11 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(byte)},
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(uint32_t)},
 #ifdef CONFIG_IN_EEPROM
-  {CF_BUSTYPE,          1, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
-  {CF_OWN_BSBADDR,      1, CCAT_GENERAL,  CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
-  {CF_OWN_BSBLPBADDR,   1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
-  {CF_DEST_BSBLPBADDR,  1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
-  {CF_PPS_WRITE,        1, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
+  {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
+  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
+  {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
+  {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
+  {CF_PPS_WRITE,        1, CCAT_BUS,      CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
 #ifdef WEBCONFIG
   {CF_ROOM_DEVICE,      2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_UINT16,         STR15062, sizeof(pps_values[PPS_QTP])},//immediately apply
   {CF_MAC,              2, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)}, //need reboot
@@ -144,17 +150,17 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},//immediately apply
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
-  {CF_ONEWIREBUS,       2, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
+  {CF_ONEWIREBUS,       2, CCAT_SENSORS,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
-  {CF_DHTBUS,           2, CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)}, //immediately apply
-  {CF_IPWE,             2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},//immediately apply
-  {CF_IPWEVALUESLIST,   2, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
-  {CF_MAX,              2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},//immediately apply
-  {CF_MAX_IPADDRESS,    2, CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
+  {CF_DHTBUS,           2, CCAT_SENSORS,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)}, //immediately apply
+  {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},//immediately apply
+  {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
+  {CF_MAX,              2, CCAT_SENSORS,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},//immediately apply
+  {CF_MAX_IPADDRESS,    2, CCAT_SENSORS,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
 #endif
 #endif
-  {CF_MAX_DEVICES,      0, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
-  {CF_MAX_DEVADDR,      0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
+  {CF_MAX_DEVICES,      0, CCAT_SENSORS,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
+  {CF_MAX_DEVADDR,      0, CCAT_SENSORS,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
   {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
@@ -168,7 +174,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}, //immediately apply
-  {CF_CHECKUPDATE,      3, CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           CF_CHECKUPDATE_TXT, sizeof(enable_version_check)} //immediately apply
+  {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_CHECKUPDATE_TXT, sizeof(enable_version_check)} //immediately apply
 
 #endif
 #endif
