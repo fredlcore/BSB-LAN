@@ -87,7 +87,8 @@ typedef enum {
   CCAT_IPV4,
   CCAT_MQTT,
   CCAT_BUS,
-  CCAT_SENSORS
+  CCAT_SENSORS,
+  CCAT_IPWE
 } ccat_params;
 
 
@@ -111,7 +112,8 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_IPV4,           CAT_IPV4_TXT},
   {CCAT_MQTT,           CAT_MQTT_TXT},
   {CCAT_BUS,            CAT_BUS_TXT},
-  {CCAT_SENSORS,        CAT_SENSORS_TXT}
+  {CCAT_SENSORS,        CAT_SENSORS_TXT},
+  {CCAT_IPWE,        CAT_IPWE_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -151,8 +153,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_ONEWIREBUS,       2, CCAT_SENSORS,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, CCAT_SENSORS,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)}, //immediately apply
-  {CF_IPWE,             2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},//immediately apply
-  {CF_IPWEVALUESLIST,   2, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
+  {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},//immediately apply
+  {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
   {CF_MAX,              2, CCAT_SENSORS,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},//immediately apply
   {CF_MAX_IPADDRESS,    2, CCAT_SENSORS,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
 #endif
