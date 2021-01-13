@@ -471,6 +471,7 @@ const char *journalFileName = "journal.txt";
 #ifdef WIFI
 WiFiEspClient client;
 WiFiEspClient *mqtt_client;  //Luposoft: own instance 
+WiFiSpiClient client;
 #ifdef VERSION_CHECK
 WiFiEspClient httpclient;
 #endif
