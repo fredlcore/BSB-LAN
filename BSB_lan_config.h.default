@@ -309,7 +309,7 @@ uint32_t destinationDelay = 84600;  // interval in seconds to send values
 #undef DEBUG
 #undef IPWE
 #undef MQTT
-#undef MDNS_HOST
+#undef MDNS_HOSTNAME
 #undef OFF_SITE_LOGGER
 #undef ROOM_UNIT
 #undef VERSION_CHECK
