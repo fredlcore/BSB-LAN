@@ -163,6 +163,7 @@
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
+#define MENU_TEXT_FSP "Free space on SD card"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 

@@ -3794,7 +3794,8 @@ void generateConfigPage(void){
 //  uint32_t m = micros();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToWebClient(PSTR("Free space: %lu MB<br>\r\n"), fs);
+  printToWebClient(STR_TEXT_FSP);
+  printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
 printToWebClient(PSTR("<BR>\r\n"));
@@ -3802,7 +3803,20 @@ printToWebClient(PSTR("<BR>\r\n"));
 #ifndef WEBCONFIG
 #ifdef AVERAGES
   if(logAverageValues){
-    printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\r\n"));
+    printToWebClient(CF_LOGAVERAGES_TXT);
+/*
+    printToWebClient(PSTR(": "));
+#if defined(__AVR__)
+    printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF),logAverageValues,0);
+#else
+    printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF),logAverageValues,0);
+#endif
+    printToWebClient(decodedTelegram.enumdescaddr);
+*/
+    printToWebClient(PSTR("<BR>\r\n"));
+    printToWebClient(CF_AVERAGESLIST_TXT);
+    printToWebClient(PSTR(": <BR>\r\n"));
+
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
         printFmtToWebClient(PSTR("%d - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), 20050 + i);//outBuf will be overwrited here

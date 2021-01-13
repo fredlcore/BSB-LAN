@@ -173,6 +173,7 @@
 #define MENU_TEXT_LGI "Новый интервал журналирования списка параметров"
 #define MENU_TEXT_LGN "Новые параметры для журналирования"
 #define MENU_TEXT_LOT "Журналирование телеграмм"
+#define MENU_TEXT_FSP "Свободное место на SD-карте"
 
 #define STR_24A_TEXT "Среднесуточное значение"
 

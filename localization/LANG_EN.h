@@ -135,6 +135,7 @@
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
 #define MENU_TEXT_LOT "Log of telegrams"
+#define MENU_TEXT_FSP "Free space on SD card"
 
 #define STR_24A_TEXT "24h average"
 #define STR500_TEXT "Mo"
