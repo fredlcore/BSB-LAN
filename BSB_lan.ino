@@ -493,7 +493,7 @@ EthernetClient *max_cul;
 #endif
 
 #ifdef MQTT
-PubSubClient *MQTTClient;
+PubSubClient *MQTTPubSubClient;
 #endif
 boolean haveTelnetClient = false;
 
@@ -7298,9 +7298,9 @@ uint8_t pps_offset = 0;
 #ifdef MQTT
                     case CF_MQTT:
                     case CF_MQTT_IPADDRESS:
-                      if(MQTTClient){
-                        delete MQTTClient;
-                        MQTTClient = NULL;
+                      if(MQTTPubSubClient){
+                        delete MQTTPubSubClient;
+                        MQTTPubSubClient = NULL;
                         mqtt_client->stop();
                         delete mqtt_client;
                       }
@@ -7685,7 +7685,7 @@ uint8_t pps_offset = 0;
     String MQTTTopic = "";
     
     mqtt_connect();        //Luposoft, connect to mqtt
-    MQTTClient->loop();    //Luposoft: listen to incoming messages
+    MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
 
     if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
       lastMQTTTime = millis();
@@ -7746,10 +7746,10 @@ uint8_t pps_offset = 0;
             } else { //plain text
               if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-                MQTTClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
+                MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
               }
               else
-                MQTTClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
+                MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
             }
           }
           // End of mqtt if loop so close off the json and publish
@@ -7766,24 +7766,24 @@ uint8_t pps_offset = 0;
             printToDebug(MQTTPayload.c_str());
             writelnToDebug();
             // Now publish the json payload only once
-            MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+            MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
           }
         }
       }
-      //MQTTClient->disconnect();   //Luposoft: no needing to disconnect anymore  
-      if(MQTTClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
+      //MQTTPubSubClient->disconnect();   //Luposoft: no needing to disconnect anymore  
+      if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
       {
-        if (MQTTClient->connected()) 
+        if (MQTTPubSubClient->connected()) 
         {
-          MQTTClient->disconnect();
+          MQTTPubSubClient->disconnect();
           printlnToDebug(PSTR("MQTT was disconnected on order through web interface"));
         }
       }
     }
   }
-  if(MQTTClient && mqtt_mode == 0){
-    delete MQTTClient;
-    MQTTClient = NULL;
+  if(MQTTPubSubClient && mqtt_mode == 0){
+    delete MQTTPubSubClient;
+    MQTTPubSubClient = NULL;
     mqtt_client->stop();
     delete mqtt_client;
   }
@@ -8063,26 +8063,26 @@ boolean mqtt_connect()
   const char* MQTTPass = NULL;
   if(MQTTPassword[0])
     MQTTPass = MQTTPassword;
-  if(MQTTClient == NULL)
+  if(MQTTPubSubClient == NULL)
   {
     #ifdef WIFI
       mqtt_client= new WiFiSpiClient();
     #else
       mqtt_client= new EthernetClient();
     #endif
-    MQTTClient = new PubSubClient(mqtt_client[0]);
-    MQTTClient->setBufferSize(1024);
+    MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
+    MQTTPubSubClient->setBufferSize(1024);
   }
-  if (!MQTTClient->connected())
+  if (!MQTTPubSubClient->connected())
   {
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-    MQTTClient->setServer(MQTTBroker, 1883);
+    MQTTPubSubClient->setServer(MQTTBroker, 1883);
     int retries = 0;
-    while (!MQTTClient->connected() && retries < 3)
+    while (!MQTTPubSubClient->connected() && retries < 3)
     {
-      MQTTClient->connect("BSB-LAN", MQTTUser, MQTTPass);
+      MQTTPubSubClient->connect("BSB-LAN", MQTTUser, MQTTPass);
       retries++;
-      if (!MQTTClient->connected())
+      if (!MQTTPubSubClient->connected())
       {
         delay(1000);
         printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
@@ -8092,9 +8092,9 @@ boolean mqtt_connect()
         printlnToDebug(PSTR("Connect to MQTT broker"));
         const char* mqtt_subscr;
         if(MQTTTopicPrefix[0]){mqtt_subscr = MQTTTopicPrefix;}else {mqtt_subscr="fromBroker";}
-        MQTTClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
-        MQTTClient->setKeepAlive(120);       //Luposoft: just for savety
-        MQTTClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+        MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
+        MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
+        MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
         return true;
       }
     }
@@ -8108,7 +8108,7 @@ return false;
 #endif
 //Luposoft: Funktionen mqtt_callback
 /*  Function: mqtt_callback()
- *  Does:     will call by MQTTClient.loop() when incomming mqtt-message from broker
+ *  Does:     will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
  *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
               send command to heater and return an acknowledge to broker
  * Pass parameters:
@@ -8167,7 +8167,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   }
   else mqtt_Topic = "BSB-LAN/";
   mqtt_Topic.concat(F("MQTT"));
-  MQTTClient->publish(mqtt_Topic.c_str(), C_value);
+  MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
   printlnToDebug(PSTR("##MQTT#############################"));
 }
 #endif
