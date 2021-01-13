@@ -161,6 +161,7 @@
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
 #undef MENU_TEXT_LOT
+#undef MENU_TEXT_FSP
 #undef STR_24A_TEXT
 #undef CF_USEEEPROM_TEXT
 #undef CF_BUSTYPE_TEXT
@@ -201,6 +202,8 @@
 #undef CAT_GENERAL_TEXT
 #undef CAT_IPV4_TEXT
 #undef CAT_MQTT_TEXT
+#undef CAT_BUS_TEXT
+#undef CAT_IPWE_TEXT
 #undef STR0_TEXT
 #undef STR1_TEXT
 #undef STR2_TEXT

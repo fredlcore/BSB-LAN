@@ -163,6 +163,7 @@ UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsv
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
+UIStrings["MENU_TEXT_FSP"] = "Free space on SD card";
 
 UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
 
@@ -207,7 +208,8 @@ UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "IP settings";
 UIStrings["CAT_MQTT_TEXT"] = "MQTT settings";
-
+UIStrings["CAT_BUS_TEXT"] = "Bus";
+UIStrings["CAT_IPWE_TEXT"] = "IPWE";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
@@ -2115,7 +2117,7 @@ UIStrings["ENUM2706_0a_TEXT"] = "Exotengasbetrieb";
 UIStrings["ENUM2706_0b_TEXT"] = "Drifttest aktiv";
 UIStrings["ENUM2706_0c_TEXT"] = "Drifttest fällig";
 UIStrings["ENUM2706_0d_TEXT"] = "Drifttest überfällig";
-UIStrings["ENUM2706_12_TEXT"] = "ADA Intervall 1 fällig";
+UIStrings["ENUM2706_12_TEXT"] = "ADA Intervall 1 bis 3 fällig";
 UIStrings["ENUM2721_01_TEXT"] = "Erdgas";
 UIStrings["ENUM2721_02_TEXT"] = "Flüssiggas";
 UIStrings["ENUM2727_01_TEXT"] = "Bereich 1";
