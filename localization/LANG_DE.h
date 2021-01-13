@@ -163,6 +163,7 @@
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
+#define MENU_TEXT_FSP "Free space on SD card"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 
@@ -207,7 +208,8 @@
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "IP settings"
 #define CAT_MQTT_TEXT "MQTT settings"
-
+#define CAT_BUS_TEXT "Bus"
+#define CAT_IPWE_TEXT "IPWE"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"
@@ -2115,7 +2117,7 @@
 #define ENUM2706_0b_TEXT "Drifttest aktiv"
 #define ENUM2706_0c_TEXT "Drifttest fällig"
 #define ENUM2706_0d_TEXT "Drifttest überfällig"
-#define ENUM2706_12_TEXT "ADA Intervall 1 fällig"
+#define ENUM2706_12_TEXT "ADA Intervall 1 bis 3 fällig"
 #define ENUM2721_01_TEXT "Erdgas"
 #define ENUM2721_02_TEXT "Flüssiggas"
 #define ENUM2727_01_TEXT "Bereich 1"
