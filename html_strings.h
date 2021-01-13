@@ -16,7 +16,7 @@ const char favicon [] PROGMEM_LATE = {
   0x44, 0xae, 0x42, 0x60, 0x82
 };
 
-#if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
+#if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 "<!--\n"
 "/*\n"
@@ -266,25 +266,23 @@ const char graph_html[] PROGMEM_LATE =
 #endif
 
 const char header_html[] PROGMEM_LATE =
-  "HTTP/1.1 200 OK\n"
-  "Content-Type: text/html\n"
-  "Cache-Control: no-cache, no-store, must-revalidate\n"
-  "Pragma: no-cache\n"
-  "Expires: 0\n\n"
+  "\n"
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">\n"
   "<html><head>\n"
   "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n"
   "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">\n"
-  "<title>BSB-LAN Web</title>\n"
+  "<title>BSB-LAN</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
-  "</head><body>\n"
+  "</head><body>\n";
+const char header_html2[] PROGMEM_LATE =
   "<script>function set(line){\n"
-  "var value = document.getElementById('value'+line).value.replace(\":\", \".\");\n"
-  "value = value.replace(\"---\", \"\");\n"
+  "var value = document.getElementById('value'+line).value.replace(/\\.$/, '');\n"
+  "value = value.replace(':', '.');\n"
+  "value = value.replace('---', '');\n"
   "if(isNaN(value)==false || value == ''){\n"
   "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
   "}}\n"
@@ -295,16 +293,15 @@ const char header_html[] PROGMEM_LATE =
   "value=value+eval(x.options[i].value);\n"
   "}}\n"
   "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
-  "}</script>\n"
+  "}</script>\n";
+const char header_html3[] PROGMEM_LATE =
   "<font face='Arial'>\n"
-  "<center><h1><A ID=main_link HREF='/";
+  "<center><h1>";
 
 const char auth_req_html[] PROGMEM_LATE =
-  "HTTP/1.1 401 Authorization Required\n"
   "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
-  "Content-Type: text/html\n"
   "Connnection: close\n"
   "\n"
   "<!DOCTYPE HTML>\n"
-  "<HTML><HEAD><TITLE>Error</TITLE>\n"
+  "<HTML><HEAD><TITLE>BSB-LAN</TITLE>\n"
   "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>\n";
