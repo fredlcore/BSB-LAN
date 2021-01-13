@@ -86,7 +86,8 @@ typedef enum {
   CCAT_GENERAL,
   CCAT_IPV4,
   CCAT_MQTT,
-  CCAT_BUS
+  CCAT_BUS,
+  CCAT_SENSORS
 } ccat_params;
 
 
@@ -109,7 +110,8 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_GENERAL,        CAT_GENERAL_TXT},
   {CCAT_IPV4,           CAT_IPV4_TXT},
   {CCAT_MQTT,           CAT_MQTT_TXT},
-  {CCAT_BUS,            CAT_BUS_TXT}
+  {CCAT_BUS,            CAT_BUS_TXT},
+  {CCAT_SENSORS,        CAT_SENSORS_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -146,17 +148,17 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},//immediately apply
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_WEBSERVER_TXT, 1},
-  {CF_ONEWIREBUS,       2, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
+  {CF_ONEWIREBUS,       2, CCAT_SENSORS,  CPI_TEXT,      CDT_BYTE,           CF_ONEWIREBUS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
-  {CF_DHTBUS,           2, CCAT_GENERAL,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)}, //immediately apply
+  {CF_DHTBUS,           2, CCAT_SENSORS,  CPI_TEXT,      CDT_DHTBUS,         CF_DHTBUS_TXT, sizeof(DHT_Pins)}, //immediately apply
   {CF_IPWE,             2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_IPWE_TXT, sizeof(enable_ipwe)},//immediately apply
   {CF_IPWEVALUESLIST,   2, CCAT_GENERAL,  CPI_TEXT,      CDT_PROGNRLIST,     CF_IPWEVALUESLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
-  {CF_MAX,              2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},//immediately apply
-  {CF_MAX_IPADDRESS,    2, CCAT_GENERAL,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
+  {CF_MAX,              2, CCAT_SENSORS,  CPI_SWITCH,    CDT_BYTE,           CF_MAX_TXT, sizeof(enable_max_cul)},//immediately apply
+  {CF_MAX_IPADDRESS,    2, CCAT_SENSORS,  CPI_TEXT,      CDT_IPV4,           CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
 #endif
 #endif
-  {CF_MAX_DEVICES,      0, CCAT_GENERAL,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
-  {CF_MAX_DEVADDR,      0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
+  {CF_MAX_DEVICES,      0, CCAT_SENSORS,  CPI_TEXT,      CDT_MAXDEVICELIST,  CF_MAX_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
+  {CF_MAX_DEVADDR,      0, CCAT_SENSORS,  CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
   {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG

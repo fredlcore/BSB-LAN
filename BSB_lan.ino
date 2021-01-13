@@ -3411,7 +3411,8 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K49'>" MENU_TEXT_SNS));
+   printToWebClient(PSTR("K49'>"));
+   printToWebClient(CAT_SENSORS_TXT);
 
    printToWebClient(PSTR("</a></td>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
@@ -3632,7 +3633,9 @@ void generateConfigPage(void){
   #endif
 
   #ifdef ONE_WIRE_BUS
-  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, " MENU_TEXT_SNS ": %d\r\n<BR>\r\n"), One_Wire_Pin, numSensors);
+  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, "), One_Wire_Pin);
+  printToWebClient(CAT_SENSORS_TXT);
+  printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
   printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
   for (int i=0; i<anz_ex_gpio; i++) {
