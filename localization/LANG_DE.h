@@ -205,9 +205,9 @@
 #define CF_MQTT_PASSWORD_TEXT "MQTT: Passwort"
 #define CF_MQTT_TOPIC_TEXT "MQTT: Topic prefix"
 
-#define CAT_GENERAL_TEXT "General"
-#define CAT_IPV4_TEXT "IP settings"
-#define CAT_MQTT_TEXT "MQTT settings"
+#define CAT_GENERAL_TEXT "Generell"
+#define CAT_IPV4_TEXT "Netzwerk"
+#define CAT_MQTT_TEXT "MQTT"
 #define CAT_BUS_TEXT "Bus"
 #define CAT_IPWE_TEXT "IPWE"
 
