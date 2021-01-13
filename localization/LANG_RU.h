@@ -212,6 +212,11 @@
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
 
+#define CAT_GENERAL_TEXT "Основные"
+#define CAT_IPV4_TEXT "Настройки IP"
+#define CAT_MQTT_TEXT "Настройки MQTT"
+#define CAT_BUS_TEXT "Шина"
+
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"
 #define STR2_TEXT "День/месяц"

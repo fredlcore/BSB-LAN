@@ -208,7 +208,7 @@
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "IP settings"
 #define CAT_MQTT_TEXT "MQTT settings"
-
+#define CAT_BUS_TEXT "Bus"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

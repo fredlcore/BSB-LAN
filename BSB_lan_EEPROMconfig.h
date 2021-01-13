@@ -85,7 +85,8 @@ typedef enum {
 typedef enum {
   CCAT_GENERAL,
   CCAT_IPV4,
-  CCAT_MQTT
+  CCAT_MQTT,
+  CCAT_BUS
 } ccat_params;
 
 
@@ -107,7 +108,8 @@ typedef struct {
 PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_GENERAL,        CAT_GENERAL_TXT},
   {CCAT_IPV4,           CAT_IPV4_TXT},
-  {CCAT_MQTT,           CAT_MQTT_TXT}
+  {CCAT_MQTT,           CAT_MQTT_TXT},
+  {CCAT_BUS,            CAT_BUS_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -115,11 +117,11 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(byte)},
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(uint32_t)},
 #ifdef CONFIG_IN_EEPROM
-  {CF_BUSTYPE,          1, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
-  {CF_OWN_BSBADDR,      1, CCAT_GENERAL,  CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
-  {CF_OWN_BSBLPBADDR,   1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
-  {CF_DEST_BSBLPBADDR,  1, CCAT_GENERAL,  CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
-  {CF_PPS_WRITE,        1, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
+  {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
+  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
+  {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
+  {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
+  {CF_PPS_WRITE,        1, CCAT_BUS,      CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
 #ifdef WEBCONFIG
   {CF_ROOM_DEVICE,      2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_UINT16,         STR15062, sizeof(pps_values[PPS_QTP])},//immediately apply
   {CF_MAC,              2, CCAT_GENERAL,  CPI_TEXT,      CDT_MAC,            CF_MAC_TXT, sizeof(mac)}, //need reboot
