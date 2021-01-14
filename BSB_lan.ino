@@ -7953,9 +7953,8 @@ uint8_t pps_offset = 0;
                 if(writeToEEPROM(i)){
                   switch(i){
                     case CF_BUSTYPE:
-                    case CF_OWN_BSBADDR:
-                    case CF_OWN_LPBADDR:
-                    case CF_DEST_LPBADDR:
+                    case CF_OWN_BSBLPBADDR:
+                    case CF_DEST_BSBLPBADDR:
                     case CF_PPS_WRITE:
                       buschanged = true;
                       break;
