@@ -522,8 +522,8 @@ const char *datalogFileName = "datalog.txt";
 const char *journalFileName = "journal.txt";
 
 #ifdef WIFI
-WiFiEspClient client;
-WiFiEspClient *mqtt_client;  //Luposoft: own instance 
+WiFiSpiClient client;
+WiFiSpiClient *mqtt_client;  //Luposoft: own instance 
 #ifdef VERSION_CHECK
 WiFiSpiClient httpclient;
 #endif
@@ -4021,9 +4021,9 @@ void SaveConfigFromRAMtoEEPROM(){
 #ifdef MQTT
         case CF_MQTT:
         case CF_MQTT_IPADDRESS:
-          if(MQTTClient){
-            delete MQTTClient;
-            MQTTClient = NULL;
+          if(MQTTPubSubClient){
+            delete MQTTPubSubClient;
+            MQTTPubSubClient = NULL;
           }
           break;
 #endif
