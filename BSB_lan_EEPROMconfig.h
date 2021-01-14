@@ -92,7 +92,8 @@ typedef enum {
   CCAT_ONEWIREBUS,
   CCAT_DEBUG,
   CCAT_MAX,
-  CCAT_LOGGING
+  CCAT_LOGGING,
+  CCAT_24HAVG
 } ccat_params;
 
 
@@ -121,7 +122,8 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_ONEWIREBUS,     CAT_ONEWIREBUS_TXT},
   {CCAT_DEBUG,          CAT_DEBUG_TXT},
   {CCAT_MAX,            CAT_MAX_TXT},
-  {CCAT_LOGGING,        CAT_LOGGING_TXT}
+  {CCAT_LOGGING,        CAT_LOGGING_TXT},
+  {CCAT_24HAVG,         CAT_24HAVG_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -148,9 +150,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
   {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
 #endif
+  {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
+  {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},//immediately apply
   {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
-  {CF_LOGAVERAGES,      1, CCAT_LOGGING,  CPI_SWITCH,    CDT_BYTE,           CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
-  {CF_AVERAGESLIST,     1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     CF_AVERAGESLIST_TXT, sizeof(avg_parameters)},//immediately apply
   {CF_LOGCURRVALUES,    1, CCAT_LOGGING,  CPI_SWITCH,    CDT_BYTE,           CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},//immediately apply
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
   {CF_CURRVALUESLIST,   1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     CF_CURRVALUESLIST_TXT, sizeof(log_parameters)},//immediately apply

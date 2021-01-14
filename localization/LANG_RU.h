@@ -186,7 +186,8 @@
 #define CF_LOGTELEGRAM_TEXT "Журналировать телеграммы в journal.txt"
 #define CF_LOGCURRVALUES_TEXT "Записывать в datalog.txt текущие значения программ"
 #define CF_LOGCURRINTERVAL_TEXT "Интервал журнала (datalog.txt, MQTT), секунд"
-#define CF_AVERAGESLIST_TEXT "Список программ для вычисления средних значений"
+#define CF_LOGAVERAGES_TEXT "Подсчёт значений"
+#define CF_AVERAGESLIST_TEXT "Список программ для вычисления"
 #define CF_CURRVALUESLIST_TEXT "Список программ для записи в журнал"
 #define CF_MAX_DEVICES_TEXT "Устройства MAX!"
 #define CF_DHCP_TEXT "Использовать DHCP"
@@ -211,6 +212,8 @@
 #define CF_MQTT_USERNAME_TEXT "Имя пользователя"
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
+#define CF_CHECKUPDATE_TEXT "Проверять обновления"
+
 
 #define CAT_GENERAL_TEXT "Основные"
 #define CAT_IPV4_TEXT "Настройки IP"
@@ -222,6 +225,8 @@
 #define CAT_DEBUG_TEXT "Отладка"
 #define CAT_MAX_TEXT "MAX!"
 #define CAT_LOGGING_TEXT "Журналирование"
+#define CAT_24HAVG_TEXT "Среднесуточные значения"
+
 
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"

@@ -140,7 +140,7 @@
 #define MENU_TEXT_BUT "Nur unbekannte Bus-Telegramme loggen"
 #define MENU_TEXT_UBT "Nur unbekannte Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_MMD "Monitor Modus"
-#define MENU_TEXT_VBL "Verbositäts-Level"
+#define MENU_TEXT_VBL "Verbositätsmodus"
 #define MENU_TEXT_AVT "Berechnung von 24h-Mittelwerten für die folgenden Parameter"
 #define MENU_TEXT_LBO "Nur Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_LGI "Neues Logging-Intervall"
@@ -174,6 +174,7 @@
 #define CF_DEST_ADDR_TEXT "Dest BSB/LPB address"
 #define CF_PPS_WRITE_TEXT "Enable PPS bus write"
 #define CF_LOGTELEGRAM_TEXT "Log telegrams"
+#define CF_LOGAVERAGES_TEXT "Berechnung"
 #define CF_LOGCURRVALUES_TEXT "Log current values"
 #define CF_LOGCURRINTERVAL_TEXT "Log interval, seconds"
 #define CF_AVERAGESLIST_TEXT "Programs for averages calculation"
@@ -204,6 +205,7 @@
 #define CF_MQTT_USERNAME_TEXT "User name"
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
+#define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "IP settings"
@@ -215,6 +217,7 @@
 #define CAT_DEBUG_TEXT "Debugging"
 #define CAT_MAX_TEXT "MAX!"
 #define CAT_LOGGING_TEXT "Logging"
+#define CAT_24HAVG_TEXT "24h-Durchschnittswerte"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

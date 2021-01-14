@@ -129,7 +129,7 @@
 #define MENU_TEXT_BDT "BSB-Data telegrams (irrespective of interval)"
 #define MENU_TEXT_BUT "Logging unknown bus telegrams only"
 #define MENU_TEXT_MMD "Monitor mode"
-#define MENU_TEXT_VBL "Verbosity level"
+#define MENU_TEXT_VBL "Verbosity mode"
 #define MENU_TEXT_AVT "Calculating 24h averages for the following parameters"
 #define MENU_TEXT_LBO "Log broadcast bus-telegrams only"
 #define MENU_TEXT_LGI "New logging interval"
