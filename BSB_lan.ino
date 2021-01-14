@@ -6039,7 +6039,7 @@ void clearEEPROM(void){
 }
 
 void internalLEDBlinking(uint16_t period, uint16_t count){
-  for (int i=0; i<count; i++) {
+  for (uint16_t i=0; i<count; i++) {
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
     delay(period);
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
