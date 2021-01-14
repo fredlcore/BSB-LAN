@@ -207,7 +207,6 @@
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
-#define CAT_AVERAGES_TEXT "24h Durchschnittswerte"
 #define CAT_MQTT_TEXT "MQTT"
 #define CAT_BUS_TEXT "Bus"
 #define CAT_IPWE_TEXT "IPWE"
