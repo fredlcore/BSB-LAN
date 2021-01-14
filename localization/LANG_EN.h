@@ -148,7 +148,7 @@
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "To SD card"
 #define CF_LOGCURRINTERVAL_TEXT "Interval (seconds)"
-#define CF_MAX_DEVICES_TEXT "Devices"
+#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
 #define CF_DHCP_TEXT "DHCP usage"
 #define CF_IPADDRESS_TEXT "IP address (fixed)"
 #define CF_TRUSTEDIPADDRESS_TEXT "Trusted IP address"
@@ -157,11 +157,11 @@
 #define CF_BASICAUTH_TEXT "HTTP authentification"
 #define CF_ONEWIREBUS_DEVICES_TEXT "Devices"
 #define CF_IPWE_TEXT "Usage"
-#define CF_MAX_TEXT "Usage"
+#define CF_MAX_TEXT CF_IPWE_TEXT
 #define CF_MAX_IPADDRESS_TEXT "IP address cube"
 #define CF_WRITEMODE_TEXT "Write access"
-#define CF_DEBUG_TEXT "Usage"
-#define CF_MQTT_TEXT "Usage"
+#define CF_DEBUG_TEXT CF_IPWE_TEXT
+#define CF_MQTT_TEXT CF_IPWE_TEXT
 #define CF_MQTT_IPADDRESS_TEXT "IP address broker"
 #define CF_MQTT_PASSWORD_TEXT "Password"
 
