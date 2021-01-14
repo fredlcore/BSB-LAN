@@ -199,6 +199,7 @@
 #define CF_MQTT_USERNAME_TEXT "Username"
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
+#define CF_MQTT_DEVICE_TEXT "Geräte ID"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
 
 #define CAT_GENERAL_TEXT "Generell"

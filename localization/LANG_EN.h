@@ -145,6 +145,7 @@
 #define CF_OWN_ADDR_TEXT "Own address"
 #define CF_DEST_ADDR_TEXT "Destination address"
 #define CF_PPS_WRITE_TEXT "PPS: bus write enabled"
+#define CF_QAA_TYPE_TEXT "PPS: QAA model"
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "To SD card"
 #define CF_LOGCURRINTERVAL_TEXT "Interval (seconds)"
@@ -164,6 +165,7 @@
 #define CF_MQTT_TEXT CF_IPWE_TEXT
 #define CF_MQTT_IPADDRESS_TEXT "IP address broker"
 #define CF_MQTT_PASSWORD_TEXT "Password"
+#define CF_MQTT_DEVICE_TEXT "Device ID"
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "Network"

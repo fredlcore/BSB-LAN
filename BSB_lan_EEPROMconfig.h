@@ -182,8 +182,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_IPADDRESS,   2, CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
+  {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
-  {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_TOPIC_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
   {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)}
