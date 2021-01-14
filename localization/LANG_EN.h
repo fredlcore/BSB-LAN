@@ -167,7 +167,6 @@
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "Network"
-#define CAT_AVERAGES_TEXT "24h averages"
 
 #define STR500_TEXT "Mo"
 #define STR501_TEXT "Tu"
