@@ -3722,7 +3722,7 @@ const char ENUM700[] PROGMEM_LATEST = {
 
 const char ENUM701[] PROGMEM_LATEST = {
 "\x01 " ENUM701_01_TEXT "\0"
-"\x02 " ENUM701_02_TEXT "\0"
+"\x02 " ENUM701_02_TEXT
 };
 
 // Parameters 702 and 703 are virtual Weishaupt parameters based on one and the same command ID, using new data type VT_CUSTOM_ENUM
