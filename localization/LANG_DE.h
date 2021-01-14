@@ -140,7 +140,7 @@
 #define MENU_TEXT_BUT "Nur unbekannte Bus-Telegramme loggen"
 #define MENU_TEXT_UBT "Nur unbekannte Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_MMD "Monitor Modus"
-#define MENU_TEXT_VBL "Verbositäts-Level"
+#define MENU_TEXT_VBL "Verbositätsmodus"
 #define MENU_TEXT_AVT "Berechnung von 24h-Mittelwerten für die folgenden Parameter"
 #define MENU_TEXT_LBO "Nur Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_LGI "Neues Logging-Intervall"
@@ -176,34 +176,29 @@
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Auf SD Karte"
 #define CF_LOGCURRINTERVAL_TEXT "Logintervall (Sekunden)"
-#define CF_AVERAGESLIST_TEXT "Parameter"
-#define CF_CURRVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+#define CF_LOGAVERAGES_TEXT "Berechnung"
+#define CF_PROGLIST_TEXT "Parameter"
+#define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
 #define CF_IPADDRESS_TEXT "IP-Adresse (manuell)"
 #define CF_TRUSTEDIPADDRESS_TEXT "Vertrauenswürdige IP-Adresse"
 #define CF_MASK_TEXT "Subnetzmaske"
 #define CF_GATEWAY_TEXT "Gateway"
 #define CF_DNS_TEXT "DNS server"
-#define CF_WWWPORT_TEXT "TCP/UDP port"
+#define CF_WWWPORT_TEXT "TCP port"
 #define CF_WIFI_SSID_TEXT "WLAN SSID"
 #define CF_WEBSERVER_TEXT "Webserver SD-Karte"
 #define CF_PASSKEY_TEXT "URL passkey"
 #define CF_BASICAUTH_TEXT "HTTP-Authentifizierung"
-#define CF_ONEWIREBUS_TEXT "Pins"
-#define CF_ONEWIREBUS_DEVICES_TEXT "Geräte"
-#define CF_DHTBUS_TEXT CF_ONEWIREBUS_TEXT
-#define CF_IPWE_TEXT "Verwenden"
-#define CF_IPWEVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_TEXT CF_IPWE_TEXT
+#define CF_PINS_TEXT "Pins"
+#define CF_USE_TEXT "Verwenden"
 #define CF_MAX_IPADDRESS_TEXT "IP-Adresse Cube"
 #define CF_WRITEMODE_TEXT "Schreibzugriff erlaubt"
-#define CF_DEBUG_TEXT CF_IPWE_TEXT
-#define CF_MQTT_TEXT CF_IPWE_TEXT
 #define CF_MQTT_IPADDRESS_TEXT "IP-Adresse Broker"
 #define CF_MQTT_USERNAME_TEXT "Username"
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
+#define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
@@ -215,7 +210,7 @@
 #define CAT_DEBUG_TEXT "Debugging"
 #define CAT_MAX_TEXT "MAX!"
 #define CAT_LOGGING_TEXT "Logging"
-
+#define CAT_24HAVG_TEXT "24h-Durchschnittswerte"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

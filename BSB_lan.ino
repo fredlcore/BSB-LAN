@@ -517,9 +517,9 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
-const char *averagesFileName = "averages.txt";
-const char *datalogFileName = "datalog.txt";
-const char *journalFileName = "journal.txt";
+const char averagesFileName[] PROGMEM = "averages.txt";
+const char datalogFileName[] PROGMEM = "datalog.txt";
+const char journalFileName[] PROGMEM = "journal.txt";
 
 #ifdef WIFI
 WiFiSpiClient client;
@@ -1061,7 +1061,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_APP_XML: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
     // case 5 below
     case MIME_TYPE_APP_JSON: getfarstrings = PSTR("application/json"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
-    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = 60; break;
     case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
     case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
     case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg"); break;
@@ -1069,7 +1069,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
     case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
     case MIME_TYPE_TEXT_TEXT:
-    default: getfarstrings = PSTR("text"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    default: getfarstrings = PSTR("text"); autoDetectCachingTime = 60; break;
   }
   printToWebClient(getfarstrings);
   if(cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
@@ -3412,7 +3412,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
    printToWebClient(PSTR("K49'>"));
-   printToWebClient(CAT_SENSORS_TXT);
+   printToWebClient(STR_TEXT_SNS);
 
    printToWebClient(PSTR("</a></td>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
@@ -3634,7 +3634,7 @@ void generateConfigPage(void){
 
   #ifdef ONE_WIRE_BUS
   printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, "), One_Wire_Pin);
-  printToWebClient(CAT_SENSORS_TXT);
+  printToWebClient(STR_TEXT_SNS);
   printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
   printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
@@ -3785,6 +3785,14 @@ void generateConfigPage(void){
   "URLCONFIG"
   #endif
 
+  #ifdef MDNS_HOSTNAME
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "MDNS"
+  #endif
 
   #if !defined (ANY_MODULE_COMPILED)
   "NONE"
@@ -3923,7 +3931,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         ((int *)variable)[j] = atoi(ptr_t);
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -3938,7 +3946,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         variable[j] = (byte)atoi(ptr_t);
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -3955,7 +3963,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -6039,7 +6047,7 @@ void clearEEPROM(void){
 }
 
 void internalLEDBlinking(uint16_t period, uint16_t count){
-  for (int i=0; i<count; i++) {
+  for (uint16_t i=0; i<count; i++) {
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
     delay(period);
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -6696,7 +6704,7 @@ uint8_t pps_offset = 0;
 
         // perform HTTP-Authentification by reading the remaining client data and look for credentials
         // Parsing headers
-        static int buffershift = 38;
+        static int buffershift = 48;
         size_t charcount=buffershift;  //Reserve space in buffer for ETag (Max 32 chars)
         uint8_t httpflags = 0; //bit 0 - authenticated: 0 - no, 1 - yes
                                //bit 1 - client browser accept gzip: 0 - no, 2 - yes
@@ -6877,7 +6885,7 @@ uint8_t pps_offset = 0;
               }
 
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\"") + 1, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
+              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
               }
@@ -6982,7 +6990,7 @@ uint8_t pps_offset = 0;
 #endif
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTUVWXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGHIJKLMNOPQRSTUVWXY"), p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -7425,7 +7433,7 @@ uint8_t pps_offset = 0;
             }
           }
           printToWebClient(PSTR("{\r\n"));
-          if(strchr("CIKLQRSVW",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr_P(PSTR("CIKLQRSVW"), p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
@@ -8739,6 +8747,8 @@ void setup() {
   pinMode(19, INPUT);
   #endif
 
+  pinMode(LED_BUILTIN, OUTPUT);
+
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if(!digitalRead(EEPROM_ERASING_PIN)){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9042,7 +9052,6 @@ if(save_debug_mode == 2)
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
-  pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
@@ -9223,11 +9232,11 @@ if(save_debug_mode == 2)
 
 #ifdef MDNS_HOSTNAME
 #ifdef WIFI
-  mdns.begin(WiFiSpi.localIP(), MDNS_HOSTNAME);
+  mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
-  mdns.begin(Ethernet.localIP(), MDNS_HOSTNAME);
+  mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
-mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
 
 #ifdef CUSTOM_COMMANDS
