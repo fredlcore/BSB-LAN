@@ -523,12 +523,14 @@ const char journalFileName[] PROGMEM = "journal.txt";
 
 #ifdef WIFI
 WiFiSpiClient client;
+WiFiSpiClient *mqtt_client;  //Luposoft: own instance 
 #ifdef VERSION_CHECK
 WiFiSpiClient httpclient;
 #endif
 WiFiSpiClient telnetClient;
 #else
 EthernetClient client;
+EthernetClient *mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
 EthernetClient httpclient;
 #endif
@@ -544,7 +546,7 @@ EthernetClient *max_cul;
 #endif
 
 #ifdef MQTT
-PubSubClient *MQTTClient;
+PubSubClient *MQTTPubSubClient;
 #endif
 bool haveTelnetClient = false;
 
@@ -663,6 +665,7 @@ uint8_t current_switchday = 0;
 #include "BSB_lan_EEPROMconfig.h"
 
 static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
+void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 
 /** *****************************************************************
  *  Function: initConfigTable(uint8_t)
@@ -676,6 +679,7 @@ static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
  *   none
  * Global resources used:
  * *************************************************************** */
+ 
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
@@ -4025,9 +4029,9 @@ void SaveConfigFromRAMtoEEPROM(){
 #ifdef MQTT
         case CF_MQTT:
         case CF_MQTT_IPADDRESS:
-          if(MQTTClient){
-            delete MQTTClient;
-            MQTTClient = NULL;
+          if(MQTTPubSubClient){
+            delete MQTTPubSubClient;
+            MQTTPubSubClient = NULL;
           }
           break;
 #endif
@@ -7942,7 +7946,74 @@ uint8_t pps_offset = 0;
 #endif
               if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
+              boolean buschanged = false;
+              boolean needReboot = false;
+              //save new values from RAM to EEPROM
+              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
+                if(writeToEEPROM(i)){
+                  switch(i){
+                    case CF_BUSTYPE:
+                    case CF_OWN_BSBADDR:
+                    case CF_OWN_LPBADDR:
+                    case CF_DEST_LPBADDR:
+                    case CF_PPS_WRITE:
+                      buschanged = true;
+                      break;
+                    //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
+                    // so here no reason do dynamic reconfiguration.
+                    // Topic: Possible to STOP an ethernet server once started and release resources ?
+                    // https://forum.arduino.cc/index.php?topic=395827.0
+                    // Topic: Dynamically changing IP address of Ethernet Shield (not DHCP and without reboot)
+                    // https://forum.arduino.cc/index.php?topic=89469.0
+                    // Resume: it possible but can cause unpredicable effects
+                    case CF_MAC:
+                    case CF_DHCP:
+                    case CF_IPADDRESS:
+                    case CF_MASK:
+                    case CF_GATEWAY:
+                    case CF_DNS:
+                    case CF_ONEWIREBUS:
+                    case CF_WWWPORT:
+                      needReboot = true;
+                      break;
+#ifdef AVERAGES
+                    case CF_AVERAGESLIST:
+                      resetAverageCalculation();
+                      break;
+#endif
+#ifdef MAX_CUL
+                    case CF_MAX:
+                    case CF_MAX_IPADDRESS:
+                      connectToMaxCul();
+                      break;
+#endif
+#ifdef MQTT
+                    case CF_MQTT:
+                    case CF_MQTT_IPADDRESS:
+                      if(MQTTPubSubClient){
+                        delete MQTTPubSubClient;
+                        MQTTPubSubClient = NULL;
+                        mqtt_client->stop();
+                        delete mqtt_client;
+                      }
+                      break;
+#endif
+                    default: break;
+                  }
+                }
+              }
+              // EEPROM dump require ~3 sec so let it be last operation.
+              // Dump when serial debug active or have telnet client
+              EEPROM_dump();
+
+              if(needReboot == true){
+                client.stop();
+                resetBoard();
+              }
+              if(buschanged) {setBusType(); }
+
               SaveConfigFromRAMtoEEPROM();
+
             }
             break;
               //no break here.
@@ -8316,37 +8387,14 @@ uint8_t pps_offset = 0;
 
 #ifdef MQTT
   if(mqtt_broker_ip_addr[0] && mqtt_mode){ //Address was set and MQTT was enabled
-    char* MQTTUser = NULL;
-    if(MQTTUsername[0])
-      MQTTUser = MQTTUsername;
-
-    const char* MQTTPass = NULL;
-    if(MQTTPassword[0])
-      MQTTPass = MQTTPassword;
-    if(MQTTClient == NULL){
-      MQTTClient = new PubSubClient(client);
-      MQTTClient->setBufferSize(1024);
-    }
-
     String MQTTPayload = "";
     String MQTTTopic = "";
+    
+    mqtt_connect();        //Luposoft, connect to mqtt
+    MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
 
     if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
       lastMQTTTime = millis();
-      if (!MQTTClient->connected()) {
-        IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-        MQTTClient->setServer(MQTTBroker, 1883);
-        int retries = 0;
-        while (!MQTTClient->connected() && retries < 3) {
-          MQTTClient->connect("BSB-LAN", MQTTUser, MQTTPass);
-          retries++;
-          if (!MQTTClient->connected()) {
-            delay(1000);
-            printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
-          }
-        }
-      }
-
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
           // Declare local variables and start building json if enabled
@@ -8363,8 +8411,8 @@ uint8_t pps_offset = 0;
             if(mqtt_mode == 3)
               MQTTPayload.concat(F("\":{\"id\":"));
           }
-          bool is_first = true;
-          if (MQTTClient->connected()) {
+          boolean is_first = true;
+          if (mqtt_connect()) {              //Luposoft, new funct
             if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
             if(MQTTTopicPrefix[0]){
               MQTTTopic = MQTTTopicPrefix;
@@ -8404,10 +8452,10 @@ uint8_t pps_offset = 0;
             } else { //plain text
               if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-                MQTTClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
+                MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
               }
               else
-                MQTTClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
+                MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
             }
           }
           // End of mqtt if loop so close off the json and publish
@@ -8424,16 +8472,26 @@ uint8_t pps_offset = 0;
             printToDebug(MQTTPayload.c_str());
             writelnToDebug();
             // Now publish the json payload only once
-            MQTTClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+            MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
           }
         }
       }
-      MQTTClient->disconnect();
+      //MQTTPubSubClient->disconnect();   //Luposoft: no needing to disconnect anymore  
+      if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
+      {
+        if (MQTTPubSubClient->connected()) 
+        {
+          MQTTPubSubClient->disconnect();
+          printlnToDebug(PSTR("MQTT was disconnected on order through web interface"));
+        }
+      }
     }
   }
-  if(MQTTClient && mqtt_mode == 0){
-    delete MQTTClient;
-    MQTTClient = NULL;
+  if(MQTTPubSubClient && mqtt_mode == 0){
+    delete MQTTPubSubClient;
+    MQTTPubSubClient = NULL;
+    mqtt_client->stop();
+    delete mqtt_client;
   }
 #endif
 
@@ -8691,6 +8749,139 @@ uint8_t pps_offset = 0;
   mdns.run();
 #endif
 } // --- loop () ---
+//Luposoft: Funktionen mqtt_connect
+/*  Function: mqtt_connect()
+ *  Does:     connect to mqtt broker
+ 
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  boolean
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ *  MQTT instance
+ * *************************************************************** */
+#ifdef MQTT
+boolean mqtt_connect()
+{
+  char* MQTTUser = NULL;
+  if(MQTTUsername[0])
+    MQTTUser = MQTTUsername;
+  const char* MQTTPass = NULL;
+  if(MQTTPassword[0])
+    MQTTPass = MQTTPassword;
+  if(MQTTPubSubClient == NULL)
+  {
+    #ifdef WIFI
+      mqtt_client= new WiFiSpiClient();
+    #else
+      mqtt_client= new EthernetClient();
+    #endif
+    MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
+    MQTTPubSubClient->setBufferSize(1024);
+  }
+  if (!MQTTPubSubClient->connected())
+  {
+    IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
+    MQTTPubSubClient->setServer(MQTTBroker, 1883);
+    int retries = 0;
+    while (!MQTTPubSubClient->connected() && retries < 3)
+    {
+      MQTTPubSubClient->connect("BSB-LAN", MQTTUser, MQTTPass);
+      retries++;
+      if (!MQTTPubSubClient->connected())
+      {
+        delay(1000);
+        printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
+      } 
+      else
+      {
+        printlnToDebug(PSTR("Connect to MQTT broker"));
+        const char* mqtt_subscr;
+        if(MQTTTopicPrefix[0]){mqtt_subscr = MQTTTopicPrefix;}else {mqtt_subscr="fromBroker";}
+        MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
+        MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
+        MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+        return true;
+      }
+    }
+  }
+  else
+  {
+    return true;
+  }
+return false;
+}
+#endif
+//Luposoft: Funktionen mqtt_callback
+/*  Function: mqtt_callback()
+ *  Does:     will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
+ *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
+              send command to heater and return an acknowledge to broker
+ * Pass parameters:
+ *  topic,payload,length
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ * *************************************************************** */
+#ifdef MQTT
+void mqtt_callback(char* topic, byte* payload, unsigned int length)
+{
+  boolean setcmd;
+  printlnToDebug(PSTR("##MQTT#############################"));
+  printToDebug(PSTR("mqtt-message arrived ["));
+  printToDebug(topic);
+  printlnToDebug(PSTR("] "));
+  char C_value[24];
+  strcpy_P(C_value, PSTR("ACK_"));   //dukess
+  switch ((char)payload[0])
+  {
+    case 'I':setcmd=false;break;
+    case 'S':setcmd=true;break;
+    default:
+      printlnToDebug(PSTR("mqtt_callback: missing 'I' or 'S' at start"));
+      return;
+      break;
+  }
+  //buffer overflow protection    //dukess
+  if(length > sizeof(C_value) - 4)
+  {
+    length = sizeof(C_value) - 4;
+    printlnToDebug(PSTR("payload too big"));
+  }
+    for (unsigned int i=0;i<length;i++)
+  {
+    C_value[i+4]=char(payload[i]);
+  }
+  C_value[length+4]='\0';
+  char*C_payload=C_value+ 4;  //dukess
+  C_payload++;
+  int I_line=atoi(C_payload);
+  C_payload=strchr(C_payload,'=');
+  C_payload++;
+  if (setcmd) {printToDebug(PSTR("S"));} else {printToDebug(PSTR("I"));}
+  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+  set(I_line,C_payload,setcmd);  //command to heater
+  String mqtt_Topic;
+  if(MQTTTopicPrefix[0])
+  {
+    mqtt_Topic = MQTTTopicPrefix;
+    mqtt_Topic.concat(F("/"));
+  }
+  else mqtt_Topic = "BSB-LAN/";
+  mqtt_Topic.concat(F("MQTT"));
+  MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
+  printlnToDebug(PSTR("##MQTT#############################"));
+}
+#endif
+
 
 #ifdef WIFI
 void printWifiStatus()
