@@ -113,7 +113,7 @@
 #define MENU_TEXT_OWP "1-Wire bus pins"
 #define MENU_TEXT_DHP "DHT22 bus pins"
 #define MENU_TEXT_EXP "Protected GPIO pins"
-#define MENU_TEXT_MAC "MAC-Address"
+#define MENU_TEXT_MAC "MAC address"
 #define MENU_TEXT_LGP "Logging the following parameters every"
 #define MENU_TEXT_SEC "seconds"
 #define MENU_TEXT_BZ1 "Burner runtime level 1"
@@ -129,7 +129,7 @@
 #define MENU_TEXT_BDT "BSB-Data telegrams (irrespective of interval)"
 #define MENU_TEXT_BUT "Logging unknown bus telegrams only"
 #define MENU_TEXT_MMD "Monitor mode"
-#define MENU_TEXT_VBL "Verbosity level"
+#define MENU_TEXT_VBL "Verbosity mode"
 #define MENU_TEXT_AVT "Calculating 24h averages for the following parameters"
 #define MENU_TEXT_LBO "Log broadcast bus-telegrams only"
 #define MENU_TEXT_LGI "New logging interval"
@@ -138,6 +138,36 @@
 #define MENU_TEXT_FSP "Free space on SD card"
 
 #define STR_24A_TEXT "24h average"
+
+//WEBCONFIG
+#define CF_USEEEPROM_TEXT "Read config from EEPROM"
+#define CF_BUSTYPE_TEXT "Type"
+#define CF_OWN_ADDR_TEXT "Own address"
+#define CF_DEST_ADDR_TEXT "Destination address"
+#define CF_PPS_WRITE_TEXT "PPS: bus write enabled"
+#define CF_LOGTELEGRAM_TEXT "Bus telegrams"
+#define CF_LOGCURRVALUES_TEXT "To SD card"
+#define CF_LOGCURRINTERVAL_TEXT "Interval (seconds)"
+#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+#define CF_DHCP_TEXT "DHCP usage"
+#define CF_IPADDRESS_TEXT "IP address (fixed)"
+#define CF_TRUSTEDIPADDRESS_TEXT "Trusted IP address"
+#define CF_MASK_TEXT "Subnet"
+#define CF_WEBSERVER_TEXT "Webserver SD card"
+#define CF_BASICAUTH_TEXT "HTTP authentification"
+#define CF_ONEWIREBUS_DEVICES_TEXT "Devices"
+#define CF_IPWE_TEXT "Usage"
+#define CF_MAX_TEXT CF_IPWE_TEXT
+#define CF_MAX_IPADDRESS_TEXT "IP address cube"
+#define CF_WRITEMODE_TEXT "Write access"
+#define CF_DEBUG_TEXT CF_IPWE_TEXT
+#define CF_MQTT_TEXT CF_IPWE_TEXT
+#define CF_MQTT_IPADDRESS_TEXT "IP address broker"
+#define CF_MQTT_PASSWORD_TEXT "Password"
+
+#define CAT_GENERAL_TEXT "General"
+#define CAT_IPV4_TEXT "Network"
+
 #define STR500_TEXT "Mo"
 #define STR501_TEXT "Tu"
 #define STR502_TEXT "We"
