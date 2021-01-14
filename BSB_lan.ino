@@ -432,6 +432,9 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
+
+#define EEPROM_ERASING_PIN 51
+
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
@@ -3408,7 +3411,8 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K49'>" MENU_TEXT_SNS));
+   printToWebClient(PSTR("K49'>"));
+   printToWebClient(CAT_SENSORS_TXT);
 
    printToWebClient(PSTR("</a></td>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
@@ -3629,7 +3633,9 @@ void generateConfigPage(void){
   #endif
 
   #ifdef ONE_WIRE_BUS
-  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, " MENU_TEXT_SNS ": %d\r\n<BR>\r\n"), One_Wire_Pin, numSensors);
+  printFmtToWebClient(PSTR(MENU_TEXT_OWP ": \r\n%d, "), One_Wire_Pin);
+  printToWebClient(CAT_SENSORS_TXT);
+  printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
   printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
   for (int i=0; i<anz_ex_gpio; i++) {
@@ -3791,7 +3797,8 @@ void generateConfigPage(void){
 //  uint32_t m = micros();
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToWebClient(PSTR("Free space: %lu MB<br>\r\n"), fs);
+  printToWebClient(STR_TEXT_FSP);
+  printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
 printToWebClient(PSTR("<BR>\r\n"));
@@ -3799,7 +3806,20 @@ printToWebClient(PSTR("<BR>\r\n"));
 #ifndef WEBCONFIG
 #ifdef AVERAGES
   if(logAverageValues){
-    printToWebClient(PSTR(MENU_TEXT_AVT ": <BR>\r\n"));
+    printToWebClient(CF_LOGAVERAGES_TXT);
+/*
+    printToWebClient(PSTR(": "));
+#if defined(__AVR__)
+    printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF),logAverageValues,0);
+#else
+    printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF),logAverageValues,0);
+#endif
+    printToWebClient(decodedTelegram.enumdescaddr);
+*/
+    printToWebClient(PSTR("<BR>\r\n"));
+    printToWebClient(CF_AVERAGESLIST_TXT);
+    printToWebClient(PSTR(": <BR>\r\n"));
+
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
         printFmtToWebClient(PSTR("%d - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), 20050 + i);//outBuf will be overwrited here
@@ -6005,6 +6025,29 @@ void connectToMaxCul() {
   }
 }
 #endif
+
+void clearEEPROM(void){
+#if defined(__AVR__)
+  for (uint16_t x=0; x<EEPROM.length(); x++) {
+    EEPROM.write(x, 0xFF);
+  }
+#else
+  uint8_t empty_block[4097] = { 0xFF };
+  EEPROM.fastBlockWrite(0, &empty_block, 4096);
+#endif
+  printlnToDebug(PSTR("Cleared EEPROM"));
+}
+
+void internalLEDBlinking(uint16_t period, uint16_t count){
+  for (int i=0; i<count; i++) {
+    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+    delay(period);
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    delay(period);
+  }
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+}
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -7363,7 +7406,7 @@ uint8_t pps_offset = 0;
             int16_t http_code = HTTP_OK;
             long cache_time = HTTP_DO_NOT_CACHE;
 
-            if(p[2] == 'C' || p[2] == 'K') {
+            if((p[2] == 'C' || p[2] == 'K') && json_token!=NULL) {
               cache_time = 300; //5 min
               if((httpflags & HTTP_ETAG))
                 http_code = HTTP_NOT_MODIFIED;
@@ -8071,15 +8114,7 @@ uint8_t pps_offset = 0;
           }
 #endif
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
-#if defined(__AVR__)
-            for (uint16_t x=0; x<EEPROM.length(); x++) {
-              EEPROM.write(x, 0xFF);
-            }
-#else
-            uint8_t empty_block[4097] = { 0xFF };
-            EEPROM.fastBlockWrite(0, &empty_block, 4096);
-#endif
-            printlnToDebug(PSTR("Cleared EEPROM"));
+            clearEEPROM();
           }
           printToWebClient(PSTR("Restarting Arduino...\r\n"));
           webPrintFooter();
@@ -8683,6 +8718,7 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -8702,6 +8738,14 @@ void setup() {
   }
   pinMode(19, INPUT);
   #endif
+
+//EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
+  if(!digitalRead(EEPROM_ERASING_PIN)){
+    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+    clearEEPROM();
+    internalLEDBlinking(125, 16); //pause 4 sec for user informing and button release
+  }
+
   //Read config parameters from EEPROM
 
   //Read "Header"
@@ -9013,13 +9057,7 @@ if(save_debug_mode == 2)
   if(diff > 0)  delay(diff);
 
   //decoration: double blink by LED before start. wait for a second
-  for (int i=0; i<2; i++) {
-    digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-    delay(250);
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-    delay(250);
-  }
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  internalLEDBlinking(250, 2);
   //end of decoration
 
   printlnToDebug(PSTR("Start network services"));
