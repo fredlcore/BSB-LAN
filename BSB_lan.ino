@@ -8739,6 +8739,8 @@ void setup() {
   pinMode(19, INPUT);
   #endif
 
+  pinMode(LED_BUILTIN, OUTPUT);
+
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if(!digitalRead(EEPROM_ERASING_PIN)){
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9042,7 +9044,6 @@ if(save_debug_mode == 2)
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
   // turn the LED on until Ethernet shield is ready and freeClusterCount is over
-  pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
   long diff = 2200; // + 1 sec with decoration
