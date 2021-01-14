@@ -1061,7 +1061,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_APP_XML: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
     // case 5 below
     case MIME_TYPE_APP_JSON: getfarstrings = PSTR("application/json"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
-    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = 60; break;
     case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
     case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
     case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg"); break;
@@ -1069,7 +1069,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
     case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
     case MIME_TYPE_TEXT_TEXT:
-    default: getfarstrings = PSTR("text"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    default: getfarstrings = PSTR("text"); autoDetectCachingTime = 60; break;
   }
   printToWebClient(getfarstrings);
   if(cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
