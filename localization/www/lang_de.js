@@ -199,6 +199,7 @@ UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-Adresse Broker";
 UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
+UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
