@@ -216,6 +216,12 @@
 #define CAT_IPV4_TEXT "Настройки IP"
 #define CAT_MQTT_TEXT "Настройки MQTT"
 #define CAT_BUS_TEXT "Шина"
+#define CAT_IPWE_TEXT "IPWE"
+#define CAT_DHTBUS_TEXT "DHT"
+#define CAT_ONEWIREBUS_TEXT "OneWire"
+#define CAT_DEBUG_TEXT "Отладка"
+#define CAT_MAX_TEXT "MAX!"
+#define CAT_LOGGING_TEXT "Журналирование"
 
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"

@@ -210,6 +210,11 @@
 #define CAT_MQTT_TEXT "MQTT settings"
 #define CAT_BUS_TEXT "Bus"
 #define CAT_IPWE_TEXT "IPWE"
+#define CAT_DHTBUS_TEXT "DHT"
+#define CAT_ONEWIREBUS_TEXT "OneWire"
+#define CAT_DEBUG_TEXT "Debugging"
+#define CAT_MAX_TEXT "MAX!"
+#define CAT_LOGGING_TEXT "Logging"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"
