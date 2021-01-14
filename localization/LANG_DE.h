@@ -176,9 +176,9 @@
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Auf SD Karte"
 #define CF_LOGCURRINTERVAL_TEXT "Logintervall (Sekunden)"
-#define CF_AVERAGESLIST_TEXT "Parameter"
-#define CF_CURRVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+#define CF_LOGAVERAGES_TEXT "Berechnung"
+#define CF_PROGLIST_TEXT "Parameter"
+#define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
 #define CF_IPADDRESS_TEXT "IP-Adresse (manuell)"
 #define CF_TRUSTEDIPADDRESS_TEXT "Vertrauenswürdige IP-Adresse"
@@ -190,16 +190,10 @@
 #define CF_WEBSERVER_TEXT "Webserver SD-Karte"
 #define CF_PASSKEY_TEXT "URL passkey"
 #define CF_BASICAUTH_TEXT "HTTP-Authentifizierung"
-#define CF_ONEWIREBUS_TEXT "Pins"
-#define CF_ONEWIREBUS_DEVICES_TEXT "Geräte"
-#define CF_DHTBUS_TEXT CF_ONEWIREBUS_TEXT
-#define CF_IPWE_TEXT "Verwenden"
-#define CF_IPWEVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_TEXT CF_IPWE_TEXT
+#define CF_PINS_TEXT "Pins"
+#define CF_USE_TEXT "Verwenden"
 #define CF_MAX_IPADDRESS_TEXT "IP-Adresse Cube"
 #define CF_WRITEMODE_TEXT "Schreibzugriff erlaubt"
-#define CF_DEBUG_TEXT CF_IPWE_TEXT
-#define CF_MQTT_TEXT CF_IPWE_TEXT
 #define CF_MQTT_IPADDRESS_TEXT "IP-Adresse Broker"
 #define CF_MQTT_USERNAME_TEXT "Username"
 #define CF_MQTT_PASSWORD_TEXT "Passwort"

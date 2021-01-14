@@ -517,9 +517,9 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
-const char *averagesFileName = "averages.txt";
-const char *datalogFileName = "datalog.txt";
-const char *journalFileName = "journal.txt";
+const char averagesFileName[] PROGMEM = "averages.txt";
+const char datalogFileName[] PROGMEM = "datalog.txt";
+const char journalFileName[] PROGMEM = "journal.txt";
 
 #ifdef WIFI
 WiFiSpiClient client;
@@ -3785,6 +3785,14 @@ void generateConfigPage(void){
   "URLCONFIG"
   #endif
 
+  #ifdef MDNS_HOSTNAME
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "MDNS"
+  #endif
 
   #if !defined (ANY_MODULE_COMPILED)
   "NONE"
@@ -3923,7 +3931,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         ((int *)variable)[j] = atoi(ptr_t);
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -3938,7 +3946,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         variable[j] = (byte)atoi(ptr_t);
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -3955,7 +3963,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
       memset(variable, 0, cfg.size);
       do{
         char *ptr_t = ptr;
-        ptr = strstr_P(ptr, PSTR(","));
+        ptr = strchr(ptr, ',');
         if(ptr) ptr[0] = 0;
         strncpy((char *)(variable + j * sizeof(max_device_list[0])), ptr_t, sizeof(max_device_list[0]));
         if(ptr) {ptr[0] = ','; ptr++;}
@@ -6696,7 +6704,7 @@ uint8_t pps_offset = 0;
 
         // perform HTTP-Authentification by reading the remaining client data and look for credentials
         // Parsing headers
-        static int buffershift = 38;
+        static int buffershift = 48;
         size_t charcount=buffershift;  //Reserve space in buffer for ETag (Max 32 chars)
         uint8_t httpflags = 0; //bit 0 - authenticated: 0 - no, 1 - yes
                                //bit 1 - client browser accept gzip: 0 - no, 2 - yes
@@ -6877,7 +6885,7 @@ uint8_t pps_offset = 0;
               }
 
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\"") + 1, dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
+              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
               }
@@ -6982,7 +6990,7 @@ uint8_t pps_offset = 0;
 #endif
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr("ABCDEGHIJKLMNOPQRSTUVWXY",p[1])==NULL){
+        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGHIJKLMNOPQRSTUVWXY"), p[1])==NULL){
           webPrintHeader();
           webPrintFooter();
           break;
@@ -7425,7 +7433,7 @@ uint8_t pps_offset = 0;
             }
           }
           printToWebClient(PSTR("{\r\n"));
-          if(strchr("CIKLQRSVW",p[2]) == NULL) {  // ignoring unknown JSON commands
+          if(strchr_P(PSTR("CIKLQRSVW"), p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
@@ -9224,11 +9232,11 @@ if(save_debug_mode == 2)
 
 #ifdef MDNS_HOSTNAME
 #ifdef WIFI
-  mdns.begin(WiFiSpi.localIP(), MDNS_HOSTNAME);
+  mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
-  mdns.begin(Ethernet.localIP(), MDNS_HOSTNAME);
+  mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
-mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
 
 #ifdef CUSTOM_COMMANDS
