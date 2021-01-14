@@ -195,6 +195,7 @@
   "CF_MQTT_USERNAME_TEXT": "Username",
   "CF_MQTT_PASSWORD_TEXT": "Passwort",
   "CF_MQTT_TOPIC_TEXT": "Topic prefix",
+  "CF_MQTT_DEVICE_TEXT": "Geräte ID",
   "CF_CHECKUPDATE_TEXT": "Auf Updates überprüfen",
   "CAT_GENERAL_TEXT": "Generell",
   "CAT_IPV4_TEXT": "Netzwerk",
