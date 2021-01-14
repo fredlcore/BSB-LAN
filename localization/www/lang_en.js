@@ -113,7 +113,7 @@ UIStrings["MENU_TEXT_BRO"] = "Read-Only";
 UIStrings["MENU_TEXT_OWP"] = "1-Wire bus pins";
 UIStrings["MENU_TEXT_DHP"] = "DHT22 bus pins";
 UIStrings["MENU_TEXT_EXP"] = "Protected GPIO pins";
-UIStrings["MENU_TEXT_MAC"] = "MAC-Address";
+UIStrings["MENU_TEXT_MAC"] = "MAC address";
 UIStrings["MENU_TEXT_LGP"] = "Logging the following parameters every";
 UIStrings["MENU_TEXT_SEC"] = "seconds";
 UIStrings["MENU_TEXT_BZ1"] = "Burner runtime level 1";
@@ -129,7 +129,7 @@ UIStrings["MENU_TEXT_MXN"] = "No MAX! data received yet.";
 UIStrings["MENU_TEXT_BDT"] = "BSB-Data telegrams (irrespective of interval)";
 UIStrings["MENU_TEXT_BUT"] = "Logging unknown bus telegrams only";
 UIStrings["MENU_TEXT_MMD"] = "Monitor mode";
-UIStrings["MENU_TEXT_VBL"] = "Verbosity level";
+UIStrings["MENU_TEXT_VBL"] = "Verbosity mode";
 UIStrings["MENU_TEXT_AVT"] = "Calculating 24h averages for the following parameters";
 UIStrings["MENU_TEXT_LBO"] = "Log broadcast bus-telegrams only";
 UIStrings["MENU_TEXT_LGI"] = "New logging interval";
@@ -138,6 +138,36 @@ UIStrings["MENU_TEXT_LOT"] = "Log of telegrams";
 UIStrings["MENU_TEXT_FSP"] = "Free space on SD card";
 
 UIStrings["STR_24A_TEXT"] = "24h average";
+
+//WEBCONFIG
+UIStrings["CF_USEEEPROM_TEXT"] = "Read config from EEPROM";
+UIStrings["CF_BUSTYPE_TEXT"] = "Type";
+UIStrings["CF_OWN_ADDR_TEXT"] = "Own address";
+UIStrings["CF_DEST_ADDR_TEXT"] = "Destination address";
+UIStrings["CF_PPS_WRITE_TEXT"] = "PPS: bus write enabled";
+UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bus telegrams";
+UIStrings["CF_LOGCURRVALUES_TEXT"] = "To SD card";
+UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Interval (seconds)";
+#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+UIStrings["CF_DHCP_TEXT"] = "DHCP usage";
+UIStrings["CF_IPADDRESS_TEXT"] = "IP address (fixed)";
+UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Trusted IP address";
+UIStrings["CF_MASK_TEXT"] = "Subnet";
+UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD card";
+UIStrings["CF_BASICAUTH_TEXT"] = "HTTP authentification";
+UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "Devices";
+UIStrings["CF_IPWE_TEXT"] = "Usage";
+#define CF_MAX_TEXT CF_IPWE_TEXT
+UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP address cube";
+UIStrings["CF_WRITEMODE_TEXT"] = "Write access";
+#define CF_DEBUG_TEXT CF_IPWE_TEXT
+#define CF_MQTT_TEXT CF_IPWE_TEXT
+UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP address broker";
+UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
+
+UIStrings["CAT_GENERAL_TEXT"] = "General";
+UIStrings["CAT_IPV4_TEXT"] = "Network";
+
 UIStrings["STR500_TEXT"] = "Mo";
 UIStrings["STR501_TEXT"] = "Tu";
 UIStrings["STR502_TEXT"] = "We";

@@ -163,53 +163,59 @@ UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsv
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
-UIStrings["MENU_TEXT_FSP"] = "Free space on SD card";
+UIStrings["MENU_TEXT_FSP"] = "Freier Speicher auf SD Karte";
 
 UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
 
 //WEBCONFIG
-UIStrings["CF_USEEEPROM_TEXT"] = "Read config from EEPROM";
-UIStrings["CF_BUSTYPE_TEXT"] = "Bus type";
-UIStrings["CF_OWN_ADDR_TEXT"] = "Own BSB/LPB address";
-UIStrings["CF_DEST_ADDR_TEXT"] = "Dest BSB/LPB address";
-UIStrings["CF_PPS_WRITE_TEXT"] = "Enable PPS bus write";
-UIStrings["CF_LOGTELEGRAM_TEXT"] = "Log telegrams";
-UIStrings["CF_LOGCURRVALUES_TEXT"] = "Log current values";
-UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Log interval, seconds";
-UIStrings["CF_AVERAGESLIST_TEXT"] = "Programs for averages calculation";
-UIStrings["CF_CURRVALUESLIST_TEXT"] = "Programs for logging";
-UIStrings["CF_MAX_DEVICES_TEXT"] = "MAX! devices";
-UIStrings["CF_DHCP_TEXT"] = "Use DHCP";
-UIStrings["CF_IPADDRESS_TEXT"] = "IP address";
-UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Trusted IP address";
-UIStrings["CF_MASK_TEXT"] = "Network mask";
+UIStrings["CF_USEEEPROM_TEXT"] = "Konfiguration aus EEPROM lesen";
+UIStrings["CF_BUSTYPE_TEXT"] = "Typ";
+UIStrings["CF_OWN_ADDR_TEXT"] = "Eigene Adresse";
+UIStrings["CF_DEST_ADDR_TEXT"] = "Zieladresse";
+UIStrings["CF_PPS_WRITE_TEXT"] = "PPS: Schreiben aktiviert";
+UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bustelegramme";
+UIStrings["CF_LOGCURRVALUES_TEXT"] = "Auf SD Karte";
+UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
+UIStrings["CF_AVERAGESLIST_TEXT"] = "Parameter";
+#define CF_CURRVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
+#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";
+UIStrings["CF_IPADDRESS_TEXT"] = "IP-Adresse (manuell)";
+UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Vertrauenswürdige IP-Adresse";
+UIStrings["CF_MASK_TEXT"] = "Subnetzmaske";
 UIStrings["CF_GATEWAY_TEXT"] = "Gateway";
 UIStrings["CF_DNS_TEXT"] = "DNS server";
-UIStrings["CF_WWWPORT_TEXT"] = "WWW port";
-UIStrings["CF_WIFI_SSID_TEXT"] = "SSID";
-UIStrings["CF_WEBSERVER_TEXT"] = "Webserver 4 SD card";
+UIStrings["CF_WWWPORT_TEXT"] = "TCP/UDP port";
+UIStrings["CF_WIFI_SSID_TEXT"] = "WLAN SSID";
+UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD-Karte";
 UIStrings["CF_PASSKEY_TEXT"] = "URL passkey";
-UIStrings["CF_BASICAUTH_TEXT"] = "Basic AUTH data";
-UIStrings["CF_ONEWIREBUS_TEXT"] = "Use One Wire bus on pin";
-UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "List of One Wire devices";
-UIStrings["CF_DHTBUS_TEXT"] = "Use DHT bus on pins";
-UIStrings["CF_IPWE_TEXT"] = "Enable IPWE";
-UIStrings["CF_IPWEVALUESLIST_TEXT"] = "Programs for displaying with IPWE";
-UIStrings["CF_MAX_TEXT"] = "Enable MAX";
-UIStrings["CF_MAX_IPADDRESS_TEXT"] = "CUNO/CUNX/modified MAX!Cube IP address";
-UIStrings["CF_WRITEMODE_TEXT"] = "Write parameters to system";
-UIStrings["CF_DEBUG_TEXT"] = "Debug";
-UIStrings["CF_MQTT_TEXT"] = "Using MQTT";
-UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "MQTT broker IP address";
-UIStrings["CF_MQTT_USERNAME_TEXT"] = "User name";
-UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
+UIStrings["CF_BASICAUTH_TEXT"] = "HTTP-Authentifizierung";
+UIStrings["CF_ONEWIREBUS_TEXT"] = "Pins";
+UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "Geräte";
+#define CF_DHTBUS_TEXT CF_ONEWIREBUS_TEXT
+UIStrings["CF_IPWE_TEXT"] = "Verwenden";
+#define CF_IPWEVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
+#define CF_MAX_TEXT CF_IPWE_TEXT
+UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP-Adresse Cube";
+UIStrings["CF_WRITEMODE_TEXT"] = "Schreibzugriff erlaubt";
+#define CF_DEBUG_TEXT CF_IPWE_TEXT
+#define CF_MQTT_TEXT CF_IPWE_TEXT
+UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-Adresse Broker";
+UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
+UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
 
-UIStrings["CAT_GENERAL_TEXT"] = "General";
-UIStrings["CAT_IPV4_TEXT"] = "IP settings";
-UIStrings["CAT_MQTT_TEXT"] = "MQTT settings";
+UIStrings["CAT_GENERAL_TEXT"] = "Generell";
+UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
+UIStrings["CAT_MQTT_TEXT"] = "MQTT";
 UIStrings["CAT_BUS_TEXT"] = "Bus";
 UIStrings["CAT_IPWE_TEXT"] = "IPWE";
+UIStrings["CAT_DHTBUS_TEXT"] = "DHT";
+UIStrings["CAT_ONEWIREBUS_TEXT"] = "OneWire";
+UIStrings["CAT_DEBUG_TEXT"] = "Debugging";
+UIStrings["CAT_MAX_TEXT"] = "MAX!";
+UIStrings["CAT_LOGGING_TEXT"] = "Logging";
+
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
