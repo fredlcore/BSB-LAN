@@ -140,7 +140,7 @@ UIStrings["MENU_TEXT_LAT"] = "Alle Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_BUT"] = "Nur unbekannte Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_UBT"] = "Nur unbekannte Broadcast Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_MMD"] = "Monitor Modus";
-UIStrings["MENU_TEXT_VBL"] = "Verbositäts-Level";
+UIStrings["MENU_TEXT_VBL"] = "Verbositätsmodus";
 UIStrings["MENU_TEXT_AVT"] = "Berechnung von 24h-Mittelwerten für die folgenden Parameter";
 UIStrings["MENU_TEXT_LBO"] = "Nur Broadcast Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_LGI"] = "Neues Logging-Intervall";
@@ -176,34 +176,29 @@ UIStrings["CF_PPS_WRITE_TEXT"] = "PPS: Schreiben aktiviert";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bustelegramme";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Auf SD Karte";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
-UIStrings["CF_AVERAGESLIST_TEXT"] = "Parameter";
-#define CF_CURRVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+UIStrings["CF_LOGAVERAGES_TEXT"] = "Berechnung";
+UIStrings["CF_PROGLIST_TEXT"] = "Parameter";
+UIStrings["CF_DEVICES_TEXT"] = "Geräte";
 UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";
 UIStrings["CF_IPADDRESS_TEXT"] = "IP-Adresse (manuell)";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Vertrauenswürdige IP-Adresse";
 UIStrings["CF_MASK_TEXT"] = "Subnetzmaske";
 UIStrings["CF_GATEWAY_TEXT"] = "Gateway";
 UIStrings["CF_DNS_TEXT"] = "DNS server";
-UIStrings["CF_WWWPORT_TEXT"] = "TCP/UDP port";
+UIStrings["CF_WWWPORT_TEXT"] = "TCP port";
 UIStrings["CF_WIFI_SSID_TEXT"] = "WLAN SSID";
 UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD-Karte";
 UIStrings["CF_PASSKEY_TEXT"] = "URL passkey";
 UIStrings["CF_BASICAUTH_TEXT"] = "HTTP-Authentifizierung";
-UIStrings["CF_ONEWIREBUS_TEXT"] = "Pins";
-UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "Geräte";
-#define CF_DHTBUS_TEXT CF_ONEWIREBUS_TEXT
-UIStrings["CF_IPWE_TEXT"] = "Verwenden";
-#define CF_IPWEVALUESLIST_TEXT CF_AVERAGESLIST_TEXT
-#define CF_MAX_TEXT CF_IPWE_TEXT
+UIStrings["CF_PINS_TEXT"] = "Pins";
+UIStrings["CF_USE_TEXT"] = "Verwenden";
 UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP-Adresse Cube";
 UIStrings["CF_WRITEMODE_TEXT"] = "Schreibzugriff erlaubt";
-#define CF_DEBUG_TEXT CF_IPWE_TEXT
-#define CF_MQTT_TEXT CF_IPWE_TEXT
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-Adresse Broker";
 UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
+UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
@@ -215,7 +210,7 @@ UIStrings["CAT_ONEWIREBUS_TEXT"] = "OneWire";
 UIStrings["CAT_DEBUG_TEXT"] = "Debugging";
 UIStrings["CAT_MAX_TEXT"] = "MAX!";
 UIStrings["CAT_LOGGING_TEXT"] = "Logging";
-
+UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
