@@ -205,6 +205,7 @@
 #define CF_MQTT_IPADDRESS_TEXT "IP-адрес брокера MQTT"
 #define CF_MQTT_USERNAME_TEXT "Имя пользователя"
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
+#define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
 

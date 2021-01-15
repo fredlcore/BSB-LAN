@@ -523,7 +523,7 @@ const char journalFileName[] PROGMEM = "journal.txt";
 
 #ifdef WIFI
 WiFiSpiClient client;
-WiFiSpiClient *mqtt_client;  //Luposoft: own instance 
+WiFiSpiClient *mqtt_client;  //Luposoft: own instance
 #ifdef VERSION_CHECK
 WiFiSpiClient httpclient;
 #endif
@@ -679,7 +679,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft
  *   none
  * Global resources used:
  * *************************************************************** */
- 
+
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
@@ -3516,8 +3516,7 @@ void webPrintSite() {
     printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
     flushToWebClient();
     httpclient.connect("bsb-lan.de", 80);
-    httpclient.println("GET /bsb-version.h");
-    httpclient.println();
+    httpclient.println("GET /bsb-version.h\r\n");
 
     unsigned long timeout = millis();
     while (millis() - timeout < 3000 && !httpclient.available()) {
@@ -4032,6 +4031,8 @@ void SaveConfigFromRAMtoEEPROM(){
           if(MQTTPubSubClient){
             delete MQTTPubSubClient;
             MQTTPubSubClient = NULL;
+            mqtt_client->stop();
+            delete mqtt_client;
           }
           break;
 #endif
@@ -6734,7 +6735,6 @@ uint8_t pps_offset = 0;
               if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
                 httpflags |= HTTP_GZIP;
               }
-              else
 #endif
               if (!(httpflags & HTTP_ETAG)) {
                 char *ptr = strstr_P(outBuf + buffershift, PSTR("If-None-Match:"));
@@ -6748,7 +6748,6 @@ uint8_t pps_offset = 0;
 //                  printFmtToDebug(PSTR("ETag string: %s\r\n"), outBuf);
                 }
               }
-             else
               //Execute only if flag not set because strstr more expensive than bitwise operation
               if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
                 httpflags |= HTTP_AUTH;
@@ -6994,7 +6993,11 @@ uint8_t pps_offset = 0;
 #endif
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGHIJKLMNOPQRSTUVWXY"), p[1])==NULL){
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGIJKLMNPQRSUVWXY"), p[1])==NULL){
+#else
+        if(!isdigit(p[1]) && strchr_P(PSTR("CDGJNQUWX"), p[1])==NULL){
+#endif
           webPrintHeader();
           webPrintFooter();
           break;
@@ -7353,7 +7356,7 @@ uint8_t pps_offset = 0;
           forcedflushToWebClient();
           break;
         }
-
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         if(p[1]=='Y'){
 #ifdef DEBUG
           if(debug_mode){
@@ -7394,6 +7397,7 @@ uint8_t pps_offset = 0;
 #endif
           break;
         }
+#endif
 
         if (p[1]=='J') {
           uint32_t cmd=0;
@@ -7946,71 +7950,6 @@ uint8_t pps_offset = 0;
 #endif
               if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
-              boolean buschanged = false;
-              boolean needReboot = false;
-              //save new values from RAM to EEPROM
-              for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-                if(writeToEEPROM(i)){
-                  switch(i){
-                    case CF_BUSTYPE:
-                    case CF_OWN_BSBLPBADDR:
-                    case CF_DEST_BSBLPBADDR:
-                    case CF_PPS_WRITE:
-                      buschanged = true;
-                      break;
-                    //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
-                    // so here no reason do dynamic reconfiguration.
-                    // Topic: Possible to STOP an ethernet server once started and release resources ?
-                    // https://forum.arduino.cc/index.php?topic=395827.0
-                    // Topic: Dynamically changing IP address of Ethernet Shield (not DHCP and without reboot)
-                    // https://forum.arduino.cc/index.php?topic=89469.0
-                    // Resume: it possible but can cause unpredicable effects
-                    case CF_MAC:
-                    case CF_DHCP:
-                    case CF_IPADDRESS:
-                    case CF_MASK:
-                    case CF_GATEWAY:
-                    case CF_DNS:
-                    case CF_ONEWIREBUS:
-                    case CF_WWWPORT:
-                      needReboot = true;
-                      break;
-#ifdef AVERAGES
-                    case CF_AVERAGESLIST:
-                      resetAverageCalculation();
-                      break;
-#endif
-#ifdef MAX_CUL
-                    case CF_MAX:
-                    case CF_MAX_IPADDRESS:
-                      connectToMaxCul();
-                      break;
-#endif
-#ifdef MQTT
-                    case CF_MQTT:
-                    case CF_MQTT_IPADDRESS:
-                      if(MQTTPubSubClient){
-                        delete MQTTPubSubClient;
-                        MQTTPubSubClient = NULL;
-                        mqtt_client->stop();
-                        delete mqtt_client;
-                      }
-                      break;
-#endif
-                    default: break;
-                  }
-                }
-              }
-              // EEPROM dump require ~3 sec so let it be last operation.
-              // Dump when serial debug active or have telnet client
-              EEPROM_dump();
-
-              if(needReboot == true){
-                client.stop();
-                resetBoard();
-              }
-              if(buschanged) {setBusType(); }
-
               SaveConfigFromRAMtoEEPROM();
 
             }
@@ -8031,7 +7970,6 @@ uint8_t pps_offset = 0;
             }
           break;
         }
-#endif
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
         if (p[1]=='L'){
           webPrintHeader();
@@ -8176,6 +8114,7 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
+#endif
         if (p[1]=='N'){           // Reset Arduino...
           webPrintHeader();
           if (p[2]=='E') {
@@ -8310,6 +8249,7 @@ uint8_t pps_offset = 0;
               digitalWrite(pin, val);
             }
             printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
               printToWebClient(STR20006);
@@ -8360,8 +8300,8 @@ uint8_t pps_offset = 0;
             if (bus->getBusDest() != destAddr) {
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
             }
+#endif
           }
-
           range = strtok(NULL,"/");
         } // endwhile
         webPrintFooter();
@@ -8388,7 +8328,7 @@ uint8_t pps_offset = 0;
   if(mqtt_broker_ip_addr[0] && mqtt_mode){ //Address was set and MQTT was enabled
     String MQTTPayload = "";
     String MQTTTopic = "";
-    
+
     mqtt_connect();        //Luposoft, connect to mqtt
     MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
 
@@ -8475,10 +8415,9 @@ uint8_t pps_offset = 0;
           }
         }
       }
-      //MQTTPubSubClient->disconnect();   //Luposoft: no needing to disconnect anymore  
       if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
       {
-        if (MQTTPubSubClient->connected()) 
+        if (MQTTPubSubClient->connected())
         {
           MQTTPubSubClient->disconnect();
           printlnToDebug(PSTR("MQTT was disconnected on order through web interface"));
@@ -8751,7 +8690,7 @@ uint8_t pps_offset = 0;
 //Luposoft: Funktionen mqtt_connect
 /*  Function: mqtt_connect()
  *  Does:     connect to mqtt broker
- 
+
  * Pass parameters:
  *  none
  * Parameters passed back:
@@ -8789,13 +8728,13 @@ boolean mqtt_connect()
     int retries = 0;
     while (!MQTTPubSubClient->connected() && retries < 3)
     {
-      MQTTPubSubClient->connect("BSB-LAN", MQTTUser, MQTTPass);
+      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass);
       retries++;
       if (!MQTTPubSubClient->connected())
       {
         delay(1000);
         printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
-      } 
+      }
       else
       {
         printlnToDebug(PSTR("Connect to MQTT broker"));
@@ -8865,8 +8804,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   int I_line=atoi(C_payload);
   C_payload=strchr(C_payload,'=');
   C_payload++;
-  if (setcmd) {printToDebug(PSTR("S"));} else {printToDebug(PSTR("I"));}
-  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+  printFmtToDebug(PSTR("%с%d=%s \r\n"), setcmd?'S':'I', I_line, C_payload);
   set(I_line,C_payload,setcmd);  //command to heater
   String mqtt_Topic;
   if(MQTTTopicPrefix[0])
