@@ -145,6 +145,7 @@ UIStrings["CF_BUSTYPE_TEXT"] = "Type";
 UIStrings["CF_OWN_ADDR_TEXT"] = "Own address";
 UIStrings["CF_DEST_ADDR_TEXT"] = "Destination address";
 UIStrings["CF_PPS_WRITE_TEXT"] = "PPS: bus write enabled";
+UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA model";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bus telegrams";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "To SD card";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Interval (seconds)";
@@ -164,6 +165,7 @@ UIStrings["CF_WRITEMODE_TEXT"] = "Write access";
 #define CF_MQTT_TEXT CF_IPWE_TEXT
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP address broker";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
+UIStrings["CF_MQTT_DEVICE_TEXT"] = "Device ID";
 
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";

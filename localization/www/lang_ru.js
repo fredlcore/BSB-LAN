@@ -179,16 +179,14 @@ UIStrings["STR_24A_TEXT"] = "Среднесуточное значение";
 
 //WEBCONFIG
 UIStrings["CF_USEEEPROM_TEXT"] = "Читать настройки из EEPROM";
-UIStrings["CF_BUSTYPE_TEXT"] = "Тип шины";
+UIStrings["CF_BUSTYPE_TEXT"] = "Тип";
 UIStrings["CF_OWN_ADDR_TEXT"] = "Адрес устройства на шине BSB/LPB";
 UIStrings["CF_DEST_ADDR_TEXT"] = "Адрес назначения на шине BSB/LPB";
 UIStrings["CF_PPS_WRITE_TEXT"] = "Включить запись на шине PPS";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Журналировать телеграммы в journal.txt";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Записывать в datalog.txt текущие значения программ";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Интервал журнала (datalog.txt, MQTT), секунд";
-UIStrings["CF_AVERAGESLIST_TEXT"] = "Список программ для вычисления средних значений";
-UIStrings["CF_CURRVALUESLIST_TEXT"] = "Список программ для записи в журнал";
-UIStrings["CF_MAX_DEVICES_TEXT"] = "Устройства MAX!";
+UIStrings["CF_LOGAVERAGES_TEXT"] = "Подсчёт значений";
 UIStrings["CF_DHCP_TEXT"] = "Использовать DHCP";
 UIStrings["CF_IPADDRESS_TEXT"] = "IP адрес";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Доверенный IP адрес";
@@ -198,24 +196,31 @@ UIStrings["CF_DNS_TEXT"] = "DNS сервер";
 UIStrings["CF_WWWPORT_TEXT"] = "Порт WWW";
 UIStrings["CF_PASSKEY_TEXT"] = "URL-пароль";
 UIStrings["CF_BASICAUTH_TEXT"] = "Данные basic AUTH";
-UIStrings["CF_ONEWIREBUS_TEXT"] = "Шина One Wire подключена к выводу";
-UIStrings["CF_DHTBUS_TEXT"] = "Устройства DHT22 подключены к выводам";
-UIStrings["CF_IPWE_TEXT"] = "Включить IPWE";
-UIStrings["CF_IPWEVALUESLIST_TEXT"] = "Значения программ, отображаемых через IPWE";
-UIStrings["CF_MAX_TEXT"] = "Использовать MAX!";
+UIStrings["CF_PINS_TEXT"] = "Подключение к контактам";
+UIStrings["CF_USE_TEXT"] = "Использовать";
+UIStrings["CF_DEVICES_TEXT"] = "Устройства";
+UIStrings["CF_PROGLIST_TEXT"] = "Список программ для обработки";
 UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP-адрес устройства CUNO/CUNX/мод. MAX!Cube";
 UIStrings["CF_WRITEMODE_TEXT"] = "Запись параметров в систему";
-UIStrings["CF_DEBUG_TEXT"] = "Отладка";
-UIStrings["CF_MQTT_TEXT"] = "Использовать MQTT";
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-адрес брокера MQTT";
 UIStrings["CF_MQTT_USERNAME_TEXT"] = "Имя пользователя";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Пароль";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Префикс темы";
+UIStrings["CF_CHECKUPDATE_TEXT"] = "Проверять обновления";
+
 
 UIStrings["CAT_GENERAL_TEXT"] = "Основные";
 UIStrings["CAT_IPV4_TEXT"] = "Настройки IP";
 UIStrings["CAT_MQTT_TEXT"] = "Настройки MQTT";
 UIStrings["CAT_BUS_TEXT"] = "Шина";
+UIStrings["CAT_IPWE_TEXT"] = "IPWE";
+UIStrings["CAT_DHTBUS_TEXT"] = "Устройства DHT22";
+UIStrings["CAT_ONEWIREBUS_TEXT"] = "Устройства OneWire";
+UIStrings["CAT_DEBUG_TEXT"] = "Отладка";
+UIStrings["CAT_MAX_TEXT"] = "Устройства MAX!";
+UIStrings["CAT_LOGGING_TEXT"] = "Журналирование";
+UIStrings["CAT_24HAVG_TEXT"] = "Среднесуточные значения";
+
 
 UIStrings["STR0_TEXT"] = "Дата/время";
 UIStrings["STR1_TEXT"] = "Часы/минуты";
