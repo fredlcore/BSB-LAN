@@ -194,7 +194,7 @@
 #define CF_PINS_TEXT "Pins"
 #define CF_USE_TEXT "Verwenden"
 #define CF_MAX_IPADDRESS_TEXT "IP-Adresse Cube"
-#define CF_WRITEMODE_TEXT "Ebene Schreibzugriff"
+#define CF_WRITEMODE_TEXT "Schreibzugriff (Ebene)"
 #define CF_MQTT_IPADDRESS_TEXT "IP-Adresse Broker"
 #define CF_MQTT_USERNAME_TEXT "Username"
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
