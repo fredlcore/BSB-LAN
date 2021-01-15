@@ -6995,7 +6995,11 @@ uint8_t pps_offset = 0;
 #endif
 
         // Answer to unknown requests
-        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGHIJKLMNOPQRSTUVWXY"), p[1])==NULL){
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGIJKLMNPQRSUVWXY"), p[1])==NULL){
+#else
+        if(!isdigit(p[1]) && strchr_P(PSTR("CDGJNQUWX"), p[1])==NULL){
+#endif
           webPrintHeader();
           webPrintFooter();
           break;
@@ -7354,7 +7358,7 @@ uint8_t pps_offset = 0;
           forcedflushToWebClient();
           break;
         }
-
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         if(p[1]=='Y'){
 #ifdef DEBUG
           if(debug_mode){
@@ -7395,6 +7399,7 @@ uint8_t pps_offset = 0;
 #endif
           break;
         }
+#endif
 
         if (p[1]=='J') {
           uint32_t cmd=0;
@@ -7967,7 +7972,6 @@ uint8_t pps_offset = 0;
             }
           break;
         }
-#endif
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
         if (p[1]=='L'){
           webPrintHeader();
@@ -8112,6 +8116,7 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
+#endif
         if (p[1]=='N'){           // Reset Arduino...
           webPrintHeader();
           if (p[2]=='E') {
@@ -8246,6 +8251,7 @@ uint8_t pps_offset = 0;
               digitalWrite(pin, val);
             }
             printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           }else if(range[0]=='B'){
             if(range[1]=='0'){ // reset furnace duration
               printToWebClient(STR20006);
@@ -8296,8 +8302,8 @@ uint8_t pps_offset = 0;
             if (bus->getBusDest() != destAddr) {
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
             }
+#endif
           }
-
           range = strtok(NULL,"/");
         } // endwhile
         webPrintFooter();
