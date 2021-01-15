@@ -6735,7 +6735,6 @@ uint8_t pps_offset = 0;
               if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
                 httpflags |= HTTP_GZIP;
               }
-              else
 #endif
               if (!(httpflags & HTTP_ETAG)) {
                 char *ptr = strstr_P(outBuf + buffershift, PSTR("If-None-Match:"));
@@ -6749,7 +6748,6 @@ uint8_t pps_offset = 0;
 //                  printFmtToDebug(PSTR("ETag string: %s\r\n"), outBuf);
                 }
               }
-             else
               //Execute only if flag not set because strstr more expensive than bitwise operation
               if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
                 httpflags |= HTTP_AUTH;
