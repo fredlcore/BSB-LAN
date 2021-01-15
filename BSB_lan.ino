@@ -7358,48 +7358,6 @@ uint8_t pps_offset = 0;
           forcedflushToWebClient();
           break;
         }
-#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-        if(p[1]=='Y'){
-#ifdef DEBUG
-          if(debug_mode){
-            webPrintHeader();
-            uint8_t type = strtol(&p[2],NULL,16);
-            uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
-            if(!bus->Send(type, c, msg, tx_msg)){
-              print_bus_send_failed();
-            }else{
-              // Decode the xmit telegram and send it to the PC serial interface
-              printTelegram(tx_msg, -1);
-#ifdef LOGGER
-              LogTelegram(tx_msg);
-#endif
-            }
-            // Decode the rcv telegram and send it to the PC serial interface
-            printTelegram(msg, -1);   // send to hardware serial interface
-#ifdef LOGGER
-            LogTelegram(msg);
-#endif
-  // TODO: replace pvalstr with data from decodedTelegram structure
-            build_pvalstr(0);
-            if(outBuf[0]>0){
-              printToWebClient(outBuf);
-              printToWebClient(PSTR("<br>"));
-            }
-
-            for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
-              printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
-            }
-            printToWebClient(PSTR("\r\n<br>\r\n"));
-            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
-              printFmtToWebClient(PSTR("%02X "), msg[i]);
-            }
-            writelnToWebClient();
-            webPrintFooter();
-          }
-#endif
-          break;
-        }
-#endif
 
         if (p[1]=='J') {
           uint32_t cmd=0;
