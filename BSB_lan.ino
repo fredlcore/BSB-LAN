@@ -4031,6 +4031,8 @@ void SaveConfigFromRAMtoEEPROM(){
           if(MQTTPubSubClient){
             delete MQTTPubSubClient;
             MQTTPubSubClient = NULL;
+            mqtt_client->stop();
+            delete mqtt_client;
           }
           break;
 #endif
