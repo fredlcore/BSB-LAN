@@ -190,7 +190,7 @@
   "CF_PINS_TEXT": "Pins",
   "CF_USE_TEXT": "Verwenden",
   "CF_MAX_IPADDRESS_TEXT": "IP-Adresse Cube",
-  "CF_WRITEMODE_TEXT": "Ebene Schreibzugriff",
+  "CF_WRITEMODE_TEXT": "Schreibzugriff (Ebene)",
   "CF_MQTT_IPADDRESS_TEXT": "IP-Adresse Broker",
   "CF_MQTT_USERNAME_TEXT": "Username",
   "CF_MQTT_PASSWORD_TEXT": "Passwort",

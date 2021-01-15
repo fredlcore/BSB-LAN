@@ -149,7 +149,9 @@ UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA model";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bus telegrams";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "To SD card";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Interval (seconds)";
-#define CF_MAX_DEVICES_TEXT CF_ONEWIREBUS_DEVICES_TEXT
+UIStrings["CF_LOGAVERAGES_TEXT"] = "Calculation";
+UIStrings["CF_PROGLIST_TEXT"] = "Parameters";
+UIStrings["CF_DEVICES_TEXT"] = "Devices";
 UIStrings["CF_DHCP_TEXT"] = "DHCP usage";
 UIStrings["CF_IPADDRESS_TEXT"] = "IP address (fixed)";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Trusted IP address";
@@ -157,18 +159,18 @@ UIStrings["CF_MASK_TEXT"] = "Subnet";
 UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD card";
 UIStrings["CF_BASICAUTH_TEXT"] = "HTTP authentification";
 UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "Devices";
-UIStrings["CF_IPWE_TEXT"] = "Usage";
-#define CF_MAX_TEXT CF_IPWE_TEXT
+UIStrings["CF_PINS_TEXT"] = "Pins";
+UIStrings["CF_USE_TEXT"] = "Usage";
 UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP address cube";
-UIStrings["CF_WRITEMODE_TEXT"] = "Write access";
-#define CF_DEBUG_TEXT CF_IPWE_TEXT
-#define CF_MQTT_TEXT CF_IPWE_TEXT
+UIStrings["CF_WRITEMODE_TEXT"] = "Write access (level)";
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP address broker";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Device ID";
+UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
 
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";
+UIStrings["CAT_24HAVG_TEXT"] = "24h averages";
 
 UIStrings["STR500_TEXT"] = "Mo";
 UIStrings["STR501_TEXT"] = "Tu";
