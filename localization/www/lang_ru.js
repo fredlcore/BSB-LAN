@@ -205,6 +205,7 @@ UIStrings["CF_WRITEMODE_TEXT"] = "Запись параметров в сист�
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-адрес брокера MQTT";
 UIStrings["CF_MQTT_USERNAME_TEXT"] = "Имя пользователя";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Пароль";
+UIStrings["CF_MQTT_DEVICE_TEXT"] = "Идентификатор устройства";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Префикс темы";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Проверять обновления";
 
