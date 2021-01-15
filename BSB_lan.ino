@@ -3516,8 +3516,7 @@ void webPrintSite() {
     printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
     flushToWebClient();
     httpclient.connect("bsb-lan.de", 80);
-    httpclient.println("GET /bsb-version.h");
-    httpclient.println();
+    httpclient.println("GET /bsb-version.h\r\n");
 
     unsigned long timeout = millis();
     while (millis() - timeout < 3000 && !httpclient.available()) {
@@ -8410,7 +8409,6 @@ uint8_t pps_offset = 0;
           }
         }
       }
-      //MQTTPubSubClient->disconnect();   //Luposoft: no needing to disconnect anymore
       if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
       {
         if (MQTTPubSubClient->connected())
@@ -8724,7 +8722,7 @@ boolean mqtt_connect()
     int retries = 0;
     while (!MQTTPubSubClient->connected() && retries < 3)
     {
-      MQTTPubSubClient->connect("BSB-LAN", MQTTUser, MQTTPass);
+      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass);
       retries++;
       if (!MQTTPubSubClient->connected())
       {
@@ -8800,8 +8798,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   int I_line=atoi(C_payload);
   C_payload=strchr(C_payload,'=');
   C_payload++;
-  if (setcmd) {printToDebug(PSTR("S"));} else {printToDebug(PSTR("I"));}
-  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+  printFmtToDebug(PSTR("%с%d=%s \r\n"), setcmd?'S':'I', I_line, C_payload);
   set(I_line,C_payload,setcmd);  //command to heater
   String mqtt_Topic;
   if(MQTTTopicPrefix[0])
