@@ -1574,6 +1574,8 @@ uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
 #endif
   else if (nr >= 20500 && nr < 20500 + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
+  else if (nr >= 20700 && nr < 20700 + numCustomFloats) {return 6;} //20700 - 20799
+  else if (nr >= 20800 && nr < 20800 + numCustomLongs) {return 7;} //20800 - 20899
   return 0;
 }
 
@@ -1606,7 +1608,7 @@ int findLine(uint16_t line
 //  printFmtToDebug(PSTR("line = %d\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
-  if(line >= 20000 && line < 20700){
+  if(line >= 20000 && line < 20900){
     switch(recognizeVirtualFunctionGroup(line)){
       case 1: break;
       case 2:  line = avg_parameters[line - 20050]; if(line == 0) return -1; else break;
@@ -1625,6 +1627,8 @@ int findLine(uint16_t line
           line = 20500 + ((line - 20500) % 4);
         break;
       }
+      case 6: line = 20700; break;
+      case 7: line = 20800; break;
       default: return -1;
     }
   }
@@ -1906,6 +1910,8 @@ void loadPrognrElementsFromTable(int nr, int i){
       case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
       case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
       case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
+      case 6: decodedTelegram.sensorid = nr - 20700; break;
+      case 7: decodedTelegram.sensorid = nr - 20800; break;
     }
   }
 }
@@ -4696,11 +4702,22 @@ int set(int line      // the ProgNr of the heater parameter
 
   loadPrognrElementsFromTable(line, i);
 
-  if((line >= 20000 && line < 20700)) //virtual functions handler
+  if((line >= 20000 && line < 20900)) //virtual functions handler
     {
       switch(line){
         case 20006: if(atoi(val)) resetDurations(); return 1; // reset furnace duration
       }
+      if((line >= 20700 && line < 20700 + numCustomFloats)) {// set custom_float
+        custom_floats[line - 20700] = atof(val);
+        return 1;
+      }
+      if((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_float
+        char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
+        strcpy_P(sscanf_buf, PSTR("%ld"));
+        sscanf(val, sscanf_buf, &custom_longs[line - 20800]);
+        return 1;
+      }
+
       return 2;
     }
 
@@ -5545,6 +5562,14 @@ void queryVirtualPrognr(int line, int table_line){
   #endif
       break;
      }
+     case 6: {
+       sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[line - 20700]);
+       return;
+     }
+     case 7: {
+       sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - 20800]);
+       return;
+     }
    }
    decodedTelegram.error = 7;
    decodedTelegram.msg_type = TYPE_ERR;
@@ -5587,7 +5612,7 @@ void query(int line)  // line (ProgNr)
       uint8_t flags = get_cmdtbl_flags(i);
 
 // virtual programs
-      if((line >= 20000 && line < 20700))
+      if((line >= 20000 && line < 20900))
         {
           queryVirtualPrognr(line, i);
           return;

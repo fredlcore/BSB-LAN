@@ -328,6 +328,8 @@ typedef enum{
   VT_CUSTOM_BYTE,       //* x Byte - 1 Byte Position, 1 Byte Länge Parameter, Space (!) (nötig für Erkennung)
   VT_CUSTOM_BIT,        //* x Byte - 1st Byte position, then 1 Byte bit value, 1 Byte bitmask, space, text
   VT_GR_PER_CUBM,       //Virtual (DHT22): Gram per cubic meter (Abs humidity)
+  VT_FLOAT,             //Virtual: custom_float
+  VT_LONG,              //Virtual: custom_long
   VT_UNKNOWN
 }vt_type_t;
 
@@ -448,6 +450,8 @@ const char STR_CUSTOM_ENUM[] PROGMEM = "CUSTOM_ENUM";
 const char STR_CUSTOM_BYTE[] PROGMEM = "CUSTOM_BYTE";
 const char STR_CUSTOM_BIT[] PROGMEM = "CUSTOM_BIT";
 const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
+const char STR_FLOAT[] PROGMEM = "FLOAT";
+const char STR_LONG[] PROGMEM = "LONG";
 const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
 
 const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
@@ -609,6 +613,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_CUSTOM_BYTE,    1.0,    0, 22+32+64, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
 {VT_CUSTOM_BIT,     1.0,    0, 22+32+64, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BIT},
 {VT_GR_PER_CUBM,    1.0,    0, 0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
+{VT_FLOAT,          1.0,    0, 0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FLOAT},
+{VT_LONG,           1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LONG},
 {VT_UNKNOWN,        1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
@@ -720,7 +726,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   9500, 9652,
   10000, 14999,
   15000, 15067,
-  20000, 20699 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors
+  20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
 const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
@@ -3009,6 +3015,8 @@ const char STR20500[] PROGMEM = STR20500_TEXT;
 const char STR20501[] PROGMEM = STR20501_TEXT;
 const char STR20502[] PROGMEM = STR20502_TEXT;
 const char STR20503[] PROGMEM = STR20503_TEXT;
+const char STR20700[] PROGMEM = STR20700_TEXT;
+const char STR20800[] PROGMEM = STR20800_TEXT;
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = STR99999_TEXT;
 
@@ -11615,6 +11623,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20501, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_FLOAT,         20700, STR20700, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_LONG,          20800, STR20800, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
 
 //{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
