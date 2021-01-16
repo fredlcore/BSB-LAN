@@ -1994,6 +1994,8 @@
 #define STR20501_TEXT "MAX! Sensor Ist Temperatur"
 #define STR20502_TEXT "MAX! Sensor Soll-Temperatur"
 #define STR20503_TEXT "MAX! Sensor Ventilöffnung"
+#define STR20700_TEXT "custom_float"
+#define STR20800_TEXT "custom_long"
 
 #define STR99999_TEXT "UNKNOWN command code"
 
