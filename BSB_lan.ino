@@ -597,6 +597,11 @@ unsigned long custom_timer = millis();
 unsigned long custom_timer_compare = 0;
 float custom_floats[20] = { 0 };
 long custom_longs[20] = { 0 };
+
+#ifdef RGT_EMULATOR
+byte newMinuteValue = 99;
+#endif
+
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
@@ -8561,6 +8566,23 @@ uint8_t pps_offset = 0;
   }
 #endif
 
+#ifdef RGT_EMULATOR
+  {
+    byte tempTime = (millis() / 60000) % 60;
+    if(newMinuteValue != tempTime){
+      newMinuteValue = tempTime;
+      for (uint8_t i = 0; i < 3; i++){
+        if(rgte_sensorid[i]){
+          query(rgte_sensorid[i]);
+          if(decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0){
+            set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
+          }
+        }
+      }
+    }
+  }
+#endif
+
 #ifdef WATCH_SOCKETS
   ShowSockStatus();
   checkSockStatus();
@@ -8969,6 +8991,12 @@ void setup() {
   registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
   registerConfigVariable(CF_MONITOR, (byte *)&monitor);
   registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
+#ifdef RGT_EMULATOR
+  registerConfigVariable(CF_RGT1_SENSOR_ID, (byte *)&rgte_sensorid[0]);
+  registerConfigVariable(CF_RGT2_SENSOR_ID, (byte *)&rgte_sensorid[1]);
+  registerConfigVariable(CF_RGT3_SENSOR_ID, (byte *)&rgte_sensorid[2]);
+#endif
+
 #endif
 
   readFromEEPROM(CF_PPS_VALUES);

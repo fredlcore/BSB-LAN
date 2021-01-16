@@ -208,6 +208,9 @@
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
+#define CF_RGT1_SENSOR_TEXT "Номер программы датчика температуры для RTG1"
+#define CF_RGT2_SENSOR_TEXT "Номер программы датчика температуры для RTG2"
+#define CF_RGT3_SENSOR_TEXT "Номер программы датчика температуры для RTG3"
 
 
 #define CAT_GENERAL_TEXT "Основные"
@@ -221,6 +224,7 @@
 #define CAT_MAX_TEXT "Устройства MAX!"
 #define CAT_LOGGING_TEXT "Журналирование"
 #define CAT_24HAVG_TEXT "Среднесуточные значения"
+#define CAT_RGT_EMUL_TEXT "Эмулятор комнатного термостата"
 
 
 #define STR0_TEXT "Дата/время"

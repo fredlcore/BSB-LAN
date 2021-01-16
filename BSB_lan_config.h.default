@@ -268,6 +268,9 @@ bool enable_version_check = false;
 // Compile JSON-based configuration and EEPROM config store module extension.
 #define JSONCONFIG
 
+#define RGT_EMULATOR
+int rgte_sensorid[3] = {0, 0, 0}; //Temperature sensor program ID for RTG1 - RTG3. If zero then RTG will not be emulated.
+
 // Variables for future use:
 // Compile room unit replacement extension
 #define ROOM_UNIT
