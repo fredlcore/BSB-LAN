@@ -1987,6 +1987,8 @@
   "STR20501_TEXT": "MAX! Sensor Ist Temperatur",
   "STR20502_TEXT": "MAX! Sensor Soll-Temperatur",
   "STR20503_TEXT": "MAX! Sensor Ventilöffnung",
+  "STR20700_TEXT": "custom_float",
+  "STR20800_TEXT": "custom_long",
   "STR99999_TEXT": "UNKNOWN command code",
   "ENUM_DEBUG_SERIAL_TEXT": "Serial",
   "ENUM_DEBUG_TELNET_TEXT": "Telnet",
