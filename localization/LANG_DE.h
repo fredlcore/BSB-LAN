@@ -1423,7 +1423,7 @@
 #define STR7152_TEXT "Abtauen auslösen"
 #define STR7153_TEXT "Kältemittel abpumpen"
 #define STR7160_TEXT "Reset Begrenzungszeiten"
-#define STR7165_TEXT "Wärmebnahmezwang TWW"
+#define STR7165_TEXT "Wärmeabnahmezwang TWW"
 #define STR7166_TEXT "Inbetriebnahmefunktion"
 #define STR7170_TEXT "Telefon Kundendienst"
 #define STR7181_TEXT "Telefon Zuständigkeit 1"
