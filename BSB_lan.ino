@@ -1862,14 +1862,30 @@ void EEPROM_dump() {
   }
 }
 
-void switchPresenseState(uint16_t line){ //for programs 701, 1001, 1301
+#ifdef BUTTONS
+void switchPresenseState(uint16_t set_mode,  uint16_t check_mode, uint16_t check_state){
+  //RGT1 701, 700, 8000
+  //RGT2 1001, 1000, 8001
+  //RGT3 1301, 1300, 8002
   int state = 0;
-  query(line);
-  state = atoi(decodedTelegram.value) + 1;
-  if(state > 2) state = 1;
+  query(check_mode);
+  state = atoi(decodedTelegram.value);
+  if(state != 1) return; // 1 = Automatic
+  query(check_state);
+  state = atoi(decodedTelegram.value);
+  switch(state){
+    case 0x72: // 0x72 - Comfort mode
+      state = 0x01; //Switch to Reduced mode
+      break;
+    case 0x74: //0x74 - Reduced mode
+      state = 0x02; //Switch to Comfort mode
+      break;
+    default: return;
+  }
   sprintf_P(decodedTelegram.value, PSTR("%d"), state);
-  set(line, decodedTelegram.value, true);
+  set(set_mode, decodedTelegram.value, true);
 }
+#endif
 
 bool programIsreadOnly(uint8_t param_len){
   if((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY){ //software-controlled
@@ -8635,15 +8651,15 @@ uint8_t pps_offset = 0;
         PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
         break;
       case ROOM1_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(701);
+        switchPresenseState(701, 700, 8000);
         PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
         break;
       case ROOM2_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(1001);
+        switchPresenseState(1001, 1000, 8001);
         PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
         break;
       case ROOM3_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(1301);
+        switchPresenseState(1301, 1300, 8002);
         PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
         break;
     }
