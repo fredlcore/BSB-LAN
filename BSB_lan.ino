@@ -8629,7 +8629,11 @@ uint8_t pps_offset = 0;
 #ifdef BUTTONS
   if(PressedButtons){
     switch(PressedButtons){
-      case TWW_PUSH_BUTTON_PRESSED: strcpy_P(decodedTelegram.value, PSTR("1")); set(1603, decodedTelegram.value, true); PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED; break;
+      case TWW_PUSH_BUTTON_PRESSED:
+        strcpy_P(decodedTelegram.value, PSTR("1"));
+        set(1603, decodedTelegram.value, true);
+        PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
+        break;
       case ROOM1_PRESENCE_BUTTON_PRESSED:
         switchPresenseState(701);
         PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
