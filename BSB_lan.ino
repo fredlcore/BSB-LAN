@@ -6550,6 +6550,7 @@ uint8_t pps_offset = 0;
                 case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
                 case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
                 case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
+//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, however this seems to come from the QAA as it begins with 0xFD
                 case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
                 case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
                 case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
