@@ -8572,7 +8572,7 @@ uint8_t pps_offset = 0;
     if(newMinuteValue != tempTime){
       newMinuteValue = tempTime;
       for (uint8_t i = 0; i < 3; i++){
-        if(rgte_sensorid[i]){
+        if(rgte_sensorid[i] != 0 && rgte_sensorid[i] != 0xFFFF){
           query(rgte_sensorid[i]);
           if(decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0){
             set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices

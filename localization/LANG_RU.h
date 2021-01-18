@@ -208,9 +208,9 @@
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
-#define CF_RGT1_SENSOR_TEXT "Номер программы датчика температуры для RTG1"
-#define CF_RGT2_SENSOR_TEXT "Номер программы датчика температуры для RTG2"
-#define CF_RGT3_SENSOR_TEXT "Номер программы датчика температуры для RTG3"
+#define CF_RGT1_SENSOR_TEXT "Номер программы датчика температуры для RGT1"
+#define CF_RGT2_SENSOR_TEXT "Номер программы датчика температуры для RGT2"
+#define CF_RGT3_SENSOR_TEXT "Номер программы датчика температуры для RGT3"
 
 
 #define CAT_GENERAL_TEXT "Основные"

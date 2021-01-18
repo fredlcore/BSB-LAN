@@ -201,9 +201,9 @@
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
-#define CF_RGT1_SENSOR_TEXT "Temp sensor program ID for RTG1"
-#define CF_RGT2_SENSOR_TEXT "Temp sensor program ID for RTG2"
-#define CF_RGT3_SENSOR_TEXT "Temp sensor program ID for RTG3"
+#define CF_RGT1_SENSOR_TEXT "Temp sensor program ID for RGT1"
+#define CF_RGT2_SENSOR_TEXT "Temp sensor program ID for RGT2"
+#define CF_RGT3_SENSOR_TEXT "Temp sensor program ID for RGT3"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
