@@ -148,9 +148,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PPS_WRITE,        1, CCAT_BUS,      CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
 #ifdef WEBCONFIG
   {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
-  {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_UINT16,         CF_RGT1_SENSOR_TXT, sizeof(log_parameters[0])},
-  {CF_RGT2_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_UINT16,         CF_RGT2_SENSOR_TXT, sizeof(log_parameters[0])},
-  {CF_RGT3_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_UINT16,         CF_RGT3_SENSOR_TXT, sizeof(log_parameters[0])},
+  {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT2_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT2_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT3_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT3_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},//immediately apply
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot

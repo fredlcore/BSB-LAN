@@ -602,6 +602,14 @@ long custom_longs[20] = { 0 };
 byte newMinuteValue = 99;
 #endif
 
+#ifdef BUTTONS
+volatile byte PressedButtons = 0;
+#define TWW_PUSH_BUTTON_PRESSED 1
+#define ROOM1_PRESENCE_BUTTON_PRESSED 2
+#define ROOM2_PRESENCE_BUTTON_PRESSED 4
+#define ROOM3_PRESENCE_BUTTON_PRESSED 8
+#endif
+
 static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
@@ -671,6 +679,21 @@ uint8_t current_switchday = 0;
 
 static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
+
+#ifdef BUTTONS
+void interruptHandlerTWWPush(){
+  PressedButtons |= TWW_PUSH_BUTTON_PRESSED;
+}
+void interruptHandlerPresenceROOM1(){
+  PressedButtons |= ROOM1_PRESENCE_BUTTON_PRESSED;
+}
+void interruptHandlerPresenceROOM2(){
+  PressedButtons |= ROOM2_PRESENCE_BUTTON_PRESSED;
+}
+void interruptHandlerPresenceROOM3(){
+  PressedButtons |= ROOM3_PRESENCE_BUTTON_PRESSED;
+}
+#endif
 
 /** *****************************************************************
  *  Function: initConfigTable(uint8_t)
@@ -1837,6 +1860,15 @@ void EEPROM_dump() {
       printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
     }
   }
+}
+
+void switchPresenseState(uint16_t line){ //for programs 701, 1001, 1301
+  int state = 0;
+  query(line);
+  state = atoi(decodedTelegram.value) + 1;
+  if(state > 2) state = 1;
+  sprintf_P(decodedTelegram.value, PSTR("%d"), state);
+  set(line, decodedTelegram.value, true);
 }
 
 bool programIsreadOnly(uint8_t param_len){
@@ -8572,13 +8604,44 @@ uint8_t pps_offset = 0;
     if(newMinuteValue != tempTime){
       newMinuteValue = tempTime;
       for (uint8_t i = 0; i < 3; i++){
-        if(rgte_sensorid[i] != 0 && rgte_sensorid[i] != 0xFFFF){
-          query(rgte_sensorid[i]);
-          if(decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0){
+        if(rgte_sensorid[i][0] != 0){
+          uint8_t z = 0;
+          float value = 0;
+          for(uint8_t j = 0; j < 5; j++){
+            if(rgte_sensorid[i][j] != 0){
+              query(rgte_sensorid[i][j]);
+              if(decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0){
+                z++;
+                value += atof(decodedTelegram.value);
+              }
+            }
+          }
+          if(z != 0){
+            _printFIXPOINT(decodedTelegram.value, value / z, 2);
             set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
           }
         }
       }
+    }
+  }
+#endif
+
+#ifdef BUTTONS
+  if(PressedButtons){
+    switch(PressedButtons){
+      case TWW_PUSH_BUTTON_PRESSED: strcpy_P(decodedTelegram.value, PSTR("1")); set(1603, decodedTelegram.value, true); PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED; break;
+      case ROOM1_PRESENCE_BUTTON_PRESSED:
+        switchPresenseState(701);
+        PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
+        break;
+      case ROOM2_PRESENCE_BUTTON_PRESSED:
+        switchPresenseState(1001);
+        PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
+        break;
+      case ROOM3_PRESENCE_BUTTON_PRESSED:
+        switchPresenseState(1301);
+        PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
+        break;
     }
   }
 #endif
@@ -8991,11 +9054,9 @@ void setup() {
   registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
   registerConfigVariable(CF_MONITOR, (byte *)&monitor);
   registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
-#ifdef RGT_EMULATOR
-  registerConfigVariable(CF_RGT1_SENSOR_ID, (byte *)&rgte_sensorid[0]);
-  registerConfigVariable(CF_RGT2_SENSOR_ID, (byte *)&rgte_sensorid[1]);
-  registerConfigVariable(CF_RGT3_SENSOR_ID, (byte *)&rgte_sensorid[2]);
-#endif
+  registerConfigVariable(CF_RGT1_SENSOR_ID, (byte *)&rgte_sensorid[0][0]);
+  registerConfigVariable(CF_RGT2_SENSOR_ID, (byte *)&rgte_sensorid[1][0]);
+  registerConfigVariable(CF_RGT3_SENSOR_ID, (byte *)&rgte_sensorid[2][0]);
 
 #endif
 
@@ -9423,6 +9484,18 @@ mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTC
 #ifdef CUSTOM_COMMANDS
 #include "BSB_lan_custom_setup.h"
 #endif
+
+#ifdef BUTTONS
+  pinMode(21, INPUT_PULLUP);
+  attachInterrupt(21, interruptHandlerTWWPush, FALLING); //TWW push button
+  pinMode(20, INPUT_PULLUP);
+  attachInterrupt(20, interruptHandlerPresenceROOM1, FALLING); //Presence ROOM 1 button
+  pinMode(19, INPUT_PULLUP);
+  attachInterrupt(19, interruptHandlerPresenceROOM2, FALLING); //Presence ROOM 2 button
+  pinMode(18, INPUT_PULLUP);
+  attachInterrupt(18, interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
+#endif
+
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
 }

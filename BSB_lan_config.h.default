@@ -269,7 +269,10 @@ bool enable_version_check = false;
 #define JSONCONFIG
 
 #define RGT_EMULATOR
-int rgte_sensorid[3] = {0, 0, 0}; //Temperature sensor program ID for RTG1 - RTG3. If zero then RTG will not be emulated.
+int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1 - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+
+//Enable presence buttons and TWW push on pins D21 (INT 2)(TWW push), D20 (INT 3)(presence ROOM1), D19 (INT 4)(presence ROOM2), D18 (INT 5)(presence ROOM3)
+#define BUTTONS
 
 // Variables for future use:
 // Compile room unit replacement extension
