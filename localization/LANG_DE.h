@@ -1423,7 +1423,7 @@
 #define STR7152_TEXT "Abtauen auslösen"
 #define STR7153_TEXT "Kältemittel abpumpen"
 #define STR7160_TEXT "Reset Begrenzungszeiten"
-#define STR7165_TEXT "Wärmebnahmezwang TWW"
+#define STR7165_TEXT "Wärmeabnahmezwang TWW"
 #define STR7166_TEXT "Inbetriebnahmefunktion"
 #define STR7170_TEXT "Telefon Kundendienst"
 #define STR7181_TEXT "Telefon Zuständigkeit 1"
@@ -1994,6 +1994,8 @@
 #define STR20501_TEXT "MAX! Sensor Ist Temperatur"
 #define STR20502_TEXT "MAX! Sensor Soll-Temperatur"
 #define STR20503_TEXT "MAX! Sensor Ventilöffnung"
+#define STR20700_TEXT "custom_float"
+#define STR20800_TEXT "custom_long"
 
 #define STR99999_TEXT "UNKNOWN command code"
 

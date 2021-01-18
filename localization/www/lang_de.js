@@ -1423,7 +1423,7 @@ UIStrings["STR7150_TEXT"] = "Simulation Außentemperatur";
 UIStrings["STR7152_TEXT"] = "Abtauen auslösen";
 UIStrings["STR7153_TEXT"] = "Kältemittel abpumpen";
 UIStrings["STR7160_TEXT"] = "Reset Begrenzungszeiten";
-UIStrings["STR7165_TEXT"] = "Wärmebnahmezwang TWW";
+UIStrings["STR7165_TEXT"] = "Wärmeabnahmezwang TWW";
 UIStrings["STR7166_TEXT"] = "Inbetriebnahmefunktion";
 UIStrings["STR7170_TEXT"] = "Telefon Kundendienst";
 UIStrings["STR7181_TEXT"] = "Telefon Zuständigkeit 1";
@@ -1994,6 +1994,8 @@ UIStrings["STR20500_TEXT"] = "MAX! Sensor ID";
 UIStrings["STR20501_TEXT"] = "MAX! Sensor Ist Temperatur";
 UIStrings["STR20502_TEXT"] = "MAX! Sensor Soll-Temperatur";
 UIStrings["STR20503_TEXT"] = "MAX! Sensor Ventilöffnung";
+UIStrings["STR20700_TEXT"] = "custom_float";
+UIStrings["STR20800_TEXT"] = "custom_long";
 
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 

@@ -202,7 +202,6 @@ byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - a
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
-// - set 'own_address' to 0x06 to define device as RGT1
 // - 'dest_address' sets destination address, defaults to 0 for heating system.
 // LPB:
 // - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
