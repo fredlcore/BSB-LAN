@@ -10571,10 +10571,10 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // 0x02 - Reduced mode
 // 0x03 - Comfort mode
 // Second byte:
-// 0x01 - Reduced mode
-// 0x02 - Comfort mode
-// 0x03 - Automatic Reduced mode
-// 0x04 - Automatic Comfort mode
+// 0x01 - Automatic in Reduced mode
+// 0x02 - Automatic in Comfort mode
+// 0x03 - Automatic in Comfort mode, but pushed into Reduced mode through presence button
+// 0x04 - Automatic in Reduced mode, but pushed into Comfort mode through presence button
 //10102 is used in switchPresenceState() function.
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1

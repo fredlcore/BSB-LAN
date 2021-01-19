@@ -1876,10 +1876,10 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
   if(2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
   if(i0 != 0x01) return; // 1 = Automatic
   switch(i1){
-    case 0x01: state = 0x02; break; //Reduced mode -> Automatic Comfort
-    case 0x02: state = 0x01; break; //Comfort mode -> Automatic Reduced
-    case 0x03: state = 0x02; break; //Automatic Reduced mode -> Automatic Comfort
-    case 0x04: state = 0x01; break; //Automatic Comfort mode -> Automatic Reduced
+    case 0x01: state = 0x02; break; //Automatic in Reduced mode -> Automatic Reduced pushed into Comfort
+    case 0x02: state = 0x01; break; //Automatic in Comfort mode -> Automatic Comfort pushed into Reduced
+    case 0x03: state = 0x02; break; //Automatic Comfort mode, but pushed into Reduced -> Automatic Comfort
+    case 0x04: state = 0x01; break; //Automatic Reduced mode, but pushed into Comfort -> Automatic Reduced
     default: return;
   }
   sprintf_P(buf, PSTR("%d"), state);
