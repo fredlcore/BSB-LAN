@@ -49,7 +49,7 @@ byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas ins
 //#define WIFI                          // activate this definement if you want to use WiFi
 char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) here
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
-#define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for Arduino-ESP8266 connection
+#define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
 #ifndef WIFI                            // mDNS currently does not work with the WiFiSpi library
 #define MDNS_HOSTNAME "BSB-LAN"         // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
