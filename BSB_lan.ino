@@ -8648,24 +8648,27 @@ uint8_t pps_offset = 0;
 
 #ifdef BUTTONS
   if(PressedButtons){
-    switch(PressedButtons){
-      case TWW_PUSH_BUTTON_PRESSED:
-        strcpy_P(decodedTelegram.value, PSTR("1"));
-        set(1603, decodedTelegram.value, true);
-        PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
-        break;
-      case ROOM1_PRESENCE_BUTTON_PRESSED:
-        switchPresenceState(701, 700, 710, 8741);
-        PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
-        break;
-      case ROOM2_PRESENCE_BUTTON_PRESSED:
-        switchPresenceState(1001, 1000, 1010, 8771);
-        PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
-        break;
-      case ROOM3_PRESENCE_BUTTON_PRESSED:
-        switchPresenceState(1301, 1300, 1310, 8801);
-        PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
-        break;
+    for (uint8_t i = 0; i < 8; i++){
+      switch(PressedButtons & (0x01 << i)){
+        case TWW_PUSH_BUTTON_PRESSED:
+          strcpy_P(decodedTelegram.value, PSTR("1"));
+          set(1603, decodedTelegram.value, true);
+          PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
+          break;
+        case ROOM1_PRESENCE_BUTTON_PRESSED:
+          switchPresenceState(701, 700, 710, 8741);
+          PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
+          break;
+        case ROOM2_PRESENCE_BUTTON_PRESSED:
+          switchPresenceState(1001, 1000, 1010, 8771);
+          PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
+          break;
+        case ROOM3_PRESENCE_BUTTON_PRESSED:
+          switchPresenceState(1301, 1300, 1310, 8801);
+          PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
+          break;
+        default: PressedButtons &= ~(0x01 << i); break; //clear unknown state
+      }
     }
   }
 #endif
