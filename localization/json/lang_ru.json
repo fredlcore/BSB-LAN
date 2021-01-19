@@ -186,6 +186,7 @@
   "CF_MQTT_IPADDRESS_TEXT": "IP-адрес брокера MQTT",
   "CF_MQTT_USERNAME_TEXT": "Имя пользователя",
   "CF_MQTT_PASSWORD_TEXT": "Пароль",
+  "CF_MQTT_DEVICE_TEXT": "Идентификатор устройства",
   "CF_MQTT_TOPIC_TEXT": "Префикс темы",
   "CF_CHECKUPDATE_TEXT": "Проверять обновления",
   "CAT_GENERAL_TEXT": "Основные",

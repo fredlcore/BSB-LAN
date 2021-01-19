@@ -49,7 +49,7 @@ byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas ins
 //#define WIFI                          // activate this definement if you want to use WiFi
 char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) here
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
-#define WIFI_SPI_SS_PIN 13              // defines SPI-SS pin for Arduino-ESP8266 connection
+#define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
 #ifndef WIFI                            // mDNS currently does not work with the WiFiSpi library
 #define MDNS_HOSTNAME "BSB-LAN"         // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
@@ -202,7 +202,6 @@ byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - a
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
-// - set 'own_address' to 0x06 to define device as RGT1
 // - 'dest_address' sets destination address, defaults to 0 for heating system.
 // LPB:
 // - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)

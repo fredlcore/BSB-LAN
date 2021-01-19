@@ -723,12 +723,12 @@ uint32_t initConfigTable(uint8_t version) {
   #if defined(__AVR__)
         uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
         uint8_t temp_version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0]));
-        if(i == temp_id){
+        if (i == temp_id) {
           if(temp_version <= v) allowedversion = true;
         } else
           if(temp_version <= v && i > temp_id) {addr += (uint16_t)pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
   #else
-        if(i == config[j].id){
+        if (i == config[j].id) {
           if(config[j].version <= v) allowedversion = true;
         } else
           if(config[j].version <= v && i > config[j].id) {addr += config[j].size;}
@@ -767,12 +767,12 @@ uint16_t getVariableSize(uint8_t id){
   uint16_t len = 0;
   for(uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++){
 #if defined(__AVR__)
-    if(id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))){
+    if (id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))) {
       len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
       break;
     }
 #else
-    if(id == config[j].id){
+    if (id == config[j].id) {
       len = config[j].size;
       break;
     }
@@ -805,7 +805,7 @@ bool writeToEEPROM(uint8_t id){
   if(!options[id].option_address) return false;
 //  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
   for(uint16_t i = 0; i < getVariableSize(id); i++){
-    if(options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)){
+    if (options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)) {
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
 //      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
       EEPROMwasChanged = true;
@@ -994,7 +994,7 @@ void printToDebug(uint_farptr_t src){
  * *************************************************************** */
 
 void flushToWebClient(){
-  if(bigBuffPos > 0){
+  if (bigBuffPos > 0) {
     // for debug purposes
     //if(bigBuffPos > sizeof(bigBuff)) printlnToDebug(PSTR("bigBuffPos > bigBuff size"));
     client.write(bigBuff, bigBuffPos);
@@ -1006,7 +1006,7 @@ void flushToWebClient(){
 }
 
 void forcedflushToWebClient(){
-  if(bigBuffPos > 0){
+  if (bigBuffPos > 0) {
     client.write(bigBuff, bigBuffPos);
     bigBuffPos = 0;
   }
@@ -1026,7 +1026,7 @@ int writelnToWebClient(){
 int printToWebClient(char *format){
   int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   bigBuffPos += len;
-  if(bigBuffPos > OUTBUF_USEFUL_LEN){
+  if (bigBuffPos > OUTBUF_USEFUL_LEN) {
     flushToWebClient();
   }
   return len;
@@ -1039,7 +1039,7 @@ int printToWebClient(const char *format){
   int len = strlen(strcpy(bigBuff + bigBuffPos, format));
   #endif
   bigBuffPos += len;
-  if(bigBuffPos > OUTBUF_USEFUL_LEN){
+  if (bigBuffPos > OUTBUF_USEFUL_LEN) {
     flushToWebClient();
   }
   return len;
@@ -1049,7 +1049,7 @@ int printToWebClient(const char *format){
 int printToWebClient(uint_farptr_t src){
   int len = strlen(strcpy_PF(bigBuff + bigBuffPos, src));
   bigBuffPos += len;
-  if(bigBuffPos > OUTBUF_USEFUL_LEN){
+  if (bigBuffPos > OUTBUF_USEFUL_LEN) {
     flushToWebClient();
   }
   return len;
@@ -1068,7 +1068,7 @@ int printFmtToWebClient(const char *format, ...){
 #endif
   bigBuffPos += len;
   va_end(args);
-  if(bigBuffPos > OUTBUF_USEFUL_LEN){
+  if (bigBuffPos > OUTBUF_USEFUL_LEN) {
     flushToWebClient();
   }
   return len;
@@ -1109,7 +1109,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   printToWebClient(PSTR("\r\n"));
 if(isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
 printToWebClient(PSTR("Cache-Control: "));
-if(cachingTime > 0){
+if (cachingTime > 0) {
   //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
   printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
 } else {
@@ -1263,20 +1263,20 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   if(decodedTelegram.type == VT_CUSTOM_BIT) c++;
 
   while(c<enumstr_len){
-    if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
+    if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') {
       val = uint16_t(pgm_read_byte_far(enumstr+c+1));
       if(decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
       c++;
-    }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
+    }else if ((byte)(pgm_read_byte_far(enumstr+c+1))==' ') {
       val=uint16_t(pgm_read_byte_far(enumstr+c));
     }
     //skip leading space
     c+=2;
 
-    if(isFirst){isFirst = false;} else{if(string_delimiter) printToWebClient(string_delimiter);}
+    if (isFirst) {isFirst = false;} else{if(string_delimiter) printToWebClient(string_delimiter);}
     if(prefix) printToWebClient(prefix);
     uint_farptr_t descAddr;
-    if(canBeDisabled){
+    if (canBeDisabled) {
       val = 65535;
 #if defined(__AVR__)
       descAddr = pgm_get_far_address(STR_DISABLED);
@@ -1286,7 +1286,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     } else{
       descAddr = enumstr + c;
     }
-    if(desc_first){
+    if (desc_first) {
       c += printToWebClient(descAddr) + 1;
       if(alt_delimiter && value == val) {
         printToWebClient(alt_delimiter);
@@ -1295,7 +1295,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
       }
     }
     printFmtToWebClient(PSTR("%u"), val);
-    if(!desc_first){
+    if (!desc_first) {
       if(alt_delimiter && value == val) {
         printToWebClient(alt_delimiter);
       } else {
@@ -1591,9 +1591,9 @@ void printcantalloc(void){
  *   none
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
-  if(nr >= 20000 && nr < 20007){ return 1;}
+  if (nr >= 20000 && nr < 20007) { return 1;}
 #ifdef AVERAGES
-  else if(nr >= 20050 && nr < 20050 + numAverages){return 2;} //20050 - 20099
+  else if (nr >= 20050 && nr < 20050 + numAverages) {return 2;} //20050 - 20099
 #endif
 #ifdef DHT_BUS
   else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20299
@@ -1636,7 +1636,7 @@ int findLine(uint16_t line
 //  printFmtToDebug(PSTR("line = %d\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
-  if(line >= 20000 && line < 20900){
+  if (line >= 20000 && line < 20900) {
     switch(recognizeVirtualFunctionGroup(line)){
       case 1: break;
       case 2:  line = avg_parameters[line - 20050]; if(line == 0) return -1; else break;
@@ -1728,7 +1728,7 @@ int findLine(uint16_t line
     l = get_cmdtbl_line(i);
   }
 
-  if(!found){
+  if (!found) {
     return -1;
   }
   if(cmd!=NULL) *cmd=save_c;
@@ -1854,7 +1854,7 @@ void SerialPrintRAW(byte* msg, byte len){
 }
 
 void EEPROM_dump() {
-  if((debug_mode == 1 || haveTelnetClient) && EEPROM_ready){
+  if ((debug_mode == 1 || haveTelnetClient) && EEPROM_ready) {
     printlnToDebug(PSTR("EEPROM dump:"));
     for (uint16_t x=0; x<EEPROM.length(); x++) {
       printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
@@ -1888,7 +1888,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
 #endif
 
 bool programIsreadOnly(uint8_t param_len){
-  if((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY){ //software-controlled
+  if ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY) { //software-controlled
     switch(programWriteMode) {
       case 0: return true; //All read-only.
       case 1: if((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
@@ -1955,7 +1955,7 @@ void loadPrognrElementsFromTable(int nr, int i){
   }
 
   decodedTelegram.sensorid = 0;
-  if(nr >= 20000){ //Virtual programs. do not forget sync changes with findline()
+  if (nr >= 20000) { //Virtual programs. do not forget sync changes with findline()
     decodedTelegram.prognr = nr;
     switch(recognizeVirtualFunctionGroup(nr)){
       case 1: break;
@@ -2130,7 +2130,7 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift){
   SerialPrintData(msg);
   int len = 0;
   decodedTelegram.telegramDump = (char *) malloc(data_len * 2 + 1); //two chars per telegram byte + zero
-  if(decodedTelegram.telegramDump){
+  if (decodedTelegram.telegramDump) {
     for (int i=0; i < data_len; i++) {
       len+=sprintf_P(decodedTelegram.telegramDump + len,PSTR("%02X"),msg[shift+i]);
     }
@@ -2163,7 +2163,7 @@ int undefinedValueToBuffer(char *p){
 }
 
 void printPassKey(void){
-  if(PASSKEY[0]){
+  if (PASSKEY[0]) {
     printToWebClient(PASSKEY);
     printToWebClient(PSTR("/"));
   }
@@ -2203,7 +2203,7 @@ void printyesno(bool i){
  * *************************************************************** */
  void printDebugValueAndUnit(char *p1, char *p2){
    printToDebug(p1);
-   if(p2[0] != 0){
+   if (p2[0] != 0) {
      printFmtToDebug(PSTR(" %s"), p2);
    }
 }
@@ -2222,8 +2222,8 @@ void printyesno(bool i){
  * *************************************************************** */
 void printBIT(byte *msg,byte data_len){
   int len = 0;
-  if(data_len == 2 || data_len == 3){
-    if(msg[bus->getPl_start()]==0 || data_len == 3){
+  if (data_len == 2 || data_len == 3) {
+    if (msg[bus->getPl_start()]==0 || data_len == 3) {
       if (bus->getBusType() == BUS_PPS) {
         data_len = 2;
       }
@@ -2234,7 +2234,7 @@ void printBIT(byte *msg,byte data_len){
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printToDebug(decodedTelegram.value);
-  }else{
+  } else {
     printFmtToDebug(PSTR("BYTE len error len!=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2277,15 +2277,15 @@ void printCustomBIT(byte *msg,byte idx){
 void printBYTE(byte *msg,byte data_len){
 //  uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1 && bus->getBusType() == BUS_PPS);
 
-  if(data_len == 2 || bus->getBusType() == BUS_PPS){
-    if(msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS){
+  if (data_len == 2 || bus->getBusType() == BUS_PPS) {
+    if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
 //      sprintf_P(decodedTelegram.value,PSTR("%d"),msg[bus->getPl_start()+1+pps_offset]);
       sprintf_P(decodedTelegram.value,PSTR("%d"),msg[bus->getPl_start()+1]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printFmtToDebug(PSTR("BYTE len error len!=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2306,15 +2306,15 @@ void printBYTE(byte *msg,byte data_len){
  * *************************************************************** */
 void printWORD(byte *msg,byte data_len, long divisor){
   long lval;
-  if(data_len == 3){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 3) {
+    if (msg[bus->getPl_start()]==0) {
       lval=((long(msg[bus->getPl_start()+1])<<8)+long(msg[bus->getPl_start()+2])) / divisor;
       sprintf_P(decodedTelegram.value,PSTR("%ld"),lval);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printFmtToDebug(PSTR("WORD len error len!=3: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2335,15 +2335,15 @@ void printWORD(byte *msg,byte data_len, long divisor){
  * *************************************************************** */
 void printSINT(byte *msg,byte data_len, long multiplier){
   int16_t lval;
-  if(data_len == 3){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 3) {
+    if (msg[bus->getPl_start()]==0) {
       lval=(((int16_t)(msg[bus->getPl_start()+1])<<8) + (int16_t)(msg[bus->getPl_start()+2])) * multiplier;
       sprintf_P(decodedTelegram.value,PSTR("%d"),lval);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printFmtToDebug(PSTR("WORD len error len!=3: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2364,15 +2364,15 @@ void printSINT(byte *msg,byte data_len, long multiplier){
  * *************************************************************** */
  void printDWORD(byte *msg, byte data_len, long divider){
    long lval;
-   if(data_len == 5){
-     if(msg[bus->getPl_start()]==0){
+   if (data_len == 5) {
+     if (msg[bus->getPl_start()]==0) {
        lval=((long(msg[bus->getPl_start()+1])<<24)+(long(msg[bus->getPl_start()+2])<<16)+(long(msg[bus->getPl_start()+3])<<8)+long(msg[bus->getPl_start()+4]))/divider;
        sprintf_P(decodedTelegram.value,PSTR("%ld"),lval);
      } else {
        undefinedValueToBuffer(decodedTelegram.value);
      }
      printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-   }else{
+   } else {
      printFmtToDebug(PSTR("DWORD len error len!=5: "));
      prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
      decodedTelegram.error = 256;
@@ -2394,7 +2394,7 @@ void printSINT(byte *msg,byte data_len, long multiplier){
 int _printFIXPOINT(char *p, float dval, int precision){
   int a,b,i;
   int len = 0;
-  if(dval<0){
+  if (dval<0) {
     p[len++] = '-';
     dval*=-1.0;
   }
@@ -2402,9 +2402,9 @@ int _printFIXPOINT(char *p, float dval, int precision){
   for(i=0;i<precision;i++) rval*=10.0;
   dval+=5.0/rval; //rounding
   a=(int)(dval);
-  if(precision==0){
+  if (precision==0) {
     len+=sprintf_P(p+len,PSTR("%d"),a);
-  }else{
+  } else {
     rval/=10.0;
     b=(int)(dval*rval - a*rval);
     char formatstr[8]="%d.%01d";
@@ -2431,8 +2431,8 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision){
 //  int8_t pps_offset = (((pps_write == 1 && msg[0] != 0x00) || (pps_write != 1 && msg[0] != 0x17 && msg[0] != 0x00)) && bus->getBusType() == BUS_PPS);
   int8_t pps_offset = (bus->getBusType() == BUS_PPS);
 
-  if(data_len == 3 || data_len == 5){
-    if(msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS){
+  if (data_len == 3 || data_len == 5) {
+    if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
       if (data_len == 3) {
         dval=float((int16_t)(msg[bus->getPl_start()+1-pps_offset] << 8) + (int16_t)msg[bus->getPl_start()+2-pps_offset]) / divider;
       } else {
@@ -2443,7 +2443,7 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision){
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printToDebug(PSTR("FIXPOINT len !=3: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2465,15 +2465,15 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision){
 void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision){
   float dval;
 
-  if(data_len == 5){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 5) {
+    if (msg[bus->getPl_start()]==0) {
       dval=float((long(msg[bus->getPl_start()+1])<<24)+(long(msg[bus->getPl_start()+2])<<16)+(long(msg[bus->getPl_start()+3])<<8)+long(msg[bus->getPl_start()+4])) / divider;
       _printFIXPOINT(decodedTelegram.value,dval,precision);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printToDebug(PSTR("FIXPOINT_DWORD len !=5: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2495,15 +2495,15 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision){
 void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision){
   float dval;
 
-  if(data_len == 2 || (data_len == 3 && (my_dev_fam == 107 || my_dev_fam == 123 || my_dev_fam == 163))){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 2 || (data_len == 3 && (my_dev_fam == 107 || my_dev_fam == 123 || my_dev_fam == 163))) {
+    if (msg[bus->getPl_start()]==0) {
       dval=float((signed char)msg[bus->getPl_start()+1+(data_len==3)]) / divider;
       _printFIXPOINT(decodedTelegram.value,dval,precision);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printToDebug(PSTR("FIXPOINT_BYTE len !=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2525,15 +2525,15 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision){
 void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
   float dval;
 
-  if(data_len == 2){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 2) {
+    if (msg[bus->getPl_start()]==0) {
       dval=float(msg[bus->getPl_start()+1]) / divider;
       _printFIXPOINT(decodedTelegram.value,dval,precision);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
-  }else{
+  } else {
     printToDebug(PSTR("FIXPOINT_BYTE len !=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2555,32 +2555,32 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision){
 void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint16_t val = 0;
   decodedTelegram.enumdescaddr = 0;
-  if(enumstr!=0){
+  if (enumstr!=0) {
     uint16_t c=0;
     while(c<enumstr_len){
-      if((byte)(pgm_read_byte_far(enumstr+c+2))==' '){
+      if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') {
         val=uint16_t((pgm_read_byte_far(enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(enumstr+c+1));
         c++;
-      }else if((byte)(pgm_read_byte_far(enumstr+c+1))==' '){
+      }else if ((byte)(pgm_read_byte_far(enumstr+c+1))==' ') {
         val=uint16_t(pgm_read_byte_far(enumstr+c));
       }
       //skip leading space
       c+=2;
-      if(val==search_val){
+      if (val==search_val) {
        // enum value found
        break;
       }
       while(pgm_read_byte_far(enumstr+c)!=0) c++;
       c++;
     }
-    if(c<enumstr_len){
+    if (c<enumstr_len) {
       decodedTelegram.enumdescaddr = enumstr+c;
       sprintf_P(decodedTelegram.value, PSTR("%d"), val);
-      if(print_val){
+      if (print_val) {
         printFmtToDebug(PSTR("%s - "), decodedTelegram.value);
       }
       printToDebug(decodedTelegram.enumdescaddr);
-    }else{
+    } else {
       sprintf_P(decodedTelegram.value, PSTR("%d"), search_val);
       printToDebug(decodedTelegram.value);
       decodedTelegram.error = 258;
@@ -2631,27 +2631,27 @@ void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enums
 void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val){
   uint8_t val;
   decodedTelegram.enumdescaddr = 0;
-  if(enumstr!=0){
+  if (enumstr!=0) {
     uint16_t c=0;
     while(c<enumstr_len){
       val=pgm_read_byte_far(enumstr+c+1);
       //skip leading space
       c+=3;
-      if(val==search_val){
+      if (val==search_val) {
        // enum value found
        break;
       }
       while(pgm_read_byte_far(enumstr+c)!=0) c++;
       c++;
     }
-    if(c<enumstr_len){
+    if (c<enumstr_len) {
       decodedTelegram.enumdescaddr = enumstr+c;
       sprintf_P(decodedTelegram.value, PSTR("%d"), val);
-      if(print_val){
+      if (print_val) {
         printFmtToDebug(PSTR("%s - "), decodedTelegram.value);
       }
       printToDebug(decodedTelegram.enumdescaddr);
-    }else{
+    } else {
       sprintf_P(decodedTelegram.value, PSTR("%d"), search_val);
       printToDebug(decodedTelegram.value);
       decodedTelegram.error = 258;
@@ -2672,14 +2672,14 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
  *
  * *************************************************************** */
 void printDateTime(byte *msg,byte data_len){
-  if(data_len == 9){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 9) {
+    if (msg[bus->getPl_start()]==0) {
       sprintf_P(decodedTelegram.value,PSTR("%02d.%02d.%d %02d:%02d:%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printToDebug(decodedTelegram.value);
-  }else{
+  } else {
     printToDebug(PSTR(" VT_DATETIME len !=9: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2700,14 +2700,14 @@ void printDateTime(byte *msg,byte data_len){
  * *************************************************************** */
 void printDate(byte *msg,byte data_len){
 
-  if(data_len == 9){
-    if(msg[bus->getPl_start()]==0){
+  if (data_len == 9) {
+    if (msg[bus->getPl_start()]==0) {
       sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
     printToDebug(decodedTelegram.value);
-  }else{
+  } else {
     printToDebug(PSTR(" VT_DATE len !=9: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2729,17 +2729,17 @@ void printDate(byte *msg,byte data_len){
 void printTimeProg(byte *msg,byte data_len){
   int len = 0;
 
-  if(data_len == 12){
+  if (data_len == 12) {
     for(byte i = 0; i < 3; i++){
-      if(i){
+      if (i) {
         decodedTelegram.value[len] = ' ';
         len++;
       }
       len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
-      if(msg[k]<24){
+      if (msg[k]<24) {
         len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
-      }else{
+      } else {
 //        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
         strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
         len += 13;
@@ -2747,7 +2747,7 @@ void printTimeProg(byte *msg,byte data_len){
     }
     decodedTelegram.value[len] = 0;
     printToDebug(decodedTelegram.value);
-  }else{
+  } else {
     printToDebug(PSTR(" VT_TIMEPROG len !=12: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2768,19 +2768,19 @@ void printTimeProg(byte *msg,byte data_len){
  * *************************************************************** */
 void printTime(byte *msg,byte data_len){
 
-  if(data_len == 3){
+  if (data_len == 3) {
     if (bus->getBusType() == BUS_PPS) {
       sprintf_P(decodedTelegram.value,PSTR("%02d:%02d"),msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10);
       printFmtToDebug(PSTR("%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d"), msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10, msg[bus->getPl_start()] / 6, (msg[bus->getPl_start()] % 6) * 10, msg[bus->getPl_start()-1] / 6, (msg[bus->getPl_start()-1] % 6) * 10, msg[bus->getPl_start()-2] / 6, (msg[bus->getPl_start()-2] % 6) * 10, msg[bus->getPl_start()-3] / 6, (msg[bus->getPl_start()-3] % 6) * 10, msg[bus->getPl_start()-4] / 6, (msg[bus->getPl_start()-4] % 6) * 10);
     } else {
-      if(msg[bus->getPl_start()]==0){
+      if (msg[bus->getPl_start()]==0) {
         sprintf_P(decodedTelegram.value,PSTR("%02d:%02d"),msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
       } else {
         strcpy_P(decodedTelegram.value,PSTR("--:--"));
       }
       printToDebug(decodedTelegram.value);
     }
-  }else{
+  } else {
     printToDebug(PSTR("VT_HOUR_MINUTES len !=3: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2801,14 +2801,14 @@ void printTime(byte *msg,byte data_len){
  * *************************************************************** */
 void printLPBAddr(byte *msg,byte data_len){
 
-  if(data_len == 2){
-    if(msg[bus->getPl_start()]==0){   // payload Int8 value
+  if (data_len == 2) {
+    if (msg[bus->getPl_start()]==0) {   // payload Int8 value
     sprintf_P(decodedTelegram.value,PSTR("%02d.%02d"),msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0f)+1);
-  }else{
+  } else {
     undefinedValueToBuffer(decodedTelegram.value);
   }
   printToDebug(decodedTelegram.value);
-  }else{
+  } else {
     printToDebug(PSTR(" VT_LPBADDR len !=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
@@ -2922,16 +2922,16 @@ void printTelegram(byte* msg, int query_line) {
   uint8_t pps_cmd = msg[1];
   switch(bus->getBusType()){
     case BUS_BSB:
-      if(msg[4]==TYPE_QUR || msg[4]==TYPE_SET){ //QUERY and SET: byte 5 and 6 are in reversed order
+      if (msg[4]==TYPE_QUR || msg[4]==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
         cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-      }else{
+      } else {
         cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
       }
       break;
     case BUS_LPB:
-      if(msg[8]==TYPE_QUR || msg[8]==TYPE_SET){ //QUERY and SET: byte 9 and 10 are in reversed order
+      if (msg[8]==TYPE_QUR || msg[8]==TYPE_SET) { //QUERY and SET: byte 9 and 10 are in reversed order
         cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
-      }else{
+      } else {
         cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
       }
       break;
@@ -2946,76 +2946,76 @@ void printTelegram(byte* msg, int query_line) {
   bool known=0;
   uint8_t score = 0;
   uint32_t c = 0;     // command code
-  if(query_line != -1){
+  if (query_line != -1) {
     while(1){
       i = findLine(query_line,i,&c);
-      if(i != -1){
-        if(c == cmd){
+      if (i != -1) {
+        if (c == cmd) {
           save_i = i;
           known = true;
           break;
         }
         i++;
-      }else{
+      } else {
         known = false;
         break;
       }
     }
 
   } else {
-  int line = 0, match_line = 0;
-  c=get_cmdtbl_cmd(i);
-  line = get_cmdtbl_line(i);
-  while(c!=CMD_END){
-    if(c == cmd || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))){
-      uint8_t dev_fam = get_cmdtbl_dev_fam(i);
-      uint8_t dev_var = get_cmdtbl_dev_var(i);
-      uint8_t dev_flags = get_cmdtbl_flags(i);
-      match_line = get_cmdtbl_line(i);
-      if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
-        if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-            known = false;
-            score = 5;
-          } else {
-            known = true;
-            save_i = i;
-            score = 6;
-            break;
+    int line = 0, match_line = 0;
+    c=get_cmdtbl_cmd(i);
+    line = get_cmdtbl_line(i);
+    while(c!=CMD_END){
+      if (c == cmd || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
+        uint8_t dev_fam = get_cmdtbl_dev_fam(i);
+        uint8_t dev_var = get_cmdtbl_dev_var(i);
+        uint8_t dev_flags = get_cmdtbl_flags(i);
+        match_line = get_cmdtbl_line(i);
+        if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
+          if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+            if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
+              known = false;
+              score = 5;
+            } else {
+              known = true;
+              save_i = i;
+              score = 6;
+              break;
+            }
           }
-        }
-        if (dev_fam!=my_dev_fam) {
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 1) {
-            known = false;
-            score = 1;
-          } else if (score < 2) {
-            known = true;
-            save_i = i;
-            score = 2;
+          if (dev_fam!=my_dev_fam) {
+            if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 1) {
+              known = false;
+              score = 1;
+            } else if (score < 2) {
+              known = true;
+              save_i = i;
+              score = 2;
+            }
           }
-        }
-        if (dev_fam==my_dev_fam) {
-          if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 3) {
-            known = false;
-            score = 3;
-          } else if (score < 4) {
-            known = true;
-            save_i = i;
-            score = 4;
+          if (dev_fam==my_dev_fam) {
+            if ((dev_flags & FL_NO_CMD) == FL_NO_CMD && score < 3) {
+              known = false;
+              score = 3;
+            } else if (score < 4) {
+              known = true;
+              save_i = i;
+              score = 4;
+            }
           }
         }
       }
-    }
-
-    i++;
-    line = get_cmdtbl_line(i);
-    c=get_cmdtbl_cmd(i);
-    if (line > match_line && known == false) {
-      score = 0;
+  
+      i++;
+      line = get_cmdtbl_line(i);
+      c=get_cmdtbl_cmd(i);
+      if (line > match_line && known == false) {
+        score = 0;
+      }
     }
   }
-  }
-  if(!known){                          // no hex code match
+  if (!known || msg[0] == 0x17) { // no hex code match or PPS RTS telegram type
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus->getBusType() != BUS_PPS) {
       printToDebug(PSTR("     "));
@@ -3024,7 +3024,7 @@ void printTelegram(byte* msg, int query_line) {
         printToDebug(PSTR(" "));
       }
     }
-  }else{
+  } else {
     i = save_i;
     // Entry in command table is a documented command code
     decodedTelegram.prognr=get_cmdtbl_line(i);
@@ -3059,24 +3059,24 @@ void printTelegram(byte* msg, int query_line) {
     }
     break;
     case BUS_PPS:
-    if (msg[0] != 0x1E) {
+    if (msg[0] != 0x17 && msg[0] != 0x1E) {
       data_len = 3;
     } else {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
     }
     break;
   }
-  if(data_len < 0){
+  if (data_len < 0) {
     printFmtToDebug(PSTR("len ERROR %d"), msg[bus->getLen_idx()]);
-  }else{
-    if(data_len > 0){
-      if(known){
-        if(decodedTelegram.msg_type==TYPE_ERR){
+  } else {
+    if (data_len > 0) {
+      if (known) {
+        if (decodedTelegram.msg_type==TYPE_ERR) {
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
-//          if((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)){
+//          if ((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)) {
           decodedTelegram.error = msg[bus->getPl_start()]; //0x07 - parameter not supported
           printFmtToDebug(PSTR("error %d"), decodedTelegram.error);
-        }else{
+        } else {
           switch(decodedTelegram.type) {
             case VT_BIT: // u8
               printBIT(msg,data_len);
@@ -3192,19 +3192,19 @@ void printTelegram(byte* msg, int query_line) {
 // ENUM_WEEKDAY used in one program 1642 as enum
 //VT_WEEKDAY defined as DT_WDAY but DT_WDAY nowhere used
             case VT_WEEKDAY: // enum
-              if(data_len == 2){
-                if(msg[bus->getPl_start()]==0){
+              if (data_len == 2) {
+                if (msg[bus->getPl_start()]==0) {
                   int len=sizeof(ENUM_WEEKDAY);
 #if defined(__AVR__)
                   printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus->getPl_start()+1],0);
 #else
                   printENUM(ENUM_WEEKDAY,len,msg[bus->getPl_start()+1],0);
 #endif
-                }else{
+                } else {
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
-              }else{
+              } else {
                 printToDebug(PSTR(" VT_WEEKDAY !=2: "));
                 prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
                 decodedTelegram.error = 256;
@@ -3222,12 +3222,12 @@ void printTelegram(byte* msg, int query_line) {
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
-                  }else{
+                  } else {
                     decodedTelegram.error = 259;
                     printToDebug(printError(decodedTelegram.error));
                     SerialPrintData(msg);
                   }
-                }else{
+                } else {
                   strcpy_P(decodedTelegram.value, PSTR("65535"));
 #if defined(__AVR__)
                   decodedTelegram.enumdescaddr = pgm_get_far_address(STR_DISABLED);
@@ -3248,7 +3248,7 @@ void printTelegram(byte* msg, int query_line) {
               if(decodedTelegram.enumstr!=0) {
                 uint8_t idx = pgm_read_byte_far(decodedTelegram.enumstr+0);
                 printCustomENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+idx],1);
-              }else{
+              } else {
                 decodedTelegram.error = 259;
                 printToDebug(printError(decodedTelegram.error));
                 SerialPrintData(msg);
@@ -3267,7 +3267,7 @@ void printTelegram(byte* msg, int query_line) {
 
                 sprintf_P(decodedTelegram.value,PSTR("%lu"),val);
                 printToDebug(decodedTelegram.value);
-              }else{
+              } else {
                 decodedTelegram.error = 259;
                 printToDebug(printError(decodedTelegram.error));
                 SerialPrintData(msg);
@@ -3281,8 +3281,8 @@ void printTelegram(byte* msg, int query_line) {
               break;
             }
             case VT_STRING: // string
-              if(data_len > 0){
-                if(msg[bus->getPl_start()]!=0){
+              if (data_len > 0) {
+                if (msg[bus->getPl_start()]!=0) {
                   msg[bus->getPl_start() + data_len]='\0'; // write terminating zero
                   printToDebug((char*)&msg[bus->getPl_start()]);
                   strcpy(decodedTelegram.value,(char*)&msg[bus->getPl_start()]);
@@ -3291,7 +3291,7 @@ void printTelegram(byte* msg, int query_line) {
                   strcpy_P(decodedTelegram.value,PSTR("-"));
                 }
                  printToDebug(decodedTelegram.value);
-              }else{
+              } else {
                 printToDebug(PSTR(" VT_STRING len == 0: "));
                 prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
                 decodedTelegram.error = 256;
@@ -3318,7 +3318,7 @@ void printTelegram(byte* msg, int query_line) {
             }
             case VT_ERRORCODE: //  u16 or u8 (via OCI420)
               if(data_len == 3 || data_len == 2) {
-                if(msg[bus->getPl_start()]==0){
+                if (msg[bus->getPl_start()]==0) {
                   long lval;
                   if (data_len == 3) {
                     lval=(long(msg[bus->getPl_start()+1])<<8)+long(msg[bus->getPl_start()+2]);
@@ -3330,7 +3330,7 @@ void printTelegram(byte* msg, int query_line) {
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
-              }else{
+              } else {
                 printToDebug(PSTR(" VT_ERRORCODE len == 0: "));
                 prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
                 decodedTelegram.error = 256;
@@ -3345,7 +3345,7 @@ void printTelegram(byte* msg, int query_line) {
               break;
           }
         }
-      }else{
+      } else {
         if (bus->getBusType() != BUS_PPS) {
           SerialPrintData(msg);
         }
@@ -3358,7 +3358,7 @@ void printTelegram(byte* msg, int query_line) {
   if (bus->getBusType() != BUS_PPS || (bus->getBusType() == BUS_PPS && !monitor)) {
     writelnToDebug();
   }
-  if(verbose){
+  if (verbose) {
     if (bus->getBusType() != BUS_PPS) {
       SerialPrintRAW(msg,msg[bus->getLen_idx()]+bus->getBusType());
     } else {
@@ -3571,7 +3571,7 @@ void webPrintSite() {
 
 #if !defined(__AVR__)
 #ifdef VERSION_CHECK
-  if(enable_version_check){
+  if (enable_version_check) {
     printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
     flushToWebClient();
     httpclient.connect("bsb-lan.de", 80);
@@ -3701,7 +3701,7 @@ void generateConfigPage(void){
   #endif
   printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
   for (int i=0; i<anz_ex_gpio; i++) {
-    if(bitRead(protected_GPIO[i / 8], i % 8)){
+    if (bitRead(protected_GPIO[i / 8], i % 8)) {
       printFmtToWebClient(PSTR("%d "), i);
     }
   }
@@ -3875,7 +3875,7 @@ printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
 #ifdef AVERAGES
-  if(logAverageValues){
+  if (logAverageValues) {
     printToWebClient(CF_LOGAVERAGES_TXT);
 /*
     printToWebClient(PSTR(": "));
@@ -3939,7 +3939,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
 
     if(cfg.id == option_id) {finded = true; break;}
   }
-  if(!finded){
+  if (!finded) {
     return 2;
   }
 
@@ -4046,7 +4046,7 @@ void SaveConfigFromRAMtoEEPROM(){
   bool needReboot = false;
   //save new values from RAM to EEPROM
   for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
-    if(writeToEEPROM(i)){
+    if (writeToEEPROM(i)) {
       switch(i){
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
@@ -4093,7 +4093,7 @@ void SaveConfigFromRAMtoEEPROM(){
 #ifdef MQTT
         case CF_MQTT:
         case CF_MQTT_IPADDRESS:
-          if(MQTTPubSubClient){
+          if (MQTTPubSubClient) {
             delete MQTTPubSubClient;
             MQTTPubSubClient = NULL;
             mqtt_client->stop();
@@ -4109,7 +4109,7 @@ void SaveConfigFromRAMtoEEPROM(){
   // Dump when serial debug active or have telnet client
   EEPROM_dump();
 
-  if(needReboot == true){
+  if (needReboot == true) {
     forcedflushToWebClient();
     client.stop();
     resetBoard();
@@ -4133,7 +4133,7 @@ void implementConfig(){
       i = 16;
     }
 
-    if(c == '='){ //key/value delimiter
+    if (c == '=') { //key/value delimiter
       char *ptr = strstr_P(outBuf, PSTR("option_"));
       if(!ptr) continue;
       ptr += 7; //len of "option_" string
@@ -4145,7 +4145,7 @@ void implementConfig(){
       continue;
     }
     if(k_flag && (c == '&' || i == OUTBUF_LEN - 2 || !client.available())) { //new pair key=value or buffer filled or last symbol was reading
-      if(!client.available()){ //copy last symbol to buffer
+      if (!client.available()) { //copy last symbol to buffer
         outBuf[i++] = c;
         outBuf[i] = 0;
       }
@@ -4158,9 +4158,9 @@ void implementConfig(){
       outBuf[i] = 0;
       continue;
     }
-    if(c == '%'){ //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
-      if(client.available()){outBuf[i] = client.read();}
-      if(client.available()){outBuf[i + 1] = client.read();}
+    if (c == '%') { //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
+      if (client.available()) {outBuf[i] = client.read();}
+      if (client.available()) {outBuf[i + 1] = client.read();}
       outBuf[i + 2] = 0;
       unsigned int symbol;
       sscanf(outBuf + i, "%x", &symbol);
@@ -4182,7 +4182,7 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value){
 
 void generateChangeConfigPage(){
   printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
-  if(PASSKEY[0]){printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
+  if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
   printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\r\n"));
   for(uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
 #if defined(__AVR__)
@@ -4279,7 +4279,7 @@ void generateChangeConfigPage(){
                i = -1;
                break;
            }
-           if(i > 0){
+           if (i > 0) {
              printConfigWebPossibleValues(i, variable[0]);
            }
            break;}
@@ -4298,7 +4298,7 @@ void generateChangeConfigPage(){
                i = -1;
                break;
            }
-           if(i > 0){
+           if (i > 0) {
              printConfigWebPossibleValues(i, ((uint16_t *)variable)[0]);
            }
            break;}
@@ -4324,7 +4324,7 @@ void generateChangeConfigPage(){
      case CDT_PROGNRLIST:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(int); j++){
-         if(((int *)variable)[j]){
+         if (((int *)variable)[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
@@ -4334,7 +4334,7 @@ void generateChangeConfigPage(){
      case CDT_DHTBUS:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
-         if(variable[j]){
+         if (variable[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%d"), variable[j]);
@@ -4344,7 +4344,7 @@ void generateChangeConfigPage(){
      case CDT_MAXDEVICELIST:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
-         if(variable[j]){
+         if (variable[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%s"), variable + j);
@@ -4395,7 +4395,7 @@ void generateJSONwithConfig(){
 #endif
     byte *variable = getConfigVariableAddress(cfg.id);
     if(!variable) continue;
-    if(notFirst){printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
+    if (notFirst) {printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
 
     printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
 //Print param category
@@ -4451,7 +4451,7 @@ void generateJSONwithConfig(){
                i = -1;
                break;
            }
-           if(i > 0){
+           if (i > 0) {
              printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
              printConfigJSONPossibleValues(i);
            }
@@ -4471,7 +4471,7 @@ void generateJSONwithConfig(){
                i = -1;
                break;
            }
-           if(i > 0){
+           if (i > 0) {
              printFmtToWebClient(PSTR("%d\",\r\n"), ((uint16_t *)variable)[0]);
              printConfigJSONPossibleValues(i);
            }
@@ -4499,7 +4499,7 @@ void generateJSONwithConfig(){
      case CDT_PROGNRLIST:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(int); j++){
-         if(((int *)variable)[j]){
+         if (((int *)variable)[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
@@ -4510,7 +4510,7 @@ void generateJSONwithConfig(){
      case CDT_DHTBUS:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j++){
-         if(variable[j]){
+         if (variable[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%d"), variable[j]);
@@ -4521,7 +4521,7 @@ void generateJSONwithConfig(){
      case CDT_MAXDEVICELIST:{
        bool isFirst = true;
        for(uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])){
-         if(variable[j]){
+         if (variable[j]) {
            if(!isFirst) printToWebClient(PSTR(","));
            isFirst = false;
            printFmtToWebClient(PSTR("%s"), variable + j);
@@ -4589,7 +4589,7 @@ void LogTelegram(byte* msg){
   if (bus->getBusType() != BUS_PPS) {
     if(msg[4+(bus->getBusType()*4)]==TYPE_QUR || msg[4+(bus->getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
       cmd=(uint32_t)msg[6+(bus->getBusType()*4)]<<24 | (uint32_t)msg[5+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
-    }else{
+    } else {
       cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
     }
   } else {
@@ -4634,10 +4634,10 @@ void LogTelegram(byte* msg){
     if (dataFile) {
       int outBufLen = 0;
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
-      if(!known){                          // no hex code match
+      if (!known) {                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
         outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN")));
-      }else{
+      } else {
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
         cmd_type=get_cmdtbl_type(i);
@@ -4755,7 +4755,7 @@ int set(int line      // the ProgNr of the heater parameter
   if(i<0) return 0;        // no match
 
   // Check for readonly parameter
-  if(programIsreadOnly(get_cmdtbl_flags(i))){
+  if (programIsreadOnly(get_cmdtbl_flags(i))) {
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
   }
@@ -4790,7 +4790,7 @@ int set(int line      // the ProgNr of the heater parameter
         uint8_t h=atoi(val);
         uint8_t m=0;
         while(*val!='\0' && *val!=':' && *val!='.') val++;
-        if(*val==':' || *val=='.'){
+        if (*val==':' || *val=='.') {
           val++;
           m=atoi(val);
         }
@@ -4877,9 +4877,9 @@ int set(int line      // the ProgNr of the heater parameter
       for (int x=decodedTelegram.payload_length;x>0;x--) {
         param[decodedTelegram.payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
-      if(val[0] == '\0' || (decodedTelegram.type == VT_ENUM && t == 0xFFFF)){
+      if (val[0] == '\0' || (decodedTelegram.type == VT_ENUM && t == 0xFFFF)) {
         param[0]=decodedTelegram.enable_byte-1;  // disable
-      }else{
+      } else {
         param[0]=decodedTelegram.enable_byte;  //enable
       }
       param_len=decodedTelegram.payload_length + 1;
@@ -4890,14 +4890,14 @@ int set(int line      // the ProgNr of the heater parameter
     // 32-bit representation
     case VT_DWORD:      // can this be merged with the 32-bit above?
       {
-      if(val[0]!='\0'){
+      if (val[0]!='\0') {
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
         param[0]=decodedTelegram.enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
         param[2]=(t >> 16) & 0xff;
         param[3]=(t >> 8) & 0xff;
         param[4]= t & 0xff;
-      }else{
+      } else {
         param[0]=decodedTelegram.enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
@@ -4912,18 +4912,18 @@ int set(int line      // the ProgNr of the heater parameter
 
     case VT_HOUR_MINUTES: //TODO test it
       {
-      if(val[0]!='\0'){
+      if (val[0]!='\0') {
         uint8_t h=atoi(val);
         uint8_t m=0;
         while(*val!='\0' && *val!=':' && *val!='.') val++;
-        if(*val==':' || *val=='.'){
+        if (*val==':' || *val=='.') {
           val++;
           m=atoi(val);
         }
         param[0]=decodedTelegram.enable_byte;  //enable
         param[1]= h;
         param[2]= m;
-      }else{
+      } else {
         param[0]=decodedTelegram.enable_byte-1;  // disable
         param[1]=0x00;
         param[2]=0x00;
@@ -4945,11 +4945,11 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SINT1000:
       {
       uint16_t t=atof(val)*1000.0;
-      if(setcmd){
+      if (setcmd) {
         param[0]=decodedTelegram.enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }else{ // INF message type (e.g. for room temperature)
+      } else { // INF message type (e.g. for room temperature)
         param[0]=(t >> 8);
         param[1]= t & 0xff;
         param[2]=0x00;
@@ -4964,11 +4964,11 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_TEMP:
       {
       uint32_t t=((int)(atof(val)*decodedTelegram.operand));
-      if(setcmd){
+      if (setcmd) {
         param[0]=decodedTelegram.enable_byte;
         param[1]=(t >> 8);
         param[2]= t & 0xff;
-      }else{ // INF message type
+      } else { // INF message type
         if((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
           param[0]=0;
           param[1]=(t >> 8);
@@ -5060,7 +5060,7 @@ int set(int line      // the ProgNr of the heater parameter
       param[7]=0;
       param[8]=0x17; //?
       param_len=9;
-      if(val[0]!='\0'){
+      if (val[0]!='\0') {
           int d,m;
           strcpy_P(sscanf_buf, PSTR("%d.%d"));
           if(2!=sscanf(val,sscanf_buf,&d,&m))
@@ -5068,7 +5068,7 @@ int set(int line      // the ProgNr of the heater parameter
           param[0]=decodedTelegram.enable_byte;   // flag = enabled
           param[2]=m;
           param[3]=d;
-      }else{
+      } else {
           param[0]=decodedTelegram.enable_byte-1;   // flag = disabled
           param[2]=1;
           param[3]=1;
@@ -5180,7 +5180,7 @@ int set(int line      // the ProgNr of the heater parameter
   LogTelegram(msg);
 #endif
   // Expect an acknowledgement to our SET telegram
-  if(msg[4+(bus->getBusType()*4)]!=TYPE_ACK){      // msg type at 4 (BSB) or 8 (LPB)
+  if (msg[4+(bus->getBusType()*4)]!=TYPE_ACK) {      // msg type at 4 (BSB) or 8 (LPB)
     printlnToDebug(PSTR("set failed NACK"));
     return 0;
   }
@@ -5212,14 +5212,14 @@ int queryDefaultValue(int line, byte *msg, byte *tx_msg){
     return 0;
   }
   int i=findLine(line,0,&c);
-  if( i < 0){
+  if ( i < 0) {
     decodedTelegram.error = 258; //not found
     return 0;
-  }else{
-    if(!bus->Send(TYPE_QRV, c, msg, tx_msg)){
+  } else {
+    if (!bus->Send(TYPE_QRV, c, msg, tx_msg)) {
       decodedTelegram.error = 261; //query failed
       return 0;
-    }else{
+    } else {
       // Decode the xmit telegram and send it to the debug interface
       if(verbose) {
         printTelegram(tx_msg, line);
@@ -5273,7 +5273,7 @@ const char* printError(uint16_t error){
 char *build_pvalstr(bool extended){
   int len = 0;
   outBuf[len] = 0;
-  if(extended){
+  if (extended) {
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
@@ -5282,28 +5282,28 @@ char *build_pvalstr(bool extended){
       len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
     }
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
-    if(decodedTelegram.sensorid){
+    if (decodedTelegram.sensorid) {
       len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
     }
     len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
   }
-  if(decodedTelegram.value[0] != 0 && decodedTelegram.error != 260){
+  if (decodedTelegram.value[0] != 0 && decodedTelegram.error != 260) {
     len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
   }
   if(decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-    if(decodedTelegram.enumdescaddr){
+    if (decodedTelegram.enumdescaddr) {
       strcpy_P(outBuf + len, PSTR(" - "));
       strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
       len+=strlen(outBuf + len);
      }
   } else{
-    if(decodedTelegram.unit[0] != 0){
+    if (decodedTelegram.unit[0] != 0) {
       strcpy_P(outBuf + len, PSTR(" "));
       strcat(outBuf + len, decodedTelegram.unit);
       len+=strlen(outBuf + len);
     }
   }
-  if(decodedTelegram.telegramDump){
+  if (decodedTelegram.telegramDump) {
     strcpy_P(outBuf + len, PSTR(" "));
     strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
@@ -5386,7 +5386,7 @@ void query_printHTML(){
               c=1;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
             }
             while(c<decodedTelegram.enumstr_len){
-              if((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' '){         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+              if ((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' ') {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
                 val=uint16_t((pgm_read_byte_far(decodedTelegram.enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
                 if (decodedTelegram.data_type == DT_BITS) {
                   bitmask = val & 0xff;
@@ -5408,7 +5408,7 @@ void query_printHTML(){
               c++;
             }
           } else {
-            if((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0){
+            if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0) {
               num_pvalstr = 1;
             }
             listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)num_pvalstr, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
@@ -5451,7 +5451,7 @@ void query_printHTML(){
 // TODO: check at least for data length (only used for temperature values)
 /*
 int data_len=msg[3]-11;
-if(data_len==3){
+if (data_len==3) {
   returnval = printFIXPOINT(msg,data_len,64.0,1,"");
 }
 */
@@ -5503,7 +5503,7 @@ void queryVirtualPrognr(int line, int table_line){
 #ifdef DHT_BUS
        size_t tempLine = line - 20100;
        size_t log_sensor = tempLine / 4;
-       if(tempLine % 4 == 0){ //print sensor ID
+       if (tempLine % 4 == 0) { //print sensor ID
          sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
          return;
        }
@@ -5554,7 +5554,7 @@ void queryVirtualPrognr(int line, int table_line){
 #ifdef ONE_WIRE_BUS
        size_t tempLine = line - 20300;
        int log_sensor = tempLine / 2;
-       if(enableOneWireBus && numSensors){
+       if (enableOneWireBus && numSensors) {
          switch (tempLine % 2) {
            case 0: //print sensor ID
              DeviceAddress device_address;
@@ -5585,8 +5585,8 @@ void queryVirtualPrognr(int line, int table_line){
 #ifdef MAX_CUL
        size_t tempLine = line - 20500;
        size_t log_sensor = tempLine / 4;
-        if(enable_max_cul){
-          if(max_devices[log_sensor]){
+        if (enable_max_cul) {
+          if (max_devices[log_sensor]) {
             switch(tempLine % 4){ //print sensor values
               case 0:  //print sensor ID
                 strcpy(decodedTelegram.value, max_device_list[log_sensor]);
@@ -5666,7 +5666,7 @@ void query(int line)  // line (ProgNr)
 
     i=findLine(line,0,&c);
 
-    if(i>=0){
+    if (i>=0) {
       loadPrognrElementsFromTable(line, i);
 
       uint8_t flags = get_cmdtbl_flags(i);
@@ -5684,7 +5684,7 @@ void query(int line)  // line (ProgNr)
           retry=QUERY_RETRIES;
           while(retry){
             uint8_t query_type = TYPE_QUR;
-            if(bus->Send(query_type, c, msg, tx_msg)){
+            if (bus->Send(query_type, c, msg, tx_msg)) {
 
               // Decode the xmit telegram and send it to the PC serial interface
               if(verbose) {
@@ -5703,7 +5703,7 @@ void query(int line)  // line (ProgNr)
               LogTelegram(msg);
 #endif
               break;   // success, break out of while loop
-            }else{
+            } else {
               printlnToDebug(printError(261)); //query failed
               retry--;          // decrement number of attempts
 
@@ -5748,11 +5748,11 @@ void query(int line)  // line (ProgNr)
           printlnToDebug(build_pvalstr(0));
           SerialOutput->flush();
         }
-      }else{
+      } else {
         //printlnToDebug(PSTR("unknown command"));
         //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
       } // endelse, valid / invalid command codes
-    }else{
+    } else {
       //printlnToDebug(PSTR("line not found"));
       //if(line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
     } // endelse, line (ProgNr) found / not found
@@ -5823,7 +5823,7 @@ void SetDevId() {
   int i=0;
   family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   while(family!=DEV_NONE){
-    if(family == device_id){
+    if (family == device_id) {
       known=1;
       break;
     }
@@ -5862,8 +5862,8 @@ void SetDateTime(){
   uint32_t c;        // command code
 
   findLine(0,0,&c);
-  if(c!=CMD_UNKNOWN){     // send only valid command codes
-    if(bus->Send(TYPE_QUR, c, rx_msg, tx_msg)){
+  if (c!=CMD_UNKNOWN) {     // send only valid command codes
+    if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg)) {
       if (bus->getBusType() == BUS_LPB) {
         setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
       } else {
@@ -5874,12 +5874,12 @@ void SetDateTime(){
 }
 
 void printToWebClient_prognrdescaddr(){
-  if(decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100){
+  if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
     printToWebClient(PSTR(STR_24A_TEXT));
     printToWebClient(PSTR(". "));
   }
   printToWebClient(decodedTelegram.prognrdescaddr);
-  if(decodedTelegram.sensorid){
+  if (decodedTelegram.sensorid) {
     printFmtToWebClient(PSTR(" #%d"), decodedTelegram.sensorid);
   }
 }
@@ -5924,7 +5924,7 @@ void printToWebClient_prognrdescaddr(){
    }
 
  #ifdef AVERAGES
-   if(logAverageValues){
+   if (logAverageValues) {
      for (int i=0; i<numAverages; i++) {
        if (avg_parameters[i] > 0) {
          counter++;
@@ -5943,7 +5943,7 @@ void printToWebClient_prognrdescaddr(){
  #endif
 
  #ifdef ONE_WIRE_BUS
-   if(enableOneWireBus){
+   if (enableOneWireBus) {
      // output of one wire sensors
      for(i=0;i<numSensors * 2;i += 2){
        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
@@ -6007,7 +6007,7 @@ void printToWebClient_prognrdescaddr(){
 uint16_t setPPS(uint8_t pps_index, int16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
-    if(logCurrentValues){
+    if (logCurrentValues) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] == 15000 + pps_index) {
           log_parameter = log_parameters[i];
@@ -6103,7 +6103,7 @@ bool createdatalogFileAndWriteHeader(){
 
 #ifdef MAX_CUL
 void connectToMaxCul() {
-  if(max_cul){
+  if (max_cul) {
     max_cul->stop();
     delete max_cul;
     max_cul = NULL;
@@ -6172,7 +6172,7 @@ void loop() {
   uint16_t log_now = 0;
 
 #ifndef WIFI
- if(ip_addr[0] == 0 || useDHCP){
+ if (ip_addr[0] == 0 || useDHCP) {
     switch (Ethernet.maintain()) {
       case 1:
         //renewed fail
@@ -6210,7 +6210,7 @@ void loop() {
   // interface.
   // Separate telegrams after a pause of more than one character time.
   bool busmsg = false;
-  if(monitor){
+  if (monitor) {
     busmsg=bus->Monitor(msg);
     if (busmsg==true) {
       LogTelegram(msg);
@@ -6226,7 +6226,7 @@ void loop() {
         LogTelegram(msg);
       }
       // Is this a broadcast message?
-      if(((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF){ // handle broadcast messages
+      if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF) { // handle broadcast messages
       // Decode the rcv telegram and send it to the PC serial interface
         if (!verbose && !monitor) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
           printTelegram(msg, -1);
@@ -6245,17 +6245,17 @@ void loop() {
           printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);
 
           if((msg[11] & 0x08) == 0x08) {  // See parameter 1602
-            if(TWW_start==0){        // has not been timed
+            if (TWW_start==0) {        // has not been timed
               TWW_start=millis();   // keep current timestamp
               TWW_count++;          // increment number of starts
             }
-          }else{             // TWW Ladung aus
-            if(TWW_start!=0){        // start has been timed
+          } else {             // TWW Ladung aus
+            if (TWW_start!=0) {        // start has been timed
               unsigned long TWW_end;
               TWW_end=millis();      // timestamp the end
-              if(TWW_end >= TWW_start){
+              if (TWW_end >= TWW_start) {
                 TWW_duration+=(TWW_end-TWW_start)/1000;
-              }else{ // overflow
+              } else { // overflow
                 TWW_duration+=(0xffffffff-TWW_start+TWW_end)/1000;
               }
                 TWW_start=0;
@@ -6269,7 +6269,7 @@ void loop() {
           printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus->getPl_start()]);      // first payload byte
 
           if((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
-            if(brenner_start==0){        // has not been timed
+            if (brenner_start==0) {        // has not been timed
               brenner_start=millis();   // keep current timestamp
               brenner_count++;          // increment number of starts
             }
@@ -6279,7 +6279,7 @@ void loop() {
             brenner_stufe=1;
           }
           if((msg[bus->getPl_start()] & 0x10) == 0x10) {       // Stufe 2 (only oil furnace)
-            if(brenner_start_2==0){        // has not been timed
+            if (brenner_start_2==0) {        // has not been timed
               brenner_start_2=millis();   // keep current timestamp
               brenner_count_2++;          // increment number of starts
             }
@@ -6291,17 +6291,17 @@ void loop() {
           if (reset_brenner_timer == 1) {   // Stufenwechsel bei mehrstufigem Ölbrenner
             brenner_end=millis();      // timestamp the end
             if (brenner_stufe == 2) {    // Stufe jetzt 2, war also vorher 1
-              if(brenner_end >= brenner_start){
+              if (brenner_end >= brenner_start) {
                 brenner_duration+=(brenner_end-brenner_start)/1000;
-              }else{ // overflow
+              } else { // overflow
                 brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
               }
               brenner_start=0;
             }
             if (brenner_stufe == 1) {   // Stufe jetzt 1, war also vorher 2
-              if(brenner_end >= brenner_start_2){
+              if (brenner_end >= brenner_start_2) {
                 brenner_duration_2+=(brenner_end-brenner_start_2)/1000;
-              }else{ // overflow
+              } else { // overflow
                 brenner_duration_2+=(0xffffffff-brenner_start_2+brenner_end)/1000;
               }
               brenner_start_2=0;
@@ -6311,18 +6311,18 @@ void loop() {
           if ((msg[bus->getPl_start()] & 0x04) != 0x04) {    // brenner off
             brenner_end=millis();      // timestamp the end
             brenner_stufe=0;
-            if(brenner_start!=0){        // start has been timed
-              if(brenner_end >= brenner_start){
+            if (brenner_start!=0) {        // start has been timed
+              if (brenner_end >= brenner_start) {
                 brenner_duration+=(brenner_end-brenner_start)/1000;
-              }else{ // overflow
+              } else { // overflow
                 brenner_duration+=(0xffffffff-brenner_start+brenner_end)/1000;
               }
               brenner_start=0;
             } // endif, a previous start has been timed
-            if(brenner_start_2!=0){        // start has been timed
-              if(brenner_end >= brenner_start_2){
+            if (brenner_start_2!=0) {        // start has been timed
+              if (brenner_end >= brenner_start_2) {
                 brenner_duration_2+=(brenner_end-brenner_start_2)/1000;
-              }else{ // overflow
+              } else { // overflow
                 brenner_duration_2+=(0xffffffff-brenner_start_2+brenner_end)/1000;
               }
               brenner_start_2=0;
@@ -6635,6 +6635,7 @@ uint8_t pps_offset = 0;
                 case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
                 case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
                 case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
+//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, however this seems to come from the QAA as it begins with 0xFD
                 case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
                 case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
                 case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
@@ -6823,7 +6824,7 @@ uint8_t pps_offset = 0;
 #endif
               if (!(httpflags & HTTP_ETAG)) {
                 char *ptr = strstr_P(outBuf + buffershift, PSTR("If-None-Match:"));
-                if(ptr != 0){
+                if (ptr != 0) {
                   httpflags |= HTTP_ETAG;
                   ptr = strchr(ptr, ':');
                   do{
@@ -6908,14 +6909,14 @@ uint8_t pps_offset = 0;
 
         // Set up a pointer to cLineBuffer
         char *p=cLineBuffer;
-        if(PASSKEY[0]){
+        if (PASSKEY[0]) {
         // check for valid passkey
         p=strchr(cLineBuffer+1,'/');
-        if(p==NULL){    // no match
+        if (p==NULL) {    // no match
           break;
         }
         *p='\0';     // mark end of string
-        if(strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))){
+        if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
           printlnToDebug(PSTR("no matching passkey"));
           client.flush();
           client.stop();
@@ -6927,7 +6928,7 @@ uint8_t pps_offset = 0;
 
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
-        if(!strcmp_P(p, PSTR("/"))){
+        if (!strcmp_P(p, PSTR("/"))) {
           httpflags |= HTTP_GET_ROOT;
           strcpy_P(p + 1, PSTR("index.html"));
         }
@@ -7038,7 +7039,7 @@ uint8_t pps_offset = 0;
           {
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           // simply print the website if no index.html on SD card
-            if((httpflags & HTTP_GET_ROOT)){
+            if ((httpflags & HTTP_GET_ROOT)) {
               webPrintSite();
               break;
             }
@@ -7069,7 +7070,7 @@ uint8_t pps_offset = 0;
 #ifndef WEBSERVER
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         // simply print the website
-        if(!strcmp_P(p, PSTR("/"))){
+        if (!strcmp_P(p, PSTR("/"))) {
           webPrintSite();
           break;
         }
@@ -7079,9 +7080,9 @@ uint8_t pps_offset = 0;
 
         // Answer to unknown requests
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-        if(!isdigit(p[1]) && strchr_P(PSTR("ABCDEGIJKLMNPQRSUVWXY"), p[1])==NULL){
+        if (!isdigit(p[1]) && strchr_P(PSTR("ABCDEGIJKLMNPQRSUVWXY"), p[1])==NULL) {
 #else
-        if(!isdigit(p[1]) && strchr_P(PSTR("CDGJNQUWX"), p[1])==NULL){
+        if (!isdigit(p[1]) && strchr_P(PSTR("CDGJNQUWX"), p[1])==NULL) {
 #endif
           webPrintHeader();
           webPrintFooter();
@@ -7090,7 +7091,7 @@ uint8_t pps_offset = 0;
 
 #ifdef WEBSERVER
         //Send HTML pages without header and footer (For external interface)
-        if(p[1]=='W'){
+        if (p[1]=='W') {
           p++;
           httpflags |= HTTP_FRAG;
         }
@@ -7098,13 +7099,13 @@ uint8_t pps_offset = 0;
 
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
         // setting verbosity level
-        if(p[1]=='V'){
+        if (p[1]=='V') {
           p+=2;
           verbose=atoi(p);
           webPrintHeader();
-          if(verbose>0){
+          if (verbose>0) {
             printToWebClient(PSTR(MENU_TEXT_VB1 "<BR>"));
-          }else{
+          } else {
             printToWebClient(PSTR(MENU_TEXT_VB2 "<BR>"));
           }
           printToWebClient(PSTR("\r\n" MENU_TEXT_VB3 "\r\n"));
@@ -7112,14 +7113,14 @@ uint8_t pps_offset = 0;
           break;
         }
         // switching monitor on/off
-        if(p[1]=='M'){
+        if (p[1]=='M') {
           p+=2;               // hopefully finds a digit there ...
           monitor=atoi(p);    // .. to convert
           webPrintHeader();
-          if(monitor>0){
+          if (monitor>0) {
             printToWebClient(PSTR(MENU_TEXT_SR1));
             monitor = 1;
-          }else{
+          } else {
             printToWebClient(PSTR(MENU_TEXT_SR2));
           }
           printToWebClient(PSTR("\r\n" MENU_TEXT_SR3 "\r\n"));
@@ -7144,12 +7145,12 @@ uint8_t pps_offset = 0;
           p+=2;               // third position in cLineBuffer
           if(!(httpflags & HTTP_FRAG)) webPrintHeader();
 
-          if(!isdigit(*p)){   // now we check for digits - nice
+          if (!isdigit(*p)) {   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
           } else {
             line=atoi(p);       // convert until non-digit char is found
             p=strchr(p,'=');    // search for '=' sign
-            if(p==NULL){        // no match
+            if (p==NULL) {        // no match
                 printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
             } else {
               p++;                   // position pointer past the '=' sign
@@ -7168,13 +7169,13 @@ uint8_t pps_offset = 0;
               int setresult = 0;
               setresult = set(line,p,setcmd);
 
-              if(setresult!=1){
+              if (setresult!=1) {
                 printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
                 if (setresult == 2) {
                   printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
                 }
               } else {
-                if(setcmd){            // was this a SET command?
+                if (setcmd) {            // was this a SET command?
                   // Query controller for this value
                   query(line);  // read value back
                   query_printHTML();
@@ -7192,7 +7193,7 @@ uint8_t pps_offset = 0;
           break;
         }
         // list categories
-        if(p[1]=='K' && !isdigit(p[2])){
+        if (p[1]=='K' && !isdigit(p[2])) {
           //list categories
           webPrintHeader();
           printToWebClient(PSTR("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
@@ -7221,11 +7222,11 @@ uint8_t pps_offset = 0;
           break;
         }
         // list enum values
-        if(p[1]=='E'){
+        if (p[1]=='E') {
           webPrintHeader();
           uint16_t line = atoi(&p[2]);
           int i=findLine(line,0,NULL);
-          if(i>=0){
+          if (i>=0) {
             loadPrognrElementsFromTable(line, i);
             uint8_t flag = 0;
             // check type
@@ -7237,19 +7238,19 @@ uint8_t pps_offset = 0;
             }
             if(flag) {
               listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE_FIRST, flag - 1);
-            }else{
+            } else {
               printToWebClient(PSTR(MENU_TEXT_ER5));
             }
-          }else{
+          } else {
             printToWebClient(PSTR(MENU_TEXT_ER6));
           }
           webPrintFooter();
           break;
         }
         // query reset value
-        if(p[1]=='R'){
+        if (p[1]=='R') {
           webPrintHeader();
-          if(!queryDefaultValue(atoi(&p[2]), msg, tx_msg)){
+          if (!queryDefaultValue(atoi(&p[2]), msg, tx_msg)) {
             if(decodedTelegram.error == 258)
               printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
             else if(decodedTelegram.error == 261) {
@@ -7259,7 +7260,7 @@ uint8_t pps_offset = 0;
           } else{
 // TODO: replace pvalstr with data from decodedTelegram structure
             build_pvalstr(0);
-            if(outBuf[0]>0){
+            if (outBuf[0]>0) {
               printToWebClient(outBuf);
               printToWebClient(PSTR("<br>"));
             }
@@ -7389,7 +7390,7 @@ uint8_t pps_offset = 0;
               uint8_t dev_var = get_cmdtbl_dev_var(j);
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
                 printFmtToDebug(PSTR("%02X\r\n"), c);
-                if(!bus->Send(TYPE_QUR, c, msg, tx_msg)){
+                if (!bus->Send(TYPE_QUR, c, msg, tx_msg)) {
                   print_bus_send_failed();
                 } else {
                   if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
@@ -7442,15 +7443,15 @@ uint8_t pps_offset = 0;
           break;
         }
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-        if(p[1]=='Y'){
+        if (p[1]=='Y') {
 #ifdef DEBUG
-          if(debug_mode){
+          if (debug_mode) {
             webPrintHeader();
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
-            if(!bus->Send(type, c, msg, tx_msg)){
+            if (!bus->Send(type, c, msg, tx_msg)) {
               print_bus_send_failed();
-            }else{
+            } else {
               // Decode the xmit telegram and send it to the PC serial interface
               printTelegram(tx_msg, -1);
 #ifdef LOGGER
@@ -7464,7 +7465,7 @@ uint8_t pps_offset = 0;
 #endif
   // TODO: replace pvalstr with data from decodedTelegram structure
             build_pvalstr(0);
-            if(outBuf[0]>0){
+            if (outBuf[0]>0) {
               printToWebClient(outBuf);
               printToWebClient(PSTR("<br>"));
             }
@@ -7514,13 +7515,13 @@ uint8_t pps_offset = 0;
             }
 
             printHTTPheader(http_code, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, cache_time);
-            if(cache_time != HTTP_DO_NOT_CACHE){
+            if (cache_time != HTTP_DO_NOT_CACHE) {
               printToWebClient(PSTR("ETag: \""));
               printToWebClient(BSB_VERSION);
               printToWebClient(PSTR("\"\r\n"));
             }
             printToWebClient(PSTR("\r\n"));
-            if(http_code == HTTP_NOT_MODIFIED){
+            if (http_code == HTTP_NOT_MODIFIED) {
               forcedflushToWebClient();
               break;
             }
@@ -7590,7 +7591,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR(",\r\n  \"protectedGPIO\": [\r\n"));
             not_first = false;
             for (i=0; i<anz_ex_gpio; i++) {
-              if(bitRead(protected_GPIO[i / 8], i % 8)){
+              if (bitRead(protected_GPIO[i / 8], i % 8)) {
                 if(not_first)
                   printToWebClient(PSTR(",\r\n"));
                 else
@@ -7602,7 +7603,7 @@ uint8_t pps_offset = 0;
 
 //averages
 #ifdef AVERAGES
-            if(logAverageValues){
+            if (logAverageValues) {
               printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
@@ -7672,12 +7673,12 @@ uint8_t pps_offset = 0;
                 }
                 if (c == '}') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
-                if(opening_quotation){
+                if (opening_quotation) {
                   if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; } //Parameter
                   if (c == 'V' || c == 'v') { v_flag = true; } //Value
                   if (c == 'T' || c == 't') { t_flag = true; } //Type
                   if ((c == 'D' || c == 'd') && t_flag != true) { d_flag = true; } //Destination
-                  if( p_flag || v_flag || t_flag || d_flag){
+                  if ( p_flag || v_flag || t_flag || d_flag) {
                     uint8_t stage_f = 0; //field name
                     bool stage_v = 0; //field value
                     uint8_t j_char_idx = 0;
@@ -7696,8 +7697,8 @@ uint8_t pps_offset = 0;
                     }
                     char *jptr = NULL;
                     size_t jsize = 0;
-                    if(v_flag){
-                      if(p[2] == 'W'){
+                    if (v_flag) {
+                      if (p[2] == 'W') {
                         jptr = outBuf;
                         jsize = sizeof(outBuf);
                       } else {
@@ -7715,7 +7716,7 @@ uint8_t pps_offset = 0;
                         if (c == '}') { output = true; opening_brackets--;}
                       break;
                       }
-                      if(c == '\"'){ //It is string value?
+                      if (c == '\"') { //It is string value?
                         if(!stage_v) { //start read from next char after quotation mark if it found
                           stage_v = true;
                           j_char_idx = 0;
@@ -7854,10 +7855,10 @@ uint8_t pps_offset = 0;
 
                   printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
                 }
-                if(decodedTelegram.data_type == DT_VALS){
+                if (decodedTelegram.data_type == DT_VALS) {
                   char pre_buf[10];
                   pre_buf[0] = 0;
-                  if(decodedTelegram.precision != 0){
+                  if (decodedTelegram.precision != 0) {
                     strcpy_P(pre_buf, PSTR("0."));
                     for(uint8_t j = 1; j < decodedTelegram.precision; j ++){
                       strcat_P(pre_buf, PSTR("0"));
@@ -7918,13 +7919,13 @@ uint8_t pps_offset = 0;
         }
 
 #ifdef LOGGER
-        if(p[1]=='D'){ // access datalog file
+        if (p[1]=='D') { // access datalog file
           if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
             webPrintHeader();
             File dataFile;
             bool filewasrecreated = false;
 //recreate journal file for telegram logging
-            if(p[2]=='J' || p[2]=='0'){
+            if (p[2]=='J' || p[2]=='0') {
               SD.remove(journalFileName);
               dataFile = SD.open(journalFileName, FILE_WRITE);
               if (dataFile) {
@@ -7935,7 +7936,7 @@ uint8_t pps_offset = 0;
               }
             }
 //recreate datalog file for programs values logging
-              if(p[2]=='D' || p[2]=='0'){
+              if (p[2]=='D' || p[2]=='0') {
                 if(p[2]=='0') {
                   printToDebug(PSTR(", "));
                   printToWebClient(PSTR(", "));
@@ -7947,7 +7948,7 @@ uint8_t pps_offset = 0;
                 printToWebClient(datalogFileName);
               }
             }
-            if(filewasrecreated){
+            if (filewasrecreated) {
               printToWebClient(PSTR(MENU_TEXT_DTR "\r\n"));
               printToDebug(PSTR(": file(s) was removed and recreated."));
             } else {
@@ -8230,16 +8231,16 @@ uint8_t pps_offset = 0;
         char* range;
         range = strtok(p,"/");
         while(range!=0){
-          if(range[0]=='U'){ // output user-defined custom_array variable
+          if (range[0]=='U') { // output user-defined custom_array variable
             for(int i=0;i<numCustomFloats;i++){
               printFmtToWebClient(PSTR("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n"), i, custom_floats[i]);
             }
             for(int i=0;i<numCustomLongs;i++){
               printFmtToWebClient(PSTR("<tr><td>\r\ncustom_long[%d]: %ld\r\n</td></tr>\r\n"),i, custom_longs[i]);
             }
-          }else if(range[0]=='X'){ // handle MAX command
+          }else if (range[0]=='X') { // handle MAX command
 #ifdef MAX_CUL
-            if(enable_max_cul){
+            if (enable_max_cul) {
               int max_avg_count = 0;
               float max_avg = 0;
               for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
@@ -8269,7 +8270,7 @@ uint8_t pps_offset = 0;
               else  //Disable 24h average calculation temporarily
                 logAverageValues = false;
             }
-            if(logAverageValues){
+            if (logAverageValues) {
               if (range[1]=='=') {
                 char* avg_token = strtok(range,"=,");  // drop everything before "="
                 avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
@@ -8292,17 +8293,17 @@ uint8_t pps_offset = 0;
             printToWebClient("AVERAGES module not compiled\r\n");
 #endif
 #endif
-          }else if(range[0]=='G'){ // handle gpio command
+          }else if (range[0]=='G') { // handle gpio command
             uint8_t val;
             uint8_t pin;
 //            bool error = false;
             p=range+1;
-            if(!isdigit(*p)){   // now we check for digits
+            if (!isdigit(*p)) {   // now we check for digits
               printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
-            if(bitRead(protected_GPIO[pin / 8], pin % 8)){
+            if (bitRead(protected_GPIO[pin / 8], pin % 8)) {
               printToWebClient(PSTR(MENU_TEXT_ER7 "\r\n"));
               break;
             }
@@ -8310,7 +8311,7 @@ uint8_t pps_offset = 0;
             char* dir_token = strchr(range,',');
             dir_token++;
             p=strchr(p,'=');    // search for '=' sign
-            if(p==NULL){        // no match -> query value
+            if (p==NULL) {        // no match -> query value
               if (dir_token!=NULL) {
                 if (*dir_token=='I') {
                   pinMode(pin, INPUT);
@@ -8318,16 +8319,16 @@ uint8_t pps_offset = 0;
                 }
               }
               val=digitalRead(pin);
-            }else{ // set value
+            } else { // set value
               p++;
               uint16_t i = 0;
               while(p[i]){
                 p[i] |= 0x20; //to lower case
                 i++;
               }
-              if(!strncmp_P(p, PSTR("on"), 2) || !strncmp_P(p, PSTR("high"), 2) || *p=='1'){
+              if (!strncmp_P(p, PSTR("on"), 2) || !strncmp_P(p, PSTR("high"), 2) || *p=='1') {
                 val=HIGH;
-              }else{
+              } else {
                 val=LOW;
               }
               pinMode(pin, OUTPUT); // TODO: does this case a problem if already set as output?
@@ -8335,19 +8336,19 @@ uint8_t pps_offset = 0;
             }
             printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-          }else if(range[0]=='B'){
-            if(range[1]=='0'){ // reset furnace duration
+          }else if (range[0]=='B') {
+            if (range[1]=='0') { // reset furnace duration
               printToWebClient(STR20006);
               printToWebClient(PSTR(".<br>\r\n"));
               resetDurations();
             }
-          }else{
+          } else {
             char* line_start;
             char* line_end;
             int start=-1;
             int end=-1;
             uint8_t destAddr = bus->getBusDest();
-            if(range[0]=='K'){
+            if (range[0]=='K') {
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
   #if defined(__AVR__)
                 uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
@@ -8357,13 +8358,13 @@ uint8_t pps_offset = 0;
                 start = ENUM_CAT_NR[cat];
                 end = ENUM_CAT_NR[cat+1];
   #endif
-            }else{
+            } else {
               // split range
               line_start=range;
               line_end=strchr(range,'-');
-              if(line_end==NULL){
+              if (line_end==NULL) {
                 line_end=line_start;
-              }else{
+              } else {
                 *line_end='\0';
                 line_end++;
               }
@@ -8410,7 +8411,7 @@ uint8_t pps_offset = 0;
 
 
 #ifdef MQTT
-  if(mqtt_broker_ip_addr[0] && mqtt_mode){ //Address was set and MQTT was enabled
+  if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
     String MQTTPayload = "";
     String MQTTTopic = "";
 
@@ -8422,7 +8423,7 @@ uint8_t pps_offset = 0;
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
           // Declare local variables and start building json if enabled
-          if(mqtt_mode == 2 || mqtt_mode == 3){
+          if (mqtt_mode == 2 || mqtt_mode == 3) {
             MQTTPayload = "";
             // Build the json heading
             MQTTPayload.concat(F("{\""));
@@ -8437,8 +8438,8 @@ uint8_t pps_offset = 0;
           }
           boolean is_first = true;
           if (mqtt_connect()) {              //Luposoft, new funct
-            if(is_first){is_first = false;} else {MQTTPayload.concat(F(","));}
-            if(MQTTTopicPrefix[0]){
+            if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
+            if (MQTTTopicPrefix[0]) {
               MQTTTopic = MQTTTopicPrefix;
               MQTTTopic.concat(F("/"));
             }
@@ -8451,18 +8452,18 @@ uint8_t pps_offset = 0;
               MQTTTopic.concat(String(log_parameters[i]));
 
             query(log_parameters[i]);
-            if(mqtt_mode == 3){ // Build the json doc on the fly
+            if (mqtt_mode == 3) { // Build the json doc on the fly
               int len = 0;
               outBuf[len] = 0;
               len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), log_parameters[i]);
               len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
               len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
-              if(decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr){
+              if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
                 len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
               }
               len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
               MQTTPayload.concat(outBuf);
-            } else if(mqtt_mode == 2){ // Build the json doc on the fly
+            } else if (mqtt_mode == 2) { // Build the json doc on the fly
               char tbuf[20];
               sprintf_P(tbuf, PSTR("\"%d\":\""), log_parameters[i]);
               MQTTPayload.concat(tbuf);
@@ -8483,7 +8484,7 @@ uint8_t pps_offset = 0;
             }
           }
           // End of mqtt if loop so close off the json and publish
-          if(mqtt_mode == 2 || mqtt_mode == 3){
+          if (mqtt_mode == 2 || mqtt_mode == 3) {
             // Close the json doc off
             if(mqtt_mode == 2)
               MQTTPayload.concat(F("}}}"));
@@ -8510,7 +8511,7 @@ uint8_t pps_offset = 0;
       }
     }
   }
-  if(MQTTPubSubClient && mqtt_mode == 0){
+  if (MQTTPubSubClient && mqtt_mode == 0) {
     delete MQTTPubSubClient;
     MQTTPubSubClient = NULL;
     mqtt_client->stop();
@@ -8541,7 +8542,7 @@ uint8_t pps_offset = 0;
             strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
             dataFile.print(outBuf);
             outBufLen = 0;
-            if(decodedTelegram.sensorid){
+            if (decodedTelegram.sensorid) {
               outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
             }
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\r\n"), decodedTelegram.value, decodedTelegram.unit);
@@ -8614,7 +8615,7 @@ uint8_t pps_offset = 0;
 #ifdef ONE_WIRE_BUS
   {
     unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-    if(tempTime != lastOneWireRequestTime){
+    if (tempTime != lastOneWireRequestTime) {
       sensors->requestTemperatures(); //call it outside of here for more faster answers
       lastOneWireRequestTime = tempTime;
     }
@@ -8693,7 +8694,7 @@ uint8_t pps_offset = 0;
 #endif
 
 #ifdef MAX_CUL
-  if(enable_max_cul){
+  if (enable_max_cul) {
   byte max_str_index = 0;
 #if OUTBUF_LEN < 60
 #error "OUTBUF_LEN must be at least 60. In other case MAX! will not work."
@@ -8809,7 +8810,7 @@ uint8_t pps_offset = 0;
 }
 #endif
 
-  if(debug_mode == 2){
+  if (debug_mode == 2) {
     telnetClient = telnetServer->available();
 
     if (telnetClient && haveTelnetClient == false) {
@@ -8879,7 +8880,7 @@ boolean mqtt_connect()
       {
         printlnToDebug(PSTR("Connect to MQTT broker"));
         const char* mqtt_subscr;
-        if(MQTTTopicPrefix[0]){mqtt_subscr = MQTTTopicPrefix;}else {mqtt_subscr="fromBroker";}
+        if (MQTTTopicPrefix[0]) {mqtt_subscr = MQTTTopicPrefix;}else {mqtt_subscr="fromBroker";}
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
         MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
         MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
@@ -9018,7 +9019,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
-  if(!digitalRead(EEPROM_ERASING_PIN)){
+  if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
     clearEEPROM();
     internalLEDBlinking(125, 16); //pause 4 sec for user informing and button release
@@ -9096,14 +9097,14 @@ void setup() {
 
   readFromEEPROM(CF_PPS_VALUES);
   byte UseEEPROM_in_config_h = UseEEPROM;
-  if(UseEEPROM){ //Read EEPROM when it allowed from config file
+  if (UseEEPROM) { //Read EEPROM when it allowed from config file
     SerialOutput->println(F("Reading EEPROM"));
     readFromEEPROM(CF_USEEEPROM);
     readFromEEPROM(CF_VERSION);
   }
-  if(UseEEPROM == 0x96){//Read EEPROM when EEPROM contain magic byte (stored configuration)
+  if (UseEEPROM == 0x96) {//Read EEPROM when EEPROM contain magic byte (stored configuration)
     readFromEEPROM(CF_CRC32);
-    if(crc == initConfigTable(EEPROMversion)){
+    if (crc == initConfigTable(EEPROMversion)) {
   //read parameters
       for(uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++){
 //        SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
@@ -9138,10 +9139,10 @@ void setup() {
   SerialOutput->print(F(" Program schema v."));
   SerialOutput->println(maxconfversion);
 
-  if(maxconfversion != EEPROMversion){ //Update config "Schema" in EEPROM
+  if (maxconfversion != EEPROMversion) { //Update config "Schema" in EEPROM
     crc = initConfigTable(maxconfversion); //store new CRC32
     EEPROMversion = maxconfversion; //store new version
-    if(UseEEPROM_in_config_h == 0x01){//Update EEPROM when config file contain UseEEPROM = 1
+    if (UseEEPROM_in_config_h == 0x01) {//Update EEPROM when config file contain UseEEPROM = 1
       if(UseEEPROM != 0x69 && UseEEPROM != 0x96) UseEEPROM = 0x96;
       SerialOutput->println(F("Update EEPROM schema"));
       for(uint8_t i = 0; i < CF_LAST_OPTION; i++){
@@ -9177,7 +9178,7 @@ void setup() {
 
 // BSB/LPB/PPS bus init
   byte temp_bus_pins[2];
-  if(bus_pins[0] && bus_pins[1]){
+  if (bus_pins[0] && bus_pins[1]) {
     temp_bus_pins[0] = bus_pins[0];
     temp_bus_pins[1] = bus_pins[1];
   } else {
@@ -9196,7 +9197,7 @@ void setup() {
   bus->enableInterface();
 
 #ifdef ONE_WIRE_BUS
-  if(enableOneWireBus){
+  if (enableOneWireBus) {
     printToDebug(PSTR("Init One Wire bus...\r\n"));
     // Setup a oneWire instance to communicate with any OneWire devices
     oneWire = new OneWire(One_Wire_Pin);
@@ -9270,22 +9271,22 @@ void setup() {
 #endif
 
   // setup IP addresses
-  if(!useDHCP && ip_addr[0]){
+  if (!useDHCP && ip_addr[0]) {
     IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
     IPAddress subnet;
     IPAddress gateway;
     IPAddress dnsserver;
-    if(subnet_addr[0]){
+    if (subnet_addr[0]) {
       subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
     } else {
       subnet = IPAddress(255, 255, 255, 0);
     }
-    if(gateway_addr[0]){
+    if (gateway_addr[0]) {
       gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
     } else {
       gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
-    if(dns_addr[0]){
+    if (dns_addr[0]) {
       dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
     } else {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
@@ -9498,7 +9499,7 @@ if(save_debug_mode == 2)
   }
 
 #ifdef MAX_CUL
-  if(enable_max_cul){
+  if (enable_max_cul) {
     UpdateMaxDeviceList();
     connectToMaxCul();
   }
