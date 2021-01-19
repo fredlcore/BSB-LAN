@@ -1863,22 +1863,24 @@ void EEPROM_dump() {
 }
 
 #ifdef BUTTONS
-void switchPresenceState(uint16_t set_mode, uint16_t current_mode, uint16_t comfort_setpoint, uint16_t current_setpoint){
-  //RGT1 701, 700, 710, 8741
-  //RGT2 1001, 1000, 1010, 8771
-  //RGT3 1301, 1300, 1310, 8801
+void switchPresenceState(uint16_t set_mode, uint16_t current_state){
+  //RGT1 701, 10102
+  //RGT2 1001, 10103
+  //RGT3 1301, 10104
   int state = 0;
-  char buf[16];
-  query(current_mode);
-  state = atoi(decodedTelegram.value);
-  if(state != 1) return; // 1 = Automatic
-  query(current_setpoint);
-  strncpy(buf, decodedTelegram.value, sizeof(buf));
-  query(comfort_setpoint);
-  if(!strncmp(decodedTelegram.value, buf, sizeof(buf))){ //Current setpoint is equal to comfort setpoint (heater in Comfort mode)
-    state = 0x01; //Switch to Reduced mode
-  } else {
-    state = 0x02; //Switch to Comfort mode
+  char buf[8];
+  unsigned int i0, i1;
+  query(current_state);
+  strcpy_P(buf, PSTR("%x%x"));
+  decodedTelegram.value[4] = 0; //cut string
+  if(2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
+  if(i0 != 0x01) return; // 1 = Automatic
+  switch(i1){
+    case 0x01: state = 0x02; break; //Reduced mode -> Automatic Comfort
+    case 0x02: state = 0x01; break; //Comfort mode -> Automatic Reduced
+    case 0x03: state = 0x02; break; //Automatic Reduced mode -> Automatic Comfort
+    case 0x04: state = 0x01; break; //Automatic Comfort mode -> Automatic Reduced
+    default: return;
   }
   sprintf_P(buf, PSTR("%d"), state);
   set(set_mode, buf, true);
@@ -8656,15 +8658,15 @@ uint8_t pps_offset = 0;
           PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
           break;
         case ROOM1_PRESENCE_BUTTON_PRESSED:
-          switchPresenceState(701, 700, 710, 8741);
+          switchPresenceState(701, 10102);
           PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
           break;
         case ROOM2_PRESENCE_BUTTON_PRESSED:
-          switchPresenceState(1001, 1000, 1010, 8771);
+          switchPresenceState(1001, 10103);
           PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
           break;
         case ROOM3_PRESENCE_BUTTON_PRESSED:
-          switchPresenceState(1301, 1300, 1310, 8801);
+          switchPresenceState(1301, 10104);
           PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
           break;
         default: PressedButtons &= ~(0x01 << i); break; //clear unknown state
