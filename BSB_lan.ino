@@ -1863,27 +1863,25 @@ void EEPROM_dump() {
 }
 
 #ifdef BUTTONS
-void switchPresenseState(uint16_t set_mode,  uint16_t check_mode, uint16_t check_state){
-  //RGT1 701, 700, 8000
-  //RGT2 1001, 1000, 8001
-  //RGT3 1301, 1300, 8002
+void switchPresenceState(uint16_t set_mode, uint16_t current_mode, uint16_t comfort_setpoint, uint16_t current_setpoint){
+  //RGT1 701, 700, 710, 8741
+  //RGT2 1001, 1000, 1010, 8771
+  //RGT3 1301, 1300, 1310, 8801
   int state = 0;
-  query(check_mode);
+  char buf[16];
+  query(current_mode);
   state = atoi(decodedTelegram.value);
   if(state != 1) return; // 1 = Automatic
-  query(check_state);
-  state = atoi(decodedTelegram.value);
-  switch(state){
-    case 0x72: // 0x72 - Comfort mode
-      state = 0x01; //Switch to Reduced mode
-      break;
-    case 0x74: //0x74 - Reduced mode
-      state = 0x02; //Switch to Comfort mode
-      break;
-    default: return;
+  query(current_setpoint);
+  strncpy(buf, decodedTelegram.value, sizeof(buf));
+  query(comfort_setpoint);
+  if(!strncmp(decodedTelegram.value, buf, sizeof(buf))){ //Current setpoint is equal to comfort setpoint (heater in Comfort mode)
+    state = 0x01; //Switch to Reduced mode
+  } else {
+    state = 0x02; //Switch to Comfort mode
   }
-  sprintf_P(decodedTelegram.value, PSTR("%d"), state);
-  set(set_mode, decodedTelegram.value, true);
+  sprintf_P(buf, PSTR("%d"), state);
+  set(set_mode, buf, true);
 }
 #endif
 
@@ -4071,6 +4069,12 @@ void SaveConfigFromRAMtoEEPROM(){
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
+          needReboot = true;
+          break;
+        case CF_TWW_PUSH_PIN_ID: //How to do dynamic reconfiguration of interrupts?
+        case CF_RGT1_PRES_PIN_ID:
+        case CF_RGT2_PRES_PIN_ID:
+        case CF_RGT3_PRES_PIN_ID:
           needReboot = true;
           break;
 #ifdef AVERAGES
@@ -8651,15 +8655,15 @@ uint8_t pps_offset = 0;
         PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
         break;
       case ROOM1_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(701, 700, 8000);
+        switchPresenceState(701, 700, 710, 8741);
         PressedButtons &= ~ROOM1_PRESENCE_BUTTON_PRESSED;
         break;
       case ROOM2_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(1001, 1000, 8001);
+        switchPresenceState(1001, 1000, 1010, 8771);
         PressedButtons &= ~ROOM2_PRESENCE_BUTTON_PRESSED;
         break;
       case ROOM3_PRESENCE_BUTTON_PRESSED:
-        switchPresenseState(1301, 1300, 8002);
+        switchPresenceState(1301, 1300, 1310, 8801);
         PressedButtons &= ~ROOM3_PRESENCE_BUTTON_PRESSED;
         break;
     }
@@ -9077,6 +9081,10 @@ void setup() {
   registerConfigVariable(CF_RGT1_SENSOR_ID, (byte *)&rgte_sensorid[0][0]);
   registerConfigVariable(CF_RGT2_SENSOR_ID, (byte *)&rgte_sensorid[1][0]);
   registerConfigVariable(CF_RGT3_SENSOR_ID, (byte *)&rgte_sensorid[2][0]);
+  registerConfigVariable(CF_TWW_PUSH_PIN_ID, (byte *)&button_on_pin[0]);
+  registerConfigVariable(CF_RGT1_PRES_PIN_ID, (byte *)&button_on_pin[1]);
+  registerConfigVariable(CF_RGT2_PRES_PIN_ID, (byte *)&button_on_pin[2]);
+  registerConfigVariable(CF_RGT3_PRES_PIN_ID, (byte *)&button_on_pin[3]);
 
 #endif
 
@@ -9506,14 +9514,22 @@ mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTC
 #endif
 
 #ifdef BUTTONS
-  pinMode(21, INPUT_PULLUP);
-  attachInterrupt(21, interruptHandlerTWWPush, FALLING); //TWW push button
-  pinMode(20, INPUT_PULLUP);
-  attachInterrupt(20, interruptHandlerPresenceROOM1, FALLING); //Presence ROOM 1 button
-  pinMode(19, INPUT_PULLUP);
-  attachInterrupt(19, interruptHandlerPresenceROOM2, FALLING); //Presence ROOM 2 button
-  pinMode(18, INPUT_PULLUP);
-  attachInterrupt(18, interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
+  if(button_on_pin[0]){
+    pinMode(button_on_pin[0], INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(button_on_pin[0]), interruptHandlerTWWPush, FALLING); //TWW push button
+  }
+  if(button_on_pin[1]){
+    pinMode(button_on_pin[1], INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(button_on_pin[1]), interruptHandlerPresenceROOM1, FALLING); //Presence ROOM 1 button
+  }
+  if(button_on_pin[2]){
+    pinMode(button_on_pin[2], INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(button_on_pin[2]), interruptHandlerPresenceROOM2, FALLING); //Presence ROOM 2 button
+  }
+  if(button_on_pin[3]){
+    pinMode(button_on_pin[3], INPUT_PULLUP);
+    attachInterrupt(digitalPinToInterrupt(button_on_pin[3]), interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
+  }
 #endif
 
   printlnToDebug(PSTR("Setup complete"));

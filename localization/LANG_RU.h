@@ -211,6 +211,10 @@
 #define CF_RGT1_SENSOR_TEXT "Номера программ датчиков температуры для RGT1"
 #define CF_RGT2_SENSOR_TEXT "Номера программ датчиков температуры для RGT2"
 #define CF_RGT3_SENSOR_TEXT "Номера программ датчиков температуры для RGT3"
+#define CF_TWW_PUSH_PIN_TEXT "Кнопка принудительного включения ГВС подключена к выводу"
+#define CF_RGT1_PRES_PIN_TEXT "Кнопка присутствия RGT1 подключена к выводу"
+#define CF_RGT2_PRES_PIN_TEXT "Кнопка присутствия RGT2 подключена к выводу"
+#define CF_RGT3_PRES_PIN_TEXT "Кнопка присутствия RGT3 подключена к выводу"
 
 
 #define CAT_GENERAL_TEXT "Основные"

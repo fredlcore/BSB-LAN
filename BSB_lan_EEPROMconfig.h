@@ -54,9 +54,13 @@ typedef enum{
   CF_WIFI_SSID, //Size: 32 byte by standart.
   CF_WIFI_PASSWORD, //Size 64 bytes.
 // Version 5 (Room Units 1-3 Emulation)
-  CF_RGT1_SENSOR_ID, //Size 2 bytes. Program ID to temperature sensor access
-  CF_RGT2_SENSOR_ID, //Size 2 bytes. Program ID to temperature sensor access
-  CF_RGT3_SENSOR_ID, //Size 2 bytes. Program ID to temperature sensor access
+  CF_RGT1_SENSOR_ID, //Size 2*5 bytes. Programs ID to temperature sensor access
+  CF_RGT2_SENSOR_ID, //Size 2*5 bytes. Programs ID to temperature sensor access
+  CF_RGT3_SENSOR_ID, //Size 2*5 bytes. Programs ID to temperature sensor access
+  CF_TWW_PUSH_PIN_ID, //Size 1 byte. Pin number for "TWW push" button connection. 0 will be ignored
+  CF_RGT1_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
+  CF_RGT2_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
+  CF_RGT3_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
 
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
@@ -148,9 +152,13 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PPS_WRITE,        1, CCAT_BUS,      CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
 #ifdef WEBCONFIG
   {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
+  {CF_TWW_PUSH_PIN_ID,  5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_TWW_PUSH_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT1_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_RGT1_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_RGT2_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT2_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT2_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_RGT2_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_RGT3_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT3_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT3_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_RGT3_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},//immediately apply
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot

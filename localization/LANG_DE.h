@@ -204,6 +204,10 @@
 #define CF_RGT1_SENSOR_TEXT "Temp sensors program IDs for RGT1"
 #define CF_RGT2_SENSOR_TEXT "Temp sensors program IDs for RGT2"
 #define CF_RGT3_SENSOR_TEXT "Temp sensors program IDs for RGT3"
+#define CF_TWW_PUSH_PIN_TEXT "TWW Push button on pin"
+#define CF_RGT1_PRES_PIN_TEXT "RGT1 presence button on pin"
+#define CF_RGT2_PRES_PIN_TEXT "RGT2 presence button on pin"
+#define CF_RGT3_PRES_PIN_TEXT "RGT3 presence button on pin"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
