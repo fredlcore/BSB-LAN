@@ -2962,7 +2962,7 @@ void printTelegram(byte* msg, int query_line) {
       }
     }
   }
-  if (!known) {                          // no hex code match
+  if (!known || msg[0] == 0x17) { // no hex code match or PPS RTS telegram type
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus->getBusType() != BUS_PPS) {
       printToDebug(PSTR("     "));
@@ -3006,7 +3006,7 @@ void printTelegram(byte* msg, int query_line) {
     }
     break;
     case BUS_PPS:
-    if (msg[0] != 0x1E) {
+    if (msg[0] != 0x17 && msg[0] != 0x1E) {
       data_len = 3;
     } else {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x1E)
