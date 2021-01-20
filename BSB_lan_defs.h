@@ -10576,13 +10576,13 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // 0x02 - Comfort mode (Automatic or Continuous)
 // 0x03 - Automatic in Comfort mode, but pushed into Reduced mode through presence button
 // 0x04 - Automatic in Reduced mode, but pushed into Comfort mode through presence button
-//10102 is used in switchPresenceState() function.
+//10102 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
-//10103 is used in switchPresenceState() function.
+//10103 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded 
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 {0x2E3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
-//10104 is used in switchPresenceState() function.
+//10104 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded
 {0x2F000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK3/P broadcast 00 to 7F ???
 {0x2F3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10104, STR10104, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK3/P broadcast 00 to 7F ???
 //{0x053D0099,  CAT_USER_DEFINED,     VT_UINT,          10105, STR10105, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode

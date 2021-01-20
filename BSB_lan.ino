@@ -1872,8 +1872,9 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
   unsigned int i0, i1;
   query(current_state);
   strcpy_P(buf, PSTR("%x%x"));
-  decodedTelegram.value[4] = 0; //cut string
-  if(2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
+  //temporary used decodedTelegram.telegramDump while programs 10102-10104 has type VT_UNKNOWN
+  decodedTelegram.telegramDump[4] = 0; //cut string
+  if(2 != sscanf(decodedTelegram.telegramDump, buf, &i0, &i1)) return;
   if(i0 != 0x01) return; // 1 = Automatic
   switch(i1){
     case 0x01: state = 0x02; break; //Automatic in Reduced mode -> Automatic Reduced pushed into Comfort
