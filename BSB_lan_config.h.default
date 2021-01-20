@@ -267,6 +267,15 @@ bool enable_version_check = false;
 // Compile JSON-based configuration and EEPROM config store module extension.
 #define JSONCONFIG
 
+#define RGT_EMULATOR
+int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1 - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+
+//Enable presence buttons and TWW push on selected pins.
+// Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21
+// On Due any Digital pins can be selected excluding 18, 19.
+#define BUTTONS
+uint8_t button_on_pin[4] = {0, 0, 0, 0}; //Order: TWW push, presence ROOM1, presence ROOM2, presence ROOM3
+
 // Variables for future use:
 // Compile room unit replacement extension
 #define ROOM_UNIT

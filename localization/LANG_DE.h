@@ -201,6 +201,13 @@
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
+#define CF_RGT1_SENSOR_TEXT "Temp sensors program IDs for RGT1"
+#define CF_RGT2_SENSOR_TEXT "Temp sensors program IDs for RGT2"
+#define CF_RGT3_SENSOR_TEXT "Temp sensors program IDs for RGT3"
+#define CF_TWW_PUSH_PIN_TEXT "TWW Push button on pin"
+#define CF_RGT1_PRES_PIN_TEXT "RGT1 presence button on pin"
+#define CF_RGT2_PRES_PIN_TEXT "RGT2 presence button on pin"
+#define CF_RGT3_PRES_PIN_TEXT "RGT3 presence button on pin"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
@@ -213,6 +220,7 @@
 #define CAT_MAX_TEXT "MAX!"
 #define CAT_LOGGING_TEXT "Logging"
 #define CAT_24HAVG_TEXT "24h-Durchschnittswerte"
+#define CAT_RGT_EMUL_TEXT "RGT emulation"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Stunden/Minuten"

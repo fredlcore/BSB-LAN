@@ -208,6 +208,13 @@
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
+#define CF_RGT1_SENSOR_TEXT "Номера программ датчиков температуры для RGT1"
+#define CF_RGT2_SENSOR_TEXT "Номера программ датчиков температуры для RGT2"
+#define CF_RGT3_SENSOR_TEXT "Номера программ датчиков температуры для RGT3"
+#define CF_TWW_PUSH_PIN_TEXT "Кнопка принудительного включения ГВС подключена к выводу"
+#define CF_RGT1_PRES_PIN_TEXT "Кнопка присутствия RGT1 подключена к выводу"
+#define CF_RGT2_PRES_PIN_TEXT "Кнопка присутствия RGT2 подключена к выводу"
+#define CF_RGT3_PRES_PIN_TEXT "Кнопка присутствия RGT3 подключена к выводу"
 
 
 #define CAT_GENERAL_TEXT "Основные"
@@ -221,6 +228,7 @@
 #define CAT_MAX_TEXT "Устройства MAX!"
 #define CAT_LOGGING_TEXT "Журналирование"
 #define CAT_24HAVG_TEXT "Среднесуточные значения"
+#define CAT_RGT_EMUL_TEXT "Эмулятор комнатного термостата"
 
 
 #define STR0_TEXT "Дата/время"
