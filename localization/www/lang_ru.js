@@ -208,6 +208,13 @@ UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Пароль";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Идентификатор устройства";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Префикс темы";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Проверять обновления";
+UIStrings["CF_RGT1_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT1";
+UIStrings["CF_RGT2_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT2";
+UIStrings["CF_RGT3_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT3";
+UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "Кнопка принудительного включения ГВС подключена к выводу";
+UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "Кнопка присутствия RGT1 подключена к выводу";
+UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "Кнопка присутствия RGT2 подключена к выводу";
+UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "Кнопка присутствия RGT3 подключена к выводу";
 
 
 UIStrings["CAT_GENERAL_TEXT"] = "Основные";
@@ -221,6 +228,7 @@ UIStrings["CAT_DEBUG_TEXT"] = "Отладка";
 UIStrings["CAT_MAX_TEXT"] = "Устройства MAX!";
 UIStrings["CAT_LOGGING_TEXT"] = "Журналирование";
 UIStrings["CAT_24HAVG_TEXT"] = "Среднесуточные значения";
+UIStrings["CAT_RGT_EMUL_TEXT"] = "Эмулятор комнатного термостата";
 
 
 UIStrings["STR0_TEXT"] = "Дата/время";

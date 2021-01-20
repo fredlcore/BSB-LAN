@@ -201,6 +201,13 @@ UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
+UIStrings["CF_RGT1_SENSOR_TEXT"] = "Temp sensors program IDs for RGT1";
+UIStrings["CF_RGT2_SENSOR_TEXT"] = "Temp sensors program IDs for RGT2";
+UIStrings["CF_RGT3_SENSOR_TEXT"] = "Temp sensors program IDs for RGT3";
+UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "TWW Push button on pin";
+UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "RGT1 presence button on pin";
+UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RGT2 presence button on pin";
+UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RGT3 presence button on pin";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
@@ -213,6 +220,7 @@ UIStrings["CAT_DEBUG_TEXT"] = "Debugging";
 UIStrings["CAT_MAX_TEXT"] = "MAX!";
 UIStrings["CAT_LOGGING_TEXT"] = "Logging";
 UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
+UIStrings["CAT_RGT_EMUL_TEXT"] = "RGT emulation";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Stunden/Minuten";
