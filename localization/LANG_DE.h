@@ -204,7 +204,7 @@
 #define CF_RGT1_SENSOR_TEXT "Temp.Sensor für RGT1"
 #define CF_RGT2_SENSOR_TEXT "Temp.Sensor für RGT2"
 #define CF_RGT3_SENSOR_TEXT "Temp.Sensor für RGT3"
-#define CF_TWW_PUSH_PIN_TEXT "TWW-Pushtaste: Pin"
+#define CF_TWW_PUSH_PIN_TEXT "TWW-Push Taste: Pin"
 #define CF_RGT1_PRES_PIN_TEXT "RGT1 Präsenztaste: Pin"
 #define CF_RGT2_PRES_PIN_TEXT "RGT2 Präsenztaste: Pin"
 #define CF_RGT3_PRES_PIN_TEXT "RGT3 Präsenztaste: Pin"
