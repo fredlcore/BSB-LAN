@@ -144,7 +144,7 @@
 #define CF_BUSTYPE_TEXT "Type"
 #define CF_OWN_ADDR_TEXT "Own address"
 #define CF_DEST_ADDR_TEXT "Destination address"
-#define CF_PPS_WRITE_TEXT "PPS: bus write enabled"
+#define CF_PPS_WRITE_TEXT "PPS: PPS mode"
 #define CF_QAA_TYPE_TEXT "PPS: QAA model"
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "To SD card"
@@ -167,10 +167,18 @@
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_DEVICE_TEXT "Device ID"
 #define CF_CHECKUPDATE_TEXT "Check for updates"
+#define CF_RGT1_SENSOR_TEXT "Temp.sensor for RU1"
+#define CF_RGT2_SENSOR_TEXT "Temp.sensor for RU2"
+#define CF_RGT3_SENSOR_TEXT "Temp.sensor for RU3"
+#define CF_TWW_PUSH_PIN_TEXT "TWW push button: pin"
+#define CF_RGT1_PRES_PIN_TEXT "RU1 presence button: pin"
+#define CF_RGT2_PRES_PIN_TEXT "RU2 presence button: pin"
+#define CF_RGT3_PRES_PIN_TEXT "RU3 presence button: pin"
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "Network"
 #define CAT_24HAVG_TEXT "24h averages"
+#define CAT_RGT_EMUL_TEXT "RU emulation"
 
 #define STR500_TEXT "Mo"
 #define STR501_TEXT "Tu"
@@ -443,6 +451,9 @@
 #define STR9560_TEXT "Fan modulation for full charging of strat. tank"
 #define STR9563_TEXT "Fan speed for full charging of stratific. tank"
 #define STR10100_TEXT "System status"
+
+#define ENUM_WRITE_ENG_TEXT "On (Standard)"
+#define ENUM_WRITE_OEM_TEXT "On (Complete)"
 
 #define ENUM8004_02_TEXT "Fault"
 #define ENUM8004_04_TEXT "Manual control active"
