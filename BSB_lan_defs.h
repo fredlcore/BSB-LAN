@@ -10571,8 +10571,9 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // 0x02 - Reduced mode
 // 0x03 - Comfort mode
 // Second byte:
-// 0x01 - Automatic in Reduced mode
-// 0x02 - Automatic in Comfort mode
+// 0x00 - Disabled or ﻿Schutzbetrieb
+// 0x01 - Reduced mode
+// 0x02 - Comfort mode
 // 0x03 - Automatic in Comfort mode, but pushed into Reduced mode through presence button
 // 0x04 - Automatic in Reduced mode, but pushed into Comfort mode through presence button
 //10102 is used in switchPresenceState() function.

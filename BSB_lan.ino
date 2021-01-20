@@ -3006,7 +3006,7 @@ void printTelegram(byte* msg, int query_line) {
           }
         }
       }
-  
+
       i++;
       line = get_cmdtbl_line(i);
       c=get_cmdtbl_cmd(i);
@@ -4363,7 +4363,9 @@ void generateChangeConfigPage(){
    }
     printToWebClient(PSTR("</td></td>\r\n"));
   }
-  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\r\n</form>\r\n"));
+  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\" value=\""));
+  printToWebClient(STR6204);
+  printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
 }
 #endif  //WEBCONFIG
 
