@@ -441,7 +441,9 @@
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
+#if defined(__AVR__)
 #include <avr/pgmspace.h>
+#endif
 //#include <avr/wdt.h>
 #include <Arduino.h>
 #include <SPI.h>
@@ -467,8 +469,15 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpi.h"
+using  ComServer = WiFiSpiServer;
+using  ComClient = WiFiSpiClient;
+using Wifi WiFiSpi;
+#endif
 #else
 #include <Ethernet.h>
+using ComServer = EthernetServer;
+using ComClient = EthernetClient;
+#endif
 #endif
 
 #ifdef MDNS_HOSTNAME
@@ -486,14 +495,8 @@ MDNS mdns(udp);
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
-#ifdef WIFI
-WiFiSpiServer *server;
-WiFiSpiServer *telnetServer;
-#else
-EthernetServer *server;
-EthernetServer *telnetServer;
-#endif
-
+ComServer *server;
+ComServer *telnetServer;
 Stream* SerialOutput;
 
 //BSB bus definitions
@@ -522,28 +525,15 @@ const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
 
-#ifdef WIFI
-WiFiSpiClient client;
-WiFiSpiClient *mqtt_client;  //Luposoft: own instance
+ComClient client;
+ComClient *mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
-WiFiSpiClient httpclient;
+ComClient httpclient;
 #endif
-WiFiSpiClient telnetClient;
-#else
-EthernetClient client;
-EthernetClient *mqtt_client;   //Luposoft: own instance
-#ifdef VERSION_CHECK
-EthernetClient httpclient;
-#endif
-EthernetClient telnetClient;
-#endif
+ComClient telnetClient;
 
 #ifdef MAX_CUL
-#ifdef WIFI
-WiFiSpiClient *max_cul;
-#else
-EthernetClient *max_cul;
-#endif
+ComClient *max_cul;
 #endif
 
 #ifdef MQTT
@@ -6118,11 +6108,7 @@ void connectToMaxCul() {
     if(!enable_max_cul) return;
   }
 
-#ifdef WIFI
-  max_cul = new WiFiSpiClient();
-#else
-  max_cul = new EthernetClient();
-#endif
+  max_cul = new ComClient();
   printToDebug(PSTR("Connection to max_cul: "));
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("established"));
@@ -8863,11 +8849,7 @@ boolean mqtt_connect()
     MQTTPass = MQTTPassword;
   if(MQTTPubSubClient == NULL)
   {
-    #ifdef WIFI
-      mqtt_client= new WiFiSpiClient();
-    #else
-      mqtt_client= new EthernetClient();
-    #endif
+    mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(1024);
   }
@@ -8975,13 +8957,13 @@ void printWifiStatus()
 {
   // print the SSID of the network you're attached to
 //  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
-  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFiSpi.SSID());
+  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
   // print your WiFi shield's IP address
-  IPAddress t = WiFiSpi.localIP();
+  IPAddress t = WiFi.localIP();
   printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
 
   // print the received signal strength
-  long rssi = WiFiSpi.RSSI();
+  long rssi = WiFi.RSSI();
   printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
 }
 #endif
@@ -9310,28 +9292,25 @@ void setup() {
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
 #else
-    WiFiSpi.config(ip, dnsserver, gateway, subnet);
+    WiFi.config(ip, dnsserver, gateway, subnet);
   }
+  WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
+  printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
+    printFmtToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
-    status = WiFiSpi.begin(wifi_ssid, wifi_pass);
+    status = WiFi.status() ;
+    delay(1000);
   }
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
   printWifiStatus();
 #endif
 
-#ifdef WIFI
-  server = new WiFiSpiServer(HTTPPort);
+  server = new ComServer(HTTPPort);
 if(save_debug_mode == 2)
-  telnetServer = new WiFiSpiServer(23);
-#else
-  server = new EthernetServer(HTTPPort);
-if(save_debug_mode == 2)
-  telnetServer = new EthernetServer(23);
-#endif
+  telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
