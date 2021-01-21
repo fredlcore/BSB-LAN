@@ -182,7 +182,7 @@
 #define CF_BUSTYPE_TEXT "Тип"
 #define CF_OWN_ADDR_TEXT "Адрес устройства на шине BSB/LPB"
 #define CF_DEST_ADDR_TEXT "Адрес назначения на шине BSB/LPB"
-#define CF_PPS_WRITE_TEXT "Включить запись на шине PPS"
+#define CF_PPS_WRITE_TEXT "Режим работы PPS"
 #define CF_LOGTELEGRAM_TEXT "Журналировать телеграммы в journal.txt"
 #define CF_LOGCURRVALUES_TEXT "Записывать в datalog.txt текущие значения программ"
 #define CF_LOGCURRINTERVAL_TEXT "Интервал журнала (datalog.txt, MQTT), секунд"
@@ -1729,6 +1729,8 @@
 
 #define STR99999_TEXT "НЕИЗВЕСТНАЯ команда"
 
+#define ENUM_BUS_PPS_MODE_PASSIVE "Пассивный"
+#define ENUM_BUS_PPS_MODE_QAA "Как комнатное устройство"
 #define ENUM_DEBUG_SERIAL_TEXT "COM-порт"
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
 #define ENUM_MQTT_PLAIN_TEXT "Обычный текст"
