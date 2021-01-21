@@ -1872,8 +1872,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
   char buf[8];
   unsigned int i0, i1;
   query(current_state);
-  strcpy_P(buf, PSTR("%x%x"));
-  decodedTelegram.value[4] = 0; //cut string
+  strcpy_P(buf, PSTR("%02x%02x"));
   if(2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
   if(i0 != 0x01) return; // 1 = Automatic
   switch(i1){
@@ -3007,7 +3006,7 @@ void printTelegram(byte* msg, int query_line) {
           }
         }
       }
-  
+
       i++;
       line = get_cmdtbl_line(i);
       c=get_cmdtbl_cmd(i);
@@ -3630,8 +3629,10 @@ char *lookup_descr(uint16_t line) {
 }
 
 void generateConfigPage(void){
-  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR><BR>"));
-  printToWebClient(PSTR("Hardware: "));
+#if !defined(WEBCONFIG)
+  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
+#endif
+  printToWebClient(PSTR("<BR>Hardware: "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
 #else
@@ -4182,6 +4183,7 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value){
 }
 
 void generateChangeConfigPage(){
+  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
   if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
   printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\r\n"));
@@ -4364,7 +4366,9 @@ void generateChangeConfigPage(){
    }
     printToWebClient(PSTR("</td></td>\r\n"));
   }
-  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\"></p>\r\n</form>\r\n"));
+  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\" value=\""));
+  printToWebClient(STR6204);
+  printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
 }
 #endif  //WEBCONFIG
 
@@ -8031,8 +8035,8 @@ uint8_t pps_offset = 0;
 #ifdef WEBCONFIG
             case 'I': {//Parse HTTP form and implement changes
               implementConfig();
-              generateConfigPage();
               generateChangeConfigPage();
+              generateConfigPage();
 #ifdef MAX_CUL
               UpdateMaxDeviceList(); //Update list MAX! devices
 #endif
@@ -8045,10 +8049,10 @@ uint8_t pps_offset = 0;
               //no break here.
 #endif
             default:
-              generateConfigPage();
 #ifdef WEBCONFIG
               generateChangeConfigPage();
 #endif
+              generateConfigPage();
               if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
 // EEPROM dump require ~3 sec so let it be last operation.
