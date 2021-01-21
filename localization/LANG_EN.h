@@ -144,7 +144,7 @@
 #define CF_BUSTYPE_TEXT "Type"
 #define CF_OWN_ADDR_TEXT "Own address"
 #define CF_DEST_ADDR_TEXT "Destination address"
-#define CF_PPS_WRITE_TEXT "PPS: PPS mode"
+#define CF_PPS_WRITE_TEXT "PPS: mode"
 #define CF_QAA_TYPE_TEXT "PPS: QAA model"
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "To SD card"

@@ -172,7 +172,7 @@
 #define CF_BUSTYPE_TEXT "Typ"
 #define CF_OWN_ADDR_TEXT "Eigene Adresse"
 #define CF_DEST_ADDR_TEXT "Zieladresse"
-#define CF_PPS_WRITE_TEXT "PPS: PPS-Modus"
+#define CF_PPS_WRITE_TEXT "PPS: Modus"
 #define CF_QAA_TYPE_TEXT "PPS: QAA Modell"
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Auf SD Karte"
