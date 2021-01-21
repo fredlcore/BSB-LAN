@@ -2008,6 +2008,8 @@ UIStrings["STR20800_TEXT"] = "custom_long";
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
 
+UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "Passiv";
+UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "Als Raumgerät";
 UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "Serial";
 UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
