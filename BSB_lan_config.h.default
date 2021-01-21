@@ -272,7 +272,7 @@ int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; /
 
 //Enable presence buttons and TWW/DHW push on selected pins.
 // Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21
-// On Due any Digital pins can be selected excluding 12-21, 31, 33, 53. 
+// On Due any Digital pins can be selected excluding 12, 16-21, 31, 33, 53. 
 // Make sure you aren't using pins which are already in use for sensors (default: 2, 3, 7) or change them accordingly.
 #define BUTTONS
 uint8_t button_on_pin[4] = {0, 0, 0, 0}; //Order: TWW push, presence ROOM1, presence ROOM2, presence ROOM3
