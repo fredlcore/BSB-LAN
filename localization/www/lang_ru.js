@@ -182,7 +182,7 @@ UIStrings["CF_USEEEPROM_TEXT"] = "Читать настройки из EEPROM";
 UIStrings["CF_BUSTYPE_TEXT"] = "Тип";
 UIStrings["CF_OWN_ADDR_TEXT"] = "Адрес устройства на шине BSB/LPB";
 UIStrings["CF_DEST_ADDR_TEXT"] = "Адрес назначения на шине BSB/LPB";
-UIStrings["CF_PPS_WRITE_TEXT"] = "Включить запись на шине PPS";
+UIStrings["CF_PPS_WRITE_TEXT"] = "Режим работы PPS";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Журналировать телеграммы в journal.txt";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Записывать в datalog.txt текущие значения программ";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Интервал журнала (datalog.txt, MQTT), секунд";
@@ -1729,6 +1729,8 @@ UIStrings["STR20503_TEXT"] = "Величина открытия вентиля M
 
 UIStrings["STR99999_TEXT"] = "НЕИЗВЕСТНАЯ команда";
 
+UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "Пассивный";
+UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "Как комнатное устройство";
 UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "COM-порт";
 UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Обычный текст";
