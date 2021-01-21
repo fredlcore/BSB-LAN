@@ -453,6 +453,8 @@
 #define STR9563_TEXT "Fan speed for full charging of stratific. tank"
 #define STR10100_TEXT "System status"
 
+#define ENUM_BUS_PPS_MODE_PASSIVE "passive"
+#define ENUM_BUS_PPS_MODE_QAA "as room unit"
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 

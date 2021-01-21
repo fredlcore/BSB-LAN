@@ -2008,6 +2008,8 @@
 #define STR99999_TEXT "UNKNOWN command code"
 
 
+#define ENUM_BUS_PPS_MODE_PASSIVE "Passiv"
+#define ENUM_BUS_PPS_MODE_QAA "Als Raumgerät"
 #define ENUM_DEBUG_SERIAL_TEXT "Serial"
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"

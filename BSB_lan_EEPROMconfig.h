@@ -11,7 +11,7 @@ typedef enum{
   CF_OWN_BSBADDR, ///Size: 1 byte. BSB bus device address (0x42). Not used. Leaved for compatibility
   CF_OWN_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus device address (0x42)
   CF_DEST_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus destination address (0x0)
-  CF_PPS_WRITE, ///Size: 1 byte. PPS can write
+  CF_PPS_MODE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
   CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
   CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
@@ -149,7 +149,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
   {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
   {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
-  {CF_PPS_WRITE,        1, CCAT_BUS,      CPI_SWITCH,    CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
+  {CF_PPS_MODE,         1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
+  {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
 #ifdef WEBCONFIG
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS_B64)},//immediately apply
@@ -182,7 +183,6 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_BYTE,           CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, CCAT_DHTBUS,   CPI_TEXT,      CDT_DHTBUS,         CF_PINS_TXT, sizeof(DHT_Pins)}, //immediately apply
-  {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
   {CF_TWW_PUSH_PIN_ID,  5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_TWW_PUSH_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
   {CF_RGT1_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_RGT1_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
