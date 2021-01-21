@@ -444,6 +444,8 @@
   "STR9560_TEXT": "Fan modulation for full charging of strat. tank",
   "STR9563_TEXT": "Fan speed for full charging of stratific. tank",
   "STR10100_TEXT": "System status",
+  "ENUM_BUS_PPS_MODE_PASSIVE": "passive",
+  "ENUM_BUS_PPS_MODE_QAA": "as room unit",
   "ENUM_WRITE_ENG_TEXT": "On (Standard)",
   "ENUM_WRITE_OEM_TEXT": "On (Complete)",
   "ENUM8004_02_TEXT": "Fault",

@@ -453,6 +453,8 @@ UIStrings["STR9560_TEXT"] = "Fan modulation for full charging of strat. tank";
 UIStrings["STR9563_TEXT"] = "Fan speed for full charging of stratific. tank";
 UIStrings["STR10100_TEXT"] = "System status";
 
+UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "passive";
+UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "as room unit";
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "On (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 
