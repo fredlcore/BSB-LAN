@@ -1998,6 +1998,8 @@
   "STR20700_TEXT": "custom_float",
   "STR20800_TEXT": "custom_long",
   "STR99999_TEXT": "UNKNOWN command code",
+  "ENUM_BUS_PPS_MODE_PASSIVE": "Passiv",
+  "ENUM_BUS_PPS_MODE_QAA": "Als Raumgerät",
   "ENUM_DEBUG_SERIAL_TEXT": "Serial",
   "ENUM_DEBUG_TELNET_TEXT": "Telnet",
   "ENUM_MQTT_PLAIN_TEXT": "Plain text",
