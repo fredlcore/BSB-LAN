@@ -140,7 +140,7 @@
   "CF_BUSTYPE_TEXT": "Type",
   "CF_OWN_ADDR_TEXT": "Own address",
   "CF_DEST_ADDR_TEXT": "Destination address",
-  "CF_PPS_WRITE_TEXT": "PPS: PPS mode",
+  "CF_PPS_WRITE_TEXT": "PPS: mode",
   "CF_QAA_TYPE_TEXT": "PPS: QAA model",
   "CF_LOGTELEGRAM_TEXT": "Bus telegrams",
   "CF_LOGCURRVALUES_TEXT": "To SD card",

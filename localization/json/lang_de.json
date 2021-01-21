@@ -168,7 +168,7 @@
   "CF_BUSTYPE_TEXT": "Typ",
   "CF_OWN_ADDR_TEXT": "Eigene Adresse",
   "CF_DEST_ADDR_TEXT": "Zieladresse",
-  "CF_PPS_WRITE_TEXT": "PPS: PPS-Modus",
+  "CF_PPS_WRITE_TEXT": "PPS: Modus",
   "CF_QAA_TYPE_TEXT": "PPS: QAA Modell",
   "CF_LOGTELEGRAM_TEXT": "Bustelegramme",
   "CF_LOGCURRVALUES_TEXT": "Auf SD Karte",
