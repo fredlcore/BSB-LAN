@@ -1869,7 +1869,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
   //RGT2 1001, 10103
   //RGT3 1301, 10104
   int state = 0;
-  char buf[8];
+  char buf[9];
   unsigned int i0, i1;
   query(current_state);
   strcpy_P(buf, PSTR("%02x%02x"));
@@ -4053,7 +4053,7 @@ void SaveConfigFromRAMtoEEPROM(){
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
         case CF_DEST_BSBLPBADDR:
-        case CF_PPS_WRITE:
+        case CF_PPS_MODE:
           buschanged = true;
           break;
         //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
@@ -4277,6 +4277,9 @@ void generateChangeConfigPage(){
                break;
              case CF_WRITEMODE:
                i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+               break;
+             case CF_PPS_MODE:
+               i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
                break;
              default:
                i = -1;
@@ -9051,7 +9054,7 @@ void setup() {
   registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
   registerConfigVariable(CF_OWN_BSBLPBADDR, (byte *)&own_address);
   registerConfigVariable(CF_DEST_BSBLPBADDR, (byte *)&dest_address);
-  registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+  registerConfigVariable(CF_PPS_MODE, (byte *)&pps_write);
   registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
   registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
   registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
