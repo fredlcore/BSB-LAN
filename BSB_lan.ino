@@ -433,7 +433,8 @@
 #define PRINT_DESCRIPTION_FIRST true
 
 
-#define EEPROM_ERASING_PIN 51
+#define EEPROM_ERASING_PIN 31
+#define EEPROM_ERASING_GND_PIN 33
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -6125,6 +6126,7 @@ void connectToMaxCul() {
 #endif
 
 void clearEEPROM(void){
+  printlnToDebug(PSTR("Clearing EEPROM..."));
 #if defined(__AVR__)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
@@ -8995,7 +8997,8 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
