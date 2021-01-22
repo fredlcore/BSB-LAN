@@ -30,6 +30,7 @@ byte UseEEPROM = 1;
 /*
  *  Enter a MAC address, found either on the EthernetShield or use the one below.
  *  Change this if you have more than one BSB-LAN adapter in your LAN, so that there aren't any address conflicts.
+ *  MAC address here only affects the LAN shield, it doesn't apply to the WiFi-ESP-solution.
 */
 byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
@@ -46,7 +47,7 @@ byte gateway_addr[4] = {192,168,178,1}; // Gateway address. This is usually your
 byte dns_addr[4] = {192,168,178,1};     // DNS server. Please note the commas instead of dots!!! Ignored if first value is 0.
 byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas instead of dots!!! Ignored if first value is 0.
 
-//#define WIFI                          // activate this definement if you want to use WiFi
+//#define WIFI                          // Activate this definement if you want to use WiFi. Note: MAC address can't be set individually.
 char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) here
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
