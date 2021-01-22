@@ -35,6 +35,7 @@ The following overview shows the most common used controllers of the different h
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
 - Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
+- ATAG: QR
 - Atlantic: Alféa Excellia, Extensa  
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
