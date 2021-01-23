@@ -2911,7 +2911,11 @@ void printTelegram(byte* msg, int query_line) {
         case 0x1D: printToDebug(PSTR("INF HEIZ->QAA ")); break;
         case 0x1E: printToDebug(PSTR("REQ HEIZ->QAA ")); break;
         case 0x17: printToDebug(PSTR("RTS HEIZ->QAA ")); break;
-        case 0xFD: printToDebug(PSTR("ANS QAA->HEIZ ")); break;
+        case 0xF8:
+        case 0xFB:
+        case 0xFD: 
+        case 0xFE:
+          printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
       }
     }
@@ -3302,13 +3306,13 @@ void printTelegram(byte* msg, int query_line) {
               const char *getfarstrings;
               uint8_t q;
               switch(weekday()) {
-                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
                 case 1: getfarstrings = PSTR(WEEKDAY_SUN_TEXT); break;
                 case 2: getfarstrings = PSTR(WEEKDAY_MON_TEXT); break;
                 case 3: getfarstrings = PSTR(WEEKDAY_TUE_TEXT); break;
                 case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
                 case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
+                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
                 default: getfarstrings = PSTR(""); break;
               }
               q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
@@ -4663,7 +4667,11 @@ void LogTelegram(byte* msg){
           case 0x1D: getfarstrings = PSTR("HEIZ->QAA INF"); break;
           case 0x1E: getfarstrings = PSTR("HEIZ->QAA REQ"); break;
           case 0x17: getfarstrings = PSTR("HEIZ->QAA RTS"); break;
-          case 0xFD: getfarstrings = PSTR("QAA->HEIZ ANS"); break;
+          case 0xF8:
+          case 0xFB:
+          case 0xFD:
+          case 0xFE:
+            getfarstrings = PSTR("QAA->HEIZ ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
         strcat_P(outBuf + outBufLen, getfarstrings);
@@ -6450,6 +6458,22 @@ void loop() {
               tx_msg[7] = pps_values[PPS_TWR] & 0xFF;
               break;
             case 13:
+            {
+              tx_msg[0] = 0xFB; // send time to heater
+              tx_msg[1] = 0x79;
+              tx_msg[4] = weekday(); // day of week
+              tx_msg[5] = hour(); // hour
+              tx_msg[6] = minute(); // minute
+              tx_msg[7] = second(); // second
+              break;
+            }
+            case 14:
+            {
+              tx_msg[0] = 0xFE; // unknown telegram
+              tx_msg[1] = 0x79;
+              break;
+            }
+            case 15:
               tx_msg[1] = 0x60;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S13];
@@ -6458,7 +6482,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E11];
               tx_msg[7] = pps_values[PPS_S11];
               break;
-            case 14:
+            case 16:
               tx_msg[1] = 0x61;
               tx_msg[2] = pps_values[PPS_E23];
               tx_msg[3] = pps_values[PPS_S23];
@@ -6467,7 +6491,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E21];
               tx_msg[7] = pps_values[PPS_S21];
               break;
-            case 15:
+            case 17:
               tx_msg[1] = 0x62;
               tx_msg[2] = pps_values[PPS_E33];
               tx_msg[3] = pps_values[PPS_S33];
@@ -6476,7 +6500,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E31];
               tx_msg[7] = pps_values[PPS_S31];
               break;
-            case 16:
+            case 18:
               tx_msg[1] = 0x63;
               tx_msg[2] = pps_values[PPS_E43];
               tx_msg[3] = pps_values[PPS_S43];
@@ -6485,7 +6509,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E41];
               tx_msg[7] = pps_values[PPS_S41];
               break;
-            case 17:
+            case 19:
               tx_msg[1] = 0x64;
               tx_msg[2] = pps_values[PPS_E53];
               tx_msg[3] = pps_values[PPS_S53];
@@ -6494,7 +6518,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E51];
               tx_msg[7] = pps_values[PPS_S51];
               break;
-            case 18:
+            case 20:
               tx_msg[1] = 0x65;
               tx_msg[2] = pps_values[PPS_E63];
               tx_msg[3] = pps_values[PPS_S63];
@@ -6503,7 +6527,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E61];
               tx_msg[7] = pps_values[PPS_S61];
               break;
-            case 19:
+            case 21:
               tx_msg[1] = 0x66;
               tx_msg[2] = pps_values[PPS_E73];
               tx_msg[3] = pps_values[PPS_S73];
@@ -6512,11 +6536,11 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E71];
               tx_msg[7] = pps_values[PPS_S71];
               break;
-            case 20:
+            case 22:
               tx_msg[1] = 0x7C;
               tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
               break;
-            case 21:
+            case 23:
               tx_msg[1] = 0x1B;                    // Frostschutz- und Maximaltemperatur
               tx_msg[4] = pps_values[PPS_SMX] >> 8;
               tx_msg[5] = pps_values[PPS_SMX] & 0xFF;
@@ -6524,7 +6548,7 @@ void loop() {
               tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
           }
           msg_cycle++;
-          if (msg_cycle > 21) {
+          if (msg_cycle > 23) {
             msg_cycle = 0;
           }
           if (saved_msg_cycle > 0) {
@@ -6564,14 +6588,14 @@ void loop() {
               case 0x4C: msg_cycle = 11; break;
               case 0x4D: msg_cycle = 2; break;
               case 0x4F: msg_cycle = 3; break;
-              case 0x60: msg_cycle = 13; break;
-              case 0x61: msg_cycle = 14; break;
-              case 0x62: msg_cycle = 15; break;
-              case 0x63: msg_cycle = 16; break;
-              case 0x64: msg_cycle = 17; break;
-              case 0x65: msg_cycle = 18; break;
-              case 0x66: msg_cycle = 19; break;
-              case 0x7C: msg_cycle = 20; break;
+              case 0x60: msg_cycle = 15; break;
+              case 0x61: msg_cycle = 16; break;
+              case 0x62: msg_cycle = 17; break;
+              case 0x63: msg_cycle = 18; break;
+              case 0x64: msg_cycle = 19; break;
+              case 0x65: msg_cycle = 20; break;
+              case 0x66: msg_cycle = 21; break;
+              case 0x7C: msg_cycle = 22; break;
               default:
                  printToDebug(PSTR("Unknown request: "));
                 for (int c=0;c<9;c++) {
@@ -6594,8 +6618,6 @@ void loop() {
 */
 #endif
                 break;
-
-
 /*
 Weitere noch zu überprüfende Telegramme:
 https://www.mikrocontroller.net/topic/218643#3517035
@@ -6627,7 +6649,7 @@ uint8_t pps_offset = 0;
             uint8_t flags=get_cmdtbl_flags(i);
             if (programIsreadOnly(flags) || pps_write != 1) {
               switch (msg[1+pps_offset]) {
-                case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+                case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
                 case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
                 case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
@@ -6644,7 +6666,7 @@ uint8_t pps_offset = 0;
                 case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
                 case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
                 case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
-//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, however this seems to come from the QAA as it begins with 0xFD
+//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, to be confirmed
                 case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
                 case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
                 case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
@@ -6706,6 +6728,7 @@ uint8_t pps_offset = 0;
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
                 case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
                   pps_values[PPS_FRS] = temp;
