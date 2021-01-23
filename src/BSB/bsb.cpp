@@ -170,7 +170,7 @@ bool BSB::GetMessage(byte* msg) {
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E || read == 0xFD))) {
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E  || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
       if (bus_type == 2 && read == 0x17) {
