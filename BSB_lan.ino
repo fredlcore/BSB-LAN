@@ -4117,6 +4117,7 @@ void SaveConfigFromRAMtoEEPROM(){
 
   if (needReboot == true) {
     forcedflushToWebClient();
+    delay(1000);
     client.stop();
     resetBoard();
   }
