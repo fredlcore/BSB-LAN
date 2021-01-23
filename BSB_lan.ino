@@ -64,6 +64,7 @@
  * Changelog:
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
+ *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
@@ -4816,11 +4817,21 @@ int set(int line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
+/*
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
     }
+*/
+
+    uint8_t flags=get_cmdtbl_flags(i);
+    if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
+      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
+      writelnToDebug();
+      writeToEEPROM(CF_PPS_VALUES);
+    }
+
     return 1;
   }
 
@@ -4838,7 +4849,6 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
     case VT_YESNO: // 1 = Ja
-    case VT_WEEKDAY: // (1=Mo..7=So)
     case VT_DAYS: // (Legionellenfkt. Periodisch)
     case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
     case VT_BIT:
@@ -6461,7 +6471,7 @@ void loop() {
             {
               tx_msg[0] = 0xFB; // send time to heater
               tx_msg[1] = 0x79;
-              tx_msg[4] = weekday(); // day of week
+              tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
               tx_msg[5] = hour(); // hour
               tx_msg[6] = minute(); // minute
               tx_msg[7] = second(); // second
@@ -9257,11 +9267,23 @@ void setup() {
   }
 */
 
-  printToDebug(PSTR("PPS settings:\r\n"));
+/*
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     if(pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
     if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+    }
+  }
+*/
+
+  printToDebug(PSTR("PPS settings:\r\n"));
+  for (int i=15000; i<= 15000+PPS_ANZ; i++) {
+    uint8_t flags=get_cmdtbl_flags(i);
+    if ((flags & FL_EEPROM) == FL_EEPROM) {
+      if(pps_values[i-15000] == (int16_t)0xFFFF) pps_values[i-15000] = 0;
+      if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF) {
+        printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+      }
     }
   }
   if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
