@@ -443,15 +443,34 @@
 
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
-#endif
-//#include <avr/wdt.h>
-#include <Arduino.h>
-#include <SPI.h>
- //Mega
-#if defined(__AVR__)
 #include <EEPROM.h>
-#else // __SAM3X8E__
+#endif
+#include <Arduino.h>
+
+#if defined(__AVR__) || defined(__arm__)
+#include <SPI.h>
 #include <Wire.h>
+#endif
+
+#if defined(ESP32)
+#include <EEPROM.h>
+#include <ESPmDNS.h>
+EEPROMClass EEPROM("eeprom1", 0x800);
+#define strcpy_PF strcpy
+#define strcat_PF strcat
+#define strchr_P strchr
+#if defined(EEPROM_ERASING_PIN)
+#undef EEPROM_ERASING_PIN
+#define EEPROM_ERASING_PIN 34
+#endif
+#if defined(EEPROM_ERASING_GND_PIN)
+#undef EEPROM_ERASING_GND_PIN
+#endif
+#ifndef LED_BUILTIN 
+#define LED_BUILTIN 2
+#endif
+
+#else // __SAM3X8E__
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
@@ -467,12 +486,40 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 #include "html_strings.h"
 
+#ifndef LED_BUILTIN 
+#define LED_BUILTIN 2
+#endif
+
 #ifdef WIFI
+#ifdef ESP32
+#include <WiFi.h>
+#else
 #include "src/WiFiSpi/src/WiFiSpi.h"
 using  ComServer = WiFiSpiServer;
 using  ComClient = WiFiSpiClient;
 using Wifi WiFiSpi;
 #endif
+#else
+
+#ifdef ESP32
+#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
+#define ETH_PHY_POWER 12
+#include <ETH.h>
+
+class Eth : public ETHClass {
+public:
+    int maintain(void) const { return 0;} ; // handled internally
+    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+      config(ip, dnsserver, gateway, subnet); //Static
+
+    }
+    void begin(uint8_t *mac) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+    }
+};
+
+Eth Ethernet;
 #else
 #include <Ethernet.h>
 using ComServer = EthernetServer;
@@ -480,7 +527,12 @@ using ComClient = EthernetClient;
 #endif
 #endif
 
-#ifdef MDNS_HOSTNAME
+#ifdef ESP32
+using ComServer = WiFiServer;
+using ComClient = WiFiClient;
+#endif
+
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
@@ -802,6 +854,11 @@ bool writeToEEPROM(uint8_t id){
       EEPROMwasChanged = true;
     }
   }
+  #if defined(ESP32)
+  if (EEPROMwasChanged)
+    EEPROM.commit();
+  #endif
+
 //  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
@@ -1732,11 +1789,13 @@ int findLine(uint16_t line
  *  Does:     Returns the amount of available RAM
  *
  * *************************************************************** */
-#if !defined(__AVR__)
+#if defined(__arm__)
 extern "C" char* sbrk(int incr);
 #endif
 int freeRam () {
-#if defined(__AVR__)
+    #ifdef ESP32
+	return (int)ESP.getFreeHeap();
+#elif defined (__AVR__)
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -3625,6 +3684,8 @@ void generateConfigPage(void){
   printToWebClient(PSTR("<BR>Hardware: "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
+#elif defined(ESP32)
+  printToWebClient(PSTR("ESP32<BR>\r\n"));
 #else
   printToWebClient(PSTR("Due<BR>\r\n"));
 #endif
@@ -6063,6 +6124,8 @@ void resetBoard(){
 #elif defined(__AVR__)
   asm volatile ("  jmp 0");
   while (1==1) {}
+#elif defined(ESP32)
+  ESP.restart();  
 #else
   printlnToDebug(PSTR("Reset function not implementing"));
 #endif
@@ -6120,10 +6183,13 @@ void connectToMaxCul() {
 
 void clearEEPROM(void){
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__)
+#if defined(__AVR__) || defined(ESP32)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
   }
+  #if defined(ESP32)
+  EEPROM.commit();
+  #endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -8819,7 +8885,7 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-#ifdef MDNS_HOSTNAME
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
   mdns.run();
 #endif
 } // --- loop () ---
@@ -8987,7 +9053,9 @@ void printWifiStatus()
 void setup() {
   decodedTelegram.telegramDump = NULL;
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+ #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
+#endif
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -9010,6 +9078,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
+  #ifdef ESP32
+  EEPROM.begin(2048); // size in Byte
+  #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9230,8 +9301,10 @@ void setup() {
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
+#ifndef ESP32
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
+#endif
   printToDebug(PSTR("Starting SD.."));
 #if defined(__AVR__)
   if(!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
@@ -9252,14 +9325,16 @@ void setup() {
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
+  #ifndef ESP32
   WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
-  if (WiFiSpi.status() == WL_NO_SHIELD) {
+  if (WiFi.status() == WL_NO_SHIELD) {
     printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
+  #endif
 #endif
 
   // setup IP addresses
@@ -9294,6 +9369,11 @@ void setup() {
 #else
     WiFi.config(ip, dnsserver, gateway, subnet);
   }
+
+#ifdef ESP32
+  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
+  WiFi.mode(WIFI_STA); //init wifi mode
+#endif  
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
@@ -9497,12 +9577,18 @@ if(save_debug_mode == 2)
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #ifdef MDNS_HOSTNAME
+#if defined(ESP32)
+  MDNS.begin(MDNS_HOSTNAME);
+  MDNS.addService("http", "tcp", 80);
+  MDNS.addService("BSB-LAN web service._http", "tcp", 80);
+#else
 #ifdef WIFI
   mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
 mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+#endif
 #endif
 
 #ifdef CUSTOM_COMMANDS
