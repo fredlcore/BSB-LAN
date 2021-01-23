@@ -11576,8 +11576,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 #define LAST_ENUM ENUM15046
 
 {0x2D490000,  CAT_PPS,              VT_ENUM,          15000, STR700,   sizeof(ENUM15000),    ENUM15000,    DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Betriebsart
-{0x2D180001,  CAT_PPS,              VT_TEMP,          15001, STR15001, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Position Drehknopf
-{0x2D4C0002,  CAT_PPS,              VT_ONOFF,         15002, STR15002, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Anwesenheit
+{0x2D4C0001,  CAT_PPS,              VT_ONOFF,         15001, STR15001, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Anwesenheit
+{0x2D180002,  CAT_PPS,              VT_TEMP,          15002, STR15002, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Position Drehknopf
 {0x2D7C0003,  CAT_PPS,              VT_BYTE,          15003, STR15003, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Verbleibende Feriendauer in Tagen
 {0x2D080004,  CAT_PPS,              VT_TEMP,          15004, STR710,   0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Raumtemperatur Soll
 {0x2D090005,  CAT_PPS,              VT_TEMP,          15005, STR712,   0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Raumtemperatur Abwesenheit Soll
@@ -11595,7 +11595,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2D2C0022,  CAT_PPS,              VT_TEMP,          15034, STR15034, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
 {0x2D190023,  CAT_PPS,              VT_TEMP,          15035, STR15035, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
 {0x2D790028,  CAT_PPS,              VT_PPS_TIME,      15040, STR15040, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Heater time
-{0x2D790028,  CAT_PPS,              VT_ENUM,          15041, STR15041, sizeof(ENUM_WEEKDAY), ENUM_WEEKDAY, DEFAULT_FLAG, DEV_ALL}, // Heater day of week
+{0x2D790029,  CAT_PPS,              VT_ENUM,          15041, STR15041, sizeof(ENUM_WEEKDAY), ENUM_WEEKDAY, DEFAULT_FLAG, DEV_ALL}, // Heater day of week
 {0x2D69002A,  CAT_PPS,              VT_TEMP,          15042, STR15042, 0,                    NULL,         FL_NO_CMD, DEV_ALL},    // Nächstes Heizprogramm
 {0x2D48002B,  CAT_PPS,              VT_ONOFF,         15043, STR15043, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Manuelles Heizen (0 = Heizprogramm, 1 = Manuell)
 {0x2D4D002C,  CAT_PPS,              VT_BIT,           15044, STR8009,  sizeof(ENUM15044),    ENUM15044,    FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
