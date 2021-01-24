@@ -444,12 +444,18 @@
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
+#include <SPI.h>
 #endif
 #include <Arduino.h>
 
-#if defined(__AVR__) || defined(__arm__)
+#if defined(__arm__)
 #include <SPI.h>
 #include <Wire.h>
+#include "src/I2C_EEPROM/I2C_EEPROM.h"
+template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
+// EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
+// EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
+UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
@@ -469,13 +475,6 @@ EEPROMClass EEPROM("eeprom1", 0x800);
 #ifndef LED_BUILTIN 
 #define LED_BUILTIN 2
 #endif
-
-#else // __SAM3X8E__
-#include "src/I2C_EEPROM/I2C_EEPROM.h"
-template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
-// EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
-// EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
-UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
@@ -485,10 +484,6 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include "src/PubSubClient/src/PubSubClient.h"
 #endif
 #include "html_strings.h"
-
-#ifndef LED_BUILTIN 
-#define LED_BUILTIN 2
-#endif
 
 #ifdef WIFI
 #ifdef ESP32
@@ -1793,7 +1788,7 @@ int findLine(uint16_t line
 extern "C" char* sbrk(int incr);
 #endif
 int freeRam () {
-    #ifdef ESP32
+#ifdef ESP32
 	return (int)ESP.getFreeHeap();
 #elif defined (__AVR__)
   extern int __heap_start, *__brkval;
@@ -9079,7 +9074,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 
   #ifdef ESP32
-  EEPROM.begin(2048); // size in Byte
+  EEPROM.begin(4096); // size in Byte
   #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
