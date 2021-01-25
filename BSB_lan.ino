@@ -3835,6 +3835,14 @@ void generateConfigPage(void){
   #endif
   "DHT_BUS"
   #endif
+  #ifdef BME280
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "BME280"
+  #endif
   #ifdef CUSTOM_COMMANDS
   #if defined (ANY_MODULE_COMPILED)
   ", "
