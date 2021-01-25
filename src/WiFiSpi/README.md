@@ -7,6 +7,15 @@ The library allows Arduino to be client or server on the WiFi network.
 
 ## News
 
+#### 2021-01-25
+
+Added UDP Multicast support
+
+#### 2021-01-02
+
+Fixed a bug with closing server connection when closing asynchronously opened another client.
+Changed deprecated boolean type to bool. 
+
 #### 2019-02-18
 
 Added SSL connection to WiFiClient class. Added verifySSL function.
@@ -209,6 +218,12 @@ Sends the buffer to the network. Returns number of bytes transmitted.
 - **size_t write(const char *str)**
 Sends the character string to the network. Returns number of bytes transmitted.
 
+- **IPAddress remoteIP()**
+Returns the IP address of the host who sent the current incoming packet. When there is no incoming connection returns 0.0.0.0.
+ 
+- **uint16_t remotePort()**
+Returns the port of the host who sent the current incoming packet. When there is no incoming connection returns 0.
+
 ### WiFiSpiServer
 
 The library has a pool of 4 sockets and after exhausting all the sockets no more connection is available. Therefore it is important to close the socket (i. e. stop the server) when it is no longer used. This version of the library is further constrained to one client connection per server.
@@ -244,11 +259,14 @@ Default constuctor.
 - **uint8_t begin(uint16_t port)**
 Initializes the instance, starts listening on specified *port*. Returns 1 if successful, 0 on error.
 
+- **uint8_t begin(uint16_t multicastIP, uint16_t port)**
+Initializes the instance, starts listening on specified *port* for multicast messages from *multicastIP* address. Returns 1 if successful, 0 on error.
+
 - **void stop()**
 Stops listening on the UDP port, frees the UDP socket used.
 
 - **int beginPacket(IPAddress ip, uint16_t port)**
-Starts building up a packet to send to the remote host specific in *ip* and *port*. Returns 1 if successful, 0 if there was a problem with the connection.
+Starts building up a packet to send to the remote host specific in *ip* and *port*. Returns 1 if successful, 0 if there was a problem with the connection. This function works for both unicast and multicast communication.
     
 - **int endPacket()**
 Finishes the packet and sends it. Returns 1 if the packet was sent successfully, 0 if there was an error.
@@ -295,6 +313,12 @@ Simple mqtt messaging.
 - **UdpNTPClient**
 Reads current time and date from a NTP server.
 
+- **UDP_Multicast_Transmitter**
+Peridically transmits a short messaage via UDP multicast.
+
+- **UDP_Multicast_Receiver**
+Listens for multicast messages, reads them and prints them out.
+
 More examples to come soon. But you can easily use the ones from WiFi library. Don't forget to add a line *WiFiSpi.init();* before using other library functions.
 
 ## Debugging
@@ -303,8 +327,7 @@ For some debugging information on Serial output uncomment line 23 (#define _DEBU
 
 ## ToDo and Wish Lists
 
-- TLS connection
-- SPI protocol optimization
+- more SPI protocol optimization
 
 ## Credits
 

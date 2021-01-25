@@ -33,7 +33,7 @@ extern "C" {
 }
 
 // Protocol version
-const char *WiFiSpiClass::protocolVer = "0.2.3";
+const char *WiFiSpiClass::protocolVer = "0.2.4";
 
 // Hardware reset pin
 int8_t WiFiSpiClass::hwResetPin = -1;
@@ -69,7 +69,7 @@ uint8_t WiFiSpiClass::getSocket()
     for (uint8_t i = 0; i < MAX_SOCK_NUM; ++i)
     {
         if (WiFiSpiClass::_state[i] == NA_STATE)  // _state is for both server and client
-             return i;
+			return i;
     }
     return SOCK_NOT_AVAIL;
 }

@@ -38,8 +38,11 @@ class ServerSpiDrv
 {
 public:
 
-    // Start server TCP on port specified
+    // Start server TCP / UDP on port specified
     static bool startServer(const uint16_t port, const uint8_t sock, const uint8_t protMode=TCP_MODE);
+
+    // Start server UDP Multicast on port specified listening given ip address
+    static bool startServerMulticast(const uint32_t ipAddress, const uint16_t port, const uint8_t sock);
 
     static void stopServer(const uint8_t sock);
 

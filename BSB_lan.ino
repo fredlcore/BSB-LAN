@@ -9574,7 +9574,7 @@ if(save_debug_mode == 2)
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
-mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+  mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
 
 #ifdef CUSTOM_COMMANDS
