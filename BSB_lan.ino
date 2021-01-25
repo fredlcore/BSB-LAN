@@ -443,20 +443,40 @@
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
-#include <avr/pgmspace.h>
-//#include <avr/wdt.h>
-#include <Arduino.h>
-#include <SPI.h>
- //Mega
 #if defined(__AVR__)
+#include <avr/pgmspace.h>
 #include <EEPROM.h>
-#else // __SAM3X8E__
+#include <SPI.h>
+#endif
+#include <Arduino.h>
+
+#if defined(__arm__)
+#include <SPI.h>
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
+#endif
+
+#if defined(ESP32)
+#include <EEPROM.h>
+#include <ESPmDNS.h>
+EEPROMClass EEPROM("eeprom1", 0x800);
+#define strcpy_PF strcpy
+#define strcat_PF strcat
+#define strchr_P strchr
+#if defined(EEPROM_ERASING_PIN)
+#undef EEPROM_ERASING_PIN
+#define EEPROM_ERASING_PIN 34
+#endif
+#if defined(EEPROM_ERASING_GND_PIN)
+#undef EEPROM_ERASING_GND_PIN
+#endif
+#ifndef LED_BUILTIN 
+#define LED_BUILTIN 2
+#endif
 #endif
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
@@ -468,12 +488,48 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include "html_strings.h"
 
 #ifdef WIFI
+#ifdef ESP32
+#include <WiFi.h>
+#else
 #include "src/WiFiSpi/src/WiFiSpi.h"
+using  ComServer = WiFiSpiServer;
+using  ComClient = WiFiSpiClient;
+using Wifi WiFiSpi;
+#endif
+#else
+
+#ifdef ESP32
+#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
+#define ETH_PHY_POWER 12
+#include <ETH.h>
+
+class Eth : public ETHClass {
+public:
+    int maintain(void) const { return 0;} ; // handled internally
+    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+      config(ip, dnsserver, gateway, subnet); //Static
+
+    }
+    void begin(uint8_t *mac) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+    }
+};
+
+Eth Ethernet;
 #else
 #include <Ethernet.h>
+using ComServer = EthernetServer;
+using ComClient = EthernetClient;
+#endif
 #endif
 
-#ifdef MDNS_HOSTNAME
+#ifdef ESP32
+using ComServer = WiFiServer;
+using ComClient = WiFiClient;
+#endif
+
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
@@ -488,14 +544,8 @@ MDNS mdns(udp);
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
-#ifdef WIFI
-WiFiSpiServer *server;
-WiFiSpiServer *telnetServer;
-#else
-EthernetServer *server;
-EthernetServer *telnetServer;
-#endif
-
+ComServer *server;
+ComServer *telnetServer;
 Stream* SerialOutput;
 
 //BSB bus definitions
@@ -524,28 +574,15 @@ const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
 
-#ifdef WIFI
-WiFiSpiClient client;
-WiFiSpiClient *mqtt_client;  //Luposoft: own instance
+ComClient client;
+ComClient *mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
-WiFiSpiClient httpclient;
+ComClient httpclient;
 #endif
-WiFiSpiClient telnetClient;
-#else
-EthernetClient client;
-EthernetClient *mqtt_client;   //Luposoft: own instance
-#ifdef VERSION_CHECK
-EthernetClient httpclient;
-#endif
-EthernetClient telnetClient;
-#endif
+ComClient telnetClient;
 
 #ifdef MAX_CUL
-#ifdef WIFI
-WiFiSpiClient *max_cul;
-#else
-EthernetClient *max_cul;
-#endif
+ComClient *max_cul;
 #endif
 
 #ifdef MQTT
@@ -814,6 +851,11 @@ bool writeToEEPROM(uint8_t id){
       EEPROMwasChanged = true;
     }
   }
+  #if defined(ESP32)
+  if (EEPROMwasChanged)
+    EEPROM.commit();
+  #endif
+
 //  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
@@ -1744,11 +1786,13 @@ int findLine(uint16_t line
  *  Does:     Returns the amount of available RAM
  *
  * *************************************************************** */
-#if !defined(__AVR__)
+#if defined(__arm__)
 extern "C" char* sbrk(int incr);
 #endif
 int freeRam () {
-#if defined(__AVR__)
+#ifdef ESP32
+	return (int)ESP.getFreeHeap();
+#elif defined (__AVR__)
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -3641,6 +3685,8 @@ void generateConfigPage(void){
   printToWebClient(PSTR("<BR>Hardware: "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
+#elif defined(ESP32)
+  printToWebClient(PSTR("ESP32<BR>\r\n"));
 #else
   printToWebClient(PSTR("Due<BR>\r\n"));
 #endif
@@ -6093,6 +6139,8 @@ void resetBoard(){
 #elif defined(__AVR__)
   asm volatile ("  jmp 0");
   while (1==1) {}
+#elif defined(ESP32)
+  ESP.restart();  
 #else
   printlnToDebug(PSTR("Reset function not implementing"));
 #endif
@@ -6138,11 +6186,7 @@ void connectToMaxCul() {
     if(!enable_max_cul) return;
   }
 
-#ifdef WIFI
-  max_cul = new WiFiSpiClient();
-#else
-  max_cul = new EthernetClient();
-#endif
+  max_cul = new ComClient();
   printToDebug(PSTR("Connection to max_cul: "));
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("established"));
@@ -6154,10 +6198,13 @@ void connectToMaxCul() {
 
 void clearEEPROM(void){
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__)
+#if defined(__AVR__) || defined(ESP32)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
   }
+  #if defined(ESP32)
+  EEPROM.commit();
+  #endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -8869,7 +8916,7 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-#ifdef MDNS_HOSTNAME
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
   mdns.run();
 #endif
 } // --- loop () ---
@@ -8899,11 +8946,7 @@ boolean mqtt_connect()
     MQTTPass = MQTTPassword;
   if(MQTTPubSubClient == NULL)
   {
-    #ifdef WIFI
-      mqtt_client= new WiFiSpiClient();
-    #else
-      mqtt_client= new EthernetClient();
-    #endif
+    mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(1024);
   }
@@ -9011,13 +9054,13 @@ void printWifiStatus()
 {
   // print the SSID of the network you're attached to
 //  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
-  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFiSpi.SSID());
+  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
   // print your WiFi shield's IP address
-  IPAddress t = WiFiSpi.localIP();
+  IPAddress t = WiFi.localIP();
   printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
 
   // print the received signal strength
-  long rssi = WiFiSpi.RSSI();
+  long rssi = WiFi.RSSI();
   printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
 }
 #endif
@@ -9041,7 +9084,9 @@ void printWifiStatus()
 void setup() {
   decodedTelegram.telegramDump = NULL;
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+ #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
+#endif
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -9064,6 +9109,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
+  #ifdef ESP32
+  EEPROM.begin(4096); // size in Byte
+  #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9296,8 +9344,10 @@ void setup() {
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
+#ifndef ESP32
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
+#endif
   printToDebug(PSTR("Starting SD.."));
 #if defined(__AVR__)
   if(!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
@@ -9318,14 +9368,16 @@ void setup() {
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
+  #ifndef ESP32
   WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
-  if (WiFiSpi.status() == WL_NO_SHIELD) {
+  if (WiFi.status() == WL_NO_SHIELD) {
     printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
+  #endif
 #endif
 
   // setup IP addresses
@@ -9358,13 +9410,21 @@ void setup() {
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
 #else
-    WiFiSpi.config(ip, dnsserver, gateway, subnet);
+    WiFi.config(ip, dnsserver, gateway, subnet);
   }
+
+#ifdef ESP32
+  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
+  WiFi.mode(WIFI_STA); //init wifi mode
+#endif  
+  WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
+  printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
+    printFmtToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
-    status = WiFiSpi.begin(wifi_ssid, wifi_pass);
+    status = WiFi.status() ;
+    delay(1000);
   }
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
@@ -9374,15 +9434,9 @@ void setup() {
   printWifiStatus();
 #endif
 
-#ifdef WIFI
-  server = new WiFiSpiServer(HTTPPort);
+  server = new ComServer(HTTPPort);
 if(save_debug_mode == 2)
-  telnetServer = new WiFiSpiServer(23);
-#else
-  server = new EthernetServer(HTTPPort);
-if(save_debug_mode == 2)
-  telnetServer = new EthernetServer(23);
-#endif
+  telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
@@ -9569,12 +9623,18 @@ if(save_debug_mode == 2)
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #ifdef MDNS_HOSTNAME
+#if defined(ESP32)
+  MDNS.begin(MDNS_HOSTNAME);
+  MDNS.addService("http", "tcp", 80);
+  MDNS.addService("BSB-LAN web service._http", "tcp", 80);
+#else
 #ifdef WIFI
   mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
   mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+#endif
 #endif
 
 #ifdef CUSTOM_COMMANDS

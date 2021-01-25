@@ -61,6 +61,7 @@ private:
   uint8_t len_idx;
   uint8_t pl_start;
   uint8_t rx_pin;
+  uint8_t tx_pin;
   inline bool _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);

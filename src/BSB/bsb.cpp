@@ -15,7 +15,13 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   myAddr=addr;
   destAddr=d_addr;
   rx_pin=rx;
+  tx_pin=tx;
 
+#if defined(ESP32)
+    HwSerial = true;
+    serial = &Serial1;
+    {
+#else
   if (rx == 19) {	// 19 = RX pin of Serial1 USART module
     HwSerial = true;
     serial = &Serial1;
@@ -24,6 +30,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
     pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
     digitalWrite(24, 1);
   } else {
+#endif    
 #if defined(__AVR__)
     BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
     serial = serial_sw;
@@ -35,7 +42,11 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 
 void BSB::enableInterface() {
   if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
+#if defined(ESP32)
+    Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
+#else
     Serial1.begin(4800, SERIAL_8O1);
+#endif    
   }
 }
 
