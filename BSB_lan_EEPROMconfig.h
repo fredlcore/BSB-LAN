@@ -196,7 +196,7 @@ PROGMEM_LATE const configuration_struct config[]={
 #endif
   {CF_MAX_DEVICES,      0, CCAT_MAX,      CPI_TEXT,      CDT_MAXDEVICELIST,  CF_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
   {CF_MAX_DEVADDR,      0, CCAT_MAX,      CPI_NOTHING,   CDT_VOID,           NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
-  {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values[PPS_TWS]) * (PPS_BRS - PPS_TWS + 1)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
+  {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           NULL, sizeof(pps_values)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
   {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           CF_USE_TXT, sizeof(enable_ipwe)},//immediately apply
