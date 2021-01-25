@@ -74,6 +74,7 @@
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Not all features are/will be working, so try it at your own risk!
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -434,14 +435,17 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
-
-#define EEPROM_ERASING_PIN 31
-#define EEPROM_ERASING_GND_PIN 33
-
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
+
+#if !defined(EEPROM_ERASING_PIN)
+#define EEPROM_ERASING_PIN 31
+#endif
+#if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
+#define EEPROM_ERASING_GND_PIN 33
+#endif
 
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
@@ -467,16 +471,6 @@ EEPROMClass EEPROM("eeprom1", 0x800);
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
-#if defined(EEPROM_ERASING_PIN)
-#undef EEPROM_ERASING_PIN
-#define EEPROM_ERASING_PIN 34
-#endif
-#if defined(EEPROM_ERASING_GND_PIN)
-#undef EEPROM_ERASING_GND_PIN
-#endif
-#ifndef LED_BUILTIN 
-#define LED_BUILTIN 2
-#endif
 #endif
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
@@ -492,9 +486,9 @@ EEPROMClass EEPROM("eeprom1", 0x800);
 #include <WiFi.h>
 #else
 #include "src/WiFiSpi/src/WiFiSpi.h"
-using  ComServer = WiFiSpiServer;
-using  ComClient = WiFiSpiClient;
-using Wifi WiFiSpi;
+using ComServer = WiFiSpiServer;
+using ComClient = WiFiSpiClient;
+WiFiSpiClass WiFi;
 #endif
 #else
 
@@ -9084,7 +9078,7 @@ void printWifiStatus()
 void setup() {
   decodedTelegram.telegramDump = NULL;
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
- #if defined(EEPROM_ERASING_GND_PIN)
+#if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 #endif
 
