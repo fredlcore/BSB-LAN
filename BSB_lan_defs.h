@@ -11249,8 +11249,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x0D3D01FA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10325, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 32 00
 {0x0D3D0930,  CAT_USER_DEFINED,     VT_UNKNOWN,       10326, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 {0x0D3D0936,  CAT_USER_DEFINED,     VT_UNKNOWN,       10327, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x0D3D0944,  CAT_USER_DEFINED,     VT_UNKNOWN,       10328, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 02 00
-{0x0D3D0945,  CAT_USER_DEFINED,     VT_UNKNOWN,       10329, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 07 80
+{0x0D3D0944,  CAT_USER_DEFINED,     VT_TEMP,          10328, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 02 00
+{0x0D3D0945,  CAT_USER_DEFINED,     VT_TEMP,          10329, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 07 80
 {0x0D3D2F9C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10330, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0A
 {0x0D3D2FB8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10331, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 0A
 {0x0D3D2FB9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10332, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 05
