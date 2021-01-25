@@ -7209,6 +7209,7 @@ uint8_t pps_offset = 0;
               }
 
               printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
+              writelnToDebug();
               // Now send it out to the bus
               int setresult = 0;
               setresult = set(line,p,setcmd);
@@ -9078,7 +9079,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
