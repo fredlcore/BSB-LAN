@@ -65,6 +65,7 @@
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
+ *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_lan_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
