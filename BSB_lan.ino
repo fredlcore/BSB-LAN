@@ -8647,7 +8647,11 @@ uint8_t pps_offset = 0;
           }
           if(z != 0){
             _printFIXPOINT(decodedTelegram.value, value / z, 2);
+// if we want to substitute own address sometime to RGT1(2,3)
+//            uint8_t saved_own_address = bus->getBusAddr();
+//            bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
             set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
+//            bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
           }
         }
       }
