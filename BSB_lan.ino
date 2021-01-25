@@ -488,7 +488,7 @@ EEPROMClass EEPROM("eeprom1", 0x800);
 #include "src/WiFiSpi/src/WiFiSpi.h"
 using ComServer = WiFiSpiServer;
 using ComClient = WiFiSpiClient;
-WiFiSpiClass WiFi;
+#define WiFi WiFiSpi
 #endif
 #else
 
