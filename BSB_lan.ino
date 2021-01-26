@@ -9448,7 +9448,7 @@ void setup() {
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
   #ifndef ESP32
-  WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
+  WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
