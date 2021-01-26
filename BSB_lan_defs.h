@@ -3056,6 +3056,8 @@ const char STR20502[] PROGMEM = STR20502_TEXT;
 const char STR20503[] PROGMEM = STR20503_TEXT;
 const char STR20700[] PROGMEM = STR20700_TEXT;
 const char STR20800[] PROGMEM = STR20800_TEXT;
+
+const char STR65535[] PROGMEM = "";
 // A catch-all description string for unrecognised command codes
 const char STR99999[] PROGMEM = STR99999_TEXT;
 
@@ -11697,13 +11699,13 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 //{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
   //Prognr 65527 - 65534 is a dirty trick for reducing enumerations addresses to the same type
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65527, "",       sizeof(ENUM_PPS_MODE),     ENUM_PPS_MODE,      DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65528, "",       sizeof(ENUM_WRITEMODE),    ENUM_WRITEMODE,     DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, "",       sizeof(ENUM_MQTT),         ENUM_MQTT,          DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, "",       sizeof(ENUM_DEBUG),        ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, "",       sizeof(ENUM_LOGTELEGRAM),  ENUM_LOGTELEGRAM,   DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65532, "",       sizeof(ENUM_BUSTYPE),      ENUM_BUSTYPE,       DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65533, "",       sizeof(ENUM_ONOFF),        ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
-{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65534, "",       sizeof(ENUM_EEPROM_ONOFF), ENUM_EEPROM_ONOFF,  DEFAULT_FLAG, DEV_ALL}, //
-{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65527, STR65535, sizeof(ENUM_PPS_MODE),     ENUM_PPS_MODE,      DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65528, STR65535, sizeof(ENUM_WRITEMODE),    ENUM_WRITEMODE,     DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, STR65535, sizeof(ENUM_MQTT),         ENUM_MQTT,          DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65530, STR65535, sizeof(ENUM_DEBUG),        ENUM_DEBUG,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65531, STR65535, sizeof(ENUM_LOGTELEGRAM),  ENUM_LOGTELEGRAM,   DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65532, STR65535, sizeof(ENUM_BUSTYPE),      ENUM_BUSTYPE,       DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65533, STR65535, sizeof(ENUM_ONOFF),        ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65534, STR65535, sizeof(ENUM_EEPROM_ONOFF), ENUM_EEPROM_ONOFF,  DEFAULT_FLAG, DEV_ALL}, //
+{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, STR65535, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 };
