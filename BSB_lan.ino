@@ -9448,14 +9448,21 @@ void setup() {
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
   #ifndef ESP32
-  WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
+  WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
+    Serial.println(F("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
+
+  if (!WiFi.checkProtocolVersion()) {
+    Serial.println(F("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP."));
+    // don't continue:
+    while (true);
+  }
+
   #endif
 #endif
 
@@ -9508,7 +9515,7 @@ void setup() {
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
 #if defined(__arm__)
-  WiFiSpi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
+  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
 #endif
   printWifiStatus();
 #endif
@@ -9708,7 +9715,7 @@ if(save_debug_mode == 2)
   MDNS.addService("BSB-LAN web service._http", "tcp", 80);
 #else
 #ifdef WIFI
-  mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
+  mdns.begin(WiFi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
