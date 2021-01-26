@@ -108,6 +108,11 @@ byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensor
 // Define the pins for DHT temperature/humidity sensors (Up to 10)
 byte DHT_Pins[10] = {2, 3};
 
+// Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
+// Up to two sensors with 0x76 and 0x77 addresses.
+// Usage: #define BME280 x, where x - number of BME280 sensors on bus
+// #define BME280 1
+
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
 bool logAverageValues = false;  // calculate and save data into averages.txt on SD-card.
@@ -324,6 +329,7 @@ uint32_t destinationDelay = 84600;  // interval in seconds to send values
 #undef ROOM_UNIT
 #undef VERSION_CHECK
 #undef MAX_CUL
+#undef BME280
 #endif
 /************************************************************************************/
 /************************************************************************************/
