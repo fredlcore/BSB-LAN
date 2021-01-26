@@ -4538,6 +4538,9 @@ void generateJSONwithConfig(){
              case CF_WRITEMODE:
                i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
                break;
+             case CF_PPS_MODE:
+               i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+               break;
              default:
                i = -1;
                break;
