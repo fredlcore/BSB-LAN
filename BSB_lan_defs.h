@@ -332,6 +332,8 @@ typedef enum{
   VT_GR_PER_CUBM,       //Virtual (DHT22): Gram per cubic meter (Abs humidity)
   VT_FLOAT,             //Virtual: custom_float
   VT_LONG,              //Virtual: custom_long
+  VT_PRESSURE_HPA,      //Virtual: Pressure [hPa]
+  VT_ALTITUDE,          //Virtual: Altitude [m]
   VT_UNKNOWN
 }vt_type_t;
 
@@ -454,6 +456,8 @@ const char STR_CUSTOM_BIT[] PROGMEM = "CUSTOM_BIT";
 const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
 const char STR_FLOAT[] PROGMEM = "FLOAT";
 const char STR_LONG[] PROGMEM = "LONG";
+const char STR_ATM_PRESSURE[] PROGMEM = "ATM_PRESSURE";
+const char STR_ALTITUDE[] PROGMEM = "ALTITUDE";
 const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
 
 const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
@@ -478,6 +482,8 @@ const char U_CEL_MIN[] PROGMEM = UNIT_CEL_MIN_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
+const char U_ATM_PRESSURE[] PROGMEM = UNIT_HPA_TEXT;
+const char U_ALTITUDE[] PROGMEM = UNIT_METER_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -617,6 +623,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_GR_PER_CUBM,    1.0,    0, 0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
 {VT_FLOAT,          1.0,    0, 0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FLOAT},
 {VT_LONG,           1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LONG},
+{VT_PRESSURE_HPA,   1.0,    0, 0, DT_VALS, 2,  U_ATM_PRESSURE, sizeof(U_ATM_PRESSURE), STR_ATM_PRESSURE},
+{VT_ALTITUDE,       1.0,    0, 0, DT_VALS, 0,  U_ALTITUDE, sizeof(U_ALTITUDE), STR_ALTITUDE},
 {VT_UNKNOWN,        1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
@@ -3034,6 +3042,12 @@ const char STR20100[] PROGMEM = STR20100_TEXT;
 const char STR20101[] PROGMEM = STR20101_TEXT;
 const char STR20102[] PROGMEM = STR20102_TEXT;
 const char STR20103[] PROGMEM = STR20103_TEXT;
+const char STR20200[] PROGMEM = STR20200_TEXT;
+const char STR20201[] PROGMEM = STR20201_TEXT;
+const char STR20202[] PROGMEM = STR20202_TEXT;
+const char STR20203[] PROGMEM = STR20203_TEXT;
+const char STR20204[] PROGMEM = STR20204_TEXT;
+const char STR20205[] PROGMEM = STR20205_TEXT;
 const char STR20300[] PROGMEM = STR20300_TEXT;
 const char STR20301[] PROGMEM = STR20301_TEXT;
 const char STR20500[] PROGMEM = STR20500_TEXT;
@@ -10586,7 +10600,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 //10102 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded
 {0x2D000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
 {0x2D3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10102, STR10102, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK1
-//10103 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded 
+//10103 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded
 {0x2E000211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 {0x2E3D0211,  CAT_USER_DEFINED,     VT_UNKNOWN,       10103, STR10103, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // INFO HK2 broadcast 00 to 7F
 //10104 is used in switchPresenceState() function. Should change switchPresenceState() function when program will be fully decoded
@@ -11664,7 +11678,13 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20201, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20202, STR20202, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PRESSURE_HPA,  20203, STR20203, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ALTITUDE,      20204, STR20204, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   20205, STR20205, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20500, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID

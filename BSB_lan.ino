@@ -472,14 +472,27 @@ EEPROMClass EEPROM("eeprom1", 0x800);
 #define strcat_PF strcat
 #define strchr_P strchr
 #endif
+
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
 //#include <util/crc16.h>
 #include "src/Time/TimeLib.h"
+
 #ifdef MQTT
 #include "src/PubSubClient/src/PubSubClient.h"
 #endif
 #include "html_strings.h"
+
+#ifdef BME280
+//BME280 library was modified. Definitions for SDA1/SCL1 on Due added:
+//#if defined(__SAM3X8E__)
+//#define Wire Wire1
+//#endif
+
+#include <Wire.h>
+#include "src/BlueDot_BME280/BlueDot_BME280.h"
+BlueDot_BME280 bme[BME280];  //Set 2 if you need two sensors.
+#endif
 
 #ifdef WIFI
 #ifdef ESP32
@@ -1635,7 +1648,10 @@ uint8_t recognizeVirtualFunctionGroup(uint16_t nr){
   else if (nr >= 20050 && nr < 20050 + numAverages) {return 2;} //20050 - 20099
 #endif
 #ifdef DHT_BUS
-  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20299
+  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20199
+#endif
+#ifdef BME280
+  else if (nr >= 20200 && nr < 20200 + sizeof(bme)/sizeof(bme[0]) * 6) {return 8;} //20100 - 20199
 #endif
 #ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
@@ -1696,6 +1712,17 @@ int findLine(uint16_t line
       }
       case 6: line = 20700; break;
       case 7: line = 20800; break;
+      case 8: {
+#ifdef BME280
+        if((sizeof(bme)/sizeof(bme[0]) * 6) >= (line - 20200)) //
+          return -1;
+        else
+          line = 20200 + ((line - 20200) % 6);
+#else
+        return -1;
+#endif
+        break;
+      }
       default: return -1;
     }
   }
@@ -2005,6 +2032,7 @@ void loadPrognrElementsFromTable(int nr, int i){
       case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
       case 6: decodedTelegram.sensorid = nr - 20700; break;
       case 7: decodedTelegram.sensorid = nr - 20800; break;
+      case 8: decodedTelegram.sensorid = (nr - 20200) / 6 + 1; break;
     }
   }
 }
@@ -2953,7 +2981,7 @@ void printTelegram(byte* msg, int query_line) {
         case 0x17: printToDebug(PSTR("RTS HEIZ->QAA ")); break;
         case 0xF8:
         case 0xFB:
-        case 0xFD: 
+        case 0xFD:
         case 0xFE:
           printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
@@ -3852,6 +3880,14 @@ void generateConfigPage(void){
   #define ANY_MODULE_COMPILED
   #endif
   "DHT_BUS"
+  #endif
+  #ifdef BME280
+  #if defined (ANY_MODULE_COMPILED)
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  "BME280"
   #endif
   #ifdef CUSTOM_COMMANDS
   #if defined (ANY_MODULE_COMPILED)
@@ -5698,6 +5734,30 @@ void queryVirtualPrognr(int line, int table_line){
        sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - 20800]);
        return;
      }
+     case 8: {
+#ifdef BME280
+       size_t tempLine = line - 20200;
+       size_t log_sensor = tempLine / 6;
+       if(tempLine % 6 == 0){
+         sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+         return;
+       }
+       if(bme[log_sensor].checkID() == 0x60){
+         switch(tempLine % 6){
+           case 1: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readTempC(), 2); break;
+           case 2: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readHumidity(), 2); break;
+           case 3: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readPressure(), 2); break;
+           case 4: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readAltitudeMeter(), 2); break;
+           case 5: {float temp = bme[log_sensor].readTempC(); _printFIXPOINT(decodedTelegram.value, (216.7*(bme[log_sensor].readHumidity()/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);} break;
+         }
+       } else {
+         decodedTelegram.error = 261;
+         undefinedValueToBuffer(decodedTelegram.value);
+       }
+       return;
+#endif
+     break;
+     }
    }
    decodedTelegram.error = 7;
    decodedTelegram.msg_type = TYPE_ERR;
@@ -6134,7 +6194,7 @@ void resetBoard(){
   asm volatile ("  jmp 0");
   while (1==1) {}
 #elif defined(ESP32)
-  ESP.restart();  
+  ESP.restart();
 #else
   printlnToDebug(PSTR("Reset function not implementing"));
 #endif
@@ -8728,7 +8788,11 @@ uint8_t pps_offset = 0;
           }
           if(z != 0){
             _printFIXPOINT(decodedTelegram.value, value / z, 2);
+// if we want to substitute own address sometime to RGT1(2,3)
+//            uint8_t saved_own_address = bus->getBusAddr();
+//            bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
             set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
+//            bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
           }
         }
       }
@@ -9077,7 +9141,7 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 #endif
@@ -9298,6 +9362,27 @@ void setup() {
   }
 #endif
 
+#ifdef BME280
+    printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
+    for(uint8_t f = 0; f < sizeof(bme)/sizeof(bme[0]); f++){
+      bme[f].parameter.communication = 0;                    //I2C communication for Sensor
+      bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
+      bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
+      bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
+      bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
+      bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
+      bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
+      bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
+      bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
+      bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+      printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
+      if(bme[f].init() != 0x60){
+        printToDebug(PSTR("NOT "));
+      }
+      printToDebug(PSTR("found\r\n"));
+    }
+#endif
+
 /*  printlnToDebug(PSTR("Reading EEPROM..."));
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     uint16_t f=0;
@@ -9410,12 +9495,12 @@ void setup() {
 #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
-#endif  
+#endif
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("."));
+    printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
     status = WiFi.status() ;
     delay(1000);
