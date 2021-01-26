@@ -2981,7 +2981,7 @@ void printTelegram(byte* msg, int query_line) {
         case 0x17: printToDebug(PSTR("RTS HEIZ->QAA ")); break;
         case 0xF8:
         case 0xFB:
-        case 0xFD: 
+        case 0xFD:
         case 0xFE:
           printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
@@ -6194,7 +6194,7 @@ void resetBoard(){
   asm volatile ("  jmp 0");
   while (1==1) {}
 #elif defined(ESP32)
-  ESP.restart();  
+  ESP.restart();
 #else
   printlnToDebug(PSTR("Reset function not implementing"));
 #endif
@@ -9141,7 +9141,7 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 #endif
@@ -9495,12 +9495,12 @@ void setup() {
 #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
-#endif  
+#endif
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("."));
+    printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
     status = WiFi.status() ;
     delay(1000);
