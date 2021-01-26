@@ -4265,6 +4265,34 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value){
 
 }
 
+int returnENUMID4ConfigOption(uint8_t id){
+  int i = 0;
+  switch(id){
+    case CF_BUSTYPE:
+      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+      break;
+    case CF_LOGTELEGRAM:
+      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+      break;
+    case CF_DEBUG:
+    i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      break;
+    case CF_MQTT:
+      i=findLine(65529,0,NULL); //return ENUM_MQTT
+      break;
+    case CF_WRITEMODE:
+      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+      break;
+    case CF_PPS_MODE:
+      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      break;
+    default:
+      i = -1;
+      break;
+  }
+  return i;
+}
+
 void generateChangeConfigPage(){
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
@@ -4344,30 +4372,7 @@ void generateChangeConfigPage(){
            printConfigWebPossibleValues(i, (uint16_t)variable[0]);
            break;}
          case CPI_DROPDOWN:{
-           int i;
-           switch(cfg.id){
-             case CF_BUSTYPE:
-               i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
-               break;
-             case CF_LOGTELEGRAM:
-               i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
-               break;
-             case CF_DEBUG:
-             i=findLine(65530,0,NULL); //return ENUM_DEBUG
-               break;
-             case CF_MQTT:
-               i=findLine(65529,0,NULL); //return ENUM_MQTT
-               break;
-             case CF_WRITEMODE:
-               i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
-               break;
-             case CF_PPS_MODE:
-               i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
-               break;
-             default:
-               i = -1;
-               break;
-           }
+           int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
              printConfigWebPossibleValues(i, variable[0]);
            }
@@ -4521,30 +4526,7 @@ void generateJSONwithConfig(){
            printConfigJSONPossibleValues(i);
            break;}
          case CPI_DROPDOWN:{
-           int i;
-           switch(cfg.id){
-             case CF_BUSTYPE:
-               i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
-               break;
-             case CF_LOGTELEGRAM:
-               i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
-               break;
-             case CF_DEBUG:
-             i=findLine(65530,0,NULL); //return ENUM_DEBUG
-               break;
-             case CF_MQTT:
-               i=findLine(65529,0,NULL); //return ENUM_MQTT
-               break;
-             case CF_WRITEMODE:
-               i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
-               break;
-             case CF_PPS_MODE:
-               i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
-               break;
-             default:
-               i = -1;
-               break;
-           }
+           int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
              printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
              printConfigJSONPossibleValues(i);
