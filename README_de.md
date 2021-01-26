@@ -37,6 +37,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
 - Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
+- ATAG: QR
 - Atlantic: Alféa Excellia, Extensa  
 - Austria Email: LWPK  
 - Baxi: Luna Platinum

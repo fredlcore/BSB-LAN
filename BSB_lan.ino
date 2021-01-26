@@ -64,6 +64,8 @@
  * Changelog:
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
+ *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
+ *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_lan_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
@@ -72,6 +74,7 @@
  *        - New categories added, subsequent categories have been shifted up
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Not all features are/will be working, so try it at your own risk!
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -432,29 +435,42 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
-
-#define EEPROM_ERASING_PIN 51
-
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_lan_config.h"
 #include "BSB_lan_defs.h"
 
-#include <avr/pgmspace.h>
-//#include <avr/wdt.h>
-#include <Arduino.h>
-#include <SPI.h>
+#if !defined(EEPROM_ERASING_PIN)
+#define EEPROM_ERASING_PIN 31
+#endif
+#if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
+#define EEPROM_ERASING_GND_PIN 33
+#endif
 
- //Mega
 #if defined(__AVR__)
+#include <avr/pgmspace.h>
 #include <EEPROM.h>
-#else // __SAM3X8E__
+#include <SPI.h>
+#endif
+#include <Arduino.h>
+
+#if defined(__arm__)
+#include <SPI.h>
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
+#endif
+
+#if defined(ESP32)
+#include <EEPROM.h>
+#include <ESPmDNS.h>
+EEPROMClass EEPROM("eeprom1", 0x800);
+#define strcpy_PF strcpy
+#define strcat_PF strcat
+#define strchr_P strchr
 #endif
 
 //#include <CRC32.h>
@@ -479,12 +495,48 @@ BlueDot_BME280 bme[BME280];  //Set 2 if you need two sensors.
 #endif
 
 #ifdef WIFI
+#ifdef ESP32
+#include <WiFi.h>
+#else
 #include "src/WiFiSpi/src/WiFiSpi.h"
+using ComServer = WiFiSpiServer;
+using ComClient = WiFiSpiClient;
+#define WiFi WiFiSpi
+#endif
+#else
+
+#ifdef ESP32
+#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
+#define ETH_PHY_POWER 12
+#include <ETH.h>
+
+class Eth : public ETHClass {
+public:
+    int maintain(void) const { return 0;} ; // handled internally
+    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+      config(ip, dnsserver, gateway, subnet); //Static
+
+    }
+    void begin(uint8_t *mac) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+    }
+};
+
+Eth Ethernet;
 #else
 #include <Ethernet.h>
+using ComServer = EthernetServer;
+using ComClient = EthernetClient;
+#endif
 #endif
 
-#ifdef MDNS_HOSTNAME
+#ifdef ESP32
+using ComServer = WiFiServer;
+using ComClient = WiFiClient;
+#endif
+
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
 #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
@@ -499,14 +551,8 @@ MDNS mdns(udp);
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
 
-#ifdef WIFI
-WiFiSpiServer *server;
-WiFiSpiServer *telnetServer;
-#else
-EthernetServer *server;
-EthernetServer *telnetServer;
-#endif
-
+ComServer *server;
+ComServer *telnetServer;
 Stream* SerialOutput;
 
 //BSB bus definitions
@@ -535,28 +581,15 @@ const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
 
-#ifdef WIFI
-WiFiSpiClient client;
-WiFiSpiClient *mqtt_client;  //Luposoft: own instance
+ComClient client;
+ComClient *mqtt_client;   //Luposoft: own instance
 #ifdef VERSION_CHECK
-WiFiSpiClient httpclient;
+ComClient httpclient;
 #endif
-WiFiSpiClient telnetClient;
-#else
-EthernetClient client;
-EthernetClient *mqtt_client;   //Luposoft: own instance
-#ifdef VERSION_CHECK
-EthernetClient httpclient;
-#endif
-EthernetClient telnetClient;
-#endif
+ComClient telnetClient;
 
 #ifdef MAX_CUL
-#ifdef WIFI
-WiFiSpiClient *max_cul;
-#else
-EthernetClient *max_cul;
-#endif
+ComClient *max_cul;
 #endif
 
 #ifdef MQTT
@@ -825,6 +858,11 @@ bool writeToEEPROM(uint8_t id){
       EEPROMwasChanged = true;
     }
   }
+  #if defined(ESP32)
+  if (EEPROMwasChanged)
+    EEPROM.commit();
+  #endif
+
 //  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
@@ -1769,11 +1807,13 @@ int findLine(uint16_t line
  *  Does:     Returns the amount of available RAM
  *
  * *************************************************************** */
-#if !defined(__AVR__)
+#if defined(__arm__)
 extern "C" char* sbrk(int incr);
 #endif
 int freeRam () {
-#if defined(__AVR__)
+#ifdef ESP32
+	return (int)ESP.getFreeHeap();
+#elif defined (__AVR__)
   extern int __heap_start, *__brkval;
   int v;
   return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
@@ -1896,7 +1936,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state){
   //RGT2 1001, 10103
   //RGT3 1301, 10104
   int state = 0;
-  char buf[8];
+  char buf[9];
   unsigned int i0, i1;
   query(current_state);
   strcpy_P(buf, PSTR("%02x%02x"));
@@ -2939,7 +2979,11 @@ void printTelegram(byte* msg, int query_line) {
         case 0x1D: printToDebug(PSTR("INF HEIZ->QAA ")); break;
         case 0x1E: printToDebug(PSTR("REQ HEIZ->QAA ")); break;
         case 0x17: printToDebug(PSTR("RTS HEIZ->QAA ")); break;
-        case 0xFD: printToDebug(PSTR("ANS QAA->HEIZ ")); break;
+        case 0xF8:
+        case 0xFB:
+        case 0xFD: 
+        case 0xFE:
+          printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
       }
     }
@@ -3330,13 +3374,13 @@ void printTelegram(byte* msg, int query_line) {
               const char *getfarstrings;
               uint8_t q;
               switch(weekday()) {
-                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
                 case 1: getfarstrings = PSTR(WEEKDAY_SUN_TEXT); break;
                 case 2: getfarstrings = PSTR(WEEKDAY_MON_TEXT); break;
                 case 3: getfarstrings = PSTR(WEEKDAY_TUE_TEXT); break;
                 case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
                 case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
                 case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
+                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
                 default: getfarstrings = PSTR(""); break;
               }
               q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
@@ -3663,6 +3707,8 @@ void generateConfigPage(void){
   printToWebClient(PSTR("<BR>Hardware: "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
+#elif defined(ESP32)
+  printToWebClient(PSTR("ESP32<BR>\r\n"));
 #else
   printToWebClient(PSTR("Due<BR>\r\n"));
 #endif
@@ -4089,7 +4135,7 @@ void SaveConfigFromRAMtoEEPROM(){
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
         case CF_DEST_BSBLPBADDR:
-        case CF_PPS_WRITE:
+        case CF_PPS_MODE:
           buschanged = true;
           break;
         //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
@@ -4314,6 +4360,9 @@ void generateChangeConfigPage(){
                break;
              case CF_WRITEMODE:
                i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+               break;
+             case CF_PPS_MODE:
+               i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
                break;
              default:
                i = -1;
@@ -4697,7 +4746,11 @@ void LogTelegram(byte* msg){
           case 0x1D: getfarstrings = PSTR("HEIZ->QAA INF"); break;
           case 0x1E: getfarstrings = PSTR("HEIZ->QAA REQ"); break;
           case 0x17: getfarstrings = PSTR("HEIZ->QAA RTS"); break;
-          case 0xFD: getfarstrings = PSTR("QAA->HEIZ ANS"); break;
+          case 0xF8:
+          case 0xFB:
+          case 0xFD:
+          case 0xFE:
+            getfarstrings = PSTR("QAA->HEIZ ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
         strcat_P(outBuf + outBufLen, getfarstrings);
@@ -4842,11 +4895,21 @@ int set(int line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 //    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
+/*
     if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
     }
+*/
+
+    uint8_t flags=get_cmdtbl_flags(i);
+    if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
+      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
+      writelnToDebug();
+      writeToEEPROM(CF_PPS_VALUES);
+    }
+
     return 1;
   }
 
@@ -4864,7 +4927,6 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
     case VT_YESNO: // 1 = Ja
-    case VT_WEEKDAY: // (1=Mo..7=So)
     case VT_DAYS: // (Legionellenfkt. Periodisch)
     case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
     case VT_BIT:
@@ -6131,6 +6193,8 @@ void resetBoard(){
 #elif defined(__AVR__)
   asm volatile ("  jmp 0");
   while (1==1) {}
+#elif defined(ESP32)
+  ESP.restart();  
 #else
   printlnToDebug(PSTR("Reset function not implementing"));
 #endif
@@ -6176,11 +6240,7 @@ void connectToMaxCul() {
     if(!enable_max_cul) return;
   }
 
-#ifdef WIFI
-  max_cul = new WiFiSpiClient();
-#else
-  max_cul = new EthernetClient();
-#endif
+  max_cul = new ComClient();
   printToDebug(PSTR("Connection to max_cul: "));
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
     printlnToDebug(PSTR("established"));
@@ -6191,10 +6251,14 @@ void connectToMaxCul() {
 #endif
 
 void clearEEPROM(void){
-#if defined(__AVR__)
+  printlnToDebug(PSTR("Clearing EEPROM..."));
+#if defined(__AVR__) || defined(ESP32)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
   }
+  #if defined(ESP32)
+  EEPROM.commit();
+  #endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -6507,6 +6571,22 @@ void loop() {
               tx_msg[7] = pps_values[PPS_TWR] & 0xFF;
               break;
             case 13:
+            {
+              tx_msg[0] = 0xFB; // send time to heater
+              tx_msg[1] = 0x79;
+              tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
+              tx_msg[5] = hour(); // hour
+              tx_msg[6] = minute(); // minute
+              tx_msg[7] = second(); // second
+              break;
+            }
+            case 14:
+            {
+              tx_msg[0] = 0xFE; // unknown telegram
+              tx_msg[1] = 0x79;
+              break;
+            }
+            case 15:
               tx_msg[1] = 0x60;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S13];
@@ -6515,7 +6595,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E11];
               tx_msg[7] = pps_values[PPS_S11];
               break;
-            case 14:
+            case 16:
               tx_msg[1] = 0x61;
               tx_msg[2] = pps_values[PPS_E23];
               tx_msg[3] = pps_values[PPS_S23];
@@ -6524,7 +6604,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E21];
               tx_msg[7] = pps_values[PPS_S21];
               break;
-            case 15:
+            case 17:
               tx_msg[1] = 0x62;
               tx_msg[2] = pps_values[PPS_E33];
               tx_msg[3] = pps_values[PPS_S33];
@@ -6533,7 +6613,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E31];
               tx_msg[7] = pps_values[PPS_S31];
               break;
-            case 16:
+            case 18:
               tx_msg[1] = 0x63;
               tx_msg[2] = pps_values[PPS_E43];
               tx_msg[3] = pps_values[PPS_S43];
@@ -6542,7 +6622,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E41];
               tx_msg[7] = pps_values[PPS_S41];
               break;
-            case 17:
+            case 19:
               tx_msg[1] = 0x64;
               tx_msg[2] = pps_values[PPS_E53];
               tx_msg[3] = pps_values[PPS_S53];
@@ -6551,7 +6631,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E51];
               tx_msg[7] = pps_values[PPS_S51];
               break;
-            case 18:
+            case 20:
               tx_msg[1] = 0x65;
               tx_msg[2] = pps_values[PPS_E63];
               tx_msg[3] = pps_values[PPS_S63];
@@ -6560,7 +6640,7 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E61];
               tx_msg[7] = pps_values[PPS_S61];
               break;
-            case 19:
+            case 21:
               tx_msg[1] = 0x66;
               tx_msg[2] = pps_values[PPS_E73];
               tx_msg[3] = pps_values[PPS_S73];
@@ -6569,11 +6649,11 @@ void loop() {
               tx_msg[6] = pps_values[PPS_E71];
               tx_msg[7] = pps_values[PPS_S71];
               break;
-            case 20:
+            case 22:
               tx_msg[1] = 0x7C;
               tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
               break;
-            case 21:
+            case 23:
               tx_msg[1] = 0x1B;                    // Frostschutz- und Maximaltemperatur
               tx_msg[4] = pps_values[PPS_SMX] >> 8;
               tx_msg[5] = pps_values[PPS_SMX] & 0xFF;
@@ -6581,7 +6661,7 @@ void loop() {
               tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
           }
           msg_cycle++;
-          if (msg_cycle > 21) {
+          if (msg_cycle > 23) {
             msg_cycle = 0;
           }
           if (saved_msg_cycle > 0) {
@@ -6621,14 +6701,14 @@ void loop() {
               case 0x4C: msg_cycle = 11; break;
               case 0x4D: msg_cycle = 2; break;
               case 0x4F: msg_cycle = 3; break;
-              case 0x60: msg_cycle = 13; break;
-              case 0x61: msg_cycle = 14; break;
-              case 0x62: msg_cycle = 15; break;
-              case 0x63: msg_cycle = 16; break;
-              case 0x64: msg_cycle = 17; break;
-              case 0x65: msg_cycle = 18; break;
-              case 0x66: msg_cycle = 19; break;
-              case 0x7C: msg_cycle = 20; break;
+              case 0x60: msg_cycle = 15; break;
+              case 0x61: msg_cycle = 16; break;
+              case 0x62: msg_cycle = 17; break;
+              case 0x63: msg_cycle = 18; break;
+              case 0x64: msg_cycle = 19; break;
+              case 0x65: msg_cycle = 20; break;
+              case 0x66: msg_cycle = 21; break;
+              case 0x7C: msg_cycle = 22; break;
               default:
                  printToDebug(PSTR("Unknown request: "));
                 for (int c=0;c<9;c++) {
@@ -6651,8 +6731,6 @@ void loop() {
 */
 #endif
                 break;
-
-
 /*
 Weitere noch zu überprüfende Telegramme:
 https://www.mikrocontroller.net/topic/218643#3517035
@@ -6684,7 +6762,7 @@ uint8_t pps_offset = 0;
             uint8_t flags=get_cmdtbl_flags(i);
             if (programIsreadOnly(flags) || pps_write != 1) {
               switch (msg[1+pps_offset]) {
-                case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+                case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
                 case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
                 case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
@@ -6701,7 +6779,7 @@ uint8_t pps_offset = 0;
                 case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
                 case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
                 case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
-//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, however this seems to come from the QAA as it begins with 0xFD
+//                case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, to be confirmed
                 case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
                 case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
                 case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
@@ -6763,6 +6841,7 @@ uint8_t pps_offset = 0;
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
                 case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
                   pps_values[PPS_FRS] = temp;
@@ -7231,6 +7310,7 @@ uint8_t pps_offset = 0;
               }
 
               printFmtToDebug(PSTR("set ProgNr %d = %s"), line, p);
+              writelnToDebug();
               // Now send it out to the bus
               int setresult = 0;
               setresult = set(line,p,setcmd);
@@ -8894,7 +8974,7 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-#ifdef MDNS_HOSTNAME
+#if defined(MDNS_HOSTNAME) && !defined(ESP32)
   mdns.run();
 #endif
 } // --- loop () ---
@@ -8924,11 +9004,7 @@ boolean mqtt_connect()
     MQTTPass = MQTTPassword;
   if(MQTTPubSubClient == NULL)
   {
-    #ifdef WIFI
-      mqtt_client= new WiFiSpiClient();
-    #else
-      mqtt_client= new EthernetClient();
-    #endif
+    mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(1024);
   }
@@ -9036,13 +9112,13 @@ void printWifiStatus()
 {
   // print the SSID of the network you're attached to
 //  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
-  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFiSpi.SSID());
+  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
   // print your WiFi shield's IP address
-  IPAddress t = WiFiSpi.localIP();
+  IPAddress t = WiFi.localIP();
   printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
 
   // print the received signal strength
-  long rssi = WiFiSpi.RSSI();
+  long rssi = WiFi.RSSI();
   printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
 }
 #endif
@@ -9065,7 +9141,10 @@ void printWifiStatus()
  * *************************************************************** */
 void setup() {
   decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);  
+#if defined(EEPROM_ERASING_GND_PIN)
+  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
+#endif
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
@@ -9088,6 +9167,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
+  #ifdef ESP32
+  EEPROM.begin(4096); // size in Byte
+  #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9103,7 +9185,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values[PPS_TWS]);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
@@ -9114,7 +9196,7 @@ void setup() {
   registerConfigVariable(CF_BUSTYPE, (byte *)&bus_type);
   registerConfigVariable(CF_OWN_BSBLPBADDR, (byte *)&own_address);
   registerConfigVariable(CF_DEST_BSBLPBADDR, (byte *)&dest_address);
-  registerConfigVariable(CF_PPS_WRITE, (byte *)&pps_write);
+  registerConfigVariable(CF_PPS_MODE, (byte *)&pps_write);
   registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
   registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
   registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
@@ -9315,11 +9397,23 @@ void setup() {
   }
 */
 
-  printToDebug(PSTR("PPS settings:\r\n"));
+/*
   for (int i=PPS_TWS;i<=PPS_BRS;i++) {
     if(pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
     if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
       printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+    }
+  }
+*/
+
+  printToDebug(PSTR("PPS settings:\r\n"));
+  for (int i=15000; i<= 15000+PPS_ANZ; i++) {
+    uint8_t flags=get_cmdtbl_flags(i);
+    if ((flags & FL_EEPROM) == FL_EEPROM) {
+      if(pps_values[i-15000] == (int16_t)0xFFFF) pps_values[i-15000] = 0;
+      if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF) {
+        printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+      }
     }
   }
   if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
@@ -9329,8 +9423,10 @@ void setup() {
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
+#ifndef ESP32
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
+#endif
   printToDebug(PSTR("Starting SD.."));
 #if defined(__AVR__)
   if(!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
@@ -9351,14 +9447,16 @@ void setup() {
 
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
+  #ifndef ESP32
   WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
 
   // check for the presence of the shield
-  if (WiFiSpi.status() == WL_NO_SHIELD) {
+  if (WiFi.status() == WL_NO_SHIELD) {
     printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
+  #endif
 #endif
 
   // setup IP addresses
@@ -9391,28 +9489,33 @@ void setup() {
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
 #else
-    WiFiSpi.config(ip, dnsserver, gateway, subnet);
+    WiFi.config(ip, dnsserver, gateway, subnet);
   }
+
+#ifdef ESP32
+  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
+  WiFi.mode(WIFI_STA); //init wifi mode
+#endif  
+  WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
+  printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   while ( status != WL_CONNECTED) {
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
+    printFmtToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
-    status = WiFiSpi.begin(wifi_ssid, wifi_pass);
+    status = WiFi.status() ;
+    delay(1000);
   }
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+#if defined(__arm__)
+  WiFiSpi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
+#endif
   printWifiStatus();
 #endif
 
-#ifdef WIFI
-  server = new WiFiSpiServer(HTTPPort);
+  server = new ComServer(HTTPPort);
 if(save_debug_mode == 2)
-  telnetServer = new WiFiSpiServer(23);
-#else
-  server = new EthernetServer(HTTPPort);
-if(save_debug_mode == 2)
-  telnetServer = new EthernetServer(23);
-#endif
+  telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
@@ -9599,12 +9702,18 @@ if(save_debug_mode == 2)
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #ifdef MDNS_HOSTNAME
+#if defined(ESP32)
+  MDNS.begin(MDNS_HOSTNAME);
+  MDNS.addService("http", "tcp", 80);
+  MDNS.addService("BSB-LAN web service._http", "tcp", 80);
+#else
 #ifdef WIFI
   mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
-mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+  mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+#endif
 #endif
 
 #ifdef CUSTOM_COMMANDS

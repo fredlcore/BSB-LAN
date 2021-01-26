@@ -35,8 +35,7 @@ extern "C" {
 #define FPSTR(pstr_pointer) (reinterpret_cast<const __FlashStringHelper *>(pstr_pointer))
 
 /*
-    Start server TCP on port specified
-    Note: protMode is ignored
+    Start server TCP / UDP on port specified
 */
 bool ServerSpiDrv::startServer(uint16_t port, uint8_t sock, uint8_t protMode)
 {
@@ -50,6 +49,29 @@ bool ServerSpiDrv::startServer(uint16_t port, uint8_t sock, uint8_t protMode)
     uint8_t _data = 0;
     uint8_t _dataLen = sizeof(_data);
     if (!EspSpiDrv::waitResponseCmd(START_SERVER_TCP_CMD, PARAM_NUMS_1, &_data, &_dataLen))
+    {
+        WARN(FPSTR(WiFiSpiDrv::ERROR_WAITRESPONSE));
+        _data = 0;
+    }
+    
+    return (_data == 1);  // return value 1 means ok
+}
+
+/*
+    Start server UDP Multicast on port specified listening given ip address
+*/
+bool ServerSpiDrv::startServerMulticast(const uint32_t ipAddress, const uint16_t port, const uint8_t sock)
+{
+    // Send Command
+    EspSpiDrv::sendCmd(START_SERVER_MULTICAST_CMD, PARAM_NUMS_3);
+    EspSpiDrv::sendParam(reinterpret_cast<const uint8_t*>(&ipAddress), sizeof(ipAddress));
+    EspSpiDrv::sendParam(reinterpret_cast<const uint8_t*>(&port), sizeof(port));
+    EspSpiDrv::sendParam(sock);
+    EspSpiDrv::endCmd();
+
+    uint8_t _data = 0;
+    uint8_t _dataLen = sizeof(_data);
+    if (!EspSpiDrv::waitResponseCmd(START_SERVER_MULTICAST_CMD, PARAM_NUMS_1, &_data, &_dataLen))
     {
         WARN(FPSTR(WiFiSpiDrv::ERROR_WAITRESPONSE));
         _data = 0;

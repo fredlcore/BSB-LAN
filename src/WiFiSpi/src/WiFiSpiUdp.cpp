@@ -57,6 +57,27 @@ uint8_t WiFiSpiUdp::begin(uint16_t port)
     return 0;
 }
 
+/*
+ * Starts WiFiSpiUdp socket, listening at port PORT for multicast messages from IP
+ * Returns 1 if successful, 0 on failure
+ */
+uint8_t WiFiSpiUdp::beginMulticast(IPAddress ip, uint16_t port)
+{
+    uint8_t sock = WiFiSpiClass::getSocket();
+    if (sock != SOCK_NOT_AVAIL)
+    {
+        if (ServerSpiDrv::startServerMulticast(uint32_t(ip), port, sock))
+        {
+            WiFiSpiClass::_server_port[sock] = port;
+            WiFiSpiClass::_state[sock] = sock;
+            _sock = sock;
+            _port = port;
+            return 1;
+        }
+    }
+    return 0;
+}
+
 /* 
  *  Returns number of bytes available in the current packet
  */

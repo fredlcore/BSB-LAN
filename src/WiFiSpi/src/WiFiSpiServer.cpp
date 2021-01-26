@@ -50,7 +50,7 @@ void WiFiSpiServer::begin()
         _sock = sock;
         ServerSpiDrv::startServer(_port, _sock);
         WiFiSpiClass::_server_port[_sock] = _port;
-        WiFiSpiClass::_state[_sock] = _sock + 128;
+        WiFiSpiClass::_state[_sock] = _sock;
     }
 }
 

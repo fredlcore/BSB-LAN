@@ -11,9 +11,7 @@ If your language does not have a file yet, you can simply create one yourself.
 - Once you have completed / paused translation and want to test it, set #define LANG in BSB_lan_config.h to your (new) country
 code. If possible, try to run ./create-undefs.pl (if you have a Perl interpreter) before compilation. It’s not necessary, but prevents compiler warnings. Check if the translations are how you want them to be.
 - Once you are done, you can send me a pull request or simply send the file via e-mail, whatever is easier for you.
-  
-***Please note that we also need help with the translations of the command reference (so called 'cheatsheet'). The files are located in the [command_ref-subfolder](https://github.com/fredlcore/bsb_lan/tree/master/command_ref).***  
-    
+      
     
 **Thank you!**
   

@@ -85,7 +85,7 @@ private:
     uint8_t buflen;
     uint8_t bufpos;
     
-    void _pulseSS(boolean start)
+    void _pulseSS(bool start)
     {
         if (_ss_pin >= 0)
         {
