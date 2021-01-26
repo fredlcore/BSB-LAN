@@ -9521,8 +9521,7 @@ void setup() {
 #endif
 
   server = new ComServer(HTTPPort);
-if(save_debug_mode == 2)
-  telnetServer = new ComServer(23);
+  if(save_debug_mode == 2) telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
@@ -9550,7 +9549,7 @@ if(save_debug_mode == 2)
   printlnToDebug(PSTR("Start network services"));
   server->begin();
 
-if(save_debug_mode == 2)
+  if(save_debug_mode == 2)
   telnetServer->begin();
 
 /*
