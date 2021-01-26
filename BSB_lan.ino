@@ -1714,10 +1714,10 @@ int findLine(uint16_t line
       case 7: line = 20800; break;
       case 8: {
 #ifdef BME280
-        if((sizeof(bme)/sizeof(bme[0]) * 6) >= (line - 20200)) //
-          return -1;
-        else
+        if(line - 20200 < sizeof(bme)/sizeof(bme[0]) * 6) //
           line = 20200 + ((line - 20200) % 6);
+        else
+          return -1;
 #else
         return -1;
 #endif
