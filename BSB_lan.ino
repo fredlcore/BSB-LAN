@@ -4125,7 +4125,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf){
 return 1;
 }
 
-void SaveConfigFromRAMtoEEPROM(){
+bool SaveConfigFromRAMtoEEPROM(){
   bool buschanged = false;
   bool needReboot = false;
   //save new values from RAM to EEPROM
@@ -4193,13 +4193,8 @@ void SaveConfigFromRAMtoEEPROM(){
   // Dump when serial debug active or have telnet client
   EEPROM_dump();
 
-  if (needReboot == true) {
-    forcedflushToWebClient();
-    delay(1000);
-    client.stop();
-    resetBoard();
-  }
   if(buschanged) {setBusType(); }
+  return needReboot;
 }
 #endif
 
@@ -6171,6 +6166,10 @@ void transmitFile(File dataFile) {
  *   none
  * *************************************************************** */
 void resetBoard(){
+  forcedflushToWebClient();
+  delay(10);
+  client.stop();
+  delay(300);
 #if defined(__SAM3X8E__)
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
   rstc_start_software_reset(RSTC);
@@ -8037,8 +8036,9 @@ uint8_t pps_offset = 0;
           if(tempDestAddr != destAddr)
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
 #if defined(JSONCONFIG)
+          bool needReboot = false;
           if (p[2]=='W') {
-            SaveConfigFromRAMtoEEPROM();
+            needReboot = SaveConfigFromRAMtoEEPROM();
 #ifdef MAX_CUL
             UpdateMaxDeviceList(); //Update list MAX! devices
 #endif
@@ -8046,6 +8046,11 @@ uint8_t pps_offset = 0;
 #endif
           printFmtToWebClient(PSTR("\r\n}\r\n"));
           forcedflushToWebClient();
+#if defined(JSONCONFIG)
+          if (needReboot) {
+            resetBoard();
+          }
+#endif
           break;
         }
 
@@ -8167,8 +8172,9 @@ uint8_t pps_offset = 0;
 #endif
               if(!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
-              SaveConfigFromRAMtoEEPROM();
-
+              if (SaveConfigFromRAMtoEEPROM() == true) {
+                resetBoard();
+              }
             }
             break;
               //no break here.
@@ -8352,8 +8358,6 @@ uint8_t pps_offset = 0;
           }
           printToWebClient(PSTR("Restarting Arduino...\r\n"));
           webPrintFooter();
-          forcedflushToWebClient();
-          client.stop();
           resetBoard();
           break;
         }
@@ -8990,8 +8994,15 @@ boolean mqtt_connect()
   if(MQTTPubSubClient == NULL)
   {
     mqtt_client= new ComClient();
+    uint16_t bufsize;
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    MQTTPubSubClient->setBufferSize(1024);
+    switch(mqtt_mode){
+      case 3: bufsize = 1024; break;
+      case 2: bufsize = 512; break;
+      case 1: bufsize = 64; break;
+      default: bufsize = 32; break;
+    }
+    MQTTPubSubClient->setBufferSize(bufsize);
   }
   if (!MQTTPubSubClient->connected())
   {
