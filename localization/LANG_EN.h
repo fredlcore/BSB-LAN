@@ -154,7 +154,7 @@
 #define CF_DEVICES_TEXT "Devices"
 #define CF_DHCP_TEXT "DHCP usage"
 #define CF_IPADDRESS_TEXT "IP address (fixed)"
-#define CF_MAC_TEXT "MAC address (LAN only)"
+#define CF_MAC_TEXT "MAC address"
 #define CF_TRUSTEDIPADDRESS_TEXT "Trusted IP address"
 #define CF_MASK_TEXT "Subnet"
 #define CF_WIFI_PASSWORD_TEXT "WLAN password"
