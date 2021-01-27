@@ -180,7 +180,7 @@
   "CF_DEVICES_TEXT": "Geräte",
   "CF_DHCP_TEXT": "DHCP verwenden",
   "CF_IPADDRESS_TEXT": "Statische IP-Adresse",
-  "CF_MAC_TEXT": "MAC-Adresse (nur LAN)",
+  "CF_MAC_TEXT": "MAC-Adresse",
   "CF_TRUSTEDIPADDRESS_TEXT": "Vertrauenswürdige IP-Adresse",
   "CF_MASK_TEXT": "Subnetzmaske",
   "CF_GATEWAY_TEXT": "Gateway",
