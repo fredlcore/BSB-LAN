@@ -184,7 +184,7 @@
 #define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
 #define CF_IPADDRESS_TEXT "Statische IP-Adresse"
-#define CF_MAC_TEXT "MAC-Adresse (nur LAN)"
+#define CF_MAC_TEXT "MAC-Adresse"
 #define CF_TRUSTEDIPADDRESS_TEXT "Vertrauenswürdige IP-Adresse"
 #define CF_MASK_TEXT "Subnetzmaske"
 #define CF_GATEWAY_TEXT "Gateway"
