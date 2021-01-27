@@ -8999,7 +8999,7 @@ boolean mqtt_connect()
     switch(mqtt_mode){
       case 3: bufsize = 1024; break;
       case 2: bufsize = 512; break;
-      case 1: bufsize = 64; break;
+      case 1: bufsize = 128; break;
       default: bufsize = 32; break;
     }
     MQTTPubSubClient->setBufferSize(bufsize);
