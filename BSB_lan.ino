@@ -446,6 +446,10 @@
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
 #define EEPROM_ERASING_GND_PIN 33
 #endif
+#if !defined(LED_BUILTIN)
+#define LED_BUILTIN 2
+#endif
+
 
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
@@ -6825,7 +6829,7 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x79: pps_values[PPS_DOW] = msg[4+pps_offset]; setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
                 case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
@@ -9129,7 +9133,7 @@ void setup() {
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
-#endif
+#endif  
 
 #ifdef BtSerial
   SerialOutput = &Serial2;
