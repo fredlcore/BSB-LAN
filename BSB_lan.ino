@@ -441,7 +441,11 @@
 #include "BSB_lan_defs.h"
 
 #if !defined(EEPROM_ERASING_PIN)
+#if defined(ESP32)
+#define EEPROM_ERASING_PIN 14
+#else
 #define EEPROM_ERASING_PIN 31
+#endif
 #endif
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
 #define EEPROM_ERASING_GND_PIN 33
@@ -3660,7 +3664,7 @@ void webPrintSite() {
     int major = -1;
     int minor = -1;
     int patch = -1;
-    char version_number[8] = { 0 };
+    char version_number[15] = { 0 };
     while (httpclient.available()) {
       char c = httpclient.read();
       if (c == '\"') {
@@ -3670,13 +3674,15 @@ void webPrintSite() {
           version_number[index] = c;
           index++;
         } while (c != '\"');
-        version_number[index-1] = '\0';
-        if (major < 0) {
-          major = atoi(version_number);
-        } else if (minor < 0) {
-          minor = atoi(version_number);
-        } else if (patch < 0) {
-          patch = atoi(version_number);
+        if (index > 1) {
+          version_number[index-1] = '\0';
+          if (major < 0) {
+            major = atoi(version_number);
+          } else if (minor < 0) {
+            minor = atoi(version_number);
+          } else if (patch < 0) {
+            patch = atoi(version_number);
+          }
         }
       }
     }
@@ -9140,12 +9146,6 @@ void printWifiStatus()
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
-  decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
-#if defined(EEPROM_ERASING_GND_PIN)
-  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
-#endif  
-
 #ifdef BtSerial
   SerialOutput = &Serial2;
   Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
@@ -9153,6 +9153,12 @@ void setup() {
   SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
 #endif
+
+  decodedTelegram.telegramDump = NULL;
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
+#if defined(EEPROM_ERASING_GND_PIN)
+  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
+#endif  
 
   SerialOutput->println(F("READY"));
 
@@ -9338,6 +9344,9 @@ void setup() {
     // SoftwareSerial
     temp_bus_pins[0] = 68;
     temp_bus_pins[1] = 69;
+#elif defined(ESP32)
+    temp_bus_pins[0] = 16;
+    temp_bus_pins[1] = 17;
 #else  // Due
     // HardwareSerial
     temp_bus_pins[0] = 19;
@@ -9502,6 +9511,14 @@ void setup() {
 #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
+  // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
+  printToDebug(PSTR("Setting up WiFi interface"));
+  WiFi.begin();
+  while (WiFi.status() == WL_DISCONNECTED) {
+    delay(100);
+    printToDebug(PSTR("."));
+  }
+  writelnToDebug();
 #endif
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
