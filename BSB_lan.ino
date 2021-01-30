@@ -472,12 +472,14 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
-#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+#if defined(ESP32)
 #include <EEPROM.h>
 #include <ESPmDNS.h>
+#if defined(ENABLE_ESP32_OTA)
 #include <WebServer.h>
 #include <Update.h>
 WebServer update_server(8080);
+#endif
 EEPROMClass EEPROM("eeprom1", 0x1000);
 #define strcpy_PF strcpy
 #define strcat_PF strcat
