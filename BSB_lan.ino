@@ -398,7 +398,7 @@
 
 #define HTTP_AUTH 1
 #define HTTP_GZIP 2
-#define HTTP_HEAD 4
+#define HTTP_HEAD_REQ 4
 #define HTTP_ETAG 8
 #define HTTP_GET_ROOT 16
 #define HTTP_FRAG 128
@@ -472,9 +472,12 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
-#if defined(ESP32)
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
 #include <EEPROM.h>
 #include <ESPmDNS.h>
+#include <WebServer.h>
+#include <Update.h>
+WebServer update_server(8080);
 EEPROMClass EEPROM("eeprom1", 0x1000);
 #define strcpy_PF strcpy
 #define strcat_PF strcat
@@ -7009,7 +7012,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
         if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
-          httpflags |= HTTP_HEAD;
+          httpflags |= HTTP_HEAD_REQ;
 #endif
         char *u_s = strchr(cLineBuffer,' ');
         char *u_e = strchr(u_s + 1,' ');
@@ -7171,10 +7174,10 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
-            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
+            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD_REQ)) {
               transmitFile(dataFile);
             }
-            printToDebug((httpflags & HTTP_HEAD)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
+            printToDebug((httpflags & HTTP_HEAD_REQ)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
           }
@@ -8980,6 +8983,9 @@ uint8_t pps_offset = 0;
 #if defined(MDNS_HOSTNAME) && !defined(ESP32)
   mdns.run();
 #endif
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+  update_server.handleClient();
+#endif
 } // --- loop () ---
 //Luposoft: Funktionen mqtt_connect
 /*  Function: mqtt_connect()
@@ -9746,6 +9752,42 @@ void setup() {
 #endif
   mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
+#endif
+
+// Set up web-based over-the-air updates for ESP32
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+  update_server.on("/", HTTP_GET, []() {
+    update_server.sendHeader("Connection", "close");
+    update_server.send(200, "text/html", serverIndex);
+  });
+  update_server.on("/update", HTTP_POST, []() {
+    update_server.sendHeader("Connection", "close");
+    update_server.send(200, "text/plain", (Update.hasError()) ? "NOK" : "OK");
+    delay(1000);
+    ESP.restart();
+  }, []() {
+    HTTPUpload& upload = update_server.upload();
+    if (upload.status == UPLOAD_FILE_START) {
+      printlnToDebug(PSTR("Updating ESP32 firmware..."));
+      uint32_t maxSketchSpace = (1048576 - 0x1000) & 0xFFFFF000;
+      if (!Update.begin(maxSketchSpace)) { //start with max available size
+//        Update.printError(SerialOutput);
+      }
+    } else if (upload.status == UPLOAD_FILE_WRITE) {
+      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+//        Update.printError(SerialOutput);
+      }
+    } else if (upload.status == UPLOAD_FILE_END) {
+      if (Update.end(true)) { //true to set the size to the current progress
+        printlnToDebug(PSTR("Update success, rebooting..."));
+      } else {
+//        Update.printError(SerialOutput);
+      }
+    }
+    yield();
+  });
+  update_server.begin();
+  printlnToDebug(PSTR("Update Server started on port 8080."));
 #endif
 
 #ifdef CUSTOM_COMMANDS
