@@ -6894,10 +6894,14 @@ uint8_t pps_offset = 0;
   client = server->available();
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
-    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr, &remoteIP, 4)) &&
-       (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2, &remoteIP, 4))){
+    // Use the overriden operater for a safe comparison, note, that != is not overriden.
+    if(   (trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
+       && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
-      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\r\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
+      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"), 
+        remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
+        trusted_ip_addr[0], trusted_ip_addr[1], trusted_ip_addr[2], trusted_ip_addr[3],
+        trusted_ip_addr2[0], trusted_ip_addr2[1], trusted_ip_addr2[2], trusted_ip_addr2[3]);
       client.stop();
     }
 
