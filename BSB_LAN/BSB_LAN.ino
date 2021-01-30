@@ -9026,51 +9026,49 @@ void mqtt_sendtoBroker(int param) {
       MQTTPayload.concat(F("\":{\"id\":"));
   }
   boolean is_first = true;
-  if (mqtt_connect()) { // This call seems unneccessary
-    if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
-    if (MQTTTopicPrefix[0]) {
-      MQTTTopic = MQTTTopicPrefix;
-      MQTTTopic.concat(F("/"));
-    }
-    else
-      MQTTTopic = "BSB-LAN/";
-    // use the sub-topic "json" if json output is enabled
-    if (mqtt_mode == 2 || mqtt_mode == 3)
-      MQTTTopic.concat(F("json"));
-    else
-      MQTTTopic.concat(String(param));
+  if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
+  if (MQTTTopicPrefix[0]) {
+    MQTTTopic = MQTTTopicPrefix;
+    MQTTTopic.concat(F("/"));
+  }
+  else
+    MQTTTopic = "BSB-LAN/";
+  // use the sub-topic "json" if json output is enabled
+  if (mqtt_mode == 2 || mqtt_mode == 3)
+    MQTTTopic.concat(F("json"));
+  else
+    MQTTTopic.concat(String(param));
 
-    query(param);
-    if (mqtt_mode == 3) { // Build the json doc on the fly
-      int len = 0;
-      outBuf[len] = 0;
-      len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
-      len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
-      len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
-      if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
-        len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
-      }
-      len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
-      MQTTPayload.concat(outBuf);
-    } else if (mqtt_mode == 2) { // Build the json doc on the fly
-      char tbuf[20];
-      sprintf_P(tbuf, PSTR("\"%d\":\""), param);
-      MQTTPayload.concat(tbuf);
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-        MQTTPayload.concat(String(build_pvalstr(0)));
-      } else {
-        MQTTPayload.concat(String(decodedTelegram.value));
-      }
-      MQTTPayload.concat(F("\""));
-    } else { //plain text
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-        MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
-      }
-      else
-        MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
+  query(param);
+  if (mqtt_mode == 3) { // Build the json doc on the fly
+    int len = 0;
+    outBuf[len] = 0;
+    len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
+    len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
+    len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
+    if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
+      len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
     }
+    len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
+    MQTTPayload.concat(outBuf);
+  } else if (mqtt_mode == 2) { // Build the json doc on the fly
+    char tbuf[20];
+    sprintf_P(tbuf, PSTR("\"%d\":\""), param);
+    MQTTPayload.concat(tbuf);
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+      MQTTPayload.concat(String(build_pvalstr(0)));
+    } else {
+      MQTTPayload.concat(String(decodedTelegram.value));
+    }
+    MQTTPayload.concat(F("\""));
+  } else { //plain text
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+      MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
+    }
+    else
+      MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
   }
   // End of mqtt if loop so close off the json and publish
   if (mqtt_mode == 2 || mqtt_mode == 3) {
