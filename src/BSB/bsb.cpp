@@ -46,7 +46,6 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 
 void BSB::enableInterface() {
   if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
-#define ESP32
 #if defined(ESP32)
     Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
     uart_intr_config_t uart_intr;
