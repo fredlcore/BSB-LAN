@@ -475,7 +475,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #if defined(ESP32)
 #include <EEPROM.h>
 #include <ESPmDNS.h>
-EEPROMClass EEPROM("eeprom1", 0x800);
+EEPROMClass EEPROM("eeprom1", 0x1000);
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -4866,7 +4866,7 @@ int set(int line      // the ProgNr of the heater parameter
       return 2;
     }
 
-  if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
+  if (bus->getBusType() == BUS_PPS && line >= 15000 && line < 15000 + PPS_ANZ) { // PPS-Bus set parameter
     int cmd_no = line - 15000;
     switch (decodedTelegram.type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
@@ -6539,7 +6539,7 @@ void loop() {
                 msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
             }
-            break;
+//            break;
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
               tx_msg[6] = pps_values[PPS_RTS] >> 8;
@@ -9191,7 +9191,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)pps_values);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
@@ -9416,14 +9416,19 @@ void setup() {
 */
 
   printToDebug(PSTR("PPS settings:\r\n"));
-  for (int i=15000; i<= 15000+PPS_ANZ; i++) {
-    uint8_t flags=get_cmdtbl_flags(i);
-    if ((flags & FL_EEPROM) == FL_EEPROM) {
-      if(pps_values[i-15000] == (int16_t)0xFFFF) pps_values[i-15000] = 0;
+  uint32_t temp_c = 0;
+  int temp_idx = findLine(15000,0,&temp_c);
+  for (int i=0; i<PPS_ANZ; i++) {
+    int l = findLine(15000+i,temp_idx+i,&temp_c);
+    uint8_t flags=get_cmdtbl_flags(l);
+//    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
+      if(pps_values[i] == (int16_t)0xFFFF) {
+        pps_values[i] = 0;
+      }
       if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF) {
         printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
       }
-    }
+//    }
   }
   if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
     pps_values[PPS_QTP] = QAA_TYPE;
