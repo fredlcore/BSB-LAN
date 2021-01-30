@@ -305,3 +305,7 @@ const char auth_req_html[] PROGMEM_LATE =
   "<!DOCTYPE HTML>\n"
   "<HTML><HEAD><TITLE>BSB-LAN</TITLE>\n"
   "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>\n";
+
+#if defined(ESP32)
+const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
+#endif 
