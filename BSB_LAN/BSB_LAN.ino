@@ -4220,12 +4220,7 @@ bool SaveConfigFromRAMtoEEPROM() {
 #ifdef MQTT
         case CF_MQTT:
         case CF_MQTT_IPADDRESS:
-          if (MQTTPubSubClient) {
-            delete MQTTPubSubClient;
-            MQTTPubSubClient = NULL;
-            mqtt_client->stop();
-            delete mqtt_client;
-          }
+          mqtt_disconnect();
           break;
 #endif
         default: break;
@@ -6244,7 +6239,8 @@ void transmitFile(File dataFile) {
 
 /** *****************************************************************
  *  Function: resetBoard
- *  Does: restart Arduino
+ *  Does: restart Arduino, will disconnect from MQTT if connected,
+ *        required to send update the WILL topic correctly.
  *  Pass parameters:
  *   none
  * Parameters passed back:
@@ -6252,9 +6248,12 @@ void transmitFile(File dataFile) {
  * Function value returned:
  *   none
  * Global resources used:
- *   none
+ *   MQTT instance
  * *************************************************************** */
 void resetBoard() {
+#ifdef MQTT
+  mqtt_disconnect();
+#endif
   forcedflushToWebClient();
   delay(10);
   client.stop();
@@ -8661,19 +8660,13 @@ uint8_t pps_offset = 0;
       }
       if (MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
       {
-        if (MQTTPubSubClient->connected())
-        {
-          MQTTPubSubClient->disconnect();
-          printlnToDebug(PSTR("MQTT was disconnected on order through web interface"));
-        }
+        // Actual disconnect will be handled a few lines below through mqtt_disconnect().
+        printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
       }
     }
   }
-  if (MQTTPubSubClient && mqtt_mode == 0) {
-    delete MQTTPubSubClient;
-    MQTTPubSubClient = NULL;
-    mqtt_client->stop();
-    delete mqtt_client;
+  if (mqtt_mode == 0) {
+    mqtt_disconnect();
   }
 #endif
 
@@ -9018,7 +9011,7 @@ uint8_t pps_offset = 0;
 void mqtt_sendtoBroker(int param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
-  String MQTTTopic = "";
+  String MQTTTopic = ""; 
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTPayload = "";
     // Build the json heading
@@ -9033,7 +9026,7 @@ void mqtt_sendtoBroker(int param) {
       MQTTPayload.concat(F("\":{\"id\":"));
   }
   boolean is_first = true;
-  if (mqtt_connect()) {              //Luposoft, new funct
+  if (mqtt_connect()) { // This call seems unneccessary
     if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
     if (MQTTTopicPrefix[0]) {
       MQTTTopic = MQTTTopicPrefix;
@@ -9041,7 +9034,7 @@ void mqtt_sendtoBroker(int param) {
     }
     else
       MQTTTopic = "BSB-LAN/";
-// use the sub-topic "json" if json output is enabled
+    // use the sub-topic "json" if json output is enabled
     if (mqtt_mode == 2 || mqtt_mode == 3)
       MQTTTopic.concat(F("json"));
     else
@@ -9116,13 +9109,7 @@ void mqtt_sendtoBroker(int param) {
 #ifdef MQTT
 boolean mqtt_connect()
 {
-  char* MQTTUser = NULL;
-  if (MQTTUsername[0])
-    MQTTUser = MQTTUsername;
-  const char* MQTTPass = NULL;
-  if (MQTTPassword[0])
-    MQTTPass = MQTTPassword;
-  if (MQTTPubSubClient == NULL)
+  if(MQTTPubSubClient == NULL)
   {
     mqtt_client= new ComClient();
     uint16_t bufsize;
@@ -9137,12 +9124,19 @@ boolean mqtt_connect()
   }
   if (!MQTTPubSubClient->connected())
   {
+    char* MQTTUser = NULL;
+    if(MQTTUsername[0])
+      MQTTUser = MQTTUsername;
+    const char* MQTTPass = NULL;
+    if(MQTTPassword[0])
+      MQTTPass = MQTTPassword;
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
     MQTTPubSubClient->setServer(MQTTBroker, 1883);
+    String MQTTWillTopic = mqtt_get_will_topic();
     int retries = 0;
     while (!MQTTPubSubClient->connected() && retries < 3)
     {
-      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass);
+      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
       retries++;
       if (!MQTTPubSubClient->connected())
       {
@@ -9157,6 +9151,7 @@ boolean mqtt_connect()
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
         MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
         MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+        MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("online"), true);
         return true;
       }
     }
@@ -9166,6 +9161,57 @@ boolean mqtt_connect()
     return true;
   }
 return false;
+}
+#endif
+/* Function: mqtt_get_will_topic()
+ * Does:    Constructs the MQTT Will Topic used throught the system
+ * Pass parameters:
+ *   none
+ * Function value returned
+ *   MQTT last will topic as C++ String instance
+ * Global resources used:
+ *   none
+ */
+#ifdef MQTT
+String mqtt_get_will_topic() {
+  // Build (Last) Will Topic
+  String MQTTLWTopic = "";
+  if (MQTTTopicPrefix[0]) {
+    MQTTLWTopic = MQTTTopicPrefix;
+    MQTTLWTopic.concat(F("/status"));
+  } else {
+    MQTTLWTopic = F("BSB-LAN/status");
+  }
+  return MQTTLWTopic;
+}
+#endif
+/* Function: mqtt_disconnect()
+ * Does:     Will disconnect from the MQTT Broker if connected.
+ *           Frees accociated resources
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *   Serial instance
+ *   Ethernet instance
+ *   MQTT instance
+ */
+#ifdef MQTT
+void mqtt_disconnect() {
+  if (MQTTPubSubClient) {
+    printlnToDebug(PSTR("Disconnect from MQTT broker, updating will topic"));
+    if (MQTTPubSubClient->connected()) {
+      MQTTPubSubClient->publish(mqtt_get_will_topic().c_str(), PSTR("offline"), true);
+      MQTTPubSubClient->disconnect();
+    }
+    delete MQTTPubSubClient;
+    MQTTPubSubClient = NULL;
+    mqtt_client->stop();
+    delete mqtt_client;
+  }
 }
 #endif
 //Luposoft: Funktionen mqtt_callback
