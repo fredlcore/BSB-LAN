@@ -6914,7 +6914,7 @@ uint8_t pps_offset = 0;
     if(   (trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
        && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
-      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"), 
+      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"),
         remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
         trusted_ip_addr[0], trusted_ip_addr[1], trusted_ip_addr[2], trusted_ip_addr[3],
         trusted_ip_addr2[0], trusted_ip_addr2[1], trusted_ip_addr2[2], trusted_ip_addr2[3]);
@@ -9181,7 +9181,7 @@ void setup() {
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
-#endif  
+#endif
 
   SerialOutput->println(F("READY"));
 
@@ -9443,7 +9443,7 @@ void setup() {
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
     int l = findLine(15000+i,temp_idx+i,&temp_c);
-    uint8_t flags=get_cmdtbl_flags(l);
+//    uint8_t flags=get_cmdtbl_flags(l);
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if(pps_values[i] == (int16_t)0xFFFF) {
         pps_values[i] = 0;
