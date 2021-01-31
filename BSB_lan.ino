@@ -9446,6 +9446,9 @@ void setup() {
     pps_values[PPS_QTP] = QAA_TYPE;
     writeToEEPROM(CF_ROOM_DEVICE);
   }
+  if(pps_values[PPS_RTI] != 0) {
+    pps_values[PPS_RTI] = 0;
+  }
 
 #if defined LOGGER || defined WEBSERVER
   // disable w5100 while setting up SD
