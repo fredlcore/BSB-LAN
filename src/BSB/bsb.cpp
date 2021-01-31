@@ -458,11 +458,13 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
     }
     serial->write(data);
     if (HwSerial == true) {
+#if !defined(ESP32)
       serial->flush();
       readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+#endif
     }
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
-      if (rx_pin_read()) {
+    if (rx_pin_read()) {
       // Collision
 #if defined(__AVR__)
       if (HwSerial == false) {
@@ -597,7 +599,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
-boolean BSB::rx_pin_read() {
+boolean BSB::rx_pin_read() {  // not tested if this will work on ESP32
   return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
 }
 
