@@ -51,12 +51,9 @@ void BSB::enableInterface() {
     uart_intr_config_t uart_intr;
     uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
                             | UART_RXFIFO_TOUT_INT_ENA_M
-                            | UART_FRM_ERR_INT_ENA_M
-                            | UART_RXFIFO_OVF_INT_ENA_M
-                            | UART_BRK_DET_INT_ENA_M
-                            | UART_PARITY_ERR_INT_ENA_M;
+                            | UART_FRM_ERR_INT_ENA_M;
     uart_intr.rxfifo_full_thresh = 1; //UART_FULL_THRESH_DEFAULT,  //120 default!! aghh! need receive 120 chars before we see them
-    uart_intr.rx_timeout_thresh = 10; // ,  //10 works well for my short messages I need send/receive
+    uart_intr.rx_timeout_thresh = 2; // ,  //10 works well for my short messages I need send/receive
     uart_intr.txfifo_empty_intr_thresh = 10; //UART_EMPTY_THRESH_DEFAULT
     uart_intr_config(UART_NUM_1, &uart_intr);
 #else
