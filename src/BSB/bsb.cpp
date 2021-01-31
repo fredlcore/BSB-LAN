@@ -457,11 +457,10 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
       data = data ^ 0xFF;
     }
     serial->write(data);
-    if (HwSerial == true) {
 #if !defined(ESP32)
+    if (HwSerial == true) {
       serial->flush();
       readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
-#endif
     }
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
     if (rx_pin_read()) {
@@ -473,6 +472,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
       goto retry;
     }
+#endif
   }
   if (HwSerial == true) {
     serial->flush();
