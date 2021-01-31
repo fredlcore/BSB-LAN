@@ -646,6 +646,10 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #ifdef DHT_BUS
   #include "src/DHT/dht.h"
   dht DHT;
+//Save state between queries
+  unsigned long DHT_Timer = 0;
+  int last_DHT_State = 0;
+  uint8_t last_DHT_pin = 0;
 #endif
 
 unsigned long lastAvgTime = 0;
@@ -5606,10 +5610,17 @@ void queryVirtualPrognr(int line, int table_line){
          sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
          return;
        }
+       unsigned long temp_timer = millis();
+       if(DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer)
+          last_DHT_pin = 0;
 
-       int chk = DHT.read22(DHT_Pins[log_sensor]);
-       printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), DHT_Pins[log_sensor]);
-       switch (chk) {
+       if(last_DHT_pin != DHT_Pins[log_sensor]) {
+         last_DHT_pin = DHT_Pins[log_sensor];
+         DHT_Timer = millis();
+         last_DHT_State = DHT.read22(last_DHT_pin);
+       }
+       printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), last_DHT_pin);
+       switch (last_DHT_State) {
          case DHTLIB_OK:
            printToDebug(PSTR("OK,\t"));
            break;
