@@ -398,7 +398,7 @@
 
 #define HTTP_AUTH 1
 #define HTTP_GZIP 2
-#define HTTP_HEAD 4
+#define HTTP_HEAD_REQ 4
 #define HTTP_ETAG 8
 #define HTTP_GET_ROOT 16
 #define HTTP_FRAG 128
@@ -441,11 +441,19 @@
 #include "BSB_lan_defs.h"
 
 #if !defined(EEPROM_ERASING_PIN)
+#if defined(ESP32)
+#define EEPROM_ERASING_PIN 14
+#else
 #define EEPROM_ERASING_PIN 31
+#endif
 #endif
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
 #define EEPROM_ERASING_GND_PIN 33
 #endif
+#if !defined(LED_BUILTIN)
+#define LED_BUILTIN 2
+#endif
+
 
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
@@ -467,7 +475,12 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #if defined(ESP32)
 #include <EEPROM.h>
 #include <ESPmDNS.h>
-EEPROMClass EEPROM("eeprom1", 0x800);
+#if defined(ENABLE_ESP32_OTA)
+#include <WebServer.h>
+#include <Update.h>
+WebServer update_server(8080);
+#endif
+EEPROMClass EEPROM("eeprom1", 0x1000);
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -3660,7 +3673,7 @@ void webPrintSite() {
     int major = -1;
     int minor = -1;
     int patch = -1;
-    char version_number[8] = { 0 };
+    char version_number[15] = { 0 };
     while (httpclient.available()) {
       char c = httpclient.read();
       if (c == '\"') {
@@ -3670,13 +3683,15 @@ void webPrintSite() {
           version_number[index] = c;
           index++;
         } while (c != '\"');
-        version_number[index-1] = '\0';
-        if (major < 0) {
-          major = atoi(version_number);
-        } else if (minor < 0) {
-          minor = atoi(version_number);
-        } else if (patch < 0) {
-          patch = atoi(version_number);
+        if (index > 1) {
+          version_number[index-1] = '\0';
+          if (major < 0) {
+            major = atoi(version_number);
+          } else if (minor < 0) {
+            minor = atoi(version_number);
+          } else if (patch < 0) {
+            patch = atoi(version_number);
+          }
         }
       }
     }
@@ -4860,7 +4875,7 @@ int set(int line      // the ProgNr of the heater parameter
       return 2;
     }
 
-  if (bus->getBusType() == BUS_PPS && line >= 15000 && line <= 15000 + PPS_ANZ) { // PPS-Bus set parameter
+  if (bus->getBusType() == BUS_PPS && line >= 15000 && line < 15000 + PPS_ANZ) { // PPS-Bus set parameter
     int cmd_no = line - 15000;
     switch (decodedTelegram.type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
@@ -6540,7 +6555,7 @@ void loop() {
                 msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
               }
             }
-            break;
+//            break;
             case 8:
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
               tx_msg[6] = pps_values[PPS_RTS] >> 8;
@@ -6835,7 +6850,7 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x79: pps_values[PPS_DOW] = msg[4+pps_offset]; setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
                 case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
@@ -6895,10 +6910,14 @@ uint8_t pps_offset = 0;
   client = server->available();
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
-    if((trusted_ip_addr[0] && memcmp(trusted_ip_addr, &remoteIP, 4)) &&
-       (trusted_ip_addr2[0] && memcmp(trusted_ip_addr2, &remoteIP, 4))){
+    // Use the overriden operater for a safe comparison, note, that != is not overriden.
+    if(   (trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
+       && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
-      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d.\r\n"), remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3]);
+      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"), 
+        remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
+        trusted_ip_addr[0], trusted_ip_addr[1], trusted_ip_addr[2], trusted_ip_addr[3],
+        trusted_ip_addr2[0], trusted_ip_addr2[1], trusted_ip_addr2[2], trusted_ip_addr2[3]);
       client.stop();
     }
 
@@ -7006,7 +7025,7 @@ uint8_t pps_offset = 0;
 #ifdef WEBSERVER
         // Check for HEAD request (for file caching)
         if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
-          httpflags |= HTTP_HEAD;
+          httpflags |= HTTP_HEAD_REQ;
 #endif
         char *u_s = strchr(cLineBuffer,' ');
         char *u_e = strchr(u_s + 1,' ');
@@ -7168,10 +7187,10 @@ uint8_t pps_offset = 0;
             printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
-            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD)) {
+            if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD_REQ)) {
               transmitFile(dataFile);
             }
-            printToDebug((httpflags & HTTP_HEAD)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
+            printToDebug((httpflags & HTTP_HEAD_REQ)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
           }
@@ -8977,6 +8996,9 @@ uint8_t pps_offset = 0;
 #if defined(MDNS_HOSTNAME) && !defined(ESP32)
   mdns.run();
 #endif
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+  update_server.handleClient();
+#endif
 } // --- loop () ---
 //Luposoft: Funktionen mqtt_connect
 /*  Function: mqtt_connect()
@@ -9147,12 +9169,6 @@ void printWifiStatus()
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
-  decodedTelegram.telegramDump = NULL;
-  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
-#if defined(EEPROM_ERASING_GND_PIN)
-  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
-#endif
-
 #ifdef BtSerial
   SerialOutput = &Serial2;
   Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
@@ -9160,6 +9176,12 @@ void setup() {
   SerialOutput = &Serial;
   Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
 #endif
+
+  decodedTelegram.telegramDump = NULL;
+  pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
+#if defined(EEPROM_ERASING_GND_PIN)
+  pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
+#endif  
 
   SerialOutput->println(F("READY"));
 
@@ -9192,7 +9214,7 @@ void setup() {
   registerConfigVariable(CF_MAX_DEVICES, (byte *)max_device_list);
   registerConfigVariable(CF_MAX_DEVADDR, (byte *)max_devices);
 #endif
-  registerConfigVariable(CF_PPS_VALUES, (byte *)&pps_values);
+  registerConfigVariable(CF_PPS_VALUES, (byte *)pps_values);
 #ifdef CONFIG_IN_EEPROM
   uint8_t EEPROMversion = 0;
   registerConfigVariable(CF_USEEEPROM, (byte *)&UseEEPROM);
@@ -9345,6 +9367,9 @@ void setup() {
     // SoftwareSerial
     temp_bus_pins[0] = 68;
     temp_bus_pins[1] = 69;
+#elif defined(ESP32)
+    temp_bus_pins[0] = 16;
+    temp_bus_pins[1] = 17;
 #else  // Due
     // HardwareSerial
     temp_bus_pins[0] = 19;
@@ -9414,18 +9439,26 @@ void setup() {
 */
 
   printToDebug(PSTR("PPS settings:\r\n"));
-  for (int i=15000; i<= 15000+PPS_ANZ; i++) {
-    uint8_t flags=get_cmdtbl_flags(i);
-    if ((flags & FL_EEPROM) == FL_EEPROM) {
-      if(pps_values[i-15000] == (int16_t)0xFFFF) pps_values[i-15000] = 0;
+  uint32_t temp_c = 0;
+  int temp_idx = findLine(15000,0,&temp_c);
+  for (int i=0; i<PPS_ANZ; i++) {
+    int l = findLine(15000+i,temp_idx+i,&temp_c);
+    uint8_t flags=get_cmdtbl_flags(l);
+//    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
+      if(pps_values[i] == (int16_t)0xFFFF) {
+        pps_values[i] = 0;
+      }
       if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF) {
         printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
       }
-    }
+//    }
   }
   if(pps_values[PPS_QTP] == 0 || UseEEPROM != 0x96) {
     pps_values[PPS_QTP] = QAA_TYPE;
     writeToEEPROM(CF_ROOM_DEVICE);
+  }
+  if(pps_values[PPS_RTI] != 0) {
+    pps_values[PPS_RTI] = 0;
   }
 
 #if defined LOGGER || defined WEBSERVER
@@ -9455,14 +9488,21 @@ void setup() {
 #ifdef WIFI
   int status = WL_IDLE_STATUS;
   #ifndef ESP32
-  WiFiSpi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 13
+  WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
+    Serial.println(F("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
+
+  if (!WiFi.checkProtocolVersion()) {
+    Serial.println(F("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP."));
+    // don't continue:
+    while (true);
+  }
+
   #endif
 #endif
 
@@ -9502,6 +9542,14 @@ void setup() {
 #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
+  // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
+  printToDebug(PSTR("Setting up WiFi interface"));
+  WiFi.begin();
+  while (WiFi.status() == WL_DISCONNECTED) {
+    delay(100);
+    printToDebug(PSTR("."));
+  }
+  writelnToDebug();
 #endif
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
@@ -9515,14 +9563,13 @@ void setup() {
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
 #if defined(__arm__)
-  WiFiSpi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
+  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
 #endif
   printWifiStatus();
 #endif
 
   server = new ComServer(HTTPPort);
-if(save_debug_mode == 2)
-  telnetServer = new ComServer(23);
+  if(save_debug_mode == 2) telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
   digitalWrite(10,HIGH);
@@ -9550,7 +9597,7 @@ if(save_debug_mode == 2)
   printlnToDebug(PSTR("Start network services"));
   server->begin();
 
-if(save_debug_mode == 2)
+  if(save_debug_mode == 2)
   telnetServer->begin();
 
 /*
@@ -9715,12 +9762,48 @@ if(save_debug_mode == 2)
   MDNS.addService("BSB-LAN web service._http", "tcp", 80);
 #else
 #ifdef WIFI
-  mdns.begin(WiFiSpi.localIP(), PSTR(MDNS_HOSTNAME));
+  mdns.begin(WiFi.localIP(), PSTR(MDNS_HOSTNAME));
 #else
   mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
 #endif
   mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
+#endif
+
+// Set up web-based over-the-air updates for ESP32
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+  update_server.on("/", HTTP_GET, []() {
+    update_server.sendHeader("Connection", "close");
+    update_server.send(200, "text/html", serverIndex);
+  });
+  update_server.on("/update", HTTP_POST, []() {
+    update_server.sendHeader("Connection", "close");
+    update_server.send(200, "text/plain", (Update.hasError()) ? "NOK" : "OK");
+    delay(1000);
+    ESP.restart();
+  }, []() {
+    HTTPUpload& upload = update_server.upload();
+    if (upload.status == UPLOAD_FILE_START) {
+      printlnToDebug(PSTR("Updating ESP32 firmware..."));
+      uint32_t maxSketchSpace = (1048576 - 0x1000) & 0xFFFFF000;
+      if (!Update.begin(maxSketchSpace)) { //start with max available size
+//        Update.printError(SerialOutput);
+      }
+    } else if (upload.status == UPLOAD_FILE_WRITE) {
+      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+//        Update.printError(SerialOutput);
+      }
+    } else if (upload.status == UPLOAD_FILE_END) {
+      if (Update.end(true)) { //true to set the size to the current progress
+        printlnToDebug(PSTR("Update success, rebooting..."));
+      } else {
+//        Update.printError(SerialOutput);
+      }
+    }
+    yield();
+  });
+  update_server.begin();
+  printlnToDebug(PSTR("Update Server started on port 8080."));
 #endif
 
 #ifdef CUSTOM_COMMANDS
