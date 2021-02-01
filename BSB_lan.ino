@@ -9779,14 +9779,14 @@ void setup() {
   });
   update_server.on("/update", HTTP_POST, []() {
     update_server.sendHeader("Connection", "close");
-    update_server.send(200, "text/plain", (Update.hasError()) ? "NOK" : "OK");
+    update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
     delay(1000);
     ESP.restart();
   }, []() {
     HTTPUpload& upload = update_server.upload();
     if (upload.status == UPLOAD_FILE_START) {
       printlnToDebug(PSTR("Updating ESP32 firmware..."));
-      uint32_t maxSketchSpace = (1048576 - 0x1000) & 0xFFFFF000;
+      uint32_t maxSketchSpace = 0x140000;
       if (!Update.begin(maxSketchSpace)) { //start with max available size
         Update.printError(Serial);
       }
