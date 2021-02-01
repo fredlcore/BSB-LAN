@@ -9788,17 +9788,17 @@ void setup() {
       printlnToDebug(PSTR("Updating ESP32 firmware..."));
       uint32_t maxSketchSpace = (1048576 - 0x1000) & 0xFFFFF000;
       if (!Update.begin(maxSketchSpace)) { //start with max available size
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     } else if (upload.status == UPLOAD_FILE_WRITE) {
       if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     } else if (upload.status == UPLOAD_FILE_END) {
       if (Update.end(true)) { //true to set the size to the current progress
         printlnToDebug(PSTR("Update success, rebooting..."));
       } else {
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     }
     yield();
