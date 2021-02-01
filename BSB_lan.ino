@@ -3353,8 +3353,11 @@ void printTelegram(byte* msg, int query_line) {
                 for (int x=0; x<len; x++) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
                 }
-
+#if !defined(ESP32)
                 sprintf_P(decodedTelegram.value,PSTR("%lu"),val);
+#else
+                sprintf_P(decodedTelegram.value,PSTR("%u"),val);
+#endif
                 printToDebug(decodedTelegram.value);
               } else {
                 decodedTelegram.error = 259;
@@ -5377,7 +5380,11 @@ char *build_pvalstr(bool extended){
   int len = 0;
   outBuf[len] = 0;
   if (extended) {
+#if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
+#else
+    len+=sprintf_P(outBuf, PSTR("%4d "), decodedTelegram.prognr);
+#endif
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
     if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
@@ -5591,7 +5598,11 @@ void queryVirtualPrognr(int line, int table_line){
          case 20005: val = TWW_count; break;
          case 20006: val = 0; break;
        }
+#if !defined(ESP32)
        sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
+#else
+       sprintf_P(decodedTelegram.value, PSTR("%d"), val);
+#endif
        return;
      }
      case 2: {
