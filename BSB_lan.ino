@@ -9563,6 +9563,9 @@ void setup() {
 #if defined(__arm__)
   WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
 #endif
+#if defined(ESP32)
+  esp_efuse_mac_get_default(mac);
+#endif
   printWifiStatus();
 #endif
 
