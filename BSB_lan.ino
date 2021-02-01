@@ -9561,7 +9561,7 @@ void setup() {
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
 #if defined(__arm__) || defined(ESP32)
-  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
+  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
 #endif
   printWifiStatus();
 #endif
