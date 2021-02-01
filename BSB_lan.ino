@@ -7070,20 +7070,20 @@ uint8_t pps_offset = 0;
         char *p=cLineBuffer;
         if (PASSKEY[0]) {
         // check for valid passkey
-        p=strchr(cLineBuffer+1,'/');
-        if (p==NULL) {    // no match
-          break;
+          p=strchr(cLineBuffer+1,'/');
+          if (p==NULL) {    // no match
+            break;
+          }
+          *p='\0';     // mark end of string
+          if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
+            printlnToDebug(PSTR("no matching passkey"));
+            client.flush();
+            client.stop();
+            //do not print header and footer. It is security breach
+            break;
+          }
+          *p='/';
         }
-        *p='\0';     // mark end of string
-        if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
-          printlnToDebug(PSTR("no matching passkey"));
-          client.flush();
-          client.stop();
-          //do not print header and footer. It is security breach
-          break;
-        }
-        *p='/';
-      }
 
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
