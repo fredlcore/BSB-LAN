@@ -7193,9 +7193,7 @@ uint8_t pps_offset = 0;
             printToDebug((httpflags & HTTP_HEAD_REQ)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
-          }
-          else
-          {
+          } else {
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           // simply print the website if no index.html on SD card
             if ((httpflags & HTTP_GET_ROOT)) {
@@ -7207,14 +7205,13 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
             flushToWebClient();
-           }
+          }
           client.flush();
           break;
         }
 #endif
-
-        if (p[1] != 'J') {
-          client.flush();
+        if (p[1] != 'J' && p[1] != 'C') {
+          while (client.available()) client.read();
         } else {
           if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
             strcpy_P(outBuf + buffershift, PSTR("\""));
