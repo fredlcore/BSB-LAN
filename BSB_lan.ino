@@ -9443,7 +9443,8 @@ void setup() {
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
     int l = findLine(15000+i,temp_idx+i,&temp_c);
-    uint8_t flags=get_cmdtbl_flags(l);
+    if (l==-1) continue;
+//    uint8_t flags=get_cmdtbl_flags(l);
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if(pps_values[i] == (int16_t)0xFFFF) {
         pps_values[i] = 0;
