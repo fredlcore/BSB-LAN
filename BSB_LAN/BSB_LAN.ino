@@ -65,7 +65,7 @@
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
- *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_lan_config.h! You need to write settings to EEPROM in configuration menu again!
+ *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
@@ -104,11 +104,11 @@
  *        - last version completely tested on Mega 2560. Future versions may still run on the Mega, but will only be tested on the Arduino Due.
  *       version 0.43
  *        - Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.
- *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_lan_config.h
+ *        - Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in BSB_LAN_config.h
  *        - Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. /<passcode>/xxx to query parameter xxx or /<passcode>/N to restart Arduino.
  *        - Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")
  *        - Many new parameters, please run /Q to see any possible changes for your device family and report back to us!
- *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_lan_custom.h, for example to read sensors etc.
+ *        - Added global variables (arrays of 20 bytes) custom_floats[] and custom_longs[] for use with BSB_LAN_custom.h, for example to read sensors etc.
  *          Output of these variables is done via new URL command /U
  *        - Added device families 23 and 29 (Grünenwald heaters)
  *        - Added device families 49, 52, 59 (Weishaupt heaters)
@@ -130,9 +130,9 @@
  *        - Bugfix: DHCP (ethernet) implementation
  *       version 0.42
  *        - Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (LANG_DE.h is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
- *          Attention: Language definition in BSB_lan_config.h is now #define LANG <ISO-CODE>
+ *          Attention: Language definition in BSB_LAN_config.h is now #define LANG <ISO-CODE>
  *          For example: #define LANG DE
- *        - Added export to MQTT broker, use log_parameters[] in BSB_lan_config.h to define parameters and activate MQTTBrokerIP definement.
+ *        - Added export to MQTT broker, use log_parameters[] in BSB_LAN_config.h to define parameters and activate MQTTBrokerIP definement.
  *        - Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino.
  *          The ESP8266 has to be flashed with the AT firmware from Espressif to work.
  *          Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.
@@ -153,8 +153,8 @@
  *        - Added WHG Procon device family (195)
  *        - Added unit to log file as well as average output
  *        - Rewrote device matching in cmd_tbl to accomodate also device variant (Gerätevariante). Run /Q to see if transition has worked for your device!
- *        - Added BSB_lan_custom_setup.h and BSB_lan_custom_global.h for you to add individual code (best used in conjunction with BSB_lan_custom.h)
- *        - Marked all (known) OEM parameters with flag FL_OEM. OEM parameters are set by default as read-only. To make them writeable, change FL_OEM from 5 to 4 in BSB_lan_defs.h
+ *        - Added BSB_LAN_custom_setup.h and BSB_LAN_custom_global.h for you to add individual code (best used in conjunction with BSB_LAN_custom.h)
+ *        - Marked all (known) OEM parameters with flag FL_OEM. OEM parameters are set by default as read-only. To make them writeable, change FL_OEM from 5 to 4 in BSB_LAN_defs.h
  *        - Increased performance for querying several parameters at once (similar to category query)
  *        - Added config option to define subnet.
  *        - /Q no longer needs #define DEBUG
@@ -166,15 +166,15 @@
  *        - Interim release containing all changes from 0.42 above, except locaization, i.e. all text fragments are still part of the main code.
  *       version 0.40
  *        - Implemented polling of MAX! heating thermostats, display with URL command /X.
- *          See BSB_lan_custom.h for an example to transmit average room temperature to heating system.
+ *          See BSB_LAN_custom.h for an example to transmit average room temperature to heating system.
  *        - Added new category "22 - Energiezähler" - please note that all subsequent categories move one up!
  *        - New virtual parameter 1601 (manual TWW push)
  *        - Added Fujitsu Waterstage WSYP100DG6 device family (211)
  *        - Added CTC device family (103)
  *        - New definement "#define TRUSTED_IP2" to grant access to a second local IP address
- *        - Added optional definement "#define GatewayIP" in BSB_lan_config.h to enable setting router address different from x.x.x.1
+ *        - Added optional definement "#define GatewayIP" in BSB_LAN_config.h to enable setting router address different from x.x.x.1
  *        - Removed parameter 10109 because it is the same as 10000
- *        - Added function to check all known CommandIDs on your own heating system. Use /Q after enabling definement "#define DEBUG" in BSB_lan_config.h
+ *        - Added function to check all known CommandIDs on your own heating system. Use /Q after enabling definement "#define DEBUG" in BSB_LAN_config.h
  *        - Added parameter numbers to category menu
  *        - Updated analyze.sh
  *        - hopefully fixing the memory issue
@@ -185,7 +185,7 @@
  *          Use setBusType(2) to set to PPS upon boot or /P2 to switch temporarily.
  *        - Set GPIOs to input by using /Gxx,I
  *        - Definement "#define CUSTOM_COMMANDS" added.
- *          Use this in your configuration to include individual code from "BSB_lan_custom.h"
+ *          Use this in your configuration to include individual code from "BSB_LAN_custom.h"
  *          (needs to be created by you!) which is executed at the end of each main loop.
  *          Variables "custom_timer" and "custom_timer_compare" have been added to execute
  *          code at arbitrary intervals.
@@ -193,10 +193,10 @@
  *        - several new parameters added
  *        - Bugfix for logging Brennerlaufzeit Stufe 2
  *       version 0.38
- *        - ATTENTION: New BSB_lan_config.h configurations! You need to adjust your configuration when upgrading to this version!
+ *        - ATTENTION: New BSB_LAN_config.h configurations! You need to adjust your configuration when upgrading to this version!
  *          Webserver port is now defined in #define Port xx
  *          IP address is now defined in #define IPAddr 88,88,88,88 form - note the commas instead of dots!
- *          Special log parameters 20002 to 20006 have changed, see BSB_lan_config.h for their new meaning
+ *          Special log parameters 20002 to 20006 have changed, see BSB_LAN_config.h for their new meaning
  *        - Added new virtual parameter 701 (Präsenztaste) which enters reduced temperature mode until next timed switch
  *        - Added Brötje BOB device family (138), including many new parameters!
  *        - Added Brötje SOB26 device family (28)
@@ -205,10 +205,10 @@
  *        - Added Weishaupt WTU 25-G familiy (50)
  *        - Added output for absolute humidity (g/m3) for DHT22 sensors
  *        - New schematics for Arduino/Raspberry board layout
- *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_lan_config.h
- *        - Including two-stage oil furnaces BC-counters and logging - please note that logging parameters have been adjusted, see BSB_lan_config.h for new values!
+ *        - Included support for W5500 Ethernet2 shields. Activate definement ETHERNET_W5500 in BSB_LAN_config.h
+ *        - Including two-stage oil furnaces BC-counters and logging - please note that logging parameters have been adjusted, see BSB_LAN_config.h for new values!
  *        - Added new options for commands /P and /S to allow specifying a different destination device during runtime
- *        - Added new configuration definement CUSTOM_COMMANDS which includes BSB_lan_custom.h at the end of each main loop. You may use custom_timer (set to current millis()) and custom_timer_compare to execute only every x milliseconds.
+ *        - Added new configuration definement CUSTOM_COMMANDS which includes BSB_LAN_custom.h at the end of each main loop. You may use custom_timer (set to current millis()) and custom_timer_compare to execute only every x milliseconds.
  *        - Bugfixing SD-card logging in monitor mode
  *        - Bugfix for setting hour:time parameters via webinterface
  *       version 0.37
@@ -253,7 +253,7 @@
  *        - newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.
  *        - German webinterface available with definement LANG_DE
  *        - new URL-command /LB=x to log only broadcast messages (x=1) or all bus messages (x=0)
- *        - new URL-command /X to reset the Arduino (need to enable RESET definement in BSB_lan_config.h)
+ *        - new URL-command /X to reset the Arduino (need to enable RESET definement in BSB_LAN_config.h)
  *        - new logging parameters 20002 and 20003 for hot water loading times and cycles
  *        - moved DS18B20 logging parameters from 20010-20019 to 20200-20299 and DHT22 logging parameters from 20020-20029 to 20100 to 20199
  *        - moved average logging parameter from 20002 to 20004
@@ -282,7 +282,7 @@
  *        - adds special parameter 20002 for logging /A command (24h averages, only makes sense for long logging intervals)
  *        - bugfixes for logging DS18B20 sensors
  *       version 0.28
- *        - adds special parameters 20000++ for SD card logging of /B, /T and /H commands (see BSB_lan_config.h for examples)
+ *        - adds special parameters 20000++ for SD card logging of /B, /T and /H commands (see BSB_LAN_config.h for examples)
  *        - adds version info to BSB_LAN web interface
  *       version 0.27
  *        - adds date field to log file (requires exact time to be sent by heating system)
@@ -313,7 +313,7 @@
  *        - minor bugfixes
  *       version 0.19
  *        - added humidity command "H", currently for DHT22 sensors
- *        - added 24h average command "A", define parameters in BSB_lan_config.h
+ *        - added 24h average command "A", define parameters in BSB_LAN_config.h
  *        - removed trailing whitespace from menu strings
  *        - fixed command id 0x053D04A2 for THISION heaters
  *        - included Rob Tillaart's DHT library because there are various libraries implementing the protocol and this one is used in the code for its ability to address multiple sensors with one object.
@@ -437,8 +437,8 @@
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
-#include "BSB_lan_config.h"
-#include "BSB_lan_defs.h"
+#include "BSB_LAN_config.h"
+#include "BSB_LAN_defs.h"
 
 #if !defined(EEPROM_ERASING_PIN)
 #if defined(ESP32)
@@ -743,7 +743,7 @@ int16_t pps_values[PPS_ANZ] = { 0 };
 bool time_set = false;
 uint8_t current_switchday = 0;
 
-#include "BSB_lan_EEPROMconfig.h"
+#include "BSB_LAN_EEPROMconfig.h"
 
 static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
@@ -905,7 +905,7 @@ bool readFromConfigVariable(uint8_t id, byte *ptr){
 const char BSB_VERSION[] PROGMEM = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
 #ifdef CUSTOM_COMMANDS
-#include "BSB_lan_custom_global.h"
+#include "BSB_LAN_custom_global.h"
 #endif
 
 /* ******************************************************************
@@ -8870,7 +8870,7 @@ uint8_t pps_offset = 0;
 #ifdef CUSTOM_COMMANDS
   {
     custom_timer = millis();
-    #include "BSB_lan_custom.h"
+    #include "BSB_LAN_custom.h"
   }
 #endif
 
@@ -9820,7 +9820,7 @@ void setup() {
 #endif
 
 #ifdef CUSTOM_COMMANDS
-#include "BSB_lan_custom_setup.h"
+#include "BSB_LAN_custom_setup.h"
 #endif
 
 #ifdef BUTTONS
