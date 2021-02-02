@@ -436,6 +436,12 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
+#if !defined(ESP32)
+#include <Arduino.h>
+#else
+#include "src/Arduino.h"  // workaround for https://github.com/fredlcore/bsb_lan/issues/322#issuecomment-771544542
+#endif
+
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_LAN_config.h"
@@ -455,13 +461,11 @@
 #define LED_BUILTIN 2
 #endif
 
-
 #if defined(__AVR__)
 #include <avr/pgmspace.h>
 #include <EEPROM.h>
 #include <SPI.h>
 #endif
-#include <Arduino.h>
 
 #if defined(__arm__)
 #include <SPI.h>
