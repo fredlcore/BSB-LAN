@@ -436,7 +436,9 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
+#if defined(ESP32)
 void loop();
+#endif
 
 #include <Arduino.h>
 
