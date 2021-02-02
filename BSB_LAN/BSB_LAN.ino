@@ -485,11 +485,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include <Update.h>
 WebServer update_server(8080);
 #endif
-/*
-#define NO_GLOBAL_EEPROM
-EEPROMClass EEPROM_ESP("eeprom1", 0x1000);
-#define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
-*/
+#define ESP32_EEPROM_SIZE 4096
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -1950,7 +1946,11 @@ void SerialPrintRAW(byte* msg, byte len){
 void EEPROM_dump() {
   if ((debug_mode == 1 || haveTelnetClient) && EEPROM_ready) {
     printlnToDebug(PSTR("EEPROM dump:"));
+#if defined(ESP32)
+    for (uint16_t x=0; x<ESP32_EEPROM_SIZE; x++) {
+#else
     for (uint16_t x=0; x<EEPROM.length(); x++) {
+#endif
       printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
     }
   }
@@ -6282,13 +6282,15 @@ void connectToMaxCul() {
 
 void clearEEPROM(void){
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__) || defined(ESP32)
+#if defined(__AVR__)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
   }
-  #if defined(ESP32)
+#elif defined(ESP32)
+  for (uint16_t x=0; x<ESP32_EEPROM_SIZE; x++) {
+    EEPROM.write(x, 0xFF);
+  }
   EEPROM.commit();
-  #endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -9214,7 +9216,7 @@ void setup() {
   pinMode(LED_BUILTIN, OUTPUT);
 
 #ifdef ESP32
-  EEPROM.begin(4096); // size in Byte
+  EEPROM.begin(ESP32_EEPROM_SIZE); // size in Byte
 #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
