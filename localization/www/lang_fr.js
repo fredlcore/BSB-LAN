@@ -319,4 +319,10 @@ UIStrings["STR15088_TEXT"] = "Période de chauffe 2 Dimanche Début";
 UIStrings["STR15089_TEXT"] = "Période de chauffe 2 Dimanche Fin";
 UIStrings["STR15090_TEXT"] = "Période de chauffe 3 Dimanche Début";
 UIStrings["STR15091_TEXT"] = "Période de chauffe 3 Dimanche Fin";
-
+UIStrings["ENUM648_01_TEXT"] = "Réduit";
+UIStrings["ENUM700_00_TEXT"] = "Hors-gel";
+UIStrings["ENUM700_01_TEXT"] = "Automatique";
+UIStrings["ENUM700_03_TEXT"] = "Confort";
+UIStrings["ENUM8000_68_TEXT"] = "Chauffage restreint, priorité ECS";
+UIStrings["ENUM8000_72_TEXT"] = "Chauffage mode confort";
+UIStrings["ENUM8000_74_TEXT"] = "Chauffage mode réduit";
