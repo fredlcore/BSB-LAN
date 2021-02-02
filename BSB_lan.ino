@@ -480,7 +480,9 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include <Update.h>
 WebServer update_server(8080);
 #endif
-EEPROMClass EEPROM("eeprom1", 0x1000);
+#define NO_GLOBAL_EEPROM
+EEPROMClass EEPROM_ESP("eeprom1", 0x1000);
+#define EEPROM EEPROM_ESP     // This is a dirty hack because the EEPROM.h library doesn't somehow gets the #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
