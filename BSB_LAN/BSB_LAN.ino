@@ -436,11 +436,9 @@
 #define PRINT_VALUE_FIRST false
 #define PRINT_DESCRIPTION_FIRST true
 
-#if !defined(ESP32)
+void loop();
+
 #include <Arduino.h>
-#else
-#include "src/Arduino.h"  // workaround for https://github.com/fredlcore/bsb_lan/issues/322#issuecomment-771544542
-#endif
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
