@@ -480,9 +480,11 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #include <Update.h>
 WebServer update_server(8080);
 #endif
+/*
 #define NO_GLOBAL_EEPROM
 EEPROMClass EEPROM_ESP("eeprom1", 0x1000);
-#define EEPROM EEPROM_ESP     // This is a dirty hack because the EEPROM.h library doesn't somehow gets the #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
+#define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
+*/
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -9206,9 +9208,9 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  #ifdef ESP32
+#ifdef ESP32
   EEPROM.begin(4096); // size in Byte
-  #endif
+#endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
