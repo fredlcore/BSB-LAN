@@ -171,7 +171,7 @@
   "CF_LOGCURRINTERVAL_TEXT": "Интервал журнала (datalog.txt, MQTT), секунд",
   "CF_LOGAVERAGES_TEXT": "Подсчёт значений",
   "CF_DHCP_TEXT": "Использовать DHCP",
-  "CF_MAC_TEXT": "MAC-адрес (только Ethernet)",
+  "CF_MAC_TEXT": "MAC-адрес",
   "CF_IPADDRESS_TEXT": "IP адрес",
   "CF_TRUSTEDIPADDRESS_TEXT": "Доверенный IP адрес",
   "CF_MASK_TEXT": "Маска сети",
