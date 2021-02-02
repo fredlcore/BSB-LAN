@@ -7159,36 +7159,14 @@ uint8_t pps_offset = 0;
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
-              switch (dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr))
-              {
-                case 1: getfarstrings = PSTR("Mon"); break;
-                case 2: getfarstrings = PSTR("Tue"); break;
-                case 3: getfarstrings = PSTR("Wed"); break;
-                case 4: getfarstrings = PSTR("Thu"); break;
-                case 5: getfarstrings = PSTR("Fri"); break;
-                case 6: getfarstrings = PSTR("Sat"); break;
-                case 7: getfarstrings = PSTR("Sun"); break;
-                default: getfarstrings = PSTR("ERR"); break;
-              }
-              strcpy_P(downame, getfarstrings);
+              uint8_t dowval =  dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr);
+              if(dowval < 1 && dowval > 7) dowval = 8;
+              memcpy_P(downame, PSTR("MonTueWedThuFriSatSunERR") + dowval * 3 - 3, 3);
+              downame[3] = 0;
 
-              switch (monthval)
-              {
-                case 1: getfarstrings = PSTR("Jan"); break;
-                case 2: getfarstrings = PSTR("Feb"); break;
-                case 3: getfarstrings = PSTR("Mar"); break;
-                case 4: getfarstrings = PSTR("Apr"); break;
-                case 5: getfarstrings = PSTR("May"); break;
-                case 6: getfarstrings = PSTR("Jun"); break;
-                case 7: getfarstrings = PSTR("Jul"); break;
-                case 8: getfarstrings = PSTR("Aug"); break;
-                case 9: getfarstrings = PSTR("Sep"); break;
-                case 10: getfarstrings = PSTR("Oct"); break;
-                case 11: getfarstrings = PSTR("Nov"); break;
-                case 12: getfarstrings = PSTR("Dec"); break;
-                default: getfarstrings = PSTR("ERR"); break;
-              }
-              strcpy_P(monthname, getfarstrings);
+              if(monthval < 1 && monthval > 12) monthval = 13;
+              memcpy_P(monthname, PSTR("JanFebMarAprMayJunJulAugSepOctNovDecERR") + monthval * 3 - 3, 3);
+              monthname[3] = 0;
               printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
