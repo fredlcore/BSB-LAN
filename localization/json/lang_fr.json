@@ -319,5 +319,12 @@
   "STR15088_TEXT": "Période de chauffe 2 Dimanche Début",
   "STR15089_TEXT": "Période de chauffe 2 Dimanche Fin",
   "STR15090_TEXT": "Période de chauffe 3 Dimanche Début",
-  "STR15091_TEXT": "Période de chauffe 3 Dimanche Fin"
+  "STR15091_TEXT": "Période de chauffe 3 Dimanche Fin",
+  "ENUM648_01_TEXT": "Réduit",
+  "ENUM700_00_TEXT": "Hors-gel",
+  "ENUM700_01_TEXT": "Automatique",
+  "ENUM700_03_TEXT": "Confort",
+  "ENUM8000_68_TEXT": "Chauffage restreint, priorité ECS",
+  "ENUM8000_72_TEXT": "Chauffage mode confort",
+  "ENUM8000_74_TEXT": "Chauffage mode réduit"
 }

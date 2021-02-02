@@ -3353,8 +3353,11 @@ void printTelegram(byte* msg, int query_line) {
                 for (int x=0; x<len; x++) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
                 }
-
+#if !defined(ESP32)
                 sprintf_P(decodedTelegram.value,PSTR("%lu"),val);
+#else
+                sprintf_P(decodedTelegram.value,PSTR("%u"),val);
+#endif
                 printToDebug(decodedTelegram.value);
               } else {
                 decodedTelegram.error = 259;
@@ -5377,7 +5380,11 @@ char *build_pvalstr(bool extended){
   int len = 0;
   outBuf[len] = 0;
   if (extended) {
+#if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
+#else
+    len+=sprintf_P(outBuf, PSTR("%4d "), decodedTelegram.prognr);
+#endif
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
     if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
@@ -5591,7 +5598,11 @@ void queryVirtualPrognr(int line, int table_line){
          case 20005: val = TWW_count; break;
          case 20006: val = 0; break;
        }
+#if !defined(ESP32)
        sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
+#else
+       sprintf_P(decodedTelegram.value, PSTR("%d"), val);
+#endif
        return;
      }
      case 2: {
@@ -7070,20 +7081,20 @@ uint8_t pps_offset = 0;
         char *p=cLineBuffer;
         if (PASSKEY[0]) {
         // check for valid passkey
-        p=strchr(cLineBuffer+1,'/');
-        if (p==NULL) {    // no match
-          break;
+          p=strchr(cLineBuffer+1,'/');
+          if (p==NULL) {    // no match
+            break;
+          }
+          *p='\0';     // mark end of string
+          if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
+            printlnToDebug(PSTR("no matching passkey"));
+            client.flush();
+            client.stop();
+            //do not print header and footer. It is security breach
+            break;
+          }
+          *p='/';
         }
-        *p='\0';     // mark end of string
-        if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
-          printlnToDebug(PSTR("no matching passkey"));
-          client.flush();
-          client.stop();
-          //do not print header and footer. It is security breach
-          break;
-        }
-        *p='/';
-      }
 
 #ifdef WEBSERVER
         printToDebug(PSTR("URL: "));
@@ -7193,9 +7204,7 @@ uint8_t pps_offset = 0;
             printToDebug((httpflags & HTTP_HEAD_REQ)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
 
             dataFile.close();
-          }
-          else
-          {
+          } else {
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
           // simply print the website if no index.html on SD card
             if ((httpflags & HTTP_GET_ROOT)) {
@@ -7207,14 +7216,13 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
             flushToWebClient();
-           }
+          }
           client.flush();
           break;
         }
 #endif
-
-        if (p[1] != 'J') {
-          client.flush();
+        if (p[1] != 'J' && p[1] != 'C') {
+          while (client.available()) client.read();
         } else {
           if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
             strcpy_P(outBuf + buffershift, PSTR("\""));
@@ -9443,6 +9451,7 @@ void setup() {
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
     int l = findLine(15000+i,temp_idx+i,&temp_c);
+    if (l==-1) continue;
 //    uint8_t flags=get_cmdtbl_flags(l);
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if(pps_values[i] == (int16_t)0xFFFF) {
@@ -9562,8 +9571,8 @@ void setup() {
   }
   // you're connected now, so print out the data
   printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
-#if defined(__arm__)
-  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of WiFiSpi connected ESP
+#if defined(__arm__) || defined(ESP32)
+  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
 #endif
   printWifiStatus();
 #endif
@@ -9778,26 +9787,26 @@ void setup() {
   });
   update_server.on("/update", HTTP_POST, []() {
     update_server.sendHeader("Connection", "close");
-    update_server.send(200, "text/plain", (Update.hasError()) ? "NOK" : "OK");
+    update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
     delay(1000);
     ESP.restart();
   }, []() {
     HTTPUpload& upload = update_server.upload();
     if (upload.status == UPLOAD_FILE_START) {
       printlnToDebug(PSTR("Updating ESP32 firmware..."));
-      uint32_t maxSketchSpace = (1048576 - 0x1000) & 0xFFFFF000;
+      uint32_t maxSketchSpace = 0x140000;
       if (!Update.begin(maxSketchSpace)) { //start with max available size
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     } else if (upload.status == UPLOAD_FILE_WRITE) {
       if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     } else if (upload.status == UPLOAD_FILE_END) {
       if (Update.end(true)) { //true to set the size to the current progress
         printlnToDebug(PSTR("Update success, rebooting..."));
       } else {
-//        Update.printError(SerialOutput);
+        Update.printError(Serial);
       }
     }
     yield();

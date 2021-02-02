@@ -51,12 +51,9 @@ void BSB::enableInterface() {
     uart_intr_config_t uart_intr;
     uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
                             | UART_RXFIFO_TOUT_INT_ENA_M
-                            | UART_FRM_ERR_INT_ENA_M
-                            | UART_RXFIFO_OVF_INT_ENA_M
-                            | UART_BRK_DET_INT_ENA_M
-                            | UART_PARITY_ERR_INT_ENA_M;
+                            | UART_FRM_ERR_INT_ENA_M;
     uart_intr.rxfifo_full_thresh = 1; //UART_FULL_THRESH_DEFAULT,  //120 default!! aghh! need receive 120 chars before we see them
-    uart_intr.rx_timeout_thresh = 10; // ,  //10 works well for my short messages I need send/receive
+    uart_intr.rx_timeout_thresh = 2; // ,  //10 works well for my short messages I need send/receive
     uart_intr.txfifo_empty_intr_thresh = 10; //UART_EMPTY_THRESH_DEFAULT
     uart_intr_config(UART_NUM_1, &uart_intr);
 #else
@@ -460,12 +457,13 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
       data = data ^ 0xFF;
     }
     serial->write(data);
+#if !defined(ESP32)
     if (HwSerial == true) {
       serial->flush();
       readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
     }
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
-      if (rx_pin_read()) {
+    if (rx_pin_read()) {
       // Collision
 #if defined(__AVR__)
       if (HwSerial == false) {
@@ -474,6 +472,7 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
       goto retry;
     }
+#endif
   }
   if (HwSerial == true) {
     serial->flush();
@@ -600,7 +599,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
-boolean BSB::rx_pin_read() {
+boolean BSB::rx_pin_read() {  // not tested if this will work on ESP32
   return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
 }
 
