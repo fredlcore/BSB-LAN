@@ -42,4 +42,4 @@ jobs:
         cp BSB_LAN/BSB_lan_config.h.default BSB_LAN/BSB_lan_config.h
 
     - name: Run PlatformIO CI
-      run: platformio ci --board=due .
+      run: platformio ci --board=due ./BSB_LAN
