@@ -319,4 +319,10 @@
 #define STR15089_TEXT "Période de chauffe 2 Dimanche Fin"
 #define STR15090_TEXT "Période de chauffe 3 Dimanche Début"
 #define STR15091_TEXT "Période de chauffe 3 Dimanche Fin"
-
+#define ENUM648_01_TEXT "Réduit"
+#define ENUM700_00_TEXT "Hors-gel"
+#define ENUM700_01_TEXT "Automatique"
+#define ENUM700_03_TEXT "Confort"
+#define ENUM8000_68_TEXT "Chauffage restreint, priorité ECS"
+#define ENUM8000_72_TEXT "Chauffage mode confort"
+#define ENUM8000_74_TEXT "Chauffage mode réduit"
