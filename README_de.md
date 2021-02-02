@@ -67,11 +67,11 @@ Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="http
 Bitte beachte, dass der Adapter zwar an einem Raspberry Pi genutzt werden kann, die hier angebotene Software jedoch nur auf dem Arduino läuft! Wenn der Adapter an einem Raspberry Pi genutzt werden soll, muss stattdessen die Software bsb_gateway genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> verfügbar ist. Bitte beachte, dass die Funktionalität am Raspberry deutlich weniger umfangreich ist, und dass Du für jegliche Fragen diesbezüglich den Autor von bsb_gateway kontaktieren musst.
 
 Web-Interface screenshots:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface.png" size="50%">
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/Web-Interface2.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
 
 BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL- sowie den zwingend benötigten Pin-Anschlüssen in roter Umrandung:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20plain.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20plain.jpg" size="50%">
 
 BSB-Adapterplatine und Ethernet-Shield auf dem Arduino Due:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">
