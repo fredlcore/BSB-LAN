@@ -69,7 +69,7 @@ The forum thread that led to the development of this interface can be found <A H
 Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the Arduino! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
 
 Web-Interface screenshots:
-<img src="https://github.com/fredlcore/bsb_lan/BSB-LAN/blob/BSB_LAN/master/schematics/Web-Interface.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
 
 BSB-Board plain, with location of CL+ and CL- connectors as well as pads framed in red for required pins:
