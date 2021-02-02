@@ -17,13 +17,13 @@
 
 BlueDot_BME280::BlueDot_BME280()
 {
-	parameter.communication;
-	parameter.I2CAddress;
-	parameter.sensorMode;
-	parameter.IIRfilter;
-	parameter.tempOversampling;
-	parameter.pressOversampling;
-	parameter.humidOversampling;
+	parameter.communication = 0;
+	parameter.I2CAddress = 0;
+	parameter.sensorMode = 0;
+	parameter.IIRfilter = 0;
+	parameter.tempOversampling = 0;
+	parameter.pressOversampling = 0;
+	parameter.humidOversampling = 0;
 	parameter.pressureSeaLevel = 0;
 	parameter.tempOutsideCelsius = 999;
 	parameter.tempOutsideFahrenheit = 999;
@@ -224,21 +224,21 @@ float BlueDot_BME280::convertTempKelvin(void)
 		
 	float tempOutsideKelvin;	
 	
-	if (parameter.tempOutsideCelsius != 999 & parameter.tempOutsideFahrenheit == 999 )   
+	if (parameter.tempOutsideCelsius != 999 && parameter.tempOutsideFahrenheit == 999 )   
 	{
 		tempOutsideKelvin = parameter.tempOutsideCelsius;
 		tempOutsideKelvin = tempOutsideKelvin + 273.15;
 		return tempOutsideKelvin;		
 	}
 	
-	if (parameter.tempOutsideCelsius != 999 & parameter.tempOutsideFahrenheit != 999 )   
+	if (parameter.tempOutsideCelsius != 999 && parameter.tempOutsideFahrenheit != 999 )   
 	{
 		tempOutsideKelvin = parameter.tempOutsideCelsius;
 		tempOutsideKelvin = tempOutsideKelvin + 273.15;
 		return tempOutsideKelvin;		
 	}
 	
-	if (parameter.tempOutsideFahrenheit != 999 & parameter.tempOutsideCelsius == 999)
+	if (parameter.tempOutsideFahrenheit != 999 && parameter.tempOutsideCelsius == 999)
 	{
 		
 		tempOutsideKelvin = (parameter.tempOutsideFahrenheit - 32);
@@ -248,7 +248,7 @@ float BlueDot_BME280::convertTempKelvin(void)
 		return tempOutsideKelvin;	
 	}
 	
-	if (parameter.tempOutsideFahrenheit == 999 & parameter.tempOutsideCelsius == 999)
+	if (parameter.tempOutsideFahrenheit == 999 && parameter.tempOutsideCelsius == 999)
 	{
 		tempOutsideKelvin = 273.15 + 15;
 		return tempOutsideKelvin; 
@@ -431,7 +431,7 @@ uint8_t BlueDot_BME280::readByte(byte reg)
 		Wire.beginTransmission(parameter.I2CAddress);
 		Wire.write(reg);
 		Wire.endTransmission();
-		Wire.requestFrom(parameter.I2CAddress,1);		
+		Wire.requestFrom(parameter.I2CAddress, (uint8_t)1);		
 		value = Wire.read();		
 		return value;
 	}
