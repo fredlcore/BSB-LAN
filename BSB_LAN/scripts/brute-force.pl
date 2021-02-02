@@ -10,12 +10,12 @@ use strict;
 # Following major IDs are know to exist, but there may be more in rather
 # special settings: 05, 06, 07, 09, 0D, 11, 15, 19, 21, 22, 25, 29, 2A, 2B, 2D,
 # 2E, 2F, 31, 49, 51, 59, 65, 69
-# Check in BSB_lan_defs.h first if a major group does apply to your heater
+# Check in BSB_LAN_defs.h first if a major group does apply to your heater
 # before running tests. Some of them are specific to certain features (such
 # as solar or cooling), so it won't make sense for you to test this group.
 # 
 # Log output will be appended to defs-brute-force-<Heater-ID>.h
-# Please note that BSB_lan_defs.h has to be in the same folder as this script.
+# Please note that BSB_LAN_defs.h has to be in the same folder as this script.
 # Testing one major category will take approx. 18 hours, more if you increase
 # the delay between queries via the sleep command (now at 1/4 second).
 
@@ -57,7 +57,7 @@ printf("%02X", $baseID);
 print " on $heater...\n";
 
 local $/ = undef;
-open DEFS, "BSB_lan_defs.h";
+open DEFS, "../BSB_LAN_defs.h";
 my $defs = <DEFS>;
 close DEFS;
 $/ = "\n";

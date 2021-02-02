@@ -1,6 +1,6 @@
 #!/bin/bash
 
-FILE=BSB_lan_defs.h
+FILE=../BSB_LAN_defs.h
 
 
 if [ $# -gt 0 ]; then
