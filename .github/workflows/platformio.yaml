@@ -39,7 +39,7 @@ jobs:
 
     - name: Setup config
       run: |
-        cp BSB_lan_config.h.default BSB_lan_config.h
+        cp BSB_LAN/BSB_lan_config.h.default BSB_LAN/BSB_lan_config.h
 
     - name: Run PlatformIO CI
       run: platformio ci --board=due .

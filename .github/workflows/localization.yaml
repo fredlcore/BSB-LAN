@@ -9,15 +9,15 @@ jobs:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
       - name: Build UNDEFs, json and js files
-        run: cd localization && ./create-undefs.pl && cd ..
+        run: cd BSB_LAN/localization && ./create-undefs.pl && cd ..
       - name: Copy files to repo
         uses: test-room-7/action-update-file@v1
         with:
            file-path: |
-             localization/json/*.json
-             localization/www/*.*
-             localization/UNDEF_LANG_*.h
-             localization/LANG_C.h
+             BSB_LAN/localization/json/*.json
+             BSB_LAN/localization/www/*.*
+             BSB_LAN/localization/UNDEF_LANG_*.h
+             BSB_LAN/localization/LANG_C.h
            commit-msg: Update language resources
            github-token: ${{ secrets.GITHUB_TOKEN }}
            
