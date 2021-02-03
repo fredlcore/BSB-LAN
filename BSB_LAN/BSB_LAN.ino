@@ -8569,7 +8569,7 @@ uint8_t pps_offset = 0;
       lastMQTTTime = millis();
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
-        mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+          mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
         }
       }
       if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
@@ -8907,7 +8907,7 @@ uint8_t pps_offset = 0;
 #endif
 } // --- loop () ---
 
-//Luposoft: Funktionen mqtt_sendtoBroker
+//Luposoft: function mqtt_sendtoBroker
 /*  Function: mqtt_sendtoBroker()
  *  Does:     send messages to mqtt-broker
  * Pass parameters:
@@ -8922,8 +8922,7 @@ uint8_t pps_offset = 0;
  *  MQTT instance
  * *************************************************************** */
 #ifdef MQTT
-void mqtt_sendtoBroker(int param)
-{
+void mqtt_sendtoBroker(int param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
   String MQTTTopic = "";
@@ -9092,8 +9091,7 @@ return false;
  *  Ethernet instance
  * *************************************************************** */
 #ifdef MQTT
-void mqtt_callback(char* topic, byte* payload, unsigned int length)
-{
+void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   //boolean setcmd;
   printlnToDebug(PSTR("##MQTT#############################"));
   printToDebug(PSTR("mqtt-message arrived ["));
@@ -9103,19 +9101,16 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   strcpy_P(C_value, PSTR("ACK_"));   //dukess
   char firstsign;
   firstsign=' ';
-  switch ((char)payload[0])
-  {
+  switch ((char)payload[0]) {
     case 'I':{firstsign='I';printToDebug(PSTR("I"));break;}
     case 'S':{firstsign='S';printToDebug(PSTR("S"));break;}
   }
   //buffer overflow protection    //dukess
-  if(length > sizeof(C_value) - 4)
-  {
+  if(length > sizeof(C_value) - 4) {
     length = sizeof(C_value) - 4;
     printlnToDebug(PSTR("payload too big"));
   }
-    for (unsigned int i=0;i<length;i++)
-  {
+  for (unsigned int i=0;i<length;i++) {
     C_value[i+4]=char(payload[i]);
   }
   C_value[length+4]='\0';
@@ -9123,8 +9118,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   if(firstsign!=' ') C_payload++; //skip I/S
   int I_line=atoi(C_payload);
   String mqtt_Topic;
-  if(MQTTTopicPrefix[0])
-  {
+  if(MQTTTopicPrefix[0]) {
     mqtt_Topic = MQTTTopicPrefix;
     mqtt_Topic.concat(F("/"));
   }
@@ -9132,20 +9126,17 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   mqtt_Topic.concat(F("MQTT"));
   MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
   
-  if (firstsign==' ')  //query
-  {
-  printFmtToDebug(PSTR("%d \r\n"), I_line);
-  mqtt_sendtoBroker(I_line);  //send mqtt-message
+  if (firstsign==' ') { //query
+    printFmtToDebug(PSTR("%d \r\n"), I_line);
+    mqtt_sendtoBroker(I_line);  //send mqtt-message
   }
-  else  //command to heater
-  {
-  C_payload=strchr(C_payload,'=');
-  C_payload++;
-  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
-  set(I_line,C_payload,firstsign=='S');  //command to heater
-  mqtt_sendtoBroker(I_line);  //send mqtt-message after command
+  else { //command to heater
+    C_payload=strchr(C_payload,'=');
+    C_payload++;
+    printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+    set(I_line,C_payload,firstsign=='S');  //command to heater
+    mqtt_sendtoBroker(I_line);  //send mqtt-message after command
   }
-  
   printlnToDebug(PSTR("##MQTT#############################"));
 }
 #endif
