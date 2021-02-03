@@ -7013,6 +7013,7 @@ uint8_t pps_offset = 0;
             }
           }
         }
+        cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
@@ -7035,11 +7036,9 @@ uint8_t pps_offset = 0;
         if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
           httpflags |= HTTP_HEAD_REQ;
 #endif
-        char *u_s = strchr(cLineBuffer,' ');
-        char *u_e = strchr(u_s + 1,' ');
-        if(u_e) u_e[0] = 0;
-        strcpy(cLineBuffer, u_s + 1);
-        printlnToDebug(cLineBuffer);
+        String urlString = String(cLineBuffer);
+        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
+        urlString.toCharArray(cLineBuffer, urlString.length()+1);
 // IPWE START
 #ifdef IPWE
         if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
