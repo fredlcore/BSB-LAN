@@ -7025,6 +7025,7 @@ uint8_t pps_offset = 0;
             }
           }
         }
+        cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
@@ -7048,9 +7049,10 @@ uint8_t pps_offset = 0;
           httpflags |= HTTP_HEAD_REQ;
 #endif
         char *u_s = strchr(cLineBuffer,' ');
+        if(!u_s) u_s = cLineBuffer;
         char *u_e = strchr(u_s + 1,' ');
         if(u_e) u_e[0] = 0;
-        strcpy(cLineBuffer, u_s + 1);
+        if(u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
         printlnToDebug(cLineBuffer);
 // IPWE START
 #ifdef IPWE
@@ -9278,6 +9280,7 @@ void setup() {
     readFromEEPROM(CF_USEEEPROM);
     readFromEEPROM(CF_VERSION);
   }
+  bool crc_correct = true;
   if (UseEEPROM == 0x96) {//Read EEPROM when EEPROM contain magic byte (stored configuration)
     readFromEEPROM(CF_CRC32);
     if (crc == initConfigTable(EEPROMversion)) {
@@ -9293,7 +9296,10 @@ void setup() {
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-    } else SerialOutput->println(F("EEPROM schema CRC mismatch"));
+    } else {
+      SerialOutput->println(F("EEPROM schema CRC mismatch"));
+      crc_correct = false;
+    }
   } else {
     SerialOutput->println(F("Using settings from config file"));
     initConfigTable(EEPROMversion); //Need to init config table in any case because we can change opinion and can enable store config in EEPROM.
@@ -9315,7 +9321,7 @@ void setup() {
   SerialOutput->print(F(" Program schema v."));
   SerialOutput->println(maxconfversion);
 
-  if (maxconfversion != EEPROMversion) { //Update config "Schema" in EEPROM
+  if (maxconfversion != EEPROMversion || !crc_correct) { //Update config "Schema" in EEPROM
     crc = initConfigTable(maxconfversion); //store new CRC32
     EEPROMversion = maxconfversion; //store new version
     if (UseEEPROM_in_config_h == 0x01) {//Update EEPROM when config file contain UseEEPROM = 1
