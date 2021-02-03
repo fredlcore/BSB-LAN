@@ -9094,21 +9094,19 @@ return false;
 #ifdef MQTT
 void mqtt_callback(char* topic, byte* payload, unsigned int length)
 {
-  boolean setcmd;
+  //boolean setcmd;
   printlnToDebug(PSTR("##MQTT#############################"));
   printToDebug(PSTR("mqtt-message arrived ["));
   printToDebug(topic);
   printlnToDebug(PSTR("] "));
   char C_value[24];
   strcpy_P(C_value, PSTR("ACK_"));   //dukess
+  char firstsign;
+  firstsign=' ';
   switch ((char)payload[0])
   {
-    case 'I':setcmd=false;break;
-    case 'S':setcmd=true;break;
-    default:
-      printlnToDebug(PSTR("mqtt_callback: missing 'I' or 'S' at start"));
-      return;
-      break;
+    case 'I':{firstsign='I';printToDebug(PSTR("I"));break;}
+    case 'S':{firstsign='S';printToDebug(PSTR("S"));break;}
   }
   //buffer overflow protection    //dukess
   if(length > sizeof(C_value) - 4)
@@ -9122,12 +9120,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   }
   C_value[length+4]='\0';
   char*C_payload=C_value+ 4;  //dukess
-  C_payload++;
+  if(firstsign!=' ') C_payload++; //skip I/S
   int I_line=atoi(C_payload);
-  C_payload=strchr(C_payload,'=');
-  C_payload++;
-  printFmtToDebug(PSTR("%с%d=%s \r\n"), setcmd?'S':'I', I_line, C_payload);
-  set(I_line,C_payload,setcmd);  //command to heater
   String mqtt_Topic;
   if(MQTTTopicPrefix[0])
   {
@@ -9137,6 +9131,21 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length)
   else mqtt_Topic = "BSB-LAN/";
   mqtt_Topic.concat(F("MQTT"));
   MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
+  
+  if (firstsign==' ')  //query
+  {
+  printFmtToDebug(PSTR("%d \r\n"), I_line);
+  mqtt_sendtoBroker(I_line);  //send mqtt-message
+  }
+  else  //command to heater
+  {
+  C_payload=strchr(C_payload,'=');
+  C_payload++;
+  printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+  set(I_line,C_payload,firstsign=='S');  //command to heater
+  mqtt_sendtoBroker(I_line);  //send mqtt-message after command
+  }
+  
   printlnToDebug(PSTR("##MQTT#############################"));
 }
 #endif
