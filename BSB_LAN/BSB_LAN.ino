@@ -7036,9 +7036,11 @@ uint8_t pps_offset = 0;
         if(!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
           httpflags |= HTTP_HEAD_REQ;
 #endif
-        String urlString = String(cLineBuffer);
-        urlString = urlString.substring(urlString.indexOf('/'), urlString.indexOf(' ', urlString.indexOf('/')));
-        urlString.toCharArray(cLineBuffer, urlString.length()+1);
+        char *u_s = strchr(cLineBuffer,' ');
+        if(!u_s) u_s = cLineBuffer;
+        char *u_e = strchr(u_s + 1,' ');
+        if(u_e) u_e[0] = 0;
+        if(u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
 // IPWE START
 #ifdef IPWE
         if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
@@ -9262,6 +9264,7 @@ void setup() {
     readFromEEPROM(CF_USEEEPROM);
     readFromEEPROM(CF_VERSION);
   }
+  bool crc_correct = true;
   if (UseEEPROM == 0x96) {//Read EEPROM when EEPROM contain magic byte (stored configuration)
     readFromEEPROM(CF_CRC32);
     if (crc == initConfigTable(EEPROMversion)) {
@@ -9277,7 +9280,10 @@ void setup() {
         if(config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
 #endif
       }
-    } else SerialOutput->println(F("EEPROM schema CRC mismatch"));
+    } else {
+      SerialOutput->println(F("EEPROM schema CRC mismatch"));
+      crc_correct = false;
+    }
   } else {
     SerialOutput->println(F("Using settings from config file"));
     initConfigTable(EEPROMversion); //Need to init config table in any case because we can change opinion and can enable store config in EEPROM.
@@ -9299,7 +9305,7 @@ void setup() {
   SerialOutput->print(F(" Program schema v."));
   SerialOutput->println(maxconfversion);
 
-  if (maxconfversion != EEPROMversion) { //Update config "Schema" in EEPROM
+  if (maxconfversion != EEPROMversion || !crc_correct) { //Update config "Schema" in EEPROM
     crc = initConfigTable(maxconfversion); //store new CRC32
     EEPROMversion = maxconfversion; //store new version
     if (UseEEPROM_in_config_h == 0x01) {//Update EEPROM when config file contain UseEEPROM = 1
