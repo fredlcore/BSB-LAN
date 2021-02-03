@@ -9535,18 +9535,30 @@ void setup() {
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
-  while ( status != WL_CONNECTED) {
+  unsigned long timeout = millis();
+  while ( status != WL_CONNECTED && millis() - timeout < 10000) {
     printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
     status = WiFi.status() ;
     delay(1000);
   }
-  // you're connected now, so print out the data
-  printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
-#if defined(__arm__) || defined(ESP32)
-  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+  if (WiFi.status() != WL_CONNECTED) {
+    printlnToDebug(PSTR("Connecting to WiFi network failed."));
+#if defined(ESP32)
+    printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
+    WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+    IPAddress t = WiFi.softAPIP();
+    printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+    printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
 #endif
-  printWifiStatus();
+  } else {
+  // you're connected now, so print out the data
+    printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+#if defined(__arm__) || defined(ESP32)
+    WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+#endif
+    printWifiStatus();
+  }
 #endif
 
   server = new ComServer(HTTPPort);
