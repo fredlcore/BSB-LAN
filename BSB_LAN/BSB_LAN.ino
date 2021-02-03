@@ -7053,7 +7053,6 @@ uint8_t pps_offset = 0;
         char *u_e = strchr(u_s + 1,' ');
         if(u_e) u_e[0] = 0;
         if(u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
-        printlnToDebug(cLineBuffer);
 // IPWE START
 #ifdef IPWE
         if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
