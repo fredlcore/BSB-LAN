@@ -8560,8 +8560,7 @@ uint8_t pps_offset = 0;
 
 #ifdef MQTT
   if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
-    String MQTTPayload = "";
-    String MQTTTopic = "";
+    
 
     mqtt_connect();        //Luposoft, connect to mqtt
     MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
@@ -8570,83 +8569,7 @@ uint8_t pps_offset = 0;
       lastMQTTTime = millis();
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] > 0) {
-          // Declare local variables and start building json if enabled
-          if (mqtt_mode == 2 || mqtt_mode == 3) {
-            MQTTPayload = "";
-            // Build the json heading
-            MQTTPayload.concat(F("{\""));
-            if(MQTTDeviceID[0])
-              MQTTPayload.concat(MQTTDeviceID);
-            else
-              MQTTPayload.concat(F("BSB-LAN"));
-            if(mqtt_mode == 2)
-              MQTTPayload.concat(F("\":{\"status\":{"));
-            if(mqtt_mode == 3)
-              MQTTPayload.concat(F("\":{\"id\":"));
-          }
-          boolean is_first = true;
-          if (mqtt_connect()) {              //Luposoft, new funct
-            if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
-            if (MQTTTopicPrefix[0]) {
-              MQTTTopic = MQTTTopicPrefix;
-              MQTTTopic.concat(F("/"));
-            }
-            else
-              MQTTTopic = "BSB-LAN/";
-// use the sub-topic "json" if json output is enabled
-            if(mqtt_mode == 2 || mqtt_mode == 3)
-              MQTTTopic.concat(F("json"));
-            else
-              MQTTTopic.concat(String(log_parameters[i]));
-
-            query(log_parameters[i]);
-            if (mqtt_mode == 3) { // Build the json doc on the fly
-              int len = 0;
-              outBuf[len] = 0;
-              len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), log_parameters[i]);
-              len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
-              len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
-              if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
-                len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
-              }
-              len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
-              MQTTPayload.concat(outBuf);
-            } else if (mqtt_mode == 2) { // Build the json doc on the fly
-              char tbuf[20];
-              sprintf_P(tbuf, PSTR("\"%d\":\""), log_parameters[i]);
-              MQTTPayload.concat(tbuf);
-              if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-                MQTTPayload.concat(String(build_pvalstr(0)));
-              } else {
-                MQTTPayload.concat(String(decodedTelegram.value));
-              }
-              MQTTPayload.concat(F("\""));
-            } else { //plain text
-              if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-                MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
-              }
-              else
-                MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
-            }
-          }
-          // End of mqtt if loop so close off the json and publish
-          if (mqtt_mode == 2 || mqtt_mode == 3) {
-            // Close the json doc off
-            if(mqtt_mode == 2)
-              MQTTPayload.concat(F("}}}"));
-            else
-              MQTTPayload.concat(F("}}"));
-            // debugging..
-            printToDebug(PSTR("Output topic: "));
-            printToDebug(MQTTTopic.c_str());
-            printToDebug(PSTR("\r\nPayload Output : "));
-            printToDebug(MQTTPayload.c_str());
-            writelnToDebug();
-            // Now publish the json payload only once
-            MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
-          }
+        mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
         }
       }
       if(MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
@@ -8983,6 +8906,106 @@ uint8_t pps_offset = 0;
   update_server.handleClient();
 #endif
 } // --- loop () ---
+
+//Luposoft: Funktionen mqtt_sendtoBroker
+/*  Function: mqtt_sendtoBroker()
+ *  Does:     send messages to mqtt-broker
+ * Pass parameters:
+ *  int param
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ *  MQTT instance
+ * *************************************************************** */
+#ifdef MQTT
+void mqtt_sendtoBroker(int param)
+{
+  // Declare local variables and start building json if enabled
+  String MQTTPayload = "";
+  String MQTTTopic = "";
+  if (mqtt_mode == 2 || mqtt_mode == 3) {
+    MQTTPayload = "";
+    // Build the json heading
+    MQTTPayload.concat(F("{\""));
+    if(MQTTDeviceID[0])
+      MQTTPayload.concat(MQTTDeviceID);
+    else
+    MQTTPayload.concat(F("BSB-LAN"));
+    if(mqtt_mode == 2)
+      MQTTPayload.concat(F("\":{\"status\":{"));
+    if(mqtt_mode == 3)
+      MQTTPayload.concat(F("\":{\"id\":"));
+  }
+  boolean is_first = true;
+  if (mqtt_connect()) {              //Luposoft, new funct
+    if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
+    if (MQTTTopicPrefix[0]) {
+      MQTTTopic = MQTTTopicPrefix;
+      MQTTTopic.concat(F("/"));
+    }
+    else
+      MQTTTopic = "BSB-LAN/";
+// use the sub-topic "json" if json output is enabled
+    if(mqtt_mode == 2 || mqtt_mode == 3)
+      MQTTTopic.concat(F("json"));
+    else
+      MQTTTopic.concat(String(param));
+
+    query(param);
+    if (mqtt_mode == 3) { // Build the json doc on the fly
+      int len = 0;
+      outBuf[len] = 0;
+      len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
+      len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
+      len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
+      if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
+        len += strlen(strcpy_PF(outBuf + len, decodedTelegram.enumdescaddr));
+      }
+      len += sprintf_P(outBuf + len, PSTR("\",\"unit\": \"%s\",\"error\": %d"), decodedTelegram.unit, decodedTelegram.error);
+      MQTTPayload.concat(outBuf);
+    } else if (mqtt_mode == 2) { // Build the json doc on the fly
+      char tbuf[20];
+      sprintf_P(tbuf, PSTR("\"%d\":\""), param);
+      MQTTPayload.concat(tbuf);
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+        MQTTPayload.concat(String(build_pvalstr(0)));
+      } else {
+        MQTTPayload.concat(String(decodedTelegram.value));
+      }
+      MQTTPayload.concat(F("\""));
+    } else { //plain text
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME){
+//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+        MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
+      }
+      else
+        MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
+    }
+  }
+  // End of mqtt if loop so close off the json and publish
+  if (mqtt_mode == 2 || mqtt_mode == 3) {
+    // Close the json doc off
+    if(mqtt_mode == 2)
+      MQTTPayload.concat(F("}}}"));
+    else
+      MQTTPayload.concat(F("}}"));
+    // debugging..
+    printToDebug(PSTR("Output topic: "));
+    printToDebug(MQTTTopic.c_str());
+    printToDebug(PSTR("\r\nPayload Output : "));
+    printToDebug(MQTTPayload.c_str());
+    writelnToDebug();
+    // Now publish the json payload only once
+    MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+  } 
+}
+#endif
+
 //Luposoft: Funktionen mqtt_connect
 /*  Function: mqtt_connect()
  *  Does:     connect to mqtt broker
