@@ -467,7 +467,7 @@ void loop();
 #include <SPI.h>
 #endif
 
-#if defined(__arm__)
+#if defined(__arm__) || defined(ESP32)
 #include <SPI.h>
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
@@ -478,18 +478,13 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
-#include <EEPROM.h>
+// #include <EEPROM.h>
 #include <ESPmDNS.h>
 #if defined(ENABLE_ESP32_OTA)
 #include <WebServer.h>
 #include <Update.h>
 WebServer update_server(8080);
 #endif
-/*
-#define NO_GLOBAL_EEPROM
-EEPROMClass EEPROM_ESP("eeprom1", 0x1000);
-#define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
-*/
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -884,10 +879,6 @@ bool writeToEEPROM(uint8_t id){
       EEPROMwasChanged = true;
     }
   }
-  #if defined(ESP32)
-  if (EEPROMwasChanged)
-    EEPROM.commit();
-  #endif
 
 //  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
@@ -6282,13 +6273,10 @@ void connectToMaxCul() {
 
 void clearEEPROM(void){
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__) || defined(ESP32)
+#if defined(__AVR__)
   for (uint16_t x=0; x<EEPROM.length(); x++) {
     EEPROM.write(x, 0xFF);
   }
-  #if defined(ESP32)
-  EEPROM.commit();
-  #endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -9182,7 +9170,7 @@ void setup() {
 
   SerialOutput->println(F("READY"));
 
-  #if defined(__SAM3X8E__)
+  #if defined(ARM) || defined(ESP32)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
@@ -9193,9 +9181,6 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-#ifdef ESP32
-  EEPROM.begin(4096); // size in Byte
-#endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
@@ -9556,18 +9541,30 @@ void setup() {
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
-  while ( status != WL_CONNECTED) {
+  unsigned long timeout = millis();
+  while ( status != WL_CONNECTED && millis() - timeout < 10000) {
     printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
     status = WiFi.status() ;
     delay(1000);
   }
-  // you're connected now, so print out the data
-  printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
-#if defined(__arm__) || defined(ESP32)
-  WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+  if (WiFi.status() != WL_CONNECTED) {
+    printlnToDebug(PSTR("Connecting to WiFi network failed."));
+#if defined(ESP32)
+    printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
+    WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+    IPAddress t = WiFi.softAPIP();
+    printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+    printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
 #endif
-  printWifiStatus();
+  } else {
+  // you're connected now, so print out the data
+    printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+#if defined(__arm__) || defined(ESP32)
+    WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+#endif
+    printWifiStatus();
+  }
 #endif
 
   server = new ComServer(HTTPPort);
