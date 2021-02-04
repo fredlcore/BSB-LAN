@@ -9180,7 +9180,7 @@ void setup() {
 
   SerialOutput->println(F("READY"));
 
-#if defined(ARM)
+#if defined(__arm__)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
