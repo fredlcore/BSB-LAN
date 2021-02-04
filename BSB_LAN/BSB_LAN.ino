@@ -9128,15 +9128,14 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   
   if (firstsign==' ') { //query
     printFmtToDebug(PSTR("%d \r\n"), I_line);
-    mqtt_sendtoBroker(I_line);  //send mqtt-message
   }
   else { //command to heater
     C_payload=strchr(C_payload,'=');
     C_payload++;
     printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
     set(I_line,C_payload,firstsign=='S');  //command to heater
-    mqtt_sendtoBroker(I_line);  //send mqtt-message after command
   }
+  mqtt_sendtoBroker(I_line);  //send mqtt-message
   printlnToDebug(PSTR("##MQTT#############################"));
 }
 #endif
