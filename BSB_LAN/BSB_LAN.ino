@@ -447,6 +447,7 @@ void loop();
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
+#define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
 #if defined(ESP32)
 #define EEPROM_ERASING_PIN 14
@@ -467,7 +468,7 @@ void loop();
 #include <SPI.h>
 #endif
 
-#if defined(__arm__) || defined(ESP32)
+#if defined(__arm__)
 #include <SPI.h>
 #include <Wire.h>
 #include "src/I2C_EEPROM/I2C_EEPROM.h"
@@ -478,13 +479,17 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
-// #include <EEPROM.h>
+#include <EEPROM.h>
 #include <ESPmDNS.h>
 #if defined(ENABLE_ESP32_OTA)
 #include <WebServer.h>
 #include <Update.h>
 WebServer update_server(8080);
 #endif
+
+EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
+#define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
+
 #define strcpy_PF strcpy
 #define strcat_PF strcat
 #define strchr_P strchr
@@ -879,7 +884,10 @@ bool writeToEEPROM(uint8_t id){
       EEPROMwasChanged = true;
     }
   }
-
+#if defined(ESP32)
+  if (EEPROMwasChanged)
+    EEPROM.commit();
+#endif
 //  printToDebug(PSTR("\r\n"));
   return EEPROMwasChanged;
 }
@@ -1941,7 +1949,7 @@ void SerialPrintRAW(byte* msg, byte len){
 void EEPROM_dump() {
   if ((debug_mode == 1 || haveTelnetClient) && EEPROM_ready) {
     printlnToDebug(PSTR("EEPROM dump:"));
-    for (uint16_t x=0; x<EEPROM.length(); x++) {
+    for (uint16_t x=0; x<EEPROM_SIZE; x++) {
       printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
     }
   }
@@ -6273,10 +6281,13 @@ void connectToMaxCul() {
 
 void clearEEPROM(void){
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__)
-  for (uint16_t x=0; x<EEPROM.length(); x++) {
+#if defined(__AVR__) || defined(ESP32)
+  for (uint16_t x=0; x<EEPROM_SIZE; x++) {
     EEPROM.write(x, 0xFF);
   }
+#if defined(ESP32)
+  EEPROM.commit();
+#endif
 #else
   uint8_t empty_block[4097] = { 0xFF };
   EEPROM.fastBlockWrite(0, &empty_block, 4096);
@@ -9169,17 +9180,20 @@ void setup() {
 
   SerialOutput->println(F("READY"));
 
-  #if defined(ARM) || defined(ESP32)
+#if defined(ARM)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
     SerialOutput->println(F("EEPROM not ready"));
   }
   pinMode(19, INPUT);
-  #endif
+#endif
 
   pinMode(LED_BUILTIN, OUTPUT);
 
+#ifdef ESP32
+  EEPROM.begin(EEPROM_SIZE); // size in Byte
+#endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
