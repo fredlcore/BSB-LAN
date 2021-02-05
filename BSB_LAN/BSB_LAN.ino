@@ -616,10 +616,10 @@ bool haveTelnetClient = false;
 
 #define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
 #ifdef MAX_CUL
+int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 uint16_t max_cur_temp[MAX_CUL_DEVICES] = { 0 };
 uint8_t max_dst_temp[MAX_CUL_DEVICES] = { 0 };
 int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
-int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #endif
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
@@ -685,9 +685,9 @@ static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0])
 
 #ifdef AVERAGES
 static const int numAverages = sizeof(avg_parameters) / sizeof(avg_parameters[0]);
-float *avgValues_Old = new float[numAverages];
-float *avgValues = new float[numAverages];
-float *avgValues_Current = new float[numAverages];
+float avgValues_Old[numAverages] = {0};
+float avgValues[numAverages] = {0};
+float avgValues_Current[numAverages] = {0};
 int avgCounter = 1;
 #endif
 int loopCount = 0;
@@ -6278,8 +6278,8 @@ void clearEEPROM(void){
     EEPROM.write(x, 0xFF);
   }
 #else
-  uint8_t empty_block[4097] = { 0xFF };
-  EEPROM.fastBlockWrite(0, &empty_block, 4096);
+  uint8_t empty_block[4096] = { 0xFF };
+  EEPROM.fastBlockWrite(0, empty_block, 4096);
 #endif
   printlnToDebug(PSTR("Cleared EEPROM"));
 }
@@ -9169,13 +9169,12 @@ void setup() {
 
   SerialOutput->println(F("READY"));
 
-  #if defined(ARM) || defined(ESP32)
+  #if defined(__arm__) || defined(ESP32)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
     SerialOutput->println(F("EEPROM not ready"));
   }
-  pinMode(19, INPUT);
   #endif
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -9361,6 +9360,11 @@ void setup() {
     temp_bus_pins[1] = 18;
 #endif
   }
+
+  #if defined(__arm__) || defined(ESP32)
+  pinMode(temp_bus_pins[0], INPUT); //RX-pin of hardware serial on Due/ESP32
+  #endif
+
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
   bus->enableInterface();
