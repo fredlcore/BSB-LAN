@@ -599,9 +599,15 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
+#if !defined(ESP32)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
+#else
+const char averagesFileName[] PROGMEM = "/averages.txt";
+const char datalogFileName[] PROGMEM = "/datalog.txt";
+const char journalFileName[] PROGMEM = "/journal.txt";
+#endif
 
 ComClient client;
 ComClient *mqtt_client;   //Luposoft: own instance
@@ -632,12 +638,21 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 #if defined LOGGER || defined WEBSERVER
+#if defined(ESP32)
+// Minimum free space in bytes
+#define MINIMUM_FREE_SPACE_ON_SD 10000
+#include <SPIFFS.h>
+#define SD SPIFFS
+// Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+#define FILE_WRITE FILE_APPEND
+#else
 //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
 #define MINIMUM_FREE_SPACE_ON_SD 100
 // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
 // do not forget set it up after SdFat upgrading
-  #include "src/SdFat/SdFat.h"
-  SdFat SD;
+#include "src/SdFat/SdFat.h"
+SdFat SD;
+#endif
 #endif
 
 #ifdef ONE_WIRE_BUS
@@ -3979,10 +3994,15 @@ void generateConfigPage(void) {
 
 #if defined LOGGER || defined WEBSERVER
 //  uint32_t m = micros();
+  printToWebClient(STR_TEXT_FSP);
+#if !defined(ESP32)
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printToWebClient(STR_TEXT_FSP);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
+#else
+  uint32_t fs = (SD.totalBytes() - SD.usedBytes());
+  printFmtToWebClient(PSTR(": %lu Bytes<br>\r\n"), fs);
+#endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
 printToWebClient(PSTR("<BR>\r\n"));
@@ -4685,7 +4705,11 @@ void LogTelegram(byte* msg) {
   int data_len;
   float dval;
   uint16_t line = 0;
+#if !defined(ESP32)
   if (SD.vol()->freeClusterCount() < MINIMUM_FREE_SPACE_ON_SD) return;
+#else
+  if (SD.totalBytes() - SD.usedBytes() < MINIMUM_FREE_SPACE_ON_SD) return;
+#endif
 
   if (bus->getBusType() != BUS_PPS) {
     if (msg[4+(bus->getBusType()*4)]==TYPE_QUR || msg[4+(bus->getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
@@ -6188,10 +6212,18 @@ uint16_t setPPS(uint8_t pps_index, int16_t value) {
 void transmitFile(File dataFile) {
   int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
   flushToWebClient();
+#if !defined(ESP32)
   int chars_read = dataFile.read(bigBuff , logbuflen);
+#else
+  int chars_read = dataFile.readBytes(bigBuff , logbuflen);
+#endif
   while (chars_read == logbuflen) {
     client.write(bigBuff, logbuflen);
+#if !defined(ESP32)
     chars_read = dataFile.read(bigBuff , logbuflen);
+#else
+    chars_read = dataFile.readBytes(bigBuff , logbuflen);
+#endif
     }
   if (chars_read > 0) client.write(bigBuff, chars_read);
 }
@@ -6789,7 +6821,7 @@ uint8_t pps_offset = 0;
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-            if (programIsreadOnly(flags) || pps_write != 1) {
+            if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && time_set == false)) {
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
@@ -7699,7 +7731,11 @@ uint8_t pps_offset = 0;
             bool not_first = false;
             int i;
 #if defined LOGGER || defined WEBSERVER
+#if defined(ESP32)
+            freespace = SD.totalBytes() - SD.usedBytes();
+#else
             freespace = SD.vol()->freeClusterCount();
+#endif
 #endif
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
@@ -8603,7 +8639,13 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-  if (logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
+  uint32_t freespace = 0;
+#if defined(ESP32)
+  freespace = SD.totalBytes() - SD.usedBytes();
+#else
+  freespace = SD.vol()->freeClusterCount();
+#endif
+  if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
@@ -9483,20 +9525,22 @@ void setup() {
   }
 
 #if defined LOGGER || defined WEBSERVER
+  printToDebug(PSTR("Starting SD.."));
+  #ifndef ESP32
   // disable w5100 while setting up SD
-#ifndef ESP32
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-#endif
-  printToDebug(PSTR("Starting SD.."));
-#if defined(__AVR__)
+    #if defined(__AVR__)
   if (!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
-#else
+    #else
   if (!SD.begin(4, SPI_DIV3_SPEED)) printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-#endif
+    #endif
   else printToDebug(PSTR("ok\r\n"));
-
+  #else
+    SD.begin(true); // format on fail active
+  #endif
 #else
+  #ifndef ESP32
   // enable w5100 SPI
   pinMode(10,OUTPUT);
   digitalWrite(10,LOW);
@@ -9504,6 +9548,7 @@ void setup() {
   // disable SD Card
   pinMode(4,OUTPUT);
   digitalWrite(4,HIGH);
+  #endif
 #endif
 
 #ifdef WIFI
@@ -9605,7 +9650,9 @@ void setup() {
   if (save_debug_mode == 2) telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
+  #ifndef ESP32
   digitalWrite(10,HIGH);
+  #endif
 #endif
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
@@ -9616,9 +9663,14 @@ void setup() {
   #if defined LOGGER || defined WEBSERVER
   printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
-  uint32_t volFree = SD.vol()->freeClusterCount();
-  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToDebug(PSTR("%d MB free\r\n"), fs);
+#if !defined(ESP32)
+  uint32_t freespace = SD.vol()->freeClusterCount();
+  freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+  printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
+#else
+  uint32_t freespace = SD.totalBytes() - SD.usedBytes();
+  printFmtToDebug(PSTR("%d Bytes free\r\n"), freespace);
+#endif
   diff -= (millis() - m); //3 sec - delay
   #endif
   if (diff > 0)  delay(diff);
