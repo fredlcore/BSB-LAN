@@ -575,7 +575,7 @@ byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - wri
 
 ComServer *server;
 ComServer *telnetServer;
-Stream* SerialOutput;
+Stream *SerialOutput;
 
 //BSB bus definitions
 BSB *bus;
@@ -2055,8 +2055,8 @@ void loadPrognrElementsFromTable(int nr, int i) {
       case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
       case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
       case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
-      case 6: decodedTelegram.sensorid = nr - 20700; break;
-      case 7: decodedTelegram.sensorid = nr - 20800; break;
+      case 6: decodedTelegram.sensorid = nr - 20700 + 1; break;
+      case 7: decodedTelegram.sensorid = nr - 20800 + 1; break;
       case 8: decodedTelegram.sensorid = (nr - 20200) / 6 + 1; break;
     }
   }
@@ -3007,8 +3007,7 @@ void printTelegram(byte* msg, int query_line) {
         case 0xF8:
         case 0xFB:
         case 0xFD:
-        case 0xFE:
-          printToDebug(PSTR("ANS QAA->HEIZ ")); break;
+        case 0xFE: printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
       }
     }
@@ -4876,7 +4875,7 @@ int set(int line      // the ProgNr of the heater parameter
         custom_floats[line - 20700] = atof(val);
         return 1;
       }
-      if ((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_float
+      if ((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
         strcpy_P(sscanf_buf, PSTR("%ld"));
         sscanf(val, sscanf_buf, &custom_longs[line - 20800]);
