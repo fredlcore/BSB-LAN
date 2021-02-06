@@ -75,6 +75,7 @@
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
  *        - HTTP Authentification now uses clear text username and password in configuration
+ *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *       version 1.1
@@ -762,7 +763,9 @@ unsigned long TWW_count   = 0;
 uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 int16_t pps_values[PPS_ANZ] = { 0 };
-bool time_set = false;
+bool pps_time_received = false;
+bool pps_time_set = false;
+bool pps_wday_set = false;
 uint8_t current_switchday = 0;
 
 #include "BSB_LAN_EEPROMconfig.h"
@@ -3325,6 +3328,7 @@ void printTelegram(byte* msg, int query_line) {
                 }
               break;
 */
+            case VT_WEEKDAY:
             case VT_ENUM: // enum
               if (data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
                 if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
@@ -3416,20 +3420,7 @@ void printTelegram(byte* msg, int query_line) {
               break;
             case VT_PPS_TIME: // PPS: Time and day of week
             {
-              const char *getfarstrings;
-              uint8_t q;
-              switch (weekday()) {
-                case 1: getfarstrings = PSTR(WEEKDAY_SUN_TEXT); break;
-                case 2: getfarstrings = PSTR(WEEKDAY_MON_TEXT); break;
-                case 3: getfarstrings = PSTR(WEEKDAY_TUE_TEXT); break;
-                case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
-                case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
-                case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
-                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
-                default: getfarstrings = PSTR(""); break;
-              }
-              q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
-              sprintf_P(decodedTelegram.value + q, PSTR(", %02d:%02d:%02d"), hour(), minute(), second());
+              sprintf_P(decodedTelegram.value, PSTR("%02d:%02d:%02d"), hour(), minute(), second());
               printToDebug(decodedTelegram.value);
               break;
             }
@@ -4916,6 +4907,24 @@ int set(int line      // the ProgNr of the heater parameter
     int cmd_no = line - 15000;
     switch (decodedTelegram.type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
+      case VT_WEEKDAY:
+      {
+        int dow = atoi(val);
+        pps_values[PPS_DOW] = dow;
+        setTime(hour(), minute(), second(), dow, 1, 2018);
+//        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
+        pps_wday_set = true;
+        break;
+      }
+      case VT_PPS_TIME:
+      {
+        int hour=0, minute=0, second=0;
+        strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
+        sscanf(val, sscanf_buf, &hour, &minute, &second);
+        setTime(hour, minute, second, weekday(), 1, 2018);
+//        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+        pps_time_set = true;
+      }
       case VT_HOUR_MINUTES:
       {
         uint8_t h=atoi(val);
@@ -4960,6 +4969,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_PERCENT:
     case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
+    case VT_WEEKDAY:
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
     case VT_YESNO: // 1 = Ja
@@ -6564,7 +6574,7 @@ void loop() {
               break;
             case 7:
             {
-              if (time_set == true) {
+              if (pps_time_set == true) {
                 bool found = false;
                 bool next_active = true;
                 int16_t current_time = hour() * 6 + minute() / 10;
@@ -6635,19 +6645,25 @@ void loop() {
               break;
             case 13:
             {
-              tx_msg[0] = 0xFB; // send time to heater
-              tx_msg[1] = 0x79;
-              tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
-              tx_msg[5] = hour(); // hour
-              tx_msg[6] = minute(); // minute
-              tx_msg[7] = second(); // second
-              break;
+              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
+                tx_msg[0] = 0xFB; // send time to heater
+                tx_msg[1] = 0x79;
+                tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
+                tx_msg[5] = hour(); // hour
+                tx_msg[6] = minute(); // minute
+                tx_msg[7] = second(); // second
+                break;
+              }
             }
             case 14:
             {
-              tx_msg[0] = 0xFE; // unknown telegram
-              tx_msg[1] = 0x79;
-              break;
+              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
+                tx_msg[0] = 0xFE; // unknown telegram
+                tx_msg[1] = 0x79;
+                pps_time_set = false;
+                pps_wday_set = false;
+                break;
+              }
             }
             case 15:
               tx_msg[1] = 0x60;
@@ -6823,7 +6839,7 @@ uint8_t pps_offset = 0;
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-            if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && time_set == false)) {
+            if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && pps_time_received == false)) {
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
@@ -6903,7 +6919,25 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: pps_values[PPS_DOW] = msg[4+pps_offset]; setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x79: 
+                {
+                  if (pps_wday_set == false) {
+                    pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
+                  }
+                  int pps_hour, pps_minute, pps_second;
+                  if (pps_time_set == false) {
+                    pps_hour = msg[5+pps_offset];
+                    pps_minute = msg[6+pps_offset];
+                    pps_second = msg[5+pps_offset];
+                  } else {
+                    pps_hour = hour();
+                    pps_minute = minute();
+                    pps_second = second();
+                  }
+                  setTime(pps_hour, pps_minute, pps_second, pps_values[PPS_DOW], 1, 2018);
+                  pps_time_received = true;
+                  break;
+                }
                 case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
@@ -6964,7 +6998,7 @@ uint8_t pps_offset = 0;
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
-    if (   (trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
+    if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
        && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
       printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"),
@@ -7423,6 +7457,7 @@ uint8_t pps_offset = 0;
             uint8_t flag = 0;
             // check type
             switch (decodedTelegram.type) {
+              case VT_WEEKDAY:
               case VT_ENUM: flag = PRINT_DISABLED_VALUE + 1; break;
               case VT_CUSTOM_ENUM:
               case VT_CUSTOM_BIT:
@@ -9028,7 +9063,7 @@ void mqtt_sendtoBroker(int param) {
       char tbuf[20];
       sprintf_P(tbuf, PSTR("\"%d\":\""), param);
       MQTTPayload.concat(tbuf);
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
         MQTTPayload.concat(String(build_pvalstr(0)));
       } else {
@@ -9036,7 +9071,7 @@ void mqtt_sendtoBroker(int param) {
       }
       MQTTPayload.concat(F("\""));
     } else { //plain text
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
         MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
       }
