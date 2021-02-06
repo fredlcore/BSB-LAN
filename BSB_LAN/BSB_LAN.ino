@@ -9172,7 +9172,7 @@ return false;
  *   none
  */
 #ifdef MQTT
-const String& mqtt_get_will_topic() {
+const String mqtt_get_will_topic() {
   // Build (Last) Will Topic
   String MQTTLWTopic = "";
   if (MQTTTopicPrefix[0]) {
