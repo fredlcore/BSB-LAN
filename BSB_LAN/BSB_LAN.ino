@@ -441,6 +441,7 @@ void loop();
 #endif
 
 #include <Arduino.h>
+#include "src/Base64/src/Base64.h"
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -7045,7 +7046,10 @@ uint8_t pps_offset = 0;
                 }
               }
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
+              char base64_user_pass[88] = { 0 };
+              int user_pass_len = strlen(USER_PASS);
+              Base64.encode(base64_user_pass, USER_PASS, user_pass_len);
+              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) {
                 httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
@@ -7058,7 +7062,7 @@ uint8_t pps_offset = 0;
         }
         cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
+        if (USER_PASS[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
@@ -9304,7 +9308,7 @@ void setup() {
   registerConfigVariable(CF_WIFI_SSID, (byte *)wifi_ssid);
   registerConfigVariable(CF_WIFI_PASSWORD, (byte *)wifi_pass);
   registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
-  registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+  registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS);
   registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
   registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
   registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);

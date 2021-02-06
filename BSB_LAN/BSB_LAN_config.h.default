@@ -87,13 +87,11 @@ byte trusted_ip_addr[4] = {0,0,0,0};
 byte trusted_ip_addr2[4] = {0,0,0,0};
 
 /* Activate HTTP-Auth authentication to provide username/password based access. No encryption!
- * The example in the comment below sets username to "atari" and password to "800xl". Visit a website like
- * https://www.base64encode.org/
- * to encode your own username/password combination in the format username:password
- * and replace the YXRhcmk6ODAweGw= string below accordingly.
-*/
-//char USER_PASS_B64[64] = "YXRhcmk6ODAweGw=";
-char USER_PASS_B64[64] = "";      // HTTP-Auth will be disabled if USER_PASS_B64 string length is zero
+ * Credentials have to be entered in the form 
+ * User:Password
+ */
+//char USER_PASS[64] = "User:Password";
+char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS_B64 string length is zero
 
 
 // Compile module with one wire bus support.
