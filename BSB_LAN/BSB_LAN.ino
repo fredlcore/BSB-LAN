@@ -67,15 +67,16 @@
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
  *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in BSB_LAN_config.h (LAN in caps), and no longer in BSB_lan_config.h (lower-caps "lan")
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Most but not all features are working right now, so try it at your own risk!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
+ *        - HTTP Authentification now uses clear text username and password in configuration
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
- *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Not all features are/will be working, so try it at your own risk!
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
