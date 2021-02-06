@@ -9143,7 +9143,8 @@ boolean mqtt_connect()
       }
       else
       {
-        printlnToDebug(PSTR("Connect to MQTT broker"));
+        printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
+        printFmtToDebug(PSTR("Will topic: %s"), MQTTWillTopic.c_str());
         const char* mqtt_subscr;
         if (MQTTTopicPrefix[0]) {mqtt_subscr = MQTTTopicPrefix;} else {mqtt_subscr="fromBroker";}
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
@@ -9171,7 +9172,7 @@ return false;
  *   none
  */
 #ifdef MQTT
-String mqtt_get_will_topic() {
+const String& mqtt_get_will_topic() {
   // Build (Last) Will Topic
   String MQTTLWTopic = "";
   if (MQTTTopicPrefix[0]) {
@@ -9200,10 +9201,14 @@ String mqtt_get_will_topic() {
 #ifdef MQTT
 void mqtt_disconnect() {
   if (MQTTPubSubClient) {
-    printlnToDebug(PSTR("Disconnect from MQTT broker, updating will topic"));
     if (MQTTPubSubClient->connected()) {
-      MQTTPubSubClient->publish(mqtt_get_will_topic().c_str(), PSTR("offline"), true);
+      String MQTTWillTopic = mqtt_get_will_topic();
+      printlnToDebug(PSTR("Disconnect from MQTT broker, updating will topic"));
+      printFmtToDebug(PSTR("Will topic: %s"), MQTTWillTopic.c_str());
+      MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("offline"), true);
       MQTTPubSubClient->disconnect();
+    } else {
+      printlnToDebug(PSTR("Dropping unconnected MQTT client"));
     }
     delete MQTTPubSubClient;
     MQTTPubSubClient = NULL;
