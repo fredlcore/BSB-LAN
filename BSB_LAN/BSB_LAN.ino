@@ -8658,8 +8658,7 @@ uint8_t pps_offset = 0;
           mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
         }
       }
-      if (MQTTPubSubClient != NULL && !mqtt_mode)  //Luposoft: user may disable MQTT through web interface
-      {
+      if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
         // Actual disconnect will be handled a few lines below through mqtt_disconnect().
         printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
       }
@@ -9025,8 +9024,13 @@ void mqtt_sendtoBroker(int param) {
     if (mqtt_mode == 3)
       MQTTPayload.concat(F("\":{\"id\":"));
   }
+
   boolean is_first = true;
-  if (is_first) {is_first = false;} else {MQTTPayload.concat(F(","));}
+  if (is_first)
+    is_first = false;
+  else
+    MQTTPayload.concat(F(","));
+    
   if (MQTTTopicPrefix[0]) {
     MQTTTopic = MQTTTopicPrefix;
     MQTTTopic.concat(F("/"));
@@ -9066,9 +9070,9 @@ void mqtt_sendtoBroker(int param) {
     if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
       MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
-    }
-    else
+    } else {
       MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
+    }
   }
   // End of mqtt if loop so close off the json and publish
   if (mqtt_mode == 2 || mqtt_mode == 3) {
@@ -9105,10 +9109,8 @@ void mqtt_sendtoBroker(int param) {
  *  MQTT instance
  * *************************************************************** */
 #ifdef MQTT
-boolean mqtt_connect()
-{
-  if(MQTTPubSubClient == NULL)
-  {
+boolean mqtt_connect() {
+  if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     uint16_t bufsize;
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
@@ -9120,8 +9122,7 @@ boolean mqtt_connect()
     }
     MQTTPubSubClient->setBufferSize(bufsize);
   }
-  if (!MQTTPubSubClient->connected())
-  {
+  if (!MQTTPubSubClient->connected()) {
     char* MQTTUser = NULL;
     if(MQTTUsername[0])
       MQTTUser = MQTTUsername;
@@ -9132,17 +9133,13 @@ boolean mqtt_connect()
     MQTTPubSubClient->setServer(MQTTBroker, 1883);
     String MQTTWillTopic = mqtt_get_will_topic();
     int retries = 0;
-    while (!MQTTPubSubClient->connected() && retries < 3)
-    {
+    while (!MQTTPubSubClient->connected() && retries < 3) {
       MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
       retries++;
-      if (!MQTTPubSubClient->connected())
-      {
+      if (!MQTTPubSubClient->connected()) {
         delay(1000);
         printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
-      }
-      else
-      {
+      } else {
         printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
         printFmtToDebug(PSTR("Will topic: %s"), MQTTWillTopic.c_str());
         const char* mqtt_subscr;
@@ -9154,12 +9151,10 @@ boolean mqtt_connect()
         return true;
       }
     }
-  }
-  else
-  {
+  } else {
     return true;
   }
-return false;
+  return false;
 }
 #endif
 /* Function: mqtt_get_will_topic()
@@ -9263,15 +9258,15 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   if (MQTTTopicPrefix[0]) {
     mqtt_Topic = MQTTTopicPrefix;
     mqtt_Topic.concat(F("/"));
+  } else {
+    mqtt_Topic = "BSB-LAN/";
   }
-  else mqtt_Topic = "BSB-LAN/";
   mqtt_Topic.concat(F("MQTT"));
   MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
 
   if (firstsign==' ') { //query
     printFmtToDebug(PSTR("%d \r\n"), I_line);
-  }
-  else { //command to heater
+  } else { //command to heater
     C_payload=strchr(C_payload,'=');
     C_payload++;
     printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
