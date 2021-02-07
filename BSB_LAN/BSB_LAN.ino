@@ -9059,7 +9059,7 @@ void mqtt_sendtoBroker(int param) {
     char tbuf[20];
     sprintf_P(tbuf, PSTR("\"%d\":\""), param);
     MQTTPayload.concat(tbuf);
-    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
       MQTTPayload.concat(String(build_pvalstr(0)));
     } else {
@@ -9067,7 +9067,7 @@ void mqtt_sendtoBroker(int param) {
     }
     MQTTPayload.concat(F("\""));
   } else { //plain text
-    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
       MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
     } else {
