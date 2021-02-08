@@ -9626,7 +9626,8 @@ void setup() {
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
     #if defined(__AVR__)
-  if (!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
+  if (!SD.begin(4)) {
+    printToDebug(PSTR("failed\r\n"));
     #else
   if (!SD.begin(4, SPI_DIV3_SPEED)) {
     printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
