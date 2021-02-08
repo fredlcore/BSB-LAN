@@ -67,15 +67,17 @@
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
  *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in BSB_LAN_config.h (LAN in caps), and no longer in BSB_lan_config.h (lower-caps "lan")
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Most but not all features are working right now, so try it at your own risk!
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
+ *        - HTTP Authentification now uses clear text username and password in configuration
+ *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
- *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on an Olimex ESP32-POE board. Not all features are/will be working, so try it at your own risk!
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -441,6 +443,7 @@ void loop();
 #endif
 
 #include <Arduino.h>
+#include "src/Base64/src/Base64.h"
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -599,9 +602,15 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
+#if !defined(ESP32)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
+#else
+const char averagesFileName[] PROGMEM = "/averages.txt";
+const char datalogFileName[] PROGMEM = "/datalog.txt";
+const char journalFileName[] PROGMEM = "/journal.txt";
+#endif
 
 ComClient client;
 ComClient *mqtt_client;   //Luposoft: own instance
@@ -632,12 +641,21 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 #if defined LOGGER || defined WEBSERVER
+#if defined(ESP32)
+// Minimum free space in bytes
+#define MINIMUM_FREE_SPACE_ON_SD 10000
+#include <SPIFFS.h>
+#define SD SPIFFS
+// Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+#define FILE_WRITE FILE_APPEND
+#else
 //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
 #define MINIMUM_FREE_SPACE_ON_SD 100
 // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
 // do not forget set it up after SdFat upgrading
-  #include "src/SdFat/SdFat.h"
-  SdFat SD;
+#include "src/SdFat/SdFat.h"
+SdFat SD;
+#endif
 #endif
 
 #ifdef ONE_WIRE_BUS
@@ -745,7 +763,9 @@ unsigned long TWW_count   = 0;
 uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 int16_t pps_values[PPS_ANZ] = { 0 };
-bool time_set = false;
+bool pps_time_received = false;
+bool pps_time_set = false;
+bool pps_wday_set = false;
 uint8_t current_switchday = 0;
 
 #include "BSB_LAN_EEPROMconfig.h"
@@ -3307,6 +3327,7 @@ void printTelegram(byte* msg, int query_line) {
                 }
               break;
 */
+            case VT_WEEKDAY:
             case VT_ENUM: // enum
               if (data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
                 if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
@@ -3398,20 +3419,7 @@ void printTelegram(byte* msg, int query_line) {
               break;
             case VT_PPS_TIME: // PPS: Time and day of week
             {
-              const char *getfarstrings;
-              uint8_t q;
-              switch (weekday()) {
-                case 1: getfarstrings = PSTR(WEEKDAY_SUN_TEXT); break;
-                case 2: getfarstrings = PSTR(WEEKDAY_MON_TEXT); break;
-                case 3: getfarstrings = PSTR(WEEKDAY_TUE_TEXT); break;
-                case 4: getfarstrings = PSTR(WEEKDAY_WED_TEXT); break;
-                case 5: getfarstrings = PSTR(WEEKDAY_THU_TEXT); break;
-                case 6: getfarstrings = PSTR(WEEKDAY_FRI_TEXT); break;
-                case 7: getfarstrings = PSTR(WEEKDAY_SAT_TEXT); break;
-                default: getfarstrings = PSTR(""); break;
-              }
-              q = strlen(strcpy_P(decodedTelegram.value, getfarstrings));
-              sprintf_P(decodedTelegram.value + q, PSTR(", %02d:%02d:%02d"), hour(), minute(), second());
+              sprintf_P(decodedTelegram.value, PSTR("%02d:%02d:%02d"), hour(), minute(), second());
               printToDebug(decodedTelegram.value);
               break;
             }
@@ -3978,10 +3986,15 @@ void generateConfigPage(void) {
 
 #if defined LOGGER || defined WEBSERVER
 //  uint32_t m = micros();
+  printToWebClient(STR_TEXT_FSP);
+#if !defined(ESP32)
   uint32_t volFree = SD.vol()->freeClusterCount();
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printToWebClient(STR_TEXT_FSP);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
+#else
+  uint32_t fs = (SD.totalBytes() - SD.usedBytes());
+  printFmtToWebClient(PSTR(": %lu Bytes<br>\r\n"), fs);
+#endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
 printToWebClient(PSTR("<BR>\r\n"));
@@ -4684,7 +4697,11 @@ void LogTelegram(byte* msg) {
   int data_len;
   float dval;
   uint16_t line = 0;
+#if !defined(ESP32)
   if (SD.vol()->freeClusterCount() < MINIMUM_FREE_SPACE_ON_SD) return;
+#else
+  if (SD.totalBytes() - SD.usedBytes() < MINIMUM_FREE_SPACE_ON_SD) return;
+#endif
 
   if (bus->getBusType() != BUS_PPS) {
     if (msg[4+(bus->getBusType()*4)]==TYPE_QUR || msg[4+(bus->getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
@@ -4889,6 +4906,24 @@ int set(int line      // the ProgNr of the heater parameter
     int cmd_no = line - 15000;
     switch (decodedTelegram.type) {
       case VT_TEMP: pps_values[cmd_no] = atof(val) * 64; break;
+      case VT_WEEKDAY:
+      {
+        int dow = atoi(val);
+        pps_values[PPS_DOW] = dow;
+        setTime(hour(), minute(), second(), dow, 1, 2018);
+//        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
+        pps_wday_set = true;
+        break;
+      }
+      case VT_PPS_TIME:
+      {
+        int hour=0, minute=0, second=0;
+        strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
+        sscanf(val, sscanf_buf, &hour, &minute, &second);
+        setTime(hour, minute, second, weekday(), 1, 2018);
+//        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+        pps_time_set = true;
+      }
       case VT_HOUR_MINUTES:
       {
         uint8_t h=atoi(val);
@@ -4933,6 +4968,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_PERCENT:
     case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
+    case VT_WEEKDAY:
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
     case VT_YESNO: // 1 = Ja
@@ -6187,10 +6223,18 @@ uint16_t setPPS(uint8_t pps_index, int16_t value) {
 void transmitFile(File dataFile) {
   int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
   flushToWebClient();
+#if !defined(ESP32)
   int chars_read = dataFile.read(bigBuff , logbuflen);
+#else
+  int chars_read = dataFile.readBytes(bigBuff , logbuflen);
+#endif
   while (chars_read == logbuflen) {
     client.write(bigBuff, logbuflen);
+#if !defined(ESP32)
     chars_read = dataFile.read(bigBuff , logbuflen);
+#else
+    chars_read = dataFile.readBytes(bigBuff , logbuflen);
+#endif
     }
   if (chars_read > 0) client.write(bigBuff, chars_read);
 }
@@ -6529,7 +6573,7 @@ void loop() {
               break;
             case 7:
             {
-              if (time_set == true) {
+              if (pps_time_set == true) {
                 bool found = false;
                 bool next_active = true;
                 int16_t current_time = hour() * 6 + minute() / 10;
@@ -6600,19 +6644,25 @@ void loop() {
               break;
             case 13:
             {
-              tx_msg[0] = 0xFB; // send time to heater
-              tx_msg[1] = 0x79;
-              tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
-              tx_msg[5] = hour(); // hour
-              tx_msg[6] = minute(); // minute
-              tx_msg[7] = second(); // second
-              break;
+              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
+                tx_msg[0] = 0xFB; // send time to heater
+                tx_msg[1] = 0x79;
+                tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
+                tx_msg[5] = hour(); // hour
+                tx_msg[6] = minute(); // minute
+                tx_msg[7] = second(); // second
+                break;
+              }
             }
             case 14:
             {
-              tx_msg[0] = 0xFE; // unknown telegram
-              tx_msg[1] = 0x79;
-              break;
+              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
+                tx_msg[0] = 0xFE; // unknown telegram
+                tx_msg[1] = 0x79;
+                pps_time_set = false;
+                pps_wday_set = false;
+                break;
+              }
             }
             case 15:
               tx_msg[1] = 0x60;
@@ -6788,7 +6838,7 @@ uint8_t pps_offset = 0;
               i--;
             }
             uint8_t flags=get_cmdtbl_flags(i);
-            if (programIsreadOnly(flags) || pps_write != 1) {
+            if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && pps_time_received == false)) {
               switch (msg[1+pps_offset]) {
                 case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
@@ -6868,7 +6918,25 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: pps_values[PPS_DOW] = msg[4+pps_offset]; setTime(msg[5+pps_offset], msg[6+pps_offset], msg[7+pps_offset], msg[4+pps_offset], 1, 2018); time_set = true; break;  // Datum (msg[4] Wochentag)
+                case 0x79: 
+                {
+                  if (pps_wday_set == false) {
+                    pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
+                  }
+                  int pps_hour, pps_minute, pps_second;
+                  if (pps_time_set == false) {
+                    pps_hour = msg[5+pps_offset];
+                    pps_minute = msg[6+pps_offset];
+                    pps_second = msg[5+pps_offset];
+                  } else {
+                    pps_hour = hour();
+                    pps_minute = minute();
+                    pps_second = second();
+                  }
+                  setTime(pps_hour, pps_minute, pps_second, pps_values[PPS_DOW], 1, 2018);
+                  pps_time_received = true;
+                  break;
+                }
                 case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
                 case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
                 case 0x1B:                                    // Frostschutz-Temperatur
@@ -6929,7 +6997,7 @@ uint8_t pps_offset = 0;
   if (client || SerialOutput->available()) {
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
-    if (   (trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
+    if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
        && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
       printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"),
@@ -7012,7 +7080,10 @@ uint8_t pps_offset = 0;
                 }
               }
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & HTTP_AUTH) && USER_PASS_B64[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,USER_PASS_B64)!=0) {
+              char base64_user_pass[88] = { 0 };
+              int user_pass_len = strlen(USER_PASS);
+              Base64.encode(base64_user_pass, USER_PASS, user_pass_len);
+              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) {
                 httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
@@ -7025,7 +7096,7 @@ uint8_t pps_offset = 0;
         }
         cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (USER_PASS_B64[0] && !(httpflags & HTTP_AUTH)) {
+        if (USER_PASS[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
 #if defined(__AVR__)
           printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
@@ -7384,6 +7455,7 @@ uint8_t pps_offset = 0;
             uint8_t flag = 0;
             // check type
             switch (decodedTelegram.type) {
+              case VT_WEEKDAY:
               case VT_ENUM: flag = PRINT_DISABLED_VALUE + 1; break;
               case VT_CUSTOM_ENUM:
               case VT_CUSTOM_BIT:
@@ -7697,7 +7769,11 @@ uint8_t pps_offset = 0;
             bool not_first = false;
             int i;
 #if defined LOGGER || defined WEBSERVER
+#if defined(ESP32)
+            freespace = SD.totalBytes() - SD.usedBytes();
+#else
             freespace = SD.vol()->freeClusterCount();
+#endif
 #endif
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
@@ -8601,7 +8677,13 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-  if (logCurrentValues && SD.vol()->freeClusterCount() >= MINIMUM_FREE_SPACE_ON_SD) {
+  uint32_t freespace = 0;
+#if defined(ESP32)
+  freespace = SD.totalBytes() - SD.usedBytes();
+#else
+  freespace = SD.vol()->freeClusterCount();
+#endif
+  if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
@@ -8979,7 +9061,7 @@ void mqtt_sendtoBroker(int param) {
       char tbuf[20];
       sprintf_P(tbuf, PSTR("\"%d\":\""), param);
       MQTTPayload.concat(tbuf);
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
         MQTTPayload.concat(String(build_pvalstr(0)));
       } else {
@@ -8987,7 +9069,7 @@ void mqtt_sendtoBroker(int param) {
       }
       MQTTPayload.concat(F("\""));
     } else { //plain text
-      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME) {
+      if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
         MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
       }
@@ -9259,7 +9341,7 @@ void setup() {
   registerConfigVariable(CF_WIFI_SSID, (byte *)wifi_ssid);
   registerConfigVariable(CF_WIFI_PASSWORD, (byte *)wifi_pass);
   registerConfigVariable(CF_PASSKEY, (byte *)PASSKEY);
-  registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS_B64);
+  registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS);
   registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
   registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
   registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
@@ -9464,7 +9546,7 @@ void setup() {
   uint32_t temp_c = 0;
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
-    int l = findLine(15000+i,temp_idx+i,&temp_c);
+    int l = findLine(15000+i,temp_idx,&temp_c);
     if (l==-1) continue;
 //    uint8_t flags=get_cmdtbl_flags(l);
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
@@ -9485,20 +9567,22 @@ void setup() {
   }
 
 #if defined LOGGER || defined WEBSERVER
+  printToDebug(PSTR("Starting SD.."));
+  #ifndef ESP32
   // disable w5100 while setting up SD
-#ifndef ESP32
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-#endif
-  printToDebug(PSTR("Starting SD.."));
-#if defined(__AVR__)
+    #if defined(__AVR__)
   if (!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
-#else
+    #else
   if (!SD.begin(4, SPI_DIV3_SPEED)) printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-#endif
+    #endif
   else printToDebug(PSTR("ok\r\n"));
-
+  #else
+    SD.begin(true); // format on fail active
+  #endif
 #else
+  #ifndef ESP32
   // enable w5100 SPI
   pinMode(10,OUTPUT);
   digitalWrite(10,LOW);
@@ -9506,6 +9590,7 @@ void setup() {
   // disable SD Card
   pinMode(4,OUTPUT);
   digitalWrite(4,HIGH);
+  #endif
 #endif
 
 #ifdef WIFI
@@ -9607,7 +9692,9 @@ void setup() {
   if (save_debug_mode == 2) telnetServer = new ComServer(23);
 
 #if defined LOGGER || defined WEBSERVER
+  #ifndef ESP32
   digitalWrite(10,HIGH);
+  #endif
 #endif
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
@@ -9618,9 +9705,14 @@ void setup() {
   #if defined LOGGER || defined WEBSERVER
   printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
-  uint32_t volFree = SD.vol()->freeClusterCount();
-  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
-  printFmtToDebug(PSTR("%d MB free\r\n"), fs);
+#if !defined(ESP32)
+  uint32_t freespace = SD.vol()->freeClusterCount();
+  freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+  printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
+#else
+  uint32_t freespace = SD.totalBytes() - SD.usedBytes();
+  printFmtToDebug(PSTR("%d Bytes free\r\n"), freespace);
+#endif
   diff -= (millis() - m); //3 sec - delay
   #endif
   if (diff > 0)  delay(diff);

@@ -87,13 +87,11 @@ byte trusted_ip_addr[4] = {0,0,0,0};
 byte trusted_ip_addr2[4] = {0,0,0,0};
 
 /* Activate HTTP-Auth authentication to provide username/password based access. No encryption!
- * The example in the comment below sets username to "atari" and password to "800xl". Visit a website like
- * https://www.base64encode.org/
- * to encode your own username/password combination in the format username:password
- * and replace the YXRhcmk6ODAweGw= string below accordingly.
-*/
-//char USER_PASS_B64[64] = "YXRhcmk6ODAweGw=";
-char USER_PASS_B64[64] = "";      // HTTP-Auth will be disabled if USER_PASS_B64 string length is zero
+ * Credentials have to be entered in the form 
+ * User:Password
+ */
+//char USER_PASS[64] = "User:Password";
+char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string length is zero
 
 
 // Compile module with one wire bus support.
@@ -223,11 +221,15 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
 // Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
 byte protected_GPIO[10] = {0b00000000,0b00111100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-#else  // Due
+#elif defined(__arm__)  // Due
 // Protect these pins from accidental GPIO access
 // Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
 byte protected_GPIO[10] = {0b00001011,0b00111100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
+#elif defined(ESP32)
+byte protected_GPIO[10] = {0b00110100,0b11110000,0b11101100,0b00001110,0b10011111,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000};
+#else
+#error "Protected pins not defined for this platform"
 #endif
 
 

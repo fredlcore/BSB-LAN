@@ -281,11 +281,10 @@ const char header_html[] PROGMEM_LATE =
 const char header_html2[] PROGMEM_LATE =
   "<script>function set(line){\n"
   "var value = document.getElementById('value'+line).value.replace(/\\.$/, '');\n"
-  "value = value.replace(':', '.');\n"
+  "value = value.replaceAll(':', '.');\n"
   "value = value.replace('---', '');\n"
-  "if(isNaN(value)==false || value == ''){\n"
   "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');\n"
-  "}}\n"
+  "}\n"
   "function setbit(line){\n"
   "var x=document.getElementById('value'+line); var value=0;\n"
   "for (var i=0; i<x.options.length; i++) {\n"
