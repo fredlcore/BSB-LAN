@@ -2040,10 +2040,11 @@ void loadPrognrElementsFromTable(int nr, int i) {
   //calc_enum_offset() MUST be after decodedTelegram.type = get_cmdtbl_type() because depend from it (VT_CUSTOM_BIT)
   decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len, decodedTelegram.type == VT_CUSTOM_BIT?1:0);
   uint8_t flags=get_cmdtbl_flags(i);
-  if (programIsreadOnly(flags))
+  if (programIsreadOnly(flags)) {
     decodedTelegram.readonly = 1;
-  else
+  } else {
     decodedTelegram.readonly = 0;
+  }
   #if defined(__AVR__)
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
@@ -2251,9 +2252,7 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift) {
     for (int i=0; i < data_len; i++) {
       len+=sprintf_P(decodedTelegram.telegramDump + len,PSTR("%02X"),msg[shift+i]);
     }
-  }
-  else
-  {
+  } else {
     printcantalloc();
   }
 }
@@ -3800,10 +3799,11 @@ void generateConfigPage(void) {
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for (int i=0;i<numDHTSensors;i++) {
     if (DHT_Pins[i]) {
-      if (not_first)
+      if (not_first) {
         printToWebClient(PSTR(", "));
-      else
+      } else {
         not_first = true;
+      }
       printFmtToWebClient(PSTR("%d"), DHT_Pins[i]);
     }
   }
@@ -5470,10 +5470,11 @@ void query_program_and_print_result(int line, const char* prefix, const char* su
   if (prefix) printToWebClient(prefix);
   query(line);
   printToWebClient_prognrdescaddr();
-  if (suffix)
+  if (suffix) {
     printToWebClient(suffix);
-  else
+  } else {
     printToWebClient(PSTR(": "));
+  }
   printToWebClient(build_pvalstr(0));
 }
 
@@ -5707,9 +5708,9 @@ void queryVirtualPrognr(int line, int table_line) {
             _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
             break;
          }
-       }
-       else
+       } else {
          undefinedValueToBuffer(decodedTelegram.value);
+       }
        return;
 #endif
      break;
@@ -5756,25 +5757,25 @@ void queryVirtualPrognr(int line, int table_line) {
                 strcpy(decodedTelegram.value, max_device_list[log_sensor]);
                 break;
               case 1:
-                if (max_dst_temp[log_sensor] > 0)
+                if (max_dst_temp[log_sensor] > 0) {
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
-                else {
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 2:
-                if (max_dst_temp[log_sensor] > 0)
+                if (max_dst_temp[log_sensor] > 0) {
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
-                else {
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 3:
-                if (max_valve[log_sensor] > -1)
+                if (max_valve[log_sensor] > -1) {
                   sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
-                else {
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
@@ -7236,10 +7237,11 @@ uint8_t pps_offset = 0;
             printlnToDebug(p);
 
             uint16_t code = 0;
-            if ((httpflags & HTTP_ETAG))
+            if ((httpflags & HTTP_ETAG)) {
               code = HTTP_NOT_MODIFIED;
-            else
+            } else {
               code = HTTP_OK;
+            }
             printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_AUTO_CACHE_AGE);
             if (lastWrtYr) {
               char monthname[4];
@@ -7480,9 +7482,9 @@ uint8_t pps_offset = 0;
         if (p[1]=='R') {
           webPrintHeader();
           if (!queryDefaultValue(atoi(&p[2]), msg, tx_msg)) {
-            if (decodedTelegram.error == 258)
+            if (decodedTelegram.error == 258) {
               printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
-            else if (decodedTelegram.error == 261) {
+            } else if (decodedTelegram.error == 261) {
               printlnToDebug(printError(decodedTelegram.error));  // to PC hardware serial I/F
               printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             }
@@ -7811,10 +7813,11 @@ uint8_t pps_offset = 0;
             int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
             for (i=0;i<numDHTSensors;i++) {
               if (DHT_Pins[i]) {
-                if (not_first)
+                if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
-                else
+                } else {
                   not_first = true;
+                }
                 printFmtToWebClient(PSTR("    { \"pin\": %d }"), DHT_Pins[i]);
               }
             }
@@ -7825,10 +7828,11 @@ uint8_t pps_offset = 0;
             not_first = false;
             for (i=0; i<anz_ex_gpio; i++) {
               if (bitRead(protected_GPIO[i / 8], i % 8)) {
-                if (not_first)
+                if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
-                else
+                } else {
                   not_first = true;
+                }
               printFmtToWebClient(PSTR("    { \"pin\": %d }"), i);
               }
             }
@@ -7841,10 +7845,11 @@ uint8_t pps_offset = 0;
               not_first = false;
               for (i=0; i<numAverages; i++) {
                 if (avg_parameters[i] > 0) {
-                  if (not_first)
+                  if (not_first) {
                     printToWebClient(PSTR(",\r\n"));
-                  else
+                  } else {
                     not_first = true;
+                  }
                   printFmtToWebClient(PSTR("    { \"parameter\": %d }"), avg_parameters[i]);
                 }
               }
@@ -7857,10 +7862,11 @@ uint8_t pps_offset = 0;
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
-                if (not_first)
+                if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
-                else
+                } else {
                   not_first = true;
+                }
                 printFmtToWebClient(PSTR("    { \"parameter\": %d }"), log_parameters[i]);
               }
             }
@@ -8252,10 +8258,11 @@ uint8_t pps_offset = 0;
                 }
               }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-              if (UseEEPROM == 0x96)
+              if (UseEEPROM == 0x96) {
                 printyesno(1) ;
-              else
+              } else {
                 printyesno(0) ;
+              }
               break;
             case 'S': //save config to EEPROM
                 for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
