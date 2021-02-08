@@ -7123,7 +7123,6 @@ uint8_t pps_offset = 0;
 
         if (mimetype)  {
           File dataFile;
-          const char *getfarstrings;
 
           // client browser accept gzip
           int suffix = 0;
