@@ -1371,7 +1371,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     //skip leading space
     c+=2;
 
-    if (isFirst) {isFirst = false;} else{if (string_delimiter) printToWebClient(string_delimiter);}
+    if (isFirst) {isFirst = false;} else {if (string_delimiter) printToWebClient(string_delimiter);}
     if (prefix) printToWebClient(prefix);
     uint_farptr_t descAddr;
     if (canBeDisabled) {
@@ -1381,7 +1381,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
 #else
       descAddr = STR_DISABLED;
 #endif
-    } else{
+    } else {
       descAddr = enumstr + c;
     }
     if (desc_first) {
@@ -2007,7 +2007,7 @@ bool programIsreadOnly(uint8_t param_len) {
       case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
       case 2: if ((param_len & FL_RONLY) == FL_RONLY && (param_len & FL_OEM) != FL_OEM) return true; else return false; //All writable except read-only
     }
-  } else{ //defs-controlled.
+  } else { //defs-controlled.
     if ((param_len & FL_RONLY) == FL_RONLY) return true;
   }
   return false;
@@ -3588,9 +3588,9 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("</a></td>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   if (!logCurrentValues)
-   printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
-   else{
+   if (!logCurrentValues) {
+     printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
+   } else {
      printToWebClient(PSTR("<a href='/"));
      printPassKey();
      printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
@@ -5446,7 +5446,7 @@ char *build_pvalstr(bool extended) {
       strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
       len+=strlen(outBuf + len);
      }
-  } else{
+  } else {
     if (decodedTelegram.unit[0] != 0) {
       strcpy_P(outBuf + len, PSTR(" "));
       strcat(outBuf + len, decodedTelegram.unit);
@@ -5753,25 +5753,25 @@ void queryVirtualPrognr(int line, int table_line) {
                 strcpy(decodedTelegram.value, max_device_list[log_sensor]);
                 break;
               case 1:
-                if (max_dst_temp[log_sensor] > 0)
+                if (max_dst_temp[log_sensor] > 0) {
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
-                else{
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 2:
-                if (max_dst_temp[log_sensor] > 0)
+                if (max_dst_temp[log_sensor] > 0) {
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
-                else{
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 3:
-                if (max_valve[log_sensor] > -1)
+                if (max_valve[log_sensor] > -1) {
                   sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
-                else{
+                } else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
@@ -7483,7 +7483,7 @@ uint8_t pps_offset = 0;
               printlnToDebug(printError(decodedTelegram.error));  // to PC hardware serial I/F
               printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
             }
-          } else{
+          } else {
 // TODO: replace pvalstr with data from decodedTelegram structure
             build_pvalstr(0);
             if (outBuf[0]>0) {
@@ -8365,12 +8365,13 @@ uint8_t pps_offset = 0;
             break;
           case 'E': //enable telegrams logging to journal.txt
           case 'D': //disable telegrams logging
-            if (p[2]=='E')
+            if (p[2]=='E') {
               logTelegram |= LOGTELEGRAM_ON;
-            else {
+            } else {
               if (logTelegram & LOGTELEGRAM_ON)
                 logTelegram -= LOGTELEGRAM_ON; //clear bit
               }
+            }
             printToWebClient(PSTR(MENU_TEXT_LOT ": "));
             printyesno(logTelegram);
             break;
@@ -8500,10 +8501,11 @@ uint8_t pps_offset = 0;
           } else if (range[0]=='A') { // handle average command
 #ifdef AVERAGES
             if (range[1]=='C' && range[2]=='=') { //24h average calculation on/off
-              if (range[3]=='1') //Enable 24h average calculation temporarily
+              if (range[3]=='1') {                //Enable 24h average calculation temporarily
                 logAverageValues = true;
-              else  //Disable 24h average calculation temporarily
+              } else {                            //Disable 24h average calculation temporarily
                 logAverageValues = false;
+              }
             }
             if (logAverageValues) {
               if (range[1]=='=') {
