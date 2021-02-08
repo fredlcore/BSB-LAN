@@ -647,6 +647,7 @@ int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #include <SPIFFS.h>
 #define SD SPIFFS
 // Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+#undef FILE_WRITE
 #define FILE_WRITE FILE_APPEND
 #else
 //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
@@ -4924,6 +4925,7 @@ int set(int line      // the ProgNr of the heater parameter
         setTime(hour, minute, second, weekday(), 1, 2018);
 //        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
         pps_time_set = true;
+        break;
       }
       case VT_HOUR_MINUTES:
       {
