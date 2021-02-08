@@ -4916,16 +4916,15 @@ int set(int line      // the ProgNr of the heater parameter
         break;
       }
       case VT_PPS_TIME:
-      {
-        int hour=0, minute=0, second=0;
-        strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
-        sscanf(val, sscanf_buf, &hour, &minute, &second);
-        setTime(hour, minute, second, weekday(), 1, 2018);
-//        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
-        pps_time_set = true;
-      }
-      case VT_HOUR_MINUTES:
-      {
+      case VT_HOUR_MINUTES: {
+        if(decodedTelegram.type == VT_PPS_TIME){
+          int hour=0, minute=0, second=0;
+          strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
+          sscanf(val, sscanf_buf, &hour, &minute, &second);
+          setTime(hour, minute, second, weekday(), 1, 2018);
+  //        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+          pps_time_set = true;
+        }
         uint8_t h=atoi(val);
         uint8_t m=0;
         while (*val!='\0' && *val!=':' && *val!='.') val++;
@@ -6572,53 +6571,52 @@ void loop() {
               tx_msg[7] = 0x00;
               break;
             case 7:
-            {
-              if (pps_time_set == true) {
-                bool found = false;
-                bool next_active = true;
-                int16_t current_time = hour() * 6 + minute() / 10;
-                int8_t PPS_weekday = weekday() - 1;
-                uint8_t next_switchday = 0;
-                uint8_t next_switchtime = 0;
-                if (PPS_weekday == 0) PPS_weekday = 7;
-                uint8_t index = PPS_S11 + ((PPS_weekday - 1) * 6);
-                while (!found) {
-                  if (current_time < pps_values[index] || (index >= PPS_S11 + ((PPS_weekday - 1 ) * 6) + 6)  || index < PPS_S11 + ((PPS_weekday - 1) * 6)) {
-                    if (pps_values[index] == 0x90) {
-                      if (PPS_weekday == 7) PPS_weekday = 0;
-                      index = PPS_S11 + PPS_weekday * 6;
-                    }
-                    next_switchtime = pps_values[index];
-                    next_switchday = ((index - PPS_S11) / 6) + 1;
-                    next_switchday = next_switchday + (0x10 * next_active);
-                    found = true;
-                  } else {
-                    index++;
-                    next_active = !next_active;
-                  }
-                  if (index > PPS_E73) index = PPS_S11;
-                }
-                tx_msg[1] = 0x69;
-                tx_msg[6] = next_switchday;     // high nibble: current heating program (0x10 = reduced, 0x00 = comfort), low nibble: day of week
-                tx_msg[7] = next_switchtime;    // next heating program time (encoded as one increment translates to one 10 minute block)
-
-                if (current_switchday != next_switchday) {    // Set presence parameter to on or off at the beginning of (non-)heating timeslot
-                  pps_values[PPS_AW] = !next_active;
-                  current_switchday = next_switchday;
-                }
-
-                if (pps_values[PPS_AW] == 0) {                 // Set destination temperature (comfort + knob for heating period, otherwise reduced temperature)
-                  pps_values[PPS_RTZ] = pps_values[PPS_RTA];
-                } else {
-                  pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
-                }
-                break;
-              } else {
-                msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
-              }
-            }
-//            break;
             case 8:
+              if(msg_cycle == 7){
+                if (pps_time_set == true) {
+                  bool found = false;
+                  bool next_active = true;
+                  int16_t current_time = hour() * 6 + minute() / 10;
+                  int8_t PPS_weekday = weekday() - 1;
+                  uint8_t next_switchday = 0;
+                  uint8_t next_switchtime = 0;
+                  if (PPS_weekday == 0) PPS_weekday = 7;
+                  uint8_t index = PPS_S11 + ((PPS_weekday - 1) * 6);
+                  while (!found) {
+                    if (current_time < pps_values[index] || (index >= PPS_S11 + ((PPS_weekday - 1 ) * 6) + 6)  || index < PPS_S11 + ((PPS_weekday - 1) * 6)) {
+                      if (pps_values[index] == 0x90) {
+                        if (PPS_weekday == 7) PPS_weekday = 0;
+                        index = PPS_S11 + PPS_weekday * 6;
+                      }
+                      next_switchtime = pps_values[index];
+                      next_switchday = ((index - PPS_S11) / 6) + 1;
+                      next_switchday = next_switchday + (0x10 * next_active);
+                      found = true;
+                    } else {
+                      index++;
+                      next_active = !next_active;
+                    }
+                    if (index > PPS_E73) index = PPS_S11;
+                  }
+                  tx_msg[1] = 0x69;
+                  tx_msg[6] = next_switchday;     // high nibble: current heating program (0x10 = reduced, 0x00 = comfort), low nibble: day of week
+                  tx_msg[7] = next_switchtime;    // next heating program time (encoded as one increment translates to one 10 minute block)
+
+                  if (current_switchday != next_switchday) {    // Set presence parameter to on or off at the beginning of (non-)heating timeslot
+                    pps_values[PPS_AW] = !next_active;
+                    current_switchday = next_switchday;
+                  }
+
+                  if (pps_values[PPS_AW] == 0) {                 // Set destination temperature (comfort + knob for heating period, otherwise reduced temperature)
+                    pps_values[PPS_RTZ] = pps_values[PPS_RTA];
+                  } else {
+                    pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
+                  }
+                  break;
+                } else {
+                  msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
+                }
+              }
               tx_msg[1] = 0x08;     // Raumtemperatur Soll
               tx_msg[6] = pps_values[PPS_RTS] >> 8;
               tx_msg[7] = pps_values[PPS_RTS] & 0xFF;
@@ -6643,28 +6641,26 @@ void loop() {
               tx_msg[7] = pps_values[PPS_TWR] & 0xFF;
               break;
             case 13:
-            {
-              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
-                tx_msg[0] = 0xFB; // send time to heater
-                tx_msg[1] = 0x79;
-                tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
-                tx_msg[5] = hour(); // hour
-                tx_msg[6] = minute(); // minute
-                tx_msg[7] = second(); // second
-                break;
-              }
-            }
             case 14:
-            {
-              if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
-                tx_msg[0] = 0xFE; // unknown telegram
-                tx_msg[1] = 0x79;
-                pps_time_set = false;
-                pps_wday_set = false;
-                break;
-              }
-            }
             case 15:
+            if((pps_time_set == true || pps_wday_set == true) && pps_time_received == true){
+                if (msg_cycle == 13) {
+                  tx_msg[0] = 0xFB; // send time to heater
+                  tx_msg[1] = 0x79;
+                  tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
+                  tx_msg[5] = hour(); // hour
+                  tx_msg[6] = minute(); // minute
+                  tx_msg[7] = second(); // second
+                  break;
+                }
+                if (msg_cycle == 14) {
+                  tx_msg[0] = 0xFE; // unknown telegram
+                  tx_msg[1] = 0x79;
+                  pps_time_set = false;
+                  pps_wday_set = false;
+                  break;
+                }
+              }
               tx_msg[1] = 0x60;
               tx_msg[2] = pps_values[PPS_E13];
               tx_msg[3] = pps_values[PPS_S13];
@@ -6918,7 +6914,7 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: 
+                case 0x79:
                 {
                   if (pps_wday_set == false) {
                     pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
@@ -6937,8 +6933,11 @@ uint8_t pps_offset = 0;
                   pps_time_received = true;
                   break;
                 }
-                case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
-                case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
+                case 0x7C:
+                case 0x48:
+                  if(msg[1+pps_offset] == 0x7C) pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
+                  log_now = setPPS(PPS_HP, msg[7+pps_offset]);    // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
+                  break;
                 case 0x1B:                                    // Frostschutz-Temperatur
                   pps_values[PPS_FRS] = temp;
                   pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
