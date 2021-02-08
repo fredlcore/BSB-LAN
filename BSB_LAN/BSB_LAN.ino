@@ -578,7 +578,7 @@ byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - wri
 
 ComServer *server;
 ComServer *telnetServer;
-Stream* SerialOutput;
+Stream *SerialOutput;
 
 //BSB bus definitions
 BSB *bus;
@@ -630,10 +630,10 @@ bool haveTelnetClient = false;
 
 #define MAX_CUL_DEVICES (sizeof(max_device_list)/sizeof(max_device_list[0]))
 #ifdef MAX_CUL
+int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 uint16_t max_cur_temp[MAX_CUL_DEVICES] = { 0 };
 uint8_t max_dst_temp[MAX_CUL_DEVICES] = { 0 };
 int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
-int32_t max_devices[MAX_CUL_DEVICES] = { 0 };
 #endif
 
 // char _ipstr[INET6_ADDRSTRLEN];    // addr in format xxx.yyy.zzz.aaa
@@ -709,9 +709,9 @@ static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0])
 
 #ifdef AVERAGES
 static const int numAverages = sizeof(avg_parameters) / sizeof(avg_parameters[0]);
-float *avgValues_Old = new float[numAverages];
-float *avgValues = new float[numAverages];
-float *avgValues_Current = new float[numAverages];
+float avgValues_Old[numAverages] = {0};
+float avgValues[numAverages] = {0};
+float avgValues_Current[numAverages] = {0};
 int avgCounter = 1;
 #endif
 int loopCount = 0;
@@ -2076,8 +2076,8 @@ void loadPrognrElementsFromTable(int nr, int i) {
       case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
       case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
       case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
-      case 6: decodedTelegram.sensorid = nr - 20700; break;
-      case 7: decodedTelegram.sensorid = nr - 20800; break;
+      case 6: decodedTelegram.sensorid = nr - 20700 + 1; break;
+      case 7: decodedTelegram.sensorid = nr - 20800 + 1; break;
       case 8: decodedTelegram.sensorid = (nr - 20200) / 6 + 1; break;
     }
   }
@@ -3028,8 +3028,7 @@ void printTelegram(byte* msg, int query_line) {
         case 0xF8:
         case 0xFB:
         case 0xFD:
-        case 0xFE:
-          printToDebug(PSTR("ANS QAA->HEIZ ")); break;
+        case 0xFE: printToDebug(PSTR("ANS QAA->HEIZ ")); break;
         default: break;
       }
     }
@@ -4894,7 +4893,7 @@ int set(int line      // the ProgNr of the heater parameter
         custom_floats[line - 20700] = atof(val);
         return 1;
       }
-      if ((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_float
+      if ((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
         strcpy_P(sscanf_buf, PSTR("%ld"));
         sscanf(val, sscanf_buf, &custom_longs[line - 20800]);
@@ -6335,8 +6334,8 @@ void clearEEPROM(void) {
   EEPROM.commit();
 #endif
 #else
-  uint8_t empty_block[4097] = { 0xFF };
-  EEPROM.fastBlockWrite(0, &empty_block, 4096);
+  uint8_t empty_block[4096] = { 0xFF };
+  EEPROM.fastBlockWrite(0, empty_block, 4096);
 #endif
   printlnToDebug(PSTR("Cleared EEPROM"));
 }
@@ -6921,7 +6920,7 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: 
+                case 0x79:
                 {
                   if (pps_wday_set == false) {
                     pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
@@ -7197,7 +7196,6 @@ uint8_t pps_offset = 0;
 
         if (mimetype)  {
           File dataFile;
-          const char *getfarstrings;
 
           // client browser accept gzip
           int suffix = 0;
@@ -9291,7 +9289,6 @@ void setup() {
     EEPROM_ready = false;
     SerialOutput->println(F("EEPROM not ready"));
   }
-  pinMode(19, INPUT);
 #endif
 
   pinMode(LED_BUILTIN, OUTPUT);
@@ -9480,6 +9477,11 @@ void setup() {
     temp_bus_pins[1] = 18;
 #endif
   }
+
+#if defined(__arm__)
+  pinMode(temp_bus_pins[0], INPUT); //RX-pin of hardware serial on Due
+#endif
+
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
   bus->enableInterface();

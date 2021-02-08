@@ -1854,7 +1854,7 @@
 #define ENUM2291_01_TEXT "Температура обратной подачи"
 #define ENUM2305_00_TEXT "Только отопление"
 #define ENUM2305_01_TEXT "Отопление и ГВС"
-#define ENUM2320_01_TEXT "По потребности"
+#define ENUM2320_01_TEXT "Требуется"
 #define ENUM2320_02_TEXT "Уставка котла"
 #define ENUM2320_04_TEXT "По мощности горелки"
 #define ENUM2450_02_TEXT "Только контур ГВС"

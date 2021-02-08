@@ -6246,6 +6246,8 @@ const char ENUM8749[] PROGMEM_LATEST = {     // numerical values unverified
 "\x01 " ENUM8749_01_TEXT
 };
 #define ENUM8779 ENUM8749  // 8779 Raumthermostat 2
+#define ENUM8809 ENUM8749  // 8809 Raumthermostat 3
+
 
 //Here can be additional values
 const char ENUM9610[] PROGMEM_LATEST = {
@@ -10288,7 +10290,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2F3D05E9,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8802,  STR8802,  0,                    NULL,         FL_OEM,       DEV_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur P Modell
 {0x233D0518,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8803,  STR8803,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur P
 {0x233D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8804,  STR8804,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert P
-{0x073D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8809,  STR8809,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Raumthermostat 3
+{0x073D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8809,  STR8809,  sizeof(ENUM8809),     ENUM8809,     FL_RONLY,     DEV_ALL}, // Raumthermostat 3
 {0x053D09A3,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8820,  STR8820,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Trinkwasserpumpe Q3
 {0x053D09AE,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8821,  STR8821,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Elektroeinsatz TWW K6 //FUJITSU ("Elektrischer Widerstand TWW")
 {0x253D04A4,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8825,  STR8825,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Trinkwasserpumpe
