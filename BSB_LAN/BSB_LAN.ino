@@ -983,9 +983,9 @@ void checkSockStatus()
           printlnToDebug(PSTR("Socket freed."));
           ShowSockStatus();
         }
+    } else {
+      connectTime[i] = thisTime;
     }
-    else connectTime[i] = thisTime;
-
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     socketStat[i] = W5100.readSnSR(i);
     SPI.endTransaction();
@@ -1742,18 +1742,20 @@ int findLine(uint16_t line
       case 1: break;
       case 2:  line = avg_parameters[line - 20050]; if (line == 0) return -1; else break;
       case 3: {
-        if (DHT_Pins[(line - 20100) / 4 ] == 0) //pin not assigned to DHT sensor
+        if (DHT_Pins[(line - 20100) / 4 ] == 0) { //pin not assigned to DHT sensor
           return -1;
-        else
+        } else {
           line = 20100 + ((line - 20100) % 4);
+        }
         break;
       }
       case 4: line = 20300 + ((line - 20300) % 2); break;
       case 5:{
-        if (max_device_list[(line - 20500) / 4][0] == 0) //device not set
+        if (max_device_list[(line - 20500) / 4][0] == 0) {  //device not set
           return -1;
-        else
+        } else {
           line = 20500 + ((line - 20500) % 4);
+        }
         break;
       }
       case 6: line = 20700; break;
@@ -1762,8 +1764,9 @@ int findLine(uint16_t line
 #ifdef BME280
         if (line - 20200 < sizeof(bme)/sizeof(bme[0]) * 6) //
           line = 20200 + ((line - 20200) % 6);
-        else
+        } else {
           return -1;
+        }
 #else
         return -1;
 #endif
@@ -1784,19 +1787,19 @@ int findLine(uint16_t line
     mid = left + (right - left) / 2;
     uint16_t temp = get_cmdtbl_line(mid);
 //    printFmtToDebug(PSTR("get_cmdtbl_line: left = %d, mid = %d\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
-    if (temp == line)
-      {
-      if (mid == left + 1)
-        {i = mid; break; }
-      else
+    if (temp == line) {
+      if (mid == left + 1) {
+          i = mid; break;
+      } else {
         right = mid + 1;
       }
-    else if (temp > line)
+    } else if (temp > line) {
       right = mid;
-    else
+    } else {
       left = mid + 1;
-//    printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
     }
+//    printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
+  }
 //  printFmtToDebug(PSTR("i = %d\r\n"), i);
   if (i == -1) return i;
 
@@ -5753,25 +5756,25 @@ void queryVirtualPrognr(int line, int table_line) {
                 strcpy(decodedTelegram.value, max_device_list[log_sensor]);
                 break;
               case 1:
-                if (max_dst_temp[log_sensor] > 0) {
+                if (max_dst_temp[log_sensor] > 0)
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
-                } else {
+                else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 2:
-                if (max_dst_temp[log_sensor] > 0) {
+                if (max_dst_temp[log_sensor] > 0)
                   sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
-                } else {
+                else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
                 break;
               case 3:
-                if (max_valve[log_sensor] > -1) {
+                if (max_valve[log_sensor] > -1)
                   sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
-                } else {
+                else {
                   decodedTelegram.error = 261;
                   undefinedValueToBuffer(decodedTelegram.value);
                 }
@@ -8333,7 +8336,8 @@ uint8_t pps_offset = 0;
               }
               break;
             case '=': // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
-              {char* log_token = strtok(p,"=,");  // drop everything before "="
+            {
+              char* log_token = strtok(p,"=,");  // drop everything before "="
               log_token = strtok(NULL, "=,");   // first token: interval
               if (log_token != 0) {
                 log_interval = atoi(log_token);
@@ -8361,16 +8365,15 @@ uint8_t pps_offset = 0;
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
-              }}
+              }
+            }
             break;
           case 'E': //enable telegrams logging to journal.txt
           case 'D': //disable telegrams logging
             if (p[2]=='E') {
               logTelegram |= LOGTELEGRAM_ON;
             } else {
-              if (logTelegram & LOGTELEGRAM_ON)
-                logTelegram -= LOGTELEGRAM_ON; //clear bit
-              }
+              if (logTelegram & LOGTELEGRAM_ON) logTelegram -= LOGTELEGRAM_ON; //clear bit
             }
             printToWebClient(PSTR(MENU_TEXT_LOT ": "));
             printyesno(logTelegram);
@@ -8500,10 +8503,10 @@ uint8_t pps_offset = 0;
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
           } else if (range[0]=='A') { // handle average command
 #ifdef AVERAGES
-            if (range[1]=='C' && range[2]=='=') { //24h average calculation on/off
-              if (range[3]=='1') {                //Enable 24h average calculation temporarily
+            if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
+              if (range[3]=='1') {                // Enable 24h average calculation temporarily
                 logAverageValues = true;
-              } else {                            //Disable 24h average calculation temporarily
+              } else {                            // Disable 24h average calculation temporarily
                 logAverageValues = false;
               }
             }
@@ -9017,10 +9020,11 @@ void mqtt_sendtoBroker(int param) {
     MQTTPayload = "";
     // Build the json heading
     MQTTPayload.concat(F("{\""));
-    if (MQTTDeviceID[0])
+    if (MQTTDeviceID[0]) {
       MQTTPayload.concat(MQTTDeviceID);
-    else
-    MQTTPayload.concat(F("BSB-LAN"));
+    } else {
+      MQTTPayload.concat(F("BSB-LAN"));
+    }
     if (mqtt_mode == 2)
       MQTTPayload.concat(F("\":{\"status\":{"));
     if (mqtt_mode == 3)
@@ -9028,23 +9032,23 @@ void mqtt_sendtoBroker(int param) {
   }
 
   boolean is_first = true;
-  if (is_first)
+  if (is_first) {
     is_first = false;
-  else
+  } else {
     MQTTPayload.concat(F(","));
-    
+  } 
   if (MQTTTopicPrefix[0]) {
     MQTTTopic = MQTTTopicPrefix;
     MQTTTopic.concat(F("/"));
-  }
-  else
+  } else {
     MQTTTopic = "BSB-LAN/";
+  }
   // use the sub-topic "json" if json output is enabled
-  if (mqtt_mode == 2 || mqtt_mode == 3)
+  if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTTopic.concat(F("json"));
-  else
+  } else {
     MQTTTopic.concat(String(param));
-
+  }
   query(param);
   if (mqtt_mode == 3) { // Build the json doc on the fly
     int len = 0;
@@ -9079,10 +9083,11 @@ void mqtt_sendtoBroker(int param) {
   // End of mqtt if loop so close off the json and publish
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     // Close the json doc off
-    if (mqtt_mode == 2)
+    if (mqtt_mode == 2) {
       MQTTPayload.concat(F("}}}"));
-    else
+    } else {
       MQTTPayload.concat(F("}}"));
+    }
     // debugging..
     printToDebug(PSTR("Output topic: "));
     printToDebug(MQTTTopic.c_str());
@@ -9623,9 +9628,12 @@ void setup() {
     #if defined(__AVR__)
   if (!SD.begin(4)) printToDebug(PSTR("failed\r\n"));
     #else
-  if (!SD.begin(4, SPI_DIV3_SPEED)) printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  if (!SD.begin(4, SPI_DIV3_SPEED)) {
+    printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
     #endif
-  else printToDebug(PSTR("ok\r\n"));
+  } else {
+    printToDebug(PSTR("ok\r\n"));
+  }
   #else
     SD.begin(true); // format on fail active
   #endif
