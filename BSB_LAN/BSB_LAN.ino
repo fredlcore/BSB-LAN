@@ -9022,7 +9022,7 @@ void mqtt_sendtoBroker(int param) {
     MQTTPayload.concat(F("{\""));
     if (MQTTDeviceID[0]) {
       MQTTPayload.concat(MQTTDeviceID);
-    } else {
+    } else {
       MQTTPayload.concat(F("BSB-LAN"));
     }
     if (mqtt_mode == 2)
@@ -9034,7 +9034,7 @@ void mqtt_sendtoBroker(int param) {
   boolean is_first = true;
   if (is_first) {
     is_first = false;
-  } else {
+  } else {
     MQTTPayload.concat(F(","));
   } 
   if (MQTTTopicPrefix[0]) {
