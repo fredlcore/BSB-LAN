@@ -6918,7 +6918,7 @@ uint8_t pps_offset = 0;
                   pps_values[PPS_E73] = msg[2+pps_offset];
                   break;
                 case 0x69: break;                             // Nächste Schaltzeit
-                case 0x79: 
+                case 0x79:
                 {
                   if (pps_wday_set == false) {
                     pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
@@ -9287,7 +9287,7 @@ void setup() {
     EEPROM_ready = false;
     SerialOutput->println(F("EEPROM not ready"));
   }
-  #endif
+#endif
 
   pinMode(LED_BUILTIN, OUTPUT);
 
@@ -9476,9 +9476,9 @@ void setup() {
 #endif
   }
 
-  #if defined(__arm__)
+#if defined(__arm__)
   pinMode(temp_bus_pins[0], INPUT); //RX-pin of hardware serial on Due
-  #endif
+#endif
 
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
