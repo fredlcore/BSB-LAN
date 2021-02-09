@@ -5520,7 +5520,7 @@ void query_printHTML() {
         }
       }
 */
-      printToWebClient(PSTR("</td><td>\r\n"));
+      printToWebClient(PSTR("</td><td>"));
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
           printToWebClient(PSTR("<select "));
@@ -5600,7 +5600,7 @@ void query_printHTML() {
           }
         }
       }
-      printToWebClient(PSTR("</td></tr>"));
+      printToWebClient(PSTR("</td></tr>\r\n"));
 
 // TODO: check at least for data length (only used for temperature values)
 /*
