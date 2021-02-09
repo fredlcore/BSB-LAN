@@ -3719,7 +3719,7 @@ void webPrintSite() {
     httpclient.stop();
     if ((major > atoi(MAJOR)) || (major == atoi(MAJOR) && minor > atoi(MINOR)) || (major == atoi(MAJOR) && minor == atoi(MINOR) && patch > atoi(PATCH))) {
       printToWebClient(PSTR(MENU_TEXT_NVA ": "));
-      printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/bsb_lan/archive/master.zip\">%d.%d.%d</A><BR>\r\n"), major, minor, patch);
+      printFmtToWebClient(PSTR("<A HREF=\"https://github.com/fredlcore/BSB-LAN/archive/master.zip\">%d.%d.%d</A><BR>\r\n"), major, minor, patch);
     } else {
       printlnToWebClient(PSTR(MENU_TEXT_NVN));
     }
