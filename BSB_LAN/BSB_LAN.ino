@@ -7461,8 +7461,8 @@ uint8_t pps_offset = 0;
             uint8_t flag = 0;
             // check type
             switch (decodedTelegram.type) {
-              case VT_WEEKDAY:
               case VT_ENUM: flag = PRINT_DISABLED_VALUE + 1; break;
+              case VT_WEEKDAY:
               case VT_CUSTOM_ENUM:
               case VT_CUSTOM_BIT:
               case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
