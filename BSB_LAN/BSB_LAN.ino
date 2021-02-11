@@ -453,7 +453,7 @@ void loop();
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
 #if defined(ESP32)
-#define EEPROM_ERASING_PIN 14
+#define EEPROM_ERASING_PIN 18
 #else
 #define EEPROM_ERASING_PIN 31
 #endif
