@@ -9527,8 +9527,13 @@ void setup() {
     temp_bus_pins[0] = 68;
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
-    temp_bus_pins[0] = 16;
+#if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
+    temp_bus_pins[0] = RX1;
+    temp_bus_pins[1] = TX1;
+#else
+    temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
+#endif
 #else  // Due
     // HardwareSerial
     temp_bus_pins[0] = 19;
