@@ -452,11 +452,11 @@ void loop();
 
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
-#if defined(ESP32)
+  #if defined(ESP32)
 #define EEPROM_ERASING_PIN 18
-#else
+  #else
 #define EEPROM_ERASING_PIN 31
-#endif
+  #endif
 #endif
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
 #define EEPROM_ERASING_GND_PIN 33
@@ -571,7 +571,7 @@ EthernetUDP udp;
 #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
-#endif
+#endif 
 
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
@@ -641,23 +641,30 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
 #if defined LOGGER || defined WEBSERVER
-#if defined(ESP32)
+  #if defined(ESP32)
+    #if defined(ESP32_USE_SD) // Use SD card adapter on ESP32
+#include "FS.h"
+#include "SD_MMC.h"
+#define SD SD_MMC
+#define MINIMUM_FREE_SPACE_ON_SD 100000
+    #else   // use SPFISS instead of SD card on ESP32
 // Minimum free space in bytes
-#define MINIMUM_FREE_SPACE_ON_SD 10000
 #include <SPIFFS.h>
 #define SD SPIFFS
+#define MINIMUM_FREE_SPACE_ON_SD 10000
 // Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+    #endif  // ESP32_USE_SD
 #undef FILE_WRITE
 #define FILE_WRITE FILE_APPEND
-#else
+  #else     // !ESP32
 //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
 #define MINIMUM_FREE_SPACE_ON_SD 100
 // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
 // do not forget set it up after SdFat upgrading
 #include "src/SdFat/SdFat.h"
 SdFat SD;
-#endif
-#endif
+  #endif    // ESP32
+#endif      // LOGGER || WEBSERVER
 
 #ifdef ONE_WIRE_BUS
   #include "src/OneWire/OneWire.h"
@@ -9648,7 +9655,15 @@ void setup() {
     printToDebug(PSTR("ok\r\n"));
   }
   #else
+    #if defined(ESP32_USE_SD)
+    if(!SD_MMC.begin()){
+      printToDebug(PSTR("failed\r\n"));
+    } else {
+      printToDebug(PSTR("ok\r\n"));
+    }
+    #else
     SD.begin(true); // format on fail active
+    #endif
   #endif
 #else
   #ifndef ESP32
