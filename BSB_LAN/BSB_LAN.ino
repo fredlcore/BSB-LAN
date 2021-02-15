@@ -520,17 +520,19 @@ BlueDot_BME280 bme[BME280];  //Set 2 if you need two sensors.
 #endif
 
 #ifdef WIFI
-#ifdef ESP32
+  #ifdef ESP32
 #include <WiFi.h>
-#else
+bool localAP = false;
+unsigned long localAPtimeout = millis();
+  #else
 #include "src/WiFiSpi/src/WiFiSpi.h"
 using ComServer = WiFiSpiServer;
 using ComClient = WiFiSpiClient;
 #define WiFi WiFiSpi
-#endif
+  #endif
 #else
 
-#ifdef ESP32
+  #ifdef ESP32
 #define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
 #define ETH_PHY_POWER 12
 #include <ETH.h>
@@ -549,11 +551,11 @@ public:
 };
 
 Eth Ethernet;
-#else
+  #else
 #include <Ethernet.h>
 using ComServer = EthernetServer;
 using ComClient = EthernetClient;
-#endif
+  #endif
 #endif
 
 #ifdef ESP32
@@ -562,13 +564,13 @@ using ComClient = WiFiClient;
 #endif
 
 #if defined(MDNS_HOSTNAME) && !defined(ESP32)
-#ifdef WIFI
+  #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
-#else
+  #else
 #include <EthernetUdp.h>
 EthernetUDP udp;
-#endif
+  #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
 #endif 
@@ -9009,6 +9011,12 @@ uint8_t pps_offset = 0;
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
   update_server.handleClient();
 #endif
+
+#if defined(WIFI) && defined(ESP32)
+  if (localAP == true && millis() - localAPtimeout > 30 * 60 * 1000) {    // Reboot after 30 minutes running local AP
+    resetBoard();
+  }
+#endif
 } // --- loop () ---
 
 //Luposoft: function mqtt_sendtoBroker
@@ -9661,13 +9669,14 @@ void setup() {
     } else {
       printToDebug(PSTR("ok\r\n"));
     }
+    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     #else
     SD.begin(true); // format on fail active
     #endif
   #endif
-#else
+#else                     // no SD card
   #ifndef ESP32
-  // enable w5100 SPI
+  // enable w5100 SPI / LAN
   pinMode(10,OUTPUT);
   digitalWrite(10,LOW);
 
@@ -9759,6 +9768,8 @@ void setup() {
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
+    localAP = true;
+
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
 #endif
