@@ -91,7 +91,7 @@ byte trusted_ip_addr2[4] = {0,0,0,0};
  * User:Password
  */
 //char USER_PASS[64] = "User:Password";
-char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string length is zero
+char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS#define ESP32_USE_SD string length is zero
 
 
 // Compile module with one wire bus support.
@@ -124,6 +124,9 @@ Does: log bus telegrams to file
       log selected values to file
       store to SD and load selected 24h averages*/
 #define LOGGER
+
+// Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage
+//#define ESP32_USE_SD
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
 // Telegrams logged upon boot:
