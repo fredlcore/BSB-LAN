@@ -547,7 +547,7 @@ public:
     int maintain(void) const { return 0;} ; // handled internally
     void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
       ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-      config(ip, gateway, subnet, dnsserver); //Static
+      config(ip, gateway, subnet, dnsserver, dnsserver); //Static
     }
     void begin(uint8_t *mac) {
       ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
@@ -7513,7 +7513,6 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
-
         if (p[1]=='Q') {
           if (!(httpflags & HTTP_FRAG)) webPrintHeader();
           uint8_t myAddr = bus->getBusAddr();
@@ -7728,7 +7727,8 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
-
+#if !defined(ESP32)
+// ESP32 crashes without even outputting a kernel panic when a /JQ command is done processing
         if (p[1]=='J') {
           uint32_t cmd=0;
           // Parse potential JSON payload
@@ -8175,6 +8175,8 @@ uint8_t pps_offset = 0;
 #endif
           break;
         }
+// end if ESP32 to disable /JQ
+#endif
 
 #ifdef LOGGER
         if (p[1]=='D') { // access datalog file
@@ -8569,7 +8571,9 @@ uint8_t pps_offset = 0;
             }
 
             char* dir_token = strchr(range,',');
-            dir_token++;
+            if (dir_token!=NULL) {
+              dir_token++;
+            }
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match -> query value
               if (dir_token!=NULL) {
