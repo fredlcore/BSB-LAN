@@ -71,6 +71,7 @@
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
+ *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
@@ -9735,6 +9736,13 @@ void setup() {
     Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
   } else {
     Ethernet.begin(mac); //DHCP
+    SerialOutput->print(PSTR("Waiting for DHCP address"));
+    unsigned long timeout = millis();
+    while (!Ethernet.localIP() && millis() - timeout < 20000) {
+      SerialOutput->print(PSTR("."));
+      delay(100);
+    }
+    SerialOutput->println();
   }
   SerialOutput->println(Ethernet.localIP());
   SerialOutput->println(Ethernet.subnetMask());
