@@ -9699,7 +9699,7 @@ void setup() {
   }
   #else
     #if defined(ESP32_USE_SD)
-    if(!SD_MMC.begin()){
+    if(!SD_MMC.begin("", true)){
       printToDebug(PSTR("failed\r\n"));
     } else {
       printToDebug(PSTR("ok\r\n"));
