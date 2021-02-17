@@ -487,6 +487,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
+//#include <esp_task_wdt.h>
 #include <EEPROM.h>
 #include <ESPmDNS.h>
 #if defined(ENABLE_ESP32_OTA)
@@ -524,6 +525,7 @@ EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
 BlueDot_BME280 bme[BME280];  //Set 2 if you need two sensors.
 #endif
 
+bool client_flag = false;
 #ifdef WIFI
   #ifdef ESP32
 #include <WiFi.h>
@@ -6383,6 +6385,11 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
+/*
+#ifdef ESP32
+  esp_task_wdt_reset();
+#endif
+*/
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
@@ -7012,7 +7019,14 @@ uint8_t pps_offset = 0;
 
   // Listen for incoming clients
   client = server->available();
-  if (client || SerialOutput->available()) {
+  if ((client || SerialOutput->available()) && client_flag == false) {
+    client_flag = true;
+/*
+#ifdef ESP32
+    esp_task_wdt_init(10,true);
+    esp_task_wdt_add(NULL);
+#endif
+*/
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
     if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
@@ -7030,6 +7044,11 @@ uint8_t pps_offset = 0;
     bPlaceInBuffer=0;            // index into cLineBuffer
     while (client.connected() || SerialOutput->available()) {
       if (client.available() || SerialOutput->available()) {
+/*
+#ifdef ESP32
+        esp_task_wdt_reset();
+#endif
+*/
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
@@ -7185,7 +7204,7 @@ uint8_t pps_offset = 0;
           *p='\0';     // mark end of string
           if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
             printlnToDebug(PSTR("no matching passkey"));
-            client.flush();
+            while(client.available()) client.read();
             client.stop();
             //do not print header and footer. It is security breach
             break;
@@ -7727,8 +7746,6 @@ uint8_t pps_offset = 0;
           break;
         }
 #endif
-#if !defined(ESP32)
-// ESP32 crashes without even outputting a kernel panic when a /JQ command is done processing
         if (p[1]=='J') {
           uint32_t cmd=0;
           // Parse potential JSON payload
@@ -8175,8 +8192,6 @@ uint8_t pps_offset = 0;
 #endif
           break;
         }
-// end if ESP32 to disable /JQ
-#endif
 
 #ifdef LOGGER
         if (p[1]=='D') { // access datalog file
@@ -8666,13 +8681,25 @@ uint8_t pps_offset = 0;
       }
 
     }
+
+/*
+#ifdef ESP32
+    esp_task_wdt_deinit();
+#endif
+*/
+    client_flag = false;
+    if (client.available()) {
+      Serial.println();
+      Serial.println(F("Client buffer gets discarded:"));
+      while (client.available()) Serial.print((char)client.read());
+    }
+
     // give the web browser time to receive the data
     delay(1);
     // close the connection:
     client.flush();
     client.stop();
   } // endif, client
-
 
 #ifdef MQTT
   if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
