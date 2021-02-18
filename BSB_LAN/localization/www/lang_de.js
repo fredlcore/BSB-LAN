@@ -2475,6 +2475,7 @@ UIStrings["ENUM5950_0b_TEXT"] = "Taupunktwächter";
 UIStrings["ENUM5950_0c_TEXT"] = "Vorlaufsollwertanhebung Hygro";
 UIStrings["ENUM5950_0d_TEXT"] = "Wärmeanforderung 10V";
 UIStrings["ENUM5950_0e_TEXT"] = "Druckmessung 10V";
+UIStrings["ENUM5950_34_TEXT"] = "Verbrauchsanforderung VK1 10V";
 UIStrings["ENUM5950_2_01_TEXT"] = "Modemfunktion";
 UIStrings["ENUM5950_2_02_TEXT"] = "Modemfunktion invers";
 UIStrings["ENUM5950_2_07_TEXT"] = "Rückmeldung Abgasklappe";
