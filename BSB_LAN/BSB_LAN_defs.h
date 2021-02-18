@@ -141,6 +141,7 @@
 #define DEV_195_ALL  195,255 // MHG Procon E 25 HS
 #define DEV_195_002  195,2   // ELCO Thision S Plus 19 (LMS14.111B109)
 #define DEV_196_ALL  196,255 // Domostar GBK 25 H/SH (LMS15.191A109)
+#define DEV_198_ALL  198,255 // AVS37.396/141
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B
 #define DEV_206_ALL  206,255 // AVS74.261/109
