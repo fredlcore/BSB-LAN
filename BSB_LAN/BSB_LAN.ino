@@ -1209,7 +1209,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = 60; break;
     case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
     case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
-    case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg"); break;
+    case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg+xml"); break;
     case MIME_TYPE_IMAGE_PNG: getfarstrings = PSTR("image/png"); break;
     case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
     case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
@@ -3573,15 +3573,15 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
  #if defined(__AVR__)
    printPStr(pgm_get_far_address(header_html), sizeof(header_html));
- #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+   #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printPStr(pgm_get_far_address(header_html2), sizeof(header_html2));
- #endif
+   #endif
    printPStr(pgm_get_far_address(header_html3), sizeof(header_html3));
  #else
    printPStr(header_html, sizeof(header_html));
- #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+   #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printPStr(header_html2, sizeof(header_html2));
- #endif
+   #endif
    printPStr(header_html3, sizeof(header_html3));
  #endif
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
@@ -7184,6 +7184,31 @@ uint8_t pps_offset = 0;
             printPStr(pgm_get_far_address(favicon), sizeof(favicon));
 #else
             printPStr(favicon, sizeof(favicon));
+#endif
+#endif
+            flushToWebClient();
+#ifdef WEBSERVER
+            }
+#endif
+          break;
+        }
+
+        if (!strcmp_P(cLineBuffer, PSTR("/favicon.svg"))) {
+          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printToWebClient(PSTR("\r\n"));
+#ifdef WEBSERVER
+          File dataFile = SD.open(cLineBuffer + 1);
+          if (dataFile) {
+            flushToWebClient();
+            transmitFile(dataFile);
+            dataFile.close();
+          } else {
+#endif
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+#if defined(__AVR__)
+            printPStr(pgm_get_far_address(svg_favicon), sizeof(svg_favicon));
+#else
+            printPStr(svg_favicon, sizeof(svg_favicon));
 #endif
 #endif
             flushToWebClient();
