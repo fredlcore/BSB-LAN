@@ -687,8 +687,8 @@ SdFat SD;
 #endif
 
 #ifdef DHT_BUS
-  #include "src/DHT/dht.h"
-  dht DHT;
+  #include "src/DHTNew/dhtnew.h"
+//  dht DHT;
 //Save state between queries
   unsigned long DHT_Timer = 0;
   int last_DHT_State = 0;
@@ -5640,78 +5640,94 @@ if (data_len==3) {
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void queryVirtualPrognr(int line, int table_line) {
-   loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
-   printFmtToDebug(PSTR("\r\nVirtual parameter %d queried. Table line %d\r\n"), line, table_line);
-   decodedTelegram.msg_type = TYPE_ANS;
-   decodedTelegram.prognr = line;
-   switch (recognizeVirtualFunctionGroup(line)) {
-     case 1: {
-       uint32_t val = 0;
-       switch (line) {
-         case 20000: val = brenner_duration; break;
-         case 20001: val = brenner_count; break;
-         case 20002: val = brenner_duration_2; break;
-         case 20003: val = brenner_count_2; break;
-         case 20004: val = TWW_duration; break;
-         case 20005: val = TWW_count; break;
-         case 20006: val = 0; break;
-       }
+  loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
+  printFmtToDebug(PSTR("\r\nVirtual parameter %d queried. Table line %d\r\n"), line, table_line);
+  decodedTelegram.msg_type = TYPE_ANS;
+  decodedTelegram.prognr = line;
+  switch (recognizeVirtualFunctionGroup(line)) {
+    case 1: {
+      uint32_t val = 0;
+      switch (line) {
+        case 20000: val = brenner_duration; break;
+        case 20001: val = brenner_count; break;
+        case 20002: val = brenner_duration_2; break;
+        case 20003: val = brenner_count_2; break;
+        case 20004: val = TWW_duration; break;
+        case 20005: val = TWW_count; break;
+        case 20006: val = 0; break;
+      }
 #if !defined(ESP32)
-       sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
+      sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
 #else
-       sprintf_P(decodedTelegram.value, PSTR("%d"), val);
+      sprintf_P(decodedTelegram.value, PSTR("%d"), val);
 #endif
-       return;
-     }
-     case 2: {
+      return;
+    }
+    case 2: {
   #ifdef AVERAGES
-       size_t tempLine = line - 20050;
-       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
-       return;
+      size_t tempLine = line - 20050;
+      _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
+      return;
    #endif
-       break;
-     }
-     case 3: {
+      break;
+    }
+    case 3: {
 #ifdef DHT_BUS
-       size_t tempLine = line - 20100;
-       size_t log_sensor = tempLine / 4;
-       if (tempLine % 4 == 0) { //print sensor ID
-         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
-         return;
-       }
-       unsigned long temp_timer = millis();
-       if (DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer)
-          last_DHT_pin = 0;
+      size_t tempLine = line - 20100;
+      size_t log_sensor = tempLine / 4;
+      if (tempLine % 4 == 0) { //print sensor ID
+        sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
+        return;
+      }
+      unsigned long temp_timer = millis();
+      if (DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer) last_DHT_pin = 0;
 
-       if (last_DHT_pin != DHT_Pins[log_sensor]) {
-         last_DHT_pin = DHT_Pins[log_sensor];
-         DHT_Timer = millis();
-         last_DHT_State = DHT.read22(last_DHT_pin);
-       }
-       printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), last_DHT_pin);
-       switch (last_DHT_State) {
-         case DHTLIB_OK:
-           printToDebug(PSTR("OK,\t"));
-           break;
-         case DHTLIB_ERROR_CHECKSUM:
-           decodedTelegram.error = 256;
-           printToDebug(PSTR("Checksum error,\t"));
-           break;
-         case DHTLIB_ERROR_TIMEOUT:
-           decodedTelegram.error = 261;
-           printToDebug(PSTR("Time out error,\t"));
+      DHTNEW dht_sensor(DHT_Pins[log_sensor]);
+
+      if (last_DHT_pin != DHT_Pins[log_sensor]) {
+        last_DHT_pin = DHT_Pins[log_sensor];
+        DHT_Timer = millis();
+        last_DHT_State = dht_sensor.read();
+//        last_DHT_State = DHT.read22(last_DHT_pin);
+      }
+
+      printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), last_DHT_pin);
+      switch (last_DHT_State) {
+        case DHTLIB_OK:
+          printToDebug(PSTR("OK,\t"));
           break;
-         default:
-           decodedTelegram.error = 1;
-           printToDebug(PSTR("Unknown error,\t"));
-         break;
-       }
+        case DHTLIB_ERROR_CHECKSUM:
+          decodedTelegram.error = 256;
+          printToDebug(PSTR("Checksum error,\t"));
+          break;
+        case DHTLIB_ERROR_SENSOR_NOT_READY:
+          decodedTelegram.error = 261;
+          printToDebug(PSTR("Sensor not ready,\t"));
+          break;
+/*
+        case DHTLIB_ERROR_WAITING_FOR_READ:
+          decodedTelegram.error = 261;
+          printToDebug(PSTR("Waiting for read,\t"));
+          break;
+*/
+        case DHTLIB_ERROR_TIMEOUT_A:
+        case DHTLIB_ERROR_TIMEOUT_B:
+        case DHTLIB_ERROR_TIMEOUT_C:
+        case DHTLIB_ERROR_TIMEOUT_D:
+          decodedTelegram.error = 261;
+          printToDebug(PSTR("Time out error,\t"));
+          break;
+        default: 
+          decodedTelegram.error = 1;
+          printToDebug(PSTR("Unknown error,\t"));
+          break;
+      }
 
-       float hum = DHT.humidity;
-       float temp = DHT.temperature;
-       if (hum > 0 && hum < 101) {
-         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
-         switch (tempLine % 4) {
+      float hum = dht_sensor.getHumidity();
+      float temp = dht_sensor.getTemperature();
+      if (hum > 0 && hum < 101) {
+        printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
+        switch (tempLine % 4) {
           case 1: //print sensor Current temperature
             _printFIXPOINT(decodedTelegram.value, temp, 2);
             break;
@@ -5721,123 +5737,123 @@ void queryVirtualPrognr(int line, int table_line) {
           case 3: //print sensor Abs Humidity
             _printFIXPOINT(decodedTelegram.value, (216.7*(hum/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);
             break;
-         }
-       } else {
-         undefinedValueToBuffer(decodedTelegram.value);
-       }
-       return;
-#endif
-     break;
-     }
-     case 4: {
-#ifdef ONE_WIRE_BUS
-       size_t tempLine = line - 20300;
-       int log_sensor = tempLine / 2;
-       if (enableOneWireBus && numSensors) {
-         switch (tempLine % 2) {
-           case 0: //print sensor ID
-             DeviceAddress device_address;
-             sensors->getAddress(device_address, log_sensor);
-             for (uint8_t z = 0; z < 8; z++) {
-               sprintf_P(&decodedTelegram.value[z*2], PSTR("%02X"), device_address[z]);
-             }
-//             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
-             break;
-           case 1: {
-             float t=sensors->getTempCByIndex(log_sensor);
-             if (t == DEVICE_DISCONNECTED_C) { //device disconnected
-               decodedTelegram.error = 261;
-               undefinedValueToBuffer(decodedTelegram.value);
-               return;
-             }
-             _printFIXPOINT(decodedTelegram.value, t, 2);
-             }
-             break;
-           default: break;
-         }
-         return;
-       }
-  #endif
-     break;
-     }
-     case 5: {
-#ifdef MAX_CUL
-       size_t tempLine = line - 20500;
-       size_t log_sensor = tempLine / 4;
-        if (enable_max_cul) {
-          if (max_devices[log_sensor]) {
-            switch (tempLine % 4){ //print sensor values
-              case 0:  //print sensor ID
-                strcpy(decodedTelegram.value, max_device_list[log_sensor]);
-                break;
-              case 1:
-                if (max_dst_temp[log_sensor] > 0) {
-                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
-                } else {
-                  decodedTelegram.error = 261;
-                  undefinedValueToBuffer(decodedTelegram.value);
-                }
-                break;
-              case 2:
-                if (max_dst_temp[log_sensor] > 0) {
-                  sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
-                } else {
-                  decodedTelegram.error = 261;
-                  undefinedValueToBuffer(decodedTelegram.value);
-                }
-                break;
-              case 3:
-                if (max_valve[log_sensor] > -1) {
-                  sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
-                } else {
-                  decodedTelegram.error = 261;
-                  undefinedValueToBuffer(decodedTelegram.value);
-                }
-                break;
-            }
-            return;
-          }
         }
+      } else {
+        undefinedValueToBuffer(decodedTelegram.value);
+      }
+      return;
+#endif
+      break;
+    }
+    case 4: {
+#ifdef ONE_WIRE_BUS
+      size_t tempLine = line - 20300;
+      int log_sensor = tempLine / 2;
+      if (enableOneWireBus && numSensors) {
+        switch (tempLine % 2) {
+          case 0: //print sensor ID
+            DeviceAddress device_address;
+            sensors->getAddress(device_address, log_sensor);
+            for (uint8_t z = 0; z < 8; z++) {
+              sprintf_P(&decodedTelegram.value[z*2], PSTR("%02X"), device_address[z]);
+            }
+//             sprintf_P(decodedTelegram.value, PSTR("%02X%02X%02X%02X%02X%02X%02X%02X"),device_address[0],device_address[1],device_address[2],device_address[3],device_address[4],device_address[5],device_address[6],device_address[7]);
+            break;
+          case 1: {
+            float t=sensors->getTempCByIndex(log_sensor);
+            if (t == DEVICE_DISCONNECTED_C) { //device disconnected
+              decodedTelegram.error = 261;
+              undefinedValueToBuffer(decodedTelegram.value);
+              return;
+            }
+            _printFIXPOINT(decodedTelegram.value, t, 2);
+            break;
+          }
+          default: break;
+        }
+        return;
+      }
   #endif
       break;
-     }
-     case 6: {
-       sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[line - 20700]);
-       return;
-     }
-     case 7: {
-       sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - 20800]);
-       return;
-     }
-     case 8: {
+    }
+    case 5: {
+#ifdef MAX_CUL
+      size_t tempLine = line - 20500;
+      size_t log_sensor = tempLine / 4;
+      if (enable_max_cul) {
+        if (max_devices[log_sensor]) {
+          switch (tempLine % 4){ //print sensor values
+            case 0:  //print sensor ID
+              strcpy(decodedTelegram.value, max_device_list[log_sensor]);
+              break;
+            case 1:
+              if (max_dst_temp[log_sensor] > 0) {
+                sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
+              } else {
+                decodedTelegram.error = 261;
+                undefinedValueToBuffer(decodedTelegram.value);
+              }
+              break;
+            case 2:
+              if (max_dst_temp[log_sensor] > 0) {
+                sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
+              } else {
+                decodedTelegram.error = 261;
+                undefinedValueToBuffer(decodedTelegram.value);
+              }
+              break;
+            case 3:
+              if (max_valve[log_sensor] > -1) {
+                sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
+              } else {
+                decodedTelegram.error = 261;
+                undefinedValueToBuffer(decodedTelegram.value);
+              }
+              break;
+          }
+          return;
+        }
+      }
+  #endif
+    break;
+    }
+    case 6: {
+      sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[line - 20700]);
+      return;
+    }
+    case 7: {
+      sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - 20800]);
+      return;
+    }
+    case 8: {
 #ifdef BME280
-       size_t tempLine = line - 20200;
-       size_t log_sensor = tempLine / 6;
-       if (tempLine % 6 == 0) {
-         sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
-         return;
-       }
-       if (bme[log_sensor].checkID() == 0x60) {
-         switch (tempLine % 6) {
-           case 1: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readTempC(), 2); break;
-           case 2: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readHumidity(), 2); break;
-           case 3: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readPressure(), 2); break;
-           case 4: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readAltitudeMeter(), 2); break;
-           case 5: {float temp = bme[log_sensor].readTempC(); _printFIXPOINT(decodedTelegram.value, (216.7*(bme[log_sensor].readHumidity()/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);} break;
-         }
-       } else {
-         decodedTelegram.error = 261;
-         undefinedValueToBuffer(decodedTelegram.value);
-       }
-       return;
+      size_t tempLine = line - 20200;
+      size_t log_sensor = tempLine / 6;
+      if (tempLine % 6 == 0) {
+        sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+        return;
+      }
+      if (bme[log_sensor].checkID() == 0x60) {
+        switch (tempLine % 6) {
+          case 1: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readTempC(), 2); break;
+          case 2: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readHumidity(), 2); break;
+          case 3: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readPressure(), 2); break;
+          case 4: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readAltitudeMeter(), 2); break;
+          case 5: {float temp = bme[log_sensor].readTempC(); _printFIXPOINT(decodedTelegram.value, (216.7*(bme[log_sensor].readHumidity()/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);} break;
+        }
+      } else {
+        decodedTelegram.error = 261;
+        undefinedValueToBuffer(decodedTelegram.value);
+      }
+      return;
 #endif
-     break;
-     }
-   }
-   decodedTelegram.error = 7;
-   decodedTelegram.msg_type = TYPE_ERR;
-   return;
- }
+      break;
+    }
+  }
+  decodedTelegram.error = 7;
+  decodedTelegram.msg_type = TYPE_ERR;
+  return;
+}
 /** *****************************************************************
  *  Function:  query()
  *  Does:      Retrieves parameter from the heater controller.
