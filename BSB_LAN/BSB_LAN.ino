@@ -3585,7 +3585,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printPStr(header_html3, sizeof(header_html3));
  #endif
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-   printPStr(svg_favicon, sizeof(svg_favicon));
+   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'>"));
    printToWebClient(PSTR("</center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));

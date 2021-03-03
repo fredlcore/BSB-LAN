@@ -9,7 +9,7 @@ const char svg_favicon[] PROGMEM_LATE =
 "<?xml version=\"1.0\" standalone=\"no\"?>\n"
 "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
 " \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
-"<svg version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\"\n"
+"<svg class=\"logo\" version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\"\n"
 " width=\"400.000000pt\" height=\"400.000000pt\" viewBox=\"0 0 400.000000 400.000000\"\n"
 " preserveAspectRatio=\"xMidYMid meet\">\n"
 "\n"
@@ -356,7 +356,7 @@ const char header_html[] PROGMEM_LATE =
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"
-  "svg {width: 10%; height: 10%}\n"
+  "svg.logo {width: 10%; height: 10%}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
   "</head><body>\n";
 const char header_html2[] PROGMEM_LATE =
