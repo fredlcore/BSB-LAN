@@ -356,6 +356,7 @@ const char header_html[] PROGMEM_LATE =
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"
+  "svg {width: 10%; height: 10%}\n"
   "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>\n"
   "</head><body>\n";
 const char header_html2[] PROGMEM_LATE =
@@ -375,7 +376,7 @@ const char header_html2[] PROGMEM_LATE =
   "}</script>\n";
 const char header_html3[] PROGMEM_LATE =
   "<font face='Arial'>\n"
-  "<center><h1>";
+  "<center>";
 
 const char auth_req_html[] PROGMEM_LATE =
   "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
