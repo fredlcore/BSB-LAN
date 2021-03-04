@@ -4010,8 +4010,8 @@ void generateConfigPage(void) {
   uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 #else
-  uint32_t fs = (SD.totalBytes() - SD.usedBytes());
-  printFmtToWebClient(PSTR(": %lu Bytes<br>\r\n"), fs);
+  uint64_t fs = (SD.totalBytes() - SD.usedBytes());
+  printFmtToWebClient(PSTR(": %llu Bytes<br>\r\n"), fs);
 #endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
@@ -7824,7 +7824,7 @@ uint8_t pps_offset = 0;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
-            int32_t freespace = 0;
+            uint64_t freespace = 0;
             bool not_first = false;
             int i;
 #if defined LOGGER || defined WEBSERVER
@@ -7836,7 +7836,7 @@ uint8_t pps_offset = 0;
 #endif
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
-            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %ld,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
+            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %llu,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
@@ -9874,8 +9874,8 @@ void setup() {
   freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
 #else
-  uint32_t freespace = SD.totalBytes() - SD.usedBytes();
-  printFmtToDebug(PSTR("%d Bytes free\r\n"), freespace);
+  uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+  printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
 #endif
   diff -= (millis() - m); //3 sec - delay
   #endif
