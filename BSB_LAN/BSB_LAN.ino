@@ -687,8 +687,8 @@ SdFat SD;
 #endif
 
 #ifdef DHT_BUS
-  #include "src/DHTNew/dhtnew.h"
-//  dht DHT;
+  #include "src/DHT/dht.h"
+  dht DHT;
 //Save state between queries
   unsigned long DHT_Timer = 0;
   int last_DHT_State = 0;
@@ -5681,14 +5681,10 @@ void queryVirtualPrognr(int line, int table_line) {
       }
       unsigned long temp_timer = millis();
       if (DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer) last_DHT_pin = 0;
-
-      DHTNEW dht_sensor(DHT_Pins[log_sensor]);
-
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
-        last_DHT_State = dht_sensor.read();
-//        last_DHT_State = DHT.read22(last_DHT_pin);
+        last_DHT_State = DHT.read22(last_DHT_pin);
       }
 
       printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), last_DHT_pin);
@@ -5700,31 +5696,18 @@ void queryVirtualPrognr(int line, int table_line) {
           decodedTelegram.error = 256;
           printToDebug(PSTR("Checksum error,\t"));
           break;
-        case DHTLIB_ERROR_SENSOR_NOT_READY:
-          decodedTelegram.error = 261;
-          printToDebug(PSTR("Sensor not ready,\t"));
-          break;
-/*
-        case DHTLIB_ERROR_WAITING_FOR_READ:
-          decodedTelegram.error = 261;
-          printToDebug(PSTR("Waiting for read,\t"));
-          break;
-*/
-        case DHTLIB_ERROR_TIMEOUT_A:
-        case DHTLIB_ERROR_TIMEOUT_B:
-        case DHTLIB_ERROR_TIMEOUT_C:
-        case DHTLIB_ERROR_TIMEOUT_D:
+        case DHTLIB_ERROR_TIMEOUT:
           decodedTelegram.error = 261;
           printToDebug(PSTR("Time out error,\t"));
-          break;
-        default: 
+         break;
+        default:
           decodedTelegram.error = 1;
           printToDebug(PSTR("Unknown error,\t"));
           break;
       }
 
-      float hum = dht_sensor.getHumidity();
-      float temp = dht_sensor.getTemperature();
+      float hum = DHT.humidity;
+      float temp = DHT.temperature;
       if (hum > 0 && hum < 101) {
         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
         switch (tempLine % 4) {
@@ -9819,10 +9802,14 @@ void setup() {
   SerialOutput->println(Ethernet.subnetMask());
   SerialOutput->println(Ethernet.gatewayIP());
 #else
+  #if !defined(ESP32)
     WiFi.config(ip, dnsserver, gateway, subnet);
+  #else
+    WiFi.config(ip, gateway, subnet, dnsserver);
+  #endif
   }
 
-#ifdef ESP32
+  #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
@@ -9833,7 +9820,7 @@ void setup() {
     printToDebug(PSTR("."));
   }
   writelnToDebug();
-#endif
+  #endif
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
@@ -9846,7 +9833,7 @@ void setup() {
   }
   if (WiFi.status() != WL_CONNECTED) {
     printlnToDebug(PSTR("Connecting to WiFi network failed."));
-#if defined(ESP32)
+  #if defined(ESP32)
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
@@ -9854,13 +9841,13 @@ void setup() {
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
-#endif
+  #endif
   } else {
   // you're connected now, so print out the data
     printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
-#if defined(__arm__) || defined(ESP32)
+  #if defined(__arm__) || defined(ESP32)
     WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
-#endif
+  #endif
     printWifiStatus();
   }
 #endif
