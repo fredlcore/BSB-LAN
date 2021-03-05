@@ -687,7 +687,7 @@ SdFat SD;
 #endif
 
 #ifdef DHT_BUS
-  #include "src/DHT/DHT.h"
+  #include "src/DHT/dht.h"
   DHT dht;
 //Save state between queries
   unsigned long DHT_Timer = 0;
