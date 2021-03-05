@@ -687,8 +687,8 @@ SdFat SD;
 #endif
 
 #ifdef DHT_BUS
-  #include "src/DHT/dht.h"
-  dht DHT;
+  #include "src/DHT/DHT.h"
+  DHT dht;
 //Save state between queries
   unsigned long DHT_Timer = 0;
   int last_DHT_State = 0;
@@ -5684,30 +5684,26 @@ void queryVirtualPrognr(int line, int table_line) {
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
-        last_DHT_State = DHT.read22(last_DHT_pin);
+        dht.setup(last_DHT_pin);
       }
 
-      printFmtToDebug(PSTR("DHT22 sensor: %d\r\n"), last_DHT_pin);
-      switch (last_DHT_State) {
-        case DHTLIB_OK:
-          printToDebug(PSTR("OK,\t"));
-          break;
-        case DHTLIB_ERROR_CHECKSUM:
+      printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
+      switch (dht.getStatus()) {
+        case DHT::ERROR_CHECKSUM:
           decodedTelegram.error = 256;
-          printToDebug(PSTR("Checksum error,\t"));
+          printlnToDebug(PSTR("Checksum error"));
           break;
-        case DHTLIB_ERROR_TIMEOUT:
+        case DHT::ERROR_TIMEOUT:
           decodedTelegram.error = 261;
-          printToDebug(PSTR("Time out error,\t"));
+          printlnToDebug(PSTR("Time out error"));
          break;
         default:
-          decodedTelegram.error = 1;
-          printToDebug(PSTR("Unknown error,\t"));
+          printlnToDebug(PSTR("OK"));
           break;
       }
 
-      float hum = DHT.humidity;
-      float temp = DHT.temperature;
+      float hum = dht.getHumidity();
+      float temp = dht.getTemperature();
       if (hum > 0 && hum < 101) {
         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
         switch (tempLine % 4) {

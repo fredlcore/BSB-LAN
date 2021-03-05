@@ -1,180 +1,206 @@
-//
-//    FILE: dht.cpp
-//  AUTHOR: Rob Tillaart
-// VERSION: 0.2.4
-// PURPOSE: DHT Temperature & Humidity Sensor library for Arduino
-//     URL: https://github.com/RobTillaart/Arduino/tree/master/libraries/DHTstable
-//
-// HISTORY:
-// 0.2.4  2018-04-03 add get-/setDisableIRQ(bool b)
-// 0.2.3  2018-02-21 change #defines in const int to enforce return types.
-//                   https://github.com/RobTillaart/Arduino/issues/94
-// 0.2.2  2017-12-12 add support for AM23XX types more explicitly
-// 0.2.1  2017-09-20 fix https://github.com/RobTillaart/Arduino/issues/80
-// 0.2.0  2017-07-24 fix https://github.com/RobTillaart/Arduino/issues/31 + 33
-// 0.1.13 fix negative temperature
-// 0.1.12 support DHT33 and DHT44 initial version
-// 0.1.11 renamed DHTLIB_TIMEOUT
-// 0.1.10 optimized faster WAKEUP + TIMEOUT
-// 0.1.09 optimize size: timeout check + use of mask
-// 0.1.08 added formula for timeout based upon clockspeed
-// 0.1.07 added support for DHT21
-// 0.1.06 minimize footprint (2012-12-27)
-// 0.1.05 fixed negative temperature bug (thanks to Roseman)
-// 0.1.04 improved readability of code using DHTLIB_OK in code
-// 0.1.03 added error values for temp and humidity when read failed
-// 0.1.02 added error codes
-// 0.1.01 added support for Arduino 1.0, fixed typos (31/12/2011)
-// 0.1.0 by Rob Tillaart (01/04/2011)
-//
-// inspired by DHT11 library
-//
-// Released to the public domain
-//
+/******************************************************************
+  DHT Temperature & Humidity Sensor library for Arduino.
 
-#include "dht.h"
+  Features:
+  - Support for DHT11 and DHT22/AM2302/RHT03
+  - Auto detect sensor model
+  - Very low memory footprint
+  - Very small code
 
-/////////////////////////////////////////////////////
-//
-// PUBLIC
-//
+  http://www.github.com/markruys/arduino-DHT
 
-// return values:
-// DHTLIB_OK
-// DHTLIB_ERROR_CHECKSUM
-// DHTLIB_ERROR_TIMEOUT
-int dht::read11(uint8_t pin)
+  Written by Mark Ruys, mark@paracas.nl.
+
+  BSD license, check license.txt for more information.
+  All text above must be included in any redistribution.
+
+  Datasheets:
+  - http://www.micro4you.com/files/sensor/DHT11.pdf
+  - http://www.adafruit.com/datasheets/DHT22.pdf
+  - http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Weather/RHT03.pdf
+  - http://meteobox.tk/files/AM2302.pdf
+
+  Changelog:
+   2013-06-10: Initial version
+   2013-06-12: Refactored code
+   2013-07-01: Add a resetTimer method
+ ******************************************************************/
+
+#include "DHT.h"
+
+void DHT::setup(uint8_t pin, DHT_MODEL_t model)
 {
-    // READ VALUES
-    if (_disableIRQ) noInterrupts();
-    int rv = _readSensor(pin, DHTLIB_DHT11_WAKEUP);
-    if (_disableIRQ) interrupts();
-    if (rv != DHTLIB_OK)
-    {
-        humidity    = DHTLIB_INVALID_VALUE; // invalid value, or is NaN prefered?
-        temperature = DHTLIB_INVALID_VALUE; // invalid value
-        return rv;
-    }
+  DHT::pin = pin;
+  DHT::model = model;
+  DHT::resetTimer(); // Make sure we do read the sensor in the next readSensor()
 
-    // CONVERT AND STORE
-    humidity = bits[0] + bits[1] * 0.1;
-    temperature = (bits[2] & 0x7F) + bits[3] * 0.1;
-    if (bits[2] & 0x80)  // negative temperature
-    {
-        temperature = -temperature;
+  if ( model == AUTO_DETECT) {
+    DHT::model = DHT22;
+    readSensor();
+    if ( error == ERROR_TIMEOUT ) {
+      DHT::model = DHT11;
+      // Warning: in case we auto detect a DHT11, you should wait at least 1000 msec
+      // before your first read request. Otherwise you will get a time out error.
     }
-
-    // TEST CHECKSUM
-    uint8_t sum = bits[0] + bits[1] + bits[2] + bits[3];
-    if (bits[4] != sum)
-    {
-      return DHTLIB_ERROR_CHECKSUM;
-    }
-    return DHTLIB_OK;
+  }
 }
 
-// return values:
-// DHTLIB_OK
-// DHTLIB_ERROR_CHECKSUM
-// DHTLIB_ERROR_TIMEOUT
-int dht::read(uint8_t pin)
+void DHT::resetTimer()
 {
-    // READ VALUES
-    if (_disableIRQ) noInterrupts();
-    int rv = _readSensor(pin, DHTLIB_DHT_WAKEUP);
-    if (_disableIRQ) interrupts();
-    if (rv != DHTLIB_OK)
-    {
-        humidity    = DHTLIB_INVALID_VALUE;  // NaN prefered?
-        temperature = DHTLIB_INVALID_VALUE;  // NaN prefered?
-        return rv; // propagate error value
-    }
-
-    // CONVERT AND STORE
-    humidity = word(bits[0], bits[1]) * 0.1;
-    temperature = word(bits[2] & 0x7F, bits[3]) * 0.1;
-    if (bits[2] & 0x80)  // negative temperature
-    {
-        temperature = -temperature;
-    }
-
-    // TEST CHECKSUM
-    uint8_t sum = bits[0] + bits[1] + bits[2] + bits[3];
-    if (bits[4] != sum)
-    {
-        return DHTLIB_ERROR_CHECKSUM;
-    }
-    return DHTLIB_OK;
+  DHT::lastReadTime = millis() - 3000;
 }
 
-/////////////////////////////////////////////////////
-//
-// PRIVATE
-//
-
-// return values:
-// DHTLIB_OK
-// DHTLIB_ERROR_TIMEOUT
-int dht::_readSensor(uint8_t pin, uint8_t wakeupDelay)
+float DHT::getHumidity()
 {
-    // INIT BUFFERVAR TO RECEIVE DATA
-    uint8_t mask = 128;
-    uint8_t idx = 0;
-
-    // EMPTY BUFFER
-    for (uint8_t i = 0; i < 5; i++) bits[i] = 0;
-
-    // REQUEST SAMPLE
-    pinMode(pin, OUTPUT);
-    digitalWrite(pin, LOW);
-    delay(wakeupDelay);
-    pinMode(pin, INPUT);
-    delayMicroseconds(40);
-
-    // GET ACKNOWLEDGE or TIMEOUT
-    uint16_t loopCnt = DHTLIB_TIMEOUT;
-    while(digitalRead(pin) == LOW)
-    {
-        if (--loopCnt == 0) return DHTLIB_ERROR_TIMEOUT;
-    }
-
-    loopCnt = DHTLIB_TIMEOUT;
-    while(digitalRead(pin) == HIGH)
-    {
-        if (--loopCnt == 0) return DHTLIB_ERROR_TIMEOUT;
-    }
-
-    // READ THE OUTPUT - 40 BITS => 5 BYTES
-    for (uint8_t i = 40; i != 0; i--)
-    {
-        loopCnt = DHTLIB_TIMEOUT;
-        while(digitalRead(pin) == LOW)
-        {
-            if (--loopCnt == 0) return DHTLIB_ERROR_TIMEOUT;
-        }
-
-        uint32_t t = micros();
-
-        loopCnt = DHTLIB_TIMEOUT;
-        while(digitalRead(pin) == HIGH)
-        {
-            if (--loopCnt == 0) return DHTLIB_ERROR_TIMEOUT;
-        }
-
-        if ((micros() - t) > 40)
-        {
-            bits[idx] |= mask;
-        }
-        mask >>= 1;
-        if (mask == 0)   // next byte?
-        {
-            mask = 128;
-            idx++;
-        }
-    }
-
-    return DHTLIB_OK;
+  readSensor();
+  return humidity;
 }
-//
-// END OF FILE
-//
+
+float DHT::getTemperature()
+{
+  readSensor();
+  return temperature;
+}
+
+#ifndef OPTIMIZE_SRAM_SIZE
+
+const char* DHT::getStatusString()
+{
+  switch ( error ) {
+    case DHT::ERROR_TIMEOUT:
+      return "TIMEOUT";
+
+    case DHT::ERROR_CHECKSUM:
+      return "CHECKSUM";
+
+    default:
+      return "OK";
+  }
+}
+
+#else
+
+// At the expense of 26 bytes of extra PROGMEM, we save 11 bytes of
+// SRAM by using the following method:
+
+prog_char P_OK[]       PROGMEM = "OK";
+prog_char P_TIMEOUT[]  PROGMEM = "TIMEOUT";
+prog_char P_CHECKSUM[] PROGMEM = "CHECKSUM";
+
+const char *DHT::getStatusString() {
+  prog_char *c;
+  switch ( error ) {
+    case DHT::ERROR_CHECKSUM:
+      c = P_CHECKSUM; break;
+
+    case DHT::ERROR_TIMEOUT:
+      c = P_TIMEOUT; break;
+
+    default:
+      c = P_OK; break;
+  }
+
+  static char buffer[9];
+  strcpy_P(buffer, c);
+
+  return buffer;
+}
+
+#endif
+
+void DHT::readSensor()
+{
+  // Make sure we don't poll the sensor too often
+  // - Max sample rate DHT11 is 1 Hz   (duty cicle 1000 ms)
+  // - Max sample rate DHT22 is 0.5 Hz (duty cicle 2000 ms)
+  unsigned long startTime = millis();
+  if ( (unsigned long)(startTime - lastReadTime) < (model == DHT11 ? 999L : 1999L) ) {
+    return;
+  }
+  lastReadTime = startTime;
+
+  temperature = NAN;
+  humidity = NAN;
+
+  // Request sample
+
+  digitalWrite(pin, LOW); // Send start signal
+  pinMode(pin, OUTPUT);
+  if ( model == DHT11 ) {
+    delay(18);
+  }
+  else {
+    // This will fail for a DHT11 - that's how we can detect such a device
+    delayMicroseconds(800);
+  }
+
+  pinMode(pin, INPUT);
+  digitalWrite(pin, HIGH); // Switch bus to receive data
+
+  // We're going to read 83 edges:
+  // - First a FALLING, RISING, and FALLING edge for the start bit
+  // - Then 40 bits: RISING and then a FALLING edge per bit
+  // To keep our code simple, we accept any HIGH or LOW reading if it's max 85 usecs long
+
+  uint16_t rawHumidity = 0;
+  uint16_t rawTemperature = 0;
+  uint16_t data = 0;
+
+  for ( int8_t i = -3 ; i < 2 * 40; i++ ) {
+    byte age;
+    startTime = micros();
+
+    do {
+      age = (unsigned long)(micros() - startTime);
+      if ( age > 90 ) {
+        error = ERROR_TIMEOUT;
+        return;
+      }
+    }
+    while ( digitalRead(pin) == (i & 1) ? HIGH : LOW );
+
+    if ( i >= 0 && (i & 1) ) {
+      // Now we are being fed our 40 bits
+      data <<= 1;
+
+      // A zero max 30 usecs, a one at least 68 usecs.
+      if ( age > 30 ) {
+        data |= 1; // we got a one
+      }
+    }
+
+    switch ( i ) {
+      case 31:
+        rawHumidity = data;
+        break;
+      case 63:
+        rawTemperature = data;
+        data = 0;
+        break;
+    }
+  }
+
+  // Verify checksum
+
+  if ( (byte)(((byte)rawHumidity) + (rawHumidity >> 8) + ((byte)rawTemperature) + (rawTemperature >> 8)) != data ) {
+    error = ERROR_CHECKSUM;
+    return;
+  }
+
+  // Store readings
+
+  if ( model == DHT11 ) {
+    humidity = rawHumidity >> 8;
+    temperature = rawTemperature >> 8;
+  }
+  else {
+    humidity = rawHumidity * 0.1;
+
+    if ( rawTemperature & 0x8000 ) {
+      rawTemperature = -(int16_t)(rawTemperature & 0x7FFF);
+    }
+    temperature = ((int16_t)rawTemperature) * 0.1;
+  }
+
+  error = ERROR_NONE;
+}
