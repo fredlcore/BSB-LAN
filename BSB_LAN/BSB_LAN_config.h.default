@@ -223,7 +223,7 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
 // Protect these pins from accidental GPIO access
 // Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
 //              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00000000,0b00111100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
+byte protected_GPIO[10] = {0b00000000,0b00011100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
 #elif defined(__arm__)  // Due
 // Protect these pins from accidental GPIO access
 // Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
