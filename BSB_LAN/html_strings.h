@@ -180,7 +180,7 @@ const char graph_html[] PROGMEM_LATE =
 "\n"
 "	// Scale the range of the data\n"
 "	x.domain(d3.extent(data, function(d) { return d.Date; }));\n"
-"	y.domain([0, d3.max(data, function(d) { return d.Value; })]);\n"
+"	y.domain([d3.min(data, function(d) { return d.Value; }), d3.max(data, function(d) { return d.Value; })]);\n"
 "\n"
 "    	// Nest the entries by symbol\n"
 "    	var dataNest = d3.nest()\n"
