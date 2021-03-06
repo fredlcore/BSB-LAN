@@ -8845,10 +8845,12 @@ uint8_t pps_offset = 0;
 
 #ifdef ONE_WIRE_BUS
   {
-    unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
-    if (tempTime != lastOneWireRequestTime) {
-      sensors->requestTemperatures(); //call it outside of here for more faster answers
-      lastOneWireRequestTime = tempTime;
+    if (enableOneWireBus) {
+      unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
+      if (tempTime != lastOneWireRequestTime) {
+        sensors->requestTemperatures(); //call it outside of here for more faster answers
+        lastOneWireRequestTime = tempTime;
+      }
     }
   }
 #endif
