@@ -4010,7 +4010,7 @@ void generateConfigPage(void) {
   printToWebClient(STR_TEXT_FSP);
 #if !defined(ESP32)
   uint32_t volFree = SD.vol()->freeClusterCount();
-  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
+  uint32_t fs = (uint32_t)(volFree*SD.vol()->sectorsPerCluster()/2048);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 #else
   uint64_t fs = (SD.totalBytes() - SD.usedBytes());
@@ -7280,19 +7280,19 @@ uint8_t pps_offset = 0;
           }
           // if the file is available, read from it:
           if (dataFile) {
-            dir_t d;
+            uint16_t d = 0, t = 0;
             uint16_t lastWrtYr = 0;
             byte monthval = 0;
             byte dayval = 0;
             unsigned long filesize = dataFile.size();
-            if (dataFile.dirEntry(&d)) {
-              lastWrtYr = FAT_YEAR(d.lastWriteDate);
-              monthval = FAT_MONTH(d.lastWriteDate);
-              dayval = FAT_DAY(d.lastWriteDate);
+            if (dataFile.getModifyDateTime(&d, &t)) {
+              lastWrtYr = FS_YEAR(d);
+              monthval = FS_MONTH(d);
+              dayval = FS_DAY(d);
               }
 
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
+              if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FS_HOUR(t), FS_MINUTE(t), FS_SECOND(t), filesize))) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
               }
@@ -7319,10 +7319,10 @@ uint8_t pps_offset = 0;
               if (monthval < 1 && monthval > 12) monthval = 13;
               memcpy_P(monthname, PSTR("JanFebMarAprMayJunJulAugSepOctNovDecERR") + monthval * 3 - 3, 3);
               monthname[3] = 0;
-              printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime));
+              printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, FS_HOUR(t), FS_MINUTE(t), FS_SECOND(t));
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
-            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+            printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FS_HOUR(t), FS_MINUTE(t), FS_SECOND(t), filesize, filesize);
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD_REQ)) {
@@ -9900,7 +9900,7 @@ void setup() {
   uint32_t m = millis();
 #if !defined(ESP32)
   uint32_t freespace = SD.vol()->freeClusterCount();
-  freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+  freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
 #else
   uint64_t freespace = SD.totalBytes() - SD.usedBytes();

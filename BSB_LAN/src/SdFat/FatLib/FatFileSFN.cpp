@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011-2018 Bill Greiman
+ * Copyright (c) 2011-2020 Bill Greiman
  * This file is part of the SdFat library for SD memory cards.
  *
  * MIT License
@@ -22,11 +22,17 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
+#define DBG_FILE "FatFileSFN.cpp"
+#include "../common/DebugMacros.h"
+#include "../common/FsStructs.h"
 #include "FatFile.h"
-#include "FatFileSystem.h"
+#include "FatVolume.h"
 //------------------------------------------------------------------------------
-bool FatFile::getSFN(char* name) {
-  dir_t* dir;
+size_t FatFile::getSFN(char* name) {
+  uint8_t j = 0;
+  uint8_t lcBit = FAT_CASE_LC_BASE;
+  DirFat_t* dir;
+
   if (!isOpen()) {
     DBG_FAIL_MACRO;
     goto fail;
@@ -34,20 +40,36 @@ bool FatFile::getSFN(char* name) {
   if (isRoot()) {
     name[0] = '/';
     name[1] = '\0';
-    return true;
+    return 1;
   }
   // cache entry
-  dir = cacheDirEntry(FatCache::CACHE_FOR_READ);
+  dir = reinterpret_cast<DirFat_t*>(cacheDirEntry(FsCache::CACHE_FOR_READ));
   if (!dir) {
     DBG_FAIL_MACRO;
     goto fail;
   }
   // format name
-  dirName(dir, name);
-  return true;
+  for (uint8_t i = 0; i < 11; i++) {
+    if (dir->name[i] == ' ') {
+      continue;
+    }
+    if (i == 8) {
+      // Position bit for extension.
+      lcBit = FAT_CASE_LC_EXT;
+      name[j++] = '.';
+    }
+    char c = dir->name[i];
+    if ('A' <= c && c <= 'Z' && (lcBit & dir->caseFlags)) {
+      c += 'a' - 'A';
+    }
+    name[j++] = c;
+  }
+  name[j] = '\0';
+  return j;
 
-fail:
-  return false;
+ fail:
+  name[0] = '\0';
+  return 0;
 }
 //------------------------------------------------------------------------------
 size_t FatFile::printSFN(print_t* pr) {
@@ -58,12 +80,12 @@ size_t FatFile::printSFN(print_t* pr) {
   }
   return pr->write(name);
 
-fail:
+ fail:
   return 0;
 }
 #if !USE_LONG_FILE_NAMES
 //------------------------------------------------------------------------------
-bool FatFile::getName(char* name, size_t size) {
+size_t FatFile::getName(char* name, size_t size) {
   return size < 13 ? 0 : getSFN(name);
 }
 //------------------------------------------------------------------------------
@@ -117,29 +139,32 @@ bool FatFile::parsePathName(const char* path, fname_t* fname,
   *ptr = path;
   return true;
 
-fail:
+ fail:
   return false;
 }
 //------------------------------------------------------------------------------
 // open with filename in fname
 #define SFN_OPEN_USES_CHKSUM 0
 bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
+  uint16_t date;
+  uint16_t time;
+  uint8_t ms10;
   bool emptyFound = false;
 #if SFN_OPEN_USES_CHKSUM
-  uint8_t chksum;
-#endif
+  uint8_t checksum;
+#endif  // SFN_OPEN_USES_CHKSUM
   uint8_t lfnOrd = 0;
   uint16_t emptyIndex;
   uint16_t index = 0;
-  dir_t* dir;
-  ldir_t* ldir;
+  DirFat_t* dir;
+  DirLfn_t* ldir;
 
   dirFile->rewind();
   while (1) {
     if (!emptyFound) {
       emptyIndex = index;
     }
-    dir = dirFile->readDirCache(true);
+    dir = reinterpret_cast<DirFat_t*>(dirFile->readDirCache(true));
     if (!dir) {
       if (dirFile->getError())  {
         DBG_FAIL_MACRO;
@@ -148,14 +173,14 @@ bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
       // At EOF if no error.
       break;
     }
-    if (dir->name[0] == DIR_NAME_FREE) {
+    if (dir->name[0] == FAT_NAME_FREE) {
       emptyFound = true;
       break;
     }
-    if (dir->name[0] == DIR_NAME_DELETED) {
+    if (dir->name[0] == FAT_NAME_DELETED) {
       lfnOrd = 0;
       emptyFound = true;
-    } else if (DIR_IS_FILE_OR_SUBDIR(dir)) {
+    } else if (isFileOrSubdir(dir)) {
       if (!memcmp(fname->sfn, dir->name, 11)) {
         // don't open existing file if O_EXCL
         if (oflag & O_EXCL) {
@@ -163,7 +188,7 @@ bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
           goto fail;
         }
 #if SFN_OPEN_USES_CHKSUM
-        if (lfnOrd && chksum != lfnChecksum(dir->name)) {
+        if (lfnOrd && checksum != lfnChecksum(dir->name)) {
           DBG_FAIL_MACRO;
           goto fail;
         }
@@ -176,12 +201,12 @@ bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
       } else {
         lfnOrd = 0;
       }
-    } else if (DIR_IS_LONG_NAME(dir)) {
-      ldir = reinterpret_cast<ldir_t*>(dir);
-      if (ldir->ord & LDIR_ORD_LAST_LONG_ENTRY) {
-        lfnOrd = ldir->ord & 0X1F;
+    } else if (isLongName(dir)) {
+      ldir = reinterpret_cast<DirLfn_t*>(dir);
+      if (ldir->order & FAT_ORDER_LAST_LONG_ENTRY) {
+        lfnOrd = ldir->order & 0X1F;
 #if SFN_OPEN_USES_CHKSUM
-        chksum = ldir->chksum;
+        checksum = ldir->checksum;
 #endif  // SFN_OPEN_USES_CHKSUM
       }
     } else {
@@ -206,38 +231,41 @@ bool FatFile::open(FatFile* dirFile, fname_t* fname, oflag_t oflag) {
     DBG_FAIL_MACRO;
     goto fail;
   }
-  dir = dirFile->readDirCache();
+  dir = reinterpret_cast<DirFat_t*>(dirFile->readDirCache());
   if (!dir) {
     DBG_FAIL_MACRO;
     goto fail;
   }
   // initialize as empty file
-  memset(dir, 0, sizeof(dir_t));
+  memset(dir, 0, sizeof(DirFat_t));
   memcpy(dir->name, fname->sfn, 11);
 
   // Set base-name and extension lower case bits.
-  dir->reservedNT =  (DIR_NT_LC_BASE | DIR_NT_LC_EXT) & fname->flags;
+  dir->caseFlags = (FAT_CASE_LC_BASE | FAT_CASE_LC_EXT) & fname->flags;
 
-  // set timestamps
-  if (m_dateTime) {
+  // Set timestamps.
+  if (FsDateTime::callback) {
     // call user date/time function
-    m_dateTime(&dir->creationDate, &dir->creationTime);
+    FsDateTime::callback(&date, &time, &ms10);
+    setLe16(dir->createDate, date);
+    setLe16(dir->createTime, time);
+    dir->createTimeMs = ms10;
   } else {
-    // use default date/time
-    dir->creationDate = FAT_DEFAULT_DATE;
-    dir->creationTime = FAT_DEFAULT_TIME;
+    setLe16(dir->createDate, FS_DEFAULT_DATE);
+    setLe16(dir->modifyDate, FS_DEFAULT_DATE);
+    setLe16(dir->accessDate, FS_DEFAULT_DATE);
+    if (FS_DEFAULT_TIME) {
+      setLe16(dir->createTime, FS_DEFAULT_TIME);
+      setLe16(dir->modifyTime, FS_DEFAULT_TIME);
+    }
   }
-  dir->lastAccessDate = dir->creationDate;
-  dir->lastWriteDate = dir->creationDate;
-  dir->lastWriteTime = dir->creationTime;
-
   // Force write of entry to device.
   dirFile->m_vol->cacheDirty();
 
   // open entry in cache.
   return openCachedEntry(dirFile, index, oflag, 0);
 
-fail:
+ fail:
   return false;
 }
 //------------------------------------------------------------------------------
@@ -246,9 +274,9 @@ size_t FatFile::printName(print_t* pr) {
 }
 //------------------------------------------------------------------------------
 bool FatFile::remove() {
-  dir_t* dir;
+  DirFat_t* dir;
   // Can't remove if LFN or not open for write.
-  if (!isFile() || isLFN() || !(m_flags & F_WRITE)) {
+  if (!isWritable() || isLFN()) {
     DBG_FAIL_MACRO;
     goto fail;
   }
@@ -258,21 +286,22 @@ bool FatFile::remove() {
     goto fail;
   }
   // Cache directory entry.
-  dir = cacheDirEntry(FatCache::CACHE_FOR_WRITE);
+  dir = reinterpret_cast<DirFat_t*>(cacheDirEntry(FsCache::CACHE_FOR_WRITE));
   if (!dir) {
     DBG_FAIL_MACRO;
     goto fail;
   }
   // Mark entry deleted.
-  dir->name[0] = DIR_NAME_DELETED;
+  dir->name[0] = FAT_NAME_DELETED;
 
   // Set this file closed.
-  m_attr = FILE_ATTR_CLOSED;
+  m_attributes = FILE_ATTR_CLOSED;
+  m_flags = 0;
 
   // Write entry to device.
   return m_vol->cacheSync();
 
-fail:
+ fail:
   return false;
 }
 #endif  // !USE_LONG_FILE_NAMES
