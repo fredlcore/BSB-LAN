@@ -579,7 +579,7 @@ EthernetUDP udp;
   #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
-#endif 
+#endif
 
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
@@ -688,11 +688,14 @@ SdFat SD;
 
 #ifdef DHT_BUS
   #include "src/DHT/DHT.h"
-  DHT dht;
+  DHT *dht;
+#ifdef OLD_DHT_BUS_MANAGEMENT
+
 //Save state between queries
   unsigned long DHT_Timer = 0;
   int last_DHT_State = 0;
   uint8_t last_DHT_pin = 0;
+#endif
 #endif
 
 unsigned long lastAvgTime = 0;
@@ -4157,7 +4160,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf) {
         variable[j] = (byte)atoi(ptr_t);
         if (ptr) {ptr[0] = ','; ptr++;}
 
-        j++;
+        if(variable[j] > 0) j++;
       }while (ptr && j < cfg.size/sizeof(byte));
       // writeToConfigVariable(option_id, variable); not needed here
       break;}
@@ -4212,6 +4215,9 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_GATEWAY:
         case CF_DNS:
         case CF_ONEWIREBUS:
+#ifdef OLD_DHT_BUS_MANAGEMENT
+        case CF_DHTBUS:
+#endif
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
@@ -5679,16 +5685,20 @@ void queryVirtualPrognr(int line, int table_line) {
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
         return;
       }
+#ifdef OLD_DHT_BUS_MANAGEMENT
       unsigned long temp_timer = millis();
       if (DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer) last_DHT_pin = 0;
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
-        dht.setup(last_DHT_pin);
+        dht[0].setup(last_DHT_pin);
       }
-
       printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
-      switch (dht.getStatus()) {
+      switch (dht[0].getStatus()) {
+#else
+      printFmtToDebug(PSTR("DHT22 sensor: %d - "), DHT_Pins[log_sensor]);
+      switch (dht[log_sensor].getStatus()) {
+#endif
         case DHT::ERROR_CHECKSUM:
           decodedTelegram.error = 256;
           printlnToDebug(PSTR("Checksum error"));
@@ -5701,9 +5711,13 @@ void queryVirtualPrognr(int line, int table_line) {
           printlnToDebug(PSTR("OK"));
           break;
       }
-
-      float hum = dht.getHumidity();
-      float temp = dht.getTemperature();
+#ifdef OLD_DHT_BUS_MANAGEMENT
+      float hum = dht[0].getHumidity();
+      float temp = dht[0].getTemperature();
+#else
+      float hum = dht[log_sensor].getHumidity();
+      float temp = dht[log_sensor].getTemperature();
+#endif
       if (hum > 0 && hum < 101) {
         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
         switch (tempLine % 4) {
@@ -9093,7 +9107,7 @@ uint8_t pps_offset = 0;
 void mqtt_sendtoBroker(int param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
-  String MQTTTopic = ""; 
+  String MQTTTopic = "";
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTPayload = "";
     // Build the json heading
@@ -9114,7 +9128,7 @@ void mqtt_sendtoBroker(int param) {
     is_first = false;
   } else {
     MQTTPayload.concat(F(","));
-  } 
+  }
   if (MQTTTopicPrefix[0]) {
     MQTTTopic = MQTTTopicPrefix;
     MQTTTopic.concat(F("/"));
@@ -9632,6 +9646,23 @@ void setup() {
     numSensors=sensors->getDeviceCount();
     printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
   }
+#endif
+
+#ifdef DHT_BUS
+#ifdef OLD_DHT_BUS_MANAGEMENT
+  dht = new DHT[1];
+#else
+  uint8_t DHT_ARRAY_SIZE = 0;
+  for(uint8_t j = 0; j < sizeof(DHT_Pins) / sizeof(DHT_Pins[0]); j++){
+    if (DHT_Pins[j] != 0) DHT_ARRAY_SIZE++;
+  }
+  if(DHT_ARRAY_SIZE > 0) {
+    dht = new DHT[DHT_ARRAY_SIZE]; //be aware: no 'delete' operator because board will reboot after reconfiguration
+    for (unsigned int i = 0; i < DHT_ARRAY_SIZE; i++) {
+        dht[i].setup(DHT_Pins[i]);
+    }
+  }
+#endif
 #endif
 
 #ifdef BME280
