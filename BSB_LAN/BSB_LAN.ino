@@ -6242,6 +6242,10 @@ void transmitFile(File dataFile) {
 #else
   int chars_read = dataFile.readBytes(bigBuff , logbuflen);
 #endif
+  if (chars_read < 0) {
+   printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+   forcedflushToWebClient();
+  }
   while (chars_read == logbuflen) {
     client.write(bigBuff, logbuflen);
 #if !defined(ESP32)
