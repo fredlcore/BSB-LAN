@@ -9649,7 +9649,6 @@ void setup() {
 #endif
 
 #ifdef DHT_BUS
-  printToDebug(PSTR("Init DHT22 sensor(s)...\r\n"));
 #ifdef OLD_DHT_BUS_MANAGEMENT
   dht = new DHT[1];
 #else
