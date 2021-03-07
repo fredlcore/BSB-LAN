@@ -22,46 +22,22 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
- /**
- * \file
- * \brief Minimal AVR Serial driver.
- */
-#ifndef MinimumSerial_h
-#define MinimumSerial_h
-#include "SysCall.h"
-//==============================================================================
-/**
- * \class MinimumSerial
- * \brief mini serial class for the %SdFat library.
- */
-class MinimumSerial : public Print {
- public:
-  /** \return true for hardware serial */
-  operator bool() { return true; }
-  /**
-   * \return one if data is available.
-   */
-  int available();
-  /**
-   * Set baud rate for serial port zero and enable in non interrupt mode.
-   * Do not call this function if you use another serial library.
-   * \param[in] baud rate
-   */
-  void begin(uint32_t baud);
-  /** Wait for write done. */
-  void flush();
-  /**
-   *  Unbuffered read
-   *  \return -1 if no character is available or an available character.
-   */
-  int read();
-  /**
-   * Unbuffered write
-   *
-   * \param[in] b byte to write.
-   * \return 1
-   */
-  size_t write(uint8_t b);
-  using Print::write;
-};
-#endif  // MinimumSerial_h
+#ifndef FmtNumber_h
+#define FmtNumber_h
+//  #include <ctype.h>
+inline bool isDigit(char c) {
+  return '0' <= c && c <= '9';
+}
+inline bool isSpace(char c) {
+  return c == ' ' || (0X9 <= c && c <= 0XD);
+}
+#include <math.h>
+#include <stdint.h>
+char* fmtDec(uint16_t n, char* p);
+char* fmtDec(uint32_t n, char* p);
+char* fmtFloat(float value, char* p, uint8_t prec);
+char* fmtFloat(float value, char* ptr, uint8_t prec, char expChar);
+char* fmtHex(uint32_t n, char* p);
+float scale10(float v, int8_t n);
+float scanFloat(const char* str, char** ptr);
+#endif  // FmtNumber_h

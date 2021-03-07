@@ -22,23 +22,8 @@
  * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
  * DEALINGS IN THE SOFTWARE.
  */
-#if defined(__STM32F1__) || defined(__STM32F4__)
+#if defined(ESP8266)
 #include "SdSpiDriver.h"
-#if defined(__STM32F1__)
-#define USE_STM32_DMA 1
-#elif defined(__STM32F4__)
-#define USE_STM32_DMA 1
-#else  // defined(__STM32F1__)
-#error Unknown STM32 type
-#endif  // defined(__STM32F1__)
-//------------------------------------------------------------------------------
-/** Set SPI options for access to SD/SDHC cards.
- *
- * \param[in] divisor SCK clock divider relative to the APB1 or APB2 clock.
- */
-void SdSpiAltDriver::activate() {
-  m_spi->beginTransaction(m_spiSettings);
-}
 //------------------------------------------------------------------------------
 /** Initialize the SPI bus.
  *
@@ -48,14 +33,19 @@ void SdSpiAltDriver::begin(uint8_t csPin) {
   m_csPin = csPin;
   pinMode(m_csPin, OUTPUT);
   digitalWrite(m_csPin, HIGH);
-  m_spi->begin();
+  SPI.begin();
 }
 //------------------------------------------------------------------------------
-/**
- * End SPI transaction.
+/** Set SPI options for access to SD/SDHC cards.
+ *
  */
+void SdSpiAltDriver::activate() {
+  SPI.beginTransaction(m_spiSettings);
+}
+//------------------------------------------------------------------------------
 void SdSpiAltDriver::deactivate() {
-  m_spi->endTransaction();
+  // Note: endTransaction is an empty function on ESP8266.
+  SPI.endTransaction();
 }
 //------------------------------------------------------------------------------
 /** Receive a byte.
@@ -63,7 +53,7 @@ void SdSpiAltDriver::deactivate() {
  * \return The byte.
  */
 uint8_t SdSpiAltDriver::receive() {
-  return m_spi->transfer(0XFF);
+  return SPI.transfer(0XFF);
 }
 //------------------------------------------------------------------------------
 /** Receive multiple bytes.
@@ -74,12 +64,20 @@ uint8_t SdSpiAltDriver::receive() {
  * \return Zero for no error or nonzero error code.
  */
 uint8_t SdSpiAltDriver::receive(uint8_t* buf, size_t n) {
-#if USE_STM32_DMA
-  return m_spi->dmaTransfer(nullptr, buf, n);
-#else  // USE_STM32_DMA
-  m_spi->read(buf, n);
+  // Adjust to 32-bit alignment.
+  while ((reinterpret_cast<uintptr_t>(buf) & 0X3) && n) {
+    *buf++ = SPI.transfer(0xff);
+    n--;
+  }
+  // Do multiple of four byte transfers.
+  size_t n4 = 4*(n/4);
+  SPI.transferBytes(0, buf, n4);
+
+  // Transfer up to three remaining bytes.
+  for (buf += n4, n -= n4; n; n--) {
+    *buf++ = SPI.transfer(0xff);
+  }
   return 0;
-#endif  // USE_STM32_DMA
 }
 //------------------------------------------------------------------------------
 /** Send a byte.
@@ -87,7 +85,7 @@ uint8_t SdSpiAltDriver::receive(uint8_t* buf, size_t n) {
  * \param[in] b Byte to send
  */
 void SdSpiAltDriver::send(uint8_t b) {
-  m_spi->transfer(b);
+  SPI.transfer(b);
 }
 //------------------------------------------------------------------------------
 /** Send multiple bytes.
@@ -96,10 +94,11 @@ void SdSpiAltDriver::send(uint8_t b) {
  * \param[in] n Number of bytes to send.
  */
 void SdSpiAltDriver::send(const uint8_t* buf , size_t n) {
-#if USE_STM32_DMA
-  m_spi->dmaTransfer(const_cast<uint8*>(buf), nullptr, n);
-#else  // USE_STM32_DMA
-  m_spi->write(const_cast<uint8*>(buf), n);
-#endif  // USE_STM32_DMA
+  // Adjust to 32-bit alignment.
+  while ((reinterpret_cast<uintptr_t>(buf) & 0X3) && n) {
+    SPI.transfer(*buf++);
+    n--;
+  }
+  SPI.transferBytes(const_cast<uint8_t*>(buf), 0, n);
 }
-#endif  // defined(__STM32F1__) || defined(__STM32F4__)
+#endif  // defined(ESP8266)

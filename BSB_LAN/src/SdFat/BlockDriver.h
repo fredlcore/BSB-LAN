@@ -24,44 +24,17 @@
  */
  /**
  * \file
- * \brief Minimal AVR Serial driver.
+ * \brief Define block driver.
  */
-#ifndef MinimumSerial_h
-#define MinimumSerial_h
-#include "SysCall.h"
-//==============================================================================
-/**
- * \class MinimumSerial
- * \brief mini serial class for the %SdFat library.
- */
-class MinimumSerial : public Print {
- public:
-  /** \return true for hardware serial */
-  operator bool() { return true; }
-  /**
-   * \return one if data is available.
-   */
-  int available();
-  /**
-   * Set baud rate for serial port zero and enable in non interrupt mode.
-   * Do not call this function if you use another serial library.
-   * \param[in] baud rate
-   */
-  void begin(uint32_t baud);
-  /** Wait for write done. */
-  void flush();
-  /**
-   *  Unbuffered read
-   *  \return -1 if no character is available or an available character.
-   */
-  int read();
-  /**
-   * Unbuffered write
-   *
-   * \param[in] b byte to write.
-   * \return 1
-   */
-  size_t write(uint8_t b);
-  using Print::write;
-};
-#endif  // MinimumSerial_h
+#ifndef BlockDriver_h
+#define BlockDriver_h
+#include "FatLib/BaseBlockDriver.h"
+#include "SdCard/SdSpiCard.h"
+//-----------------------------------------------------------------------------
+/** typedef for BlockDriver */
+#if ENABLE_EXTENDED_TRANSFER_CLASS || ENABLE_SDIO_CLASS
+typedef BaseBlockDriver BlockDriver;
+#else  // ENABLE_EXTENDED_TRANSFER_CLASS || ENABLE_SDIO_CLASS
+typedef SdSpiCard BlockDriver;
+#endif  // ENABLE_EXTENDED_TRANSFER_CLASS || ENABLE_SDIO_CLASS
+#endif  // BlockDriver_h
