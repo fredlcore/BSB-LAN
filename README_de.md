@@ -2,37 +2,36 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-LAN-Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie.github.io/BSB-LPB-LAN/kap02.html#21-bsb-und-lpb), den ["Local-Process-Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN/kap02.html#21-bsb-und-lpb) und die ["Punkt-zu-Punkt-Schnittstelle" (PPS)](https://1coderookie.github.io/BSB-LPB-LAN/kap02.html#22-pps-schnittstelle) - entwickelt für einen *Arduino Due* mit Ethernet-Shield und für einen *ESP32* zur web-basierten Kontrolle (lokal über W/LAN, aber wenn gewünscht auch über das Internet) von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte (nur Due). Dieses Projekt unterstützt mehr als 1300 Parameter unterschiedlicher Heizungen und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
+LAN-Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1011-bsb), den ["Local-Process-Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1012-lpb) und die ["Punkt-zu-Punkt-Schnittstelle" (PPS)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1013-pps-schnittstelle) - entwickelt für einen *Arduino Due* mit Ethernet-Shield und für einen *ESP32* zur web-basierten Kontrolle (lokal über W/LAN, aber wenn gewünscht auch über das Internet) von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte (nur Due). Dieses Projekt unterstützt mehr als 1300 Parameter unterschiedlicher Heizungen und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
 
 <B>Bausätze erhältlich!</B> Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Due oder ESP32 erhältlich, bei Interesse bitte e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).
 
-***Ausführliche Informationen zum Adapter und der Software sind im [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN) zu finden.***  
-*Eine Schnellinstallationsanleitung ist [hier](https://1coderookie.github.io/BSB-LPB-LAN/kap16.html) verfügbar.*  
+***Ausführliche Informationen zum Adapter und der Software sind im [Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/) zu finden.***  
    
 Mit Hilfe des Adapters und der BSB-LAN-Software können nun unkompliziert verschiedene Funktionen, Werte und Parameter beobachtet, geloggt und bei Bedarf web-basiert gesteuert und geändert werden.
-Eine optionale Einbindung in bestehende Smart-Home-Systeme wie bspw. [FHEM](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#111-fhem), [openHAB](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#112-openhab), [HomeMatic](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#113-homematic-eq3), [IoBroker](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#114-iobroker), [Loxone](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#115-loxone), [IP-Symcon](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#116-ip-symcon), [EDOMI](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#1110-edomi) oder [Home Assistant](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#1111-home-assistant) kann mittels [HTTPMOD](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#1112-einbindung-mittels-httpmod-modul), [MQTT](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#117-mqtt-influxdb-telegraf-und-grafana) oder [JSON](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#824-abrufen-und-steuern-mittels-json) erfolgen. 
-Darüber hinaus ist der Einsatz des Adapters als [Standalone-Logger](https://1coderookie.github.io/BSB-LPB-LAN/kap09.html#91-verwendung-des-adapters-als-standalone-logger-mittels-bsb-lan) ohne LAN- oder Internetanbindung bei Verwendung einer microSD-Karte ebenfalls möglich.  
-Zusätzlich können [Temperatur- und Feuchtigkeitssensoren](https://1coderookie.github.io/BSB-LPB-LAN/kap12.html#123-verwendung-optionaler-sensoren-dht22-und-ds18b20) angeschlossen und deren Daten ebenso geloggt und ausgewertet werden. Durch die Verwendung eines Arduino und die Möglichkeit, eigenen Code in die BSB-LAN-Software zu integrieren, bietet sich darüber hinaus ein weites Spektrum an Erweiterungsmöglichkeiten. 
+Eine optionale Einbindung in bestehende Smart-Home-Systeme wie bspw. [FHEM](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-fhem), [openHAB](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#82-openhab), [HomeMatic](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#83-homematic-eq3), [ioBroker](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#84-iobroker), [Loxone](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#85-loxone), [IP-Symcon](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#86-ip-symcon), [EDOMI](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#810-edomi), [Home Assistant](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#811-home-assistant), [SmartHomeNG](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#812-smarthomeng) oder [Node-RED](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#813-node-red) kann mittels [HTTPMOD](https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#812-einbindung-mittels-httpmod-modul), [MQTT](https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#52-mqtt) oder [JSON](https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#53-json) erfolgen. 
+Darüber hinaus ist der Einsatz des Adapters als [Standalone-Logger](https://1coderookie.github.io/BSB-LPB-LAN/kap06.html#61-loggen-von-daten) ohne LAN- oder Internetanbindung bei Verwendung einer microSD-Karte ebenfalls möglich.  
+Zusätzlich können [Temperatur- und Feuchtigkeitssensoren](https://1coderookie.github.io/BSB-LPB-LAN/kap07.html#71-verwendung-optionaler-sensoren-dht22-ds18b20-bme280) angeschlossen und deren Daten ebenso geloggt und ausgewertet werden. Durch die Verwendung eines Arduino und die Möglichkeit, [eigenen Code in die BSB-LAN-Software zu integrieren](https://1coderookie.github.io/BSB-LPB-LAN/kap06.html#68-eigenen-code-in-bsb-lan-einbinden), bietet sich darüber hinaus ein weites Spektrum an Erweiterungsmöglichkeiten. 
    
 Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt.  
 Als einfache Regel kann man sagen, dass die Regler mit einem **S** in der Typenbezeichnung (RV**S** und LM**S**) kompatibel mit BSB-LAN sind und den (nahezu) kompletten Funktionsumfang bieten.  
-Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je nach Typ des Wärmeerzeugers (Öl, Gas, WP etc.) normalerweise verbaut sind (bzw. waren) und die mittels BSB-LAN bedient werden können. Gewisse Einzel- und Spezialfälle (wie bspw. ein RVS-Regler bei einem Gasgerät) sind hier nicht berücksichtigt. Für genauere Informationen bzgl der [Reglertypen](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#32-detailliertere-auflistung-und-beschreibung-der-unterstützten-regler) und der zu verwendenden [Anschlüsse](https://1coderookie.github.io/BSB-LPB-LAN/kap02.html#23-anschluss-des-adapters) lies bitte im [BSB-LPB-LAN-Handbuch](https://1coderookie.github.io/BSB-LPB-LAN) nach.
+Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je nach Typ des Wärmeerzeugers (Öl, Gas, WP etc.) normalerweise verbaut sind (bzw. waren) und die mittels BSB-LAN bedient werden können. Gewisse Einzel- und Spezialfälle (wie bspw. ein RVS-Regler bei einem Gasgerät) sind hier nicht berücksichtigt. Für genauere Informationen bzgl der [Reglertypen](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#102-detaillierte-beschreibung-der-kompatiblen-regler) und der zu verwendenden [Anschlüsse](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#31-anschluss-des-adapters) lies bitte im [BSB-LPB-LAN-Handbuch](https://1coderookie.github.io/BSB-LPB-LAN/) nach.
 
 **Gasregler:**  
-- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3211-lmu-regler) und (aktuelle Generation) [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3212-lms-regler), Anschluss via BSB, vollumfänglich steuer- und bedienbar  
-- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3211-lmu-regler), Anschluss via PPS, eingeschränkt steuer- und bedienbar   
+- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler) und (aktuelle Generation) [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10212-lms-regler), Anschluss via BSB  
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler), Anschluss via PPS   
    
 **Öl-/Solar-/Zonenregler:**  
-- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via BSB, vollumfänglich steuer- und bedienbar  
-- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3221-rva--und-rvp-regler), Anschluss via PPS (modellspezifisch vereinzelt auch LPB), eingeschränkt steuer- und bedienbar  
+- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via BSB  
+- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10221-rva--und-rvp-regler), Anschluss via PPS (modellspezifisch vereinzelt auch LPB)  
    
 **Wärmepumpenregler:**  
-- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via BSB, vollumfänglich steuer- und bedienbar  
+- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via BSB  
    
 **Weishaupt (Modell WTU):**  
-- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#3222-rvs-regler), Anschluss via LPB, (nahezu) vollumfänglich steuer- und bedienbar      
+- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via LPB      
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
 - Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
@@ -53,9 +52,9 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Weishaupt: WTU
    
 ***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
-- **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#311-brötje)**
-- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#312-elco)**
-- **[weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap03.html#313-weitere-hersteller)**      
+- **[Brötje](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#111-brötje)**
+- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#112-elco)**
+- **[weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN/kap11.html#113-weitere-hersteller)**      
    
 Bitte beachte: Generelle Parameter sollten bei allen Systemen funktionieren, spezifischere Parameter werden sukzessiv hinzugefügt. Deine Hilfe könnte gebraucht werden, wenn du ein Heizungssystem hast, welches mit BSB, LPB oder PPS arbeitet, wofür wir jedoch noch keine spezifischeren Parameter hinzugefügt haben. Erfahre <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/FAQ_de.md#mein-heizungssystem-verf%C3%BCgt-%C3%BCber-parameter-die-von-der-software-bisher-nicht-unterst%C3%BCtzt-werden-kann-ich-behilflich-sein-diese-parameter-hinzuzuf%C3%BCgen">hier</A>, wie du uns helfen kannst.
 <BR><BR>
