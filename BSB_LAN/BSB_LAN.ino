@@ -9815,13 +9815,15 @@ void setup() {
   #endif
   }
 
+  unsigned long timeout = millis();
   #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
-  while (WiFi.status() == WL_DISCONNECTED) {
+  timeout = millis();
+  while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
     delay(100);
     printToDebug(PSTR("."));
   }
@@ -9830,7 +9832,7 @@ void setup() {
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
-  unsigned long timeout = millis();
+  timeout = millis();
   while ( status != WL_CONNECTED && millis() - timeout < 10000) {
     printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
