@@ -353,6 +353,7 @@ const char header_html[] PROGMEM_LATE =
   "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">"
   "<title>BSB-LAN</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
+  "a.logo:hover {background-color: initial; text-decoration: initial;}\n"
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"

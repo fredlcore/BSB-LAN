@@ -3591,8 +3591,8 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("' ID=main_link></A>\r\n"));
-   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'>"));
+   printToWebClient(PSTR("' ID=main_link class='logo'>"));
+   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
    printToWebClient(PSTR("</center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
