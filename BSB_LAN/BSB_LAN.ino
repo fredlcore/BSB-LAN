@@ -3592,8 +3592,9 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
    printToWebClient(PSTR("' ID=main_link class='logo'>"));
-   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
-   printToWebClient(PSTR("</center>\r\n"));
+   printPStr(svg_favicon, sizeof(svg_favicon));
+//   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
+   printToWebClient(PSTR("</A></center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
@@ -7213,6 +7214,7 @@ uint8_t pps_offset = 0;
 #if defined(__AVR__)
             printPStr(pgm_get_far_address(svg_favicon), sizeof(svg_favicon));
 #else
+            printPStr(svg_favicon_header, sizeof(svg_favicon_header));
             printPStr(svg_favicon, sizeof(svg_favicon));
 #endif
 #endif
@@ -9826,7 +9828,7 @@ void setup() {
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
   timeout = millis();
-  while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
+  while (WiFi.status() == WL_DISCONNECTED && millis()) {
     delay(100);
     printToDebug(PSTR("."));
   }

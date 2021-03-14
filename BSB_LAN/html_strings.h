@@ -1,14 +1,15 @@
 #if defined(__AVR__)
 const byte svg_favicon [] PROGMEM_LATE =
 #else
+const char svg_favicon_header[] PROGMEM_LATE =
+"<?xml version=\"1.0\" standalone=\"no\"?>\n"
+"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
+" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n";
 const char svg_favicon[] PROGMEM_LATE =
 #endif
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 "";
 #else
-"<?xml version=\"1.0\" standalone=\"no\"?>\n"
-"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
-" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
 "<svg class=\"logo\" version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\"\n"
 " width=\"400.000000pt\" height=\"400.000000pt\" viewBox=\"0 0 400.000000 400.000000\"\n"
 " preserveAspectRatio=\"xMidYMid meet\">\n"
