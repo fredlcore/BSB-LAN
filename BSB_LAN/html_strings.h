@@ -340,6 +340,13 @@ const char graph_html[] PROGMEM_LATE =
 "		.attr(\"class\", \"y axis\")\n"
 "		.call(yAxis);\n"
 "\n"
+"// Add the X Grid\n"
+"svg.append(\"g\").attr(\"class\", \"grid\").attr(\"transform\", \"translate(0,\" + height + \")\").call(xAxis.tickSize(-height, 0, 0).tickFormat(\"\"));\n"
+"// Add the Y Grid -  -  -  -  -\n"
+"svg.append(\"g\").attr(\"class\", \"grid\").style(\"stroke-dasharray\", \"1 3\").call(yAxis.ticks(20).tickSize(-width, 0, 0).tickFormat(\"\"));\n"
+"// Add the Y Grid  ------------\n"
+"svg.append(\"g\").attr(\"class\", \"grid\").call(yAxis.ticks(10).tickSize(-width, 0, 0).tickFormat(\"\"));\n"
+"\n"
 "});\n"
 "\n"
 "</script>\n";
