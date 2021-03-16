@@ -3519,25 +3519,25 @@ void UpdateMaxDeviceList() {
     max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
   }
 
-    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-      if (EEPROM_ready) {
-        for (uint16_t i = 0; i < sizeof(max_id_eeprom); i++) {
-          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
-        }
-      }
-      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
-        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
-          if (EEPROM_ready) {
-            for (uint16_t i = 0; i < sizeof(max_addr); i++) {
-             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
-            }
-            max_devices[x] = max_addr;
-            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
-          }
-          break;
-        }
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    if (EEPROM_ready) {
+      for (uint16_t i = 0; i < sizeof(max_id_eeprom); i++) {
+        max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
       }
     }
+    for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+      if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
+        if (EEPROM_ready) {
+          for (uint16_t i = 0; i < sizeof(max_addr); i++) {
+           ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+          }
+          max_devices[x] = max_addr;
+          printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+        }
+        break;
+      }
+    }
+  }
   writeToEEPROM(CF_MAX_DEVICES);
   writeToEEPROM(CF_MAX_DEVADDR);
   }
@@ -8557,7 +8557,7 @@ uint8_t pps_offset = 0;
                   max_avg_count++;
                   printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
                   if (max_valve[x] > -1) {
-                    printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
+                    printFmtToWebClient(PSTR(" (%hd%%)"), max_valve[x]);
                   }
                   printToWebClient(PSTR("</td></tr>"));
                 }
@@ -8973,7 +8973,6 @@ uint8_t pps_offset = 0;
       strncpy(max_hex_str, outBuf+1, 2);
       max_hex_str[2]='\0';
       uint8_t max_msg_len = (uint8_t)strtoul(max_hex_str, NULL, 16);
-
       if (max_msg_type == 0x02) {
         strncpy(max_hex_str, outBuf+15, 6);
       } else {
@@ -9041,7 +9040,7 @@ uint8_t pps_offset = 0;
         strncpy(max_hex_str, outBuf+temp_str_offset, str_len);
         max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
+//        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
         if (max_msg_type == 0x42) {
           max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
           max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -9828,7 +9827,7 @@ void setup() {
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
   timeout = millis();
-  while (WiFi.status() == WL_DISCONNECTED && millis()) {
+  while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
     delay(100);
     printToDebug(PSTR("."));
   }
