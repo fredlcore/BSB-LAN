@@ -80,7 +80,7 @@
 #define MENU_TEXT_NVN "Current version is up to date"
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html"
-#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#81-listing-and-description-of-the-url-commands"
+#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#51-url-commands"
 
 #define MENU_DESC_HFK "Allows you to query or set parameters of your heating system, sorted in different clickable categories."
 #define MENU_DESC_CFG "Displays a list of configuration options. You can change most of these by using the extended URL commands."
