@@ -5,6 +5,7 @@ arduino.sh
 due.sh
 due_bsb.sh
 due_pps.sh
+esp32.sh
 build/
 BSB_lan_config.h
 BSB_lan_config.mega.h
