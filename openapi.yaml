@@ -1,0 +1,976 @@
+openapi: 3.0.2
+info:
+  title: BSB-LAN API
+  version: '2.0'
+  description: BSB-LAN Json API Specification
+  termsOfService: ''
+  contact:
+    name: BSB-LAN
+    url: 'https://github.com/fredlcore/bsb_lan'
+servers:
+  - url: http://bsblan
+tags:
+  - name: 'General'
+  - name: 'Parameter'
+  - name: 'Category'
+  - name: 'Configuration'
+paths:
+  /JC:
+    post:
+      summary: List parameter definitions
+      description: ''
+      operationId: listParameterDefinitionsUsingPOST
+      tags:
+        - 'Parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterFilterList'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterDefinitionMap'
+
+  /JC={parameterIds}:
+    get:
+      summary: 'List parameter definitions'
+      description: ''
+      operationId: listParameterDefinitionsUsingGET
+      tags:
+        - 'Parameter'
+      parameters:
+      - name: parameterIds
+        in: path
+        required: true
+        description: One or more comma separated parameter ids
+        schema:
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterDefinitionMap'
+
+  /JI:
+    get:
+      summary: 'Query configuration of BSB-LAN'
+      description: ''
+      operationId: getInfo
+      tags:
+        - 'General'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralInfo'
+
+  /JK={categoryId}:
+    get:
+      summary: 'Query a specific category'
+      description: ''
+      operationId: getCategory
+      tags:
+        - 'Category'
+      parameters:
+      - name: categoryId
+        in: path
+        required: true
+        description: 'ID of category'
+        schema:
+          type: integer
+          format: int32
+      responses:
+        '401':
+          description: 'Unauthorized'
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterDefinitionMap'
+
+  /JK=ALL:
+    get:
+      summary: 'Get all categories'
+      description: ''
+      operationId: getCategories
+      tags:
+        - 'Category'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryMap'
+
+  /JL:
+    get:
+      summary: 'Get all BSB-LAN configuration values'
+      description: 'For the usage of this function the module "JSONCONFIG" (see file BSB_lan_config.h) has to be compiled!'
+      operationId: getConfiguration
+      tags:
+        - 'Configuration'
+      responses:
+         '401':
+            description: Unauthorized
+         '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ConfigurationList'
+
+  /JQ:
+    post:
+      summary: List parameters
+      description: ''
+      operationId: listParametersPost
+      tags:
+        - 'Parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterFilterList'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterMap'
+
+  /JQ={parameterIds}:
+    get:
+      summary: List parameters
+      description: ''
+      operationId: listParameters
+      tags:
+        - 'Parameter'
+      parameters:
+        - name: parameterIds
+          in: path
+          required: true
+          description: One or more comma separated parameter ids 
+          schema:
+            type: string
+          example:
+            - 700, 710
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterMap'
+
+  /JR:
+    post:
+      summary: 'Queries the reset/default-value of parameter'
+      description: 'Within the integrated operational unit of the heating system there arereset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
+      operationId: getResetValuePost
+      tags:
+        - 'Parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetValueFilterList'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetValueMap'
+
+  /JR={parameterIds}:
+    get:
+      summary: 'Queries the reset/default-value of parameter'
+      description: 'Within the integrated operational unit of the heating system there arereset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
+      operationId: getResetValue
+      tags:
+        - 'Parameter'
+      parameters:
+      - name: parameterIds
+        in: path
+        required: true
+        description: One or more comma separated parameter ids 
+        schema:
+          type: string
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResetValueMap'
+  
+  /JS:
+    post:
+      summary: 'Write parameter value'
+      description: ''
+      operationId: writeParameter
+      tags:
+      - 'Parameter'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterWrite'
+          
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterWriteResult'
+
+  /JV:
+    get:
+      summary: Queries the JSON-API version
+      description: ''
+      operationId: getApiVersion
+      tags:
+        - 'General'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiVersion'
+
+  /JW:
+    post:
+      summary: 'Write new BSB-LAN configuration values'
+      description: 'For the usage of this function the module "JSONCONFIG" (see file BSB_lan_config.h) has to be compiled!'
+      operationId: writeConfiguration
+      tags:
+        - 'Configuration'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfigurationWriteList'
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationWriteResultMap'
+
+components:
+  schemas:
+    ApiVersion:
+      title: ApiVersion
+      description: 'Object containing API Version'
+      type: object
+      properties:
+        api_version:
+          type: string
+      example:
+        api_version: '2.0'
+
+    Average:
+      title: Average
+      description: 'For this object 24h average values will be gathered'
+      type: object
+      properties:
+        parameter:
+          type: integer
+          format: int32
+      example:
+        parameter: 700
+
+    AverageList:
+      title: AverageList
+      description: 'List of average configurations'
+      type: array
+      items:
+        $ref: '#/components/schemas/Average'
+      example:
+        [parameter: 700, parameter: 701]
+
+    Category:
+      title: Category
+      description: 'Category definition'
+      type: object
+      properties:
+        name:
+          description: Name of category
+          type: string
+        min:
+          format: int32
+          description: Min parameter ID for category
+          type: integer
+        max:
+          format: int32
+          description: Max parameter ID for category
+          type: integer
+      example:
+        name: 'Uhrzeit und Datum'
+        min: 0
+        max: 6
+
+    CategoryMap:
+      title: Categories
+      description: 'HashMap of multiple categories with category ID as key'
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Category'
+      example:
+        '0': 
+          name: 'Uhrzeit und Datum'
+          min: 0
+          max: 6
+        '1':
+          name: 'Bedieneinheit'
+          min: 20
+          max: 70
+
+    Configuration:
+      title: Configuration
+      description: 'Details of a BSB-LAN configuration object'
+      type: object
+      properties:
+        parameter: 
+          description: 'Configuration ID'
+          type: string
+        type: 
+          description: |
+            Data type
+
+            0 - CDT_VOID // byte array (for internal using. Never sent through JSON)
+            
+            1 - CDT_BYTE //unsigned byte. can be various format (text, switch, dropdown)
+            
+            2 - CDT_UINT16 //CPI_TEXT field with format for unsigned integer
+            
+            3 - CDT_UINT32 //CPI_TEXT field with format for unsigned long integer
+            
+            4 - CDT_STRING //CPI_TEXT field
+            
+            5 - CDT_MAC //CPI_TEXT field with format for MAC input/output
+            
+            6 - CDT_IPV4 //CPI_TEXT field with format for IPv4 input/output
+            
+            7 - CDT_PROGNRLIST //CPI_TEXT field with format for programs list input/output
+            
+            8 - CDT_MAXDEVICELIST //CPI_TEXT field with format for MAX! devices list input/output
+            
+            9 - CDT_DHTBUS //CPI_TEXT field with format for DHT bus
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 9
+        format:
+          description: |
+            HTML Input type
+            
+            0 - none 
+            
+            1 - text field
+            
+            2 - switch
+            
+            3 - dropdown
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 3
+        category:
+          description: 'Category of configuration object'
+          type: string
+        name:
+          description: 'Name of configuration object'
+          type: string
+        value: 
+          description: 'Value of configuration object'
+          type: string
+        possibleValues:
+          $ref: '#/components/schemas/PossibleValueList'
+      example:
+        parameter: '0'
+        type: 1
+        format: 2
+        category: 'CAT_GENERAL_TEXT'
+        name: 'CF_USEEEPROM_TEXT'
+        value: '150'
+        possibleValues: [
+          {
+            enumValue: '105', 
+            desc: 'MENU_TEXT_OFF'
+          }, 
+          {
+            enumValue: '150', 
+            desc: 'MENU_TEXT_ON'
+          }
+        ]
+      
+    ConfigurationList:
+      title: ConfigurationList
+      description: 'List of multiple BSB-LAN configuration objects'
+      type: array
+      items:
+        $ref: '#/components/schemas/Configuration'
+      example:
+        [
+          {
+            parameter: '0', 
+            type: 1, 
+            format: 2, 
+            category: 'CAT_GENERAL_TEXT', 
+            name: 'CF_USEEEPROM_TEXT', 
+            value: '150', 
+            possibleValues: [
+              {
+                enumValue: '105', 
+                desc: 'MENU_TEXT_OFF'
+              }, 
+              {
+                enumValue: '150', 
+                desc: 'MENU_TEXT_ON'
+              }
+            ]
+          },
+          {
+            parameter: '6', 
+            type: 1, 
+            format: 3, 
+            category: 'CAT_GENERAL_TEXT', 
+            name: 'CF_BUSTYPE_TEXT', 
+            value: '0', 
+            possibleValues: [
+              {
+                enumValue: '0', 
+                desc: 'BSB'
+              }, 
+              {
+                enumValue: '1', 
+                desc: 'LPB'
+              }, 
+              {
+                enumValue: '2', 
+                desc: 'PPS'
+              }
+            ]
+          },
+        ]   
+
+    ConfigurationWriteResult:
+      title: ConfigurationWriteResult
+      description: 'Write result of BSB-LAN configuration object'
+      type: object
+      properties:
+        status:
+          description: |
+            Write status
+
+            1 - OK
+
+            2 - Not found
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 2
+      example:
+        status: 1
+
+    ConfigurationWriteResultMap:
+      title: ConfigurationWriteResultMap
+      description: 'Multiple write results of BSB-LAN configurations as hash map with parameter ID as key'
+      type: object
+      additionalProperties: 
+        $ref: '#/components/schemas/ConfigurationWriteResult'
+      example:
+        - '0': {status: 1}
+        - '6': {status: 0}
+
+    ConfigurationWrite:
+      title: ConfigurationWrite
+      description: 'Write BSB-LAN configuration object'
+      type: object
+      properties:
+        parameter:
+          description: 'Parameter ID'
+          type: integer
+          format: int32
+        value:
+          description: 'New value of configuration parameter'
+          type: string
+      required:
+        - parameter
+        - value
+      example:
+        parameter: 0
+        value: '150'
+
+    ConfigurationWriteList:
+      title: ConfigurationWriteList
+      description: 'Write multiple BSB-LAN configuration objects'
+      type: array
+      items:
+        $ref:  '#/components/schemas/ConfigurationWrite'
+      example:
+        [{parameter: 0, value: '150'}, {parameter: 6, value: "0"}]
+
+    GeneralInfo:
+      title: GeneralInfo
+      description: 'Basic information about BSB-LAN device'
+      type: object
+      properties:
+        name:
+          description: 'Name of device'
+          type: string
+        version:
+          description: 'Firmware version'
+          type: string
+        freeram:
+          description: 'Free RAM'
+          type: integer
+          format: int32
+        uptime:
+          description: 'Device uptime'
+          type: integer
+          format: int32
+        MAC:
+          description: 'MAC address of device'
+          type: string
+          pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
+        freespace:
+          description: 'Free ROM space'
+          type: integer
+          format: int32
+        bus:
+          description: 'Configured Bus type'
+          type: string
+        buswritable:
+          description: 'Can data be written on the bus'
+          type: integer
+          format: int32
+        busaddr:
+          description: 'Bus address'
+          type: integer
+          format: int32
+        busdest:
+          description: 'Bus destination'
+          type: integer
+          format: int32
+        monitor:
+          description: ''
+          type: integer
+          format: int32
+        verbose:
+          description: ''
+          type: integer
+          format: int32
+        protectedGPIO:
+          $ref: '#/components/schemas/ProtectedGPIOList'
+        averages:
+          $ref: '#/components/schemas/AverageList'
+      example:
+        name: 'BSB-LAN'
+        version: '1.1.21-20200904085757'
+        freeram: 2659
+        uptime: 276959150
+        MAC: 'DE:AD:BE:EF::CA:FE'
+        freespace: 0
+        bus: 'BSB'
+        buswritable: 1
+        busaddr: 66
+        busdest: 0
+        monitor: 0
+        verbose: 1
+        protectedGPIO: [pin: 10, pin: 11, pin: 12]
+        averages: [parameter: 700, parameter: 701]
+
+    Parameter:
+      title: Parameter
+      description: 'Contains the value of a parameter and some more details'
+      type: object
+      properties:
+        name:
+          description: 'Name of the parameter'
+          type: string
+        error:
+          $ref: '#/components/schemas/Error'
+        value: 
+          description: 'Value of the parameter'
+          type: string
+        desc:
+          description: 'Description of the value'
+          type: string
+        dataType: 
+          $ref: '#/components/schemas/ParameterType'
+        readonly:
+          $ref: '#/components/schemas/IsReadOnly'
+        unit:
+          description: 'Unit of the parameter'
+          type: string
+      example:
+        name: 'Betriebsart'
+        error: 0
+        value: '1'
+        desc: 'Automatik'
+        dataType: 1
+        readonly: 0
+        unit: ''
+
+    ParameterMap:
+      title: ParameterMap
+      description: 'HashMap of parameters as with parameter ID as key'
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/Parameter'
+      example:
+        '700':
+          name: 'Betriebsart'
+          error: 0
+          value: '1'
+          desc: 'Automatic'
+          dataType: 1
+          readonly: 0
+          unit: ''
+
+    ParameterDefinition:
+      title: ParameterDefinition
+      description: 'Object containing parameter definition'
+      type: object
+      properties:
+        name:
+          description: 'Name of the parameter'
+          type: string
+        possibleValues:
+          $ref: '#/components/schemas/PossibleValueList'
+        isswitch:
+          description: |
+            Parameter is a switch
+          
+            0 - No
+            
+            1 = Yes, VT_ONOFF or VT_YESNO
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 1
+        dataType: 
+          $ref: '#/components/schemas/ParameterType'
+        readonly:
+          $ref: '#/components/schemas/IsReadOnly'
+        unit:
+          description: 'Unit of the parameter'
+          type: string
+      example:
+        name: 'Betriebsart'
+        possibleValues:
+          [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
+        isswitch: 0
+        dataType: 1
+        readonly: 0
+        unit: ''
+
+    ParameterDefinitionMap:
+      title: ParameterDefinitionMap
+      description: 'HashMap of parameter definition with parameter ID as key'
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/ParameterDefinition'
+      example:
+          '700':
+            name: 'Betriebsart'
+            possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
+            isswitch: 0
+            dataType: 1
+            readonly: 0
+            unit: ''
+
+    ParameterFilter:
+      title: ParameterFilter
+      description: 'Filter for requesting parameter'
+      type: object
+      properties:
+        parameter:
+          type: string
+        destination:
+          type: integer
+          format: int32
+      required:
+        - parameter
+      example:
+        parameter: '700'
+    
+    ParameterFilterList:
+      title: ParameterFilterList
+      description: 'List of filters to request multiple parameters'
+      type: array
+      items:
+        $ref: '#/components/schemas/ParameterFilter'
+      example:
+        [parameter: '700', parameter: '701']
+
+    ParameterWrite:
+      title: ParameterWrite
+      description: 'Object for updating parameter value'
+      type: object
+      properties:
+        parameter:
+          description: 'Id of parameter'
+          type: string
+        value:
+          description: 'New parameter value'
+          type: string
+        type:
+          description: |
+            Write type 
+            
+            0 - INF
+            
+            1 - SET
+          type: string
+        destination:
+          description: 'Destination of parameter'
+          type: integer
+          format: int32
+      required:
+        - Parameter
+        - Value
+        - Type
+      example:
+        Parameter: '700'
+        Value: '1'
+        Type: '1'
+
+    ParameterWriteResult:
+      title: ParameterWriteResult
+      description: 'Conains result of write request'
+      type: object
+      properties:
+        parameter:
+          description: 'Id of parameter'
+          type: string
+        status:
+          description: |
+            Status of write request
+            
+            0 - Error
+
+            1 - OK
+
+            2 - parameter read-only
+          type: integer
+          format: int32
+          minimum: 0
+          maximum: 2
+      example:
+        Parameter: "700"
+        Status: 1
+
+    PossibleValue:
+      title: PossibleValue
+      description: 'Contains possible Enum Values'
+      type: object
+      properties:
+        enumValue:
+          description: Enum Value
+          type: integer
+          format: int32
+        desc:
+          description: Description of Enum Value
+          type: string
+      example:
+        enumValue: 1
+        desc: 'Automatik'
+
+    PossibleValueList:
+      title: PossibleValueList
+      description: 'List of possible values'
+      type: array
+      items:
+        $ref: '#/components/schemas/PossibleValue'
+      example:
+        [{enumvalue: 0, desc: 'Schutzbetrieb'}, {enumvalue: 1, desc: 'Automatik'}]
+
+    ProtectedGPIO:
+      title: ProtectedGPIO
+      description: ''
+      type: object
+      properties:
+        pin:
+          type: integer
+          format: int32
+      example:
+        pin: 10
+
+    ProtectedGPIOList:
+      title: ProtectedGPIOList
+      description: ''
+      type: array
+      items:
+        $ref: '#/components/schemas/ProtectedGPIO'
+      example:
+        [pin: 10, pin: 11]
+   
+    ResetValue:
+      title: ResetValue
+      description: 'Reset value of parameter'
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/Error'
+        value:
+          description: 'Reset value'
+          type: string
+      example:
+        error: 0
+        value: '3'
+
+    ResetValueMap:
+      title: ResetValueMap
+      description: 'HashMap of reset values with parameter ID as key'
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/ResetValue'
+      example:
+        '700':
+          error: 0
+          value: "3"
+    
+    ResetValueFilter:
+      title: ResetValueFilter
+      description: 'Filter for query reset value of parameter'
+      type: object
+      properties:
+        parameter:
+          description: 'Id of the parameter'
+          type: string
+        destination:
+          description: ''
+          type: integer
+          format: int32
+      required:
+        - parameter
+      example:
+        parameter: '700'
+        Destination: 0
+
+    ResetValueFilterList:
+      title: ResetValueFilterList
+      description: 'List of filters to query reset values for multiple parameters'
+      type: array
+      items:
+        $ref: '#/components/schemas/ResetValueFilter'
+      example:
+        [parameter: '700', parameter: '701']
+    
+    Error:
+      title: Error
+      description: |
+        Current state of parameter value
+        
+        0 - ok
+        
+        7 - parameter not supported
+        
+        1..255 - LPB/BSB bus errors
+        
+        256 - decoding error
+        
+        257 - unknown command
+        
+        258 - not found
+        
+        259 - no enum str
+        
+        260 - unknown type
+        
+        261 - query failed
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 261
+
+    IsReadOnly:
+      title: IsReadOnly
+      description: |
+        Parameter is readonly
+
+        0 - read/write
+
+        1 - readonly
+      type: integer
+      minimum: 0
+      maximum: 1
+      format: int32
+
+    ParameterType:
+      title: ParameterType
+      description: |
+        Data type of parameter
+      
+        0 - Number ("1", "20.5", "---" for value not available)
+      
+        1 - ENUM (Integer value of Enum "2")
+      
+        2 - Bit value ("01000101")
+
+        3 - Weekday
+
+        4 - Hour:Minute
+
+        5 - Date and time ("09.01.2021 12:42:02")
+
+        6 - Day and month ("25.10")
+
+        7 - String
+
+        8 - PPS time (day of week, hour:minute)
+      type: integer
+      format: int32
+      minimum: 0
+      maximum: 8
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
