@@ -6,9 +6,9 @@ info:
   termsOfService: ''
   contact:
     name: BSB-LAN
-    url: 'https://github.com/fredlcore/bsb_lan'
+    url: 'https://github.com/fredlcore/BSB-LAN'
 servers:
-  - url: http://bsblan
+  - url: http://bsb
 tags:
   - name: 'General'
   - name: 'Parameter'
@@ -46,12 +46,12 @@ paths:
       tags:
         - 'Parameter'
       parameters:
-      - name: parameterIds
-        in: path
-        required: true
-        description: One or more comma separated parameter ids
-        schema:
-          type: string
+        - name: parameterIds
+          in: path
+          required: true
+          description: One or more comma separated parameter ids
+          schema:
+            type: string
       responses:
         '401':
           description: Unauthorized
@@ -87,13 +87,13 @@ paths:
       tags:
         - 'Category'
       parameters:
-      - name: categoryId
-        in: path
-        required: true
-        description: 'ID of category'
-        schema:
-          type: integer
-          format: int32
+        - name: categoryId
+          in: path
+          required: true
+          description: 'ID of category'
+          schema:
+            type: integer
+            format: int32
       responses:
         '401':
           description: 'Unauthorized'
@@ -129,14 +129,14 @@ paths:
       tags:
         - 'Configuration'
       responses:
-         '401':
-            description: Unauthorized
-         '200':
-            description: OK
-            content:
-              application/json:
-                schema:
-                  $ref: '#/components/schemas/ConfigurationList'
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigurationList'
 
   /JQ:
     post:
@@ -172,11 +172,11 @@ paths:
         - name: parameterIds
           in: path
           required: true
-          description: One or more comma separated parameter ids 
+          description: One or more comma separated parameter ids
           schema:
             type: string
           example:
-            - 700, 710
+            700,710
       responses:
         '401':
           description: Unauthorized
@@ -218,12 +218,12 @@ paths:
       tags:
         - 'Parameter'
       parameters:
-      - name: parameterIds
-        in: path
-        required: true
-        description: One or more comma separated parameter ids 
-        schema:
-          type: string
+        - name: parameterIds
+          in: path
+          required: true
+          description: One or more comma separated parameter ids
+          schema:
+            type: string
       responses:
         '401':
           description: Unauthorized
@@ -233,21 +233,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResetValueMap'
-  
+
   /JS:
     post:
       summary: 'Write parameter value'
       description: ''
       operationId: writeParameter
       tags:
-      - 'Parameter'
+        - 'Parameter'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ParameterWrite'
-          
+
       responses:
         '401':
           description: Unauthorized
@@ -358,7 +358,7 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/Category'
       example:
-        '0': 
+        '0':
           name: 'Uhrzeit und Datum'
           min: 0
           max: 6
@@ -372,31 +372,31 @@ components:
       description: 'Details of a BSB-LAN configuration object'
       type: object
       properties:
-        parameter: 
+        parameter:
           description: 'Configuration ID'
           type: string
-        type: 
+        type:
           description: |
             Data type
 
             0 - CDT_VOID // byte array (for internal using. Never sent through JSON)
-            
+
             1 - CDT_BYTE //unsigned byte. can be various format (text, switch, dropdown)
-            
+
             2 - CDT_UINT16 //CPI_TEXT field with format for unsigned integer
-            
+
             3 - CDT_UINT32 //CPI_TEXT field with format for unsigned long integer
-            
+
             4 - CDT_STRING //CPI_TEXT field
-            
+
             5 - CDT_MAC //CPI_TEXT field with format for MAC input/output
-            
+
             6 - CDT_IPV4 //CPI_TEXT field with format for IPv4 input/output
-            
+
             7 - CDT_PROGNRLIST //CPI_TEXT field with format for programs list input/output
-            
+
             8 - CDT_MAXDEVICELIST //CPI_TEXT field with format for MAX! devices list input/output
-            
+
             9 - CDT_DHTBUS //CPI_TEXT field with format for DHT bus
           type: integer
           format: int32
@@ -405,13 +405,13 @@ components:
         format:
           description: |
             HTML Input type
-            
-            0 - none 
-            
+
+            0 - none
+
             1 - text field
-            
+
             2 - switch
-            
+
             3 - dropdown
           type: integer
           format: int32
@@ -423,7 +423,7 @@ components:
         name:
           description: 'Name of configuration object'
           type: string
-        value: 
+        value:
           description: 'Value of configuration object'
           type: string
         possibleValues:
@@ -437,15 +437,15 @@ components:
         value: '150'
         possibleValues: [
           {
-            enumValue: '105', 
+            enumValue: '105',
             desc: 'MENU_TEXT_OFF'
-          }, 
+          },
           {
-            enumValue: '150', 
+            enumValue: '150',
             desc: 'MENU_TEXT_ON'
           }
         ]
-      
+
     ConfigurationList:
       title: ConfigurationList
       description: 'List of multiple BSB-LAN configuration objects'
@@ -455,46 +455,46 @@ components:
       example:
         [
           {
-            parameter: '0', 
-            type: 1, 
-            format: 2, 
-            category: 'CAT_GENERAL_TEXT', 
-            name: 'CF_USEEEPROM_TEXT', 
-            value: '150', 
+            parameter: '0',
+            type: 1,
+            format: 2,
+            category: 'CAT_GENERAL_TEXT',
+            name: 'CF_USEEEPROM_TEXT',
+            value: '150',
             possibleValues: [
               {
-                enumValue: '105', 
+                enumValue: '105',
                 desc: 'MENU_TEXT_OFF'
-              }, 
+              },
               {
-                enumValue: '150', 
+                enumValue: '150',
                 desc: 'MENU_TEXT_ON'
               }
             ]
           },
           {
-            parameter: '6', 
-            type: 1, 
-            format: 3, 
-            category: 'CAT_GENERAL_TEXT', 
-            name: 'CF_BUSTYPE_TEXT', 
-            value: '0', 
+            parameter: '6',
+            type: 1,
+            format: 3,
+            category: 'CAT_GENERAL_TEXT',
+            name: 'CF_BUSTYPE_TEXT',
+            value: '0',
             possibleValues: [
               {
-                enumValue: '0', 
+                enumValue: '0',
                 desc: 'BSB'
-              }, 
+              },
               {
-                enumValue: '1', 
+                enumValue: '1',
                 desc: 'LPB'
-              }, 
+              },
               {
-                enumValue: '2', 
+                enumValue: '2',
                 desc: 'PPS'
               }
             ]
           },
-        ]   
+        ]
 
     ConfigurationWriteResult:
       title: ConfigurationWriteResult
@@ -519,7 +519,7 @@ components:
       title: ConfigurationWriteResultMap
       description: 'Multiple write results of BSB-LAN configurations as hash map with parameter ID as key'
       type: object
-      additionalProperties: 
+      additionalProperties:
         $ref: '#/components/schemas/ConfigurationWriteResult'
       example:
         - '0': {status: 1}
@@ -633,13 +633,13 @@ components:
           type: string
         error:
           $ref: '#/components/schemas/Error'
-        value: 
+        value:
           description: 'Value of the parameter'
           type: string
         desc:
           description: 'Description of the value'
           type: string
-        dataType: 
+        dataType:
           $ref: '#/components/schemas/ParameterType'
         readonly:
           $ref: '#/components/schemas/IsReadOnly'
@@ -684,15 +684,15 @@ components:
         isswitch:
           description: |
             Parameter is a switch
-          
+
             0 - No
-            
+
             1 = Yes, VT_ONOFF or VT_YESNO
           type: integer
           format: int32
           minimum: 0
           maximum: 1
-        dataType: 
+        dataType:
           $ref: '#/components/schemas/ParameterType'
         readonly:
           $ref: '#/components/schemas/IsReadOnly'
@@ -715,13 +715,13 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/ParameterDefinition'
       example:
-          '700':
-            name: 'Betriebsart'
-            possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
-            isswitch: 0
-            dataType: 1
-            readonly: 0
-            unit: ''
+        '700':
+          name: 'Betriebsart'
+          possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
+          isswitch: 0
+          dataType: 1
+          readonly: 0
+          unit: ''
 
     ParameterFilter:
       title: ParameterFilter
@@ -737,7 +737,7 @@ components:
         - parameter
       example:
         parameter: '700'
-    
+
     ParameterFilterList:
       title: ParameterFilterList
       description: 'List of filters to request multiple parameters'
@@ -760,10 +760,10 @@ components:
           type: string
         type:
           description: |
-            Write type 
-            
+            Write type
+
             0 - INF
-            
+
             1 - SET
           type: string
         destination:
@@ -790,7 +790,7 @@ components:
         status:
           description: |
             Status of write request
-            
+
             0 - Error
 
             1 - OK
@@ -848,7 +848,7 @@ components:
         $ref: '#/components/schemas/ProtectedGPIO'
       example:
         [pin: 10, pin: 11]
-   
+
     ResetValue:
       title: ResetValue
       description: 'Reset value of parameter'
@@ -873,7 +873,7 @@ components:
         '700':
           error: 0
           value: "3"
-    
+
     ResetValueFilter:
       title: ResetValueFilter
       description: 'Filter for query reset value of parameter'
@@ -900,28 +900,28 @@ components:
         $ref: '#/components/schemas/ResetValueFilter'
       example:
         [parameter: '700', parameter: '701']
-    
+
     Error:
       title: Error
       description: |
         Current state of parameter value
-        
+
         0 - ok
-        
+
         7 - parameter not supported
-        
+
         1..255 - LPB/BSB bus errors
-        
+
         256 - decoding error
-        
+
         257 - unknown command
-        
+
         258 - not found
-        
+
         259 - no enum str
-        
+
         260 - unknown type
-        
+
         261 - query failed
       type: integer
       format: int32
@@ -945,11 +945,11 @@ components:
       title: ParameterType
       description: |
         Data type of parameter
-      
+
         0 - Number ("1", "20.5", "---" for value not available)
-      
+
         1 - ENUM (Integer value of Enum "2")
-      
+
         2 - Bit value ("01000101")
 
         3 - Weekday
