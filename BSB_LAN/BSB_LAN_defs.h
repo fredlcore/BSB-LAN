@@ -348,7 +348,8 @@ typedef enum {
   DT_DTTM,    // date and time
   DT_DDMM,    // day and month
   DT_STRN,    // string
-  DT_DWHM     // PPS time (day of week, hour:minute)
+  DT_DWHM,    // PPS time (day of week, hour:minute)
+  DT_TMPR     // time program
 } dt_types_t;
 
 const char STR_VALS[] PROGMEM = "VALS";
@@ -360,6 +361,7 @@ const char STR_DTTM[] PROGMEM = "DTTM";
 const char STR_DDMM[] PROGMEM = "DDMM";
 const char STR_STRN[] PROGMEM = "STRN";
 const char STR_DWHM[] PROGMEM = "DWHM";
+const char STR_TMPR[] PROGMEM = "TMPR";
 const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
@@ -528,7 +530,8 @@ PROGMEM_LATE const dt_types dt_types_text[]={
   {DT_DTTM, STR_DTTM},
   {DT_DDMM, STR_DDMM},
   {DT_STRN, STR_STRN},
-  {DT_DWHM, STR_DWHM}
+  {DT_DWHM, STR_DWHM},
+  {DT_TMPR, STR_TMPR},
 };
 
 /* order of types must according to vt_type_t enum */
@@ -617,7 +620,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_DATETIME,       1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
 {VT_SUMMERPERIOD,   1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_SUMMERPERIOD},
 {VT_VACATIONPROG,   1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
-{VT_TIMEPROG,       1.0,    8, 11+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
+{VT_TIMEPROG,       1.0,    8, 11+32, DT_TMPR, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
 {VT_STRING,         1.0,    8, 22+64, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
 {VT_CUSTOM_ENUM,    1.0,    8, 22+32+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
 {VT_CUSTOM_BYTE,    1.0,    0, 22+32+64, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
