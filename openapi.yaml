@@ -565,11 +565,11 @@ components:
           description: 'Firmware version'
           type: string
         freeram:
-          description: 'Free RAM'
+          description: 'Free RAM in bytes'
           type: integer
           format: int32
         uptime:
-          description: 'Device uptime'
+          description: 'Device uptime in ms'
           type: integer
           format: int32
         MAC:
@@ -607,6 +607,16 @@ components:
           $ref: '#/components/schemas/ProtectedGPIOList'
         averages:
           $ref: '#/components/schemas/AverageList'
+        logvalues:
+          description: ''
+          type: integer
+          format: int32
+        loginterval:
+          description: 'Log interval'
+          type: integer
+          format: int32
+        logged:
+          $ref: '#/components/schemas/LoggedList'
       example:
         name: 'BSB-LAN'
         version: '1.1.21-20200904085757'
@@ -622,6 +632,30 @@ components:
         verbose: 1
         protectedGPIO: [pin: 10, pin: 11, pin: 12]
         averages: [parameter: 700, parameter: 701]
+        logvalues: 0
+        loginterval: 3600
+        logged: [parameter: 8700, parameter: 8743, parameter: 8314]
+
+    Logged:
+      title: Logged
+      description: ''
+      type: object
+      properties:
+        parameter:
+          description: 'Id of parameter'
+          type: integer
+          format: int32
+      example:
+        parameter: 8700
+
+    LoggedList:
+      title: LoggedList
+      description: 'List of logged parameters'
+      type: array
+      items:
+        $ref: '#/components/schemas/Logged'
+      example:
+        [parameter: 700, parameter: 800]
 
     Parameter:
       title: Parameter
@@ -958,7 +992,7 @@ components:
 
         5 - Date and time ("09.01.2021 12:42:02")
 
-        6 - Day and month ("25.10")
+        6 - Day and month ("25.10.")
 
         7 - String
 
