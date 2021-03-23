@@ -163,7 +163,7 @@
 #define MENU_TEXT_NVN "Installierte Version ist aktuell."
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
-#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle"
+#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
 #define MENU_TEXT_FSP "Freier Speicher auf SD Karte"
 

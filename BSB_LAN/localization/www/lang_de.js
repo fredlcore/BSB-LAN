@@ -163,7 +163,7 @@ UIStrings["MENU_TEXT_NVA"] = "Neuere Version gefunden";
 UIStrings["MENU_TEXT_NVN"] = "Installierte Version ist aktuell.";
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html";
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
-UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap08.html#81-auflistung-und-beschreibung-der-url-befehle";
+UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
 UIStrings["MENU_TEXT_FSP"] = "Freier Speicher auf SD Karte";
 
