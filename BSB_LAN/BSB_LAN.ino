@@ -67,11 +67,14 @@
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
  *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in BSB_LAN_config.h (LAN in caps), and no longer in BSB_lan_config.h (lower-caps "lan")
- *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most but not all features are working right now.
+ *        - ATTENTION: HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most features are working right now.
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
  *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
+ *        - New MQTT functions, including allowing any parameter to be set by an MQTT message and actively query any parameter once by sending an MQTT message
+ *        - Added support for BME280 sensors
  *        - Setting a temporary destination address for querying parameters by adding !x (where x is the destination id), e.g. /6224!10 to query the identification of the display unit
  *        - URL commands /A, /B, /T and /JA have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.
  *        - New categories added, subsequent categories have been shifted up
@@ -79,6 +82,7 @@
  *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
+ *        - New library for DHT22 should provide more reliable results
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -579,7 +583,7 @@ EthernetUDP udp;
   #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
-#endif
+#endif 
 
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
@@ -688,14 +692,11 @@ SdFat SD;
 
 #ifdef DHT_BUS
   #include "src/DHT/DHT.h"
-  DHT *dht;
-#ifdef OLD_DHT_BUS_MANAGEMENT
-
+  DHT dht;
 //Save state between queries
   unsigned long DHT_Timer = 0;
   int last_DHT_State = 0;
   uint8_t last_DHT_pin = 0;
-#endif
 #endif
 
 unsigned long lastAvgTime = 0;
@@ -3518,25 +3519,25 @@ void UpdateMaxDeviceList() {
     max_devices[z] = 0; //clearing old MAX! device address for avoiding doublettes
   }
 
-    for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
-      if (EEPROM_ready) {
-        for (uint16_t i = 0; i < sizeof(max_id_eeprom); i++) {
-          max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
-        }
-      }
-      for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
-        if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
-          if (EEPROM_ready) {
-            for (uint16_t i = 0; i < sizeof(max_addr); i++) {
-             ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
-            }
-            max_devices[x] = max_addr;
-            printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
-          }
-          break;
-        }
+  for (uint16_t z = 0; z < MAX_CUL_DEVICES; z++) {
+    if (EEPROM_ready) {
+      for (uint16_t i = 0; i < sizeof(max_id_eeprom); i++) {
+        max_id_eeprom[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVICES) + sizeof(max_id_eeprom) * z + i);
       }
     }
+    for (uint16_t x = 0; x < MAX_CUL_DEVICES; x++) {
+      if (!memcmp(max_device_list[x], max_id_eeprom, sizeof(max_id_eeprom))) {
+        if (EEPROM_ready) {
+          for (uint16_t i = 0; i < sizeof(max_addr); i++) {
+           ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
+          }
+          max_devices[x] = max_addr;
+          printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+        }
+        break;
+      }
+    }
+  }
   writeToEEPROM(CF_MAX_DEVICES);
   writeToEEPROM(CF_MAX_DEVADDR);
   }
@@ -3588,8 +3589,12 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printPStr(header_html3, sizeof(header_html3));
  #endif
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'>"));
-   printToWebClient(PSTR("</center>\r\n"));
+   printToWebClient(PSTR("<a href='/"));
+   printPassKey();
+   printToWebClient(PSTR("' ID=main_link class='logo'>"));
+   printPStr(svg_favicon, sizeof(svg_favicon));
+//   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
+   printToWebClient(PSTR("</A></center>\r\n"));
    printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
@@ -4160,7 +4165,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf) {
         variable[j] = (byte)atoi(ptr_t);
         if (ptr) {ptr[0] = ','; ptr++;}
 
-        if(variable[j] > 0) j++;
+        j++;
       }while (ptr && j < cfg.size/sizeof(byte));
       // writeToConfigVariable(option_id, variable); not needed here
       break;}
@@ -4215,9 +4220,6 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_GATEWAY:
         case CF_DNS:
         case CF_ONEWIREBUS:
-#ifdef OLD_DHT_BUS_MANAGEMENT
-        case CF_DHTBUS:
-#endif
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
@@ -5685,20 +5687,16 @@ void queryVirtualPrognr(int line, int table_line) {
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
         return;
       }
-#ifdef OLD_DHT_BUS_MANAGEMENT
       unsigned long temp_timer = millis();
       if (DHT_Timer + 2000 < temp_timer || DHT_Timer > temp_timer) last_DHT_pin = 0;
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
-        dht[0].setup(last_DHT_pin);
+        dht.setup(last_DHT_pin);
       }
+
       printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
-      switch (dht[0].getStatus()) {
-#else
-      printFmtToDebug(PSTR("DHT22 sensor: %d - "), DHT_Pins[log_sensor]);
-      switch (dht[log_sensor].getStatus()) {
-#endif
+      switch (dht.getStatus()) {
         case DHT::ERROR_CHECKSUM:
           decodedTelegram.error = 256;
           printlnToDebug(PSTR("Checksum error"));
@@ -5711,13 +5709,9 @@ void queryVirtualPrognr(int line, int table_line) {
           printlnToDebug(PSTR("OK"));
           break;
       }
-#ifdef OLD_DHT_BUS_MANAGEMENT
-      float hum = dht[0].getHumidity();
-      float temp = dht[0].getTemperature();
-#else
-      float hum = dht[log_sensor].getHumidity();
-      float temp = dht[log_sensor].getTemperature();
-#endif
+
+      float hum = dht.getHumidity();
+      float temp = dht.getTemperature();
       if (hum > 0 && hum < 101) {
         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
         switch (tempLine % 4) {
@@ -6252,6 +6246,10 @@ void transmitFile(File dataFile) {
 #else
   int chars_read = dataFile.readBytes(bigBuff , logbuflen);
 #endif
+  if (chars_read < 0) {
+   printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+   forcedflushToWebClient();
+  }
   while (chars_read == logbuflen) {
     client.write(bigBuff, logbuflen);
 #if !defined(ESP32)
@@ -7216,6 +7214,7 @@ uint8_t pps_offset = 0;
 #if defined(__AVR__)
             printPStr(pgm_get_far_address(svg_favicon), sizeof(svg_favicon));
 #else
+            printPStr(svg_favicon_header, sizeof(svg_favicon_header));
             printPStr(svg_favicon, sizeof(svg_favicon));
 #endif
 #endif
@@ -8558,7 +8557,7 @@ uint8_t pps_offset = 0;
                   max_avg_count++;
                   printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
                   if (max_valve[x] > -1) {
-                    printFmtToWebClient(PSTR(" (%h%%)"), max_valve[x]);
+                    printFmtToWebClient(PSTR(" (%hd%%)"), max_valve[x]);
                   }
                   printToWebClient(PSTR("</td></tr>"));
                 }
@@ -8974,7 +8973,6 @@ uint8_t pps_offset = 0;
       strncpy(max_hex_str, outBuf+1, 2);
       max_hex_str[2]='\0';
       uint8_t max_msg_len = (uint8_t)strtoul(max_hex_str, NULL, 16);
-
       if (max_msg_type == 0x02) {
         strncpy(max_hex_str, outBuf+15, 6);
       } else {
@@ -9042,7 +9040,7 @@ uint8_t pps_offset = 0;
         strncpy(max_hex_str, outBuf+temp_str_offset, str_len);
         max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
+//        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
         if (max_msg_type == 0x42) {
           max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
           max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -9107,7 +9105,7 @@ uint8_t pps_offset = 0;
 void mqtt_sendtoBroker(int param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
-  String MQTTTopic = "";
+  String MQTTTopic = ""; 
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTPayload = "";
     // Build the json heading
@@ -9128,7 +9126,7 @@ void mqtt_sendtoBroker(int param) {
     is_first = false;
   } else {
     MQTTPayload.concat(F(","));
-  }
+  } 
   if (MQTTTopicPrefix[0]) {
     MQTTTopic = MQTTTopicPrefix;
     MQTTTopic.concat(F("/"));
@@ -9648,23 +9646,6 @@ void setup() {
   }
 #endif
 
-#ifdef DHT_BUS
-#ifdef OLD_DHT_BUS_MANAGEMENT
-  dht = new DHT[1];
-#else
-  uint8_t DHT_ARRAY_SIZE = 0;
-  for(uint8_t j = 0; j < sizeof(DHT_Pins) / sizeof(DHT_Pins[0]); j++){
-    if (DHT_Pins[j] != 0) DHT_ARRAY_SIZE++;
-  }
-  if(DHT_ARRAY_SIZE > 0) {
-    dht = new DHT[DHT_ARRAY_SIZE]; //be aware: no 'delete' operator because board will reboot after reconfiguration
-    for (unsigned int i = 0; i < DHT_ARRAY_SIZE; i++) {
-        dht[i].setup(DHT_Pins[i]);
-    }
-  }
-#endif
-#endif
-
 #ifdef BME280
     printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
     for (uint8_t f = 0; f < sizeof(bme)/sizeof(bme[0]); f++) {
@@ -9838,13 +9819,15 @@ void setup() {
   #endif
   }
 
+  unsigned long timeout = millis();
   #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
-  while (WiFi.status() == WL_DISCONNECTED) {
+  timeout = millis();
+  while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
     delay(100);
     printToDebug(PSTR("."));
   }
@@ -9853,7 +9836,7 @@ void setup() {
   WiFi.begin(wifi_ssid, wifi_pass);
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
-  unsigned long timeout = millis();
+  timeout = millis();
   while ( status != WL_CONNECTED && millis() - timeout < 10000) {
     printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network

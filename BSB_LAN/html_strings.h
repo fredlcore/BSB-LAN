@@ -1,14 +1,15 @@
 #if defined(__AVR__)
 const byte svg_favicon [] PROGMEM_LATE =
 #else
+const char svg_favicon_header[] PROGMEM_LATE =
+"<?xml version=\"1.0\" standalone=\"no\"?>\n"
+"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
+" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n";
 const char svg_favicon[] PROGMEM_LATE =
 #endif
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 "";
 #else
-"<?xml version=\"1.0\" standalone=\"no\"?>\n"
-"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\"\n"
-" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">\n"
 "<svg class=\"logo\" version=\"1.0\" xmlns=\"http://www.w3.org/2000/svg\"\n"
 " width=\"400.000000pt\" height=\"400.000000pt\" viewBox=\"0 0 400.000000 400.000000\"\n"
 " preserveAspectRatio=\"xMidYMid meet\">\n"
@@ -180,7 +181,7 @@ const char graph_html[] PROGMEM_LATE =
 "\n"
 "	// Scale the range of the data\n"
 "	x.domain(d3.extent(data, function(d) { return d.Date; }));\n"
-"	y.domain([0, d3.max(data, function(d) { return d.Value; })]);\n"
+"	y.domain([d3.min(data, function(d) { return d.Value; }), d3.max(data, function(d) { return d.Value; })]);\n"
 "\n"
 "    	// Nest the entries by symbol\n"
 "    	var dataNest = d3.nest()\n"
@@ -360,6 +361,7 @@ const char header_html[] PROGMEM_LATE =
   "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">"
   "<title>BSB-LAN</title>\n"
   "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}\n"
+  "a.logo:hover {background-color: initial; text-decoration: initial;}\n"
   "table {width: 100%;  max-width: 1024px;  margin: auto;}\n"
   "td {vertical-align: top;}\n"
   "td.header {vertical-align: middle;}\n"
