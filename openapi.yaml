@@ -1325,7 +1325,7 @@ components:
             Example:
               "1. 04:00 - 21:00 2. --:-- - --:-- 3. --:-- - --:--"
 
-            Write format: (single minutes can not be configured, 10min steps is maximum)
+            Write format: (single minutes can not be configured, 10min steps is minimum)
               "<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>"
               '--' must be replaced by 'x'
               "04:00-21:00_xx:xx-xx:xx_xx:xx-xx:xx"
