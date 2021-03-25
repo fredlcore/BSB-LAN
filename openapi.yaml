@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: BSB-LAN API
-  version: '2.0'
+  version: '2.0.1'
   description: BSB-LAN Json API Specification
   termsOfService: ''
   contact:
@@ -553,6 +553,121 @@ components:
       example:
         [{parameter: 0, value: '150'}, {parameter: 6, value: "0"}]
 
+    DataTypeFamily:
+      title: DataTypeFamily
+      description: 'Data type group, 1:1 mapping to dataType number'
+      type: string
+      enum:
+        - VALS
+        - ENUM
+        - BITS
+        - WDAY
+        - HHMM
+        - DTTM
+        - DDMM
+        - STRN
+        - DWHM
+        - TMPR
+
+    DataTypeName:
+      title: DataTypeName
+      description: 'Concrete type of value'
+      type: string
+      enum:
+        - BIT
+        - BYTE
+        - BYTE10
+        - CLOSEDOPEN
+        - DAYS
+        - GRADIENT_SHORT
+        - HOURS_SHORT
+        - LPBADDR
+        - MINUTES_SHORT
+        - MONTHS
+        - ONOFF
+        - PERCENT
+        - PERCENT5
+        - PRESSURE
+        - PRESSURE50
+        - SECONDS_SHORT
+        - SECONDS_SHORT4
+        - SECONDS_SHORT5
+        - TEMP_SHORT
+        - TEMP_SHORT_US
+        - TEMP_SHORT5
+        - TEMP_SHORT5_US
+        - TEMP_SHORT64
+        - TEMP_PER_MIN
+        - VOLTAGE
+        - VOLTAGEONOFF
+        - WEEKDAY
+        - YESNO
+        - SPF
+        - CURRENT
+        - CURRENT1000
+        - DAYS_WORD
+        - ERRORCODE
+        - FP1
+        - FP02
+        - GRADIENT
+        - INTEGRAL
+        - MONTHS_WORD
+        - HOUR_MINUTES
+        - HOURS_WORD
+        - MINUTES_WORD
+        - MINUTES_WORD10
+        - PERCENT_WORD1
+        - PERCENT_WORD
+        - PERCENT_100
+        - POWER_WORD
+        - POWER_WORD100
+        - ENERGY_WORD
+        - ENERGY_CONTENT
+        - PRESSURE_WORD
+        - PRESSURE_1000
+        - PROPVAL
+        - SECONDS_WORD
+        - SECONDS_WORD5
+        - SPEED
+        - SPEED2
+        - TEMP
+        - TEMP_WORD
+        - TEMP_WORD60
+        - TEMP_WORD5_US
+        - VOLTAGE_WORD
+        - CELMIN
+        - LITERPERHOUR
+        - LITERPERMIN
+        - UINT
+        - UINT5
+        - UINT10
+        - SINT
+        - SINT1000
+        - PPS_TIME
+        - DWORD
+        - HOURS
+        - MINUTES
+        - SECONDS_DWORD
+        - POWER
+        - POWER100
+        - ENERGY10
+        - ENERGY
+        - UINT100
+        - DATETIME
+        - SUMMERPERIOD
+        - VACATIONPROG
+        - TIMEPROG
+        - STRING
+        - CUSTOM_ENUM
+        - CUSTOM_BYTE
+        - CUSTOM_BIT
+        - GR_PER_CUBM
+        - FLOAT
+        - LONG
+        - ATM_PRESSURE
+        - ALTITUDE
+        - UNKNOWN
+
     GeneralInfo:
       title: GeneralInfo
       description: 'Basic information about BSB-LAN device'
@@ -665,6 +780,10 @@ components:
         name:
           description: 'Name of the parameter'
           type: string
+        dataType_name:
+          $ref: '#/components/schemas/DataTypeName'
+        dataType_family:
+          $ref: '#/components/schemas/DataTypeFamily'
         error:
           $ref: '#/components/schemas/Error'
         value:
@@ -673,6 +792,9 @@ components:
         desc:
           description: 'Description of the value'
           type: string
+        precision:
+          description: 'Precision of data type 0/VALS'
+          type: number
         dataType:
           $ref: '#/components/schemas/ParameterType'
         readonly:
@@ -682,6 +804,8 @@ components:
           type: string
       example:
         name: 'Betriebsart'
+        dataType_name: ENUM
+        dataType_family: ENUM
         error: 0
         value: '1'
         desc: 'Automatik'
@@ -696,12 +820,95 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/Parameter'
       example:
+        '0':
+          name: 'Datum/Zeit'
+          dataType_name: DATETIME
+          dataType_family: DTTM
+          error: 0
+          value: '25.03.2021 23:24:52'
+          desc: ''
+          dataType: 5
+          readonly: 0
+          unit: ''
+        '5':
+          name: 'Sommerzeitbeginn Tag/Monat'
+          dataType_name: SUMMERPERIOD
+          dataType_family: DDMM
+          error: 0
+          value: "25.03."
+          desc: ''
+          dataType: 6
+          readonly: 0
+          unit: ''
+        '502':
+          name: 'Mi'
+          dataType_name: TIMEPROG
+          dataType_family: TMPR
+          error: 0
+          value: "1. 04:10 - 21:00 2. --:-- - --:-- 3. --:-- - --:--"
+          desc: ''
+          dataType: 9
+          readonly: 0
+          unit: ''
         '700':
           name: 'Betriebsart'
+          dataType_name: ENUM
+          dataType_family: ENUM
           error: 0
           value: '1'
           desc: 'Automatic'
           dataType: 1
+          readonly: 0
+          unit: ''
+        '710':
+          name: 'Komfortsollwert'
+          dataType_name: TEMP
+          dataType_family: VALS
+          error: 0
+          value: "20.2"
+          desc: ''
+          precision: 0.1
+          dataType: 0
+          readonly: 0
+          unit: '&deg;C'
+        '1602':
+          name: 'TWW Status'
+          dataType_name: BIT
+          dataType_family: BITS
+          error: 0
+          value: '01000101'
+          desc: ''
+          dataType: 2
+          readonly: 0
+          unit: ''
+        '1620':
+          name: 'TWW Freigabe'
+          dataType_name: ENUM
+          dataType_family: ENUM
+          error: 0
+          value: '2'
+          desc: 'Zeitprogramm 4/TWW'
+          dataType: 1
+          readonly: 0
+          unit: ''
+        '3832':
+          name: 'Kollektorstartfunktion ein'
+          dataType_name: HOUR_MINUTES
+          dataType_family: HHMM
+          error: 0
+          value: '07:00'
+          desc: ''
+          dataType: 4
+          readonly: 1
+          unit: ''
+        '7170':
+          name: 'Telefon Kundendienst'
+          dataType_name: STRING
+          dataType_family: STRN
+          error: 0
+          value: '0'
+          desc: ''
+          dataType: 7
           readonly: 0
           unit: ''
 
@@ -713,6 +920,10 @@ components:
         name:
           description: 'Name of the parameter'
           type: string
+        dataType_name:
+          $ref: '#/components/schemas/DataTypeName'
+        dataType_family:
+          $ref: '#/components/schemas/DataTypeFamily'
         possibleValues:
           $ref: '#/components/schemas/PossibleValueList'
         isswitch:
@@ -726,6 +937,9 @@ components:
           format: int32
           minimum: 0
           maximum: 1
+        precision:
+          description: 'Precision of data type 0/VALS'
+          type: number
         dataType:
           $ref: '#/components/schemas/ParameterType'
         readonly:
@@ -735,8 +949,9 @@ components:
           type: string
       example:
         name: 'Betriebsart'
-        possibleValues:
-          [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
+        dataType_name: ENUM
+        dataType_family: ENUM
+        possibleValues: [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
         isswitch: 0
         dataType: 1
         readonly: 0
@@ -749,11 +964,85 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/ParameterDefinition'
       example:
+        '0':
+          name: 'Datum/Zeit'
+          dataType_name: DATETIME
+          dataType_family: DTTM
+          possibleValues: []
+          isswitch: 0
+          dataType: 5
+          readonly: 0
+          unit: ''
+        '5':
+          name: 'Sommerzeitbeginn Tag/Monat'
+          dataType_name: SUMMERPERIOD
+          dataType_family: DDMM
+          possibleValues: []
+          isswitch: 0
+          dataType: 6
+          readonly: 0
+          unit: ''
+        '502':
+          name: 'Mi'
+          dataType_name: TIMEPROG
+          dataType_family: TMPR
+          possibleValues: []
+          isswitch: 0
+          dataType: 9
+          readonly: 0
+          unit: ''
         '700':
           name: 'Betriebsart'
-          possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
+          dataType_name: ENUM
+          dataType_family: ENUM
+          possibleValues: [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
           isswitch: 0
           dataType: 1
+          readonly: 0
+          unit: ''
+        '710':
+          name: 'Komfortsollwert'
+          dataType_name: TEMP
+          dataType_family: VALS
+          possibleValues: []
+          precision: 0.1
+          dataType: 0
+          readonly: 0
+          unit: '&deg;C'
+        '1602':
+          name: 'TWW Status'
+          dataType_name: BIT
+          dataType_family: BITS
+          possibleValues: [{enumValue: 2, desc: 'TWW-Push nicht aktiv'}, {enumValue: 514, desc: 'TWW-Push aktiv'}]
+          isswitch: 0
+          dataType: 2
+          readonly: 0
+          unit: ''
+        '1620':
+          name: 'TWW Freigabe'
+          dataType_name: ENUM
+          dataType_family: ENUM
+          possibleValues: [{enumValue: 65535, desc: '---'}, {enumValue: 0, desc: '24h/Tag'}]
+          isswitch: 0
+          dataType: 1
+          readonly: 0
+          unit: ''
+        '3832':
+          name: 'Kollektorstartfunktion ein'
+          dataType_name: HOUR_MINUTES
+          dataType_family: HHMM
+          possibleValues: []
+          isswitch: 0
+          dataType: 4
+          readonly: 1
+          unit: ''
+        '7170':
+          name: 'Telefon Kundendienst'
+          dataType_name: STRING
+          dataType_family: STRN
+          possibleValues: []
+          isswitch: 0
+          dataType: 7
           readonly: 0
           unit: ''
 
@@ -980,23 +1269,67 @@ components:
       description: |
         Data type of parameter
 
-        0 - Number ("1", "20.5", "---" for value not available)
+        0 - Number VALS ("1", "20.5", "---" for value not available)
 
-        1 - ENUM (Integer value of Enum "2")
+        1 - ENUM ENUM(Integer value of Enum "2")
 
-        2 - Bit value ("01000101")
+        2 - Bit value BITS ("01000101")
 
-        3 - Weekday
+        3 - Weekday (currently not used)
 
-        4 - Hour:Minute
+        4 - Hour:Minute HHMM
 
-        5 - Date and time ("09.01.2021 12:42:02")
+            Format:
+              "<hh:mm>"
 
-        6 - Day and month ("25.10.")
+            Example:
+              "09:10"
 
-        7 - String
+            Write format:
+              "<hh.mm>"
+              "09.10"
+
+        5 - Date and time DTTM
+
+            Format:
+              "<dd.mm.yyyy hh:mm:ss>"
+
+            Example:
+              "09.01.2021 12:42:02"
+
+            Write format:
+              "<dd.mm.yyyy_hh:mm:ss>"
+              "09.01.2021_12:42:02"
+
+        6 - Day and month DDMM
+
+            Format:
+              "<dd.mm.>"
+
+            Example:
+              "25.10."
+
+            Write format:
+              same as read format
+
+        7 - String STRN
 
         8 - PPS time (day of week, hour:minute)
+
+        9 - Time program: TMPR Type to define 3 timeslots per day with hh:mm.
+
+            Format:
+              1.   on    -   off   2.   on    -   off   3.   on    -   off
+              1. <hh:mm> - <hh:mm> 2. <hh:mm> - <hh:mm> 3. <hh:mm> - <hh:mm>
+
+            Example:
+              "1. 04:00 - 21:00 2. --:-- - --:-- 3. --:-- - --:--"
+
+            Write format: (single minutes can not be configured, 10min steps is minimum)
+              "<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>"
+              '--' must be replaced by 'x'
+              "04:00-21:00_xx:xx-xx:xx_xx:xx-xx:xx"
+
       type: integer
       format: int32
       minimum: 0
