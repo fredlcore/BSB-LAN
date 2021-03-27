@@ -911,6 +911,15 @@ components:
           dataType: 7
           readonly: 0
           unit: ''
+        '15040':
+          name: 'Uhrzeit'
+          dataType_name: 'PPS_TIME'
+          dataType_family: 'DWHM'
+          error: 0
+          value: '15:26:11'
+          dataType: 8
+          readonly: 0
+          unit: ''
 
     ParameterDefinition:
       title: ParameterDefinition
@@ -1043,6 +1052,15 @@ components:
           possibleValues: []
           isswitch: 0
           dataType: 7
+          readonly: 0
+          unit: ''
+        '15040':
+          name: 'Uhrzeit'
+          dataType_name: 'PPS_TIME'
+          dataType_family: 'DWHM'
+          possibleValues: []
+          isswitch: 0
+          dataType: 8
           readonly: 0
           unit: ''
 
