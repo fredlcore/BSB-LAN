@@ -583,7 +583,7 @@ EthernetUDP udp;
   #endif
 #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
-#endif 
+#endif
 
 bool EEPROM_ready = true;
 byte programWriteMode = 0; //0 - read only, 1 - write ordinary programs, 2 - write ordinary + OEM programs
@@ -7820,7 +7820,7 @@ uint8_t pps_offset = 0;
             }
           }
           printToWebClient(PSTR("{\r\n"));
-          if (strchr_P(PSTR("CIKLQRSVW"), p[2]) == NULL) {  // ignoring unknown JSON commands
+          if (strchr_P(PSTR("BCIKLQRSVW"), p[2]) == NULL) {  // ignoring unknown JSON commands
             printToWebClient(PSTR("}"));
             forcedflushToWebClient();
             break;
@@ -7946,6 +7946,41 @@ uint8_t pps_offset = 0;
             break;
           }
 #endif
+          if (p[2] == 'B'){ // backup settings to file
+            bool notfirst = false;
+            for (int cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
+              if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+#if defined(__AVR__)
+                uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
+                cat_min = pgm_read_word_far(tempAddr);
+                cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
+#else
+                cat_min = ENUM_CAT_NR[cat * 2];
+                cat_max = ENUM_CAT_NR[cat * 2 + 1];
+#endif
+                for(int j = cat_min; j <= cat_max; j++){
+                  int i_line = findLine(j, 0, &cmd);
+                  if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < 20000)) {//CMD_UNKNOWN except virtual programs
+                    continue;
+                  }
+                  loadPrognrElementsFromTable(j, i_line);
+                  if (decodedTelegram.readonly == 1) {//Do not save "read only" parameters
+                    continue;
+                  }
+                  query(j);
+                  if (decodedTelegram.error != 0) {//Do not save parameters with errors
+                    continue;
+                  }
+                  if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
+                  printFmtToWebClient(PSTR("{\"Parameter\":\"%d\", \"Value\":\"%s\", \"Type\":\"%d\"}"), j, decodedTelegram.value, 1);
+                }
+              }
+            }
+            printToWebClient(PSTR("\r\n}\r\n"));
+            forcedflushToWebClient();
+            break;
+          }
+
 // really we need flushing before prognr parsing?
 /*          if (json_token!=NULL) {
             client.flush();
@@ -9105,7 +9140,7 @@ uint8_t pps_offset = 0;
 void mqtt_sendtoBroker(int param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
-  String MQTTTopic = ""; 
+  String MQTTTopic = "";
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTPayload = "";
     // Build the json heading
@@ -9126,7 +9161,7 @@ void mqtt_sendtoBroker(int param) {
     is_first = false;
   } else {
     MQTTPayload.concat(F(","));
-  } 
+  }
   if (MQTTTopicPrefix[0]) {
     MQTTTopic = MQTTTopicPrefix;
     MQTTTopic.concat(F("/"));
