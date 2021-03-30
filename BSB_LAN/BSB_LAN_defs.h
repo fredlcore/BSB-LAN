@@ -71,11 +71,12 @@
 #define CMD_END     0xffffffffu
 #define FL_WRITEABLE    0
 #define FL_RONLY        1
-#define FL_NO_CMD       2
-#define FL_OEM          5   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
-#define FL_SPECIAL_INF  8   // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
-#define FL_EEPROM       16  // Flag to determine whether value should be written to EEPROM
-#define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
+#define FL_WONLY        2
+#define FL_NO_CMD       4
+#define FL_OEM          8 + FL_RONLY  // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
+#define FL_SPECIAL_INF  16            // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
+#define FL_EEPROM       32            // Flag to determine whether value should be written to EEPROM
+#define FL_SW_CTL_RONLY 128           //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 /* heating systems */
 
 #define DEV_021_ALL  21,255 // RVL470
@@ -7034,7 +7035,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_023_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_036_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_064_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
-{0x2D3D0572,  CAT_HK1,              VT_ENUM,          701,   STR701,   sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste // Logged from DEV_162_014, so DEV_162_ALL may still be the same as DEV_ALL
+{0x2D3D0572,  CAT_HK1,              VT_ENUM,          701,   STR701,   sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste // Logged from DEV_162_014, so DEV_162_ALL may still be the same as DEV_ALL
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
 {0x393D2F80,  CAT_HK1,              VT_TEMP_SHORT5,   709,   STR709,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Min
@@ -7211,8 +7212,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Heizkreis 2
 {0x2E3D0574,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),     ENUM1000,     DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
-{0x2E3E0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
-{0x2E3D0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2E3E0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2E3D0572,  CAT_HK2,              VT_ONOFF,         1001,  STR1001,  0,                    0,            DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2E3D058E,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
 // line not in menue!
 // virtuelle Zeile
@@ -7290,7 +7291,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 // Einstellungen Heizkreis P/3, only visible when Heizkreis P exists
 {0x2F3D0574,  CAT_HKP,              VT_ENUM,          1300,  STR1300,  sizeof(ENUM1300),     ENUM1300,     DEFAULT_FLAG, DEV_ALL}, // Betriebsart
-{0x2F3D0572,  CAT_HKP,              VT_ONOFF,         1301,  STR1301,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 3/P - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+{0x2F3D0572,  CAT_HKP,              VT_ONOFF,         1301,  STR1301,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 3/P - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2F3D058E,  CAT_HKP,              VT_TEMP,          1310,  STR1310,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Komfortsollwert
 {0x2F3D05A5,  CAT_HKP,              VT_TEMP,          1311,  STR1311,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P - Komfortsollwert Max
 {0x2F3D0590,  CAT_HKP,              VT_TEMP,          1312,  STR1312,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziertsollwert
@@ -7348,7 +7349,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x253D1158,  CAT_TW,               VT_ENUM,          1600,  STR1600,  sizeof(ENUM1600),     ENUM1600,     DEFAULT_FLAG, DEV_211_ALL}, // [-] - Trinkwasser - Trinkwasserbetrieb Ein/Aus ***(virtuelle Zeile)***
 {0x253D1158,  CAT_TW,               VT_ENUM,          1601,  STR1601,  sizeof(ENUM1601),     ENUM1601,   DEFAULT_FLAG, DEV_108_ALL}, // [-] - Trinkwasser - Betriebsartwahl Eco: Keine, Trinkwasserspeicher
 {0x31000212,  CAT_TW,               VT_BIT,           1602,  STR1602,  sizeof(ENUM1602),     ENUM1602,     DEFAULT_FLAG, DEV_ALL}, // Status Trinkwasserbereitung
-{0x313D0573,  CAT_TW,               VT_ONOFF,         1603,  STR1603,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
+{0x313D0573,  CAT_TW,               VT_ONOFF,         1603,  STR1603,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Trinkwasser - Manueller Push Ein/Aus ***(virtuelle Zeile)***
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
@@ -10638,10 +10639,10 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 // Take your pick whether you assign 10000 (your choice) or 10109 (as in other sources) to this telegram
 // dc 86 00 0e 02 3d 2d 02 15 05 76 00 b0 e0   Note the command code! The command table must match it.
-{0x2D3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
-{0x2D3D021C,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
-{0x2E3E0215,  CAT_USER_DEFINED,     VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
-{0x2F3F0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
+{0x2D3D0215,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
+{0x2D3D021C,  CAT_USER_DEFINED,     VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_059_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
+{0x2E3E0215,  CAT_USER_DEFINED,     VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
+{0x2F3F0215,  CAT_USER_DEFINED,     VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
 {0x0500021F,  CAT_USER_DEFINED,     VT_TEMP,          10003, STR8700,  0,                    NULL,         DEFAULT_FLAG+FL_SPECIAL_INF, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt
 {0x053D0521,  CAT_USER_DEFINED,     VT_TEMP,          10004, STR8700,  0,                    NULL,         DEFAULT_FLAG+FL_SPECIAL_INF, DEV_ALL}, // Außentemperatur wie von Funkempfänger übermittelt
 
