@@ -531,7 +531,7 @@ PROGMEM_LATE const dt_types dt_types_text[]={
   {DT_DDMM, STR_DDMM},
   {DT_STRN, STR_STRN},
   {DT_DWHM, STR_DWHM},
-  {DT_TMPR, STR_TMPR},
+  {DT_TMPR, STR_TMPR}
 };
 
 /* order of types must according to vt_type_t enum */
