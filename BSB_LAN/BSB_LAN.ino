@@ -1013,6 +1013,17 @@ void checkSockStatus()
 
 #endif
 
+int char2int(char input)
+{
+  if(input >= '0' && input <= '9')
+    return input - '0';
+  if(input >= 'A' && input <= 'F')
+    return input - 'A' + 10;
+  if(input >= 'a' && input <= 'f')
+    return input - 'a' + 10;
+  return 0;
+}
+
 /* Functions for management "Ring" debug buffer */
 /** *****************************************************************
  *  Function: printToDebug(char *), printToDebug(const char *), printToDebug(uint_farptr_t), printFmtToDebug()
@@ -7743,7 +7754,18 @@ uint8_t pps_offset = 0;
             webPrintHeader();
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
-            if (!bus->Send(type, c, msg, tx_msg)) {
+            uint8_t param[MAX_PARAM_LEN] = { 0 };
+            uint8_t param_len = 0;
+            uint8_t counter = 13;
+            if (p[counter] == ',') {
+              counter++;
+              while (p[counter] && p[counter+1]) {
+                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                param_len++;
+                counter = counter + 2;
+              }
+            }
+            if (!bus->Send(type, c, msg, tx_msg, param, param_len, true)) {
               print_bus_send_failed();
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
