@@ -5455,7 +5455,7 @@ const char* printError(uint16_t error) {
 char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
-  if (extended) {
+  if (extended && !decodedTelegram.error) {
 #if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
 #else
@@ -7780,7 +7780,7 @@ uint8_t pps_offset = 0;
             LogTelegram(msg);
 #endif
   // TODO: replace pvalstr with data from decodedTelegram structure
-            build_pvalstr(0);
+            build_pvalstr(1);
             if (outBuf[0]>0) {
               printToWebClient(outBuf);
               printToWebClient(PSTR("<br>"));
