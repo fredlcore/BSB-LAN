@@ -9794,7 +9794,7 @@ void setup() {
     } else {
       printToDebug(PSTR("ok\r\n"));
     }
-    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
+//    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     #else
     SD.begin(true); // format on fail active
     #endif
