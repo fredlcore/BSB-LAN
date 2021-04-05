@@ -227,7 +227,7 @@
 #define CAT_RGT_EMUL_TEXT "RGT Emulation"
 
 #define STR0_TEXT "Datum/Zeit"
-#define STR1_TEXT "Stunden/Minuten"
+#define STR1_TEXT "Uhrzeit"
 #define STR2_TEXT "Tag/Monat"
 #define STR3_TEXT "Jahr"
 #define STR5_TEXT "Sommerzeitbeginn Tag/Monat"
