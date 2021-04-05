@@ -325,8 +325,10 @@ typedef enum{
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
-  VT_SUMMERPERIOD,      //* 9 Byte - no flag? 1 enable / byte 2/3 month/year
-  VT_VACATIONPROG,      //* 9 Byte - 1 enable 0x06 / byte 2/3 month/year
+  VT_YEAR,              // subset of VT_DATETIME
+  VT_DAYMONTH,          // subset of VT_DATETIME
+  VT_TIME,              // subset of VT_DATETIME
+  VT_VACATIONPROG,      // subset of VT_DATETIME
   VT_TIMEPROG,          //*12 Byte - no flag / 1_ein 1_aus 2_ein 2_aus 3_ein 3_aus (jeweils SS:MM)
   VT_STRING,            //* x Byte - 1 enable / string
   VT_CUSTOM_ENUM,       //* x Byte - 1 Byte Position, 1 Byte Parameter-Wert, Space, Text
@@ -350,7 +352,8 @@ typedef enum {
   DT_DDMM,    // day and month
   DT_STRN,    // string
   DT_DWHM,    // PPS time (day of week, hour:minute)
-  DT_TMPR     // time program
+  DT_TMPR,    // time program
+  DT_THMS,    // time (hours:minute:seconds)
 } dt_types_t;
 
 const char STR_VALS[] PROGMEM = "VALS";
@@ -363,6 +366,7 @@ const char STR_DDMM[] PROGMEM = "DDMM";
 const char STR_STRN[] PROGMEM = "STRN";
 const char STR_DWHM[] PROGMEM = "DWHM";
 const char STR_TMPR[] PROGMEM = "TMPR";
+const char STR_THMS[] PROGMEM = "THMS";
 const char STR_DISABLED[] PROGMEM = "---";
 
 const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
@@ -451,7 +455,9 @@ const char STR_ENERGY10[] PROGMEM = "ENERGY10";
 const char STR_ENERGY[] PROGMEM = "ENERGY";
 const char STR_UINT100[] PROGMEM = "UINT100";
 const char STR_DATETIME[] PROGMEM = "DATETIME";
-const char STR_SUMMERPERIOD[] PROGMEM = "SUMMERPERIOD";
+const char STR_YEAR[] PROGMEM = "YEAR";
+const char STR_DAYMONTH[] PROGMEM = "DAYMONTH";
+const char STR_TIME[] PROGMEM = "TIME";
 const char STR_VACATIONPROG[] PROGMEM = "VACATIONPROG";
 const char STR_TIMEPROG[] PROGMEM = "TIMEPROG";
 const char STR_STRING[] PROGMEM = "STRING";
@@ -532,7 +538,8 @@ PROGMEM_LATE const dt_types dt_types_text[]={
   {DT_DDMM, STR_DDMM},
   {DT_STRN, STR_STRN},
   {DT_DWHM, STR_DWHM},
-  {DT_TMPR, STR_TMPR}
+  {DT_TMPR, STR_TMPR},
+  {DT_THMS, STR_THMS}
 };
 
 /* order of types must according to vt_type_t enum */
@@ -619,8 +626,10 @@ PROGMEM_LATE const units optbl[]={
 {VT_ENERGY,         1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_UINT100,        100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_DATETIME,       1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
-{VT_SUMMERPERIOD,   1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_SUMMERPERIOD},
-{VT_VACATIONPROG,   1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
+{VT_YEAR,           1.0,    1, 8+32, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_YEAR},
+{VT_DAYMONTH,       1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_DAYMONTH},
+{VT_TIME,           1.0,    1, 8+32, DT_THMS, 0,  U_NONE, sizeof(U_NONE), STR_TIME},
+{VT_VACATIONPROG,   1.0,    6, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
 {VT_TIMEPROG,       1.0,    8, 11+32, DT_TMPR, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
 {VT_STRING,         1.0,    8, 22+64, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
 {VT_CUSTOM_ENUM,    1.0,    8, 22+32+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
@@ -6756,57 +6765,57 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
 {0x0500006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
-{0x053D006C,  CAT_DATUMZEIT,        VT_DATETIME,      3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
+{0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
+{0x053D000B,  CAT_DATUMZEIT,        VT_TIME,          1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
+{0x053D000B,  CAT_DATUMZEIT,        VT_DAYMONTH,      2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
+{0x053D000B,  CAT_DATUMZEIT,        VT_YEAR,          3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
 
 // Sommerzeit scheint im DISP gehandelt zu werden
 // Bei Anzeige werden keine Werte abgefragt. Bei Änderung wird ein INF geschickt.
 // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
 // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
-{0x053D009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x0500009E,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_162_014}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_023_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_025_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_029_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_044_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_051_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_052_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_068_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_092_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D04B3,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
-{0x053D009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x0500009D,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_162_014}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_023_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_025_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_029_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_044_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_051_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_052_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_068_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_092_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
-{0x053D04B2,  CAT_DATUMZEIT,        VT_SUMMERPERIOD,  6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D009E,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x0500009E,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_162_014}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_023_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_025_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_029_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_044_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_051_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_052_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_068_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_092_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x0500009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_162_014}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_021_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_023_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_025_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_028_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_029_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_036_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_044_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_049_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_050_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_051_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_052_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_059_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_068_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_092_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 
 // nur Bedienteil -> keine Kommunikation über BSB
