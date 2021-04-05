@@ -227,7 +227,7 @@ UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "RGT Emulation";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
-UIStrings["STR1_TEXT"] = "Stunden/Minuten";
+UIStrings["STR1_TEXT"] = "Uhrzeit";
 UIStrings["STR2_TEXT"] = "Tag/Monat";
 UIStrings["STR3_TEXT"] = "Jahr";
 UIStrings["STR5_TEXT"] = "Sommerzeitbeginn Tag/Monat";
