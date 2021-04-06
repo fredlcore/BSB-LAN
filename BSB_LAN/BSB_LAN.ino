@@ -5459,7 +5459,7 @@ const char* printError(uint16_t error) {
 char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
-  if (extended && !decodedTelegram.error) {
+  if (extended) {
 #if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
 #else
