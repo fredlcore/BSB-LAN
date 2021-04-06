@@ -83,6 +83,7 @@
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *        - New library for DHT22 should provide more reliable results
+ *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -1012,6 +1013,17 @@ void checkSockStatus()
 }
 
 #endif
+
+int char2int(char input)
+{
+  if(input >= '0' && input <= '9')
+    return input - '0';
+  if(input >= 'A' && input <= 'F')
+    return input - 'A' + 10;
+  if(input >= 'a' && input <= 'f')
+    return input - 'a' + 10;
+  return 0;
+}
 
 /* Functions for management "Ring" debug buffer */
 /** *****************************************************************
@@ -2806,10 +2818,21 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
  * Global resources used:
  *
  * *************************************************************** */
-void printDateTime(byte *msg,byte data_len) {
+void printDateTime(byte *msg,byte data_len, uint8_t telegram_type) {
   if (data_len == 9) {
     if (msg[bus->getPl_start()]==0) {
-      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d.%d %02d:%02d:%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+      if (telegram_type == VT_DATETIME) {
+        sprintf_P(decodedTelegram.value,PSTR("%02d.%02d.%d %02d:%02d:%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+      }
+      if (telegram_type == VT_YEAR) {
+        sprintf_P(decodedTelegram.value,PSTR("%d"),msg[bus->getPl_start()+1]+1900);
+      }
+      if (telegram_type == VT_DAYMONTH || telegram_type == VT_VACATIONPROG) {
+        sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+      }
+      if (telegram_type == VT_TIME) {
+        sprintf_P(decodedTelegram.value,PSTR("%02d:%02d:%02d"),msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+      }
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -3315,12 +3338,12 @@ void printTelegram(byte* msg, int query_line) {
             case VT_HOUR_MINUTES: // u8:u8
               printTime(msg,data_len);
               break;
-            case VT_DATETIME: // special
-              printDateTime(msg,data_len);
-              break;
-            case VT_SUMMERPERIOD:
+            case VT_YEAR:
+            case VT_TIME:
+            case VT_DAYMONTH:
             case VT_VACATIONPROG:
-              printDate(msg,data_len);
+            case VT_DATETIME: // special
+              printDateTime(msg,data_len, decodedTelegram.type);
               break;
             case VT_TIMEPROG:
               printTimeProg(msg,data_len);
@@ -5156,22 +5179,65 @@ int set(int line      // the ProgNr of the heater parameter
 
     // ---------------------------------------------
     // Schedule data
+    case VT_YEAR:
+    case VT_DAYMONTH:
+    case VT_TIME:
+    case VT_VACATIONPROG:
     case VT_DATETIME:
       {
       // /S0=dd.mm.yyyy_mm:hh:ss
-      int d,m,y,hour,min,sec;
-      // The caller MUST provide six values for an event
-      strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
-      if (6!=sscanf(val,sscanf_buf,&d,&m,&y,&hour,&min,&sec)) {
-        printlnToDebug(PSTR("Too few/many arguments for date/time!"));
-        return 0;
+      int d = 0xFF; int m = d; int y = d; int hour = d; int min = d; int sec = d;
+      uint8_t date_flag = 0;
+      if (val[0]!='\0') {
+        if (decodedTelegram.type == VT_YEAR) {
+          strcpy_P(sscanf_buf, PSTR("%d"));
+          if (1!=sscanf(val,sscanf_buf,&y)) {
+            printlnToDebug(PSTR("Too few/many arguments for year!"));
+            return 0;
+          }
+          // Send to the PC hardware serial interface (DEBUG)
+          printFmtToDebug(PSTR("year: %d\r\n"), y);
+          date_flag = 0x0F;
+        }
+        if (decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_VACATIONPROG) {
+          strcpy_P(sscanf_buf, PSTR("%d.%d."));
+          if (2!=sscanf(val,sscanf_buf,&d,&m)) {
+            printlnToDebug(PSTR("Too few/many arguments for day/month!"));
+            return 0;
+          }
+          // Send to the PC hardware serial interface (DEBUG)
+          printFmtToDebug(PSTR("day/month: %d.%d.\r\n"), d, m);
+          if (decodedTelegram.type == VT_DAYMONTH) {
+            date_flag = 0x16;
+          } else {
+            date_flag = 0x17;
+          }
+        }
+        if (decodedTelegram.type == VT_TIME) {
+          strcpy_P(sscanf_buf, PSTR("%d:%d:%d"));
+          if (3!=sscanf(val,sscanf_buf,&hour,&min,&sec)) {
+            printlnToDebug(PSTR("Too few/many arguments for time!"));
+            return 0;
+          }
+          // Send to the PC hardware serial interface (DEBUG)
+          printFmtToDebug(PSTR("time: %d:%d:%d\r\n"), hour, min, sec);
+          date_flag = 0x1D;
+        }
+        if (decodedTelegram.type == VT_DATETIME) {
+          strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
+          if (6!=sscanf(val,sscanf_buf,&d,&m,&y,&hour,&min,&sec)) {
+            printlnToDebug(PSTR("Too few/many arguments for date/time!"));
+            return 0;
+          }
+          // Send to the PC hardware serial interface (DEBUG)
+          printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
+          date_flag = 0x00;
+        }
+        param[0]=decodedTelegram.enable_byte;
+      } else {
+        param[0]=decodedTelegram.enable_byte-1;
       }
-
-      // Send to the PC hardware serial interface (DEBUG)
-      printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
-
       // Set up the command payload
-      param[0]=decodedTelegram.enable_byte;
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
@@ -5179,7 +5245,7 @@ int set(int line      // the ProgNr of the heater parameter
       param[5]=hour;
       param[6]=min;
       param[7]=sec;
-      param[8]=0;
+      param[8]=date_flag;
       param_len=9;
       }
       break;
@@ -5218,57 +5284,6 @@ int set(int line      // the ProgNr of the heater parameter
       }
       break;
     // ---------------------------------------------
-    // Define day/month BEGIN and END dates for vacation periods
-    case VT_VACATIONPROG:
-      //DISP->HEIZ SET      3D0509C6 06 00 02 0A 00 00 00 00 17
-      //outBufLen+=sprintf(outBuf+outBufLen,"%02d.%02d",msg[12],msg[11]);
-      param[1]=0;
-      param[2]=0;
-      param[3]=0;
-      param[4]=0;
-      param[5]=0;
-      param[6]=0;
-      param[7]=0;
-      param[8]=0x17; //?
-      param_len=9;
-      if (val[0]!='\0') {
-          int d,m;
-          strcpy_P(sscanf_buf, PSTR("%d.%d"));
-          if (2!=sscanf(val,sscanf_buf,&d,&m))
-            return 0;      // incomplete input data
-          param[0]=decodedTelegram.enable_byte;   // flag = enabled
-          param[2]=m;
-          param[3]=d;
-      } else {
-          param[0]=decodedTelegram.enable_byte-1;   // flag = disabled
-          param[2]=1;
-          param[3]=1;
-      }
-      break;
-    // ---------------------------------------------
-    case VT_SUMMERPERIOD: // TODO do we have to send INF or SET command?
-      {
-    // Sommerzeit scheint im DISP gehandelt zu werden
-    // Bei Anzeige werden keine Werte abgefragt. Bei Änderung wird ein INF geschickt.
-    // Sommerzeit Beginn 25.3. DISP->ALL  INF      0500009E 00 FF 03 19 FF FF FF FF 16
-    // Sommerzeit Ende 25.11. DISP->ALL  INF      0500009D 00 FF 0B 19 FF FF FF FF 16
-      int d,m;
-      strcpy_P(sscanf_buf, PSTR("%d.%d"));
-      if (2!=sscanf(val,sscanf_buf,&d,&m))
-        return 0;
-      param[0]=decodedTelegram.enable_byte;
-      param[1]=0xff;
-      param[2]=m;
-      param[3]=d;
-      param[4]=0xff;
-      param[5]=0xff;
-      param[6]=0xff;
-      param[7]=0xff;
-      param[8]=0x16; //?
-      param_len=9;
-      }
-      break;
-
     case VT_CUSTOM_ENUM:
     {
       uint8_t t=atoi(val);
@@ -7743,7 +7758,18 @@ uint8_t pps_offset = 0;
             webPrintHeader();
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
-            if (!bus->Send(type, c, msg, tx_msg)) {
+            uint8_t param[MAX_PARAM_LEN] = { 0 };
+            uint8_t param_len = 0;
+            uint8_t counter = 13;
+            if (p[counter] == ',') {
+              counter++;
+              while (p[counter] && p[counter+1]) {
+                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                param_len++;
+                counter = counter + 2;
+              }
+            }
+            if (!bus->Send(type, c, msg, tx_msg, param, param_len, true)) {
               print_bus_send_failed();
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
@@ -7758,7 +7784,7 @@ uint8_t pps_offset = 0;
             LogTelegram(msg);
 #endif
   // TODO: replace pvalstr with data from decodedTelegram structure
-            build_pvalstr(0);
+            build_pvalstr(1);
             if (outBuf[0]>0) {
               printToWebClient(outBuf);
               printToWebClient(PSTR("<br>"));
@@ -9190,7 +9216,7 @@ void mqtt_sendtoBroker(int param) {
     char tbuf[20];
     sprintf_P(tbuf, PSTR("\"%d\":\""), param);
     MQTTPayload.concat(tbuf);
-    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
       MQTTPayload.concat(String(build_pvalstr(0)));
     } else {
@@ -9198,7 +9224,7 @@ void mqtt_sendtoBroker(int param) {
     }
     MQTTPayload.concat(F("\""));
   } else { //plain text
-    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_WEEKDAY) {
+    if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
       MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
     } else {
@@ -9772,7 +9798,7 @@ void setup() {
     } else {
       printToDebug(PSTR("ok\r\n"));
     }
-    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
+//    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     #else
     SD.begin(true); // format on fail active
     #endif
@@ -9876,6 +9902,9 @@ void setup() {
     printToDebug(PSTR("."));
     // Connect to WPA/WPA2 network
     status = WiFi.status() ;
+//  int wifi_status = (int)WiFi.status();
+  Serial.println(status);
+
     delay(1000);
   }
   if (WiFi.status() != WL_CONNECTED) {
