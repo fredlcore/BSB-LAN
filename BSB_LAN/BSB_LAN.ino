@@ -747,7 +747,7 @@ uint_farptr_t enumstr; //address of first element of enum
 uint_farptr_t progtypedescaddr; //program type description string address
 uint_farptr_t data_type_descaddr; //data type description DT_*, dt_types_text[?].type_text
 uint16_t enumstr_len;  //enum length
-uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed
+uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
 uint8_t readonly; // 0 - read/write, 1 - read only
@@ -1018,8 +1018,7 @@ int char2int(char input)
 {
   if(input >= '0' && input <= '9')
     return input - '0';
-  if(input >= 'A' && input <= 'F')
-    return input - 'A' + 10;
+  input |= 0x20; //to lower case
   if(input >= 'a' && input <= 'f')
     return input - 'a' + 10;
   return 0;
@@ -2821,17 +2820,20 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
 void printDateTime(byte *msg,byte data_len, uint8_t telegram_type) {
   if (data_len == 9) {
     if (msg[bus->getPl_start()]==0) {
-      if (telegram_type == VT_DATETIME) {
-        sprintf_P(decodedTelegram.value,PSTR("%02d.%02d.%d %02d:%02d:%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
-      }
-      if (telegram_type == VT_YEAR) {
-        sprintf_P(decodedTelegram.value,PSTR("%d"),msg[bus->getPl_start()+1]+1900);
-      }
-      if (telegram_type == VT_DAYMONTH || telegram_type == VT_VACATIONPROG) {
-        sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
-      }
-      if (telegram_type == VT_TIME) {
-        sprintf_P(decodedTelegram.value,PSTR("%02d:%02d:%02d"),msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+      switch(telegram_type){
+        case VT_DATETIME:
+          sprintf_P(decodedTelegram.value,PSTR("%02d.%02d.%d %02d:%02d:%02d"),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+          break;
+        case VT_YEAR:
+          sprintf_P(decodedTelegram.value,PSTR("%d"),msg[bus->getPl_start()+1]+1900);
+          break;
+        case VT_DAYMONTH:
+        case VT_VACATIONPROG:
+          sprintf_P(decodedTelegram.value,PSTR("%02d.%02d."),msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+          break;
+        case VT_TIME:
+          sprintf_P(decodedTelegram.value,PSTR("%02d:%02d:%02d"),msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+        break;
       }
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
@@ -5188,50 +5190,63 @@ int set(int line      // the ProgNr of the heater parameter
       // /S0=dd.mm.yyyy_mm:hh:ss
       int d = 0xFF; int m = d; int y = d; int hour = d; int min = d; int sec = d;
       uint8_t date_flag = 0;
+      const char *error_msg = NULL;
       if (val[0]!='\0') {
-        if (decodedTelegram.type == VT_YEAR) {
-          strcpy_P(sscanf_buf, PSTR("%d"));
-          if (1!=sscanf(val,sscanf_buf,&y)) {
-            printlnToDebug(PSTR("Too few/many arguments for year!"));
-            return 0;
-          }
-          // Send to the PC hardware serial interface (DEBUG)
-          printFmtToDebug(PSTR("year: %d\r\n"), y);
-          date_flag = 0x0F;
+        switch(decodedTelegram.type){
+          case VT_YEAR:
+            strcpy_P(sscanf_buf, PSTR("%d"));
+            if (1 != sscanf(val, sscanf_buf, &y)) {
+              decodedTelegram.error = 262;
+              error_msg = PSTR("year!");
+            } else {
+              // Send to the PC hardware serial interface (DEBUG)
+              printFmtToDebug(PSTR("year: %d\r\n"), y);
+              date_flag = 0x0F;
+            }
+          break;
+          case VT_DAYMONTH:
+          case VT_VACATIONPROG:
+            strcpy_P(sscanf_buf, PSTR("%d.%d."));
+            if (2 != sscanf(val, sscanf_buf, &d, &m)) {
+              decodedTelegram.error = 262;
+              error_msg = PSTR("day/month!");
+            } else {
+              // Send to the PC hardware serial interface (DEBUG)
+              printFmtToDebug(PSTR("day/month: %d.%d.\r\n"), d, m);
+              if (decodedTelegram.type == VT_DAYMONTH) {
+                date_flag = 0x16;
+              } else {
+                date_flag = 0x17;
+              }
+            }
+          break;
+          case VT_TIME:
+            strcpy_P(sscanf_buf, PSTR("%d:%d:%d"));
+            if (3 != sscanf(val, sscanf_buf, &hour, &min, &sec)) {
+              decodedTelegram.error = 262;
+              error_msg = PSTR("time!");
+            } else {
+              // Send to the PC hardware serial interface (DEBUG)
+              printFmtToDebug(PSTR("time: %d:%d:%d\r\n"), hour, min, sec);
+              date_flag = 0x1D;
+            }
+          break;
+          case VT_DATETIME:
+            strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
+            if (6 != sscanf(val, sscanf_buf, &d, &m, &y, &hour, &min, &sec)) {
+              decodedTelegram.error = 262;
+              error_msg = PSTR("date/time!");
+            } else {
+              // Send to the PC hardware serial interface (DEBUG)
+              printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d, m, y, hour, min, sec);
+              date_flag = 0x00;
+            }
+          break;
         }
-        if (decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_VACATIONPROG) {
-          strcpy_P(sscanf_buf, PSTR("%d.%d."));
-          if (2!=sscanf(val,sscanf_buf,&d,&m)) {
-            printlnToDebug(PSTR("Too few/many arguments for day/month!"));
-            return 0;
-          }
-          // Send to the PC hardware serial interface (DEBUG)
-          printFmtToDebug(PSTR("day/month: %d.%d.\r\n"), d, m);
-          if (decodedTelegram.type == VT_DAYMONTH) {
-            date_flag = 0x16;
-          } else {
-            date_flag = 0x17;
-          }
-        }
-        if (decodedTelegram.type == VT_TIME) {
-          strcpy_P(sscanf_buf, PSTR("%d:%d:%d"));
-          if (3!=sscanf(val,sscanf_buf,&hour,&min,&sec)) {
-            printlnToDebug(PSTR("Too few/many arguments for time!"));
-            return 0;
-          }
-          // Send to the PC hardware serial interface (DEBUG)
-          printFmtToDebug(PSTR("time: %d:%d:%d\r\n"), hour, min, sec);
-          date_flag = 0x1D;
-        }
-        if (decodedTelegram.type == VT_DATETIME) {
-          strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
-          if (6!=sscanf(val,sscanf_buf,&d,&m,&y,&hour,&min,&sec)) {
-            printlnToDebug(PSTR("Too few/many arguments for date/time!"));
-            return 0;
-          }
-          // Send to the PC hardware serial interface (DEBUG)
-          printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d,m,y,hour,min,sec);
-          date_flag = 0x00;
+        if(decodedTelegram.error == 262){
+          printToDebug(PSTR("Too few/many arguments for "));
+          printlnToDebug(error_msg);
+          return 0;
         }
         param[0]=decodedTelegram.enable_byte;
       } else {
