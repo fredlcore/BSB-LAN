@@ -1582,6 +1582,7 @@ const char STR2923[] PROGMEM = STR2923_TEXT;
 const char STR2941[] PROGMEM = STR2941_TEXT;
 const char STR2951[] PROGMEM = STR2951_TEXT;
 const char STR2952[] PROGMEM = STR2952_TEXT;
+const char STR2953[] PROGMEM = STR2953_TEXT;
 const char STR2954[] PROGMEM = STR2954_TEXT;
 const char STR2963[] PROGMEM = STR2963_TEXT;
 const char STR2964[] PROGMEM = STR2964_TEXT;
@@ -1710,6 +1711,16 @@ const char STR3267[] PROGMEM = STR3267_TEXT;
 const char STR3510[] PROGMEM = STR3510_TEXT;
 const char STR3511[] PROGMEM = STR3511_TEXT;
 const char STR3512[] PROGMEM = STR3512_TEXT;
+const char STR3514[] PROGMEM = STR3514_TEXT;
+const char STR3516[] PROGMEM = STR3516_TEXT;
+const char STR3517[] PROGMEM = STR3517_TEXT;
+const char STR3518[] PROGMEM = STR3518_TEXT;
+const char STR3522[] PROGMEM = STR3522_TEXT;
+const char STR3523[] PROGMEM = STR3523_TEXT;
+const char STR3525[] PROGMEM = STR3525_TEXT;
+const char STR3538[] PROGMEM = STR3538_TEXT;
+const char STR3542[] PROGMEM = STR3542_TEXT;
+const char STR3543[] PROGMEM = STR3543_TEXT;
 const char STR3530[] PROGMEM = STR3530_TEXT;
 const char STR3531[] PROGMEM = STR3531_TEXT;
 const char STR3532[] PROGMEM = STR3532_TEXT;
@@ -1736,6 +1747,8 @@ const char STR3694[] PROGMEM = STR3694_TEXT;
 #define STR3701 STR2204
 const char STR3705[] PROGMEM = STR3705_TEXT;
 #define STR3710 STR2210
+const char STR3718[] PROGMEM = STR3718_TEXT;
+const char STR3719[] PROGMEM = STR3719_TEXT;
 const char STR3720[] PROGMEM = STR3720_TEXT;
 const char STR3722[] PROGMEM = STR3722_TEXT;
 const char STR3723[] PROGMEM = STR3723_TEXT;
@@ -1813,6 +1826,7 @@ const char STR4192[] PROGMEM = STR4192_TEXT;
 #define STR4204 STR2325
 
 // 4700 Pufferspeicher
+const char STR4705[] PROGMEM = STR4705_TEXT;
 const char STR4708[] PROGMEM = STR4708_TEXT;
 const char STR4709[] PROGMEM = STR4709_TEXT;
 const char STR4710[] PROGMEM = STR4710_TEXT;
@@ -1821,12 +1835,17 @@ const char STR4712[] PROGMEM = STR4712_TEXT;
 const char STR4720[] PROGMEM = STR4720_TEXT;
 const char STR4721[] PROGMEM = STR4721_TEXT;
 const char STR4722[] PROGMEM = STR4722_TEXT;
+const char STR4723[] PROGMEM = STR4723_TEXT;
 const char STR4724[] PROGMEM = STR4724_TEXT;
+const char STR4726[] PROGMEM = STR4726_TEXT;
+const char STR4728[] PROGMEM = STR4728_TEXT;
+const char STR4735[] PROGMEM = STR4735_TEXT;
 const char STR4739[] PROGMEM = STR4739_TEXT;
 const char STR4740[] PROGMEM = STR4740_TEXT;
 const char STR4743[] PROGMEM = STR4743_TEXT;
 const char STR4744[] PROGMEM = STR4744_TEXT;
 const char STR4746[] PROGMEM = STR4746_TEXT;
+const char STR4749[] PROGMEM = STR4749_TEXT;
 const char STR4750[] PROGMEM = STR4750_TEXT;
 const char STR4751[] PROGMEM = STR4751_TEXT;
 const char STR4755[] PROGMEM = STR4755_TEXT;
@@ -1842,6 +1861,8 @@ const char STR4796[] PROGMEM = STR4796_TEXT;
 #define STR4810 STR2208
 const char STR4811[] PROGMEM = STR4811_TEXT;
 const char STR4813[] PROGMEM = STR4813_TEXT;
+const char STR4830[] PROGMEM = STR4830_TEXT;
+const char STR4831[] PROGMEM = STR4831_TEXT;
 // 5000 Trinkwasserspeicher
 const char STR5007[] PROGMEM = STR5007_TEXT;
 const char STR5008[] PROGMEM = STR5008_TEXT;
@@ -7870,6 +7891,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D17B7,  CAT_WAERMEPUMPE,      VT_ENUM,          2941,  STR2941,  sizeof(ENUM2941),     ENUM2941,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Uml'ventil Y28
 {0x593D08D5,  CAT_WAERMEPUMPE,      VT_TEMP,          2951,  STR2951,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaufreigabe unterhalb TA
 {0x593D08D6,  CAT_WAERMEPUMPE,      VT_TEMP,          2952,  STR2952,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Abtauen
+{CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_UNKNOWN,       2953,  STR2953,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturdifferenz Abtauen-Ende
 {0x593D08D8,  CAT_WAERMEPUMPE,      VT_TEMP,          2954,  STR2954,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verdampfertemp Abtau-Ende
 {0x593D08DC,  CAT_WAERMEPUMPE,      VT_MINUTES_WORD,  2963,  STR2963,  0,                    NULL,         FL_OEM, DEV_ALL}, // Dauer bis Zwangsabtauen
 {0x593D08DD,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2964,  STR2964,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtaudauer Maximal
@@ -7999,13 +8021,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x153D0842,  CAT_KASKADE,          VT_ENUM,          3510,  STR3510,  sizeof(ENUM3510),     ENUM3510,     FL_OEM, DEV_ALL}, // Führungsstrategie
 {0x153D0843,  CAT_KASKADE,          VT_PERCENT,       3511,  STR3511,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Minimum
 {0x153D0844,  CAT_KASKADE,          VT_PERCENT,       3512,  STR3512,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leistungsband Maximum
-{0x0D3D0942,  CAT_KASKADE,          VT_CELMIN,     3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
-{0x0D3D0943,  CAT_KASKADE,          VT_CELMIN,     3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3514,  STR3514,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Stufenfolge -> Seriell, alle 2. Stufen frei ¦ Seriell, letzte Stufe frei ¦ Parallel, letzte Stufe frei
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3516,  STR3516,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Maximale Anzahl Wärmeerzeuger Zwangsladung
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3517,  STR3517,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Maximale Anzahl Wärmeerzeuger Zwangsladung bei gedämpfter Außentemperatur
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3518,  STR3518,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anzahl Wärmeerzeuger Abtauen erlaubt
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3522,  STR3522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegral Erzeugerfolge Kühlen
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3523,  STR3523,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegral Erzeugerfolge Kühlen
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3525,  STR3525,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zuschaltverzögerung Kühlen
+{0x0D3D0942,  CAT_KASKADE,          VT_CELMIN,        3530,  STR3530,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Erz’folge
+{0x0D3D0943,  CAT_KASKADE,          VT_CELMIN,        3531,  STR3531,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Erz’folge
 {0x053D0830,  CAT_KASKADE,          VT_SECONDS_WORD,  3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
 {0x053D0831,  CAT_KASKADE,          VT_MINUTES_SHORT, 3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
 {0x053D0832,  CAT_KASKADE,          VT_SECONDS_WORD,  3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3538,  STR3538,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ersatz Schienenvorlauftemperatur
 {0x053D0833,  CAT_KASKADE,          VT_HOURS_WORD,    3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
 {0x053D084E,  CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3542,  STR3542,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Erzeugerfolge Kühlen gespiegelt -> Nein | Ja
+{CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3543,  STR3543,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Erzeugerfolge mit optimaler Energie -> Nein | Ja
 {0x053D083B,  CAT_KASKADE,          VT_ENUM,          3544,  STR3544,  sizeof(ENUM3544),     ENUM3544,     DEFAULT_FLAG, DEV_ALL}, // Führender Erzeuger
 {0x153D0B3C,  CAT_KASKADE,          VT_ONOFF,         3550,  STR3550,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Kaskad'pumpe
 {0x153D0B3A,  CAT_KASKADE,          VT_TEMP,          3560,  STR3560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufsollwert Minimum
@@ -8017,20 +8049,22 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0846,  CAT_KASKADE,          VT_TEMP,          3590,  STR3590,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp’spreizung Minimum
 
 // Zusatzerzeuger
-{0x053D1300, CAT_ZUSATZERZEUGER,   VT_TEMP,          3690,  STR3690,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollw'anhebung Haupterzeug
-{0x053D11D4, CAT_ZUSATZERZEUGER,   VT_PERCENT,       3691,  STR3691,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leist'grenze Haupterzeuger
-{0x053D11D3, CAT_ZUSATZERZEUGER,   VT_ENUM,          3692,  STR3692,  sizeof(ENUM3692),     ENUM3692,     FL_OEM, DEV_ALL}, // Bei Trinkwasserladung
-{0x053D0E66, CAT_ZUSATZERZEUGER,   VT_ENUM,          3694,  STR3694,  sizeof(ENUM3694),     ENUM3694,     FL_OEM, DEV_ALL}, // TA Grenzen bei TWW
-{0x053D0B5C, CAT_ZUSATZERZEUGER,   VT_TEMP,          3700,  STR3700,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe unter Außentemp
-{0x053D0B5B, CAT_ZUSATZERZEUGER,   VT_TEMP,          3701,  STR3701,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe über Außentemp
-{0x053D0D70, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3705,  STR3705,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlaufzeit
-{0x053D11D5, CAT_ZUSATZERZEUGER,   VT_TEMP,          3710,  STR3710,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwert Minimum
-{0x053D0D6A, CAT_ZUSATZERZEUGER,   VT_CELMIN,        3720,  STR3720,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltintegral
-{0x053D0D6B, CAT_ZUSATZERZEUGER,   VT_TEMP,          3722,  STR3722,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Aus
-{0x053D0D6C, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3723,  STR3723,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit
-{0x053D11EA, CAT_ZUSATZERZEUGER,   VT_ENUM,          3725,  STR3725,  sizeof(ENUM3725),     ENUM3725,     FL_OEM, DEV_ALL}, // Regelfühler
-{0x053D117F, CAT_ZUSATZERZEUGER,   VT_ENUM,          3750,  STR3750,  sizeof(ENUM3750),     ENUM3750,     FL_OEM, DEV_ALL}, // Erzeugertyp
-{0x053D11EB, CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3755,  STR3755,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verzögerung Störstellung
+{0x053D1300,  CAT_ZUSATZERZEUGER,   VT_TEMP,          3690,  STR3690,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollw'anhebung Haupterzeug
+{0x053D11D4,  CAT_ZUSATZERZEUGER,   VT_PERCENT,       3691,  STR3691,  0,                    NULL,         FL_OEM, DEV_ALL}, // Leist'grenze Haupterzeuger
+{0x053D11D3,  CAT_ZUSATZERZEUGER,   VT_ENUM,          3692,  STR3692,  sizeof(ENUM3692),     ENUM3692,     FL_OEM, DEV_ALL}, // Bei Trinkwasserladung
+{0x053D0E66,  CAT_ZUSATZERZEUGER,   VT_ENUM,          3694,  STR3694,  sizeof(ENUM3694),     ENUM3694,     FL_OEM, DEV_ALL}, // TA Grenzen bei TWW
+{0x053D0B5C,  CAT_ZUSATZERZEUGER,   VT_TEMP,          3700,  STR3700,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe unter Außentemp
+{0x053D0B5B,  CAT_ZUSATZERZEUGER,   VT_TEMP,          3701,  STR3701,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabe über Außentemp
+{0x053D0D70,  CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3705,  STR3705,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlaufzeit
+{0x053D11D5,  CAT_ZUSATZERZEUGER,   VT_TEMP,          3710,  STR3710,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sollwert Minimum
+{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_UNKNOWN,       3718,  STR3718,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegral
+{CMD_UNKNOWN, CAT_ZUSATZERZEUGER,   VT_UNKNOWN,       3719,  STR3719,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegral
+{0x053D0D6A,  CAT_ZUSATZERZEUGER,   VT_CELMIN,        3720,  STR3720,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltintegral
+{0x053D0D6B,  CAT_ZUSATZERZEUGER,   VT_TEMP,          3722,  STR3722,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Aus
+{0x053D0D6C,  CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3723,  STR3723,  0,                    NULL,         FL_OEM, DEV_ALL}, // Sperrzeit
+{0x053D11EA,  CAT_ZUSATZERZEUGER,   VT_ENUM,          3725,  STR3725,  sizeof(ENUM3725),     ENUM3725,     FL_OEM, DEV_ALL}, // Regelfühler
+{0x053D117F,  CAT_ZUSATZERZEUGER,   VT_ENUM,          3750,  STR3750,  sizeof(ENUM3750),     ENUM3750,     FL_OEM, DEV_ALL}, // Erzeugertyp
+{0x053D11EB,  CAT_ZUSATZERZEUGER,   VT_MINUTES_SHORT, 3755,  STR3755,  0,                    NULL,         FL_OEM, DEV_ALL}, // Verzögerung Störstellung
 
 // Solar
 {0x493D085D,  CAT_SOLAR,            VT_TEMP,          3810,  STR3810,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Temperaturdifferenz Ein
@@ -8111,6 +8145,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Pufferspeicher
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4705,  STR4705,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladung
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4708,  STR4708,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsollwert Kühlen
 {0x053D0B2F,  CAT_PUFFERSPEICHER,   VT_TEMP,          4709,  STR4709,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsoll Heizen Min
 {0x053D0B2E,  CAT_PUFFERSPEICHER,   VT_TEMP,          4710,  STR4710,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsoll Heizen Max
@@ -8119,12 +8154,17 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0455,  CAT_PUFFERSPEICHER,   VT_ENUM,          4720,  STR4720,  sizeof(ENUM4720),     ENUM4720,     DEFAULT_FLAG, DEV_ALL}, // [0] - Pufferspeicher (nur wenn aktiviert) - Auto Erzeugersperre
 {0x053D0858,  CAT_PUFFERSPEICHER,   VT_TEMP,          4721,  STR4721,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Auto Erzeugersperre SD
 {0x053D0857,  CAT_PUFFERSPEICHER,   VT_TEMP,          4722,  STR4722,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Temp`diff Puffer/Heizkreis
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4723,  STR4723,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturdifferenz Puffer/Kühlkreis
 {0x053D0A10,  CAT_PUFFERSPEICHER,   VT_TEMP,          4724,  STR4724,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Min Speichertemp Heizbetrieb
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4726,  STR4726,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Speichertemperatur Kühlbetrieb
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4728,  STR4728,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relative Temperaturdifferenz Puffer/HK
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4735,  STR4735,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertreduktion B42/B41
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4739,  STR4739,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schichtschutz
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4740,  STR4740,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Tempdiff Max
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4743,  STR4743,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Vor’schauzeit
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4744,  STR4744,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Nachstellzeit
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4746,  STR4746,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasserschutz Kombi
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4749,  STR4749,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Minimaler Ladesollwert Solar
 {0x053D08A9,  CAT_PUFFERSPEICHER,   VT_TEMP,          4750,  STR4750,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Ladetemperatur
 {0x053D08A8,  CAT_PUFFERSPEICHER,   VT_TEMP,          4751,  STR4751,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Speichertemperatur Maximum
 {0x053D0A0D,  CAT_PUFFERSPEICHER,   VT_TEMP,          4755,  STR4755,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Rückkühltemperatur
@@ -8140,6 +8180,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x193D0B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     FL_OEM, DEV_ALL}, // Durchladung
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4811,  STR4811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Durchladetemperatur Minimum
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4830,  STR4830,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufumlenktemperatur
+{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4831,  STR4831,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz Vorlaufumlenkung
 
 // Trinkwasserspeicher
 {0x253D1667,  CAT_TWSPEICHER,       VT_ENUM,          5007,  STR5007,  sizeof(ENUM5007),     ENUM5007,     FL_OEM, DEV_ALL}, // Ladeanforderung
