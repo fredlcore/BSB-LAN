@@ -751,6 +751,7 @@ uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus error
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
 uint8_t readonly; // 0 - read/write, 1 - read only
+uint8_t writeonly; // 0 - read/write, 1 - write only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
@@ -2075,6 +2076,12 @@ void loadPrognrElementsFromTable(int nr, int i) {
   } else {
     decodedTelegram.readonly = 0;
   }
+  if ((flags & FL_WONLY) == FL_WONLY) {
+    decodedTelegram.writeonly = 1;
+    decodedTelegram.prognr = nr;
+  } else {
+    decodedTelegram.writeonly = 0;
+  }
   #if defined(__AVR__)
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
   decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
@@ -2134,6 +2141,7 @@ void resetDecodedTelegram() {
   decodedTelegram.payload_length = 0;
   decodedTelegram.error = 0;
   decodedTelegram.readonly = 0;
+  decodedTelegram.writeonly = 0;
   decodedTelegram.isswitch = 0;
   decodedTelegram.value[0] = 0;
   decodedTelegram.unit[0] = 0;
@@ -2775,7 +2783,7 @@ void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enums
  *
  * *************************************************************** */
 void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, int print_val) {
-  uint8_t val;
+  uint8_t val = 0;
   decodedTelegram.enumdescaddr = 0;
   if (enumstr!=0) {
     uint16_t c=0;
@@ -5891,8 +5899,7 @@ void queryVirtualPrognr(int line, int table_line) {
  *   client instance
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
-void query(int line)  // line (ProgNr)
-{
+void query(int line) {  // line (ProgNr)
   byte msg[33] = { 0 };      // response buffer
   byte tx_msg[33] = { 0 };   // xmit buffer
   uint32_t c;        // command code
@@ -5900,99 +5907,98 @@ void query(int line)  // line (ProgNr)
   int retry;
   resetDecodedTelegram();
 
-    i=findLine(line,0,&c);
-
-    if (i>=0) {
-      loadPrognrElementsFromTable(line, i);
-
-      uint8_t flags = get_cmdtbl_flags(i);
+  i=findLine(line,0,&c);
+  if (i>=0) {
+    loadPrognrElementsFromTable(line, i);
+    uint8_t flags = get_cmdtbl_flags(i);
+    if (decodedTelegram.writeonly == 1) {
+      printFmtToDebug(PSTR("%d "), decodedTelegram.prognr);
+      loadCategoryDescAddr();
+      printFmtToDebug(PSTR(" - %s - write-only\r\n"), decodedTelegram.prognrdescaddr);
+      return;
+    }
 
 // virtual programs
-      if ((line >= 20000 && line < 20900))
-        {
-          queryVirtualPrognr(line, i);
-          return;
-        }
-
-      //printlnToDebug(PSTR("found"));
-      if (c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
-        if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
-          retry=QUERY_RETRIES;
-          while (retry) {
-            uint8_t query_type = TYPE_QUR;
-            if (bus->Send(query_type, c, msg, tx_msg)) {
-
-              // Decode the xmit telegram and send it to the PC serial interface
-              if (verbose) {
-                printTelegram(tx_msg, line);
+    if ((line >= 20000 && line < 20900)) {
+      queryVirtualPrognr(line, i);
+      return;
+    }
+    //printlnToDebug(PSTR("found"));
+    if (c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
+      if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
+        retry=QUERY_RETRIES;
+        while (retry) {
+          uint8_t query_type = TYPE_QUR;
+          if (bus->Send(query_type, c, msg, tx_msg)) {
+            // Decode the xmit telegram and send it to the PC serial interface
+            if (verbose) {
+              printTelegram(tx_msg, line);
 #ifdef LOGGER
-                LogTelegram(tx_msg);
+              LogTelegram(tx_msg);
 #endif
-              }
+            }
 
-              // Decode the rcv telegram and send it to the PC serial interface
-              printTelegram(msg, line);
-              printFmtToDebug(PSTR("#%d: "), line);
-              printlnToDebug(build_pvalstr(0));
-              SerialOutput->flush();
+            // Decode the rcv telegram and send it to the PC serial interface
+            printTelegram(msg, line);
+            printFmtToDebug(PSTR("#%d: "), line);
+            printlnToDebug(build_pvalstr(0));
+            SerialOutput->flush();
 #ifdef LOGGER
-              LogTelegram(msg);
+            LogTelegram(msg);
 #endif
-              break;   // success, break out of while loop
-            } else {
-              printlnToDebug(printError(261)); //query failed
-              retry--;          // decrement number of attempts
-
-            }
-          } // endwhile, maximum number of retries reached
-          if (retry==0) {
-            if (bus->getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
-              printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
-            } else {
-              printFmtToDebug(PSTR("%d\r\n"), line); //%d
-            }
+            break;   // success, break out of while loop
+          } else {
+            printlnToDebug(printError(261)); //query failed
+            retry--;          // decrement number of attempts
+          }
+        } // endwhile, maximum number of retries reached
+        if (retry==0) {
+          if (bus->getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
+            printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
+          } else {
+            printFmtToDebug(PSTR("%d\r\n"), line); //%d
+          }
           decodedTelegram.error = 261;
-          }
-        } else { // bus type is PPS
-
-          uint32_t cmd = get_cmdtbl_cmd(i);
-          uint16_t temp_val = 0;
-          switch (decodedTelegram.type) {
-//            case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
-//            case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
-//            case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
-            case VT_ONOFF:
-            case VT_YESNO: temp_val = pps_values[(line-15000)]; decodedTelegram.isswitch = 1; break;
-//            case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
-//            case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
-            default: temp_val = pps_values[(line-15000)]; break;
-          }
-
-          msg[1] = ((cmd & 0x00FF0000) >> 16);
-          msg[4+(bus->getBusType()*4)]=TYPE_ANS;
-          msg[bus->getPl_start()]=temp_val >> 8;
-          msg[bus->getPl_start()+1]=temp_val & 0xFF;
-/*
-          msg[5] = c >> 24;
-          msg[6] = c >> 16 & 0xFF;
-          msg[7] = c >> 8 & 0xFF;
-          msg[8] = c & 0xFF;
-*/
-          printTelegram(msg, line);
-
-          printFmtToDebug(PSTR("#%d: "), line);
-          printlnToDebug(build_pvalstr(0));
-          SerialOutput->flush();
         }
-      } else {
-        //printlnToDebug(PSTR("unknown command"));
-        //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
-      } // endelse, valid / invalid command codes
+      } else { // bus type is PPS
+        uint32_t cmd = get_cmdtbl_cmd(i);
+        uint16_t temp_val = 0;
+        switch (decodedTelegram.type) {
+//          case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
+//          case VT_BYTE: temp_val = pps_values[(line-15000)] * 256; break;
+//          case VT_YESNO: temp_val = pps_values[(line-15000)] * 256; decodedTelegram.isswitch = 1; break;
+          case VT_ONOFF:
+          case VT_YESNO: temp_val = pps_values[(line-15000)]; decodedTelegram.isswitch = 1; break;
+//          case VT_HOUR_MINUTES: temp_val = ((pps_values[line-15000] / 6) * 256) + ((pps_values[line-15000] % 6) * 10); break;
+//          case VT_HOUR_MINUTES: temp_val = (pps_values[line-15000] / 6) + ((pps_values[line-15000] % 6) * 10); break;
+          default: temp_val = pps_values[(line-15000)]; break;
+        }
+
+        msg[1] = ((cmd & 0x00FF0000) >> 16);
+        msg[4+(bus->getBusType()*4)]=TYPE_ANS;
+        msg[bus->getPl_start()]=temp_val >> 8;
+        msg[bus->getPl_start()+1]=temp_val & 0xFF;
+/*
+        msg[5] = c >> 24;
+        msg[6] = c >> 16 & 0xFF;
+        msg[7] = c >> 8 & 0xFF;
+        msg[8] = c & 0xFF;
+*/
+        printTelegram(msg, line);
+
+        printFmtToDebug(PSTR("#%d: "), line);
+        printlnToDebug(build_pvalstr(0));
+        SerialOutput->flush();
+      }
     } else {
-      //printlnToDebug(PSTR("line not found"));
-      //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
-    } // endelse, line (ProgNr) found / not found
-  } // --- query() ---
+      //printlnToDebug(PSTR("unknown command"));
+      //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d unknown command",line);
+    } // endelse, valid / invalid command codes
+  } else {
+    //printlnToDebug(PSTR("line not found"));
+    //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%d line not found",line);
+  } // endelse, line (ProgNr) found / not found
+} // --- query() ---
 
 /** *****************************************************************
  *  Function:  query()
@@ -9831,7 +9837,6 @@ void setup() {
 #endif
 
 #ifdef WIFI
-  int status = WL_IDLE_STATUS;
   #ifndef ESP32
   WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
 
@@ -9913,13 +9918,9 @@ void setup() {
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   timeout = millis();
-  while ( status != WL_CONNECTED && millis() - timeout < 10000) {
+  delay(1000);
+  while (WiFi.status() != WL_CONNECTED && millis() - timeout < 10000) {
     printToDebug(PSTR("."));
-    // Connect to WPA/WPA2 network
-    status = WiFi.status() ;
-//  int wifi_status = (int)WiFi.status();
-  Serial.println(status);
-
     delay(1000);
   }
   if (WiFi.status() != WL_CONNECTED) {
