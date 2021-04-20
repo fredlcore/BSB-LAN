@@ -750,8 +750,7 @@ uint16_t enumstr_len;  //enum length
 uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
-uint8_t readonly; // 0 - read/write, 1 - read only
-uint8_t writeonly; // 0 - read/write, 1 - write only
+uint8_t readwrite; // 0 - read/write, 1 - read only, 2 - write only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (get_cmdtbl_type()). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
@@ -2072,15 +2071,12 @@ void loadPrognrElementsFromTable(int nr, int i) {
   decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len, decodedTelegram.type == VT_CUSTOM_BIT?1:0);
   uint8_t flags=get_cmdtbl_flags(i);
   if (programIsreadOnly(flags)) {
-    decodedTelegram.readonly = 1;
-  } else {
-    decodedTelegram.readonly = 0;
-  }
-  if ((flags & FL_WONLY) == FL_WONLY) {
-    decodedTelegram.writeonly = 1;
+    decodedTelegram.readwrite = FL_RONLY; //read only
+  } else if ((flags & FL_WONLY) == FL_WONLY) {
+    decodedTelegram.readwrite = FL_WONLY; //write only
     decodedTelegram.prognr = nr;
   } else {
-    decodedTelegram.writeonly = 0;
+    decodedTelegram.readwrite = FL_WRITEABLE; //read/write
   }
   #if defined(__AVR__)
   decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
@@ -2113,7 +2109,7 @@ void loadPrognrElementsFromTable(int nr, int i) {
     decodedTelegram.prognr = nr;
     switch (recognizeVirtualFunctionGroup(nr)) {
       case 1: break;
-      case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readonly = 1; break; //overwrite native program categories with CAT_USERSENSORS
+      case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readwrite = FL_RONLY; break; //overwrite native program categories with CAT_USERSENSORS
       case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
       case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
       case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
@@ -2140,8 +2136,7 @@ void resetDecodedTelegram() {
   decodedTelegram.enable_byte = 0;
   decodedTelegram.payload_length = 0;
   decodedTelegram.error = 0;
-  decodedTelegram.readonly = 0;
-  decodedTelegram.writeonly = 0;
+  decodedTelegram.readwrite = FL_WRITEABLE;
   decodedTelegram.isswitch = 0;
   decodedTelegram.value[0] = 0;
   decodedTelegram.unit[0] = 0;
@@ -5628,7 +5623,7 @@ void query_printHTML() {
             listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)num_pvalstr, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
           }
           printToWebClient(PSTR("</select></td><td>"));
-          if (!decodedTelegram.readonly) {
+          if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
             printToWebClient(PSTR("<input type=button value='Set' onclick=\"set"));
             if (decodedTelegram.type == VT_BIT) {
               printToWebClient(PSTR("bit"));
@@ -5655,7 +5650,7 @@ void query_printHTML() {
           }*/
           printToWebClient(decodedTelegram.value);
           printToWebClient(PSTR("'></td><td>"));
-          if (!decodedTelegram.readonly) {
+          if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
             printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%ld)\">"), decodedTelegram.prognr);
           }
         }
@@ -5911,7 +5906,7 @@ void query(int line) {  // line (ProgNr)
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
     uint8_t flags = get_cmdtbl_flags(i);
-    if (decodedTelegram.writeonly == 1) {
+    if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
       printFmtToDebug(PSTR("%d "), decodedTelegram.prognr);
       loadCategoryDescAddr();
       printFmtToDebug(PSTR(" - %s - write-only\r\n"), decodedTelegram.prognrdescaddr);
@@ -8011,7 +8006,7 @@ uint8_t pps_offset = 0;
                     continue;
                   }
                   loadPrognrElementsFromTable(j, i_line);
-                  if (decodedTelegram.readonly == 1) {//Do not save "read only" parameters
+                  if (decodedTelegram.readwrite) {//Do not save "read only" or "write only" parameters
                     continue;
                   }
                   query(j);
@@ -8250,7 +8245,7 @@ uint8_t pps_offset = 0;
                   strcat_P(pre_buf, PSTR("1"));
                   printFmtToWebClient(PSTR("    \"precision\": %s,\r\n"), pre_buf);
                 }
-                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readonly, decodedTelegram.unit);
+                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
