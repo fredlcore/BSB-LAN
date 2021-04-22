@@ -7766,8 +7766,33 @@ uint8_t pps_offset = 0;
             flushToWebClient();
           }
 
-          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
+
+          printToWebClient(PSTR("<BR>Complete dump:<BR>\r\n"));
+          c = 0;
+          bus->Send(TYPE_IQ1, c, msg, tx_msg);
+          int IA1_max = (msg[7] << 8) + msg[8];
+          bus->Send(TYPE_IQ2, c, msg, tx_msg);
+          int IA2_max = (msg[5] << 8) + msg[6];
+
+          for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+            bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
+              printFmtToWebClient(PSTR("%02X "), msg[i]);
+            }
+            printToWebClient(PSTR("<br>\r\n"));
+            flushToWebClient();
+          }
+          for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+            bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
+              printFmtToWebClient(PSTR("%02X "), msg[i]);
+            }
+            printToWebClient(PSTR("<br>\r\n"));
+            flushToWebClient();
+          }
+
+          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
