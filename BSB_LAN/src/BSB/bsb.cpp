@@ -549,12 +549,12 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   byte A4 = (cmd & 0x000000ff);
 
   // special treatment of internal query types
-  if (type == 0x12) {   // TYPE_IA1
+  if (type == 0x12) {   // TYPE_IQ1
     A1 = A3;
     A2 = A4;
     offset = 2;
   }
-  if (type == 0x14) {   // TYPE_IA2
+  if (type == 0x14) {   // TYPE_IQ2
     A1 = A4;
     offset = 3;
   }
