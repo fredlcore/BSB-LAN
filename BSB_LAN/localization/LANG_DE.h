@@ -147,6 +147,7 @@
 #define MENU_TEXT_LBO "Nur Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_LGI "Neues Logging-Intervall"
 #define MENU_TEXT_LGN "Neue Logging-Parameter"
+#define MENU_TEXT_QIN "Dieser Test kann ein paar Minuten dauern, bitte warten, bis am Ende 'Fertig' steht.\r\nDanach die Ausgabe speichern und die Datei an bsb(ät)code-it.de schicken, damit die neuen Parameter eingepflegt werden können."
 #define MENU_TEXT_QSC "Scanne nach Geräten"
 #define MENU_TEXT_QFD "Geräteadresse gefunden"
 #define MENU_TEXT_QFA "Geräteabfrage fehlgeschlagen"
