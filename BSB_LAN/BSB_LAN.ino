@@ -3658,7 +3658,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK));
+   printToWebClient(PSTR("Q' TARGET='_new'>" MENU_TEXT_CHK));
    printToWebClient(PSTR("</a></td>"));
 
    printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
@@ -7601,13 +7601,18 @@ uint8_t pps_offset = 0;
         }
 #endif
         if (p[1]=='Q') {
-          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
+//          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
+          printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printToWebClient(PSTR("\r\n"));
+          flushToWebClient();
+
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
+          printToWebClient(PSTR(MENU_TEXT_QIN "\r\n\r\n"));
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
           printToWebClient(BSB_VERSION);
-          printToWebClient(PSTR("<BR>\r\n"));
-          printToWebClient(PSTR(MENU_TEXT_QSC "...<BR>"));
+          printToWebClient(PSTR("\r\n"));
+          printToWebClient(PSTR(MENU_TEXT_QSC "...\r\n"));
           switch (bus->getBusType()) {
             case BUS_BSB: bus->setBusType(BUS_BSB, myAddr, 0x7F); break;
             case BUS_LPB: bus->setBusType(BUS_LPB, myAddr, 0xFF); break;
@@ -7639,31 +7644,31 @@ uint8_t pps_offset = 0;
                   }
                 }
                 if (!found) {
-                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu<BR>\r\n"),found_id);
+                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu\r\n"),found_id);
                   flushToWebClient();
                 }
               }
               delay(1);
             }
           } else {
-            printToWebClient(PSTR(MENU_TEXT_QFA "!<BR>"));
+            printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
-
+/*
           for (int x=0;x<10;x++) {
             if (found_ids[x]==0xFF) {
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu..."), found_ids[x]);
+            printFmtToWebClient(PSTR(MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
             uint16_t l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
-            query_program_and_print_result(6225, PSTR("<BR>\r\n"), NULL);
+            query_program_and_print_result(6225, PSTR("\r\n"), NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            query_program_and_print_result(6226, PSTR("<BR>\r\n"), NULL);
+            query_program_and_print_result(6226, PSTR("\r\n"), NULL);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
@@ -7675,11 +7680,11 @@ uint8_t pps_offset = 0;
 #else
               prognr = proglist4q[q];
 #endif
-              query_program_and_print_result(prognr, PSTR("<BR>\r\n"), NULL);
+              query_program_and_print_result(prognr, PSTR("\r\n"), NULL);
             }
-            query_program_and_print_result(10003, PSTR("<BR>\r\n"), PSTR(" (10003): "));
-            query_program_and_print_result(10004, PSTR("<BR>\r\n"), PSTR(" (10004): "));
-            printToWebClient(PSTR("<BR>\r\n"));
+            query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
+            query_program_and_print_result(10004, PSTR("\r\n"), PSTR(" (10004): "));
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
 
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
@@ -7691,7 +7696,7 @@ uint8_t pps_offset = 0;
 #endif
               printFmtToWebClient(PSTR("%d;"), prognr);
             }
-            printToWebClient(PSTR("<BR>\r\n"));
+            printToWebClient(PSTR("\r\n"));
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
               int prognr = 0;
 #if defined(__AVR__)
@@ -7703,11 +7708,11 @@ uint8_t pps_offset = 0;
               printToWebClient(PSTR(";"));
             }
 
-            printToWebClient(PSTR("<BR><BR>\r\n"));
+            printToWebClient(PSTR("\r\n\r\n"));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
-            printToWebClient(PSTR("<BR>" MENU_TEXT_QST "...<BR>\r\n"));
+            printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
             flushToWebClient();
             for (int j=0;j<10000;j++) {
               if (get_cmdtbl_cmd(j) == c) {
@@ -7741,20 +7746,20 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("<BR>\r\n%hu - "), l);
+                        printFmtToWebClient(PSTR("\r\n%hu - "), l);
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
                         printToWebClient_prognrdescaddr();
-                        printFmtToWebClient(PSTR("<BR>\r\n0x%08X"), c);
+                        printFmtToWebClient(PSTR("\r\n0x%08X"), c);
                         printToWebClient(PSTR("\r\n<br>\r\n"));
                         for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\r\n"));
+                        printToWebClient(PSTR("\r\n"));
                         for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\r\n"));
+                        printToWebClient(PSTR("\r\n"));
                       }
                       forcedflushToWebClient(); //browser will build page immediately
                     }
@@ -7762,25 +7767,25 @@ uint8_t pps_offset = 0;
                 }
               }
             }
-            printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_QTE ".<BR>\r\n"));
+            printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
             flushToWebClient();
           }
-
+*/
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
 
-          printToWebClient(PSTR("<BR>Complete dump:<BR>\r\n"));
+          printToWebClient(PSTR("\r\nComplete dump:\r\n"));
           c = 0;
           bus->Send(TYPE_IQ1, c, msg, tx_msg);
-          int IA1_max = (msg[7] << 8) + msg[8];
+          int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
           bus->Send(TYPE_IQ2, c, msg, tx_msg);
-          int IA2_max = (msg[5] << 8) + msg[6];
+          int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
 
           for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
             bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
             for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
               printFmtToWebClient(PSTR("%02X "), msg[i]);
             }
-            printToWebClient(PSTR("<br>\r\n"));
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
           }
           for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
@@ -7788,12 +7793,12 @@ uint8_t pps_offset = 0;
             for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
               printFmtToWebClient(PSTR("%02X "), msg[i]);
             }
-            printToWebClient(PSTR("<br>\r\n"));
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
           }
 
-          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
-          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
+          printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
+//          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
         }
