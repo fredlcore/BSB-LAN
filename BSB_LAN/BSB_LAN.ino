@@ -7653,7 +7653,7 @@ uint8_t pps_offset = 0;
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
-/*
+
           for (int x=0;x<10;x++) {
             if (found_ids[x]==0xFF) {
               continue;
@@ -7770,7 +7770,7 @@ uint8_t pps_offset = 0;
             printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
             flushToWebClient();
           }
-*/
+
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
 
           printToWebClient(PSTR("\r\nComplete dump:\r\n"));
