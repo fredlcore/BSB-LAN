@@ -2178,12 +2178,14 @@ char *TranslateAddr(byte addr, char *device) {
     case ADDR_EM2: p = PSTR("EM2"); break;
     case ADDR_RGT1: p = PSTR("RGT1"); break;
     case ADDR_RGT2: p = PSTR("RGT2"); break;
-    case ADDR_CNTR: p = PSTR("CNTR"); break;
+    case ADDR_RGT3: p = PSTR("RGT3"); break;
     case ADDR_SRVC: p = PSTR("SRVC"); break;
+    case ADDR_DSP1: p = PSTR("DSP1"); break;
+    case ADDR_DSP2: p = PSTR("DSP2"); break;
+    case ADDR_DSP3: p = PSTR("DSP3"); break;
     case ADDR_LAN: p = PSTR("LAN"); break;
-    case ADDR_DISP: p = PSTR("DISP"); break;
     case ADDR_OZW: p = PSTR("OZW"); break;
-    case ADDR_FE: p = PSTR("FE"); break;
+    case ADDR_FUNK: p = PSTR("FUNK"); break;
     case ADDR_RC: p = PSTR("REMO"); break;
     case ADDR_ALL: p = PSTR("ALL "); break;
     default: sprintf_P(device, PSTR("%02X"), addr); break;
@@ -3269,6 +3271,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_HOURS_WORD: // u16 h
             case VT_MINUTES_WORD: //u16 min
             case VT_SECONDS_WORD: //u16 s
+            case VT_SECONDS_WORD16: //u16 s
             case VT_GRADIENT: // u16
             case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
@@ -3324,6 +3327,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SPEED2: // u16
             case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
+            case VT_METER:
             case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
@@ -5050,11 +5054,13 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_UINT:
     case VT_SINT:
     case VT_PERCENT_WORD1:
+    case VT_METER:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
     case VT_UINT5:
     case VT_UINT10:
     case VT_SECONDS_WORD:
+    case VT_SECONDS_WORD16: 
     case VT_TEMP_WORD:
     case VT_CELMIN:
     case VT_PERCENT_100:
@@ -5482,7 +5488,7 @@ const char* printError(uint16_t error) {
 char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
-  if (extended && (decodedTelegram.error == 0 || decodedTelegram.error == 7)) {
+  if (extended && (decodedTelegram.error == 0 || decodedTelegram.error == 7 || decodedTelegram.error == 256 || decodedTelegram.error == 260)) {
 #if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
 #else
