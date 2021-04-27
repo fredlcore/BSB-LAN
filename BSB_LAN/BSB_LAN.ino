@@ -700,6 +700,7 @@ SdFat SD;
   uint8_t last_DHT_pin = 0;
 #endif
 
+unsigned long maintenance_timer = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -7757,7 +7758,7 @@ uint8_t pps_offset = 0;
                         printToWebClient(PSTR(" - "));
                         printToWebClient_prognrdescaddr();
                         printFmtToWebClient(PSTR("\r\n0x%08X"), c);
-                        printToWebClient(PSTR("\r\n<br>\r\n"));
+                        printToWebClient(PSTR("\r\n"));
                         for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
                         }
@@ -9203,6 +9204,17 @@ uint8_t pps_offset = 0;
     resetBoard();
   }
 #endif
+
+  if (millis() - maintenance_timer > 60000) {
+    maintenance_timer = millis();
+#if defined(WIFI)
+    if ((WiFi.status() != WL_CONNECTED) {
+      WiFi.disconnect();
+      WiFi.reconnect();
+    }
+#endif
+  }
+
 } // --- loop () ---
 
 //Luposoft: function mqtt_sendtoBroker
