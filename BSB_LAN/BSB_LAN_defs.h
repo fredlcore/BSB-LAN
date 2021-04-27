@@ -7042,8 +7042,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D09CD,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  641,   STR641,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 5 Ende Tag/Monat
 {0x053D09CE,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR642,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Beginn Tag/Monat
 {0x213D09C4,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR642,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Beginn Tag/Monat - logged on OCI700 via LPB
-{0x053D09C4,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR632,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Beginn Tag/Monat
-{0x053D09C5,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR633,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Ende Tag/Monat
+//{0x053D09C4,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  642,   STR632,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Beginn Tag/Monat
+//{0x053D09C5,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR633,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 1 - Periode 1 Ende Tag/Monat
 {0x053D09CF,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR643,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Ende Tag/Monat
 {0x213D09C5,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  643,   STR643,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 6 Ende Tag/Monat - logged on OCI700 via LPB
 {0x053D09D0,  CAT_FERIEN_HK1,       VT_VACATIONPROG,  644,   STR644,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 1 - Periode 7 Beginn Tag/Monat
@@ -7058,8 +7058,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09C6,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  651,   STR651,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Beginn Tag/Monat
 {0x063D09C7,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR652,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Ende Tag/Monat
 {0x220509C4,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR652,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 2 Ende Tag/Monat - logged on OCI700 via LPB
-{0x063D09C4,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR649,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Beginn Tag/Monat
-{0x063D09C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR650,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Ende Tag/Monat
+//{0x063D09C4,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  652,   STR649,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Beginn Tag/Monat
+//{0x063D09C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR650,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // [tt.MM ] - Ferienheizkreis 2 - Periode 1 Ende Tag/Monat
 {0x063D09C8,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR653,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Beginn Tag/Monat
 {0x220509C5,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  653,   STR653,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Beginn Tag/Monat - logged on OCI700 via LPB
 {0x063D09C9,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  654,   STR654,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 3 Ende Tag/Monat
@@ -7067,7 +7067,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09CB,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  656,   STR656,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Ende Tag/Monat
 {0x063D09CC,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  657,   STR657,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Beginn Tag/Monat
 {0x063D09CD,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  658,   STR658,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Ende Tag/Monat
-{0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          658,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_NONE}, // [0] - Ferienheizkreis 2 - Betriebsniveau
+//{0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          658,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_NONE}, // [0] - Ferienheizkreis 2 - Betriebsniveau
 {0x063D09CE,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  659,   STR659,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Beginn Tag/Monat
 {0x063D09CF,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  660,   STR660,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Ende Tag/Monat
 {0x063D09D0,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  661,   STR661,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Beginn Tag/Monat
