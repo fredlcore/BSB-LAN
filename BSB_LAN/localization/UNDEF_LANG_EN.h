@@ -65,6 +65,7 @@
 #undef MENU_TEXT_NO
 #undef MENU_TEXT_ON
 #undef MENU_TEXT_OFF
+#undef MENU_TEXT_QIN
 #undef MENU_TEXT_QSC
 #undef MENU_TEXT_QFD
 #undef MENU_TEXT_QFA

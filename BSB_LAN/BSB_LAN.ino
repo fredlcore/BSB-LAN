@@ -700,6 +700,7 @@ SdFat SD;
   uint8_t last_DHT_pin = 0;
 #endif
 
+unsigned long maintenance_timer = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -2173,12 +2174,14 @@ char *TranslateAddr(byte addr, char *device) {
     case ADDR_EM2: p = PSTR("EM2"); break;
     case ADDR_RGT1: p = PSTR("RGT1"); break;
     case ADDR_RGT2: p = PSTR("RGT2"); break;
-    case ADDR_CNTR: p = PSTR("CNTR"); break;
+    case ADDR_RGT3: p = PSTR("RGT3"); break;
     case ADDR_SRVC: p = PSTR("SRVC"); break;
+    case ADDR_DSP1: p = PSTR("DSP1"); break;
+    case ADDR_DSP2: p = PSTR("DSP2"); break;
+    case ADDR_DSP3: p = PSTR("DSP3"); break;
     case ADDR_LAN: p = PSTR("LAN"); break;
-    case ADDR_DISP: p = PSTR("DISP"); break;
     case ADDR_OZW: p = PSTR("OZW"); break;
-    case ADDR_FE: p = PSTR("FE"); break;
+    case ADDR_FUNK: p = PSTR("FUNK"); break;
     case ADDR_RC: p = PSTR("REMO"); break;
     case ADDR_ALL: p = PSTR("ALL "); break;
     default: sprintf_P(device, PSTR("%02X"), addr); break;
@@ -3264,6 +3267,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_HOURS_WORD: // u16 h
             case VT_MINUTES_WORD: //u16 min
             case VT_SECONDS_WORD: //u16 s
+            case VT_SECONDS_WORD16: //u16 s
             case VT_GRADIENT: // u16
             case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
@@ -3319,6 +3323,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SPEED2: // u16
             case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
+            case VT_METER:
             case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
@@ -3653,7 +3658,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("Q'>" MENU_TEXT_CHK));
+   printToWebClient(PSTR("Q' TARGET='_new'>" MENU_TEXT_CHK));
    printToWebClient(PSTR("</a></td>"));
 
    printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
@@ -5045,11 +5050,13 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_UINT:
     case VT_SINT:
     case VT_PERCENT_WORD1:
+    case VT_METER:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
     case VT_UINT5:
     case VT_UINT10:
     case VT_SECONDS_WORD:
+    case VT_SECONDS_WORD16: 
     case VT_TEMP_WORD:
     case VT_CELMIN:
     case VT_PERCENT_100:
@@ -5477,7 +5484,7 @@ const char* printError(uint16_t error) {
 char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
-  if (extended && (decodedTelegram.error == 0 || decodedTelegram.error == 7)) {
+  if (extended && (decodedTelegram.error == 0 || decodedTelegram.error == 7 || decodedTelegram.error == 256 || decodedTelegram.error == 260)) {
 #if !(defined ESP32)
     len+=sprintf_P(outBuf, PSTR("%4ld "), decodedTelegram.prognr);
 #else
@@ -7596,13 +7603,18 @@ uint8_t pps_offset = 0;
         }
 #endif
         if (p[1]=='Q') {
-          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
+//          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
+          printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printToWebClient(PSTR("\r\n"));
+          flushToWebClient();
+
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
+          printToWebClient(PSTR(MENU_TEXT_QIN "\r\n\r\n"));
           printToWebClient(PSTR(MENU_TEXT_VER ": "));
           printToWebClient(BSB_VERSION);
-          printToWebClient(PSTR("<BR>\r\n"));
-          printToWebClient(PSTR(MENU_TEXT_QSC "...<BR>"));
+          printToWebClient(PSTR("\r\n"));
+          printToWebClient(PSTR(MENU_TEXT_QSC "...\r\n"));
           switch (bus->getBusType()) {
             case BUS_BSB: bus->setBusType(BUS_BSB, myAddr, 0x7F); break;
             case BUS_LPB: bus->setBusType(BUS_LPB, myAddr, 0xFF); break;
@@ -7634,14 +7646,14 @@ uint8_t pps_offset = 0;
                   }
                 }
                 if (!found) {
-                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu<BR>\r\n"),found_id);
+                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu\r\n"),found_id);
                   flushToWebClient();
                 }
               }
               delay(1);
             }
           } else {
-            printToWebClient(PSTR(MENU_TEXT_QFA "!<BR>"));
+            printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
 
           for (int x=0;x<10;x++) {
@@ -7649,16 +7661,16 @@ uint8_t pps_offset = 0;
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR("<BR>" MENU_TEXT_QRT " %hu..."), found_ids[x]);
+            printFmtToWebClient(PSTR(MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
             uint16_t l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
-            query_program_and_print_result(6225, PSTR("<BR>\r\n"), NULL);
+            query_program_and_print_result(6225, PSTR("\r\n"), NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            query_program_and_print_result(6226, PSTR("<BR>\r\n"), NULL);
+            query_program_and_print_result(6226, PSTR("\r\n"), NULL);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
@@ -7670,11 +7682,11 @@ uint8_t pps_offset = 0;
 #else
               prognr = proglist4q[q];
 #endif
-              query_program_and_print_result(prognr, PSTR("<BR>\r\n"), NULL);
+              query_program_and_print_result(prognr, PSTR("\r\n"), NULL);
             }
-            query_program_and_print_result(10003, PSTR("<BR>\r\n"), PSTR(" (10003): "));
-            query_program_and_print_result(10004, PSTR("<BR>\r\n"), PSTR(" (10004): "));
-            printToWebClient(PSTR("<BR>\r\n"));
+            query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
+            query_program_and_print_result(10004, PSTR("\r\n"), PSTR(" (10004): "));
+            printToWebClient(PSTR("\r\n"));
             flushToWebClient();
 
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
@@ -7686,7 +7698,7 @@ uint8_t pps_offset = 0;
 #endif
               printFmtToWebClient(PSTR("%d;"), prognr);
             }
-            printToWebClient(PSTR("<BR>\r\n"));
+            printToWebClient(PSTR("\r\n"));
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(int); i++) {
               int prognr = 0;
 #if defined(__AVR__)
@@ -7698,11 +7710,11 @@ uint8_t pps_offset = 0;
               printToWebClient(PSTR(";"));
             }
 
-            printToWebClient(PSTR("<BR><BR>\r\n"));
+            printToWebClient(PSTR("\r\n\r\n"));
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
-            printToWebClient(PSTR("<BR>" MENU_TEXT_QST "...<BR>\r\n"));
+            printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
             flushToWebClient();
             for (int j=0;j<10000;j++) {
               if (get_cmdtbl_cmd(j) == c) {
@@ -7736,20 +7748,20 @@ uint8_t pps_offset = 0;
                       my_dev_fam = orig_dev_fam;
                       my_dev_var = orig_dev_var;
                       if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("<BR>\r\n%hu - "), l);
+                        printFmtToWebClient(PSTR("\r\n%hu - "), l);
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
                         printToWebClient_prognrdescaddr();
-                        printFmtToWebClient(PSTR("<BR>\r\n0x%08X"), c);
-                        printToWebClient(PSTR("\r\n<br>\r\n"));
+                        printFmtToWebClient(PSTR("\r\n0x%08X"), c);
+                        printToWebClient(PSTR("\r\n"));
                         for (int i=0;i<tx_msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), tx_msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\r\n"));
+                        printToWebClient(PSTR("\r\n"));
                         for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
                           printFmtToWebClient(PSTR("%02X "), msg[i]);
                         }
-                        printToWebClient(PSTR("<br>\r\n"));
+                        printToWebClient(PSTR("\r\n"));
                       }
                       forcedflushToWebClient(); //browser will build page immediately
                     }
@@ -7757,13 +7769,38 @@ uint8_t pps_offset = 0;
                 }
               }
             }
-            printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_QTE ".<BR>\r\n"));
+            printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
             flushToWebClient();
           }
 
-          printToWebClient(PSTR("<BR>" MENU_TEXT_QFE ".<BR>\r\n"));
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
+
+          printToWebClient(PSTR("\r\nComplete dump:\r\n"));
+          c = 0;
+          bus->Send(TYPE_IQ1, c, msg, tx_msg);
+          int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+          bus->Send(TYPE_IQ2, c, msg, tx_msg);
+          int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+
+          for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+            bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
+              printFmtToWebClient(PSTR("%02X "), msg[i]);
+            }
+            printToWebClient(PSTR("\r\n"));
+            flushToWebClient();
+          }
+          for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+            bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
+              printFmtToWebClient(PSTR("%02X "), msg[i]);
+            }
+            printToWebClient(PSTR("\r\n"));
+            flushToWebClient();
+          }
+
+          printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
+//          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
         }
@@ -9162,6 +9199,17 @@ uint8_t pps_offset = 0;
     resetBoard();
   }
 #endif
+
+  if (millis() - maintenance_timer > 60000) {
+    maintenance_timer = millis();
+#if defined(WIFI)
+    if ((WiFi.status() != WL_CONNECTED) {
+      WiFi.disconnect();
+      WiFi.reconnect();
+    }
+#endif
+  }
+
 } // --- loop () ---
 
 //Luposoft: function mqtt_sendtoBroker
