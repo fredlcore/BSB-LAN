@@ -66,6 +66,7 @@ UIStrings["MENU_TEXT_YES"] = "Yes";
 UIStrings["MENU_TEXT_NO"] = "No";
 UIStrings["MENU_TEXT_ON"] = "On";
 UIStrings["MENU_TEXT_OFF"] = "Off";
+UIStrings["MENU_TEXT_QIN"] = "This scan can take a few minutes, do not interrupt until the message 'Done' appears.\r\nAfterwards, save this page and send the file to bsb(ät)code-it.de so that the new parameters can be added.";
 UIStrings["MENU_TEXT_QSC"] = "Scanning for devices...";
 UIStrings["MENU_TEXT_QFD"] = "Device address found";
 UIStrings["MENU_TEXT_QFA"] = "Device query failed";
