@@ -7760,8 +7760,7 @@ uint8_t pps_offset = 0;
                         printToWebClient(decodedTelegram.catdescaddr);
                         printToWebClient(PSTR(" - "));
                         printToWebClient_prognrdescaddr();
-                        printFmtToWebClient(PSTR("\r\n0x%08X"), c);
-                        printToWebClient(PSTR("\r\n"));
+                        printFmtToWebClient(PSTR("\r\n0x%08X\r\n"), c);
                         int outBufLen = strlen(outBuf);
                         bin2hex(outBuf + outBufLen, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                         printToWebClient(outBuf + outBufLen);
@@ -7789,24 +7788,23 @@ uint8_t pps_offset = 0;
           int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
           bus->Send(TYPE_IQ2, c, msg, tx_msg);
           int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+          int outBufLen = strlen(outBuf);
 
           for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
             bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
-            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
-              printFmtToWebClient(PSTR("%02X "), msg[i]);
-            }
+            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+            printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
           }
           for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
             bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
-            for (int i=0;i<msg[bus->getLen_idx()]+bus->getBusType();i++) {
-              printFmtToWebClient(PSTR("%02X "), msg[i]);
-            }
+            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+            printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
           }
-
+          outBuf[outBufLen] = 0;
           printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
 //          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
@@ -8253,11 +8251,9 @@ uint8_t pps_offset = 0;
                 }
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
-                printToWebClient(PSTR("\",\r\n"));
-                printToWebClient(PSTR("    \"dataType_name\": \""));
+                printToWebClient(PSTR("\",\r\n    \"dataType_name\": \""));
                 printToWebClient(decodedTelegram.progtypedescaddr);
-                printToWebClient(PSTR("\",\r\n"));
-                printToWebClient(PSTR("    \"dataType_family\": \""));
+                printToWebClient(PSTR("\",\r\n    \"dataType_family\": \""));
                 printToWebClient(decodedTelegram.data_type_descaddr);
                 printToWebClient(PSTR("\",\r\n"));
 
@@ -9209,7 +9205,7 @@ uint8_t pps_offset = 0;
   if (millis() - maintenance_timer > 60000) {
     maintenance_timer = millis();
 #if defined(WIFI)
-    if ((WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED) {
       WiFi.disconnect();
       WiFi.reconnect();
     }
