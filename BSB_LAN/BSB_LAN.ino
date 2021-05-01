@@ -9206,7 +9206,7 @@ uint8_t pps_offset = 0;
 
   if (millis() - maintenance_timer > 60000) {
     maintenance_timer = millis();
-#if defined(WIFI)
+#if defined(WIFI) && defined(ESP32)
     if (WiFi.status() != WL_CONNECTED) {
       WiFi.disconnect();
       WiFi.reconnect();
