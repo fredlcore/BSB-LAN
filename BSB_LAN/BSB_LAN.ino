@@ -5931,7 +5931,9 @@ void query(int line) {  // line (ProgNr)
     if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
       printFmtToDebug(PSTR("%d "), decodedTelegram.prognr);
       loadCategoryDescAddr();
-      printFmtToDebug(PSTR(" - %s - write-only\r\n"), decodedTelegram.prognrdescaddr);
+      printToDebug(PSTR(" - "));
+      printToDebug(decodedTelegram.prognrdescaddr);
+      printToDebug(PSTR(" - write-only\r\n"));
       return;
     }
 
