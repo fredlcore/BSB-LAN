@@ -2036,7 +2036,7 @@ bool programIsreadOnly(uint8_t param_len) {
     switch (programWriteMode) {
       case 0: return true; //All read-only.
       case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
-      case 2: if ((param_len & FL_RONLY) == FL_RONLY && (param_len & FL_OEM) != FL_OEM) return true; else return false; //All writable except read-only
+      case 2: if ((param_len & FL_RONLY) == FL_RONLY) return true; else return false; //All writable except read-only
     }
   } else { //defs-controlled.
     if ((param_len & FL_RONLY) == FL_RONLY) return true;
