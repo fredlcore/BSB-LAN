@@ -615,11 +615,15 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
-#if !defined(ESP32)
+#if defined(__AVR__)
+const char *averagesFileName = "averages.txt";
+const char *datalogFileName = "datalog.txt";
+const char *journalFileName = "journal.txt";
+#elif defined(__SAM3X8E__)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
-#else
+#elif defined(ESP32)
 const char averagesFileName[] PROGMEM = "/averages.txt";
 const char datalogFileName[] PROGMEM = "/datalog.txt";
 const char journalFileName[] PROGMEM = "/journal.txt";
