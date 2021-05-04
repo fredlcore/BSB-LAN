@@ -7918,19 +7918,22 @@ uint8_t pps_offset = 0;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
-            uint64_t freespace = 0;
             bool not_first = false;
             int i;
-#if defined LOGGER || defined WEBSERVER
-#if defined(ESP32)
-            freespace = SD.totalBytes() - SD.usedBytes();
-#else
-            freespace = SD.vol()->freeClusterCount();
-#endif
-#endif
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
-            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %llu,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
+            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+#if defined LOGGER || defined WEBSERVER
+#if !defined(ESP32)
+            uint32_t freespace = SD.vol()->freeClusterCount();
+            freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+            printFmtToWebClient(PSTR("%d"), freespace);
+#else
+            uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+            printFmtToWebClient(PSTR("%llu"), freespace);
+#endif
+#endif
+
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
@@ -7945,7 +7948,7 @@ uint8_t pps_offset = 0;
               case 1: strcpy_P(json_value_string, PSTR("LPB")); break;
               case 2: strcpy_P(json_value_string, PSTR("PPS")); break;
             }
-            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
+            printFmtToWebClient(PSTR(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
             printFmtToWebClient(PSTR("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n"), bus->getBusAddr(), bus->getBusDest());
 //enabled options
             printFmtToWebClient(PSTR("  \"monitor\": %d,\r\n  \"verbose\": %d"), monitor, verbose);
@@ -8876,10 +8879,11 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-  uint32_t freespace = 0;
 #if defined(ESP32)
+  uint64_t freespace = 0;
   freespace = SD.totalBytes() - SD.usedBytes();
 #else
+  uint32_t freespace = 0;
   freespace = SD.vol()->freeClusterCount();
 #endif
   if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
