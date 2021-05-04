@@ -8839,8 +8839,7 @@ uint8_t pps_offset = 0;
 */
     client_flag = false;
     if (client.available()) {
-      Serial.println();
-      Serial.println(F("Client buffer gets discarded:"));
+      printToDebug(PSTR("\r\nClient buffer gets discarded:\r\n"));
       while (client.available()) Serial.print((char)client.read());
     }
 
@@ -9889,13 +9888,13 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println(F("WiFi shield not present. Cannot continue.\r\n"));
+    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
 
   if (!WiFi.checkProtocolVersion()) {
-    Serial.println(F("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP."));
+    printToDebug(PSTR("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP.\r\n"));
     // don't continue:
     while (true);
   }
@@ -9928,13 +9927,13 @@ void setup() {
     Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
   } else {
     Ethernet.begin(mac); //DHCP
-    SerialOutput->print(PSTR("Waiting for DHCP address"));
+    printToDebug(PSTR("Waiting for DHCP address"));
     unsigned long timeout = millis();
     while (!Ethernet.localIP() && millis() - timeout < 20000) {
-      SerialOutput->print(PSTR("."));
+      printToDebug(PSTR("."));
       delay(100);
     }
-    SerialOutput->println();
+    writelnToDebug();
   }
   SerialOutput->println(Ethernet.localIP());
   SerialOutput->println(Ethernet.subnetMask());
