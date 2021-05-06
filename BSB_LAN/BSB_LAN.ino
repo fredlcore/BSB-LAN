@@ -615,11 +615,15 @@ int bigBuffPos=0;
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
-#if !defined(ESP32)
+#if defined(__AVR__)
+const char *averagesFileName = "averages.txt";
+const char *datalogFileName = "datalog.txt";
+const char *journalFileName = "journal.txt";
+#elif defined(__SAM3X8E__)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
-#else
+#elif defined(ESP32)
 const char averagesFileName[] PROGMEM = "/averages.txt";
 const char datalogFileName[] PROGMEM = "/datalog.txt";
 const char journalFileName[] PROGMEM = "/journal.txt";
@@ -2036,7 +2040,7 @@ bool programIsreadOnly(uint8_t param_len) {
     switch (programWriteMode) {
       case 0: return true; //All read-only.
       case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
-      case 2: if ((param_len & FL_RONLY) == FL_RONLY && (param_len & FL_OEM) != FL_OEM) return true; else return false; //All writable except read-only
+      case 2: if ((param_len & FL_RONLY) == FL_RONLY) return true; else return false; //All writable except read-only
     }
   } else { //defs-controlled.
     if ((param_len & FL_RONLY) == FL_RONLY) return true;
@@ -7918,19 +7922,22 @@ uint8_t pps_offset = 0;
           }
 
           if (p[2] == 'I'){ // dump configuration in JSON
-            uint64_t freespace = 0;
             bool not_first = false;
             int i;
-#if defined LOGGER || defined WEBSERVER
-#if defined(ESP32)
-            freespace = SD.totalBytes() - SD.usedBytes();
-#else
-            freespace = SD.vol()->freeClusterCount();
-#endif
-#endif
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
-            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": %llu,\r\n"), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], freespace);
+            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+#if defined LOGGER || defined WEBSERVER
+#if !defined(ESP32)
+            uint32_t freespace = SD.vol()->freeClusterCount();
+            freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+            printFmtToWebClient(PSTR("%d"), freespace);
+#else
+            uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+            printFmtToWebClient(PSTR("%llu"), freespace);
+#endif
+#endif
+
 // Bus info
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
@@ -7945,7 +7952,7 @@ uint8_t pps_offset = 0;
               case 1: strcpy_P(json_value_string, PSTR("LPB")); break;
               case 2: strcpy_P(json_value_string, PSTR("PPS")); break;
             }
-            printFmtToWebClient(PSTR("  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
+            printFmtToWebClient(PSTR(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
             printFmtToWebClient(PSTR("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n"), bus->getBusAddr(), bus->getBusDest());
 //enabled options
             printFmtToWebClient(PSTR("  \"monitor\": %d,\r\n  \"verbose\": %d"), monitor, verbose);
@@ -8839,8 +8846,7 @@ uint8_t pps_offset = 0;
 */
     client_flag = false;
     if (client.available()) {
-      Serial.println();
-      Serial.println(F("Client buffer gets discarded:"));
+      printToDebug(PSTR("\r\nClient buffer gets discarded:\r\n"));
       while (client.available()) Serial.print((char)client.read());
     }
 
@@ -8877,10 +8883,11 @@ uint8_t pps_offset = 0;
 
 
 #ifdef LOGGER
-  uint32_t freespace = 0;
 #if defined(ESP32)
+  uint64_t freespace = 0;
   freespace = SD.totalBytes() - SD.usedBytes();
 #else
+  uint32_t freespace = 0;
   freespace = SD.vol()->freeClusterCount();
 #endif
   if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
@@ -9889,13 +9896,13 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    Serial.println(F("WiFi shield not present. Cannot continue.\r\n"));
+    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
     // don't continue
     while (true);
   }
 
   if (!WiFi.checkProtocolVersion()) {
-    Serial.println(F("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP."));
+    printToDebug(PSTR("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP.\r\n"));
     // don't continue:
     while (true);
   }
@@ -9928,13 +9935,13 @@ void setup() {
     Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
   } else {
     Ethernet.begin(mac); //DHCP
-    SerialOutput->print(PSTR("Waiting for DHCP address"));
+    printToDebug(PSTR("Waiting for DHCP address"));
     unsigned long timeout = millis();
     while (!Ethernet.localIP() && millis() - timeout < 20000) {
-      SerialOutput->print(PSTR("."));
+      printToDebug(PSTR("."));
       delay(100);
     }
-    SerialOutput->println();
+    writelnToDebug();
   }
   SerialOutput->println(Ethernet.localIP());
   SerialOutput->println(Ethernet.subnetMask());
