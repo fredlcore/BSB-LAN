@@ -76,7 +76,7 @@
 #define FL_RONLY        1
 #define FL_WONLY        2
 #define FL_NO_CMD       4
-#define FL_OEM          9   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 4.
+#define FL_OEM          9   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
 #define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
 #define FL_EEPROM       32  // Flag to determine whether value should be written to EEPROM
 #define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
@@ -1028,6 +1028,9 @@ const char STR700[] PROGMEM = STR700_TEXT;
 const char STR701[] PROGMEM = STR701_TEXT;
 #define STR702 STR701
 #define STR703 STR702
+const char STR704[] PROGMEM = STR704_TEXT;
+const char STR705[] PROGMEM = STR705_TEXT;
+const char STR706[] PROGMEM = STR706_TEXT;
 const char STR709[] PROGMEM = STR709_TEXT;
 const char STR710[] PROGMEM = STR710_TEXT;
 const char STR711[] PROGMEM = STR711_TEXT;
@@ -1069,11 +1072,13 @@ const char STR834[] PROGMEM = STR834_TEXT;
 const char STR835[] PROGMEM = STR835_TEXT;
 const char STR836[] PROGMEM = STR836_TEXT;
 const char STR841[] PROGMEM = STR841_TEXT;
+const char STR843[] PROGMEM = STR843_TEXT;
 const char STR850[] PROGMEM = STR850_TEXT;
 const char STR851[] PROGMEM = STR851_TEXT;
 const char STR855[] PROGMEM = STR855_TEXT;
 const char STR856[] PROGMEM = STR856_TEXT;
 const char STR857[] PROGMEM = STR857_TEXT;
+const char STR860[] PROGMEM = STR860_TEXT;
 const char STR861[] PROGMEM = STR861_TEXT;
 const char STR864[] PROGMEM = STR864_TEXT;
 const char STR870[] PROGMEM = STR870_TEXT;
@@ -1116,6 +1121,7 @@ const char STR919[] PROGMEM = STR919_TEXT;
 const char STR920[] PROGMEM = STR920_TEXT;
 const char STR923[] PROGMEM = STR923_TEXT;
 const char STR924[] PROGMEM = STR924_TEXT;
+const char STR925[] PROGMEM = STR925_TEXT;
 #define STR928 STR750
 #define STR932 STR760
 const char STR933[] PROGMEM = STR933_TEXT;
@@ -1130,6 +1136,7 @@ const char STR945[] PROGMEM = STR945_TEXT;
 const char STR946[] PROGMEM = STR946_TEXT;
 const char STR947[] PROGMEM = STR947_TEXT;
 const char STR948[] PROGMEM = STR948_TEXT;
+const char STR949[] PROGMEM = STR949_TEXT;
 const char STR950[] PROGMEM = STR950_TEXT;
 #define STR962 STR870
 const char STR963[] PROGMEM = STR963_TEXT;
@@ -1138,6 +1145,9 @@ const char STR963[] PROGMEM = STR963_TEXT;
 // Einstellungen Heizkreis 2
 #define STR1000 STR700
 #define STR1001 STR701
+#define STR1004 STR704
+#define STR1005 STR705
+#define STR1006 STR706
 #define STR1010 STR710
 #define STR1011 STR711
 #define STR1012 STR712
@@ -1148,6 +1158,9 @@ const char STR963[] PROGMEM = STR963_TEXT;
 #define STR1026 STR726
 #define STR1030 STR730
 #define STR1032 STR732
+#define STR1033 STR733
+
+const char STR1044[] PROGMEM = STR1044_TEXT;
 #define STR1040 STR740
 #define STR1041 STR741
 #define STR1042 STR742
@@ -1175,11 +1188,13 @@ const char STR963[] PROGMEM = STR963_TEXT;
 #define STR1135 STR835
 #define STR1136 STR836
 #define STR1141 STR841
+#define STR1143 STR843
 #define STR1150 STR850
 #define STR1151 STR851
 #define STR1155 STR855
 #define STR1156 STR856
 #define STR1157 STR857
+#define STR1160 STR860
 #define STR1161 STR861
 #define STR1164 STR864
 #define STR1170 STR870
@@ -1191,12 +1206,19 @@ const char STR963[] PROGMEM = STR963_TEXT;
 #define STR1185 STR885
 #define STR1186 STR886
 #define STR1186_2 STR886_2
+#define STR1188_2 STR888_2
 #define STR1189 STR889
+#define STR1190 STR890
+#define STR1198 STR898
 #define STR1200 STR900
 
 // Heizkreis 3/P
 #define STR1300 STR700
 #define STR1301 STR701
+#define STR1301 STR701
+#define STR1304 STR704
+#define STR1305 STR705
+#define STR1306 STR706
 #define STR1310 STR710
 #define STR1311 STR711
 #define STR1312 STR712
@@ -1207,8 +1229,11 @@ const char STR963[] PROGMEM = STR963_TEXT;
 #define STR1326 STR726
 #define STR1330 STR730
 #define STR1332 STR732
+#define STR1333 STR733
 #define STR1340 STR740
 #define STR1341 STR741
+#define STR1342 STR742
+#define STR1344 STR744
 #define STR1346 STR746
 #define STR1350 STR750
 #define STR1360 STR760
@@ -1232,22 +1257,29 @@ const char STR963[] PROGMEM = STR963_TEXT;
 #define STR1434 STR834
 #define STR1435 STR835
 #define STR1436 STR836
+#define STR1441 STR841
+#define STR1443 STR843
 #define STR1450 STR1150
 #define STR1451 STR1151
 #define STR1455 STR1155
 #define STR1456 STR1156
 #define STR1457 STR1157
+#define STR1460 STR860
 #define STR1461 STR861
 #define STR1464 STR864
 #define STR1470 STR870
 #define STR1472 STR872
+#define STR1480 STR880
 #define STR1481 STR881
 #define STR1482 STR882
 #define STR1483 STR883
 #define STR1485 STR885
 #define STR1486 STR886
 #define STR1486_2 STR886_2
+#define STR1488 STR888
 #define STR1489 STR889
+#define STR1490 STR890
+#define STR1498 STR898
 #define STR1500 STR900
 
 // Trinkwasser
@@ -1325,6 +1357,7 @@ const char STR2080[] PROGMEM = STR2080_TEXT;
 #define STR2110 STR740
 #define STR2111 STR741
 const char STR2112[] PROGMEM = STR2112_TEXT;
+const char STR2121[] PROGMEM = STR2121_TEXT;
 #define STR2130 STR830
 #define STR2131 STR831
 #define STR2132 STR832
@@ -1359,6 +1392,7 @@ const char STR2235[] PROGMEM = STR2235_TEXT;
 const char STR2236[] PROGMEM = STR2236_TEXT;
 const char STR2237[] PROGMEM = STR2237_TEXT;
 const char STR2238[] PROGMEM = STR2238_TEXT;
+const char STR2239[] PROGMEM = STR2239_TEXT;
 const char STR2240[] PROGMEM = STR2240_TEXT;
 const char STR2241[] PROGMEM = STR2241_TEXT;
 const char STR2243[] PROGMEM = STR2243_TEXT;
@@ -1368,16 +1402,22 @@ const char STR2253[] PROGMEM = STR2253_TEXT;
 const char STR2260[] PROGMEM = STR2260_TEXT;
 const char STR2261[] PROGMEM = STR2261_TEXT;
 const char STR2262[] PROGMEM = STR2262_TEXT;
+const char STR2263[] PROGMEM = STR2263_TEXT;
 const char STR2264[] PROGMEM = STR2264_TEXT;
 const char STR2270[] PROGMEM = STR2270_TEXT;
 const char STR2271[] PROGMEM = STR2271_TEXT;
 const char STR2272[] PROGMEM = STR2272_TEXT;
+const char STR2273[] PROGMEM = STR2273_TEXT;
+const char STR2274[] PROGMEM = STR2274_TEXT;
+const char STR2276[] PROGMEM = STR2276_TEXT;
+const char STR2278[] PROGMEM = STR2278_TEXT;
 #define STR2282 STR834
 #define STR2283 STR835
 #define STR2284 STR836
 const char STR2285[] PROGMEM = STR2285_TEXT;
 const char STR2290[] PROGMEM = STR2290_TEXT;
 const char STR2291[] PROGMEM = STR2291_TEXT;
+const char STR2292[] PROGMEM = STR2292_TEXT;
 const char STR2300[] PROGMEM = STR2300_TEXT;
 const char STR2301[] PROGMEM = STR2301_TEXT;
 const char STR2305[] PROGMEM = STR2305_TEXT;
@@ -1400,6 +1440,15 @@ const char STR2331[] PROGMEM = STR2331_TEXT;
 const char STR2334[] PROGMEM = STR2334_TEXT;
 const char STR2335[] PROGMEM = STR2335_TEXT;
 const char STR2340[] PROGMEM = STR2340_TEXT;
+const char STR2370[] PROGMEM = STR2370_TEXT;
+const char STR2371[] PROGMEM = STR2371_TEXT;
+const char STR2372[] PROGMEM = STR2372_TEXT;
+const char STR2373[] PROGMEM = STR2373_TEXT;
+const char STR2375[] PROGMEM = STR2375_TEXT;
+const char STR2376[] PROGMEM = STR2376_TEXT;
+const char STR2377[] PROGMEM = STR2377_TEXT;
+const char STR2381[] PROGMEM = STR2381_TEXT;
+const char STR2382[] PROGMEM = STR2382_TEXT;
 const char STR2440[] PROGMEM = STR2440_TEXT;
 const char STR2441[] PROGMEM = STR2441_TEXT;
 const char STR2441_2[] PROGMEM = STR2441_2_TEXT;
@@ -1453,8 +1502,12 @@ const char STR2494[] PROGMEM = STR2494_TEXT;
 const char STR2495[] PROGMEM = STR2495_TEXT;
 const char STR2496[] PROGMEM = STR2496_TEXT;
 const char STR2500[] PROGMEM = STR2500_TEXT;
+const char STR2501[] PROGMEM = STR2501_TEXT;
 const char STR2502[] PROGMEM = STR2502_TEXT;
+const char STR2503[] PROGMEM = STR2503_TEXT;
 const char STR2504[] PROGMEM = STR2504_TEXT;
+const char STR2505[] PROGMEM = STR2505_TEXT;
+const char STR2509[] PROGMEM = STR2509_TEXT;
 const char STR2510[] PROGMEM = STR2510_TEXT;
 const char STR2511[] PROGMEM = STR2511_TEXT;
 const char STR2512[] PROGMEM = STR2512_TEXT;
@@ -1489,6 +1542,7 @@ const char STR2682[] PROGMEM = STR2682_TEXT;
 //Sitherm Pro
 const char STR2700[] PROGMEM = STR2700_TEXT;
 const char STR2700_2[] PROGMEM = STR2700_2_TEXT;
+const char STR2701[] PROGMEM = STR2701_TEXT;
 const char STR2702[] PROGMEM = STR2702_TEXT;
 const char STR2702_2[] PROGMEM = STR2702_2_TEXT;
 const char STR2703[] PROGMEM = STR2703_TEXT;
@@ -1497,6 +1551,11 @@ const char STR2704[] PROGMEM = STR2704_TEXT;
 const char STR2705[] PROGMEM = STR2705_TEXT;
 const char STR2705_2[] PROGMEM = STR2705_2_TEXT;
 const char STR2706[] PROGMEM = STR2706_TEXT;
+const char STR2710[] PROGMEM = STR2710_TEXT;
+const char STR2711[] PROGMEM = STR2711_TEXT;
+const char STR2714[] PROGMEM = STR2714_TEXT;
+const char STR2717[] PROGMEM = STR2717_TEXT;
+const char STR2718[] PROGMEM = STR2718_TEXT;
 const char STR2720[] PROGMEM = STR2720_TEXT;
 const char STR2721[] PROGMEM = STR2721_TEXT;
 const char STR2727[] PROGMEM = STR2727_TEXT;
@@ -1508,6 +1567,9 @@ const char STR2742[] PROGMEM = STR2742_TEXT;
 const char STR2743[] PROGMEM = STR2743_TEXT;
 const char STR2744[] PROGMEM = STR2744_TEXT;
 const char STR2745[] PROGMEM = STR2745_TEXT;
+const char STR2746[] PROGMEM = STR2746_TEXT;
+const char STR2747[] PROGMEM = STR2747_TEXT;
+const char STR2748[] PROGMEM = STR2748_TEXT;
 #define STR2749 STR2703
 const char STR2750[] PROGMEM = STR2750_TEXT;
 const char STR2751[] PROGMEM = STR2751_TEXT;
@@ -1758,6 +1820,7 @@ const char STR3518[] PROGMEM = STR3518_TEXT;
 const char STR3522[] PROGMEM = STR3522_TEXT;
 const char STR3523[] PROGMEM = STR3523_TEXT;
 const char STR3525[] PROGMEM = STR3525_TEXT;
+const char STR3535[] PROGMEM = STR3535_TEXT;
 const char STR3538[] PROGMEM = STR3538_TEXT;
 const char STR3542[] PROGMEM = STR3542_TEXT;
 const char STR3543[] PROGMEM = STR3543_TEXT;
@@ -1771,6 +1834,7 @@ const char STR3541[] PROGMEM = STR3541_TEXT;
 const char STR3544[] PROGMEM = STR3544_TEXT;
 const char STR3550[] PROGMEM = STR3550_TEXT;
 #define STR3560 STR2270
+const char STR3563[] PROGMEM = STR3563_TEXT;
 #define STR3561 STR2271
 #define STR3562 STR2272
 #define STR3570 STR834
@@ -1819,12 +1883,20 @@ const char STR3834[] PROGMEM = STR3834_TEXT;
 const char STR3835[] PROGMEM = STR3835_TEXT;
 const char STR3840[] PROGMEM = STR3840_TEXT;
 const char STR3850[] PROGMEM = STR3850_TEXT;
+const char STR3851[] PROGMEM = STR3851_TEXT;
 const char STR3860[] PROGMEM = STR3860_TEXT;
+const char STR3861[] PROGMEM = STR3861_TEXT;
 const char STR3862[] PROGMEM = STR3862_TEXT;
+const char STR3865[] PROGMEM = STR3865_TEXT;
+const char STR3867[] PROGMEM = STR3867_TEXT;
+const char STR3868[] PROGMEM = STR3868_TEXT;
+const char STR3869[] PROGMEM = STR3869_TEXT;
 #define STR3870 STR882
 #define STR3871 STR883
 #define STR3872 STR835
 #define STR3873 STR836
+#define STR3875 STR2327
+#define STR3876 STR2328
 const char STR3880[] PROGMEM = STR3880_TEXT;
 const char STR3881[] PROGMEM = STR3881_TEXT;
 const char STR3884[] PROGMEM = STR3884_TEXT;
@@ -1837,6 +1909,7 @@ const char STR3896[] PROGMEM = STR3896_TEXT;
 const char STR3897[] PROGMEM = STR3897_TEXT;
 
 // 4100 Feststoffkessel
+const char STR4101[] PROGMEM = STR4101_TEXT;
 const char STR4102[] PROGMEM = STR4102_TEXT;
 const char STR4103[] PROGMEM = STR4103_TEXT;
 #define STR4110 STR2210
@@ -1858,6 +1931,9 @@ const char STR4158[] PROGMEM = STR4158_TEXT;
 #define STR4164 STR835
 #define STR4165 STR836
 #define STR4170 STR2300
+const char STR4180[] PROGMEM = STR4180_TEXT;
+const char STR4182[] PROGMEM = STR4182_TEXT;
+const char STR4184[] PROGMEM = STR4184_TEXT;
 const char STR4190[] PROGMEM = STR4190_TEXT;
 const char STR4192[] PROGMEM = STR4192_TEXT;
 #define STR4201 STR882
@@ -1898,6 +1974,7 @@ const char STR4790[] PROGMEM = STR4790_TEXT;
 const char STR4791[] PROGMEM = STR4791_TEXT;
 const char STR4795[] PROGMEM = STR4795_TEXT;
 const char STR4796[] PROGMEM = STR4796_TEXT;
+const char STR4800[] PROGMEM = STR4800_TEXT;
 #define STR4810 STR2208
 const char STR4811[] PROGMEM = STR4811_TEXT;
 const char STR4813[] PROGMEM = STR4813_TEXT;
@@ -1951,6 +2028,8 @@ const char STR5107[] PROGMEM = STR5107_TEXT;
 const char STR5108[] PROGMEM = STR5108_TEXT;
 const char STR5109[] PROGMEM = STR5109_TEXT;
 #define STR5120 STR830
+const char STR5122[] PROGMEM = STR5122_TEXT;
+const char STR5123[] PROGMEM = STR5123_TEXT;
 #define STR5124 STR834
 #define STR5125 STR835
 #define STR5126 STR836
@@ -2164,6 +2243,7 @@ const char STR6049_2[] PROGMEM = STR6049_2_TEXT;
 const char STR6050_2[] PROGMEM = STR6050_2_TEXT;
 const char STR6051[] PROGMEM = STR6051_TEXT;
 const char STR6052[] PROGMEM = STR6052_TEXT;
+#define STR6052_2 STR5966_TEXT
 const char STR6057[] PROGMEM = STR6057_TEXT;
 const char STR6058[] PROGMEM = STR6058_TEXT;
 const char STR6059[] PROGMEM = STR6059_TEXT;
@@ -2308,6 +2388,7 @@ const char STR6650[] PROGMEM = STR6650_TEXT;
 const char STR6699[] PROGMEM = STR6699_TEXT;
 
 // Fehler
+const char STR6700[] PROGMEM = STR6700_TEXT;
 const char STR6705[] PROGMEM = STR6705_TEXT;
 #define STR6704 STR6705
 const char STR6706[] PROGMEM = STR6706_TEXT;
@@ -2668,26 +2749,43 @@ const char STR8099[] PROGMEM = STR8099_TEXT;
 
 // Diagnose Kaskade
 const char STR8100[] PROGMEM = STR8100_TEXT;
+#define STR8101 STR1
 const char STR8102[] PROGMEM = STR8102_TEXT;
+#define STR8103 STR1
 const char STR8104[] PROGMEM = STR8104_TEXT;
+#define STR8105 STR1
 const char STR8106[] PROGMEM = STR8106_TEXT;
+#define STR8107 STR1
 const char STR8108[] PROGMEM = STR8108_TEXT;
+#define STR8109 STR1
 const char STR8110[] PROGMEM = STR8110_TEXT;
+#define STR8111 STR1
 const char STR8112[] PROGMEM = STR8112_TEXT;
+#define STR8113 STR1
 const char STR8114[] PROGMEM = STR8114_TEXT;
+#define STR8115 STR1
 const char STR8116[] PROGMEM = STR8116_TEXT;
+#define STR8117 STR1
 const char STR8118[] PROGMEM = STR8118_TEXT;
+#define STR8119 STR1
 const char STR8120[] PROGMEM = STR8120_TEXT;
+#define STR8121 STR1
 const char STR8122[] PROGMEM = STR8122_TEXT;
+#define STR8123 STR1
 const char STR8124[] PROGMEM = STR8124_TEXT;
+#define STR8125 STR1
 const char STR8126[] PROGMEM = STR8126_TEXT;
+#define STR8127 STR1
 const char STR8128[] PROGMEM = STR8128_TEXT;
+#define STR8129 STR1
 const char STR8130[] PROGMEM = STR8130_TEXT;
+#define STR8131 STR1
 const char STR8138[] PROGMEM = STR8138_TEXT;
 const char STR8139[] PROGMEM = STR8139_TEXT;
 const char STR8140[] PROGMEM = STR8140_TEXT;
 const char STR8141[] PROGMEM = STR8141_TEXT;
 const char STR8150[] PROGMEM = STR8150_TEXT;
+const char STR8151[] PROGMEM = STR8151_TEXT;
 const char STR8199[] PROGMEM = STR8199_TEXT;
 
 // 8300 Diagnose Erzeuger
@@ -3008,6 +3106,7 @@ const char STR9531[] PROGMEM = STR9531_TEXT;
 const char STR9534[] PROGMEM = STR9534_TEXT;
 const char STR9540[] PROGMEM = STR9540_TEXT;
 const char STR9541[] PROGMEM = STR9541_TEXT;
+const char STR9541_2[] PROGMEM = STR9541_2_TEXT;
 const char STR9542[] PROGMEM = STR9542_TEXT;
 const char STR9545[] PROGMEM = STR9545_TEXT;
 const char STR9550[] PROGMEM = STR9550_TEXT;
@@ -3920,6 +4019,7 @@ const char ENUM1000[] PROGMEM_LATEST = {
 #define ENUM1132 ENUM832         // Antrieb Typ HK2
 #define ENUM1150 ENUM850         // Estrichfunktion HK2
 #define ENUM1161 ENUM861         // Übertemperaturabnahme HK2
+#define ENUM1198 ENUM898         // Betriebsniveauumschaltung HK2
 #define ENUM1200 ENUM900         // Betriebsartumschaltung HK2
 #define ENUM1200_2 ENUM900_2         // Betriebsartumschaltung HK2
 
@@ -3936,6 +4036,8 @@ const char ENUM1300[] PROGMEM_LATEST = {
 #define ENUM1450 ENUM850
 
 #define ENUM1461 ENUM861         // Uebertemperaturabnahme HK P/3
+#define ENUM1480 ENUM880         // Pumpe Drehzahlreduktion
+#define ENUM1498 ENUM898         // Betriebsniveauumschaltung HP P/3
 #define ENUM1500 ENUM900         // Betriebsartumschaltung HK P/3
 #define ENUM1500_2 ENUM900_2         // Betriebsartumschaltung HK P/3
 
@@ -7079,6 +7181,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09D1,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Ende Tag/Monat
 //{0x073D09C4,  CAT_USER_DEFINED,     VT_ENUM,          662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
 {0x063D09D2,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Beginn Tag/Monat
+//{0x073D09C5,  CAT_USER_DEFINED,     ,                 663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // Urlaubende
 {0x063D09D3,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  664,   STR664,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Ende Tag/Monat
 {0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          665,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_ALL}, // [0] - Ferienheizkreis 2 - Betriebsniveau
 // Ferien Heizkreis P
@@ -7111,8 +7214,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_036_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_064_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D3D0572,  CAT_HK1,              VT_ENUM,          701,   STR701,   sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste // Logged from DEV_162_014, so DEV_162_ALL may still be the same as DEV_ALL
+// Logged from LMS15, moved to 704/705/706
+// {0x053D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x053D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x053D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
+{0x053D1A83,  CAT_HK1,              VT_UNKNOWN,       704,   STR704,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+{0x053D1A91,  CAT_HK1,              VT_UNKNOWN,       705,   STR705,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+{0x053D1A92,  CAT_HK1,              VT_UNKNOWN,       706,   STR706,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x393D2F80,  CAT_HK1,              VT_TEMP_SHORT5,   709,   STR709,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Min
 {0x2D3D058E,  CAT_HK1,              VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
 //HEIZ->DISP ANS      2D3D05A5 00 08 C0 (35.0°C)
@@ -7165,12 +7275,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0658,  CAT_HK1,              VT_TEMP,          835,   STR835,   0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Heizkreis 1 - Mischer P-Band Xp
 {0x213D0659,  CAT_HK1,              VT_SECONDS_WORD,  836,   STR836,   0,                    NULL,         FL_OEM, DEV_ALL}, // [ s ] - Mischer Nachstellzeit Tn
 {0x213D0684,  CAT_HK1,              VT_TEMP,          841,   STR841,   0,                    NULL,         FL_OEM, DEV_ALL}, // Temperaturwächter Sollwert HK1
+{0x2D3D1256,  CAT_HK1,              VT_UNKNOWN,       843,   STR843,   0,                    NULL,         FL_OEM,       DEV_ALL},  // Logged from LMS15
 {0x2D3D067B,  CAT_HK1,              VT_ENUM,          850,   STR850,   sizeof(ENUM850),      ENUM850,      DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 1 - Estrichfunktion
 {0x2D3D068A,  CAT_HK1,              VT_TEMP,          851,   STR851,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Estrich Sollwert manuell
 {0x2D3D067D,  CAT_HK1,              VT_TEMP,          855,   STR855,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlauf-Sollwert Estrich Austrocknung
 {0x2D3D067C,  CAT_HK1,              VT_DAYS,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tag ] - Heizkreis 1 - Estrich-Austrocknung Tag
 {0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          856,   STR856,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [ Tag ] - Heizkreis 1 - Estrich Tag aktuell //FUJITSU
 {0x2D3D0DF2,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
+{0x053D0D2D,  CAT_HK1,              VT_DAYS_WORD,     857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_NONE}, // Estrich-Austrocknung Tage erfüllt.aktuell, logged from ZR1
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
@@ -7186,6 +7298,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt //FUJITSU
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
 {0x213D0B43,  CAT_HK1,              VT_DAYS,          857,   STR857,   0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // [ Tage ] - Heizkreis 1 - Estrich Tage erfüllt
+{0x2D3D071A,  CAT_HK1,              VT_UNKNOWN,       860,   STR860,   0,                    NULL,         FL_OEM,       DEV_ALL}, // Rückkühlung Speicher
 {0x213D08C9,  CAT_HK1,              VT_ENUM,          861,   STR861,   sizeof(ENUM861),      ENUM861,      DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Übertemperaturabnahme
 {0x213D065E,  CAT_HK1,              VT_PERCENT,       864,   STR864,   0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2D3D07C4,  CAT_HK1,              VT_YESNO,         870,   STR870,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Mit Pufferspeicher
@@ -7278,7 +7391,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x653D0A1B,  CAT_KUEHL1,           VT_TEMP,          920,   STR920,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sommerkomp Sollw’anhebung
 {0x653D0A1E,  CAT_KUEHL1,           VT_TEMP,          923,   STR923,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Min bei TA 25 °C
 {0x653D0A1F,  CAT_KUEHL1,           VT_TEMP,          924,   STR924,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollwert Min bei TA 35 °C
-{0x693D0B66,  CAT_KUEHL1,           VT_UNKNOWN,       925,   STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
+{0x693D0B66,  CAT_KUEHL1,           VT_UNKNOWN,       925,   STR925,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
 {0x653D0A27,  CAT_KUEHL1,           VT_PERCENT,       928,   STR928,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumeinfluss
 {0x653D0A23,  CAT_KUEHL1,           VT_TEMP,          932,   STR932,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperaturbegrenzung
 {0x653D0B6F,  CAT_KUEHL1,           VT_PERCENT,       933,   STR933,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kühlgrenze Raumregler
@@ -7293,7 +7406,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x653D0B79,  CAT_KUEHL1,           VT_MINUTES_WORD,  946,   STR946,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrdauer Taupunktwächt
 {0x653D0A1C,  CAT_KUEHL1,           VT_TEMP,          947,   STR947,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufsollw’anhebung Hygro
 {0x653D0B71,  CAT_KUEHL1,           VT_PERCENT,       948,   STR948,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorl'anhebung Beginn bei r. F.
-{0x653D0B70,  CAT_KUEHL1,           VT_PERCENT,       949,   STR10200, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
+{0x653D0B70,  CAT_KUEHL1,           VT_PERCENT,       949,   STR949,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorl'anhebung Ende bei r. F.
 {0x653D0B76,  CAT_KUEHL1,           VT_TEMP,          950,   STR950,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlauftemp'diff Taupunkt
 {0x653D0B68,  CAT_KUEHL1,           VT_UNKNOWN,       962,   STR962,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mit Pufferspeicher
 {0x653D0B69,  CAT_KUEHL1,           VT_ONOFF,         963,   STR963,   sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Mit Vorregler/Zubring'pumpe
@@ -7304,6 +7417,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3E0574,  CAT_HK2,              VT_ENUM,          1000,  STR1000,  sizeof(ENUM1000),     ENUM1000,     DEFAULT_FLAG, DEV_ALL}, // [-] - Heizkreis 2 - Betriebsart ***(virtuelle Zeile)***
 {0x2E3E0572,  CAT_HK2,              VT_ENUM,          1001,  STR1001,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2E3D0572,  CAT_HK2,              VT_ENUM,          1001,  STR1001,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+// see 701
+// {0x063D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x063D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x063D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+{0x063D1A83,  CAT_HK2,              VT_UNKNOWN,       1004,  STR1004,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+{0x063D1A91,  CAT_HK2,              VT_UNKNOWN,       1005,  STR1005,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+{0x063D1A92,  CAT_HK2,              VT_UNKNOWN,       1006,  STR1006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+
 {0x2E3D058E,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
 // line not in menue!
 // virtuelle Zeile
@@ -7322,6 +7443,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0663,  CAT_HK2,              VT_TEMP,          1040,  STR1040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x223D0662,  CAT_HK2,              VT_TEMP,          1041,  STR1041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Maximum
 {0x223D0A88,  CAT_HK2,              VT_TEMP,          1042,  STR1042,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Vorlaufsollwert Raumthermostat // Command ID tbc
+{0x063D1214,  CAT_HK2,              VT_UNKNOWN,       1033,  STR1033,  0,                    NULL,         FL_OEM,       DEV_ALL},  // Logged from LMS15
+{0x2E3D0D85,  CAT_HK2,              VT_PERCENT,       1044,  STR1044,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Logged from LMS15
 {0x223D17BB,  CAT_HK2,              VT_SECONDS_WORD,  1046,  STR1046,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 2 - Delay time in case it is used an external electrical valve zone
 {0x2E3D0603,  CAT_HK2,              VT_PERCENT,       1050,  STR1050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 2 (nur wenn aktiviert) - Raumeinfluss
 {0x2E3D0614,  CAT_HK2,              VT_TEMP,          1060,  STR1060,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Raumtemperaturbegrenzung
@@ -7347,6 +7470,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0658,  CAT_HK2,              VT_TEMP,          1135,  STR1135,  0,                    NULL,         FL_OEM, DEV_ALL}, // TODO Thision 1135 Mischer P-Band XP [K]
 {0x223D0659,  CAT_HK2,              VT_SECONDS_WORD,  1136,  STR1136,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x223D0684,  CAT_HK2,              VT_TEMP,          1141,  STR1141,  0,                    NULL,         FL_OEM, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40 / on RVS43.222:  00 17 C0  // Temperaturwächter Sollwert HK2
+{0x2E3D1256,  CAT_HK2,              VT_UNKNOWN,       1143,  STR1143,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Logged from LMS15
 {0x2E3D067B,  CAT_HK2,              VT_ENUM,          1150,  STR1150,  sizeof(ENUM1150),     ENUM1150,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Estrichfunktion
 {0x2E3D068A,  CAT_HK2,              VT_TEMP,          1151,  STR1151,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Estrich sollwert manuell
 {0x2E3D067D,  CAT_HK2,              VT_TEMP,          1155,  STR1155,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 1155 Estrich Sollwert aktuell [Tage]
@@ -7366,6 +7490,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_196_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 {0x223D0B43,  CAT_HK2,              VT_DAYS,          1157,  STR1157,  0,                    NULL,         FL_RONLY, DEV_203_ALL}, // Estrich Tag erfüllt? logged from ACS700 diagnosis software
 
+{0x2E3D071A,  CAT_HK2,              VT_UNKNOWN,       1160,  STR1160,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Rückkühlung Speicher
 {0x223D08C9,  CAT_HK2,              VT_ENUM,          1161,  STR1161,  sizeof(ENUM1161),     ENUM1161,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Übertemperaturabnahme
 {0x223D065E,  CAT_HK2,              VT_PERCENT,       1164,  STR1164,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2E3D07C4,  CAT_HK2,              VT_YESNO,         1170,  STR1170,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Mit Pufferspeicher
@@ -7374,10 +7499,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D10D7,  CAT_HK2,              VT_PERCENT,       1181,  STR1181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x223D04AB,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 1 - Pumpendrehzahl Minimum
+{0x063D115E,  CAT_HK2,              VT_PERCENT,       1182,  STR1182,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL},
 {0x223D04AA,  CAT_HK2,              VT_PERCENT,       1183,  STR1183,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x063D115F,  CAT_HK2,              VT_PERCENT,       1183,  STR1183,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL},
 {0x063D10E1,  CAT_HK2,              VT_PERCENT,       1185,  STR1185,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
 {0x063D10E0,  CAT_HK2,              VT_PERCENT,       1186,  STR1186_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x223D0E38,  CAT_HK2,              VT_PERCENT,       1188,  STR1188_2,0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
 {0x223D0E39,  CAT_HK2,              VT_MINUTES_SHORT, 1189,  STR1189,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
+{0x223D10C2,  CAT_HK2,              VT_YESNO,         1190,  STR1190,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged from LMS15
+{0x063D0DD4,  CAT_HK2,              VT_ENUM,          1198,  STR1198,  sizeof(ENUM1198),     ENUM1198,     DEFAULT_FLAG, DEV_ALL}, // Logged from LMS15
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200),     ENUM1200,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
 {0x063D07BE,  CAT_HK2,              VT_ENUM,          1200,  STR1200,  sizeof(ENUM1200_2),   ENUM1200_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 2 (nur wenn aktiviert) - Betriebsartumschaltung
 
@@ -7386,6 +7516,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Einstellungen Heizkreis P/3, only visible when Heizkreis P exists
 {0x2F3D0574,  CAT_HKP,              VT_ENUM,          1300,  STR1300,  sizeof(ENUM1300),     ENUM1300,     DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x2F3D0572,  CAT_HKP,              VT_ENUM,          1301,  STR1301,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 3/P - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
+// {0x073D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x073D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x073D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+{0x073D1A83,  CAT_HKP,              VT_UNKNOWN,       1304,  STR1304,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+{0x073D1A91,  CAT_HKP,              VT_UNKNOWN,       1305,  STR1305,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+{0x073D1A92,  CAT_HKP,              VT_UNKNOWN,       1306,  STR1306,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x2F3D058E,  CAT_HKP,              VT_TEMP,          1310,  STR1310,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Komfortsollwert
 {0x2F3D05A5,  CAT_HKP,              VT_TEMP,          1311,  STR1311,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P - Komfortsollwert Max
 {0x2F3D0590,  CAT_HKP,              VT_TEMP,          1312,  STR1312,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziertsollwert
@@ -7396,10 +7532,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2F3D060B,  CAT_HKP,              VT_ONOFF,         1326,  STR1326,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Kennlinie Adaption
 {0x2F3D05FD,  CAT_HKP,              VT_TEMP,          1330,  STR1330,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Sommer-/ Winterheizgrenze
 {0x2F3D0640,  CAT_HKP,              VT_TEMP,          1332,  STR1332,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Tagesheizgrenze
+{0x073D1214,  CAT_HKP,              VT_UNKNOWN,       1333,  STR1333,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Logged on LMS15
 {0x233D0663,  CAT_HKP,              VT_TEMP,          1340,  STR1340,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Minimum
 {0x233D0662,  CAT_HKP,              VT_TEMP,          1341,  STR1341,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Vorlaufsollwert Maximum
+{0x233D0A88,  CAT_HKP,              VT_TEMP,          1342,  STR1342,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged on LMS15
+{0x2F3D0D85,  CAT_HKP,              VT_PERCENT,       1344,  STR1344,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged on LMS15
 {0x233D17BB,  CAT_HKP,              VT_SECONDS_WORD,  1346,  STR1346,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 3/P - Delay time in case it is used an external electrical valve zone
 {0x233D0A88,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 3/P (nur wenn aktiviert) - Raumeinfluss
+{0x2F3D0603,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL},
 {0x2F3D0603,  CAT_HKP,              VT_PERCENT,       1350,  STR1350,  0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
 {0x2F3D0614,  CAT_HKP,              VT_TEMP,          1360,  STR1360,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Raumtemperaturbegrenzung
 {0x073D0C9D,  CAT_HKP,              VT_PERCENT,       1361,  STR1361,  0,                    NULL,         FL_OEM,       DEV_ALL},
@@ -7416,28 +7556,38 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x233D1181,  CAT_HKP,              VT_ONOFF,         1412,  STR1412,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P - Frostschutz Temperatur
 {0x233D0674,  CAT_HKP,              VT_ONOFF,         1420,  STR1420,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - Heizkreis 3/P (nur wenn aktiviert) - Überhitzschutz Pumpenkreis
 {0x233D065D,  CAT_HKP,              VT_TEMP,          1430,  STR1430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Mischerüberhöhung
+{0x233D0654,  CAT_HKP,              VT_UNKNOWN,       1432,  STR1432,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Logged on LMS15
 {0x233D065C,  CAT_HKP,              VT_TEMP,          1433,  STR1433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
 {0x233D065A,  CAT_HKP,              VT_SECONDS_WORD,  1434,  STR1434,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit HKP
 {0x2F3D065A,  CAT_HKP,              VT_SECONDS_WORD,  1434,  STR1434,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 1134 Antrieb Laufzeit [s] - logged on OCI700 via LPB
 {0x233D0658,  CAT_HKP,              VT_TEMP,          1435,  STR1435,  0,                    NULL,         FL_OEM, DEV_ALL}, // TODO Thision 1135 Mischer P-Band XP [K]
 {0x233D0659,  CAT_HKP,              VT_SECONDS_WORD,  1436,  STR1436,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x233D0684,  CAT_HKP,              VT_TEMP,          1441,  STR1441,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturwächter Sollwert
+{0x2F3D1256,  CAT_HKP,              VT_UNKNOWN,       1443,  STR1443,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Logged on LMS15
 {0x2F3D067B,  CAT_HKP,              VT_ENUM,          1450,  STR1450,  sizeof(ENUM1450),     ENUM1450,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Estrichfunktion
 {0x2F3D068A,  CAT_HKP,              VT_TEMP,          1451,  STR1451,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Estrich sollwert manuell
 {0x2F3D067D,  CAT_HKP,              VT_TEMP,          1455,  STR1455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Sollwert aktuell
 {0x2F3D067C,  CAT_HKP,              VT_DAYS,          1456,  STR1456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag aktuell
 {0x233D0DF2,  CAT_HKP,              VT_DAYS,          1457,  STR1457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Estrich Tag erfüllt
 {0x233D0B43,  CAT_HKP,              VT_DAYS,          1457,  STR1457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL},
+{0x2F3D071A,  CAT_HKP,              VT_UNKNOWN,       1460,  STR1460,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Rückkühlung Speicher
 {0x233D08C9,  CAT_HKP,              VT_ENUM,          1461,  STR1461,  sizeof(ENUM1461),     ENUM1461,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Übertemperaturabnahme
 {0x233D065E,  CAT_HKP,              VT_PERCENT,       1464,  STR1464,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Sperrsignalverstärkung
 {0x2F3D07C4,  CAT_HKP,              VT_YESNO,         1470,  STR1470,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Pufferspeicher
 {0x2F3D07C5,  CAT_HKP,              VT_YESNO,         1472,  STR1472,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Mit Vorregler/Zubring`pumpe
+{0x233D04AD,  CAT_HKP,              VT_ENUM,          1480,  STR1480,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged on LMS15
 {0x073D10D7,  CAT_HKP,              VT_PERCENT,       1481,  STR1481,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+. Anlaufdrehzahl. This parameter set with 0x01 cmd from Room Device instead 0x06
 {0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x233D04AB,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [%] - Heizkreis 3 - Pumpendrehzahl Minimum
+{0x073D115E,  CAT_HKP,              VT_PERCENT,       1482,  STR1482,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Logged on LMS15
 {0x233D04AA,  CAT_HKP,              VT_PERCENT,       1483,  STR1483,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
+{0x073D115F,  CAT_HKP,              VT_PERCENT,       1483,  STR1483,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Logged on LMS15
 {0x073D10E1,  CAT_HKP,              VT_PERCENT,       1485,  STR1485,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Minimum OEM [%]
 {0x073D10E0,  CAT_HKP,              VT_PERCENT,       1486,  STR1486_2,0,                    NULL,         FL_RONLY, DEV_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
+{0x233D0E38,  CAT_HKP,              VT_PERCENT,       1488,  STR1488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged on LMS15
 {0x233D0E39,  CAT_HKP,              VT_MINUTES_SHORT, 1489,  STR1489,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
+{0x233D10C2,  CAT_HKP,              VT_YESNO,         1490,  STR1490,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged from LMS15
+{0x073D0DD4,  CAT_HKP,              VT_ENUM,          1498,  STR1498,  sizeof(ENUM1498),     NULL,         DEFAULT_FLAG, DEV_ALL}, // Logged from LMS15
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500),     ENUM1500,     DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 {0x073D07BE,  CAT_HKP,              VT_ENUM,          1500,  STR1500,  sizeof(ENUM1500_2),   ENUM1500_2,   DEFAULT_FLAG, DEV_096_ALL}, // [0] - Heizkreis 3/P (nur wenn aktiviert) - Betriebsartumschaltung
 
@@ -7503,23 +7653,25 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2A3D07C6,  CAT_HXPUMPE,          VT_YESNO,         2037,  STR2037,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // H2 mit Pufferspeicher
 {0x2A3D07C7,  CAT_HXPUMPE,          VT_YESNO,         2039,  STR2039,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // H2 Vorregler / Zubring'pumpe
 {0x723D0B47,  CAT_HXPUMPE,          VT_UNKNOWN,       2040,  STR2040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // H2 Kälteanforderung
-{CMD_UNKNOWN, CAT_HXPUMPE,          VT_YESNO,         2044,  STR2044,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // H3 TWW-Ladevorrang
-{CMD_UNKNOWN, CAT_HXPUMPE,          VT_ONOFF,         2046,  STR2046,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - H1/H3-Pumpe (nur wenn aktiviert) - H3 Übertemperaturabnahme
-{CMD_UNKNOWN, CAT_HXPUMPE,          VT_YESNO,         2048,  STR2048,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [-] - H1/H3-Pumpe (nur wenn aktiviert) - H3 mit Pufferspeicher
-{CMD_UNKNOWN, CAT_HXPUMPE,          VT_YESNO,         2050,  STR2050,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - H1/H3-Pumpe (nur wenn aktiviert) - H3 Vorregler/Zubring`pumpe
+{0x2B3D08E5,  CAT_HXPUMPE,          VT_YESNO,         2044,  STR2044,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // H3 TWW-Ladevorrang
+{0x2B3D08CA,  CAT_HXPUMPE,          VT_ONOFF,         2046,  STR2046,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - H1/H3-Pumpe (nur wenn aktiviert) - H3 Übertemperaturabnahme
+{0x2B3D07C6,  CAT_HXPUMPE,          VT_YESNO,         2048,  STR2048,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [-] - H1/H3-Pumpe (nur wenn aktiviert) - H3 mit Pufferspeicher
+{0x2B3D07C7,  CAT_HXPUMPE,          VT_YESNO,         2050,  STR2050,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [ - ] - H1/H3-Pumpe (nur wenn aktiviert) - H3 Vorregler/Zubring`pumpe
 {CMD_UNKNOWN, CAT_HXPUMPE,          VT_UNKNOWN,       2051,  STR2051,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // H3 Kälteanforderung
 
 // Schwimmbad
 {0x493D0555,  CAT_SCHWIMMBAD,       VT_TEMP,          2055,  STR2055,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert Solarbeheizung
-{CMD_UNKNOWN, CAT_SCHWIMMBAD,       VT_UNKNOWN,       2056,  STR2056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert Erzeugerbeheizung
-{CMD_UNKNOWN, CAT_SCHWIMMBAD,       VT_YESNO,         2065,  STR2065,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Ladevorrang Solar
-{CMD_UNKNOWN, CAT_SCHWIMMBAD,       VT_UNKNOWN,       2070,  STR2070,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schwimmbadtemp Maximum
-{CMD_UNKNOWN, CAT_SCHWIMMBAD,       VT_YESNO,         2080,  STR2080,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Mit Solareinbindung
+{0x053D0AEA,  CAT_SCHWIMMBAD,       VT_UNKNOWN,       2056,  STR2056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwert Erzeugerbeheizung
+{0x053D12FD,  CAT_SCHWIMMBAD,       VT_YESNO,         2065,  STR2065,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Ladevorrang Solar
+{0x493D0AE6,  CAT_SCHWIMMBAD,       VT_YESNO,         2065,  STR2065,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_090_090}, // Ladevorrang Solar - Logged from Schotty's RVS63
+{0x053D0AEB,  CAT_SCHWIMMBAD,       VT_UNKNOWN,       2070,  STR2070,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schwimmbadtemp Maximum
+{0x053D0828,  CAT_SCHWIMMBAD,       VT_YESNO,         2080,  STR2080,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Mit Solareinbindung
 
 // Vorregler/Zubringerpumpe
 {0x1D3D079D,  CAT_VORREGLERPUMPE,   VT_TEMP,          2110,  STR2110,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorlaufsollwert Minimum
 {0x1D3D07BC,  CAT_VORREGLERPUMPE,   VT_TEMP,          2111,  STR2111,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorlaufsollwert Maximum
 {0x1D3D0D22,  CAT_VORREGLERPUMPE,   VT_TEMP,          2112,  STR2112,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorlaufsollwert Kühlen Min
+{0x053D1259,  CAT_VORREGLERPUMPE,   VT_UNKNOWN,       2121,  STR2121,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zubringerpumpe bei Erzeugersperre
 {0x1D3D0771,  CAT_VORREGLERPUMPE,   VT_TEMP   ,       2130,  STR2130,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
 {0x1D3D0D21,  CAT_VORREGLERPUMPE,   VT_TEMP,          2131,  STR2131,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerunterkühlung
 {0x1D3D08C1,  CAT_VORREGLERPUMPE,   VT_ENUM,          2132,  STR2132,  sizeof(ENUM2132),     ENUM2132,     FL_OEM, DEV_ALL}, // Antrieb Typ
@@ -7563,6 +7715,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D10C4,  CAT_KESSEL,           VT_TEMP,          2236,  STR2236,  0,                    NULL,         FL_OEM, DEV_ALL}, // P-Band Xp Trinkwasser
 {0x113D10C5,  CAT_KESSEL,           VT_SECONDS_WORD,  2237,  STR2237,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachstellzeit (Tn) Trinkwasser
 {0x113D10C6,  CAT_KESSEL,           VT_SECONDS_SHORT, 2238,  STR2238,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorhaltezeit (Tv) Trinkwasser
+{0x0D3D1104,  CAT_KESSEL,           VT_PERCENT,       2239,  STR2239,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // PID I-Erweiterung
 {0x0D3D0928,  CAT_KESSEL,           VT_TEMP,          2240,  STR2240,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Kessel
 {0x0D3D0939,  CAT_KESSEL,           VT_MINUTES_SHORT, 2241,  STR2241,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel Brennerlaufzeit Minimum
 {0x39050939,  CAT_KESSEL,           VT_SECONDS_WORD,  2241,  STR2241,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel Brennerlaufzeit Minimum
@@ -7582,6 +7735,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D08FE,  CAT_KESSEL,           VT_ONOFF,         2260,  STR2260,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Verbraucher
 {0x113D093A,  CAT_KESSEL,           VT_ONOFF,         2261,  STR2261,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anfahrentlast Kesselpumpe
 {0x053D0437,  CAT_KESSEL,           VT_ONOFF,         2262,  STR2262,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Einschaltoptimierung
+{0x113D0A0F,  CAT_KESSEL,           VT_UNKNOWN,       2263,  STR2263,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Sollwert Minimum bei Kesselabschaltung
 {0x0B063D05,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Antrieb Laufzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_025_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
 {0x053D0904,  CAT_KESSEL,           VT_SECONDS_WORD,  2264,  STR2264,  0,                    NULL,         FL_OEM, DEV_028_ALL}, // Baxi Luna Platinum+ 1.24,  Kessel -  Anfahrentlast Vor'schauzeit
@@ -7615,12 +7769,17 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0549,  CAT_KESSEL,           VT_TEMP,          2271,  STR2271,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Min OEM
 {0x053D08FD,  CAT_KESSEL,           VT_ONOFF,         2272,  STR2272,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // [°C ] - Kessel - Rückl'einfluss Verbraucher
+{0x053D0905,  CAT_KESSEL,           VT_SECONDS_WORD,  2273,  STR2273,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorausschau-Zeit Rücklauf-Minimalbegrenzung
+{0x113D0A0E,  CAT_KESSEL,           VT_PERCENT,       2274,  STR2274,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufeinfluss auf Kessel-Minimalbegrenzung
+{0x113D0B5E,  CAT_KESSEL,           VT_UNKNOWN,       2276,  STR2276,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufeinfluss auf Kesselrücklaufregelung
+{0x113D0B78,  CAT_KESSEL,           VT_UNKNOWN,       2278,  STR2278,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufregelung Wassermenge
 {0x053D090C,  CAT_KESSEL,           VT_SECONDS_WORD,  2282,  STR2282,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Antrieb Laufzeit
 {0x053D090A,  CAT_KESSEL,           VT_TEMP,          2283,  STR2283,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Mischer P-Band Xp
 {0x053D090B,  CAT_KESSEL,           VT_SECONDS_WORD,  2284,  STR2284,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Mischer Nachstellzeit
 {0x053D095E,  CAT_KESSEL,           VT_SECONDS_SHORT4,2285,  STR2285,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel - Mischer Vorhaltezeit Tv
 {0x113D0946,  CAT_KESSEL,           VT_TEMP,          2290,  STR2290,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Schaltdiff Bypasspumpe
 {0x113D0947,  CAT_KESSEL,           VT_ENUM,          2291,  STR2291,  sizeof(ENUM2291),     ENUM2291,     FL_OEM, DEV_ALL}, // Schaltdiff Bypasspumpe
+{0x113D0642,  CAT_KESSEL,           VT_UNKNOWN,       2292,  STR2292,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlagefrostschutz Kessel-Bypasspumpe
 {0x113D063C,  CAT_KESSEL,           VT_ONOFF,         2300,  STR2300,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Kessel - Anl'frostschutz Kess'pumpe (an/aus)
 {0x053D1182,  CAT_KESSEL,           VT_ONOFF,         2301,  STR2301,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kesselpumpe bei Erzeugersperre
 {0x053D1258,  CAT_KESSEL,           VT_ENUM,          2305,  STR2305,  sizeof(ENUM2305),     ENUM2305,     DEFAULT_FLAG, DEV_ALL}, // Wirkung Erzeugersperre
@@ -7649,7 +7808,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10F4,  CAT_KESSEL,           VT_PERCENT_100,   2334,  STR2334,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. min
 {0x053D10F5,  CAT_KESSEL,           VT_PERCENT_100,   2335,  STR2335,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung bei Pumpendrehz. max
 {0x053D0B5D,  CAT_KESSEL,           VT_HOURS_WORD,    2340,  STR2340,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Auto Erz’folge 2 x 1 Kaskade
-
+{0x053D14A7,  CAT_KESSEL,           VT_TEMP,          2370,  STR2370,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperaturhub Pumpendrehzahl Min Bypass
+{0x053D14A8,  CAT_KESSEL,           VT_TEMP,          2371,  STR2371,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperaturhub Pumpendrehzahl Max Bypass
+{0x053D14D8,  CAT_KESSEL,           VT_TEMP,          2372,  STR2372,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperatur Pumpendrehzahl Max Bypass
+{0x053D14A9,  CAT_KESSEL,           VT_MINUTES,       2373,  STR2373,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Verzögerung Drehzahlregler Bypasspumpe
+{0x053D14B3,  CAT_KESSEL,           VT_PERCENT,       2375,  STR2375,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Bypasspumpe
+{0x053D14AF,  CAT_KESSEL,           VT_PERCENT,       2376,  STR2376,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum Bypass
+{0x053D14B0,  CAT_KESSEL,           VT_PERCENT,       2377,  STR2377,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum Bypass
+{0x053D14B1,  CAT_KESSEL,           VT_PERCENT,       2381,  STR2381,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Min OEM Bypass
+{0x053D14B2,  CAT_KESSEL,           VT_PERCENT,       2382,  STR2382,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Max OEM Bypass
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
 {0x0D3D2F94,  CAT_KESSEL,           VT_SPEED,         2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2441 Gebläsedrehzahl Hz Maximum
 {0x093D0F80,  CAT_KESSEL,           VT_SPEED2,        2441,  STR2441,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Baxi Luna Platinum+ Gebläsedrehzahl Maximum RPM
@@ -7812,12 +7979,18 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0FE2,  CAT_KESSEL,           VT_SECONDS_SHORT5,2496,  STR2496,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Dyn Drucküberw Zeitkonst
 {0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
 {0x053D0FEA,  CAT_KESSEL,           VT_ONOFF,         2502,  STR2500,  sizeof(ENUM2502),     ENUM2502,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Durchfl'schalter Abschaltung
+{0x053D1361,  CAT_KESSEL,           VT_UNKNOWN,       2501,  STR2501,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Durchflussmessung
+{0x053D1B92,  CAT_KESSEL,           VT_UNKNOWN,       2503,  STR2503,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wartezeit Schalter
+{0x053D1AE1,  CAT_KESSEL,           VT_LITERPERMIN,   2505,  STR2505,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
 {0x053D0FE8,  CAT_KESSEL,           VT_SECONDS_SHORT5,2504,  STR2504,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Min Einschaltzeit Schalter
+{0x053D1ADE,  CAT_KESSEL,           VT_LITERPERMIN,   2509,  STR2509,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
 {0x0D3D1121,  CAT_KESSEL,           VT_TEMP_WORD60,   2510,  STR2510,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschaltung Temp'grad (Bug in Baxi Luna: 0.8 shown twice)
 {0x0D3D1122,  CAT_KESSEL,           VT_SECONDS_SHORT, 2511,  STR2511,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw'zeit
 {0x0D3D1120,  CAT_KESSEL,           VT_ONOFF,         2512,  STR2512,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw' RT
 {0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
 {0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
+{0x0D3D11F4,  CAT_KESSEL,           VT_TEMP,          2527,  STR2527,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Kesseltemperatur Leistungsreduktion
+{0x0D3D11F5,  CAT_KESSEL,           VT_TEMP,          2528,  STR2528,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdifferenz Leistungsreduktion
 {0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
@@ -7845,6 +8018,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 
 //Sitherm Pro
 {0x093D303A,  CAT_SITHERM,           VT_UINT,         2700,  STR2700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ergebnis letzter Drifttest
+{0x093D3039,  CAT_SITHERM,           VT_UINT,         2700,  STR2700,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // Ergebnis letzter Drifttest
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_122_ALL}, // Ion'strom gefiltert
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Ion'strom gefiltert
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_162_ALL}, // Ion'strom gefiltert
@@ -7853,6 +8027,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_195_ALL}, // Ion'strom gefiltert
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_196_ALL}, // Ion'strom gefiltert
 {0x093D0F31,  CAT_SITHERM,           VT_CURRENT,      2700,  STR2700_2,0,                    NULL,         FL_RONLY, DEV_203_ALL}, // Ion'strom gefiltert
+{0x093D303A,  CAT_SITHERM,           VT_UNKNOWN,      2701,  STR2701,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mittelwert Drifttest
 {0x093D301E,  CAT_SITHERM,           VT_YESNO,        2702,  STR2702,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Auslösen neuer Drifttest Ja/Nein
 {0x053D3042,  CAT_SITHERM,           VT_SINT,         2702,  STR2702_2,0,                    NULL,         FL_RONLY, DEV_122_ALL}, // Position Schrittmotor // todo VT_SINT verifizieren
 {0x053D3042,  CAT_SITHERM,           VT_SINT,         2702,  STR2702_2,0,                    NULL,         FL_RONLY, DEV_123_ALL}, // Position Schrittmotor // todo VT_SINT verifizieren
@@ -7882,8 +8057,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D0F26,  CAT_SITHERM,           VT_SINT,         2705,  STR2705_2,0,                    NULL,         FL_RONLY, DEV_196_ALL}, // R-Wert
 {0x093D0F26,  CAT_SITHERM,           VT_SINT,         2705,  STR2705_2,0,                    NULL,         FL_RONLY, DEV_203_ALL}, // R-Wert
 {0x093D0F62,  CAT_SITHERM,           VT_ENUM,         2706,  STR2706,  sizeof(ENUM2706),     ENUM2706,     FL_RONLY, DEV_ALL},     // Betriebsphase
+{0x093D301D,  CAT_SITHERM,           VT_UNKNOWN,      2710,  STR2710,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wahl Exemplareinstellung
+{0x093D303D,  CAT_SITHERM,           VT_CURRENT,      2711,  STR2711,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Exempl'einstell. Ion.Strom TL
+{0x093D303E,  CAT_SITHERM,           VT_CURRENT,      2714,  STR2714,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Exempl'einstell. Ion.Strom VL
+{0x093D303F,  CAT_SITHERM,           VT_CURRENT,      2717,  STR2717,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Exempl'einst. Sollwertkorr.TL
+{0x093D3040,  CAT_SITHERM,           VT_CURRENT,      2718,  STR2718,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Exempl'einst. Sollwertkorr.VL
 {0x053D3020,  CAT_SITHERM,           VT_ONOFF,        2720,  STR2720,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Freigabe Einstellung Gasart
 {0x053D3041,  CAT_SITHERM,           VT_ENUM,         2721,  STR2721,  sizeof(ENUM2721),     ENUM2721,     FL_RONLY, DEV_ALL},     // Gasart
+//{0x093D3020,  CAT_SITHERM,           VT_UNKNOWN,      2725,  STR2725,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // Freigabe Einstellung Gasart
+//{0x093D3041,  CAT_SITHERM,           VT_UNKNOWN,      2726,  STR2726,  sizeof(ENUM2721),     ENUM2721,     DEFAULT_FLAG, DEV_097_ALL}, // Gasart
 {0x093D3077,  CAT_SITHERM,           VT_ENUM,         2727,  STR2727,  sizeof(ENUM2727),     ENUM2727,     DEFAULT_FLAG, DEV_ALL}, // Zünd und Überwach'bereich
 {0x153D2FF0,  CAT_SITHERM,           VT_CURRENT,      2730,  STR2730,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ionisationsstrom uA -> Gleiche ID wie STR8329
 {0x153D2FF0,  CAT_SITHERM,           VT_CURRENT,      2730,  STR2730,  0,                    NULL,         FL_NO_CMD, DEV_097_ALL}, // No command
@@ -7891,11 +8073,23 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D3042,  CAT_SITHERM,           VT_UINT,         2731,  STR2731,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Schrittmotor
 {0x093D3043,  CAT_SITHERM,           VT_SINT,         2732,  STR2732,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Lernwert Gasqualität
 {0x093D1A10,  CAT_SITHERM,           VT_ENUM,         2740,  STR2702,  sizeof(ENUM2740),     ENUM2740,     DEFAULT_FLAG, DEV_ALL}, // Auslösen Drifttest
+// Logged from LMS15 - unclear which variant is applicable
+//{0x093D1A12,  CAT_SITHERM,           VT_CURRENT,       2741,  STR2741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Ergebnis letzter Test
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2742,  STR2742,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2743,  STR2743,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2744,  STR2744,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2745,  STR2745,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
+//{0x093D1AE0,  CAT_SITHERM,           VT_HOURS_SHORT,   2745,  STR2745,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Zeit bis Ablauf des Intervall 1
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2747,  STR2747,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
+//{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2748,  STR2748,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
 {0x093D1A11,  CAT_SITHERM,           VT_BYTE,         2741,  STR2741,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ADA Punkt Nr
 {0x093D1A13,  CAT_SITHERM,           VT_CURRENT,      2742,  STR2742,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Filterwert
 {0x093D1A14,  CAT_SITHERM,           VT_CURRENT,      2743,  STR2743,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Korrektur
 {0x093D1A15,  CAT_SITHERM,           VT_UINT100,      2744,  STR2744,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA vergangene Zeit
 {0x093D1A12,  CAT_SITHERM,           VT_CURRENT,      2745,  STR2745,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Ergebnis // todo dies ist eigentlich Teil 2 von Parameter 2741. 2741 legt den ADA Punkt fest (1...7), dessen Wert dann unter dieser 0xID abgefragt werden kann.
+{0x093D1AE0,  CAT_SITHERM,           VT_HOURS_SHORT,  2746,  STR2746,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Zeit bis Ablauf des Intervall 1 - reported as parameter 2745
+{0x093D1A88,  CAT_SITHERM,           VT_CURRENT,      2747,  STR2747,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Warnschwelle Ionstromkorrektur ist groß
+{0x093D1A89,  CAT_SITHERM,           VT_CURRENT,      2748,  STR2748,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Störschwelle Ionstromkorrektur ist groß
 {0x093D1A16,  CAT_SITHERM,           VT_ENUM,         2749,  STR2749,  sizeof(ENUM2749),     ENUM2749,     DEFAULT_FLAG, DEV_ALL}, // Reset Drifttest
 {0x093D0F63,  CAT_SITHERM,           VT_BYTE,         2750,  STR2750,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anstehende Drifttests
 {0x093D1A17,  CAT_SITHERM,           VT_HOURS_WORD,   2751,  STR2751,  0,                    NULL,         FL_RONLY, DEV_ALL}, // ADA Zeitintervall 1
@@ -8151,6 +8345,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0830,  CAT_KASKADE,          VT_SECONDS_WORD,  3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
 {0x053D0831,  CAT_KASKADE,          VT_MINUTES_SHORT, 3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
 {0x053D0832,  CAT_KASKADE,          VT_SECONDS_WORD,  3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
+{0x053D1AE2,  CAT_KASKADE,          VT_MINUTES,       3535,  STR3535,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zuschaltverzögerung Erzeugerfolge TWW
 {CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3538,  STR3538,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ersatz Schienenvorlauftemperatur
 {0x053D0833,  CAT_KASKADE,          VT_HOURS_WORD,    3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
 {0x053D084E,  CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
@@ -8161,6 +8356,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x153D0B3A,  CAT_KASKADE,          VT_TEMP,          3560,  STR3560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufsollwert Minimum
 {0x153D0B3B,  CAT_KASKADE,          VT_TEMP,          3561,  STR3561,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rücklaufsollwert Min OEM
 {0x153D0B40,  CAT_KASKADE,          VT_ONOFF,         3562,  STR3562,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
+{0x153D0B77,  CAT_KASKADE,          VT_SECONDS_WORD,  3563,  STR3563,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorausschau-Zeit Rücklauf-Minimalbegrenzung
 {0x153D0B3F,  CAT_KASKADE,          VT_SECONDS_WORD,  3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
 {0x153D0B3D,  CAT_KASKADE,          VT_TEMP,          3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
 {0x153D0B3E,  CAT_KASKADE,          VT_SECONDS_WORD,  3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
@@ -8213,13 +8409,24 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x0D3D0860,  CAT_SOLAR,            VT_TEMP,          3840,  STR3840,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Kollektor Frostschutz - logged on OCI700 via LPB
 {0x493D0865,  CAT_SOLAR,            VT_TEMP,          3850,  STR3850,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Kollektorüberhitzschutz
 {0x113D0865,  CAT_SOLAR,            VT_TEMP,          3850,  STR3850,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Kollektorüberhitzschutz - logged on OCI700 via LPB
+{0x493D0864,  CAT_SOLAR,            VT_TEMP,          3851,  STR3851,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kollektorüberhitzschutztemp Schaltdifferenz
 {0x493D0551,  CAT_SOLAR,            VT_TEMP,          3860,  STR3860,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Verdampfung Waermetaeger
 {0x113D0551,  CAT_SOLAR,            VT_TEMP,          3860,  STR3860,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Verdampfung Waermetaeger - logged on OCI700 via LPB
+{0x493D0552,  CAT_SOLAR,            VT_TEMP,          3861,  STR3861,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz Verdampfungstemp Wärmeträger
 {0x053D12FC,  CAT_SOLAR,            VT_UNKNOWN,       3862,  STR3862,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Solar (nur wenn aktiviert) - Wirkung Verdampf´überwach
+{0x053D10DB,  CAT_SOLAR,            VT_PERCENT,       3865,  STR3865,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Kollektorpumpe 1
+{0x053D10DA,  CAT_SOLAR,            VT_PERCENT,       3867,  STR3867,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Solarpumpe ext. Tauscher
+{0x053D10D9,  CAT_SOLAR,            VT_PERCENT,       3868,  STR3868,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Solarpumpe Puffer
+{0x053D10D8,  CAT_SOLAR,            VT_PERCENT,       3869,  STR3869,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Solarpumpe Schwimmbad
+// TODO: The following two entries were logged from LMS15 - does a HC1 telegram make sense here?
+//{0x053D1162,  CAT_USER_DEFINED,     VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum Heizkreis 1
+//{0x053D1163,  CAT_USER_DEFINED,     VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
 {0x493D04B1,  CAT_SOLAR,            VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x493D04B0,  CAT_SOLAR,            VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x493D0AEC,  CAT_SOLAR,            VT_TEMP,          3872,  STR3872,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x493D0AED,  CAT_SOLAR,            VT_SECONDS_WORD,  3873,  STR3873,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
+{0x053D10E6,  CAT_USER_DEFINED,     VT_PERCENT,       3875,  STR3875,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum OEM
+{0x053D10E7,  CAT_USER_DEFINED,     VT_PERCENT,       3876,  STR3876,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum OEM
 {0x493D0509,  CAT_SOLAR,            VT_ENUM,          3880,  STR3880,  sizeof(ENUM3880),     ENUM3880,     DEFAULT_FLAG, DEV_ALL}, // Frostschutzmittel
 {0x493D050A,  CAT_SOLAR,            VT_PERCENT,       3881,  STR3881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Frost'mittel Konzentration
 {0x493D050C,  CAT_SOLAR,            VT_UINT,          3884,  STR3884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendurchfluss
@@ -8232,6 +8439,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10D3,  CAT_SOLAR,            VT_UNKNOWN,       3897,  STR3897,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Solarrückl´fühler
 
 // Feststoffkessel
+{0x053D0B0B,  CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4101,  STR4101,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Feststoffkessel Anfeuerungshilfe
 {0x513D088A,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4102,  STR4102,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [0] - Feststoffkessel (nur wenn aktiviert) - Sperrt andere Erzeuger
 {0x513D11CA,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4103,  STR4103,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // [0] - Feststoffkessel (nur wenn aktiviert) - Ladepriorität TWW Speicher
 {0x513D0885,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4110,  STR4110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Feststoffkessel (nur wenn aktiviert) - Sollwert Minimum
@@ -8253,6 +8461,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x513D0880,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4164,  STR4164,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
 {0x513D087F,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4165,  STR4165,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x513D063B,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4170,  STR4170,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anl'frostschutz Kess'pumpe
+{0x053D0B0E,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4180,  STR4180,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe Abgastemperatur Minimum
+{0x513D0B0D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES,       4182,  STR4182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe Dauer Maximum
+{0x513D0A9F,  CAT_FESTSTOFFKESSEL,  VT_UNKNOWN,       4184,  STR4184,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe mit Pumpe
 {0x513D089E,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4190,  STR4190,  0,                    NULL,         FL_OEM, DEV_ALL}, // Restwärmefkt Dauer Max
 {0x513D066E,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4192,  STR4192,  sizeof(ENUM4192),     ENUM4192,     FL_OEM, DEV_ALL}, // Restwärmefkt Auslösung
 {0x513D089F,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4201,  STR4201,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Minimum
@@ -8277,11 +8488,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4726,  STR4726,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max Speichertemperatur Kühlbetrieb
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4728,  STR4728,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relative Temperaturdifferenz Puffer/HK
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4735,  STR4735,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertreduktion B42/B41
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4739,  STR4739,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schichtschutz
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4740,  STR4740,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Tempdiff Max
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4743,  STR4743,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Vor’schauzeit
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4744,  STR4744,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Nachstellzeit
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4746,  STR4746,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasserschutz Kombi
+{0x193D0B51,  CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4739,  STR4739,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schichtschutz
+{0x053D08CE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4740,  STR4740,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Tempdiff Max
+{0x053D08D0,  CAT_PUFFERSPEICHER,   VT_SECONDS_WORD,  4743,  STR4743,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Vor’schauzeit
+{0x053D08CF,  CAT_PUFFERSPEICHER,   VT_SECONDS_SHORT, 4744,  STR4744,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Nachstellzeit
+{0x053D0B52,  CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4746,  STR4746,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasserschutz Kombi
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4749,  STR4749,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Minimaler Ladesollwert Solar
 {0x053D08A9,  CAT_PUFFERSPEICHER,   VT_TEMP,          4750,  STR4750,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Ladetemperatur
 {0x053D08A8,  CAT_PUFFERSPEICHER,   VT_TEMP,          4751,  STR4751,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Pufferspeicher (nur wenn aktiviert) - Speichertemperatur Maximum
@@ -8295,8 +8506,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D08AE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4791,  STR4791,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp'diff AUS Rückl'umlenk
 {0x053D0638,  CAT_PUFFERSPEICHER,   VT_ENUM,          4795,  STR4795,  sizeof(ENUM4795),     ENUM4795,     DEFAULT_FLAG, DEV_ALL}, // Vergleichstemp Rückl'umlenk
 {0x053D085F,  CAT_PUFFERSPEICHER,   VT_ENUM,          4796,  STR4796,  sizeof(ENUM4796),     ENUM4796,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Rücklaufumlenkung
+{0x053D0AF1,  CAT_USER_DEFINED,     VT_TEMP,          4800,  STR4800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Teilladung 
 {0x193D0B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     FL_OEM, DEV_ALL}, // Durchladung
-{CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4811,  STR4811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Durchladetemperatur Minimum
+{0x193D0B86,  CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4811,  STR4811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Durchladetemperatur Minimum
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4830,  STR4830,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorlaufumlenktemperatur
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4831,  STR4831,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdifferenz Vorlaufumlenkung
@@ -8387,6 +8599,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
 {0x053D10DD,  CAT_TWSPEICHER,       VT_PERCENT,       5109,  STR5109,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anl'drehzahl Zwi'kreispumpe //Thision 19 Plus
 {0x253D072C,  CAT_TWSPEICHER,       VT_TEMP,          5120,  STR5120,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
+{0x253D071F,  CAT_TWSPEICHER,       VT_UNKNOWN,       5122,  STR5122,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb-Regelungsart Heizkreis
+{0x253D0749,  CAT_TWSPEICHER,       VT_TEMP,          5123,  STR5123,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb-Schaltdifferenz Heizkreis
 {0x253D072B,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5124,  STR5124,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
 {0x253D0729,  CAT_TWSPEICHER,       VT_TEMP,          5125,  STR5125,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer-B-Band Xp
 {0x253D072A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5126,  STR5126,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
@@ -8409,7 +8623,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 
 // Trinkwasser Durchl'erhitzer
 {0x313D2FC5,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5400,  STR5400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5400 Komfortsollwert [°C]
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_TEMP,          5406,  STR5406,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min Sollw'diff zu Speich'temp
+{0x313D0D14,  CAT_DRUCHLERHITZER,   VT_TEMP,          5406,  STR5406,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min Sollw'diff zu Speich'temp
 {0x253D0720,  CAT_DRUCHLERHITZER,   VT_TEMP,          5420,  STR5420,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5420 Vorlauf-Sollwertüberhöhung [°C]
 {0x22052F8F,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
 //{0x213D2F8F,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
@@ -8448,10 +8662,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x223D301B,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
 {0x213D3075,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
 {CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5530,  STR5530,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
+{0x313D0B1E,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT5,5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
+{0x313D0B1D,  CAT_DRUCHLERHITZER,   VT_TEMP,          5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x313D0B21,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x313D0B22,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT4,5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
 
 // Allgemeine Funktionen: CAT_ALLGFUNKT
 {0x053D182A,  CAT_ALLGFUNKT,        VT_TEMP,          5570,  STR5570,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff EIN dT-Regler 1 [grad C]
@@ -9036,6 +9250,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D0B83,  CAT_KONFIG,           VT_UNKNOWN,       6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktionswert 2 H2 BAR
 {0x053D0E7B,  CAT_KONFIG,           VT_SINT,          6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Funktionswert 2 H2 modul 1 - Baxi Luna Platinum
 {0x053D0E7B,  CAT_KONFIG,           VT_SINT,          6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Funktionswert 2 H2 modul 1 - Baxi Luna Platinum
+{0x063D05DC,  CAT_KONFIG,           VT_PRESSURE_WORD, 6052,  STR6052_2,0,                    NULL,         DEFAULT_FLAG, DEV_090_090}, // Druckwert bei 3.5 V H2
 {0x053D0E7F,  CAT_KONFIG,           VT_VOLTAGE_WORD,  6057,  STR6057  ,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 1 H2 modul 2 - Baxi Luna Platinum
 {0x053D0E79,  CAT_KONFIG,           VT_SINT,          6058,  STR6058  ,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktionswert 1 H2 modul 2 - Baxi Luna Platinum
 {0x053D0E82,  CAT_KONFIG,           VT_VOLTAGE_WORD,  6059,  STR6059  ,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 2 H2 modul 2 - Baxi Luna Platinum
@@ -9143,11 +9358,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_205_ALL}, // Wasserdruck kritisch Min
 {0x053D05DA,  CAT_KONFIG,           VT_PRESSURE,      6142,  STR6142,  0,                    NULL,         FL_RONLY, DEV_211_ALL}, // Wasserdruck kritisch Min
 {0x093D2FBC,  CAT_KONFIG,           VT_PRESSURE_WORD, 6143,  STR6143,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruckschwelle für Kessel und Pumpe aus
-{0x113D3068,  CAT_KONFIG,           VT_UNKNOWN,       6143,  STR6143,  0,                    NULL,         FL_RONLY, DEV_097_ALL}, // Wasserdruckschwelle für Kessel und Pumpe aus
+{0x053D05DD,  CAT_KONFIG,           VT_PRESSURE_WORD, 6143,  STR6143,  0,                    NULL,         FL_RONLY, DEV_097_ALL}, // Wasserdruckschwelle für Kessel und Pumpe aus
 {0x093D2FBD,  CAT_KONFIG,           VT_PRESSURE_WORD, 6144,  STR6144,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Schaltdifferenz Wasserdruck
-{0x113D3069,  CAT_KONFIG,           VT_FP02,          6144,  STR6145,  0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Min. Druckdiff Pumpe Ein Thision S17.1 0.02 = 1
+{0x113D3068,  CAT_KONFIG,           VT_FP02,          6144,  STR6145,  0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Min. Druckdiff Pumpe Ein Thision S17.1 0.02 = 1
 {0x093D3068,  CAT_KONFIG,           VT_UNKNOWN,       6145,  STR6145,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Minimale Druckdifferenz nach Pumpe ein
-{0x093D2FBD,  CAT_KONFIG,           VT_FP02,          6145,  STR6146,  0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Max. Druckdiff Pumpe Ein Thision S17.1 0.02 = 1
+{0x113D3069,  CAT_KONFIG,           VT_FP02,          6145,  STR6146,  0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Max. Druckdiff Pumpe Ein Thision S17.1 0.02 = 1
 {0x093D3069,  CAT_KONFIG,           VT_UNKNOWN,       6146,  STR6146,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Maximale Druckdifferenz nach Pumpe ein
 {0x093D3016,  CAT_KONFIG,           VT_PRESSURE,      6146,  STR6146_2,0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Druckwert 3.5V [bar] Thision S17.1
 {0x053D12E5,  CAT_KONFIG,           VT_ENUM,          6148,  STR6148,  sizeof(ENUM6148),     ENUM6148,     DEFAULT_FLAG, DEV_ALL}, // Statische Drucküberwach' 1
@@ -9156,6 +9371,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D05DA,  CAT_KONFIG,           VT_PRESSURE,      6152,  STR6152,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 kritisch Min
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6180,  STR6180,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Maximum
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
+{0x073D05D9,  CAT_KONFIG,           VT_PRESSURE_WORD, 6181,  STR6181,  0,                    NULL,         FL_OEM,       DEV_090_090}, // Wasserdruck 3 Minimum
 {0x073D05DA,  CAT_KONFIG,           VT_PRESSURE,      6182,  STR6182,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 kritisch Min
 {0x053D06AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Fühler Speichern
 {0x053D0BBF,  CAT_KONFIG,           VT_YESNO,         6201,  STR6201,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Fühler löschen //FUJITSU
@@ -9354,7 +9570,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x413D000E,  CAT_LPB,              VT_FP1    ,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
 
 //Fehler
-{0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
+{0x053D009A,  CAT_FEHLER,           VT_UNKNOWN,       6700,  STR6700,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00 00 00 00 00 00 00 00 00 00 / same on RVS43.222 // bytes 4 and 5 same as 053D000B, probably error log with some kind of date, error number and error origin (VT_LPBADDR)
 {0x053D006B,  CAT_FEHLER,           VT_UNKNOWN,       6701,  STR10200, 0,                    NULL,         FL_RONLY,     DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222 // first byte error code, second byte FA Phase?
 {0x053D127A,  CAT_FEHLER,           VT_YESNO,         6704,  STR6704,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // SW Diagnosecode
 {0x053D0099,  CAT_FEHLER,           VT_ERRORCODE,     6705,  STR6705,  sizeof(ENUM_SWCODE),  ENUM_SWCODE,  FL_RONLY,     DEV_ALL}, // Thision 6705 SW Diagnosecode [VT_ERRORCODE?]
@@ -9534,6 +9750,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D081D,  CAT_FEHLER,           VT_ERRORCODE,     6819,  STR6819,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_NO_CMD,    DEV_162_ALL}, // [ ] - Fehler - Historie 10 Fehlercode
 // 3
 {0x0D3D06E7,  CAT_FEHLER,           VT_YESNO,         6820,  STR6820,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM,       DEV_ALL}, // [ ] - Fehler - Reset Historie
+{0x053D06E7,  CAT_FEHLER,           VT_YESNO,         6820,  STR6820,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM,       DEV_107_ALL}, // [ ] - Fehler - Reset Historie
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [ ] - THISION: Fehler Historie 3 - logged on OCI700 via LPB
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // [ ] - THISION: Fehler Historie 3
 {0x053D2FF9,  CAT_FEHLER,           VT_BYTE,          6820,  STR6820_2,0,                    NULL,         FL_RONLY,     DEV_098_ALL}, // [ ] - THISION: Fehler Historie 3
@@ -9807,7 +10024,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_195_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_196_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_203_ALL}, // Meldung Ionisationsstrom
-{0x05050B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
+{0x053D0B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
@@ -10095,6 +10312,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D03F8,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7911,  STR7911,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX 1 //FUJITSU
 //following CommandID used to be ...FC, but since it doubles with 7915 and ...09 make much more sense here, I changed it accordingly
 {0x053D03F9,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7912,  STR7912,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // [V] - Ein-/Ausgangstest - Eingang EX2
+{0x053D03FC,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7912,  STR7912,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_090_090}, // [V] - Ein-/Ausgangstest - Eingang EX2
 {0x053D03FA,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7913,  STR7913,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX 3 //FUJITSU
 {0x053D03FB,  CAT_IOTEST,           VT_VOLTAGEONOFF,  7914,  STR7914,  sizeof(ENUM_VOLTAGEONOFF), ENUM_VOLTAGEONOFF, FL_RONLY,     DEV_ALL}, // Eingang EX 4
 // following CommandID from device family 119, same one in 7912
@@ -10190,29 +10408,45 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D17DD,  CAT_STATUS,           VT_ENUM,          8099,  STR8099,  sizeof(ENUM8006),     ENUM8099,     FL_RONLY,     DEV_ALL}, // Status Wärmepumpe im Hauptdisplay, virtueller Parameter, BSW-K
 
 // Diagnose Kaskade
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8100,  STR8100,  sizeof(ENUM8100),     ENUM8100,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 1
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8102,  STR8102,  sizeof(ENUM8102),     ENUM8102,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 2
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8104,  STR8104,  sizeof(ENUM8104),     ENUM8104,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 3
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8106,  STR8106,  sizeof(ENUM8106),     ENUM8106,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 4
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8108,  STR8108,  sizeof(ENUM8108),     ENUM8108,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 5
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8110,  STR8110,  sizeof(ENUM8110),     ENUM8110,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 6
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8112,  STR8112,  sizeof(ENUM8112),     ENUM8112,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 7
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8114,  STR8114,  sizeof(ENUM8114),     ENUM8114,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 8
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8116,  STR8116,  sizeof(ENUM8116),     ENUM8116,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 9
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8118,  STR8118,  sizeof(ENUM8118),     ENUM8118,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 10
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8120,  STR8120,  sizeof(ENUM8120),     ENUM8120,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 11
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8122,  STR8122,  sizeof(ENUM8122),     ENUM8122,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 12
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8124,  STR8124,  sizeof(ENUM8124),     ENUM8124,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 13
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8126,  STR8126,  sizeof(ENUM8126),     ENUM8126,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 14
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8128,  STR8128,  sizeof(ENUM8128),     ENUM8128,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 15
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_ENUM,          8130,  STR8130,  sizeof(ENUM8130),     ENUM8130,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 16
+{0x153D0B90,  CAT_DIAG_KASKADE,     VT_ENUM,          8100,  STR8100,  sizeof(ENUM8100),     ENUM8100,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 1
+{0x153D0BA4,  CAT_USER_DEFINED,     VT_UNKNOWN,       8101,  STR8101,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B91,  CAT_DIAG_KASKADE,     VT_ENUM,          8102,  STR8102,  sizeof(ENUM8102),     ENUM8102,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 2
+{0x153D0BA5,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8103,  STR8103,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B92,  CAT_DIAG_KASKADE,     VT_ENUM,          8104,  STR8104,  sizeof(ENUM8104),     ENUM8104,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 3
+{0x153D0BA6,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8105,  STR8105,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B93,  CAT_DIAG_KASKADE,     VT_ENUM,          8106,  STR8106,  sizeof(ENUM8106),     ENUM8106,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 4
+{0x153D0BA7,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8107,  STR8107,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B94,  CAT_DIAG_KASKADE,     VT_ENUM,          8108,  STR8108,  sizeof(ENUM8108),     ENUM8108,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 5
+{0x153D0BA8,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8109,  STR8109,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B95,  CAT_DIAG_KASKADE,     VT_ENUM,          8110,  STR8110,  sizeof(ENUM8110),     ENUM8110,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 6
+{0x153D0BA9,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8111,  STR8111,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B96,  CAT_DIAG_KASKADE,     VT_ENUM,          8112,  STR8112,  sizeof(ENUM8112),     ENUM8112,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 7
+{0x153D0BAA,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8113,  STR8113,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B97,  CAT_DIAG_KASKADE,     VT_ENUM,          8114,  STR8114,  sizeof(ENUM8114),     ENUM8114,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 8
+{0x153D0BAB,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8115,  STR8115,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B98,  CAT_DIAG_KASKADE,     VT_ENUM,          8116,  STR8116,  sizeof(ENUM8116),     ENUM8116,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 9
+{0x153D0BAC,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8117,  STR8117,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B99,  CAT_DIAG_KASKADE,     VT_ENUM,          8118,  STR8118,  sizeof(ENUM8118),     ENUM8118,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 10
+{0x153D0BAD,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8119,  STR8119,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9A,  CAT_DIAG_KASKADE,     VT_ENUM,          8120,  STR8120,  sizeof(ENUM8120),     ENUM8120,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 11
+{0x153D0BAE,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8121,  STR8121,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9B,  CAT_DIAG_KASKADE,     VT_ENUM,          8122,  STR8122,  sizeof(ENUM8122),     ENUM8122,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 12
+{0x153D0BAF,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8123,  STR8123,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9C,  CAT_DIAG_KASKADE,     VT_ENUM,          8124,  STR8124,  sizeof(ENUM8124),     ENUM8124,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 13
+{0x153D0BB0,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8125,  STR8125,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9D,  CAT_DIAG_KASKADE,     VT_ENUM,          8126,  STR8126,  sizeof(ENUM8126),     ENUM8126,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 14
+{0x153D0BB1,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8127,  STR8125,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9E,  CAT_DIAG_KASKADE,     VT_ENUM,          8128,  STR8128,  sizeof(ENUM8128),     ENUM8128,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 15
+{0x153D0BB2,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8129,  STR8129,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
+{0x153D0B9F,  CAT_DIAG_KASKADE,     VT_ENUM,          8130,  STR8130,  sizeof(ENUM8130),     ENUM8130,     FL_RONLY,     DEV_ALL}, // Priorität / Status Erzeuger 16
+{0x153D0BB3,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8131,  STR8131,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Uhrzeit
 {0x053D053A,  CAT_DIAG_KASKADE,     VT_TEMP,          8138,  STR8138,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenvorlauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8139,  STR8139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenvorlaufsollwert
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8140,  STR8140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklauftemperatur
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8141,  STR8141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklaufsollwert
-{CMD_UNKNOWN, CAT_DIAG_KASKADE,     VT_UNKNOWN,       8150,  STR8150,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Erz'folge Umschalt aktuell
+{0x053D0B74,  CAT_DIAG_KASKADE,     VT_TEMP,          8139,  STR8139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenvorlaufsollwert
+{0x153D095B,  CAT_DIAG_KASKADE,     VT_TEMP,          8140,  STR8140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklauftemperatur
+{0x053D0B75,  CAT_DIAG_KASKADE,     VT_TEMP,          8141,  STR8141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklaufsollwert
+{0x153D083A,  CAT_DIAG_KASKADE,     VT_HOURS_SHORT,   8150,  STR8150,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Erz'folge Umschalt aktuell
+{0x053D0850,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8151,  STR8151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Stufenfolge Aktuell
 {0x053D0ABC,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8199,  STR8199,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskaden Zustand, virtueller Parameter von ACS700
-
 
 //Diagnose Erzeuger
 {0x053D09A0,  CAT_DIAG_ERZEUGER,    VT_ONOFF,         8300,  STR8300,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Erzeuger - 1. Brennerstufe T2
@@ -10879,6 +11113,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_196_ALL}, // Nachlüftzeit
 {0x093D10FD,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9540,  STR9540,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // Nachlüftzeit
 {0x053D2FB5,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_SHORT, 9541,  STR9541,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Max - Baxi Luna Platinum+
+{0x113D304B,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES,       9541,  STR9541,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // Gebläsenachlauf bei TW / TB Überschreitung
 {0x093D0DD9,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9542,  STR9542,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Min //Thision 19 Plus
 {0x093D19D3,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9545,  STR9545,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
@@ -10904,7 +11139,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D0C74,  CAT_FEUERUNGSAUTOMAT, VT_PROPVAL,       9630,  STR9630,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 {0x053D0C76,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD,  9631,  STR9631,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 //May be incorrect value: Baxi Luna Platinum+ return 0.00 sec, so here can be different divider
-{0x053D0C77,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9632,  STR9632,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
+//Edit: Complete Dump of LMS15 says it should be VT_SECONDS_WORD16, not VT_SECONDS_WORD5, still test is needed...
+{0x053D0C77,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD16,9632,  STR9632,  0,                    NULL,         FL_RONLY,     DEV_ALL}, //
 {0x093D0F87,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9650,  STR9650,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // Kamintrocknung //Thision 19 Plus
 {0x093D0F88,  CAT_FEUERUNGSAUTOMAT, VT_SPEED2,        9651,  STR9651,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 {0x093D0F89,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_WORD,  9652,  STR9652,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Dauer Kamintrocknung //Thision 19 Plus
@@ -10980,7 +11216,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D0095,  CAT_USER_DEFINED,     VT_UNKNOWN,       10211, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 33 32 31 37 34 32 00 00 00 00 00 00 00 00 00 00 (ASCII: "321742") // "Anlagebildbeschreibung 2"
 {0x053D0096,  CAT_USER_DEFINED,     VT_UNKNOWN,       10212, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 // "Anlagebildbeschreibung 3"
 {0x053D0097,  CAT_USER_DEFINED,     VT_UNKNOWN,       10213, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // "Anlagebildbeschreibung 4"
-{0x053D009B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10214, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0416,  CAT_USER_DEFINED,     VT_UNKNOWN,       10218, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D045F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10219, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0461,  CAT_USER_DEFINED,     VT_UNKNOWN,       10220, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
@@ -10995,7 +11230,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10231, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D0569,  CAT_USER_DEFINED,     VT_UNKNOWN,       10233, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 00 00
 {0x053D0578,  CAT_USER_DEFINED,     VT_UNKNOWN,       10234, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 64
-{0x053D05DD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10238, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 / same on RVS43.222
 {0x053D05A9,  CAT_USER_DEFINED,     VT_UNKNOWN,       10239, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D063E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10241, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D0655,  CAT_USER_DEFINED,     VT_UNKNOWN,       10242, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
@@ -11011,7 +11245,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D07EA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10253, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x053D083E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10254, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x053D08FC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10256, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 0A
-{0x053D0905,  CAT_USER_DEFINED,     VT_UNKNOWN,       10258, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00 14
 {0x053D0906,  CAT_USER_DEFINED,     VT_UNKNOWN,       10259, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x053D0951,  CAT_USER_DEFINED,     VT_UNKNOWN,       10261, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 1E 00 / on RVS43.222: 00 00 F0
 {0x053D0956,  CAT_USER_DEFINED,     VT_UNKNOWN,       10262, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 02
@@ -11579,8 +11812,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 // 0x093D....
 
-{0x093D3016,  CAT_USER_DEFINED,     VT_UNKNOWN,       10294, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 28
-{0x093D301D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10295, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x093D3020,  CAT_USER_DEFINED,     VT_UNKNOWN,       10296, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x093D3023,  CAT_USER_DEFINED,     VT_SECONDS_WORD5, 10297, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x093D3024,  CAT_USER_DEFINED,     VT_PERCENT_WORD,  10298, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
@@ -11598,10 +11829,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x093D3030,  CAT_USER_DEFINED,     VT_PERCENT_WORD,      10310, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x093D3031,  CAT_USER_DEFINED,     VT_PERCENT_WORD,  10311, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 {0x093D3032,  CAT_USER_DEFINED,     VT_SPEED,         10312, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x093D303D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10313, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x093D303E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10314, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x093D303F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10315, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x093D3040,  CAT_USER_DEFINED,     VT_UNKNOWN,       10316, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 {0x093D3041,  CAT_USER_DEFINED,     VT_UNKNOWN,       10317, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01
 {0x093D3047,  CAT_USER_DEFINED,     VT_SPEED,         10318, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 5E
 {0x093D3055,  CAT_USER_DEFINED,     VT_CURRENT1000,   10319, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 E8    // dec. 1000
@@ -11617,9 +11844,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x0D3D0930,  CAT_USER_DEFINED,     VT_UNKNOWN,       10326, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 {0x0D3D0936,  CAT_USER_DEFINED,     VT_UNKNOWN,       10327, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x0D3D0944,  CAT_USER_DEFINED,     VT_TEMP,          10328, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 02 00
-{0x0D3D0945,  CAT_USER_DEFINED,     VT_TEMP,          10329, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 07 80
-{0x0D3D2F9C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10330, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0A
-{0x0D3D300A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10334, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 11
 {0x0D3D304E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10335, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF
 {0x0D3D3060,  CAT_USER_DEFINED,     VT_UNKNOWN,       10336, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 
@@ -11629,15 +11853,11 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x113D01FA,  CAT_USER_DEFINED,     VT_UNKNOWN,       10339, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 32 00
 {0x113D0209,  CAT_USER_DEFINED,     VT_UNKNOWN,       10340, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 02 81 00 01 F4 02 F1 E1 C0 // periodically sent by LMU64 with paylaod 02 01 00 01 18 05 3E DB E0
 {0x113D042A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10341, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x113D0642,  CAT_USER_DEFINED,     VT_UNKNOWN,       10343, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D0775,  CAT_USER_DEFINED,     VT_UNKNOWN,       10344, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D07C8,  CAT_USER_DEFINED,     VT_UNKNOWN,       10345, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
 {0x113D0938,  CAT_USER_DEFINED,     VT_UNKNOWN,       10346, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 FF
 {0x113D09FC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10347, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 32
-{0x113D304B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10350, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 05
 {0x113D305E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10355, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 1A
-{0x113D3068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10358, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
-{0x113D3069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10359, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FA
 
 // 0x153D....
 
@@ -11670,7 +11890,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x213D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10384, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x213D066C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10385, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x213D0683,  CAT_USER_DEFINED,     VT_UNKNOWN,       10386, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x213D3075,  CAT_USER_DEFINED,     VT_UNKNOWN,       10390, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 
 // 0x223D....
 
@@ -11695,7 +11914,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x233D066B,  CAT_USER_DEFINED,     VT_UNKNOWN,       10423, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x233D066C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10424, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
 {0x233D0683,  CAT_USER_DEFINED,     VT_UNKNOWN,       10425, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x233D0684,  CAT_USER_DEFINED,     VT_UNKNOWN,       10426, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40 / on RVS43.222:  00 17 C0  // Temperaturwächter Sollwert HK3/P?
 {0x233D2F8C,  CAT_USER_DEFINED,     VT_UNKNOWN,       10427, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 06
 {0x233D2F8D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10428, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 08
 {0x233D2F8E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10429, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 10
@@ -11743,9 +11961,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2D3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10465, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F
 {0x2D3D0613,  CAT_USER_DEFINED,     VT_UNKNOWN,       10466, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 00 FF
 {0x2D3D0615,  CAT_USER_DEFINED,     VT_UNKNOWN,       10467, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x2D3D071A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10468, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
-{0x2D3D3045,  CAT_USER_DEFINED,     VT_UNKNOWN,       10473, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 34
-{0x2D3D3074,  CAT_USER_DEFINED,     VT_UNKNOWN,       10474, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 FF
 
 // 0x2E3D.... (größtenteils Steuerung HK2)
 
@@ -11758,7 +11973,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2E3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10483, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F / same on RVS43.222
 {0x2E3D0613,  CAT_USER_DEFINED,     VT_UNKNOWN,       10484, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222:  00 FF
 {0x2E3D0615,  CAT_USER_DEFINED,     VT_UNKNOWN,       10485, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
-{0x2E3D071A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10486, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x2E3D2FAB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10487, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 03
 {0x2E3D2FAC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10488, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 {0x2E3D2FAD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10489, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 4B
@@ -11786,12 +12000,10 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2F3D04BB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10496, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 31 / on RVS43.222:  00 00
 {0x2F3D056A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10497, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 01 0C 80
 {0x2F3D05F3,  CAT_USER_DEFINED,     VT_UNKNOWN,       10498, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 40 / on RVS43.222:  00 00 00
-{0x2F3D0603,  CAT_USER_DEFINED,     VT_UNKNOWN,       10500, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF / on RVS43.222:  01 14
 {0x2F3D060D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10501, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 0F / same on RVS43.222
 {0x2F3D060E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10502, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 03 / on RVS43.222:  00 0F
 {0x2F3D0613,  CAT_USER_DEFINED,     VT_UNKNOWN,       10503, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 FF / same on RVS43.222
 {0x2F3D0615,  CAT_USER_DEFINED,     VT_UNKNOWN,       10504, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 01 08 C0
-{0x2F3D071A,  CAT_USER_DEFINED,     VT_UNKNOWN,       10505, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01
 {0x2F3D2FAB,  CAT_USER_DEFINED,     VT_UNKNOWN,       10506, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 03
 {0x2F3D2FAC,  CAT_USER_DEFINED,     VT_UNKNOWN,       10507, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 00
 {0x2F3D2FAD,  CAT_USER_DEFINED,     VT_UNKNOWN,       10508, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 4B
@@ -11825,8 +12037,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // 0x493D....
 
 {0x493D0422,  CAT_USER_DEFINED,     VT_UNKNOWN,       10520, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / same on RVS43.222
-{0x493D0552,  CAT_USER_DEFINED,     VT_UNKNOWN,       10521, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 40 /  on RVS43.222: 00 03 C0
-{0x493D0864,  CAT_USER_DEFINED,     VT_UNKNOWN,       10523, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 01 40 / same on RVS43.222
 {0x493D306E,  CAT_USER_DEFINED,     VT_UNKNOWN,       10524, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00
 
 // no Command IDs found via brute force for major group 0x51 on LMU74.100A136 and RVS43.222
@@ -11837,9 +12047,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // CommandIDs logged from OCI700/ACS700 diagnosis tool
 
 {0x2E3D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10526, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software
-
-{0x653D0B71,  CAT_USER_DEFINED,     VT_UNKNOWN,       10527, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Beginn Vorlaufanhebung bei rel. Raumfeuchte KK1
-{0x653D0B70,  CAT_USER_DEFINED,     VT_UNKNOWN,       10528, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Ende Vorlaufanhebung bei rel. Raumfeuchte KK1
 {0x153D2FA0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10529, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Reglerkonfiguration 3
 {0x113D2FA7,  CAT_USER_DEFINED,     VT_PERCENT_WORD1, 10530, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Maximale Förderhöhe der modulierenden Pumpe
 {0x113D2FA8,  CAT_USER_DEFINED,     VT_PERCENT_WORD1, 10531, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Minimale Förderhöhe der modulierenden Pumpe
