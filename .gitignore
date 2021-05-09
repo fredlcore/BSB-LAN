@@ -20,6 +20,7 @@ src/BSB/BSBSoftwareSerial.h.old
 *.bak
 defs-brute-force-*.h
 check-existing.pl
+filter_double_brutes.pl
 find_unknown_sets.pl
 remove_doubles.pl
 remove_double_enums.pl
@@ -28,3 +29,4 @@ replace_enums.pl
 tidy_enums.pl
 localization/conv-csv.pl
 OEM-Codes.txt
+.gitignore
