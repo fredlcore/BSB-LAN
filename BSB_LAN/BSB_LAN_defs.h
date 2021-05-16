@@ -2359,7 +2359,25 @@ const char STR6234[] PROGMEM = STR6234_TEXT;
 const char STR6235[] PROGMEM = STR6235_TEXT;
 const char STR6236[] PROGMEM = STR6236_TEXT;
 const char STR6240[] PROGMEM = STR6240_TEXT;
+const char STR6240_2[] PROGMEM = STR6240_2_TEXT;
+const char STR6241[] PROGMEM = STR6241_TEXT;
+const char STR6242[] PROGMEM = STR6242_TEXT;
+const char STR6243[] PROGMEM = STR6243_TEXT;
+const char STR6244[] PROGMEM = STR6244_TEXT;
+const char STR6245[] PROGMEM = STR6245_TEXT;
+const char STR6246[] PROGMEM = STR6246_TEXT;
+const char STR6247[] PROGMEM = STR6247_TEXT;
+const char STR6248[] PROGMEM = STR6248_TEXT;
+const char STR6249[] PROGMEM = STR6249_TEXT;
 const char STR6250[] PROGMEM = STR6250_TEXT;
+const char STR6250_2[] PROGMEM = STR6250_2_TEXT;
+const char STR6251[] PROGMEM = STR6251_TEXT;
+const char STR6252[] PROGMEM = STR6252_TEXT;
+const char STR6253[] PROGMEM = STR6253_TEXT;
+const char STR6254[] PROGMEM = STR6254_TEXT;
+const char STR6255[] PROGMEM = STR6255_TEXT;
+const char STR6256[] PROGMEM = STR6256_TEXT;
+const char STR6257[] PROGMEM = STR6257_TEXT;
 const char STR6258[] PROGMEM = STR6258_TEXT;
 const char STR6259[] PROGMEM = STR6259_TEXT;
 const char STR6260[] PROGMEM = STR6260_TEXT;
@@ -2773,7 +2791,6 @@ const char STR7845[] PROGMEM = STR7845_TEXT;
 const char STR7846[] PROGMEM = STR7846_TEXT;
 const char STR7847[] PROGMEM = STR7847_TEXT;
 const char STR7848[] PROGMEM = STR7848_TEXT;
-const char STR7849[] PROGMEM = STR7849_TEXT;
 const char STR7849[] PROGMEM = STR7849_TEXT;
 const char STR7852[] PROGMEM = STR7852_TEXT;
 const char STR7854[] PROGMEM = STR7854_TEXT;
@@ -7925,7 +7942,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D14A9,  CAT_KESSEL,           VT_MINUTES,       2373,  STR2373,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Verzögerung Drehzahlregler Bypasspumpe
 {0x053D14B3,  CAT_KESSEL,           VT_PERCENT,       2375,  STR2375,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Bypasspumpe
 {0x053D14AF,  CAT_KESSEL,           VT_PERCENT,       2376,  STR2376,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum Bypass
+{0x053D14AD,  CAT_KESSEL,           VT_PERCENT,       2376,  STR2376,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Pumpendrehzahl Minimum Bypass
 {0x053D14B0,  CAT_KESSEL,           VT_PERCENT,       2377,  STR2377,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum Bypass
+{0x053D14AE,  CAT_KESSEL,           VT_PERCENT,       2377,  STR2377,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Pumpendrehzahl Maximum Bypass
 {0x053D14B1,  CAT_KESSEL,           VT_PERCENT,       2381,  STR2381,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Min OEM Bypass
 {0x053D14B2,  CAT_KESSEL,           VT_PERCENT,       2382,  STR2382,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Max OEM Bypass
 {0x093D2F98,  CAT_KESSEL,           VT_PERCENT,       2440,  STR2440,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2440 Gebläse-PWM Hz Maximum [%]
@@ -8789,7 +8808,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x213D3075,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
 {0x053D10A6,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5489,  STR5489,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Nachlauf in Durchl'erhitzer
 {0x053D115A,  CAT_DURCHLERHITZER,   VT_PERCENT,       5530,  STR5530,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x313D0B20,  CAT_DURCHLERHITZER,   VT_PERCENT,       5530,  STR5530,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Pumpendrehzahl Minimum Heizkreis 1
 {0x053D115B,  CAT_DURCHLERHITZER,   VT_PERCENT,       5531,  STR5531,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
+{0x313D0B1F,  CAT_DURCHLERHITZER,   VT_PERCENT,       5531,  STR5531,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
 {0x053D10E5,  CAT_DURCHLERHITZER,   VT_PERCENT,       5535,  STR5535,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Min OEM Durchlauferhitzer
 {0x053D10E4,  CAT_DURCHLERHITZER,   VT_PERCENT,       5536,  STR5536,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Max OEM Durchlauferhitzer
 {0x053D10DC,  CAT_DURCHLERHITZER,   VT_PERCENT,       5537,  STR5537,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Durchlauferhitzerpumpe
@@ -9575,7 +9596,25 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1174,  CAT_KONFIG,           VT_UNKNOWN,       6235,  STR6235,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Parametersatzgruppe OEM
 {0x053D148A,  CAT_KONFIG,           VT_UNKNOWN,       6236,  STR6236,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Parametersatznummer OEM
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
+{0x053D15CC,  CAT_KONFIG,           VT_UNKNOWN,       6240,  STR6240_2,0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Funktion Ausgang UX21 Modul 1
+{0x053D15B7,  CAT_KONFIG,           VT_UNKNOWN,       6241,  STR6241,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX21 Modul 1
+{0x053D15EA,  CAT_KONFIG,           VT_UNKNOWN,       6242,  STR6242,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX21 Modul 1
+{0x053D15CF,  CAT_KONFIG,           VT_UNKNOWN,       6243,  STR6243,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX22 Modul 1
+{0x053D15BA,  CAT_KONFIG,           VT_UNKNOWN,       6244,  STR6244,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX22 Modul 1
+{0x053D15ED,  CAT_KONFIG,           VT_UNKNOWN,       6245,  STR6245,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX22 Modul 1
+{0x053D15CD,  CAT_KONFIG,           VT_UNKNOWN,       6246,  STR6246,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX21 Modul 2
+{0x053D15B8,  CAT_KONFIG,           VT_UNKNOWN,       6247,  STR6247,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX21 Modul 2
+{0x053D15EB,  CAT_KONFIG,           VT_UNKNOWN,       6248,  STR6248,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX21 Modul 2
+{0x053D15D0,  CAT_KONFIG,           VT_UNKNOWN,       6249,  STR6249,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX22 Modul 2
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
+{0x053D15BB,  CAT_KONFIG,           VT_UNKNOWN,       6250,  STR6250_2,0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Signallogik Ausgang UX22 Modul 2
+{0x053D15EE,  CAT_KONFIG,           VT_UNKNOWN,       6251,  STR6251,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX22 Modul 2
+{0x053D15CE,  CAT_KONFIG,           VT_UNKNOWN,       6252,  STR6252,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX21 Modul 3
+{0x053D15B9,  CAT_KONFIG,           VT_UNKNOWN,       6253,  STR6253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX21 Modul 3
+{0x053D15EC,  CAT_KONFIG,           VT_UNKNOWN,       6254,  STR6254,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX21 Modul 3
+{0x053D15D1,  CAT_KONFIG,           VT_UNKNOWN,       6255,  STR6255,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX22 Modul 3
+{0x053D15BC,  CAT_KONFIG,           VT_UNKNOWN,       6256,  STR6256,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX22 Modul 3
+{0x053D15EF,  CAT_KONFIG,           VT_UNKNOWN,       6257,  STR6257,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX22 Modul 3
 {0x053D1BC7,  CAT_KONFIG,           VT_UNKNOWN,       6258,  STR6258,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 3 OEM
 {0x053D1BC8,  CAT_KONFIG,           VT_UNKNOWN,       6259,  STR6259,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 4 OEM
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
