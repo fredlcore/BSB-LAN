@@ -76,7 +76,7 @@
 #define FL_RONLY        1
 #define FL_WONLY        2
 #define FL_NO_CMD       4
-#define FL_OEM          9   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
+#define FL_OEM          8   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
 #define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
 #define FL_EEPROM       32  // Flag to determine whether value should be written to EEPROM
 #define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
@@ -223,7 +223,7 @@ typedef enum{
   CAT_FESTSTOFFKESSEL,
   CAT_PUFFERSPEICHER,
   CAT_TWSPEICHER,
-  CAT_DRUCHLERHITZER,
+  CAT_DURCHLERHITZER,
   CAT_ALLGFUNKT,
   CAT_KONFIG,
   CAT_LPB,
@@ -765,8 +765,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237};
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
@@ -1985,6 +1985,7 @@ const char STR5007[] PROGMEM = STR5007_TEXT;
 const char STR5008[] PROGMEM = STR5008_TEXT;
 const char STR5010[] PROGMEM = STR5010_TEXT;
 const char STR5011[] PROGMEM = STR5011_TEXT;
+const char STR5012[] PROGMEM = STR5012_TEXT;
 const char STR5013[] PROGMEM = STR5013_TEXT;
 const char STR5016[] PROGMEM = STR5016_TEXT;
 const char STR5019[] PROGMEM = STR5019_TEXT;
@@ -2003,6 +2004,7 @@ const char STR5030[] PROGMEM = STR5030_TEXT;
 const char STR5032[] PROGMEM = STR5032_TEXT;
 const char STR5040[] PROGMEM = STR5040_TEXT;
 const char STR5041[] PROGMEM = STR5041_TEXT;
+const char STR5042[] PROGMEM = STR5042_TEXT;
 const char STR5050[] PROGMEM = STR5050_TEXT;
 const char STR5051[] PROGMEM = STR5051_TEXT;
 const char STR5055[] PROGMEM = STR5055_TEXT;
@@ -2050,12 +2052,16 @@ const char STR5151[] PROGMEM = STR5151_TEXT;
 #define STR5400 STR710
 const char STR5406[] PROGMEM = STR5406_TEXT;
 const char STR5420[] PROGMEM = STR5420_TEXT;
+const char STR5429[] PROGMEM = STR5429_TEXT;
 const char STR5430[] PROGMEM = STR5430_TEXT;
 const char STR5431[] PROGMEM = STR5431_TEXT;
 const char STR5432[] PROGMEM = STR5432_TEXT;
 const char STR5433[] PROGMEM = STR5433_TEXT;
 const char STR5434[] PROGMEM = STR5434_TEXT;
 const char STR5435[] PROGMEM = STR5435_TEXT;
+const char STR5441[] PROGMEM = STR5441_TEXT;
+const char STR5444[] PROGMEM = STR5444_TEXT;
+const char STR5445[] PROGMEM = STR5445_TEXT;
 const char STR5450[] PROGMEM = STR5450_TEXT;
 const char STR5451[] PROGMEM = STR5451_TEXT;
 const char STR5452[] PROGMEM = STR5452_TEXT;
@@ -2063,6 +2069,16 @@ const char STR5453[] PROGMEM = STR5453_TEXT;
 const char STR5454[] PROGMEM = STR5454_TEXT;
 const char STR5455[] PROGMEM = STR5455_TEXT;
 const char STR5456[] PROGMEM = STR5456_TEXT;
+const char STR5460[] PROGMEM = STR5460_TEXT;
+const char STR5461[] PROGMEM = STR5461_TEXT;
+const char STR5462[] PROGMEM = STR5462_TEXT;
+const char STR5464[] PROGMEM = STR5464_TEXT;
+const char STR5468[] PROGMEM = STR5468_TEXT;
+const char STR5470[] PROGMEM = STR5470_TEXT;
+const char STR5471[] PROGMEM = STR5471_TEXT;
+const char STR5472[] PROGMEM = STR5472_TEXT;
+const char STR5473[] PROGMEM = STR5473_TEXT;
+const char STR5475[] PROGMEM = STR5475_TEXT;
 const char STR5480[] PROGMEM = STR5480_TEXT;
 const char STR5481[] PROGMEM = STR5481_TEXT;
 const char STR5482[] PROGMEM = STR5482_TEXT;
@@ -2070,11 +2086,17 @@ const char STR5483[] PROGMEM = STR5483_TEXT;
 const char STR5486[] PROGMEM = STR5486_TEXT;
 const char STR5487[] PROGMEM = STR5487_TEXT;
 const char STR5488[] PROGMEM = STR5488_TEXT;
+const char STR5489[] PROGMEM = STR5489_TEXT;
 #define STR5530 STR882
+#define STR5531 STR883
+const char STR5535[] PROGMEM = STR5535_TEXT;
+const char STR5536[] PROGMEM = STR5536_TEXT;
+const char STR5537[] PROGMEM = STR5537_TEXT;
 #define STR5544 STR834
 #define STR5545 STR835
 #define STR5546 STR836
 #define STR5547 STR2285
+const char STR5550[] PROGMEM = STR5550_TEXT;
 
 // Allgemeine Funktionen
 const char STR5570[] PROGMEM = STR5570_TEXT;
@@ -2259,7 +2281,9 @@ const char STR6071[] PROGMEM = STR6071_TEXT;
 const char STR6072[] PROGMEM = STR6072_TEXT;
 const char STR6075[] PROGMEM = STR6075_TEXT;
 const char STR6078[] PROGMEM = STR6078_TEXT;
+const char STR6079[] PROGMEM = STR6079_TEXT;
 const char STR6085[] PROGMEM = STR6085_TEXT;
+const char STR6086[] PROGMEM = STR6086_TEXT;
 const char STR6089[] PROGMEM = STR6089_TEXT;
 const char STR6089_2[] PROGMEM = STR6089_2_TEXT;
 const char STR6090[] PROGMEM = STR6090_TEXT;
@@ -2272,6 +2296,7 @@ const char STR6099[] PROGMEM = STR6099_TEXT;
 const char STR6100[] PROGMEM = STR6100_TEXT;
 const char STR6101[] PROGMEM = STR6101_TEXT;
 const char STR6102[] PROGMEM = STR6102_TEXT;
+const char STR6107[] PROGMEM = STR6107_TEXT;
 const char STR6110[] PROGMEM = STR6110_TEXT;
 const char STR6112[] PROGMEM = STR6112_TEXT;
 const char STR6116[] PROGMEM = STR6116_TEXT;
@@ -2300,9 +2325,11 @@ const char STR6148[] PROGMEM = STR6148_TEXT;
 const char STR6150[] PROGMEM = STR6150_TEXT;
 const char STR6151[] PROGMEM = STR6151_TEXT;
 const char STR6152[] PROGMEM = STR6152_TEXT;
+const char STR6153[] PROGMEM = STR6153_TEXT;
 const char STR6180[] PROGMEM = STR6180_TEXT;
 const char STR6181[] PROGMEM = STR6181_TEXT;
 const char STR6182[] PROGMEM = STR6182_TEXT;
+const char STR6183[] PROGMEM = STR6183_TEXT;
 const char STR6200[] PROGMEM = STR6200_TEXT;
 const char STR6201[] PROGMEM = STR6201_TEXT;
 const char STR6204[] PROGMEM = STR6204_TEXT;
@@ -2331,6 +2358,8 @@ const char STR6235[] PROGMEM = STR6235_TEXT;
 const char STR6236[] PROGMEM = STR6236_TEXT;
 const char STR6240[] PROGMEM = STR6240_TEXT;
 const char STR6250[] PROGMEM = STR6250_TEXT;
+const char STR6258[] PROGMEM = STR6258_TEXT;
+const char STR6259[] PROGMEM = STR6259_TEXT;
 const char STR6260[] PROGMEM = STR6260_TEXT;
 const char STR6270[] PROGMEM = STR6270_TEXT;
 const char STR6270_2[] PROGMEM = STR6270_2_TEXT;
@@ -2343,9 +2372,17 @@ const char STR6300[] PROGMEM = STR6300_TEXT;
 const char STR6300_2[] PROGMEM = STR6300_2_TEXT;
 const char STR6310[] PROGMEM = STR6310_TEXT;
 const char STR6330[] PROGMEM = STR6330_TEXT;
+const char STR6344[] PROGMEM = STR6344_TEXT;
+const char STR6345[] PROGMEM = STR6345_TEXT;
+const char STR6346[] PROGMEM = STR6346_TEXT;
+const char STR6347[] PROGMEM = STR6347_TEXT;
+const char STR6348[] PROGMEM = STR6348_TEXT;
+const char STR6351[] PROGMEM = STR6351_TEXT;
+const char STR6352[] PROGMEM = STR6352_TEXT;
 const char STR6355[] PROGMEM = STR6355_TEXT;
 const char STR6356[] PROGMEM = STR6356_TEXT;
 const char STR6357[] PROGMEM = STR6357_TEXT;
+const char STR6359[] PROGMEM = STR6359_TEXT;
 const char STR6375[] PROGMEM = STR6375_TEXT;
 const char STR6420[] PROGMEM = STR6420_TEXT;
 const char STR6421[] PROGMEM = STR6421_TEXT;
@@ -2385,6 +2422,10 @@ const char STR6631[] PROGMEM = STR6631_TEXT;
 const char STR6632[] PROGMEM = STR6632_TEXT;
 const char STR6640[] PROGMEM = STR6640_TEXT;
 const char STR6650[] PROGMEM = STR6650_TEXT;
+const char STR6651[] PROGMEM = STR6651_TEXT;
+const char STR6652[] PROGMEM = STR6652_TEXT;
+const char STR6653[] PROGMEM = STR6653_TEXT;
+const char STR6654[] PROGMEM = STR6654_TEXT;
 const char STR6699[] PROGMEM = STR6699_TEXT;
 
 // Fehler
@@ -2474,6 +2515,7 @@ const char STR6996[] PROGMEM = STR6996_TEXT;
 #define STR6881 STR6817
 #define STR6890 STR6818
 #define STR6891 STR6819
+#define STR6999 STR6820
 
 // übrige Fehlerparameter
 const char STR6800[] PROGMEM = STR6800_TEXT;
@@ -2571,6 +2613,8 @@ const char STR7153[] PROGMEM = STR7153_TEXT;
 const char STR7160[] PROGMEM = STR7160_TEXT;
 const char STR7165[] PROGMEM = STR7165_TEXT;
 const char STR7166[] PROGMEM = STR7166_TEXT;
+const char STR7167[] PROGMEM = STR7167_TEXT;
+const char STR7168[] PROGMEM = STR7168_TEXT;
 const char STR7170[] PROGMEM = STR7170_TEXT;
 const char STR7181[] PROGMEM = STR7181_TEXT;
 const char STR7183[] PROGMEM = STR7183_TEXT;
@@ -2590,13 +2634,34 @@ const char STR7252[] PROGMEM = STR7252_TEXT;
 const char STR7253[] PROGMEM = STR7253_TEXT;
 
 // Konfiguration Erweit'module
+const char STR7300[] PROGMEM = STR7300_TEXT;
+const char STR7301[] PROGMEM = STR7301_TEXT;
+const char STR7302[] PROGMEM = STR7302_TEXT;
+const char STR7303[] PROGMEM = STR7303_TEXT;
+const char STR7307[] PROGMEM = STR7307_TEXT;
+const char STR7308[] PROGMEM = STR7308_TEXT;
 const char STR7311[] PROGMEM = STR7311_TEXT;
+const char STR7321[] PROGMEM = STR7321_TEXT;
+const char STR7322[] PROGMEM = STR7322_TEXT;
+const char STR7324[] PROGMEM = STR7324_TEXT;
+const char STR7325[] PROGMEM = STR7325_TEXT;
+const char STR7326[] PROGMEM = STR7326_TEXT;
+const char STR7327[] PROGMEM = STR7327_TEXT;
+const char STR7342[] PROGMEM = STR7342_TEXT;
+const char STR7348[] PROGMEM = STR7348_TEXT;
+const char STR7349[] PROGMEM = STR7349_TEXT;
+const char STR7350[] PROGMEM = STR7350_TEXT;
+const char STR7355[] PROGMEM = STR7355_TEXT;
+const char STR7356[] PROGMEM = STR7356_TEXT;
+const char STR7357[] PROGMEM = STR7357_TEXT;
+const char STR7375[] PROGMEM = STR7375_TEXT;
 #define STR7376 STR6033
 #define STR7377 STR6034
 #define STR7378 STR6035
 const char STR7386[] PROGMEM = STR7386_TEXT;
 const char STR7387[] PROGMEM = STR7387_TEXT;
 const char STR7396[] PROGMEM = STR7396_TEXT;
+const char STR7397[] PROGMEM = STR7397_TEXT;
 const char STR7399[] PROGMEM = STR7399_TEXT;
 const char STR7400[] PROGMEM = STR7400_TEXT;
 const char STR7401[] PROGMEM = STR7401_TEXT;
@@ -7179,9 +7244,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09CF,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  660,   STR660,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Ende Tag/Monat
 {0x063D09D0,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  661,   STR661,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Beginn Tag/Monat
 {0x063D09D1,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Ende Tag/Monat
-//{0x073D09C4,  CAT_USER_DEFINED,     VT_ENUM,          662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
+//{0x073D09C4,  CAT_FERIEN_HK2,     VT_ENUM,          662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
 {0x063D09D2,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Beginn Tag/Monat
-//{0x073D09C5,  CAT_USER_DEFINED,     ,                 663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // Urlaubende
+//{0x073D09C5,  CAT_FERIEN_HK2,     ,                 663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // Urlaubende
 {0x063D09D3,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  664,   STR664,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Ende Tag/Monat
 {0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          665,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_ALL}, // [0] - Ferienheizkreis 2 - Betriebsniveau
 // Ferien Heizkreis P
@@ -7189,7 +7254,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x073D09C4,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  666,   STR666,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 1 Beginn Tag/Monat
 {0x073D09C5,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  667,   STR667,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 1 Ende Tag/Monat
 {0x073D09C6,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  668,   STR668,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 2 Beginn Tag/Monat
-//{0x2F3D04C2,  CAT_USER_DEFINED,     VT_UNKNOWN,       668,   STR668,   0,                    NULL,         DEFAULT_FLAG, DEV_DEV_107_ALL},
+//{0x2F3D04C2,  CAT_FERIEN_HKP,     VT_UNKNOWN,       668,   STR668,   0,                    NULL,         DEFAULT_FLAG, DEV_DEV_107_ALL},
 {0x073D09C7,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  669,   STR669,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 2 Ende Tag/Monat
 {0x073D09C8,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  670,   STR670,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 3 Beginn Tag/Monat
 {0x073D09C9,  CAT_FERIEN_HKP,       VT_VACATIONPROG,  671,   STR671,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis P - Periode 3 Ende Tag/Monat
@@ -7215,9 +7280,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0074,  CAT_HK1,              VT_ENUM,          700,   STR700,   sizeof(ENUM700),      ENUM700,      DEFAULT_FLAG, DEV_064_ALL}, // [-] - Heizkreis 1 - Betriebsart ***(virtuelle Zeile)***
 {0x2D3D0572,  CAT_HK1,              VT_ENUM,          701,   STR701,   sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 1 - Präsenztaste // Logged from DEV_162_014, so DEV_162_ALL may still be the same as DEV_ALL
 // Logged from LMS15, moved to 704/705/706
-// {0x053D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
-// {0x053D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
-// {0x053D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+// {0x053D1A83,  CAT_HK1,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x053D1A91,  CAT_HK1,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x053D1A92,  CAT_HK1,     VT_UNKNOWN5,      701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
 {0x2D3D020D,  CAT_HK1,              VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
 {0x053D1A83,  CAT_HK1,              VT_UNKNOWN,       704,   STR704,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
@@ -7418,9 +7483,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2E3E0572,  CAT_HK2,              VT_ENUM,          1001,  STR1001,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 {0x2E3D0572,  CAT_HK2,              VT_ENUM,          1001,  STR1001,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 2 - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
 // see 701
-// {0x063D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
-// {0x063D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
-// {0x063D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+// {0x063D1A83,  CAT_HK2,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x063D1A91,  CAT_HK2,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x063D1A92,  CAT_HK2,     VT_UNKNOWN5,      1001,  STR1001,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x063D1A83,  CAT_HK2,              VT_UNKNOWN,       1004,  STR1004,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
 {0x063D1A91,  CAT_HK2,              VT_UNKNOWN,       1005,  STR1005,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
 {0x063D1A92,  CAT_HK2,              VT_UNKNOWN,       1006,  STR1006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
@@ -7516,9 +7581,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 // Einstellungen Heizkreis P/3, only visible when Heizkreis P exists
 {0x2F3D0574,  CAT_HKP,              VT_ENUM,          1300,  STR1300,  sizeof(ENUM1300),     ENUM1300,     DEFAULT_FLAG, DEV_ALL}, // Betriebsart
 {0x2F3D0572,  CAT_HKP,              VT_ENUM,          1301,  STR1301,  sizeof(ENUM701),      ENUM701,      DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // [-] - Heizkreis 3/P - Präsenztaste (Absenkmodus bis zum nächsten BA-Wechsel laut Zeitplan) ***(virtuelle Zeile)***
-// {0x073D1A83,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
-// {0x073D1A91,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
-// {0x073D1A92,  CAT_USER_DEFINED,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+// {0x073D1A83,  CAT_HKP,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
+// {0x073D1A91,  CAT_HKP,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
+// {0x073D1A92,  CAT_HKP,     VT_UNKNOWN5,      1301,  STR1301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
 {0x073D1A83,  CAT_HKP,              VT_UNKNOWN,       1304,  STR1304,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
 {0x073D1A91,  CAT_HKP,              VT_UNKNOWN,       1305,  STR1305,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
 {0x073D1A92,  CAT_HKP,              VT_UNKNOWN,       1306,  STR1306,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
@@ -8419,14 +8484,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10D9,  CAT_SOLAR,            VT_PERCENT,       3868,  STR3868,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Solarpumpe Puffer
 {0x053D10D8,  CAT_SOLAR,            VT_PERCENT,       3869,  STR3869,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Solarpumpe Schwimmbad
 // TODO: The following two entries were logged from LMS15 - does a HC1 telegram make sense here?
-//{0x053D1162,  CAT_USER_DEFINED,     VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum Heizkreis 1
-//{0x053D1163,  CAT_USER_DEFINED,     VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
+//{0x053D1162,  CAT_SOLAR,     VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum Heizkreis 1
+//{0x053D1163,  CAT_SOLAR,     VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
 {0x493D04B1,  CAT_SOLAR,            VT_PERCENT,       3870,  STR3870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
 {0x493D04B0,  CAT_SOLAR,            VT_PERCENT,       3871,  STR3871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x493D0AEC,  CAT_SOLAR,            VT_TEMP,          3872,  STR3872,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x493D0AED,  CAT_SOLAR,            VT_SECONDS_WORD,  3873,  STR3873,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
-{0x053D10E6,  CAT_USER_DEFINED,     VT_PERCENT,       3875,  STR3875,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum OEM
-{0x053D10E7,  CAT_USER_DEFINED,     VT_PERCENT,       3876,  STR3876,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum OEM
+{0x053D10E6,  CAT_SOLAR,            VT_PERCENT,       3875,  STR3875,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum OEM
+{0x053D10E7,  CAT_SOLAR,            VT_PERCENT,       3876,  STR3876,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum OEM
 {0x493D0509,  CAT_SOLAR,            VT_ENUM,          3880,  STR3880,  sizeof(ENUM3880),     ENUM3880,     DEFAULT_FLAG, DEV_ALL}, // Frostschutzmittel
 {0x493D050A,  CAT_SOLAR,            VT_PERCENT,       3881,  STR3881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Frost'mittel Konzentration
 {0x493D050C,  CAT_SOLAR,            VT_UINT,          3884,  STR3884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendurchfluss
@@ -8506,7 +8571,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D08AE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4791,  STR4791,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp'diff AUS Rückl'umlenk
 {0x053D0638,  CAT_PUFFERSPEICHER,   VT_ENUM,          4795,  STR4795,  sizeof(ENUM4795),     ENUM4795,     DEFAULT_FLAG, DEV_ALL}, // Vergleichstemp Rückl'umlenk
 {0x053D085F,  CAT_PUFFERSPEICHER,   VT_ENUM,          4796,  STR4796,  sizeof(ENUM4796),     ENUM4796,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Rücklaufumlenkung
-{0x053D0AF1,  CAT_USER_DEFINED,     VT_TEMP,          4800,  STR4800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Teilladung 
+{0x053D0AF1,  CAT_PUFFERSPEICHER,   VT_TEMP,          4800,  STR4800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Teilladung 
 {0x193D0B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     FL_OEM, DEV_ALL}, // Durchladung
 {0x193D0B86,  CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4811,  STR4811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Durchladetemperatur Minimum
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler
@@ -8518,6 +8583,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D179E,  CAT_TWSPEICHER,       VT_MINUTES_SHORT, 5008,  STR5008,  0,                    NULL,         FL_OEM, DEV_ALL}, // Lad'anforderung zeitgeführt
 {0x253D0737,  CAT_TWSPEICHER,       VT_ENUM,          5010,  STR5010,  sizeof(ENUM5010),     ENUM5010,     FL_OEM, DEV_ALL}, // Ladung
 {0x053D0F7C,  CAT_TWSPEICHER,       VT_HOUR_MINUTES,  5011,  STR5011,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Trinkwasser-Speicher Ladevorlegungszeit
+{0x253D072F,  CAT_TWSPEICHER,       VT_UNKNOWN,       5012,  STR5012,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Trinkwasser Zwangsladung
 {0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_ALL}, // Ladung opt Energie
 {0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_ALL}, // Ladung opt Energie Kontakt
 {0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
@@ -8566,6 +8632,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
 {0x253D116F,  CAT_TWSPEICHER,       VT_ENUM,          5041,  STR5041,  sizeof(ENUM5041),     ENUM5041,     FL_OEM, DEV_ALL}, // Entladeschutzfühler
+{0x053D14F1,  CAT_TWSPEICHER,       VT_UNKNOWN ,      5042,  STR5042,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Entladeschutz nach Ladung
 {0x253D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ladetemperatur Maximum
 {0x153D08A3,  CAT_TWSPEICHER,       VT_TEMP,          5050,  STR5050,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Ladetemperatur Maximum - logged on OCI700 via LPB
 {0x253D08A7,  CAT_TWSPEICHER,       VT_TEMP,          5051,  STR5051,  0,                    NULL,         FL_OEM, DEV_ALL}, // Speichertemperatur Maximum
@@ -8622,50 +8689,69 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D0FED,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5151,  STR5151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Z'kreistemp Übersch Verzög //Thision 19 Plus
 
 // Trinkwasser Durchl'erhitzer
-{0x313D2FC5,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5400,  STR5400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5400 Komfortsollwert [°C]
-{0x313D0D14,  CAT_DRUCHLERHITZER,   VT_TEMP,          5406,  STR5406,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min Sollw'diff zu Speich'temp
-{0x253D0720,  CAT_DRUCHLERHITZER,   VT_TEMP,          5420,  STR5420,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5420 Vorlauf-Sollwertüberhöhung [°C]
-{0x22052F8F,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
-//{0x213D2F8F,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x22052F90,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
-//{0x213D2F90,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x21052F91,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
-//{0x213D2F91,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x21052F92,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
-//{0x213D2F92,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x21052FD5,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
-//{0x213D2FD5,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x21052F93,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
-//{0x213D2F93,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x31052FC0,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5450 Gradient Zapfende [K/s]
-//{0x313D2FC0,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x31052FC1,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5451,  STR5451,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5451 Gradient Beginn Zapf Komf [K/s]
-//{0x313D2FC1,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5451,  STR5451,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x31052FC2,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5452,  STR5452,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5452 Gradient Beginn Zapfung Hz [K/s]
-//{0x313D2FC2,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT64,  5452,  STR5452,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x313D2FB0,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5453,  STR5453,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Komfortregelung mit 40°C
-//{0x31052FB0,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5453,  STR5453,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x313D2FB1,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5454,  STR5454,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Komfortregelung mit 60°C
-//{0x313D2FB1,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5454,  STR5454,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x31052FB2,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5455,  STR5455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Auslaufregelung mit 40°C
-//{0x313D2FB2,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5455,  STR5455,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x31052FB3,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5456,  STR5456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Auslaufregelung mit 60°C
-//{0x313D2FB3,  CAT_DRUCHLERHITZER,   VT_TEMP_SHORT5,   5456,  STR5456,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
-{0x313D2FC3,  CAT_DRUCHLERHITZER,   VT_MINUTES_WORD10,5480,  STR5480,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5480 Komfortzeit ohne Hz-Anfo [min]
-{0x313D2FC4,  CAT_DRUCHLERHITZER,   VT_MINUTES_SHORT, 5481,  STR5481,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5481 Komfortzeit mit Hz-Anfo [min]
-{0x153D3010,  CAT_DRUCHLERHITZER,   VT_SECONDS_WORD,  5482,  STR5482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit TWW-FlowSwitch geschlossen
-{0x193D3011,  CAT_DRUCHLERHITZER,   VT_SECONDS_WORD,  5483,  STR5483,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit TWW-Komfort FlowSwitch geschlossen
-{0x313D300D,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5486,  STR5486,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reglerverzögerung bei Takten in DLH Auslaufbetr.
-{0x2E3D2FDB,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5487 Pump'nachlauf Komf [min]
-{0x2D3D3074,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // TODO Thision 5487 Pump'nachlauf Komf [min]
-{0x2E3D2FDB,  CAT_DRUCHLERHITZER,   VT_MINUTES,       5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Pump'nachlauf Komf [min]
-{0x223D301B,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
-{0x213D3075,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
-{CMD_UNKNOWN, CAT_DRUCHLERHITZER,   VT_UNKNOWN,       5530,  STR5530,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
-{0x313D0B1E,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT5,5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
-{0x313D0B1D,  CAT_DRUCHLERHITZER,   VT_TEMP,          5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
-{0x313D0B21,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT, 5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
-{0x313D0B22,  CAT_DRUCHLERHITZER,   VT_SECONDS_SHORT4,5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
+{0x313D2FC5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5400,  STR5400,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5400 Komfortsollwert [°C]
+{0x313D0D14,  CAT_DURCHLERHITZER,   VT_TEMP,          5406,  STR5406,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min Sollw'diff zu Speich'temp
+{0x253D0720,  CAT_DURCHLERHITZER,   VT_TEMP,          5420,  STR5420,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5420 Vorlauf-Sollwertüberhöhung [°C]
+{0x313D071D,  CAT_DURCHLERHITZER,   VT_TEMP,          5429,  STR5429,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Trinkwasser Schaltdifferenz
+{0x22052F8F,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
+//{0x213D2F8F,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5430,  STR5430,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x22052F90,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
+//{0x213D2F90,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x21052F91,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
+//{0x213D2F91,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x21052F92,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+//{0x213D2F92,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x21052FD5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+//{0x213D2FD5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x21052F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+//{0x213D2F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
+{0x053D1362,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5441,  STR5441,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Durchflussmessung
+{0x053D0F8F,  CAT_DURCHLERHITZER,   VT_LITERPERMIN,   5444,  STR5444,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
+{0x053D0F90,  CAT_DURCHLERHITZER,   VT_LITERPERMIN,   5445,  STR5445,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
+{0x313D2FC0,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5450 Gradient Zapfende [K/s]
+{0x313D10B5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Gradient Erkennung Zapfende
+{0x313D2FC1,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5451,  STR5451,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5451 Gradient Beginn Zapf Komf [K/s]
+{0x313D10B6,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5451,  STR5451,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Gradient Erkennung Zapfbeginn bei Warmhaltung
+{0x313D2FC2,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5452,  STR5452,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5452 Gradient Beginn Zapfung Hz [K/s]
+{0x313D10B7,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5452,  STR5452,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Gradient Erkennung Zapfbeginn
+{0x313D2FB0,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5453,  STR5453,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Komfortregelung mit 40°C
+{0x313D2FB1,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5454,  STR5454,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Komfortregelung mit 60°C
+{0x313D2FB2,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5455,  STR5455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Auslaufregelung mit 40°C
+{0x313D10B8,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5455,  STR5455,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Zapfsollwertkorrektur bei 40°C
+{0x313D2FB3,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5456,  STR5456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertkorrektur bei Auslaufregelung mit 60°C
+{0x313D10B9,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5456,  STR5456,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Zapfsollwertkorrektur bei 60°C
+{0x313D10BA,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5460,  STR5460,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltesollwert
+{0x313D10BB,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5461,  STR5461,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltesollwertkorrektur bei 40°C
+{0x313D10BC,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5462,  STR5462,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltesollwertkorrektur bei 60°C
+{0x313D0F8A,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5464,  STR5464,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltung Freigabe
+{0x313D0F9B,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5468,  STR5468,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Minimale Zapfzeit für Warmhaltung
+{0x313D10BD,  CAT_DURCHLERHITZER,   VT_MINUTES_WORD,  5470,  STR5470,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltezeit ohne Heizbetrieb
+{0x313D10BE,  CAT_DURCHLERHITZER,   VT_MINUTES,       5471,  STR5471,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltezeit bei Heizbetrieb
+{0x313D10BF,  CAT_DURCHLERHITZER,   VT_MINUTES,       5472,  STR5472,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpennachlaufzeit Warmhaltung
+{0x313D10C0,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5473,  STR5473,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpennachlaufzeit Warmhaltung
+{0x313D0F9C,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5475,  STR5475,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Regelfühler Warmhaltung
+{0x313D2FC3,  CAT_DURCHLERHITZER,   VT_MINUTES_WORD10,5480,  STR5480,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5480 Komfortzeit ohne Hz-Anfo [min]
+{0x313D2FC4,  CAT_DURCHLERHITZER,   VT_MINUTES_SHORT, 5481,  STR5481,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5481 Komfortzeit mit Hz-Anfo [min]
+{0x153D3010,  CAT_DURCHLERHITZER,   VT_SECONDS_WORD,  5482,  STR5482,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit TWW-FlowSwitch geschlossen
+{0x053D3010,  CAT_DURCHLERHITZER,   VT_SECONDS_WORD5, 5482,  STR5482,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Zeit TWW-FlowSwitch geschlossen
+{0x193D3011,  CAT_DURCHLERHITZER,   VT_SECONDS_WORD,  5483,  STR5483,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zeit TWW-Komfort FlowSwitch geschlossen
+{0x313D300D,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5486,  STR5486,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reglerverzögerung bei Takten in DLH Auslaufbetr.
+{0x2E3D2FDB,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5487 Pump'nachlauf Komf [min]
+{0x2D3D3074,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // TODO Thision 5487 Pump'nachlauf Komf [min]
+{0x2E3D2FDB,  CAT_DURCHLERHITZER,   VT_MINUTES,       5487,  STR5487,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Pump'nachlauf Komf [min]
+{0x223D301B,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
+{0x213D3075,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5488,  STR5488,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5488 Pump'nachlauf Komf [sek]
+{0x053D10A6,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5489,  STR5489,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Nachlauf in Durchl'erhitzer
+{0x053D115A,  CAT_DURCHLERHITZER,   VT_PERCENT,       5530,  STR5530,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendrehzahl Minimum
+{0x053D115B,  CAT_DURCHLERHITZER,   VT_PERCENT,       5531,  STR5531,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum Heizkreis 1
+{0x053D10E5,  CAT_DURCHLERHITZER,   VT_PERCENT,       5535,  STR5535,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Min OEM Durchlauferhitzer
+{0x053D10E4,  CAT_DURCHLERHITZER,   VT_PERCENT,       5536,  STR5536,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Max OEM Durchlauferhitzer
+{0x053D10DC,  CAT_DURCHLERHITZER,   VT_PERCENT,       5537,  STR5537,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Durchlauferhitzerpumpe
+{0x313D0B1E,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT5,5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
+{0x313D0B1D,  CAT_DURCHLERHITZER,   VT_TEMP,          5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
+{0x313D0B21,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x313D0B22,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT4,5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
+{0x313D0FEC,  CAT_DURCHLERHITZER,   VT_UNKNOWN,       5550,  STR5550,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Aqua booster
 
 // Allgemeine Funktionen: CAT_ALLGFUNKT
 {0x053D182A,  CAT_ALLGFUNKT,        VT_TEMP,          5570,  STR5570,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Temp'diff EIN dT-Regler 1 [grad C]
@@ -9266,7 +9352,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0B29,  CAT_KONFIG,           VT_ENUM,          6072,  STR6072,  sizeof(ENUM7425),     ENUM7425,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Signal Ausg' UX - Baxi Luna Platinum
 {0x053D042B,  CAT_KONFIG,           VT_TEMP,          6075,  STR6075,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temperaturwert 10V UX
 {0x053D1231,  CAT_KONFIG,           VT_ENUM,          6078,  STR6078,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Signal Fkt' UX2 - Baxi Luna Platinum
+{0x063D045B,  CAT_KONFIG,           VT_UNKNOWN,       6079,  STR6079,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Signallogik Ausgang UX2
 {0x053D04A0,  CAT_KONFIG,           VT_ENUM,          6085,  STR6085,  sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_ALL}, // PWM-Ausgang P1
+{0x053D045B,  CAT_KONFIG,           VT_UNKNOWN,       6086,  STR6086,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Signallogik Ausgang P1
 {0x113D2F97,  CAT_KONFIG,           VT_BYTE,          6089,  STR6089,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6089 Mod Pumpe Drehzahlstufen [?]
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_108_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_122_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
@@ -9280,15 +9368,19 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_205_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_211_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x213D3044,  CAT_KONFIG,           VT_METER,         6090,  STR6090,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Mod Pumpe Förderhöhe Min [m]/10
+{0x073D045B,  CAT_KONFIG,           VT_UNKNOWN,       6090,  STR6090,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Signallogik Ausgang UX3
 {0x2D3D3045,  CAT_KONFIG,           VT_METER,         6091,  STR6091,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Mod Pumpe Förderhöhe Max [m]/10
 {0x113D2FE1,  CAT_KONFIG,           VT_PERCENT,       6092,  STR6092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM Min
+{0x053D2FE1,  CAT_KONFIG,           VT_PERCENT5,      6092,  STR6092,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Modulierende Pumpe PWM Minimum
 {0x113D2FE2,  CAT_KONFIG,           VT_PERCENT,       6093,  STR6093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM Max
+{0x053D2FE2,  CAT_KONFIG,           VT_PERCENT5,      6093,  STR6093,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Modulierende Pumpe PWM Maximum
 {0x053D075D,  CAT_KONFIG,           VT_ENUM,          6097,  STR6097,  sizeof(ENUM6097),     ENUM6097,     DEFAULT_FLAG, DEV_ALL}, // Fühlertyp Kollektor NTC|PT1000
 {0x053D08B6,  CAT_KONFIG,           VT_TEMP,          6098,  STR6098,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Kollektorfühler
 {0x053D08B7,  CAT_KONFIG,           VT_TEMP,          6099,  STR6099,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Kollektorfühler 2
 {0x053D05F1,  CAT_KONFIG,           VT_TEMP,          6100,  STR6100,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Konfiguration - korrektur Aussenfühler
 {0x053D08E6,  CAT_KONFIG,           VT_ENUM,          6101,  STR6101,  sizeof(ENUM6101),     ENUM6101,     DEFAULT_FLAG, DEV_ALL}, // Fühlertyp Abgastemperatur NTC | PT1000
 {0x053D08E7,  CAT_KONFIG,           VT_TEMP,          6102,  STR6102,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Abgastemp'fühler
+{0x313D199B,  CAT_KONFIG,           VT_TEMP,          6107,  STR6107,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Messwertkorrektur Trinkwasserfühler 1 (B3)
 {0x053D0600,  CAT_KONFIG,           VT_HOURS_SHORT,   6110,  STR6110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Konfiguration - Zeitkonstante Gebaeude
 {0x2D3D05E7,  CAT_KONFIG,           VT_GRADIENT,      6112,  STR6112,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision 6112 Gradient Raummodell [min/K]
 {0x053D0D2F,  CAT_KONFIG,           VT_MINUTES_SHORT, 6116,  STR6116,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zeitkonstante Sollw’führung
@@ -9369,10 +9461,12 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D05D8,  CAT_KONFIG,           VT_PRESSURE,      6150,  STR6150,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 Maximum
 {0x063D05D9,  CAT_KONFIG,           VT_PRESSURE,      6151,  STR6151,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 Minimum
 {0x063D05DA,  CAT_KONFIG,           VT_PRESSURE,      6152,  STR6152,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 kritisch Min
+{0x063D05DD,  CAT_KONFIG,           VT_PRESSURE_WORD, 6153,  STR6153,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wasserdruck 2 Schaltdifferenz
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6180,  STR6180,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Maximum
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
 {0x073D05D9,  CAT_KONFIG,           VT_PRESSURE_WORD, 6181,  STR6181,  0,                    NULL,         FL_OEM,       DEV_090_090}, // Wasserdruck 3 Minimum
 {0x073D05DA,  CAT_KONFIG,           VT_PRESSURE,      6182,  STR6182,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 kritisch Min
+{0x073D05DD,  CAT_KONFIG,           VT_PRESSURE_WORD, 6183,  STR6183,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wasserdruck 3 Schaltdifferenz
 {0x053D06AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Fühler Speichern
 {0x053D0BBF,  CAT_KONFIG,           VT_YESNO,         6201,  STR6201,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Fühler löschen //FUJITSU
 {0x053D05D4,  CAT_KONFIG,           VT_YESNO,         6204,  STR6204,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_ALL}, // [-] - Konfiguration - Parameter speichern
@@ -9427,15 +9521,15 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_203_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_211_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1195,  CAT_KONFIG,           VT_UINT,          6231,  STR6231,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Konfiguration - Info 2 OEM
-{0x053D1770,  CAT_KONFIG,           VT_DWORD,         6232,  STR6232,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Inbetriebssetzung?
-{0x053D1771,  CAT_KONFIG,           VT_DWORD,         6233,  STR6233,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene?
-{0x053D1772,  CAT_KONFIG,           VT_DWORD,         6234,  STR6234,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
-{0x053D1773,  CAT_KONFIG,           VT_DWORD,         6235,  STR6235,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
-{0x053D0064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
-{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6236,  STR6236,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
-{0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6237,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
+{0x053D1488,  CAT_KONFIG,           VT_UNKNOWN,       6232,  STR6232,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Parameterversion
+{0x053D1489,  CAT_KONFIG,           VT_UNKNOWN,       6233,  STR6233,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Parametersatznummer
+{0x053D127C,  CAT_KONFIG,           VT_UNKNOWN,       6234,  STR6234,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Kesseltypnummer OEM
+{0x053D1174,  CAT_KONFIG,           VT_UNKNOWN,       6235,  STR6235,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Parametersatzgruppe OEM
+{0x053D148A,  CAT_KONFIG,           VT_UNKNOWN,       6236,  STR6236,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Parametersatznummer OEM
 {0x153D2F9E,  CAT_KONFIG,           VT_BIT,           6240,  STR6240,  sizeof(ENUM6240),     ENUM6240,     DEFAULT_FLAG, DEV_ALL}, // Thision 6240 KonfigRg1 Bit 0-7 [?]
 {0x253D2F9F,  CAT_KONFIG,           VT_BIT,           6250,  STR6250,  sizeof(ENUM6250),     ENUM6250,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg2 Bit 0-7
+{0x053D1BC7,  CAT_KONFIG,           VT_UNKNOWN,       6258,  STR6258,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 3 OEM
+{0x053D1BC8,  CAT_KONFIG,           VT_UNKNOWN,       6259,  STR6259,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 4 OEM
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA1,  CAT_KONFIG,           VT_BIT,           6270,  STR6270,  sizeof(ENUM6270),     ENUM6270,     DEFAULT_FLAG, DEV_ALL}, // Thision 6270 KonfigRg4 Bit 0-7 [?]
 {0x053D11E1,  CAT_KONFIG,           VT_TEMP,          6270,  STR6270_2,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutztemperatur
@@ -9457,9 +9551,18 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6300,  STR6300_2,0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Info 1 OEM
 {0x313D2FB7,  CAT_KONFIG,           VT_BIT,           6310,  STR6310,  sizeof(ENUM6310),     ENUM6310,     DEFAULT_FLAG, DEV_ALL}, // Thision 6310 KonfigRg8 Bit 0-7 [?]
 {0x0D3D3017,  CAT_KONFIG,           VT_BIT,           6330,  STR6330,  sizeof(ENUM6330),     ENUM6330,     DEFAULT_FLAG, DEV_ALL}, // Thision 6330 KonfigRg10 Bit 0-7 [?]
+{0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6343,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
+{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6344,  STR6344,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
+{0x053D1770,  CAT_KONFIG,           VT_DWORD,         6345,  STR6345,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Inbetriebssetzung?
+{0x053D1771,  CAT_KONFIG,           VT_DWORD,         6346,  STR6346,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene
+{0x053D1772,  CAT_KONFIG,           VT_DWORD,         6347,  STR6347,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
+{0x053D1773,  CAT_KONFIG,           VT_DWORD,         6348,  STR6348,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM2?
+{0x053D1BCD,  CAT_KONFIG,           VT_UNKNOWN,       6351,  STR6351,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion OT Kanal 1
+{0x063D1BCD,  CAT_KONFIG,           VT_UNKNOWN,       6352,  STR6352,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion OT Kanal 2
 {0x053D12E2,  CAT_KONFIG,           VT_BYTE,          6355,  STR6355,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum - Raumregler Heizkreis 1
 {0x063D12E2,  CAT_KONFIG,           VT_BYTE,          6356,  STR6356,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum - Raumregler Heizkreis 2
 {0x073D12E2,  CAT_KONFIG,           VT_BYTE,          6357,  STR6357,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum - Raumregler Heizkreis 3
+{0x053D1BB7,  CAT_KONFIG,           VT_UNKNOWN,       6359,  STR6359,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Externe Bedienung TWW
 {0x053D1224,  CAT_KONFIG,           VT_ENUM,          6375,  STR6375,  sizeof(ENUM6375),     ENUM6375,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX35 //FUJITSU
 {0x053D1264,  CAT_KONFIG,           VT_ENUM,          6420,  STR6420,  sizeof(ENUM6420),     ENUM6420,     DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang H33 //FUJITSU
 {0x053D1277,  CAT_KONFIG,           VT_ENUM,          6421,  STR6421,  sizeof(ENUM6421),     ENUM6421,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Kontakt H33 //FUJITSU
@@ -9567,6 +9670,10 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_080_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_085_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_088_ALL}, // [0] - LPB - Aussentemperatur Lieferant
+{0x053D1109,  CAT_LPB,              VT_UNKNOWN,       6651,  STR6651,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modbus Slaveadresse
+{0x053D110B,  CAT_LPB,              VT_UNKNOWN,       6652,  STR6652,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modbus Baudrate
+{0x053D110A,  CAT_LPB,              VT_UNKNOWN,       6653,  STR6653,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modbus Parität
+{0x053D1F3D,  CAT_LPB,              VT_UNKNOWN,       6654,  STR6654,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modbus Stoppbit
 {0x413D000E,  CAT_LPB,              VT_FP1    ,       6699,  STR6699,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - LPB - Software Version Einschub
 
 //Fehler
@@ -9958,6 +10065,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D30B5,  CAT_FEHLER,           VT_ERRORCODE,     6991,  STR6991,  sizeof(ENUM_ERROR),   ENUM_ERROR,   FL_RONLY,     DEV_ALL}, // [ ] - Fehler - Historie 20 Fehlercode
 {0x053D3092,  CAT_FEHLER,           VT_UINT,          6995,  STR6995,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [ ] - Fehler - SW Diagnosecode 20
 {0x053D30A1,  CAT_FEHLER,           VT_ENUM,          6996,  STR6996,  sizeof(ENUM6706),     ENUM6706,     FL_RONLY,     DEV_ALL}, // [ ] - Fehler - FA Phase 20
+{0x053D06E7,  CAT_FEHLER,           VT_YESNO,         6999,  STR6999,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Reset Fehlerhistorie
 
 // Wartung/Sonderbetrieb
 
@@ -10073,6 +10181,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_WARTUNG,          VT_UNKNOWN,       7160,  STR7160,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Reset Begrenzungszeiten
 {0x053D1A8E,  CAT_WARTUNG,          VT_ONOFF,         7165,  STR7165,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+
 {0x113D1A9A,  CAT_WARTUNG,          VT_BYTE,          7166,  STR7166,  0,                    NULL,         FL_RONLY, DEV_ALL}, // [ ] Wartung/Sonderbetrieb - Inbetriebnahmefunktion
+{0x053D0F8B,  CAT_WARTUNG,          VT_UNKNOWN,       7167,  STR7167,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Inbetriebnahme Assistent
+{0x053D1A90,  CAT_WARTUNG,          VT_UNKNOWN,       7168,  STR7168,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Fabrikationstest Assistent
 {0x053D06E8,  CAT_WARTUNG,          VT_STRING,        7170,  STR7170,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Kundendienst
 {0x053D07B7,  CAT_WARTUNG,          VT_STRING,        7181,  STR7181,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Zuständigkeit 1
 {0x053D07B8,  CAT_WARTUNG,          VT_STRING,        7183,  STR7183,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Wartung/Service - Telefon Zuständigkeit 2
@@ -10093,6 +10203,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D11D7,  CAT_WARTUNG,          VT_PERCENT,       7254,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt TODO: Check double telegram ..D8 ..D7
 
 // Konfiguration Erweit'module
+{0x053D0D52,  CAT_MODULE,           VT_UNKNOWN,       7301,  STR7301,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21 Modul 1
+{0x053D0D53,  CAT_MODULE,           VT_UNKNOWN,       7302,  STR7302,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX22 Modul 1
+{0x053D0D54,  CAT_MODULE,           VT_UNKNOWN,       7303,  STR7303,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX23 Modul 1
+{0x053D0D89,  CAT_MODULE,           VT_UNKNOWN,       7307,  STR7307,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX21 Modul 1
+{0x053D0D8C,  CAT_MODULE,           VT_UNKNOWN,       7308,  STR7308,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Fühlereingang BX22 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_123_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_138_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_170_ALL}, // Funktion Eingang H2 Modul 1
@@ -10101,6 +10216,20 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_178_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_195_ALL}, // Funktion Eingang H2 Modul 1
 {0x053D0D92,  CAT_MODULE,           VT_ENUM,          7311,  STR7311,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_203_ALL}, // Funktion Eingang H2 Modul 1
+{0x053D0D92,  CAT_MODULE,           VT_UNKNOWN,       7321,  STR7321,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Eingang H2/H21 Modul 1 Funktionswahl
+{0x053D0DC9,  CAT_MODULE,           VT_UNKNOWN,       7322,  STR7322,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kontaktart H2/H21 Modul 1
+{0x053D0E7E,  CAT_MODULE,           VT_VOLTAGE,       7324,  STR7324,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 1 H2/H21 Modul 1
+{0x053D0E78,  CAT_MODULE,           VT_UNKNOWN,       7325,  STR7325,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktionswert 1 H2/H21 Modul 1
+{0x053D0E81,  CAT_MODULE,           VT_VOLTAGE,       7326,  STR7326,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 2 H2/H21 Modul 1
+{0x053D0E7B,  CAT_MODULE,           VT_UNKNOWN,       7327,  STR7327,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktionswert 2 H2/H21 Modul 1
+{0x053D1075,  CAT_MODULE,           VT_UNKNOWN,       7342,  STR7342,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang EX21 Modul 1
+{0x053D15CC,  CAT_MODULE,           VT_UNKNOWN,       7348,  STR7348,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX21 Modul 1
+{0x053D15B7,  CAT_MODULE,           VT_UNKNOWN,       7349,  STR7349,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX21 Modul 1
+{0x053D15EA,  CAT_MODULE,           VT_UNKNOWN,       7350,  STR7350,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX21 Modul 1
+{0x053D15CF,  CAT_MODULE,           VT_UNKNOWN,       7355,  STR7355,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Ausgang UX22 Modul 1
+{0x053D15BA,  CAT_MODULE,           VT_UNKNOWN,       7356,  STR7356,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signallogik Ausgang UX22 Modul 1
+{0x053D15ED,  CAT_MODULE,           VT_UNKNOWN,       7357,  STR7357,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Signal Ausgang UX22 Modul 1
+{0x053D0789,  CAT_MODULE,           VT_UNKNOWN,       7375,  STR7375,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktion Erweiterungsmodul 2
 {0x053D0D55,  CAT_MODULE,           VT_ENUM,          7376,  STR7376,  sizeof(ENUM7376),     ENUM7376,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX21 Modul 2
 {0x053D0D56,  CAT_MODULE,           VT_ENUM,          7377,  STR7377,  sizeof(ENUM7376),     ENUM7376,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX22 Modul 2
 {0x053D0D57,  CAT_MODULE,           VT_ENUM,          7378,  STR7378,  sizeof(ENUM7376),     ENUM7376,     DEFAULT_FLAG, DEV_ALL}, // Relaisausgang QX23 Modul 2
@@ -10109,6 +10238,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0D93,  CAT_MODULE,           VT_ENUM,          7386,  STR7386,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_ALL}, // Funktion Eingang H2 Modul 2
 {0x053D0DCA,  CAT_MODULE,           VT_ENUM,          7387,  STR7387,  sizeof(ENUM5951),     ENUM5951,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Kontakt H2 Modul 2
 {0x053D15BE,  CAT_MODULE,           VT_ENUM,          7396,  STR7396,  sizeof(ENUM5950_4),   ENUM5950_4,   DEFAULT_FLAG, DEV_ALL}, // Funktion Eing' H21 Modul 2
+{0x053D0D93,  CAT_MODULE,           VT_UNKNOWN,       7396,  STR7396,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Eingang H2/H21 Modul 2 Funktionswahl
+{0x053D0DCA,  CAT_MODULE,           VT_UNKNOWN,       7397,  STR7397,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kontaktart H2/H21 Modul 2
 {0x053D15D3,  CAT_MODULE,           VT_VOLTAGE,       7399,  STR7399,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 1 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
 {0x053D15DF,  CAT_MODULE,           VT_UINT,          7400,  STR7400,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Funkt'wert 1 H21 Modul 2
 {0x053D15D9,  CAT_MODULE,           VT_VOLTAGE,       7401,  STR7401,  0,                    0,            DEFAULT_FLAG, DEV_ALL}, // Eingangswert 2 H21 Modul 2 // todo: dies ein 3 byte spannungswert wert...
