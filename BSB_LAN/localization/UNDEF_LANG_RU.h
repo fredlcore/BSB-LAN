@@ -74,6 +74,7 @@
 #undef ENUM_CAT_30_TEXT
 #undef ENUM_CAT_31_TEXT
 #undef ENUM_CAT_32_TEXT
+#undef ENUM_CAT_33_TEXT
 #undef MENU_TEXT_TOC
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ

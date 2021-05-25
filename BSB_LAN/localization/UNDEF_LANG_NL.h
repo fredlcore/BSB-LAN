@@ -33,12 +33,13 @@
 #undef ENUM_CAT_25_TEXT
 #undef ENUM_CAT_26_TEXT
 #undef ENUM_CAT_27_TEXT
-#undef ENUM_CAT_2a_TEXT
-#undef ENUM_CAT_2c_TEXT
+#undef ENUM_CAT_28_TEXT
+#undef ENUM_CAT_2b_TEXT
 #undef ENUM_CAT_2d_TEXT
 #undef ENUM_CAT_2e_TEXT
-#undef ENUM_CAT_30_TEXT
-#undef ENUM_CAT_32_TEXT
+#undef ENUM_CAT_2f_TEXT
+#undef ENUM_CAT_31_TEXT
+#undef ENUM_CAT_33_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SN1
 #undef MENU_TEXT_SN2
