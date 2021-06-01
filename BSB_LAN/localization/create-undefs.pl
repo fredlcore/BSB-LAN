@@ -4,7 +4,7 @@ use bytes;
 
 # Extract the variable size of buffer via BUFLEN from BSB_lan.ino
 # Can probably be written shorter/nicer/more effective?
-@Ino = `cat ../BSB_lan.ino`;
+@Ino = `cat ../BSB_LAN.ino`;
 @size = grep(/#define OUTBUF_LEN /, @Ino);
 $size[0] =~ /#define OUTBUF_LEN (.*)/;
 $size = $1-1;

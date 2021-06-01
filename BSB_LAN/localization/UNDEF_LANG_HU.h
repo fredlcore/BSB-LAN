@@ -20,10 +20,11 @@
 #undef ENUM_CAT_25_TEXT
 #undef ENUM_CAT_26_TEXT
 #undef ENUM_CAT_27_TEXT
-#undef ENUM_CAT_2a_TEXT
+#undef ENUM_CAT_28_TEXT
 #undef ENUM_CAT_2b_TEXT
 #undef ENUM_CAT_2c_TEXT
 #undef ENUM_CAT_2d_TEXT
+#undef ENUM_CAT_2e_TEXT
 #undef STR516_TEXT
 #undef STR536_TEXT
 #undef STR556_TEXT

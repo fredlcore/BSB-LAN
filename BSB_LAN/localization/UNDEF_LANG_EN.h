@@ -50,6 +50,7 @@
 #undef ENUM_CAT_30_TEXT
 #undef ENUM_CAT_31_TEXT
 #undef ENUM_CAT_32_TEXT
+#undef ENUM_CAT_33_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1
