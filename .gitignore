@@ -30,3 +30,4 @@ tidy_enums.pl
 localization/conv-csv.pl
 OEM-Codes.txt
 .gitignore
+BSB_LAN/scripts/match-vt_types.pl
