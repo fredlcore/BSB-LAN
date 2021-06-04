@@ -255,6 +255,7 @@ typedef enum{
   VT_GRADIENT_SHORT,    //  2 Byte - 1 enable / value min/K
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
+  VT_LPM_SHORT,         //  2 Byte - 1 enable / value / 10
   VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x06 / minutes      Int08S
   VT_MONTHS,            //  2 Byte - 1 enable 0x06 / months       Int08S
   VT_ONOFF,             //  2 Byte - 1 enable 0x01 / 0=Aus  1=An (auch 0xff=An)
@@ -266,6 +267,7 @@ typedef enum{
   VT_PRESSURE,          //  2 Byte - 1 enable 0x01 / bar/10.0     READ-ONLY
   VT_PRESSURE50,        //  2 Byte - 1 enable 0x01 / bar/50.0
   VT_SECONDS_SHORT,     //  2 Byte - 1 enable / seconds
+  VT_SECONDS_SHORT2,    //  2 Byte - 1 enable 0x01 / value/2 (signed?)
   VT_SECONDS_SHORT4,    //  2 Byte - 1 enable 0x01 / value/4 (signed?)
   VT_SECONDS_SHORT5,    //  2 Byte - 1 enable 0x01 / value/5 (signed?)
   VT_TEMP_SHORT,        //  2 Byte - 1 enable 0x01 / value (signed)
@@ -286,7 +288,7 @@ typedef enum{
   VT_FP1,               //  3 Byte - 1 enable / value/10 READ-ONLY
   VT_FP02,              //  3 Byte - 1 enable 0x01 / value/50
   VT_GRADIENT,          //  3 Byte - 1 enable / value min/K
-  VT_INTEGRAL,          //  3 Byte - 1 enable / value Kmin
+//  VT_INTEGRAL,          //  3 Byte - 1 enable / value Kmin
   VT_METER,             //  3 Byte - 1 enable 0x06 / meter / 10
   VT_MONTHS_WORD,       //  3 Byte - 1 enable 0x06 / months
   VT_HOUR_MINUTES,      //  3 Byte - 1 enable 0x06 / hh mm
@@ -310,7 +312,7 @@ typedef enum{
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
   VT_TEMP,              //  3 Byte - 1 enable / value/64
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
-  VT_TEMP_WORD60,       //  3 Byte - 1 enable / value / 60
+//  VT_TEMP_WORD60,       //  3 Byte - 1 enable / value / 60
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
   VT_VOLTAGE_WORD,      //  3 Byte - 1 enable / volt z.B. 2.9V
   VT_CELMIN,            //  3 Byte - 1 enable / value
@@ -319,6 +321,7 @@ typedef enum{
   VT_UINT,              //  3 Byte - 1 enable 0x06 / value
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
+  VT_UINT100_WORD,      //  3 Byte - 1 enable / value / 100
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_PPS_TIME,          //  4 Byte
@@ -328,7 +331,7 @@ typedef enum{
   VT_SECONDS_DWORD,     //  5 Byte - 1 enable 0x01 / seconds
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
   VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
-  VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
+//  VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
@@ -398,6 +401,7 @@ const char STR_PERCENT5[] PROGMEM = "PERCENT5";
 const char STR_PRESSURE[] PROGMEM = "PRESSURE";
 const char STR_PRESSURE50[] PROGMEM = "PRESSURE50";
 const char STR_SECONDS_SHORT[] PROGMEM = "SECONDS_SHORT";
+const char STR_SECONDS_SHORT2[] PROGMEM = "SECONDS_SHORT2";
 const char STR_SECONDS_SHORT4[] PROGMEM = "SECONDS_SHORT4";
 const char STR_SECONDS_SHORT5[] PROGMEM = "SECONDS_SHORT5";
 const char STR_TEMP_SHORT[] PROGMEM = "TEMP_SHORT";
@@ -428,6 +432,7 @@ const char STR_MINUTES_WORD[] PROGMEM = "MINUTES_WORD";
 const char STR_MINUTES_WORD10[] PROGMEM = "MINUTES_WORD10";
 const char STR_PERCENT_WORD1[] PROGMEM = "PERCENT_WORD1";
 const char STR_PERCENT_WORD[] PROGMEM = "PERCENT_WORD";
+const char STR_PERCENT1[] PROGMEM = "PERCENT1";
 const char STR_PERCENT_100[] PROGMEM = "PERCENT_100";
 const char STR_POWER_WORD[] PROGMEM = "POWER_WORD";
 const char STR_POWER_WORD100[] PROGMEM = "POWER_WORD100";
@@ -448,6 +453,7 @@ const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
 const char STR_CELMIN[] PROGMEM = "CELMIN";
 const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
 const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
+const char STR_LPM_SHORT[] PROGMEM = "LPM_SHORT";
 const char STR_UINT[] PROGMEM = "UINT";
 const char STR_UINT5[] PROGMEM = "UINT5";
 const char STR_UINT10[] PROGMEM = "UINT10";
@@ -563,15 +569,17 @@ PROGMEM_LATE const units optbl[]={
 {VT_GRADIENT_SHORT, 1.0,    1, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
 {VT_HOURS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_LPBADDR,        1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
+{VT_LPM_SHORT,      10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
 {VT_MINUTES_SHORT,  1.0,    6, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
 {VT_MONTHS,         1.0,    6, 1, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
 {VT_ONOFF,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
 {VT_PERCENT,        1.0,    6, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
-{VT_PERCENT1,       1.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
+{VT_PERCENT1,       1.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT1},
 {VT_PERCENT5,       2.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT5},
 {VT_PRESSURE,       10.0,   6, 1, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE},
 {VT_PRESSURE50,     50.0,   1, 1, DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
 {VT_SECONDS_SHORT,  1.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
+{VT_SECONDS_SHORT2, 2.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
 {VT_SECONDS_SHORT4, 4.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
 {VT_SECONDS_SHORT5, 5.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
 {VT_TEMP_SHORT,     1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
@@ -592,7 +600,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_FP1,            10.0,   0, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
 {VT_FP02,           50.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
 {VT_GRADIENT,       1.0,    1, 2, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
-{VT_INTEGRAL,       1.0,    0, 2, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
+// {VT_INTEGRAL,       1.0,    0, 2, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
 {VT_METER,          10,     1, 2, DT_VALS, 0,  U_METER, sizeof(U_METER), STR_METER},
 {VT_MONTHS_WORD,    1.0,    1, 2, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
 {VT_HOUR_MINUTES,   1.0,    6, 2+32, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
@@ -616,7 +624,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SPEED2,         1.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
 {VT_TEMP,           64.0,   1, 2+32, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
 {VT_TEMP_WORD,      1.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
-{VT_TEMP_WORD60,    60.0,   6, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
+// {VT_TEMP_WORD60,    60.0,   6, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
 {VT_TEMP_WORD5_US,  2.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
 {VT_VOLTAGE_WORD,   10.0,   1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
 {VT_CELMIN,         1.0,    1, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
@@ -625,6 +633,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_UINT,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
 {VT_UINT5,          5.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
 {VT_UINT10,         10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
+{VT_UINT100_WORD,   100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_SINT,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT1000,       1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
 {VT_PPS_TIME,       1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
@@ -634,7 +643,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SECONDS_DWORD,  1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
 {VT_POWER,          10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
 {VT_POWER100,       100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
-{VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
+// {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
 {VT_ENERGY,         1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_UINT100,        100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_DATETIME,       1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
@@ -7969,14 +7978,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D09CB,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  656,   STR656,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 4 Ende Tag/Monat
 {0x063D09CC,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  657,   STR657,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Beginn Tag/Monat
 {0x063D09CD,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  658,   STR658,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 5 Ende Tag/Monat
-//{0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          658,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_NONE}, // [0] - Ferienheizkreis 2 - Betriebsniveau
+//{0x2E3D04C2,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  658,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_NONE}, // [0] - Ferienheizkreis 2 - Betriebsniveau
 {0x063D09CE,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  659,   STR659,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Beginn Tag/Monat
 {0x063D09CF,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  660,   STR660,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 6 Ende Tag/Monat
 {0x063D09D0,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  661,   STR661,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Beginn Tag/Monat
 {0x063D09D1,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 7 Ende Tag/Monat
-//{0x073D09C4,  CAT_FERIEN_HK2,     VT_ENUM,          662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
+//{0x073D09C4,  CAT_FERIEN_HK2,     VT_VACATIONPROG,    662,   STR662,   0,                    NULL,         DEFAULT_FLAG, DEV_107_ALL},
 {0x063D09D2,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Beginn Tag/Monat
-//{0x073D09C5,  CAT_FERIEN_HK2,     ,                 663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // Urlaubende
+//{0x073D09C5,  CAT_FERIEN_HK2,     VT_VACATIONPROG,    663,   STR663,   0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // Urlaubende
 {0x063D09D3,  CAT_FERIEN_HK2,       VT_VACATIONPROG,  664,   STR664,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Ferienheizkreis 2 - Periode 8 Ende Tag/Monat
 {0x2E3D04C2,  CAT_FERIEN_HK2,       VT_ENUM,          665,   STR665,   sizeof(ENUM665),      ENUM665,      DEFAULT_FLAG, DEV_ALL}, // [0] - Ferienheizkreis 2 - Betriebsniveau
 // Ferien Heizkreis P
@@ -8140,7 +8149,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10E0,  CAT_HK1,              VT_PERCENT,       886,   STR886_2, 0,                    NULL,         FL_RONLY, DEV_211_ALL}, // Baxi Luna Platinum+ Pumpe-PWM Maximum OEM [%]
 {0x053D3050,  CAT_HK1,              VT_TEMP_SHORT5_US,887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C]
 {0x393D2F82,  CAT_HK1,              VT_TEMP_WORD5_US, 887,   STR887,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 887 Vorlaufsoll NormAussentemp [°C] - logged on OCI700 via LPB
-{0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD1, 888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
+{0x253D2FE5,  CAT_HK1,              VT_PERCENT_WORD,  888,   STR888,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 888 dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // dt Überhöhungsfaktor [%]
@@ -8468,7 +8477,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x1D3D07BC,  CAT_VORREGLERPUMPE,   VT_TEMP,          2111,  STR2111,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorlaufsollwert Maximum
 {0x1D3D0D22,  CAT_VORREGLERPUMPE,   VT_TEMP,          2112,  STR2112,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorlaufsollwert Kühlen Min
 {0x053D1259,  CAT_VORREGLERPUMPE,   VT_ONOFF,         2121,  STR2121,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Zubringerpumpe bei Erzeugersperre
-{0x1D3D0771,  CAT_VORREGLERPUMPE,   VT_TEMP   ,       2130,  STR2130,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
+{0x1D3D0771,  CAT_VORREGLERPUMPE,   VT_TEMP,          2130,  STR2130,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerüberhöhung
 {0x1D3D0D21,  CAT_VORREGLERPUMPE,   VT_TEMP,          2131,  STR2131,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischerunterkühlung
 {0x1D3D08C1,  CAT_VORREGLERPUMPE,   VT_ENUM,          2132,  STR2132,  sizeof(ENUM2132),     ENUM2132,     FL_OEM, DEV_ALL}, // Antrieb Typ
 {0x1D3D0770,  CAT_VORREGLERPUMPE,   VT_TEMP,          2133,  STR2133,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz 2-Punkt
@@ -8501,8 +8510,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2214 Sollwert Handbetrieb [°C]
 {0x11052F87,  CAT_KESSEL,           VT_TEMP_WORD,     2215,  STR2215,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Regeldiff. ohne Abbruch der Mindestpause (von LMU64 Parameter 517/113)
 {0x053D137D,  CAT_KESSEL,           VT_TEMP,          2217,  STR2217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ 1.24 [°C]
-{0x0D3D0932,  CAT_KESSEL,           VT_UINT,          2220,  STR2220,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Stufe 2 °Cmin[0-500]
-{0x0D3D0933,  CAT_KESSEL,           VT_UINT,          2221,  STR2221,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Stufe 2 °Cmin[0-500]
+{0x0D3D0932,  CAT_KESSEL,           VT_CELMIN,        2220,  STR2220,  0,                    NULL,         FL_OEM, DEV_ALL}, // Freigabeintegral Stufe 2 °Cmin[0-500]
+{0x0D3D0933,  CAT_KESSEL,           VT_CELMIN,        2221,  STR2221,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rückstellintegral Stufe 2 °Cmin[0-500]
 {0x0D3D08BE,  CAT_KESSEL,           VT_SECONDS_SHORT, 2222,  STR2222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangseinschaltung Stufe 2
 {0x113D08F6,  CAT_KESSEL,           VT_SECONDS_WORD5, 2232,  STR2232,  0,                    NULL,         FL_OEM, DEV_ALL}, // Klappenantrieb Laufzeit
 {0x113D08F5,  CAT_KESSEL,           VT_TEMP,          2233,  STR2233,  0,                    NULL,         FL_OEM, DEV_ALL}, // Klappenantrieb P-Band Xp
@@ -8510,7 +8519,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D08F8,  CAT_KESSEL,           VT_SECONDS_SHORT4,2235,  STR2235,  0,                    NULL,         FL_OEM, DEV_ALL}, // Klappenantrieb Vorh'zeit Tv
 {0x113D10C4,  CAT_KESSEL,           VT_TEMP,          2236,  STR2236,  0,                    NULL,         FL_OEM, DEV_ALL}, // P-Band Xp Trinkwasser
 {0x113D10C5,  CAT_KESSEL,           VT_SECONDS_WORD,  2237,  STR2237,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachstellzeit (Tn) Trinkwasser
-{0x113D10C6,  CAT_KESSEL,           VT_SECONDS_SHORT, 2238,  STR2238,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorhaltezeit (Tv) Trinkwasser
+{0x113D10C6,  CAT_KESSEL,           VT_SECONDS_SHORT4,2238,  STR2238,  0,                    NULL,         FL_OEM, DEV_ALL}, // Vorhaltezeit (Tv) Trinkwasser
 {0x0D3D1104,  CAT_KESSEL,           VT_PERCENT,       2239,  STR2239,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // PID I-Erweiterung
 {0x0D3D0928,  CAT_KESSEL,           VT_TEMP,          2240,  STR2240,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schaltdifferenz Kessel
 {0x0D3D0939,  CAT_KESSEL,           VT_MINUTES_SHORT, 2241,  STR2241,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kessel Brennerlaufzeit Minimum
@@ -8607,7 +8616,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D14A7,  CAT_KESSEL,           VT_TEMP,          2370,  STR2370,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperaturhub Pumpendrehzahl Min Bypass
 {0x053D14A8,  CAT_KESSEL,           VT_TEMP,          2371,  STR2371,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperaturhub Pumpendrehzahl Max Bypass
 {0x053D14D8,  CAT_KESSEL,           VT_TEMP,          2372,  STR2372,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Temperatur Pumpendrehzahl Max Bypass
-{0x053D14A9,  CAT_KESSEL,           VT_MINUTES,       2373,  STR2373,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Verzögerung Drehzahlregler Bypasspumpe
+{0x053D14A9,  CAT_KESSEL,           VT_MINUTES_SHORT, 2373,  STR2373,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Verzögerung Drehzahlregler Bypasspumpe
 {0x053D14B3,  CAT_KESSEL,           VT_PERCENT,       2375,  STR2375,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Bypasspumpe
 {0x053D14AF,  CAT_KESSEL,           VT_PERCENT,       2376,  STR2376,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Minimum Bypass
 {0x053D14AD,  CAT_KESSEL,           VT_PERCENT,       2376,  STR2376,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Pumpendrehzahl Minimum Bypass
@@ -8706,8 +8715,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Brötje 2453 Reglerverzögerung Dauer
 {0x053D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Brötje 2453 Reglerverzögerung Dauer
 {0x053D2F9B,  CAT_KESSEL,           VT_SECONDS_WORD,  2453,  STR2453,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2453 Reglerverzögerung Dauer
-{0x213D2F8C,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2454 Schaltdifferenz Kessel
-{0x223D2F8C,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2454 Schaltdifferenz Kessel - logged on OCI700 via LPB
+{0x213D2F8C,  CAT_KESSEL,           VT_TEMP_SHORT5,   2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2454 Schaltdifferenz Kessel
+{0x223D2F8C,  CAT_KESSEL,           VT_TEMP_SHORT5,   2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2454 Schaltdifferenz Kessel - logged on OCI700 via LPB
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Brötje 2454 Schaltdifferenz Kessel
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Brötje 2454 Schaltdifferenz Kessel
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Brötje 2454 Schaltdifferenz Kessel
@@ -8716,8 +8725,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Brötje 2454 Schaltdifferenz Kessel
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Brötje 2454 Schaltdifferenz Kessel
 {0x113D0E08,  CAT_KESSEL,           VT_TEMP,          2454,  STR2454,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2454 Schaltdifferenz Kessel
-{0x213D2F8D,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
-{0x223D2F8D,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min - logged on OCI700 via LPB
+{0x213D2F8D,  CAT_KESSEL,           VT_TEMP_SHORT5,   2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
+{0x223D2F8D,  CAT_KESSEL,           VT_TEMP_SHORT5,   2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min - logged on OCI700 via LPB
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
@@ -8726,8 +8735,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
 {0x113D0E09,  CAT_KESSEL,           VT_TEMP,          2455,  STR2455,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2455 Schaltdiff Kessel Aus Min
-{0x213D2F8E,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
-{0x223D2F8E,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max - logged on OCI700 via LPB
+{0x213D2F8E,  CAT_KESSEL,           VT_TEMP_SHORT5,   2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
+{0x223D2F8E,  CAT_KESSEL,           VT_TEMP_SHORT5,   2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max - logged on OCI700 via LPB
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
@@ -8761,9 +8770,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2472 Pumpennachlauftemp TWW - logged on OCI700 via LPB
 {0x053D0F69,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2473,  STR2473,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsredukt
-{0x0D3D2FBB,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2473,  STR2473,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Leistungsredukt
+{0x0D3D2FBB,  CAT_KESSEL,           VT_TEMP_SHORT,    2473,  STR2473,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Leistungsredukt
 {0x053D3061,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2474,  STR2474,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Abschaltgrenze
-{0x113D3061,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2474,  STR2474,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Abschaltgrenze
+{0x113D3061,  CAT_KESSEL,           VT_TEMP_SHORT,    2474,  STR2474,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Abschaltgrenze
 {0x093D0F8C,  CAT_KESSEL,           VT_ENUM,          2476,  STR2476,  sizeof(ENUM2476),     ENUM2476,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  [enum] Kessel - Abgasüberwach' Abschaltung
 {0x093D0F8D,  CAT_KESSEL,           VT_MINUTES_SHORT, 2477,  STR2477,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Abgasüberw Startverhin'zeit [min]
 {0x053D17B4,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2478,  STR2478,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsbegrenz. This parameter set with 0x06 cmd from Room Device, but can be set with 0x01
@@ -8778,15 +8787,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0FE9,  CAT_KESSEL,           VT_ENUM,          2500,  STR2500,  sizeof(ENUM2500),     ENUM2500,     DEFAULT_FLAG, DEV_ALL}, // Druckschalter Abschaltung
 {0x053D1361,  CAT_KESSEL,           VT_ENUM,          2501,  STR2501,  sizeof(ENUM2501),     ENUM2501,     FL_OEM,       DEV_ALL}, // Durchflussmessung
 {0x053D0FEA,  CAT_KESSEL,           VT_ONOFF,         2502,  STR2500,  sizeof(ENUM2502),     ENUM2502,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Durchfl'schalter Abschaltung
-{0x053D1B92,  CAT_KESSEL,           VT_UNKNOWN,       2503,  STR2503,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wartezeit Schalter
+{0x053D1B92,  CAT_KESSEL,           VT_SECONDS_SHORT2,2503,  STR2503,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wartezeit Schalter
 {0x053D1AE1,  CAT_KESSEL,           VT_LITERPERMIN,   2505,  STR2505,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
 {0x053D0FE8,  CAT_KESSEL,           VT_SECONDS_SHORT5,2504,  STR2504,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Min Einschaltzeit Schalter
-{0x053D1ADE,  CAT_KESSEL,           VT_LITERPERMIN,   2509,  STR2509,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
-{0x0D3D1121,  CAT_KESSEL,           VT_TEMP_WORD60,   2510,  STR2510,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschaltung Temp'grad (Bug in Baxi Luna: 0.8 shown twice)
+{0x053D1ADE,  CAT_KESSEL,           VT_LPM_SHORT,     2509,  STR2509,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
+{0x0D3D1121,  CAT_KESSEL,           VT_TEMP,          2510,  STR2510,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschaltung Temp'grad (Bug in Baxi Luna: 0.8 shown twice)
 {0x0D3D1122,  CAT_KESSEL,           VT_SECONDS_SHORT, 2511,  STR2511,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw'zeit
 {0x0D3D1120,  CAT_KESSEL,           VT_ONOFF,         2512,  STR2512,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw' RT
-{0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
-{0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
+{0x093D2F84,  CAT_KESSEL,           VT_TEMP_SHORT5,   2521,  STR2521,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2521 Frostschutz Einschalttemp
+{0x093D2F85,  CAT_KESSEL,           VT_TEMP_SHORT5,   2522,  STR2522,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2522 Frostschutz Ausschalttemp
 {0x0D3D11F4,  CAT_KESSEL,           VT_TEMP,          2527,  STR2527,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Kesseltemperatur Leistungsreduktion
 {0x0D3D11F5,  CAT_KESSEL,           VT_TEMP,          2528,  STR2528,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdifferenz Leistungsreduktion
 {0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
@@ -8871,7 +8880,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D3042,  CAT_SITHERM,           VT_UINT,         2731,  STR2731,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Position Schrittmotor
 {0x093D3043,  CAT_SITHERM,           VT_SINT,         2732,  STR2732,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Lernwert Gasqualität
 {0x093D1A10,  CAT_SITHERM,           VT_ENUM,         2740,  STR2702,  sizeof(ENUM2740),     ENUM2740,     DEFAULT_FLAG, DEV_ALL}, // Auslösen Drifttest
-// Logged from LMS15 - unclear which variant is applicable
+// Todo: Logged from LMS15 - unclear which variant is applicable
 //{0x093D1A12,  CAT_SITHERM,           VT_CURRENT,       2741,  STR2741,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // ADA Ergebnis letzter Test
 //{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2742,  STR2742,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
 //{0x093D1A11,  CAT_SITHERM,           VT_UNKNOWN2,      2743,  STR2743,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Nummer des angezeigten ADA Punktes
@@ -8933,8 +8942,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D0B89,  CAT_WAERMEPUMPE,      VT_TEMP,          2809,  STR2809,  0,                    NULL,         FL_OEM, DEV_ALL}, // Temperatur Frost-Alarm
 {0x593D1787,  CAT_WAERMEPUMPE,      VT_TEMP,          2810,  STR2810,  0,                    NULL,         FL_OEM, DEV_ALL}, // Kondensatorfrostschutz
 {0x593D1893,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2811,  STR2811,  0,                    NULL,         FL_OEM, DEV_ALL}, // Nachlauf Kond’frostschutz
-{0x593D0B8A,  CAT_WAERMEPUMPE,      VT_TEMP_WORD,     2812,  STR2812,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Min Luft
-{0x593D0CF0,  CAT_WAERMEPUMPE,      VT_TEMP_WORD,     2813,  STR2813,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Max Luft
+{0x593D0B8A,  CAT_WAERMEPUMPE,      VT_TEMP,          2812,  STR2812,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Min Luft
+{0x593D0CF0,  CAT_WAERMEPUMPE,      VT_TEMP,          2813,  STR2813,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einsatzgrenze TA Max Luft
 {0x593D0CF2,  CAT_WAERMEPUMPE,      VT_TEMP,          2814,  STR2814,  0,                    NULL,         FL_OEM, DEV_ALL}, // Quellentemperatur Maximum
 {CMD_UNKNOWN, CAT_WAERMEPUMPE,      VT_TEMP,          2815,  STR2815,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp Min Wasser
 {0x593D05AE,  CAT_WAERMEPUMPE,      VT_TEMP,          2816,  STR2816,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Quellentemp Min Sole
@@ -8965,19 +8974,19 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x593D05AA,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2852,  STR2852,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung beim Start
 {0x593D0B8F,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2853,  STR2853,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // ND-Verzögerung im Betrieb
 {0x593D0495,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2862,  STR2862,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Stufe/Mod //FUJITSU
-{0x593D0493,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2863,  STR2863,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr Stufe2/Mod
-{0x593D0494,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2864,  STR2864,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr Stufe2/Mod
+{0x593D0493,  CAT_WAERMEPUMPE,      VT_CELMIN,        2863,  STR2863,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr Stufe2/Mod
+{0x593D0494,  CAT_WAERMEPUMPE,      VT_CELMIN,        2864,  STR2864,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr Stufe2/Mod
 {0x593D0BA2,  CAT_WAERMEPUMPE,      VT_PERCENT,       2870,  STR2870,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Max.
 {0x593D0BA3,  CAT_WAERMEPUMPE,      VT_PERCENT,       2871,  STR2871,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtungsmodulation Min.
 {0x593D14B4,  CAT_WAERMEPUMPE,      VT_SECONDS_WORD,  2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verdichtermod Laufzeit //FUJITSU
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_108_160}, // Verdichtermod Laufzeit
 {0x593D0BB5,  CAT_WAERMEPUMPE,      VT_SECONDS_SHORT, 2873,  STR2873,  0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // Verdichtermod Laufzeit
 {0x053D0D00,  CAT_WAERMEPUMPE,      VT_ENUM,          2880,  STR2880,  sizeof(ENUM2880),     ENUM2880,     DEFAULT_FLAG, DEV_ALL}, // Verwendung Elektro-Vorlauf
-{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES,       2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
+{0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D01,  CAT_WAERMEPUMPE,      VT_MINUTES_SHORT, 2881,  STR2881,  0,                    NULL,         FL_OEM, DEV_186_ALL}, // Sperrzeit Elektro-Vorlauf
 {0x053D0D02,  CAT_WAERMEPUMPE,      VT_UINT,          2882,  STR2882,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freigabeintegr. Elektro-Vorl °Cmin[0-500] //FUJITSU
-{0x053D0D03,  CAT_WAERMEPUMPE,      VT_INTEGRAL,      2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
+{0x053D0D03,  CAT_WAERMEPUMPE,      VT_CELMIN,        2883,  STR2883,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rückstellintegr. Elektro-Vorl
 {0x593D0D2E,  CAT_WAERMEPUMPE,      VT_TEMP,          2884,  STR2884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Freig Elektro-Vorl unter TA //FUJITSU
 {0x593D0436,  CAT_WAERMEPUMPE,      VT_ONOFF,         2886,  STR2886,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Kompensation Wärmedefizit //FUJITSU
 {0x593D05C4,  CAT_WAERMEPUMPE,      VT_HOURS_SHORT,   2889,  STR2889,  0,                    NULL,         FL_OEM, DEV_ALL}, // [h] Dauer Fehlerwiederholung
@@ -9046,8 +9055,8 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D1090,  CAT_ENERGIEZAEHLER,   VT_UINT,          3103,  STR3103,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Zähler
 {0x053D1091,  CAT_ENERGIEZAEHLER,   VT_UINT,          3104,  STR3104,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulswert Energie Nenner
 {0x053D1092,  CAT_ENERGIEZAEHLER,   VT_ENERGY_CONTENT,3106,  STR3106,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Mittlerer Gasenergieinhalt
-{0x053D1092,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektrische Quellenleistung
-{0x053D1093,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD,    3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Elektrische Quellenleistung
+{0x053D1092,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Elektrische Quellenleistung
+{0x053D1093,  CAT_ENERGIEZAEHLER,   VT_POWER_WORD100, 3108,  STR3108,  0,                    NULL,         DEFAULT_FLAG, DEV_108_ALL}, // Elektrische Quellenleistung
 {0x053D12B8,  CAT_ENERGIEZAEHLER,   VT_ENUM,          3109,  STR3109,  sizeof(ENUM3109),     ENUM3109,     DEFAULT_FLAG, DEV_ALL}, // Zählung Intern Elektro Vorl’
 {0x053D10B3,  CAT_ENERGIEZAEHLER,   VT_STRING,        3110,  STR3110,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgegebene Wärme
 {0x053D196C,  CAT_ENERGIEZAEHLER,   VT_STRING,        3112,  STR3112,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Aufgenommene Wärme Quelle
@@ -9143,7 +9152,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0830,  CAT_KASKADE,          VT_SECONDS_WORD,  3532,  STR3532,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wiedereinschaltsperre
 {0x053D0831,  CAT_KASKADE,          VT_MINUTES_SHORT, 3533,  STR3533,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zuschaltverzögerung
 {0x053D0832,  CAT_KASKADE,          VT_SECONDS_WORD,  3534,  STR3534,  0,                    NULL,         FL_OEM, DEV_ALL}, // Zwangszeit Grundstufe
-{0x053D1AE2,  CAT_KASKADE,          VT_MINUTES,       3535,  STR3535,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zuschaltverzögerung Erzeugerfolge TWW
+{0x053D1AE2,  CAT_KASKADE,          VT_MINUTES_SHORT, 3535,  STR3535,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zuschaltverzögerung Erzeugerfolge TWW
 {CMD_UNKNOWN, CAT_KASKADE,          VT_UNKNOWN,       3538,  STR3538,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Ersatz Schienenvorlauftemperatur
 {0x053D0833,  CAT_KASKADE,          VT_HOURS_WORD,    3540,  STR3540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Umschaltung
 {0x053D084E,  CAT_KASKADE,          VT_ENUM,          3541,  STR3541,  sizeof(ENUM3541),     ENUM3541,     DEFAULT_FLAG, DEV_ALL}, // Auto Erz’folge Ausgrenzung
@@ -9154,7 +9163,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x153D0B3A,  CAT_KASKADE,          VT_TEMP,          3560,  STR3560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Rücklaufsollwert Minimum
 {0x153D0B3B,  CAT_KASKADE,          VT_TEMP,          3561,  STR3561,  0,                    NULL,         FL_OEM, DEV_ALL}, // Rücklaufsollwert Min OEM
 {0x153D0B40,  CAT_KASKADE,          VT_ONOFF,         3562,  STR3562,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Rückl'einfluss Verbraucher
-{0x153D0B77,  CAT_KASKADE,          VT_SECONDS_WORD,  3563,  STR3563,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorausschau-Zeit Rücklauf-Minimalbegrenzung
+{0x153D0B77,  CAT_KASKADE,          VT_SECONDS_SHORT, 3563,  STR3563,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Vorausschau-Zeit Rücklauf-Minimalbegrenzung
 {0x153D0B3F,  CAT_KASKADE,          VT_SECONDS_WORD,  3570,  STR3570,  0,                    NULL,         FL_OEM, DEV_ALL}, // Antrieb Laufzeit
 {0x153D0B3D,  CAT_KASKADE,          VT_TEMP,          3571,  STR3571,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
 {0x153D0B3E,  CAT_KASKADE,          VT_SECONDS_WORD,  3572,  STR3572,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
@@ -9227,14 +9236,15 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D10E7,  CAT_SOLAR,            VT_PERCENT,       3876,  STR3876,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Maximum OEM
 {0x493D0509,  CAT_SOLAR,            VT_ENUM,          3880,  STR3880,  sizeof(ENUM3880),     ENUM3880,     DEFAULT_FLAG, DEV_ALL}, // Frostschutzmittel
 {0x493D050A,  CAT_SOLAR,            VT_PERCENT,       3881,  STR3881,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Frost'mittel Konzentration
-{0x493D050C,  CAT_SOLAR,            VT_UINT,          3884,  STR3884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendurchfluss
+{0x493D050C,  CAT_SOLAR,            VT_LITERPERHOUR,  3884,  STR3884,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pumpendurchfluss
 {0x053D10F9,  CAT_SOLAR,            VT_UNKNOWN,       3886,  STR3886,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulszählung Ertrag
+// Todo: Check with Ulf and Sergey if this is VT_ENUM or rather VT_LITER?
 {0x053D0F93,  CAT_SOLAR,            VT_ENUM,          3887,  STR3887,  sizeof(ENUM3887),     ENUM3887,     DEFAULT_FLAG, DEV_ALL}, // Impulseinheit Ertrag
 {0x053D10FB,  CAT_SOLAR,            VT_UNKNOWN,       3888,  STR3888,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulszählung Zähler
 {0x053D10FC,  CAT_SOLAR,            VT_UNKNOWN,       3889,  STR3889,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Impulszählung Nenner
 {0x053D1240,  CAT_SOLAR,            VT_UNKNOWN,       3891,  STR3891,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchflussmessung Ertrag
-{0x053D10D2,  CAT_SOLAR,            VT_UNKNOWN,       3896,  STR3896,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Solarvorl´fühler
-{0x053D10D3,  CAT_SOLAR,            VT_UNKNOWN,       3897,  STR3897,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Solarrückl´fühler
+{0x053D10D2,  CAT_SOLAR,            VT_TEMP,          3896,  STR3896,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Solarvorl´fühler
+{0x053D10D3,  CAT_SOLAR,            VT_TEMP,          3897,  STR3897,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Korrektur Solarrückl´fühler
 
 // Feststoffkessel
 {0x053D0B0B,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4101,  STR4101,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Feststoffkessel Anfeuerungshilfe
@@ -9260,7 +9270,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x513D087F,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4165,  STR4165,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x513D063B,  CAT_FESTSTOFFKESSEL,  VT_ONOFF,         4170,  STR4170,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Anl'frostschutz Kess'pumpe
 {0x053D0B0E,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4180,  STR4180,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe Abgastemperatur Minimum
-{0x513D0B0D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES,       4182,  STR4182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe Dauer Maximum
+{0x513D0B0D,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4182,  STR4182,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe Dauer Maximum
 {0x513D0A9F,  CAT_FESTSTOFFKESSEL,  VT_YESNO,         4184,  STR4184,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // Anfeuerungshilfe mit Pumpe
 {0x513D089E,  CAT_FESTSTOFFKESSEL,  VT_MINUTES_SHORT, 4190,  STR4190,  0,                    NULL,         FL_OEM, DEV_ALL}, // Restwärmefkt Dauer Max
 {0x513D066E,  CAT_FESTSTOFFKESSEL,  VT_ENUM,          4192,  STR4192,  sizeof(ENUM4192),     ENUM4192,     FL_OEM, DEV_ALL}, // Restwärmefkt Auslösung
@@ -9288,7 +9298,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4735,  STR4735,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Sollwertreduktion B42/B41
 {0x193D0B51,  CAT_PUFFERSPEICHER,   VT_ENUM,          4739,  STR4739,  sizeof(ENUM4739),     ENUM4739,     DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Schichtschutz
 {0x053D08CE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4740,  STR4740,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Tempdiff Max
-{0x053D08D0,  CAT_PUFFERSPEICHER,   VT_SECONDS_WORD,  4743,  STR4743,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Vor’schauzeit
+{0x053D08D0,  CAT_PUFFERSPEICHER,   VT_SECONDS_SHORT, 4743,  STR4743,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Vor’schauzeit
 {0x053D08CF,  CAT_PUFFERSPEICHER,   VT_SECONDS_SHORT, 4744,  STR4744,  0,                    NULL,         FL_OEM, DEV_ALL}, // Schichtschutz Nachstellzeit
 {0x053D0B52,  CAT_PUFFERSPEICHER,   VT_ONOFF,         4746,  STR4746,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // Trinkwasserschutz bei Kombispeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4749,  STR4749,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Minimaler Ladesollwert Solar
@@ -9319,7 +9329,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D072F,  CAT_TWSPEICHER,       VT_ONOFF,         5012,  STR5012,  sizeof(VT_ONOFF),     ENUM_ONOFF,   FL_OEM,       DEV_ALL}, // Trinkwasser Zwangsladung
 {0x313D14DA,  CAT_TWSPEICHER,       VT_ENUM,          5013,  STR5013,  sizeof(ENUM5013),     ENUM5013,     FL_OEM, DEV_ALL}, // Ladung opt Energie
 {0x313D14DD,  CAT_TWSPEICHER,       VT_ENUM,          5016,  STR5016,  sizeof(ENUM5016),     ENUM5016,     FL_OEM, DEV_ALL}, // Ladung opt Energie Kontakt
-{0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
+{0x313D3009,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5019,  STR5019,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Nachlad'Überhöh Schichtensp
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP,          5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D0720,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5020,  STR5020,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Trinkwasser-Speicher - Vorlaufsollwertüberhöhung
 {0x253D07C1,  CAT_TWSPEICHER,       VT_TEMP,          5021,  STR5021,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser-Speicher - Umladeüberhöhung
@@ -9355,12 +9365,12 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_203_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_205_ALL}, // TW Schaltdifferenz 1 ein
 {0x313D071D,  CAT_TWSPEICHER,       VT_TEMP,          5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_211_ALL}, // TW Schaltdifferenz 1 ein
-{0x213D2F8F,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasser-Speicher Schaltdifferenz
-{0x213D2F90,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5025,  STR5025,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus min
-{0x213D2F91,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5026,  STR5026,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus max
-{0x213D2F92,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5027,  STR5027,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Ein
-{0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
-{0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5_US,5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
+{0x213D2F8F,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5024,  STR5024,  0,                    NULL,         FL_OEM, DEV_ALL}, // Trinkwasser-Speicher Schaltdifferenz
+{0x213D2F90,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5025,  STR5025,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus min
+{0x213D2F91,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5026,  STR5026,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 1 Aus max
+{0x213D2F92,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5027,  STR5027,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Ein
+{0x213D2FD5,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5028,  STR5028,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus min
+{0x213D2F93,  CAT_TWSPEICHER,       VT_TEMP_SHORT5,   5029,  STR5029,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TW Schaltdifferenz 2 Aus max
 {0x253D0731,  CAT_TWSPEICHER,       VT_MINUTES_WORD,  5030,  STR5030,  0,                    NULL,         FL_OEM, DEV_ALL}, // TW Ladezeitbegrenzung //FUJITSU
 {0x253D17BF,  CAT_TWSPEICHER,       VT_TEMP,          5032,  STR5032,  0,                    NULL,         FL_OEM, DEV_ALL}, // Max Ladeabbruchtemp
 {0x253D0754,  CAT_TWSPEICHER,       VT_ENUM,          5040,  STR5040,  sizeof(ENUM5040),     ENUM5040,     FL_OEM, DEV_ALL}, // TW Entladeschutz
@@ -9392,8 +9402,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D115D,  CAT_TWSPEICHER,       VT_PERCENT1,      5102,  STR5102,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Pumpendrehzahl Maximum % // VT_PERCENT1 logged from DEV_162_014, so maybe DEV_162_ALL may still be VT_PERCENT
 {0x253D0B19,  CAT_TWSPEICHER,       VT_TEMP,          5103,  STR5103,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x253D0B1A,  CAT_TWSPEICHER,       VT_SECONDS_WORD,  5104,  STR5104,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
-{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT4,5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
-{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_123_ALL}, // Baxi Luna Platinum+
+{0x253D0E57,  CAT_TWSPEICHER,       VT_SECONDS_SHORT, 5105,  STR5105,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Vorhaltezeit Tv
 {0x053D10E3,  CAT_TWSPEICHER,       VT_PERCENT,       5106,  STR5106,  0,                    NULL,         FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Minimum OEM
 {0x053D10E2,  CAT_TWSPEICHER,       VT_PERCENT,       5107,  STR5107,  0,                    NULL,         FL_RONLY | FL_OEM, DEV_ALL}, //  Baxi Luna Platinum+ Pumpendrehzahl Maximum OEM
 {0x053D10DE,  CAT_TWSPEICHER,       VT_PERCENT,       5108,  STR5108,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlaufdrehzahl Ladepumpe //Thision 19 Plus
@@ -9439,8 +9448,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x21052F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
 //{0x213D2F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x053D1362,  CAT_DURCHLERHITZER,   VT_ENUM,          5441,  STR5441,  sizeof(ENUM5441),     ENUM5441,     FL_OEM,       DEV_ALL}, // Durchflussmessung
-{0x053D0F8F,  CAT_DURCHLERHITZER,   VT_LITERPERMIN,   5444,  STR5444,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
-{0x053D0F90,  CAT_DURCHLERHITZER,   VT_LITERPERMIN,   5445,  STR5445,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
+{0x053D0F8F,  CAT_DURCHLERHITZER,   VT_LPM_SHORT,     5444,  STR5444,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
+{0x053D0F90,  CAT_DURCHLERHITZER,   VT_LPM_SHORT,     5445,  STR5445,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
 {0x313D2FC0,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5450 Gradient Zapfende [K/s]
 {0x313D10B5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         FL_OEM,       DEV_108_ALL}, // Gradient Erkennung Zapfende
 {0x313D10B5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT64,  5450,  STR5450,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Gradient Erkennung Zapfende
@@ -9463,8 +9472,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x313D0F8A,  CAT_DURCHLERHITZER,   VT_ENUM,          5464,  STR5464,  sizeof(ENUM5464),     ENUM5464,     DEFAULT_FLAG, DEV_ALL}, // Warmhaltung Freigabe
 {0x313D0F9B,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5468,  STR5468,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Minimale Zapfzeit für Warmhaltung
 {0x313D10BD,  CAT_DURCHLERHITZER,   VT_MINUTES_WORD,  5470,  STR5470,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltezeit ohne Heizbetrieb
-{0x313D10BE,  CAT_DURCHLERHITZER,   VT_MINUTES,       5471,  STR5471,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltezeit bei Heizbetrieb
-{0x313D10BF,  CAT_DURCHLERHITZER,   VT_MINUTES,       5472,  STR5472,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpennachlaufzeit Warmhaltung
+{0x313D10BE,  CAT_DURCHLERHITZER,   VT_MINUTES_SHORT, 5471,  STR5471,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Warmhaltezeit bei Heizbetrieb
+{0x313D10BF,  CAT_DURCHLERHITZER,   VT_MINUTES_SHORT, 5472,  STR5472,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpennachlaufzeit Warmhaltung
 {0x313D10C0,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5473,  STR5473,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpennachlaufzeit Warmhaltung
 {0x313D0F9C,  CAT_DURCHLERHITZER,   VT_ENUM,          5475,  STR5475,  sizeof(ENUM5475),     ENUM5475,     DEFAULT_FLAG, DEV_ALL}, // Regelfühler Warmhaltung
 {0x313D2FC3,  CAT_DURCHLERHITZER,   VT_MINUTES_WORD10,5480,  STR5480,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TODO Thision 5480 Komfortzeit ohne Hz-Anfo [min]
@@ -9488,9 +9497,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D10E5,  CAT_DURCHLERHITZER,   VT_PERCENT,       5535,  STR5535,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Min OEM Durchlauferhitzer
 {0x053D10E4,  CAT_DURCHLERHITZER,   VT_PERCENT,       5536,  STR5536,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Pumpendrehzahl Max OEM Durchlauferhitzer
 {0x053D10DC,  CAT_DURCHLERHITZER,   VT_PERCENT,       5537,  STR5537,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Anlaufdrehzahl Durchlauferhitzerpumpe
-{0x313D0B1E,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT5,5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
+{0x313D0B1E,  CAT_DURCHLERHITZER,   VT_SECONDS_WORD5, 5544,  STR5544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Antrieb Laufzeit
 {0x313D0B1D,  CAT_DURCHLERHITZER,   VT_TEMP,          5545,  STR5545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer P-Band Xp
-{0x313D0B21,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT, 5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
+{0x313D0B21,  CAT_DURCHLERHITZER,   VT_SECONDS_WORD,  5546,  STR5546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x313D0B22,  CAT_DURCHLERHITZER,   VT_SECONDS_SHORT4,5547,  STR5547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Vorhaltezeit Tv
 {0x313D0FEC,  CAT_DURCHLERHITZER,   VT_ENUM,          5550,  STR5550,  sizeof(ENUM5550),     ENUM5550,     DEFAULT_FLAG, DEV_ALL}, // Aqua booster
 
@@ -9525,26 +9534,27 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D071C,  CAT_KONFIG,           VT_ENUM,          5731,  STR5731,  sizeof(ENUM5731),     ENUM5731,     DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser-Stellglied Q3
 {0x113D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5732 TWW Pumpenpause Umsch UV [s]
 {0x393D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 5732 TWW Pumpenpause Umsch UV [s] - logged on OCI700 via LPB
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
-{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT, 5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
+{0x053D2FE3,  CAT_KONFIG,           VT_SECONDS_SHORT5,5732,  STR5732,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Baxi Luna Platinum+ TWW Pumpenpause Umsch UV[s]
 {0x113D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 5733 TWW Pumpenpause Verzögerung [s]
 {0x393D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 5733 TWW Pumpenpause Verzögerung [s] - logged on OCI700 via LPB
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
-{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT, 5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_122_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_162_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_163_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_178_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
+{0x053D2FE4,  CAT_KONFIG,           VT_SECONDS_SHORT5,5733,  STR5733,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Baxi Luna Platinum+  TWW Pumpenpause Verzögerung [s]
 {0x053D0F7B,  CAT_KONFIG,           VT_ENUM,          5734,  STR5734,  sizeof(ENUM5734),     ENUM5734,     FL_RONLY,     DEV_ALL}, // Grundposition TWW Uml'ventil
 {0x053D0727,  CAT_KONFIG,           VT_ONOFF,         5736,  STR5736,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Trinkwasser Trennschaltung
 {0x053D10EA,  CAT_KONFIG,           VT_ONOFF,         5737,  STR5737,  sizeof(ENUM5737),     ENUM5737,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn TW Umlenkventil
 {0x053D118C,  CAT_KONFIG,           VT_ONOFF,         5738,  STR5738,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
+// Todo: Check unit: kw or kwh?
 {0x053D12BC,  CAT_KONFIG,           VT_ENERGY_WORD,   5740,  STR5740,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro TWW K6
 {0x053D079C,  CAT_KONFIG,           VT_ENUM,          5760,  STR5760,  sizeof(ENUM5760),     ENUM5760,     DEFAULT_FLAG, DEV_ALL}, // Vorregler/Zubringerpumpe [Vor Pufferspeicher | Nach Pufferspeicher] (Nach Pufferspeicher)
 {0x193D2FDC,  CAT_KONFIG,           VT_BIT,           5761,  STR5761,  sizeof(ENUM5761),     ENUM5761,     DEFAULT_FLAG, DEV_ALL}, // Thision 5761 Zubringerpumpe Q8 Bit 0-3 [?]
@@ -9556,6 +9566,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1119,  CAT_KONFIG,           VT_ENUM,          5806,  STR5806,  sizeof(ENUM5806),     ENUM5806,     DEFAULT_FLAG, DEV_ALL}, // Typ Elektroeinsatz Vorlauf //FUJITSU
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5807,  STR5807,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kälteerzeugung
 {CMD_UNKNOWN, CAT_KONFIG,           VT_UNKNOWN,       5810,  STR5810,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreizung HK bei TA –10 °C
+// Todo: Check unit: kw or kwh?
 {0x053D12B9,  CAT_KONFIG,           VT_ENERGY_WORD,   5811,  STR5811,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro 1 Vorl' K25
 {0x053D12B9,  CAT_KONFIG,           VT_ENERGY_WORD,   5813,  STR5813,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Leistung Elektro 2 Vorl' K26
 // TODO  Note: There is only one configuration parameter 5840 "Solarstellglied" but
@@ -10077,7 +10088,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D0B83,  CAT_KONFIG,           VT_UNKNOWN,       6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Funktionswert 2 H2 BAR
 {0x053D0E7B,  CAT_KONFIG,           VT_SINT,          6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Funktionswert 2 H2 modul 1 - Baxi Luna Platinum
 {0x053D0E7B,  CAT_KONFIG,           VT_SINT,          6052,  STR6052,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // Funktionswert 2 H2 modul 1 - Baxi Luna Platinum
-{0x063D05DC,  CAT_KONFIG,           VT_PRESSURE_WORD, 6052,  STR6052_2,0,                    NULL,         DEFAULT_FLAG, DEV_090_090}, // Druckwert bei 3.5 V H2
+{0x063D05DC,  CAT_KONFIG,           VT_PRESSURE,      6052,  STR6052_2,0,                    NULL,         DEFAULT_FLAG, DEV_090_090}, // Druckwert bei 3.5 V H2
 {0x053D0D93,  CAT_KONFIG,           VT_ENUM,          6054,  STR6054,  sizeof(ENUM6054),     ENUM6054,     DEFAULT_FLAG, DEV_ALL}, // Eingang H2 Modul 2 Funktionswahl
 {0x053D0DCA,  CAT_KONFIG,           VT_ENUM,          6055,  STR6055,  sizeof(ENUM6055),     ENUM6055,     DEFAULT_FLAG, DEV_ALL}, // Kontaktart H2 Modul 2
 {0x053D0E7F,  CAT_KONFIG,           VT_VOLTAGE_WORD,  6057,  STR6057  ,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spannungswert 1 H2 modul 2 - Baxi Luna Platinum
@@ -10208,8 +10219,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x063D05DA,  CAT_KONFIG,           VT_PRESSURE,      6152,  STR6152,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 kritisch Min
 {0x063D05DD,  CAT_KONFIG,           VT_PRESSURE,      6153,  STR6153,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wasserdruck 2 Schaltdifferenz
 {0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6180,  STR6180,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Maximum
-{0x073D05D8,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
-{0x073D05D9,  CAT_KONFIG,           VT_PRESSURE_WORD, 6181,  STR6181,  0,                    NULL,         FL_OEM,       DEV_090_090}, // Wasserdruck 3 Minimum
+{0x073D05D9,  CAT_KONFIG,           VT_PRESSURE,      6181,  STR6181,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 Minimum
 {0x073D05DA,  CAT_KONFIG,           VT_PRESSURE,      6182,  STR6182,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 3 kritisch Min
 {0x073D05DD,  CAT_KONFIG,           VT_PRESSURE,      6183,  STR6183,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wasserdruck 3 Schaltdifferenz
 {0x053D06AB,  CAT_KONFIG,           VT_YESNO,         6200,  STR6200,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Fühler Speichern
@@ -10222,7 +10232,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // # !FIXME! ProgNr 6217 is listed as 0x053D0BD2 in Python project
 {0x053D0BD3,  CAT_KONFIG,           VT_DWORD,         6217,  STR6217,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Kontrollnummer Heizkreise
 {0x053D000E,  CAT_KONFIG,           VT_FP1,           6220,  STR6220,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Konfiguration - Software- Version LOGON B
-{0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index [?]
+{0x093D3033,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6221 Entwicklungs-Index
 {0x053D0E89,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         FL_NO_CMD, DEV_122_ALL}, // Baxi Luna Platinum Entwicklungs-Index [?]
 {0x053D0E89,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_123_231}, // Baxi Luna Platinum Entwicklungs-Index [?]
 {0x053D0E89,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Baxi Luna Platinum Entwicklungs-Index [?]
@@ -10878,9 +10888,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x253D2FDE,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB  // TODO: Check if value has to be divided by 10 for LMU64?
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x250503F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB
-{0x2E052FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall - logged on OCI700 via LPB
-{0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_098_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
-{0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
+{0x2E052FD6,  CAT_WARTUNG,          VT_UINT5,         7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall - logged on OCI700 via LPB
+{0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT5,         7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_098_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
+{0x2D3D2FD6,  CAT_WARTUNG,          VT_UINT5,         7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
 {0x053D05DF,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_080_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
 {0x053D05DF,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_088_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
 {0x053D05DF,  CAT_WARTUNG,          VT_UINT,          7042,  STR7042,  0,                    NULL,         DEFAULT_FLAG, DEV_095_ALL}, // [0] - Wartung/Service - Brennerstarts Intervall
@@ -10924,7 +10934,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_196_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_203_ALL}, // Meldung Ionisationsstrom
 {0x053D0B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
-{0x053D0B2B,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
 {0x053D05E1,  CAT_WARTUNG,          VT_MONTHS,        7070,  STR7070,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // WP Zeitintervall //FUJITSU
@@ -10942,7 +10951,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x593D06EF,  CAT_WARTUNG,          VT_UNKNOWN,       7082,  STR7082,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Spreiz Verdampfer Min / Wo
 {0x593D06F0,  CAT_WARTUNG,          VT_UNKNOWN,       7083,  STR7083,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt Spreiz Verdampfer Min / Wo
 {0x253D06F1,  CAT_WARTUNG,          VT_MONTHS,        7090,  STR7090,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher Zeitintervall
-{0x253D06F2,  CAT_WARTUNG,          VT_UNKNOWN,       7091,  STR7091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher seit Wartung
+{0x253D06F2,  CAT_WARTUNG,          VT_MONTHS,        7091,  STR7091,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Speicher seit Wartung
 {0x593D05B1,  CAT_WARTUNG,          VT_TEMP,          7092,  STR7092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Ladetemp WP Minimum
 {0x593D05B0,  CAT_WARTUNG,          VT_TEMP,          7093,  STR7093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Akt TWW Ladetemperatur WP
 {0x05050D20,  CAT_WARTUNG,          VT_ENUM,          7119,  STR7119,  sizeof(ENUM7119),     ENUM7119,     DEFAULT_FLAG, DEV_ALL}, // Ökofunktion
@@ -11431,7 +11440,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D0B74,  CAT_DIAG_KASKADE,     VT_TEMP,          8139,  STR8139,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenvorlaufsollwert
 {0x153D095B,  CAT_DIAG_KASKADE,     VT_TEMP,          8140,  STR8140,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklauftemperatur
 {0x053D0B75,  CAT_DIAG_KASKADE,     VT_TEMP,          8141,  STR8141,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskadenrücklaufsollwert
-{0x153D083A,  CAT_DIAG_KASKADE,     VT_HOURS_SHORT,   8150,  STR8150,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Erz'folge Umschalt aktuell
+{0x153D083A,  CAT_DIAG_KASKADE,     VT_HOURS_WORD,    8150,  STR8150,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Erz'folge Umschalt aktuell
 {0x053D0850,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8151,  STR8151,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Stufenfolge Aktuell
 {0x053D0ABC,  CAT_DIAG_KASKADE,     VT_UNKNOWN,       8199,  STR8199,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kaskaden Zustand, virtueller Parameter von ACS700
 
@@ -11521,17 +11530,17 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x21050518,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8323,  STR8323,  0,                    NULL,         FL_RONLY,     DEV_211_ALL}, // Gebläsedrehzahl
 {0x0D3D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl - logged on OCI700 via LPB
 {0x113D0C82,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_096_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_122_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_196_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_UINT,          8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_162_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_163_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_178_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_195_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_196_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
+{0x093D0E6A,  CAT_DIAG_ERZEUGER,    VT_SPEED2,        8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_203_ALL}, // WGBS Diagnose Erzeuger - Gebläsedrehzahl
 {0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8324,  STR8324,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision Diagnose Erzeuger - Gebläsedrehzahl
-{0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
+{0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT_100,   8325,  STR8325,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
 {0x11050C83,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25 - logged on OCI700 via LPB
 {0x113D305D,  CAT_DIAG_ERZEUGER,    VT_PERCENT,       8325,  STR8325,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25 - logged on OCI700 via LPB
 {0x093D0E00,  CAT_DIAG_ERZEUGER,    VT_PERCENT_100,   8325,  STR8325_2,0,                    NULL,         FL_RONLY,     DEV_123_ALL}, // Akt. Gebläsesteuerung - Broetje NovoCondens WOB20-25
@@ -11673,9 +11682,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x593D05A8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8416,  STR8416,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur Max
 {0x593D05C0,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8417,  STR8417,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Heissgastemperatur 2
 {0x593D05C8,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8420,  STR8420,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kältemitteltemperatur flüssig
-{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensatortemperatur
-{0x593D1783,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // Kondensatortemperatur
-{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8424,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_186_ALL}, // Kondensationsdruck // actually comes as second value with parameter 8423 on device family 186
+{0x593D1783,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8423,  STR8423,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensatortemperatur
+{0x053D163C,  CAT_DIAG_ERZEUGER,    VT_PRESSURE_WORD, 8424,  STR8424,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kondensationsdruck // actually comes as second value with parameter 8423 on device family 186
 {0x593D05C3,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8425,  STR8425,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Kondensator //FUJITSU
 {0x593D05C2,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8426,  STR8426,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Temp’spreizung Verdampfer
 {0x593D05B9,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8427,  STR8427,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Quelle Eintrittstemperatur
@@ -11764,7 +11772,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x493D050F,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8520,  STR8520,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solarrücklauftemperatur
 {0x053D12F6,  CAT_DIAG_ERZEUGER,    VT_LITERPERMIN,   8521,  STR8521,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Solardurchfluss
 {0x493D0599,  CAT_DIAG_ERZEUGER,    VT_ENERGY_WORD,   8526,  STR8526,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Tagesertrag Solarenergie
-{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_ENERGY10,      8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamtertrag Solarenergie
+{0x493D0598,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gesamtertrag Solarenergie
 {0x493D0598,  CAT_DIAG_ERZEUGER,    VT_ENERGY,        8527,  STR8527,  0,                    NULL,         FL_RONLY,     DEV_171_ALL}, // Gesamtertrag Solarenergie
 {0x493D0893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag
 {0x15050893,  CAT_DIAG_ERZEUGER,    VT_HOURS,         8530,  STR8530,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [h ] - Diagnose Erzeuger - Betr`stunden Solarertrag - logged on OCI700 via LPB
@@ -12113,7 +12121,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D2FB5,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_SHORT, 9541,  STR9541,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Max - Baxi Luna Platinum+
 {0x113D304B,  CAT_FEUERUNGSAUTOMAT, VT_MINUTES_WORD,  9541,  STR9541,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // Gebläsenachlauf bei TW / TB Überschreitung
 {0x093D0DD9,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9542,  STR9542,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Nachlüftzeit Min //Thision 19 Plus
-{0x093D1202,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_WORD5, 9544,  STR9544,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Nachlüftzeit 2
+{0x093D1202,  CAT_FEUERUNGSAUTOMAT, VT_SECONDS_SHORT5,9544,  STR9544,  0,                    NULL,         FL_OEM+FL_RONLY, DEV_ALL}, // Nachlüftzeit 2
 {0x093D19D3,  CAT_FEUERUNGSAUTOMAT, VT_ONOFF,         9545,  STR9545,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, //
 {0x0D3D304D,  CAT_FEUERUNGSAUTOMAT, VT_PERCENT_WORD,  9550,  STR9550,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 9550 Gebl'ansteuerung Stillstand [%]
 {0x0D3D300A,  CAT_FEUERUNGSAUTOMAT, VT_SPEED,         9551,  STR9551,  0,                    NULL,         FL_RONLY,     DEV_097_ALL}, // Solldrehzahl Stillstand Max //Thision S17
