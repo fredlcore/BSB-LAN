@@ -9411,9 +9411,9 @@ const String mqtt_get_client_id() {
   // Build Client ID
   String result = "";
   if (MQTTDeviceID[0]) {
-    result = MQTTDeviceID;
+    result.concat(MQTTDeviceID);
   } else {
-    result = PSTR("BSB-LAN");
+    result.concat(PSTR("BSB-LAN"));
   }
   return result;
 }
