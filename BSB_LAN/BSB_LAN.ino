@@ -84,6 +84,7 @@
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *        - New library for DHT22 should provide more reliable results
  *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
+ *        - MQTT: Use MQTTDeviceID as a client ID for the broker, still defaults to BSB-LAN. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -9368,16 +9369,18 @@ boolean mqtt_connect() {
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
     MQTTPubSubClient->setServer(MQTTBroker, 1883);
     String MQTTWillTopic = mqtt_get_will_topic();
+    String MQTTRealClientId = mqtt_get_client_id();
     int retries = 0;
+    printFmtToDebug(PSTR("Client ID: %s\r\n"), MQTTRealClientId.c_str());
+    printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
     while (!MQTTPubSubClient->connected() && retries < 3) {
-      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
+      MQTTPubSubClient->connect(MQTTRealClientId.c_str(), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
       retries++;
       if (!MQTTPubSubClient->connected()) {
         delay(1000);
         printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
       } else {
         printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
-        printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
         const char* mqtt_subscr;
         if (MQTTTopicPrefix[0]) {mqtt_subscr = MQTTTopicPrefix;} else {mqtt_subscr="fromBroker";}
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
@@ -9391,6 +9394,28 @@ boolean mqtt_connect() {
     return true;
   }
   return false;
+}
+#endif
+/* Function: mqtt_get_client_id()
+ * Does: Gets the client ID to use for the MQTT connection based on the set
+ *   MQTT Device ID, if unset, defaults to "BSB-LAN".
+ * Pass parameters:
+ *   none
+ * Function value returned
+ *   MQTT client ID as C++ String instance
+ * Global resources used:
+ *   none
+ */
+#ifdef MQTT
+const String mqtt_get_client_id() {
+  // Build Client ID
+  String result = "";
+  if (MQTTDeviceID[0]) {
+    result = MQTTDeviceID;
+  } else {
+    result = PSTR("BSB-LAN");
+  }
+  return result;
 }
 #endif
 /* Function: mqtt_get_will_topic()
