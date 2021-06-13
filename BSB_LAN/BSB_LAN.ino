@@ -10127,7 +10127,7 @@ void setup() {
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
           num[x] = c;
           x++;
           c = avgfile.read();
@@ -10137,7 +10137,7 @@ void setup() {
 
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
           num[x] = c;
           x++;
           c = avgfile.read();
@@ -10150,7 +10150,7 @@ void setup() {
 
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
           num[x] = c;
           x++;
           c = avgfile.read();
@@ -10161,7 +10161,7 @@ void setup() {
 
       c = avgfile.read();
       x = 0;
-      while (avgfile.available() && c != '\n') {
+      while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
         num[x] = c;
         x++;
         c = avgfile.read();
