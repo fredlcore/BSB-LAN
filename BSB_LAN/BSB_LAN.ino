@@ -705,6 +705,7 @@ SdFat SD;
 #endif
 
 unsigned long maintenance_timer = millis();
+unsigned long WiFiMillis = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -6453,11 +6454,24 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-/*
+
 #ifdef ESP32
-  esp_task_wdt_reset();
+//  esp_task_wdt_reset();
+  // if WiFi is down, try reconnecting every 5 minutes
+  if (WiFi.status() != WL_CONNECTED) {
+    if ((millis() - WiFiMillis) >= 300000) {
+      Serial.print(millis());
+      Serial.println(F(" Reconnecting to WiFi..."));
+      WiFi.disconnect();
+      WiFi.reconnect();
+      WiFiMillis = millis();
+    }
+  }
+  else {
+    WiFiMillis = millis();
+  } 
 #endif
-*/
+
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
@@ -10122,23 +10136,26 @@ void setup() {
     File avgfile = SD.open(averagesFileName, FILE_READ);
     if (avgfile) {
       char c;
-      char num[10];
+      char num[15];
       int x;
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
         while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
-          num[x] = c;
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
         num[x]='\0';
         avgValues[i] = atof(num);
-
         c = avgfile.read();
         x = 0;
         while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
-          num[x] = c;
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10151,7 +10168,9 @@ void setup() {
         c = avgfile.read();
         x = 0;
         while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
-          num[x] = c;
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10162,7 +10181,9 @@ void setup() {
       c = avgfile.read();
       x = 0;
       while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
-        num[x] = c;
+        if (x < sizeof(num)-1) {
+          num[x] = c;
+        }
         x++;
         c = avgfile.read();
       }
