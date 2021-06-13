@@ -31,3 +31,4 @@ localization/conv-csv.pl
 OEM-Codes.txt
 .gitignore
 BSB_LAN/scripts/match-vt_types.pl
+BSB_LAN/scripts/compare_levels.pl
