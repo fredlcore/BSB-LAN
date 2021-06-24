@@ -10136,7 +10136,7 @@ void setup() {
     if (avgfile) {
       char c;
       char num[15];
-      int x;
+      uint x;
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
