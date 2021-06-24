@@ -2933,14 +2933,13 @@ void printTimeProg(byte *msg,byte data_len) {
         decodedTelegram.value[len] = ' ';
         len++;
       }
-      len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
       if (msg[k]<24) {
-        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d-%02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       } else {
 //        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
-        strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
-        len += 13;
+        strcpy_P(decodedTelegram.value+len,PSTR("##:##-##:##"));
+        len += 11;
       }
     }
     decodedTelegram.value[len] = 0;
