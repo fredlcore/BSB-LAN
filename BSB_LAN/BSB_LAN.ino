@@ -705,6 +705,7 @@ SdFat SD;
 #endif
 
 unsigned long maintenance_timer = millis();
+unsigned long WiFiMillis = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -2932,14 +2933,13 @@ void printTimeProg(byte *msg,byte data_len) {
         decodedTelegram.value[len] = ' ';
         len++;
       }
-      len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
       if (msg[k]<24) {
-        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d-%02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       } else {
 //        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
-        strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
-        len += 13;
+        strcpy_P(decodedTelegram.value+len,PSTR("##:##-##:##"));
+        len += 11;
       }
     }
     decodedTelegram.value[len] = 0;
@@ -3299,7 +3299,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD: //u16 s
             case VT_SECONDS_WORD16: //u16 s
             case VT_GRADIENT: // u16
-            case VT_INTEGRAL: // u16
+//            case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
@@ -3313,6 +3313,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SINT: //  s16
               printSINT(msg,data_len,decodedTelegram.operand);
               break;
+            case VT_SECONDS_SHORT2: // s8 / 2 (signed)
             case VT_SECONDS_SHORT4: // s8 / 4 (signed)
             case VT_SECONDS_SHORT5: // s8 / 5 (signed)
             case VT_TEMP_SHORT64: // s8 / 64 (signed)
@@ -3322,6 +3323,7 @@ void printTelegram(byte* msg, int query_line) {
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_BYTE10: // u8 / 10.0
+            case VT_LPM_SHORT: // u8 / 0.1 l/min
             case VT_PRESSURE: // u8 / 10.0 bar
             case VT_PRESSURE50: // u8 / 50.0 bar
             case VT_PERCENT5: // u8 %
@@ -3334,7 +3336,7 @@ void printTelegram(byte* msg, int query_line) {
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
-            case VT_TEMP_WORD60: //  u16 / 60
+//            case VT_TEMP_WORD60: //  u16 / 60
             case VT_VOLTAGE_WORD: //unsigned?
             case VT_CELMIN: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
@@ -3360,10 +3362,11 @@ void printTelegram(byte* msg, int query_line) {
             case VT_POWER100: //u32 / 100 kW
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100:  // u32 / 100
+            case VT_UINT100_WORD:  // u16 / 100
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
             case VT_POWER: // u32 / 10.0 kW
-            case VT_ENERGY10: // u32 / 10.0 kWh
+//            case VT_ENERGY10: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_ONOFF:
@@ -6453,11 +6456,24 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-/*
+
 #ifdef ESP32
-  esp_task_wdt_reset();
+//  esp_task_wdt_reset();
+  // if WiFi is down, try reconnecting every 5 minutes
+  if (WiFi.status() != WL_CONNECTED) {
+    if ((millis() - WiFiMillis) >= 300000) {
+      Serial.print(millis());
+      Serial.println(F(" Reconnecting to WiFi..."));
+      WiFi.disconnect();
+      WiFi.reconnect();
+      WiFiMillis = millis();
+    }
+  }
+  else {
+    WiFiMillis = millis();
+  } 
 #endif
-*/
+
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
@@ -10122,23 +10138,26 @@ void setup() {
     File avgfile = SD.open(averagesFileName, FILE_READ);
     if (avgfile) {
       char c;
-      char num[10];
-      int x;
+      char num[15];
+      uint x;
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
         num[x]='\0';
         avgValues[i] = atof(num);
-
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10150,8 +10169,10 @@ void setup() {
 
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10161,8 +10182,10 @@ void setup() {
 
       c = avgfile.read();
       x = 0;
-      while (avgfile.available() && c != '\n') {
-        num[x] = c;
+      while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+        if (x < sizeof(num)-1) {
+          num[x] = c;
+        }
         x++;
         c = avgfile.read();
       }
