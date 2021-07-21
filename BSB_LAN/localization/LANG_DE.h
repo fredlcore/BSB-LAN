@@ -3084,6 +3084,7 @@
 #define ENUM8004_cc_TEXT "Gesperrt, Heizbetrieb"
 #define ENUM8004_cd_TEXT "Gesperrt, Erzeuger"
 #define ENUM8004_ce_TEXT "Gesperrt, Puffer"
+#define ENUM8004_ff_TEXT "Kühlbetrieb reduziert"
 #define ENUM8005_01_TEXT "STB angesprochen"
 #define ENUM8005_05_TEXT "Schornsteinfegerfunktion, Vollast"
 #define ENUM8005_06_TEXT "Schornsteinfegerfunktion, Teillast"
