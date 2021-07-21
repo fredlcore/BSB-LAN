@@ -4366,6 +4366,9 @@ void implementConfig() {
       outBuf[i] = 0;
       continue;
     }
+    if (c == '+') {
+      c = ' ';
+    }
     if (c == '%') { //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if (client.available()) {outBuf[i] = client.read();}
       if (client.available()) {outBuf[i + 1] = client.read();}
