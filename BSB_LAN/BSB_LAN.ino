@@ -3672,7 +3672,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K49'>"));
+   printToWebClient(PSTR("K50'>"));
    printToWebClient(STR_TEXT_SNS);
 
    printToWebClient(PSTR("</a></td>"));
