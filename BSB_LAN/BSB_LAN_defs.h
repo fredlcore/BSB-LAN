@@ -760,7 +760,7 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   5007, 5179,
   5400, 5550,
   5570, 5608,
-  5700, 6498,
+  5700, 6599,
   6600, 6650,
   6651, 6699,
   6700, 6996,
@@ -7147,6 +7147,7 @@ const char ENUM8004[] PROGMEM_LATEST = {
 "\xcc " ENUM8004_cc_TEXT "\0"
 "\xcd " ENUM8004_cd_TEXT "\0"
 "\xce " ENUM8004_ce_TEXT "\0"
+"\xff " ENUM8004_ff_TEXT "\0"
 "\x01\x1d " ENUM8004_11d_TEXT
 };
 
