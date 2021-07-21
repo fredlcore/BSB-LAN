@@ -728,7 +728,6 @@ volatile byte PressedButtons = 0;
 #define ROOM3_PRESENCE_BUTTON_PRESSED 8
 #endif
 
-static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
@@ -3903,12 +3902,6 @@ void generateConfigPage(void) {
   printToWebClient(STR_TEXT_SNS);
   printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
-  printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
-  for (int i=0; i<anz_ex_gpio; i++) {
-    if (bitRead(protected_GPIO[i / 8], i % 8)) {
-      printFmtToWebClient(PSTR("%d "), i);
-    }
-  }
 
   printToWebClient(PSTR("<BR><BR>\r\n"));
 /*
@@ -7996,20 +7989,6 @@ uint8_t pps_offset = 0;
             }
             printToWebClient(PSTR("\r\n  ]"));
             #endif
-//protected GPIO
-            printToWebClient(PSTR(",\r\n  \"protectedGPIO\": [\r\n"));
-            not_first = false;
-            for (i=0; i<anz_ex_gpio; i++) {
-              if (bitRead(protected_GPIO[i / 8], i % 8)) {
-                if (not_first) {
-                  printToWebClient(PSTR(",\r\n"));
-                } else {
-                  not_first = true;
-                }
-              printFmtToWebClient(PSTR("    { \"pin\": %d }"), i);
-              }
-            }
-            printToWebClient(PSTR("\r\n  ]"));
 
 //averages
 #ifdef AVERAGES
@@ -8756,10 +8735,6 @@ uint8_t pps_offset = 0;
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
-            if (bitRead(protected_GPIO[pin / 8], pin % 8)) {
-              printToWebClient(PSTR(MENU_TEXT_ER7 "\r\n"));
-              break;
-            }
 
             char* dir_token = strchr(range,',');
             if (dir_token!=NULL) {
