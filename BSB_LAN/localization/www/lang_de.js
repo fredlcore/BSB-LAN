@@ -3084,6 +3084,7 @@ UIStrings["ENUM8004_b3_TEXT"] = "Vorlaufgrenze erreicht";
 UIStrings["ENUM8004_cc_TEXT"] = "Gesperrt, Heizbetrieb";
 UIStrings["ENUM8004_cd_TEXT"] = "Gesperrt, Erzeuger";
 UIStrings["ENUM8004_ce_TEXT"] = "Gesperrt, Puffer";
+UIStrings["ENUM8004_ff_TEXT"] = "Kühlbetrieb reduziert";
 UIStrings["ENUM8005_01_TEXT"] = "STB angesprochen";
 UIStrings["ENUM8005_05_TEXT"] = "Schornsteinfegerfunktion, Vollast";
 UIStrings["ENUM8005_06_TEXT"] = "Schornsteinfegerfunktion, Teillast";
