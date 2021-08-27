@@ -630,7 +630,9 @@ const char journalFileName[] PROGMEM = "/journal.txt";
 #endif
 
 ComClient client;
+#ifdef MQTT
 ComClient *mqtt_client;   //Luposoft: own instance
+#endif
 #ifdef VERSION_CHECK
 ComClient httpclient;
 #endif
@@ -6449,7 +6451,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-
+  
 #ifdef ESP32
 //  esp_task_wdt_reset();
   // if WiFi is down, try reconnecting every 5 minutes
@@ -9179,8 +9181,9 @@ uint8_t pps_offset = 0;
 #endif
 
   if (debug_mode == 2) {
-    telnetClient = telnetServer->available();
-
+    if (haveTelnetClient == false) {
+      telnetClient = telnetServer->available();
+    }
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
       haveTelnetClient = true;
