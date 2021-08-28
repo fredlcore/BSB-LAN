@@ -631,7 +631,9 @@ const char journalFileName[] PROGMEM = "/journal.txt";
 #endif
 
 ComClient client;
+#ifdef MQTT
 ComClient *mqtt_client;   //Luposoft: own instance
+#endif
 #ifdef VERSION_CHECK
 ComClient httpclient;
 #endif
@@ -706,6 +708,7 @@ SdFat SD;
 #endif
 
 unsigned long maintenance_timer = millis();
+unsigned long WiFiMillis = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -728,7 +731,6 @@ volatile byte PressedButtons = 0;
 #define ROOM3_PRESENCE_BUTTON_PRESSED 8
 #endif
 
-static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
@@ -2933,14 +2935,13 @@ void printTimeProg(byte *msg,byte data_len) {
         decodedTelegram.value[len] = ' ';
         len++;
       }
-      len+=sprintf_P(decodedTelegram.value+len,PSTR("%d. "), i + 1);
       byte k = bus->getPl_start() + i * 4;
       if (msg[k]<24) {
-        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d - %02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+        len+=sprintf_P(decodedTelegram.value+len,PSTR("%02d:%02d-%02d:%02d"),msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       } else {
 //        len += strlen(strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--")));
-        strcpy_P(decodedTelegram.value+len,PSTR("--:-- - --:--"));
-        len += 13;
+        strcpy_P(decodedTelegram.value+len,PSTR("##:##-##:##"));
+        len += 11;
       }
     }
     decodedTelegram.value[len] = 0;
@@ -3673,7 +3674,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K49'>"));
+   printToWebClient(PSTR("K50'>"));
    printToWebClient(STR_TEXT_SNS);
 
    printToWebClient(PSTR("</a></td>"));
@@ -3904,12 +3905,6 @@ void generateConfigPage(void) {
   printToWebClient(STR_TEXT_SNS);
   printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
-  printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
-  for (int i=0; i<anz_ex_gpio; i++) {
-    if (bitRead(protected_GPIO[i / 8], i % 8)) {
-      printFmtToWebClient(PSTR("%d "), i);
-    }
-  }
 
   printToWebClient(PSTR("<BR><BR>\r\n"));
 /*
@@ -4366,6 +4361,9 @@ void implementConfig() {
       i = 0;
       outBuf[i] = 0;
       continue;
+    }
+    if (c == '+') {
+      c = ' ';
     }
     if (c == '%') { //%HEX_CODE to char. Must be placed here for avoiding wrong behavior when =%& symbols decoded
       if (client.available()) {outBuf[i] = client.read();}
@@ -6454,11 +6452,24 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-/*
+  
 #ifdef ESP32
-  esp_task_wdt_reset();
+//  esp_task_wdt_reset();
+  // if WiFi is down, try reconnecting every 5 minutes
+  if (WiFi.status() != WL_CONNECTED) {
+    if ((millis() - WiFiMillis) >= 300000) {
+      Serial.print(millis());
+      Serial.println(F(" Reconnecting to WiFi..."));
+      WiFi.disconnect();
+      WiFi.reconnect();
+      WiFiMillis = millis();
+    }
+  }
+  else {
+    WiFiMillis = millis();
+  } 
 #endif
-*/
+
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
@@ -7981,20 +7992,6 @@ uint8_t pps_offset = 0;
             }
             printToWebClient(PSTR("\r\n  ]"));
             #endif
-//protected GPIO
-            printToWebClient(PSTR(",\r\n  \"protectedGPIO\": [\r\n"));
-            not_first = false;
-            for (i=0; i<anz_ex_gpio; i++) {
-              if (bitRead(protected_GPIO[i / 8], i % 8)) {
-                if (not_first) {
-                  printToWebClient(PSTR(",\r\n"));
-                } else {
-                  not_first = true;
-                }
-              printFmtToWebClient(PSTR("    { \"pin\": %d }"), i);
-              }
-            }
-            printToWebClient(PSTR("\r\n  ]"));
 
 //averages
 #ifdef AVERAGES
@@ -8741,10 +8738,6 @@ uint8_t pps_offset = 0;
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
-            if (bitRead(protected_GPIO[pin / 8], pin % 8)) {
-              printToWebClient(PSTR(MENU_TEXT_ER7 "\r\n"));
-              break;
-            }
 
             char* dir_token = strchr(range,',');
             if (dir_token!=NULL) {
@@ -9189,8 +9182,9 @@ uint8_t pps_offset = 0;
 #endif
 
   if (debug_mode == 2) {
-    telnetClient = telnetServer->available();
-
+    if (haveTelnetClient == false) {
+      telnetClient = telnetServer->available();
+    }
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
       haveTelnetClient = true;
@@ -10147,23 +10141,26 @@ void setup() {
     File avgfile = SD.open(averagesFileName, FILE_READ);
     if (avgfile) {
       char c;
-      char num[10];
-      int x;
+      char num[15];
+      uint x;
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
         num[x]='\0';
         avgValues[i] = atof(num);
-
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10175,8 +10172,10 @@ void setup() {
 
         c = avgfile.read();
         x = 0;
-        while (avgfile.available() && c != '\n') {
-          num[x] = c;
+        while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+          if (x < sizeof(num)-1) {
+            num[x] = c;
+          }
           x++;
           c = avgfile.read();
         }
@@ -10186,8 +10185,10 @@ void setup() {
 
       c = avgfile.read();
       x = 0;
-      while (avgfile.available() && c != '\n') {
-        num[x] = c;
+      while (avgfile.available() && c != '\n' && x < sizeof(num)-1) {
+        if (x < sizeof(num)-1) {
+          num[x] = c;
+        }
         x++;
         c = avgfile.read();
       }

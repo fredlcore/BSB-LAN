@@ -91,7 +91,7 @@ byte trusted_ip_addr2[4] = {0,0,0,0};
  * User:Password
  */
 //char USER_PASS[64] = "User:Password";
-char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS#define ESP32_USE_SD string length is zero
+char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string length is zero
 
 
 // Compile module with one wire bus support.
@@ -220,24 +220,6 @@ byte dest_address = 0x00;
 // - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
 bool pps_write = 0;
 byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
-
-
-#if defined(__AVR__) // Mega2560
-// Protect these pins from accidental GPIO access
-// Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
-//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00000000,0b00011100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-#elif defined(__arm__)  // Due
-// Protect these pins from accidental GPIO access
-// Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
-//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00001011,0b00011100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-#elif defined(ESP32)
-byte protected_GPIO[10] = {0b00110100,0b11110000,0b11101100,0b00001110,0b10011111,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000};
-#else
-#error "Protected pins not defined for this platform"
-#endif
-
 
 /* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
  * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
