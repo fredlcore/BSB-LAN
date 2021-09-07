@@ -84,6 +84,7 @@
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
  *        - New library for DHT22 should provide more reliable results
  *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
+ *        - MQTT: Use MQTTDeviceID as a client ID for the broker, still defaults to BSB-LAN. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.
  *       version 1.1
  *        - ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
  *        - ATTENTION: New categories added, most category numbers (using /K) will be shifted up by a few numbers.
@@ -630,7 +631,9 @@ const char journalFileName[] PROGMEM = "/journal.txt";
 #endif
 
 ComClient client;
+#ifdef MQTT
 ComClient *mqtt_client;   //Luposoft: own instance
+#endif
 #ifdef VERSION_CHECK
 ComClient httpclient;
 #endif
@@ -728,7 +731,6 @@ volatile byte PressedButtons = 0;
 #define ROOM3_PRESENCE_BUTTON_PRESSED 8
 #endif
 
-static const int anz_ex_gpio = sizeof(protected_GPIO) / sizeof(byte) * 8;
 static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
@@ -3672,7 +3674,7 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K49'>"));
+   printToWebClient(PSTR("K50'>"));
    printToWebClient(STR_TEXT_SNS);
 
    printToWebClient(PSTR("</a></td>"));
@@ -3903,12 +3905,6 @@ void generateConfigPage(void) {
   printToWebClient(STR_TEXT_SNS);
   printFmtToWebClient(PSTR(": %d\r\n<BR>\r\n"), numSensors);
   #endif
-  printToWebClient(PSTR(MENU_TEXT_EXP ": \r\n"));
-  for (int i=0; i<anz_ex_gpio; i++) {
-    if (bitRead(protected_GPIO[i / 8], i % 8)) {
-      printFmtToWebClient(PSTR("%d "), i);
-    }
-  }
 
   printToWebClient(PSTR("<BR><BR>\r\n"));
 /*
@@ -6456,7 +6452,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-
+  
 #ifdef ESP32
 //  esp_task_wdt_reset();
   // if WiFi is down, try reconnecting every 5 minutes
@@ -7996,20 +7992,6 @@ uint8_t pps_offset = 0;
             }
             printToWebClient(PSTR("\r\n  ]"));
             #endif
-//protected GPIO
-            printToWebClient(PSTR(",\r\n  \"protectedGPIO\": [\r\n"));
-            not_first = false;
-            for (i=0; i<anz_ex_gpio; i++) {
-              if (bitRead(protected_GPIO[i / 8], i % 8)) {
-                if (not_first) {
-                  printToWebClient(PSTR(",\r\n"));
-                } else {
-                  not_first = true;
-                }
-              printFmtToWebClient(PSTR("    { \"pin\": %d }"), i);
-              }
-            }
-            printToWebClient(PSTR("\r\n  ]"));
 
 //averages
 #ifdef AVERAGES
@@ -8756,10 +8738,6 @@ uint8_t pps_offset = 0;
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
-            if (bitRead(protected_GPIO[pin / 8], pin % 8)) {
-              printToWebClient(PSTR(MENU_TEXT_ER7 "\r\n"));
-              break;
-            }
 
             char* dir_token = strchr(range,',');
             if (dir_token!=NULL) {
@@ -9204,8 +9182,9 @@ uint8_t pps_offset = 0;
 #endif
 
   if (debug_mode == 2) {
-    telnetClient = telnetServer->available();
-
+    if (haveTelnetClient == false) {
+      telnetClient = telnetServer->available();
+    }
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
       haveTelnetClient = true;
@@ -9384,16 +9363,18 @@ boolean mqtt_connect() {
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
     MQTTPubSubClient->setServer(MQTTBroker, 1883);
     String MQTTWillTopic = mqtt_get_will_topic();
+    String MQTTRealClientId = mqtt_get_client_id();
     int retries = 0;
+    printFmtToDebug(PSTR("Client ID: %s\r\n"), MQTTRealClientId.c_str());
+    printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
     while (!MQTTPubSubClient->connected() && retries < 3) {
-      MQTTPubSubClient->connect(PSTR("BSB-LAN"), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
+      MQTTPubSubClient->connect(MQTTRealClientId.c_str(), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
       retries++;
       if (!MQTTPubSubClient->connected()) {
         delay(1000);
         printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
       } else {
         printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
-        printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
         const char* mqtt_subscr;
         if (MQTTTopicPrefix[0]) {mqtt_subscr = MQTTTopicPrefix;} else {mqtt_subscr="fromBroker";}
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
@@ -9407,6 +9388,28 @@ boolean mqtt_connect() {
     return true;
   }
   return false;
+}
+#endif
+/* Function: mqtt_get_client_id()
+ * Does: Gets the client ID to use for the MQTT connection based on the set
+ *   MQTT Device ID, if unset, defaults to "BSB-LAN".
+ * Pass parameters:
+ *   none
+ * Function value returned
+ *   MQTT client ID as C++ String instance
+ * Global resources used:
+ *   none
+ */
+#ifdef MQTT
+const String mqtt_get_client_id() {
+  // Build Client ID
+  String result = "";
+  if (MQTTDeviceID[0]) {
+    result.concat(MQTTDeviceID);
+  } else {
+    result.concat(PSTR("BSB-LAN"));
+  }
+  return result;
 }
 #endif
 /* Function: mqtt_get_will_topic()
