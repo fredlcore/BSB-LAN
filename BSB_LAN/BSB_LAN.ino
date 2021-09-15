@@ -4317,7 +4317,10 @@ bool SaveConfigFromRAMtoEEPROM() {
   // Dump when serial debug active or have telnet client
   EEPROM_dump();
 
-  if (buschanged) {setBusType(); }
+  if (buschanged) {
+    setBusType();
+    SetDevId();
+  }
   return needReboot;
 }
 #endif
@@ -10142,7 +10145,7 @@ void setup() {
     if (avgfile) {
       char c;
       char num[15];
-      uint x;
+      uint8_t x;
       for (int i=0; i<numAverages; i++) {
         c = avgfile.read();
         x = 0;
