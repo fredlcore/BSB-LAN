@@ -460,7 +460,7 @@ void loop();
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
-    #if defined(RX1)          // poor man's detection of Olimex' builtin key
+    #if defined(RX1)          // poor man's detection of Olimex' builtin button
 #define EEPROM_ERASING_PIN 34
     #else                     // GPIO for ESP32-NodeMCU
 #define EEPROM_ERASING_PIN 18
@@ -5536,7 +5536,7 @@ char *build_pvalstr(bool extended) {
       len+=strlen(outBuf + len);
      }
   } else {
-    if (decodedTelegram.unit[0] != 0) {
+    if (decodedTelegram.unit[0] != 0 && decodedTelegram.error != 7) {
       strcpy_P(outBuf + len, PSTR(" "));
       strcat(outBuf + len, decodedTelegram.unit);
       len+=strlen(outBuf + len);
