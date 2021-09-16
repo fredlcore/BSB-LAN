@@ -528,7 +528,7 @@ EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
 
 #include <Wire.h>
 #include "src/BlueDot_BME280/BlueDot_BME280.h"
-BlueDot_BME280 bme[BME280];  //Set 2 if you need two sensors.
+BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
 #endif
 
 bool client_flag = false;
@@ -1735,7 +1735,7 @@ uint8_t recognizeVirtualFunctionGroup(uint16_t nr) {
   else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20199
 #endif
 #ifdef BME280
-  else if (nr >= 20200 && nr < 20200 + sizeof(bme)/sizeof(bme[0]) * 6) {return 8;} //20100 - 20199
+  else if (nr >= 20200 && nr < 20200 + BME_Sensors * 6) {return 8;} //20100 - 20199
 #endif
 #ifdef ONE_WIRE_BUS
   else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
@@ -1800,7 +1800,7 @@ int findLine(uint16_t line
       case 7: line = 20800; break;
       case 8: {
 #ifdef BME280
-        if (line - 20200 < sizeof(bme)/sizeof(bme[0]) * 6) { //
+        if (line - 20200 < BME_Sensors * 6) { //
           line = 20200 + ((line - 20200) % 6);
         } else {
           return -1;
@@ -4284,6 +4284,8 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
+        case CF_BMEBUS:
+        case CF_MDNS_HOSTNAME:
           needReboot = true;
           break;
         case CF_TWW_PUSH_PIN_ID: //How to do dynamic reconfiguration of interrupts?
@@ -5803,7 +5805,7 @@ void queryVirtualPrognr(int line, int table_line) {
 #ifdef ONE_WIRE_BUS
       size_t tempLine = line - 20300;
       int log_sensor = tempLine / 2;
-      if (enableOneWireBus && numSensors) {
+      if (One_Wire_Pin && numSensors) {
         switch (tempLine % 2) {
           case 0: //print sensor ID
             DeviceAddress device_address;
@@ -6213,7 +6215,7 @@ void printToWebClient_prognrdescaddr() {
  #endif
 
  #ifdef ONE_WIRE_BUS
-   if (enableOneWireBus) {
+   if (One_Wire_Pin) {
      // output of one wire sensors
      for (i=0;i<numSensors * 2;i += 2) {
        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
@@ -6456,7 +6458,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  * *************************************************************** */
 void loop() {
   
-#ifdef ESP32
+#if defined(WIFI) && defined(ESP32)
 //  esp_task_wdt_reset();
   // if WiFi is down, try reconnecting every 5 minutes
   if (WiFi.status() != WL_CONNECTED) {
@@ -7349,22 +7351,27 @@ uint8_t pps_offset = 0;
           }
           // if the file is available, read from it:
           if (dataFile) {
+            unsigned long filesize = dataFile.size();
+#if !defined(ESP32)
             dir_t d;
             uint16_t lastWrtYr = 0;
             byte monthval = 0;
             byte dayval = 0;
-            unsigned long filesize = dataFile.size();
             if (dataFile.dirEntry(&d)) {
               lastWrtYr = FAT_YEAR(d.lastWriteDate);
               monthval = FAT_MONTH(d.lastWriteDate);
               dayval = FAT_DAY(d.lastWriteDate);
               }
-
+#endif
             if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
+#if !defined(ESP32)
               if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize))) {
                 // reuse httpflags
                 httpflags &= ~HTTP_ETAG; //ETag not match
               }
+#else
+                httpflags &= ~HTTP_ETAG; //ETag not match
+#endif
             }
 
             printToDebug(PSTR("File opened from SD: "));
@@ -7377,6 +7384,7 @@ uint8_t pps_offset = 0;
               code = HTTP_OK;
             }
             printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_AUTO_CACHE_AGE);
+#if !defined(ESP32)
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -7392,6 +7400,9 @@ uint8_t pps_offset = 0;
             }
             //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
             printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, FAT_HOUR(d.lastWriteTime), FAT_MINUTE(d.lastWriteTime), FAT_SECOND(d.lastWriteTime), filesize, filesize);
+#else
+            printFmtToWebClient(PSTR("Content-Length: %lu\r\n\r\n"), filesize);
+#endif
             flushToWebClient();
             //Send file if !HEAD request received or ETag not match
             if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD_REQ)) {
@@ -8983,7 +8994,7 @@ uint8_t pps_offset = 0;
 
 #ifdef ONE_WIRE_BUS
   {
-    if (enableOneWireBus) {
+    if (One_Wire_Pin) {
       unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
       if (tempTime != lastOneWireRequestTime) {
         sensors->requestTemperatures(); //call it outside of here for more faster answers
@@ -9200,9 +9211,12 @@ uint8_t pps_offset = 0;
     }
   }
 #if defined(MDNS_HOSTNAME) && !defined(ESP32)
-  mdns.run();
+  if(mDNS_hostname[0]) {
+    mdns.run();
+  }
 #endif
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+ if(enable_ota_update)
   update_server.handleClient();
 #endif
 
@@ -9648,6 +9662,9 @@ void setup() {
   registerConfigVariable(CF_BASICAUTH, (byte *)USER_PASS);
   registerConfigVariable(CF_ONEWIREBUS, (byte *)&One_Wire_Pin);
   registerConfigVariable(CF_DHTBUS, (byte *)DHT_Pins);
+  registerConfigVariable(CF_BMEBUS, (byte *)&BME_Sensors);
+  registerConfigVariable(CF_OTA_UPDATE, (byte *)&enable_ota_update);
+  registerConfigVariable(CF_MDNS_HOSTNAME, (byte *)mDNS_hostname);
   registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
   registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
   registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
@@ -9794,7 +9811,7 @@ void setup() {
   bus->enableInterface();
 
 #ifdef ONE_WIRE_BUS
-  if (enableOneWireBus) {
+  if (One_Wire_Pin) {
     printToDebug(PSTR("Init One Wire bus...\r\n"));
     // Setup a oneWire instance to communicate with any OneWire devices
     oneWire = new OneWire(One_Wire_Pin);
@@ -9809,7 +9826,8 @@ void setup() {
 
 #ifdef BME280
     printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
-    for (uint8_t f = 0; f < sizeof(bme)/sizeof(bme[0]); f++) {
+    bme = new BlueDot_BME280[BME_Sensors];
+    for (uint8_t f = 0; f < BME_Sensors; f++) {
       bme[f].parameter.communication = 0;                    //I2C communication for Sensor
       bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
       bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
@@ -10225,54 +10243,58 @@ void setup() {
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
 #ifdef MDNS_HOSTNAME
+  if(mDNS_hostname[0]) {
 #if defined(ESP32)
-  MDNS.begin(MDNS_HOSTNAME);
-  MDNS.addService("http", "tcp", 80);
-  MDNS.addService("BSB-LAN web service._http", "tcp", 80);
+    MDNS.begin(mDNS_hostname);
+    MDNS.addService("http", "tcp", 80);
+    MDNS.addService("BSB-LAN web service._http", "tcp", 80);
 #else
 #ifdef WIFI
-  mdns.begin(WiFi.localIP(), PSTR(MDNS_HOSTNAME));
+    mdns.begin(WiFi.localIP(), mDNS_hostname);
 #else
-  mdns.begin(Ethernet.localIP(), PSTR(MDNS_HOSTNAME));
+    mdns.begin(Ethernet.localIP(), mDNS_hostname);
 #endif
-  mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+    mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
+  }
 #endif
 
 // Set up web-based over-the-air updates for ESP32
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
-  update_server.on("/", HTTP_GET, []() {
-    update_server.sendHeader("Connection", "close");
-    update_server.send(200, "text/html", serverIndex);
-  });
-  update_server.on("/update", HTTP_POST, []() {
-    update_server.sendHeader("Connection", "close");
-    update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
-    delay(1000);
-    ESP.restart();
-  }, []() {
-    HTTPUpload& upload = update_server.upload();
-    if (upload.status == UPLOAD_FILE_START) {
-      printlnToDebug(PSTR("Updating ESP32 firmware..."));
-      uint32_t maxSketchSpace = 0x140000;
-      if (!Update.begin(maxSketchSpace)) { //start with max available size
-        Update.printError(Serial);
+  if(enable_ota_update) {
+    update_server.on("/", HTTP_GET, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/html", serverIndex);
+    });
+    update_server.on("/update", HTTP_POST, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
+      delay(1000);
+      ESP.restart();
+    }, []() {
+      HTTPUpload& upload = update_server.upload();
+      if (upload.status == UPLOAD_FILE_START) {
+        printlnToDebug(PSTR("Updating ESP32 firmware..."));
+        uint32_t maxSketchSpace = 0x140000;
+        if (!Update.begin(maxSketchSpace)) { //start with max available size
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_WRITE) {
+        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_END) {
+        if (Update.end(true)) { //true to set the size to the current progress
+          printlnToDebug(PSTR("Update success, rebooting..."));
+        } else {
+          Update.printError(Serial);
+        }
       }
-    } else if (upload.status == UPLOAD_FILE_WRITE) {
-      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
-        Update.printError(Serial);
-      }
-    } else if (upload.status == UPLOAD_FILE_END) {
-      if (Update.end(true)) { //true to set the size to the current progress
-        printlnToDebug(PSTR("Update success, rebooting..."));
-      } else {
-        Update.printError(Serial);
-      }
-    }
-    yield();
-  });
-  update_server.begin();
-  printlnToDebug(PSTR("Update Server started on port 8080."));
+      yield();
+    });
+    update_server.begin();
+    printlnToDebug(PSTR("Update Server started on port 8080."));
+  }
 #endif
 
 #ifdef CUSTOM_COMMANDS

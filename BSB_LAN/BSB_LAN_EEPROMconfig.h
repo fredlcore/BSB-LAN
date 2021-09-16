@@ -61,7 +61,10 @@ typedef enum{
   CF_RGT1_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
   CF_RGT2_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
   CF_RGT3_PRES_PIN_ID, //Size 1 byte. Pin number for "Presence" button connection. 0 will be ignored
-
+// Version 6 ()
+  CF_BMEBUS, //Size: 1 byte. If set to 1 or 2 then BME280 sensor(s) will be used
+  CF_OTA_UPDATE, //Size: 1 byte. OTA update for ESP32. 0 - disabled, 1 - enabled.
+  CF_MDNS_HOSTNAME, //Size: 32 byte. Host name for mDNS discovery service
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -102,7 +105,8 @@ typedef enum {
   CCAT_MAX,
   CCAT_LOGGING,
   CCAT_24HAVG,
-  CCAT_RGT_EMUL
+  CCAT_RGT_EMUL,
+  CCAT_BMEBUS
 } ccat_params;
 
 
@@ -133,7 +137,8 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_MAX,            CAT_MAX_TXT},
   {CCAT_LOGGING,        CAT_LOGGING_TXT},
   {CCAT_24HAVG,         CAT_24HAVG_TXT},
-  {CCAT_RGT_EMUL,       CAT_RGT_EMUL_TXT}
+  {CCAT_RGT_EMUL,       CAT_RGT_EMUL_TXT},
+  {CCAT_BMEBUS,         CAT_BMEBUS_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -144,6 +149,7 @@ PROGMEM_LATE const configuration_struct config[]={
 #ifdef WEBCONFIG
   {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
+  {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
 #endif
   {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
   {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
@@ -165,6 +171,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_TRUSTEDIPADDRESS2,2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},//immediately apply
   {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
   {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
+  {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_IPADDRESS,   2, CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
@@ -183,6 +190,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_BYTE,           CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, CCAT_DHTBUS,   CPI_TEXT,      CDT_DHTBUS,         CF_PINS_TXT, sizeof(DHT_Pins)}, //immediately apply
+  {CF_BMEBUS,           6, CCAT_BMEBUS,   CPI_TEXT,      CDT_BYTE,           CF_NUM_TXT, sizeof(BME_Sensors)}, //need reboot
   {CF_TWW_PUSH_PIN_ID,  5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_TWW_PUSH_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
   {CF_RGT1_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           CF_RGT1_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
