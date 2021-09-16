@@ -213,15 +213,9 @@ UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "TWW-Push Taste: Pin";
 UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "RGT1 Präsenztaste: Pin";
 UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RGT2 Präsenztaste: Pin";
 UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RGT3 Präsenztaste: Pin";
-<<<<<<< HEAD
 UIStrings["CF_MDNS_HOSTNAME_TEXT"] = "mDNS Hostname";
 UIStrings["CF_NUM_TEXT"] = "Sensoren";
 UIStrings["CF_OTA_UPDATE_TEXT"] = "OTA Update";
-=======
-UIStrings["CF_MDNS_HOSTNAME_TEXT"] = "mDNS hostname";
-UIStrings["CF_NUM_TEXT"] = "Sensors";
-UIStrings["CF_OTA_UPDATE_TEXT"] = "Allow OTA update";
->>>>>>> aaabf2a6df9ee5596156ffe56486cc1cc41883f3
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
