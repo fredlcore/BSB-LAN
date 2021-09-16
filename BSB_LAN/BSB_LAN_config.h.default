@@ -97,8 +97,7 @@ char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string 
 
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
-bool enableOneWireBus = false;  //true - enable oneWire bus, false - disable
-byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensors
+byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
 
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS

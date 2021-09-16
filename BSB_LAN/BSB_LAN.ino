@@ -5805,7 +5805,7 @@ void queryVirtualPrognr(int line, int table_line) {
 #ifdef ONE_WIRE_BUS
       size_t tempLine = line - 20300;
       int log_sensor = tempLine / 2;
-      if (enableOneWireBus && numSensors) {
+      if (One_Wire_Pin && numSensors) {
         switch (tempLine % 2) {
           case 0: //print sensor ID
             DeviceAddress device_address;
@@ -6215,7 +6215,7 @@ void printToWebClient_prognrdescaddr() {
  #endif
 
  #ifdef ONE_WIRE_BUS
-   if (enableOneWireBus) {
+   if (One_Wire_Pin) {
      // output of one wire sensors
      for (i=0;i<numSensors * 2;i += 2) {
        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
@@ -8994,7 +8994,7 @@ uint8_t pps_offset = 0;
 
 #ifdef ONE_WIRE_BUS
   {
-    if (enableOneWireBus) {
+    if (One_Wire_Pin) {
       unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
       if (tempTime != lastOneWireRequestTime) {
         sensors->requestTemperatures(); //call it outside of here for more faster answers
@@ -9811,7 +9811,7 @@ void setup() {
   bus->enableInterface();
 
 #ifdef ONE_WIRE_BUS
-  if (enableOneWireBus) {
+  if (One_Wire_Pin) {
     printToDebug(PSTR("Init One Wire bus...\r\n"));
     // Setup a oneWire instance to communicate with any OneWire devices
     oneWire = new OneWire(One_Wire_Pin);
