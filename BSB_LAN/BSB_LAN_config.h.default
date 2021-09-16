@@ -52,7 +52,8 @@ char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) h
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
-#define MDNS_HOSTNAME "BSB-LAN"         // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+#define MDNS_HOSTNAME                   // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+char mDNS_hostname[32] = "BSB-LAN";
 
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
@@ -107,7 +108,8 @@ byte DHT_Pins[10] = {5};
 // Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
 // Up to two sensors with 0x76 and 0x77 addresses.
 // Usage: #define BME280 x, where x - number of BME280 sensors on bus
-// #define BME280 1
+#define BME280
+byte BME_Sensors = 1; //Define number of BME280 sensors
 
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
@@ -248,6 +250,10 @@ static const int fixed_device_variant = 0;
 */
 #define VERSION_CHECK
 bool enable_version_check = false;
+
+#define ENABLE_ESP32_OTA
+boolean enable_ota_update = false;
+
 
 // "External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER

@@ -213,6 +213,9 @@
 #define CF_RGT1_PRES_PIN_TEXT "RGT1 Präsenztaste: Pin"
 #define CF_RGT2_PRES_PIN_TEXT "RGT2 Präsenztaste: Pin"
 #define CF_RGT3_PRES_PIN_TEXT "RGT3 Präsenztaste: Pin"
+#define CF_MDNS_HOSTNAME_TEXT "mDNS hostname"
+#define CF_NUM_TEXT "Sensors"
+#define CF_OTA_UPDATE_TEXT "Allow OTA update"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
@@ -226,6 +229,7 @@
 #define CAT_LOGGING_TEXT "Logging"
 #define CAT_24HAVG_TEXT "24h-Durchschnittswerte"
 #define CAT_RGT_EMUL_TEXT "RGT Emulation"
+#define CAT_BMEBUS_TEXT "BME280 sensors"
 
 #define STR0_TEXT "Datum/Zeit"
 #define STR1_TEXT "Uhrzeit"
