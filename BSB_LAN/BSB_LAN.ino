@@ -3820,6 +3820,45 @@ void webPrintSite() {
   webPrintFooter();
 } // --- webPrintSite() ---
 
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+void init_ota_update(){
+  if(enable_ota_update) {
+    update_server.on("/", HTTP_GET, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/html", serverIndex);
+    });
+    update_server.on("/update", HTTP_POST, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
+      delay(1000);
+      ESP.restart();
+    }, []() {
+      HTTPUpload& upload = update_server.upload();
+      if (upload.status == UPLOAD_FILE_START) {
+        printlnToDebug(PSTR("Updating ESP32 firmware..."));
+        uint32_t maxSketchSpace = 0x140000;
+        if (!Update.begin(maxSketchSpace)) { //start with max available size
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_WRITE) {
+        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_END) {
+        if (Update.end(true)) { //true to set the size to the current progress
+          printlnToDebug(PSTR("Update success, rebooting..."));
+        } else {
+          Update.printError(Serial);
+        }
+      }
+      yield();
+    });
+    update_server.begin();
+    printlnToDebug(PSTR("Update Server started on port 8080."));
+  }
+}  
+#endif
+
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
   if (i<0) {                    // Not found (for this heating system)?
@@ -4288,6 +4327,16 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_MDNS_HOSTNAME:
           needReboot = true;
           break;
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)          
+        case CF_OTA_UPDATE:
+          if (enable_ota_update){
+            init_ota_update();
+          } else {
+            update_server.stop();
+            printlnToDebug(PSTR("Update Server stopped."));
+          }
+          break;
+#endif
         case CF_TWW_PUSH_PIN_ID: //How to do dynamic reconfiguration of interrupts?
         case CF_RGT1_PRES_PIN_ID:
         case CF_RGT2_PRES_PIN_ID:
@@ -10264,40 +10313,7 @@ void setup() {
 
 // Set up web-based over-the-air updates for ESP32
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
-  if(enable_ota_update) {
-    update_server.on("/", HTTP_GET, []() {
-      update_server.sendHeader("Connection", "close");
-      update_server.send(200, "text/html", serverIndex);
-    });
-    update_server.on("/update", HTTP_POST, []() {
-      update_server.sendHeader("Connection", "close");
-      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
-      delay(1000);
-      ESP.restart();
-    }, []() {
-      HTTPUpload& upload = update_server.upload();
-      if (upload.status == UPLOAD_FILE_START) {
-        printlnToDebug(PSTR("Updating ESP32 firmware..."));
-        uint32_t maxSketchSpace = 0x140000;
-        if (!Update.begin(maxSketchSpace)) { //start with max available size
-          Update.printError(Serial);
-        }
-      } else if (upload.status == UPLOAD_FILE_WRITE) {
-        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
-          Update.printError(Serial);
-        }
-      } else if (upload.status == UPLOAD_FILE_END) {
-        if (Update.end(true)) { //true to set the size to the current progress
-          printlnToDebug(PSTR("Update success, rebooting..."));
-        } else {
-          Update.printError(Serial);
-        }
-      }
-      yield();
-    });
-    update_server.begin();
-    printlnToDebug(PSTR("Update Server started on port 8080."));
-  }
+  init_ota_update();
 #endif
 
 #ifdef CUSTOM_COMMANDS
