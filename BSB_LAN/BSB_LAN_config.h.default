@@ -52,7 +52,7 @@ char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) h
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
-#define MDNS_HOSTNAME                   // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+#define MDNS_SUPPORT                   // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
 char mDNS_hostname[32] = "BSB-LAN";
 
 #define DEBUG         // Compile with verbose DEBUG module if defined

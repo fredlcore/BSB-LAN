@@ -71,7 +71,7 @@
  *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most features are working right now.
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
- *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
+ *        - Added MDNS_SUPPORT definement in config so that BSB-LAN can be discovered through mDNS
  *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
  *        - New MQTT functions, including allowing any parameter to be set by an MQTT message and actively query any parameter once by sending an MQTT message
  *        - Added support for BME280 sensors
@@ -575,7 +575,7 @@ using ComServer = WiFiServer;
 using ComClient = WiFiClient;
 #endif
 
-#if defined(MDNS_HOSTNAME) && !defined(ESP32)
+#if defined(MDNS_SUPPORT) && !defined(ESP32)
   #ifdef WIFI
 #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
@@ -4055,7 +4055,7 @@ void generateConfigPage(void) {
   "URLCONFIG"
   #endif
 
-  #ifdef MDNS_HOSTNAME
+  #ifdef MDNS_SUPPORT
   #if defined (ANY_MODULE_COMPILED)
   ", "
   #else
@@ -9210,7 +9210,7 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-#if defined(MDNS_HOSTNAME) && !defined(ESP32)
+#if defined(MDNS_SUPPORT) && !defined(ESP32)
   if(mDNS_hostname[0]) {
     mdns.run();
   }
@@ -9825,24 +9825,27 @@ void setup() {
 #endif
 
 #ifdef BME280
-    printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
-    bme = new BlueDot_BME280[BME_Sensors];
-    for (uint8_t f = 0; f < BME_Sensors; f++) {
-      bme[f].parameter.communication = 0;                    //I2C communication for Sensor
-      bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
-      bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
-      bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
-      bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
-      bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
-      bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
-      bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
-      bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
-      bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-      printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
-      if (bme[f].init() != 0x60) {
-        printToDebug(PSTR("NOT "));
+    if(BME_Sensors) {
+      printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
+      if(BME_Sensors > 2) BME_Sensors = 2;
+      bme = new BlueDot_BME280[BME_Sensors];
+      for (uint8_t f = 0; f < BME_Sensors; f++) {
+        bme[f].parameter.communication = 0;                    //I2C communication for Sensor
+        bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
+        bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
+        bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
+        bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
+        bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
+        bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
+        bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
+        bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
+        bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+        printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
+        if (bme[f].init() != 0x60) {
+          printToDebug(PSTR("NOT "));
+        }
+        printToDebug(PSTR("found\r\n"));
       }
-      printToDebug(PSTR("found\r\n"));
     }
 #endif
 
@@ -10242,7 +10245,7 @@ void setup() {
 
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
-#ifdef MDNS_HOSTNAME
+#ifdef MDNS_SUPPORT
   if(mDNS_hostname[0]) {
 #if defined(ESP32)
     MDNS.begin(mDNS_hostname);
