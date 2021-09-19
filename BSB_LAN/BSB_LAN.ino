@@ -534,57 +534,56 @@ BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
 bool client_flag = false;
 #ifdef WIFI
   #ifdef ESP32
-#include <WiFi.h>
-bool localAP = false;
-unsigned long localAPtimeout = millis();
+    #include <WiFi.h>
+    bool localAP = false;
+    unsigned long localAPtimeout = millis();
   #else
-#include "src/WiFiSpi/src/WiFiSpi.h"
-using ComServer = WiFiSpiServer;
-using ComClient = WiFiSpiClient;
-#define WiFi WiFiSpi
+    #include "src/WiFiSpi/src/WiFiSpi.h"
+    using ComServer = WiFiSpiServer;
+    using ComClient = WiFiSpiClient;
+    #define WiFi WiFiSpi
   #endif
 #else
-
   #ifdef ESP32
-#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
-#define ETH_PHY_POWER 12
-#include <ETH.h>
-
-class Eth : public ETHClass {
-public:
-    int maintain(void) const { return 0;} ; // handled internally
-    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-      config(ip, gateway, subnet, dnsserver, dnsserver); //Static
-    }
-    void begin(uint8_t *mac) {
-      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-    }
-};
-
-Eth Ethernet;
+    //#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
+    //#define ETH_PHY_POWER 12
+    #include <ETH.h>
+    
+    class Eth : public ETHClass {
+    public:
+        int maintain(void) const { return 0;} ; // handled internally
+        void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+           begin(mac);
+          config(ip, gateway, subnet, dnsserver, dnsserver); //Static
+        }
+        void begin(uint8_t *mac) {
+          ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+        }
+    };
+    
+    Eth Ethernet;
   #else
-#include <Ethernet.h>
-using ComServer = EthernetServer;
-using ComClient = EthernetClient;
+    #include <Ethernet.h>
+    using ComServer = EthernetServer;
+    using ComClient = EthernetClient;
   #endif
 #endif
 
 #ifdef ESP32
-using ComServer = WiFiServer;
-using ComClient = WiFiClient;
+  using ComServer = WiFiServer;
+  using ComClient = WiFiClient;
 #endif
 
 #if defined(MDNS_SUPPORT) && !defined(ESP32)
   #ifdef WIFI
-#include "src/WiFiSpi/src/WiFiSpiUdp.h"
-WiFiSpiUdp udp;
+    #include "src/WiFiSpi/src/WiFiSpiUdp.h"
+    WiFiSpiUdp udp;
   #else
-#include <EthernetUdp.h>
-EthernetUDP udp;
+    #include <EthernetUdp.h>
+    EthernetUDP udp;
   #endif
-#include "src/ArduinoMDNS/ArduinoMDNS.h"
-MDNS mdns(udp);
+  #include "src/ArduinoMDNS/ArduinoMDNS.h"
+  MDNS mdns(udp);
 #endif
 
 bool EEPROM_ready = true;
@@ -604,11 +603,11 @@ char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
 #if defined(__AVR__)
-#undef OUTBUF_USEFUL_LEN
-#define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
+  #undef OUTBUF_USEFUL_LEN
+  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
 #else
-#undef OUTBUF_USEFUL_LEN
-#define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
+  #undef OUTBUF_USEFUL_LEN
+  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
 #endif
 char bigBuff[OUTBUF_USEFUL_LEN + OUTBUF_LEN] = { 0 };
 int bigBuffPos=0;
@@ -617,34 +616,34 @@ int bigBuffPos=0;
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
 #if defined(__AVR__)
-const char *averagesFileName = "averages.txt";
-const char *datalogFileName = "datalog.txt";
-const char *journalFileName = "journal.txt";
+  const char *averagesFileName = "averages.txt";
+  const char *datalogFileName = "datalog.txt";
+  const char *journalFileName = "journal.txt";
 #elif defined(__SAM3X8E__)
-const char averagesFileName[] PROGMEM = "averages.txt";
-const char datalogFileName[] PROGMEM = "datalog.txt";
-const char journalFileName[] PROGMEM = "journal.txt";
+  const char averagesFileName[] PROGMEM = "averages.txt";
+  const char datalogFileName[] PROGMEM = "datalog.txt";
+  const char journalFileName[] PROGMEM = "journal.txt";
 #elif defined(ESP32)
-const char averagesFileName[] PROGMEM = "/averages.txt";
-const char datalogFileName[] PROGMEM = "/datalog.txt";
-const char journalFileName[] PROGMEM = "/journal.txt";
+  const char averagesFileName[] PROGMEM = "/averages.txt";
+  const char datalogFileName[] PROGMEM = "/datalog.txt";
+  const char journalFileName[] PROGMEM = "/journal.txt";
 #endif
 
 ComClient client;
 #ifdef MQTT
-ComClient *mqtt_client;   //Luposoft: own instance
+  ComClient *mqtt_client;   //Luposoft: own instance
 #endif
 #ifdef VERSION_CHECK
-ComClient httpclient;
+  ComClient httpclient;
 #endif
 ComClient telnetClient;
 
 #ifdef MAX_CUL
-ComClient *max_cul;
+  ComClient *max_cul;
 #endif
 
 #ifdef MQTT
-PubSubClient *MQTTPubSubClient;
+  PubSubClient *MQTTPubSubClient;
 #endif
 bool haveTelnetClient = false;
 
@@ -663,26 +662,26 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 #if defined LOGGER || defined WEBSERVER
   #if defined(ESP32)
     #if defined(ESP32_USE_SD) // Use SD card adapter on ESP32
-#include "FS.h"
-#include "SD_MMC.h"
-#define SD SD_MMC
-#define MINIMUM_FREE_SPACE_ON_SD 100000
+      #include "FS.h"
+      #include "SD_MMC.h"
+      #define SD SD_MMC
+      #define MINIMUM_FREE_SPACE_ON_SD 100000
     #else   // use SPFISS instead of SD card on ESP32
-// Minimum free space in bytes
-#include <SPIFFS.h>
-#define SD SPIFFS
-#define MINIMUM_FREE_SPACE_ON_SD 10000
-// Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+      // Minimum free space in bytes
+      #include <SPIFFS.h>
+      #define SD SPIFFS
+      #define MINIMUM_FREE_SPACE_ON_SD 10000
+      // Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
     #endif  // ESP32_USE_SD
-#undef FILE_WRITE
-#define FILE_WRITE FILE_APPEND
+    #undef FILE_WRITE
+    #define FILE_WRITE FILE_APPEND
   #else     // !ESP32
-//leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
-#define MINIMUM_FREE_SPACE_ON_SD 100
-// set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
-// do not forget set it up after SdFat upgrading
-#include "src/SdFat/SdFat.h"
-SdFat SD;
+    //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
+    #define MINIMUM_FREE_SPACE_ON_SD 100
+    // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
+    // do not forget set it up after SdFat upgrading
+    #include "src/SdFat/SdFat.h"
+    SdFat SD;
   #endif    // ESP32
 #endif      // LOGGER || WEBSERVER
 

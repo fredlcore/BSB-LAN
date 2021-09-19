@@ -106,7 +106,6 @@ byte DHT_Pins[10] = {5};
 
 // Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
 // Up to two sensors with 0x76 and 0x77 addresses.
-// Usage: #define BME280 x, where x - number of BME280 sensors on bus
 #define BME280
 byte BME_Sensors = 1; //Define number of BME280 sensors
 
