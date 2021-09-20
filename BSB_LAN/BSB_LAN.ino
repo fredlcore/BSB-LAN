@@ -553,7 +553,7 @@ bool client_flag = false;
     public:
         int maintain(void) const { return 0;} ; // handled internally
         void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-           begin(mac);
+          begin(mac);
           config(ip, gateway, subnet, dnsserver, dnsserver); //Static
         }
         void begin(uint8_t *mac) {
@@ -686,6 +686,7 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 #endif      // LOGGER || WEBSERVER
 
 #ifdef ONE_WIRE_BUS
+// this patch (https://github.com/PaulStoffregen/OneWire/pull/93) should be applied for ESP32 support when OneWire library would be updated.
   #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
