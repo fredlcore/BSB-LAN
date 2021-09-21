@@ -4141,7 +4141,7 @@ printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(decodedTelegram.enumdescaddr);
 */
     printToWebClient(PSTR("<BR>\r\n"));
-    printToWebClient(CF_AVERAGESLIST_TXT);
+    printToWebClient(CF_PROGLIST_TXT);
     printToWebClient(PSTR(": <BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
@@ -4378,6 +4378,34 @@ bool SaveConfigFromRAMtoEEPROM() {
 }
 #endif
 
+int returnENUMID4ConfigOption(uint8_t id) {
+  int i = 0;
+  switch (id) {
+    case CF_BUSTYPE:
+      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+      break;
+    case CF_LOGTELEGRAM:
+      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+      break;
+    case CF_DEBUG:
+    i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      break;
+    case CF_MQTT:
+      i=findLine(65529,0,NULL); //return ENUM_MQTT
+      break;
+    case CF_WRITEMODE:
+      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+      break;
+    case CF_PPS_MODE:
+      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      break;
+    default:
+      i = -1;
+      break;
+  }
+  return i;
+}
+
 #ifdef WEBCONFIG
 void implementConfig() {
   bool k_flag = false;
@@ -4441,34 +4469,6 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value) {
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
   listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
 
-}
-
-int returnENUMID4ConfigOption(uint8_t id) {
-  int i = 0;
-  switch (id) {
-    case CF_BUSTYPE:
-      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
-      break;
-    case CF_LOGTELEGRAM:
-      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
-      break;
-    case CF_DEBUG:
-    i=findLine(65530,0,NULL); //return ENUM_DEBUG
-      break;
-    case CF_MQTT:
-      i=findLine(65529,0,NULL); //return ENUM_MQTT
-      break;
-    case CF_WRITEMODE:
-      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
-      break;
-    case CF_PPS_MODE:
-      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
-      break;
-    default:
-      i = -1;
-      break;
-  }
-  return i;
 }
 
 void generateChangeConfigPage() {
