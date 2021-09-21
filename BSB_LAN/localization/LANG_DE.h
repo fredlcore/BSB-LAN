@@ -159,6 +159,8 @@
 #define MENU_TEXT_TOC "Handbuch"
 #define MENU_TEXT_UPT "Uptime"
 #define MENU_TEXT_VER "Version"
+#define MENU_TEXT_MCU "Hardware"
+#define MENU_TEXT_BYT "Bytes"
 #define MENU_TEXT_MOD "Installierte Module"
 #define MENU_TEXT_NVS "Überprüfe auf neuere Version"
 #define MENU_TEXT_NVA "Neuere Version gefunden"

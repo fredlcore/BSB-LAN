@@ -548,7 +548,7 @@ bool client_flag = false;
     //#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
     //#define ETH_PHY_POWER 12
     #include <ETH.h>
-    
+
     class Eth : public ETHClass {
     public:
         int maintain(void) const { return 0;} ; // handled internally
@@ -560,7 +560,7 @@ bool client_flag = false;
           ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
         }
     };
-    
+
     Eth Ethernet;
   #else
     #include <Ethernet.h>
@@ -3856,7 +3856,7 @@ void init_ota_update(){
     update_server.begin();
     printlnToDebug(PSTR("Update Server started on port 8080."));
   }
-}  
+}
 #endif
 
 char *lookup_descr(uint16_t line) {
@@ -3873,22 +3873,24 @@ void generateConfigPage(void) {
 #if !defined(WEBCONFIG)
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
 #endif
-  printToWebClient(PSTR("<BR>Hardware: "));
+  printToWebClient(PSTR("<BR>" MENU_TEXT_MCU ": "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
 #elif defined(ESP32)
   printToWebClient(PSTR("ESP32<BR>\r\n"));
-#else
+#elif defined(__SAM3X8E__)
   printToWebClient(PSTR("Due<BR>\r\n"));
+#else
+  printToWebClient(PSTR("Unknown<BR>\r\n"));
 #endif
   printToWebClient(PSTR("" MENU_TEXT_VER ": "));
   printToWebClient(BSB_VERSION);
   printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": "));
 #ifdef WEBCONFIG
-  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
+  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
 
 #else
-  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
+  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
   printlnToWebClient(PSTR("<BR>\r\n" MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
 
@@ -4327,7 +4329,7 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_MDNS_HOSTNAME:
           needReboot = true;
           break;
-#if defined(ESP32) && defined(ENABLE_ESP32_OTA)          
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
         case CF_OTA_UPDATE:
           if (enable_ota_update){
             init_ota_update();
@@ -6506,7 +6508,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-  
+
 #if defined(WIFI) && defined(ESP32)
 //  esp_task_wdt_reset();
   // if WiFi is down, try reconnecting every 5 minutes
@@ -6521,7 +6523,7 @@ void loop() {
   }
   else {
     WiFiMillis = millis();
-  } 
+  }
 #endif
 
   byte  msg[33] = { 0 };                       // response buffer
@@ -8004,6 +8006,16 @@ uint8_t pps_offset = 0;
             int i;
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
+            printToWebClient(PSTR(",\r\n  \"hardware\": \""));
+            #if defined(__AVR__)
+            printToWebClient(PSTR("Mega 2560"));
+            #elif defined(ESP32)
+            printToWebClient(PSTR("ESP32"));
+            #elif defined(__SAM3X8E__)
+            printToWebClient(PSTR("Due"));
+            #else
+            printToWebClient(PSTR("Unknown"));
+            #endif
             printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
