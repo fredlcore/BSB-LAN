@@ -529,6 +529,8 @@ EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
 #include <Wire.h>
 #include "src/BlueDot_BME280/BlueDot_BME280.h"
 BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
+//Multiplexor TCA9548A (if presented) address on I2C bus
+#define TCA9548A_ADDR 0x70
 #endif
 
 bool client_flag = false;
@@ -4325,8 +4327,11 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
-        case CF_BMEBUS:
         case CF_MDNS_HOSTNAME:
+          needReboot = true;
+          break;
+        case CF_BMEBUS:
+          if(BME_Sensors > 16) BME_Sensors = 16;
           needReboot = true;
           break;
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
@@ -5754,6 +5759,15 @@ if (data_len==3) {
   flushToWebClient();
 }
 
+#ifdef BME280
+void tcaselect(uint8_t i) {
+  if (i > 7) return;
+ 
+  Wire.beginTransmission(TCA9548A_ADDR);
+  Wire.write(1 << i);
+  Wire.endTransmission();  
+}
+#endif
 
 /** *****************************************************************
  *  Function:  queryVirtualPrognr(int line)
@@ -5934,8 +5948,15 @@ void queryVirtualPrognr(int line, int table_line) {
       size_t tempLine = line - 20200;
       size_t log_sensor = tempLine / 6;
       if (tempLine % 6 == 0) {
-        sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+        if(BME_Sensors > 2){
+          sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
+        } else {
+          sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+        }
         return;
+      }
+      if(BME_Sensors > 2){
+        tcaselect(log_sensor & 0x07);
       }
       if (bme[log_sensor].checkID() == 0x60) {
         switch (tempLine % 6) {
@@ -9888,11 +9909,18 @@ void setup() {
 #ifdef BME280
     if(BME_Sensors) {
       printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
-      if(BME_Sensors > 2) BME_Sensors = 2;
       bme = new BlueDot_BME280[BME_Sensors];
       for (uint8_t f = 0; f < BME_Sensors; f++) {
         bme[f].parameter.communication = 0;                    //I2C communication for Sensor
-        bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
+        //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
+        if(BME_Sensors > 2){
+        // fill ports 1-8 on multiplexor first with devices with address 0x76.
+        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors. 
+          bme[f].parameter.I2CAddress = 0x76 + f / 8;                    //I2C Address for Sensor.
+          tcaselect(log_sensor & 0x07);                                  //Select channel on multiplexor
+        } else {
+          bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
+        }
         bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
         bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
         bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
