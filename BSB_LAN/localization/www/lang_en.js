@@ -510,6 +510,7 @@ UIStrings["EXTIF_CATNOTEXIST_TEXT"] = "Error: Category not exist!";
 UIStrings["EXTIF_NOTEXIST_TEXT"] = "not exist!";
 UIStrings["EXTIF_CATNO_TEXT"] = "Category #";
 UIStrings["EXTIF_FUNCNO_TEXT"] = "Parameter #";
+UIStrings["EXTIF_CHANGEPARAM1_TEXT"] = "Parameter";
 UIStrings["EXTIF_CHANGEPARAM2_TEXT"] = "was changed to";
 UIStrings["EXTIF_CHANGEPARAM3_TEXT"] = "";
 UIStrings["EXTIF_OK_TEXT"] = "ok";
