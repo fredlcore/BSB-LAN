@@ -3739,6 +3739,8 @@ UIStrings["EXTIF_CATNOTEXIST_TEXT"] = "Fehler: Kategorie nicht vorhanden!";
 UIStrings["EXTIF_NOTEXIST_TEXT"] = "nicht vorhanden!";
 UIStrings["EXTIF_FUNCNO_TEXT"] = "Parameter #";
 UIStrings["EXTIF_CATNO_TEXT"] = "Kategorie #";
+//Do not remove EXTIF_CHANGEPARAM1_TEXT please: EXTIF_CHANGEPARAM1_TEXT and CF_PROGLIST_TEXT are different in Russian language
+UIStrings["EXTIF_CHANGEPARAM1_TEXT"] = "Parameter";
 UIStrings["EXTIF_CHANGEPARAM2_TEXT"] = "wurde auf";
 UIStrings["EXTIF_CHANGEPARAM3_TEXT"] = "geändert";
 UIStrings["EXTIF_OK_TEXT"] = "Ok";
