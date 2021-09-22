@@ -1552,7 +1552,6 @@ UIStrings["ENUM702_05_TEXT"] = "Programma di riscaldamento 2";
 UIStrings["ENUM702_06_TEXT"] = "Programma di riscaldamento 3";
 UIStrings["ENUM703_00_TEXT"] = "Presente";
 UIStrings["ENUM703_01_TEXT"] = "Assente";
-UIStrings["ENUM780_00_TEXT"] = "Off";
 UIStrings["ENUM780_01_TEXT"] = "Fino a setpoint ridotto";
 UIStrings["ENUM780_02_TEXT"] = "Fino a protezione antigelo";
 UIStrings["ENUM832_00_TEXT"] = "2-Punti";
