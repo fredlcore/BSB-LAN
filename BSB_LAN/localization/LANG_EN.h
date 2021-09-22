@@ -510,6 +510,7 @@
 #define EXTIF_NOTEXIST_TEXT "not exist!"
 #define EXTIF_CATNO_TEXT "Category #"
 #define EXTIF_FUNCNO_TEXT "Parameter #"
+#define EXTIF_CHANGEPARAM1_TEXT "Parameter"
 #define EXTIF_CHANGEPARAM2_TEXT "was changed to"
 #define EXTIF_CHANGEPARAM3_TEXT ""
 #define EXTIF_OK_TEXT "ok"
