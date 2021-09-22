@@ -9911,19 +9911,19 @@ void setup() {
       printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
       bme = new BlueDot_BME280[BME_Sensors];
       for (uint8_t f = 0; f < BME_Sensors; f++) {
-        bme[f].parameter.communication = 0;                    //I2C communication for Sensor
+        bme[f].parameter.communication = 0;                     //I2C communication for Sensor
         //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
         if(BME_Sensors > 2){
         // fill ports 1-8 on multiplexor first with devices with address 0x76.
         // if we need 9-16 sensors then 0x77 address will be used for these additional sensors. 
-          bme[f].parameter.I2CAddress = 0x76 + f / 8;                    //I2C Address for Sensor.
-          tcaselect(log_sensor & 0x07);                                  //Select channel on multiplexor
+          bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
+          tcaselect(f & 0x07);                                  //Select channel on multiplexor
         } else {
-          bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
+          bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
         }
-        bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
-        bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
-        bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
+        bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
+        bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
+        bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
         bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
         bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
         bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
