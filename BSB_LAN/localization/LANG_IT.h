@@ -1552,7 +1552,6 @@
 #define ENUM702_06_TEXT "Programma di riscaldamento 3"
 #define ENUM703_00_TEXT "Presente"
 #define ENUM703_01_TEXT "Assente"
-#define ENUM780_00_TEXT "Off"
 #define ENUM780_01_TEXT "Fino a setpoint ridotto"
 #define ENUM780_02_TEXT "Fino a protezione antigelo"
 #define ENUM832_00_TEXT "2-Punti"
