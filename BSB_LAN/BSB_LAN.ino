@@ -537,12 +537,12 @@ bool client_flag = false;
 #ifdef WIFI
   #ifdef ESP32
     #include <WiFi.h>
-    bool localAP = false;
-    unsigned long localAPtimeout = millis();
+bool localAP = false;
+unsigned long localAPtimeout = millis();
   #else
     #include "src/WiFiSpi/src/WiFiSpi.h"
-    using ComServer = WiFiSpiServer;
-    using ComClient = WiFiSpiClient;
+using ComServer = WiFiSpiServer;
+using ComClient = WiFiSpiClient;
     #define WiFi WiFiSpi
   #endif
 #else
@@ -551,41 +551,41 @@ bool client_flag = false;
     //#define ETH_PHY_POWER 12
     #include <ETH.h>
 
-    class Eth : public ETHClass {
-    public:
-        int maintain(void) const { return 0;} ; // handled internally
-        void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-          begin(mac);
-          config(ip, gateway, subnet, dnsserver, dnsserver); //Static
-        }
-        void begin(uint8_t *mac) {
-          ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-        }
-    };
+class Eth : public ETHClass {
+public:
+    int maintain(void) const { return 0;} ; // handled internally
+    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+      begin(mac);
+      config(ip, gateway, subnet, dnsserver, dnsserver); //Static
+    }
+    void begin(uint8_t *mac) {
+      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+    }
+};
 
-    Eth Ethernet;
+Eth Ethernet;
   #else
     #include <Ethernet.h>
-    using ComServer = EthernetServer;
-    using ComClient = EthernetClient;
+using ComServer = EthernetServer;
+using ComClient = EthernetClient;
   #endif
 #endif
 
 #ifdef ESP32
-  using ComServer = WiFiServer;
-  using ComClient = WiFiClient;
+using ComServer = WiFiServer;
+using ComClient = WiFiClient;
 #endif
 
 #if defined(MDNS_SUPPORT) && !defined(ESP32)
   #ifdef WIFI
     #include "src/WiFiSpi/src/WiFiSpiUdp.h"
-    WiFiSpiUdp udp;
+WiFiSpiUdp udp;
   #else
     #include <EthernetUdp.h>
-    EthernetUDP udp;
+EthernetUDP udp;
   #endif
   #include "src/ArduinoMDNS/ArduinoMDNS.h"
-  MDNS mdns(udp);
+MDNS mdns(udp);
 #endif
 
 bool EEPROM_ready = true;
@@ -618,34 +618,34 @@ int bigBuffPos=0;
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
 #if defined(__AVR__)
-  const char *averagesFileName = "averages.txt";
-  const char *datalogFileName = "datalog.txt";
-  const char *journalFileName = "journal.txt";
+const char *averagesFileName = "averages.txt";
+const char *datalogFileName = "datalog.txt";
+const char *journalFileName = "journal.txt";
 #elif defined(__SAM3X8E__)
-  const char averagesFileName[] PROGMEM = "averages.txt";
-  const char datalogFileName[] PROGMEM = "datalog.txt";
-  const char journalFileName[] PROGMEM = "journal.txt";
+const char averagesFileName[] PROGMEM = "averages.txt";
+const char datalogFileName[] PROGMEM = "datalog.txt";
+const char journalFileName[] PROGMEM = "journal.txt";
 #elif defined(ESP32)
-  const char averagesFileName[] PROGMEM = "/averages.txt";
-  const char datalogFileName[] PROGMEM = "/datalog.txt";
-  const char journalFileName[] PROGMEM = "/journal.txt";
+const char averagesFileName[] PROGMEM = "/averages.txt";
+const char datalogFileName[] PROGMEM = "/datalog.txt";
+const char journalFileName[] PROGMEM = "/journal.txt";
 #endif
 
 ComClient client;
 #ifdef MQTT
-  ComClient *mqtt_client;   //Luposoft: own instance
+ComClient *mqtt_client;   //Luposoft: own instance
 #endif
 #ifdef VERSION_CHECK
-  ComClient httpclient;
+ComClient httpclient;
 #endif
 ComClient telnetClient;
 
 #ifdef MAX_CUL
-  ComClient *max_cul;
+ComClient *max_cul;
 #endif
 
 #ifdef MQTT
-  PubSubClient *MQTTPubSubClient;
+PubSubClient *MQTTPubSubClient;
 #endif
 bool haveTelnetClient = false;
 
@@ -683,7 +683,7 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
     // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
     // do not forget set it up after SdFat upgrading
     #include "src/SdFat/SdFat.h"
-    SdFat SD;
+SdFat SD;
   #endif    // ESP32
 #endif      // LOGGER || WEBSERVER
 
@@ -693,20 +693,20 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
 //  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
-  OneWire *oneWire;
-  DallasTemperature *sensors;
-  uint8_t numSensors;
-  unsigned long lastOneWireRequestTime = 0;
+OneWire *oneWire;
+DallasTemperature *sensors;
+uint8_t numSensors;
+unsigned long lastOneWireRequestTime = 0;
   #define ONE_WIRE_REQUESTS_PERIOD 25000 //sensors->requestTemperatures() calling period
 #endif
 
 #ifdef DHT_BUS
   #include "src/DHT/DHT.h"
-  DHT dht;
+DHT dht;
 //Save state between queries
-  unsigned long DHT_Timer = 0;
-  int last_DHT_State = 0;
-  uint8_t last_DHT_pin = 0;
+unsigned long DHT_Timer = 0;
+int last_DHT_State = 0;
+uint8_t last_DHT_pin = 0;
 #endif
 
 unsigned long maintenance_timer = millis();
@@ -5762,10 +5762,10 @@ if (data_len==3) {
 #ifdef BME280
 void tcaselect(uint8_t i) {
   if (i > 7) return;
- 
+
   Wire.beginTransmission(TCA9548A_ADDR);
   Wire.write(1 << i);
-  Wire.endTransmission();  
+  Wire.endTransmission();
 }
 #endif
 
@@ -8957,10 +8957,10 @@ uint8_t pps_offset = 0;
   {
 #endif
     if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
-  
+
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
-  
+
       if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
         lastMQTTTime = millis();
         for (int i=0; i < numLogValues; i++) {
@@ -9921,7 +9921,7 @@ void setup() {
         //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
         if(BME_Sensors > 2){
         // fill ports 1-8 on multiplexor first with devices with address 0x76.
-        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors. 
+        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
           bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
           tcaselect(f & 0x07);                                  //Select channel on multiplexor
         } else {
