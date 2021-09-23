@@ -8951,26 +8951,32 @@ uint8_t pps_offset = 0;
   } // endif, client
 
 #ifdef MQTT
-  if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
-
-    mqtt_connect();        //Luposoft, connect to mqtt
-    MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
-
-    if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
-      lastMQTTTime = millis();
-      for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0) {
-          mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+#if defined(ESP32) && defined(WIFI)
+  if(!localAP){
+#else
+  {
+#endif
+    if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
+  
+      mqtt_connect();        //Luposoft, connect to mqtt
+      MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
+  
+      if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+        lastMQTTTime = millis();
+        for (int i=0; i < numLogValues; i++) {
+          if (log_parameters[i] > 0) {
+            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+          }
+        }
+        if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
+          // Actual disconnect will be handled a few lines below through mqtt_disconnect().
+          printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
         }
       }
-      if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
-        // Actual disconnect will be handled a few lines below through mqtt_disconnect().
-        printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
-      }
     }
-  }
-  if (mqtt_mode == 0) {
-    mqtt_disconnect();
+    if (mqtt_mode == 0) {
+      mqtt_disconnect();
+    }
   }
 #endif
 
