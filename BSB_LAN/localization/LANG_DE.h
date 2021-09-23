@@ -159,6 +159,8 @@
 #define MENU_TEXT_TOC "Handbuch"
 #define MENU_TEXT_UPT "Uptime"
 #define MENU_TEXT_VER "Version"
+#define MENU_TEXT_MCU "Hardware"
+#define MENU_TEXT_BYT "Bytes"
 #define MENU_TEXT_MOD "Installierte Module"
 #define MENU_TEXT_NVS "Überprüfe auf neuere Version"
 #define MENU_TEXT_NVA "Neuere Version gefunden"
@@ -3737,6 +3739,8 @@
 #define EXTIF_NOTEXIST_TEXT "nicht vorhanden!"
 #define EXTIF_FUNCNO_TEXT "Parameter #"
 #define EXTIF_CATNO_TEXT "Kategorie #"
+//Do not remove EXTIF_CHANGEPARAM1_TEXT please: EXTIF_CHANGEPARAM1_TEXT and CF_PROGLIST_TEXT are different in Russian language
+#define EXTIF_CHANGEPARAM1_TEXT "Parameter"
 #define EXTIF_CHANGEPARAM2_TEXT "wurde auf"
 #define EXTIF_CHANGEPARAM3_TEXT "geändert"
 #define EXTIF_OK_TEXT "Ok"

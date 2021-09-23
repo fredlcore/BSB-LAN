@@ -159,6 +159,8 @@ UIStrings["MENU_TEXT_QFE"] = "Fertig";
 UIStrings["MENU_TEXT_TOC"] = "Handbuch";
 UIStrings["MENU_TEXT_UPT"] = "Uptime";
 UIStrings["MENU_TEXT_VER"] = "Version";
+UIStrings["MENU_TEXT_MCU"] = "Hardware";
+UIStrings["MENU_TEXT_BYT"] = "Bytes";
 UIStrings["MENU_TEXT_MOD"] = "Installierte Module";
 UIStrings["MENU_TEXT_NVS"] = "Überprüfe auf neuere Version";
 UIStrings["MENU_TEXT_NVA"] = "Neuere Version gefunden";
@@ -3737,6 +3739,8 @@ UIStrings["EXTIF_CATNOTEXIST_TEXT"] = "Fehler: Kategorie nicht vorhanden!";
 UIStrings["EXTIF_NOTEXIST_TEXT"] = "nicht vorhanden!";
 UIStrings["EXTIF_FUNCNO_TEXT"] = "Parameter #";
 UIStrings["EXTIF_CATNO_TEXT"] = "Kategorie #";
+//Do not remove EXTIF_CHANGEPARAM1_TEXT please: EXTIF_CHANGEPARAM1_TEXT and CF_PROGLIST_TEXT are different in Russian language
+UIStrings["EXTIF_CHANGEPARAM1_TEXT"] = "Parameter";
 UIStrings["EXTIF_CHANGEPARAM2_TEXT"] = "wurde auf";
 UIStrings["EXTIF_CHANGEPARAM3_TEXT"] = "geändert";
 UIStrings["EXTIF_OK_TEXT"] = "Ok";

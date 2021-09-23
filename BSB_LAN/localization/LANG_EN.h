@@ -240,6 +240,8 @@
 #define STR888_TEXT "Limit of temperature boost of dT controller"
 #define STR894_TEXT "Delta flow / return temperature at TiAussenNorm"
 
+#define STR947_TEXT "Flow temp setp incr hygro"
+
 #define STR1600_TEXT "DHW operating mode"
 #define STR1610_TEXT "DHW temperature nominal setpoint"
 #define STR1612_TEXT "DHW temperature reduced setpoint"
@@ -462,6 +464,11 @@
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 
+#define ENUM8000_04_TEXT "Manual control active"
+#define ENUM8000_11_TEXT "Overrun active"
+#define ENUM8000_16_TEXT "Frost prot plant active"
+#define ENUM8000_17_TEXT "Frost protection active"
+#define ENUM8000_75_TEXT "Frost protection flow active"
 #define ENUM8004_02_TEXT "Fault"
 #define ENUM8004_11d_TEXT "Cooling mode Reduced"
 #define ENUM8004_85_TEXT "Dewpoint monitor active"
@@ -503,6 +510,7 @@
 #define EXTIF_NOTEXIST_TEXT "not exist!"
 #define EXTIF_CATNO_TEXT "Category #"
 #define EXTIF_FUNCNO_TEXT "Parameter #"
+#define EXTIF_CHANGEPARAM1_TEXT "Parameter"
 #define EXTIF_CHANGEPARAM2_TEXT "was changed to"
 #define EXTIF_CHANGEPARAM3_TEXT ""
 #define EXTIF_OK_TEXT "ok"

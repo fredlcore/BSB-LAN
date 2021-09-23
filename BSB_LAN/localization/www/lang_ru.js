@@ -119,6 +119,10 @@ UIStrings["MENU_TEXT_QST"] = "Запуск тестирования";
 UIStrings["MENU_TEXT_QTE"] = "Тестирование окончено";
 UIStrings["MENU_TEXT_QFE"] = "Готово";
 UIStrings["MENU_TEXT_MOD"] = "Установленные модули";
+UIStrings["MENU_TEXT_UPT"] = "Время работы";
+UIStrings["MENU_TEXT_VER"] = "Версия";
+UIStrings["MENU_TEXT_MCU"] = "Тип контроллера";
+UIStrings["MENU_TEXT_BYT"] = "байт";
 
 UIStrings["MENU_DESC_HFK"] = "позволяет просмотреть или установить значения параметров системы отопления, рассортированные по различным категориям.";
 UIStrings["MENU_DESC_CFG"] = "отображает список настроек. Вы можете изменять большую часть из них, используя дополнительные команды URL.";

@@ -119,6 +119,10 @@
 #define MENU_TEXT_QTE "Тестирование окончено"
 #define MENU_TEXT_QFE "Готово"
 #define MENU_TEXT_MOD "Установленные модули"
+#define MENU_TEXT_UPT "Время работы"
+#define MENU_TEXT_VER "Версия"
+#define MENU_TEXT_MCU "Тип контроллера"
+#define MENU_TEXT_BYT "байт"
 
 #define MENU_DESC_HFK "позволяет просмотреть или установить значения параметров системы отопления, рассортированные по различным категориям."
 #define MENU_DESC_CFG "отображает список настроек. Вы можете изменять большую часть из них, используя дополнительные команды URL."

@@ -71,7 +71,7 @@
  *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most features are working right now.
  *        - Webinterface allows for configuration of most settings without the need to re-flash
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
- *        - Added MDNS_HOSTNAME definement in config so that BSB-LAN can be discovered through mDNS
+ *        - Added MDNS_SUPPORT definement in config so that BSB-LAN can be discovered through mDNS
  *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
  *        - New MQTT functions, including allowing any parameter to be set by an MQTT message and actively query any parameter once by sending an MQTT message
  *        - Added support for BME280 sensors
@@ -529,32 +529,33 @@ EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
 #include <Wire.h>
 #include "src/BlueDot_BME280/BlueDot_BME280.h"
 BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
+//Multiplexor TCA9548A (if presented) address on I2C bus
+#define TCA9548A_ADDR 0x70
 #endif
 
 bool client_flag = false;
 #ifdef WIFI
   #ifdef ESP32
-#include <WiFi.h>
+    #include <WiFi.h>
 bool localAP = false;
 unsigned long localAPtimeout = millis();
   #else
-#include "src/WiFiSpi/src/WiFiSpi.h"
+    #include "src/WiFiSpi/src/WiFiSpi.h"
 using ComServer = WiFiSpiServer;
 using ComClient = WiFiSpiClient;
-#define WiFi WiFiSpi
+    #define WiFi WiFiSpi
   #endif
 #else
-
   #ifdef ESP32
-#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
-#define ETH_PHY_POWER 12
-#include <ETH.h>
+    //#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
+    //#define ETH_PHY_POWER 12
+    #include <ETH.h>
 
 class Eth : public ETHClass {
 public:
     int maintain(void) const { return 0;} ; // handled internally
     void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+      begin(mac);
       config(ip, gateway, subnet, dnsserver, dnsserver); //Static
     }
     void begin(uint8_t *mac) {
@@ -564,7 +565,7 @@ public:
 
 Eth Ethernet;
   #else
-#include <Ethernet.h>
+    #include <Ethernet.h>
 using ComServer = EthernetServer;
 using ComClient = EthernetClient;
   #endif
@@ -575,15 +576,15 @@ using ComServer = WiFiServer;
 using ComClient = WiFiClient;
 #endif
 
-#if defined(MDNS_HOSTNAME) && !defined(ESP32)
+#if defined(MDNS_SUPPORT) && !defined(ESP32)
   #ifdef WIFI
-#include "src/WiFiSpi/src/WiFiSpiUdp.h"
+    #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp;
   #else
-#include <EthernetUdp.h>
+    #include <EthernetUdp.h>
 EthernetUDP udp;
   #endif
-#include "src/ArduinoMDNS/ArduinoMDNS.h"
+  #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
 #endif
 
@@ -604,11 +605,11 @@ char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
 #if defined(__AVR__)
-#undef OUTBUF_USEFUL_LEN
-#define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
+  #undef OUTBUF_USEFUL_LEN
+  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
 #else
-#undef OUTBUF_USEFUL_LEN
-#define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
+  #undef OUTBUF_USEFUL_LEN
+  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
 #endif
 char bigBuff[OUTBUF_USEFUL_LEN + OUTBUF_LEN] = { 0 };
 int bigBuffPos=0;
@@ -663,48 +664,49 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 #if defined LOGGER || defined WEBSERVER
   #if defined(ESP32)
     #if defined(ESP32_USE_SD) // Use SD card adapter on ESP32
-#include "FS.h"
-#include "SD_MMC.h"
-#define SD SD_MMC
-#define MINIMUM_FREE_SPACE_ON_SD 100000
+      #include "FS.h"
+      #include "SD_MMC.h"
+      #define SD SD_MMC
+      #define MINIMUM_FREE_SPACE_ON_SD 100000
     #else   // use SPFISS instead of SD card on ESP32
-// Minimum free space in bytes
-#include <SPIFFS.h>
-#define SD SPIFFS
-#define MINIMUM_FREE_SPACE_ON_SD 10000
-// Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
+      // Minimum free space in bytes
+      #include <SPIFFS.h>
+      #define SD SPIFFS
+      #define MINIMUM_FREE_SPACE_ON_SD 10000
+      // Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
     #endif  // ESP32_USE_SD
-#undef FILE_WRITE
-#define FILE_WRITE FILE_APPEND
+    #undef FILE_WRITE
+    #define FILE_WRITE FILE_APPEND
   #else     // !ESP32
-//leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
-#define MINIMUM_FREE_SPACE_ON_SD 100
-// set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
-// do not forget set it up after SdFat upgrading
-#include "src/SdFat/SdFat.h"
+    //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
+    #define MINIMUM_FREE_SPACE_ON_SD 100
+    // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
+    // do not forget set it up after SdFat upgrading
+    #include "src/SdFat/SdFat.h"
 SdFat SD;
   #endif    // ESP32
 #endif      // LOGGER || WEBSERVER
 
 #ifdef ONE_WIRE_BUS
+// this patch (https://github.com/PaulStoffregen/OneWire/pull/93) should be applied for ESP32 support when OneWire library would be updated.
   #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
 //  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
-  OneWire *oneWire;
-  DallasTemperature *sensors;
-  uint8_t numSensors;
-  unsigned long lastOneWireRequestTime = 0;
+OneWire *oneWire;
+DallasTemperature *sensors;
+uint8_t numSensors;
+unsigned long lastOneWireRequestTime = 0;
   #define ONE_WIRE_REQUESTS_PERIOD 25000 //sensors->requestTemperatures() calling period
 #endif
 
 #ifdef DHT_BUS
   #include "src/DHT/DHT.h"
-  DHT dht;
+DHT dht;
 //Save state between queries
-  unsigned long DHT_Timer = 0;
-  int last_DHT_State = 0;
-  uint8_t last_DHT_pin = 0;
+unsigned long DHT_Timer = 0;
+int last_DHT_State = 0;
+uint8_t last_DHT_pin = 0;
 #endif
 
 unsigned long maintenance_timer = millis();
@@ -3820,6 +3822,45 @@ void webPrintSite() {
   webPrintFooter();
 } // --- webPrintSite() ---
 
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+void init_ota_update(){
+  if(enable_ota_update) {
+    update_server.on("/", HTTP_GET, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/html", serverIndex);
+    });
+    update_server.on("/update", HTTP_POST, []() {
+      update_server.sendHeader("Connection", "close");
+      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
+      delay(1000);
+      ESP.restart();
+    }, []() {
+      HTTPUpload& upload = update_server.upload();
+      if (upload.status == UPLOAD_FILE_START) {
+        printlnToDebug(PSTR("Updating ESP32 firmware..."));
+        uint32_t maxSketchSpace = 0x140000;
+        if (!Update.begin(maxSketchSpace)) { //start with max available size
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_WRITE) {
+        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+          Update.printError(Serial);
+        }
+      } else if (upload.status == UPLOAD_FILE_END) {
+        if (Update.end(true)) { //true to set the size to the current progress
+          printlnToDebug(PSTR("Update success, rebooting..."));
+        } else {
+          Update.printError(Serial);
+        }
+      }
+      yield();
+    });
+    update_server.begin();
+    printlnToDebug(PSTR("Update Server started on port 8080."));
+  }
+}
+#endif
+
 char *lookup_descr(uint16_t line) {
   int i=findLine(line,0,NULL);
   if (i<0) {                    // Not found (for this heating system)?
@@ -3834,22 +3875,24 @@ void generateConfigPage(void) {
 #if !defined(WEBCONFIG)
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
 #endif
-  printToWebClient(PSTR("<BR>Hardware: "));
+  printToWebClient(PSTR("<BR>" MENU_TEXT_MCU ": "));
 #if defined(__AVR__)
   printToWebClient(PSTR("Mega 2560<BR>\r\n"));
 #elif defined(ESP32)
   printToWebClient(PSTR("ESP32<BR>\r\n"));
-#else
+#elif defined(__SAM3X8E__)
   printToWebClient(PSTR("Due<BR>\r\n"));
+#else
+  printToWebClient(PSTR("Unknown<BR>\r\n"));
 #endif
   printToWebClient(PSTR("" MENU_TEXT_VER ": "));
   printToWebClient(BSB_VERSION);
   printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": "));
 #ifdef WEBCONFIG
-  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
+  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
 
 #else
-  printFmtToWebClient(PSTR("%d Bytes <BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
+  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
   printlnToWebClient(PSTR("<BR>\r\n" MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
 
@@ -4055,7 +4098,7 @@ void generateConfigPage(void) {
   "URLCONFIG"
   #endif
 
-  #ifdef MDNS_HOSTNAME
+  #ifdef MDNS_SUPPORT
   #if defined (ANY_MODULE_COMPILED)
   ", "
   #else
@@ -4100,7 +4143,7 @@ printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(decodedTelegram.enumdescaddr);
 */
     printToWebClient(PSTR("<BR>\r\n"));
-    printToWebClient(CF_AVERAGESLIST_TXT);
+    printToWebClient(CF_PROGLIST_TXT);
     printToWebClient(PSTR(": <BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
@@ -4284,10 +4327,23 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WWWPORT:
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
-        case CF_BMEBUS:
         case CF_MDNS_HOSTNAME:
           needReboot = true;
           break;
+        case CF_BMEBUS:
+          if(BME_Sensors > 16) BME_Sensors = 16;
+          needReboot = true;
+          break;
+#if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+        case CF_OTA_UPDATE:
+          if (enable_ota_update){
+            init_ota_update();
+          } else {
+            update_server.stop();
+            printlnToDebug(PSTR("Update Server stopped."));
+          }
+          break;
+#endif
         case CF_TWW_PUSH_PIN_ID: //How to do dynamic reconfiguration of interrupts?
         case CF_RGT1_PRES_PIN_ID:
         case CF_RGT2_PRES_PIN_ID:
@@ -4326,6 +4382,34 @@ bool SaveConfigFromRAMtoEEPROM() {
   return needReboot;
 }
 #endif
+
+int returnENUMID4ConfigOption(uint8_t id) {
+  int i = 0;
+  switch (id) {
+    case CF_BUSTYPE:
+      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+      break;
+    case CF_LOGTELEGRAM:
+      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+      break;
+    case CF_DEBUG:
+    i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      break;
+    case CF_MQTT:
+      i=findLine(65529,0,NULL); //return ENUM_MQTT
+      break;
+    case CF_WRITEMODE:
+      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+      break;
+    case CF_PPS_MODE:
+      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      break;
+    default:
+      i = -1;
+      break;
+  }
+  return i;
+}
 
 #ifdef WEBCONFIG
 void implementConfig() {
@@ -4390,34 +4474,6 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value) {
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
   listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
 
-}
-
-int returnENUMID4ConfigOption(uint8_t id) {
-  int i = 0;
-  switch (id) {
-    case CF_BUSTYPE:
-      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
-      break;
-    case CF_LOGTELEGRAM:
-      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
-      break;
-    case CF_DEBUG:
-    i=findLine(65530,0,NULL); //return ENUM_DEBUG
-      break;
-    case CF_MQTT:
-      i=findLine(65529,0,NULL); //return ENUM_MQTT
-      break;
-    case CF_WRITEMODE:
-      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
-      break;
-    case CF_PPS_MODE:
-      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
-      break;
-    default:
-      i = -1;
-      break;
-  }
-  return i;
 }
 
 void generateChangeConfigPage() {
@@ -5703,6 +5759,15 @@ if (data_len==3) {
   flushToWebClient();
 }
 
+#ifdef BME280
+void tcaselect(uint8_t i) {
+  if (i > 7) return;
+
+  Wire.beginTransmission(TCA9548A_ADDR);
+  Wire.write(1 << i);
+  Wire.endTransmission();
+}
+#endif
 
 /** *****************************************************************
  *  Function:  queryVirtualPrognr(int line)
@@ -5883,8 +5948,15 @@ void queryVirtualPrognr(int line, int table_line) {
       size_t tempLine = line - 20200;
       size_t log_sensor = tempLine / 6;
       if (tempLine % 6 == 0) {
-        sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+        if(BME_Sensors > 2){
+          sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
+        } else {
+          sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+        }
         return;
+      }
+      if(BME_Sensors > 2){
+        tcaselect(log_sensor & 0x07);
       }
       if (bme[log_sensor].checkID() == 0x60) {
         switch (tempLine % 6) {
@@ -6457,7 +6529,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-  
+
 #if defined(WIFI) && defined(ESP32)
 //  esp_task_wdt_reset();
   // if WiFi is down, try reconnecting every 5 minutes
@@ -6472,7 +6544,7 @@ void loop() {
   }
   else {
     WiFiMillis = millis();
-  } 
+  }
 #endif
 
   byte  msg[33] = { 0 };                       // response buffer
@@ -7955,6 +8027,16 @@ uint8_t pps_offset = 0;
             int i;
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
+            printToWebClient(PSTR(",\r\n  \"hardware\": \""));
+            #if defined(__AVR__)
+            printToWebClient(PSTR("Mega 2560"));
+            #elif defined(ESP32)
+            printToWebClient(PSTR("ESP32"));
+            #elif defined(__SAM3X8E__)
+            printToWebClient(PSTR("Due"));
+            #else
+            printToWebClient(PSTR("Unknown"));
+            #endif
             printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
@@ -8869,26 +8951,32 @@ uint8_t pps_offset = 0;
   } // endif, client
 
 #ifdef MQTT
-  if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
+#if defined(ESP32) && defined(WIFI)
+  if(!localAP){
+#else
+  {
+#endif
+    if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
 
-    mqtt_connect();        //Luposoft, connect to mqtt
-    MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
+      mqtt_connect();        //Luposoft, connect to mqtt
+      MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
 
-    if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
-      lastMQTTTime = millis();
-      for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] > 0) {
-          mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+      if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+        lastMQTTTime = millis();
+        for (int i=0; i < numLogValues; i++) {
+          if (log_parameters[i] > 0) {
+            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+          }
+        }
+        if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
+          // Actual disconnect will be handled a few lines below through mqtt_disconnect().
+          printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
         }
       }
-      if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
-        // Actual disconnect will be handled a few lines below through mqtt_disconnect().
-        printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
-      }
     }
-  }
-  if (mqtt_mode == 0) {
-    mqtt_disconnect();
+    if (mqtt_mode == 0) {
+      mqtt_disconnect();
+    }
   }
 #endif
 
@@ -9210,7 +9298,7 @@ uint8_t pps_offset = 0;
       telnetClient.stop();
     }
   }
-#if defined(MDNS_HOSTNAME) && !defined(ESP32)
+#if defined(MDNS_SUPPORT) && !defined(ESP32)
   if(mDNS_hostname[0]) {
     mdns.run();
   }
@@ -9825,24 +9913,34 @@ void setup() {
 #endif
 
 #ifdef BME280
-    printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
-    bme = new BlueDot_BME280[BME_Sensors];
-    for (uint8_t f = 0; f < BME_Sensors; f++) {
-      bme[f].parameter.communication = 0;                    //I2C communication for Sensor
-      bme[f].parameter.I2CAddress = 0x76 + f;                    //I2C Address for Sensor
-      bme[f].parameter.sensorMode = 0b11;                    //Setup Sensor mode
-      bme[f].parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor
-      bme[f].parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor
-      bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
-      bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
-      bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
-      bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
-      bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-      printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
-      if (bme[f].init() != 0x60) {
-        printToDebug(PSTR("NOT "));
+    if(BME_Sensors) {
+      printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
+      bme = new BlueDot_BME280[BME_Sensors];
+      for (uint8_t f = 0; f < BME_Sensors; f++) {
+        bme[f].parameter.communication = 0;                     //I2C communication for Sensor
+        //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
+        if(BME_Sensors > 2){
+        // fill ports 1-8 on multiplexor first with devices with address 0x76.
+        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
+          bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
+          tcaselect(f & 0x07);                                  //Select channel on multiplexor
+        } else {
+          bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
+        }
+        bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
+        bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
+        bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
+        bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
+        bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
+        bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
+        bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
+        bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+        printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
+        if (bme[f].init() != 0x60) {
+          printToDebug(PSTR("NOT "));
+        }
+        printToDebug(PSTR("found\r\n"));
       }
-      printToDebug(PSTR("found\r\n"));
     }
 #endif
 
@@ -10242,7 +10340,7 @@ void setup() {
 
   printlnToDebug((char *)destinationServer); // delete it when destinationServer will be used
 
-#ifdef MDNS_HOSTNAME
+#ifdef MDNS_SUPPORT
   if(mDNS_hostname[0]) {
 #if defined(ESP32)
     MDNS.begin(mDNS_hostname);
@@ -10261,40 +10359,7 @@ void setup() {
 
 // Set up web-based over-the-air updates for ESP32
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
-  if(enable_ota_update) {
-    update_server.on("/", HTTP_GET, []() {
-      update_server.sendHeader("Connection", "close");
-      update_server.send(200, "text/html", serverIndex);
-    });
-    update_server.on("/update", HTTP_POST, []() {
-      update_server.sendHeader("Connection", "close");
-      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
-      delay(1000);
-      ESP.restart();
-    }, []() {
-      HTTPUpload& upload = update_server.upload();
-      if (upload.status == UPLOAD_FILE_START) {
-        printlnToDebug(PSTR("Updating ESP32 firmware..."));
-        uint32_t maxSketchSpace = 0x140000;
-        if (!Update.begin(maxSketchSpace)) { //start with max available size
-          Update.printError(Serial);
-        }
-      } else if (upload.status == UPLOAD_FILE_WRITE) {
-        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
-          Update.printError(Serial);
-        }
-      } else if (upload.status == UPLOAD_FILE_END) {
-        if (Update.end(true)) { //true to set the size to the current progress
-          printlnToDebug(PSTR("Update success, rebooting..."));
-        } else {
-          Update.printError(Serial);
-        }
-      }
-      yield();
-    });
-    update_server.begin();
-    printlnToDebug(PSTR("Update Server started on port 8080."));
-  }
+  init_ota_update();
 #endif
 
 #ifdef CUSTOM_COMMANDS

@@ -240,6 +240,8 @@ UIStrings["STR887_TEXT"] = "Boiler setpoint at design outside temperature";
 UIStrings["STR888_TEXT"] = "Limit of temperature boost of dT controller";
 UIStrings["STR894_TEXT"] = "Delta flow / return temperature at TiAussenNorm";
 
+UIStrings["STR947_TEXT"] = "Flow temp setp incr hygro";
+
 UIStrings["STR1600_TEXT"] = "DHW operating mode";
 UIStrings["STR1610_TEXT"] = "DHW temperature nominal setpoint";
 UIStrings["STR1612_TEXT"] = "DHW temperature reduced setpoint";
@@ -462,6 +464,11 @@ UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "as room unit";
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "On (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 
+UIStrings["ENUM8000_04_TEXT"] = "Manual control active";
+UIStrings["ENUM8000_11_TEXT"] = "Overrun active";
+UIStrings["ENUM8000_16_TEXT"] = "Frost prot plant active";
+UIStrings["ENUM8000_17_TEXT"] = "Frost protection active";
+UIStrings["ENUM8000_75_TEXT"] = "Frost protection flow active";
 UIStrings["ENUM8004_02_TEXT"] = "Fault";
 UIStrings["ENUM8004_11d_TEXT"] = "Cooling mode Reduced";
 UIStrings["ENUM8004_85_TEXT"] = "Dewpoint monitor active";
@@ -503,6 +510,7 @@ UIStrings["EXTIF_CATNOTEXIST_TEXT"] = "Error: Category not exist!";
 UIStrings["EXTIF_NOTEXIST_TEXT"] = "not exist!";
 UIStrings["EXTIF_CATNO_TEXT"] = "Category #";
 UIStrings["EXTIF_FUNCNO_TEXT"] = "Parameter #";
+UIStrings["EXTIF_CHANGEPARAM1_TEXT"] = "Parameter";
 UIStrings["EXTIF_CHANGEPARAM2_TEXT"] = "was changed to";
 UIStrings["EXTIF_CHANGEPARAM3_TEXT"] = "";
 UIStrings["EXTIF_OK_TEXT"] = "ok";

@@ -103,6 +103,10 @@
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
 #undef MENU_TEXT_MOD
+#undef MENU_TEXT_UPT
+#undef MENU_TEXT_VER
+#undef MENU_TEXT_MCU
+#undef MENU_TEXT_BYT
 #undef MENU_DESC_HFK
 #undef MENU_DESC_CFG
 #undef MENU_DESC_URL
