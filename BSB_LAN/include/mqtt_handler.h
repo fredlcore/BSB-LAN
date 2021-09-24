@@ -1,3 +1,4 @@
+char *build_pvalstr(bool extended);
 //Luposoft: function mqtt_sendtoBroker
 /*  Function: mqtt_sendtoBroker()
  *  Does:     send messages to mqtt-broker
