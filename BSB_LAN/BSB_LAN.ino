@@ -8027,7 +8027,7 @@ uint8_t pps_offset = 0;
             int i;
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
-            printToWebClient(PSTR(",\r\n  \"hardware\": \""));
+            printToWebClient(PSTR("\",\r\n  \"hardware\": \""));
             #if defined(__AVR__)
             printToWebClient(PSTR("Mega 2560"));
             #elif defined(ESP32)
