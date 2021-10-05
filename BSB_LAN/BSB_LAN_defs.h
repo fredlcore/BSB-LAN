@@ -148,6 +148,7 @@
 #define DEV_195_002  195,2   // ELCO Thision S Plus 19 (LMS14.111B109)
 #define DEV_196_ALL  196,255 // Domostar GBK 25 H/SH (LMS15.191A109)
 #define DEV_198_ALL  198,255 // AVS37.396/141
+#define DEV_202_ALL  202,255 // Viessmann Vitotwin 300 W (RVC32.430/124)
 #define DEV_203_ALL  203,255 // Elco Thision 13 Plus
 #define DEV_205_ALL  205,255 // Brötje Sensotherm BLW 15 B / 12 B (RVS21.825E/100)
 #define DEV_206_ALL  206,255 // AVS74.261/109
