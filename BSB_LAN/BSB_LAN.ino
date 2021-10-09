@@ -493,7 +493,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
-//#include <esp_task_wdt.h>
+#include <esp_task_wdt.h>
 #include <EEPROM.h>
 #include <ESPmDNS.h>
 #if defined(ENABLE_ESP32_OTA)
@@ -4623,12 +4623,7 @@ void loop() {
   client = server->available();
   if ((client || SerialOutput->available()) && client_flag == false) {
     client_flag = true;
-/*
-#ifdef ESP32
-    esp_task_wdt_init(10,true);
-    esp_task_wdt_add(NULL);
-#endif
-*/
+
     IPAddress remoteIP = client.remoteIP();
     // Use the overriden operater for a safe comparison, note, that != is not overriden.
     if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
@@ -4646,11 +4641,7 @@ void loop() {
     bPlaceInBuffer=0;            // index into cLineBuffer
     while (client.connected() || SerialOutput->available()) {
       if (client.available() || SerialOutput->available()) {
-/*
-#ifdef ESP32
-        esp_task_wdt_reset();
-#endif
-*/
+
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
@@ -6779,7 +6770,9 @@ void loop() {
     }
 #endif
   }
-
+#if defined(ESP32)
+  esp_task_wdt_reset();
+#endif
 } // --- loop () ---
 
 #ifdef WIFI
@@ -6830,6 +6823,15 @@ void setup() {
 #endif
 
   SerialOutput->println(F("READY"));
+
+#if defined(ESP32)
+  #ifndef WDT_TIMEOUT
+  //set watchdog timeout 120 seconds
+    #define WDT_TIMEOUT 120
+  #endif
+  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  esp_task_wdt_add(NULL); //add current thread to WDT watch
+#endif
 
 #if defined(__arm__)
   Wire.begin();
