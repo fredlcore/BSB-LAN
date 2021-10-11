@@ -6769,7 +6769,7 @@ void loop() {
   if (millis() - maintenance_timer > 60000) {
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
-    if(!my_dev_fam) {
+    if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
     }
 #if defined(WIFI) && defined(ESP32)
