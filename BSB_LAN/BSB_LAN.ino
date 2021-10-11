@@ -5295,14 +5295,19 @@ void loop() {
             printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
             flushToWebClient();
             for (int j=0;j<10000;j++) {
-              if (get_cmdtbl_cmd(j) == c) {
+              uint32_t cc = get_cmdtbl_cmd(j);
+              if (cc == c) {
                 continue;
+              } else {
+                c = cc;
               }
-              c=get_cmdtbl_cmd(j);
               if (c==CMD_END) break;
               l=get_cmdtbl_line(j);
               uint8_t dev_fam = get_cmdtbl_dev_fam(j);
               uint8_t dev_var = get_cmdtbl_dev_var(j);
+#if defined(ESP32)
+              esp_task_wdt_reset();
+#endif
               if (((dev_fam != temp_dev_fam && dev_fam != 255) || (dev_var != temp_dev_var && dev_var != 255)) && c!=CMD_UNKNOWN) {
                 printFmtToDebug(PSTR("%02X\r\n"), c);
                 if (!bus->Send(TYPE_QUR, c, msg, tx_msg)) {
@@ -5361,6 +5366,9 @@ void loop() {
           int outBufLen = strlen(outBuf);
 
           for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+#if defined(ESP32)
+            esp_task_wdt_reset();
+#endif
             bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
@@ -5368,6 +5376,9 @@ void loop() {
             flushToWebClient();
           }
           for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+#if defined(ESP32)
+            esp_task_wdt_reset();
+#endif
             bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
