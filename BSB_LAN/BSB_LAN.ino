@@ -3110,6 +3110,9 @@ int set(int line      // the ProgNr of the heater parameter
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
   uint8_t param_len = 0;
   char sscanf_buf[36]; //Max format length is VT_TIMEPROG
+#if defined(ESP32)
+  esp_task_wdt_reset();
+#endif
 
   if (line < 0) {
     return 0;
@@ -4110,6 +4113,9 @@ void query(int line) {  // line (ProgNr)
   int i=0;
   int retry;
   resetDecodedTelegram();
+#if defined(ESP32)
+  esp_task_wdt_reset();
+#endif
 
   i=findLine(line,0,&c);
   if (i>=0) {
@@ -4384,6 +4390,9 @@ void transmitFile(File dataFile) {
     chars_read = dataFile.read(bigBuff , logbuflen);
 #else
     chars_read = dataFile.readBytes(bigBuff , logbuflen);
+#endif
+#if defined(ESP32)
+    esp_task_wdt_reset();
 #endif
     }
   if (chars_read > 0) client.write(bigBuff, chars_read);
