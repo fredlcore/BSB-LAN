@@ -710,7 +710,6 @@ uint8_t last_DHT_pin = 0;
 #endif
 
 unsigned long maintenance_timer = millis();
-unsigned long WiFiMillis = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -4531,24 +4530,6 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
  *   server instance
  * *************************************************************** */
 void loop() {
-
-#if defined(WIFI) && defined(ESP32)
-//  esp_task_wdt_reset();
-  // if WiFi is down, try reconnecting every 5 minutes
-  if (WiFi.status() != WL_CONNECTED) {
-    if ((millis() - WiFiMillis) >= 300000) {
-      Serial.print(millis());
-      Serial.println(F(" Reconnecting to WiFi..."));
-      WiFi.disconnect();
-      WiFi.reconnect();
-      WiFiMillis = millis();
-    }
-  }
-  else {
-    WiFiMillis = millis();
-  }
-#endif
-
   byte  msg[33] = { 0 };                       // response buffer
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
@@ -6795,9 +6776,11 @@ void loop() {
       SetDevId();
     }
 #if defined(WIFI) && defined(ESP32)
+// if WiFi is down, try reconnecting every minute
     if (WiFi.status() != WL_CONNECTED) {
+      printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
       WiFi.disconnect();
-      WiFi.reconnect();
+      WiFi.begin();
     }
 #endif
   }
