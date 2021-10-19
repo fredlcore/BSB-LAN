@@ -42,4 +42,4 @@ jobs:
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
 
     - name: Run PlatformIO CI
-      run: platformio ci --board=megaatmega2560 ./BSB_LAN
+      run: platformio ci --board_upload.maximum_size=1310720 --board=megaatmega2560 ./BSB_LAN
