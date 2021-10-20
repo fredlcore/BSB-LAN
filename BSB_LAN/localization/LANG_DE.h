@@ -218,6 +218,7 @@
 #define CF_MDNS_HOSTNAME_TEXT "mDNS Hostname"
 #define CF_NUM_TEXT "Sensoren"
 #define CF_OTA_UPDATE_TEXT "OTA Update"
+#define CF_SHOW_UNKNOWN_TEXT "Unbekannte Parameter anzeigen"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"

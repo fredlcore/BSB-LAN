@@ -837,6 +837,7 @@ const char CF_MAX_IPADDRESS_TXT[] PROGMEM = CF_MAX_IPADDRESS_TEXT;
 const char CF_WRITEMODE_TXT[] PROGMEM = CF_WRITEMODE_TEXT;
 const char CF_VERBOSE_TXT[] PROGMEM = MENU_TEXT_VBL;
 const char CF_MONITOR_TXT[] PROGMEM = MENU_TEXT_MMD;
+const char CF_SHOW_UNKNOWN_TXT[] PROGMEM = CF_SHOW_UNKNOWN_TEXT;
 const char CF_MQTT_IPADDRESS_TXT[] PROGMEM = CF_MQTT_IPADDRESS_TEXT;
 const char CF_MQTT_USERNAME_TXT[] PROGMEM = CF_MQTT_USERNAME_TEXT;
 const char CF_MQTT_PASSWORD_TXT[] PROGMEM = CF_MQTT_PASSWORD_TEXT;
@@ -7020,7 +7021,7 @@ const char ENUM7700_2[] PROGMEM_LATEST = {
 "\x09 " ENUM7700_2_09_TEXT
 };
 
-// 7717 - Ausgangssignal UX2 
+// 7717 - Ausgangssignal UX2
 const char ENUM7717[] PROGMEM_LATEST = {
 "\x00 " "?" ENUM7717_00_TEXT "\0"
 "\x01 " "?" ENUM7717_01_TEXT "\0"
@@ -9768,7 +9769,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D08AE,  CAT_PUFFERSPEICHER,   VT_TEMP,          4791,  STR4791,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temp'diff AUS Rückl'umlenk
 {0x053D0638,  CAT_PUFFERSPEICHER,   VT_ENUM,          4795,  STR4795,  sizeof(ENUM4795),     ENUM4795,     DEFAULT_FLAG, DEV_ALL}, // Vergleichstemp Rückl'umlenk
 {0x053D085F,  CAT_PUFFERSPEICHER,   VT_ENUM,          4796,  STR4796,  sizeof(ENUM4796),     ENUM4796,     DEFAULT_FLAG, DEV_ALL}, // Wirksinn Rücklaufumlenkung
-{0x053D0AF1,  CAT_PUFFERSPEICHER,   VT_TEMP,          4800,  STR4800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Teilladung 
+{0x053D0AF1,  CAT_PUFFERSPEICHER,   VT_TEMP,          4800,  STR4800,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pufferspeicher Teilladung
 {0x193D0B87,  CAT_PUFFERSPEICHER,   VT_ENUM,          4810,  STR4810,  sizeof(ENUM4810),     ENUM4810,     FL_OEM, DEV_ALL}, // Durchladung
 {0x193D0B86,  CAT_PUFFERSPEICHER,   VT_TEMP,          4811,  STR4811,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Durchladetemperatur Minimum
 {0x193D0B88,  CAT_PUFFERSPEICHER,   VT_ENUM,          4813,  STR4813,  sizeof(ENUM4813),     ENUM4813,     FL_OEM, DEV_ALL}, // Durchladefühler

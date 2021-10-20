@@ -65,6 +65,8 @@ typedef enum{
   CF_BMEBUS, //Size: 1 byte. If set to 1 or 2 then BME280 sensor(s) will be used
   CF_OTA_UPDATE, //Size: 1 byte. OTA update for ESP32. 0 - disabled, 1 - enabled.
   CF_MDNS_HOSTNAME, //Size: 32 byte. Host name for mDNS discovery service
+// Version 7 ()
+  CF_SHOW_UNKNOWN, //Size: 1 byte. show/hide unknown parameters from web display
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -211,7 +213,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     CF_PROGLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_VERBOSE_TXT, sizeof(verbose)},
-  {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)}
+  {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_MONITOR_TXT, sizeof(monitor)},
+  {CF_SHOW_UNKNOWN,     7, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           CF_SHOW_UNKNOWN_TXT, sizeof(show_unknown)}//immediately apply
 #endif
 #endif
 };

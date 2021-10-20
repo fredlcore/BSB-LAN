@@ -6929,6 +6929,7 @@ void setup() {
   registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
   registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
   registerConfigVariable(CF_MONITOR, (byte *)&monitor);
+  registerConfigVariable(CF_SHOW_UNKNOWN, (byte *)&show_unknown);
   registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
   registerConfigVariable(CF_RGT1_SENSOR_ID, (byte *)&rgte_sensorid[0][0]);
   registerConfigVariable(CF_RGT2_SENSOR_ID, (byte *)&rgte_sensorid[1][0]);
