@@ -442,8 +442,13 @@
 
 #define DO_NOT_PRINT_DISABLED_VALUE false
 #define PRINT_DISABLED_VALUE true
-#define PRINT_VALUE_FIRST false
-#define PRINT_DESCRIPTION_FIRST true
+#define PRINT_NOTHING 0
+#define PRINT_VALUE 1
+#define PRINT_DESCRIPTION 2
+#define PRINT_VALUE_FIRST 4
+#define PRINT_DESCRIPTION_FIRST 8
+#define PRINT_ONLY_VALUE_LINE 16
+#define PRINT_ENUM_AS_DT_BITS 32
 
 #if defined(ESP32)
 void loop();
@@ -1076,7 +1081,7 @@ const char *prefix - print string before enum element
  const char *suffix - print string after  enum element
  const char *string_delimiter - if string_delimiter is set, string_delimiter will be print between enum elements
  uint16_t value - if alt_delimiter is set then alt_delimiter will be print when "value" will be found in enum
- bool desc_first - if true, then description will be print first; if false, then value print first
+ uint8_t print_mode. 0 - print nothing, 1 - print value, 2 - print description, 4 - print value first and description then, 8 - print description first and value then, 16 - print suitable for "value" line only, 32 - it is DT_BITS enum
  bool canBeDisabled - if true, then "---" value will be print
 
  * Parameters passed back:
@@ -1086,23 +1091,36 @@ const char *prefix - print string before enum element
  * Global resources used:
  *  none
  * *************************************************************** */
-void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, bool desc_first, bool canBeDisabled) {
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, uint8_t print_mode, bool canBeDisabled) {
   uint16_t val = 0;
   uint16_t c=0;
+  uint8_t bitmask=0;
   bool isFirst = true;
-  if (decodedTelegram.type == VT_CUSTOM_BIT) c++;
+  if (decodedTelegram.type == VT_CUSTOM_BIT) c++;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
 
-  while (c<enumstr_len) {
-    if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') {
+  while (c + 2 < enumstr_len) {
+    if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
       val = uint16_t(pgm_read_byte_far(enumstr+c+1));
       if (decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
+      if (print_mode & 32) { //decodedTelegram.data_type is DT_BITS
+        bitmask = val & 0xff;
+        val = val >> 8 & 0xff;
+      }
       c++;
     } else if ((byte)(pgm_read_byte_far(enumstr+c+1))==' ') {
       val=uint16_t(pgm_read_byte_far(enumstr+c));
     }
     //skip leading space
     c+=2;
-
+    if ((print_mode & 16) && val != value) {
+      while(c < enumstr_len){
+        if ((byte)(pgm_read_byte_far(enumstr+c)) == '\0'){
+          break;
+        }
+        c++;
+      }
+      continue;
+    }
     if (isFirst) {isFirst = false;} else {if (string_delimiter) printToWebClient(string_delimiter);}
     if (prefix) printToWebClient(prefix);
     uint_farptr_t descAddr;
@@ -1116,17 +1134,19 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     } else {
       descAddr = enumstr + c;
     }
-    if (desc_first) {
+    if (print_mode & (8 | 2)) {
       c += printToWebClient(descAddr) + 1;
-      if (alt_delimiter && value == val) {
+      //                      All enums except DT_BITS                   DT_BITS  enums
+      if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
         printToWebClient(alt_delimiter);
       } else {
         if (delimiter) printToWebClient(delimiter);
       }
     }
-    printFmtToWebClient(PSTR("%u"), val);
-    if (!desc_first) {
-      if (alt_delimiter && value == val) {
+    if (print_mode & 1) printFmtToWebClient(PSTR("%u"), val);
+    if (print_mode & (4 | 2)) {
+      //                      All enums except DT_BITS                   DT_BITS  enums
+      if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
         printToWebClient(alt_delimiter);
       } else {
         if (delimiter) printToWebClient(delimiter);
@@ -1974,21 +1994,25 @@ char *lookup_descr(uint16_t line) {
   return outBuf;
 }
 
+void printDeviceArchToWebClient(){
+  #if defined(__AVR__)
+    printToWebClient(PSTR("Mega 2560"));
+  #elif defined(ESP32)
+    printToWebClient(PSTR("ESP32"));
+  #elif defined(__SAM3X8E__)
+    printToWebClient(PSTR("Due"));
+  #else
+    printToWebClient(PSTR("Unknown"));
+  #endif
+}
+
 void generateConfigPage(void) {
 #if !defined(WEBCONFIG)
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
 #endif
   printToWebClient(PSTR("<BR>" MENU_TEXT_MCU ": "));
-#if defined(__AVR__)
-  printToWebClient(PSTR("Mega 2560<BR>\r\n"));
-#elif defined(ESP32)
-  printToWebClient(PSTR("ESP32<BR>\r\n"));
-#elif defined(__SAM3X8E__)
-  printToWebClient(PSTR("Due<BR>\r\n"));
-#else
-  printToWebClient(PSTR("Unknown<BR>\r\n"));
-#endif
-  printToWebClient(PSTR("" MENU_TEXT_VER ": "));
+  printDeviceArchToWebClient();
+  printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_VER ": "));
   printToWebClient(BSB_VERSION);
   printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": "));
 #ifdef WEBCONFIG
@@ -2572,18 +2596,24 @@ void implementConfig() {
 
 }
 
-void printConfigWebPossibleValues(int i, uint16_t temp_value) {
+void printConfigWebPossibleValues(int i, uint16_t temp_value, boolean printCurrentSelectionOnly) {
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-  listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-
+  if(printCurrentSelectionOnly){
+    listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE, DO_NOT_PRINT_DISABLED_VALUE);
+  } else {
+    listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+  }
 }
 
-void generateChangeConfigPage() {
+void generateChangeConfigPage(boolean printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
-  printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
-  if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
-  printToWebClient(PSTR("/CI\"><table align=\"center\"><tbody>\r\n"));
+  if(!printOnly){
+    printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
+    if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
+    printToWebClient(PSTR("/CI\">"));
+  }
+  printToWebClient(PSTR("<table align=\"center\"><tbody>\r\n"));
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
 #if defined(__AVR__)
     if (pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
@@ -2608,35 +2638,39 @@ void generateChangeConfigPage() {
 #else
     printToWebClient(catalist[cfg.category].desc);
 #endif
-
-    printToWebClient(PSTR("</td><td>\r\n"));
+    const char fieldDelimiter[] PROGMEM = "</td><td>\r\n";
+    printToWebClient(fieldDelimiter);
 //Param Name
     printToWebClient(cfg.desc);
-    printToWebClient(PSTR("</td><td>\r\n"));
+    printToWebClient(fieldDelimiter);
 //Param Value
 
 //Open tag
-   switch (cfg.input_type) {
-     case CPI_TEXT:
-     printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
-     switch (cfg.var_type) {
-       case CDT_MAC:
-         printToWebClient(PSTR("pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'"));
-         break;
-       case CDT_IPV4:
-         printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
-         break;
-       case CDT_PROGNRLIST:
-         printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})))*'"));
-         break;
-       }
-     printToWebClient(PSTR(" VALUE='"));
-     break;
-     case CPI_SWITCH:
-     case CPI_DROPDOWN:
-     printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
-     break;
-     default: break;
+   if(!printOnly){
+     switch (cfg.input_type) {
+       case CPI_TEXT:
+       printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
+       switch (cfg.var_type) {
+         case CDT_MAC:
+           printToWebClient(PSTR("pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'"));
+           break;
+         case CDT_IPV4:
+           printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
+           break;
+         case CDT_PROGNRLIST:
+           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})))*'"));
+           break;
+         }
+       printToWebClient(PSTR(" VALUE='"));
+       break;
+       case CPI_SWITCH:
+       case CPI_DROPDOWN:
+       printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+       break;
+       default: break;
+     }
+   } else {
+     printFmtToWebClient(PSTR("<output id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
    }
 
 
@@ -2655,12 +2689,12 @@ void generateChangeConfigPage() {
                i=findLine(65533,0,NULL); //return ENUM_ONOFF
                break;
            }
-           printConfigWebPossibleValues(i, (uint16_t)variable[0]);
+           printConfigWebPossibleValues(i, (uint16_t)variable[0], printOnly);
            break;}
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
-             printConfigWebPossibleValues(i, variable[0]);
+             printConfigWebPossibleValues(i, variable[0], printOnly);
            }
            break;}
          }
@@ -2679,7 +2713,7 @@ void generateChangeConfigPage() {
                break;
            }
            if (i > 0) {
-             printConfigWebPossibleValues(i, ((uint16_t *)variable)[0]);
+             printConfigWebPossibleValues(i, ((uint16_t *)variable)[0], printOnly);
            }
            break;}
          }
@@ -2733,17 +2767,24 @@ void generateChangeConfigPage() {
    }
 
 //Closing tag
-   switch (cfg.input_type) {
-     case CPI_TEXT: printToWebClient(PSTR("'>")); break;
-     case CPI_SWITCH:
-     case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
-     default: break;
+   if(!printOnly){
+     switch (cfg.input_type) {
+       case CPI_TEXT: printToWebClient(PSTR("'>")); break;
+       case CPI_SWITCH:
+       case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
+       default: break;
+     }
+   } else {
+     printToWebClient(PSTR("</output>"));
    }
     printToWebClient(PSTR("</td></td>\r\n"));
   }
-  printToWebClient(PSTR("</tbody></table><p><input type=\"submit\" value=\""));
-  printToWebClient(STR6204);
-  printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
+  printToWebClient(PSTR("</tbody></table><p>"));
+  if(!printOnly){
+    printToWebClient(PSTR("<input type=\"submit\" value=\""));
+    printToWebClient(STR6204);
+    printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
+  }
 }
 #endif  //WEBCONFIG
 
@@ -2753,7 +2794,7 @@ void printConfigJSONPossibleValues(int i) {
   printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
   printToWebClient(PSTR("\r\n      ]"));
 }
 
@@ -3755,9 +3796,6 @@ void query_printHTML() {
   }
   printToWebClient(build_pvalstr(1));
 
-  float num_pvalstr = strtod(decodedTelegram.value, NULL);
-
-
 /*
       // dump data payload for unknown types
       if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
@@ -3773,7 +3811,8 @@ void query_printHTML() {
         }
       }
 */
-      printToWebClient(PSTR("</td><td>"));
+    const char fieldDelimiter[] PROGMEM = "</td><td>";
+      printToWebClient(fieldDelimiter);
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
           printToWebClient(PSTR("<select "));
@@ -3781,46 +3820,23 @@ void query_printHTML() {
             printToWebClient(PSTR("multiple "));
           }
           printFmtToWebClient(PSTR("id='value%ld'>\r\n"), decodedTelegram.prognr);
+          uint16_t value = 0;
           if (decodedTelegram.data_type == DT_BITS) {
-            uint16_t val = 0;
-            uint16_t c=0;
-            uint8_t bitmask=0;
-            uint8_t bitvalue = 0;
             for (int i = 0; i < 8; i++) {
-              if (decodedTelegram.value[i] == '1') bitvalue+=1<<(7-i);
-            }
-            if (decodedTelegram.type == VT_CUSTOM_BIT) {
-              c=1;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
-            }
-            while (c<decodedTelegram.enumstr_len) {
-              if ((byte)(pgm_read_byte_far(decodedTelegram.enumstr+c+2)) == ' ') {         // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-                val=uint16_t((pgm_read_byte_far(decodedTelegram.enumstr+c) << 8)) | uint16_t(pgm_read_byte_far(decodedTelegram.enumstr+c+1));
-                if (decodedTelegram.data_type == DT_BITS) {
-                  bitmask = val & 0xff;
-                  val = val >> 8 & 0xff;
-                }
-                c++;
-              }
-              //skip leading space
-              c+=2;
-              printToWebClient(STR_OPTION_VALUE);
-              printFmtToWebClient(PSTR("%d"), val);
-              if ((bitvalue & bitmask) == (val & bitmask)) {
-                printToWebClient(STR_SELECTED);
-              } else {
-                printToWebClient(PSTR("'>"));
-              }
-              c += printToWebClient(decodedTelegram.enumstr+c);
-              printToWebClient(STR_CLOSE_OPTION);
-              c++;
+              if (decodedTelegram.value[i] == '1') value+=1<<(7-i);
             }
           } else {
-            if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0) {
-              num_pvalstr = 1;
+            value = strtod(decodedTelegram.value, NULL);
+            if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && value != 0) {
+              value = 1;
             }
-            listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)num_pvalstr, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
           }
-          printToWebClient(PSTR("</select></td><td>"));
+          listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
+          decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
+             (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST),
+             decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+          printToWebClient(PSTR("</select>"));
+          printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
             printToWebClient(PSTR("<input type=button value='Set' onclick=\"set"));
             if (decodedTelegram.type == VT_BIT) {
@@ -3829,25 +3845,8 @@ void query_printHTML() {
             printFmtToWebClient(PSTR("(%ld)\">"), decodedTelegram.prognr);
           }
         } else {
-          printFmtToWebClient(PSTR("<input type=text id='value%ld' VALUE='"), decodedTelegram.prognr);
-
-/*
-          char* colon_pos = strchr(pvalstr,':');
-          if (colon_pos!=0) {
-            *colon_pos = '.';
-          }
-*/
-/*          if (decodedTelegram.type == VT_HOUR_MINUTES) {
-            client.print(decodedTelegram.value);
-          } else {
-            if  (decodedTelegram.value[2] == '-') {   // do not run strtod on disabled parameters (---)
-              printToWebClient(PSTR("---"));
-            } else {
-              client.print(strtod(decodedTelegram.value, NULL));
-            }
-          }*/
-          printToWebClient(decodedTelegram.value);
-          printToWebClient(PSTR("'></td><td>"));
+          printFmtToWebClient(PSTR("<input type=text id='value%ld' VALUE='%s'>"), decodedTelegram.prognr, decodedTelegram.value);
+          printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
             printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%ld)\">"), decodedTelegram.prognr);
           }
@@ -5129,7 +5128,7 @@ void loop() {
               case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
             }
             if (flag) {
-              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE_FIRST, flag - 1);
+              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, flag - 1);
             } else {
               printToWebClient(PSTR(MENU_TEXT_ER5));
             }
@@ -5483,15 +5482,7 @@ void loop() {
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
             printToWebClient(PSTR("\",\r\n  \"hardware\": \""));
-            #if defined(__AVR__)
-            printToWebClient(PSTR("Mega 2560"));
-            #elif defined(ESP32)
-            printToWebClient(PSTR("ESP32"));
-            #elif defined(__SAM3X8E__)
-            printToWebClient(PSTR("Due"));
-            #else
-            printToWebClient(PSTR("Unknown"));
-            #endif
+            printDeviceArchToWebClient();
             printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
@@ -5828,7 +5819,7 @@ void loop() {
                 if (p[2] != 'Q') {
                   printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
                     if (decodedTelegram.enumstr_len > 0) {
-                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
                     }
 
                   printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
@@ -6014,7 +6005,7 @@ void loop() {
 #ifdef WEBCONFIG
             case 'I': {//Parse HTTP form and implement changes
               implementConfig();
-              generateChangeConfigPage();
+              generateChangeConfigPage(false);
               generateConfigPage();
 #ifdef MAX_CUL
               UpdateMaxDeviceList(); //Update list MAX! devices
@@ -6027,10 +6018,17 @@ void loop() {
             }
             break;
               //no break here.
+            case 'O': {//Just print current configuration (for debug purposes)
+              generateConfigPage();
+              generateChangeConfigPage(true);
+              if (!(httpflags & HTTP_FRAG)) webPrintFooter();
+              flushToWebClient();
+            }
+            break;
 #endif
             default:
 #ifdef WEBCONFIG
-              generateChangeConfigPage();
+              generateChangeConfigPage(false);
 #endif
               generateConfigPage();
               if (!(httpflags & HTTP_FRAG)) webPrintFooter();
