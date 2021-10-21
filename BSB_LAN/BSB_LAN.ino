@@ -1134,7 +1134,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     } else {
       descAddr = enumstr + c;
     }
-    if (print_mode & (8 | 2)) {
+    if (print_mode & 2 && print_mode & 8) {
       c += printToWebClient(descAddr) + 1;
       //                      All enums except DT_BITS                   DT_BITS  enums
       if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
@@ -1144,7 +1144,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
       }
     }
     if (print_mode & 1) printFmtToWebClient(PSTR("%u"), val);
-    if (print_mode & (4 | 2)) {
+    if (print_mode & 2 && print_mode & 4) {
       //                      All enums except DT_BITS                   DT_BITS  enums
       if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
         printToWebClient(alt_delimiter);
