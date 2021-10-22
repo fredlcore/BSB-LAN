@@ -1102,7 +1102,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
       val = uint16_t(pgm_read_byte_far(enumstr+c+1));
       if (decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
-      if (print_mode & 32) { //decodedTelegram.data_type is DT_BITS
+      if (print_mode & PRINT_ENUM_AS_DT_BITS) { //decodedTelegram.data_type is DT_BITS
         bitmask = val & 0xff;
         val = val >> 8 & 0xff;
       }
@@ -1112,7 +1112,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     }
     //skip leading space
     c+=2;
-    if ((print_mode & 16) && val != value) {
+    if ((print_mode & PRINT_ONLY_VALUE_LINE) && val != value) {
       while(c < enumstr_len){
         if ((byte)(pgm_read_byte_far(enumstr+c)) == '\0'){
           break;
@@ -1134,19 +1134,19 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     } else {
       descAddr = enumstr + c;
     }
-    if (print_mode & 2 && print_mode & 8) {
+    if (print_mode & PRINT_DESCRIPTION && print_mode & PRINT_DESCRIPTION_FIRST) {
       c += printToWebClient(descAddr) + 1;
-      //                      All enums except DT_BITS                   DT_BITS  enums
-      if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
+      //                      All enums except DT_BITS                                         DT_BITS  enums
+      if (alt_delimiter && ((value == val && !(print_mode & PRINT_ENUM_AS_DT_BITS)) || ((value & bitmask) == (val & bitmask) && (print_mode & PRINT_ENUM_AS_DT_BITS)))) {
         printToWebClient(alt_delimiter);
       } else {
         if (delimiter) printToWebClient(delimiter);
       }
     }
-    if (print_mode & 1) printFmtToWebClient(PSTR("%u"), val);
-    if (print_mode & 2 && print_mode & 4) {
-      //                      All enums except DT_BITS                   DT_BITS  enums
-      if (alt_delimiter && ((value == val && !(print_mode & 32)) || ((value & bitmask) == (val & bitmask) && (print_mode & 32)))) {
+    if (print_mode & PRINT_VALUE) printFmtToWebClient(PSTR("%u"), val);
+    if (print_mode & PRINT_DESCRIPTION && print_mode & PRINT_VALUE_FIRST) {
+      //                      All enums except DT_BITS                                               DT_BITS  enums
+      if (alt_delimiter && ((value == val && !(print_mode & PRINT_ENUM_AS_DT_BITS)) || ((value & bitmask) == (val & bitmask) && (print_mode & PRINT_ENUM_AS_DT_BITS)))) {
         printToWebClient(alt_delimiter);
       } else {
         if (delimiter) printToWebClient(delimiter);
