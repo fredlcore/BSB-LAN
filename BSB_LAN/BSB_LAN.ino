@@ -4052,7 +4052,8 @@ void queryVirtualPrognr(int line, int table_line) {
 #ifdef BME280
       size_t tempLine = line - 20200;
       size_t log_sensor = tempLine / 6;
-      if (tempLine % 6 == 0) {
+      uint8_t selector = tempLine % 6;
+      if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
         } else {
@@ -4063,17 +4064,18 @@ void queryVirtualPrognr(int line, int table_line) {
       if(BME_Sensors > 2){
         tcaselect(log_sensor & 0x07);
       }
-      if (bme[log_sensor].checkID() == 0x60) {
-        switch (tempLine % 6) {
-          case 1: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readTempC(), 2); break;
-          case 2: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readHumidity(), 2); break;
-          case 3: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readPressure(), 2); break;
-          case 4: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readAltitudeMeter(), 2); break;
-          case 5: {float temp = bme[log_sensor].readTempC(); _printFIXPOINT(decodedTelegram.value, (216.7*(bme[log_sensor].readHumidity()/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);} break;
-        }
-      } else {
-        decodedTelegram.error = 261;
-        undefinedValueToBuffer(decodedTelegram.value);
+      switch(bme[log_sensor].checkID()) {
+        case 0x58: if(selector == 2 || selector == 5) selector = 6; break; //BMP280. Set error value for humidity measurement
+        case 0x60: break; //BME280
+        default: selector = 6; break; //set error value
+      }
+      switch (selector) {
+        case 1: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readTempC(), 2); break;
+        case 2: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readHumidity(), 2); break;
+        case 3: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readPressure(), 2); break;
+        case 4: _printFIXPOINT(decodedTelegram.value, bme[log_sensor].readAltitudeMeter(), 2); break;
+        case 5: {float temp = bme[log_sensor].readTempC(); _printFIXPOINT(decodedTelegram.value, (216.7*(bme[log_sensor].readHumidity()/100.0*6.112*exp(17.62*temp/(243.12+temp))/(273.15+temp))), 2);} break;
+        case 6: decodedTelegram.error = 261; undefinedValueToBuffer(decodedTelegram.value); break;
       }
       return;
 #endif
@@ -7073,7 +7075,7 @@ void setup() {
 
 #ifdef BME280
     if(BME_Sensors) {
-      printToDebug(PSTR("Init BME280 sensor(s)...\r\n"));
+      printToDebug(PSTR("Init BMxx80 sensor(s)...\r\n"));
       bme = new BlueDot_BME280[BME_Sensors];
       for (uint8_t f = 0; f < BME_Sensors; f++) {
         bme[f].parameter.communication = 0;                     //I2C communication for Sensor
@@ -7094,8 +7096,14 @@ void setup() {
         bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
         bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
         bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-        printFmtToDebug(PSTR("Sensor with address %x "), bme[f].parameter.I2CAddress);
-        if (bme[f].init() != 0x60) {
+        boolean sensor_found = true;
+        switch(bme[f].init()){
+          case 0x58: printToDebug(PSTR("BMP280")); break;
+          case 0x60: printToDebug(PSTR("BME280")); break;
+          default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
+        }
+        printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
+        if (!sensor_found) {
           printToDebug(PSTR("NOT "));
         }
         printToDebug(PSTR("found\r\n"));
