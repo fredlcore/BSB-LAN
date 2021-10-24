@@ -3016,14 +3016,14 @@ void LogTelegram(byte* msg) {
         strcat_P(outBuf + outBufLen, PSTR(";"));
         const char *getfarstrings;
         switch (msg[0]) {
-          case 0x1D: getfarstrings = PSTR("HEIZ->QAA INF"); break;
-          case 0x1E: getfarstrings = PSTR("HEIZ->QAA REQ"); break;
-          case 0x17: getfarstrings = PSTR("HEIZ->QAA RTS"); break;
+          case 0x1D: getfarstrings = PSTR("PPS INF"); break;
+          case 0x1E: getfarstrings = PSTR("PPS REQ"); break;
+          case 0x17: getfarstrings = PSTR("PPS RTS"); break;
           case 0xF8:
           case 0xFB:
           case 0xFD:
           case 0xFE:
-            getfarstrings = PSTR("QAA->HEIZ ANS"); break;
+            getfarstrings = PSTR("PPS ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
         strcat_P(outBuf + outBufLen, getfarstrings);
@@ -4617,7 +4617,7 @@ void loop() {
    // At this point drop possible GetMessage() failures silently
 
     // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
-    if (pps_mcba == true) {
+    if (pps_values[PPS_QTP] == 0xEA) {
       if (millis() - pps_mcba_timer > 500) {
         pps_query_mcba();
         pps_mcba_timer = millis();

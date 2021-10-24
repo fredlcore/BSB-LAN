@@ -3299,6 +3299,7 @@
 #define ENUM15044_10_10_TEXT "Kontakt H1: geschlossen"
 #define ENUM15046_52_TEXT "QAA 50"
 #define ENUM15046_53_TEXT "QAA 70"
+#define ENUM15046_EA_TEXT "DC225/MCBA"
 #define ENUM_ERROR_00_TEXT "kein Fehler"
 #define ENUM_ERROR_0a_TEXT "Außentemperatur Fühlerfehler"
 #define ENUM_ERROR_14_TEXT "Kesseltemperatur 1 Fühlerfehler"
