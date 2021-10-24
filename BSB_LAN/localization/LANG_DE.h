@@ -393,7 +393,6 @@
 #define STR949_TEXT "Ende Vorlaufsollwertanhebung bei relativer Luftfeuchtigkeit"
 #define STR950_TEXT "Vorlauftemperaturdifferenz Taupunkt"
 #define STR1044_TEXT "Sollwert Einschaltverhältnis Raumthermostat"
-#define STR1600_TEXT "Trinkwasserbetrieb"
 #define STR1601_TEXT "Betriebsartwahl Eco"
 #define STR1602_TEXT "TWW Status"
 #define STR1603_TEXT "Manueller TWW-Push"
