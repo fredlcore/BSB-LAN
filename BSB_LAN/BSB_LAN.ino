@@ -798,6 +798,7 @@ bool pps_time_received = false;
 bool pps_time_set = false;
 bool pps_wday_set = false;
 uint8_t current_switchday = 0;
+unsigned long pps_mcba_timer = millis();
 
 #include "BSB_LAN_EEPROMconfig.h"
 
@@ -4608,14 +4609,20 @@ void loop() {
 
 // PPS-Bus handling
       if (bus->getBusType() == BUS_PPS) {
-     log_now = pps_bus_handling(msg);
-
-
+        log_now = pps_bus_handling(msg);
       } // End PPS-bus handling
 
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
+
+    // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
+    if (pps_mcba == true) {
+      if (millis() - pps_mcba_timer > 500) {
+        pps_query_mcba();
+        pps_mcba_timer = millis();
+      }
+    }
 
   } // endelse, NOT in monitor mode
 
