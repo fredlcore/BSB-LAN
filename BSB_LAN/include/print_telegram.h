@@ -678,13 +678,13 @@ void printTelegram(byte* msg, int query_line) {
   } else {
     if (!monitor) {
       switch (msg[0]) {
-        case 0x1D: printToDebug(PSTR("INF HEIZ->QAA ")); break;
-        case 0x1E: printToDebug(PSTR("REQ HEIZ->QAA ")); break;
-        case 0x17: printToDebug(PSTR("RTS HEIZ->QAA ")); break;
+        case 0x1D: printToDebug(PSTR("PPS INF ")); break;
+        case 0x1E: printToDebug(PSTR("PPS REQ ")); break;
+        case 0x17: printToDebug(PSTR("PPS RTS ")); break;
         case 0xF8:
         case 0xFB:
         case 0xFD:
-        case 0xFE: printToDebug(PSTR("ANS QAA->HEIZ ")); break;
+        case 0xFE: printToDebug(PSTR("PPS ANS ")); break;
         default: break;
       }
     }

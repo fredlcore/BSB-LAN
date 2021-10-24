@@ -306,7 +306,7 @@ ich mir da nicht)
                 case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
                 case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
                 case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
-                case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll (?)
+                case 0x0C: pps_values[PPS_TWR] = temp; break; // Trinkwassertemperatur Reduziert Soll (?)
                 case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
                 case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
                 case 0x19: log_now = setPPS(PPS_RTZ, temp); break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
@@ -444,4 +444,40 @@ ich mir da nicht)
         } // End parse PPS heating data
 
         return log_now;
+}
+
+void pps_query_mcba() {
+  byte rx_msg[10] = { 0 };
+  byte tx_msg[10] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  if (msg_cycle % 4 == 0) {
+    tx_msg[0] = 0x1D;
+    tx_msg[1] = 0x0C;
+    tx_msg[6] = 0x0C;
+    tx_msg[7] = 0x80;
+  } else if(msg_cycle % 2 == 0) {
+    tx_msg[0] = 0x1D;
+    tx_msg[1] = 0x0E;
+    tx_msg[6] = 0x0F;
+    tx_msg[7] = 0x80;
+  } else {
+    tx_msg[0] = 0x17;
+  }
+  if (pps_write == 1) {
+    bus->Send(0, 0, rx_msg, tx_msg);
+  }
+  if (verbose) {     // verbose output for PPS after time-critical sending procedure
+    if (monitor) {
+      printFmtToDebug(PSTR("%lu "), millis());
+    }
+    printTelegram(tx_msg, -1);
+#ifdef LOGGER
+    if (!monitor) {
+      LogTelegram(tx_msg);
+    }
+#endif
+  }
+  msg_cycle++;
+  if (msg_cycle > 3) {
+    msg_cycle = 0;
+  }
 }
