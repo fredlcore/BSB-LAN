@@ -3299,6 +3299,7 @@ UIStrings["ENUM15044_00_10_TEXT"] = "Kontakt H1: offen";
 UIStrings["ENUM15044_10_10_TEXT"] = "Kontakt H1: geschlossen";
 UIStrings["ENUM15046_52_TEXT"] = "QAA 50";
 UIStrings["ENUM15046_53_TEXT"] = "QAA 70";
+UIStrings["ENUM15046_EA_TEXT"] = "DC225/MCBA";
 UIStrings["ENUM_ERROR_00_TEXT"] = "kein Fehler";
 UIStrings["ENUM_ERROR_0a_TEXT"] = "Außentemperatur Fühlerfehler";
 UIStrings["ENUM_ERROR_14_TEXT"] = "Kesseltemperatur 1 Fühlerfehler";
