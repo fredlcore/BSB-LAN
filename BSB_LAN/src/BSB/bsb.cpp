@@ -411,6 +411,7 @@ inline bool BSB::_send(byte* msg) {
             if (c < 16) Serial.print("0");
             Serial.print(c, HEX);
 #endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
           }
 #if DEBUG_LL
           Serial.println();
@@ -515,6 +516,7 @@ UART buffer gefüllt ist und ein empfangenes Byte meldet.
             if (c < 16) Serial.print("0");
             Serial.print(c, HEX);
 #endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
           }
 #if DEBUG_LL
           Serial.println();
