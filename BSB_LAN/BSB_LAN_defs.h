@@ -7608,7 +7608,9 @@ const char ENUM15000[] PROGMEM_LATEST = {
 const char ENUM15046[] PROGMEM_LATEST = {
 "\x52 " ENUM15046_52_TEXT "\0"
 "\x53 " ENUM15046_53_TEXT "\0"
-"\xea " ENUM15046_EA_TEXT         // Use unused value 0xEA for MCBA/DC225 type
+"\x37 " ENUM15046_37_TEXT "\0"
+"\x66 " ENUM15046_66_TEXT "\0"
+"\xea " ENUM15046_ea_TEXT         // Use unused value 0xEA for MCBA/DC225 type
 };
 
 const char ENUM15044[] PROGMEM_LATEST = {
