@@ -318,7 +318,11 @@ ich mir da nicht)
           case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
           case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
           case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
-//          case 0x4A: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur, to be confirmed
+          case 0x4A: 
+            pps_values[PPS_KVT] = temp;               // Kesselvorlauftemperatur bei MCBA-Systemen
+            pps_values[PPS_MOD] = msg[3+pps_offset];  // Brennermodulation bei MCBA-Systemen
+            setPPS(PPS_BRS, msg[5+pps_offset]);       // Brennerstatus bei MCBA_Systemen
+            break;
           case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
           case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
           case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
