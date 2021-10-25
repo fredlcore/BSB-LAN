@@ -393,7 +393,6 @@ UIStrings["STR948_TEXT"] = "Beginn Vorlaufsollwertanhebung bei relativer Luftfeu
 UIStrings["STR949_TEXT"] = "Ende Vorlaufsollwertanhebung bei relativer Luftfeuchtigkeit";
 UIStrings["STR950_TEXT"] = "Vorlauftemperaturdifferenz Taupunkt";
 UIStrings["STR1044_TEXT"] = "Sollwert Einschaltverhältnis Raumthermostat";
-UIStrings["STR1600_TEXT"] = "Trinkwasserbetrieb";
 UIStrings["STR1601_TEXT"] = "Betriebsartwahl Eco";
 UIStrings["STR1602_TEXT"] = "TWW Status";
 UIStrings["STR1603_TEXT"] = "Manueller TWW-Push";
