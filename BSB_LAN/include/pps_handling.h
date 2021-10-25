@@ -447,17 +447,17 @@ ich mir da nicht)
 void pps_query_mcba() {
   byte rx_msg[10] = { 0 };
   byte tx_msg[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-  if (msg_cycle % 4 == 0) {   // Trinkwassertemperatur (Reduziert?) Soll
+  if (msg_cycle % 4 == 0) {         // Trinkwassertemperatur (Reduziert?) Soll
     tx_msg[0] = 0x1D;
     tx_msg[1] = 0x0C;
     tx_msg[6] = pps_values[PPS_TWS] >> 8;
     tx_msg[7] = pps_values[PPS_TWS] & 0xFF;
-  } else if(msg_cycle % 2 == 0) {
+  } else if(msg_cycle % 2 == 0) {   // Kesselvorlauftemperatur Soll
     tx_msg[0] = 0x1D;
     tx_msg[1] = 0x0E;
     tx_msg[6] = pps_values[PPS_KVS] >> 8;
     tx_msg[7] = pps_values[PPS_KVS] & 0xFF;
-  } else {
+  } else {                          // Request telegram from heater
     tx_msg[0] = 0x17;
   }
   if (pps_write == 1) {
