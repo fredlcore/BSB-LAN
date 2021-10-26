@@ -480,6 +480,14 @@ UART buffer gefüllt ist und ein empfangenes Byte meldet.
 #endif
     }
     if (bus_type==2 && i==0 && data==0x17) {
+      unsigned long timeout = millis();
+      while ((millis()-timeout < 200) && serial->available() == 0) {
+        delay(1);
+      }
+      while (serial->available()) {
+        char c = readByte();
+        c = c;
+      }
       return true;  // In case we emulate a DC225, we are regularly sending single byte (0x17) messages, so abort loop after first byte.
     }
 /*
