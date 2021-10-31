@@ -3125,6 +3125,13 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
+#ifdef MQTT
+  // Force to publish MQTT update during next loop as state may have been modified by this SET command
+  if (millis() - lastMQTTTime > 1000) {  // Only if the previous update is older than 1s
+    lastMQTTTime = 0;
+  }
+#endif
+
   loadPrognrElementsFromTable(line, i);
 
   if ((line >= 20000 && line < 20900)) //virtual functions handler
