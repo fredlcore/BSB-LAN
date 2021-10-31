@@ -67,6 +67,11 @@ typedef enum{
   CF_MDNS_HOSTNAME, //Size: 32 byte. Host name for mDNS discovery service
 // Version 7 ()
   CF_SHOW_UNKNOWN, //Size: 1 byte. show/hide unknown parameters from web display
+// Version 8 (bus pins and device family and variant)
+  CF_RX_PIN, //Size: 1 byte. RX pin
+  CF_TX_PIN, //Size: 1 byte. TX pin
+  CF_DEVICE_FAMILY, //Size: 1 byte. Heater family ID
+  CF_DEVICE_VARIANT, //Size: 1 byte. Heater variant ID
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -153,12 +158,16 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
   {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
 #endif
+  {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
+  {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
   {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           NULL, sizeof(byte)},//Not used. Leaved for compatibility
   {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
   {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
   {CF_PPS_MODE,         1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
   {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
+  {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         STR6225, sizeof(fixed_device_family)},//need reboot
+  {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         STR6226, sizeof(fixed_device_variant)},//need reboot
 #ifdef WEBCONFIG
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply

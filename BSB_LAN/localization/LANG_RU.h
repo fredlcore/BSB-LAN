@@ -224,7 +224,8 @@
 #define CF_RGT2_PRES_PIN_TEXT "Кнопка присутствия RGT2 подключена к выводу"
 #define CF_RGT3_PRES_PIN_TEXT "Кнопка присутствия RGT3 подключена к выводу"
 #define CF_SHOW_UNKNOWN_TEXT "Показывать неизвестные параметры"
-
+#define CF_RX_PIN_TEXT "Номер вывода RX"
+#define CF_TX_PIN_TEXT "Номер вывода TX"
 
 #define CAT_GENERAL_TEXT "Основные"
 #define CAT_IPV4_TEXT "Настройки IP"

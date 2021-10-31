@@ -867,6 +867,8 @@ const char CF_RGT1_PRES_PIN_TXT[] PROGMEM = "";
 const char CF_RGT2_PRES_PIN_TXT[] PROGMEM = "";
 const char CF_RGT3_PRES_PIN_TXT[] PROGMEM = "";
 #endif
+const char CF_RX_PIN_TXT[] PROGMEM = CF_RX_PIN_TEXT;
+const char CF_TX_PIN_TXT[] PROGMEM = CF_TX_PIN_TEXT;
 
 const char CAT_GENERAL_TXT[] PROGMEM = CAT_GENERAL_TEXT;
 const char CAT_IPV4_TXT[] PROGMEM = CAT_IPV4_TEXT;

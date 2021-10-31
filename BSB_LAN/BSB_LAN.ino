@@ -2437,6 +2437,10 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_PPS_MODE:
           buschanged = true;
           break;
+        case CF_RX_PIN:
+        case CF_TX_PIN:
+        case CF_DEVICE_FAMILY:
+        case CF_DEVICE_VARIANT:
         //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
         // so here no reason do dynamic reconfiguration.
         // Topic: Possible to STOP an ethernet server once started and release resources ?
@@ -6938,6 +6942,10 @@ void setup() {
   registerConfigVariable(CF_RGT1_PRES_PIN_ID, (byte *)&button_on_pin[1]);
   registerConfigVariable(CF_RGT2_PRES_PIN_ID, (byte *)&button_on_pin[2]);
   registerConfigVariable(CF_RGT3_PRES_PIN_ID, (byte *)&button_on_pin[3]);
+  registerConfigVariable(CF_RX_PIN, (byte *)&bus_pins[0]);
+  registerConfigVariable(CF_TX_PIN, (byte *)&bus_pins[1]);
+  registerConfigVariable(CF_DEVICE_FAMILY, (byte *)&fixed_device_family);
+  registerConfigVariable(CF_DEVICE_VARIANT, (byte *)&fixed_device_variant);
 
 #endif
 
