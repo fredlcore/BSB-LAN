@@ -2634,8 +2634,10 @@ void generateWebConfigPage(boolean printOnly) {
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
     if (cfg.var_type == CDT_VOID) continue;
-    if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
-    if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
+    if(!printOnly){
+      if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
+      if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
+    }
     byte *variable = getConfigVariableAddress(cfg.id);
     if (!variable) continue;
 
