@@ -3817,6 +3817,7 @@ void query_printHTML() {
             if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && num_pvalstr != 0) {
               num_pvalstr = 1;
             }
+            if (decodedTelegram.readwrite == FL_WONLY) num_pvalstr = 65535;
             listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, (uint16_t)num_pvalstr, PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
           }
           printToWebClient(PSTR("</select></td><td>"));
