@@ -750,6 +750,10 @@ int avgCounter = 1;
 #endif
 int loopCount = 0;
 
+#if defined(JSONCONFIG) || defined(WEBCONFIG)
+byte config_level = 0;
+#endif
+
 struct decodedTelegram_t {
 //Commented fields for future use
 int cat; //category number
@@ -2306,7 +2310,7 @@ if (logTelegram) {
 }
 
 #if defined(WEBCONFIG) || defined(JSONCONFIG)
-uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf) {
+uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
   bool finded = false;
   configuration_struct cfg;
   char sscanf_buf[24];
@@ -2340,9 +2344,11 @@ uint8_t takeNewConfigValueFromUI_andWriteToEEPROM(int option_id, char *buf) {
       uint32_t variable = atoi(buf);
       writeToConfigVariable(option_id, (byte *)&variable);
       break;}
-    case CDT_STRING:
-      writeToConfigVariable(option_id, (byte *)buf);
-      break;
+    case CDT_STRING:{
+      char *variable = (char *)getConfigVariableAddress(option_id);
+      memset(variable, 0, cfg.size);
+      strncpy(variable, buf, cfg.size);
+      break;}
     case CDT_MAC:{
       unsigned int i0, i1, i2, i3, i4, i5;
       strcpy_P(sscanf_buf, PSTR("%x:%x:%x:%x:%x:%x"));
@@ -2430,6 +2436,7 @@ bool SaveConfigFromRAMtoEEPROM() {
   //save new values from RAM to EEPROM
   for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
     if (writeToEEPROM(i)) {
+      //printFmtToDebug(PSTR("Option %d updated. EEPROM address: %04d\n"), i, getEEPROMaddress(i));
       switch (i) {
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
@@ -2543,7 +2550,7 @@ int returnENUMID4ConfigOption(uint8_t id) {
 }
 
 #ifdef WEBCONFIG
-void implementConfig() {
+void applyingConfig() {
   bool k_flag = false;
   int i = 0;
   int option_id = 0;
@@ -2574,7 +2581,7 @@ void implementConfig() {
         outBuf[i] = 0;
       }
 
-      if (takeNewConfigValueFromUI_andWriteToEEPROM(option_id, outBuf)  == 1)
+      if (takeNewConfigValueFromUI_andWriteToRAM(option_id, outBuf)  == 1)
         printFmtToDebug(PSTR("Option value: %s\r\n"), outBuf);
 
       k_flag = false;
@@ -2610,7 +2617,7 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, boolean printCurre
   }
 }
 
-void generateChangeConfigPage(boolean printOnly) {
+void generateWebConfigPage(boolean printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   if(!printOnly){
     printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
@@ -2619,12 +2626,6 @@ void generateChangeConfigPage(boolean printOnly) {
   }
   printToWebClient(PSTR("<table align=\"center\"><tbody>\r\n"));
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
-#if defined(__AVR__)
-    if (pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
-#else
-    if (config[i].var_type == CDT_VOID) continue;
-#endif
-
     configuration_struct cfg;
 
 #if defined(__AVR__)
@@ -2632,6 +2633,9 @@ void generateChangeConfigPage(boolean printOnly) {
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
+    if (cfg.var_type == CDT_VOID) continue;
+    if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
+    if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
     byte *variable = getConfigVariableAddress(cfg.id);
     if (!variable) continue;
 
@@ -2805,12 +2809,6 @@ void printConfigJSONPossibleValues(int i) {
 void generateJSONwithConfig() {
   bool notFirst = false;
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
-#if defined(__AVR__)
-    if (pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + i * sizeof(config[0])) == CDT_VOID) continue;
-#else
-    if (config[i].var_type == CDT_VOID) continue;
-#endif
-
     configuration_struct cfg;
 
 #if defined(__AVR__)
@@ -2818,6 +2816,9 @@ void generateJSONwithConfig() {
 #else
     memcpy(&cfg, &config[i], sizeof(cfg));
 #endif
+    if (cfg.var_type == CDT_VOID) continue;
+    if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
+    if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
     byte *variable = getConfigVariableAddress(cfg.id);
     if (!variable) continue;
     if (notFirst) {printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
@@ -5864,7 +5865,7 @@ void loop() {
 #if defined(JSONCONFIG)
               if (p[2]=='W') {
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
-                int status = takeNewConfigValueFromUI_andWriteToEEPROM(json_parameter, outBuf);
+                int status = takeNewConfigValueFromUI_andWriteToRAM(json_parameter, outBuf);
                 printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
                 printFmtToDebug(PSTR("Setting parameter %d to \"%s\"\r\n"), json_parameter, outBuf);
@@ -6010,8 +6011,8 @@ void loop() {
 #endif
 #ifdef WEBCONFIG
             case 'I': {//Parse HTTP form and implement changes
-              implementConfig();
-              generateChangeConfigPage(false);
+              applyingConfig();
+              generateWebConfigPage(false);
               generateConfigPage();
 #ifdef MAX_CUL
               UpdateMaxDeviceList(); //Update list MAX! devices
@@ -6026,7 +6027,7 @@ void loop() {
               //no break here.
             case 'O': {//Just print current configuration (for debug purposes)
               generateConfigPage();
-              generateChangeConfigPage(true);
+              generateWebConfigPage(true);
               if (!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
             }
@@ -6034,7 +6035,7 @@ void loop() {
 #endif
             default:
 #ifdef WEBCONFIG
-              generateChangeConfigPage(false);
+              generateWebConfigPage(false);
 #endif
               generateConfigPage();
               if (!(httpflags & HTTP_FRAG)) webPrintFooter();
@@ -6946,6 +6947,7 @@ void setup() {
   registerConfigVariable(CF_TX_PIN, (byte *)&bus_pins[1]);
   registerConfigVariable(CF_DEVICE_FAMILY, (byte *)&fixed_device_family);
   registerConfigVariable(CF_DEVICE_VARIANT, (byte *)&fixed_device_variant);
+  registerConfigVariable(CF_CONFIG_LEVEL, (byte *)&config_level);
 
 #endif
 

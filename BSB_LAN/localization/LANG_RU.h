@@ -226,6 +226,7 @@
 #define CF_SHOW_UNKNOWN_TEXT "Показывать неизвестные параметры"
 #define CF_RX_PIN_TEXT "Номер вывода RX"
 #define CF_TX_PIN_TEXT "Номер вывода TX"
+#define CF_CONFIG_LEVEL_TEXT "Расширенные настройки"
 
 #define CAT_GENERAL_TEXT "Основные"
 #define CAT_IPV4_TEXT "Настройки IP"
