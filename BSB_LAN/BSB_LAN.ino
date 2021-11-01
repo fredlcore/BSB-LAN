@@ -3127,7 +3127,7 @@ int set(int line      // the ProgNr of the heater parameter
 
 #ifdef MQTT
   // Force to publish MQTT update during next loop as state may have been modified by this SET command
-  if (millis() - lastMQTTTime > 1000) {  // Only if the previous update is older than 1s
+  if (setcmd) {  // Only for SET messages
     lastMQTTTime = 0;
   }
 #endif
