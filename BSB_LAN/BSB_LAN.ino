@@ -3099,6 +3099,7 @@ void LogTelegram(byte* msg) {
  * Global resources used:
  *  Serial instance
  *  bus    instance
+ *  lastMQTTTime variable (#ifdef MQTT)
  * *************************************************************** */
 int set(int line      // the ProgNr of the heater parameter
       , const char *val          // the value to set
