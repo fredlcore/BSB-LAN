@@ -3837,6 +3837,7 @@ void query_printHTML() {
             if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && value != 0) {
               value = 1;
             }
+            if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
           }
           listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
           decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
@@ -5845,7 +5846,7 @@ void loop() {
                   strcat_P(pre_buf, PSTR("1"));
                   printFmtToWebClient(PSTR("    \"precision\": %s,\r\n"), pre_buf);
                 }
-                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.unit);
+                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.readwrite, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
