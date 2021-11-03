@@ -806,6 +806,7 @@ bool pps_time_received = false;
 bool pps_time_set = false;
 bool pps_wday_set = false;
 uint8_t current_switchday = 0;
+unsigned long pps_mcba_timer = millis();
 
 #include "BSB_LAN_EEPROMconfig.h"
 
@@ -3062,14 +3063,14 @@ void LogTelegram(byte* msg) {
         strcat_P(outBuf + outBufLen, PSTR(";"));
         const char *getfarstrings;
         switch (msg[0]) {
-          case 0x1D: getfarstrings = PSTR("HEIZ->QAA INF"); break;
-          case 0x1E: getfarstrings = PSTR("HEIZ->QAA REQ"); break;
-          case 0x17: getfarstrings = PSTR("HEIZ->QAA RTS"); break;
+          case 0x1D: getfarstrings = PSTR("PPS INF"); break;
+          case 0x1E: getfarstrings = PSTR("PPS REQ"); break;
+          case 0x17: getfarstrings = PSTR("PPS RTS"); break;
           case 0xF8:
           case 0xFB:
           case 0xFD:
           case 0xFE:
-            getfarstrings = PSTR("QAA->HEIZ ANS"); break;
+            getfarstrings = PSTR("PPS ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
         strcat_P(outBuf + outBufLen, getfarstrings);
@@ -4607,14 +4608,20 @@ void loop() {
 
 // PPS-Bus handling
       if (bus->getBusType() == BUS_PPS) {
-     log_now = pps_bus_handling(msg);
-
-
+        log_now = pps_bus_handling(msg);
       } // End PPS-bus handling
 
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
+
+    // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
+    if (pps_values[PPS_QTP] == 0xEA) {
+      if (millis() - pps_mcba_timer > 500) {
+        pps_query_mcba();
+        pps_mcba_timer = millis();
+      }
+    }
 
   } // endelse, NOT in monitor mode
 
@@ -6780,7 +6787,7 @@ void loop() {
   if (millis() - maintenance_timer > 60000) {
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
-    if(!my_dev_fam) {
+    if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
     }
 #if defined(WIFI) && defined(ESP32)

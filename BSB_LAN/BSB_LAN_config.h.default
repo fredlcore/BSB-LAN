@@ -219,7 +219,7 @@ byte dest_address = 0x00;
 // PPS:
 // - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
 bool pps_write = 0;
-byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x66 = BMU
+byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/DC225
 
 /* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
  * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here

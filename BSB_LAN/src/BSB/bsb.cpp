@@ -411,6 +411,7 @@ inline bool BSB::_send(byte* msg) {
             if (c < 16) Serial.print("0");
             Serial.print(c, HEX);
 #endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
           }
 #if DEBUG_LL
           Serial.println();
@@ -478,6 +479,17 @@ UART buffer gefüllt ist und ein empfangenes Byte meldet.
       serial->flush();
 #endif
     }
+    if (bus_type==2 && i==0 && data==0x17) {
+      unsigned long timeout = millis();
+      while ((millis()-timeout < 200) && serial->available() == 0) {
+        delay(1);
+      }
+      while (serial->available()) {
+        char c = readByte();
+        c = c;
+      }
+      return true;  // In case we emulate a DC225, we are regularly sending single byte (0x17) messages, so abort loop after first byte.
+    }
 /*
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
     if (rx_pin_read()) {
@@ -512,6 +524,7 @@ UART buffer gefüllt ist und ein empfangenes Byte meldet.
             if (c < 16) Serial.print("0");
             Serial.print(c, HEX);
 #endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
           }
 #if DEBUG_LL
           Serial.println();
