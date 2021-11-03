@@ -218,6 +218,10 @@ UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RGT3 Präsenztaste: Pin";
 UIStrings["CF_MDNS_HOSTNAME_TEXT"] = "mDNS Hostname";
 UIStrings["CF_NUM_TEXT"] = "Sensoren";
 UIStrings["CF_OTA_UPDATE_TEXT"] = "OTA Update";
+UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
+UIStrings["CF_RX_PIN_TEXT"] = "RX pin number";
+UIStrings["CF_TX_PIN_TEXT"] = "TX pin number";
+UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Advanced options";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
