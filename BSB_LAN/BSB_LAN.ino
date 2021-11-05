@@ -7028,8 +7028,14 @@ void setup() {
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
 #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
-    temp_bus_pins[0] = RX1;
-    temp_bus_pins[1] = TX1;
+    pinMode(4, INPUT);
+    if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
+      temp_bus_pins[0] = RX1;
+      temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX
+    } else {
+      temp_bus_pins[0] = RX1;
+      temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
+    }
 #else
     temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
