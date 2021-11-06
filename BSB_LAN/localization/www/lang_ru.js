@@ -223,7 +223,10 @@ UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "Кнопка принудительного
 UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "Кнопка присутствия RGT1 подключена к выводу";
 UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "Кнопка присутствия RGT2 подключена к выводу";
 UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "Кнопка присутствия RGT3 подключена к выводу";
-
+UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Показывать неизвестные параметры";
+UIStrings["CF_RX_PIN_TEXT"] = "Номер вывода RX";
+UIStrings["CF_TX_PIN_TEXT"] = "Номер вывода TX";
+UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Расширенные настройки";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Основные";
 UIStrings["CAT_IPV4_TEXT"] = "Настройки IP";
