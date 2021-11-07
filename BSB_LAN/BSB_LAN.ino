@@ -7095,7 +7095,8 @@ void setup() {
 
 #ifdef BME280
     if(BME_Sensors) {
-      printToDebug(PSTR("Init BMxx80 sensor(s)...\r\n"));
+      printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
+      if(BME_Sensors > 16) BME_Sensors = 16;
       bme = new BlueDot_BME280[BME_Sensors];
       for (uint8_t f = 0; f < BME_Sensors; f++) {
         bme[f].parameter.communication = 0;                     //I2C communication for Sensor
