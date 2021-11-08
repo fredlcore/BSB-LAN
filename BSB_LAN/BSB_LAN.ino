@@ -696,13 +696,17 @@ SdFat SD;
 // this patch (https://github.com/PaulStoffregen/OneWire/pull/93) should be applied for ESP32 support when OneWire library would be updated.
   #include "src/OneWire/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
-  #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
-//  #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
+  #ifndef TEMPERATURE_PRECISION
+    #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
+//    #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
+  #endif
 OneWire *oneWire;
 DallasTemperature *sensors;
 uint8_t numSensors;
 unsigned long lastOneWireRequestTime = 0;
-  #define ONE_WIRE_REQUESTS_PERIOD 25000 //sensors->requestTemperatures() calling period
+  #ifndef ONE_WIRE_REQUESTS_PERIOD
+    #define ONE_WIRE_REQUESTS_PERIOD 25000 //sensors->requestTemperatures() calling period
+  #endif
 #endif
 
 #ifdef DHT_BUS
@@ -775,7 +779,7 @@ uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
 uint8_t enable_byte;//optbl[?].enable_byte
 uint8_t payload_length;//optbl[?].payload_length
-uint8_t sensorid; //id of external (OneWire, DHT, MAX!) sensor for virtual programs. Must be zero for real program numbers.
+uint8_t sensorid; //id of external (OneWire, DHT, BME, MAX!) sensor for virtual programs. Must be zero for real program numbers.
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
 char value[64]; //decoded value from telegram to string
