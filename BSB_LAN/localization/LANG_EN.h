@@ -469,8 +469,7 @@
 
 #define ENUM130_01_TEXT "In operation"
 #define ENUM702_00_TEXT "Summer operation"
-#define ENUM780_00_TEXT "Off"
-#define ENUM2706_00_TEXT "Locked"
+#define ENUM2746_ff_TEXT "Locked"
 
 #define ENUM8000_03_TEXT "Limit thermostat hat cut out"
 #define ENUM8000_04_TEXT "Manual control active"
