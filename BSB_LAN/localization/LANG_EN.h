@@ -537,6 +537,7 @@
 #define ENUM8004_86_TEXT "Cooling limit OT active"
 #define ENUM8004_87_TEXT "Locking time after heating"
 #define ENUM8004_89_TEXT "Heating mode"
+#define ENUM8004_8a_TEXT "Cooling mode off"
 #define ENUM8004_90_TEXT "Cooling mode restricted"
 #define ENUM8004_92_TEXT "Cooling mode locked"
 #define ENUM8004_96_TEXT "Cooling mode Comfort"
