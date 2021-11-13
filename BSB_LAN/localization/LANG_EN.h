@@ -560,7 +560,6 @@
 #define ENUM8005_0d_TEXT "Return limitation"
 #define ENUM8005_0e_TEXT "Released, low-fire"
 #define ENUM8005_10_TEXT "Return temperature limitation, low-fire"
-#define ENUM8005_13_TEXT "Released"
 #define ENUM8005_14_TEXT "Minimum limitation"
 #define ENUM8005_15_TEXT "Minimum limitation, low-fire"
 #define ENUM8005_16_TEXT "Minimum limitation active"
