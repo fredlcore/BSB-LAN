@@ -469,7 +469,7 @@
 
 #define ENUM130_01_TEXT "In operation"
 #define ENUM702_00_TEXT "Summer operation"
-#define ENUM861_01 "Heating mode"
+#define ENUM861_01_TEXT "Heating mode"
 #define ENUM2746_ff_TEXT "Locked"
 #define ENUM2920_01_TEXT "Released"
 
