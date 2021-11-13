@@ -490,7 +490,6 @@
 #define ENUM8000_6d_TEXT "Forced discharging heat source"
 #define ENUM8000_6e_TEXT "Forced heat release"
 #define ENUM8000_6f_TEXT "Optimum start control + boost heating"
-#define ENUM8000_71_TEXT "Boost heating"
 #define ENUM8000_72_TEXT "Heating mode Comfort"
 #define ENUM8000_73_TEXT "Optimum stop control"
 #define ENUM8000_74_TEXT "Heating mode Reduced"
