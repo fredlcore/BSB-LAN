@@ -3037,7 +3037,6 @@
 #define ENUM8000_6d_TEXT "Zwangsabnahme Erzeuger"
 #define ENUM8000_6e_TEXT "Zwangsabnahme"
 #define ENUM8000_6f_TEXT "Einschaltoptimierung + Schnellaufheizung"
-#define ENUM8000_71_TEXT "Schnellaufheizung"
 #define ENUM8000_72_TEXT "Heizbetrieb Komfort"
 #define ENUM8000_73_TEXT "Ausschaltoptimierung"
 #define ENUM8000_74_TEXT "Heizbetrieb Reduziert"
