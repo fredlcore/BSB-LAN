@@ -258,7 +258,7 @@ typedef enum{
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
   VT_LPM_SHORT,         //  2 Byte - 1 enable / value / 10
-  VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x06 / minutes      Int08S
+  VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x01 / minutes      Int08S
   VT_MONTHS,            //  2 Byte - 1 enable 0x06 / months       Int08S
   VT_ONOFF,             //  2 Byte - 1 enable 0x01 / 0=Aus  1=An (auch 0xff=An)
 //  VT_MANUAUTO,          //  2 Byte - 1 enable 0x01 / 0=Automatisch  1=Manuell //FUJITSU
@@ -572,7 +572,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_LPBADDR,        1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
 {VT_LPM_SHORT,      10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
-{VT_MINUTES_SHORT,  1.0,    6, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
+{VT_MINUTES_SHORT,  1.0,    1, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
 {VT_MONTHS,         1.0,    6, 1, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
 {VT_ONOFF,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
 {VT_PERCENT,        1.0,    6, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
@@ -607,7 +607,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_MONTHS_WORD,    1.0,    1, 2, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
 {VT_HOUR_MINUTES,   1.0,    6, 2+32, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
 {VT_HOURS_WORD,     1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
-{VT_MINUTES_WORD,   1.0,    6, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
+{VT_MINUTES_WORD,   1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
 {VT_MINUTES_WORD10, 0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
 {VT_PERCENT_WORD1,  1.0,    6, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
 {VT_PERCENT_WORD,   2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
