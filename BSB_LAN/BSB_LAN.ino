@@ -710,8 +710,13 @@ unsigned long lastOneWireRequestTime = 0;
 #endif
 
 #ifdef DHT_BUS
-  #include "src/DHT/DHT.h"
+  #if defined(__AVR__)
+    #include "src/DHT/DHT.h"
 DHT dht;
+  #else
+    #include "src/DHTesp/DHTesp.h"
+DHTesp dht;
+  #endif
 //Save state between queries
 unsigned long DHT_Timer = 0;
 int last_DHT_State = 0;
@@ -3944,16 +3949,30 @@ void queryVirtualPrognr(int line, int table_line) {
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
+#if defined(__AVR__)
         dht.setup(last_DHT_pin);
+#elif defined(ESP32)
+        dht.setup(last_DHT_pin, DHTesp::DHT22);
+#else
+        dht.setup(last_DHT_pin, DHTesp::AUTO_DETECT);
+#endif
       }
 
       printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
       switch (dht.getStatus()) {
+#if defined(__AVR__)
         case DHT::ERROR_CHECKSUM:
+#else
+        case DHTesp::ERROR_CHECKSUM:
+#endif
           decodedTelegram.error = 256;
           printlnToDebug(PSTR("Checksum error"));
           break;
-        case DHT::ERROR_TIMEOUT:
+  #if defined(__AVR__)
+          case DHT::ERROR_TIMEOUT:
+  #else
+          case DHTesp::ERROR_TIMEOUT:
+  #endif
           decodedTelegram.error = 261;
           printlnToDebug(PSTR("Time out error"));
          break;
@@ -5466,7 +5485,7 @@ void loop() {
             int16_t http_code = HTTP_OK;
             long cache_time = HTTP_DO_NOT_CACHE;
 
-            if ((p[2] == 'C' || p[2] == 'K') && json_token!=NULL) {
+            if (json_token!=NULL && (p[2] == 'C' || (p[2] == 'K' && atoi(json_token) != CAT_USERSENSORS))) {
               cache_time = 300; //5 min
               if ((httpflags & HTTP_ETAG))
                 http_code = HTTP_NOT_MODIFIED;
