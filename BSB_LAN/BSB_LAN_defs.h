@@ -779,8 +779,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
@@ -4447,14 +4447,16 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 
 /* ENUM tables */
 const char ENUM20[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x01 " "?" ENUM20_01_TEXT "\0"
-"\x02 " "?" ENUM20_02_TEXT "\0"
-"\x03 " "?" ENUM20_03_TEXT "\0"
-"\x04 " "?" ENUM20_04_TEXT "\0"
-"\x05 " "?" ENUM20_05_TEXT "\0"
-"\x06 " "?" ENUM20_06_TEXT "\0"
-"\x07 " "?" ENUM20_07_TEXT "\0"
-"\x08 " "?" ENUM20_08_TEXT
+"\x01 " ENUM20_01_TEXT "\0"
+"\x02 " ENUM20_02_TEXT "\0"
+"\x03 " ENUM20_03_TEXT "\0"
+"\x04 " ENUM20_04_TEXT "\0"
+"\x05 " ENUM20_05_TEXT "\0"
+"\x06 " ENUM20_06_TEXT "\0"
+"\x07 " ENUM20_07_TEXT "\0"
+"\x07 " ENUM20_08_TEXT "\0"
+"\x07 " ENUM20_09_TEXT "\0"
+"\x08 " ENUM20_10_TEXT
 };
 // numerical values are hypothetical
 const char ENUM22[] PROGMEM_LATEST = {
