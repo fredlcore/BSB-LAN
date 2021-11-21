@@ -157,6 +157,8 @@
 #define DEV_211_ALL  211,255 // Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteidentifikation: RVS21.831F/127)
 #define DEV_ALL      255,255 // All devices
 #define DEV_NONE     0,0
+#define DEV_PPS      0,1
+#define DEV_PPS_MCBA 0,2
 
 /*
 typedef struct {
@@ -13627,8 +13629,9 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2D280008,  CAT_PPS,              VT_TEMP,          15008, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
 {0x2D570014,  CAT_PPS,              VT_ONOFF,         15020, STR5010,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Trinkwasserladung
 {0x2D2B0015,  CAT_PPS,              VT_TEMP,          15021, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0016,  CAT_PPS,              VT_TEMP,          15022, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D1E0016,  CAT_PPS,              VT_TEMP,          15022, STR1612,  0,                    NULL,         FL_RONLY, DEV_PPS},     // Trinkwassertemperatur Reduziert Soll
+{0x2D0B0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS}, // Trinkwassertemperatur Soll
+{0x2D0C0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS_MCBA}, // Trinkwassertemperatur Soll
 {0x2D29001E,  CAT_PPS,              VT_TEMP,          15030, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D57001F,  CAT_PPS,              VT_TEMP,          15031, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
 {0x2D2E0020,  CAT_PPS,              VT_TEMP,          15032, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur

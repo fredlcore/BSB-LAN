@@ -7522,6 +7522,14 @@ void setup() {
 
 // receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
     SetDevId();
+  } else {
+    if (pps_values[PPS_QTP] == 0xEA) {
+      my_dev_fam = 0;
+      my_dev_var = 2;
+    } else {
+      my_dev_fam = 0;
+      my_dev_var = 2;
+    }
   }
 
 #ifdef MAX_CUL
