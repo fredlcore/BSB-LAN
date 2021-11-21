@@ -3100,6 +3100,7 @@ void LogTelegram(byte* msg) {
  *  Serial instance
  *  bus    instance
  *  lastMQTTTime variable (#ifdef MQTT)
+ *  log_interval variable (#ifdef MQTT)
  * *************************************************************** */
 int set(int line      // the ProgNr of the heater parameter
       , const char *val          // the value to set
@@ -3127,9 +3128,15 @@ int set(int line      // the ProgNr of the heater parameter
   }
 
 #ifdef MQTT
-  // Force to publish MQTT update during next loop as state may have been modified by this SET command
+  // Force to publish MQTT update in 1s as state may have been modified by this SET command
+  // Wait 1s to ensure all values are updated in the microcontroller
+  // (e.g., moving from Off to Automatic: state circuit 1 is updated after dozen of ms)
   if (setcmd) {  // Only for SET messages
-    lastMQTTTime = 0;
+    if (millis() - log_interval * 1000 + 1000 > 0) {
+      lastMQTTTime = millis() - log_interval * 1000 + 1000;
+    } else {
+      lastMQTTTime = 0;
+    }
   }
 #endif
 
