@@ -7528,7 +7528,7 @@ void setup() {
       my_dev_var = 2;
     } else {
       my_dev_fam = 0;
-      my_dev_var = 2;
+      my_dev_var = 1;
     }
   }
 
