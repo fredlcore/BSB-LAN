@@ -4655,7 +4655,7 @@ void loop() {
    // At this point drop possible GetMessage() failures silently
 
     // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
-    if (pps_values[PPS_QTP] == 0xEA) {
+    if (pps_values[PPS_QTP] == 0xEA && pps_write == 1) {
       unsigned long milliseconds = millis();
       if (milliseconds - pps_mcba_timer > 500 || pps_mcba_timer > milliseconds) {
         pps_query_mcba();
@@ -7101,8 +7101,14 @@ void setup() {
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
 #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
-    temp_bus_pins[0] = RX1;
-    temp_bus_pins[1] = TX1;
+    pinMode(4, INPUT);
+    if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
+      temp_bus_pins[0] = RX1;
+      temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX
+    } else {
+      temp_bus_pins[0] = RX1;
+      temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
+    }
 #else
     temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
@@ -7560,6 +7566,14 @@ void setup() {
 
 // receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
     SetDevId();
+  } else {
+    if (pps_values[PPS_QTP] == 0xEA) {
+      my_dev_fam = 0;
+      my_dev_var = 2;
+    } else {
+      my_dev_fam = 0;
+      my_dev_var = 1;
+    }
   }
 
 #ifdef MAX_CUL

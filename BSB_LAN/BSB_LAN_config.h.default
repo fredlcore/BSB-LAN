@@ -206,7 +206,7 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
 
 // Setting bus pins and bus type
 
-byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due and 68,69 for Mega).
+byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB and 68,69 for Mega).
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
