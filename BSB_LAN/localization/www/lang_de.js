@@ -222,8 +222,6 @@ UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
 UIStrings["CF_RX_PIN_TEXT"] = "RX pin number";
 UIStrings["CF_TX_PIN_TEXT"] = "TX pin number";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Advanced options";
-UIStrings["CF_ENABLE_BLE_TEXT"] = "Query sensors";
-UIStrings["CF_BLE_SENSORS_MACS_TEXT"] = "List sensors MACs for reading";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
@@ -238,7 +236,6 @@ UIStrings["CAT_LOGGING_TEXT"] = "Logging";
 UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "RGT Emulation";
 UIStrings["CAT_BMEBUS_TEXT"] = "BME280 sensors";
-UIStrings["CAT_BLEBUS_TEXT"] = "BLE sensors";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Uhrzeit";
@@ -2170,11 +2167,6 @@ UIStrings["STR20502_TEXT"] = "MAX! Sensor Soll-Temperatur";
 UIStrings["STR20503_TEXT"] = "MAX! Sensor Ventilöffnung";
 UIStrings["STR20700_TEXT"] = "custom_float";
 UIStrings["STR20800_TEXT"] = "custom_long";
-UIStrings["STR20900_TEXT"] = "BLE Sensor ID";
-UIStrings["STR20901_TEXT"] = "BLE Sensor Temperatur";
-UIStrings["STR20902_TEXT"] = "BLE Sensor Luftfeuchtigkeit";
-UIStrings["STR20903_TEXT"] = "BLE Sensor Pressure";
-UIStrings["STR20904_TEXT"] = "BLE Battery voltage";
 
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
@@ -2193,13 +2185,11 @@ UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";
 UIStrings["ENUM20_03_TEXT"] = "Francais";
-UIStrings["ENUM20_04_TEXT"] = "Italiano";
-UIStrings["ENUM20_05_TEXT"] = "Nederlands";
+UIStrings["ENUM20_04_TEXT"] = "Nederlands";
+UIStrings["ENUM20_05_TEXT"] = "Italiano";
 UIStrings["ENUM20_06_TEXT"] = "Espanol";
-UIStrings["ENUM20_07_TEXT"] = "Portuguese";
-UIStrings["ENUM20_08_TEXT"] = "Dansk/Ceski/Polski";
-UIStrings["ENUM20_09_TEXT"] = "Suomi";
-UIStrings["ENUM20_10_TEXT"] = "Svenska";
+UIStrings["ENUM20_07_TEXT"] = "Polski";
+UIStrings["ENUM20_08_TEXT"] = "Ceski";
 UIStrings["ENUM22_01_TEXT"] = "Temporär";
 UIStrings["ENUM22_02_TEXT"] = "Permanent";
 UIStrings["ENUM23_00_TEXT"] = "Code";
