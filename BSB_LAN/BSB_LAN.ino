@@ -723,7 +723,7 @@ int last_DHT_State = 0;
 uint8_t last_DHT_pin = 0;
 #endif
 
-unsigned long maintenance_timer = millis();
+unsigned long maintenance_timer = millis() / 60000;
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -888,7 +888,7 @@ void checkSockStatus()
     SPI.endTransaction();
 
     if ((s == 0x14) || (s == 0x1C)) {
-        if (thisTime - connectTime[i] > 30000UL) {
+        if (thisTime - connectTime[i] > 30000UL || connectTime[i] > thisTime) {
           printFmtToDebug(PSTR("\r\nSocket frozen: %d\r\n"), i);
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
           W5100.execCmdSn(s, Sock_DISCON);
@@ -2361,16 +2361,26 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
       break;}
     case CDT_MAC:{
       unsigned int i0, i1, i2, i3, i4, i5;
-      strcpy_P(sscanf_buf, PSTR("%x:%x:%x:%x:%x:%x"));
-      sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5);
-      byte variable[6];
-      variable[0] = (byte)(i0 & 0xFF);
-      variable[1] = (byte)(i1 & 0xFF);
-      variable[2] = (byte)(i2 & 0xFF);
-      variable[3] = (byte)(i3 & 0xFF);
-      variable[4] = (byte)(i4 & 0xFF);
-      variable[5] = (byte)(i5 & 0xFF);
-      writeToConfigVariable(option_id, variable);
+      uint16_t j = 0;
+      char *ptr = buf;
+      byte *variable = getConfigVariableAddress(option_id);
+      memset(variable, 0, cfg.size);
+      do{
+        char *ptr_t = ptr;
+        ptr = strchr(ptr, ',');
+        if (ptr) ptr[0] = 0;
+        strcpy_P(sscanf_buf, PSTR("%x:%x:%x:%x:%x:%x"));
+        if(sscanf(ptr_t, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5) == 6) {
+          ((byte *)variable)[j * sizeof(mac) + 0] = (byte)(i0 & 0xFF);
+          ((byte *)variable)[j * sizeof(mac) + 1] = (byte)(i1 & 0xFF);
+          ((byte *)variable)[j * sizeof(mac) + 2] = (byte)(i2 & 0xFF);
+          ((byte *)variable)[j * sizeof(mac) + 3] = (byte)(i3 & 0xFF);
+          ((byte *)variable)[j * sizeof(mac) + 4] = (byte)(i4 & 0xFF);
+          ((byte *)variable)[j * sizeof(mac) + 5] = (byte)(i5 & 0xFF);
+        }
+        if (ptr) {ptr[0] = ','; ptr++;}
+        j++;
+      }while (ptr && j < cfg.size/sizeof(mac));
       break;
     }
     case CDT_IPV4:{
@@ -2627,6 +2637,59 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, boolean printCurre
   }
 }
 
+void printMAClistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(mac); j++) {
+    bool mac_valid = false;
+    for(int m = 0; m < sizeof(mac); m++){
+      if(variable[j * sizeof(mac) + m]){
+        mac_valid = true;
+        break;
+      }
+    }
+    if (mac_valid) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      bin2hex(outBuf, variable + j * sizeof(mac), sizeof(mac), ':');
+      printToWebClient(outBuf);
+      outBuf[0] = 0;
+    }
+  }
+}
+
+void printDHTlistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(byte); j++) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printFmtToWebClient(PSTR("%d"), variable[j]);
+    }
+  }
+}
+
+void printProglistToWebClient(int *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(int); j++) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printFmtToWebClient(PSTR("%d"), variable[j]);
+    }
+  }
+}
+
+void printMAXlistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(byte); j += sizeof(max_device_list[0])) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printFmtToWebClient(PSTR("%s"), variable + j);
+    }
+  }
+}
+
 void generateWebConfigPage(boolean printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   if(!printOnly){
@@ -2672,7 +2735,7 @@ void generateWebConfigPage(boolean printOnly) {
        printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
        switch (cfg.var_type) {
          case CDT_MAC:
-           printToWebClient(PSTR("pattern='^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'"));
+           printToWebClient(PSTR("pattern='((^|,)([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))*$'"));
            break;
          case CDT_IPV4:
            printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
@@ -2745,44 +2808,20 @@ void generateWebConfigPage(boolean printOnly) {
        printFmtToWebClient(PSTR("%s"), (char *)variable);
        break;
      case CDT_MAC:
-       bin2hex(outBuf, variable, 6, ':');
-       printToWebClient(outBuf);
-       outBuf[0] = 0;
-  //       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
+       printMAClistToWebClient((byte *)variable, cfg.size);
        break;
      case CDT_IPV4:
        printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
        break;
-     case CDT_PROGNRLIST:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(int); j++) {
-         if (((int *)variable)[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
-         }
-       }
-       break;}
-     case CDT_DHTBUS:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(byte); j++) {
-         if (variable[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%d"), variable[j]);
-         }
-       }
-       break;}
-     case CDT_MAXDEVICELIST:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])) {
-         if (variable[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%s"), variable + j);
-         }
-       }
-       break;}
+     case CDT_PROGNRLIST:
+       printProglistToWebClient((int *)variable, cfg.size);
+       break;
+     case CDT_DHTBUS:
+       printDHTlistToWebClient((byte *)variable, cfg.size);
+       break;
+     case CDT_MAXDEVICELIST:
+       printMAXlistToWebClient((byte *)variable, cfg.size);
+       break;
      default: break;
    }
 
@@ -2864,13 +2903,13 @@ void generateJSONwithConfig() {
                i=findLine(65533,0,NULL); //return ENUM_ONOFF
                break;
            }
-           printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
+           printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
            printConfigJSONPossibleValues(i);
            break;}
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
-             printFmtToWebClient(PSTR("%d\",\r\n"), (uint16_t)variable[0]);
+             printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
              printConfigJSONPossibleValues(i);
            }
            break;}
@@ -2890,7 +2929,7 @@ void generateJSONwithConfig() {
                break;
            }
            if (i > 0) {
-             printFmtToWebClient(PSTR("%d\",\r\n"), ((uint16_t *)variable)[0]);
+             printFmtToWebClient(PSTR("%u\",\r\n"), ((uint16_t *)variable)[0]);
              printConfigJSONPossibleValues(i);
            }
            break;}
@@ -2903,48 +2942,25 @@ void generateJSONwithConfig() {
        printFmtToWebClient(PSTR("%s\""), (char *)variable);
        break;
      case CDT_MAC:
-       bin2hex(outBuf, variable, 6, ':');
-       printToWebClient(outBuf);
-       outBuf[0] = 0;
+       printMAClistToWebClient((byte *)variable, cfg.size);
        printToWebClient(PSTR("\""));
   //       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
        break;
      case CDT_IPV4:
        printFmtToWebClient(PSTR("%u.%u.%u.%u\""), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
        break;
-     case CDT_PROGNRLIST:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(int); j++) {
-         if (((int *)variable)[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%d"), ((int *)variable)[j]);
-         }
-       }
+     case CDT_PROGNRLIST:
+       printProglistToWebClient((int *)variable, cfg.size);
        printToWebClient(PSTR("\""));
-       break;}
-     case CDT_DHTBUS:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(byte); j++) {
-         if (variable[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%d"), variable[j]);
-         }
-       }
+       break;
+     case CDT_DHTBUS:
+       printDHTlistToWebClient((byte *)variable, cfg.size);
        printToWebClient(PSTR("\""));
-       break;}
-     case CDT_MAXDEVICELIST:{
-       bool isFirst = true;
-       for (uint16_t j = 0; j < cfg.size/sizeof(byte); j += sizeof(max_device_list[0])) {
-         if (variable[j]) {
-           if (!isFirst) printToWebClient(PSTR(","));
-           isFirst = false;
-           printFmtToWebClient(PSTR("%s"), variable + j);
-         }
-       }
+       break;
+     case CDT_MAXDEVICELIST:
+       printMAXlistToWebClient((byte *)variable, cfg.size);
        printToWebClient(PSTR("\""));
-       break;}
+       break;
      default: break;
    }
   }
@@ -4640,9 +4656,10 @@ void loop() {
 
     // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
     if (pps_values[PPS_QTP] == 0xEA) {
-      if (millis() - pps_mcba_timer > 500) {
+      unsigned long milliseconds = millis();
+      if (milliseconds - pps_mcba_timer > 500 || pps_mcba_timer > milliseconds) {
         pps_query_mcba();
-        pps_mcba_timer = millis();
+        pps_mcba_timer = milliseconds;
       }
     }
 
@@ -5223,7 +5240,7 @@ void loop() {
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
             unsigned long startquery = millis();
-            while (millis() - startquery < 10000) {
+            while (millis() - startquery < 10000 && millis() >= startquery) {
               if (bus->GetMessage(msg)) {
                 uint8_t found_id = 0;
                 bool found = false;
@@ -6453,9 +6470,10 @@ void loop() {
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
-
-      if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
-        lastMQTTTime = millis();
+      unsigned long milliseconds = millis();
+      if(lastMQTTTime > milliseconds) lastMQTTTime = milliseconds;
+      if ((((milliseconds - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+        lastMQTTTime = milliseconds;
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i] > 0) {
             mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
@@ -6483,7 +6501,9 @@ void loop() {
   freespace = SD.vol()->freeClusterCount();
 #endif
   if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
-    if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
+    unsigned long milliseconds = millis();
+    if(lastLogTime > milliseconds) lastLogTime = milliseconds;
+    if (((milliseconds - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
@@ -6807,8 +6827,8 @@ void loop() {
   }
 #endif
 
-  if (millis() - maintenance_timer > 60000) {
-    maintenance_timer = millis();
+  if (millis() / 60000 != maintenance_timer) {
+    maintenance_timer = millis() / 60000;
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
@@ -7306,7 +7326,7 @@ void setup() {
   #endif
   }
 
-  unsigned long timeout = millis();
+  unsigned long timeout;
   #ifdef ESP32
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
