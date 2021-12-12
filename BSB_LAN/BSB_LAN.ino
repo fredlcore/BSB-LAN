@@ -723,7 +723,7 @@ int last_DHT_State = 0;
 uint8_t last_DHT_pin = 0;
 #endif
 
-unsigned long maintenance_timer = millis() / 60000;
+unsigned long maintenance_timer = millis();
 unsigned long lastAvgTime = 0;
 unsigned long lastLogTime = millis();
 #ifdef MQTT
@@ -888,7 +888,7 @@ void checkSockStatus()
     SPI.endTransaction();
 
     if ((s == 0x14) || (s == 0x1C)) {
-        if (thisTime - connectTime[i] > 30000UL || connectTime[i] > thisTime) {
+        if (thisTime - connectTime[i] > 30000UL) {
           printFmtToDebug(PSTR("\r\nSocket frozen: %d\r\n"), i);
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
           W5100.execCmdSn(s, Sock_DISCON);
@@ -4656,10 +4656,9 @@ void loop() {
 
     // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
     if (pps_values[PPS_QTP] == 0xEA && pps_write == 1) {
-      unsigned long milliseconds = millis();
-      if (milliseconds - pps_mcba_timer > 500 || pps_mcba_timer > milliseconds) {
+      if (millis() - pps_mcba_timer > 500) {
         pps_query_mcba();
-        pps_mcba_timer = milliseconds;
+        pps_mcba_timer = millis();
       }
     }
 
@@ -5240,7 +5239,7 @@ void loop() {
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
             unsigned long startquery = millis();
-            while (millis() - startquery < 10000 && millis() >= startquery) {
+            while (millis() - startquery < 10000) {
               if (bus->GetMessage(msg)) {
                 uint8_t found_id = 0;
                 bool found = false;
@@ -6470,10 +6469,9 @@ void loop() {
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
-      unsigned long milliseconds = millis();
-      if(lastMQTTTime > milliseconds) lastMQTTTime = milliseconds;
-      if ((((milliseconds - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
-        lastMQTTTime = milliseconds;
+
+      if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
+        lastMQTTTime = millis();
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i] > 0) {
             mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
@@ -6501,9 +6499,7 @@ void loop() {
   freespace = SD.vol()->freeClusterCount();
 #endif
   if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
-    unsigned long milliseconds = millis();
-    if(lastLogTime > milliseconds) lastLogTime = milliseconds;
-    if (((milliseconds - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
+    if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
       File dataFile = SD.open(datalogFileName, FILE_WRITE);
@@ -6827,8 +6823,8 @@ void loop() {
   }
 #endif
 
-  if (millis() / 60000 != maintenance_timer) {
-    maintenance_timer = millis() / 60000;
+  if (millis() - maintenance_timer > 60000) {
+    maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
@@ -7568,11 +7564,11 @@ void setup() {
     SetDevId();
   } else {
     if (pps_values[PPS_QTP] == 0xEA) {
-      my_dev_fam = 0;
-      my_dev_var = 2;
+      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
+      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
     } else {
-      my_dev_fam = 0;
-      my_dev_var = 1;
+      my_dev_fam = DEV_FAM(DEV_PPS);
+      my_dev_var = DEV_VAR(DEV_PPS);
     }
   }
 
