@@ -5357,32 +5357,36 @@ void loop() {
           printToWebClient(PSTR("\r\nComplete dump:\r\n"));
           c = 0;
           bus->Send(TYPE_IQ1, c, msg, tx_msg);
-          int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
-          bus->Send(TYPE_IQ2, c, msg, tx_msg);
-          int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
-          int outBufLen = strlen(outBuf);
-
-          for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+          if (msg[4+bus->getBusType()*4] == 0x13) {
+            int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+            bus->Send(TYPE_IQ2, c, msg, tx_msg);
+            int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+            int outBufLen = strlen(outBuf);
+  
+            for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
 #if defined(ESP32)
-            esp_task_wdt_reset();
+              esp_task_wdt_reset();
 #endif
-            bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
-            flushToWebClient();
-          }
-          for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+              bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf + outBufLen);
+              printToWebClient(PSTR("\r\n"));
+              flushToWebClient();
+            }
+            for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
 #if defined(ESP32)
-            esp_task_wdt_reset();
+              esp_task_wdt_reset();
 #endif
-            bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
-            flushToWebClient();
+              bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf + outBufLen);
+              printToWebClient(PSTR("\r\n"));
+              flushToWebClient();
+            }
+            outBuf[outBufLen] = 0;
+          } else {
+            printToWebClient(PSTR("\r\nNot supported by this device. No problem.\r\n"));
           }
-          outBuf[outBufLen] = 0;
           printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
 //          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
@@ -6854,6 +6858,7 @@ void setup() {
   SerialOutput->println(F("READY"));
 
 #if defined(ESP32)
+  setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
   #ifndef WDT_TIMEOUT
   //set watchdog timeout 120 seconds
     #define WDT_TIMEOUT 120
