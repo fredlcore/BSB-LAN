@@ -3339,11 +3339,24 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_ENERGY:
     case VT_MINUTES:
       {
-      uint32_t t = 0;
+      char* val1 = (char *)val;
       if (val[0] == '-') {
-        t=((int)(atof(val)*decodedTelegram.operand));
-      } else {
-        t=atof(val)*decodedTelegram.operand;
+        val1++;
+      }
+      uint32_t t = atoi(val1) * decodedTelegram.operand;
+      val1 = strchr(val, '.');
+      if(val1) {
+        val1++;
+        int len = strlen(val1);
+        uint32_t tpart = atoi(val1) * decodedTelegram.operand;
+        for(int d = 0; d < len; d++) {
+          if(tpart % 10 > 4 && d + 1 == len) tpart += 10; //rounding
+          tpart /= 10;
+        }
+        t += tpart;
+      }
+      if (val[0] == '-') {
+        t = -1 * (int) t;
       }
       for (int x=decodedTelegram.payload_length;x>0;x--) {
         param[decodedTelegram.payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
