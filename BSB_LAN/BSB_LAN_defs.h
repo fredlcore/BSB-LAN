@@ -160,6 +160,11 @@
 #define DEV_PPS      0,1
 #define DEV_PPS_MCBA 0,2
 
+#define DEV_FAM_(X, Y) ((X))
+#define DEV_VAR_(X, Y) ((Y))
+#define DEV_FAM(...) DEV_FAM_(__VA_ARGS__)
+#define DEV_VAR(...) DEV_VAR_(__VA_ARGS__)
+
 /*
 typedef struct {
   uint8_t    dev_family;             // Gerätefamilie
