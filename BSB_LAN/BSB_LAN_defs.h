@@ -157,6 +157,13 @@
 #define DEV_211_ALL  211,255 // Fujitsu Waterstage WSYP100DG6 (Gerätevariante: 127, Geräteidentifikation: RVS21.831F/127)
 #define DEV_ALL      255,255 // All devices
 #define DEV_NONE     0,0
+#define DEV_PPS      0,1
+#define DEV_PPS_MCBA 0,2
+
+#define DEV_FAM_(X, Y) ((X))
+#define DEV_VAR_(X, Y) ((Y))
+#define DEV_FAM(...) DEV_FAM_(__VA_ARGS__)
+#define DEV_VAR(...) DEV_VAR_(__VA_ARGS__)
 
 /*
 typedef struct {
@@ -258,7 +265,7 @@ typedef enum{
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
   VT_LPM_SHORT,         //  2 Byte - 1 enable / value / 10
-  VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x06 / minutes      Int08S
+  VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x01 / minutes      Int08S
   VT_MONTHS,            //  2 Byte - 1 enable 0x06 / months       Int08S
   VT_ONOFF,             //  2 Byte - 1 enable 0x01 / 0=Aus  1=An (auch 0xff=An)
 //  VT_MANUAUTO,          //  2 Byte - 1 enable 0x01 / 0=Automatisch  1=Manuell //FUJITSU
@@ -572,7 +579,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_LPBADDR,        1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
 {VT_LPM_SHORT,      10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
-{VT_MINUTES_SHORT,  1.0,    6, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
+{VT_MINUTES_SHORT,  1.0,    1, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
 {VT_MONTHS,         1.0,    6, 1, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
 {VT_ONOFF,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
 {VT_PERCENT,        1.0,    6, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
@@ -607,7 +614,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_MONTHS_WORD,    1.0,    1, 2, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
 {VT_HOUR_MINUTES,   1.0,    6, 2+32, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
 {VT_HOURS_WORD,     1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
-{VT_MINUTES_WORD,   1.0,    6, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
+{VT_MINUTES_WORD,   1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
 {VT_MINUTES_WORD10, 0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
 {VT_PERCENT_WORD1,  1.0,    6, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
 {VT_PERCENT_WORD,   2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
@@ -779,8 +786,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344, 6345, 6346, 6347, 6348};
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
@@ -4447,14 +4454,16 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 
 /* ENUM tables */
 const char ENUM20[] PROGMEM_LATEST = { // numerical values are hypothetical
-"\x01 " "?" ENUM20_01_TEXT "\0"
-"\x02 " "?" ENUM20_02_TEXT "\0"
-"\x03 " "?" ENUM20_03_TEXT "\0"
-"\x04 " "?" ENUM20_04_TEXT "\0"
-"\x05 " "?" ENUM20_05_TEXT "\0"
-"\x06 " "?" ENUM20_06_TEXT "\0"
-"\x07 " "?" ENUM20_07_TEXT "\0"
-"\x08 " "?" ENUM20_08_TEXT
+"\x01 " ENUM20_01_TEXT "\0"
+"\x02 " ENUM20_02_TEXT "\0"
+"\x03 " ENUM20_03_TEXT "\0"
+"\x04 " ENUM20_04_TEXT "\0"
+"\x05 " ENUM20_05_TEXT "\0"
+"\x06 " ENUM20_06_TEXT "\0"
+"\x07 " ENUM20_07_TEXT "\0"
+"\x07 " ENUM20_08_TEXT "\0"
+"\x07 " ENUM20_09_TEXT "\0"
+"\x08 " ENUM20_10_TEXT
 };
 // numerical values are hypothetical
 const char ENUM22[] PROGMEM_LATEST = {
@@ -13625,8 +13634,9 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2D280008,  CAT_PPS,              VT_TEMP,          15008, STR8721,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Raumtemperatur Ist
 {0x2D570014,  CAT_PPS,              VT_ONOFF,         15020, STR5010,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Trinkwasserladung
 {0x2D2B0015,  CAT_PPS,              VT_TEMP,          15021, STR8830,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
-{0x2D1E0016,  CAT_PPS,              VT_TEMP,          15022, STR1612,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Trinkwassertemperatur Soll
+{0x2D1E0016,  CAT_PPS,              VT_TEMP,          15022, STR1612,  0,                    NULL,         FL_RONLY, DEV_PPS},     // Trinkwassertemperatur Reduziert Soll
+{0x2D0B0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS}, // Trinkwassertemperatur Soll
+{0x2D0C0017,  CAT_PPS,              VT_TEMP,          15023, STR1610,  0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS_MCBA}, // Trinkwassertemperatur Soll
 {0x2D29001E,  CAT_PPS,              VT_TEMP,          15030, STR8700,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D57001F,  CAT_PPS,              VT_TEMP,          15031, STR8704,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
 {0x2D2E0020,  CAT_PPS,              VT_TEMP,          15032, STR8743,  0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
