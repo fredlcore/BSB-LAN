@@ -68,8 +68,10 @@
  *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in BSB_LAN_config.h (LAN in caps), and no longer in BSB_lan_config.h (lower-caps "lan")
  *        - ATTENTION: HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!
- *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most features are working right now.
- *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. ESP32 code uses SDK version 2.0.2, please take note when configuring Arduino IDE!
+ *        - OTA Updates now possible for ESP32-based devices
+ *        - Support for special PPS devices (based on DC225/Honeywell MCBA) added
+ *        - Webinterface allows for configuration of most settings without the need to re-flash, also split into basic and extended configuration
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_SUPPORT definement in config so that BSB-LAN can be discovered through mDNS
  *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
@@ -82,6 +84,7 @@
  *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
+ *        - URL command /JB allows for backing up parameters to JSON file 
  *        - New library for DHT22 should provide more reliable results
  *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
  *        - MQTT: Use MQTTDeviceID as a client ID for the broker, still defaults to BSB-LAN. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.
@@ -507,7 +510,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 WebServer update_server(8080);
 #endif
 
-EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
+EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
 #define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 
 #define strcpy_PF strcpy
@@ -5409,32 +5412,36 @@ void loop() {
           printToWebClient(PSTR("\r\nComplete dump:\r\n"));
           c = 0;
           bus->Send(TYPE_IQ1, c, msg, tx_msg);
-          int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
-          bus->Send(TYPE_IQ2, c, msg, tx_msg);
-          int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
-          int outBufLen = strlen(outBuf);
-
-          for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+          if (msg[4+bus->getBusType()*4] == 0x13) {
+            int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+            bus->Send(TYPE_IQ2, c, msg, tx_msg);
+            int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+            int outBufLen = strlen(outBuf);
+  
+            for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
 #if defined(ESP32)
-            esp_task_wdt_reset();
+              esp_task_wdt_reset();
 #endif
-            bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
-            flushToWebClient();
-          }
-          for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+              bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf + outBufLen);
+              printToWebClient(PSTR("\r\n"));
+              flushToWebClient();
+            }
+            for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
 #if defined(ESP32)
-            esp_task_wdt_reset();
+              esp_task_wdt_reset();
 #endif
-            bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
-            flushToWebClient();
+              bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf + outBufLen);
+              printToWebClient(PSTR("\r\n"));
+              flushToWebClient();
+            }
+            outBuf[outBufLen] = 0;
+          } else {
+            printToWebClient(PSTR("\r\nNot supported by this device. No problem.\r\n"));
           }
-          outBuf[outBufLen] = 0;
           printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
 //          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
@@ -6906,6 +6913,7 @@ void setup() {
   SerialOutput->println(F("READY"));
 
 #if defined(ESP32)
+  setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
   #ifndef WDT_TIMEOUT
   //set watchdog timeout 120 seconds
     #define WDT_TIMEOUT 120
@@ -7152,42 +7160,42 @@ void setup() {
 #endif
 
 #ifdef BME280
-    if(BME_Sensors) {
-      printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
-      if(BME_Sensors > 16) BME_Sensors = 16;
-      bme = new BlueDot_BME280[BME_Sensors];
-      for (uint8_t f = 0; f < BME_Sensors; f++) {
-        bme[f].parameter.communication = 0;                     //I2C communication for Sensor
-        //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
-        if(BME_Sensors > 2){
-        // fill ports 1-8 on multiplexor first with devices with address 0x76.
-        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
-          bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
-          tcaselect(f & 0x07);                                  //Select channel on multiplexor
-        } else {
-          bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
-        }
-        bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
-        bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
-        bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
-        bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
-        bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
-        bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
-        bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
-        bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-        boolean sensor_found = true;
-        switch(bme[f].init()){
-          case 0x58: printToDebug(PSTR("BMP280")); break;
-          case 0x60: printToDebug(PSTR("BME280")); break;
-          default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
-        }
-        printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
-        if (!sensor_found) {
-          printToDebug(PSTR("NOT "));
-        }
-        printToDebug(PSTR("found\r\n"));
+  if(BME_Sensors) {
+    printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
+    if(BME_Sensors > 16) BME_Sensors = 16;
+    bme = new BlueDot_BME280[BME_Sensors];
+    for (uint8_t f = 0; f < BME_Sensors; f++) {
+      bme[f].parameter.communication = 0;                     //I2C communication for Sensor
+      //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
+      if(BME_Sensors > 2){
+      // fill ports 1-8 on multiplexor first with devices with address 0x76.
+      // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
+        bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
+        tcaselect(f & 0x07);                                  //Select channel on multiplexor
+      } else {
+        bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
       }
+      bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
+      bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
+      bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
+      bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
+      bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
+      bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
+      bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
+      bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+      boolean sensor_found = true;
+      switch(bme[f].init()){
+        case 0x58: printToDebug(PSTR("BMP280")); break;
+        case 0x60: printToDebug(PSTR("BME280")); break;
+        default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
+      }
+      printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
+      if (!sensor_found) {
+        printToDebug(PSTR("NOT "));
+      }
+      printToDebug(PSTR("found\r\n"));
     }
+  }
 #endif
 
 /*  printlnToDebug(PSTR("Reading EEPROM..."));

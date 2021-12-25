@@ -102,7 +102,7 @@ byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensor
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS
 // Define the pins for DHT temperature/humidity sensors (Up to 10)
-byte DHT_Pins[10] = {5};
+uint8_t DHT_Pins[10] = {5};
 
 // Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
 // Up to two sensors with 0x76 and 0x77 addresses.

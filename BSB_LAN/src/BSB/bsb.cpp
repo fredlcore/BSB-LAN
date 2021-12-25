@@ -6,6 +6,7 @@
 #if defined(ESP32)
 #include "driver/uart.h"
 #include "soc/uart_struct.h"
+#include "soc/uart_reg.h"
 #endif
 
 #include "bsb.h"
@@ -459,6 +460,12 @@ Da bei HardwareSerial die gesendeten Bytes nichts sofort im Empfangspuffer lande
 UART buffer gefüllt ist und ein empfangenes Byte meldet.
 */
 
+/*
+FH 25.12.2021: Mit Umstieg auf ESP32 SDK 2.0.2 kommen gesendete Daten nicht wieder auf der Empfangsleitung an. Sowohl das flush() als auch die 50ms
+sorgen dafür, dass bereits die Antwort-Telegramme als "fremde" Daten und somit als Buskollision gewertet werden, weswegen dieser Teil auskommentiert wurde.
+Ob damit weiterhin eine Bus-Kollisionserkennung möglich ist, muss noch geprüft werden.
+*/
+
 #if defined(__AVR__)
   if (HwSerial == false) {
     cli();
@@ -504,11 +511,13 @@ UART buffer gefüllt ist und ein empfangenes Byte meldet.
 */
   }
   if (HwSerial == true) {
+#if !defined(ESP32)
     serial->flush();
     unsigned long timeout = millis();
     while ((millis()-timeout < 50) && serial->available() == 0) {
       delay(1);
     }
+#endif
     if (serial->available()) {      
       for (uint8_t i=0; i<=loop_len; i++) {
         char readdata = readByte();
