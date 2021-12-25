@@ -6,6 +6,7 @@
 #if defined(ESP32)
 #include "driver/uart.h"
 #include "soc/uart_struct.h"
+#include "soc/uart_reg.h"
 #endif
 
 #include "bsb.h"

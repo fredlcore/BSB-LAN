@@ -507,7 +507,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 WebServer update_server(8080);
 #endif
 
-EEPROMClass EEPROM_ESP("nvs", EEPROM_SIZE);
+EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
 #define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 
 #define strcpy_PF strcpy
