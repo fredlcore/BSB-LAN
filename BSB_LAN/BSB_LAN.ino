@@ -3479,7 +3479,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_DATETIME:
       {
       // /S0=dd.mm.yyyy_mm:hh:ss
-      int d = 0xFF; int m = d; int y = d; int hour = d; int min = d; int sec = d;
+      int d = 1; int m = 1; int y = 0xFF; int hour = y; int min = y; int sec = y;
       uint8_t date_flag = 0;
       const char *error_msg = NULL;
       if (val[0]!='\0') {
@@ -3544,10 +3544,14 @@ int set(int line      // the ProgNr of the heater parameter
         param[0]=decodedTelegram.enable_byte-1;
       }
       // Set up the command payload
+      uint8_t dow = dayofweek(d,m,y);
+      if (decodedTelegram.type == VT_VACATIONPROG) {
+        y = 1900; dow = 0; hour = dow; min = dow; sec = dow; date_flag = 0x17;
+      }
       param[1]=y-1900;
       param[2]=m;
       param[3]=d;
-      param[4]=dayofweek(d,m,y);
+      param[4]=dow;
       param[5]=hour;
       param[6]=min;
       param[7]=sec;
