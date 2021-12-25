@@ -68,8 +68,10 @@
  *        - ATTENTION: Change of EEPROM layout will lead to loading of default values from BSB_LAN_config.h! You need to write settings to EEPROM in configuration menu again!
  *        - ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in BSB_LAN_config.h (LAN in caps), and no longer in BSB_lan_config.h (lower-caps "lan")
  *        - ATTENTION: HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!
- *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. Most features are working right now.
- *        - Webinterface allows for configuration of most settings without the need to re-flash
+ *        - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. ESP32 code uses SDK version 2.0.2, please take note when configuring Arduino IDE!
+ *        - OTA Updates now possible for ESP32-based devices
+ *        - Support for special PPS devices (based on DC225/Honeywell MCBA) added
+ *        - Webinterface allows for configuration of most settings without the need to re-flash, also split into basic and extended configuration
  *        - Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.
  *        - Added MDNS_SUPPORT definement in config so that BSB-LAN can be discovered through mDNS
  *        - If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point "BSB-LAN" with password "BSB-LPB-PPS-LAN" for 30 minutes. After that, it will reboot and try to connect again.
@@ -82,6 +84,7 @@
  *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
+ *        - URL command /JB allows for backing up parameters to JSON file 
  *        - New library for DHT22 should provide more reliable results
  *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
  *        - MQTT: Use MQTTDeviceID as a client ID for the broker, still defaults to BSB-LAN. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.
