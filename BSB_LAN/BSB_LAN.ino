@@ -7160,42 +7160,42 @@ void setup() {
 #endif
 
 #ifdef BME280
-    if(BME_Sensors) {
-      printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
-      if(BME_Sensors > 16) BME_Sensors = 16;
-      bme = new BlueDot_BME280[BME_Sensors];
-      for (uint8_t f = 0; f < BME_Sensors; f++) {
-        bme[f].parameter.communication = 0;                     //I2C communication for Sensor
-        //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
-        if(BME_Sensors > 2){
-        // fill ports 1-8 on multiplexor first with devices with address 0x76.
-        // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
-          bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
-          tcaselect(f & 0x07);                                  //Select channel on multiplexor
-        } else {
-          bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
-        }
-        bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
-        bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
-        bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
-        bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
-        bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
-        bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
-        bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
-        bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-        boolean sensor_found = true;
-        switch(bme[f].init()){
-          case 0x58: printToDebug(PSTR("BMP280")); break;
-          case 0x60: printToDebug(PSTR("BME280")); break;
-          default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
-        }
-        printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
-        if (!sensor_found) {
-          printToDebug(PSTR("NOT "));
-        }
-        printToDebug(PSTR("found\r\n"));
+  if(BME_Sensors) {
+    printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
+    if(BME_Sensors > 16) BME_Sensors = 16;
+    bme = new BlueDot_BME280[BME_Sensors];
+    for (uint8_t f = 0; f < BME_Sensors; f++) {
+      bme[f].parameter.communication = 0;                     //I2C communication for Sensor
+      //TCA9548A 1-to-8 I2C Multiplexer allow to manage 16 BME280.
+      if(BME_Sensors > 2){
+      // fill ports 1-8 on multiplexor first with devices with address 0x76.
+      // if we need 9-16 sensors then 0x77 address will be used for these additional sensors.
+        bme[f].parameter.I2CAddress = 0x76 + f / 8;           //I2C Address for Sensor.
+        tcaselect(f & 0x07);                                  //Select channel on multiplexor
+      } else {
+        bme[f].parameter.I2CAddress = 0x76 + f;               //I2C Address for Sensor
       }
+      bme[f].parameter.sensorMode = 0b11;                     //Setup Sensor mode
+      bme[f].parameter.IIRfilter = 0b100;                     //IIR Filter for Sensor
+      bme[f].parameter.humidOversampling = 0b101;             //Humidity Oversampling for Sensor
+      bme[f].parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor
+      bme[f].parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor
+      bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
+      bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
+      bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+      boolean sensor_found = true;
+      switch(bme[f].init()){
+        case 0x58: printToDebug(PSTR("BMP280")); break;
+        case 0x60: printToDebug(PSTR("BME280")); break;
+        default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
+      }
+      printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
+      if (!sensor_found) {
+        printToDebug(PSTR("NOT "));
+      }
+      printToDebug(PSTR("found\r\n"));
     }
+  }
 #endif
 
 /*  printlnToDebug(PSTR("Reading EEPROM..."));
