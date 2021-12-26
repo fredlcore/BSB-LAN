@@ -201,10 +201,10 @@ PROGMEM_LATE const configuration_struct config[]={
 #endif
   {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
-  {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
   {CF_LOGCURRVALUES,    1, CCAT_LOGGING,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},//immediately apply
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
   {CF_CURRVALUESLIST,   1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(log_parameters)},//immediately apply
+  {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
 #ifdef WEBCONFIG
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_WEBSERVER_TXT, 1},
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_BYTE,           OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
