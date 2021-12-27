@@ -39,6 +39,7 @@ The following overview shows the most common used controllers of the different h
 - Atlantic: Alféa Evolution, Excellia, Extensa  
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
+- Chappée: Klista
 - CTA: Optiheat  
 - Deville: 9942, 9981
 - EVI Heat: Combi-7
