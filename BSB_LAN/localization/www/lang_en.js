@@ -145,8 +145,8 @@ UIStrings["STR_24A_TEXT"] = "24h average";
 //WEBCONFIG
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Display extended configuration";
 UIStrings["CF_USEEEPROM_TEXT"] = "Read config from EEPROM";
-UIStrings["CF_RX_PIN_TEXT"] = "RX pin no.";
-UIStrings["CF_TX_PIN_TEXT"] = "TX pin no.";
+UIStrings["CF_RX_PIN_TEXT"] = "RX pin number";
+UIStrings["CF_TX_PIN_TEXT"] = "TX pin number";
 UIStrings["CF_BUSTYPE_TEXT"] = "Type";
 UIStrings["CF_OWN_ADDR_TEXT"] = "Own address";
 UIStrings["CF_DEST_ADDR_TEXT"] = "Destination address";

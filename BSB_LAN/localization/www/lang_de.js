@@ -219,8 +219,8 @@ UIStrings["CF_MDNS_HOSTNAME_TEXT"] = "mDNS Hostname";
 UIStrings["CF_NUM_TEXT"] = "Sensoren";
 UIStrings["CF_OTA_UPDATE_TEXT"] = "OTA Update";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
-UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nr.";
-UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nr.";
+UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nummer";
+UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nummer";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Erweiterte Einstellungen anzeigen";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
