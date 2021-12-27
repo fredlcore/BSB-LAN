@@ -145,8 +145,8 @@
 //WEBCONFIG
 #define CF_CONFIG_LEVEL_TEXT "Display extended configuration"
 #define CF_USEEEPROM_TEXT "Read config from EEPROM"
-#define CF_RX_PIN_TEXT "RX pin no."
-#define CF_TX_PIN_TEXT "TX pin no."
+#define CF_RX_PIN_TEXT "RX pin number"
+#define CF_TX_PIN_TEXT "TX pin number"
 #define CF_BUSTYPE_TEXT "Type"
 #define CF_OWN_ADDR_TEXT "Own address"
 #define CF_DEST_ADDR_TEXT "Destination address"
