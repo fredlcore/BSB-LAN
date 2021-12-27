@@ -33,18 +33,29 @@ The following overview shows the most common used controllers of the different h
      
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
 - Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Boesch: heat pumps with RVS controller type
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
 - ATAG: QR  
-- Atlantic: Alféa Excellia, Extensa  
+- Atlantic: Alféa Evolution, Excellia, Extensa  
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
 - CTA: Optiheat  
+- Deville: 9942, 9981
+- EVI Heat: Combi-7
+- Fernwärme: RVD230
 - Froeling: Rendagas Plus
-- Fujitsu: Waterstage Comfort, WSHA, WSYK, WSYP
+- Fujitsu Waterstage: Comfort, Duo
+- Geminox: Thrs
 - Gruenenwald: Greenheat
+- Hansa: SND
 - Interdomo: Domostar GBK 25H/SH
+- MAN/MHG: Ecostar 200
 - MHG: Procon E
 - Olymp: SHS, WHS
+- Sieger: TG11
+- Sixmadun: TG11BE
+- Termomax: Termo ÖV
+- Thermics: Energie
 - Thermital: TBox Clima TOP
 - Viessmann: Vitotwin 300-W
 - Weishaupt: WTU
