@@ -35,7 +35,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
 - Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
-- Boesch: heat pumps with RVS controller type
+- Bösch: Wärmepumpen mit RVS-Reglern
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
 - ATAG: QR  
 - Atlantic: Alféa Evolution, Excellia, Extensa  
