@@ -219,8 +219,8 @@
 #define CF_NUM_TEXT "Sensoren"
 #define CF_OTA_UPDATE_TEXT "OTA Update"
 #define CF_SHOW_UNKNOWN_TEXT "Unbekannte Parameter anzeigen"
-#define CF_RX_PIN_TEXT "RX Pin Nr."
-#define CF_TX_PIN_TEXT "TX Pin Nr."
+#define CF_RX_PIN_TEXT "RX Pin Nummer"
+#define CF_TX_PIN_TEXT "TX Pin Nummer"
 #define CF_CONFIG_LEVEL_TEXT "Erweiterte Einstellungen anzeigen"
 
 #define CAT_GENERAL_TEXT "Generell"
