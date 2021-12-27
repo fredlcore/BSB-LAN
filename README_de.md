@@ -41,6 +41,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Atlantic: Alféa Evolution, Excellia, Extensa  
 - Austria Email: LWPK  
 - Baxi: Luna Platinum
+- Chappée: Klista
 - CTA: Optiheat  
 - Deville: 9942, 9981
 - EVI Heat: Combi-7
