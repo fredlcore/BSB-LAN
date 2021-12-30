@@ -45,7 +45,7 @@
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
-   printToWebClient(PSTR("K66'>"));
+   printFmtToWebClient(PSTR("K%d'>"), CAT_USERSENSORS);
    printToWebClient(STR_TEXT_SNS);
 
    printToWebClient(PSTR("</a></td>"));
