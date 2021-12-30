@@ -330,6 +330,7 @@ typedef enum{
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PRESSURE_1000,     //  3 Byte - 1 enable / bar/1000.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
+  VT_PPM,               //  2 Byte - 1 enable 0x   / ppm/1 signed
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
   VT_SECONDS_WORD16,    //  3 Byte - 1 enable / seconds / 16
@@ -351,6 +352,7 @@ typedef enum{
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_PPS_TIME,          //  4 Byte
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
+  VT_DWORD10,           //  5 Byte - 1 enable 0x   / value
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
   VT_SECONDS_DWORD,     //  5 Byte - 1 enable 0x01 / seconds
@@ -466,6 +468,7 @@ const char STR_ENERGY_CONTENT[] PROGMEM = "ENERGY_CONTENT";
 const char STR_PRESSURE_WORD[] PROGMEM = "PRESSURE_WORD";
 const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
 const char STR_PROPVAL[] PROGMEM = "PROPVAL";
+const char STR_PPM[] PROGMEM = "PPM";
 const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
 const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
 const char STR_SPEED[] PROGMEM = "SPEED";
@@ -486,6 +489,7 @@ const char STR_SINT[] PROGMEM = "SINT";
 const char STR_SINT1000[] PROGMEM = "SINT1000";
 const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
 const char STR_DWORD[] PROGMEM = "DWORD";
+const char STR_DWORD10[] PROGMEM = "DWORD10";
 const char STR_HOURS[] PROGMEM = "HOURS";
 const char STR_MINUTES[] PROGMEM = "MINUTES";
 const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
@@ -536,6 +540,7 @@ const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_ATM_PRESSURE[] PROGMEM = UNIT_HPA_TEXT;
 const char U_ALTITUDE[] PROGMEM = UNIT_METER_TEXT;
+const char U_PPM[] PROGMEM = UNIT_PPM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -642,6 +647,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_PRESSURE_WORD,  10.0,   6, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
 {VT_PRESSURE_1000,  1000.0, 0, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
 {VT_PROPVAL,        16.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
+{VT_PPM,            1.0,    0, 2, DT_VALS, 0,  U_PPM, sizeof(U_PPM), STR_PPM},
 {VT_SECONDS_WORD,   1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
 {VT_SECONDS_WORD5,  2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
 {VT_SECONDS_WORD16, 16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
@@ -663,6 +669,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SINT1000,       1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
 {VT_PPS_TIME,       1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
 {VT_DWORD,          1.0,    6, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
+{VT_DWORD,          10.0,   0, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD10},
 {VT_HOURS,          3600.0, 1, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
 {VT_MINUTES,        60.0,   1, 4, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
 {VT_SECONDS_DWORD,  1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},

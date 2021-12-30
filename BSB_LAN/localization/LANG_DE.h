@@ -23,6 +23,7 @@
 #define UNIT_LITERPERMIN_TEXT "l/min"
 #define UNIT_GR_PER_CUBM_TEXT "g/m³"
 #define UNIT_HPA_TEXT "hPa"
+#define UNIT_PPM_TEXT "ppm"
 
 #define ENUM_CAT_00_TEXT "Uhrzeit und Datum"
 #define ENUM_CAT_01_TEXT "Bedieneinheit"

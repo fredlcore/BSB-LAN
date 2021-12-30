@@ -3329,6 +3329,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_CELMIN:
     case VT_PERCENT_100:
     case VT_PERCENT_WORD:
+    case VT_PPM:
     case VT_FP02:
     case VT_SECONDS_WORD5:
     case VT_TEMP_WORD5_US:
@@ -6498,7 +6499,7 @@ void loop() {
         lastMQTTTime = millis();
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i] > 0) {
-            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put hole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
         if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
