@@ -23,6 +23,7 @@ UIStrings["UNIT_LITERPERHOUR_TEXT"] = "l/h";
 UIStrings["UNIT_LITERPERMIN_TEXT"] = "l/min";
 UIStrings["UNIT_GR_PER_CUBM_TEXT"] = "g/m³";
 UIStrings["UNIT_HPA_TEXT"] = "hPa";
+UIStrings["UNIT_PPM_TEXT"] = "ppm";
 
 UIStrings["ENUM_CAT_00_TEXT"] = "Uhrzeit und Datum";
 UIStrings["ENUM_CAT_01_TEXT"] = "Bedieneinheit";
