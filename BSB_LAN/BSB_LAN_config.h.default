@@ -97,17 +97,17 @@ char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string 
 
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
-byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
+byte One_Wire_Pin = 0;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
 
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS
 // Define the pins for DHT temperature/humidity sensors (Up to 10)
-uint8_t DHT_Pins[10] = {5};
+uint8_t DHT_Pins[10] = {0};
 
 // Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
 // Up to two sensors with 0x76 and 0x77 addresses.
 #define BME280
-byte BME_Sensors = 1; //Define number of BME280 sensors
+byte BME_Sensors = 0; //Define number of BME280 sensors
 
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
