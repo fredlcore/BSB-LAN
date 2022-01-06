@@ -322,6 +322,7 @@ UIStrings["STR701_TEXT"] = "Präsenztaste (temporäre Abwesenheit)";
 UIStrings["STR704_TEXT"] = "Wärmer / Kälter";
 UIStrings["STR705_TEXT"] = "Temporär wärmer";
 UIStrings["STR706_TEXT"] = "Temporär kälter";
+UIStrings["STR707_TEXT"] = "Temporärer Raumsollwert";
 UIStrings["STR709_TEXT"] = "Komfortsollwert Minimum";
 UIStrings["STR710_TEXT"] = "Komfortsollwert";
 UIStrings["STR711_TEXT"] = "Komfortsollwert Maximum";

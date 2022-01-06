@@ -315,6 +315,7 @@
 #undef STR704_TEXT
 #undef STR705_TEXT
 #undef STR706_TEXT
+#undef STR707_TEXT
 #undef STR709_TEXT
 #undef STR710_TEXT
 #undef STR711_TEXT
