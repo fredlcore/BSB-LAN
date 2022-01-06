@@ -322,6 +322,7 @@
 #define STR704_TEXT "Wärmer / Kälter"
 #define STR705_TEXT "Temporär wärmer"
 #define STR706_TEXT "Temporär kälter"
+#define STR707_TEXT "Temporärer Raumsollwert"
 #define STR709_TEXT "Komfortsollwert Minimum"
 #define STR710_TEXT "Komfortsollwert"
 #define STR711_TEXT "Komfortsollwert Maximum"
