@@ -165,6 +165,7 @@ UIStrings["MENU_TEXT_AVT"] = "Berechnung von 24h-Mittelwerten für die folgenden
 UIStrings["MENU_TEXT_LBO"] = "Nur Broadcast Bus-Telegramme loggen";
 UIStrings["MENU_TEXT_LGI"] = "Neues Logging-Intervall";
 UIStrings["MENU_TEXT_LGN"] = "Neue Logging-Parameter";
+UIStrings["MENU_TEXT_NOQ"] = "Prüfen auf neue Parameter wird nur bei BSB- und LPB-Systemen unterstützt.\r\n";
 UIStrings["MENU_TEXT_QIN"] = "Dieser Test kann ein paar Minuten dauern, bitte warten, bis am Ende 'Fertig' steht.\r\nDanach die Ausgabe speichern und die Datei an bsb(ät)code-it.de schicken, damit die neuen Parameter eingepflegt werden können.";
 UIStrings["MENU_TEXT_QSC"] = "Scanne nach Geräten";
 UIStrings["MENU_TEXT_QFD"] = "Geräteadresse gefunden";
