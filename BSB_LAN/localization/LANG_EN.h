@@ -83,7 +83,7 @@
 #define MENU_TEXT_NO "No"
 #define MENU_TEXT_ON "On"
 #define MENU_TEXT_OFF "Off"
-#define MENU_TEXT_QIN "Check for new parameters only supported with BSB and LPB systems.\r\n"
+#define MENU_TEXT_NOQ "Check for new parameters only supported with BSB and LPB systems.\r\n"
 #define MENU_TEXT_QIN "This scan can take a few minutes, do not interrupt until the message 'Done' appears.\r\nAfterwards, save this page and send the file to bsb(ät)code-it.de so that the new parameters can be added."
 #define MENU_TEXT_QSC "Scanning for devices..."
 #define MENU_TEXT_QFD "Device address found"
