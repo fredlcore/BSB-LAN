@@ -122,7 +122,8 @@ int avg_parameters[40] = {
 Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot
 Does: log bus telegrams to file
       log selected values to file
-      store to SD and load selected 24h averages*/
+      store to SD and load selected 24h averages
+      push selected values to an MQTT broker*/
 #define LOGGER
 
 // Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage
@@ -219,7 +220,7 @@ byte dest_address = 0x00;
 // PPS:
 // - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
 bool pps_write = 0;
-byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/DC225
+byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x5A = QAA10, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/REA70/DC225
 
 /* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
  * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
