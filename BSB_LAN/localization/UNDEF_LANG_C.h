@@ -163,7 +163,7 @@
 #undef MENU_TEXT_LBO
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
-#undef MENU_TEXT_QIN
+#undef MENU_TEXT_NOQ
 #undef MENU_TEXT_QIN
 #undef MENU_TEXT_QSC
 #undef MENU_TEXT_QFD
