@@ -60,8 +60,11 @@
  *       1.0   - 03.08.2020
  *       1.1   - 10.11.2020
  *       2.0   - 31.12.2021
+ *       2.1   -
  *
  * Changelog:
+ *       version 2.1
+ *        -
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
@@ -478,22 +481,22 @@ void loop();
   #endif
 #endif
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
-#define EEPROM_ERASING_GND_PIN 33
+  #define EEPROM_ERASING_GND_PIN 33
 #endif
 #if !defined(LED_BUILTIN)
-#define LED_BUILTIN 2
+  #define LED_BUILTIN 2
 #endif
 
 #if defined(__AVR__)
-#include <avr/pgmspace.h>
-#include <EEPROM.h>
-#include <SPI.h>
+  #include <avr/pgmspace.h>
+  #include <EEPROM.h>
+  #include <SPI.h>
 #endif
 
 #if defined(__arm__)
-#include <SPI.h>
-#include <Wire.h>
-#include "src/I2C_EEPROM/I2C_EEPROM.h"
+  #include <SPI.h>
+  #include <Wire.h>
+  #include "src/I2C_EEPROM/I2C_EEPROM.h"
 template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CADDRESS, 4096U,2,32>{};
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
@@ -501,22 +504,32 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
-#include <esp_task_wdt.h>
-#include <EEPROM.h>
-#include <ESPmDNS.h>
-#if defined(ENABLE_ESP32_OTA)
-#include <WebServer.h>
-#include <Update.h>
+  #include <esp_task_wdt.h>
+  #include <EEPROM.h>
+  #include <WiFiUdp.h>
+WiFiUDP udp;
+  #if defined(ENABLE_ESP32_OTA)
+    #include <WebServer.h>
+    #include <Update.h>
 WebServer update_server(8080);
-#endif
+  #endif
 
 EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
-#define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
+  #define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 
-#define strcpy_PF strcpy
-#define strcat_PF strcat
-#define strchr_P strchr
+  #define strcpy_PF strcpy
+  #define strcat_PF strcat
+  #define strchr_P strchr
+#else
+  #ifdef WIFI
+    #include "src/WiFiSpi/src/WiFiSpiUdp.h"
+WiFiSpiUdp udp;
+  #else
+    #include <EthernetUdp.h>
+EthernetUDP udp;
+  #endif
 #endif
+
 
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
@@ -524,7 +537,7 @@ EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
 #include "src/Time/TimeLib.h"
 
 #ifdef MQTT
-#include "src/PubSubClient/src/PubSubClient.h"
+  #include "src/PubSubClient/src/PubSubClient.h"
 #endif
 #include "html_strings.h"
 
@@ -584,16 +597,13 @@ using ComServer = WiFiServer;
 using ComClient = WiFiClient;
 #endif
 
-#if defined(MDNS_SUPPORT) && !defined(ESP32)
-  #ifdef WIFI
-    #include "src/WiFiSpi/src/WiFiSpiUdp.h"
-WiFiSpiUdp udp;
-  #else
-    #include <EthernetUdp.h>
-EthernetUDP udp;
-  #endif
-  #include "src/ArduinoMDNS/ArduinoMDNS.h"
+#if defined(MDNS_SUPPORT)
+  #if !defined(ESP32)
+    #include "src/ArduinoMDNS/ArduinoMDNS.h"
 MDNS mdns(udp);
+  #else
+    #include <ESPmDNS.h>
+  #endif
 #endif
 
 bool EEPROM_ready = true;
@@ -3203,6 +3213,15 @@ int set(int line      // the ProgNr of the heater parameter
     return 2;   // return value for trying to set a readonly parameter
   }
 
+#ifdef MQTT
+  // Force to publish MQTT update in 1s as state may have been modified by this SET command
+  // Wait 1s to ensure all values are updated in the microcontroller
+  // (e.g., moving from Off to Automatic: state circuit 1 is updated after dozen of ms)
+  if (setcmd) {  // Only for SET messages
+    lastMQTTTime = millis() - log_interval * 1000 + 1000;
+  }
+#endif
+
   loadPrognrElementsFromTable(line, i);
 
   if ((line >= 20000 && line < 20900)) //virtual functions handler
@@ -5242,6 +5261,11 @@ void loop() {
           printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
           flushToWebClient();
+
+          if (bus_type > 1) {
+            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+            break;
+          }
 
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
