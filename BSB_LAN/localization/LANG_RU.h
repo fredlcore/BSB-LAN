@@ -35,6 +35,7 @@
 #define UNIT_LITERPERMIN_TEXT "л/мин"
 #define UNIT_GR_PER_CUBM_TEXT "г/м&sup3;"
 #define UNIT_HPA_TEXT "гПа"
+#define UNIT_PPM_TEXT "мд"
 
 #define ENUM_CAT_00_TEXT "Дата и время"
 #define ENUM_CAT_01_TEXT "Комнатный термостат"
@@ -127,6 +128,8 @@
 #define MENU_TEXT_OFF "Выкл"
 #define MENU_TEXT_OPEN "Открыто"
 #define MENU_TEXT_CLOSE "Закрыто"
+#define MENU_TEXT_NOQ "Проверка на наличие неизвестных параметров работает только на системах BSB или LPB.\r\n"
+#define MENU_TEXT_QIN "Сканирование займёт несколько минут, не прерывайте его до появления надписи 'Готово'.\r\nПосле этого сохраните эту страницу и отправьте файл на адрес bsb@code-it.de, чтобы добавить поддержку новых параметров."
 #define MENU_TEXT_QSC "Поиск устройств..."
 #define MENU_TEXT_QFD "Найдено устройство по адресу"
 #define MENU_TEXT_QFA "Сбой при обращении к устройству"
@@ -328,6 +331,10 @@
 
 #define STR700_TEXT "Режим работы"
 #define STR701_TEXT "Кнопка присутствия (временное отсутствие)"
+#define STR704_TEXT "Теплее / Холоднее"
+#define STR705_TEXT "Временно теплее"
+#define STR706_TEXT "Временно холоднее"
+#define STR707_TEXT "Временная уставка комнатной температуры"
 #define STR709_TEXT "Нижняя граница комфортной температуры"
 #define STR710_TEXT "Комфортная температура"
 #define STR711_TEXT "Верхняя граница комфортной температуры"
