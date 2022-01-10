@@ -1305,6 +1305,7 @@ const char STR1044[] PROGMEM = STR1044_TEXT;
 #define STR1304 STR704
 #define STR1305 STR705
 #define STR1306 STR706
+#define STR1307 STR707
 #define STR1310 STR710
 #define STR1311 STR711
 #define STR1312 STR712
@@ -7678,6 +7679,7 @@ const char ENUM15000[] PROGMEM_LATEST = {
 const char ENUM15046[] PROGMEM_LATEST = {
 "\x52 " ENUM15046_52_TEXT "\0"
 "\x53 " ENUM15046_53_TEXT "\0"
+"\x5a " ENUM15046_5a_TEXT "\0"
 "\x37 " ENUM15046_37_TEXT "\0"
 "\x66 " ENUM15046_66_TEXT "\0"
 "\xea " ENUM15046_ea_TEXT         // Use unused value 0xEA for MCBA/DC225 type
@@ -8757,7 +8759,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x063D1A83,  CAT_HK2,              VT_UNKNOWN,       1004,  STR1004,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
 {0x063D1A91,  CAT_HK2,              VT_UNKNOWN,       1005,  STR1005,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
 {0x063D1A92,  CAT_HK2,              VT_UNKNOWN,       1006,  STR1006,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
-{0x2E3D1125,  CAT_HK1,              VT_TEMP,          1007,  STR1007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporärer Raumsollwert / logged from 123/231/LMS15.000A349 (ohne Parameternummer)
+{0x2E3D1125,  CAT_HK2,              VT_TEMP,          1007,  STR1007,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporärer Raumsollwert / logged from 123/231/LMS15.000A349 (ohne Parameternummer)
 {0x2E3D058E,  CAT_HK2,              VT_TEMP,          1010,  STR1010,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 2 (nur wenn aktiviert) - Komfortsollwert
 // line not in menue!
 // virtuelle Zeile
@@ -8855,6 +8857,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x073D1A83,  CAT_HKP,              VT_UNKNOWN,       1304,  STR1304,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
 {0x073D1A91,  CAT_HKP,              VT_UNKNOWN,       1305,  STR1305,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
 {0x073D1A92,  CAT_HKP,              VT_UNKNOWN,       1306,  STR1306,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+{0x2F3D1125,  CAT_HKP,              VT_TEMP,          1307,  STR1307,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporärer Raumsollwert / logged from 123/231/LMS15.000A349 (ohne Parameternummer)
 {0x2F3D058E,  CAT_HKP,              VT_TEMP,          1310,  STR1310,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Komfortsollwert
 {0x2F3D05A5,  CAT_HKP,              VT_TEMP,          1311,  STR1311,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P - Komfortsollwert Max
 {0x2F3D0590,  CAT_HKP,              VT_TEMP,          1312,  STR1312,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 3/P (nur wenn aktiviert) - Reduziertsollwert
