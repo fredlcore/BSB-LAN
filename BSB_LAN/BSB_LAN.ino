@@ -64,7 +64,7 @@
  *
  * Changelog:
  *       version 2.1
- *        -
+ *        - ESP32: OTA now uses system-wide HTTP AUTH authentication credentials
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
@@ -1976,10 +1976,20 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 void init_ota_update(){
   if(enable_ota_update) {
     update_server.on("/", HTTP_GET, []() {
+      if (USER_PASS[0]) {
+        if (!update_server.authenticate(strtok(USER_PASS,":"),strtok(NULL,":"))) {
+          return update_server.requestAuthentication();
+        }
+      }
       update_server.sendHeader("Connection", "close");
       update_server.send(200, "text/html", serverIndex);
     });
     update_server.on("/update", HTTP_POST, []() {
+      if (USER_PASS[0]) {
+        if (!update_server.authenticate(strtok(USER_PASS,":"),strtok(NULL,":"))) {
+          return update_server.requestAuthentication();
+        }
+      }
       update_server.sendHeader("Connection", "close");
       update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
       delay(1000);
