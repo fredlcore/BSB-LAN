@@ -87,7 +87,7 @@
  *        - PPS users can now send time and day of week to heater
  *        - Lots of new parameters added
  *        - URL command /JR allows for querying the standard (reset) value of a parameter in JSON format
- *        - URL command /JB allows for backing up parameters to JSON file 
+ *        - URL command /JB allows for backing up parameters to JSON file
  *        - New library for DHT22 should provide more reliable results
  *        - Consolidated data and value types: New data types VT_YEAR, VT_DAYMONTH, VT_TIME as subsets of VT_DATETIME for parameters 1-3, replacing VT_SUMMERPERIOD and adjusting VT_VACATIONPROG. New value types DT_THMS for time consisting of hour:minutes:seconds
  *        - MQTT: Use MQTTDeviceID as a client ID for the broker, still defaults to BSB-LAN. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.
@@ -5881,9 +5881,8 @@ void loop() {
 
               if (p[2]=='K' && isdigit(p[4])) {
                 cat_param++;
-                if (cat_min<0) {
-                  int8_t search_cat = -1;
-                  search_cat = atoi(&p[4]) * 2;
+                if (cat_min < 0) {
+                  int search_cat = atoi(&p[4]) * 2;
 #if defined(__AVR__)
                   uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (search_cat) * sizeof(ENUM_CAT_NR[0]);
                   cat_min = pgm_read_word_far(tempAddr);
