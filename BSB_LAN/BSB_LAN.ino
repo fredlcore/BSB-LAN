@@ -691,11 +691,9 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
       #include <SPIFFS.h>
       #define SD SPIFFS
       #define MINIMUM_FREE_SPACE_ON_SD 10000
-      // Redefine FILE_WRITE which is start writing before EOF which is FILE_APPEND on SPIFFS
     #endif  // ESP32_USE_SD
-    #undef FILE_WRITE
-    #define FILE_WRITE FILE_APPEND
   #else     // !ESP32
+    #define FILE_APPEND FILE_WRITE  // FILE_APPEND does not exist on Arduino, FILE_WRITE seems to do the same (create if not existing, start writing from EOF onwards)
     //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
     #define MINIMUM_FREE_SPACE_ON_SD 100
     // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
@@ -3089,7 +3087,7 @@ void LogTelegram(byte* msg) {
     default: logThis = false; break;
   }
   if (logThis) {
-    dataFile = SD.open(journalFileName, FILE_WRITE);
+    dataFile = SD.open(journalFileName, FILE_APPEND);
     if (dataFile) {
       int outBufLen = 0;
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
@@ -6310,7 +6308,7 @@ void loop() {
 #ifdef LOGGER
           // what doing this fragment? Just opened and closed file? We really need it?
           // FH: Before, it seemed to be necessary to have the file properly closed. And since I thought you can only properly close it when it's opened before, I was opening it.
-          File dataFile = SD.open(datalogFileName, FILE_WRITE);
+          File dataFile = SD.open(datalogFileName, FILE_APPEND);
           if (dataFile) {
             dataFile.close();
           }
@@ -6560,7 +6558,7 @@ void loop() {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
-      File dataFile = SD.open(datalogFileName, FILE_WRITE);
+      File dataFile = SD.open(datalogFileName, FILE_APPEND);
 
       if (dataFile) {
         for (int i=0; i < numLogValues; i++) {
