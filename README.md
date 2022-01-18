@@ -52,6 +52,7 @@ The following overview shows the most common used controllers of the different h
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E
+- Oilon: SH, SHx
 - Olymp: SHS, WHS
 - Sieger: TG11
 - Sixmadun: TG11BE
@@ -59,6 +60,7 @@ The following overview shows the most common used controllers of the different h
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Viessmann: Vitotwin 300-W
+- Wamak: DB
 - Weishaupt: WTU
    
 ***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
