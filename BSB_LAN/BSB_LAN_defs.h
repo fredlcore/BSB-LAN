@@ -8697,6 +8697,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_205_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E38,  CAT_HK1,              VT_PERCENT,       888,   STR888_2, 0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // dt Überhöhungsfaktor [%]
 {0x213D0E39,  CAT_HK1,              VT_MINUTES_SHORT, 889,   STR889,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Filterzeitkonstant Drehz'reg
+{0x093D2FB6,  CAT_HK1,              VT_PERCENT,       889,   STR889,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Zeitkonstante Temp'filte [%] 00 63 / 99
 {0x093D2FB6,  CAT_HK1,              VT_PERCENT,       889,   STR889,   0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 dT Zeitkonstante Temp'filte [%] 00 63 / 99
 {0x213D10C2,  CAT_HK1,              VT_YESNO,         890,   STR890,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
 {0x2D3D2FAB,  CAT_HK1,              VT_PROPVAL,       890,   STR890,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Proportionalbeiwert Kp
@@ -9302,6 +9303,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP,          2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Brötje 2472 Pumpennachlauftemp TWW
 {0x113D2F86,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2472,  STR2472,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Brötje 2472 Pumpennachlauftemp TWW - logged on OCI700 via LPB
 {0x053D0F69,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2473,  STR2473,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Leistungsredukt
+{0x0D3D2FBB,  CAT_KESSEL,           VT_TEMP_SHORT,    2473,  STR2473,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 Abgastemp Leistungsredukt
 {0x0D3D2FBB,  CAT_KESSEL,           VT_TEMP_SHORT,    2473,  STR2473,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Leistungsredukt
 {0x053D3061,  CAT_KESSEL,           VT_TEMP_SHORT_US, 2474,  STR2474,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+  Abgastemp Abschaltgrenze
 {0x113D3061,  CAT_KESSEL,           VT_TEMP_SHORT,    2474,  STR2474,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 Abgastemp Abschaltgrenze
@@ -10749,6 +10751,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x093D3068,  CAT_KONFIG,           VT_UNKNOWN,       6145,  STR6145,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Minimale Druckdifferenz nach Pumpe ein
 {0x113D3069,  CAT_KONFIG,           VT_PRESSURE50,    6145,  STR6146,  0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Max. Druckdiff Pumpe Ein Thision S17.1 0.02 = 1
 {0x093D3069,  CAT_KONFIG,           VT_UNKNOWN,       6146,  STR6146,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Maximale Druckdifferenz nach Pumpe ein
+{0x093D3016,  CAT_KONFIG,           VT_PRESSURE_WORD, 6146,  STR6146_2,0,                    NULL,         FL_OEM,   DEV_064_ALL}, // Druckwert 3.5V [bar] Thision S17.1
 {0x093D3016,  CAT_KONFIG,           VT_PRESSURE_WORD, 6146,  STR6146_2,0,                    NULL,         FL_OEM,   DEV_097_ALL}, // Druckwert 3.5V [bar] Thision S17.1
 {0x053D12E5,  CAT_KONFIG,           VT_ENUM,          6148,  STR6148,  sizeof(ENUM6148),     ENUM6148,     DEFAULT_FLAG, DEV_ALL}, // Statische Drucküberwach' 1
 {0x063D05D8,  CAT_KONFIG,           VT_PRESSURE,      6150,  STR6150,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Wasserdruck 2 Maximum
