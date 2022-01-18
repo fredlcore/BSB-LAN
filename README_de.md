@@ -54,7 +54,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E
-- Oilon: Geopro SHx 11
+- Oilon: SH, SHx
 - Olymp: SHS, WHS
 - Sieger: TG11
 - Sixmadun: TG11BE
@@ -62,7 +62,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Viessmann: Vitotwin 300-W
-- Wamak: DB 11
+- Wamak: DB
 - Weishaupt: WTU
    
 ***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
