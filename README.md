@@ -6,10 +6,21 @@ LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LP
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
-<B>Interface kits available!</B> PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.  
+---
+
+***Interface kits available!***  
+**PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.**  
+   
+---   
    
 ***Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!***  
-   
+  
+***Quick Start Guides for the installation and commissioning of the BSB-LAN setups are available here:***  
+***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
+***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)*** 
+  
+---  
+  
 With the usage of the BSB-LPB-LAN adapter and the BSB-LAN software, various functions, values and parameters can now be easily monitored, logged and (if wanted) web-based controlled and changed.
 An optional integration into existing SmartHome systems such as [FHEM](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#81-fhem), [openHAB](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#82-openhab), [HomeMatic](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#83-homematic-eq3), [ioBroker](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#84-iobroker), [Loxone](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#85-loxone), [IP-Symcon](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#86-ip-symcon), [EDOMI](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#810-edomi), [Home Assistant](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#811-home-assistant), [SmartHomeNG](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#812-smarthomeng) or [Node-RED](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#813-node-red) can be done via [HTTPMOD](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#812-integration-via-httpmod-module), [JSON](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#53-json)) or [MQTT](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#52-mqtt).
 In addition, the use of the adapter as a [standalone logger](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap06.html#61-logging-data) without LAN or Internet connection when using a microSD card is also possible.
@@ -52,6 +63,7 @@ The following overview shows the most common used controllers of the different h
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E
+- Oilon: SH, SHx
 - Olymp: SHS, WHS
 - Sieger: TG11
 - Sixmadun: TG11BE
@@ -59,6 +71,7 @@ The following overview shows the most common used controllers of the different h
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Viessmann: Vitotwin 300-W
+- Wamak: DB
 - Weishaupt: WTU
    
 ***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
