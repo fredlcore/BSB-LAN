@@ -16,8 +16,8 @@ LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LP
 ***Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!***  
   
 ***Quick Start Guides for the installation and commissioning of the BSB-LAN setups are available here:***  
-***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.md)***  
-***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.md)*** 
+***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
+***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)*** 
   
 ---  
   
