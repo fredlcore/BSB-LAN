@@ -9279,6 +9279,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_196_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0A,  CAT_KESSEL,           VT_TEMP,          2456,  STR2456,  0,                    NULL,         DEFAULT_FLAG, DEV_203_ALL}, // Brötje 2456 Schaltdiff Kessel Aus Max
 {0x113D0E0C,  CAT_KESSEL,           VT_MINUTES_SHORT, 2457,  STR2457,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschwingzeit HK's
+{0x0D3D2FB8,  CAT_KESSEL,           VT_MINUTES_WORD,  2457,  STR2457,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Einschwingzeit HK's
 {0x0D3D2FB8,  CAT_KESSEL,           VT_MINUTES_WORD,  2457,  STR2457,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Einschwingzeit HK's
 {0x0D3D2FB9,  CAT_KESSEL,           VT_MINUTES_WORD,  2458,  STR2458,  0,                    NULL,         FL_OEM, DEV_ALL}, // Einschwingzeit TWW Max
 {0x0D3D2FBA,  CAT_KESSEL,           VT_SECONDS_SHORT, 2459,  STR2459,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2459 Sperrzeit dynam Schaltdiff [s]
