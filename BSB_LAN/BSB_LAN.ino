@@ -7177,6 +7177,7 @@ void setup() {
   pinMode(temp_bus_pins[0], INPUT); //RX-pin of hardware serial on Due
 #endif
 
+  printFmtToDebug(PSTR("Using RX/TX pins %d, %d\r\n"), temp_bus_pins[0], temp_bus_pins[1]);
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
   bus->enableInterface();
