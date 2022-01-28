@@ -7653,6 +7653,7 @@ void setup() {
 #endif
     mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
+    printFmtToDebug(PSTR("Starting MDNS service with hostname %s\r\n"), mDNS_hostname);
   }
 #endif
 
