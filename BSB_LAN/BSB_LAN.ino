@@ -546,12 +546,11 @@ EthernetUDP udp;
 //#if defined(__SAM3X8E__)
 //#define Wire Wire1
 //#endif
-
-#include <Wire.h>
-#include "src/BlueDot_BME280/BlueDot_BME280.h"
+  #include <Wire.h>
+  #include "src/BlueDot_BME280/BlueDot_BME280.h"
 BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
 //Multiplexor TCA9548A (if presented) address on I2C bus
-#define TCA9548A_ADDR 0x70
+  #define TCA9548A_ADDR 0x70
 #endif
 
 bool client_flag = false;
@@ -7149,11 +7148,13 @@ void setup() {
     temp_bus_pins[1] = bus_pins[1];
   } else {
 #if defined(__AVR__) // Mega2560
+    printToDebug(PSTR("Microcontroller: AVR/Arduino Mega 2560\r\n"))
     // SoftwareSerial
     temp_bus_pins[0] = 68;
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
-#if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
+  #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
+    printToDebug(PSTR("Microcontroller: ESP32/Olimex\r\n"))
     pinMode(4, INPUT);
     if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
       temp_bus_pins[0] = RX1;
@@ -7162,11 +7163,13 @@ void setup() {
       temp_bus_pins[0] = RX1;
       temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
     }
-#else
+  #else
+    printToDebug(PSTR("Microcontroller: ESP32/NodeMCU\r\n"))
     temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
-#endif
+  #endif
 #else  // Due
+    printToDebug(PSTR("Microcontroller: ARM/Arduino Due\r\n"))
     // HardwareSerial
     temp_bus_pins[0] = 19;
     temp_bus_pins[1] = 18;
