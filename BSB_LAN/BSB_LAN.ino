@@ -7140,7 +7140,8 @@ void setup() {
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
     printFmtToDebug(PSTR("%c"), SerialOutput->read());
   }
-
+  printFmtToDebug(PSTR("BSB-LAN version: %s\r\n"), BSB_VERSION);
+  printlnToDebug(BSB_VERSION);
 // BSB/LPB/PPS bus init
   byte temp_bus_pins[2];
   if (bus_pins[0] && bus_pins[1]) {
@@ -7148,13 +7149,13 @@ void setup() {
     temp_bus_pins[1] = bus_pins[1];
   } else {
 #if defined(__AVR__) // Mega2560
-    printToDebug(PSTR("Microcontroller: AVR/Arduino Mega 2560\r\n"))
+    printToDebug(PSTR("Microcontroller: AVR/Arduino Mega 2560\r\n"));
     // SoftwareSerial
     temp_bus_pins[0] = 68;
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
   #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
-    printToDebug(PSTR("Microcontroller: ESP32/Olimex\r\n"))
+    printToDebug(PSTR("Microcontroller: ESP32/Olimex\r\n"));
     pinMode(4, INPUT);
     if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
       temp_bus_pins[0] = RX1;
@@ -7164,12 +7165,12 @@ void setup() {
       temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
     }
   #else
-    printToDebug(PSTR("Microcontroller: ESP32/NodeMCU\r\n"))
+    printToDebug(PSTR("Microcontroller: ESP32/NodeMCU\r\n"));
     temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
   #endif
 #else  // Due
-    printToDebug(PSTR("Microcontroller: ARM/Arduino Due\r\n"))
+    printToDebug(PSTR("Microcontroller: ARM/Arduino Due\r\n"));
     // HardwareSerial
     temp_bus_pins[0] = 19;
     temp_bus_pins[1] = 18;
