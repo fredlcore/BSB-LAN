@@ -8567,8 +8567,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x393D2F81,  CAT_HK1,              VT_TEMP_SHORT5,   711,   STR711,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max
 {0x2D3D0590,  CAT_HK1,              VT_TEMP,          712,   STR712,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Reduziertsollwert
 {0x2D3D0592,  CAT_HK1,              VT_TEMP,          714,   STR714,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Frostschutzsollwert
-{0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR716,   0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
-{0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR716,   0,                    NULL,         DEFAULT_FLAG, DEV_119_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
+{0x2D3D05A5,  CAT_HK1,              VT_TEMP,          716,   STR716,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert Max //FUJITSU
 {0x2D3D05F6,  CAT_HK1,              VT_FP02,          720,   STR720,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [0] - Heizkreis 1 - Kennlinie Steilheit
 {0x2D3D05F6,  CAT_HK1,              VT_BYTE,          720,   STR720,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [0] - Heizkreis 1 - Kennlinie Steilheit
 {0x2D3D0610,  CAT_HK1,              VT_TEMP,          721,   STR721,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Kennlinie Verschiebung
