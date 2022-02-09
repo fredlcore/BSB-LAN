@@ -331,6 +331,7 @@ typedef enum{
   VT_PRESSURE_1000,     //  3 Byte - 1 enable / bar/1000.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_PPM,               //  2 Byte - 1 enable 0x   / ppm/1 signed
+  VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / 
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
   VT_SECONDS_WORD16,    //  3 Byte - 1 enable / seconds / 16
@@ -590,110 +591,111 @@ PROGMEM_LATE const dt_types dt_types_text[]={
 
 /* order of types must according to vt_type_t enum */
 PROGMEM_LATE const units optbl[]={
-{VT_BIT,            1.0,    1, 1, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
-{VT_BYTE,           1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
-{VT_BYTE10,         10.0,   0, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
-{VT_CLOSEDOPEN,     1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
-{VT_DAYS,           1.0,    1, 1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
-{VT_ENUM,           1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
-{VT_GRADIENT_SHORT, 1.0,    1, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
-{VT_HOURS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
-{VT_LPBADDR,        1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
-{VT_LPM_SHORT,      10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
-{VT_MINUTES_SHORT,  1.0,    1, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
-{VT_MONTHS,         1.0,    6, 1, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
-{VT_ONOFF,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
-{VT_PERCENT,        1.0,    6, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
-{VT_PERCENT1,       1.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT1},
-{VT_PERCENT5,       2.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT5},
-{VT_PRESSURE,       10.0,   6, 1, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE},
-{VT_PRESSURE50,     50.0,   1, 1, DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
-{VT_SECONDS_SHORT,  1.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
-{VT_SECONDS_SHORT2, 2.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
-{VT_SECONDS_SHORT4, 4.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
-{VT_SECONDS_SHORT5, 5.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
-{VT_TEMP_SHORT,     1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
-{VT_TEMP_SHORT_US,  1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT_US},
-{VT_TEMP_SHORT5,    2.0,    1, 1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5},
-{VT_TEMP_SHORT5_US, 2.0,    1, 1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5_US},
-{VT_TEMP_SHORT64,   64.0,   1, 1, DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), STR_TEMP_SHORT64},
-{VT_TEMP_PER_MIN,   1.0,    6, 1, DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
-{VT_VOLTAGE,        10.0,   1, 1, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
-{VT_VOLTAGEONOFF,   1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
-{VT_WEEKDAY,        1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
-{VT_YESNO,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
-{VT_SPF,            100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
-{VT_CURRENT,        100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
-{VT_CURRENT1000,    1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
-{VT_DAYS_WORD,      1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
-{VT_ERRORCODE,      1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
-{VT_FP1,            10.0,   0, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
-{VT_FP02,           50.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
-{VT_GRADIENT,       1.0,    1, 2, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
-// {VT_INTEGRAL,       1.0,    0, 2, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
-{VT_METER,          10,     1, 2, DT_VALS, 0,  U_METER, sizeof(U_METER), STR_METER},
-{VT_MONTHS_WORD,    1.0,    1, 2, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
-{VT_HOUR_MINUTES,   1.0,    6, 2+32, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
-{VT_HOURS_WORD,     1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
-{VT_MINUTES_WORD,   1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
-{VT_MINUTES_WORD10, 0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
-{VT_PERCENT_WORD1,  1.0,    6, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
-{VT_PERCENT_WORD,   2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
-{VT_PERCENT_100,    100.0,  1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
-{VT_POWER_WORD,     10.0,   1, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
-{VT_POWER_WORD100,  100.0,  0, 2, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
-{VT_ENERGY_WORD,    10.0,   0, 2, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
-{VT_ENERGY_CONTENT, 10.0,   0, 2, DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
-{VT_PRESSURE_WORD,  10.0,   6, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
-{VT_PRESSURE_1000,  1000.0, 0, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
-{VT_PROPVAL,        16.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
-{VT_PPM,            1.0,    0, 2, DT_VALS, 0,  U_PPM, sizeof(U_PPM), STR_PPM},
-{VT_SECONDS_WORD,   1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
-{VT_SECONDS_WORD5,  2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
-{VT_SECONDS_WORD16, 16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
-{VT_SPEED,          0.02,   0, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
-{VT_SPEED2,         1.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
-{VT_TEMP,           64.0,   1, 2+32, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
-{VT_TEMP_WORD,      1.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
+{VT_BIT,              1.0,    1, 1, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
+{VT_BYTE,             1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
+{VT_BYTE10,           10.0,   0, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
+{VT_CLOSEDOPEN,       1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
+{VT_DAYS,             1.0,    1, 1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
+{VT_ENUM,             1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
+{VT_GRADIENT_SHORT,   1.0,    1, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
+{VT_HOURS_SHORT,      1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
+{VT_LPBADDR,          1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
+{VT_LPM_SHORT,        10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
+{VT_MINUTES_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
+{VT_MONTHS,           1.0,    6, 1, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS},
+{VT_ONOFF,            1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ONOFF},
+{VT_PERCENT,          1.0,    6, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT},
+{VT_PERCENT1,         1.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT1},
+{VT_PERCENT5,         2.0,    1, 1, DT_VALS, 0,  U_PERC, sizeof(U_PERC), STR_PERCENT5},
+{VT_PRESSURE,         10.0,   6, 1, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE},
+{VT_PRESSURE50,       50.0,   1, 1, DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
+{VT_SECONDS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
+{VT_SECONDS_SHORT2,   2.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
+{VT_SECONDS_SHORT4,   4.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
+{VT_SECONDS_SHORT5,   5.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
+{VT_TEMP_SHORT,       1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
+{VT_TEMP_SHORT_US,    1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT_US},
+{VT_TEMP_SHORT5,      2.0,    1, 1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5},
+{VT_TEMP_SHORT5_US,   2.0,    1, 1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5_US},
+{VT_TEMP_SHORT64,     64.0,   1, 1, DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), STR_TEMP_SHORT64},
+{VT_TEMP_PER_MIN,     1.0,    6, 1, DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
+{VT_VOLTAGE,          10.0,   1, 1, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
+{VT_VOLTAGEONOFF,     1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
+{VT_WEEKDAY,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
+{VT_YESNO,            1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
+{VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
+{VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
+{VT_CURRENT1000,      1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
+{VT_DAYS_WORD,        1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
+{VT_ERRORCODE,        1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
+{VT_FP1,              10.0,   0, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
+{VT_FP02,             50.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
+{VT_GRADIENT,         1.0,    1, 2, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
+// {VT_INTEGRAL,         1.0,    0, 2, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
+{VT_METER,            10,     1, 2, DT_VALS, 0,  U_METER, sizeof(U_METER), STR_METER},
+{VT_MONTHS_WORD,      1.0,    1, 2, DT_VALS, 0,  U_MONTHS, sizeof(U_MONTHS), STR_MONTHS_WORD},
+{VT_HOUR_MINUTES,     1.0,    6, 2+32, DT_HHMM, 0,  U_NONE, sizeof(U_NONE), STR_HOUR_MINUTES},
+{VT_HOURS_WORD,       1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
+{VT_MINUTES_WORD,     1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
+{VT_MINUTES_WORD10,   0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
+{VT_PERCENT_WORD1,    1.0,    6, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
+{VT_PERCENT_WORD,     2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
+{VT_PERCENT_100,      100.0,  1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
+{VT_POWER_WORD,       10.0,   1, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
+{VT_POWER_WORD100,    100.0,  0, 2, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
+{VT_ENERGY_WORD,      10.0,   0, 2, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
+{VT_ENERGY_CONTENT,   10.0,   0, 2, DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
+{VT_PRESSURE_WORD,    10.0,   6, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
+{VT_PRESSURE_1000,    1000.0, 0, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
+{VT_PROPVAL,          16.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
+{VT_PPM,              1.0,    0, 2, DT_VALS, 0,  U_PPM, sizeof(U_PPM), STR_PPM},
+{VT_CEL_PER_MIN_WORD, 1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_CEL_MIN), STR_TEMP_PER_MIN},
+{VT_SECONDS_WORD,     1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
+{VT_SECONDS_WORD5,    2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
+{VT_SECONDS_WORD16,   16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
+{VT_SPEED,            0.02,   0, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
+{VT_SPEED2,           1.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
+{VT_TEMP,             64.0,   1, 2+32, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
+{VT_TEMP_WORD,        1.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
 // {VT_TEMP_WORD60,    60.0,   6, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
-{VT_TEMP_WORD5_US,  2.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
-{VT_VOLTAGE_WORD,   10.0,   1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
-{VT_CELMIN,         1.0,    1, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
-{VT_LITERPERHOUR,   1.0,    0, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
-{VT_LITERPERMIN,    10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
-{VT_UINT,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
-{VT_UINT5,          5.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
-{VT_UINT10,         10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
-{VT_UINT100_WORD,   100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
-{VT_SINT,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
-{VT_SINT1000,       1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
-{VT_PPS_TIME,       1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
-{VT_DWORD,          1.0,    6, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
-{VT_DWORD,          10.0,   0, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD10},
-{VT_HOURS,          3600.0, 1, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
-{VT_MINUTES,        60.0,   1, 4, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
-{VT_SECONDS_DWORD,  1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
-{VT_POWER,          10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
-{VT_POWER100,       100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
+{VT_TEMP_WORD5_US,    2.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
+{VT_VOLTAGE_WORD,     10.0,   1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
+{VT_CELMIN,           1.0,    1, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
+{VT_LITERPERHOUR,     1.0,    0, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
+{VT_LITERPERMIN,      10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
+{VT_UINT,             1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
+{VT_UINT5,            5.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
+{VT_UINT10,           10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
+{VT_UINT100_WORD,     100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_SINT,             1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
+{VT_SINT1000,         1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
+{VT_PPS_TIME,         1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
+{VT_DWORD,            1.0,    6, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
+{VT_DWORD,            10.0,   0, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD10},
+{VT_HOURS,            3600.0, 1, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
+{VT_MINUTES,          60.0,   1, 4, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
+{VT_SECONDS_DWORD,    1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
+{VT_POWER,            10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
+{VT_POWER100,         100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
 // {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
-{VT_ENERGY,         1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
-{VT_UINT100,        100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
-{VT_DATETIME,       1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
-{VT_YEAR,           1.0,    1, 8+32, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_YEAR},
-{VT_DAYMONTH,       1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_DAYMONTH},
-{VT_TIME,           1.0,    1, 8+32, DT_THMS, 0,  U_NONE, sizeof(U_NONE), STR_TIME},
-{VT_VACATIONPROG,   1.0,    6, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
-{VT_TIMEPROG,       1.0,    8, 11+32, DT_TMPR, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
-{VT_STRING,         1.0,    8, 22+64, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
-{VT_CUSTOM_ENUM,    1.0,    8, 22+32+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
-{VT_CUSTOM_BYTE,    1.0,    0, 22+32+64, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
-{VT_CUSTOM_BIT,     1.0,    0, 22+32+64, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BIT},
-{VT_GR_PER_CUBM,    1.0,    0, 0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
-{VT_FLOAT,          1.0,    0, 0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FLOAT},
-{VT_LONG,           1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LONG},
-{VT_PRESSURE_HPA,   1.0,    0, 0, DT_VALS, 2,  U_ATM_PRESSURE, sizeof(U_ATM_PRESSURE), STR_ATM_PRESSURE},
-{VT_ALTITUDE,       1.0,    0, 0, DT_VALS, 0,  U_ALTITUDE, sizeof(U_ALTITUDE), STR_ALTITUDE},
-{VT_UNKNOWN,        1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
+{VT_ENERGY,           1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_UINT100,          100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_DATETIME,         1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
+{VT_YEAR,             1.0,    1, 8+32, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_YEAR},
+{VT_DAYMONTH,         1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_DAYMONTH},
+{VT_TIME,             1.0,    1, 8+32, DT_THMS, 0,  U_NONE, sizeof(U_NONE), STR_TIME},
+{VT_VACATIONPROG,     1.0,    6, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_VACATIONPROG},
+{VT_TIMEPROG,         1.0,    8, 11+32, DT_TMPR, 0,  U_NONE, sizeof(U_NONE), STR_TIMEPROG},
+{VT_STRING,           1.0,    8, 22+64, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_STRING},
+{VT_CUSTOM_ENUM,      1.0,    8, 22+32+64, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_ENUM},
+{VT_CUSTOM_BYTE,      1.0,    0, 22+32+64, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BYTE},
+{VT_CUSTOM_BIT,       1.0,    0, 22+32+64, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_CUSTOM_BIT},
+{VT_GR_PER_CUBM,      1.0,    0, 0, DT_VALS, 3,  U_GR_PER_CUBM, sizeof(U_GR_PER_CUBM), STR_GR_PER_CUBM},
+{VT_FLOAT,            1.0,    0, 0, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FLOAT},
+{VT_LONG,             1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LONG},
+{VT_PRESSURE_HPA,     1.0,    0, 0, DT_VALS, 2,  U_ATM_PRESSURE, sizeof(U_ATM_PRESSURE), STR_ATM_PRESSURE},
+{VT_ALTITUDE,         1.0,    0, 0, DT_VALS, 0,  U_ALTITUDE, sizeof(U_ALTITUDE), STR_ALTITUDE},
+{VT_UNKNOWN,          1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
 /****************************************************/
@@ -841,8 +843,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237, 6258, 6259, 6343, 6344};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237, 6258, 6259, 6343, 6344};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
@@ -1129,6 +1131,7 @@ const char STR730[] PROGMEM = STR730_TEXT;
 const char STR732[] PROGMEM = STR732_TEXT;
 const char STR733[] PROGMEM = STR733_TEXT;
 const char STR734[] PROGMEM = STR734_TEXT;
+const char STR739[] PROGMEM = STR739_TEXT;
 const char STR740[] PROGMEM = STR740_TEXT;
 const char STR741[] PROGMEM = STR741_TEXT;
 const char STR742[] PROGMEM = STR742_TEXT;
@@ -5874,6 +5877,14 @@ const char ENUM5950_7[] PROGMEM_LATEST = {
 "\x03 " ENUM5950_7_03_TEXT
 };
 
+// Konfiguration - Funktion Eingang H1/F2 LMU64
+const char ENUM5950_8[] PROGMEM_LATEST = {
+"\x00 " ENUM5950_2_00_TEXT "\0"
+"\x01 " ENUM5950_2_01_TEXT "\0"
+"\x02 " ENUM5950_2_02_TEXT "\0"
+"\x07 " ENUM5950_2_03_TEXT
+};
+
 const char ENUM5951[] PROGMEM_LATEST = {
 "\x00 " ENUM5951_00_TEXT "\0"
 "\x01 " ENUM5951_01_TEXT
@@ -6287,9 +6298,11 @@ const char ENUM6230[] PROGMEM_LATEST = {
 "\x40\x40 " ENUM6230_40_40_TEXT
 };
 
-const char ENUM6236[] PROGMEM_LATEST = {
+/*
+const char ENUM6344[] PROGMEM_LATEST = {
 "\x06\x04 "
 };
+*/
 
 // Konfiguration - KonfigRG1
 
@@ -8581,8 +8594,12 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x2D3D0640,  CAT_HK1,              VT_TEMP,          732,   STR732,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Tagesheizgrenze
 {0x053D1214,  CAT_HK1,              VT_YESNO,         733,   STR733,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Verlängerung Tagesheizgrenze
 {0x393D2F89,  CAT_HK1,              VT_TEMP_SHORT5_US,734,   STR734,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumsollabsenkung mit Schaltuhr
+{0x393D2F89,  CAT_HK1,              VT_TEMP_SHORT5_US,734,   STR734,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Raumsollabsenkung mit Schaltuhr
+{0x09050665,  CAT_HK1,              VT_CEL_PER_MIN_WORD,739, STR739,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C/min ] - Heizkreis 1 - Vorlaufsollwertanstieg-Maximalbegrenzung
 {0x213D0663,  CAT_HK1,              VT_TEMP,          740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
+{0x193D0663,  CAT_HK1,              VT_TEMP_WORD5_US, 740,   STR740,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Minimum
 {0x213D0662,  CAT_HK1,              VT_TEMP,          741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
+{0x193D0662,  CAT_HK1,              VT_TEMP_WORD5_US, 741,   STR741,   0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Heizkreis 1 - Vorlaufsollwert Maximum
 {0x213D0A88,  CAT_HK1,              VT_TEMP,          742,   STR742,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Vorlaufsollwert Raumthermostat HK1, also used by Brötje IDA and FE ISR Plus
 {0x2D3D0D85,  CAT_HK1,              VT_PERCENT,       744,   STR744,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [% ] - Heizkreis 1 - Soll Einschaltverh R'stat
 {0x213D17BB,  CAT_HK1,              VT_SECONDS_WORD,  746,   STR746,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ - Heizkreis 1 - Verzög' Wärmeanforderung - Delay time in case it is used an external electrical valve zone
@@ -8936,7 +8953,9 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x313D06B9,  CAT_TW,               VT_TEMP,          1610,  STR1610,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert
 {0x313D06BA,  CAT_TW,               VT_TEMP,          1612,  STR1612,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert
 {0x313D06B8,  CAT_TW,               VT_TEMP,          1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
+{0x313D06B8,  CAT_TW,               VT_TEMP_WORD5_US, 1614,  STR1614,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // [°C ] - Trinkwasser - Nennsollwert Maximum
 {0x253D2F83,  CAT_TW,               VT_TEMP,          1615,  STR1615,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert Minimum
+{0x253D2F83,  CAT_TW,               VT_TEMP_WORD5_US, 1615,  STR1615,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // [°C ] - Trinkwasser - Reduziertsollwert Minimum
 {0x253D1BEE,  CAT_TW,               VT_UNKNOWN,       1616,  STR1616,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Trinkwasser - Sollwert Photovoltaik
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620),     ENUM1620,     DEFAULT_FLAG, DEV_ALL}, // [0] - Trinkwasser - Freigabe
 {0x253D0722,  CAT_TW,               VT_ENUM,          1620,  STR1620,  sizeof(ENUM1620_2),   ENUM1620_2,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Trinkwasser - Freigabe
@@ -9028,13 +9047,14 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x113D0B50,  CAT_KESSEL,           VT_ONOFF,         2208,  STR2208,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_OEM, DEV_ALL}, // Durchladung Pufferspeicher (EIN/AUS)
 {0x0D3D092C,  CAT_KESSEL,           VT_TEMP,          2210,  STR2210,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Sollwert Minimum
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
-//{0x2D3D092C,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2210,  STR2210,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert Minimum - logged on OCI700 via LPB
+{0x2D3D092C,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2210,  STR2210,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert Minimum - logged on OCI700 via LPB
+//{0x193D0663,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2210,  STR2210,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert Minimum - logged on LMU64 via OCI700
 {0x193D0663,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2210,  STR2210,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert Minimum - logged on LMU64 via OCI700
 {0x0D3D092D,  CAT_KESSEL,           VT_TEMP,          2211,  STR2211,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Sollwert Minimum OEM
 {0x0D3D092B,  CAT_KESSEL,           VT_TEMP,          2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Sollwert maximum
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
-//{0x093D0952,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on OCI700 via LPB
-{0x193D0662,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on LMU64 via OCI700
+{0x093D0952,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on OCI700 via LPB
+//{0x193D0662,  CAT_KESSEL,           VT_TEMP_WORD5_US,2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on LMU64 via OCI700
 {0x053D08F3,  CAT_KESSEL,           VT_TEMP,          2213,  STR2213,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Sollwert Maximum OEM
 // command with same command id as line 2270
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2214,  STR2214,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2214 Sollwert Handbetrieb [°C]
@@ -10148,7 +10168,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0784,  CAT_KONFIG,           VT_ENUM,          5942,  STR5942,  sizeof(ENUM5942),     ENUM5942,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Fühlereingang BX22
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_ALL}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B)
 {0x053D0807,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_5),   ENUM5950_5,   DEFAULT_FLAG, DEV_107_ALL}, // [-] - Konfiguration - Funktion Eingang H1
-{0x39053052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950),     ENUM5950,     DEFAULT_FLAG, DEV_064_ALL}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B) - logged on OCI700 via LPB
+{0x39053052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_8),   ENUM5950_8,   DEFAULT_FLAG, DEV_064_ALL}, // [-] - Konfiguration - Funktion Eingang H1 (LOGON B) - logged on OCI700 via LPB
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_097_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x053D3052,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_2),   ENUM5950_2,   DEFAULT_FLAG, DEV_098_ALL}, // [-] - Konfiguration - Funktion Eingang H1
 {0x393D0483,  CAT_KONFIG,           VT_ENUM,          5950,  STR5950,  sizeof(ENUM5950_7),   ENUM5950_7,   DEFAULT_FLAG, DEV_025_ALL}, // [-] - Konfiguration - Funktion Eingang H1
@@ -10871,7 +10891,8 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x313D2FB7,  CAT_KONFIG,           VT_BIT,           6310,  STR6310,  sizeof(ENUM6310),     ENUM6310,     DEFAULT_FLAG, DEV_ALL}, // Thision 6310 KonfigRg8 Bit 0-7 [?]
 {0x0D3D3017,  CAT_KONFIG,           VT_BIT,           6330,  STR6330,  sizeof(ENUM6330),     ENUM6330,     DEFAULT_FLAG, DEV_ALL}, // Thision 6330 KonfigRg10 Bit 0-7 [?]
 {0x153D020A,  CAT_KONFIG,           VT_UNKNOWN,       6343,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 01 00 01 F4 / on LMU64: 00 01 1D 00 AA // regularly called by ACS700 diagnosis software
-{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6344,  STR6344,  sizeof(ENUM6236),     ENUM6236,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
+{0x053D0010,  CAT_KONFIG,           VT_DWORD,         6344,  STR6344,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Fabrikationsnummer (LMU64)
+//{0x05000064,  CAT_KONFIG,           VT_CUSTOM_BYTE,   6344,  STR6344,  sizeof(ENUM6344),     ENUM6344,     FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
 {0x053D1770,  CAT_KONFIG,           VT_DWORD,         6345,  STR6345,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Inbetriebssetzung?
 {0x053D1771,  CAT_KONFIG,           VT_DWORD,         6346,  STR6346,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode Fachmannebene
 {0x053D1772,  CAT_KONFIG,           VT_DWORD,         6347,  STR6347,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Zugangscode OEM?
@@ -11432,7 +11453,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 // !FIXME! !AUTOGENERATED! same cmd as 7007
 {0x2D3D2FDA,  CAT_WARTUNG,          VT_YESNO,         7012,  STR7012,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // TODO Thision 7012 Reset Meldungen 1-6 [Ja/Nein]
 {0x053D03F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7040,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden Intervall
-{0x2E3D03F1,  CAT_WARTUNG,          VT_HOURS_WORD,    7040,  STR7011,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 7011 Repetitionszeit Meldung [Tage] - logged on OCI700 via LPB
+{0x2E3D03F1,  CAT_WARTUNG,          VT_HOURS,         7040,  STR7011,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 7011 Repetitionszeit Meldung [Tage] - logged on OCI700 via LPB
 {0x053D03F3,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung
 {0x253D2FDE,  CAT_WARTUNG,          VT_HOURS_WORD,    7041,  STR7041,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [h ] - Wartung/Service - Brennerstunden seit Wartung - logged on OCI700 via LPB  // TODO: Check if value has to be divided by 10 for LMU64?
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
@@ -11483,6 +11504,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_196_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_203_ALL}, // Meldung Ionisationsstrom
 {0x053D0B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
+{0x053D0921,  CAT_WARTUNG,          VT_TEMP_SHORT,    7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
 {0x053D05E1,  CAT_WARTUNG,          VT_MONTHS,        7070,  STR7070,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // WP Zeitintervall //FUJITSU
@@ -12351,7 +12373,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // Diagnose Verbraucher
 {0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x053D0521,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_090_090}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
-{0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+{0x0505021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 //{0x0500021F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_097_100}, // [°C ] - Diagnose Verbraucher - Aussentemperatur // different reports for 97/100, one time 0x053D0521, then 0x0500021F
 {0x053D056F,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8701,  STR8701,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Außentemperatur Minimum
@@ -12775,8 +12797,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 // 0x053D.... (größtenteils Regelung HK1)
 
+{0x05050064,  CAT_USER_DEFINED,     VT_UNKNOWN,       10200, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Byte 1+2: Gerätevariante; Byte 3+4: Gerätefamilie; Bytes 5+6: Objektverzeichnis-Version; Bytes 7-10: Hersteller-ID
 {0x053D0007,  CAT_USER_DEFINED,     VT_UNKNOWN,       10201, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 00 00
-{0x053D0010,  CAT_USER_DEFINED,     VT_UNKNOWN,       10202, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 53 FD 02 63 (seems to be subset of follwing Command ID) / on RVS43.222: 00 00 00 7A A6
 {0x053D0066,  CAT_USER_DEFINED,     VT_UNKNOWN,       10204, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on RVS43.222: 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00 00 / on RVP320: 39 31 2D 25 21 19 15 11 0D 00 00 00 00 00 00 00
 {0x053D0068,  CAT_USER_DEFINED,     VT_UNKNOWN,       10205, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 41 30 30 36 31 30 33 00 // "Anlagenbild" (ASCII: "A006103") / on RVS43.222: (ASCII: "A0060Z2") / on ZR1: (ASCII: "A006BZ2") / on RVP320: (ASCII: "A003631")
 {0x053D0069,  CAT_USER_DEFINED,     VT_UNKNOWN,       10206, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 00 / on RVS43.222: 10 00 // LMU74 sometimes sends INF message with 20 00 payload
