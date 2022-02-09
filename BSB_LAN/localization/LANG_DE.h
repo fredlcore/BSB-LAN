@@ -1428,6 +1428,8 @@
 #define STR6700_TEXT "Fehlermeldung"
 #define STR6705_TEXT "SW Diagnosecode"
 #define STR6706_TEXT "FA Phase Störstellung"
+#define STR6707_TEXT "Interner Diagnosecode"
+#define STR6708_TEXT "Aktueller Wert des Störcode-Zählers"
 #define STR6710_TEXT "Reset Alarmrelais"
 #define STR6711_TEXT "Reset Wärmepumpe"
 #define STR6740_TEXT "Vorlauftemperatur 1 Alarm"
