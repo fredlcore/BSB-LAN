@@ -1740,6 +1740,9 @@ int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter){
  * *************************************************************** */
 char *TranslateType(byte type, char *mtype) {
   const char *p = NULL;
+  if (type > 0x20) {
+    type = type & 0x0F;
+  }
   switch (type) {
     case TYPE_QINF: p = PSTR("QINF"); break;
     case TYPE_INF: p = PSTR("INF"); break;
