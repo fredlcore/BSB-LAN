@@ -329,6 +329,7 @@
 #undef STR732_TEXT
 #undef STR733_TEXT
 #undef STR734_TEXT
+#undef STR739_TEXT
 #undef STR740_TEXT
 #undef STR741_TEXT
 #undef STR742_TEXT
