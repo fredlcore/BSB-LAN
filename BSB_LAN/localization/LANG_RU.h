@@ -2761,7 +2761,7 @@
 #define ENUM_SWCODE_a9_TEXT "Reglerstoppfunktion aktiv"
 #define ENUM_SWCODE_aa_TEXT "Entriegelungstaste ist dauernd betätig"
 #define ENUM_SWCODE_01_19_TEXT "Gebläsedrehzahl überschritten"
-#define ENUM_SWCODE_01_20_TEXT "Gebläsedrehzahl unterschritten"
+#define ENUM_SWCODE_01_1a_TEXT "Gebläsedrehzahl unterschritten"
 #define ENUM_SWCODE_01_45_TEXT "ungültiges Schema in hydraulischen System oder interner Fehler"
 #define ENUM_SWCODE_01_a6_TEXT "el. STB hat ausgelöst (Nacherwärmung)"
 #define ENUM_SWCODE_01_aa_TEXT "Kesseltemperatur steigt schneller als erlaubt"
