@@ -350,7 +350,8 @@ UIStrings["STR732_TEXT"] = "Раннее отключение нагревани
 //#define STR733_TEXT "Verlängerung Tagesheizgrenze"
 UIStrings["STR733_TEXT"] = "Расширение суточного предела обогрева";
 //???Компенсация температуры в помещении с таймером
-UIStrings["STR734_TEXT"] = "Raumsollabsenkung mit Schaltuhr";
+UIStrings["STR734_TEXT"] = "Компенсация температуры в помещении с таймером";
+UIStrings["STR739_TEXT"] = "Верхняя граница увеличения подачи";
 //740-742 В зависимости от выбранной настройки используется фиксированное значение температуры контура отопления или в диапазоне 740-741.
 //Baxi Luna Platinum+ russian manual: P740 must be >45C. Probably incorrect
 //#define STR740_TEXT "Минимальная температура в контуре высокотемпературной системы отопления"
@@ -1144,6 +1145,7 @@ UIStrings["STR6300_TEXT"] = "Конфигурационный регистр 7, 
 UIStrings["STR6300_2_TEXT"] = "Сведения 1 OEM";
 UIStrings["STR6310_TEXT"] = "Конфигурационный регистр 8, биты 0-7";
 UIStrings["STR6330_TEXT"] = "Конфигурационный регистр 10, биты 0-7";
+UIStrings["STR6344_TEXT"] = "Серийный номер";
 UIStrings["STR6345_TEXT"] = "Код доступа к меню ввода в эксплуатацию";
 UIStrings["STR6346_TEXT"] = "Код доступа к инженерному меню";
 UIStrings["STR6347_TEXT"] = "Код доступа OEM";
@@ -1189,6 +1191,8 @@ UIStrings["STR6650_TEXT"] = "Поставщик уличной температ�
 
 UIStrings["STR6705_TEXT"] = "Диагностический код ПО";
 UIStrings["STR6706_TEXT"] = "Состояние котла";
+UIStrings["STR6707_TEXT"] = "Внутренний диагностический код";
+UIStrings["STR6708_TEXT"] = "Текущее значение счётчика кодов неисправности";
 UIStrings["STR6710_TEXT"] = "Сброс реле тревоги";
 UIStrings["STR6711_TEXT"] = "Сброс теплового насоса";
 UIStrings["STR6740_TEXT"] = "Сигнализация температуры подачи 1";
@@ -2761,7 +2765,7 @@ UIStrings["ENUM_SWCODE_a8_TEXT"] = "Kaminkehrerfunktion aktiv";
 UIStrings["ENUM_SWCODE_a9_TEXT"] = "Reglerstoppfunktion aktiv";
 UIStrings["ENUM_SWCODE_aa_TEXT"] = "Entriegelungstaste ist dauernd betätig";
 UIStrings["ENUM_SWCODE_01_19_TEXT"] = "Gebläsedrehzahl überschritten";
-UIStrings["ENUM_SWCODE_01_20_TEXT"] = "Gebläsedrehzahl unterschritten";
+UIStrings["ENUM_SWCODE_01_1a_TEXT"] = "Gebläsedrehzahl unterschritten";
 UIStrings["ENUM_SWCODE_01_45_TEXT"] = "ungültiges Schema in hydraulischen System oder interner Fehler";
 UIStrings["ENUM_SWCODE_01_a6_TEXT"] = "el. STB hat ausgelöst (Nacherwärmung)";
 UIStrings["ENUM_SWCODE_01_aa_TEXT"] = "Kesseltemperatur steigt schneller als erlaubt";
