@@ -331,7 +331,7 @@ typedef enum{
   VT_PRESSURE_1000,     //  3 Byte - 1 enable / bar/1000.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_PPM,               //  2 Byte - 1 enable 0x   / ppm/1 signed
-  VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / 
+  VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / k/min
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
   VT_SECONDS_WORD16,    //  3 Byte - 1 enable / seconds / 16
@@ -843,8 +843,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237, 6258, 6259, 6343, 6344};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6237, 6258, 6259, 6343, 6344};
+const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
@@ -1184,6 +1184,7 @@ const char STR888[] PROGMEM = STR888_TEXT;
 const char STR888_2[] PROGMEM = STR888_2_TEXT;
 const char STR889[] PROGMEM = STR889_TEXT;
 const char STR890[] PROGMEM = STR890_TEXT;
+const char STR890_2[] PROGMEM = STR890_2_TEXT;
 const char STR891[] PROGMEM = STR891_TEXT;
 const char STR892[] PROGMEM = STR892_TEXT;
 const char STR893[] PROGMEM = STR893_TEXT;
@@ -2383,6 +2384,7 @@ const char STR6086[] PROGMEM = STR6086_TEXT;
 const char STR6089[] PROGMEM = STR6089_TEXT;
 const char STR6089_2[] PROGMEM = STR6089_2_TEXT;
 const char STR6090[] PROGMEM = STR6090_TEXT;
+const char STR6090_2[] PROGMEM = STR6090_2_TEXT;
 const char STR6091[] PROGMEM = STR6091_TEXT;
 const char STR6092[] PROGMEM = STR6092_TEXT;
 const char STR6093[] PROGMEM = STR6093_TEXT;
@@ -8717,9 +8719,11 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x093D2FB6,  CAT_HK1,              VT_PERCENT,       889,   STR889,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Zeitkonstante Temp'filte [%] 00 63 / 99
 {0x093D2FB6,  CAT_HK1,              VT_PERCENT,       889,   STR889,   0,                    NULL,         FL_OEM, DEV_097_ALL}, // Elco Thision S17.1 dT Zeitkonstante Temp'filte [%] 00 63 / 99
 {0x213D10C2,  CAT_HK1,              VT_YESNO,         890,   STR890,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_ALL}, // WOB20C/WOB25C Vorl'sollwertkorr Drehz'reg HK1
-{0x2D3D2FAB,  CAT_HK1,              VT_PROPVAL,       890,   STR890,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Proportionalbeiwert Kp
+{0x2D3D2FAB,  CAT_HK1,              VT_PROPVAL,       890,   STR890_2,   0,                  NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Proportionalbeiwert Kp
 {0x2D3D2FAC,  CAT_HK1,              VT_SECONDS_WORD16,891,   STR891,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Vorhaltezeit Tv [s] 00 00 03 / 0.19 = /16
+{0x220508F8,  CAT_HK1,              VT_SECONDS_WORD16,891,   STR891,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Vorhaltezeit Tv [s] 00 00 03 / 0.19 = /16
 {0x2D3D2FAD,  CAT_HK1,              VT_SECONDS_WORD,  892,   STR892,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Nachstellzeit Tv [s] 00 00 4B / 75
+{0x2D050659,  CAT_HK1,              VT_SECONDS_WORD,  892,   STR892,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Nachstellzeit Tv [s] 00 00 4B / 75
 {0x0D3D2F9C,  CAT_HK1,              VT_BYTE,          893,   STR893,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Abtastfaktor 00 0A / 10
 {0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 894 dt Spreizung Norm Aussent. [°C]
 {0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 895 dt Spreizung Maximum [°C]
@@ -9053,7 +9057,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x0D3D092D,  CAT_KESSEL,           VT_TEMP,          2211,  STR2211,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Sollwert Minimum OEM
 {0x0D3D092B,  CAT_KESSEL,           VT_TEMP,          2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Sollwert maximum
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
-{0x093D0952,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on OCI700 via LPB
+{0x2D3D0952,  CAT_KESSEL,           VT_TEMP_WORD5_US, 2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on OCI700 via LPB
 //{0x193D0662,  CAT_KESSEL,           VT_TEMP_WORD5_US,2212,  STR2212,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // [°C ] - Kessel - Sollwert maximum - logged on LMU64 via OCI700
 {0x053D08F3,  CAT_KESSEL,           VT_TEMP,          2213,  STR2213,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Sollwert Maximum OEM
 // command with same command id as line 2270
@@ -9357,13 +9361,19 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D3062,  CAT_KESSEL,           VT_TEMP_SHORT5_US,2531,  STR2531,  0,                    NULL,         FL_OEM, DEV_097_ALL}, // Baxi Luna Platinum+ Auslösetemperatur Wächter
 {0x113D2FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
+{0x25052FA9,  CAT_KESSEL,           VT_PROPVAL,       2540,  STR2540,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2540 Proportionalbeiwert Kp TWW [0..9.9375]
 {0x113D3059,  CAT_KESSEL,           VT_SECONDS_WORD16,2541,  STR2541,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Vorhaltezeit Tv TWW [s] /16
+{0x2505074C,  CAT_KESSEL,           VT_SECONDS_WORD16,2541,  STR2541,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Thision Vorhaltezeit Tv TWW [s] /16
 {0x113D305A,  CAT_KESSEL,           VT_SECONDS_WORD,  2542,  STR2542,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Nachstellzeit Tn TWW [s]
+{0x2505072A,  CAT_KESSEL,           VT_SECONDS_WORD,  2542,  STR2542,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Thision Nachstellzeit Tn TWW [s]
 {0x113D2FAA,  CAT_KESSEL,           VT_PROPVAL,       2543,  STR2543,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
+{0x22052FAA,  CAT_KESSEL,           VT_PROPVAL,       2543,  STR2543,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 2543 Proportionalbeiwert Kp HK's [0..9.9375]
 {0x113D305B,  CAT_KESSEL,           VT_SECONDS_WORD16,2544,  STR2544,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision Vorhaltezeit Tv HK's [s]/16
 {0x113D305C,  CAT_KESSEL,           VT_SECONDS_WORD,  2545,  STR2545,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Nachstellzeit Tn HK's [s]
 {0x213D2FAE,  CAT_KESSEL,           VT_SECONDS_SHORT5,2546,  STR2546,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtastintervall Hz/Speicher [s]/2
+{0x223D2FAE,  CAT_KESSEL,           VT_SECONDS_SHORT ,2546,  STR2546,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Abtastintervall Hz/Speicher [s]/2
 {0x253D2FAF,  CAT_KESSEL,           VT_SECONDS_SHORT5,2547,  STR2547,  0,                    NULL,         FL_OEM, DEV_ALL}, // Abtastintervall DLH [s]/2
+{0x253D2FAF,  CAT_KESSEL,           VT_SECONDS_SHORT ,2547,  STR2547,  0,                    NULL,         FL_OEM, DEV_064_ALL}, // Abtastintervall DLH [s]/2
 {0x053D1A79,  CAT_KESSEL,           VT_ONOFF,         2550,  STR2550,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // [] - Kessel - Gasenergiezählung
 {0x053D1A82,  CAT_KESSEL,           VT_SINT1000,      2551,  STR2551,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [] - Kessel - Gasenergiezähl Korrektur
 {0x093D1ADF,  CAT_KESSEL,           VT_SECONDS_SHORT, 2560,  STR2560,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abschaltverz Abgasklappe
@@ -9996,12 +10006,16 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x22052F90,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
 //{0x213D2F90,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5431,  STR5431,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x21052F91,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
+{0x22052F91,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 1) [°C]
 //{0x213D2F91,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5432,  STR5432,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x21052F92,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+{0x22052F92,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Einschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
 //{0x213D2F92,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5433,  STR5433,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x21052FD5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+{0x22052FD5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Min. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
 //{0x213D2FD5,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5434,  STR5434,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x21052F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
+{0x22052F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Max. Ausschaltdifferenz im BW-Betrieb (Fühler 2) [°C]
 //{0x213D2F93,  CAT_DURCHLERHITZER,   VT_TEMP_SHORT5,   5435,  STR5435,  0,                    NULL,         DEFAULT_FLAG, DEV_097_ALL}, // THISION S17.1
 {0x053D1362,  CAT_DURCHLERHITZER,   VT_ENUM,          5441,  STR5441,  sizeof(ENUM5441),     ENUM5441,     FL_OEM,       DEV_ALL}, // Durchflussmessung
 {0x053D0F8F,  CAT_DURCHLERHITZER,   VT_LPM_SHORT,     5444,  STR5444,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
@@ -10685,9 +10699,11 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_205_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x053D1232,  CAT_KONFIG,           VT_ENUM,          6089,  STR6089_2,sizeof(ENUM6085),     ENUM6085,     DEFAULT_FLAG, DEV_211_ALL}, // [0] - Konfiguration - Signal Fkt' UX3 - Baxi Luna Platinum
 {0x213D3044,  CAT_KONFIG,           VT_METER,         6090,  STR6090,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Mod Pumpe Förderhöhe Min [m]/10
-{0x073D045B,  CAT_KONFIG,           VT_ENUM,          6090,  STR6090,  sizeof(ENUM6090),     ENUM6090,     DEFAULT_FLAG, DEV_108_ALL}, // Signallogik Ausgang UX3
-{0x073D045B,  CAT_KONFIG,           VT_ENUM,          6090,  STR6090,  sizeof(ENUM6090),     ENUM6090,     DEFAULT_FLAG, DEV_196_ALL}, // Signallogik Ausgang UX3
+{0x113D2FA8,  CAT_KONFIG,           VT_METER,         6090,  STR6090,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL},  // Miniimale Förderhöhe der modulierenden Pumpe
+{0x073D045B,  CAT_KONFIG,           VT_ENUM,          6090,  STR6090_2,  sizeof(ENUM6090),     ENUM6090,     DEFAULT_FLAG, DEV_108_ALL}, // Signallogik Ausgang UX3
+{0x073D045B,  CAT_KONFIG,           VT_ENUM,          6090,  STR6090_2,  sizeof(ENUM6090),     ENUM6090,     DEFAULT_FLAG, DEV_196_ALL}, // Signallogik Ausgang UX3
 {0x2D3D3045,  CAT_KONFIG,           VT_METER,         6091,  STR6091,  0,                    NULL,         FL_OEM, DEV_ALL}, // Thision Mod Pumpe Förderhöhe Max [m]/10
+{0x113D2FA7,  CAT_KONFIG,           VT_METER,         6091,  STR6091,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL},  // Maximale Förderhöhe der modulierenden Pumpe
 {0x113D2FE1,  CAT_KONFIG,           VT_PERCENT,       6092,  STR6092,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM Min
 {0x053D2FE1,  CAT_KONFIG,           VT_PERCENT5,      6092,  STR6092,  0,                    NULL,         FL_OEM,       DEV_196_ALL}, // Modulierende Pumpe PWM Minimum
 {0x113D2FE2,  CAT_KONFIG,           VT_PERCENT,       6093,  STR6093,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6092 Mod Pumpe PWM Max
@@ -10818,7 +10834,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1388,  CAT_KONFIG,           VT_BYTE,          6221,  STR6221,  0,                    NULL,         DEFAULT_FLAG, DEV_211_ALL}, // Thision 6221 Entwicklungs-Index [?]
 {0x053D0011,  CAT_KONFIG,           VT_HOURS,         6222,  STR6222,  0,                    NULL,         FL_OEM, DEV_ALL}, // Gerätebetriebsstunden
 {0x053D0000,  CAT_KONFIG,           VT_UINT,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_ALL}, // Anlagetyp
-{0x2D052FEA,  CAT_KONFIG,           VT_UINT,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
+{0x2D052FEA,  CAT_KONFIG,           VT_BYTE,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
 // Parameter below is from Elco Thision S 17.1 (devcie family 97) via OCI. So far no possibility to detect presence of OCI and react to different command IDs from OCI420 vis-a-vis direct BSB connection.
 //{0x053D0067,  CAT_KONFIG,           VT_BYTE,          6223,  STR6223,  0,                    NULL,         FL_RONLY, DEV_064_ALL}, // Anlagetyp
 {0x053D0001,  CAT_KONFIG,           VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
@@ -10870,6 +10886,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1BC7,  CAT_KONFIG,           VT_UNKNOWN,       6258,  STR6258,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 3 OEM
 {0x053D1BC8,  CAT_KONFIG,           VT_UNKNOWN,       6259,  STR6259,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Info 4 OEM
 {0x153D3064,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  sizeof(ENUM6260),     ENUM6260,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg3 Bit 0-7
+{0x153D2FA0,  CAT_KONFIG,           VT_BIT,           6260,  STR6260,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // KonfigRg3 Bit 0-7
 {0x153D2FA1,  CAT_KONFIG,           VT_BIT,           6270,  STR6270,  sizeof(ENUM6270),     ENUM6270,     DEFAULT_FLAG, DEV_ALL}, // Thision 6270 KonfigRg4 Bit 0-7 [?]
 {0x053D11E1,  CAT_KONFIG,           VT_TEMP,          6270,  STR6270_2,0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutztemperatur
 {0x053D11E2,  CAT_KONFIG,           VT_TEMP,          6271,  STR6271,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Überhitzschutz Schaltdiff
@@ -11504,7 +11521,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_196_ALL}, // Meldung Ionisationsstrom
 {0x053D300C,  CAT_WARTUNG,          VT_YESNO,         7051,  STR7051,  sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_203_ALL}, // Meldung Ionisationsstrom
 {0x053D0B0F,  CAT_WARTUNG,          VT_TEMP,          7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Abgastemperaturgrenze
-{0x053D0921,  CAT_WARTUNG,          VT_TEMP_SHORT,    7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Abgastemperaturgrenze
+{0x0D3D0921,  CAT_WARTUNG,          VT_TEMP_SHORT,    7053,  STR7053,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Abgastemperaturgrenze
 {0x053D0B2B,  CAT_WARTUNG,          VT_MINUTES_SHORT, 7054,  STR7054,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Verzögerung Abgasmeldung
 {0x053D107E,  CAT_WARTUNG,          VT_TEMP,          7056,  STR7056,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // TWW Verbrühungsgefahr
 {0x053D05E1,  CAT_WARTUNG,          VT_MONTHS,        7070,  STR7070,  0,                    NULL,         DEFAULT_FLAG, DEV_170_ALL}, // WP Zeitintervall //FUJITSU
@@ -13637,9 +13654,6 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 // CommandIDs logged from OCI700/ACS700 diagnosis tool
 
 {0x2E3D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10526, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software
-{0x153D2FA0,  CAT_USER_DEFINED,     VT_UNKNOWN,       10529, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Reglerkonfiguration 3
-{0x113D2FA7,  CAT_USER_DEFINED,     VT_PERCENT_WORD1, 10530, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Maximale Förderhöhe der modulierenden Pumpe
-{0x113D2FA8,  CAT_USER_DEFINED,     VT_PERCENT_WORD1, 10531, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working  // Minimale Förderhöhe der modulierenden Pumpe
 {0x2D3D3023,  CAT_USER_DEFINED,     VT_UNKNOWN,       10532, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x2E3D302F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10533, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 
