@@ -695,14 +695,14 @@ void printTelegram(byte* msg, int query_line) {
   uint8_t pps_cmd = msg[1];
   switch (bus->getBusType()) {
     case BUS_BSB:
-      if (msg[4]==TYPE_QUR || msg[4]==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
+      if ((msg[4] & 0x0F)==TYPE_QUR || (msg[4] & 0x0F)==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
         cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
       } else {
         cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
       }
       break;
     case BUS_LPB:
-      if (msg[8]==TYPE_QUR || msg[8]==TYPE_SET) { //QUERY and SET: byte 9 and 10 are in reversed order
+      if ((msg[8] & 0x0F)==TYPE_QUR || (msg[8] & 0x0F)==TYPE_SET) { //QUERY and SET: byte 9 and 10 are in reversed order
         cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
       } else {
         cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
@@ -723,7 +723,7 @@ void printTelegram(byte* msg, int query_line) {
     while (1) {
       i = findLine(query_line,i,&c);
       if (i != -1) {
-        if (c == cmd) {
+        if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF)) {
           save_i = i;
           known = true;
           break;
@@ -740,7 +740,7 @@ void printTelegram(byte* msg, int query_line) {
     c=get_cmdtbl_cmd(i);
     line = get_cmdtbl_line(i);
     while (c!=CMD_END) {
-      if (c == cmd || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
+      if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
         uint8_t dev_flags = get_cmdtbl_flags(i);
@@ -792,7 +792,7 @@ void printTelegram(byte* msg, int query_line) {
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus->getBusType() != BUS_PPS) {
       printToDebug(PSTR("     "));
-      if (decodedTelegram.msg_type < 0x12) {
+      if (decodedTelegram.msg_type < 0x12 || decodedTelegram.msg_type > 0x20) {
         printFmtToDebug(PSTR("%08lX "), cmd);             // print what we have got
       }
     }
@@ -817,14 +817,14 @@ void printTelegram(byte* msg, int query_line) {
   int data_len=0;
   switch (bus->getBusType()) {
     case BUS_BSB:
-    if (decodedTelegram.msg_type < 0x12) {
+    if (decodedTelegram.msg_type < 0x12 || decodedTelegram.msg_type > 0x20) {
       data_len=msg[bus->getLen_idx()]-11;     // get packet length, then subtract
     } else {
       data_len=msg[bus->getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
     }
     break;
     case BUS_LPB:
-    if (decodedTelegram.msg_type < 0x12) {
+    if (decodedTelegram.msg_type < 0x12 || decodedTelegram.msg_type > 0x20) {
       data_len=msg[bus->getLen_idx()]-14;     // get packet length, then subtract
     } else {
       data_len=msg[bus->getLen_idx()]-7;      // for yet unknow telegram types 0x12 to 0x15
