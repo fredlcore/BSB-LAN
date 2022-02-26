@@ -7158,11 +7158,19 @@ void setup() {
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
   #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
-    printToDebug(PSTR("Microcontroller: ESP32/Olimex\r\n"));
+    #if defined(ETH_CLOCK_GPIO17_OUTPUT)
+      printToDebug(PSTR("Microcontroller: ESP32/Olimex PoE\r\n"));
+    #else
+      printToDebug(PSTR("Microcontroller: ESP32/Olimex EVB\r\n"));
+    #endif
     pinMode(4, INPUT);
     if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
       temp_bus_pins[0] = RX1;
-      temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX
+    #if defined(ETH_CLOCK_GPIO17_OUTPUT)
+      temp_bus_pins[1] = 5;        // use GPIO5 / UEXT pin 10 for TX on Olimex ESP32 PoE
+    #else
+      temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX on Olime ESP32 EVB
+    #endif
     } else {
       temp_bus_pins[0] = RX1;
       temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
