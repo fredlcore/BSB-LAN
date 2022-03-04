@@ -180,7 +180,7 @@
  * type of sensors.
  */
 #ifndef CONFIG_DS18S20_EXT_RES
-# define CONFIG_DS18S20_EXT_RES
+#define CONFIG_DS18S20_EXT_RES
 #endif
 
 /**
