@@ -703,10 +703,11 @@ SdFat SD;
 #endif      // LOGGER || WEBSERVER
 
 #ifdef ONE_WIRE_BUS
-// this patch (https://github.com/PaulStoffregen/OneWire/pull/93) should be applied for ESP32 support when OneWire library would be updated.
-  #include "src/OneWire/OneWire.h"
+// CONFIG_DS18S20_EXT_RES can be enabled in OneWireNg_Config.h
+// Paths in some files should be changed after library updating.
+  #include "src/OneWireNg/OneWire.h"
   #include "src/DallasTemperature/DallasTemperature.h"
-  #ifndef TEMPERATURE_PRECISION
+  #ifndef TEMPERATURE_PRECISION //Not used in this time
     #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
 //    #define TEMPERATURE_PRECISION 10 //10 bit. Time to calculation: 188 ms
   #endif
@@ -5456,7 +5457,7 @@ void loop() {
             bus->Send(TYPE_IQ2, c, msg, tx_msg);
             int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
             int outBufLen = strlen(outBuf);
-  
+
             for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
 #if defined(ESP32)
               esp_task_wdt_reset();
