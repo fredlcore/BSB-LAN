@@ -64,6 +64,7 @@
  *
  * Changelog:
  *       version 2.1
+ *        - ATTENTION: New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
  *        - ESP32: OTA now uses system-wide HTTP AUTH authentication credentials
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
