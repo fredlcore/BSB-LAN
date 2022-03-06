@@ -264,6 +264,8 @@ typedef enum{
   CAT_STICHTAGSPEICHER,
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
+  CAT_LMU64,
+  CAT_RVD,
   CAT_PPS,
   CAT_USERSENSORS,
   CAT_UNKNOWN
@@ -771,7 +773,9 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x40 " ENUM_CAT_40_TEXT "\0"
 "\x41 " ENUM_CAT_41_TEXT "\0"
 "\x42 " ENUM_CAT_42_TEXT "\0"
-"\x43 " ENUM_CAT_43_TEXT
+"\x42 " ENUM_CAT_43_TEXT "\0"
+"\x42 " ENUM_CAT_44_TEXT "\0"
+"\x43 " ENUM_CAT_45_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -839,7 +843,9 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8700, 9075,
   9100, 9291,
   9500, 9652,
-  10000, 14999,
+  10000, 11999,
+  13000, 13999,
+  14000, 14999,
   15000, 15099,
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
@@ -3373,6 +3379,16 @@ const char STR10104[] PROGMEM = STR10104_TEXT;
 
 const char STR10200[] PROGMEM = STR10200_TEXT;
 
+const char STR14081[] PROGMEM = STR14081_TEXT;
+const char STR14082[] PROGMEM = STR14082_TEXT;
+const char STR14083[] PROGMEM = STR14083_TEXT;
+const char STR14084[] PROGMEM = STR14084_TEXT;
+const char STR14085[] PROGMEM = STR14085_TEXT;
+const char STR14086[] PROGMEM = STR14086_TEXT;
+const char STR14087[] PROGMEM = STR14087_TEXT;
+const char STR14088[] PROGMEM = STR14088_TEXT;
+const char STR14089[] PROGMEM = STR14089_TEXT;
+
 const char STR15001[] PROGMEM = STR15001_TEXT;
 const char STR15002[] PROGMEM = STR15002_TEXT;
 const char STR15003[] PROGMEM = STR15003_TEXT;
@@ -4481,6 +4497,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8749_01_TEXT ENUM2320_01_TEXT
 #define ENUM9614_00_TEXT ENUM2206_00_TEXT
 #define ENUM10100_01_TEXT ENUM_CAT_34_TEXT
+#define ENUM14088_01_TEXT ENUM1630_00_TEXT
 #define ENUM15000_00_TEXT ENUM5040_02_TEXT
 #define ENUM15000_01_TEXT ENUM850_05_TEXT
 #define ENUM15000_02_TEXT ENUM780_00_TEXT
@@ -7686,6 +7703,14 @@ const char ENUM10100[] PROGMEM_LATEST = {
 "\x80\x80 " ENUM10100_80_TEXT
 };
 
+// RVD/RVP
+
+// Externer Wärmebedarf Vorrang
+const char ENUM14088[] PROGMEM_LATEST = {
+"\x00 " ENUM14088_00_TEXT "\0"
+"\x01 " ENUM14088_01_TEXT
+};
+
 // PPS Betriebsart
 const char ENUM15000[] PROGMEM_LATEST = {
 "\x00 " ENUM15000_00_TEXT "\0"
@@ -10848,7 +10873,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0003,  CAT_KONFIG,           VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6226 Gerätevariante [?]
 {0x053D0004,  CAT_KONFIG,           VT_FP1,           6227,  STR6227,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6227 Objektverzeichnis-Version [?]
 {0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
-{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version // 0x1500020A seems to have a different function, sent by RVP at beginning and end of startup with payloads 00 00 00 00 00 and 00 01 00 00 00 respectively
+{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version // 0x1500020A seems to have a different function, sent by RVP at beginning and end of startup with payloads 00 00 00 00 00 and 00 01 00 00 00 respectively // second byte may also contain error number
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_108_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_122_ALL}, // Konfiguration - Info 1 OEM
@@ -13668,6 +13693,20 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2E3D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10526, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software
 {0x2D3D3023,  CAT_USER_DEFINED,     VT_UNKNOWN,       10532, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x2E3D302F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10533, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
+
+// LMU64 commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
+
+// RVD/RVP and other older controller commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
+
+{0x053D076E,  CAT_RVD,              VT_SECONDS_WORD,  14081, STR14081, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Laufzeit Auf/Zu Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D076C,  CAT_RVD,              VT_TEMP,          14082, STR14082, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // P-Band XP Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D076D,  CAT_RVD,              VT_SECONDS_WORD,  14083, STR14083, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Nachstellzeit TN Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0771,  CAT_RVD,              VT_TEMP,          14084, STR14084, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Überhöhung Sollwert Mischer/Wärmetauscher // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0780,  CAT_RVD,              VT_TEMP,          14085, STR14085, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Maximalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0781,  CAT_RVD,              VT_TEMP,          14086, STR14086, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Minimalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0656,  CAT_RVD,              VT_TEMP,          14087, STR14087, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Temperaturanforderung Externer Wärmebedarfskontakt // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0656,  CAT_RVD,              VT_ENUM,          14088, STR14088, sizeof(ENUM14088),    ENUM14088,    DEFAULT_FLAG, DEV_ALL},  // Externer Wärmebedarf Vorrang // logged from ACS700 diagnosis software from RVD265/109
+{0x053D079F,  CAT_RVD,              VT_TEMP,          14089, STR14089, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Wärmebedarfseingang DC 0..10V // logged from ACS700 diagnosis software from RVD265/109
 
 //PPS-Bus commands
 #define PPS_BA  0
