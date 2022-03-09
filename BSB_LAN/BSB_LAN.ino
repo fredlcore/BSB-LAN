@@ -7160,7 +7160,7 @@ void setup() {
     temp_bus_pins[1] = 69;
 #elif defined(ESP32)
   #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
-    #if defined(ETH_CLOCK_GPIO17_OUTPUT)
+    #if ETH_PHY_POWER == 12
       printToDebug(PSTR("Microcontroller: ESP32/Olimex PoE\r\n"));
     #else
       printToDebug(PSTR("Microcontroller: ESP32/Olimex EVB\r\n"));
@@ -7168,8 +7168,8 @@ void setup() {
     pinMode(4, INPUT);
     if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
       temp_bus_pins[0] = RX1;
-    #if defined(ETH_CLOCK_GPIO17_OUTPUT)
-      temp_bus_pins[1] = 5;        // use GPIO5 / UEXT pin 10 for TX on Olimex ESP32 PoE
+    #if ETH_PHY_POWER == 12         // Olimex ESP32 PoE?
+      temp_bus_pins[1] = 5;         // use GPIO5 / UEXT pin 10 for TX on Olimex ESP32 PoE
     #else
       temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX on Olime ESP32 EVB
     #endif
