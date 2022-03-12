@@ -131,6 +131,7 @@
 #define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
+#define DEV_148_ALL  148,255 // RVD265/109
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E
 #define DEV_162_005  162,5   // Brötje Eco-Therm Plus WGB 20E LMS14.001A100 (K.-H. M.)
 #define DEV_162_014  162,14  // Broetje WBS 22 E (FunkOdyssey)
@@ -263,6 +264,8 @@ typedef enum{
   CAT_STICHTAGSPEICHER,
   CAT_FEUERUNGSAUTOMAT,
   CAT_USER_DEFINED,
+  CAT_LMU64,
+  CAT_RVD,
   CAT_PPS,
   CAT_USERSENSORS,
   CAT_UNKNOWN
@@ -770,7 +773,9 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x40 " ENUM_CAT_40_TEXT "\0"
 "\x41 " ENUM_CAT_41_TEXT "\0"
 "\x42 " ENUM_CAT_42_TEXT "\0"
-"\x43 " ENUM_CAT_43_TEXT
+"\x43 " ENUM_CAT_43_TEXT "\0"
+"\x44 " ENUM_CAT_44_TEXT "\0"
+"\x45 " ENUM_CAT_45_TEXT
 };
 
 const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
@@ -838,7 +843,9 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   8700, 9075,
   9100, 9291,
   9500, 9652,
-  10000, 14999,
+  10000, 11999,
+  13000, 13999,
+  14000, 14999,
   15000, 15099,
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
@@ -3372,6 +3379,16 @@ const char STR10104[] PROGMEM = STR10104_TEXT;
 
 const char STR10200[] PROGMEM = STR10200_TEXT;
 
+const char STR14081[] PROGMEM = STR14081_TEXT;
+const char STR14082[] PROGMEM = STR14082_TEXT;
+const char STR14083[] PROGMEM = STR14083_TEXT;
+const char STR14084[] PROGMEM = STR14084_TEXT;
+const char STR14085[] PROGMEM = STR14085_TEXT;
+const char STR14086[] PROGMEM = STR14086_TEXT;
+const char STR14087[] PROGMEM = STR14087_TEXT;
+const char STR14088[] PROGMEM = STR14088_TEXT;
+const char STR14089[] PROGMEM = STR14089_TEXT;
+
 const char STR15001[] PROGMEM = STR15001_TEXT;
 const char STR15002[] PROGMEM = STR15002_TEXT;
 const char STR15003[] PROGMEM = STR15003_TEXT;
@@ -4480,6 +4497,7 @@ const char STR99999[] PROGMEM = STR99999_TEXT;
 #define ENUM8749_01_TEXT ENUM2320_01_TEXT
 #define ENUM9614_00_TEXT ENUM2206_00_TEXT
 #define ENUM10100_01_TEXT ENUM_CAT_34_TEXT
+#define ENUM14088_01_TEXT ENUM1630_00_TEXT
 #define ENUM15000_00_TEXT ENUM5040_02_TEXT
 #define ENUM15000_01_TEXT ENUM850_05_TEXT
 #define ENUM15000_02_TEXT ENUM780_00_TEXT
@@ -7685,6 +7703,14 @@ const char ENUM10100[] PROGMEM_LATEST = {
 "\x80\x80 " ENUM10100_80_TEXT
 };
 
+// RVD/RVP
+
+// Externer Wärmebedarf Vorrang
+const char ENUM14088[] PROGMEM_LATEST = {
+"\x00 " ENUM14088_00_TEXT "\0"
+"\x01 " ENUM14088_01_TEXT
+};
+
 // PPS Betriebsart
 const char ENUM15000[] PROGMEM_LATEST = {
 "\x00 " ENUM15000_00_TEXT "\0"
@@ -8290,6 +8316,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x0500009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_162_014}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
@@ -8313,6 +8340,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
 
@@ -8724,6 +8752,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x220508F8,  CAT_HK1,              VT_SECONDS_WORD16,891,   STR891,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Vorhaltezeit Tv [s] 00 00 03 / 0.19 = /16
 {0x2D3D2FAD,  CAT_HK1,              VT_SECONDS_WORD,  892,   STR892,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Nachstellzeit Tv [s] 00 00 4B / 75
 {0x2D050659,  CAT_HK1,              VT_SECONDS_WORD,  892,   STR892,   0,                    NULL,         FL_OEM, DEV_064_ALL}, // Elco Thision S17.1 dT Nachstellzeit Tv [s] 00 00 4B / 75
+{0x2D050659,  CAT_HK1,              VT_SECONDS_WORD,  892,   STR892,   0,                    NULL,         FL_OEM, DEV_148_ALL}, // Elco Thision S17.1 dT Nachstellzeit Tv [s] 00 00 4B / 75
 {0x0D3D2F9C,  CAT_HK1,              VT_BYTE,          893,   STR893,   0,                    NULL,         FL_OEM, DEV_ALL}, // Elco Thision S17.1 dT Abtastfaktor 00 0A / 10
 {0x193D2F8A,  CAT_HK1,              VT_TEMP_SHORT5,   894,   STR894,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 894 dt Spreizung Norm Aussent. [°C]
 {0x193D2F8B,  CAT_HK1,              VT_TEMP_SHORT5,   895,   STR895,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 895 dt Spreizung Maximum [°C]
@@ -8824,6 +8853,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x223D065C,  CAT_HK2,              VT_TEMP,          1133,  STR1133,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Schaltdiffernez 2-Punkt
 {0x223D065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 1134 Antrieb Laufzeit [s]
 {0x2E3D065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                    NULL,         DEFAULT_FLAG, DEV_064_ALL}, // Thision 1134 Antrieb Laufzeit [s] - logged on OCI700 via LPB
+{0x2E3D065A,  CAT_HK2,              VT_SECONDS_WORD,  1134,  STR1134,  0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // Thision 1134 Antrieb Laufzeit [s] - logged on OCI700 via LPB
 {0x223D0658,  CAT_HK2,              VT_TEMP,          1135,  STR1135,  0,                    NULL,         FL_OEM, DEV_ALL}, // TODO Thision 1135 Mischer P-Band XP [K]
 {0x223D0659,  CAT_HK2,              VT_SECONDS_WORD,  1136,  STR1136,  0,                    NULL,         FL_OEM, DEV_ALL}, // Mischer Nachstellzeit Tn
 {0x223D0684,  CAT_HK2,              VT_TEMP,          1141,  STR1141,  0,                    NULL,         FL_OEM, DEV_ALL}, // Brute force detected Command ID, data payload on LMU74.100A136: 00 15 40 / on RVS43.222:  00 17 C0  // Temperaturwächter Sollwert HK2
@@ -9128,6 +9158,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_090_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_096_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
+{0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0908,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_195_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x0D3D08EB,  CAT_KESSEL,           VT_TEMP,          2270,  STR2270,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Minimum
 {0x053D0549,  CAT_KESSEL,           VT_TEMP,          2271,  STR2271,  0,                    NULL,         FL_OEM, DEV_ALL}, // [°C ] - Kessel - Rücklaufsollwert Min OEM
@@ -10842,7 +10873,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0003,  CAT_KONFIG,           VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6226 Gerätevariante [?]
 {0x053D0004,  CAT_KONFIG,           VT_FP1,           6227,  STR6227,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Thision 6227 Objektverzeichnis-Version [?]
 {0x053D0CA0,  CAT_KONFIG,           VT_FP1,           6228,  STR6228,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Bootloader Version
-{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version // 0x1500020A seems to have a different function, sent by RVP at beginning and end of startup with payloads 00 00 00 00 00 and 00 01 00 00 00 respectively
+{0x153D020A,  CAT_KONFIG,           VT_FP1,           6229,  STR6229,  0,                    NULL,         FL_RONLY, DEV_ALL}, // EEPROM-Version // 0x1500020A seems to have a different function, sent by RVP at beginning and end of startup with payloads 00 00 00 00 00 and 00 01 00 00 00 respectively // second byte may also contain error number
 {0x153D2F9D,  CAT_KONFIG,           VT_BIT,           6230,  STR6230,  sizeof(ENUM6230),     ENUM6230,     DEFAULT_FLAG, DEV_ALL}, // KonfigRg0 Bit 0-7
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_108_ALL}, // Konfiguration - Info 1 OEM
 {0x053D1193,  CAT_KONFIG,           VT_UINT,          6230,  STR6230_2,0,                    NULL,         FL_RONLY, DEV_122_ALL}, // Konfiguration - Info 1 OEM
@@ -10988,6 +11019,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_133_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_136_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_137_ALL}, // Anzeige Systemmeldungen
+{0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_148_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_164_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_165_ALL}, // Anzeige Systemmeldungen
 {0x053D0006,  CAT_LPB,              VT_YESNO,         6610,  STR6610,  sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_OEM, DEV_186_ALL}, // Anzeige Systemmeldungen
@@ -11029,6 +11061,7 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_080_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_085_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_088_ALL}, // [0] - LPB - Aussentemperatur Lieferant
+{0x053D0082,  CAT_LPB,              VT_LPBADDR,       6650,  STR6650,  0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [0] - LPB - Aussentemperatur Lieferant
 {0x053D1109,  CAT_MODBUS,           VT_BYTE,          6651,  STR6651,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Modbus Slaveadresse
 {0x053D110B,  CAT_MODBUS,           VT_ENUM,          6652,  STR6652,  sizeof(ENUM6652),     ENUM6652,     DEFAULT_FLAG, DEV_ALL}, // Modbus Baudrate / logged from 163/16/LMS15.003A100
 {0x053D110A,  CAT_MODBUS,           VT_ENUM,          6653,  STR6653,  sizeof(ENUM6653),     ENUM6653,     DEFAULT_FLAG, DEV_ALL}, // Modbus Parität / logged from 163/16/LMS15.003A100
@@ -12061,6 +12094,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_090_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_108_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_119_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
+{0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_148_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_170_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x0500021D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_172_ALL}, // [°C ] - Diagnose Erzeuger - Kesseltemperatur
 {0x053D130E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8310,  STR8310,  0,                    NULL,         FL_RONLY,     DEV_196_ALL}, // Regeltemperatur
@@ -12077,6 +12111,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_044_ALL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
+{0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_148_ALL}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {0x0500021E,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8314,  STR8314,  0,                    NULL,         FL_RONLY,     DEV_NONE}, // [°C ] - Diagnose Erzeuger - Kesselrücklauftemperatur
 {0x113D0B64,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8315,  STR8315,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Kesselrücklaufsollwert
 {0x053D051D,  CAT_DIAG_ERZEUGER,    VT_TEMP,          8316,  STR8316,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Erzeuger - Abgastemperatur
@@ -12426,6 +12461,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D0464,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_037_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
 {0x053D0464,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_044_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
 {0x053D0464,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
+{0x053D0464,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8743,  STR8743,  0,                    NULL,         FL_RONLY,     DEV_148_ALL}, // [°C ] - Diagnose Verbraucher - Vorlauftemperatur 1
 {0x213D0667,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8744,  STR8744,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Vorlaufsollwert 1
 {0x053D0C7D,  CAT_DIAG_VERBRAUCHER, VT_ENUM,          8749,  STR8749,  sizeof(ENUM8749),     ENUM8749,     FL_RONLY,     DEV_ALL}, // Raumthermostat 1
 {0x053D04A2,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8750,  STR8750,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Thision 8750 Mod Pumpe Sollwert [%]
@@ -12532,6 +12568,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_036_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_044_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_064_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
+{0x0505021E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8952,  STR8952,  0,                    NULL,         FL_RONLY,     DEV_148_ALL}, // Schienenrücklauftemperatur - logged on OCI700 via LPB
 {0x053D18E5,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8956,  STR8956,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Schienenvorlauftemp 2
 {0x053D0D28,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8957,  STR8957,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Schienenvorl'sollwert Kälte //FUJITSU
 {0x053D0B61,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8962,  STR8962,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Leistungssollwert Schiene
@@ -13656,6 +13693,20 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x2E3D051D,  CAT_USER_DEFINED,     VT_UNKNOWN,       10526, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL}, // logged from ACS700 diagnosis software
 {0x2D3D3023,  CAT_USER_DEFINED,     VT_UNKNOWN,       10532, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
 {0x2E3D302F,  CAT_USER_DEFINED,     VT_UNKNOWN,       10533, STR10200, 0,                    NULL,         FL_RONLY, DEV_ALL},  // logged from ACS700 diagnosis software, but (seemingly) not working
+
+// LMU64 commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
+
+// RVD/RVP and other older controller commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
+
+{0x053D076E,  CAT_RVD,              VT_SECONDS_WORD,  14081, STR14081, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Laufzeit Auf/Zu Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D076C,  CAT_RVD,              VT_TEMP,          14082, STR14082, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // P-Band XP Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D076D,  CAT_RVD,              VT_SECONDS_WORD,  14083, STR14083, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Nachstellzeit TN Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0771,  CAT_RVD,              VT_TEMP,          14084, STR14084, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Überhöhung Sollwert Mischer/Wärmetauscher // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0780,  CAT_RVD,              VT_TEMP,          14085, STR14085, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Maximalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0781,  CAT_RVD,              VT_TEMP,          14086, STR14086, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Minimalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0656,  CAT_RVD,              VT_TEMP,          14087, STR14087, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Temperaturanforderung Externer Wärmebedarfskontakt // logged from ACS700 diagnosis software from RVD265/109
+{0x053D0656,  CAT_RVD,              VT_ENUM,          14088, STR14088, sizeof(ENUM14088),    ENUM14088,    DEFAULT_FLAG, DEV_ALL},  // Externer Wärmebedarf Vorrang // logged from ACS700 diagnosis software from RVD265/109
+{0x053D079F,  CAT_RVD,              VT_TEMP,          14089, STR14089, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Wärmebedarfseingang DC 0..10V // logged from ACS700 diagnosis software from RVD265/109
 
 //PPS-Bus commands
 #define PPS_BA  0
