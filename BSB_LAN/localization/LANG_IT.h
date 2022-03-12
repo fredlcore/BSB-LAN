@@ -44,8 +44,8 @@
 #define ENUM_CAT_3d_TEXT "Diagnostica utenze"
 #define ENUM_CAT_3f_TEXT "Bruciatore automatico"
 #define ENUM_CAT_40_TEXT "Personalizzato"
-#define ENUM_CAT_41_TEXT "Bus PPS"
-#define ENUM_CAT_42_TEXT "categoria sconosciuta"
+#define ENUM_CAT_43_TEXT "Bus PPS"
+#define ENUM_CAT_45_TEXT "categoria sconosciuta"
 
 #define MENU_TEXT_HFK "Funzioni di riscaldamento"
 #define MENU_TEXT_SNS "Sensori"

@@ -44,5 +44,5 @@
 #define ENUM_CAT_3d_TEXT "Διάγνωση καταναλωτή"
 #define ENUM_CAT_3f_TEXT "Έλεγχος καυστήρα"
 #define ENUM_CAT_40_TEXT "Ορισμένη από το χρήστη"
-#define ENUM_CAT_41_TEXT "Αρτηρία PPS"
-#define ENUM_CAT_43_TEXT "Άγνωστη κατηγορία"
+#define ENUM_CAT_43_TEXT "Αρτηρία PPS"
+#define ENUM_CAT_45_TEXT "Άγνωστη κατηγορία"

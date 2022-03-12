@@ -102,9 +102,9 @@
 #define ENUM_CAT_3e_TEXT "Показания счётчиков"
 #define ENUM_CAT_3f_TEXT "Автомат горения"
 #define ENUM_CAT_40_TEXT "Заданные пользователем"
-#define ENUM_CAT_41_TEXT "Шина PPS"
-#define ENUM_CAT_42_TEXT "Пользовательские датчики (DHT, Dallas, MAX!)"
-#define ENUM_CAT_43_TEXT "Неизвестная категория"
+#define ENUM_CAT_43_TEXT "Шина PPS"
+#define ENUM_CAT_44_TEXT "Пользовательские датчики (DHT, Dallas, MAX!)"
+#define ENUM_CAT_45_TEXT "Неизвестная категория"
 
 #define MENU_TEXT_TOC "Руководство (на английском языке)"
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
