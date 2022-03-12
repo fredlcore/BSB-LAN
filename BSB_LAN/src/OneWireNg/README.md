@@ -1,4 +1,10 @@
+This fork is used for BSB-LAN project (https://github.com/fredlcore/BSB-LAN). Some pathes was changed.
+
 # OneWireNg
+[![Tests status](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml)
+[![Builds status](https://github.com/pstolarz/OneWireNg/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/build.yml)
+[![Join the chat at https://gitter.im/pstolarz/OneWireNg](https://badges.gitter.im/pstolarz/OneWireNg.svg)](https://gitter.im/pstolarz/OneWireNg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+<br>
 
 This is an Arduino 1-wire service library, intended as an alternative for the
 classic [OneWire](https://github.com/PaulStoffregen/OneWire) library. The library
@@ -60,7 +66,7 @@ devices.
     * Tested on Arduino UNO (ATmega328P).
 * Arduino megaAVR (recent Microchip AVR architecture).
     * Platform class: `OneWireNg_ArduinoMegaAVR`.
-    * [Reported to be working](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/LibraryCompatibility.md).
+    * [Reported to be working.](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/LibraryCompatibility.md)
 * Arduino ESP8266.
     * Platform class: `OneWireNg_ArduinoESP8266`.
     * Tested on WemOS D1
@@ -69,7 +75,7 @@ devices.
     * Tested on ESP32-WROOM-32, ESP32-S2-WROVER
 * Arduino SAM.
     * Platform class: `OneWireNg_ArduinoSAM`.
-    * **Not tested**.
+    * [Reported to be working.](https://github.com/pstolarz/OneWireNg/issues/33)
 * Arduino SAMD/SAMD-Beta.
     * Platform class: `OneWireNg_ArduinoSAMD`.
     * **Not tested**.

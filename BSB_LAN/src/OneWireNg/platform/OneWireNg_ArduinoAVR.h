@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Piotr Stolarz
+ * Copyright (c) 2019-2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -16,6 +16,7 @@
 #include <assert.h>
 #include "Arduino.h"
 #include "../OneWireNg_BitBang.h"
+#include "../platform/Platform_TimeCritical.h"
 
 #ifdef CONFIG_OVERDRIVE_ENABLED
 # if (F_CPU < 16000000L)
@@ -87,18 +88,18 @@ public:
 #endif
 
 protected:
-    int readDtaGpioIn()
+    TIME_CRITICAL int readDtaGpioIn()
     {
         return __READ_GPIO(_dtaGpio);
     }
 
-    void setDtaGpioAsInput()
+    TIME_CRITICAL void setDtaGpioAsInput()
     {
         __GPIO_AS_INPUT(_dtaGpio);
     }
 
 #ifdef CONFIG_PWR_CTRL_ENABLED
-    void writeGpioOut(int state, GpioType gpio)
+    TIME_CRITICAL void writeGpioOut(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             __WRITE_GPIO(_dtaGpio, state);
@@ -107,7 +108,7 @@ protected:
         }
     }
 
-    void setGpioAsOutput(int state, GpioType gpio)
+    TIME_CRITICAL void setGpioAsOutput(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             __GPIO_AS_OUTPUT(_dtaGpio);
@@ -118,12 +119,12 @@ protected:
         }
     }
 #else
-    void writeGpioOut(int state)
+    TIME_CRITICAL void writeGpioOut(int state)
     {
         __WRITE_GPIO(_dtaGpio, state);
     }
 
-    void setGpioAsOutput(int state)
+    TIME_CRITICAL void setGpioAsOutput(int state)
     {
         __GPIO_AS_OUTPUT(_dtaGpio);
         __WRITE_GPIO(_dtaGpio, state);
@@ -131,7 +132,7 @@ protected:
 #endif /* CONFIG_PWR_CTRL_ENABLED */
 
 #ifdef CONFIG_OVERDRIVE_ENABLED
-    int touch1Overdrive()
+    TIME_CRITICAL int touch1Overdrive()
     {
         __GPIO_AS_OUTPUT(_dtaGpio);
         __WRITE0_GPIO(_dtaGpio);

@@ -16,7 +16,7 @@
 #ifdef ARDUINO
 # include "Arduino.h"
 # ifdef ARDUINO_ARCH_ESP32
-# include "freertos/task.h"
+#  include "freertos/task.h"
 /*
  * NOTE: Arduino ESP32 has interrupts() and noInterrupts() implemented as NOPs,
  * therefore they don't provide proper timing guards in time critical parts of
@@ -25,18 +25,13 @@
  * This implementation of time critical enter/exit routines bases on Xtensa
  * FreeRTOS API for disabling/enabling interrupts locally (exclusively for
  * a CPU core the routine is called on).
- *
- * Time critical routines need to be marked by TIME_CRITICAL attribute.
- * Currently it's required for ESP32 platforms only to place the routines
- * into IRAM due to xPortGetCoreID() usage, which is IRAM inlined.
  */
-static unsigned _int_level[portNUM_PROCESSORS];
+extern unsigned esp_int_level[portNUM_PROCESSORS];
 
 #  define timeCriticalEnter() \
-    _int_level[xPortGetCoreID()] = portSET_INTERRUPT_MASK_FROM_ISR()
+    esp_int_level[xPortGetCoreID()] = portSET_INTERRUPT_MASK_FROM_ISR()
 #  define timeCriticalExit() \
-    portCLEAR_INTERRUPT_MASK_FROM_ISR(_int_level[xPortGetCoreID()])
-#  define TIME_CRITICAL IRAM_ATTR
+    portCLEAR_INTERRUPT_MASK_FROM_ISR(esp_int_level[xPortGetCoreID()])
 # else
 #  define timeCriticalEnter() noInterrupts()
 #  define timeCriticalExit() interrupts()
@@ -49,7 +44,14 @@ static unsigned _int_level[portNUM_PROCESSORS];
 # define timeCriticalExit()
 #endif
 
-#ifndef TIME_CRITICAL
+/*
+ * Time critical routines need to be marked by TIME_CRITICAL attribute.
+ * Currently it's required for ESP platforms only to place the routines
+ * into IRAM.
+ */
+#if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32)
+# define TIME_CRITICAL IRAM_ATTR
+#else
 # define TIME_CRITICAL
 #endif
 

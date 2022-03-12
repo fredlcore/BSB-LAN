@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Piotr Stolarz
+ * Copyright (c) 2019-2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -235,8 +235,10 @@ public:
 
 #ifdef USE_RANGE_LOOP
 # if __cplusplus >= 201703L
-    typedef nullptr_t end_iterator;
-    typedef nullptr_t end_iterator_ref;
+    /* due to std namespace discrepancies between various toolchains
+       decltype(nullptr) is used here instead of std::nullptr_t */
+    typedef decltype(nullptr) end_iterator;
+    typedef decltype(nullptr) end_iterator_ref;
 # else
     class iterator;
     typedef iterator end_iterator;

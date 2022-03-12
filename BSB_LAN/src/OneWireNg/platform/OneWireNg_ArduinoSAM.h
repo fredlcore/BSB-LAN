@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020,2021 Piotr Stolarz
+ * Copyright (c) 2020-2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -16,6 +16,7 @@
 #include <assert.h>
 #include "Arduino.h"
 #include "../OneWireNg_BitBang.h"
+#include "../platform/Platform_TimeCritical.h"
 
 /* if defined - internal Arduino pin status in updated */
 //#define PIN_STATUS_UPDATE
@@ -78,12 +79,12 @@ public:
 #endif
 
 protected:
-    int readDtaGpioIn()
+    TIME_CRITICAL int readDtaGpioIn()
     {
         return __READ_GPIO(_dtaGpio);
     }
 
-    void setDtaGpioAsInput()
+    TIME_CRITICAL void setDtaGpioAsInput()
     {
 #ifdef PIN_STATUS_UPDATE
         *_dtaGpio.status = _dtaGpio.inputStatus;
@@ -92,7 +93,7 @@ protected:
     }
 
 #ifdef CONFIG_PWR_CTRL_ENABLED
-    void writeGpioOut(int state, GpioType gpio)
+    TIME_CRITICAL void writeGpioOut(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
 # ifdef PIN_STATUS_UPDATE
@@ -107,7 +108,7 @@ protected:
         }
     }
 
-    void setGpioAsOutput(int state, GpioType gpio)
+    TIME_CRITICAL void setGpioAsOutput(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
 # ifdef PIN_STATUS_UPDATE
@@ -124,7 +125,7 @@ protected:
         }
     }
 #else
-    void writeGpioOut(int state)
+    TIME_CRITICAL void writeGpioOut(int state)
     {
 # ifdef PIN_STATUS_UPDATE
         *_dtaGpio.status = (state << 4) | PIN_STATUS_DIGITAL_OUTPUT;
@@ -132,7 +133,7 @@ protected:
         __WRITE_GPIO(_dtaGpio, state);
     }
 
-    void setGpioAsOutput(int state)
+    TIME_CRITICAL void setGpioAsOutput(int state)
     {
 # ifdef PIN_STATUS_UPDATE
         *_dtaGpio.status = (state << 4) | PIN_STATUS_DIGITAL_OUTPUT;

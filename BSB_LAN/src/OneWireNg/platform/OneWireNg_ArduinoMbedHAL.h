@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Piotr Stolarz
+ * Copyright (c) 2021,2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -17,6 +17,7 @@
 #include "Arduino.h"
 #include "hal/gpio_api.h"
 #include "../OneWireNg_BitBang.h"
+#include "../platform/Platform_TimeCritical.h"
 
 /**
  * Arduino MbedOS based platform GPIO specific implementation via HAL API.
@@ -63,18 +64,18 @@ public:
 #endif
 
 protected:
-    int readDtaGpioIn()
+    TIME_CRITICAL int readDtaGpioIn()
     {
         return (gpio_read(&_dtaGpio) != 0);
     }
 
-    void setDtaGpioAsInput()
+    TIME_CRITICAL void setDtaGpioAsInput()
     {
         gpio_dir(&_dtaGpio, PIN_INPUT);
     }
 
 #ifdef CONFIG_PWR_CTRL_ENABLED
-    void writeGpioOut(int state, GpioType gpio)
+    TIME_CRITICAL void writeGpioOut(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             gpio_write(&_dtaGpio, state);
@@ -83,7 +84,7 @@ protected:
         }
     }
 
-    void setGpioAsOutput(int state, GpioType gpio)
+    TIME_CRITICAL void setGpioAsOutput(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             gpio_write(&_dtaGpio, state);
@@ -94,12 +95,12 @@ protected:
         }
     }
 #else
-    void writeGpioOut(int state)
+    TIME_CRITICAL void writeGpioOut(int state)
     {
         gpio_write(&_dtaGpio, state);
     }
 
-    void setGpioAsOutput(int state)
+    TIME_CRITICAL void setGpioAsOutput(int state)
     {
         gpio_write(&_dtaGpio, state);
         gpio_dir(&_dtaGpio, PIN_OUTPUT);
