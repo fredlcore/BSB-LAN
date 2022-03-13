@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020,2021 Piotr Stolarz
+ * Copyright (c) 2020-2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -16,6 +16,7 @@
 #include <assert.h>
 #include "Arduino.h"
 #include "../OneWireNg_BitBang.h"
+#include "../platform/Platform_TimeCritical.h"
 
 /**
  * Arduino STM32 platform GPIO specific implementation.
@@ -62,19 +63,19 @@ public:
 #endif
 
 protected:
-    int readDtaGpioIn()
+    TIME_CRITICAL int readDtaGpioIn()
     {
         return (digitalReadFast(_dtaGpio.pinName) == LOW ? 0 : 1);
     }
 
-    void setDtaGpioAsInput()
+    TIME_CRITICAL void setDtaGpioAsInput()
     {
         LL_GPIO_SetPinMode(
             _dtaGpio.gpio, _dtaGpio.ll_pin, LL_GPIO_MODE_INPUT);
     }
 
 #ifdef CONFIG_PWR_CTRL_ENABLED
-    void writeGpioOut(int state, GpioType gpio)
+    TIME_CRITICAL void writeGpioOut(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             digitalWriteFast(_dtaGpio.pinName, state);
@@ -83,7 +84,7 @@ protected:
         }
     }
 
-    void setGpioAsOutput(int state, GpioType gpio)
+    TIME_CRITICAL void setGpioAsOutput(int state, GpioType gpio)
     {
         if (gpio == GPIO_DTA) {
             digitalWriteFast(_dtaGpio.pinName, state);
@@ -96,12 +97,12 @@ protected:
         }
     }
 #else
-    void writeGpioOut(int state)
+    TIME_CRITICAL void writeGpioOut(int state)
     {
         digitalWriteFast(_dtaGpio.pinName, state);
     }
 
-    void setGpioAsOutput(int state)
+    TIME_CRITICAL void setGpioAsOutput(int state)
     {
         digitalWriteFast(_dtaGpio.pinName, state);
         LL_GPIO_SetPinMode(

@@ -90,9 +90,9 @@
 #define ENUM_CAT_3e_TEXT "Set day value storage"
 #define ENUM_CAT_3f_TEXT "Gázégő vezérlés"
 #define ENUM_CAT_40_TEXT "User defined"
-#define ENUM_CAT_41_TEXT "PPS bus"
-#define ENUM_CAT_42_TEXT "One Wire, DHT & MAX! Sensors"
-#define ENUM_CAT_43_TEXT "Ismeretlen kategória"
+#define ENUM_CAT_43_TEXT "PPS bus"
+#define ENUM_CAT_44_TEXT "One Wire, DHT & MAX! Sensors"
+#define ENUM_CAT_45_TEXT "Ismeretlen kategória"
 
 #define STR0_TEXT "Pontos idő és dátum"
 #define STR1_TEXT "Óra / perc"

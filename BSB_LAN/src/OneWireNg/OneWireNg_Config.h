@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2021 Piotr Stolarz
+ * Copyright (c) 2019-2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -66,9 +66,9 @@
  * Type of algorithm used for CRC-8/MAXIM calculation.
  *
  * The macro may be defined as:
- * @c CRC8_BASIC: Basic method. No memory tables used. This method is about 8
- *     times slower than the tabled method but no extra memory is used.
- * @c CRC8_TAB_16LH: 2x16 elements table, 1 byte each.
+ * - @c CRC8_BASIC: Basic method. No memory tables used. This method is
+ *   about 8 times slower than the tabled method but no extra memory is used.
+ * - @c CRC8_TAB_16LH: 2x16 elements table, 1 byte each.
  */
 #ifndef CONFIG_CRC8_ALGO
 # define CONFIG_CRC8_ALGO CRC8_TAB_16LH
@@ -86,9 +86,9 @@
  * Valid only if CRC-16 is enabled via @ref CONFIG_CRC16_ENABLED.
  *
  * The macro may be defined as:
- * @c CRC16_BASIC: Basic method. No memory tables used. This method is about 8
- *     times slower than the tabled method but no extra memory is used.
- * @c CRC16_TAB_16LH: 2x16 elements table, 2 bytes each.
+ * - @c CRC16_BASIC: Basic method. No memory tables used. This method is about
+ *     8 times slower than the tabled method but no extra memory is used.
+ * - @c CRC16_TAB_16LH: 2x16 elements table, 2 bytes each.
  */
 #ifndef CONFIG_CRC16_ALGO
 # define CONFIG_CRC16_ALGO CRC16_TAB_16LH
@@ -136,6 +136,31 @@
  */
 #ifndef CONFIG_BUS_BLINK_PROTECTION
 //# define CONFIG_BUS_BLINK_PROTECTION
+#endif
+
+/**
+ * The parameter controls timing regime while bit-banging 1-wire signals
+ * on the data bus. The parameter may be useful while running the library
+ * on interrupts intense platforms, where control over the timings may be
+ * advisable in terms of overall hardware stability.
+ *
+ * The macro may be defined as:
+ * - @c TIMING_STRICT: All 1-wire signals (except standard reset pulse)
+ *   are bit-banged during time-critical (interrupts disabled) state.
+ * - @c TIMING_RELAXED: Contrary to the strict configuration the following
+ *   signals are bit-banged in time-non-critical (interrupts enabled) state:
+ *   - reset sampling period (standard mode),
+ *   - write-0 low pulse (standard mode),
+ *   - reset low pulse (overdrive mode).
+ *   Note, the configuration may cause issues when used along with extensive
+ *   amount of interrupts coming from other peripherals (e.g. ESP32 with WiFi
+ *   communication).
+ * - @c TIMING_NULL: All 1-wire signals are bit-banged in time-non-critical
+ *   (interrupts enabled) state. Use with care, especially in the overdrive
+ *   mode.
+ */
+#ifndef CONFIG_BITBANG_TIMING
+# define CONFIG_BITBANG_TIMING TIMING_STRICT
 #endif
 
 /**

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Piotr Stolarz
+ * Copyright (c) 2021,2022 Piotr Stolarz
  * OneWireNg: Arduino 1-wire service library
  *
  * Distributed under the 2-clause BSD License (the License)
@@ -14,7 +14,7 @@
 #ifndef __OWNG_MAX31850__
 #define __OWNG_MAX31850__
 
-#include "drivers/DSTherm.h"
+#include "../drivers/DSTherm.h"
 
 /**
  * Dallas MAX31850/MAX31851 thermocouples driver.
@@ -39,7 +39,8 @@ public:
          */
         long getTemp() const
         {
-            long temp = ((long)(int8_t)_scrpd[1] << 8) | _scrpd[0];
+            long temp =
+                (long)((unsigned long)(long)(int8_t)_scrpd[1] << 8) | _scrpd[0];
             temp = rsh(temp, 2); /* truncate unused bits */
             temp = div2(temp * 1000, 2);
             return temp;
@@ -67,7 +68,8 @@ public:
          */
         long getTempInternal() const
         {
-            long temp = ((long)(int8_t)_scrpd[3] << 8) | _scrpd[2];
+            long temp =
+                (long)((unsigned long)(long)(int8_t)_scrpd[3] << 8) | _scrpd[2];
             temp = rsh(temp, 4); /* truncate unused bits */
             temp = div2(temp * 1000, 4);
             return temp;
@@ -106,10 +108,12 @@ public:
          */
         using DSTherm::Scratchpad::getRaw;
 
-        /**
-         * @see DSTherm::Scratchpad::~Scratchpad()
+        /*
+         * Intentionally empty destructor - the same Scratchpad placeholder
+         * may be used by subsequent sensor reads without explicit calls to
+         * Scratchpad destructor.
          */
-        ~Scratchpad() {}
+        // ~Scratchpad() {}
 
     protected:
         /**
