@@ -38,8 +38,8 @@ UIStrings["ENUM_CAT_39_TEXT"] = "Status";
 UIStrings["ENUM_CAT_3c_TEXT"] = "Diagnose opwekker";
 UIStrings["ENUM_CAT_3d_TEXT"] = "Diagnose verbruiker";
 UIStrings["ENUM_CAT_3f_TEXT"] = "Branderautomaat";
-UIStrings["ENUM_CAT_41_TEXT"] = "PPS bus";
-UIStrings["ENUM_CAT_42_TEXT"] = "Onbenkende categorie";
+UIStrings["ENUM_CAT_43_TEXT"] = "PPS bus";
+UIStrings["ENUM_CAT_45_TEXT"] = "Onbenkende categorie";
 
 UIStrings["MENU_TEXT_HFK"] = "Verwarmingsfuncties";
 UIStrings["MENU_TEXT_SN1"] = "DS18B20 Sensor";

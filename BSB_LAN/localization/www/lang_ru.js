@@ -102,9 +102,9 @@ UIStrings["ENUM_CAT_3d_TEXT"] = "Диагностика потребителей
 UIStrings["ENUM_CAT_3e_TEXT"] = "Показания счётчиков";
 UIStrings["ENUM_CAT_3f_TEXT"] = "Автомат горения";
 UIStrings["ENUM_CAT_40_TEXT"] = "Заданные пользователем";
-UIStrings["ENUM_CAT_41_TEXT"] = "Шина PPS";
-UIStrings["ENUM_CAT_42_TEXT"] = "Пользовательские датчики (DHT, Dallas, MAX!)";
-UIStrings["ENUM_CAT_43_TEXT"] = "Неизвестная категория";
+UIStrings["ENUM_CAT_43_TEXT"] = "Шина PPS";
+UIStrings["ENUM_CAT_44_TEXT"] = "Пользовательские датчики (DHT, Dallas, MAX!)";
+UIStrings["ENUM_CAT_45_TEXT"] = "Неизвестная категория";
 
 UIStrings["MENU_TEXT_TOC"] = "Руководство (на английском языке)";
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html";

@@ -90,9 +90,9 @@ UIStrings["ENUM_CAT_3d_TEXT"] = "Fogyasztó oldali paraméterek";
 UIStrings["ENUM_CAT_3e_TEXT"] = "Set day value storage";
 UIStrings["ENUM_CAT_3f_TEXT"] = "Gázégő vezérlés";
 UIStrings["ENUM_CAT_40_TEXT"] = "User defined";
-UIStrings["ENUM_CAT_41_TEXT"] = "PPS bus";
-UIStrings["ENUM_CAT_42_TEXT"] = "One Wire, DHT & MAX! Sensors";
-UIStrings["ENUM_CAT_43_TEXT"] = "Ismeretlen kategória";
+UIStrings["ENUM_CAT_43_TEXT"] = "PPS bus";
+UIStrings["ENUM_CAT_44_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_45_TEXT"] = "Ismeretlen kategória";
 
 UIStrings["STR0_TEXT"] = "Pontos idő és dátum";
 UIStrings["STR1_TEXT"] = "Óra / perc";

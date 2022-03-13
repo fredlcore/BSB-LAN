@@ -64,9 +64,9 @@ UIStrings["ENUM_CAT_3d_TEXT"] = "Diagnostics consumer";
 UIStrings["ENUM_CAT_3e_TEXT"] = "Set day value storage";
 UIStrings["ENUM_CAT_3f_TEXT"] = "Burner control";
 UIStrings["ENUM_CAT_40_TEXT"] = "User defined";
-UIStrings["ENUM_CAT_41_TEXT"] = "PPS bus";
-UIStrings["ENUM_CAT_42_TEXT"] = "One Wire, DHT & MAX! Sensors";
-UIStrings["ENUM_CAT_43_TEXT"] = "Unknown category";
+UIStrings["ENUM_CAT_43_TEXT"] = "PPS bus";
+UIStrings["ENUM_CAT_44_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_45_TEXT"] = "Unknown category";
 
 UIStrings["MENU_TEXT_HFK"] = "Heater functions";
 UIStrings["MENU_TEXT_SNS"] = "Sensors";

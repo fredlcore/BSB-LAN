@@ -64,9 +64,9 @@
 #undef ENUM_CAT_3e_TEXT
 #undef ENUM_CAT_3f_TEXT
 #undef ENUM_CAT_40_TEXT
-#undef ENUM_CAT_41_TEXT
-#undef ENUM_CAT_42_TEXT
 #undef ENUM_CAT_43_TEXT
+#undef ENUM_CAT_44_TEXT
+#undef ENUM_CAT_45_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SNS
 #undef MENU_TEXT_SN1

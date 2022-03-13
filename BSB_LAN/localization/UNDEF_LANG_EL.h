@@ -44,5 +44,5 @@
 #undef ENUM_CAT_3d_TEXT
 #undef ENUM_CAT_3f_TEXT
 #undef ENUM_CAT_40_TEXT
-#undef ENUM_CAT_41_TEXT
 #undef ENUM_CAT_43_TEXT
+#undef ENUM_CAT_45_TEXT

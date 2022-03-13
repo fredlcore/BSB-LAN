@@ -38,8 +38,8 @@
 #undef ENUM_CAT_3c_TEXT
 #undef ENUM_CAT_3d_TEXT
 #undef ENUM_CAT_3f_TEXT
-#undef ENUM_CAT_41_TEXT
-#undef ENUM_CAT_42_TEXT
+#undef ENUM_CAT_43_TEXT
+#undef ENUM_CAT_45_TEXT
 #undef MENU_TEXT_HFK
 #undef MENU_TEXT_SN1
 #undef MENU_TEXT_SN2
