@@ -1205,22 +1205,22 @@ void printcantalloc(void) {
  *   none
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(uint16_t nr) {
-  if (nr >= 20000 && nr < 20007) { return 1;}
+  if (nr >= BSP_INTERNAL && nr < BSP_INTERNAL+7) { return 1;}
 #ifdef AVERAGES
-  else if (nr >= 20050 && nr < 20050 + numAverages) {return 2;} //20050 - 20099
+  else if (nr >= BSP_AVERAGES && nr < BSP_AVERAGES + numAverages) {return 2;} //20050 - 20099
 #endif
 #ifdef DHT_BUS
-  else if (nr >= 20100 && nr < 20100 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20199
+  else if (nr >= BSP_DHT22 && nr < BSP_DHT22 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0]) * 4) {return 3;} //20100 - 20199
 #endif
 #ifdef BME280
-  else if (nr >= 20200 && nr < 20200 + BME_Sensors * 6) {return 8;} //20100 - 20199
+  else if (nr >= BSP_BME280 && nr < BSP_BME280 + BME_Sensors * 6) {return 8;} //20200 - 20299
 #endif
 #ifdef ONE_WIRE_BUS
-  else if (nr >= 20300 && nr < 20300 + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
+  else if (nr >= BSP_ONEWIRE && nr < BSP_ONEWIRE + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
 #endif
-  else if (nr >= 20500 && nr < 20500 + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
-  else if (nr >= 20700 && nr < 20700 + numCustomFloats) {return 6;} //20700 - 20799
-  else if (nr >= 20800 && nr < 20800 + numCustomLongs) {return 7;} //20800 - 20899
+  else if (nr >= BSP_MAX && nr < BSP_MAX + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
+  else if (nr >= BSP_FLOAT && nr < BSP_FLOAT + numCustomFloats) {return 6;} //20700 - 20799
+  else if (nr >= BSP_LONG && nr < BSP_LONG + numCustomLongs) {return 7;} //20800 - 20899
   return 0;
 }
 
@@ -1253,33 +1253,33 @@ int findLine(uint16_t line
 //  printFmtToDebug(PSTR("line = %d\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
-  if (line >= 20000 && line < 20900) {
+  if (line >= BSP_INTERNAL && line < BSP_END) {
     switch (recognizeVirtualFunctionGroup(line)) {
       case 1: break;
-      case 2:  line = avg_parameters[line - 20050]; if (line == 0) return -1; else break;
+      case 2:  line = avg_parameters[line - BSP_AVERAGES]; if (line == 0) return -1; else break;
       case 3: {
-        if (DHT_Pins[(line - 20100) / 4 ] == 0) { //pin not assigned to DHT sensor
+        if (DHT_Pins[(line - BSP_DHT22) / 4 ] == 0) { //pin not assigned to DHT sensor
           return -1;
         } else {
-          line = 20100 + ((line - 20100) % 4);
+          line = BSP_DHT22 + ((line - BSP_DHT22) % 4);
         }
         break;
       }
-      case 4: line = 20300 + ((line - 20300) % 2); break;
+      case 4: line = BSP_ONEWIRE + ((line - BSP_ONEWIRE) % 2); break;
       case 5:{
-        if (max_device_list[(line - 20500) / 4][0] == 0) {  //device not set
+        if (max_device_list[(line - BSP_MAX) / 4][0] == 0) {  //device not set
           return -1;
         } else {
-          line = 20500 + ((line - 20500) % 4);
+          line = BSP_MAX + ((line - BSP_MAX) % 4);
         }
         break;
       }
-      case 6: line = 20700; break;
-      case 7: line = 20800; break;
+      case 6: line = BSP_FLOAT; break;
+      case 7: line = BSP_LONG; break;
       case 8: {
 #ifdef BME280
-        if (line - 20200 < BME_Sensors * 6) { //
-          line = 20200 + ((line - 20200) % 6);
+        if (line - BSP_BME280 < BME_Sensors * 6) { //
+          line = BSP_BME280 + ((line - BSP_BME280) % 6);
         } else {
           return -1;
         }
@@ -1588,17 +1588,17 @@ void loadPrognrElementsFromTable(int nr, int i) {
   }
 
   decodedTelegram.sensorid = 0;
-  if (nr >= 20000) { //Virtual programs. do not forget sync changes with findline()
+  if (nr >= BSP_INTERNAL) { //Virtual programs. do not forget sync changes with findline()
     decodedTelegram.prognr = nr;
     switch (recognizeVirtualFunctionGroup(nr)) {
       case 1: break;
       case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readwrite = FL_RONLY; break; //overwrite native program categories with CAT_USERSENSORS
-      case 3: decodedTelegram.sensorid = (nr - 20100) / 4 + 1; break;
-      case 4: decodedTelegram.sensorid = (nr - 20300) / 2 + 1; break;
-      case 5: decodedTelegram.sensorid = (nr - 20500) / 4 + 1; break;
-      case 6: decodedTelegram.sensorid = nr - 20700 + 1; break;
-      case 7: decodedTelegram.sensorid = nr - 20800 + 1; break;
-      case 8: decodedTelegram.sensorid = (nr - 20200) / 6 + 1; break;
+      case 3: decodedTelegram.sensorid = (nr - BSP_DHT22) / 4 + 1; break;
+      case 4: decodedTelegram.sensorid = (nr - BSP_ONEWIRE) / 2 + 1; break;
+      case 5: decodedTelegram.sensorid = (nr - BSP_MAX) / 4 + 1; break;
+      case 6: decodedTelegram.sensorid = nr - BSP_FLOAT + 1; break;
+      case 7: decodedTelegram.sensorid = nr - BSP_LONG + 1; break;
+      case 8: decodedTelegram.sensorid = (nr - BSP_BME280) / 6 + 1; break;
     }
   }
 }
@@ -2314,7 +2314,7 @@ printToWebClient(PSTR("<BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
-        printFmtToWebClient(PSTR("%d - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), 20050 + i);//outBuf will be overwrited here
+        printFmtToWebClient(PSTR("%d - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
@@ -3236,19 +3236,19 @@ int set(int line      // the ProgNr of the heater parameter
 
   loadPrognrElementsFromTable(line, i);
 
-  if ((line >= 20000 && line < 20900)) //virtual functions handler
+  if ((line >= BSP_INTERNAL && line < BSP_END)) //virtual functions handler
     {
       switch (line) {
-        case 20006: if (atoi(val)) resetDurations(); return 1; // reset furnace duration
+        case BSP_INTERNAL+6: if (atoi(val)) resetDurations(); return 1; // reset furnace duration
       }
-      if ((line >= 20700 && line < 20700 + numCustomFloats)) {// set custom_float
-        custom_floats[line - 20700] = atof(val);
+      if ((line >= BSP_FLOAT && line < BSP_FLOAT + numCustomFloats)) {// set custom_float
+        custom_floats[line - BSP_FLOAT] = atof(val);
         return 1;
       }
-      if ((line >= 20800 && line < 20800 + numCustomLongs)) {// set custom_longs
+      if ((line >= BSP_LONG && line < BSP_LONG + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
         strcpy_P(sscanf_buf, PSTR("%ld"));
-        sscanf(val, sscanf_buf, &custom_longs[line - 20800]);
+        sscanf(val, sscanf_buf, &custom_longs[line - BSP_LONG]);
         return 1;
       }
 
@@ -3809,7 +3809,7 @@ char *build_pvalstr(bool extended) {
 #endif
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
-    if (decodedTelegram.prognr >= 20050 && decodedTelegram.prognr < 20100) {
+    if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_AVERAGES + numAverages) {
       len+=strlen(strcpy_P(outBuf + len, PSTR(STR_24A_TEXT)));
       len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
     }
@@ -3981,13 +3981,13 @@ void queryVirtualPrognr(int line, int table_line) {
     case 1: {
       uint32_t val = 0;
       switch (line) {
-        case 20000: val = brenner_duration; break;
-        case 20001: val = brenner_count; break;
-        case 20002: val = brenner_duration_2; break;
-        case 20003: val = brenner_count_2; break;
-        case 20004: val = TWW_duration; break;
-        case 20005: val = TWW_count; break;
-        case 20006: val = 0; break;
+        case BSP_INTERNAL + 0: val = brenner_duration; break;
+        case BSP_INTERNAL + 1: val = brenner_count; break;
+        case BSP_INTERNAL + 2: val = brenner_duration_2; break;
+        case BSP_INTERNAL + 3: val = brenner_count_2; break;
+        case BSP_INTERNAL + 4: val = TWW_duration; break;
+        case BSP_INTERNAL + 5: val = TWW_count; break;
+        case BSP_INTERNAL + 6: val = 0; break;
       }
 #if !defined(ESP32)
       sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
@@ -3998,7 +3998,7 @@ void queryVirtualPrognr(int line, int table_line) {
     }
     case 2: {
   #ifdef AVERAGES
-      size_t tempLine = line - 20050;
+      size_t tempLine = line - BSP_AVERAGES;
       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
       return;
    #endif
@@ -4006,7 +4006,7 @@ void queryVirtualPrognr(int line, int table_line) {
     }
     case 3: {
 #ifdef DHT_BUS
-      size_t tempLine = line - 20100;
+      size_t tempLine = line - BSP_DHT22;
       size_t log_sensor = tempLine / 4;
       if (tempLine % 4 == 0) { //print sensor ID
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
@@ -4073,7 +4073,7 @@ void queryVirtualPrognr(int line, int table_line) {
     }
     case 4: {
 #ifdef ONE_WIRE_BUS
-      size_t tempLine = line - 20300;
+      size_t tempLine = line - BSP_ONEWIRE;
       int log_sensor = tempLine / 2;
       if (One_Wire_Pin && numSensors) {
         switch (tempLine % 2) {
@@ -4101,7 +4101,7 @@ void queryVirtualPrognr(int line, int table_line) {
     }
     case 5: {
 #ifdef MAX_CUL
-      size_t tempLine = line - 20500;
+      size_t tempLine = line - BSP_MAX;
       size_t log_sensor = tempLine / 4;
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
@@ -4141,16 +4141,16 @@ void queryVirtualPrognr(int line, int table_line) {
     break;
     }
     case 6: {
-      sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[line - 20700]);
+      sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[line - BSP_FLOAT]);
       return;
     }
     case 7: {
-      sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - 20800]);
+      sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[line - BSP_LONG]);
       return;
     }
     case 8: {
 #ifdef BME280
-      size_t tempLine = line - 20200;
+      size_t tempLine = line - BSP_BME280;
       size_t log_sensor = tempLine / 6;
       uint8_t selector = tempLine % 6;
       if (selector == 0) {
@@ -4231,7 +4231,7 @@ void query(int line) {  // line (ProgNr)
     }
 
 // virtual programs
-    if ((line >= 20000 && line < 20900)) {
+    if ((line >= BSP_INTERNAL && line < BSP_END)) {
       queryVirtualPrognr(line, i);
       return;
     }
@@ -5712,7 +5712,7 @@ void loop() {
 #endif
                 for(int j = cat_min; j <= cat_max; j++){
                   int i_line = findLine(j, 0, &cmd);
-                  if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < 20000)) {//CMD_UNKNOWN except virtual programs
+                  if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                     continue;
                   }
                   loadPrognrElementsFromTable(j, i_line);
@@ -5849,7 +5849,7 @@ void loop() {
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter,0,&cmd);
-                if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000))) { //CMD_UNKNOWN except virtual programs
+                if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL))) { //CMD_UNKNOWN except virtual programs
                   json_token = strtok(NULL,",");
                   continue;
                 }
@@ -5907,7 +5907,7 @@ void loop() {
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 int i_line=findLine(json_parameter,0,&cmd);
-                if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < 20000)) {//CMD_UNKNOWN except virtual programs
+                if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
 
@@ -6569,7 +6569,7 @@ void loop() {
           int outBufLen = 0;
           if (log_parameters[i] > 0) {
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
-            if ((log_parameters[i] >= 20050 && log_parameters[i] < 20100)) {
+            if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
              //averages
               outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
             }
