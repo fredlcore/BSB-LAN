@@ -6558,7 +6558,7 @@ void loop() {
   uint32_t freespace = 0;
   freespace = SD.vol()->freeClusterCount();
 #endif
-  if (logCurrentValues && freespace >= MINIMUM_FREE_SPACE_ON_SD) {
+  if (logCurrentValues && freespace > MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;

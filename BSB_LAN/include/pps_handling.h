@@ -233,7 +233,7 @@ uint16_t pps_bus_handling(byte *msg) {
 
   } else {    // parse heating system data
 
-    if (msg[0] == 0x1E) {   // Anfragen der Therme nach bestimmten Parametern
+    if ((msg[0] & 0x0E) == 0x0E) {   // Anfragen der Therme nach bestimmten Parametern
       saved_msg_cycle = msg_cycle;
       switch (msg[1]) {
         case 0x08: msg_cycle = 8; break;
