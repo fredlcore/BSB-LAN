@@ -1,7 +1,7 @@
 // PPS-Bus handling
 uint16_t pps_bus_handling(byte *msg) {
   uint16_t log_now = 0;
-  if ((msg[0] & 0x0F)) == 0x07 && pps_write == 1) { // Send client data
+  if ((msg[0] & 0x0F) == 0x07 && pps_write == 1) { // Send client data
     byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     byte rx_msg[10] = { 0 };
     switch (msg_cycle) {

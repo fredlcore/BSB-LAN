@@ -3116,10 +3116,10 @@ void LogTelegram(byte* msg) {
           case 0x0D: getfarstrings = PSTR("PPS INF"); break;  // 0x1D
           case 0x0E: getfarstrings = PSTR("PPS REQ"); break;  // 0x1E
           case 0x07: getfarstrings = PSTR("PPS RTS"); break;  // 0x17
-          case 0x08:                                          // 0xF8
-          case 0x0B:                                          // 0xFB
-          case 0x0D:                                          // 0xFD
-          case 0x0E:                                          // 0xFE
+          case 0xF8:                                          // 0xF8
+          case 0xFB:                                          // 0xFB
+          case 0xFD:                                          // 0xFD
+          case 0xFE:                                          // 0xFE
             getfarstrings = PSTR("PPS ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
