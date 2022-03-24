@@ -853,6 +853,18 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
 const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 
+typedef enum { //BSP = base sensors program
+  BSP_INTERNAL = 20000,    // brenner durations, internal functions
+  BSP_AVERAGES = 20050,  //averages values (check size!)
+  BSP_DHT22 = 20100,    // DHT22 sensor
+  BSP_BME280 = 20200,    // BME280 sensor
+  BSP_ONEWIRE = 20300,    // One wire (Dallas) sensor
+  BSP_MAX = 20500,    // MAX! sensor
+  BSP_FLOAT = 20700,    // custom_floats
+  BSP_LONG = 20800,    // custom_longs
+  BSP_END = 20900,    // end of sensors category
+} dt_sensors_base_prog_t;
+
 //Mega not enough space for useless strings.
 #if defined(__AVR__) && not defined WEBCONFIG
 #undef CF_USEEEPROM_TEXT
@@ -11624,6 +11636,9 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D11D9,  CAT_WARTUNG,          VT_ENUM,          7252,  STR7252,  sizeof(ENUM7252),     ENUM7252,     DEFAULT_FLAG, DEV_ALL}, // Pstick Befehl
 {0x053D11D8,  CAT_WARTUNG,          VT_PERCENT,       7253,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt
 {0x053D11D7,  CAT_WARTUNG,          VT_PERCENT,       7254,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt TODO: Check double telegram ..D8 ..D7
+};
+
+PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 
 // Konfiguration Erweit'module
@@ -11949,9 +11964,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D1270,  CAT_IOTEST,           VT_TEMP,          7978,  STR7978,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Fühlertemperatur BX36 //FUJITSU
 {0x053D1285,  CAT_IOTEST,           VT_CLOSEDOPEN,    7996,  STR7996,  sizeof(ENUM_CLOSEDOPEN), ENUM_CLOSEDOPEN, FL_RONLY,     DEV_ALL}, // Zustand Kontakt H33 //FUJITSU
 {0x053D175F,  CAT_IOTEST,           VT_ENUM,          7999,  STR7999,  sizeof(ENUM7999),     ENUM7999,     FL_RONLY,     DEV_ALL}, // Eingangssignal H33 //FUJITSU
-};
-
-PROGMEM_LATE const cmd_t cmdtbl3[]={
 //Status
 {0x053D07A3,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1
 {0x053D07A4,  CAT_STATUS,           VT_ENUM,          8000,  STR8000,  sizeof(ENUM8000),     ENUM8000,     FL_RONLY,     DEV_ALL}, // [ ] - Status - Status Heizkreis 1  // gleiche Funktion in eigener CommandID
@@ -13865,32 +13877,32 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
 
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20000, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20001, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20002, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20003, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, 20004, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         20005, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ONOFF,         20006, STR20006, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, BSP_INTERNAL+0, STR20000, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         BSP_INTERNAL+1, STR20001, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, BSP_INTERNAL+2, STR20002, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         BSP_INTERNAL+3, STR20003, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_SECONDS_DWORD, BSP_INTERNAL+4, STR20004, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ONOFF,         BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
 
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20100, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20101, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20102, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   20103, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20200, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20201, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20202, STR20202, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PRESSURE_HPA,  20203, STR20203, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ALTITUDE,      20204, STR20204, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   20205, STR20205, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20300, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20301, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        20500, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20501, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          20502, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, 20503, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_FLOAT,         20700, STR20700, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_LONG,          20800, STR20800, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_DHT22+0, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_DHT22+1, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_DHT22+2, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   BSP_DHT22+3, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_BME280+0, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_BME280+1, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_BME280+2, STR20202, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PRESSURE_HPA,  BSP_BME280+3, STR20203, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_ALTITUDE,      BSP_BME280+4, STR20204, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   BSP_BME280+5, STR20205, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_ONEWIRE+0, STR20300, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_ONEWIRE+1, STR20301, 0,                    NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_MAX+0, STR20500, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_MAX+1, STR20501, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_MAX+2, STR20502, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_MAX+3, STR20503, 0,                    NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_FLOAT,         BSP_FLOAT, STR20700, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_LONG,          BSP_LONG, STR20800, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
 
 //{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
