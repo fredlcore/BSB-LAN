@@ -3112,14 +3112,17 @@ void LogTelegram(byte* msg) {
       } else {
         strcat_P(outBuf + outBufLen, PSTR(";"));
         const char *getfarstrings;
-        switch (msg[0] & 0x0F) {
+        switch (msg[0] & 0x0F) {                              // messages from heater
           case 0x0D: getfarstrings = PSTR("PPS INF"); break;  // 0x1D
           case 0x0E: getfarstrings = PSTR("PPS REQ"); break;  // 0x1E
           case 0x07: getfarstrings = PSTR("PPS RTS"); break;  // 0x17
-          case 0xF8:                                          // 0xF8
-          case 0xFB:                                          // 0xFB
-          case 0xFD:                                          // 0xFD
-          case 0xFE:                                          // 0xFE
+          default: getfarstrings = PSTR(""); break;
+        }
+        switch (msg[0]) {                                     // messages from room unit - had to split this up because some PPS devices change high byte, but room units not, so 0x1D and 0xFD would clash
+          case 0xF8:
+          case 0xFB:
+          case 0xFD:
+          case 0xFE:
             getfarstrings = PSTR("PPS ANS"); break;
           default: getfarstrings = PSTR(""); break;
         }
