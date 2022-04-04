@@ -3812,10 +3812,12 @@ char *build_pvalstr(bool extended) {
 #endif
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
+#ifdef AVERAGES
     if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_AVERAGES + numAverages) {
       len+=strlen(strcpy_P(outBuf + len, PSTR(STR_24A_TEXT)));
       len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
     }
+#endif
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
     if (decodedTelegram.sensorid) {
       len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
@@ -6572,10 +6574,12 @@ void loop() {
           int outBufLen = 0;
           if (log_parameters[i] > 0) {
             outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+#ifdef AVERAGES
             if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
              //averages
               outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
             }
+#endif
             dataFile.print(outBuf);
             query(log_parameters[i]);
             outBufLen = 0;
