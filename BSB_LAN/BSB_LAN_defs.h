@@ -5805,7 +5805,7 @@ const char ENUM5950[] PROGMEM_LATEST = {
 "\x0c " ENUM5950_0c_TEXT "\0"
 "\x0d " ENUM5950_0d_TEXT "\0"
 "\x0e " ENUM5950_0e_TEXT "\0"
-"\x0e " ENUM5950_34_TEXT
+"\x34 " ENUM5950_34_TEXT
 };
 
 // Konfiguration - Funktion Eingang H1 THISION
