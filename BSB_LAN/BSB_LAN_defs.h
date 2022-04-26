@@ -8328,6 +8328,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
+{0x0500009E,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D04B3,  CAT_DATUMZEIT,        VT_DAYMONTH,      5,     STR5,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt:MM ] - Uhrzeit und Datum - Sommerzeitbeginn Tag/Monat
 {0x053D009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
@@ -8352,6 +8353,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_094_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_076_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_118_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
+{0x0500009D,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_123_ALL}, // Baxi Luna Platinum
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_148_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 {0x053D04B2,  CAT_DATUMZEIT,        VT_DAYMONTH,      6,     STR6,     0,                    NULL,         DEFAULT_FLAG, DEV_188_ALL}, // [tt.MM ] - Uhrzeit und Datum - Sommerzeitende Tag/Monat
 
