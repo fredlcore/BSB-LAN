@@ -3295,14 +3295,6 @@ int set(int line      // the ProgNr of the heater parameter
       }
       default: pps_values[cmd_no] = atoi(val); break;
     }
-//    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-/*
-    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
-      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
-      writelnToDebug();
-      writeToEEPROM(CF_PPS_VALUES);
-    }
-*/
 
     uint8_t flags=get_cmdtbl_flags(i);
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
@@ -7258,29 +7250,6 @@ void setup() {
     }
   }
 #endif
-
-/*  printlnToDebug(PSTR("Reading EEPROM..."));
-  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
-    uint16_t f=0;
-    if (EEPROM_ready) {
-      EEPROM.get(sizeof(uint16_t)*i, f);
-    }
-    if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Reading %u from EEPROM slot %d\r\n"), f, i);
-
-      pps_values[i] = f;
-    }
-  }
-*/
-
-/*
-  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
-    if (pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
-    if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
-    }
-  }
-*/
 
   printToDebug(PSTR("PPS settings:\r\n"));
   uint32_t temp_c = 0;
