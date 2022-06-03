@@ -2548,6 +2548,7 @@ bool SaveConfigFromRAMtoEEPROM() {
 #ifdef MQTT
         case CF_MQTT:
         case CF_MQTT_IPADDRESS:
+        case CF_MQTT_PORT:
           mqtt_disconnect();
           break;
 #endif
@@ -6524,7 +6525,7 @@ void loop() {
 #else
   {
 #endif
-    if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
+    if (mqtt_broker_ip_addr[0] && mqtt_mode && mqtt_broker_port) { //Address was set and MQTT was enabled
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
@@ -7043,6 +7044,7 @@ void setup() {
   registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
   registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
   registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+  registerConfigVariable(CF_MQTT_PORT, (byte *)&mqtt_broker_port);
   registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);

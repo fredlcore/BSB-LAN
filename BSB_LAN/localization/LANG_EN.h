@@ -189,6 +189,7 @@
 #define CF_MAX_IPADDRESS_TEXT "IP address cube"
 #define CF_WRITEMODE_TEXT "Write access (level)"
 #define CF_MQTT_IPADDRESS_TEXT "IP address broker"
+#define CF_MQTT_PORT_TEXT "Broker port"
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_DEVICE_TEXT "Device ID"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"

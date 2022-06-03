@@ -230,6 +230,7 @@
 #define CF_MAX_IPADDRESS_TEXT "IP-адрес устройства CUNO/CUNX/мод. MAX!Cube"
 #define CF_WRITEMODE_TEXT "Запись параметров в систему"
 #define CF_MQTT_IPADDRESS_TEXT "IP-адрес брокера MQTT"
+#define CF_MQTT_PORT_TEXT "Порт брокера MQTT"
 #define CF_MQTT_USERNAME_TEXT "Имя пользователя"
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
