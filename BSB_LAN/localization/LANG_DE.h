@@ -228,7 +228,7 @@
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
-#define CF_RGT1_SENSOR_TEXT "RGT1 Temperatursensor Parameter"
+#define CF_RGT1_SENSOR_TEXT "RGT1/PPS Temperatursensor Parameter"
 #define CF_RGT2_SENSOR_TEXT "RGT2 Temperatursensor Parameter"
 #define CF_RGT3_SENSOR_TEXT "RGT3 Temperatursensor Parameter"
 #define CF_TWW_PUSH_PIN_TEXT "TWW-Push Taste: Pin"

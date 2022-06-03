@@ -6665,7 +6665,11 @@ void loop() {
     byte tempTime = (millis() / 60000) % 60;
     if (newMinuteValue != tempTime) {
       newMinuteValue = tempTime;
-      for (uint8_t i = 0; i < 3; i++) {
+      uint8_t k = 3; // 3 circuits in BSB/LPB mode
+      if (bus->getBusType() == BUS_PPS) {
+        k = 1;
+      }
+      for (uint8_t i = 0; i < k; i++) {
         if (rgte_sensorid[i][0] != 0) {
           uint8_t z = 0;
           float value = 0;
@@ -6680,11 +6684,15 @@ void loop() {
           }
           if (z != 0) {
             _printFIXPOINT(decodedTelegram.value, value / z, 2);
+            if (bus->getBusType() != BUS_PPS) {
 // if we want to substitute own address sometime to RGT1(2,3)
-//            uint8_t saved_own_address = bus->getBusAddr();
-//            bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
-            set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
-//            bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
+//              uint8_t saved_own_address = bus->getBusAddr();
+//              bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
+              set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
+//              bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
+            } else {
+              set(15000 + PPS_RTI, decodedTelegram.value, false); //set PPS parameter PPS_RTI (Raumtemperatur Ist)
+            }
           }
         }
       }

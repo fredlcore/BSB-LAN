@@ -267,7 +267,7 @@ boolean enable_ota_update = false;
 #define JSONCONFIG
 
 #define RGT_EMULATOR
-int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1 - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
 
 //Enable presence buttons and TWW/DHW push on selected pins.
 // Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21
