@@ -823,6 +823,7 @@ unsigned long TWW_count   = 0;
 uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 int16_t pps_values[PPS_ANZ] = { 0 };
+uint8_t allow_write_pps_values[PPS_ANZ/8 + 1] = { 0 }; //Bitwise array. 0 - pps_values[] writing to EEPROM now allowed. 1 - allowed to write
 bool pps_time_received = false;
 bool pps_time_set = false;
 bool pps_wday_set = false;
@@ -3298,6 +3299,7 @@ int set(int line      // the ProgNr of the heater parameter
 
     uint8_t flags=get_cmdtbl_flags(i);
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
+//    if(EEPROM_ready && (allow_write_pps_values[cmd_no / 8] & (1 << (cmd_no % 8)))) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
@@ -7265,7 +7267,11 @@ void setup() {
   for (int i=0; i<PPS_ANZ; i++) {
     int l = findLine(15000+i,temp_idx,&temp_c);
     if (l==-1) continue;
-//    uint8_t flags=get_cmdtbl_flags(l);
+    // fill bitwise array with flags
+    uint8_t flags=get_cmdtbl_flags(l);
+    if ((flags & FL_EEPROM) == FL_EEPROM) {
+      allow_write_pps_values[i / 8] |= (1 << (i % 8));
+    }
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if (pps_values[i] == (int16_t)0xFFFF) {
         pps_values[i] = 0;
