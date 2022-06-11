@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <input type='file' id='file-input' accept='.txt,.csv'
+     onchange='loadFile(this.files[0])'>
+    <div id='chartDiv' style='height: 95vh;'></div>
+    <script src='https://code.jscharting.com/latest/jscharting.js'></script>
+    <script>
+      async function loadFile( file ) {
+        let text = await ( new Response(file) ).text( );
+        // convert date/time format to ISO:
+        text = text.replace( /;(\d{2})\.(\d{2})\.(\d{4}) /g, ';$3-$2-$1T' );
+        // combine Parameter and Description:
+        text = text.replace( /^(.+?;.+?;.+?);/gm, '$1 - ' );
+        let data = JSC.dsv2Json( text, ';' );
+        let series = JSC.nest( )
+                        .key( 'Parameter - Description' )
+                        .key( 'Date' )
+                        .rollup( 'Value' )
+                        .series( data );
+        JSC.Chart( 'chartDiv', {
+          series: series,
+          defaultCultureName: 'de-DE',
+          legend: { template: '%icon %name', position: 'top' },
+          xAxis: { crosshair_enabled: true, scale_type: 'time' },
+          axisToZoom: 'xy'
+        } );
+      }
+    </script>
+  </body>
+</html>
