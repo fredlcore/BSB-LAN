@@ -2293,6 +2293,10 @@ void generateConfigPage(void) {
 #endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
+#ifdef WIFI
+  printToWebClient(STR_TEXT_WSS);
+  printFmtToWebClient(PSTR(": %d dBm<br>\r\n"), (int)(WiFi.RSSI()));
+#endif
 printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
