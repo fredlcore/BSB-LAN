@@ -190,6 +190,7 @@
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
 #define MENU_TEXT_FSP "Freier Speicher auf SD Karte"
+#define MENU_TEXT_WSS "WIFI Signalstärke"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 
