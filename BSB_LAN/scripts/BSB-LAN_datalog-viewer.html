@@ -31,14 +31,16 @@
         t=t.replace(/.+/,'m;t;p;d;v;u')
         // remove seconds from timestamps to get 'concurrent' param readings:
         .replace(/^(.+?;.+?):..;/gm,'$1;');
-        // 'pivot' data (p=params, r=row, a=all, x=prevDate):
-        let p=[],r=[],a=[],x='';
+        // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
+        let p=[],r=[],a=[],x=y=0;
         d3.dsvFormat(';').parse(t).forEach(function(i){
-          if(i.t!=x&&x!=''){a.push(r);r=[];}
+        	// ms less than 999 different from previous? -> assign same hh:mm
+          if(y&&i.m-y>999){a.push(r);r=[];x=i.t}
+          y=i.m;
           let k=i.p+' - '+i.d;
           p[k]=1;
           r[k]=i.v;
-          r['t']=x=i.t;
+          r['t']=x?x:i.t;
         });
         a.push(r);
         // plot:
