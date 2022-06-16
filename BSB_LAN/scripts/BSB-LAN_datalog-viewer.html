@@ -34,7 +34,7 @@
         // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
         let p=[],r=[],a=[],x=y=0;
         d3.dsvFormat(';').parse(t).forEach(function(i){
-        	// ms less than 999 different from previous? -> assign same hh:mm
+          // ms less than 999 different from previous? -> assign same hh:mm
           if(y&&i.m-y>999){a.push(r);r=[];x=i.t}
           y=i.m;
           let k=i.p+' - '+i.d;
