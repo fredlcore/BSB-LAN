@@ -106,8 +106,7 @@ const char graph_html[] PROGMEM_LATE =
   "<div id='c3'></div>"
   "<style>"
     "svg,.c3-tooltip{font:10px sans-serif;}"
-    // unintended side effect of the following line: turns favicon.svg invisible!
-    "path,line{fill:none;stroke:#000;}"
+    "div path,line{fill:none;stroke:#000;}"
     ".c3-focused{opacity:1;stroke-width:2px;}"
     ".c3-defocused,.c3-legend-item-hidden{opacity:0.2 !important;}"
     ".c3-tooltip{opacity:0.5;background-color:#eee;}"
