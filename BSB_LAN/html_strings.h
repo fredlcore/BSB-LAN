@@ -119,12 +119,10 @@ const char graph_html[] PROGMEM_LATE =
     "fetch('D').then(response=>response.text()).then(t=>{"
       // abbreviate heading to save javascript code size:
       "t=t.replace(/.+/,'m;t;p;d;v;u')"
-      // remove seconds from timestamps to get 'concurrent' param readings:
-      ".replace(/^(.+?;.+?):..;/gm,'$1;');"
       // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
       "let p=[],r=[],a=[],x=y=0;"
       "d3.dsvFormat(';').parse(t).forEach(function(i){"
-        // ms less than 999 different from previous? -> assign same hh:mm
+        // ms less than 1000 different from previous? -> use same hh:mm
         "if(y&&i.m-y>999){a.push(r);r=[];x=i.t}"
         "y=i.m;"
         "let k=i.p+' - '+i.d;"
@@ -140,7 +138,7 @@ const char graph_html[] PROGMEM_LATE =
         "data:{"
           "json:a,"
           "keys:{x:'t',value:Object.keys(p)},"
-          "xFormat:f"
+          "xFormat:f+':%S'"
         "},"
         "point:{show:false},"
         "axis:{x:{type:'timeseries',tick:{count:3,format:f}}},"
