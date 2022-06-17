@@ -118,7 +118,7 @@ const char graph_html[] PROGMEM_LATE =
   "<script>"
     "fetch('D').then(response=>response.text()).then(t=>{"
       // abbreviate heading to save javascript code size:
-      "t=t.replace(/.+/,'m;t;p;d;v;u')"
+      "t=t.replace(/.+/,'m;t;p;d;v;u');"
       // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
       "let p=[],r=[],a=[],x=y=0;"
       "d3.dsvFormat(';').parse(t).forEach(function(i){"
