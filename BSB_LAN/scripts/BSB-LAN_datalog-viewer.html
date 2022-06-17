@@ -28,7 +28,7 @@
         // [...]
         let t=await(new Response(file)).text();
         // abbreviate heading to save javascript code size:
-        t=t.replace(/.+/,'m;t;p;d;v;u')
+        t=t.replace(/.+/,'m;t;p;d;v;u');
         // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
         let p=[],r=[],a=[],x=y=0;
         d3.dsvFormat(';').parse(t).forEach(function(i){
