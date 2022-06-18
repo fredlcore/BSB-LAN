@@ -113,8 +113,8 @@ const char graph_html[] PROGMEM_LATE =
     ".c3-tooltip th{background-color:#ccc}"
     ".c3-tooltip .value{text-align:right}"
   "</style>"
-  "<script src='http://d3js.org/d3.v4.min.js'></script>"
-  "<script src='http://cdn.jsdelivr.net/npm/c3'></script>"
+  "<script src='https://d3js.org/d3.v4.min.js'></script>"
+  "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
   "<script>"
     "fetch('D').then(response=>response.text()).then(t=>{"
       // abbreviate heading to save javascript code size:
