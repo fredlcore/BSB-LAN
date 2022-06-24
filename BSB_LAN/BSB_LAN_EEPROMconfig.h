@@ -119,7 +119,8 @@ typedef enum {
   CCAT_LOGGING,
   CCAT_24HAVG,
   CCAT_RGT_EMUL,
-  CCAT_BMEBUS
+  CCAT_BMEBUS,
+  CCAT_UDPL
 } ccat_params;
 
 
@@ -155,7 +156,8 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_LOGGING,        CAT_LOGGING_TXT},
   {CCAT_24HAVG,         CAT_24HAVG_TXT},
   {CCAT_RGT_EMUL,       CAT_RGT_EMUL_TXT},
-  {CCAT_BMEBUS,         CAT_BMEBUS_TXT}
+  {CCAT_BMEBUS,         CAT_BMEBUS_TXT},
+  {CCAT_UDPL,           CAT_UDPL_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -203,8 +205,8 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
-  {CF_UDP_LOGGING,      10,CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
-  {CF_UDP_LOGGING_PORT, 10,CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_UDP_LOGGING_PORT_TXT, sizeof(UDPLoggingPort)}, //immediately apply
+  {CF_UDP_LOGGING,      10,CCAT_UDPL,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
+  {CF_UDP_LOGGING_PORT, 10,CCAT_UDPL,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_UDP_LOGGING_PORT_TXT, sizeof(UDPLoggingPort)}, //immediately apply
 
 #endif
   {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply

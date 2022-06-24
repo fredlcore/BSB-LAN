@@ -235,7 +235,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
-#define CF_UDP_LOGGING_TEXT "Передача параметров через протокол UDP"
+#define CF_UDP_LOGGING_TEXT "Включить передачу параметров"
 #define CF_UDP_LOGGING_PORT_TEXT "Порт UDP"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
 #define CF_RGT1_SENSOR_TEXT "Номера программ датчиков температуры для RGT1/PPS"
@@ -262,7 +262,7 @@
 #define CAT_LOGGING_TEXT "Журналирование"
 #define CAT_24HAVG_TEXT "Среднесуточные значения"
 #define CAT_RGT_EMUL_TEXT "Эмулятор комнатного термостата"
-
+#define CAT_UDPL_TEXT "Передача через UDP"
 
 #define STR0_TEXT "Дата/время"
 #define STR1_TEXT "Часы/минуты"
