@@ -182,7 +182,7 @@ boolean mqtt_connect() {
     if(MQTTPassword[0])
       MQTTPass = MQTTPassword;
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-    MQTTPubSubClient->setServer(MQTTBroker, mqtt_broker_port);
+    MQTTPubSubClient->setServer(MQTTBroker, 1883);
     String MQTTWillTopic = mqtt_get_will_topic();
     String MQTTRealClientId = mqtt_get_client_id();
     int retries = 0;

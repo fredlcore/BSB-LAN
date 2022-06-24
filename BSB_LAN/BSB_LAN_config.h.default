@@ -165,7 +165,6 @@ byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text forma
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
 // rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
-uint16_t mqtt_broker_port = 1883;               // MQTT broker port.
 char MQTTUsername[32] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[32] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
@@ -176,7 +175,7 @@ char MQTTDeviceID[32] = "BSB-LAN";
 
 // Logging through UDP
 bool EnableUDPLogging = true; //true - enable UDP logging, false - disable logging
-uint16_t UDPLoggingPort = 6502; //UDP source port number
+
 
 
 // Compile IPWE extension

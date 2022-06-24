@@ -75,9 +75,7 @@ typedef enum{
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (MQTT port)
-  CF_MQTT_PORT, // Size: 2 bytes. Default value = 1883
   CF_UDP_LOGGING, // Size: 1 byte. UDP Logging: 0 - disabled, 1 - enabled
-  CF_UDP_LOGGING_PORT, // Size: 2 bytes. Default value = 6502
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -156,8 +154,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_LOGGING,        CAT_LOGGING_TXT},
   {CCAT_24HAVG,         CAT_24HAVG_TXT},
   {CCAT_RGT_EMUL,       CAT_RGT_EMUL_TXT},
-  {CCAT_BMEBUS,         CAT_BMEBUS_TXT},
-  {CCAT_UDPL,           CAT_UDPL_TXT}
+  {CCAT_BMEBUS,         CAT_BMEBUS_TXT}
 };
 
 PROGMEM_LATE const configuration_struct config[]={
@@ -200,13 +197,11 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_IPADDRESS,   2, CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
-  {CF_MQTT_PORT,        10,CCAT_MQTT,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_MQTT_PORT_TXT, sizeof(mqtt_broker_port)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
-  {CF_UDP_LOGGING,      10,CCAT_UDPL,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
-  {CF_UDP_LOGGING_PORT, 10,CCAT_UDPL,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_UDP_LOGGING_PORT_TXT, sizeof(UDPLoggingPort)}, //immediately apply
+  {CF_UDP_LOGGING,      10,CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
 
 #endif
   {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
