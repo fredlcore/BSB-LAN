@@ -7050,6 +7050,8 @@ void setup() {
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  registerConfigVariable(CF_UDP_LOGGING, (byte *)&EnableUDPLogging);
+  registerConfigVariable(CF_UDP_LOGGING_PORT, (byte *)&UDPLoggingPort);
   if (DEFAULT_FLAG & FL_SW_CTL_RONLY) {
     registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
   }

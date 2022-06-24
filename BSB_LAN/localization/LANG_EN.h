@@ -193,6 +193,8 @@
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_DEVICE_TEXT "Device ID"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
+#define CF_UDP_LOGGING_TEXT "UDP Logging"
+#define CF_UDP_LOGGING_PORT_TEXT "UDP port"
 #define CF_CHECKUPDATE_TEXT "Check for updates"
 #define CF_RGT1_SENSOR_TEXT "RU1/PPS temperature sensor parameter"
 #define CF_RGT2_SENSOR_TEXT "RU2 temperature sensor parameter"

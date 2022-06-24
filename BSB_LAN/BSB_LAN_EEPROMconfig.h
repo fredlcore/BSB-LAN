@@ -70,12 +70,14 @@ typedef enum{
 // Version 8 (bus pins and device family and variant)
   CF_RX_PIN, //Size: 1 byte. RX pin
   CF_TX_PIN, //Size: 1 byte. TX pin
-  CF_DEVICE_FAMILY, //Size: 2 byte. Heater family ID
-  CF_DEVICE_VARIANT, //Size: 2 byte. Heater variant ID
+  CF_DEVICE_FAMILY, //Size: 2 bytes. Heater family ID
+  CF_DEVICE_VARIANT, //Size: 2 bytes. Heater variant ID
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (MQTT port)
-  CF_MQTT_PORT, // Size: 2 byte. Default value = 1883
+  CF_MQTT_PORT, // Size: 2 bytes. Default value = 1883
+  CF_UDP_LOGGING, // Size: 1 byte. UDP Logging: 0 - disabled, 1 - enabled
+  CF_UDP_LOGGING_PORT, // Size: 2 bytes. Default value = 6502
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -201,6 +203,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
+  {CF_UDP_LOGGING,      10,CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
+  {CF_UDP_LOGGING_PORT, 10,CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_UDP_LOGGING_PORT_TXT, sizeof(UDPLoggingPort)}, //immediately apply
+
 #endif
   {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
