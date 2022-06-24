@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <title>BSB-LAN datalog.txt viewer</title>
+    <input type='file' id='file-input' accept='.txt,.csv'
+     onchange='loadFile(this.files[0])'>
+    <div id='c3'></div>
+    <style>
+      svg,.c3-tooltip{font:10px sans-serif}
+      div path,line{fill:none;stroke:#000}
+      .c3-focused{opacity:1;stroke-width:2px}
+      .c3-defocused,.c3-legend-item-hidden{opacity:0.2 !important}
+      .c3-tooltip{opacity:0.5;background-color:#eee}
+      .c3-tooltip th{background-color:#ccc}
+      .c3-tooltip .value{text-align:right}
+    </style>
+    <script src='https://d3js.org/d3.v4.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/c3'></script>
+    <script>
+      async function loadFile(file){
+        // - example datalog.txt (/D) contents: -
+        // Milliseconds;Date;Parameter;Description;Value;Unit
+        // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
+        // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
+        // [...]
+        let t=await(new Response(file)).text();
+        // abbreviate heading to save javascript code size:
+        t=t.replace(/.+/,'m;t;p;d;v;u');
+        // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
+        let p=[],r=[],a=[],x=y=0;
+        d3.dsvFormat(';').parse(t).forEach(function(i){
+          // ms less than 1000 different from previous? -> use same hh:mm
+          if(y&&i.m-y>999){a.push(r);r=[];x=i.t}
+          y=i.m;
+          let k=i.p+' - '+i.d;
+          p[k]=1;
+          r[k]=i.v;
+          r['t']=x?x:i.t;
+        });
+        a.push(r);
+        // plot:
+        let f='%d.%m.%Y %H:%M';
+        c3.generate({
+          bindto:'#c3',
+          data:{
+            json:a,
+            keys:{x:'t',value:Object.keys(p)},
+            xFormat:f+':%S'
+          },
+          point:{show:false},
+          axis:{x:{type:'timeseries',tick:{count:3,format:f}}},
+          zoom:{enabled:true},
+          size:{height:500}
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -66,6 +66,7 @@
  *       version 2.1
  *        - ATTENTION: New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
  *        - ESP32: OTA now uses system-wide HTTP AUTH authentication credentials
+ *        - Improved built-in chart display (/DG), new configuration definement #define USE_ADVANCED_PLOT_LOG_FILE - thanks to Christian Ramharter
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
  *        - ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!

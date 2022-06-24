@@ -192,6 +192,15 @@ int ipwe_parameters[40] = {
 //  8704                    // Aussentemperatur gemischt
 };
 
+// If you prefer to use the log file plotting (/DG) used in BSB-LAN 2.1.3, disable the following #define.
+// Otherwise a newer implementation will be used that does require (automated) loading of an additional
+// Javascript library off the internet (currently 204 KB), but offers the following improvements:
+// - better legibility for value numbers with plot lines close to each other (mouseover on plot)
+// - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
+// - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
+// - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
+// - saves over 4 KB in compiled BSB-LAN sketch
+#define USE_ADVANCED_PLOT_LOG_FILE
 
 // Compile CUNO/CUNX/modified MAX!Cube extension.
 #define MAX_CUL
