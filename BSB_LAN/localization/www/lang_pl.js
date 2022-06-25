@@ -519,6 +519,7 @@ UIStrings["STR8730_TEXT"] = "Pompa Q2 obiegu grzewczego 1";
 UIStrings["STR8731_TEXT"] = "Mieszczacz 1 obiegu CO otwarty";
 UIStrings["STR8732_TEXT"] = "Mieszczacz 1 obiegu CO zamykanie";
 UIStrings["STR8735_TEXT"] = "Prędkość pompy obiegu grzewczego 1";
+UIStrings["STR8739_TEXT"] = "Tłumiona temperatura zewnętrzna";
 UIStrings["STR8740_TEXT"] = "Temperatura w pomieszczeniu 1";
 UIStrings["STR8741_TEXT"] = "Wartość zadana w pomieszczeniu 1";
 UIStrings["STR8743_TEXT"] = "Temperatura zasilania 1";

@@ -239,6 +239,7 @@
 #define STR8700_TEXT "Outside temp sensor local"
 #define STR8703_TEXT "Tlmená vonkajšia teplota"
 #define STR8704_TEXT "Kombinovaná vonkajšia T"
+#define STR8739_TEXT "Okolitá vlhkosť 1 aktuálna hodnota"
 #define STR8740_TEXT "Room temp 1 actual value"
 #define STR8741_TEXT "Room temp setpoint current"
 #define STR8743_TEXT "Teplota vstupu 1"

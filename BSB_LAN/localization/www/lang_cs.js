@@ -238,6 +238,7 @@ UIStrings["STR8530_TEXT"] = "Solární výnos provozních hodin";
 UIStrings["STR8700_TEXT"] = "Lokální čidlo venkovní teploty";
 UIStrings["STR8703_TEXT"] = "Venkovní tlumená teplota";
 UIStrings["STR8704_TEXT"] = "Venkovní geometrická teplota";
+UIStrings["STR8739_TEXT"] = "Okolní vlhkost 1";
 UIStrings["STR8740_TEXT"] = "Teplota prostoru 1";
 UIStrings["STR8741_TEXT"] = "Aktuální žádaná teplota prostoru";
 UIStrings["STR8743_TEXT"] = "Teplota náběhu topného okruhu 1";

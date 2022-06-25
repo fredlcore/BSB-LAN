@@ -239,6 +239,7 @@
 #define STR8700_TEXT "Lokal utetemp.givare"
 #define STR8703_TEXT "Dämpad utetemp"
 #define STR8704_TEXT "Lagrad utetemp"
+#define STR8739_TEXT "Luftfuktighet 1 aktuellt värde"
 #define STR8740_TEXT "Rumstemp 1 aktuellt värde"
 #define STR8741_TEXT "Aktuellt börvärde rumstemp"
 #define STR8743_TEXT "Framl.temp aktuellt värde värmekrets 1"

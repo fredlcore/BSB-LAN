@@ -895,6 +895,7 @@
 #define STR8731_TEXT "FK1 keverőszelep 1 nyit"
 #define STR8732_TEXT "FK1 keverőszelep 2 zár"
 #define STR8735_TEXT "FK1 szivattyú fordulatszáma"
+#define STR8739_TEXT "Környezeti páratartalom 1"
 #define STR8740_TEXT "FK1 Kezelőegységen mért szobahőmérséklet"
 #define STR8741_TEXT "FK1 Kezelőegységen beállított ideiglenes hőmérséklet"
 #define STR8742_TEXT "FK1 Szobahőmérséklet modell"
