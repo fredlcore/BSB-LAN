@@ -519,6 +519,7 @@
 #define STR8731_TEXT "Mieszczacz 1 obiegu CO otwarty"
 #define STR8732_TEXT "Mieszczacz 1 obiegu CO zamykanie"
 #define STR8735_TEXT "Prędkość pompy obiegu grzewczego 1"
+#define STR8739_TEXT "Tłumiona temperatura zewnętrzna"
 #define STR8740_TEXT "Temperatura w pomieszczeniu 1"
 #define STR8741_TEXT "Wartość zadana w pomieszczeniu 1"
 #define STR8743_TEXT "Temperatura zasilania 1"

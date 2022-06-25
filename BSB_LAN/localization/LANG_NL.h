@@ -467,6 +467,7 @@
 #define STR8702_TEXT "Buitentemperatuur Maximum"
 #define STR8703_TEXT "Gedempte buitentemperatuur"
 #define STR8704_TEXT "Gemengde buitentemperatuur"
+#define STR8739_TEXT "Omgevingsvochtigheid 1"
 #define STR8740_TEXT "Ruimtetemperatuur 1"
 #define STR8741_TEXT "Ruimtetemp. 1 gewenste waarde"
 #define STR8742_TEXT "Ruimtetemp. 1 Model"

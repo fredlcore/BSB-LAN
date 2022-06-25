@@ -239,6 +239,7 @@ UIStrings["STR8530_TEXT"] = "Horas operativas de rendimiento solar";
 UIStrings["STR8700_TEXT"] = "Sonda local de Temperatura Exterior";
 UIStrings["STR8703_TEXT"] = "Temperatura Exterior Atenuada";
 UIStrings["STR8704_TEXT"] = "Temperatura Exterior Compuesta";
+UIStrings["STR8739_TEXT"] = "Humedad ambiente 1";
 UIStrings["STR8740_TEXT"] = "Valor Actual Temperatura Ambiente 1";
 UIStrings["STR8741_TEXT"] = "Consigna Resultante de la Temperatura Ambiente";
 UIStrings["STR8743_TEXT"] = "Valor actual Temp.Impulsión Cto.Calefac. 1";

@@ -240,6 +240,7 @@
   "STR8700_TEXT": "Outside temp sensor local",
   "STR8703_TEXT": "Vaimennettu ulkolämpötila",
   "STR8704_TEXT": "Sekoitettu ulkolämpötila",
+  "STR8739_TEXT": "Ympäristön kosteus 1",
   "STR8740_TEXT": "Room temp 1 actual value",
   "STR8741_TEXT": "Room temp setpoint current",
   "STR8743_TEXT": "Menoveden lämpötila 1",

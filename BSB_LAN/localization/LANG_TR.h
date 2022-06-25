@@ -239,6 +239,7 @@
 #define STR8700_TEXT "Outside temp sensor local"
 #define STR8703_TEXT "Dis hava sicakligi azaltilmis"
 #define STR8704_TEXT "Dis hava sicakligi karma"
+#define STR8739_TEXT "Ortam nemi 1 akım değeri"
 #define STR8740_TEXT "Room temp 1 actual value"
 #define STR8741_TEXT "Room temp setpoint current"
 #define STR8743_TEXT "Akis sicakligi 1"

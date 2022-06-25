@@ -239,6 +239,7 @@
 #define STR8700_TEXT "Outside temp sensor local"
 #define STR8703_TEXT "Udetemperatur dæmpet"
 #define STR8704_TEXT "Udetemperatur blandet"
+#define STR8739_TEXT "Omgivende luftfugtighed 1"
 #define STR8740_TEXT "Room temp 1 actual value"
 #define STR8741_TEXT "Room temp setpoint current"
 #define STR8743_TEXT "Fremløbstemperatur 1"

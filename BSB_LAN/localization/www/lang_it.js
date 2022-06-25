@@ -1289,6 +1289,7 @@ UIStrings["STR8730_TEXT"] = "Pompa Circuito Riscaldamento 2 Q2";
 UIStrings["STR8731_TEXT"] = "Valvola miscelatrice CR1 aperto Y1";
 UIStrings["STR8732_TEXT"] = "Valvola miscelatrice CR1 chiuso Y2";
 UIStrings["STR8735_TEXT"] = "Numero giri pompa calore 1";
+UIStrings["STR8739_TEXT"] = "Umidità ambiente 1";
 UIStrings["STR8740_TEXT"] = "Temperatura ambiente 1";
 UIStrings["STR8741_TEXT"] = "Setpoint ambiente 1";
 UIStrings["STR8742_TEXT"] = "Modello della temperatura ambiente 1";

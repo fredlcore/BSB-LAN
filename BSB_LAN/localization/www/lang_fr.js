@@ -243,6 +243,7 @@ UIStrings["STR8700_TEXT"] = "Température extérieure locale";
 UIStrings["STR8703_TEXT"] = "Température extérieure résultante";
 UIStrings["STR8704_TEXT"] = "Température extérieure mélangée";
 UIStrings["STR8721_TEXT"] = "Température ambiante";
+UIStrings["STR8739_TEXT"] = "Humidité ambiante 1";
 UIStrings["STR8740_TEXT"] = "Température ambiante 1";
 UIStrings["STR8741_TEXT"] = "Consigne actuelle de température Ambiante";
 UIStrings["STR8743_TEXT"] = "Température de départ circuit de chauffe 1";

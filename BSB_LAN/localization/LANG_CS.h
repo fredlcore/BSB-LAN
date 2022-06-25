@@ -238,6 +238,7 @@
 #define STR8700_TEXT "Lokální čidlo venkovní teploty"
 #define STR8703_TEXT "Venkovní tlumená teplota"
 #define STR8704_TEXT "Venkovní geometrická teplota"
+#define STR8739_TEXT "Okolní vlhkost 1"
 #define STR8740_TEXT "Teplota prostoru 1"
 #define STR8741_TEXT "Aktuální žádaná teplota prostoru"
 #define STR8743_TEXT "Teplota náběhu topného okruhu 1"

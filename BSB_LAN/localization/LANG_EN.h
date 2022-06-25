@@ -453,6 +453,7 @@
 #define STR8700_TEXT "Outside temp sensor local"
 #define STR8703_TEXT "Outside temp attenuated"
 #define STR8704_TEXT "Outside temp composite"
+#define STR8739_TEXT "Room humid 1 actual value"
 #define STR8740_TEXT "Room temp 1 actual value"
 #define STR8741_TEXT "Room temp setpoint current"
 #define STR8743_TEXT "Flow temp actual value heat circuit 1"

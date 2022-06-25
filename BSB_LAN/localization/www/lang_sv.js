@@ -239,6 +239,7 @@ UIStrings["STR8530_TEXT"] = "Solfångare drifttid tillskott";
 UIStrings["STR8700_TEXT"] = "Lokal utetemp.givare";
 UIStrings["STR8703_TEXT"] = "Dämpad utetemp";
 UIStrings["STR8704_TEXT"] = "Lagrad utetemp";
+UIStrings["STR8739_TEXT"] = "Luftfuktighet 1 aktuellt värde";
 UIStrings["STR8740_TEXT"] = "Rumstemp 1 aktuellt värde";
 UIStrings["STR8741_TEXT"] = "Aktuellt börvärde rumstemp";
 UIStrings["STR8743_TEXT"] = "Framl.temp aktuellt värde värmekrets 1";

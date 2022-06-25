@@ -240,6 +240,7 @@
 #define STR8700_TEXT "Outside temp sensor local"
 #define STR8703_TEXT "Vaimennettu ulkolämpötila"
 #define STR8704_TEXT "Sekoitettu ulkolämpötila"
+#define STR8739_TEXT "Ympäristön kosteus 1"
 #define STR8740_TEXT "Room temp 1 actual value"
 #define STR8741_TEXT "Room temp setpoint current"
 #define STR8743_TEXT "Menoveden lämpötila 1"

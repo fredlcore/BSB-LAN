@@ -467,6 +467,7 @@ UIStrings["STR8701_TEXT"] = "Buitentemperatuur Minimum";
 UIStrings["STR8702_TEXT"] = "Buitentemperatuur Maximum";
 UIStrings["STR8703_TEXT"] = "Gedempte buitentemperatuur";
 UIStrings["STR8704_TEXT"] = "Gemengde buitentemperatuur";
+UIStrings["STR8739_TEXT"] = "Omgevingsvochtigheid 1";
 UIStrings["STR8740_TEXT"] = "Ruimtetemperatuur 1";
 UIStrings["STR8741_TEXT"] = "Ruimtetemp. 1 gewenste waarde";
 UIStrings["STR8742_TEXT"] = "Ruimtetemp. 1 Model";

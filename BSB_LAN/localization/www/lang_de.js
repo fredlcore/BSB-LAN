@@ -1965,6 +1965,7 @@ UIStrings["STR8730_TEXT"] = "Heizkreispumpe Q2";
 UIStrings["STR8731_TEXT"] = "Heizkreismischer Auf Y1";
 UIStrings["STR8732_TEXT"] = "Heizkreismischer Zu Y2";
 UIStrings["STR8735_TEXT"] = "Drehzahl Heizkreispumpe 1";
+UIStrings["STR8739_TEXT"] = "Luftfeuchtigkeit 1";
 UIStrings["STR8740_TEXT"] = "Raumtemperatur 1";
 UIStrings["STR8741_TEXT"] = "Raumsollwert 1";
 UIStrings["STR8742_TEXT"] = "Raumtemperatur 1 Modell";

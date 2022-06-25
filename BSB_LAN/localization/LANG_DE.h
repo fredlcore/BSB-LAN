@@ -1965,6 +1965,7 @@
 #define STR8731_TEXT "Heizkreismischer Auf Y1"
 #define STR8732_TEXT "Heizkreismischer Zu Y2"
 #define STR8735_TEXT "Drehzahl Heizkreispumpe 1"
+#define STR8739_TEXT "Luftfeuchtigkeit 1"
 #define STR8740_TEXT "Raumtemperatur 1"
 #define STR8741_TEXT "Raumsollwert 1"
 #define STR8742_TEXT "Raumtemperatur 1 Modell"
