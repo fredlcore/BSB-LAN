@@ -193,7 +193,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_DEVICE_TEXT "Device ID"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
-#define CF_UDP_LOGGING_TEXT "Enable UDP Logging"
+#define CF_LOGMODE_TEXT "Logging mode"
 #define CF_CHECKUPDATE_TEXT "Check for updates"
 #define CF_RGT1_SENSOR_TEXT "RU1/PPS temperature sensor parameter"
 #define CF_RGT2_SENSOR_TEXT "RU2 temperature sensor parameter"
@@ -488,6 +488,10 @@
 #define ENUM_BUS_PPS_MODE_QAA "as room unit"
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
+
+#define ENUM_LOGGER_MODE_01_TEXT "Write to SD card"
+#define ENUM_LOGGER_MODE_02_TEXT "Send to MQTT broker"
+#define ENUM_LOGGER_MODE_04_TEXT "Send to UDP"
 
 #define ENUM8000_04_TEXT "Manual control active"
 #define ENUM8000_11_TEXT "Overrun active"

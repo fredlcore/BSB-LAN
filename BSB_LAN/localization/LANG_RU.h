@@ -235,7 +235,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Пароль"
 #define CF_MQTT_DEVICE_TEXT "Идентификатор устройства"
 #define CF_MQTT_TOPIC_TEXT "Префикс темы"
-#define CF_UDP_LOGGING_TEXT "Включить передачу параметров через протокол UDP"
+#define CF_LOGMODE_TEXT "Способы журналирования значений"
 #define CF_CHECKUPDATE_TEXT "Проверять обновления"
 #define CF_RGT1_SENSOR_TEXT "Номера программ датчиков температуры для RGT1/PPS"
 #define CF_RGT2_SENSOR_TEXT "Номера программ датчиков температуры для RGT2"
@@ -1794,6 +1794,10 @@
 
 #define ENUM_WRITE_ENG_TEXT "Вкл. (Инженерные)"
 #define ENUM_WRITE_OEM_TEXT "Вкл. (Инженерные + OEM)"
+
+#define ENUM_LOGGER_MODE_01_TEXT "Запись на SD-карту"
+#define ENUM_LOGGER_MODE_02_TEXT "Отправка брокеру MQTT"
+#define ENUM_LOGGER_MODE_04_TEXT "Отправка через UDP"
 
 #define ENUM20_01_TEXT "Английский"
 #define ENUM20_02_TEXT "Немецкий"

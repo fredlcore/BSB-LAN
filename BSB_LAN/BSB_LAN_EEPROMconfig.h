@@ -75,7 +75,7 @@ typedef enum{
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (MQTT port)
-  CF_UDP_LOGGING, // Size: 1 byte. UDP Logging: 0 - disabled, 1 - enabled
+  CF_LOGMODE, // Size: 1 byte. Bitwise value. Logging: 0 - disabled, 1 - SD card logging
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -86,7 +86,8 @@ typedef enum {
   CPI_NOTHING,
   CPI_TEXT, // general text field
   CPI_SWITCH,
-  CPI_DROPDOWN
+  CPI_DROPDOWN,
+  CPI_CHECKBOXES
 } cpi_params;
 
 //according to var_type in configuration_struct
@@ -117,8 +118,7 @@ typedef enum {
   CCAT_LOGGING,
   CCAT_24HAVG,
   CCAT_RGT_EMUL,
-  CCAT_BMEBUS,
-  CCAT_UDPL
+  CCAT_BMEBUS
 } ccat_params;
 
 
@@ -126,7 +126,7 @@ typedef struct {
 	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
   uint8_t version; //config version which can manage this parameter
   uint8_t category;	// for grouping configuration options (cdt_params)
-  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown
+  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown, 4 - bitwise (checkboxes)
   uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
   uint8_t flags; // options flags: 1 - basic option, 2 - advanced option
   const char* desc;	// pointer to text to be displayed for option - is text length necessary if we just read until NULL?
@@ -201,9 +201,9 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
-  {CF_UDP_LOGGING,      10,CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_UDP_LOGGING_TXT, sizeof(EnableUDPLogging)}, //immediately apply
 
 #endif
+  {CF_LOGMODE,          10,CCAT_LOGGING,  CPI_CHECKBOXES, CDT_BYTE,          OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
   {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
   {CF_LOGCURRVALUES,    1, CCAT_LOGGING,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},//immediately apply

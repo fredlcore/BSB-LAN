@@ -2578,7 +2578,7 @@ int returnENUMID4ConfigOption(uint8_t id) {
       i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
       break;
     case CF_DEBUG:
-    i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      i=findLine(65530,0,NULL); //return ENUM_DEBUG
       break;
     case CF_MQTT:
       i=findLine(65529,0,NULL); //return ENUM_MQTT
@@ -2588,6 +2588,9 @@ int returnENUMID4ConfigOption(uint8_t id) {
       break;
     case CF_PPS_MODE:
       i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      break;
+    case CF_LOGMODE:
+      i=findLine(65526,0,NULL); //return ENUM_PPS_MODE
       break;
     default:
       i = -1;
@@ -2720,6 +2723,8 @@ void printMAXlistToWebClient(byte *variable, uint16_t size) {
 void generateWebConfigPage(boolean printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   if(!printOnly){
+    //This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
+    printToWebClient(PSTR("<script>function bvc(e,v){o=e.closest('div').querySelector('input');n=Number(o.value);n&v?p=n-v:p=n+v;o.value=p}</script>"));
     printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
     if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
     printToWebClient(PSTR("/CI\">"));
@@ -2771,11 +2776,14 @@ void generateWebConfigPage(boolean printOnly) {
            printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})))*'"));
            break;
          }
-       printToWebClient(PSTR(" VALUE='"));
+       printToWebClient(PSTR(" value='"));
        break;
        case CPI_SWITCH:
        case CPI_DROPDOWN:
-       printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+          printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+       break;
+       case CPI_CHECKBOXES:
+          printFmtToWebClient(PSTR("<div><input type=hidden id='option_%d' name='option_%d' value='%d'>\r\n"), cfg.id + 1, cfg.id + 1, (int)variable[0]);
        break;
        default: break;
      }
@@ -2801,6 +2809,14 @@ void generateWebConfigPage(boolean printOnly) {
            }
            printConfigWebPossibleValues(i, (uint16_t)variable[0], printOnly);
            break;}
+         case CPI_CHECKBOXES:{
+           int i = returnENUMID4ConfigOption(cfg.id);
+           if (i > 0) {
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
+             listEnumValues(enumstr, enumstr_len, PSTR("<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,"), PSTR(")\">"), PSTR(")\" checked>"), PSTR("</label>"), NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS, DO_NOT_PRINT_DISABLED_VALUE);
+           }
+         break;}
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
@@ -2858,6 +2874,7 @@ void generateWebConfigPage(boolean printOnly) {
        case CPI_TEXT: printToWebClient(PSTR("'>")); break;
        case CPI_SWITCH:
        case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
+       case CPI_CHECKBOXES: printToWebClient(PSTR("</div>"));break;
        default: break;
      }
    } else {
@@ -2933,6 +2950,7 @@ void generateJSONwithConfig() {
            printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
            printConfigJSONPossibleValues(i);
            break;}
+         case CPI_CHECKBOXES:
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
@@ -7048,7 +7066,7 @@ void setup() {
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
-  registerConfigVariable(CF_UDP_LOGGING, (byte *)&EnableUDPLogging);
+  registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (DEFAULT_FLAG & FL_SW_CTL_RONLY) {
     registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
   }

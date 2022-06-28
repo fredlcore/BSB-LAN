@@ -173,8 +173,8 @@ char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" f
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
 char MQTTDeviceID[32] = "BSB-LAN";
 
-// Logging through UDP
-bool EnableUDPLogging = true; //true - enable UDP logging, false - disable logging
+// Logging mode
+byte LoggingMode = 1; //0 - disabled, 1 - to SD card, 2 - to MQTT, 4 - to UDP
 
 
 

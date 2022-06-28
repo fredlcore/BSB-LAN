@@ -927,7 +927,7 @@ const char CF_MQTT_USERNAME_TXT[] PROGMEM = CF_MQTT_USERNAME_TEXT;
 const char CF_MQTT_PASSWORD_TXT[] PROGMEM = CF_MQTT_PASSWORD_TEXT;
 const char CF_MQTT_TOPIC_TXT[] PROGMEM = CF_MQTT_TOPIC_TEXT;
 const char CF_MQTT_DEVICE_TXT[] PROGMEM = CF_MQTT_DEVICE_TEXT;
-const char CF_UDP_LOGGING_TXT[] PROGMEM = CF_UDP_LOGGING_TEXT;
+const char CF_LOGMODE_TXT[] PROGMEM = CF_LOGMODE_TEXT;
 const char CF_CHECKUPDATE_TXT[] PROGMEM = CF_CHECKUPDATE_TEXT;
 const char CF_MDNS_HOSTNAME_TXT[] PROGMEM = CF_MDNS_HOSTNAME_TEXT;
 const char CF_NUM_TXT[] PROGMEM = CF_NUM_TEXT;
@@ -8279,6 +8279,12 @@ const char ENUM_VOLTAGEONOFF[] PROGMEM_LATEST = {
 "\x00 " "0 " UNIT_VOLT_TEXT "\0"
 "\x01 " "230 " UNIT_VOLT_TEXT
 };
+//TODO: Move to translations
+const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
+"\x01\x01 " ENUM_LOGGER_MODE_01_TEXT "\0"
+"\x02\x02 " ENUM_LOGGER_MODE_02_TEXT "\0"
+"\x04\x04 " ENUM_LOGGER_MODE_04_TEXT
+};
 
 /*
  * Bei der Änderung des Komfortsollwertes durch einfaches Drehen des Rades
@@ -13909,7 +13915,8 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 
 //{CMD_END,     CAT_UNKNOWN,          VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
-  //Prognr 65527 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+  //Prognr 65526 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+{0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65526, STR65535, sizeof(ENUM_LOGGER_MODE),  ENUM_LOGGER_MODE,   DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65527, STR65535, sizeof(ENUM_PPS_MODE),     ENUM_PPS_MODE,      DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65528, STR65535, sizeof(ENUM_WRITEMODE),    ENUM_WRITEMODE,     DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  CAT_UNKNOWN,          VT_ENUM,          65529, STR65535, sizeof(ENUM_MQTT),         ENUM_MQTT,          DEFAULT_FLAG, DEV_ALL}, //
