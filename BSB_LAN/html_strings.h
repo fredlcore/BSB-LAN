@@ -144,8 +144,8 @@ const char graph_html[] PROGMEM_LATE =
         "point:{show:false},"
         "axis:{x:{type:'timeseries',tick:{count:3,format:f}}},"
         "zoom:{enabled:true},"
-        "size:{height:window.innerHeight-30},"
-        "onresize:function(){c.resize({height:window.innerHeight-30})}"
+        "size:{height:window.innerHeight-40},"
+        "onresize:function(){c.resize({height:window.innerHeight-40})}"
       "});"
     "});"
   "</script>";
