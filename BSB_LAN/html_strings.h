@@ -104,6 +104,7 @@ const char graph_html[] PROGMEM_LATE =
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
   // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
   // [...]
+  "</td></tr></tbody></table>" // close table opened by surrounding html to escape its width limitation
   "<div id='c3'></div>"
   "<style>"
     "svg,.c3-tooltip{font:10px sans-serif}"
@@ -144,11 +145,13 @@ const char graph_html[] PROGMEM_LATE =
         "point:{show:false},"
         "axis:{x:{type:'timeseries',tick:{count:3,format:f}}},"
         "zoom:{enabled:true},"
-        "size:{height:window.innerHeight-40},"
-        "onresize:function(){c.resize({height:window.innerHeight-40})}"
+        "size:{height:window.innerHeight-20},"
+        "onresize:function(){c.resize({height:window.innerHeight-20})}"
       "});"
     "});"
-  "</script>";
+  "</script>"
+  "<table><tbody><tr><td>" // re-open table for surrounding html
+  ;
 #else // #ifdef USE_ADVANCED_PLOT_LOG_FILE
 /*
   Based on the awesome tutorials at
