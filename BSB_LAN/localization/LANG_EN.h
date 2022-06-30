@@ -172,7 +172,6 @@
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "Logging enabled"
 #define CF_LOGCURRINTERVAL_TEXT "Interval (seconds)"
-#define CF_LOGAVERAGES_TEXT "Calculation"
 #define CF_PROGLIST_TEXT "Parameters"
 #define CF_DEVICES_TEXT "Devices"
 #define CF_DHCP_TEXT "DHCP usage"
@@ -489,9 +488,11 @@
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 
-#define ENUM_LOGGER_MODE_01_TEXT "Write to SD card"
-#define ENUM_LOGGER_MODE_02_TEXT "Send to MQTT broker"
-#define ENUM_LOGGER_MODE_04_TEXT "Send to UDP"
+#define ENUM_LOGMODE_01_TEXT "Write to SD card"
+#define ENUM_LOGMODE_02_TEXT "Write 24h avg to SD card"
+#define ENUM_LOGMODE_04_TEXT "Publish to IPWE"
+#define ENUM_LOGMODE_08_TEXT "Send to MQTT broker"
+#define ENUM_LOGMODE_10_TEXT "Send to UDP"
 
 #define ENUM8000_04_TEXT "Manual control active"
 #define ENUM8000_11_TEXT "Overrun active"

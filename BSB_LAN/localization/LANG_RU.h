@@ -211,7 +211,6 @@
 #define CF_LOGTELEGRAM_TEXT "Журналировать телеграммы в journal.txt"
 #define CF_LOGCURRVALUES_TEXT "Записывать в datalog.txt текущие значения программ"
 #define CF_LOGCURRINTERVAL_TEXT "Интервал журнала (datalog.txt, MQTT), секунд"
-#define CF_LOGAVERAGES_TEXT "Подсчёт значений"
 #define CF_DHCP_TEXT "Использовать DHCP"
 #define CF_IPADDRESS_TEXT "IP адрес"
 #define CF_TRUSTEDIPADDRESS_TEXT "Доверенный IP адрес"
@@ -1795,9 +1794,11 @@
 #define ENUM_WRITE_ENG_TEXT "Вкл. (Инженерные)"
 #define ENUM_WRITE_OEM_TEXT "Вкл. (Инженерные + OEM)"
 
-#define ENUM_LOGGER_MODE_01_TEXT "Запись на SD-карту"
-#define ENUM_LOGGER_MODE_02_TEXT "Отправка брокеру MQTT"
-#define ENUM_LOGGER_MODE_04_TEXT "Отправка через UDP"
+#define ENUM_LOGMODE_01_TEXT "Запись на SD-карту"
+#define ENUM_LOGMODE_02_TEXT "Запись среднесуточных на SD-карту"
+#define ENUM_LOGMODE_04_TEXT "Публикация в IPWE"
+#define ENUM_LOGMODE_08_TEXT "Отправка брокеру MQTT"
+#define ENUM_LOGMODE_10_TEXT "Отправка через UDP"
 
 #define ENUM20_01_TEXT "Английский"
 #define ENUM20_02_TEXT "Немецкий"

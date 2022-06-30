@@ -203,7 +203,6 @@
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Logging aktiv"
 #define CF_LOGCURRINTERVAL_TEXT "Logintervall (Sekunden)"
-#define CF_LOGAVERAGES_TEXT "Berechnung"
 #define CF_PROGLIST_TEXT "Parameter"
 #define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
@@ -2218,9 +2217,11 @@
 #define ENUM_WRITE_ENG_TEXT "Ein (Standard)"
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"
 
-#define ENUM_LOGGER_MODE_01_TEXT "Write to SD card"
-#define ENUM_LOGGER_MODE_02_TEXT "Send to MQTT broker"
-#define ENUM_LOGGER_MODE_04_TEXT "Send to UDP"
+#define ENUM_LOGMODE_01_TEXT "Write to SD card"
+#define ENUM_LOGMODE_02_TEXT "Write 24h avg to SD card"
+#define ENUM_LOGMODE_04_TEXT "Publish to IPWE"
+#define ENUM_LOGMODE_08_TEXT "Send to MQTT broker"
+#define ENUM_LOGMODE_10_TEXT "Send to UDP"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"

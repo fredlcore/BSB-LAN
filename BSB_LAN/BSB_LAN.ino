@@ -2299,17 +2299,8 @@ printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
 #ifdef AVERAGES
-  if (logAverageValues) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
     printToWebClient(CF_LOGAVERAGES_TXT);
-/*
-    printToWebClient(PSTR(": "));
-#if defined(__AVR__)
-    printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF),logAverageValues,0);
-#else
-    printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF),logAverageValues,0);
-#endif
-    printToWebClient(decodedTelegram.enumdescaddr);
-*/
     printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(CF_PROGLIST_TXT);
     printToWebClient(PSTR(": <BR>\r\n"));
@@ -2325,7 +2316,7 @@ printToWebClient(PSTR("<BR>\r\n"));
   #ifdef LOGGER
   printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \r\n%d"), log_interval);
   printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
-  printyesno(logCurrentValues);
+  printyesno(LoggingMode & CF_LOGMODE_SD_CARD);
   printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
@@ -4465,7 +4456,7 @@ void SetDateTime() {
 uint16_t setPPS(uint8_t pps_index, int16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
-    if (logCurrentValues) {
+    if (LoggingMode & CF_LOGMODE_SD_CARD) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] == 15000 + pps_index) {
           log_parameter = log_parameters[i];
@@ -4869,7 +4860,7 @@ void loop() {
         if (u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
 // IPWE START
 #ifdef IPWE
-        if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
+        if ((LoggingMode & CF_LOGMODE_IPWE) && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
           Ipwe();
           break;
         }
@@ -5672,7 +5663,7 @@ void loop() {
 
 //averages
 #ifdef AVERAGES
-            if (logAverageValues) {
+            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
               printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
@@ -5690,7 +5681,7 @@ void loop() {
 #endif
 // logged parameters
           #ifdef LOGGER
-            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), logCurrentValues, log_interval);
+            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode & CF_LOGMODE_SD_CARD, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
@@ -6181,12 +6172,12 @@ void loop() {
             case 'C':
               if (p[3]=='=') {
                 if (p[4]=='1') {
-                  logCurrentValues = true;
+                  LoggingMode |= CF_LOGMODE_SD_CARD;
                 } else {
-                  logCurrentValues = false;
+                  LoggingMode &= ~CF_LOGMODE_SD_CARD;
                 }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-                printyesno(logCurrentValues) ;
+                printyesno(LoggingMode & CF_LOGMODE_SD_CARD) ;
               }
               break;
             case 'B':
@@ -6383,12 +6374,12 @@ void loop() {
 #ifdef AVERAGES
             if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
               if (range[3]=='1') {                // Enable 24h average calculation temporarily
-                logAverageValues = true;
+                LoggingMode |= CF_LOGMODE_SD_CARD_24AVG;
               } else {                            // Disable 24h average calculation temporarily
-                logAverageValues = false;
+                LoggingMode &= ~CF_LOGMODE_SD_CARD_24AVG;
               }
             }
-            if (logAverageValues) {
+            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
               if (range[1]=='=') {
                 char* avg_token = strtok(range,"=,");  // drop everything before "="
                 avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
@@ -6543,7 +6534,7 @@ void loop() {
 #else
   {
 #endif
-    if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
+    if (mqtt_broker_ip_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { //Address was set and MQTT was enabled
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
@@ -6555,13 +6546,13 @@ void loop() {
             mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
-        if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
+        if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
           printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
         }
       }
     }
-    if (mqtt_mode == 0) {
+    if (!(LoggingMode & CF_LOGMODE_MQTT)) {
       mqtt_disconnect();
     }
   }
@@ -6576,7 +6567,7 @@ void loop() {
   uint32_t freespace = 0;
   freespace = SD.vol()->freeClusterCount();
 #endif
-  if (logCurrentValues && freespace > MINIMUM_FREE_SPACE_ON_SD) {
+  if ((LoggingMode & CF_LOGMODE_SD_CARD) && freespace > MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
@@ -6619,7 +6610,7 @@ void loop() {
 
 // Calculate 24h averages
 #ifdef AVERAGES
-  if (logAverageValues) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
     if (millis() / 60000 != lastAvgTime) {
       if (avgCounter == 1441) {
         for (int i=0; i<numAverages; i++) {
@@ -7031,9 +7022,7 @@ void setup() {
   registerConfigVariable(CF_DEST_BSBLPBADDR, (byte *)&dest_address);
   registerConfigVariable(CF_PPS_MODE, (byte *)&pps_write);
   registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
-  registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
   registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
-  registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
   registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
   registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
 #ifdef WEBCONFIG
@@ -7056,7 +7045,6 @@ void setup() {
   registerConfigVariable(CF_BMEBUS, (byte *)&BME_Sensors);
   registerConfigVariable(CF_OTA_UPDATE, (byte *)&enable_ota_update);
   registerConfigVariable(CF_MDNS_HOSTNAME, (byte *)mDNS_hostname);
-  registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
   registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
   registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
   registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
