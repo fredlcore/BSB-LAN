@@ -51,7 +51,7 @@
    printToWebClient(PSTR("</a></td>"));
    printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   if (!logCurrentValues) {
+   if (!(LoggingMode & CF_LOGMODE_SD_CARD_24AVG)) {
      printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
    } else {
      printToWebClient(PSTR("<a href='/"));
