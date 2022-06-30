@@ -134,7 +134,7 @@ const char graph_html[] PROGMEM_LATE =
       "a.push(r);"
       // plot:
       "let f='%d.%m.%Y %H:%M';"
-      "c3.generate({"
+      "let c=c3.generate({"
         "bindto:'#c3',"
         "data:{"
           "json:a,"
@@ -144,7 +144,8 @@ const char graph_html[] PROGMEM_LATE =
         "point:{show:false},"
         "axis:{x:{type:'timeseries',tick:{count:3,format:f}}},"
         "zoom:{enabled:true},"
-        "size:{height:500}"
+        "size:{height:window.innerHeight-30},"
+        "onresize:function(){c.resize({height:window.innerHeight-30})}"
       "});"
     "});"
   "</script>";
