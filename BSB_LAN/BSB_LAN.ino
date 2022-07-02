@@ -2648,7 +2648,7 @@ void applyingConfig() {
 
 }
 
-void printConfigWebPossibleValues(int i, uint16_t temp_value, boolean printCurrentSelectionOnly) {
+void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentSelectionOnly) {
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
   if(printCurrentSelectionOnly){
@@ -2711,7 +2711,7 @@ void printMAXlistToWebClient(byte *variable, uint16_t size) {
   }
 }
 
-void generateWebConfigPage(boolean printOnly) {
+void generateWebConfigPage(bool printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   if(!printOnly){
     //This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
@@ -2884,11 +2884,13 @@ void generateWebConfigPage(boolean printOnly) {
 
 
 #if defined(JSONCONFIG)
-void printConfigJSONPossibleValues(int i) {
+void printConfigJSONPossibleValues(int i, bool its_a_bits_enum) {
   printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0,
+    its_a_bits_enum?PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS:
+    PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
   printToWebClient(PSTR("\r\n      ]"));
 }
 
@@ -2939,14 +2941,14 @@ void generateJSONwithConfig() {
                break;
            }
            printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
-           printConfigJSONPossibleValues(i);
+           printConfigJSONPossibleValues(i, false);
            break;}
          case CPI_CHECKBOXES:
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
              printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
-             printConfigJSONPossibleValues(i);
+             printConfigJSONPossibleValues(i, cfg.input_type == CPI_CHECKBOXES);
            }
            break;}
          }
@@ -2966,7 +2968,7 @@ void generateJSONwithConfig() {
            }
            if (i > 0) {
              printFmtToWebClient(PSTR("%u\",\r\n"), ((uint16_t *)variable)[0]);
-             printConfigJSONPossibleValues(i);
+             printConfigJSONPossibleValues(i, false);
            }
            break;}
          }
@@ -7254,7 +7256,7 @@ void setup() {
       bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
       bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
       bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-      boolean sensor_found = true;
+      bool sensor_found = true;
       switch(bme[f].init()){
         case 0x58: printToDebug(PSTR("BMP280")); break;
         case 0x60: printToDebug(PSTR("BME280")); break;
