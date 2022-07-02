@@ -203,7 +203,6 @@ UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA Modell";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bustelegramme";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Logging aktiv";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
-UIStrings["CF_LOGAVERAGES_TEXT"] = "Berechnung";
 UIStrings["CF_PROGLIST_TEXT"] = "Parameter";
 UIStrings["CF_DEVICES_TEXT"] = "Geräte";
 UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";
@@ -227,8 +226,9 @@ UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic Präfix";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
+UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
-UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1 Temperatursensor Parameter";
+UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1/PPS Temperatursensor Parameter";
 UIStrings["CF_RGT2_SENSOR_TEXT"] = "RGT2 Temperatursensor Parameter";
 UIStrings["CF_RGT3_SENSOR_TEXT"] = "RGT3 Temperatursensor Parameter";
 UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "TWW-Push Taste: Pin";
@@ -242,6 +242,8 @@ UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
 UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nummer";
 UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nummer";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Erweiterte Einstellungen anzeigen";
+UIStrings["CF_ENABLE_BLE_TEXT"] = "Query sensors";
+UIStrings["CF_BLE_SENSORS_MACS_TEXT"] = "List sensors MACs for reading";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
@@ -256,6 +258,7 @@ UIStrings["CAT_LOGGING_TEXT"] = "Logging";
 UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "RGT Emulation";
 UIStrings["CAT_BMEBUS_TEXT"] = "BME280 sensors";
+UIStrings["CAT_BLEBUS_TEXT"] = "BLE sensors";
 
 UIStrings["STR0_TEXT"] = "Datum/Zeit";
 UIStrings["STR1_TEXT"] = "Uhrzeit";
@@ -2203,6 +2206,11 @@ UIStrings["STR20502_TEXT"] = "MAX! Sensor Soll-Temperatur";
 UIStrings["STR20503_TEXT"] = "MAX! Sensor Ventilöffnung";
 UIStrings["STR20700_TEXT"] = "custom_float";
 UIStrings["STR20800_TEXT"] = "custom_long";
+UIStrings["STR20900_TEXT"] = "BLE Sensor ID";
+UIStrings["STR20901_TEXT"] = "BLE Sensor Temperatur";
+UIStrings["STR20902_TEXT"] = "BLE Sensor Luftfeuchtigkeit";
+UIStrings["STR20903_TEXT"] = "BLE Sensor Pressure";
+UIStrings["STR20904_TEXT"] = "BLE Battery voltage";
 
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
@@ -2217,6 +2225,12 @@ UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Rich JSON";
 
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "Ein (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";
+
+UIStrings["ENUM_LOGMODE_01_TEXT"] = "Write to SD card";
+UIStrings["ENUM_LOGMODE_02_TEXT"] = "Write 24h avg to SD card";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Publish to IPWE";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to MQTT broker";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Send to UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";

@@ -211,7 +211,6 @@ UIStrings["CF_PPS_WRITE_TEXT"] = "Режим работы PPS";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Журналировать телеграммы в journal.txt";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Записывать в datalog.txt текущие значения программ";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Интервал журнала (datalog.txt, MQTT), секунд";
-UIStrings["CF_LOGAVERAGES_TEXT"] = "Подсчёт значений";
 UIStrings["CF_DHCP_TEXT"] = "Использовать DHCP";
 UIStrings["CF_IPADDRESS_TEXT"] = "IP адрес";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Доверенный IP адрес";
@@ -230,12 +229,14 @@ UIStrings["CF_PROGLIST_TEXT"] = "Список программ для обраб
 UIStrings["CF_MAX_IPADDRESS_TEXT"] = "IP-адрес устройства CUNO/CUNX/мод. MAX!Cube";
 UIStrings["CF_WRITEMODE_TEXT"] = "Запись параметров в систему";
 UIStrings["CF_MQTT_IPADDRESS_TEXT"] = "IP-адрес брокера MQTT";
+UIStrings["CF_MQTT_PORT_TEXT"] = "Порт брокера MQTT";
 UIStrings["CF_MQTT_USERNAME_TEXT"] = "Имя пользователя";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Пароль";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Идентификатор устройства";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Префикс темы";
+UIStrings["CF_LOGMODE_TEXT"] = "Способы журналирования значений";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Проверять обновления";
-UIStrings["CF_RGT1_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT1";
+UIStrings["CF_RGT1_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT1/PPS";
 UIStrings["CF_RGT2_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT2";
 UIStrings["CF_RGT3_SENSOR_TEXT"] = "Номера программ датчиков температуры для RGT3";
 UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "Кнопка принудительного включения ГВС подключена к выводу";
@@ -259,7 +260,7 @@ UIStrings["CAT_MAX_TEXT"] = "Устройства MAX!";
 UIStrings["CAT_LOGGING_TEXT"] = "Журналирование";
 UIStrings["CAT_24HAVG_TEXT"] = "Среднесуточные значения";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "Эмулятор комнатного термостата";
-
+UIStrings["CAT_UDPL_TEXT"] = "Передача через UDP";
 
 UIStrings["STR0_TEXT"] = "Дата/время";
 UIStrings["STR1_TEXT"] = "Часы/минуты";
@@ -1793,6 +1794,12 @@ UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Подробный JSON";
 
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "Вкл. (Инженерные)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Вкл. (Инженерные + OEM)";
+
+UIStrings["ENUM_LOGMODE_01_TEXT"] = "Запись на SD-карту";
+UIStrings["ENUM_LOGMODE_02_TEXT"] = "Запись среднесуточных на SD-карту";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Публикация в IPWE";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Отправка брокеру MQTT";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Отправка через UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "Английский";
 UIStrings["ENUM20_02_TEXT"] = "Немецкий";
