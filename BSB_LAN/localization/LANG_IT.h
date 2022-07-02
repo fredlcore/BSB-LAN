@@ -1289,6 +1289,7 @@
 #define STR8731_TEXT "Valvola miscelatrice CR1 aperto Y1"
 #define STR8732_TEXT "Valvola miscelatrice CR1 chiuso Y2"
 #define STR8735_TEXT "Numero giri pompa calore 1"
+#define STR8739_TEXT "Umidità ambiente 1"
 #define STR8740_TEXT "Temperatura ambiente 1"
 #define STR8741_TEXT "Setpoint ambiente 1"
 #define STR8742_TEXT "Modello della temperatura ambiente 1"

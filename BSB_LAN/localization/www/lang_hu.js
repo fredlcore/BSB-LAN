@@ -895,6 +895,7 @@ UIStrings["STR8730_TEXT"] = "FK1 szivattyú Q2";
 UIStrings["STR8731_TEXT"] = "FK1 keverőszelep 1 nyit";
 UIStrings["STR8732_TEXT"] = "FK1 keverőszelep 2 zár";
 UIStrings["STR8735_TEXT"] = "FK1 szivattyú fordulatszáma";
+UIStrings["STR8739_TEXT"] = "Környezeti páratartalom 1";
 UIStrings["STR8740_TEXT"] = "FK1 Kezelőegységen mért szobahőmérséklet";
 UIStrings["STR8741_TEXT"] = "FK1 Kezelőegységen beállított ideiglenes hőmérséklet";
 UIStrings["STR8742_TEXT"] = "FK1 Szobahőmérséklet modell";

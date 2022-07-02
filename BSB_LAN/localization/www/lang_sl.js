@@ -239,6 +239,7 @@ UIStrings["STR8530_TEXT"] = "Počet hod. solárneho zisku";
 UIStrings["STR8700_TEXT"] = "Outside temp sensor local";
 UIStrings["STR8703_TEXT"] = "Tlmená vonkajšia teplota";
 UIStrings["STR8704_TEXT"] = "Kombinovaná vonkajšia T";
+UIStrings["STR8739_TEXT"] = "Okolitá vlhkosť 1 aktuálna hodnota";
 UIStrings["STR8740_TEXT"] = "Room temp 1 actual value";
 UIStrings["STR8741_TEXT"] = "Room temp setpoint current";
 UIStrings["STR8743_TEXT"] = "Teplota vstupu 1";

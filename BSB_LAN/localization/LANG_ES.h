@@ -239,6 +239,7 @@
 #define STR8700_TEXT "Sonda local de Temperatura Exterior"
 #define STR8703_TEXT "Temperatura Exterior Atenuada"
 #define STR8704_TEXT "Temperatura Exterior Compuesta"
+#define STR8739_TEXT "Humedad ambiente 1"
 #define STR8740_TEXT "Valor Actual Temperatura Ambiente 1"
 #define STR8741_TEXT "Consigna Resultante de la Temperatura Ambiente"
 #define STR8743_TEXT "Valor actual Temp.Impulsión Cto.Calefac. 1"

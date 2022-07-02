@@ -243,6 +243,7 @@
 #define STR8703_TEXT "Température extérieure résultante"
 #define STR8704_TEXT "Température extérieure mélangée"
 #define STR8721_TEXT "Température ambiante"
+#define STR8739_TEXT "Humidité ambiante 1"
 #define STR8740_TEXT "Température ambiante 1"
 #define STR8741_TEXT "Consigne actuelle de température Ambiante"
 #define STR8743_TEXT "Température de départ circuit de chauffe 1"

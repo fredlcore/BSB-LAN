@@ -3203,6 +3203,7 @@ const char STR8730[] PROGMEM = STR8730_TEXT;
 const char STR8731[] PROGMEM = STR8731_TEXT;
 const char STR8732[] PROGMEM = STR8732_TEXT;
 const char STR8735[] PROGMEM = STR8735_TEXT;
+const char STR8739[] PROGMEM = STR8739_TEXT;
 const char STR8740[] PROGMEM = STR8740_TEXT;
 const char STR8741[] PROGMEM = STR8741_TEXT;
 const char STR8742[] PROGMEM = STR8742_TEXT;
@@ -12462,6 +12463,7 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {0x053D09A6,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8731,  STR8731,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Heizkreismischer Auf Y1
 {0x053D09A7,  CAT_DIAG_VERBRAUCHER, VT_ONOFF,         8732,  STR8732,  sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY,     DEV_ALL}, // [0] - Diagnose Verbraucher - Heizkreismischer Zu Y2
 {0x213D04A7,  CAT_DIAG_VERBRAUCHER, VT_PERCENT,       8735,  STR8735,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Drehzahl Heizkreispumpe 1
+{0x053D1A87,  CAT_DIAG_VERBRAUCHER, VT_PERCENT_WORD1, 8739,  STR8739,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Luftfeuchtigkeit 1
 {0x2D3D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_021_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
 {0x053D051E,  CAT_DIAG_VERBRAUCHER, VT_TEMP,          8740,  STR8740,  0,                    NULL,         FL_RONLY,     DEV_023_ALL}, // [°C ] - Diagnose Verbraucher - Raumtemperatur 1
