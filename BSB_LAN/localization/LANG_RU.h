@@ -1802,9 +1802,8 @@
 
 #define ENUM_LOGMODE_01_TEXT "Запись на SD-карту"
 #define ENUM_LOGMODE_02_TEXT "Запись среднесуточных на SD-карту"
-#define ENUM_LOGMODE_04_TEXT "Публикация в IPWE"
-#define ENUM_LOGMODE_08_TEXT "Отправка брокеру MQTT"
-#define ENUM_LOGMODE_10_TEXT "Отправка через UDP"
+#define ENUM_LOGMODE_04_TEXT "Отправка брокеру MQTT"
+#define ENUM_LOGMODE_08_TEXT "Отправка через UDP"
 
 #define ENUM20_01_TEXT "Английский"
 #define ENUM20_02_TEXT "Немецкий"

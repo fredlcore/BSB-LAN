@@ -177,7 +177,8 @@ byte LoggingMode = 1; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMO
 
 // Compile IPWE extension
 #define IPWE
-// Parameters to be displayed in IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
+bool enable_ipwe = false;  // true - activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
+// Parameters to be displayed in IPWE extension
 int ipwe_parameters[40] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur

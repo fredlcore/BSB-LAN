@@ -4862,7 +4862,7 @@ void loop() {
         if (u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
 // IPWE START
 #ifdef IPWE
-        if ((LoggingMode & CF_LOGMODE_IPWE) && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
+        if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
           Ipwe();
           break;
         }
@@ -7047,6 +7047,7 @@ void setup() {
   registerConfigVariable(CF_BMEBUS, (byte *)&BME_Sensors);
   registerConfigVariable(CF_OTA_UPDATE, (byte *)&enable_ota_update);
   registerConfigVariable(CF_MDNS_HOSTNAME, (byte *)mDNS_hostname);
+  registerConfigVariable(CF_IPWE, (byte *)&enable_ipwe);
   registerConfigVariable(CF_IPWEVALUESLIST, (byte *)ipwe_parameters);
   registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
   registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);

@@ -1,8 +1,7 @@
 #define CF_LOGMODE_SD_CARD 1
 #define CF_LOGMODE_SD_CARD_24AVG 2
-#define CF_LOGMODE_IPWE 4
-#define CF_LOGMODE_MQTT 8
-#define CF_LOGMODE_UDP 16
+#define CF_LOGMODE_MQTT 4
+#define CF_LOGMODE_UDP 8
 
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
@@ -20,7 +19,6 @@ typedef enum{
   CF_PPS_MODE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
   CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
   CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
   CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
 // Version 2 (Web-config)
@@ -237,6 +235,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(pps_values)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
+  {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(enable_ipwe)},//immediately apply
   {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_VERBOSE_TXT, sizeof(verbose)},

@@ -8283,14 +8283,11 @@ const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
 #ifdef AVERAGES
 "\0\x02\x02 " ENUM_LOGMODE_02_TEXT
 #endif
-#ifdef IPWE
+#ifdef MQTT
 "\0\x04\x04 " ENUM_LOGMODE_04_TEXT
 #endif
-#ifdef MQTT
-"\0\x08\x08 " ENUM_LOGMODE_08_TEXT
-#endif
 //#ifdef UDP
-"\0\x10\x10 " ENUM_LOGMODE_10_TEXT
+"\0\x08\x08 " ENUM_LOGMODE_08_TEXT
 //#endif
 
 };
