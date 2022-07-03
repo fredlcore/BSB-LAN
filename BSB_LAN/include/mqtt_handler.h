@@ -69,6 +69,7 @@ void mqtt_sendtoBroker(int param) {
     MQTTPayload.concat(tbuf);
     if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+//---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
       MQTTPayload.concat(String(build_pvalstr(0)));
     } else {
       MQTTPayload.concat(String(decodedTelegram.value));
@@ -77,6 +78,7 @@ void mqtt_sendtoBroker(int param) {
   } else { //plain text
     if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
+//---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
       MQTTPubSubClient->publish(MQTTTopic.c_str(), build_pvalstr(0));
     } else {
       MQTTPubSubClient->publish(MQTTTopic.c_str(), decodedTelegram.value);
