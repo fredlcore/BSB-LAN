@@ -26,3 +26,8 @@ BSB_LAN/scripts/old
 BSB_LAN/scripts/match-vt_types.pl
 BSB_LAN/scripts/compare_levels.pl
 BSB_LAN/scripts/check_lang_doubles.pl
+BSB_LAN/scripts/lpb.sdf
+BSB_LAN/scripts/dump_enumid.pl
+BSB_LAN/scripts/filter-enumtable.pl
+BSB_LAN/scripts/check6.py
+
