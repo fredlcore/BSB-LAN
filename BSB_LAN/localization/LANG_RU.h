@@ -1789,8 +1789,8 @@
 
 #define STR99999_TEXT "НЕИЗВЕСТНАЯ команда"
 
-#define ENUM_BUS_PPS_MODE_PASSIVE "Пассивный"
-#define ENUM_BUS_PPS_MODE_QAA "Как комнатное устройство"
+#define ENUM_PPS_MODE_PASSIVE_TEXT "Пассивный"
+#define ENUM_PPS_MODE_QAA_TEXT "Как комнатное устройство"
 #define ENUM_DEBUG_SERIAL_TEXT "COM-порт"
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
 #define ENUM_MQTT_PLAIN_TEXT "Обычный текст"
