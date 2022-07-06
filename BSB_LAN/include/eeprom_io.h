@@ -14,7 +14,7 @@
 
 uint32_t initConfigTable(uint8_t version) {
   CRC32 crc;
-  if (version == 0xFF) version--; //protection fromm infinite loop
+  if (version == 0xFF) version--; //protection from infinite loop
   // look for parameters vith selected version
   for (uint8_t v = 0; v <= version; v++) {
     //select config parameter
