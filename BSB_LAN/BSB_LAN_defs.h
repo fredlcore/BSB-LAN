@@ -4688,7 +4688,8 @@ const char ENUM780[] PROGMEM_LATEST = {
 };
 const char ENUM832[] PROGMEM_LATEST = {
 "\x00 " ENUM832_00_TEXT "\0"
-"\x01 " ENUM832_01_TEXT
+"\x01 " ENUM832_01_TEXT "\0"
+"\xff " ENUM832_01_TEXT         // FUJITSU
 };
 
 // 843 - Zusätzl' Wirkung TW-Eingang HK1
@@ -5648,6 +5649,7 @@ const char ENUM5890[] PROGMEM_LATEST = {
 "\x22 " ENUM5890_22_TEXT "\0"
 "\x23 " ENUM5890_23_TEXT "\0"
 "\x24 " ENUM5890_24_TEXT "\0"
+"\x25 " ENUM5890_25_TEXT "\0"
 "\x26 " ENUM5890_26_TEXT "\0"
 "\x27 " ENUM5890_27_TEXT "\0"
 "\x28 " ENUM5890_28_TEXT "\0"
@@ -5779,7 +5781,15 @@ const char ENUM5930[] PROGMEM_LATEST = {
 "\x0e " ENUM5930_0e_TEXT "\0" //B13
 "\x0f " ENUM5930_0f_TEXT "\0" //B61
 "\x10 " ENUM5930_10_TEXT "\0" //B63
-"\x11 " ENUM5930_11_TEXT      //B64
+"\x11 " ENUM5930_11_TEXT "\0" //B64
+"\x13 " ENUM5930_13_TEXT "\0" //B3
+"\x14 " ENUM5930_14_TEXT "\0" //B21
+"\x15 " ENUM5930_15_TEXT "\0" //B71
+"\x16 " ENUM5930_16_TEXT "\0" //B81
+"\x17 " ENUM5930_17_TEXT "\0" //B9
+"\x18 " ENUM5930_18_TEXT "\0" //B91
+"\x19 " ENUM5930_19_TEXT "\0" //B92/B84
+"\x1a " ENUM5930_1a_TEXT      //B5
 };
 
 #define ENUM5931 ENUM5930               // Konfiguration - Fühlereingang BX 2
@@ -8510,7 +8520,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_108_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_119_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 {0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_162_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
-
+{0x053D082B,  CAT_ZEITPROG_5,       VT_YESNO,         616,   STR616,   sizeof(ENUM_YESNO),   ENUM_YESNO,   DEFAULT_FLAG, DEV_170_ALL}, // [0] - Zeitprogramm 5 - Standardwerte
 
 // Es gibt 8 Perioden c4..d3 (jeweils Beginn/Ende).
 // Zeile 641 dient nur zur Vorwahl der Perioden auf dem Bedienteil.
