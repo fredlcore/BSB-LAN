@@ -564,9 +564,9 @@ typedef struct {
   uint8_t     category;            // the menu category
   uint8_t     type;                // the message type
   uint16_t    line;                // parameter number
-  const char *desc;                // description test
+  const char  *desc;               // description test
   uint16_t    enumstr_len;         // sizeof enum
-  const char *enumstr;             // enum string
+  const char  *enumstr;            // enum string
   uint8_t     flags;               // e.g. FL_RONLY
   uint8_t     dev_fam;             // device family
   uint8_t     dev_var;             // device variant
