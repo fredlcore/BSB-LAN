@@ -96,7 +96,6 @@
 #undef MENU_TEXT_NVS
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
-#undef MENU_TEXT_NVW
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL

@@ -97,7 +97,6 @@ UIStrings["MENU_TEXT_MOD"] = "Installed modules";
 UIStrings["MENU_TEXT_NVS"] = "Checking for newer version";
 UIStrings["MENU_TEXT_NVA"] = "Newer version found";
 UIStrings["MENU_TEXT_NVN"] = "Current version is up to date";
-UIStrings["MENU_TEXT_NVW"] = "Attention! New version can contain breaking changes that require changes in configuration. Please read the ChangeLog in BSB_LAN.ino carefully!";
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html";
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#51-url-commands";
