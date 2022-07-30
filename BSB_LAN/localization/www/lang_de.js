@@ -185,6 +185,7 @@ UIStrings["MENU_TEXT_MOD"] = "Installierte Module";
 UIStrings["MENU_TEXT_NVS"] = "Überprüfe auf neuere Version";
 UIStrings["MENU_TEXT_NVA"] = "Neuere Version gefunden";
 UIStrings["MENU_TEXT_NVN"] = "Installierte Version ist aktuell.";
+UIStrings["MENU_TEXT_NVW"] = "Achtung! Neue Version kann Änderungen enthalten, die Anpassungen erforderlich machen. Bitte das ChangeLog in der Datei BSB_LAN.ino lesen!";
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html";
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle";
