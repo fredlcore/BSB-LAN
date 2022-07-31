@@ -2208,8 +2208,8 @@ UIStrings["STR20800_TEXT"] = "custom_long";
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
 
-UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "Passiv";
-UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "Als Raumgerät";
+UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "Passiv";
+UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "Als Raumgerät";
 UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "Serial";
 UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
@@ -2221,9 +2221,8 @@ UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";
 
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Write to SD card";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "Write 24h avg to SD card";
-UIStrings["ENUM_LOGMODE_04_TEXT"] = "Publish to IPWE";
-UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to MQTT broker";
-UIStrings["ENUM_LOGMODE_10_TEXT"] = "Send to UDP";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Send to MQTT broker";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";
