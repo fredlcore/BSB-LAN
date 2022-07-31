@@ -826,6 +826,7 @@ unsigned long TWW_count   = 0;
 uint8_t msg_cycle = 0;
 uint8_t saved_msg_cycle = 0;
 int16_t pps_values[PPS_ANZ] = { 0 };
+uint8_t allow_write_pps_values[PPS_ANZ/8 + 1] = { 0 }; //Bitwise array. 0 - pps_values[] writing to EEPROM now allowed. 1 - allowed to write
 bool pps_time_received = false;
 bool pps_time_set = false;
 bool pps_wday_set = false;
@@ -2300,17 +2301,8 @@ printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
 #ifdef AVERAGES
-  if (logAverageValues) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
     printToWebClient(CF_LOGAVERAGES_TXT);
-/*
-    printToWebClient(PSTR(": "));
-#if defined(__AVR__)
-    printENUM(pgm_get_far_address(ENUM_ONOFF),sizeof(ENUM_ONOFF),logAverageValues,0);
-#else
-    printENUM(ENUM_ONOFF,sizeof(ENUM_ONOFF),logAverageValues,0);
-#endif
-    printToWebClient(decodedTelegram.enumdescaddr);
-*/
     printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(CF_PROGLIST_TXT);
     printToWebClient(PSTR(": <BR>\r\n"));
@@ -2326,7 +2318,7 @@ printToWebClient(PSTR("<BR>\r\n"));
   #ifdef LOGGER
   printFmtToWebClient(PSTR("<BR>" MENU_TEXT_LGP " \r\n%d"), log_interval);
   printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
-  printyesno(logCurrentValues);
+  printyesno(LoggingMode & CF_LOGMODE_SD_CARD);
   printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
@@ -2579,7 +2571,7 @@ int returnENUMID4ConfigOption(uint8_t id) {
       i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
       break;
     case CF_DEBUG:
-    i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      i=findLine(65530,0,NULL); //return ENUM_DEBUG
       break;
     case CF_MQTT:
       i=findLine(65529,0,NULL); //return ENUM_MQTT
@@ -2589,6 +2581,9 @@ int returnENUMID4ConfigOption(uint8_t id) {
       break;
     case CF_PPS_MODE:
       i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      break;
+    case CF_LOGMODE:
+      i=findLine(65526,0,NULL); //return ENUM_PPS_MODE
       break;
     default:
       i = -1;
@@ -2655,7 +2650,7 @@ void applyingConfig() {
 
 }
 
-void printConfigWebPossibleValues(int i, uint16_t temp_value, boolean printCurrentSelectionOnly) {
+void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentSelectionOnly) {
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
   if(printCurrentSelectionOnly){
@@ -2718,9 +2713,11 @@ void printMAXlistToWebClient(byte *variable, uint16_t size) {
   }
 }
 
-void generateWebConfigPage(boolean printOnly) {
+void generateWebConfigPage(bool printOnly) {
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
   if(!printOnly){
+    //This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
+    printToWebClient(PSTR("<script>function bvc(e,v){o=e.closest('div').querySelector('input');n=Number(o.value);n&v?p=n-v:p=n+v;o.value=p}</script>"));
     printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
     if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
     printToWebClient(PSTR("/CI\">"));
@@ -2772,11 +2769,14 @@ void generateWebConfigPage(boolean printOnly) {
            printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})))*'"));
            break;
          }
-       printToWebClient(PSTR(" VALUE='"));
+       printToWebClient(PSTR(" value='"));
        break;
        case CPI_SWITCH:
        case CPI_DROPDOWN:
-       printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+          printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+       break;
+       case CPI_CHECKBOXES:
+          printFmtToWebClient(PSTR("<div><input type=hidden id='option_%d' name='option_%d' value='%d'>\r\n"), cfg.id + 1, cfg.id + 1, (int)variable[0]);
        break;
        default: break;
      }
@@ -2802,6 +2802,14 @@ void generateWebConfigPage(boolean printOnly) {
            }
            printConfigWebPossibleValues(i, (uint16_t)variable[0], printOnly);
            break;}
+         case CPI_CHECKBOXES:{
+           int i = returnENUMID4ConfigOption(cfg.id);
+           if (i > 0) {
+             uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
+             uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
+             listEnumValues(enumstr, enumstr_len, PSTR("<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,"), PSTR(")\">"), PSTR(")\" checked>"), PSTR("</label>"), NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS, DO_NOT_PRINT_DISABLED_VALUE);
+           }
+         break;}
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
@@ -2859,6 +2867,7 @@ void generateWebConfigPage(boolean printOnly) {
        case CPI_TEXT: printToWebClient(PSTR("'>")); break;
        case CPI_SWITCH:
        case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
+       case CPI_CHECKBOXES: printToWebClient(PSTR("</div>"));break;
        default: break;
      }
    } else {
@@ -2877,11 +2886,13 @@ void generateWebConfigPage(boolean printOnly) {
 
 
 #if defined(JSONCONFIG)
-void printConfigJSONPossibleValues(int i) {
+void printConfigJSONPossibleValues(int i, bool its_a_bits_enum) {
   printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0,
+    its_a_bits_enum?PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS:
+    PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
   printToWebClient(PSTR("\r\n      ]"));
 }
 
@@ -2932,13 +2943,14 @@ void generateJSONwithConfig() {
                break;
            }
            printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
-           printConfigJSONPossibleValues(i);
+           printConfigJSONPossibleValues(i, false);
            break;}
+         case CPI_CHECKBOXES:
          case CPI_DROPDOWN:{
            int i = returnENUMID4ConfigOption(cfg.id);
            if (i > 0) {
              printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
-             printConfigJSONPossibleValues(i);
+             printConfigJSONPossibleValues(i, cfg.input_type == CPI_CHECKBOXES);
            }
            break;}
          }
@@ -2958,7 +2970,7 @@ void generateJSONwithConfig() {
            }
            if (i > 0) {
              printFmtToWebClient(PSTR("%u\",\r\n"), ((uint16_t *)variable)[0]);
-             printConfigJSONPossibleValues(i);
+             printConfigJSONPossibleValues(i, false);
            }
            break;}
          }
@@ -3298,17 +3310,10 @@ int set(int line      // the ProgNr of the heater parameter
       }
       default: pps_values[cmd_no] = atoi(val); break;
     }
-//    if (atof(p) != pps_values[cmd_no] && cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI) {
-/*
-    if (cmd_no >= PPS_TWS && cmd_no <= PPS_BRS && cmd_no != PPS_RTI && EEPROM_ready) {
-      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
-      writelnToDebug();
-      writeToEEPROM(CF_PPS_VALUES);
-    }
-*/
 
     uint8_t flags=get_cmdtbl_flags(i);
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
+//    if(EEPROM_ready && (allow_write_pps_values[cmd_no / 8] & (1 << (cmd_no % 8)))) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
@@ -4455,7 +4460,7 @@ void SetDateTime() {
 uint16_t setPPS(uint8_t pps_index, int16_t value) {
   uint16_t log_parameter = 0;
   if (pps_values[pps_index] != value) {
-    if (logCurrentValues) {
+    if (LoggingMode & CF_LOGMODE_SD_CARD) {
       for (int i=0; i < numLogValues; i++) {
         if (log_parameters[i] == 15000 + pps_index) {
           log_parameter = log_parameters[i];
@@ -5662,7 +5667,7 @@ void loop() {
 
 //averages
 #ifdef AVERAGES
-            if (logAverageValues) {
+            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
               printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
@@ -5680,7 +5685,7 @@ void loop() {
 #endif
 // logged parameters
           #ifdef LOGGER
-            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), logCurrentValues, log_interval);
+            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode & CF_LOGMODE_SD_CARD, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
@@ -6171,12 +6176,12 @@ void loop() {
             case 'C':
               if (p[3]=='=') {
                 if (p[4]=='1') {
-                  logCurrentValues = true;
+                  LoggingMode |= CF_LOGMODE_SD_CARD;
                 } else {
-                  logCurrentValues = false;
+                  LoggingMode &= ~CF_LOGMODE_SD_CARD;
                 }
 //                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
-                printyesno(logCurrentValues) ;
+                printyesno(LoggingMode & CF_LOGMODE_SD_CARD) ;
               }
               break;
             case 'B':
@@ -6373,12 +6378,12 @@ void loop() {
 #ifdef AVERAGES
             if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
               if (range[3]=='1') {                // Enable 24h average calculation temporarily
-                logAverageValues = true;
+                LoggingMode |= CF_LOGMODE_SD_CARD_24AVG;
               } else {                            // Disable 24h average calculation temporarily
-                logAverageValues = false;
+                LoggingMode &= ~CF_LOGMODE_SD_CARD_24AVG;
               }
             }
-            if (logAverageValues) {
+            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
               if (range[1]=='=') {
                 char* avg_token = strtok(range,"=,");  // drop everything before "="
                 avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
@@ -6533,7 +6538,7 @@ void loop() {
 #else
   {
 #endif
-    if (mqtt_broker_ip_addr[0] && mqtt_mode) { //Address was set and MQTT was enabled
+    if (mqtt_broker_ip_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { //Address was set and MQTT was enabled
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
@@ -6545,13 +6550,13 @@ void loop() {
             mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
-        if (MQTTPubSubClient != NULL && !mqtt_mode) { //Luposoft: user may disable MQTT through web interface
+        if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
           printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
         }
       }
     }
-    if (mqtt_mode == 0) {
+    if (!(LoggingMode & CF_LOGMODE_MQTT)) {
       mqtt_disconnect();
     }
   }
@@ -6566,7 +6571,7 @@ void loop() {
   uint32_t freespace = 0;
   freespace = SD.vol()->freeClusterCount();
 #endif
-  if (logCurrentValues && freespace > MINIMUM_FREE_SPACE_ON_SD) {
+  if ((LoggingMode & CF_LOGMODE_SD_CARD) && freespace > MINIMUM_FREE_SPACE_ON_SD) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
 //    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
@@ -6609,7 +6614,7 @@ void loop() {
 
 // Calculate 24h averages
 #ifdef AVERAGES
-  if (logAverageValues) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
     if (millis() / 60000 != lastAvgTime) {
       if (avgCounter == 1441) {
         for (int i=0; i<numAverages; i++) {
@@ -6676,7 +6681,11 @@ void loop() {
     byte tempTime = (millis() / 60000) % 60;
     if (newMinuteValue != tempTime) {
       newMinuteValue = tempTime;
-      for (uint8_t i = 0; i < 3; i++) {
+      uint8_t k = 3; // 3 circuits in BSB/LPB mode
+      if (bus->getBusType() == BUS_PPS) {
+        k = 1;
+      }
+      for (uint8_t i = 0; i < k; i++) {
         if (rgte_sensorid[i][0] != 0) {
           uint8_t z = 0;
           float value = 0;
@@ -6691,11 +6700,15 @@ void loop() {
           }
           if (z != 0) {
             _printFIXPOINT(decodedTelegram.value, value / z, 2);
+            if (bus->getBusType() != BUS_PPS) {
 // if we want to substitute own address sometime to RGT1(2,3)
-//            uint8_t saved_own_address = bus->getBusAddr();
-//            bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
-            set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
-//            bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
+//              uint8_t saved_own_address = bus->getBusAddr();
+//              bus->setBusType(bus->getBusType(), ADDR_RGT1 + i, bus->getBusDest());
+              set(10000 + i, decodedTelegram.value, false); //send INF message like RGT1 - RGT3 devices
+//              bus->setBusType(bus->getBusType(), saved_own_address, bus->getBusDest());
+            } else {
+              set(15000 + PPS_RTI, decodedTelegram.value, false); //set PPS parameter PPS_RTI (Raumtemperatur Ist)
+            }
           }
         }
       }
@@ -7013,9 +7026,7 @@ void setup() {
   registerConfigVariable(CF_DEST_BSBLPBADDR, (byte *)&dest_address);
   registerConfigVariable(CF_PPS_MODE, (byte *)&pps_write);
   registerConfigVariable(CF_LOGTELEGRAM, (byte *)&logTelegram);
-  registerConfigVariable(CF_LOGAVERAGES, (byte *)&logAverageValues);
   registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
-  registerConfigVariable(CF_LOGCURRVALUES, (byte *)&logCurrentValues);
   registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
   registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
 #ifdef WEBCONFIG
@@ -7048,6 +7059,7 @@ void setup() {
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (DEFAULT_FLAG & FL_SW_CTL_RONLY) {
     registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
   }
@@ -7247,7 +7259,7 @@ void setup() {
       bme[f].parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa
       bme[f].parameter.tempOutsideCelsius = 15;               //default value of 15°C
       bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
-      boolean sensor_found = true;
+      bool sensor_found = true;
       switch(bme[f].init()){
         case 0x58: printToDebug(PSTR("BMP280")); break;
         case 0x60: printToDebug(PSTR("BME280")); break;
@@ -7262,36 +7274,17 @@ void setup() {
   }
 #endif
 
-/*  printlnToDebug(PSTR("Reading EEPROM..."));
-  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
-    uint16_t f=0;
-    if (EEPROM_ready) {
-      EEPROM.get(sizeof(uint16_t)*i, f);
-    }
-    if (f > 0 && f < 0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Reading %u from EEPROM slot %d\r\n"), f, i);
-
-      pps_values[i] = f;
-    }
-  }
-*/
-
-/*
-  for (int i=PPS_TWS;i<=PPS_BRS;i++) {
-    if (pps_values[i] == (int16_t)0xFFFF) pps_values[i] = 0;
-    if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF && i != PPS_RTI) {
-      printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
-    }
-  }
-*/
-
   printToDebug(PSTR("PPS settings:\r\n"));
   uint32_t temp_c = 0;
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
     int l = findLine(15000+i,temp_idx,&temp_c);
     if (l==-1) continue;
-//    uint8_t flags=get_cmdtbl_flags(l);
+    // fill bitwise array with flags
+    uint8_t flags=get_cmdtbl_flags(l);
+    if ((flags & FL_EEPROM) == FL_EEPROM) {
+      allow_write_pps_values[i / 8] |= (1 << (i % 8));
+    }
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if (pps_values[i] == (int16_t)0xFFFF) {
         pps_values[i] = 0;

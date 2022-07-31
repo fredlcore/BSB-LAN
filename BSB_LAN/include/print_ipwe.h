@@ -38,7 +38,7 @@
    }
 
  #ifdef AVERAGES
-   if (logAverageValues) {
+   if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
      for (int i=0; i<numAverages; i++) {
        if (avg_parameters[i] > 0) {
          counter++;

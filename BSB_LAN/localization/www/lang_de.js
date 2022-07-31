@@ -204,7 +204,6 @@ UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA Modell";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bustelegramme";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Logging aktiv";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
-UIStrings["CF_LOGAVERAGES_TEXT"] = "Berechnung";
 UIStrings["CF_PROGLIST_TEXT"] = "Parameter";
 UIStrings["CF_DEVICES_TEXT"] = "Geräte";
 UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";
@@ -228,8 +227,9 @@ UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic Präfix";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
+UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
-UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1 Temperatursensor Parameter";
+UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1/PPS Temperatursensor Parameter";
 UIStrings["CF_RGT2_SENSOR_TEXT"] = "RGT2 Temperatursensor Parameter";
 UIStrings["CF_RGT3_SENSOR_TEXT"] = "RGT3 Temperatursensor Parameter";
 UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "TWW-Push Taste: Pin";
@@ -2218,6 +2218,12 @@ UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Rich JSON";
 
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "Ein (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";
+
+UIStrings["ENUM_LOGMODE_01_TEXT"] = "Write to SD card";
+UIStrings["ENUM_LOGMODE_02_TEXT"] = "Write 24h avg to SD card";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Publish to IPWE";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to MQTT broker";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Send to UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";

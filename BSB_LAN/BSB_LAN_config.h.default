@@ -111,8 +111,7 @@ byte BME_Sensors = 0; //Define number of BME280 sensors
 
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
-bool logAverageValues = false;  // calculate and save data into averages.txt on SD-card.
-// Create 24h averages from these parameters
+// Create 24h averages from these parameters and save data into averages.txt on SD-card.
 int avg_parameters[40] = {
   8700,                         // Außentemperatur
   8326                          // Brenner-Modulation
@@ -141,7 +140,6 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command during runtime
 // Data will be written to "datalog.txt"
-bool logCurrentValues = false;      // Save data in datalog.txt on SD-card.
 unsigned long log_interval = 3600;  // Logging interval (to SD card and MQTT broker) in seconds
 int log_parameters[40] = {
   8700,                   // Außentemperatur
@@ -161,7 +159,7 @@ int log_parameters[40] = {
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
 #define MQTT
-byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
 // rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
@@ -172,6 +170,10 @@ char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" f
 // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
 char MQTTDeviceID[32] = "BSB-LAN";
+
+// Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be conjunction of these values.
+byte LoggingMode = 1; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
+
 
 // Compile IPWE extension
 #define IPWE
@@ -276,7 +278,7 @@ boolean enable_ota_update = false;
 #define JSONCONFIG
 
 #define RGT_EMULATOR
-int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1 - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
 
 //Enable presence buttons and TWW/DHW push on selected pins.
 // Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21

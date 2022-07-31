@@ -1,3 +1,8 @@
+#define CF_LOGMODE_SD_CARD 1
+#define CF_LOGMODE_SD_CARD_24AVG 2
+#define CF_LOGMODE_MQTT 4
+#define CF_LOGMODE_UDP 8
+
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
@@ -13,9 +18,9 @@ typedef enum{
   CF_DEST_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus destination address (0x0)
   CF_PPS_MODE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
-  CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST
+  CF_LOGAVERAGES, //Size: 1 byte. Log average values. 0 - disabled, 1 - enabled. Program list will be set in CF_AVERAGESLIST. NOT USED. CAN BE REPLACED WITH OTHER VARIABLE WITH SAME SIZE.
   CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
-  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST
+  CF_LOGCURRVALUES, //Size: 1 byte. Log current values. 0 - disabled, 1 - enabled. Program list will be set in CF_CURRVALUESLIST. NOT USED. CAN BE REPLACED WITH OTHER VARIABLE WITH SAME SIZE.
   CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
   CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
 // Version 2 (Web-config)
@@ -70,10 +75,12 @@ typedef enum{
 // Version 8 (bus pins and device family and variant)
   CF_RX_PIN, //Size: 1 byte. RX pin
   CF_TX_PIN, //Size: 1 byte. TX pin
-  CF_DEVICE_FAMILY, //Size: 2 byte. Heater family ID
-  CF_DEVICE_VARIANT, //Size: 2 byte. Heater variant ID
+  CF_DEVICE_FAMILY, //Size: 2 bytes. Heater family ID
+  CF_DEVICE_VARIANT, //Size: 2 bytes. Heater variant ID
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
+// Version 10 (Logger switcher)
+  CF_LOGMODE, // Size: 1 byte. Bitwise value. Logging: 0 - disabled, 1 - SD card logging, 2 - send to MQTT, 4 - send to UDP
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -84,7 +91,8 @@ typedef enum {
   CPI_NOTHING,
   CPI_TEXT, // general text field
   CPI_SWITCH,
-  CPI_DROPDOWN
+  CPI_DROPDOWN,
+  CPI_CHECKBOXES
 } cpi_params;
 
 //according to var_type in configuration_struct
@@ -123,7 +131,7 @@ typedef struct {
 	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
   uint8_t version; //config version which can manage this parameter
   uint8_t category;	// for grouping configuration options (cdt_params)
-  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown
+  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown, 4 - bitwise (checkboxes)
   uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
   uint8_t flags; // options flags: 1 - basic option, 2 - advanced option
   const char* desc;	// pointer to text to be displayed for option - is text length necessary if we just read until NULL?
@@ -192,16 +200,20 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
   {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
   {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
+  #endif
+  {CF_LOGMODE,          10,CCAT_LOGGING,  CPI_CHECKBOXES,CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
+  #ifdef WEBCONFIG
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_IPADDRESS,   2, CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
+
 #endif
-  {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGAVERAGES_TXT, sizeof(logAverageValues)},//immediately apply
+  {CF_LOGAVERAGES,      1, CCAT_24HAVG,   CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(bool)},//Empty 1 byte
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
-  {CF_LOGCURRVALUES,    1, CCAT_LOGGING,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRVALUES_TXT, sizeof(logCurrentValues)},//immediately apply
+  {CF_LOGCURRVALUES,    1, CCAT_LOGGING,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(bool)},//Empty 1 byte
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
   {CF_CURRVALUESLIST,   1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(log_parameters)},//immediately apply
   {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply

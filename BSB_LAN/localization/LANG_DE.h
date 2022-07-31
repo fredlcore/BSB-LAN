@@ -204,7 +204,6 @@
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Logging aktiv"
 #define CF_LOGCURRINTERVAL_TEXT "Logintervall (Sekunden)"
-#define CF_LOGAVERAGES_TEXT "Berechnung"
 #define CF_PROGLIST_TEXT "Parameter"
 #define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
@@ -228,8 +227,9 @@
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
+#define CF_LOGMODE_TEXT "Logging mode"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
-#define CF_RGT1_SENSOR_TEXT "RGT1 Temperatursensor Parameter"
+#define CF_RGT1_SENSOR_TEXT "RGT1/PPS Temperatursensor Parameter"
 #define CF_RGT2_SENSOR_TEXT "RGT2 Temperatursensor Parameter"
 #define CF_RGT3_SENSOR_TEXT "RGT3 Temperatursensor Parameter"
 #define CF_TWW_PUSH_PIN_TEXT "TWW-Push Taste: Pin"
@@ -2208,8 +2208,8 @@
 #define STR99999_TEXT "UNKNOWN command code"
 
 
-#define ENUM_BUS_PPS_MODE_PASSIVE "Passiv"
-#define ENUM_BUS_PPS_MODE_QAA "Als Raumgerät"
+#define ENUM_PPS_MODE_PASSIVE_TEXT "Passiv"
+#define ENUM_PPS_MODE_QAA_TEXT "Als Raumgerät"
 #define ENUM_DEBUG_SERIAL_TEXT "Serial"
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"
@@ -2218,6 +2218,11 @@
 
 #define ENUM_WRITE_ENG_TEXT "Ein (Standard)"
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"
+
+#define ENUM_LOGMODE_01_TEXT "Write to SD card"
+#define ENUM_LOGMODE_02_TEXT "Write 24h avg to SD card"
+#define ENUM_LOGMODE_04_TEXT "Send to MQTT broker"
+#define ENUM_LOGMODE_08_TEXT "Send to UDP"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"
