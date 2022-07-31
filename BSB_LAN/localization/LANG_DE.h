@@ -185,6 +185,7 @@
 #define MENU_TEXT_NVS "Überprüfe auf neuere Version"
 #define MENU_TEXT_NVA "Neuere Version gefunden"
 #define MENU_TEXT_NVN "Installierte Version ist aktuell."
+#define MENU_TEXT_NVW "Achtung! Neue Version kann Änderungen enthalten, die Anpassungen erforderlich machen. Bitte das ChangeLog in der Datei BSB_LAN.ino lesen!"
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsverzeichnis.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
