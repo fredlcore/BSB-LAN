@@ -52,7 +52,8 @@ char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) h
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 #define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
-#define MDNS_HOSTNAME "BSB-LAN"         // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+#define MDNS_SUPPORT                   // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
+char mDNS_hostname[32] = "BSB-LAN";
 
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
@@ -87,32 +88,30 @@ byte trusted_ip_addr[4] = {0,0,0,0};
 byte trusted_ip_addr2[4] = {0,0,0,0};
 
 /* Activate HTTP-Auth authentication to provide username/password based access. No encryption!
- * Credentials have to be entered in the form 
+ * Credentials have to be entered in the form
  * User:Password
  */
 //char USER_PASS[64] = "User:Password";
-char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS#define ESP32_USE_SD string length is zero
+char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string length is zero
 
 
 // Compile module with one wire bus support.
 #define ONE_WIRE_BUS
-bool enableOneWireBus = false;  //true - enable oneWire bus, false - disable
-byte One_Wire_Pin = 7;         // Define the pin for one wire temperature sensors
+byte One_Wire_Pin = 0;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
 
 // Compile module with DHT temperature/humidity sensors support
 #define DHT_BUS
 // Define the pins for DHT temperature/humidity sensors (Up to 10)
-byte DHT_Pins[10] = {5};
+uint8_t DHT_Pins[10] = {0};
 
 // Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
 // Up to two sensors with 0x76 and 0x77 addresses.
-// Usage: #define BME280 x, where x - number of BME280 sensors on bus
-// #define BME280 1
+#define BME280
+byte BME_Sensors = 0; //Define number of BME280 sensors
 
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
-bool logAverageValues = false;  // calculate and save data into averages.txt on SD-card.
-// Create 24h averages from these parameters
+// Create 24h averages from these parameters and save data into averages.txt on SD-card.
 int avg_parameters[40] = {
   8700,                         // Außentemperatur
   8326                          // Brenner-Modulation
@@ -122,7 +121,8 @@ int avg_parameters[40] = {
 Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot
 Does: log bus telegrams to file
       log selected values to file
-      store to SD and load selected 24h averages*/
+      store to SD and load selected 24h averages
+      push selected values to an MQTT broker*/
 #define LOGGER
 
 // Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage
@@ -140,7 +140,6 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command during runtime
 // Data will be written to "datalog.txt"
-bool logCurrentValues = false;      // Save data in datalog.txt on SD-card.
 unsigned long log_interval = 3600;  // Logging interval (to SD card and MQTT broker) in seconds
 int log_parameters[40] = {
   8700,                   // Außentemperatur
@@ -160,14 +159,21 @@ int log_parameters[40] = {
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
 #define MQTT
-byte mqtt_mode = 0; // MQTT: 0 - disabled, 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
 // rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
 char MQTTUsername[32] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[32] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
-char MQTTDeviceID[32] = "MyHeater";	        // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
+
+// Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
+// This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
+char MQTTDeviceID[32] = "BSB-LAN";
+
+// Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be conjunction of these values.
+byte LoggingMode = 1; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
+
 
 // Compile IPWE extension
 #define IPWE
@@ -187,6 +193,15 @@ int ipwe_parameters[40] = {
 //  8704                    // Aussentemperatur gemischt
 };
 
+// If you prefer to use the log file plotting (/DG) used in BSB-LAN 2.1.3, disable the following #define.
+// Otherwise a newer implementation will be used that does require (automated) loading of an additional
+// Javascript library off the internet (currently 204 KB), but offers the following improvements:
+// - better legibility for value numbers with plot lines close to each other (mouseover on plot)
+// - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
+// - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
+// - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
+// - saves over 4 KB in compiled BSB-LAN sketch
+#define USE_ADVANCED_PLOT_LOG_FILE
 
 // Compile CUNO/CUNX/modified MAX!Cube extension.
 #define MAX_CUL
@@ -203,7 +218,7 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
 
 // Setting bus pins and bus type
 
-byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due and 68,69 for Mega).
+byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB and 68,69 for Mega).
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 // BSB:
 // - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
@@ -216,32 +231,14 @@ byte dest_address = 0x00;
 // PPS:
 // - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
 bool pps_write = 0;
-byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50
-
-
-#if defined(__AVR__) // Mega2560
-// Protect these pins from accidental GPIO access
-// Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
-//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00000000,0b00011100,0b00000000,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-#elif defined(__arm__)  // Due
-// Protect these pins from accidental GPIO access
-// Bit-coded list of protected GPIO pins. 0 - pin unprotected, 1 - pin protected
-//              pins list:   7  --  0,  15 --  8,  23 -- 16,  31 -- 24,  39 -- 32,  47 -- 40,  55 -- 48,  63 -- 56,  71 -- 64,  79 -- 72,
-byte protected_GPIO[10] = {0b00001011,0b00011100,0b11111100,0b00000000,0b00000000,0b00000000,0b00111100,0b11000000,0b00111111,0b00000000};
-#elif defined(ESP32)
-byte protected_GPIO[10] = {0b00110100,0b11110000,0b11101100,0b00001110,0b10011111,0b00000000,0b00000000,0b00000000,0b00000000,0b00000000};
-#else
-#error "Protected pins not defined for this platform"
-#endif
-
+byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x5A = QAA10, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/REA70/DC225
 
 /* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
  * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
  * if heating system is not running when Arduino is powered on.
 */
-static const int fixed_device_family = 0;
-static const int fixed_device_variant = 0;
+uint16_t fixed_device_family = 0;
+uint16_t fixed_device_variant = 0;
 
 // defines default flag for parameters
 // use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
@@ -264,6 +261,10 @@ static const int fixed_device_variant = 0;
 #define VERSION_CHECK
 bool enable_version_check = false;
 
+#define ENABLE_ESP32_OTA
+boolean enable_ota_update = false;
+
+
 // "External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER
 
@@ -277,11 +278,11 @@ bool enable_version_check = false;
 #define JSONCONFIG
 
 #define RGT_EMULATOR
-int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1 - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
 
 //Enable presence buttons and TWW/DHW push on selected pins.
 // Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21
-// On Due any Digital pins can be selected excluding 12, 16-21, 31, 33, 53. 
+// On Due any Digital pins can be selected excluding 12, 16-21, 31, 33, 53.
 // Make sure you aren't using pins which are already in use for sensors (default: 2, 3, 7) or change them accordingly.
 #define BUTTONS
 uint8_t button_on_pin[4] = {0, 0, 0, 0}; //Order: TWW push, presence ROOM1, presence ROOM2, presence ROOM3

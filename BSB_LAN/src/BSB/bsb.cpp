@@ -6,6 +6,7 @@
 #if defined(ESP32)
 #include "driver/uart.h"
 #include "soc/uart_struct.h"
+#include "soc/uart_reg.h"
 #endif
 
 #include "bsb.h"
@@ -193,10 +194,10 @@ bool BSB::GetMessage(byte* msg) {
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && (read == 0x17 || read == 0x1D || read == 0x1E  || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && ((read & 0x07) == 0x07 || (read & 0x0D) == 0x0D || (read & 0x0E) == 0x0E  || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
-      if (bus_type == 2 && read == 0x17) {
+      if (bus_type == 2 && (read & 0x07) == 0x07) {
 //      	uint8_t PPS_write_enabled = myAddr;
 //      	if (PPS_write_enabled == 1) {
           return true; // PPS-Bus request byte 0x17 just contains one byte, so return
@@ -385,28 +386,37 @@ inline bool BSB::_send(byte* msg) {
 #if DEBUG_LL  
   print(msg);
 #endif  
-  /*
-Er wartet 11/4800 Sek ab (statt 10, Hinweis von miwi), lauscht und schaut ob der Bus in dieser Zeit von jemand anderem benutzt wird. Sprich ob der Bus in dieser Zeit mal
-auf 0 runtergezogen wurde. Wenn ja - mit den warten neu anfangen.
-*/
   static const unsigned long timeoutabort = 1000;  // one second timeout
   unsigned long start_timer = millis();
+  unsigned long waitfree;
   retry:
-  // Select a random wait time between 60 and 79 ms
-  unsigned long waitfree = random(1,60) + 25; // range 26 .. 85 ms
-//  unsigned long waitfree = random(1,20) + 59; // range 60 .. 79 ms
+  waitfree = random(1,20) + 3 + 59; // range 63 .. 82 ms, BSB mimimum delay between telegrams is 59 ms (25 for LPB -> miwi), plus duration of one full (32 bytes) telegram (3 ms), plus random amount of 1-20 ms.
   { // block begins
     if(millis()-start_timer > timeoutabort){  // one second has elapsed
       return false;
     }
     if (bus_type != 2) {
-      // Wait 59 ms plus a random time
       unsigned long timeout = millis();
-//      unsigned long timeout = millis() + 3;//((1/480)*1000);
+      // Probe the bus until the delay calculated above has passed. We want to wait this long even on the first try because we want to make sure the minimum delay between telegrams has passed.
       while (millis()-timeout < waitfree) {
 //        if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read()))   // Test RX pin
-      if (rx_pin_read())
-        {
+        bool rx_pin = rx_pin_read();
+        if (rx_pin) {  // If there is activity on the bus / the bus has been pulled low, we have to try again and wait for 'waitfree' ms. 
+#if DEBUG_LL
+          Serial.println("Collision while waiting, retrying...");
+#endif
+          delay(146); // Wait the duration of 11 bits at 4800 bps times 32 (maximum telegram size) in ms (*1000) times 2 (because we can just keep waiting for an answer telegram) 
+          while (serial->available()) {
+            char c = readByte();
+#if DEBUG_LL
+            if (c < 16) Serial.print("0");
+            Serial.print(c, HEX);
+#endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
+          }
+#if DEBUG_LL
+          Serial.println();
+#endif
           goto retry;
         } // endif
       } // endwhile
@@ -442,6 +452,20 @@ gesetzt und wäre nur in seltenen Ausnahmefällen == 0.
 So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 */
 
+/*
+FH 23.03.2021: Eine Kollisionsprüfung während des Sendens ist mit HardwareSerial nicht mehr ohne Weiteres möglich.
+Nachdem oben schon auf einen freien Bus gewartet wurde, wird nun jedes gesendete Byte, das ja wieder auf der Empfangsleitung
+ankommt, auf Gleichheit überprüft. Wenn dies nicht der Fall ist, gab es einen Zwischenfall und das Telegramm wird erneut gesendet.
+Da bei HardwareSerial die gesendeten Bytes nichts sofort im Empfangspuffer landen, wird bis zu 50ms gewartet, bis der 
+UART buffer gefüllt ist und ein empfangenes Byte meldet.
+*/
+
+/*
+FH 25.12.2021: Mit Umstieg auf ESP32 SDK 2.0.2 kommen gesendete Daten nicht wieder auf der Empfangsleitung an. Sowohl das flush() als auch die 50ms
+sorgen dafür, dass bereits die Antwort-Telegramme als "fremde" Daten und somit als Buskollision gewertet werden, weswegen dieser Teil auskommentiert wurde.
+Ob damit weiterhin eine Bus-Kollisionserkennung möglich ist, muss noch geprüft werden.
+*/
+
 #if defined(__AVR__)
   if (HwSerial == false) {
     cli();
@@ -457,11 +481,23 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
       data = data ^ 0xFF;
     }
     serial->write(data);
-#if !defined(ESP32)
     if (HwSerial == true) {
+#if !defined(ESP32)
       serial->flush();
-      readByte(); // Read (and discard) the byte that was just sent so that it isn't processed as an incoming message
+#endif
     }
+    if (bus_type==2 && i==0 && data==0x17) {
+      unsigned long timeout = millis();
+      while ((millis()-timeout < 200) && serial->available() == 0) {
+        delay(1);
+      }
+      while (serial->available()) {
+        char c = readByte();
+        c = c;
+      }
+      return true;  // In case we emulate a DC225, we are regularly sending single byte (0x17) messages, so abort loop after first byte.
+    }
+/*
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
     if (rx_pin_read()) {
       // Collision
@@ -472,10 +508,40 @@ So wie es jetzt scheint, findet die Kollisionsprüfung beim Senden nicht statt.
 #endif
       goto retry;
     }
-#endif
+*/
   }
   if (HwSerial == true) {
+#if !defined(ESP32)
     serial->flush();
+    unsigned long timeout = millis();
+    while ((millis()-timeout < 50) && serial->available() == 0) {
+      delay(1);
+    }
+#endif
+    if (serial->available()) {      
+      for (uint8_t i=0; i<=loop_len; i++) {
+        char readdata = readByte();
+        if (msg[i] != readdata) {
+#if DEBUG_LL
+          Serial.println(readdata, HEX);
+#endif
+          Serial.println("Collision on the bus, retrying...");
+          delay(146);   // Wait the duration of 11 bits at 4800 bps times 32 (maximum telegram size) in ms (*1000) times 2 (because we can just keep waiting for an answer telegram) 
+          while (serial->available()) {
+            char c = readByte();
+#if DEBUG_LL
+            if (c < 16) Serial.print("0");
+            Serial.print(c, HEX);
+#endif
+            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
+          }
+#if DEBUG_LL
+          Serial.println();
+#endif
+          goto retry;
+        }
+      }
+    }
   } else {
 #if defined(__AVR__)
     sei();
@@ -505,12 +571,12 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   byte A4 = (cmd & 0x000000ff);
 
   // special treatment of internal query types
-  if (type == 0x12) {   // TYPE_IA1
+  if (type == 0x12) {   // TYPE_IQ1
     A1 = A3;
     A2 = A4;
     offset = 2;
   }
-  if (type == 0x14) {   // TYPE_IA2
+  if (type == 0x14) {   // TYPE_IQ2
     A1 = A4;
     offset = 3;
   }
@@ -599,7 +665,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
   return false;
 }
 
-boolean BSB::rx_pin_read() {  // not tested if this will work on ESP32
+bool BSB::rx_pin_read() {  // not tested if this will work on ESP32
   return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
 }
 

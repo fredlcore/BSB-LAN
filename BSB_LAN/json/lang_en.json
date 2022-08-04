@@ -418,6 +418,7 @@
   "STR8700_TEXT": "Outside temp sensor local",
   "STR8703_TEXT": "Outside temp attenuated",
   "STR8704_TEXT": "Outside temp composite",
+  "STR8739_TEXT": "Room humid 1 actual value",
   "STR8740_TEXT": "Room temp 1 actual value",
   "STR8741_TEXT": "Room temp setpoint current",
   "STR8743_TEXT": "Flow temp actual value heat circuit 1",
