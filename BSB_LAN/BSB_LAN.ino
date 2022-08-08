@@ -5737,7 +5737,7 @@ void loop() {
                     continue;
                   }
                   if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
-                  printFmtToWebClient(PSTR("{\"Parameter\":\"%d\", \"Value\":\"%s\", \"Type\":\"%d\"}"), j, decodedTelegram.value, 1);
+                  printFmtToWebClient(PSTR("  \"%d\":{\"parameter\":\"%d\", \"value\":\"%s\", \"type\":\"%d\"}"), j, j, decodedTelegram.value, 1);
                 }
               }
             }
