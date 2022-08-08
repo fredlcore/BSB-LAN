@@ -1,20 +1,36 @@
 openapi: 3.0.2
 info:
   title: BSB-LAN API
-  version: '2.0.1'
-  description: BSB-LAN Json API Specification
+  version: '2.1'
+  description: BSB-LAN JSON API Specification
   termsOfService: ''
   contact:
     name: BSB-LAN
     url: 'https://github.com/fredlcore/BSB-LAN'
 servers:
-  - url: http://bsb-lan
+  - url: http://bsb
 tags:
   - name: 'General'
   - name: 'Parameter'
   - name: 'Category'
   - name: 'Configuration'
 paths:
+  /JB:
+    get:
+      summary: List all writeable parameters
+      description: ''
+      operationId: listWritableParametersUsingGET
+      tags:
+        - 'Parameter'
+      responses:
+        '401':
+          description: Unauthorized
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WritableParameterMap'
   /JC:
     post:
       summary: List parameter definitions
@@ -46,12 +62,12 @@ paths:
       tags:
         - 'Parameter'
       parameters:
-        - name: parameterIds
-          in: path
-          required: true
-          description: One or more comma separated parameter ids
-          schema:
-            type: string
+      - name: parameterIds
+        in: path
+        required: true
+        description: One or more comma separated parameter ids
+        schema:
+          type: string
       responses:
         '401':
           description: Unauthorized
@@ -87,13 +103,13 @@ paths:
       tags:
         - 'Category'
       parameters:
-        - name: categoryId
-          in: path
-          required: true
-          description: 'ID of category'
-          schema:
-            type: integer
-            format: int32
+      - name: categoryId
+        in: path
+        required: true
+        description: 'ID of category'
+        schema:
+          type: integer
+          format: int32
       responses:
         '401':
           description: 'Unauthorized'
@@ -129,14 +145,14 @@ paths:
       tags:
         - 'Configuration'
       responses:
-        '401':
-          description: Unauthorized
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ConfigurationList'
+         '401':
+            description: Unauthorized
+         '200':
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ConfigurationList'
 
   /JQ:
     post:
@@ -172,7 +188,7 @@ paths:
         - name: parameterIds
           in: path
           required: true
-          description: One or more comma separated parameter ids
+          description: One or more comma separated parameter ids 
           schema:
             type: string
           example:
@@ -186,6 +202,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ParameterMap'
+                
+  /JQ2:
+    get:
+      summary: List parameters
+      description: ''
+      operationId: listParameters2
+      tags:
+        - 'Parameter'
+      parameters:
+        - name: parameter
+          in: query
+          required: true
+          description: One or more comma separated parameter ids 
+          explode: false
+          schema:
+            type: array
+            items: 
+              type: integer
+            minimum: 1
+          
+          example:
+            700,710
+      responses:
+        '401':
+          description: Unauthorized
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterMap'
+
 
   /JR:
     post:
@@ -218,12 +266,12 @@ paths:
       tags:
         - 'Parameter'
       parameters:
-        - name: parameterIds
-          in: path
-          required: true
-          description: One or more comma separated parameter ids
-          schema:
-            type: string
+      - name: parameterIds
+        in: path
+        required: true
+        description: One or more comma separated parameter ids 
+        schema:
+          type: string
       responses:
         '401':
           description: Unauthorized
@@ -233,21 +281,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ResetValueMap'
-
+  
   /JS:
     post:
       summary: 'Write parameter value'
       description: ''
       operationId: writeParameter
       tags:
-        - 'Parameter'
+      - 'Parameter'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/ParameterWrite'
-
+          
       responses:
         '401':
           description: Unauthorized
@@ -358,7 +406,7 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/Category'
       example:
-        '0':
+        '0': 
           name: 'Uhrzeit und Datum'
           min: 0
           max: 6
@@ -372,31 +420,31 @@ components:
       description: 'Details of a BSB-LAN configuration object'
       type: object
       properties:
-        parameter:
+        parameter: 
           description: 'Configuration ID'
           type: string
-        type:
+        type: 
           description: |
             Data type
 
             0 - CDT_VOID // byte array (for internal using. Never sent through JSON)
-
+            
             1 - CDT_BYTE //unsigned byte. can be various format (text, switch, dropdown)
-
+            
             2 - CDT_UINT16 //CPI_TEXT field with format for unsigned integer
-
+            
             3 - CDT_UINT32 //CPI_TEXT field with format for unsigned long integer
-
+            
             4 - CDT_STRING //CPI_TEXT field
-
+            
             5 - CDT_MAC //CPI_TEXT field with format for MAC input/output
-
+            
             6 - CDT_IPV4 //CPI_TEXT field with format for IPv4 input/output
-
+            
             7 - CDT_PROGNRLIST //CPI_TEXT field with format for programs list input/output
-
+            
             8 - CDT_MAXDEVICELIST //CPI_TEXT field with format for MAX! devices list input/output
-
+            
             9 - CDT_DHTBUS //CPI_TEXT field with format for DHT bus
           type: integer
           format: int32
@@ -405,13 +453,13 @@ components:
         format:
           description: |
             HTML Input type
-
-            0 - none
-
+            
+            0 - none 
+            
             1 - text field
-
+            
             2 - switch
-
+            
             3 - dropdown
           type: integer
           format: int32
@@ -423,7 +471,7 @@ components:
         name:
           description: 'Name of configuration object'
           type: string
-        value:
+        value: 
           description: 'Value of configuration object'
           type: string
         possibleValues:
@@ -437,15 +485,15 @@ components:
         value: '150'
         possibleValues: [
           {
-            enumValue: '105',
+            enumValue: '105', 
             desc: 'MENU_TEXT_OFF'
-          },
+          }, 
           {
-            enumValue: '150',
+            enumValue: '150', 
             desc: 'MENU_TEXT_ON'
           }
         ]
-
+      
     ConfigurationList:
       title: ConfigurationList
       description: 'List of multiple BSB-LAN configuration objects'
@@ -455,46 +503,46 @@ components:
       example:
         [
           {
-            parameter: '0',
-            type: 1,
-            format: 2,
-            category: 'CAT_GENERAL_TEXT',
-            name: 'CF_USEEEPROM_TEXT',
-            value: '150',
+            parameter: '0', 
+            type: 1, 
+            format: 2, 
+            category: 'CAT_GENERAL_TEXT', 
+            name: 'CF_USEEEPROM_TEXT', 
+            value: '150', 
             possibleValues: [
               {
-                enumValue: '105',
+                enumValue: '105', 
                 desc: 'MENU_TEXT_OFF'
-              },
+              }, 
               {
-                enumValue: '150',
+                enumValue: '150', 
                 desc: 'MENU_TEXT_ON'
               }
             ]
           },
           {
-            parameter: '6',
-            type: 1,
-            format: 3,
-            category: 'CAT_GENERAL_TEXT',
-            name: 'CF_BUSTYPE_TEXT',
-            value: '0',
+            parameter: '6', 
+            type: 1, 
+            format: 3, 
+            category: 'CAT_GENERAL_TEXT', 
+            name: 'CF_BUSTYPE_TEXT', 
+            value: '0', 
             possibleValues: [
               {
-                enumValue: '0',
+                enumValue: '0', 
                 desc: 'BSB'
-              },
+              }, 
               {
-                enumValue: '1',
+                enumValue: '1', 
                 desc: 'LPB'
-              },
+              }, 
               {
-                enumValue: '2',
+                enumValue: '2', 
                 desc: 'PPS'
               }
             ]
           },
-        ]
+        ]   
 
     ConfigurationWriteResult:
       title: ConfigurationWriteResult
@@ -519,7 +567,7 @@ components:
       title: ConfigurationWriteResultMap
       description: 'Multiple write results of BSB-LAN configurations as hash map with parameter ID as key'
       type: object
-      additionalProperties:
+      additionalProperties: 
         $ref: '#/components/schemas/ConfigurationWriteResult'
       example:
         - '0': {status: 1}
@@ -553,121 +601,6 @@ components:
       example:
         [{parameter: 0, value: '150'}, {parameter: 6, value: "0"}]
 
-    DataTypeFamily:
-      title: DataTypeFamily
-      description: 'Data type group, 1:1 mapping to dataType number'
-      type: string
-      enum:
-        - VALS
-        - ENUM
-        - BITS
-        - WDAY
-        - HHMM
-        - DTTM
-        - DDMM
-        - STRN
-        - DWHM
-        - TMPR
-
-    DataTypeName:
-      title: DataTypeName
-      description: 'Concrete type of value'
-      type: string
-      enum:
-        - BIT
-        - BYTE
-        - BYTE10
-        - CLOSEDOPEN
-        - DAYS
-        - GRADIENT_SHORT
-        - HOURS_SHORT
-        - LPBADDR
-        - MINUTES_SHORT
-        - MONTHS
-        - ONOFF
-        - PERCENT
-        - PERCENT5
-        - PRESSURE
-        - PRESSURE50
-        - SECONDS_SHORT
-        - SECONDS_SHORT4
-        - SECONDS_SHORT5
-        - TEMP_SHORT
-        - TEMP_SHORT_US
-        - TEMP_SHORT5
-        - TEMP_SHORT5_US
-        - TEMP_SHORT64
-        - TEMP_PER_MIN
-        - VOLTAGE
-        - VOLTAGEONOFF
-        - WEEKDAY
-        - YESNO
-        - SPF
-        - CURRENT
-        - CURRENT1000
-        - DAYS_WORD
-        - ERRORCODE
-        - FP1
-        - FP02
-        - GRADIENT
-        - INTEGRAL
-        - MONTHS_WORD
-        - HOUR_MINUTES
-        - HOURS_WORD
-        - MINUTES_WORD
-        - MINUTES_WORD10
-        - PERCENT_WORD1
-        - PERCENT_WORD
-        - PERCENT_100
-        - POWER_WORD
-        - POWER_WORD100
-        - ENERGY_WORD
-        - ENERGY_CONTENT
-        - PRESSURE_WORD
-        - PRESSURE_1000
-        - PROPVAL
-        - SECONDS_WORD
-        - SECONDS_WORD5
-        - SPEED
-        - SPEED2
-        - TEMP
-        - TEMP_WORD
-        - TEMP_WORD60
-        - TEMP_WORD5_US
-        - VOLTAGE_WORD
-        - CELMIN
-        - LITERPERHOUR
-        - LITERPERMIN
-        - UINT
-        - UINT5
-        - UINT10
-        - SINT
-        - SINT1000
-        - PPS_TIME
-        - DWORD
-        - HOURS
-        - MINUTES
-        - SECONDS_DWORD
-        - POWER
-        - POWER100
-        - ENERGY10
-        - ENERGY
-        - UINT100
-        - DATETIME
-        - SUMMERPERIOD
-        - VACATIONPROG
-        - TIMEPROG
-        - STRING
-        - CUSTOM_ENUM
-        - CUSTOM_BYTE
-        - CUSTOM_BIT
-        - GR_PER_CUBM
-        - FLOAT
-        - LONG
-        - ATM_PRESSURE
-        - ALTITUDE
-        - UNKNOWN
-
     GeneralInfo:
       title: GeneralInfo
       description: 'Basic information about BSB-LAN device'
@@ -679,12 +612,14 @@ components:
         version:
           description: 'Firmware version'
           type: string
+        hardware:
+          description: 'Hardware type'
         freeram:
-          description: 'Free RAM in bytes'
+          description: 'Free RAM'
           type: integer
           format: int32
         uptime:
-          description: 'Device uptime in ms'
+          description: 'Device uptime'
           type: integer
           format: int32
         MAC:
@@ -718,26 +653,25 @@ components:
           description: ''
           type: integer
           format: int32
-        protectedGPIO:
-          $ref: '#/components/schemas/ProtectedGPIOList'
-        averages:
-          $ref: '#/components/schemas/AverageList'
         logvalues:
-          description: ''
+          description: 'Number of values to log'
           type: integer
           format: int32
         loginterval:
-          description: 'Log interval'
+          description: 'Loginterval in seconds'
           type: integer
-          format: int32
+          format: uint64
         logged:
           $ref: '#/components/schemas/LoggedList'
+        averages:
+          $ref: '#/components/schemas/AverageList'
       example:
         name: 'BSB-LAN'
-        version: '1.1.21-20200904085757'
-        freeram: 2659
-        uptime: 276959150
-        MAC: 'DE:AD:BE:EF::CA:FE'
+        version: '2.1.8-20220731102301'
+        hardware: 'Due'
+        freeram: 81279
+        uptime: 264494
+        MAC: 'DE:AD:BE:EF:CA:FE'
         freespace: 0
         bus: 'BSB'
         buswritable: 1
@@ -745,19 +679,17 @@ components:
         busdest: 0
         monitor: 0
         verbose: 1
-        protectedGPIO: [pin: 10, pin: 11, pin: 12]
-        averages: [parameter: 700, parameter: 701]
         logvalues: 0
         loginterval: 3600
-        logged: [parameter: 8700, parameter: 8743, parameter: 8314]
+        logged: [parameter: 8700, parameter: 8743]
+        averages: [parameter: 700, parameter: 701]
 
-    Logged:
-      title: Logged
+    LoggedParameter:
+      title: LoggedParameter
       description: ''
       type: object
       properties:
         parameter:
-          description: 'Id of parameter'
           type: integer
           format: int32
       example:
@@ -765,13 +697,13 @@ components:
 
     LoggedList:
       title: LoggedList
-      description: 'List of logged parameters'
+      description: ''
       type: array
       items:
-        $ref: '#/components/schemas/Logged'
+        $ref: '#/components/schemas/LoggedParameter'
       example:
-        [parameter: 700, parameter: 800]
-
+        [parameter: 8700, parameter: 8743]
+   
     Parameter:
       title: Parameter
       description: 'Contains the value of a parameter and some more details'
@@ -781,31 +713,32 @@ components:
           description: 'Name of the parameter'
           type: string
         dataType_name:
-          $ref: '#/components/schemas/DataTypeName'
+          description: 'Name of the data content (e.g. TEMP, POWER, STRING)'
+          type: string
         dataType_family:
-          $ref: '#/components/schemas/DataTypeFamily'
+          description: 'Name of the value type (e.g. VALS, ENUM)'
+          type: string
         error:
           $ref: '#/components/schemas/Error'
-        value:
-          description: 'Value of the parameter'
+        value: 
+          description: 'Value of the parameter (--- for disabled / not available)'
           type: string
         desc:
           description: 'Description of the value'
           type: string
         precision:
-          description: 'Precision of data type 0/VALS'
-          type: number
-        dataType:
+          $ref: '#/components/schemas/Precision'
+        dataType: 
           $ref: '#/components/schemas/ParameterType'
         readonly:
           $ref: '#/components/schemas/IsReadOnly'
+        readwrite:
+          $ref: '#/components/schemas/ReadWrite' 
         unit:
           description: 'Unit of the parameter'
           type: string
       example:
         name: 'Betriebsart'
-        dataType_name: ENUM
-        dataType_family: ENUM
         error: 0
         value: '1'
         desc: 'Automatik'
@@ -820,104 +753,12 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/Parameter'
       example:
-        '0':
-          name: 'Datum/Zeit'
-          dataType_name: DATETIME
-          dataType_family: DTTM
-          error: 0
-          value: '25.03.2021 23:24:52'
-          desc: ''
-          dataType: 5
-          readonly: 0
-          unit: ''
-        '5':
-          name: 'Sommerzeitbeginn Tag/Monat'
-          dataType_name: SUMMERPERIOD
-          dataType_family: DDMM
-          error: 0
-          value: "25.03."
-          desc: ''
-          dataType: 6
-          readonly: 0
-          unit: ''
-        '502':
-          name: 'Mi'
-          dataType_name: TIMEPROG
-          dataType_family: TMPR
-          error: 0
-          value: "1. 04:10 - 21:00 2. --:-- - --:-- 3. --:-- - --:--"
-          desc: ''
-          dataType: 9
-          readonly: 0
-          unit: ''
         '700':
           name: 'Betriebsart'
-          dataType_name: ENUM
-          dataType_family: ENUM
           error: 0
           value: '1'
           desc: 'Automatic'
           dataType: 1
-          readonly: 0
-          unit: ''
-        '710':
-          name: 'Komfortsollwert'
-          dataType_name: TEMP
-          dataType_family: VALS
-          error: 0
-          value: "20.2"
-          desc: ''
-          precision: 0.1
-          dataType: 0
-          readonly: 0
-          unit: '&deg;C'
-        '1602':
-          name: 'TWW Status'
-          dataType_name: BIT
-          dataType_family: BITS
-          error: 0
-          value: '01000101'
-          desc: ''
-          dataType: 2
-          readonly: 0
-          unit: ''
-        '1620':
-          name: 'TWW Freigabe'
-          dataType_name: ENUM
-          dataType_family: ENUM
-          error: 0
-          value: '2'
-          desc: 'Zeitprogramm 4/TWW'
-          dataType: 1
-          readonly: 0
-          unit: ''
-        '3832':
-          name: 'Kollektorstartfunktion ein'
-          dataType_name: HOUR_MINUTES
-          dataType_family: HHMM
-          error: 0
-          value: '07:00'
-          desc: ''
-          dataType: 4
-          readonly: 1
-          unit: ''
-        '7170':
-          name: 'Telefon Kundendienst'
-          dataType_name: STRING
-          dataType_family: STRN
-          error: 0
-          value: '0'
-          desc: ''
-          dataType: 7
-          readonly: 0
-          unit: ''
-        '15040':
-          name: 'Uhrzeit'
-          dataType_name: 'PPS_TIME'
-          dataType_family: 'DWHM'
-          error: 0
-          value: '15:26:11'
-          dataType: 8
           readonly: 0
           unit: ''
 
@@ -929,27 +770,20 @@ components:
         name:
           description: 'Name of the parameter'
           type: string
-        dataType_name:
-          $ref: '#/components/schemas/DataTypeName'
-        dataType_family:
-          $ref: '#/components/schemas/DataTypeFamily'
         possibleValues:
           $ref: '#/components/schemas/PossibleValueList'
         isswitch:
           description: |
             Parameter is a switch
-
+          
             0 - No
-
-            1 = Yes, VT_ONOFF or VT_YESNO
+            
+            1 = Yes, ONOFF or YESNO
           type: integer
           format: int32
           minimum: 0
           maximum: 1
-        precision:
-          description: 'Precision of data type 0/VALS'
-          type: number
-        dataType:
+        dataType: 
           $ref: '#/components/schemas/ParameterType'
         readonly:
           $ref: '#/components/schemas/IsReadOnly'
@@ -958,9 +792,8 @@ components:
           type: string
       example:
         name: 'Betriebsart'
-        dataType_name: ENUM
-        dataType_family: ENUM
-        possibleValues: [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
+        possibleValues:
+          [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
         isswitch: 0
         dataType: 1
         readonly: 0
@@ -973,96 +806,13 @@ components:
       additionalProperties:
         $ref: '#/components/schemas/ParameterDefinition'
       example:
-        '0':
-          name: 'Datum/Zeit'
-          dataType_name: DATETIME
-          dataType_family: DTTM
-          possibleValues: []
-          isswitch: 0
-          dataType: 5
-          readonly: 0
-          unit: ''
-        '5':
-          name: 'Sommerzeitbeginn Tag/Monat'
-          dataType_name: SUMMERPERIOD
-          dataType_family: DDMM
-          possibleValues: []
-          isswitch: 0
-          dataType: 6
-          readonly: 0
-          unit: ''
-        '502':
-          name: 'Mi'
-          dataType_name: TIMEPROG
-          dataType_family: TMPR
-          possibleValues: []
-          isswitch: 0
-          dataType: 9
-          readonly: 0
-          unit: ''
-        '700':
-          name: 'Betriebsart'
-          dataType_name: ENUM
-          dataType_family: ENUM
-          possibleValues: [{enumValue: 0, desc: 'Schutzbetrieb'}, {enumValue: 1, desc: 'Automatik'}]
-          isswitch: 0
-          dataType: 1
-          readonly: 0
-          unit: ''
-        '710':
-          name: 'Komfortsollwert'
-          dataType_name: TEMP
-          dataType_family: VALS
-          possibleValues: []
-          precision: 0.1
-          dataType: 0
-          readonly: 0
-          unit: '&deg;C'
-        '1602':
-          name: 'TWW Status'
-          dataType_name: BIT
-          dataType_family: BITS
-          possibleValues: [{enumValue: 2, desc: 'TWW-Push nicht aktiv'}, {enumValue: 514, desc: 'TWW-Push aktiv'}]
-          isswitch: 0
-          dataType: 2
-          readonly: 0
-          unit: ''
-        '1620':
-          name: 'TWW Freigabe'
-          dataType_name: ENUM
-          dataType_family: ENUM
-          possibleValues: [{enumValue: 65535, desc: '---'}, {enumValue: 0, desc: '24h/Tag'}]
-          isswitch: 0
-          dataType: 1
-          readonly: 0
-          unit: ''
-        '3832':
-          name: 'Kollektorstartfunktion ein'
-          dataType_name: HOUR_MINUTES
-          dataType_family: HHMM
-          possibleValues: []
-          isswitch: 0
-          dataType: 4
-          readonly: 1
-          unit: ''
-        '7170':
-          name: 'Telefon Kundendienst'
-          dataType_name: STRING
-          dataType_family: STRN
-          possibleValues: []
-          isswitch: 0
-          dataType: 7
-          readonly: 0
-          unit: ''
-        '15040':
-          name: 'Uhrzeit'
-          dataType_name: 'PPS_TIME'
-          dataType_family: 'DWHM'
-          possibleValues: []
-          isswitch: 0
-          dataType: 8
-          readonly: 0
-          unit: ''
+          '700':
+            name: 'Betriebsart'
+            possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
+            isswitch: 0
+            dataType: 1
+            readonly: 0
+            unit: ''
 
     ParameterFilter:
       title: ParameterFilter
@@ -1078,7 +828,7 @@ components:
         - parameter
       example:
         parameter: '700'
-
+    
     ParameterFilterList:
       title: ParameterFilterList
       description: 'List of filters to request multiple parameters'
@@ -1100,13 +850,7 @@ components:
           description: 'New parameter value'
           type: string
         type:
-          description: |
-            Write type
-
-            0 - INF
-
-            1 - SET
-          type: string
+          $ref: '#/components/schemas/WriteType'
         destination:
           description: 'Destination of parameter'
           type: integer
@@ -1131,7 +875,7 @@ components:
         status:
           description: |
             Status of write request
-
+            
             0 - Error
 
             1 - OK
@@ -1170,25 +914,12 @@ components:
       example:
         [{enumvalue: 0, desc: 'Schutzbetrieb'}, {enumvalue: 1, desc: 'Automatik'}]
 
-    ProtectedGPIO:
-      title: ProtectedGPIO
-      description: ''
-      type: object
-      properties:
-        pin:
-          type: integer
-          format: int32
+    Precision:
+      title: Precision
+      description: 'Digits after the decimal dot'
+      type: number
       example:
-        pin: 10
-
-    ProtectedGPIOList:
-      title: ProtectedGPIOList
-      description: ''
-      type: array
-      items:
-        $ref: '#/components/schemas/ProtectedGPIO'
-      example:
-        [pin: 10, pin: 11]
+        precision: 0.1
 
     ResetValue:
       title: ResetValue
@@ -1214,7 +945,7 @@ components:
         '700':
           error: 0
           value: "3"
-
+    
     ResetValueFilter:
       title: ResetValueFilter
       description: 'Filter for query reset value of parameter'
@@ -1241,28 +972,59 @@ components:
         $ref: '#/components/schemas/ResetValueFilter'
       example:
         [parameter: '700', parameter: '701']
-
+    
+    WritableParameterMap:
+      title: WritableParameterMap
+      description: 'HashMap of writable parameters with parameter ID as key'
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/WritableParameter'
+      example:
+        '70':
+          parameter: '70'
+          value: '4.2'
+          type: '1'
+        '130':
+          parameter: '130'
+          value: '65535'
+          type: '1'
+    
+    WritableParameter:
+      title: WritableParameter
+      description: 'A parameter which can be written'
+      type: object
+      properties:
+        value: 
+          description: 'Current value of the parameter'
+          type: string
+        type: 
+          $ref: '#/components/schemas/WriteType'
+      example:
+        parameter: '70'
+        value: '4.2'
+        type: '1'
+    
     Error:
       title: Error
       description: |
         Current state of parameter value
-
+        
         0 - ok
-
+        
         7 - parameter not supported
-
+        
         1..255 - LPB/BSB bus errors
-
+        
         256 - decoding error
-
+        
         257 - unknown command
-
+        
         258 - not found
-
+        
         259 - no enum str
-
+        
         260 - unknown type
-
+        
         261 - query failed
       type: integer
       format: int32
@@ -1281,77 +1043,55 @@ components:
       minimum: 0
       maximum: 1
       format: int32
+      deprecated: true
 
     ParameterType:
       title: ParameterType
       description: |
         Data type of parameter
+      
+        0 - Number ("1", "20.5", "---" for value not available)
+      
+        1 - ENUM (Integer value of Enum "2")
+      
+        2 - Bit value ("01000101")
 
-        0 - Number VALS ("1", "20.5", "---" for value not available)
+        3 - Weekday
 
-        1 - ENUM ENUM(Integer value of Enum "2")
+        4 - Hour:Minute
 
-        2 - Bit value BITS ("01000101")
+        5 - Date and time ("09.01.2021 12:42:02")
 
-        3 - Weekday (currently not used)
+        6 - Day and month ("25.10")
 
-        4 - Hour:Minute HHMM
-
-            Format:
-              "<hh:mm>"
-
-            Example:
-              "09:10"
-
-            Write format:
-              "<hh.mm>"
-              "09.10"
-
-        5 - Date and time DTTM
-
-            Format:
-              "<dd.mm.yyyy hh:mm:ss>"
-
-            Example:
-              "09.01.2021 12:42:02"
-
-            Write format:
-              "<dd.mm.yyyy_hh:mm:ss>"
-              "09.01.2021_12:42:02"
-
-        6 - Day and month DDMM
-
-            Format:
-              "<dd.mm.>"
-
-            Example:
-              "25.10."
-
-            Write format:
-              same as read format
-
-        7 - String STRN
+        7 - String
 
         8 - PPS time (day of week, hour:minute)
-
-        9 - Time program: TMPR Type to define 3 timeslots per day with hh:mm.
-
-            Format:
-              1.   on    -   off   2.   on    -   off   3.   on    -   off
-              1. <hh:mm> - <hh:mm> 2. <hh:mm> - <hh:mm> 3. <hh:mm> - <hh:mm>
-
-            Example:
-              "1. 04:00 - 21:00 2. --:-- - --:-- 3. --:-- - --:--"
-
-            Write format: (single minutes can not be configured, 10min steps is minimum)
-              "<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>_<hh:mm>-<hh:mm>"
-              '--' must be replaced by 'x'
-              "04:00-21:00_xx:xx-xx:xx_xx:xx-xx:xx"
-
       type: integer
       format: int32
       minimum: 0
       maximum: 8
+    
+    ReadWrite:
+      title: ReadWrite
+      description: |
+        0 - read/write
+
+        1 - readonly
+        
+        2 - write only
+      type: integer
+      minimum: 0
+      maximum: 2
+      format: int32
+
+    WriteType:
+      title: WriteType
+      description: |
+        0 - INF
+            
+        1 - SET
+      type: string
 
   securitySchemes:
     basicAuth:
