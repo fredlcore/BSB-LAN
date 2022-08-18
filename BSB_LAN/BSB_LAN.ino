@@ -6585,13 +6585,14 @@ void loop() {
           }
         }
       }
+      IPAddress broadcast_ip;
       if (LoggingMode & CF_LOGMODE_UDP) {
         #ifdef WIFI
           IPAddress local_ip = WiFi.localIP();
         #else
           IPAddress local_ip = Ethernet.localIP();
         #endif
-        IPAddress broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
+        broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
       }
       for (int i=0; i < numLogValues; i++) {
         int outBufLen = 0;
