@@ -191,6 +191,7 @@
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
 #define MENU_TEXT_FSP "Freier Speicher auf SD Karte"
+#define MENU_TEXT_WSS "WIFI Signalstärke"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 
@@ -227,7 +228,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
-#define CF_LOGMODE_TEXT "Logging mode"
+#define CF_LOGMODE_TEXT "Log-Modus"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
 #define CF_RGT1_SENSOR_TEXT "RGT1/PPS Temperatursensor Parameter"
 #define CF_RGT2_SENSOR_TEXT "RGT2 Temperatursensor Parameter"
@@ -2219,10 +2220,10 @@
 #define ENUM_WRITE_ENG_TEXT "Ein (Standard)"
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"
 
-#define ENUM_LOGMODE_01_TEXT "Write to SD card"
-#define ENUM_LOGMODE_02_TEXT "Write 24h avg to SD card"
-#define ENUM_LOGMODE_04_TEXT "Send to MQTT broker"
-#define ENUM_LOGMODE_08_TEXT "Send to UDP"
+#define ENUM_LOGMODE_01_TEXT "Auf SD-Karte schreiben"
+#define ENUM_LOGMODE_02_TEXT "24-Stunden-Durchschnittswerte auf SD-Karte schreiben"
+#define ENUM_LOGMODE_04_TEXT "An MQTT-Broker senden"
+#define ENUM_LOGMODE_08_TEXT "Als UDP-Nachrichten senden"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"
