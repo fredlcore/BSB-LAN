@@ -68,6 +68,7 @@
  *        - ATTENTION: New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
  *        - ESP32: OTA now uses system-wide HTTP AUTH authentication credentials
  *        - Improved built-in chart display (/DG), new configuration definement #define USE_ADVANCED_PLOT_LOG_FILE - thanks to Christian Ramharter
+ *        - Optional logging via UDP broadcast added (configurable, same parameters and format as in SD card logging)
  *        - Lots of bugfixes
  *       version 2.0
  *        - ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
@@ -511,7 +512,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
   #include <WiFiUdp.h>
-WiFiUDP udp;
+WiFiUDP udp, udp_log;
   #if defined(ENABLE_ESP32_OTA)
     #include <WebServer.h>
     #include <Update.h>
@@ -527,10 +528,10 @@ EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
 #else
   #ifdef WIFI
     #include "src/WiFiSpi/src/WiFiSpiUdp.h"
-WiFiSpiUdp udp;
+WiFiSpiUdp udp, udp_log;
   #else
     #include <EthernetUdp.h>
-EthernetUDP udp;
+EthernetUDP udp, udp_log;
   #endif
 #endif
 
@@ -5685,7 +5686,7 @@ void loop() {
 #endif
 // logged parameters
           #ifdef LOGGER
-            printFmtToWebClient(PSTR(",\r\n  \"logvalues\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode & CF_LOGMODE_SD_CARD, log_interval);
+            printFmtToWebClient(PSTR(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i] > 0)  {
@@ -6208,6 +6209,7 @@ void loop() {
                 printyesno(logTelegram & LOGTELEGRAM_UNKNOWN_ONLY);
               }
               break;
+            // note: no use case recognized for temporary UDP logging on/off
             case '=': // logging configuration: L=<interval>,<parameter 1>,<parameter 2>,...,<parameter20>
             {
               char* log_token = strtok(p,"=,");  // drop everything before "="
@@ -6564,49 +6566,61 @@ void loop() {
 
 
 #ifdef LOGGER
-#if defined(ESP32)
-  uint64_t freespace = 0;
-  freespace = SD.totalBytes() - SD.usedBytes();
-#else
-  uint32_t freespace = 0;
-  freespace = SD.vol()->freeClusterCount();
-#endif
-  if ((LoggingMode & CF_LOGMODE_SD_CARD) && freespace > MINIMUM_FREE_SPACE_ON_SD) {
+  if ((LoggingMode & (CF_LOGMODE_SD_CARD|CF_LOGMODE_UDP))) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
-//    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
-      File dataFile = SD.open(datalogFileName, FILE_APPEND);
-
-      if (dataFile) {
-        for (int i=0; i < numLogValues; i++) {
-          int outBufLen = 0;
-          if (log_parameters[i] > 0) {
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
-#ifdef AVERAGES
-            if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
-             //averages
-              outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
-            }
-#endif
-            dataFile.print(outBuf);
-            query(log_parameters[i]);
-            outBufLen = 0;
-            strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
-            dataFile.print(outBuf);
-            outBufLen = 0;
-            if (decodedTelegram.sensorid) {
-              outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
-            }
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\r\n"), decodedTelegram.value, decodedTelegram.unit);
-            dataFile.print(outBuf);
+      File dataFile;
+      if (LoggingMode & CF_LOGMODE_SD_CARD) {
+        #if defined(ESP32)
+          uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+        #else
+          uint 32_t freespace = SD.vol()->freeClusterCount();
+        #endif
+        if (freespace > MINIMUM_FREE_SPACE_ON_SD) {
+          dataFile = SD.open(datalogFileName, FILE_APPEND);
+          if (!dataFile) {
+            // if the file isn't open, pop up an error:
+            printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+            printFmtToDebug(PSTR("Error opening %s!\r\n"), datalogFileName);
           }
         }
-        dataFile.close();
-      } else {
-    // if the file isn't open, pop up an error:
-        printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
-        printFmtToDebug(PSTR("Error opening %s!\r\n"), datalogFileName);
       }
+      if (LoggingMode & CF_LOGMODE_UDP) {
+        #ifdef WIFI
+          IPAddress local_ip = WiFi.localIP();
+        #else
+          IPAddress local_ip = Ethernet.localIP();
+        #endif
+        IPAddress broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
+      }
+      for (int i=0; i < numLogValues; i++) {
+        int outBufLen = 0;
+        if (log_parameters[i] > 0) {
+          if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          #ifdef AVERAGES
+            if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
+              outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
+            }
+          #endif
+          if (dataFile) dataFile.print(outBuf);
+          if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
+          query(log_parameters[i]);
+          outBufLen = 0;
+          strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
+          if (dataFile) dataFile.print(outBuf);
+          if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
+          outBufLen = 0;
+          if (decodedTelegram.sensorid) {
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
+          }
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\r\n"), decodedTelegram.value, decodedTelegram.unit);
+          if (dataFile) dataFile.print(outBuf);
+          if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
+          if (LoggingMode & CF_LOGMODE_UDP) udp_log.endPacket();
+        }
+      }
+      if (dataFile) dataFile.close();
       lastLogTime = millis();
     }
   }
