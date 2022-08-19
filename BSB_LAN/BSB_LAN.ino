@@ -6568,14 +6568,15 @@ void loop() {
 #ifdef LOGGER
   if ((LoggingMode & (CF_LOGMODE_SD_CARD|CF_LOGMODE_UDP))) {
     if (((millis() - lastLogTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) {
+//    SetDateTime(); // receive inital date/time from heating system
       log_now = 0;
       File dataFile;
       if (LoggingMode & CF_LOGMODE_SD_CARD) {
-        #if defined(ESP32)
-          uint64_t freespace = SD.totalBytes() - SD.usedBytes();
-        #else
-          uint32_t freespace = SD.vol()->freeClusterCount();
-        #endif
+#if defined(ESP32)
+        uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+#else
+        uint32_t freespace = SD.vol()->freeClusterCount();
+#endif
         if (freespace > MINIMUM_FREE_SPACE_ON_SD) {
           dataFile = SD.open(datalogFileName, FILE_APPEND);
           if (!dataFile) {
@@ -6587,11 +6588,11 @@ void loop() {
       }
       IPAddress broadcast_ip;
       if (LoggingMode & CF_LOGMODE_UDP) {
-        #ifdef WIFI
-          IPAddress local_ip = WiFi.localIP();
-        #else
-          IPAddress local_ip = Ethernet.localIP();
-        #endif
+#ifdef WIFI
+        IPAddress local_ip = WiFi.localIP();
+#else
+        IPAddress local_ip = Ethernet.localIP();
+#endif
         broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
       }
       for (int i=0; i < numLogValues; i++) {
@@ -6599,11 +6600,12 @@ void loop() {
         if (log_parameters[i] > 0) {
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
           outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%d;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
-          #ifdef AVERAGES
-            if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
-              outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
-            }
-          #endif
+#ifdef AVERAGES
+          if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
+            //averages
+            outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
+          }
+#endif
           if (dataFile) dataFile.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           query(log_parameters[i]);
