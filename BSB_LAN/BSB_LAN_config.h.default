@@ -112,7 +112,7 @@ byte BME_Sensors = 0; //Define number of BME280 sensors
 // Compile module for calculation 24h averages for selected programs
 #define AVERAGES
 // Create 24h averages from these parameters and save data into averages.txt on SD-card.
-int avg_parameters[40] = {
+float avg_parameters[40] = {
   8700,                         // Außentemperatur
   8326                          // Brenner-Modulation
 };
@@ -141,7 +141,7 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Interval and list of parameters can be redefined through /L command during runtime
 // Data will be written to "datalog.txt"
 unsigned long log_interval = 3600;  // Logging interval (to SD card and MQTT broker) in seconds
-int log_parameters[40] = {
+float log_parameters[40] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -179,7 +179,7 @@ byte LoggingMode = 1; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMO
 #define IPWE
 bool enable_ipwe = false;  // true - activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 // Parameters to be displayed in IPWE extension
-int ipwe_parameters[40] = {
+float ipwe_parameters[40] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
   8314,                   // Rücklauftemperatur
@@ -278,7 +278,7 @@ boolean enable_ota_update = false;
 #define JSONCONFIG
 
 #define RGT_EMULATOR
-int rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
+float rgte_sensorid[3][5] = {{0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}, {0, 0, 0, 0, 0}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
 
 //Enable presence buttons and TWW/DHW push on selected pins.
 // Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21

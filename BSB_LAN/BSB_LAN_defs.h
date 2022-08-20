@@ -563,7 +563,7 @@ typedef struct {
   uint32_t    cmd;                 // the command or fieldID
   uint8_t     category;            // the menu category
   uint8_t     type;                // the message type
-  uint16_t    line;                // parameter number
+  float       line;                // parameter number
   const char  *desc;               // description test
   uint16_t    enumstr_len;         // sizeof enum
   const char  *enumstr;            // enum string
@@ -778,7 +778,7 @@ const char ENUM_CAT[] PROGMEM_LATEST = {
 "\x45 " ENUM_CAT_45_TEXT
 };
 
-const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
+const float ENUM_CAT_NR[] PROGMEM_LATEST = {
   0, 6,
   20, 70,
   120, 140,
@@ -850,8 +850,8 @@ const uint16_t ENUM_CAT_NR[] PROGMEM_LATEST = {
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
 
-const int proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
-const int params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const float proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const float params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 
 typedef enum { //BSP = base sensors program
   BSP_INTERNAL = 20000,    // brenner durations, internal functions
@@ -13901,10 +13901,10 @@ PROGMEM_LATE const cmd_t cmdtbl3[]={
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                    NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_ONOFF,         BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
 
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_DHT22+0, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_DHT22+1, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_DHT22+2, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   BSP_DHT22+3, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_DHT22+0.0, STR20100, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_DHT22+0.1, STR20101, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_DHT22+0.2, STR20102, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, CAT_USERSENSORS,      VT_GR_PER_CUBM,   BSP_DHT22+0.3, STR20103, 0,                    NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_STRING,        BSP_BME280+0, STR20200, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_TEMP,          BSP_BME280+1, STR20201, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
 {CMD_UNKNOWN, CAT_USERSENSORS,      VT_PERCENT_WORD1, BSP_BME280+2, STR20202, 0,                    NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity

@@ -26,8 +26,8 @@ uint32_t get_cmdtbl_cmd(int i) {
   return c;
 }
 
-uint16_t get_cmdtbl_line(int i) {
-  uint16_t l = 0;
+float get_cmdtbl_line(int i) {
+  float l = 0;
   int entries1 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]);
   int entries2 = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) +  sizeof(cmdtbl2)/sizeof(cmdtbl2[0]);
   if (i < entries1) {
@@ -51,6 +51,26 @@ uint16_t get_cmdtbl_line(int i) {
 #endif
   }
   return l;
+}
+
+float get_next_prognr(int startFromTableLine){
+  if(startFromTableLine < 0) return -1;
+  int cmdtblsize = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]);
+  float prognr = get_cmdtbl_line(startFromTableLine);
+  float nextprognr = -1;
+//  printFmtToDebug(PSTR("prognr: %.1f\r\n"), prognr);
+//  printFmtToDebug(PSTR("startindex: %d\r\n"), startFromTableLine);
+  do{
+    startFromTableLine++;
+    if(cmdtblsize == startFromTableLine) {
+//      printFmtToDebug(PSTR("nextprognr: -1\r\n"));
+      return -1;
+    }
+    nextprognr = get_cmdtbl_line(startFromTableLine);
+//    printFmtToDebug(PSTR("nextindex: %d\r\n"), startFromTableLine);
+  } while (prognr == nextprognr);
+//  printFmtToDebug(PSTR("nextprognr: %.1f\r\n"), nextprognr);
+  return nextprognr;
 }
 
 uint_farptr_t get_cmdtbl_desc(int i) {

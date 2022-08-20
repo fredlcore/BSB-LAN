@@ -652,7 +652,7 @@ void loadCategoryDescAddr() {
  *  or, if You do not want every time decode pvalstr, you can use
  *  values from decodedTelegram structure after printTelegram() calling
  * *************************************************************** */
-void printTelegram(byte* msg, int query_line) {
+void printTelegram(byte* msg, float query_line) {
   resetDecodedTelegram();
 /*
 #if !DEBUG
@@ -709,7 +709,7 @@ void printTelegram(byte* msg, int query_line) {
       }
       break;
     case BUS_PPS:
-      cmd = 0x2D000000 + query_line - 15000;    // PPS commands start at parameter no. 15000
+      cmd = 0x2D000000 + ((uint16_t)query_line) - 15000;    // PPS commands start at parameter no. 15000
       cmd = cmd + (pps_cmd * 0x10000);
       break;
   }
@@ -801,7 +801,7 @@ void printTelegram(byte* msg, int query_line) {
     // Entry in command table is a documented command code
     decodedTelegram.prognr=get_cmdtbl_line(i);
 
-    printFmtToDebug(PSTR("%4ld "),decodedTelegram.prognr);
+    printFmtToDebug(PSTR("%4.1f "),decodedTelegram.prognr);
 
     // print category
     loadPrognrElementsFromTable(query_line, i);
