@@ -1226,12 +1226,12 @@ uint8_t recognizeVirtualFunctionGroup(float nr) {
   else if (nr >= BSP_DHT22 && nr < BSP_DHT22 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0])) {return 3;} //20100 - 20199
 #endif
 #ifdef BME280
-  else if (nr >= BSP_BME280 && nr < BSP_BME280 + BME_Sensors * 6) {return 8;} //20200 - 20299
+  else if (nr >= BSP_BME280 && nr < BSP_BME280 + BME_Sensors) {return 8;} //20200 - 20299
 #endif
 #ifdef ONE_WIRE_BUS
-  else if (nr >= BSP_ONEWIRE && nr < BSP_ONEWIRE + (uint16_t)numSensors * 2) {return 4;} //20300 - 20499
+  else if (nr >= BSP_ONEWIRE && nr < BSP_ONEWIRE + (uint16_t)numSensors) {return 4;} //20300 - 20499
 #endif
-  else if (nr >= BSP_MAX && nr < BSP_MAX + MAX_CUL_DEVICES * 4) {return 5;} //20500 - 20699
+  else if (nr >= BSP_MAX && nr < BSP_MAX + MAX_CUL_DEVICES) {return 5;} //20500 - 20699
   else if (nr >= BSP_FLOAT && nr < BSP_FLOAT + numCustomFloats) {return 6;} //20700 - 20799
   else if (nr >= BSP_LONG && nr < BSP_LONG + numCustomLongs) {return 7;} //20800 - 20899
   return 0;
@@ -1279,12 +1279,12 @@ int findLine(float line
         }
         break;
       }
-      case 4: line = BSP_ONEWIRE + ((((uint16_t)line) - BSP_ONEWIRE) % 2); break;
+      case 4: line = BSP_ONEWIRE + modf(line, NULL); break;
       case 5:{
-        if (max_device_list[(((uint16_t)line) - BSP_MAX) / 4][0] == 0) {  //device not set
+        if (max_device_list[((uint16_t)line) - BSP_MAX][0] == 0) {  //device not set
           return -1;
         } else {
-          line = BSP_MAX + ((((uint16_t)line) - BSP_MAX) % 4);
+          line = BSP_MAX + modf(line, NULL);
         }
         break;
       }
@@ -1292,8 +1292,8 @@ int findLine(float line
       case 7: line = BSP_LONG; break;
       case 8: {
 #ifdef BME280
-        if (line - BSP_BME280 < BME_Sensors * 6) { //
-          line = BSP_BME280 + ((((uint16_t)line) - BSP_BME280) % 6);
+        if (line - BSP_BME280 < BME_Sensors) { //
+          line = BSP_BME280 + modf(line, NULL);
         } else {
           return -1;
         }
@@ -1611,11 +1611,11 @@ void loadPrognrElementsFromTable(float nr, int i) {
       case 1: break;
       case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readwrite = FL_RONLY; break; //overwrite native program categories with CAT_USERSENSORS
       case 3: decodedTelegram.sensorid = nr - BSP_DHT22 + 1; break;
-      case 4: decodedTelegram.sensorid = (nr - BSP_ONEWIRE) / 2 + 1; break;
-      case 5: decodedTelegram.sensorid = (nr - BSP_MAX) / 4 + 1; break;
+      case 4: decodedTelegram.sensorid = nr - BSP_ONEWIRE + 1; break;
+      case 5: decodedTelegram.sensorid = nr - BSP_MAX + 1; break;
       case 6: decodedTelegram.sensorid = nr - BSP_FLOAT + 1; break;
       case 7: decodedTelegram.sensorid = nr - BSP_LONG + 1; break;
-      case 8: decodedTelegram.sensorid = (nr - BSP_BME280) / 6 + 1; break;
+      case 8: decodedTelegram.sensorid = nr - BSP_BME280 + 1; break;
     }
   }
 }
@@ -4107,9 +4107,9 @@ void queryVirtualPrognr(float line, int table_line) {
     case 4: {
 #ifdef ONE_WIRE_BUS
       size_t tempLine = line - BSP_ONEWIRE;
-      int log_sensor = tempLine / 2;
+      int log_sensor = tempLine;
       if (One_Wire_Pin && numSensors) {
-        switch (tempLine % 2) {
+        switch (((int)(tempLine * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
             sensors->getAddress(device_address, log_sensor);
@@ -4135,10 +4135,10 @@ void queryVirtualPrognr(float line, int table_line) {
     case 5: {
 #ifdef MAX_CUL
       size_t tempLine = line - BSP_MAX;
-      size_t log_sensor = tempLine / 4;
+      size_t log_sensor = tempLine;
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
-          switch (tempLine % 4){ //print sensor values
+          switch (((int)(tempLine * 10)) % 10){ //print sensor values
             case 0:  //print sensor ID
               strcpy(decodedTelegram.value, max_device_list[log_sensor]);
               break;
@@ -4184,8 +4184,8 @@ void queryVirtualPrognr(float line, int table_line) {
     case 8: {
 #ifdef BME280
       size_t tempLine = ((uint16_t)line) - BSP_BME280;
-      size_t log_sensor = tempLine / 6;
-      uint8_t selector = tempLine % 6;
+      size_t log_sensor = tempLine;
+      uint8_t selector = ((int)(tempLine * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
