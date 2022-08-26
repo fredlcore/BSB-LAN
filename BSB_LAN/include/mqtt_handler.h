@@ -14,7 +14,7 @@ char *build_pvalstr(bool extended);
  *  MQTT instance
  * *************************************************************** */
 #ifdef MQTT
-void mqtt_sendtoBroker(int param) {
+void mqtt_sendtoBroker(float param) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
   String MQTTTopic = "";
@@ -55,7 +55,10 @@ void mqtt_sendtoBroker(int param) {
   if (mqtt_mode == 3) { // Build the json doc on the fly
     int len = 0;
     outBuf[len] = 0;
-    len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
+    if(roundf(param * 10) != roundf(param) * 10)
+      len += sprintf_P(outBuf + len, PSTR("%.1f,\"name\":\""), param);
+    else
+      len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
     len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
     len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
     if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
@@ -65,7 +68,10 @@ void mqtt_sendtoBroker(int param) {
     MQTTPayload.concat(outBuf);
   } else if (mqtt_mode == 2) { // Build the json doc on the fly
     char tbuf[20];
-    sprintf_P(tbuf, PSTR("\"%d\":\""), param);
+    if(roundf(param * 10) != roundf(param) * 10)
+      sprintf_P(tbuf, PSTR("\"%.1f\":\""), param);
+    else
+      sprintf_P(tbuf, PSTR("\"%d\":\""), (int)roundf(param));
     MQTTPayload.concat(tbuf);
     if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
@@ -287,7 +293,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   C_value[length+4]='\0';
   char*C_payload=C_value+ 4;  //dukess
   if (firstsign!=' ') C_payload++; //skip I/S
-  int I_line=atoi(C_payload);
+  float I_line=atof(C_payload);
   String mqtt_Topic;
   if (MQTTTopicPrefix[0]) {
     mqtt_Topic = MQTTTopicPrefix;
@@ -299,11 +305,11 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
 
   if (firstsign==' ') { //query
-    printFmtToDebug(PSTR("%d \r\n"), I_line);
+    printFmtToDebug(PSTR("%.1f \r\n"), I_line);
   } else { //command to heater
     C_payload=strchr(C_payload,'=');
     C_payload++;
-    printFmtToDebug(PSTR("%d=%s \r\n"), I_line, C_payload);
+    printFmtToDebug(PSTR("%.1f=%s \r\n"), I_line, C_payload);
     set(I_line,C_payload,firstsign=='S');  //command to heater
   }
   mqtt_sendtoBroker(I_line);  //send mqtt-message
