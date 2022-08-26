@@ -1275,16 +1275,18 @@ int findLine(float line
         if (DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == 0) { //pin not assigned to DHT sensor
           return -1;
         } else {
-          line = BSP_DHT22 + modf(line, NULL);
+          float intpart;
+          line = BSP_DHT22 + modf(line, &intpart);
         }
         break;
       }
-      case 4: line = BSP_ONEWIRE + modf(line, NULL); break;
+      case 4: {float intpart; line = BSP_ONEWIRE + modf(line, &intpart); break;}
       case 5:{
         if (max_device_list[((uint16_t)line) - BSP_MAX][0] == 0) {  //device not set
           return -1;
         } else {
-          line = BSP_MAX + modf(line, NULL);
+          float intpart;
+          line = BSP_MAX + modf(line, &intpart);
         }
         break;
       }
@@ -1292,8 +1294,9 @@ int findLine(float line
       case 7: line = BSP_LONG; break;
       case 8: {
 #ifdef BME280
-        if (line - BSP_BME280 < BME_Sensors) { //
-          line = BSP_BME280 + modf(line, NULL);
+        if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
+          float intpart;
+          line = BSP_BME280 + modf(line, &intpart);
         } else {
           return -1;
         }
@@ -4031,7 +4034,7 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 2: {
   #ifdef AVERAGES
-      size_t tempLine = line - BSP_AVERAGES;
+      size_t tempLine = roundf(line - BSP_AVERAGES);
       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
       return;
    #endif
@@ -4039,9 +4042,9 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 3: {
 #ifdef DHT_BUS
-      float tempLine = line - BSP_DHT22;
-      size_t log_sensor = tempLine;
-      if (((int)tempLine) * 10 == (int)(tempLine * 10)) { //print sensor ID
+      size_t log_sensor = roundf(line - BSP_DHT22);
+      int tempLine = (int)roundf((line - BSP_DHT22) * 10) % 10;
+      if (tempLine == 0) { //print sensor ID
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
         return;
       }
@@ -4086,7 +4089,7 @@ void queryVirtualPrognr(float line, int table_line) {
       float temp = dht.getTemperature();
       if (hum > 0 && hum < 101) {
         printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
-        switch (((int)(tempLine * 10)) % 10) {
+        switch (tempLine) {
           case 1: //print sensor Current temperature
             _printFIXPOINT(decodedTelegram.value, temp, 2);
             break;
@@ -4106,10 +4109,9 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 4: {
 #ifdef ONE_WIRE_BUS
-      size_t tempLine = line - BSP_ONEWIRE;
-      int log_sensor = tempLine;
+      size_t log_sensor = roundf(line - BSP_ONEWIRE);
       if (One_Wire_Pin && numSensors) {
-        switch (((int)(tempLine * 10)) % 10) {
+        switch (((int)roundf((line - BSP_ONEWIRE) * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
             sensors->getAddress(device_address, log_sensor);
@@ -4134,11 +4136,10 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 5: {
 #ifdef MAX_CUL
-      size_t tempLine = line - BSP_MAX;
-      size_t log_sensor = tempLine;
+      size_t log_sensor = roundf(line - BSP_MAX);
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
-          switch (((int)(tempLine * 10)) % 10){ //print sensor values
+          switch (((int)roundf((line - BSP_MAX) * 10)) % 10){ //print sensor values
             case 0:  //print sensor ID
               strcpy(decodedTelegram.value, max_device_list[log_sensor]);
               break;
@@ -4183,9 +4184,8 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 8: {
 #ifdef BME280
-      size_t tempLine = ((uint16_t)line) - BSP_BME280;
-      size_t log_sensor = tempLine;
-      uint8_t selector = ((int)(tempLine * 10)) % 10;
+      size_t log_sensor = roundf(line - BSP_BME280);
+      uint8_t selector = ((int)roundf((line - BSP_BME280) * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
@@ -7308,7 +7308,7 @@ void setup() {
         case 0x60: printToDebug(PSTR("BME280")); break;
         default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
       }
-      printFmtToDebug(PSTR(" with address %x "), bme[f].parameter.I2CAddress);
+      printFmtToDebug(PSTR(" with address 0x%x "), bme[f].parameter.I2CAddress);
       if (!sensor_found) {
         printToDebug(PSTR("NOT "));
       }
