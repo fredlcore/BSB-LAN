@@ -1789,8 +1789,8 @@ UIStrings["STR20904_TEXT"] = "Напряжение батареи BLE";
 
 UIStrings["STR99999_TEXT"] = "НЕИЗВЕСТНАЯ команда";
 
-UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "Пассивный";
-UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "Как комнатное устройство";
+UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "Пассивный";
+UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "Как комнатное устройство";
 UIStrings["ENUM_DEBUG_SERIAL_TEXT"] = "COM-порт";
 UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Обычный текст";
@@ -1802,9 +1802,8 @@ UIStrings["ENUM_WRITE_OEM_TEXT"] = "Вкл. (Инженерные + OEM)";
 
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Запись на SD-карту";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "Запись среднесуточных на SD-карту";
-UIStrings["ENUM_LOGMODE_04_TEXT"] = "Публикация в IPWE";
-UIStrings["ENUM_LOGMODE_08_TEXT"] = "Отправка брокеру MQTT";
-UIStrings["ENUM_LOGMODE_10_TEXT"] = "Отправка через UDP";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Отправка брокеру MQTT";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Отправка через UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "Английский";
 UIStrings["ENUM20_02_TEXT"] = "Немецкий";

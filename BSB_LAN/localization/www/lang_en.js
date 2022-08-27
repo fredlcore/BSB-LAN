@@ -485,16 +485,15 @@ UIStrings["STR9560_TEXT"] = "Fan modulation for full charging of strat. tank";
 UIStrings["STR9563_TEXT"] = "Fan speed for full charging of stratific. tank";
 UIStrings["STR10100_TEXT"] = "System status";
 
-UIStrings["ENUM_BUS_PPS_MODE_PASSIVE"] = "passive";
-UIStrings["ENUM_BUS_PPS_MODE_QAA"] = "as room unit";
+UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "passive";
+UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "as room unit";
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "On (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Write to SD card";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "Write 24h avg to SD card";
-UIStrings["ENUM_LOGMODE_04_TEXT"] = "Publish to IPWE";
-UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to MQTT broker";
-UIStrings["ENUM_LOGMODE_10_TEXT"] = "Send to UDP";
+UIStrings["ENUM_LOGMODE_04_TEXT"] = "Send to MQTT broker";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to UDP";
 
 UIStrings["ENUM8000_04_TEXT"] = "Manual control active";
 UIStrings["ENUM8000_11_TEXT"] = "Overrun active";
