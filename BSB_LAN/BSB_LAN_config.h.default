@@ -117,13 +117,16 @@ int avg_parameters[40] = {
   8326                          // Brenner-Modulation
 };
 
-/* Compile module for logging on SD-card.
-Requires a FAT32-formatted Micro-SD card inserted into the Ethernet-Shield's card slot
+/* Compile module for logging.
+File logging requires a FAT32 formatted micro SD card inserted into the Ethernet shield's card slot.
 Does: log bus telegrams to file
       log selected values to file
       store to SD and load selected 24h averages
+      send selected values as UDP broadcast
       push selected values to an MQTT broker*/
 #define LOGGER
+
+#define UDP_LOG_PORT 6502 // fixed here, not configurable via web interface
 
 // Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage
 //#define ESP32_USE_SD
@@ -140,7 +143,7 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command during runtime
 // Data will be written to "datalog.txt"
-unsigned long log_interval = 3600;  // Logging interval (to SD card and MQTT broker) in seconds
+unsigned long log_interval = 3600;  // Logging interval (to SD card, UDP and MQTT broker) in seconds
 int log_parameters[40] = {
   8700,                   // Außentemperatur
   8743,                   // Vorlauftemperatur
@@ -172,7 +175,7 @@ char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" f
 char MQTTDeviceID[32] = "BSB-LAN";
 
 // Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be conjunction of these values.
-byte LoggingMode = 1; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
+byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
 
 
 // Compile IPWE extension
