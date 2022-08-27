@@ -4377,11 +4377,12 @@ void query(float line_start  // begin at this line (ProgNr)
   float line = line_start;     // ProgNr
    do {
      query(line);
-     if (decodedTelegram.prognr == -1) continue;
-     if (!no_print) {         // display in web client?
-        query_printHTML();
+     if (decodedTelegram.prognr != -1) {
+       if (!no_print) {         // display in web client?
+         query_printHTML();
+       }
      }
-     line = get_next_prognr(findLine(line, 0, NULL));
+     line = get_next_prognr(line, findLine(line, 0, NULL));
    }while(line >= line_start && line <= line_end); // endfor, for each valid line (ProgNr) command within selected range
 }
 
@@ -5757,16 +5758,14 @@ void loop() {
                     continue;
                   }
                   loadPrognrElementsFromTable(j, i_line);
-                  if (decodedTelegram.readwrite) {//Do not save "read only" or "write only" parameters
-                    continue;
+                  if (decodedTelegram.readwrite == FL_WRITEABLE) {//Do not save "read only" or "write only" parameters
+                    query(j);
+                    if (decodedTelegram.error == 0) {//Do not save parameters with errors
+                      if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
+                      printFmtToWebClient(PSTR("  \"%s\":{\"parameter\":\"%s\", \"value\":\"%s\", \"type\":\"%d\"}"), printProgNR(j, prognrBuf), printProgNR(j, prognrBuf), decodedTelegram.value, 1);
+                    }
                   }
-                  query(j);
-                  if (decodedTelegram.error != 0) {//Do not save parameters with errors
-                    continue;
-                  }
-                  if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
-                  printFmtToWebClient(PSTR("  \"%s\":{\"parameter\":\"%s\", \"value\":\"%s\", \"type\":\"%d\"}"), printProgNR(j, prognrBuf), printProgNR(j, prognrBuf), decodedTelegram.value, 1);
-                  j = get_next_prognr(i_line);
+                  j = get_next_prognr(j, i_line);
                 }while(j >= cat_min && j <= cat_max);
               }
             }
@@ -5927,7 +5926,9 @@ void loop() {
 
               if (p[2]=='K' && isdigit(p[4])) {
 //WARNING: simple increment of cat_param was changed because some prognr have decimal part.
-                if(cat_param >= 0) cat_param = get_next_prognr(findLine(cat_param,0,NULL));
+                if(cat_param >= 0) {
+                  cat_param = get_next_prognr(cat_param, findLine(cat_param,0,NULL));
+                }
                 if (cat_min < 0) {
                   int search_cat = atoi(&p[4]) * 2;
 #if defined(__AVR__)
@@ -5938,7 +5939,10 @@ void loop() {
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
 #endif
-                  cat_param = cat_min;
+// Check for category number (if somebody will set wrong category number)
+                  if(search_cat >= 0 || search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){
+                    cat_param = cat_min;
+                  }
                 }
                 if (cat_param >= cat_min && cat_param <= cat_max) {
                   json_parameter = cat_param;

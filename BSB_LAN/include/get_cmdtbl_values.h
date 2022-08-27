@@ -53,13 +53,16 @@ float get_cmdtbl_line(int i) {
   return l;
 }
 
-float get_next_prognr(int startFromTableLine){
-  if(startFromTableLine < 0) return -1;
+float get_next_prognr(float currentProgNR, int startFromTableLine){
+  if(startFromTableLine < 0) {
+    float intpart;
+    modf(currentProgNR, &intpart);
+    return intpart + 1;
+  }
   int cmdtblsize = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]);
   float prognr = get_cmdtbl_line(startFromTableLine);
   float nextprognr = -1;
-//  printFmtToDebug(PSTR("prognr: %.1f\r\n"), prognr);
-//  printFmtToDebug(PSTR("startindex: %d\r\n"), startFromTableLine);
+//  printFmtToDebug(PSTR("prognr: %.1f, startindex: %d\r\n"), prognr, startFromTableLine);
   do{
     startFromTableLine++;
     if(cmdtblsize == startFromTableLine) {
@@ -69,6 +72,21 @@ float get_next_prognr(int startFromTableLine){
     nextprognr = get_cmdtbl_line(startFromTableLine);
 //    printFmtToDebug(PSTR("nextindex: %d\r\n"), startFromTableLine);
   } while (prognr == nextprognr);
+  if(currentProgNR >= BSP_INTERNAL && currentProgNR < BSP_END) {
+    float prognrDiff = currentProgNR - prognr;
+    float intpart1, intpart2;
+    modf(prognr, &intpart1);
+    modf(nextprognr, &intpart2);
+    if(intpart1 == intpart2) {
+      nextprognr += prognrDiff;
+    } else {
+      if(recognizeVirtualFunctionGroup(currentProgNR + 1)){
+        float intpart;
+        modf(currentProgNR, &intpart);
+        nextprognr = intpart + 1;
+      }
+    }
+  }
 //  printFmtToDebug(PSTR("nextprognr: %.1f\r\n"), nextprognr);
   return nextprognr;
 }
