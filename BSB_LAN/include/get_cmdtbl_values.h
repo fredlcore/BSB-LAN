@@ -55,7 +55,11 @@ float get_cmdtbl_line(int i) {
 
 float get_next_prognr(float currentProgNR, int startFromTableLine){
   if(startFromTableLine < 0) {
+#if defined(__SAM3X8E__)
+    double intpart;
+#else
     float intpart;
+#endif
     modf(currentProgNR, &intpart);
     return intpart + 1;
   }
@@ -74,14 +78,22 @@ float get_next_prognr(float currentProgNR, int startFromTableLine){
   } while (prognr == nextprognr);
   if(currentProgNR >= BSP_INTERNAL && currentProgNR < BSP_END) {
     float prognrDiff = currentProgNR - prognr;
+#if defined(__SAM3X8E__)
+    double intpart1, intpart2;
+#else
     float intpart1, intpart2;
+#endif
     modf(prognr, &intpart1);
     modf(nextprognr, &intpart2);
     if(intpart1 == intpart2) {
       nextprognr += prognrDiff;
     } else {
       if(recognizeVirtualFunctionGroup(currentProgNR + 1)){
-        float intpart;
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
+          float intpart;
+#endif
         modf(currentProgNR, &intpart);
         nextprognr = intpart + 1;
       }

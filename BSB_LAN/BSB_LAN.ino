@@ -1276,17 +1276,33 @@ int findLine(float line
         if (DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == 0) { //pin not assigned to DHT sensor
           return -1;
         } else {
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_DHT22 + modf(line, &intpart);
         }
         break;
       }
-      case 4: {float intpart; line = BSP_ONEWIRE + modf(line, &intpart); break;}
+      case 4: {
+#if defined(__SAM3X8E__)
+        double intpart;
+#else
+        float intpart;
+#endif
+        line = BSP_ONEWIRE + modf(line, &intpart);
+        break;
+      }
       case 5:{
         if (max_device_list[((uint16_t)line) - BSP_MAX][0] == 0) {  //device not set
           return -1;
         } else {
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_MAX + modf(line, &intpart);
         }
         break;
@@ -1296,7 +1312,11 @@ int findLine(float line
       case 8: {
 #ifdef BME280
         if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_BME280 + modf(line, &intpart);
         } else {
           return -1;
