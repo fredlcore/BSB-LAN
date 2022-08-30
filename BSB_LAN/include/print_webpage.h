@@ -14,19 +14,11 @@
  void webPrintHeader(void) {
    flushToWebClient();
    printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
- #if defined(__AVR__)
-   printPStr(pgm_get_far_address(header_html), sizeof(header_html));
-   #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-   printPStr(pgm_get_far_address(header_html2), sizeof(header_html2));
-   #endif
-   printPStr(pgm_get_far_address(header_html3), sizeof(header_html3));
- #else
    printPStr(header_html, sizeof(header_html));
    #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printPStr(header_html2, sizeof(header_html2));
    #endif
    printPStr(header_html3, sizeof(header_html3));
- #endif
  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printToWebClient(PSTR("<a href='/"));
    printPassKey();
@@ -140,7 +132,6 @@ void webPrintSite() {
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL ));
 
-#if !defined(__AVR__)
 #ifdef VERSION_CHECK
   if (enable_version_check) {
     printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
@@ -188,7 +179,6 @@ void webPrintSite() {
       printlnToWebClient(PSTR(MENU_TEXT_NVN));
     }
   }
-#endif
 #endif
 
   webPrintFooter();
