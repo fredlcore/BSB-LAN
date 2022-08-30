@@ -174,7 +174,7 @@ char MQTTTopicPrefix[32] = "BSB-LAN"; 	        // Optional: Choose the "topic" f
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
 char MQTTDeviceID[32] = "BSB-LAN";
 
-// Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be conjunction of these values.
+// Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be any sum of these values.
 byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_SD_CARD_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
 
 

@@ -9,7 +9,7 @@ LAN Interface for [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LP
 ---
 
 ***Interface kits available!***  
-**PCB boards with parts are available upon request. If you are interested, please send an e-mail to bsb (ät) code-it.de (German or English) for further information.**  
+**PCB boards with parts are available upon request. If you are interested, please send an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
    
 ---   
    
