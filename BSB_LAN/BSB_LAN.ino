@@ -5407,7 +5407,7 @@ void loop() {
 #else
               prognr = params4q[i];
 #endif
-              printFmtToWebClient(PSTR("%d;"), prognr);
+              printFmtToWebClient(PSTR("%.1f;"), prognr);
             }
             printToWebClient(PSTR("\r\n"));
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
