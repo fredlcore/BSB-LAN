@@ -411,6 +411,10 @@
  *
  */
 
+ #if defined(__AVR__)
+ #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
+ #endif
+
 #define LOGTELEGRAM_OFF 0
 #define LOGTELEGRAM_ON 1
 #define LOGTELEGRAM_UNKNOWN_ONLY 2
@@ -1276,17 +1280,33 @@ int findLine(float line
         if (DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == 0) { //pin not assigned to DHT sensor
           return -1;
         } else {
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_DHT22 + modf(line, &intpart);
         }
         break;
       }
-      case 4: {float intpart; line = BSP_ONEWIRE + modf(line, &intpart); break;}
+      case 4: {
+#if defined(__SAM3X8E__)
+        double intpart;
+#else
+        float intpart;
+#endif
+        line = BSP_ONEWIRE + modf(line, &intpart);
+        break;
+      }
       case 5:{
         if (max_device_list[((uint16_t)line) - BSP_MAX][0] == 0) {  //device not set
           return -1;
         } else {
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_MAX + modf(line, &intpart);
         }
         break;
@@ -1296,7 +1316,11 @@ int findLine(float line
       case 8: {
 #ifdef BME280
         if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
           float intpart;
+#endif
           line = BSP_BME280 + modf(line, &intpart);
         } else {
           return -1;
@@ -1313,7 +1337,7 @@ int findLine(float line
   // binary search for the line in cmdtbl
 
   int left = start_idx;
-  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1);
+  int right = (int)(sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1);
   int mid = 0;
   int line_dd = roundf(line * 10);
   while (!(left >= right))
@@ -5407,7 +5431,7 @@ void loop() {
 #else
               prognr = params4q[i];
 #endif
-              printFmtToWebClient(PSTR("%d;"), prognr);
+              printFmtToWebClient(PSTR("%.1f;"), prognr);
             }
             printToWebClient(PSTR("\r\n"));
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
@@ -7222,9 +7246,7 @@ void setup() {
   }
 
   if (save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
-  printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
-  printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
-  printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
+  printFmtToDebug(PSTR("Size of cmdtbl: %d\r\n"),sizeof(cmdtbl));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut

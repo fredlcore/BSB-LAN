@@ -8305,7 +8305,7 @@ HEIZ->DISP ANS  712 11 - Heizkreis 1 - Reduziertsollwert 15.00 &deg;C
 /* global command table */
 /* **********************/
 
-PROGMEM_LATE const cmd_t cmdtbl1[]={
+PROGMEM_LATE const cmd_t cmdtbl[]={
 // Uhrzeit und Datum
 {0x053D000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum
 {0x0505000B,  CAT_DATUMZEIT,        VT_DATETIME,      0,     STR0,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [ ] - Uhrzeit und Datum   // gleiche Funktion mit anderer CommandID
@@ -9902,9 +9902,7 @@ PROGMEM_LATE const cmd_t cmdtbl1[]={
 {0x513D08A0,  CAT_FESTSTOFFKESSEL,  VT_PERCENT,       4202,  STR4202,  0,                    NULL,         FL_OEM, DEV_ALL}, // Pumpendrehzahl Maximum
 {0x513D11C0,  CAT_FESTSTOFFKESSEL,  VT_TEMP,          4203,  STR4203,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl P-Band Xp
 {0x513D11C2,  CAT_FESTSTOFFKESSEL,  VT_SECONDS_WORD,  4204,  STR4204,  0,                    NULL,         FL_OEM, DEV_ALL}, // Drehzahl Nachstellzeit Tn
-};
 
-PROGMEM_LATE const cmd_t cmdtbl2[]={
 // Pufferspeicher
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4705,  STR4705,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladung
 {CMD_UNKNOWN, CAT_PUFFERSPEICHER,   VT_UNKNOWN,       4708,  STR4708,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Zwangsladungsollwert Kühlen
@@ -11651,10 +11649,6 @@ PROGMEM_LATE const cmd_t cmdtbl2[]={
 {0x053D11D9,  CAT_WARTUNG,          VT_ENUM,          7252,  STR7252,  sizeof(ENUM7252),     ENUM7252,     DEFAULT_FLAG, DEV_ALL}, // Pstick Befehl
 {0x053D11D8,  CAT_WARTUNG,          VT_PERCENT,       7253,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt
 {0x053D11D7,  CAT_WARTUNG,          VT_PERCENT,       7254,  STR7253,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Pstick Fortschritt TODO: Check double telegram ..D8 ..D7
-};
-
-PROGMEM_LATE const cmd_t cmdtbl3[]={
-
 
 // Konfiguration Erweit'module
 {0x053D0788,  CAT_MODULE,           VT_ENUM,          7300,  STR7300,  sizeof(ENUM7300),     ENUM7300,     DEFAULT_FLAG, DEV_ALL}, // Funktion Erweiterungsmodul 1 / logged from 163/16/LMS15.003A100
