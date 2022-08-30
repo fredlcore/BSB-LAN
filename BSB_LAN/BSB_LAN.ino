@@ -411,6 +411,10 @@
  *
  */
 
+ #if defined(__AVR__)
+ #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
+ #endif
+
 #define LOGTELEGRAM_OFF 0
 #define LOGTELEGRAM_ON 1
 #define LOGTELEGRAM_UNKNOWN_ONLY 2
@@ -1333,7 +1337,7 @@ int findLine(float line
   // binary search for the line in cmdtbl
 
   int left = start_idx;
-  int right = (int)(sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1);
+  int right = (int)(sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1);
   int mid = 0;
   int line_dd = roundf(line * 10);
   while (!(left >= right))
@@ -7242,9 +7246,7 @@ void setup() {
   }
 
   if (save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
-  printFmtToDebug(PSTR("Size of cmdtbl1: %d\r\n"),sizeof(cmdtbl1));
-  printFmtToDebug(PSTR("Size of cmdtbl2: %d\r\n"),sizeof(cmdtbl2));
-  printFmtToDebug(PSTR("Size of cmdtbl3: %d\r\n"),sizeof(cmdtbl3));
+  printFmtToDebug(PSTR("Size of cmdtbl: %d\r\n"),sizeof(cmdtbl));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
