@@ -288,7 +288,7 @@ ich mir da nicht)
       uint8_t pps_offset = 0;
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
       uint16_t temp = (msg[6] << 8) + msg[7];
-      uint16_t i = sizeof(cmdtbl1)/sizeof(cmdtbl1[0]) + sizeof(cmdtbl2)/sizeof(cmdtbl2[0]) + sizeof(cmdtbl3)/sizeof(cmdtbl3[0]) - 1;
+      uint16_t i = sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;
       while (i > 0 && get_cmdtbl_line(i) >= 15000) {
         uint32_t cmd = get_cmdtbl_cmd(i);
         cmd = (cmd & 0x00FF0000) >> 16;
@@ -318,7 +318,7 @@ ich mir da nicht)
           case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
           case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
           case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
-          case 0x4A: 
+          case 0x4A:
             pps_values[PPS_KVT] = temp;               // Kesselvorlauftemperatur bei MCBA-Systemen
             pps_values[PPS_MOD] = msg[3+pps_offset];  // Brennermodulation bei MCBA-Systemen
             setPPS(PPS_BRS, msg[5+pps_offset]);       // Brennerstatus bei MCBA_Systemen
