@@ -496,12 +496,6 @@ void loop();
   #define LED_BUILTIN 2
 #endif
 
-#if defined(__AVR__)
-  #include <avr/pgmspace.h>
-  #include <EEPROM.h>
-  #include <SPI.h>
-#endif
-
 #if defined(__arm__)
   #include <SPI.h>
   #include <Wire.h>
@@ -630,24 +624,16 @@ BSB *bus;
 char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
-#if defined(__AVR__)
-  #undef OUTBUF_USEFUL_LEN
-  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN)
-#else
-  #undef OUTBUF_USEFUL_LEN
-  #define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
-#endif
+#undef OUTBUF_USEFUL_LEN
+#define OUTBUF_USEFUL_LEN (OUTBUF_LEN * 2)
+
 char bigBuff[OUTBUF_USEFUL_LEN + OUTBUF_LEN] = { 0 };
 int bigBuffPos=0;
 
 // buffer for debug output
 char DebugBuff[OUTBUF_LEN] = { 0 };
 
-#if defined(__AVR__)
-const char *averagesFileName = "averages.txt";
-const char *datalogFileName = "datalog.txt";
-const char *journalFileName = "journal.txt";
-#elif defined(__SAM3X8E__)
+#if defined(__SAM3X8E__)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
 const char journalFileName[] PROGMEM = "journal.txt";
@@ -730,13 +716,8 @@ unsigned long lastOneWireRequestTime = 0;
 #endif
 
 #ifdef DHT_BUS
-  #if defined(__AVR__)
-    #include "src/DHT/DHT.h"
-DHT dht;
-  #else
-    #include "src/DHTesp/DHTesp.h"
+  #include "src/DHTesp/DHTesp.h"
 DHTesp dht;
-  #endif
 //Save state between queries
 unsigned long DHT_Timer = 0;
 int last_DHT_State = 0;
@@ -1043,32 +1024,7 @@ int recognize_mime(char *str) {
  * *************************************************************** */
 
 uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len, int shift) {
-#if defined(__AVR__)
-  uint_farptr_t page = 0x10000;
-  while (page < 0x40000) {
-    uint8_t second_char = pgm_read_byte_far(enum_addr + page + 1 + shift);
-    uint8_t third_char = pgm_read_byte_far(enum_addr + page + 2 + shift);
-    uint8_t last_char = pgm_read_byte_far(enum_addr + page + enumstr_len-1);
-
-    if ((second_char == 0x20 || third_char == 0x20) && (last_char == 0x00)) {
-      break;
-    }
-    page = page + 0x10000;
-  }
-
-  enum_addr = enum_addr + page;
-
-/*
-  enum_addr = enum_addr & 0xFFFF;     // no longer relevant as strings are currently no longer stored as uint_farptr_t but char pointer)
-  if (enum_addr < enumstr_offset) {   // if address is smaller than lowest enum address, then a new page needs to be addressed
-    enum_addr = enum_addr + 0x10000;  // therefore add 0x10000 - will only work for a maximum of 128kB, but that should suffice here
-  }
-  enum_addr = enum_addr + enum_page;  // add enum_offset as calculated during setup()
-*/
   return enum_addr;
-#else
-  return enum_addr;
-#endif
 }
 
 inline uint_farptr_t calc_enum_offset(uint_farptr_t enum_addr, uint16_t enumstr_len) {
@@ -1170,11 +1126,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
     uint_farptr_t descAddr;
     if (canBeDisabled) {
       val = 65535;
-#if defined(__AVR__)
-      descAddr = pgm_get_far_address(STR_DISABLED);
-#else
       descAddr = STR_DISABLED;
-#endif
     } else {
       descAddr = enumstr + c;
     }
@@ -1423,10 +1375,6 @@ extern "C" char* sbrk(int incr);
 int freeRam () {
 #ifdef ESP32
 	return (int)ESP.getFreeHeap();
-#elif defined (__AVR__)
-  extern int __heap_start, *__brkval;
-  int v;
-  return (int) &v - (__brkval == 0 ? (int) &__heap_start : (int) __brkval);
 #else
   char top;
   return &top - reinterpret_cast<char*>(sbrk(0));
@@ -1606,16 +1554,6 @@ void loadPrognrElementsFromTable(float nr, int i) {
   } else {
     decodedTelegram.readwrite = FL_WRITEABLE; //read/write
   }
-  #if defined(__AVR__)
-  decodedTelegram.data_type=pgm_read_byte_far(pgm_get_far_address(optbl[0].data_type) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.enable_byte=pgm_read_byte_far(pgm_get_far_address(optbl[0].enable_byte) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.payload_length=pgm_read_byte_far(pgm_get_far_address(optbl[0].payload_length) + decodedTelegram.type * sizeof(optbl[0]));
-  strcpy_PF(decodedTelegram.unit, pgm_read_word_far(pgm_get_far_address(optbl[0].unit) + decodedTelegram.type * sizeof(optbl[0])));
-  decodedTelegram.progtypedescaddr = pgm_read_word_far(pgm_get_far_address(optbl[0].type_text) + decodedTelegram.type * sizeof(optbl[0]));
-  decodedTelegram.data_type_descaddr = pgm_read_word_far(pgm_get_far_address(dt_types_text[0].type_text) + decodedTelegram.data_type * sizeof(dt_types_text[0]));
-  #else
   decodedTelegram.data_type=optbl[decodedTelegram.type].data_type;
   decodedTelegram.operand=optbl[decodedTelegram.type].operand;
   decodedTelegram.precision=optbl[decodedTelegram.type].precision;
@@ -1624,7 +1562,6 @@ void loadPrognrElementsFromTable(float nr, int i) {
   memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
   decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
   decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
-  #endif
 
   if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
     decodedTelegram.isswitch = 1;
@@ -1866,11 +1803,7 @@ void prepareToPrintHumanReadableTelegram(byte *msg, byte data_len, int shift) {
  *
  * *************************************************************** */
 int undefinedValueToBuffer(char *p) {
-  #if defined(__AVR__)
-                    strcpy_PF(p, pgm_get_far_address(STR_DISABLED));
-  #else
-                    strcpy(p, STR_DISABLED);
-  #endif
+  strcpy(p, STR_DISABLED);
   return 3;
 }
 
@@ -2079,9 +2012,7 @@ char *lookup_descr(float line) {
 }
 
 void printDeviceArchToWebClient(){
-  #if defined(__AVR__)
-    printToWebClient(PSTR("Mega 2560"));
-  #elif defined(ESP32)
+  #if defined(ESP32)
     printToWebClient(PSTR("ESP32"));
   #elif defined(__SAM3X8E__)
     printToWebClient(PSTR("Due"));
@@ -2387,14 +2318,8 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
   char sscanf_buf[24];
 
   for (uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++) {
-    #if defined(__AVR__)
-        if (pgm_read_byte_far(pgm_get_far_address(config[0].var_type) + f * sizeof(config[0])) == CDT_VOID) continue;
-        memcpy_PF(&cfg, pgm_get_far_address(config[0]) + f * sizeof(config[0]), sizeof(cfg));
-    #else
-        if (config[f].var_type == CDT_VOID) continue;
-        memcpy(&cfg, &config[f], sizeof(cfg));
-    #endif
-
+    if (config[f].var_type == CDT_VOID) continue;
+    memcpy(&cfg, &config[f], sizeof(cfg));
     if (cfg.id == option_id) {finded = true; break;}
   }
   if (!finded) {
@@ -2768,11 +2693,8 @@ void generateWebConfigPage(bool printOnly) {
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
     configuration_struct cfg;
 
-#if defined(__AVR__)
-    memcpy_PF(&cfg, pgm_get_far_address(config[0].id) + i * sizeof(config[0]), sizeof(cfg));
-#else
     memcpy(&cfg, &config[i], sizeof(cfg));
-#endif
+
     if (cfg.var_type == CDT_VOID) continue;
     if(!printOnly){
       if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
@@ -2783,11 +2705,7 @@ void generateWebConfigPage(bool printOnly) {
 
     printToWebClient(PSTR("<tr><td>"));
 //Print param category
-#if defined(__AVR__)
-    printToWebClient(pgm_read_word_far(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0])));
-#else
     printToWebClient(catalist[cfg.category].desc);
-#endif
     const char fieldDelimiter[] PROGMEM = "</td><td>\r\n";
     printToWebClient(fieldDelimiter);
 //Param Name
@@ -2943,11 +2861,8 @@ void generateJSONwithConfig() {
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
     configuration_struct cfg;
 
-#if defined(__AVR__)
-    memcpy_PF(&cfg, pgm_get_far_address(config[0].id) + i * sizeof(config[0]), sizeof(cfg));
-#else
     memcpy(&cfg, &config[i], sizeof(cfg));
-#endif
+
     if (cfg.var_type == CDT_VOID) continue;
     if(config_level == 0 && !(cfg.flags & OPT_FL_BASIC)) continue;
     if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
@@ -2957,11 +2872,7 @@ void generateJSONwithConfig() {
 
     printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
 //Print param category
-#if defined(__AVR__)
-    printToWebClient(pgm_read_word_far(pgm_get_far_address(catalist[0].desc) + cfg.category * sizeof(catalist[0])));
-#else
     printToWebClient(catalist[cfg.category].desc);
-#endif
 
     printToWebClient(PSTR("\",\r\n    \"name\": \""));
 //Param Name
@@ -3202,13 +3113,9 @@ void LogTelegram(byte* msg) {
           data_len=msg[3]-11;
         }
         dval = 0;
-#if defined(__AVR__)
-        operand=pgm_read_float_far(pgm_get_far_address(optbl[0].operand) + cmd_type * sizeof(optbl[0]));
-        precision=pgm_read_byte_far(pgm_get_far_address(optbl[0].precision) + cmd_type * sizeof(optbl[0]));
-#else
         operand=optbl[cmd_type].operand;
         precision=optbl[cmd_type].precision;
-#endif
+
         for (i=0;i<data_len-1+bus->getBusType();i++) {
           if (bus->getBusType() == BUS_LPB) {
             dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
@@ -4078,9 +3985,7 @@ void queryVirtualPrognr(float line, int table_line) {
       if (last_DHT_pin != DHT_Pins[log_sensor]) {
         last_DHT_pin = DHT_Pins[log_sensor];
         DHT_Timer = millis();
-#if defined(__AVR__)
-        dht.setup(last_DHT_pin);
-#elif defined(ESP32)
+#if defined(ESP32)
         dht.setup(last_DHT_pin, DHTesp::DHT22);
 #else
         dht.setup(last_DHT_pin, DHTesp::AUTO_DETECT);
@@ -4089,19 +3994,11 @@ void queryVirtualPrognr(float line, int table_line) {
 
       printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
       switch (dht.getStatus()) {
-#if defined(__AVR__)
-        case DHT::ERROR_CHECKSUM:
-#else
         case DHTesp::ERROR_CHECKSUM:
-#endif
           decodedTelegram.error = 256;
           printlnToDebug(PSTR("Checksum error"));
           break;
-  #if defined(__AVR__)
-          case DHT::ERROR_TIMEOUT:
-  #else
           case DHTesp::ERROR_TIMEOUT:
-  #endif
           decodedTelegram.error = 261;
           printlnToDebug(PSTR("Time out error"));
          break;
@@ -4587,9 +4484,6 @@ void resetBoard() {
 // Reset function from https://forum.arduino.cc/index.php?topic=345209.0
   rstc_start_software_reset(RSTC);
   while (1==1) {}
-#elif defined(__AVR__)
-  asm volatile ("  jmp 0");
-  while (1==1) {}
 #elif defined(ESP32)
   ESP.restart();
 #else
@@ -4649,13 +4543,11 @@ void connectToMaxCul() {
 
 void clearEEPROM(void) {
   printlnToDebug(PSTR("Clearing EEPROM..."));
-#if defined(__AVR__) || defined(ESP32)
+#if defined(ESP32)
   for (uint16_t x=0; x<EEPROM_SIZE; x++) {
     EEPROM.write(x, 0xFF);
   }
-#if defined(ESP32)
   EEPROM.commit();
-#endif
 #else
   uint8_t empty_block[4096] = { 0xFF };
   EEPROM.fastBlockWrite(0, empty_block, 4096);
@@ -4887,11 +4779,7 @@ void loop() {
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS[0] && !(httpflags & HTTP_AUTH)) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
-#if defined(__AVR__)
-          printPStr(pgm_get_far_address(auth_req_html), sizeof(auth_req_html));
-#else
           printPStr(auth_req_html, sizeof(auth_req_html));
-#endif
           forcedflushToWebClient();
           client.stop();
           break;
@@ -4932,11 +4820,7 @@ void loop() {
           } else {
 #endif
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-#if defined(__AVR__)
-            printPStr(pgm_get_far_address(favicon), sizeof(favicon));
-#else
             printPStr(favicon, sizeof(favicon));
-#endif
 #endif
             flushToWebClient();
 #ifdef WEBSERVER
@@ -4957,12 +4841,8 @@ void loop() {
           } else {
 #endif
 #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-#if defined(__AVR__)
-            printPStr(pgm_get_far_address(svg_favicon), sizeof(svg_favicon));
-#else
             printPStr(svg_favicon_header, sizeof(svg_favicon_header));
             printPStr(svg_favicon, sizeof(svg_favicon));
-#endif
 #endif
             flushToWebClient();
 #ifdef WEBSERVER
@@ -5263,16 +5143,9 @@ void loop() {
           for (int cat=0;cat<CAT_UNKNOWN;cat++) {
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
               printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
-#if defined(__AVR__)
-              printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-              uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
-              cat_min = pgm_read_word_far(tempAddr);
-              cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
-#else
               printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
               cat_min = ENUM_CAT_NR[cat*2];
               cat_max = ENUM_CAT_NR[cat*2+1];
-#endif
               printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
               writelnToDebug();
               printFmtToWebClient(PSTR("</a></td><td>%s - %s</td></tr>\r\n"), printProgNR(cat_min, prognrBuf), printProgNR(cat_max, prognrBuf_max));
@@ -5411,13 +5284,7 @@ void loop() {
             my_dev_var = temp_dev_var;
 
             for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(int); q++) {
-              int prognr = 0;
-#if defined(__AVR__)
-              prognr = pgm_read_word_far(pgm_get_far_address(proglist4q) + (q) * sizeof(proglist4q[0]));
-#else
-              prognr = proglist4q[q];
-#endif
-              query_program_and_print_result(prognr, PSTR("\r\n"), NULL);
+              query_program_and_print_result(proglist4q[q], PSTR("\r\n"), NULL);
             }
             query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
             query_program_and_print_result(10004, PSTR("\r\n"), PSTR(" (10004): "));
@@ -5425,23 +5292,11 @@ void loop() {
             flushToWebClient();
 
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
-              float prognr = 0;
-#if defined(__AVR__)
-              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
-#else
-              prognr = params4q[i];
-#endif
-              printFmtToWebClient(PSTR("%.1f;"), prognr);
+              printFmtToWebClient(PSTR("%.1f;"), params4q[i]);
             }
             printToWebClient(PSTR("\r\n"));
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
-              float prognr = 0;
-#if defined(__AVR__)
-              prognr = pgm_read_word_far(pgm_get_far_address(params4q) + (i) * sizeof(params4q[0]));
-#else
-              prognr = params4q[i];
-#endif
-              query(prognr); printToWebClient(decodedTelegram.value);
+              query(params4q[i]); printToWebClient(decodedTelegram.value);
               printToWebClient(PSTR(";"));
             }
 
@@ -5767,14 +5622,9 @@ void loop() {
             bool notfirst = false;
             for (int cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
-#if defined(__AVR__)
-                uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
-                cat_min = pgm_read_word_far(tempAddr);
-                cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
-#else
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
-#endif
+
                 float j = cat_min;
 //WARNING: simple increment of j was changed because some prognr have decimal part.
                 do{
@@ -5932,16 +5782,10 @@ void loop() {
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
-#if defined(__AVR__)
-                    printENUM(pgm_get_far_address(ENUM_CAT),sizeof(ENUM_CAT),cat,1);
-                    uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat * 2) * sizeof(ENUM_CAT_NR[0]);
-                    cat_min = pgm_read_word_far(tempAddr);
-                    cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
-#else
                     printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
-#endif
+
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
                     printFmtToWebClient(PSTR("\", \"min\": %s, \"max\": %s }"), printProgNR(cat_min, prognrBuf), printProgNR(cat_max, prognrBuf_max));
                   }
@@ -5956,14 +5800,9 @@ void loop() {
                 }
                 if (cat_min < 0) {
                   int search_cat = atoi(&p[4]) * 2;
-#if defined(__AVR__)
-                  uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (search_cat) * sizeof(ENUM_CAT_NR[0]);
-                  cat_min = pgm_read_word_far(tempAddr);
-                  cat_max = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
-#else
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
-#endif
+
 // Check for category number (if somebody will set wrong category number)
                   if(search_cat >= 0 || search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){
                     cat_param = cat_min;
@@ -6132,11 +5971,7 @@ void loop() {
             webPrintHeader();
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE)
             printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\r\n"));
-#if defined(__AVR__)
-            printPStr(pgm_get_far_address(graph_html), sizeof(graph_html));
-#else
             printPStr(graph_html, sizeof(graph_html));
-#endif
 #else
             printToWebClient(PSTR("/DG command disabled because I_WILL_USE_EXTERNAL_INTERFACE defined<br>\r\n"));
 #endif
@@ -6533,14 +6368,8 @@ void loop() {
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
-  #if defined(__AVR__)
-                uint_farptr_t tempAddr = pgm_get_far_address(ENUM_CAT_NR) + (cat) * sizeof(ENUM_CAT_NR[0]);
-                start = pgm_read_word_far(tempAddr);
-                end = pgm_read_word_far(tempAddr + sizeof(ENUM_CAT_NR[0]));
-  #else
-                start = ENUM_CAT_NR[cat];
-                end = ENUM_CAT_NR[cat+1];
-  #endif
+              start = ENUM_CAT_NR[cat];
+              end = ENUM_CAT_NR[cat+1];
             } else {
               // split range
               line_start=range;
@@ -7185,13 +7014,7 @@ void setup() {
       for (uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
 //        SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
   //read parameter if it version is non-zero
-#if defined(__AVR__)
-        uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
-        if (version > 0 && version <= EEPROMversion)
-          readFromEEPROM(pgm_read_byte_far(pgm_get_far_address(config[0].id) + i * sizeof(config[0])));
-#else
         if (config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
-#endif
       }
     } else {
       SerialOutput->println(F("EEPROM schema CRC mismatch"));
@@ -7206,12 +7029,7 @@ void setup() {
   //calculate maximal version
   uint8_t maxconfversion = 0;
   for (uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
-  #if defined(__AVR__)
-    uint8_t version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + i * sizeof(config[0]));
-    if (version > maxconfversion) maxconfversion = version;
-  #else
     if (config[i].version > maxconfversion) maxconfversion = config[i].version;
-  #endif
   }
   SerialOutput->print(F("EEPROM schema v."));
   SerialOutput->print(EEPROMversion);
@@ -7260,12 +7078,7 @@ void setup() {
     temp_bus_pins[0] = bus_pins[0];
     temp_bus_pins[1] = bus_pins[1];
   } else {
-#if defined(__AVR__) // Mega2560
-    printToDebug(PSTR("Microcontroller: AVR/Arduino Mega 2560\r\n"));
-    // SoftwareSerial
-    temp_bus_pins[0] = 68;
-    temp_bus_pins[1] = 69;
-#elif defined(ESP32)
+#if defined(ESP32)
   #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
     #if ETH_PHY_POWER == 12
       printToDebug(PSTR("Microcontroller: ESP32/Olimex PoE\r\n"));
@@ -7393,13 +7206,8 @@ void setup() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-    #if defined(__AVR__)
-  if (!SD.begin(4)) {
-    printToDebug(PSTR("failed\r\n"));
-    #else
   if (!SD.begin(4, SPI_DIV3_SPEED)) {
     printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-    #endif
   } else {
     printToDebug(PSTR("ok\r\n"));
   }

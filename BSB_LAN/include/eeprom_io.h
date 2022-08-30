@@ -23,19 +23,10 @@ uint32_t initConfigTable(uint8_t version) {
       uint16_t addr = baseConfigAddrInEEPROM;
       //look for config parameter in parameters table
       for (uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++) {
-  #if defined(__AVR__)
-        uint8_t temp_id = pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]));
-        uint8_t temp_version = pgm_read_byte_far(pgm_get_far_address(config[0].version) + j * sizeof(config[0]));
-        if (i == temp_id) {
-          if (temp_version <= v) allowedversion = true;
-        } else
-          if (temp_version <= v && i > temp_id) {addr += (uint16_t)pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));}
-  #else
         if (i == config[j].id) {
           if (config[j].version <= v) allowedversion = true;
         } else
           if (config[j].version <= v && i > config[j].id) {addr += config[j].size;}
-  #endif
       }
       if (allowedversion) {
         options[i].eeprom_address = addr;
@@ -69,17 +60,10 @@ uint16_t getEEPROMaddress(uint8_t id) {
 uint16_t getVariableSize(uint8_t id) {
   uint16_t len = 0;
   for (uint8_t j = 0; j < sizeof(config)/sizeof(config[0]); j++) {
-#if defined(__AVR__)
-    if (id == pgm_read_byte_far(pgm_get_far_address(config[0].id) + j * sizeof(config[0]))) {
-      len = pgm_read_word_far(pgm_get_far_address(config[0].size) + j * sizeof(config[0]));
-      break;
-    }
-#else
     if (id == config[j].id) {
       len = config[j].size;
       break;
     }
-#endif
   }
 return len;
 }

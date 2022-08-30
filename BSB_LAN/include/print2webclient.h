@@ -36,11 +36,7 @@ void forcedflushToWebClient() {
 }
 
 int writelnToWebClient() {
-#if defined(__AVR__)
-  int len = strlen(strcpy_P(bigBuff + bigBuffPos, PSTR("\r\n")));
-#else
   int len = strlen(strcpy(bigBuff + bigBuffPos, PSTR("\r\n")));
-#endif
   bigBuffPos += len;
   return len;
 }
@@ -55,39 +51,20 @@ int printToWebClient(char *format) {
 }
 
 int printToWebClient(const char *format) {
-  #if defined(__AVR__)
-  int len = strlen(strcpy_P(bigBuff + bigBuffPos, format));
-  #else
   int len = strlen(strcpy(bigBuff + bigBuffPos, format));
-  #endif
   bigBuffPos += len;
   if (bigBuffPos > OUTBUF_USEFUL_LEN) {
     flushToWebClient();
   }
   return len;
 }
-
-#if defined(__AVR__)
-int printToWebClient(uint_farptr_t src) {
-  int len = strlen(strcpy_PF(bigBuff + bigBuffPos, src));
-  bigBuffPos += len;
-  if (bigBuffPos > OUTBUF_USEFUL_LEN) {
-    flushToWebClient();
-  }
-  return len;
-}
-#endif
 
 #define printlnToWebClient(format) (printToWebClient(format) + writelnToWebClient())
 
 int printFmtToWebClient(const char *format, ...) {
   va_list args;
   va_start(args, format);
-#if defined(__AVR__)
-  int len = vsprintf_P(bigBuff + bigBuffPos, format, args);
-#else
   int len = vsprintf(bigBuff + bigBuffPos, format, args);
-#endif
   bigBuffPos += len;
   va_end(args);
   if (bigBuffPos > OUTBUF_USEFUL_LEN) {

@@ -1,12 +1,8 @@
-#if defined(__AVR__)
-const byte svg_favicon [] PROGMEM_LATE =
-#else
 const char svg_favicon_header[] PROGMEM_LATE =
 "<?xml version=\"1.0\" standalone=\"no\"?>"
 "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\""
 " \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
 const char svg_favicon[] PROGMEM_LATE =
-#endif
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 "";
 #else
@@ -51,11 +47,7 @@ const char svg_favicon[] PROGMEM_LATE =
 "</svg>";
 #endif
 
-#if defined(__AVR__)
-const byte favicon [] PROGMEM_LATE = {
-#else
 const char favicon[] PROGMEM_LATE = {
-#endif
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
   0x00
 #else

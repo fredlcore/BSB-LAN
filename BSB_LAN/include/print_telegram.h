@@ -620,11 +620,7 @@ void printLPBAddr(byte *msg,byte data_len) {
 
 //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
 void loadCategoryDescAddr() {
-#if defined(__AVR__)
-  printENUM(pgm_get_far_address(ENUM_CAT), sizeof(ENUM_CAT), decodedTelegram.cat, 0);
-#else
   printENUM(ENUM_CAT, sizeof(ENUM_CAT), decodedTelegram.cat, 0);
-#endif
   decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
   decodedTelegram.enumdescaddr = 0;
   decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
@@ -972,11 +968,7 @@ void printTelegram(byte* msg, float query_line) {
               if (data_len == 2) {
                 if (msg[bus->getPl_start()]==0) {
                   int len=sizeof(ENUM_WEEKDAY);
-#if defined(__AVR__)
-                  printENUM(pgm_get_far_address(ENUM_WEEKDAY),len,msg[bus->getPl_start()+1],0);
-#else
                   printENUM(ENUM_WEEKDAY,len,msg[bus->getPl_start()+1],0);
-#endif
                 } else {
                   undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
@@ -1007,11 +999,7 @@ void printTelegram(byte* msg, float query_line) {
                   }
                 } else {
                   strcpy_P(decodedTelegram.value, PSTR("65535"));
-#if defined(__AVR__)
-                  decodedTelegram.enumdescaddr = pgm_get_far_address(STR_DISABLED);
-#else
                   decodedTelegram.enumdescaddr = STR_DISABLED;
-#endif
 //                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
                 }
