@@ -204,6 +204,7 @@ UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA Modell";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bustelegramme";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Logging aktiv";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
+UIStrings["CF_CALCULATION_TEXT"] = "Berechnung";
 UIStrings["CF_PROGLIST_TEXT"] = "Parameter";
 UIStrings["CF_DEVICES_TEXT"] = "Geräte";
 UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";

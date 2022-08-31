@@ -173,6 +173,7 @@ UIStrings["CF_QAA_TYPE_TEXT"] = "PPS: QAA model";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Bus telegrams";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Logging enabled";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Interval (seconds)";
+UIStrings["CF_CALCULATION_TEXT"] = "Calculation";
 UIStrings["CF_PROGLIST_TEXT"] = "Parameters";
 UIStrings["CF_DEVICES_TEXT"] = "Devices";
 UIStrings["CF_DHCP_TEXT"] = "DHCP usage";

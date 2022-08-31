@@ -211,6 +211,7 @@ UIStrings["CF_PPS_WRITE_TEXT"] = "Режим работы PPS";
 UIStrings["CF_LOGTELEGRAM_TEXT"] = "Журналировать телеграммы в journal.txt";
 UIStrings["CF_LOGCURRVALUES_TEXT"] = "Записывать в datalog.txt текущие значения программ";
 UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Интервал журнала (datalog.txt, MQTT), секунд";
+UIStrings["CF_CALCULATION_TEXT"] = "Подсчёт значений";
 UIStrings["CF_DHCP_TEXT"] = "Использовать DHCP";
 UIStrings["CF_IPADDRESS_TEXT"] = "IP адрес";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Доверенный IP адрес";
