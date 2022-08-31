@@ -211,6 +211,7 @@
 #define CF_LOGTELEGRAM_TEXT "Журналировать телеграммы в journal.txt"
 #define CF_LOGCURRVALUES_TEXT "Записывать в datalog.txt текущие значения программ"
 #define CF_LOGCURRINTERVAL_TEXT "Интервал журнала (datalog.txt, MQTT), секунд"
+#define CF_CALCULATION_TEXT "Подсчёт значений"
 #define CF_DHCP_TEXT "Использовать DHCP"
 #define CF_IPADDRESS_TEXT "IP адрес"
 #define CF_TRUSTEDIPADDRESS_TEXT "Доверенный IP адрес"
