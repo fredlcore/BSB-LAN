@@ -302,42 +302,6 @@ byte destinationServer[128] = "";   // URL string to periodically send values to
 uint16_t destinationPort = 80;      // port number for abovementioned server
 uint32_t destinationDelay = 84600;  // interval in seconds to send values
 
-/*
- * For Arduino Mega users:
- *
- * If you use CONFIG_IN_EEPROM and WEBCONFIG modules then
- * you can enable I_DO_NOT_WANT_URL_CONFIG for saving flash memory (~1.2Kb).
- * This will disable configuration through URL commands (/A, /L, /P)
- * #define I_DO_NOT_WANT_URL_CONFIG
- *
- * Enable I_WILL_USE_EXTERNAL_INTERFACE for saving flash memory (~6,8Kb). /DG command will be disabled
- * #define I_WILL_USE_EXTERNAL_INTERFACE
- *
- * Enabling I_DO_NOT_NEED_NATIVE_WEB_INTERFACE will eliminate native web interface and save up to 13 Kb of flash memory.
- * /N[E] and /Q command still work
- * You can use this if you are using third-party software for BSB-LAN management. Do not forget to enable other required modules (JSONCONFIG, MQTT, WEBSERVER).
- * #define I_DO_NOT_NEED_NATIVE_WEB_INTERFACE
- */
-
-// By default, the following modules are disabled for the Arduino Mega2560 due to lack of memory.
-// This overwrites any definements above.
-// You are of course free to make changes here so that they fit your needs and the Mega's memory constraints.
-#if defined(__AVR__)
-//#undef CONFIG_IN_EEPROM
-//#undef WEBCONFIG
-#undef JSONCONFIG
-//#undef WEBSERVER
-#undef AVERAGES
-#undef DEBUG
-#undef IPWE
-#undef MQTT
-#undef MDNS_HOSTNAME
-#undef OFF_SITE_LOGGER
-#undef ROOM_UNIT
-#undef VERSION_CHECK
-#undef MAX_CUL
-#undef BME280
-#endif
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */

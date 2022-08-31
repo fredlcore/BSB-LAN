@@ -2269,12 +2269,13 @@ void generateConfigPage(void) {
 #endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
 #endif
-printToWebClient(PSTR("<BR>\r\n"));
+  printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
+  char prognrBuf[8];
 #ifdef AVERAGES
   if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
-    printToWebClient(CF_LOGAVERAGES_TXT);
+    printToWebClient(CF_CALCULATION_TXT);
     printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(CF_PROGLIST_TXT);
     printToWebClient(PSTR(": <BR>\r\n"));
@@ -2294,7 +2295,7 @@ printToWebClient(PSTR("<BR>\r\n"));
   printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
-      printFmtToWebClient(PSTR("%s - "), printProgNR(log_parameters[i], prognrBuf);
+      printFmtToWebClient(PSTR("%s - "), printProgNR(log_parameters[i], prognrBuf));
       printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
       printToWebClient(PSTR("<BR>\r\n"));
     }
@@ -2558,6 +2559,62 @@ int returnENUMID4ConfigOption(uint8_t id) {
   return i;
 }
 
+#if defined(JSONCONFIG) || defined(WEBCONFIG)
+void printMAClistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(mac); j++) {
+    bool mac_valid = false;
+    for(int m = 0; m < sizeof(mac); m++){
+      if(variable[j * sizeof(mac) + m]){
+        mac_valid = true;
+        break;
+      }
+    }
+    if (mac_valid) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      bin2hex(outBuf, variable + j * sizeof(mac), sizeof(mac), ':');
+      printToWebClient(outBuf);
+      outBuf[0] = 0;
+    }
+  }
+}
+
+void printDHTlistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(byte); j++) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printFmtToWebClient(PSTR("%d"), variable[j]);
+    }
+  }
+}
+
+void printProglistToWebClient(float *variable, uint16_t size) {
+  char prognrBuf[8];
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(float); j++) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printToWebClient(printProgNR(variable[j], prognrBuf));
+    }
+  }
+}
+
+void printMAXlistToWebClient(byte *variable, uint16_t size) {
+  bool isFirst = true;
+  for (uint16_t j = 0; j < size/sizeof(byte); j += sizeof(max_device_list[0])) {
+    if (variable[j]) {
+      if (!isFirst) printToWebClient(PSTR(","));
+      isFirst = false;
+      printFmtToWebClient(PSTR("%s"), variable + j);
+    }
+  }
+}
+#endif
+
 #ifdef WEBCONFIG
 void applyingConfig() {
   bool k_flag = false;
@@ -2623,60 +2680,6 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentS
     listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE, DO_NOT_PRINT_DISABLED_VALUE);
   } else {
     listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-  }
-}
-
-void printMAClistToWebClient(byte *variable, uint16_t size) {
-  bool isFirst = true;
-  for (uint16_t j = 0; j < size/sizeof(mac); j++) {
-    bool mac_valid = false;
-    for(int m = 0; m < sizeof(mac); m++){
-      if(variable[j * sizeof(mac) + m]){
-        mac_valid = true;
-        break;
-      }
-    }
-    if (mac_valid) {
-      if (!isFirst) printToWebClient(PSTR(","));
-      isFirst = false;
-      bin2hex(outBuf, variable + j * sizeof(mac), sizeof(mac), ':');
-      printToWebClient(outBuf);
-      outBuf[0] = 0;
-    }
-  }
-}
-
-void printDHTlistToWebClient(byte *variable, uint16_t size) {
-  bool isFirst = true;
-  for (uint16_t j = 0; j < size/sizeof(byte); j++) {
-    if (variable[j]) {
-      if (!isFirst) printToWebClient(PSTR(","));
-      isFirst = false;
-      printFmtToWebClient(PSTR("%d"), variable[j]);
-    }
-  }
-}
-
-void printProglistToWebClient(float *variable, uint16_t size) {
-  char prognrBuf[8];
-  bool isFirst = true;
-  for (uint16_t j = 0; j < size/sizeof(float); j++) {
-    if (variable[j]) {
-      if (!isFirst) printToWebClient(PSTR(","));
-      isFirst = false;
-      printToWebClient(printProgNR(variable[j], prognrBuf));
-    }
-  }
-}
-
-void printMAXlistToWebClient(byte *variable, uint16_t size) {
-  bool isFirst = true;
-  for (uint16_t j = 0; j < size/sizeof(byte); j += sizeof(max_device_list[0])) {
-    if (variable[j]) {
-      if (!isFirst) printToWebClient(PSTR(","));
-      isFirst = false;
-      printFmtToWebClient(PSTR("%s"), variable + j);
-    }
   }
 }
 
@@ -5283,7 +5286,7 @@ void loop() {
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
 
-            for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(int); q++) {
+            for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(proglist4q[0]); q++) {
               query_program_and_print_result(proglist4q[q], PSTR("\r\n"), NULL);
             }
             query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
@@ -5291,7 +5294,7 @@ void loop() {
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
 
-            for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
+            for (uint16_t i=0; i<sizeof(params4q)/sizeof(params4q[0]); i++) {
               printFmtToWebClient(PSTR("%.1f;"), params4q[i]);
             }
             printToWebClient(PSTR("\r\n"));

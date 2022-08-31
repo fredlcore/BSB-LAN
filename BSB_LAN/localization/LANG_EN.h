@@ -173,6 +173,7 @@
 #define CF_LOGTELEGRAM_TEXT "Bus telegrams"
 #define CF_LOGCURRVALUES_TEXT "Logging enabled"
 #define CF_LOGCURRINTERVAL_TEXT "Interval (seconds)"
+#define CF_CALCULATION_TEXT "Calculation"
 #define CF_PROGLIST_TEXT "Parameters"
 #define CF_DEVICES_TEXT "Devices"
 #define CF_DHCP_TEXT "DHCP usage"

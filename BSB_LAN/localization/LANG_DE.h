@@ -204,6 +204,7 @@
 #define CF_LOGTELEGRAM_TEXT "Bustelegramme"
 #define CF_LOGCURRVALUES_TEXT "Logging aktiv"
 #define CF_LOGCURRINTERVAL_TEXT "Logintervall (Sekunden)"
+#define CF_CALCULATION_TEXT "Berechnung"
 #define CF_PROGLIST_TEXT "Parameter"
 #define CF_DEVICES_TEXT "Geräte"
 #define CF_DHCP_TEXT "DHCP verwenden"
