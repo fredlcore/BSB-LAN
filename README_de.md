@@ -2,14 +2,14 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-LAN-Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1011-bsb), den ["Local-Process-Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1012-lpb) und die ["Punkt-zu-Punkt-Schnittstelle" (PPS)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1013-pps-schnittstelle) - entwickelt für einen *Arduino Due* mit Ethernet-Shield und für einen *ESP32* zur web-basierten Kontrolle (lokal über W/LAN, aber wenn gewünscht auch über das Internet) von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte (nur Due). Dieses Projekt unterstützt mehr als 1300 Parameter unterschiedlicher Heizungen und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
+LAN-Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1011-bsb), den ["Local-Process-Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1012-lpb) und die ["Punkt-zu-Punkt-Schnittstelle" (PPS)](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#1013-pps-schnittstelle) - entwickelt für einen *Arduino Due* mit Ethernet-Shield und für einen *ESP32* zur web-basierten Kontrolle (lokal über W/LAN, aber wenn gewünscht auch über das Internet) von Elco, Brötje und baugleichen Heizungssystemen, einschließlich Logging-Funktion auf Micro-SD-Karte. Dieses Projekt unterstützt mehr als 1300 Parameter unterschiedlicher Heizungen und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
 
 ---
 
 ***Bausätze erhältlich!***  
-**Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Due oder ESP32 erhältlich, bei Interesse bitte e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
+**Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Due oder ESP32 erhältlich, bei Interesse bitte Frederik eine e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
 
 ---
 
