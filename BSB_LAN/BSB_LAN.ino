@@ -5095,6 +5095,8 @@ void loop() {
             if (p==NULL) {        // no match
                 printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
             } else {
+              uint8_t save_my_dev_fam = my_dev_fam;
+              uint8_t save_my_dev_var = my_dev_var;
               p++;                   // position pointer past the '=' sign
               char* token = strchr(p, '!');
               if (token != NULL) {
@@ -5103,6 +5105,10 @@ void loop() {
                   int d_addr = atoi(token);
                   printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
                   bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  query(6225);
+                  my_dev_fam = strtod(decodedTelegram.value,NULL);
+                  query(6226);
+                  my_dev_var = strtod(decodedTelegram.value,NULL);
                 }
               }
 
@@ -5128,6 +5134,8 @@ void loop() {
               }
               if (bus->getBusDest() != destAddr) {
                 bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+                my_dev_fam = save_my_dev_fam;
+                my_dev_var = save_my_dev_var;
               }
             }
           }
@@ -6368,6 +6376,8 @@ void loop() {
             char* line_end;
             float start=-1;
             float end=-1;
+            uint8_t save_my_dev_fam = my_dev_fam;
+            uint8_t save_my_dev_var = my_dev_var;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
@@ -6391,6 +6401,10 @@ void loop() {
                   int d_addr = atoi(token);
                   printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
                   bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  query(6225);
+                  my_dev_fam = strtod(decodedTelegram.value,NULL);
+                  query(6226);
+                  my_dev_var = strtod(decodedTelegram.value,NULL);
                 }
               }
 
@@ -6400,6 +6414,8 @@ void loop() {
             query(start,end,0);
             if (bus->getBusDest() != destAddr) {
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
             }
 #endif
           }
