@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+**Before submitting a bug report, please make sure that you have checked chapter 14 of the manual** ("Problems and their Possible Causes"). Most problems that are reported to us can be solved by going through the solutions provided there.
+
 **BSB-LAN Version**
 As displayed in the web-configuration or copy from `bsb-version.h` file.
 
