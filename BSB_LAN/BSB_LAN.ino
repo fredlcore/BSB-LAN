@@ -4498,7 +4498,6 @@ void resetBoard() {
 #ifdef AVERAGES
 void resetAverageCalculation() {
   for (int i=0;i<numAverages;i++) {
-    avg_parameters[i] = 0;
     avgValues[i] = 0;
     avgValues_Old[i] = -9999;
     avgValues_Current[i] = 0;
@@ -6300,6 +6299,9 @@ void loop() {
                 int token_counter = 0;
                 if (avg_token != 0) {
                   resetAverageCalculation();
+                  for (int i=0;i<numAverages;i++) {
+                    avg_parameters[i] = 0;
+                  }
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
                 while (avg_token!=0) {
@@ -7444,11 +7446,7 @@ void setup() {
 
 // initialize average calculation
 #ifdef AVERAGES
-  for (int i=0; i<numAverages; i++) {
-    avgValues[i] = 0;
-    avgValues_Old[i] = -9999;
-    avgValues_Current[i] = 0;
-  }
+  resetAverageCalculation();
 #endif
 
 #ifdef WATCH_SOCKETS
