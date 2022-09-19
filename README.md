@@ -43,7 +43,7 @@ The following overview shows the most common used controllers of the different h
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10222-rvs-controllers), connection via LPB  
      
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
-- Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
 - Boesch: heat pumps with RVS controller type
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
 - ATAG: QR  
