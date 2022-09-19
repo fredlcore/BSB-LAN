@@ -45,7 +45,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via LPB      
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
-- Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
 - Bösch: Wärmepumpen mit RVS-Reglern
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus  
 - ATAG: QR  
