@@ -22,7 +22,7 @@
    int counter = 0;
    int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
    printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
-   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
    printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
    for (i=0; i < numIPWESensors; i++) {
      if (!ipwe_parameters[i]) continue;
@@ -38,7 +38,7 @@
    }
 
  #ifdef AVERAGES
-   if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
+   if (LoggingMode & CF_LOGMODE_24AVG) {
      for (int i=0; i<numAverages; i++) {
        if (avg_parameters[i] > 0) {
          counter++;
