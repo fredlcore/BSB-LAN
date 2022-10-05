@@ -13,7 +13,7 @@
  * *************************************************************** */
  void webPrintHeader(void) {
    flushToWebClient();
-   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
    printPStr(header_html, sizeof(header_html));
    #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
    printPStr(header_html2, sizeof(header_html2));
