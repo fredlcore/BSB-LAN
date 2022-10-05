@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Español";
+UIStrings["MENU_TEXT_NO"] = "No";
+UIStrings["MENU_TEXT_YES"] = "Si";
+UIStrings["MENU_TEXT_OFF"] = "Desactivado";
+UIStrings["MENU_TEXT_ON"] = "Activo";
+UIStrings["MENU_TEXT_CLOSED"] = "Cerrado";
+UIStrings["MENU_TEXT_OPEN"] = "Abierto";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Reloj";
 UIStrings["ENUM_CAT_06_TEXT"] = "Programa de conmutación 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Programa de conmutación 2";

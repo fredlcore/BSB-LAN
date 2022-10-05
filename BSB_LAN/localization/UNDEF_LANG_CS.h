@@ -1,4 +1,10 @@
 #undef LANGUAGENAME_TEXT
+#undef MENU_TEXT_YES
+#undef MENU_TEXT_NO
+#undef MENU_TEXT_ON
+#undef MENU_TEXT_OFF
+#undef MENU_TEXT_OPEN
+#undef MENU_TEXT_CLOSE
 #undef UNIT_MONTHS_TEXT
 #undef UNIT_DAYS_TEXT
 #undef UNIT_RPM_TEXT
@@ -83,12 +89,6 @@
 #undef MENU_TEXT_URL
 #undef MENU_TEXT_HWT
 #undef MENU_TEXT_FAQ
-#undef MENU_TEXT_YES
-#undef MENU_TEXT_NO
-#undef MENU_TEXT_ON
-#undef MENU_TEXT_OFF
-#undef MENU_TEXT_OPEN
-#undef MENU_TEXT_CLOSE
 #undef MENU_TEXT_VER
 #undef MENU_TEXT_DTD
 #undef MENU_TEXT_NVS

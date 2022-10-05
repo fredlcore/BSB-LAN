@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Magyar nyelv";
+UIStrings["MENU_TEXT_YES"] = "Igen";
+UIStrings["MENU_TEXT_NO"] = "Nem";
+UIStrings["MENU_TEXT_ON"] = "Ki";
+UIStrings["MENU_TEXT_OFF"] = "Be";
+UIStrings["MENU_TEXT_OPEN"] = "Nyitva";
+UIStrings["MENU_TEXT_CLOSE"] = "Zárva";
+
 UIStrings["UNIT_METER_TEXT"] = "m";
 UIStrings["UNIT_MONTHS_TEXT"] = "Hónap";
 UIStrings["UNIT_DAYS_TEXT"] = "Nap";
@@ -1247,12 +1254,6 @@ UIStrings["MENU_TEXT_CFG"] = "Beállítások";
 UIStrings["MENU_TEXT_URL"] = "URL Commands";
 UIStrings["MENU_TEXT_HWT"] = "HowTo";
 UIStrings["MENU_TEXT_FAQ"] = "FAQ";
-UIStrings["MENU_TEXT_YES"] = "Igen";
-UIStrings["MENU_TEXT_NO"] = "Nem";
-UIStrings["MENU_TEXT_ON"] = "On";
-UIStrings["MENU_TEXT_OFF"] = "Off";
-UIStrings["MENU_TEXT_OPEN"] = "Nyitva";
-UIStrings["MENU_TEXT_CLOSE"] = "Zárva";
 UIStrings["ENUM_WEEKDAY_01_TEXT"] = "Hétfő";
 UIStrings["ENUM_WEEKDAY_02_TEXT"] = "Kedd";
 UIStrings["ENUM_WEEKDAY_03_TEXT"] = "Szerda";

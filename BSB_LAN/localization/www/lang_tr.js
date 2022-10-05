@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Türkçe";
+UIStrings["MENU_TEXT_NO"] = "Hayır";
+UIStrings["MENU_TEXT_YES"] = "Evet";
+UIStrings["MENU_TEXT_OFF"] = "Kapalı";
+UIStrings["MENU_TEXT_ON"] = "Açık";
+UIStrings["MENU_TEXT_OPEN"] = "Açık";
+UIStrings["MENU_TEXT_CLOSE"] = "Kapandı";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Gun ve zaman saati";
 UIStrings["ENUM_CAT_06_TEXT"] = "Zaman programi ist dev 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Zaman programi ist dev 2";

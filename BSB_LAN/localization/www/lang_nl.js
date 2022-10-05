@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Nederlands";
+UIStrings["MENU_TEXT_YES"] = "Ja";
+UIStrings["MENU_TEXT_NO"] = "Nee";
+UIStrings["MENU_TEXT_ON"] = "Aan";
+UIStrings["MENU_TEXT_OFF"] = "Uit";
+UIStrings["MENU_TEXT_OPEN"] = "Open";
+UIStrings["MENU_TEXT_CLOSED"] = "Gesloten";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Kloktijd";
 UIStrings["ENUM_CAT_01_TEXT"] = "bedieningseenheid";
 UIStrings["ENUM_CAT_02_TEXT"] = "Draadloos";
@@ -50,10 +57,6 @@ UIStrings["MENU_TEXT_CFG"] = "Instellingen";
 UIStrings["MENU_TEXT_URL"] = "URL commando's";
 UIStrings["MENU_TEXT_HWT"] = "HowTo";
 UIStrings["MENU_TEXT_FAQ"] = "FAQ";
-UIStrings["MENU_TEXT_YES"] = "Ja";
-UIStrings["MENU_TEXT_NO"] = "Nee";
-UIStrings["MENU_TEXT_ON"] = "Aan";
-UIStrings["MENU_TEXT_OFF"] = "Uit";
 UIStrings["MENU_DESC_HFK"] = "Hiermee kunt u de functies van uw verwarmingssysteem opvragen of regelen. De individuele parameters zijn onderverdeeld in overeenkomstige categorieën, waarop u kunt klikken.";
 UIStrings["MENU_DESC_CFG"] = "Hier ziet u de waarden waarmee BSB-LAN is geconfigureerd. Het wijzigen van deze parameters is mogelijk via de uitgebreide URL-opdrachten.";
 UIStrings["MENU_DESC_URL"] = "Toont een overzicht van de opdrachten die u kunt verzenden via de directe invoer in de adresbalk van de browser. Deze opdrachten zijn ook nodig voor de verbinding met domotica-systemen zoals FHEM.";
