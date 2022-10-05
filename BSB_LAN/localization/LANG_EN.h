@@ -492,7 +492,7 @@
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 
 #define ENUM_LOGMODE_01_TEXT "Write to SD card"
-#define ENUM_LOGMODE_02_TEXT "Write 24h avg to SD card"
+#define ENUM_LOGMODE_02_TEXT "Calculate 24h averages"
 #define ENUM_LOGMODE_04_TEXT "Send to MQTT broker"
 #define ENUM_LOGMODE_08_TEXT "Send to UDP"
 

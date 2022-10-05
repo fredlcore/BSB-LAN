@@ -2239,7 +2239,7 @@
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"
 
 #define ENUM_LOGMODE_01_TEXT "Auf SD-Karte schreiben"
-#define ENUM_LOGMODE_02_TEXT "24-Stunden-Durchschnittswerte auf SD-Karte schreiben"
+#define ENUM_LOGMODE_02_TEXT "24-Stunden-Durchschnittswerte berechnen"
 #define ENUM_LOGMODE_04_TEXT "An MQTT-Broker senden"
 #define ENUM_LOGMODE_08_TEXT "Als UDP-Nachrichten senden"
 

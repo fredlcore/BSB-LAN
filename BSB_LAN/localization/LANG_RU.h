@@ -1803,7 +1803,7 @@
 #define ENUM_WRITE_OEM_TEXT "Вкл. (Инженерные + OEM)"
 
 #define ENUM_LOGMODE_01_TEXT "Запись на SD-карту"
-#define ENUM_LOGMODE_02_TEXT "Запись среднесуточных на SD-карту"
+#define ENUM_LOGMODE_02_TEXT "рассчитать среднесуточных"
 #define ENUM_LOGMODE_04_TEXT "Отправка брокеру MQTT"
 #define ENUM_LOGMODE_08_TEXT "Отправка через UDP"
 
