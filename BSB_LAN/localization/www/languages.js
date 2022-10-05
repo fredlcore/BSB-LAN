@@ -11,6 +11,7 @@ langList["hu"] = "Magyar nyelv";
 langList["it"] = "Italiano";
 langList["nl"] = "Nederlands";
 langList["pl"] = "Język polski";
+langList["pt"] = "Portugues";
 langList["ru"] = "Русский";
 langList["sl"] = "Slovenščina";
 langList["sv"] = "Svenska";

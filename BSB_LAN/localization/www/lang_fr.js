@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "France";
+UIStrings["MENU_TEXT_NO"] = "Non";
+UIStrings["MENU_TEXT_YES"] = "Oui";
+UIStrings["MENU_TEXT_OFF"] = "Arrêt";
+UIStrings["MENU_TEXT_ON"] = "Marche";
+UIStrings["MENU_TEXT_CLOSED"] = "Fermé";
+UIStrings["MENU_TEXT_OPEN"] = "Ouvert";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Heure";
 UIStrings["ENUM_CAT_06_TEXT"] = "Progr. de commande horaire 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Progr. de commande horaire 2";
@@ -271,11 +278,25 @@ UIStrings["STR9527_TEXT"] = "Consigne vitesse rotation ventil. Pleine charge";
 UIStrings["STR9540_TEXT"] = "Temps de post-ventilation";
 UIStrings["STR9560_TEXT"] = "Mod. Ventil. Pour charge balllon  stratification";
 UIStrings["STR9563_TEXT"] = "Consigne ventil. Charge continue ballon  stratif";
+UIStrings["STR15000_TEXT"] = "Régime Circuit de chauffe 1";
 UIStrings["STR15001_TEXT"] = "Touche de présence";
 UIStrings["STR15002_TEXT"] = "Bouton rotatif";
 UIStrings["STR15003_TEXT"] = "Jours de vacances restants";
+UIStrings["STR15004_TEXT"] = "Consigne confort temp.ambiante CC1";
+UIStrings["STR15005_TEXT"] = "Valeur de consigne réduite temp. ambiante CC1";
+UIStrings["STR15006_TEXT"] = "Consigne horsgel température ambiante CC1";
+UIStrings["STR15007_TEXT"] = "Limitation maxi de température de chaudière";
+UIStrings["STR15008_TEXT"] = "Température ambiante";
+UIStrings["STR15021_TEXT"] = "Température  mesurée ECS en haut (B3)";
+UIStrings["STR15022_TEXT"] = "Consigne réduite de température ECS";
+UIStrings["STR15023_TEXT"] = "Consigne nominale de température ECS";
+UIStrings["STR15030_TEXT"] = "Température extérieure locale";
+UIStrings["STR15031_TEXT"] = "Température extérieure mélangée";
+UIStrings["STR15032_TEXT"] = "Température de départ circuit de chauffe 1";
+UIStrings["STR15033_TEXT"] = "Consigne de départ H1";
 UIStrings["STR15034_TEXT"] = "Température départ après mélangeur";
 UIStrings["STR15035_TEXT"] = "Température cible";
+UIStrings["STR15036_TEXT"] = "Puissance relative";
 UIStrings["STR15040_TEXT"] = "Heure chaudière";
 UIStrings["STR15043_TEXT"] = "Chauffage manuel";
 UIStrings["STR15045_TEXT"] = "Connexion interrompue";
@@ -333,3 +354,5 @@ UIStrings["ENUM8000_68_TEXT"] = "Chauffage restreint, priorité ECS";
 UIStrings["ENUM8000_72_TEXT"] = "Chauffage mode confort";
 UIStrings["ENUM8000_74_TEXT"] = "Chauffage mode réduit";
 UIStrings["ENUM8000_77_TEXT"] = "Mode éco";
+#define ENUM15000_02_TEXT MENU_TEXT_OFF
+

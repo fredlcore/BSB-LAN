@@ -1,4 +1,10 @@
 #undef LANGUAGENAME_TEXT
+#undef MENU_TEXT_YES
+#undef MENU_TEXT_NO
+#undef MENU_TEXT_ON
+#undef MENU_TEXT_OFF
+#undef MENU_TEXT_OPEN
+#undef MENU_TEXT_CLOSED
 #undef ENUM_CAT_00_TEXT
 #undef ENUM_CAT_01_TEXT
 #undef ENUM_CAT_02_TEXT
@@ -49,10 +55,6 @@
 #undef MENU_TEXT_URL
 #undef MENU_TEXT_HWT
 #undef MENU_TEXT_FAQ
-#undef MENU_TEXT_YES
-#undef MENU_TEXT_NO
-#undef MENU_TEXT_ON
-#undef MENU_TEXT_OFF
 #undef MENU_DESC_HFK
 #undef MENU_DESC_CFG
 #undef MENU_DESC_URL

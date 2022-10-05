@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Język polski";
+UIStrings["MENU_TEXT_YES"] = "Tak";
+UIStrings["MENU_TEXT_NO"] = "Nie";
+UIStrings["MENU_TEXT_ON"] = "Włączony";
+UIStrings["MENU_TEXT_OFF"] = "Wyłączony";
+UIStrings["MENU_TEXT_OPEN"] = "Otwarty";
+UIStrings["MENU_TEXT_CLOSED"] = "Zwarty";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Godzina i data";
 UIStrings["ENUM_CAT_01_TEXT"] = "Jednostka sterująca";
 UIStrings["ENUM_CAT_02_TEXT"] = "Radio";
@@ -57,10 +64,6 @@ UIStrings["MENU_TEXT_CFG"] = "Konfiguracja";
 UIStrings["MENU_TEXT_URL"] = "Polecenia URL";
 UIStrings["MENU_TEXT_HWT"] = "Instrukcja obsługi";
 UIStrings["MENU_TEXT_FAQ"] = "FAQ";
-UIStrings["MENU_TEXT_YES"] = "Tak";
-UIStrings["MENU_TEXT_NO"] = "Nie";
-UIStrings["MENU_TEXT_ON"] = "Włączony";
-UIStrings["MENU_TEXT_OFF"] = "Wyłączony";
 UIStrings["MENU_DESC_HFK"] = "Pozwala na sprawdzenie lub ustawienie parametrów systemu grzewczego, posortowane w różnych kategoriach.";
 UIStrings["MENU_DESC_CFG"] = "Wyświetla listę opcji konfiguracji. Większość z nich można zmienić, używając poleceń rozszerzonego adresu URL.";
 UIStrings["MENU_DESC_URL"] = "Zaawansowane polecenia URL: Wyświetla listę rozszerzonych poleceń, do których można uzyskać dostęp bezpośrednio wprowadzając je w linii adresu przeglądarki. Polecenia te są również niezbędne do połączenia BSB-LAN z dowolnym systemem automatyki domowej, takim jak FHEM.";

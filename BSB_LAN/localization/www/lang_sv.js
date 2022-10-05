@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Svenska";
+UIStrings["MENU_TEXT_NO"] = "Nej";
+UIStrings["MENU_TEXT_YES"] = "Ja";
+UIStrings["MENU_TEXT_OFF"] = "Från";
+UIStrings["MENU_TEXT_ON"] = "Till";
+UIStrings["MENU_TEXT_OPEN"] = "Öppen";
+UIStrings["MENU_TEXT_CLOSE"] = "Stängd";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Klocka";
 UIStrings["ENUM_CAT_06_TEXT"] = "Tidprogram 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Tidprogram 2";

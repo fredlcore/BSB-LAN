@@ -12,6 +12,13 @@
 // TO DO: Придумать замену кальке "Загрузка" в контексте нагрева горячей воды.
 //
 UIStrings["LANGUAGENAME_TEXT"] = "Русский";
+UIStrings["MENU_TEXT_YES"] = "Да";
+UIStrings["MENU_TEXT_NO"] = "Нет";
+UIStrings["MENU_TEXT_ON"] = "Вкл";
+UIStrings["MENU_TEXT_OFF"] = "Выкл";
+UIStrings["MENU_TEXT_OPEN"] = "Открыто";
+UIStrings["MENU_TEXT_CLOSE"] = "Закрыто";
+
 UIStrings["UNIT_MONTHS_TEXT"] = "месяцев";
 UIStrings["UNIT_DAYS_TEXT"] = "дней";
 UIStrings["UNIT_HOUR_TEXT"] = "ч";
@@ -122,12 +129,6 @@ UIStrings["MENU_TEXT_CFG"] = "Настройки";
 UIStrings["MENU_TEXT_URL"] = "Команды URL";
 UIStrings["MENU_TEXT_HWT"] = "HowTo";
 UIStrings["MENU_TEXT_FAQ"] = "FAQ";
-UIStrings["MENU_TEXT_YES"] = "Да";
-UIStrings["MENU_TEXT_NO"] = "Нет";
-UIStrings["MENU_TEXT_ON"] = "Вкл";
-UIStrings["MENU_TEXT_OFF"] = "Выкл";
-UIStrings["MENU_TEXT_OPEN"] = "Открыто";
-UIStrings["MENU_TEXT_CLOSE"] = "Закрыто";
 UIStrings["MENU_TEXT_NOQ"] = "Проверка на наличие неизвестных параметров работает только на системах BSB или LPB.\r\n";
 UIStrings["MENU_TEXT_QIN"] = "Сканирование займёт несколько минут, не прерывайте его до появления надписи 'Готово'.\r\nПосле этого сохраните эту страницу и отправьте файл на адрес bsb@code-it.de, чтобы добавить поддержку новых параметров.";
 UIStrings["MENU_TEXT_QSC"] = "Поиск устройств...";
@@ -1802,7 +1803,7 @@ UIStrings["ENUM_WRITE_ENG_TEXT"] = "Вкл. (Инженерные)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Вкл. (Инженерные + OEM)";
 
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Запись на SD-карту";
-UIStrings["ENUM_LOGMODE_02_TEXT"] = "Запись среднесуточных на SD-карту";
+UIStrings["ENUM_LOGMODE_02_TEXT"] = "рассчитать среднесуточных";
 UIStrings["ENUM_LOGMODE_04_TEXT"] = "Отправка брокеру MQTT";
 UIStrings["ENUM_LOGMODE_08_TEXT"] = "Отправка через UDP";
 

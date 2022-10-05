@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Suomi";
+UIStrings["MENU_TEXT_NO"] = "Ei";
+UIStrings["MENU_TEXT_YES"] = "Kylla";
+UIStrings["MENU_TEXT_OFF"] = "Seis";
+UIStrings["MENU_TEXT_ON"] = "On";
+UIStrings["MENU_TEXT_CLOSED"] = "Suljettu";
+UIStrings["MENU_TEXT_OPEN"] = "Auki";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Kellonaika ja päivämäärä";
 UIStrings["ENUM_CAT_06_TEXT"] = "Aikaohjelma, lämmityspiiri 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Aikaohjelma, lämmityspiiri 2";

@@ -1,0 +1,7 @@
+#undef LANGUAGENAME_TEXT
+#undef MENU_TEXT_NO
+#undef MENU_TEXT_YES
+#undef MENU_TEXT_OFF
+#undef MENU_TEXT_ON
+#undef MENU_TEXT_OPEN
+#undef MENU_TEXT_CLOSE

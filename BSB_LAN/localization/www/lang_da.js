@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Dansk";
+UIStrings["MENU_TEXT_NO"] = "Nej";
+UIStrings["MENU_TEXT_YES"] = "Ja";
+UIStrings["MENU_TEXT_OFF"] = "Fra";
+UIStrings["MENU_TEXT_ON"] = "Til";
+UIStrings["MENU_TEXT_OPEN"] = "Åben";
+UIStrings["MENU_TEXT_CLOSED"] = "Lukket";
+
 UIStrings["ENUM_CAT_00_TEXT"] = "Klokkeslæt og dato";
 UIStrings["ENUM_CAT_06_TEXT"] = "Tidsprogram varmekreds 1";
 UIStrings["ENUM_CAT_07_TEXT"] = "Tidsprogram varmekreds 2";

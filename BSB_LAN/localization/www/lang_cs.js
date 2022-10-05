@@ -1,4 +1,11 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Čeština";
+UIStrings["MENU_TEXT_YES"] = "Ano";
+UIStrings["MENU_TEXT_NO"] = "Ne";
+UIStrings["MENU_TEXT_ON"] = "Zap";
+UIStrings["MENU_TEXT_OFF"] = "Vyp";
+UIStrings["MENU_TEXT_OPEN"] = "Otevřít";
+UIStrings["MENU_TEXT_CLOSE"] = "Zavřít";
+
 UIStrings["UNIT_MONTHS_TEXT"] = "Měsíce";
 UIStrings["UNIT_DAYS_TEXT"] = "Dny";
 UIStrings["UNIT_RPM_TEXT"] = "Ot/min";
@@ -84,12 +91,6 @@ UIStrings["MENU_TEXT_CFG"] = "Nastavení";
 UIStrings["MENU_TEXT_URL"] = "URL příkazy";
 UIStrings["MENU_TEXT_HWT"] = "JakNaTo";
 UIStrings["MENU_TEXT_FAQ"] = "FAQ";
-UIStrings["MENU_TEXT_YES"] = "Ano";
-UIStrings["MENU_TEXT_NO"] = "Ne";
-UIStrings["MENU_TEXT_ON"] = "Zap";
-UIStrings["MENU_TEXT_OFF"] = "Vyp";
-UIStrings["MENU_TEXT_OPEN"] = "Otevřít";
-UIStrings["MENU_TEXT_CLOSE"] = "Zavřít";
 UIStrings["MENU_TEXT_VER"] = "Verze";
 UIStrings["MENU_TEXT_DTD"] = "Stáhnout data";
 UIStrings["MENU_TEXT_NVS"] = "Hledám novější verze";
