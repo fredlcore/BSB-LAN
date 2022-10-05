@@ -5371,7 +5371,7 @@ void loop() {
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
             if (temp_dev_fam == 97) temp_dev_fam = 64;
-
+/*
             for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(proglist4q[0]); q++) {
               query_program_and_print_result(proglist4q[q], PSTR("\r\n"), NULL);
               forcedflushToWebClient();
@@ -5391,6 +5391,7 @@ void loop() {
             }
 
             printToWebClient(PSTR("\r\n\r\n"));
+*/
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
