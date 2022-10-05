@@ -1,4 +1,11 @@
 #define LANGUAGENAME_TEXT "Svenska"
+#define MENU_TEXT_NO "Nej"
+#define MENU_TEXT_YES "Ja"
+#define MENU_TEXT_OFF "Från"
+#define MENU_TEXT_ON "Till"
+#define MENU_TEXT_OPEN "Öppen"
+#define MENU_TEXT_CLOSE "Stängd"
+
 #define ENUM_CAT_00_TEXT "Klocka"
 #define ENUM_CAT_06_TEXT "Tidprogram 1"
 #define ENUM_CAT_07_TEXT "Tidprogram 2"

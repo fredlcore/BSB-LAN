@@ -1,4 +1,11 @@
 #define LANGUAGENAME_TEXT "Suomi"
+#define MENU_TEXT_NO "Ei"
+#define MENU_TEXT_YES "Kylla"
+#define MENU_TEXT_OFF "Seis"
+#define MENU_TEXT_ON "On" 
+#define MENU_TEXT_CLOSED "Suljettu"
+#define MENU_TEXT_OPEN "Auki"
+
 #define ENUM_CAT_00_TEXT "Kellonaika ja päivämäärä"
 #define ENUM_CAT_06_TEXT "Aikaohjelma, lämmityspiiri 1"
 #define ENUM_CAT_07_TEXT "Aikaohjelma, lämmityspiiri 2"

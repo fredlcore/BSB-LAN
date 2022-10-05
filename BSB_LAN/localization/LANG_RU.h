@@ -12,6 +12,13 @@
 // TO DO: Придумать замену кальке "Загрузка" в контексте нагрева горячей воды.
 //
 #define LANGUAGENAME_TEXT "Русский"
+#define MENU_TEXT_YES "Да"
+#define MENU_TEXT_NO "Нет"
+#define MENU_TEXT_ON "Вкл"
+#define MENU_TEXT_OFF "Выкл"
+#define MENU_TEXT_OPEN "Открыто"
+#define MENU_TEXT_CLOSE "Закрыто"
+
 #define UNIT_MONTHS_TEXT "месяцев"
 #define UNIT_DAYS_TEXT "дней"
 #define UNIT_HOUR_TEXT "ч"
@@ -122,12 +129,6 @@
 #define MENU_TEXT_URL "Команды URL"
 #define MENU_TEXT_HWT "HowTo"
 #define MENU_TEXT_FAQ "FAQ"
-#define MENU_TEXT_YES "Да"
-#define MENU_TEXT_NO "Нет"
-#define MENU_TEXT_ON "Вкл"
-#define MENU_TEXT_OFF "Выкл"
-#define MENU_TEXT_OPEN "Открыто"
-#define MENU_TEXT_CLOSE "Закрыто"
 #define MENU_TEXT_NOQ "Проверка на наличие неизвестных параметров работает только на системах BSB или LPB.\r\n"
 #define MENU_TEXT_QIN "Сканирование займёт несколько минут, не прерывайте его до появления надписи 'Готово'.\r\nПосле этого сохраните эту страницу и отправьте файл на адрес bsb@code-it.de, чтобы добавить поддержку новых параметров."
 #define MENU_TEXT_QSC "Поиск устройств..."

@@ -1,4 +1,11 @@
 #define LANGUAGENAME_TEXT "Español"
+#define MENU_TEXT_NO "No"
+#define MENU_TEXT_YES "Si"
+#define MENU_TEXT_OFF "Desactivado"
+#define MENU_TEXT_ON "Activo" 
+#define MENU_TEXT_CLOSED "Cerrado"
+#define MENU_TEXT_OPEN "Abierto"
+
 #define ENUM_CAT_00_TEXT "Reloj"
 #define ENUM_CAT_06_TEXT "Programa de conmutación 1"
 #define ENUM_CAT_07_TEXT "Programa de conmutación 2"

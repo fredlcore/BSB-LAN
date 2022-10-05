@@ -1,4 +1,11 @@
 #define LANGUAGENAME_TEXT "Türkçe"
+#define MENU_TEXT_NO "Hayır"
+#define MENU_TEXT_YES "Evet"
+#define MENU_TEXT_OFF "Kapalı"
+#define MENU_TEXT_ON "Açık"
+#define MENU_TEXT_OPEN "Açık"
+#define MENU_TEXT_CLOSE "Kapandı"
+
 #define ENUM_CAT_00_TEXT "Gun ve zaman saati"
 #define ENUM_CAT_06_TEXT "Zaman programi ist dev 1"
 #define ENUM_CAT_07_TEXT "Zaman programi ist dev 2"

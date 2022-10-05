@@ -1,4 +1,11 @@
 #define LANGUAGENAME_TEXT "Dansk"
+#define MENU_TEXT_NO "Nej"
+#define MENU_TEXT_YES "Ja"
+#define MENU_TEXT_OFF "Fra"
+#define MENU_TEXT_ON "Til" 
+#define MENU_TEXT_OPEN "Åben"
+#define MENU_TEXT_CLOSED "Lukket"
+
 #define ENUM_CAT_00_TEXT "Klokkeslæt og dato"
 #define ENUM_CAT_06_TEXT "Tidsprogram varmekreds 1"
 #define ENUM_CAT_07_TEXT "Tidsprogram varmekreds 2"
