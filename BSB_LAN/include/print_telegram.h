@@ -850,43 +850,59 @@ void printTelegram(byte* msg, float query_line) {
               printBIT(msg,data_len);
               break;
             case VT_MONTHS: // u8 Monate
+            case VT_MONTHS_N: // u8 Monate
             case VT_DAYS: // u8 Tage
             case VT_GRADIENT_SHORT: //u8 min
             case VT_HOURS_SHORT: // u8 h
+            case VT_HOURS_SHORT_N: // u8 h
             case VT_MINUTES_SHORT: //u8 min
+            case VT_MINUTES_SHORT_N: //u8 min
             case VT_SECONDS_SHORT: //u8 s
+            case VT_SECONDS_SHORT_N: //u8 s
             case VT_PERCENT: // u8 %
+            case VT_PERCENT_NN: // u8 %
             case VT_PERCENT1: // u8 %
             case VT_BYTE: // u8
+            case VT_BYTE_N: // u8
 //            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU
               printBYTE(msg,data_len);
               break;
             case VT_MONTHS_WORD: // u16 Monate
             case VT_DAYS_WORD: // u16 Tage
             case VT_HOURS_WORD: // u16 h
+            case VT_HOURS_WORD_N: // u16 h
             case VT_MINUTES_WORD: //u16 min
+            case VT_MINUTES_WORD_N: //u16 min
             case VT_SECONDS_WORD: //u16 s
+            case VT_SECONDS_WORD_N: //u16 s
             case VT_SECONDS_WORD16: //u16 s
             case VT_GRADIENT: // u16
 //            case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
+            case VT_UINT_N: //  u16
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
+            case VT_HOURS_N: // u32 h
             case VT_DWORD: // s32
+            case VT_DWORD_N: // s32
             case VT_ENERGY: // u32 / 1.0 kWh
+            case VT_ENERGY_N: // u32 / 1.0 kWh
             case VT_SECONDS_DWORD: //u32? s
               printDWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_SINT: //  s16
+            case VT_SINT_NN: //  s16
               printSINT(msg,data_len,decodedTelegram.operand);
               break;
             case VT_SECONDS_SHORT2: // s8 / 2 (signed)
+            case VT_SECONDS_SHORT2_N: // s8 / 2 (signed)
             case VT_SECONDS_SHORT4: // s8 / 4 (signed)
             case VT_SECONDS_SHORT5: // s8 / 5 (signed)
             case VT_TEMP_SHORT64: // s8 / 64 (signed)
             case VT_TEMP_SHORT5: // s8 / 2 (signed)
+            case VT_TEMP_SHORT5_N: // s8 / 2 (signed)
             case VT_TEMP_SHORT: // s8 (signed)
             case VT_TEMP_PER_MIN: // s8
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
@@ -894,25 +910,33 @@ void printTelegram(byte* msg, float query_line) {
             case VT_BYTE10: // u8 / 10.0
             case VT_LPM_SHORT: // u8 / 0.1 l/min
             case VT_PRESSURE: // u8 / 10.0 bar
+            case VT_PRESSURE_NN: // u8 / 10.0 bar
             case VT_PRESSURE50: // u8 / 50.0 bar
             case VT_PERCENT5: // u8 %
             case VT_TEMP_SHORT5_US: // u8 / 2 (unsigned)
             case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
+            case VT_VOLTAGE_N: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
             case VT_TEMP_SHORT_US: //u8 (unsigned)
+            case VT_TEMP_SHORT_US_N: //u8 (unsigned)
               printFIXPOINT_BYTE_US(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
+            case VT_TEMP_N: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
 //            case VT_TEMP_WORD60: //  u16 / 60
             case VT_VOLTAGE_WORD: //unsigned?
             case VT_CELMIN: // u16 / °Cmin
+            case VT_CELMIN_N: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
+            case VT_LITERPERHOUR_N: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
+            case VT_LITERPERMIN_N: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_WORD: // u16 / 10.0 kW
+            case VT_POWER_WORD_N: // u16 / 10.0 kW
             case VT_POWER_WORD100: // u16 / 100.0 kW
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100
@@ -922,6 +946,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
             case VT_SPEED2: // u16
+            case VT_SPEED2_N: // s16
             case VT_FP1: // s16 / 10.0 Wert als Festkommazahl mit 1/10 Schritten interpretiert (RAW / 10)
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
             case VT_METER:
@@ -932,6 +957,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100:  // u32 / 100
             case VT_UINT100_WORD:  // u16 / 100
+            case VT_UINT100_WORD_N:  // u16 / 100
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
             case VT_POWER: // u32 / 10.0 kW
@@ -987,10 +1013,17 @@ void printTelegram(byte* msg, float query_line) {
                   if (decodedTelegram.enumstr!=0) {
                     if (data_len == 2) {
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+1],1);
-                    } else {                            // Fujitsu: data_len == 3
+                    } else if (data_len == 3) {                            // Fujitsu: data_len == 3
+                      uint8_t pps_offset = 0;
+                      if (bus->getBusType() == BUS_PPS) pps_offset = 1;
+                      long lval;
+                      lval=(long(msg[bus->getPl_start()+1-pps_offset])<<8)+long(msg[bus->getPl_start()+2-pps_offset]);
+                      printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,lval,1);
+                    } else {
                       uint8_t pps_offset = 0;
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
+
                     }
                   } else {
                     decodedTelegram.error = 259;

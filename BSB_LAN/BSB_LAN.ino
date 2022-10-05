@@ -431,6 +431,9 @@
 #define HTTP_FILE_NOT_GZIPPED false
 #define HTTP_FILE_GZIPPED true
 
+#define HTTP_NO_DOWNLOAD false
+#define HTTP_IS_DOWNLOAD true
+
 #define HTTP_ADD_CHARSET_TO_HEADER true
 #define HTTP_DO_NOT_ADD_CHARSET_TO_HEADER false
 #define HTTP_DO_NOT_CACHE -1
@@ -454,6 +457,7 @@
 #define MIME_TYPE_IMAGE_PNG 104
 #define MIME_TYPE_IMAGE_ICON 105
 #define MIME_TYPE_APP_GZ 201
+#define MIME_TYPE_FORCE_DOWNLOAD 202
 
 #define DO_NOT_PRINT_DISABLED_VALUE false
 #define PRINT_DISABLED_VALUE true
@@ -925,7 +929,7 @@ int char2int(char input)
 /* Functions for management "Ring" output buffer */
 #include "include/print2webclient.h"
 
-void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, long cachingTime) {
+void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, bool isDownload, long cachingTime) {
   const char *getfarstrings;
   long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
   printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
@@ -951,6 +955,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_IMAGE_PNG: getfarstrings = PSTR("image/png"); break;
     case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
     case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
+    case MIME_TYPE_FORCE_DOWNLOAD: getfarstrings = PSTR("application/force-download"); break;
     case MIME_TYPE_TEXT_TEXT:
     default: getfarstrings = PSTR("text"); autoDetectCachingTime = 60; break;
   }
@@ -958,15 +963,19 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   if (cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
   if (addcharset)printToWebClient(PSTR("; charset=utf-8"));
   printToWebClient(PSTR("\r\n"));
-if (isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
-printToWebClient(PSTR("Cache-Control: "));
-if (cachingTime > 0) {
-  //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
-  printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
-} else {
-  printToWebClient(PSTR("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0"));
-}
-printToWebClient(PSTR("\r\n"));
+  if (isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
+  printToWebClient(PSTR("Cache-Control: "));
+  if (cachingTime > 0) {
+    //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
+    printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
+  } else {
+    printToWebClient(PSTR("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0"));
+  }
+  printToWebClient(PSTR("\r\n"));
+  if (isDownload) {
+    printToWebClient(PSTR("Content-Disposition: attachment; filename=\"BSB-LAN-"));
+    printFmtToWebClient("%03u-%03u.txt\"\r\n", my_dev_fam, my_dev_var);
+  }
 }
 
 char *printProgNR(float prognr, char *buf){
@@ -2274,7 +2283,7 @@ void generateConfigPage(void) {
 #ifndef WEBCONFIG
   char prognrBuf[8];
 #ifdef AVERAGES
-  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
+  if (LoggingMode & CF_LOGMODE_24AVG) {
     printToWebClient(CF_CALCULATION_TXT);
     printToWebClient(PSTR("<BR>\r\n"));
     printToWebClient(CF_PROGLIST_TXT);
@@ -2841,7 +2850,7 @@ void generateWebConfigPage(bool printOnly) {
   printToWebClient(PSTR("</tbody></table><p>"));
   if(!printOnly){
     printToWebClient(PSTR("<input type=\"submit\" value=\""));
-    printToWebClient(STR6204);
+    printToWebClient(STR_SAVE);
     printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
   }
 }
@@ -3283,7 +3292,9 @@ int set(int line      // the ProgNr of the heater parameter
 
     // 8-bit representations
     case VT_MONTHS: //(Wartungsintervall)
+    case VT_MONTHS_N: //(Wartungsintervall)
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
+    case VT_MINUTES_SHORT_N: // ( Fehler - Alarm)
     case VT_PERCENT:
     case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
@@ -3293,50 +3304,71 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_YESNO: // 1 = Ja
     case VT_DAYS: // (Legionellenfkt. Periodisch)
     case VT_HOURS_SHORT: // (Zeitkonstante Gebäude)
+    case VT_HOURS_SHORT_N: // (Zeitkonstante Gebäude)
     case VT_BIT:
     case VT_BYTE:
+    case VT_BYTE_N:
     case VT_TEMP_SHORT:
     case VT_TEMP_SHORT_US:
+    case VT_TEMP_SHORT_US_N:
     case VT_TEMP_PER_MIN:
     case VT_TEMP_SHORT5_US:
     case VT_TEMP_SHORT5:
     case VT_PERCENT5:
     case VT_TEMP_SHORT64:
+    case VT_SECONDS_SHORT2:
+    case VT_SECONDS_SHORT2_N:
     case VT_SECONDS_SHORT4:
     case VT_SECONDS_SHORT5:
     case VT_PRESSURE:
+    case VT_PRESSURE_NN:
     case VT_GRADIENT_SHORT:
     case VT_LPBADDR:
     case VT_SECONDS_SHORT:
+    case VT_SECONDS_SHORT_N:
     case VT_VOLTAGE:
+    case VT_VOLTAGE_N:
 
     // 16-bit representations
     case VT_UINT:
+    case VT_UINT_N:
+    case VT_UINT100_WORD_N:
     case VT_SINT:
+    case VT_SINT_NN:
     case VT_PERCENT_WORD1:
     case VT_METER:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
+    case VT_HOURS_WORD_N: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
+    case VT_MINUTES_WORD_N:
     case VT_UINT5:
     case VT_UINT10:
     case VT_SECONDS_WORD:
+    case VT_SECONDS_WORD_N:
     case VT_SECONDS_WORD16:
     case VT_TEMP_WORD:
     case VT_CELMIN:
+    case VT_CELMIN_N:
     case VT_PERCENT_100:
     case VT_PERCENT_WORD:
+    case VT_LITERPERHOUR:
+    case VT_LITERPERHOUR_N:
+    case VT_LITERPERMIN:
+    case VT_LITERPERMIN_N:
     case VT_PPM:
     case VT_FP02:
     case VT_SECONDS_WORD5:
     case VT_TEMP_WORD5_US:
     case VT_GRADIENT:
     case VT_POWER_WORD:
+    case VT_POWER_WORD_N:
     case VT_MONTHS_WORD:
     case VT_DAYS_WORD:
 
     // 32-bit representations
     case VT_UINT100:
     case VT_ENERGY:
+    case VT_ENERGY_N:
     case VT_MINUTES:
       {
       char* val1 = (char *)val;
@@ -3373,6 +3405,7 @@ int set(int line      // the ProgNr of the heater parameter
     // ---------------------------------------------
     // 32-bit representation
     case VT_DWORD:      // can this be merged with the 32-bit above?
+    case VT_DWORD_N:
       {
       if (val[0]!='\0') {
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
@@ -3446,6 +3479,7 @@ int set(int line      // the ProgNr of the heater parameter
     // 16-bit unsigned integer representation
     // Temperature values, mult=64
     case VT_TEMP:
+    case VT_TEMP_N:
       {
       uint32_t t=((int)(atof(val)*decodedTelegram.operand));
       if (setcmd) {
@@ -3619,6 +3653,7 @@ int set(int line      // the ProgNr of the heater parameter
     // ---------------------------------------------
 /*
     case VT_HOURS: // (read only)
+    case VT_HOURS_N: // (read only)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
     case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
     case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
@@ -3815,6 +3850,7 @@ char *build_pvalstr(bool extended) {
 void query_program_and_print_result(int line, const char* prefix, const char* suffix) {
   if (prefix) printToWebClient(prefix);
   query(line);
+  if (decodedTelegram.prognr < 0) return;
   printToWebClient_prognrdescaddr();
   if (suffix) {
     printToWebClient(suffix);
@@ -4300,15 +4336,24 @@ void query(float line_start  // begin at this line (ProgNr)
           , bool no_print)    // display in web client?
 {
   float line = line_start;     // ProgNr
-   do {
-     query(line);
-     if (decodedTelegram.prognr != -1) {
-       if (!no_print) {         // display in web client?
-         query_printHTML();
-       }
-     }
-     line = get_next_prognr(line, findLine(line, 0, NULL));
-   }while(line >= line_start && line <= line_end); // endfor, for each valid line (ProgNr) command within selected range
+  do {
+    query(line);
+    if (decodedTelegram.prognr != -1) {
+      if (!no_print) {         // display in web client?
+        query_printHTML();
+      }
+    }
+    line = get_next_prognr(line, findLine(line, 0, NULL));
+  } while(line >= line_start && line <= line_end); // endfor, for each valid line (ProgNr) command within selected range
+}
+
+void GetDevId() {
+  byte  msg[33] = { 0 };
+  byte  tx_msg[33] = { 0 };
+  bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
+  my_dev_fam = msg[10+bus->getBusType()*4];
+  my_dev_var = msg[12+bus->getBusType()*4];
+  return;
 }
 
 /** *****************************************************************
@@ -4327,10 +4372,18 @@ void query(float line_start  // begin at this line (ProgNr)
 
 void SetDevId() {
   if (fixed_device_family < 1) {
+    GetDevId();
+/*
     query(6225);
     my_dev_fam = strtod(decodedTelegram.value,NULL);
     query(6226);
     my_dev_var = strtod(decodedTelegram.value,NULL);
+*/
+    if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
+      my_dev_fam = 64;
+      my_dev_var = 97;
+    }
+
   } else {
     my_dev_fam = fixed_device_family;
     my_dev_var = fixed_device_variant;
@@ -4781,7 +4834,7 @@ void loop() {
         cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS[0] && !(httpflags & HTTP_AUTH)) {
-          printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+          printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
           printPStr(auth_req_html, sizeof(auth_req_html));
           forcedflushToWebClient();
           client.stop();
@@ -4812,7 +4865,7 @@ void loop() {
 // IPWE END
 
         if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
-          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(cLineBuffer + 1);
@@ -4833,7 +4886,7 @@ void loop() {
         }
 
         if (!strcmp_P(cLineBuffer, PSTR("/favicon.svg"))) {
-          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
           File dataFile = SD.open(cLineBuffer + 1);
@@ -4955,7 +5008,7 @@ void loop() {
             } else {
               code = HTTP_OK;
             }
-            printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_AUTO_CACHE_AGE);
+            printHTTPheader(code, mimetype, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, (httpflags & HTTP_GZIP), HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
             if (lastWrtYr) {
               char monthname[4];
               char downame[4];
@@ -4987,7 +5040,7 @@ void loop() {
               break;
             }
 #endif
-            printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_DO_NOT_CACHE);
+            printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
             printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
             printToWebClient(p);
             flushToWebClient();
@@ -5105,10 +5158,17 @@ void loop() {
                   int d_addr = atoi(token);
                   printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
                   bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  GetDevId();
+/*
                   query(6225);
                   my_dev_fam = strtod(decodedTelegram.value,NULL);
                   query(6226);
                   my_dev_var = strtod(decodedTelegram.value,NULL);
+*/
+                  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
+                    my_dev_fam = 64;
+                    my_dev_var = 97;
+                  }
                 }
               }
 
@@ -5216,9 +5276,28 @@ void loop() {
           break;
         }
 #endif
-        if (p[1]=='Q') {
+        if (p[1]=='Q' && p[2] !='D') {
+          webPrintHeader();
+          if (bus_type > 1) {
+            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+          } else {
+            printToWebClient(PSTR(MENU_TEXT_QIN "<BR><BR>\r\n"));
+            printToWebClient(PSTR("<A HREF='/"));
+            printPassKey();
+            printToWebClient(PSTR("QD'>" MENU_TEXT_QDL "</A><BR>\r\n"));
+          }
+          webPrintFooter();
+          break;
+        }
+        if (p[1]=='Q' && p[2]=='D') {
 //          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
-          printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+          if (bus_type > 1) {
+            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
+            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+            break;
+          }
+
+          printHTTPheader(HTTP_OK, MIME_TYPE_FORCE_DOWNLOAD, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_IS_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
           flushToWebClient();
 
@@ -5274,7 +5353,6 @@ void loop() {
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
-
           for (int x=0;x<10;x++) {
             if (found_ids[x]==0xFF) {
               continue;
@@ -5293,9 +5371,11 @@ void loop() {
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
+            if (temp_dev_fam == 97) temp_dev_fam = 64;
 
             for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(proglist4q[0]); q++) {
               query_program_and_print_result(proglist4q[q], PSTR("\r\n"), NULL);
+              forcedflushToWebClient();
             }
             query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
             query_program_and_print_result(10004, PSTR("\r\n"), PSTR(" (10004): "));
@@ -5315,106 +5395,117 @@ void loop() {
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
-            printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
-            flushToWebClient();
-            for (int j=0;j<10000;j++) {
-              uint32_t cc = get_cmdtbl_cmd(j);
-              if (cc == c) {
-                continue;
-              } else {
-                c = cc;
-              }
-              if (c==CMD_END) break;
-              l=get_cmdtbl_line(j);
-              uint8_t dev_fam = get_cmdtbl_dev_fam(j);
-              uint8_t dev_var = get_cmdtbl_dev_var(j);
-#if defined(ESP32)
-              esp_task_wdt_reset();
-#endif
-              if (((dev_fam != temp_dev_fam && dev_fam != DEV_FAM(DEV_ALL)) || (dev_var != temp_dev_var && dev_var != DEV_VAR(DEV_ALL))) && c!=CMD_UNKNOWN) {
-                printFmtToDebug(PSTR("%02X\r\n"), c);
-                if (!bus->Send(TYPE_QUR, c, msg, tx_msg)) {
-                  print_bus_send_failed();
+            if (p[3] == 'F') {
+              printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
+              flushToWebClient();
+              for (int j=0;j<10000;j++) {
+                uint32_t cc = get_cmdtbl_cmd(j);
+                if (cc == c) {
+                  continue;
                 } else {
-                  if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
-                    // Decode the xmit telegram and send it to the PC serial interface
-                    printTelegram(tx_msg, -1);
-#ifdef LOGGER
-                    LogTelegram(tx_msg);
+                  c = cc;
+                }
+                if (c==CMD_END) break;
+                l=get_cmdtbl_line(j);
+                uint8_t dev_fam = get_cmdtbl_dev_fam(j);
+                uint8_t dev_var = get_cmdtbl_dev_var(j);
+#if defined(ESP32)
+                esp_task_wdt_reset();
 #endif
-                    // Decode the rcv telegram and send it to the PC serial interface
-                    printTelegram(msg, -1);   // send to hardware serial interface
+                if (((dev_fam != temp_dev_fam && dev_fam != DEV_FAM(DEV_ALL)) || (dev_var != temp_dev_var && dev_var != DEV_VAR(DEV_ALL))) && c!=CMD_UNKNOWN) {
+                  printFmtToDebug(PSTR("%02X\r\n"), c);
+                  if (!bus->Send(TYPE_QUR, c, msg, tx_msg)) {
+                    print_bus_send_failed();
+                  } else {
+                    if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
+                      // Decode the xmit telegram and send it to the PC serial interface
+                      printTelegram(tx_msg, -1);
 #ifdef LOGGER
-                    LogTelegram(msg);
+                      LogTelegram(tx_msg);
 #endif
-                    if (decodedTelegram.msg_type != TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                      my_dev_fam = temp_dev_fam;
-                      my_dev_var = temp_dev_var;
-                      query(l);
-                      my_dev_fam = orig_dev_fam;
-                      my_dev_var = orig_dev_var;
-                      if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                        printFmtToWebClient(PSTR("\r\n%.1f - "), l);
-                        printToWebClient(decodedTelegram.catdescaddr);
-                        printToWebClient(PSTR(" - "));
-                        printToWebClient_prognrdescaddr();
-                        printFmtToWebClient(PSTR("\r\n0x%08X\r\n"), c);
-                        int outBufLen = strlen(outBuf);
-                        bin2hex(outBuf + outBufLen, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-                        printToWebClient(outBuf + outBufLen);
-                        printToWebClient(PSTR("\r\n"));
-                        bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-                        printToWebClient(outBuf + outBufLen);
-                        outBuf[outBufLen] = 0;
-                        printToWebClient(PSTR("\r\n"));
+                      // Decode the rcv telegram and send it to the PC serial interface
+                      printTelegram(msg, -1);   // send to hardware serial interface
+#ifdef LOGGER
+                      LogTelegram(msg);
+#endif
+                      if (decodedTelegram.msg_type != TYPE_ERR) { //pvalstr[0]<1 - unknown command
+                        my_dev_fam = temp_dev_fam;
+                        my_dev_var = temp_dev_var;
+                        query(l);
+                        my_dev_fam = orig_dev_fam;
+                        my_dev_var = orig_dev_var;
+                        if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
+                          printFmtToWebClient(PSTR("\r\n%.1f - "), l);
+                          printToWebClient(decodedTelegram.catdescaddr);
+                          printToWebClient(PSTR(" - "));
+                          printToWebClient_prognrdescaddr();
+                          printFmtToWebClient(PSTR("\r\n0x%08X\r\n"), c);
+                          int outBufLen = strlen(outBuf);
+                          bin2hex(outBuf + outBufLen, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+                          printToWebClient(outBuf + outBufLen);
+                          printToWebClient(PSTR("\r\n"));
+                          bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+                          printToWebClient(outBuf + outBufLen);
+                          outBuf[outBufLen] = 0;
+                          printToWebClient(PSTR("\r\n"));
+                        }
+                        forcedflushToWebClient(); //browser will build page immediately
                       }
-                      forcedflushToWebClient(); //browser will build page immediately
                     }
                   }
                 }
               }
+              printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
+              flushToWebClient();
             }
-            printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
-            flushToWebClient();
-          }
-
-          bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-
-          printToWebClient(PSTR("\r\nComplete dump:\r\n"));
-          c = 0;
-          bus->Send(TYPE_IQ1, c, msg, tx_msg);
-          if (msg[4+bus->getBusType()*4] == 0x13) {
-            int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
-            bus->Send(TYPE_IQ2, c, msg, tx_msg);
-            int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+            printToWebClient(PSTR("\r\nComplete dump:\r\n"));
+            c = 0;
             int outBufLen = strlen(outBuf);
+            bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg);
+            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+            printToWebClient(outBuf + outBufLen);
+            printToWebClient(PSTR("\r\n"));
+            bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
+            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+            printToWebClient(outBuf + outBufLen);
+            printToWebClient(PSTR("\r\n"));
+            flushToWebClient();
 
-            for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+            bus->Send(TYPE_IQ1, c, msg, tx_msg);
+            if (msg[4+bus->getBusType()*4] == 0x13) {
+              int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+              bus->Send(TYPE_IQ2, c, msg, tx_msg);
+              int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+              int outBufLen = strlen(outBuf);
+
+              for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
 #if defined(ESP32)
-              esp_task_wdt_reset();
+                esp_task_wdt_reset();
 #endif
-              bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
-              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-              printToWebClient(outBuf + outBufLen);
-              printToWebClient(PSTR("\r\n"));
-              flushToWebClient();
-            }
-            for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+                bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+                bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+                printToWebClient(outBuf + outBufLen);
+                printToWebClient(PSTR("\r\n"));
+                flushToWebClient();
+              }
+              for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
 #if defined(ESP32)
-              esp_task_wdt_reset();
+                esp_task_wdt_reset();
 #endif
-              bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
-              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-              printToWebClient(outBuf + outBufLen);
-              printToWebClient(PSTR("\r\n"));
-              flushToWebClient();
+                bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+                bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+                printToWebClient(outBuf + outBufLen);
+                printToWebClient(PSTR("\r\n"));
+                flushToWebClient();
+              }
+              outBuf[outBufLen] = 0;
+            } else {
+              printToWebClient(PSTR("\r\nNot supported by this device. No problem.\r\n"));
             }
-            outBuf[outBufLen] = 0;
-          } else {
-            printToWebClient(PSTR("\r\nNot supported by this device. No problem.\r\n"));
           }
+          bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
           printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
-//          if (!(httpflags & HTTP_FRAG)) webPrintFooter();
+//            if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
         }
@@ -5497,7 +5588,7 @@ void loop() {
                 http_code = HTTP_NOT_MODIFIED;
             }
 
-            printHTTPheader(http_code, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, cache_time);
+            printHTTPheader(http_code, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, cache_time);
             if (cache_time != HTTP_DO_NOT_CACHE) {
               printToWebClient(PSTR("ETag: \""));
               printToWebClient(BSB_VERSION);
@@ -5584,7 +5675,7 @@ void loop() {
 
 //averages
 #ifdef AVERAGES
-            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
+            if (LoggingMode & CF_LOGMODE_24AVG) {
               printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
@@ -5989,7 +6080,7 @@ void loop() {
             webPrintFooter();
 #endif
           } else {  // dump datalog or journal file
-            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_AUTO_CACHE_AGE);
+            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
@@ -6296,12 +6387,12 @@ void loop() {
             char prognrBuf[8];
             if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
               if (range[3]=='1') {                // Enable 24h average calculation temporarily
-                LoggingMode |= CF_LOGMODE_SD_CARD_24AVG;
+                LoggingMode |= CF_LOGMODE_24AVG;
               } else {                            // Disable 24h average calculation temporarily
-                LoggingMode &= ~CF_LOGMODE_SD_CARD_24AVG;
+                LoggingMode &= ~CF_LOGMODE_24AVG;
               }
             }
-            if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
+            if (LoggingMode & CF_LOGMODE_24AVG) {
               if (range[1]=='=') {
                 char* avg_token = strtok(range,"=,");  // drop everything before "="
                 avg_token = strtok(NULL,"=,");    // subsequent tokens: average parameters
@@ -6401,10 +6492,17 @@ void loop() {
                   int d_addr = atoi(token);
                   printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
                   bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  GetDevId();
+/*
                   query(6225);
                   my_dev_fam = strtod(decodedTelegram.value,NULL);
                   query(6226);
                   my_dev_var = strtod(decodedTelegram.value,NULL);
+*/
+                  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
+                    my_dev_fam = 64;
+                    my_dev_var = 97;
+                  }
                 }
               }
 
@@ -6549,7 +6647,7 @@ void loop() {
 
 // Calculate 24h averages
 #ifdef AVERAGES
-  if (LoggingMode & CF_LOGMODE_SD_CARD_24AVG) {
+  if (LoggingMode & CF_LOGMODE_24AVG) {
     if (millis() / 60000 != lastAvgTime) {
       if (avgCounter == 1441) {
         for (int i=0; i<numAverages; i++) {
