@@ -6618,7 +6618,7 @@ void loop() {
         int outBufLen = 0;
         if (log_parameters[i] > 0) {
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%.1f;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%.f;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
 #ifdef AVERAGES
           if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
             //averages
