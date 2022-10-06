@@ -41,6 +41,7 @@ jobs:
       run: |
         rm -R BSB_LAN/src/WiFiSpi
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
     - name: Run PlatformIO CI
       run: platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git#feature/arduino-upstream" --project-option="platform_packages = framework-arduinoespressif32 @ https://github.com/espressif/arduino-esp32.git" --board=esp32-evb ./BSB_LAN
