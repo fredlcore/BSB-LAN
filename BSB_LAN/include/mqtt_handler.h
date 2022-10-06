@@ -58,7 +58,7 @@ void mqtt_sendtoBroker(float param) {
     if(roundf(param * 10) != roundf(param) * 10)
       len += sprintf_P(outBuf + len, PSTR("%.1f,\"name\":\""), param);
     else
-      len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), param);
+      len += sprintf_P(outBuf + len, PSTR("%d,\"name\":\""), (int)param);
     len += strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
     len += sprintf_P(outBuf + len, PSTR("\",\"value\": \"%s\",\"desc\": \""), decodedTelegram.value);
     if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {

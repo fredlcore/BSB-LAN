@@ -1229,7 +1229,7 @@ int findLine(float line
   int save_i = 0;
   uint32_t c, save_c = 0;
   float l;
-  char prognrBuf[8];
+//  char prognrBuf[8];
 //  printFmtToDebug(PSTR("line = %.1f\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
