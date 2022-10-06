@@ -4353,6 +4353,11 @@ void GetDevId() {
   bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
   my_dev_fam = msg[10+bus->getBusType()*4];
   my_dev_var = msg[12+bus->getBusType()*4];
+
+  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
+    my_dev_fam = 64;
+    my_dev_var = 97;
+  }
   return;
 }
 
@@ -4379,11 +4384,6 @@ void SetDevId() {
     query(6226);
     my_dev_var = strtod(decodedTelegram.value,NULL);
 */
-    if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
-      my_dev_fam = 64;
-      my_dev_var = 97;
-    }
-
   } else {
     my_dev_fam = fixed_device_family;
     my_dev_var = fixed_device_variant;
@@ -5164,11 +5164,7 @@ void loop() {
                   query(6226);
                   my_dev_var = strtod(decodedTelegram.value,NULL);
 */
-                  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
-                    my_dev_fam = 64;
-                    my_dev_var = 97;
-                  }
-                }
+               }
               }
 
               printFmtToDebug(PSTR("set ProgNr %.1f = %s"), line, p);
@@ -5901,7 +5897,7 @@ void loop() {
                   cat_param = get_next_prognr(cat_param, findLine(cat_param,0,NULL));
                 }
                 if (cat_min < 0) {
-                  int search_cat = atoi(&p[4]) * 2;
+                  uint search_cat = atoi(&p[4]) * 2;
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
 
@@ -6502,10 +6498,6 @@ void loop() {
                   query(6226);
                   my_dev_var = strtod(decodedTelegram.value,NULL);
 */
-                  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
-                    my_dev_fam = 64;
-                    my_dev_var = 97;
-                  }
                 }
               }
 
