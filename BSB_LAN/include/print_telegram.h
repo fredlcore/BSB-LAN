@@ -849,6 +849,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_BIT: // u8
               printBIT(msg,data_len);
               break;
+            case VT_LITER: // u8 Liter
             case VT_MONTHS: // u8 Monate
             case VT_MONTHS_N: // u8 Monate
             case VT_DAYS: // u8 Tage
@@ -922,6 +923,8 @@ void printTelegram(byte* msg, float query_line) {
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_TEMP_N: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
+            case VT_SECONDS_WORD4: // u16  - Wert als Temperatur interpretiert (RAW / 4)
+            case VT_SECONDS_WORD4_N: // u16  - Wert als Temperatur interpretiert (RAW / 4)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
@@ -931,10 +934,14 @@ void printTelegram(byte* msg, float query_line) {
             case VT_CELMIN_N: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
             case VT_LITERPERHOUR_N: // u16 / l/h
+            case VT_LITERPERHOUR100: // u16 / l/h
+            case VT_LITERPERHOUR100_N: // u16 / l/h
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_LITERPERMIN_N: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
+            case VT_POWER_W: // u16 / 1.0 W
+            case VT_POWER_W_N: // u16 / 1.0 W
             case VT_POWER_WORD: // u16 / 10.0 kW
             case VT_POWER_WORD_N: // u16 / 10.0 kW
             case VT_POWER_WORD100: // u16 / 100.0 kW
@@ -960,7 +967,9 @@ void printTelegram(byte* msg, float query_line) {
             case VT_UINT100_WORD_N:  // u16 / 100
             case VT_UINT5: //  u16 / 5
             case VT_UINT10: //  u16 / 10
+            case VT_CUBICMETER: //  u32 / 10
             case VT_POWER: // u32 / 10.0 kW
+            case VT_TEMP_DWORD: // u32 / 10.0 kW
 //            case VT_ENERGY10: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;

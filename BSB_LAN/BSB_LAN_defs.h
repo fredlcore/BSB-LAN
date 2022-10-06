@@ -355,6 +355,7 @@ const char STR_TEMP_PER_MIN[] PROGMEM = "TEMP_PER_MIN";
 const char STR_VOLTAGE[] PROGMEM = "VOLTAGE";
 const char STR_VOLTAGEONOFF[] PROGMEM = "VOLTAGEONOFF";
 const char STR_WEEKDAY[] PROGMEM = "WEEKDAY";
+const char STR_LITER[] PROGMEM = "LITER";
 const char STR_YESNO[] PROGMEM = "YESNO";
 const char STR_SPF[] PROGMEM = "SPF";
 const char STR_CURRENT[] PROGMEM = "CURRENT";
@@ -385,6 +386,7 @@ const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
 const char STR_PROPVAL[] PROGMEM = "PROPVAL";
 const char STR_PPM[] PROGMEM = "PPM";
 const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
+const char STR_SECONDS_WORD4[] PROGMEM = "SECONDS_WORD4";
 const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
 const char STR_SPEED[] PROGMEM = "SPEED";
 const char STR_SPEED2[] PROGMEM = "SPEED2";
@@ -392,10 +394,12 @@ const char STR_TEMP[] PROGMEM = "TEMP";
 const char STR_TEMP_WORD[] PROGMEM = "TEMP_WORD";
 const char STR_TEMP_WORD60[] PROGMEM = "TEMP_WORD60";
 const char STR_TEMP_WORD5_US[] PROGMEM = "TEMP_WORD5_US";
+const char STR_TEMP_DWORD[] PROGMEM = "TEMP_DWORD";
 const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
 const char STR_CELMIN[] PROGMEM = "CELMIN";
 const char STR_FREQ[] PROGMEM = "FREQ";
 const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
+const char STR_LITERPERHOUR100[] PROGMEM = "LITERPERHOUR100";
 const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
 const char STR_LPM_SHORT[] PROGMEM = "LPM_SHORT";
 const char STR_UINT[] PROGMEM = "UINT";
@@ -410,6 +414,7 @@ const char STR_HOURS[] PROGMEM = "HOURS";
 const char STR_MINUTES[] PROGMEM = "MINUTES";
 const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
 const char STR_POWER[] PROGMEM = "POWER";
+const char STR_POWER_W[] PROGMEM = "POWER_W";
 const char STR_POWER100[] PROGMEM = "POWER100";
 const char STR_ENERGY10[] PROGMEM = "ENERGY10";
 const char STR_ENERGY[] PROGMEM = "ENERGY";
@@ -429,6 +434,7 @@ const char STR_FLOAT[] PROGMEM = "FLOAT";
 const char STR_LONG[] PROGMEM = "LONG";
 const char STR_ATM_PRESSURE[] PROGMEM = "ATM_PRESSURE";
 const char STR_ALTITUDE[] PROGMEM = "ALTITUDE";
+const char STR_CUBICMETER[] PROGMEM = "CUBICMETER";
 const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
 
 const char U_METER[] PROGMEM = UNIT_METER_TEXT;
@@ -440,6 +446,7 @@ const char U_SEC[] PROGMEM = UNIT_SEC_TEXT;
 const char U_DEG[] PROGMEM = UNIT_DEG_TEXT;
 const char U_PERC[] PROGMEM = UNIT_PERC_TEXT;
 const char U_RPM[] PROGMEM = UNIT_RPM_TEXT;
+const char U_WATT[] PROGMEM = UNIT_WATT_TEXT;
 const char U_KW[] PROGMEM = UNIT_KW_TEXT;
 const char U_KWH[] PROGMEM = UNIT_KWH_TEXT;
 const char U_KWHM3[] PROGMEM = UNIT_KWHM3_TEXT;
@@ -451,12 +458,14 @@ const char U_GRADIENTKS[] PROGMEM = UNIT_GRADIENTKS_TEXT;
 const char U_TEMP_PER_MIN[] PROGMEM = UNIT_TEMP_PER_MIN_TEXT;
 const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
 const char U_CEL_MIN[] PROGMEM = UNIT_CEL_MIN_TEXT;
+const char U_LITER[] PROGMEM = UNIT_LITER_TEXT;
 const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
 const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
 const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
 const char U_ATM_PRESSURE[] PROGMEM = UNIT_HPA_TEXT;
 const char U_ALTITUDE[] PROGMEM = UNIT_METER_TEXT;
 const char U_PPM[] PROGMEM = UNIT_PPM_TEXT;
+const char U_CM[] PROGMEM = UNIT_CM_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -550,6 +559,7 @@ typedef enum{
   VT_VOLTAGEONOFF,      //  2 Byte - 1 enable / volt 0V (0x00) or 230V (0xFF)
   VT_WEEKDAY,           //  2 Byte - 1 enable 0x01 / weekday (1=Mo..7=So)
   VT_YESNO,             //  2 Byte - 1 enable 0x01 / 0=Nein 1=Ja (auch 0xff=Ja)
+  VT_LITER,             //  2 Byte - 1 enable / value
   VT_SPF,               //  3 Byte -  / value / 100
   VT_CURRENT,           //  3 Byte - 1 enable / value/100 uA
   VT_CURRENT1000,       //  3 Byte - 1 enable / value/1000 uA
@@ -571,6 +581,8 @@ typedef enum{
   VT_PERCENT_WORD1,     //  3 Byte - 1 enable / percent
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
+  VT_POWER_W,           //  3 Byte - 1 enable / value
+  VT_POWER_W_N,           //  3 Byte - 1 enable / value
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
   VT_POWER_WORD_N,        //  3 Byte - 1 enable / value/10 kW
   VT_POWER_WORD100,     //  3 Byte - 1 enable / value/100 kW
@@ -585,6 +597,8 @@ typedef enum{
   VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / k/min
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD_N,    //  3 Byte - 1 enable / seconds
+  VT_SECONDS_WORD4,     //  3 Byte - 1 enable / seconds / 4
+  VT_SECONDS_WORD4_N,   //  3 Byte - 1 enable / seconds / 4
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
   VT_SECONDS_WORD16,    //  3 Byte - 1 enable / seconds / 16
   VT_SPEED,             //  3 Byte - 1 enable / value * 50 rpm
@@ -601,6 +615,8 @@ typedef enum{
   VT_FREQ,              //  3 Byte - 1 enabl / value / 200
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERHOUR_N,    //  3 Byte - 1 enable / value
+  VT_LITERPERHOUR100,   //  3 Byte - 1 enable / value
+  VT_LITERPERHOUR100_N, //  3 Byte - 1 enable / value
   VT_LITERPERMIN,       //  3 Byte - 1 enable / value / 10
   VT_LITERPERMIN_N,     //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x01 / value
@@ -626,6 +642,8 @@ typedef enum{
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
   VT_ENERGY_N,          //  5 Byte - 1 enable / value/1 kWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
+  VT_CUBICMETER,        //  5 Byte - 1 enable / value / 10
+  VT_TEMP_DWORD,        //  5 Byte - 1 enable / value / 64
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
   VT_YEAR,              // subset of VT_DATETIME
   VT_DAYMONTH,          // subset of VT_DATETIME
@@ -689,6 +707,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_VOLTAGEONOFF,     1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
 {VT_WEEKDAY,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
 {VT_YESNO,            1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
+{VT_LITER,            1.0,    1, 2, DT_VALS, 0,  U_LITER, sizeof(U_LITER), STR_LITER},
 {VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
 {VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
 {VT_CURRENT1000,      1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
@@ -710,6 +729,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_PERCENT_WORD1,    1.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
 {VT_PERCENT_WORD,     2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
 {VT_PERCENT_100,      100.0,  1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
+{VT_POWER_W,          1.0,    1, 2, DT_VALS, 1,  U_WATT, sizeof(U_WATT), STR_POWER_W},
+{VT_POWER_W_N,        1.0,    6, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_W},
 {VT_POWER_WORD,       10.0,   1, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
 {VT_POWER_WORD_N,     10.0,   6, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
 {VT_POWER_WORD100,    100.0,  1, 2, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
@@ -724,6 +745,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_CEL_PER_MIN_WORD, 1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_CEL_MIN), STR_TEMP_PER_MIN},
 {VT_SECONDS_WORD,     1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
 {VT_SECONDS_WORD_N,   1.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
+{VT_SECONDS_WORD4,    4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
+{VT_SECONDS_WORD4_N,  4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
 {VT_SECONDS_WORD5,    2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
 {VT_SECONDS_WORD16,   16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
 {VT_SPEED,            0.02,   0, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
@@ -740,6 +763,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_FREQ,             1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_FREQ},
 {VT_LITERPERHOUR,     1.0,    1, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
 {VT_LITERPERHOUR_N,   1.0,    6, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
+{VT_LITERPERHOUR100,  100.0,  1, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR100},
+{VT_LITERPERHOUR100_N,100.0,  6, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR100},
 {VT_LITERPERMIN,      10.0,   1, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
 {VT_LITERPERMIN_N,    10.0,   6, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
 {VT_UINT,             1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
@@ -765,6 +790,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_ENERGY,           1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_ENERGY_N,         1.0,    6, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_UINT100,          100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_CUBICMETER,       10.0,   1, 4, DT_VALS, 1,  U_CM, sizeof(U_CM), STR_CUBICMETER},
+{VT_TEMP_DWORD,       64.0,   1, 4, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_DWORD},
 {VT_DATETIME,         1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
 {VT_YEAR,             1.0,    1, 8+32, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_YEAR},
 {VT_DAYMONTH,         1.0,    1, 8+32, DT_DDMM, 0,  U_NONE, sizeof(U_NONE), STR_DAYMONTH},

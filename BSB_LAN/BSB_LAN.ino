@@ -3328,6 +3328,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SECONDS_SHORT_N:
     case VT_VOLTAGE:
     case VT_VOLTAGE_N:
+    case VT_LITER:
 
     // 16-bit representations
     case VT_UINT:
@@ -3353,13 +3354,18 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_PERCENT_WORD:
     case VT_LITERPERHOUR:
     case VT_LITERPERHOUR_N:
+    case VT_LITERPERHOUR100:
+    case VT_LITERPERHOUR100_N:
     case VT_LITERPERMIN:
     case VT_LITERPERMIN_N:
     case VT_PPM:
     case VT_FP02:
     case VT_SECONDS_WORD5:
+    case VT_SECONDS_WORD4:
+    case VT_SECONDS_WORD4_N:
     case VT_TEMP_WORD5_US:
     case VT_GRADIENT:
+    case VT_POWER_W:
     case VT_POWER_WORD:
     case VT_POWER_WORD_N:
     case VT_MONTHS_WORD:
@@ -3369,7 +3375,9 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_UINT100:
     case VT_ENERGY:
     case VT_ENERGY_N:
+    case VT_CUBICMETER:
     case VT_MINUTES:
+    case VT_TEMP_DWORD:
       {
       char* val1 = (char *)val;
       if (val[0] == '-') {
