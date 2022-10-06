@@ -73,7 +73,6 @@ inline uint16_t get_cmdtbl_enumstr_len(int i) {
 
 
 inline uint8_t get_cmdtbl_category(int i) {
-  uint8_t category = 0;
   for (uint8_t x=0;x<sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0]);x=x+2) {
     if (ENUM_CAT_NR[x] <= cmdtbl[i].line && ENUM_CAT_NR[x+1] >= cmdtbl[i].line) {
       return x/2;
