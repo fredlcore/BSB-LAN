@@ -40,6 +40,7 @@ jobs:
     - name: Setup config
       run: |
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
     - name: Run PlatformIO CI
       run: platformio ci --board=due ./BSB_LAN
