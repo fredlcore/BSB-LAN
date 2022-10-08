@@ -6681,6 +6681,7 @@ void loop() {
   #ifdef LOGGER
 
   // write averages to SD card to protect from power off
+    if (LoggingMode & CF_LOGMODE_SD_CARD) {
       if (avg_parameters[0] > 0) { //write averages if at least one value is set
         File avgfile = SD.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
@@ -6693,6 +6694,7 @@ void loop() {
           avgfile.close();
         }
       }
+    }
   #endif
   }
   } else {
