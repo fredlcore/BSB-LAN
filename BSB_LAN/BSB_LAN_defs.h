@@ -356,6 +356,8 @@ const char STR_VOLTAGE[] PROGMEM = "VOLTAGE";
 const char STR_VOLTAGEONOFF[] PROGMEM = "VOLTAGEONOFF";
 const char STR_WEEKDAY[] PROGMEM = "WEEKDAY";
 const char STR_LITER[] PROGMEM = "LITER";
+const char STR_MSECONDS_WORD[] PROGMEM = "MSECONDS_WORD";
+const char STR_POWER_SHORT[] PROGMEM = "POWER_SHORT";
 const char STR_YESNO[] PROGMEM = "YESNO";
 const char STR_SPF[] PROGMEM = "SPF";
 const char STR_CURRENT[] PROGMEM = "CURRENT";
@@ -381,6 +383,7 @@ const char STR_POWER_WORD[] PROGMEM = "POWER_WORD";
 const char STR_POWER_WORD100[] PROGMEM = "POWER_WORD100";
 const char STR_ENERGY_WORD[] PROGMEM = "ENERGY_WORD";
 const char STR_ENERGY_CONTENT[] PROGMEM = "ENERGY_CONTENT";
+const char STR_PRESSURE_WORD1[] PROGMEM = "PRESSURE_WORD1";
 const char STR_PRESSURE_WORD[] PROGMEM = "PRESSURE_WORD";
 const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
 const char STR_PROPVAL[] PROGMEM = "PROPVAL";
@@ -396,8 +399,11 @@ const char STR_TEMP_WORD60[] PROGMEM = "TEMP_WORD60";
 const char STR_TEMP_WORD5_US[] PROGMEM = "TEMP_WORD5_US";
 const char STR_TEMP_DWORD[] PROGMEM = "TEMP_DWORD";
 const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
+const char STR_VOLTAGE_WORD1[] PROGMEM = "VOLTAGE_WORD1";
+const char STR_M3H[] PROGMEM = "M3H";
 const char STR_CELMIN[] PROGMEM = "CELMIN";
 const char STR_FREQ[] PROGMEM = "FREQ";
+const char STR_FREQ10[] PROGMEM = "FREQ10";
 const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
 const char STR_LITERPERHOUR100[] PROGMEM = "LITERPERHOUR100";
 const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
@@ -405,6 +411,7 @@ const char STR_LPM_SHORT[] PROGMEM = "LPM_SHORT";
 const char STR_UINT[] PROGMEM = "UINT";
 const char STR_UINT5[] PROGMEM = "UINT5";
 const char STR_UINT10[] PROGMEM = "UINT10";
+const char STR_AMP[] PROGMEM = "AMP";
 const char STR_SINT[] PROGMEM = "SINT";
 const char STR_SINT1000[] PROGMEM = "SINT1000";
 const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
@@ -416,6 +423,7 @@ const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
 const char STR_POWER[] PROGMEM = "POWER";
 const char STR_POWER_W[] PROGMEM = "POWER_W";
 const char STR_POWER100[] PROGMEM = "POWER100";
+const char STR_ENERGY_MWH[] PROGMEM = "ENERGY_MWH";
 const char STR_ENERGY10[] PROGMEM = "ENERGY10";
 const char STR_ENERGY[] PROGMEM = "ENERGY";
 const char STR_UINT100[] PROGMEM = "UINT100";
@@ -443,6 +451,7 @@ const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
 const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
 const char U_MIN[] PROGMEM = UNIT_MIN_TEXT;
 const char U_SEC[] PROGMEM = UNIT_SEC_TEXT;
+const char U_MSEC[] PROGMEM = UNIT_MSEC_TEXT;
 const char U_DEG[] PROGMEM = UNIT_DEG_TEXT;
 const char U_PERC[] PROGMEM = UNIT_PERC_TEXT;
 const char U_RPM[] PROGMEM = UNIT_RPM_TEXT;
@@ -450,6 +459,8 @@ const char U_WATT[] PROGMEM = UNIT_WATT_TEXT;
 const char U_KW[] PROGMEM = UNIT_KW_TEXT;
 const char U_KWH[] PROGMEM = UNIT_KWH_TEXT;
 const char U_KWHM3[] PROGMEM = UNIT_KWHM3_TEXT;
+const char U_MWH[] PROGMEM = UNIT_MWH_TEXT;
+const char U_M3H[] PROGMEM = UNIT_M3H_TEXT;
 const char U_CURR[] PROGMEM = UNIT_CURR_TEXT;
 const char U_BAR[] PROGMEM = UNIT_BAR_TEXT;
 const char U_VOLT[] PROGMEM = UNIT_VOLT_TEXT;
@@ -466,6 +477,8 @@ const char U_ATM_PRESSURE[] PROGMEM = UNIT_HPA_TEXT;
 const char U_ALTITUDE[] PROGMEM = UNIT_METER_TEXT;
 const char U_PPM[] PROGMEM = UNIT_PPM_TEXT;
 const char U_CM[] PROGMEM = UNIT_CM_TEXT;
+const char U_AMP[] PROGMEM = UNIT_AMP_TEXT;
+const char U_HERTZ[] PROGMEM = UNIT_HERTZ_TEXT;
 const char U_NONE[] PROGMEM = "";
 
 typedef struct {
@@ -560,6 +573,8 @@ typedef enum{
   VT_WEEKDAY,           //  2 Byte - 1 enable 0x01 / weekday (1=Mo..7=So)
   VT_YESNO,             //  2 Byte - 1 enable 0x01 / 0=Nein 1=Ja (auch 0xff=Ja)
   VT_LITER,             //  2 Byte - 1 enable / value
+  VT_POWER_SHORT,       //  2 Byte - 1 enable / value
+  VT_POWER_SHORT_N,     //  2 Byte - 1 enable / value
   VT_SPF,               //  3 Byte -  / value / 100
   VT_CURRENT,           //  3 Byte - 1 enable / value/100 uA
   VT_CURRENT1000,       //  3 Byte - 1 enable / value/1000 uA
@@ -591,10 +606,13 @@ typedef enum{
   VT_ENERGY_CONTENT,    //  3 Byte - 1 enable / value/10 kWh/m³
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PRESSURE_WORD_NN,  //  3 Byte - 1 enable / bar/10.0
+  VT_PRESSURE_WORD1,    //  3 Byte - 1 enable / value
   VT_PRESSURE_1000,     //  3 Byte - 1 enable / bar/1000.0
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_PPM,               //  2 Byte - 1 enable 0x   / ppm/1 signed
   VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / k/min
+  VT_MSECONDS_WORD,     //  3 Byte - 1 enable / seconds
+  VT_MSECONDS_WORD_N,   //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD_N,    //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD4,     //  3 Byte - 1 enable / seconds / 4
@@ -609,10 +627,12 @@ typedef enum{
   VT_TEMP_WORD,         //  3 Byte - 1 enable / value
 //  VT_TEMP_WORD60,       //  3 Byte - 1 enable / value / 60
   VT_TEMP_WORD5_US,     //  3 Byte - 1 enable / value / 2
-  VT_VOLTAGE_WORD,      //  3 Byte - 1 enable / volt z.B. 2.9V
+  VT_VOLTAGE_WORD,      //  3 Byte - 1 enable / value/10 z.B. 2.9V
+  VT_VOLTAGE_WORD1,     //  3 Byte - 1 enable / value
   VT_CELMIN,            //  3 Byte - 1 enable / value
   VT_CELMIN_N,          //  3 Byte - 1 enable / value
   VT_FREQ,              //  3 Byte - 1 enabl / value / 200
+  VT_FREQ10,            //  3 Byte - 1 enabl / value / 10
   VT_LITERPERHOUR,      //  3 Byte - 1 enable / value
   VT_LITERPERHOUR_N,    //  3 Byte - 1 enable / value
   VT_LITERPERHOUR100,   //  3 Byte - 1 enable / value
@@ -625,6 +645,9 @@ typedef enum{
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_UINT100_WORD,      //  3 Byte - 1 enable / value / 100
   VT_UINT100_WORD_N,    //  3 Byte - 1 enable / value / 100
+  VT_AMP,               //  3 Byte - 1 enable / value / 100
+  VT_AMP_N,             //  3 Byte - 1 enable / value / 100
+  VT_CONSUMPTION,       //  3 Byte - 1 enable value / 100 m3/h
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT_NN,            //  3 Byte - 1 enable 0x01 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
@@ -641,6 +664,8 @@ typedef enum{
 //  VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
   VT_ENERGY,            //  5 Byte - 1 enable / value/1 kWh
   VT_ENERGY_N,          //  5 Byte - 1 enable / value/1 kWh
+  VT_ENERGY_MWH,        //  5 Byte - 1 enable / value/100 MWh
+  VT_ENERGY_MWH_N,      //  5 Byte - 1 enable / value/100 MWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
   VT_CUBICMETER,        //  5 Byte - 1 enable / value / 10
   VT_TEMP_DWORD,        //  5 Byte - 1 enable / value / 64
@@ -708,6 +733,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_WEEKDAY,          1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_WEEKDAY},
 {VT_YESNO,            1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
 {VT_LITER,            1.0,    1, 2, DT_VALS, 0,  U_LITER, sizeof(U_LITER), STR_LITER},
+{VT_POWER_SHORT,      1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
+{VT_POWER_SHORT_N,    1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
 {VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
 {VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
 {VT_CURRENT1000,      1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
@@ -739,10 +766,13 @@ PROGMEM_LATE const units optbl[]={
 {VT_ENERGY_CONTENT,   10.0,   0, 2, DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
 {VT_PRESSURE_WORD,    10.0,   6, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
 {VT_PRESSURE_WORD_NN, 10.0,   1, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
+{VT_PRESSURE_WORD1,   50.0,   1, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD1},
 {VT_PRESSURE_1000,    1000.0, 0, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_1000},
 {VT_PROPVAL,          16.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_PROPVAL},
 {VT_PPM,              1.0,    0, 2, DT_VALS, 0,  U_PPM, sizeof(U_PPM), STR_PPM},
 {VT_CEL_PER_MIN_WORD, 1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_CEL_MIN), STR_TEMP_PER_MIN},
+{VT_MSECONDS_WORD,    1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_MSEC), STR_MSECONDS_WORD},
+{VT_MSECONDS_WORD_N,  1.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_MSEC), STR_MSECONDS_WORD},
 {VT_SECONDS_WORD,     1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
 {VT_SECONDS_WORD_N,   1.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
 {VT_SECONDS_WORD4,    4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
@@ -758,9 +788,11 @@ PROGMEM_LATE const units optbl[]={
 // {VT_TEMP_WORD60,    60.0,   6, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD60},
 {VT_TEMP_WORD5_US,    2.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD5_US},
 {VT_VOLTAGE_WORD,     10.0,   1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD},
+{VT_VOLTAGE_WORD1,    1.0,    1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD1},
 {VT_CELMIN,           1.0,    1, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
 {VT_CELMIN_N,         1.0,    6, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
-{VT_FREQ,             1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_FREQ},
+{VT_FREQ,             200.0,  1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_FREQ},
+{VT_FREQ10,           10.0,   1, 2, DT_VALS, 0,  U_HERTZ, sizeof(U_HERTZ), STR_FREQ10},
 {VT_LITERPERHOUR,     1.0,    1, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
 {VT_LITERPERHOUR_N,   1.0,    6, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
 {VT_LITERPERHOUR100,  100.0,  1, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR100},
@@ -773,6 +805,9 @@ PROGMEM_LATE const units optbl[]={
 {VT_UINT10,           10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
 {VT_UINT100_WORD,     100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_UINT100_WORD_N,   100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
+{VT_AMP,              100.0,  1, 4, DT_VALS, 2,  U_AMP, sizeof(U_AMP), STR_AMP},
+{VT_AMP_N,            100.0,  6, 4, DT_VALS, 2,  U_AMP, sizeof(U_AMP), STR_AMP},
+{VT_CONSUMPTION,      100,    1, 4, DT_VALS, 3,  U_M3H, sizeof(U_M3H), STR_M3H},
 {VT_SINT,             1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT_NN,          1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT1000,         1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
@@ -789,6 +824,8 @@ PROGMEM_LATE const units optbl[]={
 // {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
 {VT_ENERGY,           1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_ENERGY_N,         1.0,    6, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_ENERGY_MWH,       100.0,  1, 4, DT_VALS, 0,  U_MWH, sizeof(U_MWH), STR_ENERGY_MWH},
+{VT_ENERGY_MWH_N,     100.0,  6, 4, DT_VALS, 0,  U_MWH, sizeof(U_MWH), STR_ENERGY_MWH},
 {VT_UINT100,          100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_CUBICMETER,       10.0,   1, 4, DT_VALS, 1,  U_CM, sizeof(U_CM), STR_CUBICMETER},
 {VT_TEMP_DWORD,       64.0,   1, 4, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_DWORD},
@@ -809,11 +846,6 @@ PROGMEM_LATE const units optbl[]={
 {VT_ALTITUDE,         1.0,    0, 0, DT_VALS, 0,  U_ALTITUDE, sizeof(U_ALTITUDE), STR_ALTITUDE},
 {VT_UNKNOWN,          1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
-
-/* User-defined command numbers */
-#define STR10000 STR8740
-#define STR10001 STR8770
-#define STR10002 STR8800
 
 const char STR10100[] PROGMEM = STR10100_TEXT;
 const char STR10101[] PROGMEM = STR10101_TEXT;
@@ -982,8 +1014,8 @@ const char ENUM_VOLTAGEONOFF[] PROGMEM_LATEST = {
 };
 
 const char ENUM_ONOFF[] PROGMEM_LATEST = {
-"\x00 " MENU_TEXT_NO "\0"
-"\x01 " MENU_TEXT_YES
+"\x00 " MENU_TEXT_OFF "\0"
+"\x01 " MENU_TEXT_ON
 };
 const char ENUM_YESNO[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_NO "\0"
