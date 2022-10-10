@@ -3328,7 +3328,10 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_SECONDS_SHORT_N:
     case VT_VOLTAGE:
     case VT_VOLTAGE_N:
+    case VT_VOLTAGE_WORD1:
     case VT_LITER:
+    case VT_POWER_SHORT:
+    case VT_POWER_SHORT_N:
 
     // 16-bit representations
     case VT_UINT:
@@ -3344,6 +3347,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MINUTES_WORD_N:
     case VT_UINT5:
     case VT_UINT10:
+    case VT_MSECONDS_WORD:
+    case VT_MSECONDS_WORD_N:
     case VT_SECONDS_WORD:
     case VT_SECONDS_WORD_N:
     case VT_SECONDS_WORD16:
@@ -3358,6 +3363,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_LITERPERHOUR100_N:
     case VT_LITERPERMIN:
     case VT_LITERPERMIN_N:
+    case VT_CONSUMPTION:
+    case VT_PRESSURE_WORD1:
     case VT_PPM:
     case VT_FP02:
     case VT_SECONDS_WORD5:
@@ -3370,11 +3377,16 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_POWER_WORD_N:
     case VT_MONTHS_WORD:
     case VT_DAYS_WORD:
+    case VT_FREQ:
+    case VT_FREQ10:
 
     // 32-bit representations
     case VT_UINT100:
     case VT_ENERGY:
     case VT_ENERGY_N:
+    case VT_ENERGY_MWH:
+    case VT_ENERGY_MWH_N:
+    case VT_AMP:
     case VT_CUBICMETER:
     case VT_MINUTES:
     case VT_TEMP_DWORD:
@@ -5929,7 +5941,7 @@ void loop() {
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
-		char prognrBuf[8];
+            		char prognrBuf[8];
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 if (p[2]=='Q') {
