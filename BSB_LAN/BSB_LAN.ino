@@ -799,6 +799,7 @@ char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allo
 
 uint8_t my_dev_fam = DEV_FAM(DEV_NONE);
 uint8_t my_dev_var = DEV_VAR(DEV_NONE);
+uint32_t my_dev_id = 0;
 
 // variables for handling of broadcast messages
 int brenner_stufe = 0;
@@ -974,7 +975,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   printToWebClient(PSTR("\r\n"));
   if (isDownload) {
     printToWebClient(PSTR("Content-Disposition: attachment; filename=\"BSB-LAN-"));
-    printFmtToWebClient("%03u-%03u.txt\"\r\n", my_dev_fam, my_dev_var);
+    printFmtToWebClient("%03u-%03u-%u.txt\"\r\n", my_dev_fam, my_dev_var, my_dev_id);
   }
 }
 
@@ -4373,7 +4374,7 @@ void GetDevId() {
   bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
   my_dev_fam = msg[10+bus->getBusType()*4];
   my_dev_var = msg[12+bus->getBusType()*4];
-
+  my_dev_id = (msg[15+bus->getBusType()*4] << 24) + (msg[16+bus->getBusType()*4] << 16) + (msg[17+bus->getBusType()*4] << 8) + (msg[18+bus->getBusType()*4]);
   if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
     my_dev_fam = 64;
     my_dev_var = 97;
