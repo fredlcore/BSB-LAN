@@ -930,6 +930,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_SECONDS_WORD4: // u16  - Wert als Temperatur interpretiert (RAW / 4)
             case VT_SECONDS_WORD4_N: // u16  - Wert als Temperatur interpretiert (RAW / 4)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_SECONDS_WORD5_N: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
 //            case VT_TEMP_WORD60: //  u16 / 60
