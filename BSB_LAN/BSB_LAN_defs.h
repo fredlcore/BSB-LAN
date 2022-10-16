@@ -618,6 +618,7 @@ typedef enum{
   VT_SECONDS_WORD4,     //  3 Byte - 1 enable / seconds / 4
   VT_SECONDS_WORD4_N,   //  3 Byte - 1 enable / seconds / 4
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
+  VT_SECONDS_WORD5_N,   //  3 Byte - 1 enable / seconds / 2
   VT_SECONDS_WORD16,    //  3 Byte - 1 enable / seconds / 16
   VT_SPEED,             //  3 Byte - 1 enable / value * 50 rpm
   VT_SPEED2,            //  3 Byte - 1 enable / rpm
@@ -778,6 +779,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SECONDS_WORD4,    4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
 {VT_SECONDS_WORD4_N,  4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
 {VT_SECONDS_WORD5,    2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
+{VT_SECONDS_WORD5_N,  2.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
 {VT_SECONDS_WORD16,   16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
 {VT_SPEED,            0.02,   0, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
 {VT_SPEED2,           1.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
