@@ -3309,6 +3309,8 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_BIT:
     case VT_BYTE:
     case VT_BYTE_N:
+    case VT_BYTE10:
+    case VT_BYTE10_N:
     case VT_TEMP_SHORT:
     case VT_TEMP_SHORT_US:
     case VT_TEMP_SHORT_US_N:
