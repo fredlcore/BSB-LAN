@@ -913,6 +913,7 @@ void printTelegram(byte* msg, float query_line) {
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_BYTE10: // u8 / 10.0
+            case VT_BYTE10_N: // u8 / 10.0
             case VT_LPM_SHORT: // u8 / 0.1 l/min
             case VT_PRESSURE: // u8 / 10.0 bar
             case VT_PRESSURE_NN: // u8 / 10.0 bar

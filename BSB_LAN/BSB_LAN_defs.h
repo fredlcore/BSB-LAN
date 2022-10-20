@@ -533,6 +533,7 @@ typedef enum{
   VT_BYTE,              //  2 Byte - 1 enable 0x01 / value
   VT_BYTE_N,            //  2 Byte - 1 enable 0x06 / value
   VT_BYTE10,            //  2 Byte - 1 enable 0x01 / value/10
+  VT_BYTE10_N,          //  2 Byte - 1 enable 0x01 / value/10
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
   VT_DAYS,              //  2 Byte - 1 enable 0x01 / day
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
@@ -694,6 +695,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_BYTE,             1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
 {VT_BYTE_N,           1.0,    6, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
 {VT_BYTE10,           10.0,   1, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
+{VT_BYTE10_N,         10.0,   6, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
 {VT_CLOSEDOPEN,       1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
 {VT_DAYS,             1.0,    1, 1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
 {VT_ENUM,             1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
