@@ -946,6 +946,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_LITERPERMIN: // u16 / 0.1 l/min
             case VT_LITERPERMIN_N: // u16 / 0.1 l/min
             case VT_PRESSURE_WORD: // u16 / 10.0 bar
+            case VT_PRESSURE_WORD_NN: // u16 / 10.0 bar
             case VT_PRESSURE_1000: // u16 / 1000.0 bar
             case VT_POWER_W: // u16 / 1.0 W
             case VT_POWER_W_N: // u16 / 1.0 W
