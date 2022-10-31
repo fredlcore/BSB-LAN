@@ -6633,6 +6633,8 @@ void loop() {
       for (int i=0; i < numLogValues; i++) {
         int outBufLen = 0;
         if (log_parameters[i] > 0) {
+          query(log_parameters[i]);
+          if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
           outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%.1f;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
 #ifdef AVERAGES
@@ -6643,7 +6645,6 @@ void loop() {
 #endif
           if (dataFile) dataFile.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
-          query(log_parameters[i]);
           outBufLen = 0;
           strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
           if (dataFile) dataFile.print(outBuf);
