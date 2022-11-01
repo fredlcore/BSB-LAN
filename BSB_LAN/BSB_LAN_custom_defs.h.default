@@ -1,3 +1,4 @@
+
 // Menu Categories
 typedef enum{
   CAT_DATUMZEIT,
@@ -4620,7 +4621,7 @@ const char ENUM5550[] PROGMEM_LATEST = {
 };
 
 // Allgemeine Funktionen
-const char ENUM5573[] PROGMEM_LATEST = { //Fühler 1 dT-Regler 1 - Baxi Luna Platinum+
+const char ENUM5573[] PROGMEM_LATEST = { //Fühler 1 dT-Regler 1 - Baxi Luna Platinum+
 "\x00 " ENUM5573_00_TEXT "\0" //none
 "\x01 " ENUM5573_01_TEXT "\0" //B31
 "\x02 " ENUM5573_02_TEXT "\0" //B6
@@ -4639,7 +4640,7 @@ const char ENUM5573[] PROGMEM_LATEST = { //Fühler 1 dT-Regler 1 - Baxi Luna Pla
 "\x10 " ENUM5573_10_TEXT "\0" //B63
 "\x11 " ENUM5573_11_TEXT "\0" //B64
 "\x12 " ENUM5573_12_TEXT "\0" //B38
-"\x13 " ENUM5573_13_TEXT "\0" //B26 Primärtauscherfühler B26
+"\x13 " ENUM5573_13_TEXT "\0" //B26 Primärtauscherfühler B26
 "\x15 " ENUM5573_15_TEXT "\0" //B2
 "\x16 " ENUM5573_16_TEXT "\0" //B62 Solarfühler ext.Tausch B62
 "\x18 " ENUM5573_18_TEXT "\0" //B3 Trinkwasserfühler B3
@@ -4653,9 +4654,9 @@ const char ENUM5573[] PROGMEM_LATEST = { //Fühler 1 dT-Regler 1 - Baxi Luna Pla
 "\x22 " ENUM5573_22_TEXT //B14 Vorlauftemperaturfühler HK3 B14
 };
 
-#define ENUM5574 ENUM5573               // Fühler 2 dT-Regler 1
-#define ENUM5583 ENUM5573               // Fühler 1 dT-Regler 2
-#define ENUM5584 ENUM5573               // Fühler 2 dT-Regler 2
+#define ENUM5574 ENUM5573               // Fühler 2 dT-Regler 1
+#define ENUM5583 ENUM5573               // Fühler 1 dT-Regler 2
+#define ENUM5584 ENUM5573               // Fühler 2 dT-Regler 2
 
 // Konfiguration
 const char ENUM5700[] PROGMEM_LATEST = { //FUJITSU
