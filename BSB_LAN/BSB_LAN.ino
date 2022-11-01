@@ -61,8 +61,14 @@
  *       1.1   - 10.11.2020
  *       2.0   - 31.12.2021
  *       2.1   - 30.07.2022
+ *       2.2   - 01.11.2022
  *
  * Changelog:
+ *       version 2.2
+ *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
+ *        - Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)
+ *        - Lots of bugfixes and new data types
+ *        - Device-specific parameter lists supported
  *       version 2.1
  *        - Many new parameters for LMU64
  *        - ATTENTION: New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
