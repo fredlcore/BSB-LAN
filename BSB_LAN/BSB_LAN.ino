@@ -3267,6 +3267,7 @@ int set(int line      // the ProgNr of the heater parameter
         break;
       }
       case VT_HOUR_MINUTES:
+      case VT_HOUR_MINUTES_N:
       {
         uint8_t h=atoi(val);
         uint8_t m=0;
