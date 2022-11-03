@@ -995,6 +995,7 @@ void printTelegram(byte* msg, float query_line) {
               printLPBAddr(msg,data_len);
               break;
             case VT_HOUR_MINUTES: // u8:u8
+            case VT_HOUR_MINUTES_N: // u8:u8
               printTime(msg,data_len);
               break;
             case VT_YEAR:
