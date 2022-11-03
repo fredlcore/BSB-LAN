@@ -806,6 +806,8 @@ char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allo
 uint8_t my_dev_fam = DEV_FAM(DEV_NONE);
 uint8_t my_dev_var = DEV_VAR(DEV_NONE);
 uint32_t my_dev_id = 0;
+uint8_t default_flag = DEFAULT_FLAG;  // necessary for ESP32 SDK 2.0.4 and above to prevent tautological-compare errors
+
 
 // variables for handling of broadcast messages
 int brenner_stufe = 0;
@@ -1526,10 +1528,10 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state) {
 #endif
 
 bool programIsreadOnly(uint8_t param_len) {
-  if ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY) { //software-controlled
+  if ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY) { //software-controlled
     switch (programWriteMode) {
       case 0: return true; //All read-only.
-      case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (DEFAULT_FLAG & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
+      case 1: if ((param_len & FL_OEM) == FL_OEM || ((param_len & FL_RONLY) == FL_RONLY && (default_flag & FL_RONLY) != FL_RONLY)) return true; else return false; //All writable except read-only and OEM
       case 2: if ((param_len & FL_RONLY) == FL_RONLY) return true; else return false; //All writable except read-only
     }
   } else { //defs-controlled.
@@ -2062,7 +2064,7 @@ void generateConfigPage(void) {
   if (bustype != BUS_PPS) {
     printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
 
-    if ((DEFAULT_FLAG & FL_RONLY) == FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !programWriteMode)) {
+    if ((default_flag & FL_RONLY) == FL_RONLY || ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !programWriteMode)) {
       printToWebClient(PSTR(MENU_TEXT_BRO));
     } else {
       printToWebClient(PSTR(MENU_TEXT_BRW));
@@ -5664,7 +5666,7 @@ void loop() {
             json_parameter = 0; //reuse json_parameter  for lesser memory usage
             i = bus->getBusType();
             if (i != BUS_PPS) {
-              if ((DEFAULT_FLAG & FL_RONLY) != FL_RONLY || ((DEFAULT_FLAG & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode)) json_parameter = 1;
+              if ((default_flag & FL_RONLY) != FL_RONLY || ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode)) json_parameter = 1;
             } else {
               if (pps_write == 1)  json_parameter = 1;
             }
@@ -5933,7 +5935,7 @@ void loop() {
                   cat_max = ENUM_CAT_NR[search_cat+1];
 
 // Check for category number (if somebody will set wrong category number)
-                  if(search_cat >= 0 || search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){
+                  if(search_cat >= 0 || search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){   // TODO: search_cat is uint, so it is always equal or greater than zero, so this block is always executed. Why?
                     cat_param = cat_min;
                   }
                 }
@@ -7120,7 +7122,7 @@ void setup() {
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
-  if (DEFAULT_FLAG & FL_SW_CTL_RONLY) {
+  if (default_flag & FL_SW_CTL_RONLY) {
     registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
   }
   registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
