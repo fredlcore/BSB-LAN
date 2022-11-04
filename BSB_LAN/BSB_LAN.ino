@@ -2279,7 +2279,7 @@ void generateConfigPage(void) {
   printToWebClient(STR_TEXT_FSP);
 #if !defined(ESP32)
   uint32_t volFree = SD.vol()->freeClusterCount();
-  uint32_t fs = (uint32_t)(volFree*SD.vol()->blocksPerCluster()/2048);
+  uint32_t fs = (uint32_t)(volFree*SD.vol()->sectorsPerCluster()/2048);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 #else
   uint64_t fs = (SD.totalBytes() - SD.usedBytes());
@@ -5654,7 +5654,7 @@ void loop() {
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
             uint32_t freespace = SD.vol()->freeClusterCount();
-            freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+            freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
             printFmtToWebClient(PSTR("%d"), freespace);
 #else
             uint64_t freespace = SD.totalBytes() - SD.usedBytes();
@@ -7508,7 +7508,7 @@ void setup() {
   uint32_t m = millis();
 #if !defined(ESP32)
   uint32_t freespace = SD.vol()->freeClusterCount();
-  freespace = (uint32_t)(freespace*SD.vol()->blocksPerCluster()/2048);
+  freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
 #else
   uint64_t freespace = SD.totalBytes() - SD.usedBytes();
