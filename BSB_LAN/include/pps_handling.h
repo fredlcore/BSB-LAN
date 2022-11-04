@@ -81,6 +81,7 @@ uint16_t pps_bus_handling(byte *msg) {
           break;
         } else {
           msg_cycle++;  // If time is not yet set, above code is not executed, but following case will. Increase msg_cycle so that it is not run a second time in the next iteration.
+          [[fallthrough]];
         }
       }
 //            break;
@@ -119,6 +120,7 @@ uint16_t pps_bus_handling(byte *msg) {
           tx_msg[7] = second(); // second
           break;
         }
+        [[fallthrough]];
       }
       case 14:
       {
@@ -129,6 +131,7 @@ uint16_t pps_bus_handling(byte *msg) {
           pps_wday_set = false;
           break;
         }
+        [[fallthrough]];
       }
       case 15:
         tx_msg[1] = 0x60;
@@ -402,7 +405,7 @@ ich mir da nicht)
             pps_time_received = true;
             break;
           }
-          case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; // Verbleibende Ferientage
+          case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; break; // Verbleibende Ferientage
           case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
           case 0x1B:                                    // Frostschutz-Temperatur
             pps_values[PPS_FRS] = temp;
