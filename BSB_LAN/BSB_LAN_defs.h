@@ -785,7 +785,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SECONDS_WORD16,   16.0,   1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD16},
 {VT_SPEED,            0.02,   0, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED},
 {VT_SPEED2,           1.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
-{VT_SPEED2_N,         6.0,    1, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
+{VT_SPEED2_N,         1.0,    6, 2, DT_VALS, 0,  U_RPM, sizeof(U_RPM), STR_SPEED2},
 {VT_TEMP,             64.0,   1, 2+32, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
 {VT_TEMP_N,           64.0,   6, 2+32, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP},
 {VT_TEMP_WORD,        1.0,    1, 2, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_WORD},
