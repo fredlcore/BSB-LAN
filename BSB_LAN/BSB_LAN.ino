@@ -66,6 +66,7 @@
  *
  * Changelog:
  *       version 3.0
+ *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
  *        - New SdFat version 2 for Arduino Due
  *       version 2.2
  *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
