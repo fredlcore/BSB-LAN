@@ -3004,7 +3004,13 @@ void generateJSONwithConfig() {
  *   none
  * *************************************************************** */
 char *GetDateTime(char *date) {
+#if defined(ESP32)
+  struct tm now;
+  getLocalTime(&now,0);
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
+#else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
+#endif
   date[19] = 0;
   return date;
 }
@@ -3261,7 +3267,13 @@ int set(int line      // the ProgNr of the heater parameter
       {
         int dow = atoi(val);
         pps_values[PPS_DOW] = dow;
+      #if defined(ESP32)
+        struct tm now;
+        getLocalTime(&now,0);
+        setTime(now.tm_hour,now.tm_min,now.tm_sec, dow, 1, 2018);
+      #else
         setTime(hour(), minute(), second(), dow, 1, 2018);
+      #endif
 //        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
         pps_wday_set = true;
         break;

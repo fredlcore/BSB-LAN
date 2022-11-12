@@ -18,7 +18,7 @@ void setTime(int hr,int min,int sec,int day, int month, int yr){
 int year(){
   struct tm now;
   getLocalTime(&now,0);
-  return now.tm_year;
+  return now.tm_year + 1900;
 }
 
 int month(){
