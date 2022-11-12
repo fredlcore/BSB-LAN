@@ -49,7 +49,10 @@ void mqtt_sendtoBroker(float param) {
   if (mqtt_mode == 2 || mqtt_mode == 3) {
     MQTTTopic.concat(F("json"));
   } else {
-    MQTTTopic.concat(String(param));
+    if(roundf(param * 10) != roundf(param) * 10)
+      MQTTTopic.concat(String(param, 1));
+    else
+      MQTTTopic.concat(String(param, 0));
   }
   query(param);
   if (mqtt_mode == 3) { // Build the json doc on the fly

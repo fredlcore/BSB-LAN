@@ -62,7 +62,7 @@
  *       2.0   - 31.12.2021
  *       2.1   - 30.07.2022
  *       2.2   - 01.11.2022
- *       3.0   - 
+ *       3.0   -
  *
  * Changelog:
  *       version 3.0
@@ -551,7 +551,11 @@ EthernetUDP udp, udp_log;
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
 //#include <util/crc16.h>
-#include "src/Time/TimeLib.h"
+#if defined(ESP32)
+  #include "src/esp32_time.h"
+#else
+  #include "src/Time/TimeLib.h"
+#endif
 
 #ifdef MQTT
   #include "src/PubSubClient/src/PubSubClient.h"
@@ -5005,15 +5009,16 @@ void loop() {
             byte minval = 0;
             byte secval = 0;
 #if !defined(ESP32)
-            {dir_t d;
-            if (dataFile.dirEntry(&d)) {
-              lastWrtYr = FAT_YEAR(d.lastWriteDate);
-              monthval = FAT_MONTH(d.lastWriteDate);
-              dayval = FAT_DAY(d.lastWriteDate);
-              hourval = FAT_HOUR(d.lastWriteTime);
-              minval = FAT_MINUTE(d.lastWriteTime);
-              secval = FAT_SECOND(d.lastWriteTime);
-            }}
+            {uint16_t pdate;
+            uint16_t ptime;
+            dataFile.getModifyDateTime(&pdate, &ptime);
+            lastWrtYr = FS_YEAR(pdate);
+            monthval = FS_MONTH(pdate);
+            dayval = FS_DAY(pdate);
+            hourval = FS_HOUR(ptime);
+            minval = FS_MINUTE(ptime);
+            secval = FS_SECOND(ptime);
+            }
 #else
             {struct stat st;
             if(stat(p, &st) == 0){
@@ -7008,6 +7013,19 @@ void printWifiStatus()
 }
 #endif
 
+
+// Call back for file timestamps.  Only called for file create and sync().
+#if !defined(ESP32)
+void dateTime(uint16_t* date, uint16_t* time) {
+  // Return date using FS_DATE macro to format fields.
+  *date = FS_DATE(year(), month(), day());
+
+  // Return time using FS_TIME macro to format fields.
+  *time = FS_TIME(hour(), minute(), second());
+
+}
+#endif
+
 /** *****************************************************************
  *  Function: setup()
  *  Does:     Sets up the Arduino including its Ethernet shield.
@@ -7743,7 +7761,9 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(button_on_pin[3]), interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
   }
 #endif
-
+#if !defined(ESP32)
+  FsDateTime::setCallback(dateTime);
+#endif
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
 }
