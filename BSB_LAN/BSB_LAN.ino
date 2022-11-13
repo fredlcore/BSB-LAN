@@ -3855,11 +3855,11 @@ char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257) {
-#if !(defined ESP32)
-    len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
-#else
-    len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
-#endif
+    if(roundf(decodedTelegram.prognr * 10) != roundf(decodedTelegram.prognr) * 10)
+      len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
+    else
+      len+=sprintf_P(outBuf, PSTR("%d "), roundf(decodedTelegram.prognr));
+
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
 #ifdef AVERAGES
