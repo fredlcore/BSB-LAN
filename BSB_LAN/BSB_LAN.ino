@@ -6666,7 +6666,12 @@ void loop() {
           query(log_parameters[i]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%.1f;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
+          if(roundf(log_parameters[i] * 10) != roundf(log_parameters[i]) * 10)
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%.1f;"), log_parameters[i]);
+          else
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%d;"), (int)log_parameters[i]);
+
 #ifdef AVERAGES
           if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
             //averages

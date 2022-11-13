@@ -42,7 +42,7 @@
      for (int i=0; i<numAverages; i++) {
        if (avg_parameters[i] > 0) {
          counter++;
-         query(20050 + i);
+         query(BSP_AVERAGES + i);
          printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
          printToWebClient(PSTR("<br></td><td>"));
          printToWebClient_prognrdescaddr();
@@ -61,9 +61,9 @@
      // output of one wire sensors
      for (i=0;i<numSensors * 2;i += 2) {
        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-       query(i + 20300);
+       query(i + BSP_ONEWIRE);
        printToWebClient(decodedTelegram.value);
-       query(i + 20301);
+       query(i + BSP_ONEWIRE + 1);
        printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
        printToWebClient(STR_IPWEZERO);
        printToWebClient(STR_IPWEZERO);
@@ -78,7 +78,7 @@
    int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
    for (i=0;i<numDHTSensors;i++) {
      if (!DHT_Pins[i]) continue;
-     query(20101 + i * 4);
+     query(BSP_DHT22 + 1 + i * 4);
      counter++;
      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
      printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
@@ -88,7 +88,7 @@
      printToWebClient(STR_IPWEZERO);
      printToWebClient(PSTR("</tr>"));
      counter++;
-     query(20102 + i * 4);
+     query(BSP_DHT22 + 2 + i * 4);
      printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d<br></td><td>"), counter);
      printFmtToWebClient(PSTR("DHT sensor %d humidity<br></td>"), DHT_Pins[i]);
      printToWebClient(STR_IPWEZERO);
