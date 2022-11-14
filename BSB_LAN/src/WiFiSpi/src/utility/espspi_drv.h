@@ -17,6 +17,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#if !defined(ESP32)
 
 #ifndef _ESPSPI_DRV_H_INCLUDED
 #define _ESPSPI_DRV_H_INCLUDED
@@ -50,3 +51,4 @@ class EspSpiDrv
 
 #endif
 
+#endif

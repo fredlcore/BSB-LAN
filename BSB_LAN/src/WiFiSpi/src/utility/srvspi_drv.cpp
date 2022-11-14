@@ -21,6 +21,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#if !defined(ESP32)
 
 #include "srvspi_drv.h"
 
@@ -412,3 +413,4 @@ uint8_t ServerSpiDrv::verifySSLClient(const uint8_t sock, uint8_t *fingerprint, 
 
     return _data;  // return value 1 means ok
 }
+#endif

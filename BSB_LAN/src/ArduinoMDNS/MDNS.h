@@ -17,6 +17,7 @@
 //  License along with EthernetBonjour. If not, see
 //  <http://www.gnu.org/licenses/>.
 //
+#if !defined(ESP32)
 
 #if !defined(__MDNS_H__)
 #define __MDNS_H__ 1
@@ -150,3 +151,4 @@ public:
 };
 
 #endif // __MDNS_H__
+#endif

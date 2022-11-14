@@ -21,6 +21,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#if !defined(ESP32)
 
 #include <string.h>
 #include "utility/srvspi_drv.h"
@@ -115,3 +116,4 @@ void WiFiSpiServer::stop()
     WiFiSpiClass::_state[_sock] = NA_STATE;
 }
 
+#endif

@@ -17,6 +17,7 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
+#if !defined(ESP32)
 
 #include "../config.h"
 #include "espspi_drv.h"
@@ -235,3 +236,4 @@ int8_t EspSpiDrv::waitResponseParams(const uint8_t cmd, uint8_t numParam, tParam
     return 1;
 }
 
+#endif

@@ -18,7 +18,9 @@
 
 #ifndef __ARDUINO_MDNS_H__
 #define __ARDUINO_MDNS_H__
+#if !defined(ESP32)
 
 #include "MDNS.h"
 
+#endif
 #endif
