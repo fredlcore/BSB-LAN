@@ -3856,7 +3856,7 @@ char *build_pvalstr(bool extended) {
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257) {
     if(roundf(decodedTelegram.prognr * 10) != roundf(decodedTelegram.prognr) * 10)
-      len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
+      len+=sprintf_P(outBuf, PSTR("%.1f "), decodedTelegram.prognr);
     else
       len+=sprintf_P(outBuf, PSTR("%d "), (int)roundf(decodedTelegram.prognr));
 
@@ -5962,7 +5962,7 @@ void loop() {
                   cat_max = ENUM_CAT_NR[search_cat+1];
 
 // Check for category number (if somebody will set wrong category number)
-                  if(search_cat >= 0 || search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){   // TODO: search_cat is uint, so it is always equal or greater than zero, so this block is always executed. Why?
+                  if(search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){
                     cat_param = cat_min;
                   }
                 }
