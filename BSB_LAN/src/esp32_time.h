@@ -24,7 +24,7 @@ int year(){
 int month(){
   struct tm now;
   getLocalTime(&now,0);
-  return now.tm_mon;
+  return now.tm_mon + 1;
 }
 
 int day(){
