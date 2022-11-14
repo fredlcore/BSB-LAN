@@ -5,8 +5,8 @@
 void setTime(int hr,int min,int sec,int day, int month, int yr){
   struct tm t = {0};        // Initalize to all 0's
   t.tm_year = yr - 1900;    // This is year-1900, so 121 = 2021
-  t.tm_mon = month - 1;
-  t.tm_mday = day;
+  t.tm_mon = month - 1;     // Month 0 - 11 
+  t.tm_mday = day - 1;     //Day of week, 0 - 6. Sunday = 0
   t.tm_hour = hr;
   t.tm_min = min;
   t.tm_sec = sec;
@@ -24,7 +24,7 @@ int year(){
 int month(){
   struct tm now;
   getLocalTime(&now,0);
-  return now.tm_mon;
+  return now.tm_mon + 1;
 }
 
 int day(){
@@ -53,7 +53,7 @@ int second(){
 int weekday() {   // Sunday is day 1
   struct tm now;
   getLocalTime(&now,0);
-  return now.tm_wday;
+  return now.tm_wday + 1;
 }
 
 #endif
