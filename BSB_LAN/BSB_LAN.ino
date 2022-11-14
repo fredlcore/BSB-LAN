@@ -5485,7 +5485,11 @@ void loop() {
                         my_dev_fam = orig_dev_fam;
                         my_dev_var = orig_dev_var;
                         if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                          printFmtToWebClient(PSTR("\r\n%.1f - "), l);
+                          if((((int)l) * 10) == ((int)(l * 10))) {
+                            printFmtToWebClient(PSTR("\r\n%d - "), (int)l);
+                          } else {
+                            printFmtToWebClient(PSTR("\r\n%.1f - "), l);
+                          }
                           printToWebClient(decodedTelegram.catdescaddr);
                           printToWebClient(PSTR(" - "));
                           printToWebClient_prognrdescaddr();
