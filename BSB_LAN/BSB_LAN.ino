@@ -5671,15 +5671,15 @@ void loop() {
             printToWebClient(BSB_VERSION);
             printToWebClient(PSTR("\",\r\n  \"hardware\": \""));
             printDeviceArchToWebClient();
-            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\""), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
             uint32_t freespace = SD.vol()->freeClusterCount();
             freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
-            printFmtToWebClient(PSTR("%d"), freespace);
+            printFmtToWebClient(PSTR(",\r\n  \"freespace\": %d"), freespace);
 #else
             uint64_t freespace = SD.totalBytes() - SD.usedBytes();
-            printFmtToWebClient(PSTR("%llu"), freespace);
+            printFmtToWebClient(PSTR(",\r\n  \"freespace\": %llu"), freespace);
 #endif
 #endif
 
