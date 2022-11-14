@@ -3007,7 +3007,7 @@ char *GetDateTime(char *date) {
 #if defined(ESP32)
   struct tm now;
   getLocalTime(&now,0);
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon + 1,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
 #else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
 #endif
@@ -5485,7 +5485,11 @@ void loop() {
                         my_dev_fam = orig_dev_fam;
                         my_dev_var = orig_dev_var;
                         if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                          printFmtToWebClient(PSTR("\r\n%.1f - "), l);
+                          if((((int)l) * 10) == ((int)(l * 10))) {
+                            printFmtToWebClient(PSTR("\r\n%d - "), (int)l);
+                          } else {
+                            printFmtToWebClient(PSTR("\r\n%.1f - "), l);
+                          }
                           printToWebClient(decodedTelegram.catdescaddr);
                           printToWebClient(PSTR(" - "));
                           printToWebClient_prognrdescaddr();
@@ -5681,6 +5685,8 @@ void loop() {
             uint64_t freespace = SD.totalBytes() - SD.usedBytes();
             printFmtToWebClient(PSTR("%llu"), freespace);
 #endif
+#else
+            printFmtToWebClient(PSTR("0"));
 #endif
 
 // Bus info
