@@ -62,7 +62,7 @@
  *       2.0   - 31.12.2021
  *       2.1   - 30.07.2022
  *       2.2   - 01.11.2022
- *       3.0   - 
+ *       3.0   -
  *
  * Changelog:
  *       version 3.0
@@ -551,7 +551,11 @@ EthernetUDP udp, udp_log;
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
 //#include <util/crc16.h>
-#include "src/Time/TimeLib.h"
+#if defined(ESP32)
+  #include "src/esp32_time.h"
+#else
+  #include "src/Time/TimeLib.h"
+#endif
 
 #ifdef MQTT
   #include "src/PubSubClient/src/PubSubClient.h"
@@ -3000,7 +3004,13 @@ void generateJSONwithConfig() {
  *   none
  * *************************************************************** */
 char *GetDateTime(char *date) {
+#if defined(ESP32)
+  struct tm now;
+  getLocalTime(&now,0);
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
+#else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
+#endif
   date[19] = 0;
   return date;
 }
@@ -3257,7 +3267,13 @@ int set(int line      // the ProgNr of the heater parameter
       {
         int dow = atoi(val);
         pps_values[PPS_DOW] = dow;
+      #if defined(ESP32)
+        struct tm now;
+        getLocalTime(&now,0);
+        setTime(now.tm_hour,now.tm_min,now.tm_sec, dow, 1, 2018);
+      #else
         setTime(hour(), minute(), second(), dow, 1, 2018);
+      #endif
 //        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
         pps_wday_set = true;
         break;
@@ -3839,11 +3855,11 @@ char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257) {
-#if !(defined ESP32)
-    len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
-#else
-    len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
-#endif
+    if(roundf(decodedTelegram.prognr * 10) != roundf(decodedTelegram.prognr) * 10)
+      len+=sprintf_P(outBuf, PSTR("%4.1f "), decodedTelegram.prognr);
+    else
+      len+=sprintf_P(outBuf, PSTR("%d "), (int)roundf(decodedTelegram.prognr));
+
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
 #ifdef AVERAGES
@@ -5005,15 +5021,16 @@ void loop() {
             byte minval = 0;
             byte secval = 0;
 #if !defined(ESP32)
-            {dir_t d;
-            if (dataFile.dirEntry(&d)) {
-              lastWrtYr = FAT_YEAR(d.lastWriteDate);
-              monthval = FAT_MONTH(d.lastWriteDate);
-              dayval = FAT_DAY(d.lastWriteDate);
-              hourval = FAT_HOUR(d.lastWriteTime);
-              minval = FAT_MINUTE(d.lastWriteTime);
-              secval = FAT_SECOND(d.lastWriteTime);
-            }}
+            {uint16_t pdate;
+            uint16_t ptime;
+            dataFile.getModifyDateTime(&pdate, &ptime);
+            lastWrtYr = FS_YEAR(pdate);
+            monthval = FS_MONTH(pdate);
+            dayval = FS_DAY(pdate);
+            hourval = FS_HOUR(ptime);
+            minval = FS_MINUTE(ptime);
+            secval = FS_SECOND(ptime);
+            }
 #else
             {struct stat st;
             if(stat(p, &st) == 0){
@@ -6649,7 +6666,12 @@ void loop() {
           query(log_parameters[i]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%.1f;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
+          if(roundf(log_parameters[i] * 10) != roundf(log_parameters[i]) * 10)
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%.1f;"), log_parameters[i]);
+          else
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%d;"), (int)log_parameters[i]);
+
 #ifdef AVERAGES
           if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
             //averages
@@ -7007,6 +7029,19 @@ void printWifiStatus()
   // print the received signal strength
   long rssi = WiFi.RSSI();
   printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
+}
+#endif
+
+
+// Call back for file timestamps.  Only called for file create and sync().
+#if !defined(ESP32)
+void dateTime(uint16_t* date, uint16_t* time) {
+  // Return date using FS_DATE macro to format fields.
+  *date = FS_DATE(year(), month(), day());
+
+  // Return time using FS_TIME macro to format fields.
+  *time = FS_TIME(hour(), minute(), second());
+
 }
 #endif
 
@@ -7745,7 +7780,9 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(button_on_pin[3]), interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
   }
 #endif
-
+#if !defined(ESP32)
+  FsDateTime::setCallback(dateTime);
+#endif
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
 }
