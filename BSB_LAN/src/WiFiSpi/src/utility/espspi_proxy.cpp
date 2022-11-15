@@ -19,6 +19,8 @@
 */
 
 #include "espspi_proxy.h"
+#if !defined(ESP32)
 
 EspSpiProxy espSpiProxy;
 
+#endif

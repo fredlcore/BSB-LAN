@@ -35,6 +35,7 @@
 
     Based on Hristo Gochkov's SPISlave library.
 */
+#if !defined(ESP32)
 
 #ifndef _ESPSPI_PROXY_H_INCLUDED
 #define _ESPSPI_PROXY_H_INCLUDED
@@ -407,3 +408,4 @@ extern EspSpiProxy espSpiProxy;
 
 #endif
 
+#endif

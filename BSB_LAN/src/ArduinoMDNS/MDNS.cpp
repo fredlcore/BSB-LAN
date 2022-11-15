@@ -17,6 +17,7 @@
 //  License along with EthernetBonjour. If not, see
 //  <http://www.gnu.org/licenses/>.
 //
+#if !defined(ESP32)
 
 #define  HAS_SERVICE_REGISTRATION      1  // disabling saves about 1.25 kilobytes
 #define  HAS_NAME_BROWSING             1  // disable together with above, additionally saves about 4.3 kilobytes
@@ -1432,3 +1433,4 @@ void MDNS::_finishedResolvingName(char* name, const byte ipAddr[4])
    my_free(this->_resolveNames[0]);
    this->_resolveNames[0] = NULL;
 }
+#endif
