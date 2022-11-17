@@ -58,10 +58,11 @@ void mqtt_sendtoBroker(float param) {
     // =============================================
     case 1:
       // use parameter code as sub-topic 
-      if(roundf(param * 10) != roundf(param) * 10)
+      if(roundf(param * 10) != roundf(param) * 10) {
         MQTTTopic.concat(String(param, 1));
-      else
+      } else {
         MQTTTopic.concat(String(param, 0));
+      }
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
 //---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
@@ -80,10 +81,11 @@ void mqtt_sendtoBroker(float param) {
       MQTTPayload.concat(F("{\""));
       MQTTPayload.concat(mqtt_get_client_id());
       MQTTPayload.concat(F("\":{\"status\":{\""));
-      if(roundf(param * 10) != roundf(param) * 10)
+      if(roundf(param * 10) != roundf(param) * 10) {
         MQTTPayload.concat(String(param, 1));
-      else
+      } else {
         MQTTPayload.concat(String(param, 0));
+      }
       MQTTPayload.concat(F("\":\""));
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
@@ -107,10 +109,11 @@ void mqtt_sendtoBroker(float param) {
         MQTTPayload.concat(F("BSB-LAN"));
       }
       MQTTPayload.concat(F("\":{\"id\":"));
-      if(roundf(param * 10) != roundf(param) * 10)
+      if(roundf(param * 10) != roundf(param) * 10) {
         MQTTPayload.concat(String(param, 1));
-      else
+      } else {
         MQTTPayload.concat(String(param, 0));
+      }
       MQTTPayload.concat(F(",\"name\":\""));
       MQTTPayload.concat(decodedTelegram.prognrdescaddr);
       MQTTPayload.concat(F("\",\"value\": \""));
@@ -191,11 +194,13 @@ boolean mqtt_connect() {
   }
   if (!MQTTPubSubClient->connected()) {
     char* MQTTUser = NULL;
-    if(MQTTUsername[0])
+    if(MQTTUsername[0]) {
       MQTTUser = MQTTUsername;
+    }
     const char* MQTTPass = NULL;
-    if(MQTTPassword[0])
+    if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
+    }
     IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
     MQTTPubSubClient->setServer(MQTTBroker, 1883);
     String MQTTWillTopic = mqtt_get_will_topic();
@@ -212,7 +217,11 @@ boolean mqtt_connect() {
       } else {
         printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
         const char* mqtt_subscr;
-        if (MQTTTopicPrefix[0]) {mqtt_subscr = MQTTTopicPrefix;} else {mqtt_subscr="fromBroker";}
+        if (MQTTTopicPrefix[0]) {
+          mqtt_subscr = MQTTTopicPrefix;
+        } else {
+          mqtt_subscr="fromBroker";
+        }
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
         printFmtToDebug(PSTR("Subscribed to topic '%s'\n"), mqtt_subscr);
         MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
@@ -301,7 +310,9 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   }
   C_value[length+4]='\0';
   char*C_payload=C_value+ 4;  //dukess
-  if (firstsign!=' ') C_payload++; //skip I/S
+  if (firstsign!=' ') {
+    C_payload++; //skip I/S
+  }
   float I_line=atof(C_payload);
   String mqtt_Topic;
   if (MQTTTopicPrefix[0]) {
