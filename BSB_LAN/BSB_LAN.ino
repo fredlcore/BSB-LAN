@@ -7039,8 +7039,9 @@ void printWifiStatus()
 #endif
 
 
+#if defined LOGGER || defined WEBSERVER
 // Call back for file timestamps.  Only called for file create and sync().
-#if !defined(ESP32)
+  #if !defined(ESP32)
 void dateTime(uint16_t* date, uint16_t* time) {
   // Return date using FS_DATE macro to format fields.
   *date = FS_DATE(year(), month(), day());
@@ -7049,6 +7050,7 @@ void dateTime(uint16_t* date, uint16_t* time) {
   *time = FS_TIME(hour(), minute(), second());
 
 }
+  #endif
 #endif
 
 /** *****************************************************************
@@ -7786,8 +7788,11 @@ void setup() {
     attachInterrupt(digitalPinToInterrupt(button_on_pin[3]), interruptHandlerPresenceROOM3, FALLING); //Presence ROOM 3 button
   }
 #endif
-#if !defined(ESP32)
+
+#if defined LOGGER || defined WEBSERVER
+  #if !defined(ESP32)
   FsDateTime::setCallback(dateTime);
+  #endif
 #endif
   printlnToDebug(PSTR("Setup complete"));
   debug_mode = save_debug_mode; //restore actual debug mode
