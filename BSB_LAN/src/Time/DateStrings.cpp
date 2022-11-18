@@ -8,6 +8,7 @@
  * the long strings can be any length up to the constant dt_MAX_STRING_LEN defined in TimeLib.h
  * 
  */
+#if !defined(ESP32)
 
 #include <Arduino.h>
 
@@ -95,3 +96,4 @@ char* dayShortStr(uint8_t day)
    buffer[dt_SHORT_STR_LEN] = 0; 
    return buffer;
 }
+#endif
