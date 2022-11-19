@@ -67,7 +67,9 @@
  * Changelog:
  *       version 3.0
  *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
+ *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
+ *        - New data type VT_BINARY_ENUM
  *       version 2.2
  *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
  *        - Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)
