@@ -1,3 +1,4 @@
+#define DEFAULT_DEFS 1
 
 // Menu Categories
 typedef enum{

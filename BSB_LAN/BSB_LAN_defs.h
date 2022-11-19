@@ -537,6 +537,7 @@ typedef enum{
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
   VT_DAYS,              //  2 Byte - 1 enable 0x01 / day
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
+  VT_BINARY_ENUM,       //* 2 Byte - 1 enable 0x01 / value        Choice
   VT_GRADIENT_SHORT,    //  2 Byte - 1 enable / value min/K
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_HOURS_SHORT_N,       //  2 Byte - 1 enable 0x01 / hours        Int08
@@ -699,6 +700,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_CLOSEDOPEN,       1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
 {VT_DAYS,             1.0,    1, 1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
 {VT_ENUM,             1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
+{VT_BINARY_ENUM,      1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
 {VT_GRADIENT_SHORT,   1.0,    6, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
 {VT_HOURS_SHORT,      1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_HOURS_SHORT_N,    1.0,    6, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},

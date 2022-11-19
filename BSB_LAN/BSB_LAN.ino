@@ -1589,7 +1589,7 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
   decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
 
-  if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
+  if (decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) {
     decodedTelegram.isswitch = 1;
   } else {
     decodedTelegram.isswitch = 0;
@@ -3289,7 +3289,6 @@ int set(int line      // the ProgNr of the heater parameter
         break;
       }
       case VT_HOUR_MINUTES:
-      case VT_HOUR_MINUTES_N:
       {
         uint8_t h=atoi(val);
         uint8_t m=0;
@@ -3328,6 +3327,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_PERCENT:
     case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
+    case VT_BINARY_ENUM:
     case VT_WEEKDAY:
     case VT_ONOFF: // 1 = On                      // on = Bit 0 = 1 (i.e. 1=on, 3=on... 0=off, 2=off etc.)
     case VT_CLOSEDOPEN: // 1 = geschlossen
@@ -3481,6 +3481,7 @@ int set(int line      // the ProgNr of the heater parameter
     // Special parameters
 
     case VT_HOUR_MINUTES: //TODO test it
+    case VT_HOUR_MINUTES_N:
       {
       if (val[0]!='\0') {
         uint8_t h=atoi(val);
@@ -3971,7 +3972,7 @@ void query_printHTML() {
             }
           } else {
             value = strtod(decodedTelegram.value, NULL);
-            if ((decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && value != 0) {
+            if ((decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && value != 0) {
               value = 1;
             }
             if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
@@ -5290,6 +5291,7 @@ void loop() {
               case VT_WEEKDAY:
               case VT_CUSTOM_ENUM:
               case VT_CUSTOM_BIT:
+              case VT_BINARY_ENUM:
               case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
             }
             if (flag) {
@@ -5330,10 +5332,14 @@ void loop() {
           if (bus_type > 1) {
             printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
           } else {
-            printToWebClient(PSTR(MENU_TEXT_QIN "<BR><BR>\r\n"));
-            printToWebClient(PSTR("<A HREF='/"));
-            printPassKey();
-            printToWebClient(PSTR("QD'>" MENU_TEXT_QDL "</A><BR>\r\n"));
+            if (my_dev_fam == 0) {
+              printToWebClient(PSTR(MENU_TEXT_QNC "<BR>\r\n"));
+            } else {
+              printToWebClient(PSTR(MENU_TEXT_QIN "<BR><BR>\r\n"));
+              printToWebClient(PSTR("<A HREF='/"));
+              printPassKey();
+              printToWebClient(PSTR("QD'>" MENU_TEXT_QDL "</A><BR>\r\n"));
+            }
           }
           webPrintFooter();
           break;

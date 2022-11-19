@@ -174,6 +174,7 @@
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
 #undef MENU_TEXT_NOQ
+#undef MENU_TEXT_QNC
 #undef MENU_TEXT_QIN
 #undef MENU_TEXT_QDL
 #undef MENU_TEXT_QSC
@@ -193,6 +194,7 @@
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
 #undef MENU_TEXT_NVW
+#undef MENU_TEXT_SDF
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL

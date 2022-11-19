@@ -128,6 +128,11 @@ void webPrintSite() {
   printlnToWebClient(PSTR("<p>"));
   printToWebClient(PSTR("BSB-LAN, Version "));
   printToWebClient(BSB_VERSION);
+#if defined(DEFAULT_DEFS)
+  if (bus_type < 2) {
+    printlnToWebClient(PSTR("<p><br><b>" MENU_TEXT_SDF "</b><br><br>"));
+  }
+#endif
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_HFK ":</b> " MENU_DESC_HFK ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL ));
