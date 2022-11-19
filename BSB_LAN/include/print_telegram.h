@@ -606,11 +606,11 @@ void printLPBAddr(byte *msg,byte data_len) {
 
   if (data_len == 2) {
     if (msg[bus->getPl_start()]==0) {   // payload Int8 value
-    sprintf_P(decodedTelegram.value,PSTR("%02d.%02d"),msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0f)+1);
-  } else {
-    undefinedValueToBuffer(decodedTelegram.value);
-  }
-  printToDebug(decodedTelegram.value);
+      sprintf_P(decodedTelegram.value,PSTR("%02d.%02d"),msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0f)+1);
+    } else {
+      undefinedValueToBuffer(decodedTelegram.value);
+    }
+    printToDebug(decodedTelegram.value);
   } else {
     printToDebug(PSTR(" VT_LPBADDR len !=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -985,6 +985,7 @@ void printTelegram(byte* msg, float query_line) {
 //            case VT_ENERGY10: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
+            case VT_BINARY_ENUM:
             case VT_ONOFF:
             case VT_YESNO:
             case VT_CLOSEDOPEN:
@@ -1045,7 +1046,6 @@ void printTelegram(byte* msg, float query_line) {
                       uint8_t pps_offset = 0;
                       if (bus->getBusType() == BUS_PPS) pps_offset = 1;
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
-
                     }
                   } else {
                     decodedTelegram.error = 259;

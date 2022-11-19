@@ -83,6 +83,7 @@
 #undef MENU_TEXT_ON
 #undef MENU_TEXT_OFF
 #undef MENU_TEXT_NOQ
+#undef MENU_TEXT_QNC
 #undef MENU_TEXT_QIN
 #undef MENU_TEXT_QSC
 #undef MENU_TEXT_QFD
@@ -97,6 +98,7 @@
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
 #undef MENU_TEXT_NVW
+#undef MENU_TEXT_SDF
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
