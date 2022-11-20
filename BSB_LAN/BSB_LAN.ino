@@ -995,6 +995,15 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   }
 }
 
+char *printProgNR(float prognr, char *buf){
+  if((((int)prognr) * 10) == ((int)(prognr * 10))) {
+    sprintf(buf, "%d", (int)prognr);
+  } else {
+    sprintf(buf, "%.1f", prognr);
+  }
+  return buf;
+}
+
 int recognize_mime(char *str) {
 //        if (strlen(dot)) {
   char mimebuf[32];
@@ -1284,7 +1293,7 @@ int findLine(float line
       case 7: line = BSP_LONG; break;
       case 8: {
 #ifdef BME280
-        if ((int)(line - BSP_BME280) < BME_Sensors) { //
+        if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
 #if defined(__SAM3X8E__)
           double intpart;
 #else
@@ -1308,13 +1317,13 @@ int findLine(float line
   int left = start_idx;
   int right = (int)(sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1);
   int mid = 0;
-  int line_dd = (int)(line * 10);
+  int line_dd = roundf(line * 10);
   while (!(left >= right))
     {
 //    printFmtToDebug(PSTR("get_cmdtbl_line: left = %f, line = %f\r\n"), get_cmdtbl_line(left), line);
-    if ((int)(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
+    if (roundf(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
     mid = left + (right - left) / 2;
-    int temp_dd = (int)(get_cmdtbl_line(mid) * 10);
+    int temp_dd = roundf(get_cmdtbl_line(mid) * 10);
 //    printFmtToDebug(PSTR("get_cmdtbl_line integer: temp = %d, line = %d\r\n"), temp_dd, line_dd);
 //    printFmtToDebug(PSTR("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
     if (temp_dd == line_dd) {
@@ -2289,6 +2298,7 @@ void generateConfigPage(void) {
   printToWebClient(PSTR("<BR>\r\n"));
 
 #ifndef WEBCONFIG
+  char prognrBuf[8];
 #ifdef AVERAGES
   if (LoggingMode & CF_LOGMODE_24AVG) {
     printToWebClient(CF_CALCULATION_TXT);
@@ -2298,7 +2308,7 @@ void generateConfigPage(void) {
 
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i] > 0) {
-        printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), BSP_AVERAGES + i);//outBuf will be overwrited here
+        printFmtToWebClient(PSTR("%s - %s: %d<BR>\r\n"), printProgNR(avg_parameters[i], prognrBuf), lookup_descr(avg_parameters[i]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
@@ -2311,7 +2321,7 @@ void generateConfigPage(void) {
   printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i] > 0) {
-      printFmtToWebClient(PSTR("%g - "), log_parameters[i]);
+      printFmtToWebClient(PSTR("%s - "), printProgNR(log_parameters[i], prognrBuf));
       printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
       printToWebClient(PSTR("<BR>\r\n"));
     }
@@ -2608,12 +2618,13 @@ void printDHTlistToWebClient(byte *variable, uint16_t size) {
 }
 
 void printProglistToWebClient(float *variable, uint16_t size) {
+  char prognrBuf[8];
   bool isFirst = true;
   for (uint16_t j = 0; j < size/sizeof(float); j++) {
     if (variable[j]) {
       if (!isFirst) printToWebClient(PSTR(","));
       isFirst = false;
-      printFmtToWebClient(PSTR("%g"), variable[j]);
+      printToWebClient(printProgNR(variable[j], prognrBuf));
     }
   }
 }
@@ -3094,7 +3105,8 @@ void LogTelegram(byte* msg) {
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
         cmd_type=get_cmdtbl_type(i);
-        outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%g"), line);
+        char prognrBuf[8];
+        outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%s"), printProgNR(line, prognrBuf));
         }
 
       uint8_t msg_len = 0;
@@ -3192,6 +3204,7 @@ int set(int line      // the ProgNr of the heater parameter
       , const char *val          // the value to set
       , bool setcmd)       // true: SET msg; false: INF msg
 {
+  char prognrBuf[8];
   byte msg[33];            // we know the maximum length
   byte tx_msg[33];
   int i;
@@ -3708,7 +3721,7 @@ int set(int line      // the ProgNr of the heater parameter
   } // endswitch
 
   // Send a message to PC hardware serial port
-  printFmtToDebug(PSTR("setting line: %g val: "), line);
+  printFmtToDebug(PSTR("setting line: %s val: "), printProgNR(line, prognrBuf));
   SerialPrintRAW(param,param_len);
   writelnToDebug();
 
@@ -3842,7 +3855,10 @@ char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257) {
-    len+=sprintf_P(outBuf, PSTR("%g "), decodedTelegram.prognr);
+    if(roundf(decodedTelegram.prognr * 10) != roundf(decodedTelegram.prognr) * 10)
+      len+=sprintf_P(outBuf, PSTR("%.1f "), decodedTelegram.prognr);
+    else
+      len+=sprintf_P(outBuf, PSTR("%d "), (int)roundf(decodedTelegram.prognr));
 
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
@@ -3920,6 +3936,7 @@ void query_printHTML() {
     printToWebClient(PSTR("<tr><td>"));
   }
   printToWebClient(build_pvalstr(1));
+  char prognrBuf[8];
 
 /*
       // dump data payload for unknown types
@@ -3937,7 +3954,7 @@ void query_printHTML() {
       }
 */
 
-    printFmtToWebClient(PSTR("%g"), decodedTelegram.prognr);
+    printProgNR(decodedTelegram.prognr, prognrBuf);
     const char fieldDelimiter[] PROGMEM = "</td><td>";
       printToWebClient(fieldDelimiter);
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
@@ -3946,7 +3963,7 @@ void query_printHTML() {
           if (decodedTelegram.data_type == DT_BITS) {
             printToWebClient(PSTR("multiple "));
           }
-          printFmtToWebClient(PSTR("id='value%g'>\r\n"), decodedTelegram.prognr);
+          printFmtToWebClient(PSTR("id='value%s'>\r\n"), prognrBuf);
           uint16_t value = 0;
           if (decodedTelegram.data_type == DT_BITS) {
             for (int i = 0; i < 8; i++) {
@@ -3970,13 +3987,13 @@ void query_printHTML() {
             if (decodedTelegram.type == VT_BIT) {
               printToWebClient(PSTR("bit"));
             }
-            printFmtToWebClient(PSTR("(%g)\">"), decodedTelegram.prognr);
+            printFmtToWebClient(PSTR("(%s)\">"), prognrBuf);
           }
         } else {
-          printFmtToWebClient(PSTR("<input type=text id='value%g' VALUE='%s'>"), decodedTelegram.prognr, decodedTelegram.value);
+          printFmtToWebClient(PSTR("<input type=text id='value%s' VALUE='%s'>"), prognrBuf, decodedTelegram.value);
           printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%g)\">"), decodedTelegram.prognr);
+            printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%s)\">"), prognrBuf);
           }
         }
       }
@@ -4015,8 +4032,9 @@ void tcaselect(uint8_t i) {
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void queryVirtualPrognr(float line, int table_line) {
+  char prognrBuf[8];
   loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
-  printFmtToDebug(PSTR("\r\nVirtual parameter %g queried. Table line %d\r\n"), line, table_line);
+  printFmtToDebug(PSTR("\r\nVirtual parameter %s queried. Table line %d\r\n"), printProgNR(line, prognrBuf), table_line);
   decodedTelegram.msg_type = TYPE_ANS;
   decodedTelegram.prognr = line;
   switch (recognizeVirtualFunctionGroup(line)) {
@@ -4040,7 +4058,7 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 2: {
   #ifdef AVERAGES
-      size_t tempLine = (int)(line - BSP_AVERAGES);
+      size_t tempLine = roundf(line - BSP_AVERAGES);
       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
       return;
    #endif
@@ -4048,8 +4066,8 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 3: {
 #ifdef DHT_BUS
-      size_t log_sensor = (int)(line - BSP_DHT22);
-      int tempLine = ((int)((line - BSP_DHT22) * 10)) % 10;
+      size_t log_sensor = roundf(line - BSP_DHT22);
+      int tempLine = (int)roundf((line - BSP_DHT22) * 10) % 10;
       if (tempLine == 0) { //print sensor ID
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
         return;
@@ -4105,9 +4123,9 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 4: {
 #ifdef ONE_WIRE_BUS
-      size_t log_sensor = (int)(line - BSP_ONEWIRE);
+      size_t log_sensor = roundf(line - BSP_ONEWIRE);
       if (One_Wire_Pin && numSensors) {
-        switch (((int)((line - BSP_ONEWIRE) * 10)) % 10) {
+        switch (((int)roundf((line - BSP_ONEWIRE) * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
             sensors->getAddress(device_address, log_sensor);
@@ -4132,10 +4150,10 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 5: {
 #ifdef MAX_CUL
-      size_t log_sensor = (int)(line - BSP_MAX);
+      size_t log_sensor = roundf(line - BSP_MAX);
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
-          switch (((int)((line - BSP_MAX) * 10)) % 10){ //print sensor values
+          switch (((int)roundf((line - BSP_MAX) * 10)) % 10){ //print sensor values
             case 0:  //print sensor ID
               strcpy(decodedTelegram.value, max_device_list[log_sensor]);
               break;
@@ -4180,8 +4198,8 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 8: {
 #ifdef BME280
-      size_t log_sensor = (int)(line - BSP_BME280);
-      uint8_t selector = ((int)((line - BSP_BME280) * 10)) % 10;
+      size_t log_sensor = roundf(line - BSP_BME280);
+      uint8_t selector = ((int)roundf((line - BSP_BME280) * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
@@ -4236,6 +4254,7 @@ void queryVirtualPrognr(float line, int table_line) {
  *   decodedTelegram   error status, r/o flag
  * *************************************************************** */
 void query(float line) {  // line (ProgNr)
+  char prognrBuf[8];
   byte msg[33] = { 0 };      // response buffer
   byte tx_msg[33] = { 0 };   // xmit buffer
   uint32_t c;        // command code
@@ -4247,11 +4266,12 @@ void query(float line) {  // line (ProgNr)
 #endif
 
   i=findLine(line,0,&c);
+  printProgNR(line, prognrBuf);
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
     uint8_t flags = get_cmdtbl_flags(i);
     if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
-      printFmtToDebug(PSTR("%g "), line);
+      printFmtToDebug(PSTR("%s "), prognrBuf);
       loadCategoryDescAddr();
       printToDebug(PSTR(" - "));
       printToDebug(decodedTelegram.prognrdescaddr);
@@ -4281,7 +4301,7 @@ void query(float line) {  // line (ProgNr)
 
             // Decode the rcv telegram and send it to the PC serial interface
             printTelegram(msg, line);
-            printFmtToDebug(PSTR("#%g: "), line);
+            printFmtToDebug(PSTR("#%s: "), prognrBuf);
             printlnToDebug(build_pvalstr(0));
             SerialOutput->flush();
 #ifdef LOGGER
@@ -4297,7 +4317,7 @@ void query(float line) {  // line (ProgNr)
           if (bus->getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
             printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
           } else {
-            printFmtToDebug(PSTR("%g\r\n"), line); //%d
+            printFmtToDebug(PSTR("%s\r\n"), prognrBuf); //%d
           }
           decodedTelegram.error = 261;
         }
@@ -4327,7 +4347,7 @@ void query(float line) {  // line (ProgNr)
 */
         printTelegram(msg, line);
 
-        printFmtToDebug(PSTR("#%g: "), line);
+        printFmtToDebug(PSTR("#%s: "), prognrBuf);
         printlnToDebug(build_pvalstr(0));
         SerialOutput->flush();
       }
@@ -5237,6 +5257,8 @@ void loop() {
           //list categories
           webPrintHeader();
           printToWebClient(PSTR("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
+          char prognrBuf[8];
+          char prognrBuf_max[8];
           float  cat_min = -1, cat_max = -1;
           for (int cat=0;cat<CAT_UNKNOWN;cat++) {
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
@@ -5246,7 +5268,7 @@ void loop() {
               cat_max = ENUM_CAT_NR[cat*2+1];
               printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
               writelnToDebug();
-              printFmtToWebClient(PSTR("</a></td><td>%g - %g</td></tr>\r\n"), cat_min, cat_max);
+              printFmtToWebClient(PSTR("</a></td><td>%s - %s</td></tr>\r\n"), printProgNR(cat_min, prognrBuf), printProgNR(cat_max, prognrBuf_max));
             }
           }
           printToWebClient(PSTR("</table>"));
@@ -5647,6 +5669,7 @@ void loop() {
 
           if (p[2] == 'I'){ // dump configuration in JSON
             bool not_first = false;
+            char prognrBuf[8];
             int i;
             printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
             printToWebClient(BSB_VERSION);
@@ -5718,7 +5741,7 @@ void loop() {
                   } else {
                     not_first = true;
                   }
-                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %s }"), printProgNR(avg_parameters[i], prognrBuf));
                 }
               }
               printToWebClient(PSTR("\r\n  ]"));
@@ -5735,7 +5758,7 @@ void loop() {
                 } else {
                   not_first = true;
                 }
-                printFmtToWebClient(PSTR("    { \"parameter\": %g }"), log_parameters[i]);
+                printFmtToWebClient(PSTR("    { \"parameter\": %s }"), printProgNR(log_parameters[i], prognrBuf));
               }
             }
             printToWebClient(PSTR("\r\n  ]"));
@@ -5753,6 +5776,7 @@ void loop() {
           }
 #endif
           if (p[2] == 'B'){ // backup settings to file
+            char prognrBuf[8];
             bool notfirst = false;
             for (int cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
@@ -5771,7 +5795,7 @@ void loop() {
                     query(j);
                     if (decodedTelegram.error == 0) {//Do not save parameters with errors
                       if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
-                      printFmtToWebClient(PSTR("  \"%g\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\"}"), j, j, decodedTelegram.value, 1);
+                      printFmtToWebClient(PSTR("  \"%s\":{\"parameter\":\"%s\", \"value\":\"%s\", \"type\":\"%d\"}"), printProgNR(j, prognrBuf), printProgNR(j, prognrBuf), decodedTelegram.value, 1);
                     }
                   }
                   j = get_next_prognr(j, i_line);
@@ -5909,6 +5933,8 @@ void loop() {
               if (json_parameter == -1) continue;
 
               if (p[2]=='K' && !isdigit(p[4])) {
+                char prognrBuf[8];
+                char prognrBuf_max[8];
                 bool notfirst = false;
                 for (int cat=0;cat<CAT_UNKNOWN;cat++) {
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
@@ -5919,7 +5945,7 @@ void loop() {
                     cat_max = ENUM_CAT_NR[cat*2+1];
 
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
-                    printFmtToWebClient(PSTR("\", \"min\": %g, \"max\": %g }"), cat_min, cat_max);
+                    printFmtToWebClient(PSTR("\", \"min\": %s, \"max\": %s }"), printProgNR(cat_min, prognrBuf), printProgNR(cat_max, prognrBuf_max));
                   }
                 }
                 json_token = NULL;
@@ -5955,15 +5981,15 @@ void loop() {
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
+            		char prognrBuf[8];
 
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 if (p[2]=='Q') {
                   query(json_parameter);
                 } else {
                   loadPrognrElementsFromTable(json_parameter, i_line);
-		              decodedTelegram.prognr = json_parameter;
                 }
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"name\": \""), json_parameter);
+                printFmtToWebClient(PSTR("  \"%s\": {\r\n    \"name\": \""), printProgNR(json_parameter, prognrBuf));
                 printToWebClient_prognrdescaddr();
                 printToWebClient(PSTR("\",\r\n    \"dataType_name\": \""));
                 printToWebClient(decodedTelegram.progtypedescaddr);
@@ -6002,28 +6028,34 @@ void loop() {
               }
 
               if (p[2]=='S') {
+		char prognrBuf[8];
+                printProgNR(json_parameter, prognrBuf);
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 int status = set(json_parameter, json_value_string, json_type);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
+                printFmtToWebClient(PSTR("  \"%s\": {\r\n    \"status\": %d\r\n  }"), prognrBuf, status);
 
-                printFmtToDebug(PSTR("Setting parameter %g to \"%s\" with type %d\r\n"), json_parameter, json_value_string, json_type);
+                printFmtToDebug(PSTR("Setting parameter %s to \"%s\" with type %d\r\n"), prognrBuf, json_value_string, json_type);
               }
 
               if (p[2]=='R') {
+		char prognrBuf[8];
+                printProgNR(json_parameter, prognrBuf);
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 queryDefaultValue(json_parameter, msg, tx_msg);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
+                printFmtToWebClient(PSTR("  \"%s\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), prognrBuf, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Default value of parameter %g is \"%s\"\r\n"), json_parameter, decodedTelegram.value);
+                printFmtToDebug(PSTR("Default value of parameter %s is \"%s\"\r\n"), prognrBuf, decodedTelegram.value);
               }
 
 #if defined(JSONCONFIG)
               if (p[2]=='W') {
+		char prognrBuf[8];
+                printProgNR(json_parameter, prognrBuf);
                 if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
                 int status = takeNewConfigValueFromUI_andWriteToRAM(json_parameter, outBuf);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
+                printFmtToWebClient(PSTR("  \"%s\": {\r\n    \"status\": %d\r\n  }"), prognrBuf, status);
 
-                printFmtToDebug(PSTR("Setting parameter %g to \"%s\"\r\n"), json_parameter, outBuf);
+                printFmtToDebug(PSTR("Setting parameter %s to \"%s\"\r\n"), prognrBuf, outBuf);
               }
 #endif
 
@@ -6242,6 +6274,7 @@ void loop() {
             {
               char* log_token = strtok(p,"=,");  // drop everything before "="
               log_token = strtok(NULL, "=,");   // first token: interval
+              char prognrBuf[8];
 
               if (log_token != 0) {
                 log_interval = atoi(log_token);
@@ -6265,7 +6298,7 @@ void loop() {
                 float log_parameter = atof(log_token);
                 if (token_counter < numLogValues) {
                   log_parameters[token_counter] = log_parameter;
-                  printFmtToWebClient(PSTR("%g\r\n"), log_parameters[token_counter]);
+                  printFmtToWebClient(PSTR("%s\r\n"), printProgNR(log_parameters[token_counter], prognrBuf));
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
@@ -6407,6 +6440,7 @@ void loop() {
 #if !defined(I_DO_NOT_WANT_URL_CONFIG)
           } else if (range[0]=='A') { // handle average command
 #ifdef AVERAGES
+            char prognrBuf[8];
             if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
               if (range[3]=='1') {                // Enable 24h average calculation temporarily
                 LoggingMode |= CF_LOGMODE_24AVG;
@@ -6429,7 +6463,7 @@ void loop() {
                 while (avg_token!=0) {
                   if (token_counter < numAverages) {
                     avg_parameters[token_counter] = atof(avg_token);
-                    printFmtToWebClient(PSTR("%g \r\n"), avg_parameters[token_counter]);
+                    printFmtToWebClient(PSTR("%s \r\n"), printProgNR(avg_parameters[token_counter], prognrBuf));
                     token_counter++;
                   }
                   avg_token = strtok(NULL,"=,");
@@ -6638,7 +6672,11 @@ void loop() {
           query(log_parameters[i]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
+          if(roundf(log_parameters[i] * 10) != roundf(log_parameters[i]) * 10)
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%.1f;"), log_parameters[i]);
+          else
+            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%d;"), (int)log_parameters[i]);
 
 #ifdef AVERAGES
           if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
