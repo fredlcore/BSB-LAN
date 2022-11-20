@@ -996,11 +996,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
 }
 
 char *printProgNR(float prognr, char *buf){
-  if((((int)prognr) * 10) == ((int)(prognr * 10))) {
-    sprintf(buf, "%d", (int)prognr);
-  } else {
-    sprintf(buf, "%.1f", prognr);
-  }
+  sprintf(buf, "%g", prognr);
   return buf;
 }
 
@@ -3855,10 +3851,7 @@ char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257) {
-    if(roundf(decodedTelegram.prognr * 10) != roundf(decodedTelegram.prognr) * 10)
-      len+=sprintf_P(outBuf, PSTR("%.1f "), decodedTelegram.prognr);
-    else
-      len+=sprintf_P(outBuf, PSTR("%d "), (int)roundf(decodedTelegram.prognr));
+    len+=sprintf_P(outBuf, PSTR("%g "), decodedTelegram.prognr);
 
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
@@ -5221,7 +5214,7 @@ void loop() {
                }
               }
 
-              printFmtToDebug(PSTR("set ProgNr %.1f = %s"), line, p);
+              printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
               writelnToDebug();
               // Now send it out to the bus
               int setresult = 0;
@@ -5485,11 +5478,7 @@ void loop() {
                         my_dev_fam = orig_dev_fam;
                         my_dev_var = orig_dev_var;
                         if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                          if((((int)l) * 10) == ((int)(l * 10))) {
-                            printFmtToWebClient(PSTR("\r\n%d - "), (int)l);
-                          } else {
-                            printFmtToWebClient(PSTR("\r\n%.1f - "), l);
-                          }
+                          printFmtToWebClient(PSTR("\r\n%g - "), l);
                           printToWebClient(decodedTelegram.catdescaddr);
                           printToWebClient(PSTR(" - "));
                           printToWebClient_prognrdescaddr();
@@ -5988,6 +5977,7 @@ void loop() {
                   query(json_parameter);
                 } else {
                   loadPrognrElementsFromTable(json_parameter, i_line);
+                  decodedTelegram.prognr = json_parameter;
                 }
                 printFmtToWebClient(PSTR("  \"%s\": {\r\n    \"name\": \""), printProgNR(json_parameter, prognrBuf));
                 printToWebClient_prognrdescaddr();
@@ -6672,11 +6662,7 @@ void loop() {
           query(log_parameters[i]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
-          if(roundf(log_parameters[i] * 10) != roundf(log_parameters[i]) * 10)
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%.1f;"), log_parameters[i]);
-          else
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%d;"), (int)log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
 
 #ifdef AVERAGES
           if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
