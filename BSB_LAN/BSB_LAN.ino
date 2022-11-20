@@ -997,6 +997,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   }
 }
 
+
 int recognize_mime(char *str) {
 //        if (strlen(dot)) {
   char mimebuf[32];
@@ -1239,7 +1240,6 @@ int findLine(float line
   int save_i = 0;
   uint32_t c, save_c = 0;
   float l;
-//  char prognrBuf[8];
 //  printFmtToDebug(PSTR("line = %.1f\r\n"), line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
@@ -1286,7 +1286,7 @@ int findLine(float line
       case 7: line = BSP_LONG; break;
       case 8: {
 #ifdef BME280
-        if ((int)(line - BSP_BME280) < BME_Sensors) { //
+        if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
 #if defined(__SAM3X8E__)
           double intpart;
 #else
@@ -1310,13 +1310,13 @@ int findLine(float line
   int left = start_idx;
   int right = (int)(sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1);
   int mid = 0;
-  int line_dd = (int)(line * 10);
+  int line_dd = roundf(line * 10);
   while (!(left >= right))
     {
 //    printFmtToDebug(PSTR("get_cmdtbl_line: left = %f, line = %f\r\n"), get_cmdtbl_line(left), line);
-    if ((int)(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
+    if (roundf(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
     mid = left + (right - left) / 2;
-    int temp_dd = (int)(get_cmdtbl_line(mid) * 10);
+    int temp_dd = roundf(get_cmdtbl_line(mid) * 10);
 //    printFmtToDebug(PSTR("get_cmdtbl_line integer: temp = %d, line = %d\r\n"), temp_dd, line_dd);
 //    printFmtToDebug(PSTR("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
     if (temp_dd == line_dd) {
@@ -3940,7 +3940,6 @@ void query_printHTML() {
       }
 */
 
-    printFmtToWebClient(PSTR("%g"), decodedTelegram.prognr);
     const char fieldDelimiter[] PROGMEM = "</td><td>";
       printToWebClient(fieldDelimiter);
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
@@ -4043,7 +4042,7 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 2: {
   #ifdef AVERAGES
-      size_t tempLine = (int)(line - BSP_AVERAGES);
+      size_t tempLine = roundf(line - BSP_AVERAGES);
       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
       return;
    #endif
@@ -4051,8 +4050,8 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 3: {
 #ifdef DHT_BUS
-      size_t log_sensor = (int)(line - BSP_DHT22);
-      int tempLine = ((int)((line - BSP_DHT22) * 10)) % 10;
+      size_t log_sensor = roundf(line - BSP_DHT22);
+      int tempLine = (int)roundf((line - BSP_DHT22) * 10) % 10;
       if (tempLine == 0) { //print sensor ID
         sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
         return;
@@ -4108,9 +4107,9 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 4: {
 #ifdef ONE_WIRE_BUS
-      size_t log_sensor = (int)(line - BSP_ONEWIRE);
+      size_t log_sensor = roundf(line - BSP_ONEWIRE);
       if (One_Wire_Pin && numSensors) {
-        switch (((int)((line - BSP_ONEWIRE) * 10)) % 10) {
+        switch (((int)roundf((line - BSP_ONEWIRE) * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
             sensors->getAddress(device_address, log_sensor);
@@ -4135,10 +4134,10 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 5: {
 #ifdef MAX_CUL
-      size_t log_sensor = (int)(line - BSP_MAX);
+      size_t log_sensor = roundf(line - BSP_MAX);
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
-          switch (((int)((line - BSP_MAX) * 10)) % 10){ //print sensor values
+          switch (((int)roundf((line - BSP_MAX) * 10)) % 10){ //print sensor values
             case 0:  //print sensor ID
               strcpy(decodedTelegram.value, max_device_list[log_sensor]);
               break;
@@ -4183,8 +4182,8 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 8: {
 #ifdef BME280
-      size_t log_sensor = (int)(line - BSP_BME280);
-      uint8_t selector = ((int)((line - BSP_BME280) * 10)) % 10;
+      size_t log_sensor = roundf(line - BSP_BME280);
+      uint8_t selector = ((int)roundf((line - BSP_BME280) * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
@@ -4300,7 +4299,7 @@ void query(float line) {  // line (ProgNr)
           if (bus->getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
             printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
           } else {
-            printFmtToDebug(PSTR("%g\r\n"), line); //%d
+            printFmtToDebug(PSTR("%g\r\n"), line);
           }
           decodedTelegram.error = 261;
         }
@@ -5204,7 +5203,7 @@ void loop() {
                }
               }
 
-              printFmtToDebug(PSTR("set ProgNr %.1f = %s"), line, p);
+              printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
               writelnToDebug();
               // Now send it out to the bus
               int setresult = 0;
@@ -5471,11 +5470,7 @@ void loop() {
                         my_dev_fam = orig_dev_fam;
                         my_dev_var = orig_dev_var;
                         if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                          if((((int)l) * 10) == ((int)(l * 10))) {
-                            printFmtToWebClient(PSTR("\r\n%d - "), (int)l);
-                          } else {
-                            printFmtToWebClient(PSTR("\r\n%.1f - "), l);
-                          }
+                          printFmtToWebClient(PSTR("\r\n%g - "), l);
                           printToWebClient(decodedTelegram.catdescaddr);
                           printToWebClient(PSTR(" - "));
                           printToWebClient_prognrdescaddr();
@@ -5969,7 +5964,7 @@ void loop() {
                   query(json_parameter);
                 } else {
                   loadPrognrElementsFromTable(json_parameter, i_line);
-		              decodedTelegram.prognr = json_parameter;
+                  decodedTelegram.prognr = json_parameter;
                 }
                 printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"name\": \""), json_parameter);
                 printToWebClient_prognrdescaddr();
