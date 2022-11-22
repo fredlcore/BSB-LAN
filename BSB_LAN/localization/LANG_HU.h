@@ -1066,6 +1066,7 @@
 #define ENUM700_01_TEXT "Automatikus"
 #define ENUM700_03_TEXT "Komfort"
 #define ENUM701_00_TEXT "Visszatérés komfort módba"
+#define ENUM701_01_TEXT "Csökkentett"
 #define ENUM701_02_TEXT "Komfort mód érvényre juttatása"
 #define ENUM780_01_TEXT "Csökkentett hőmérsékleti alapjelre"
 #define ENUM780_02_TEXT "Fagyvédelmi hőmérsékleti alapjelre"

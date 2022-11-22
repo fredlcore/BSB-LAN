@@ -2295,6 +2295,7 @@
 #define ENUM700_01_TEXT "Automatik"
 #define ENUM700_03_TEXT "Komfort"
 #define ENUM701_00_TEXT "Rückkehr zu Komfortbetrieb"
+#define ENUM701_01_TEXT "Reduziert"
 #define ENUM701_02_TEXT "Erzwinge Komfortbetrieb"
 #define ENUM702_00_TEXT "Sommerbetrieb"
 #define ENUM702_01_TEXT "Heizprogramm 1"

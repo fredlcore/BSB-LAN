@@ -2459,7 +2459,6 @@ const char STR9652[] PROGMEM = STR9652_TEXT;
 #define ENUM48_01_TEXT ENUM_CAT_11_TEXT
 #define ENUM48_02_TEXT ENUM_CAT_14_TEXT
 #define ENUM700_02_TEXT ENUM648_01_TEXT
-#define ENUM701_01_TEXT ENUM700_02_TEXT
 #define ENUM780_00_TEXT MENU_TEXT_OFF
 #define ENUM843_00_TEXT ENUM48_00_TEXT
 #define ENUM843_02_TEXT STR2201_TEXT
@@ -3611,12 +3610,6 @@ const char ENUM700[] PROGMEM_LATEST = {
 "\x01 " ENUM700_01_TEXT "\0"
 "\x02 " ENUM700_02_TEXT "\0"
 "\x03 " ENUM700_03_TEXT
-};
-
-const char ENUM701[] PROGMEM_LATEST = {
-"\x00 " ENUM701_00_TEXT "\0"
-"\x01 " ENUM701_01_TEXT "\0"
-"\x02 " ENUM701_02_TEXT
 };
 
 // Parameters 702 and 703 are virtual Weishaupt parameters based on one and the same command ID, using new data type VT_CUSTOM_ENUM
