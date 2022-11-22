@@ -1066,6 +1066,7 @@ UIStrings["ENUM700_00_TEXT"] = "Fagyvédelmi";
 UIStrings["ENUM700_01_TEXT"] = "Automatikus";
 UIStrings["ENUM700_03_TEXT"] = "Komfort";
 UIStrings["ENUM701_00_TEXT"] = "Visszatérés komfort módba";
+UIStrings["ENUM701_01_TEXT"] = "Csökkentett";
 UIStrings["ENUM701_02_TEXT"] = "Komfort mód érvényre juttatása";
 UIStrings["ENUM780_01_TEXT"] = "Csökkentett hőmérsékleti alapjelre";
 UIStrings["ENUM780_02_TEXT"] = "Fagyvédelmi hőmérsékleti alapjelre";
