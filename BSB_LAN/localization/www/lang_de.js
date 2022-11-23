@@ -2295,6 +2295,7 @@ UIStrings["ENUM700_00_TEXT"] = "Schutzbetrieb";
 UIStrings["ENUM700_01_TEXT"] = "Automatik";
 UIStrings["ENUM700_03_TEXT"] = "Komfort";
 UIStrings["ENUM701_00_TEXT"] = "Rückkehr zu Komfortbetrieb";
+UIStrings["ENUM701_01_TEXT"] = "Reduziert";
 UIStrings["ENUM701_02_TEXT"] = "Erzwinge Komfortbetrieb";
 UIStrings["ENUM702_00_TEXT"] = "Sommerbetrieb";
 UIStrings["ENUM702_01_TEXT"] = "Heizprogramm 1";

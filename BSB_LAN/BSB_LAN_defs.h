@@ -745,7 +745,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_CURRENT1000,      1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
 {VT_DAYS_WORD,        1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
 {VT_ERRORCODE,        1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
-{VT_FP1,              10.0,   0, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
+{VT_FP1,              10.0,   1, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
 {VT_FP02,             50.0,   1, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_FP02},
 {VT_GRADIENT,         1.0,    1, 2, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT},
 // {VT_INTEGRAL,         1.0,    0, 2, DT_VALS, 0,  U_INTEGRAL, sizeof(U_INTEGRAL), STR_INTEGRAL},
@@ -1030,6 +1030,12 @@ const char ENUM_YESNO[] PROGMEM_LATEST = {
 const char ENUM_CLOSEDOPEN[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OPEN "\0"
 "\x01 " MENU_TEXT_CLOSE
+};
+
+const char ENUM701[] PROGMEM_LATEST = {
+"\x00 " ENUM701_00_TEXT "\0"
+"\x01 " ENUM701_01_TEXT "\0"
+"\x02 " ENUM701_02_TEXT
 };
 
 // Sonderbetriebs-Codes

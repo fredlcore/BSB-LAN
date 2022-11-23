@@ -348,6 +348,7 @@
 #define ENUM700_01_TEXT "Automatique"
 #define ENUM700_03_TEXT "Confort"
 #define ENUM701_00_TEXT "Retour au mode horaire"
+#define ENUM701_01_TEXT "Réduit"
 #define ENUM701_02_TEXT "Mode confort forcé"
 #define ENUM8000_17_TEXT "Protection anti-gel"
 #define ENUM8000_68_TEXT "Chauffage restreint, priorité ECS"
