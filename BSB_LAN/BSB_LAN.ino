@@ -5929,27 +5929,24 @@ void loop() {
               }
 
               if (p[2]=='K' && isdigit(p[4])) {
-//WARNING: simple increment of cat_param was changed because some prognr have decimal part.
-                if(cat_param >= 0) {
-                  cat_param = get_next_prognr(cat_param, findLine(cat_param,0,NULL));
-                }
                 if (cat_min < 0) {
                   uint search_cat = atoi(&p[4]) * 2;
+// Check the category number to be within allowed range
+                  if(search_cat > sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])) {
+                    search_cat = 0; // if we got an invalid category, just use 0
+                  }
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
-
-// Check for category number (if somebody will set wrong category number)
-                  if(search_cat < sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])){
-                    cat_param = cat_min;
-                  }
-                }
-                if (cat_param >= cat_min && cat_param <= cat_max) {
-                  json_parameter = cat_param;
-                  if (cat_param == cat_max) {
-                    json_token = NULL;
-                  }
+                  cat_param = cat_min;
                 } else {
-                  json_token = NULL;
+//WARNING: simple increment of cat_param was changed because some prognr have decimal part.
+                  cat_param = get_next_prognr(cat_param, findLine(cat_param,0,NULL));
+                }
+                if (cat_param <= cat_max) {
+                  json_parameter = cat_param; // we still have work to do
+                }
+                if (cat_param >= cat_max) {
+                  json_token = NULL;        // but this is the last round
                 }
               }
 
