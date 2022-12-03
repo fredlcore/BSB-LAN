@@ -5496,20 +5496,31 @@ void loop() {
             printToWebClient(PSTR("\r\nComplete dump:\r\n"));
             c = 0;
             int outBufLen = strlen(outBuf);
-            bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg);
+            unsigned long timeout = millis() + 3000;
+            while (!bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) && (millis() < timeout)) {
+              delay(500);
+            }
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
-            bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
+            timeout = millis() + 3000;
+            while (!bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) && (millis() < timeout)) {
+              delay(500);
+            }
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
-
-            bus->Send(TYPE_IQ1, c, msg, tx_msg);
+            timeout = millis() + 3000;
+            while (!bus->Send(TYPE_IQ1, c, msg, tx_msg) && (millis() < timeout)) {
+              delay(500);
+            }
             if (msg[4+bus->getBusType()*4] == 0x13) {
               int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
-              bus->Send(TYPE_IQ2, c, msg, tx_msg);
+              timeout = millis() + 3000;
+              while (!bus->Send(TYPE_IQ2, c, msg, tx_msg) && (millis() < timeout)) {
+                delay(500);
+              }
               int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
               int outBufLen = strlen(outBuf);
 
@@ -5517,7 +5528,10 @@ void loop() {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
-                bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg);
+                timeout = millis() + 3000;
+                while (!bus->Send(TYPE_IQ1, c, msg, tx_msg) && (millis() < timeout)) {
+                  delay(500);
+                }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
                 printToWebClient(PSTR("\r\n"));
@@ -5527,7 +5541,10 @@ void loop() {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
-                bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg);
+                timeout = millis() + 3000;
+                while (!bus->Send(TYPE_IQ2, c, msg, tx_msg) && (millis() < timeout)) {
+                  delay(500);
+                }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
                 printToWebClient(PSTR("\r\n"));

@@ -625,7 +625,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 #endif
       i--;
       byte msg_type = rx_msg[4+(bus_type*4)];
-      if (msg_type == 0x13 || msg_type == 0x15) {   // no recipient check for answers for special query types 0x12/0x13 and 0x14/0x15
+      if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type=0x14 && msg_type == 0x15))) {
         return true;
       }
       if (bus_type == 1) {
@@ -652,8 +652,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 #endif
         }
       }
-    }
-    else {
+    } else {
       delayMicroseconds(205);
     }
   }
