@@ -1097,8 +1097,8 @@ const char ENUM15046[] PROGMEM_LATEST = {
 
 //PPS-Bus commands
 #define PPS_BA  0
-#define PPS_PDK 1
-#define PPS_AW  2
+#define PPS_AW  1
+#define PPS_PDK 2
 #define PPS_FDT 3
 #define PPS_RTS 4
 #define PPS_RTA 5
