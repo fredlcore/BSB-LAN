@@ -2997,7 +2997,7 @@ void generateJSONwithConfig() {
 char *GetDateTime(char *date) {
 #if defined(ESP32)
   struct tm now;
-  getLocalTime(&now,0);
+  getLocalTime(&now,100);
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon + 1,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
 #else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
