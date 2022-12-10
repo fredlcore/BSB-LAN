@@ -395,7 +395,7 @@ ich mir da nicht)
             if (pps_time_set == false) {
               pps_hour = msg[5+pps_offset];
               pps_minute = msg[6+pps_offset];
-              pps_second = msg[5+pps_offset];
+              pps_second = msg[7+pps_offset];
             } else {
               pps_hour = hour();
               pps_minute = minute();
