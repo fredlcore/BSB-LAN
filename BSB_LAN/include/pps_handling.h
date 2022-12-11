@@ -21,23 +21,27 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[7] = pps_values[PPS_RTI] & 0xFF;
         break;
       case 3:
+        tx_msg[1] = 0x55; // QAA50 sends this, meaning still unknown
+        tx_msg[7] = 0x03;
+        break;
+      case 4:
+        tx_msg[1] = 0x4E; // QAA50 sends this, meaning still unknown
+        tx_msg[7] = 0x00;
+        break;
+      case 5:
+        tx_msg[1] = 0x49; // Betriebsart
+        tx_msg[7] = pps_values[PPS_BA];
+        break;
+      case 6:
         tx_msg[1] = 0x19; // Raumtepmeratur Soll
         tx_msg[6] = pps_values[PPS_RTZ] >> 8;
         tx_msg[7] = pps_values[PPS_RTZ] & 0xFF;
         break;
-      case 4:
-        tx_msg[1] = 0x4E;
-        tx_msg[7] = 0x00;
-        break;
-      case 5:
-        tx_msg[1] = 0x49;     // Betriebsart
-        tx_msg[7] = pps_values[PPS_BA];
-        break;
-      case 6:
+      case 7:
         tx_msg[1] = 0x56;
         tx_msg[7] = 0x00;
         break;
-      case 7:
+      case 8:
       {
         if (pps_time_set == true) {
           bool found = false;
@@ -85,31 +89,31 @@ uint16_t pps_bus_handling(byte *msg) {
         }
       }
 //            break;
-      case 8:
+      case 9:
         tx_msg[1] = 0x08;     // Raumtemperatur Soll
         tx_msg[6] = pps_values[PPS_RTS] >> 8;
         tx_msg[7] = pps_values[PPS_RTS] & 0xFF;
         break;
-      case 9:
+      case 10:
         tx_msg[1] = 0x09;     // Raumtemperatur Abwesenheit Soll
         tx_msg[6] = pps_values[PPS_RTA] >> 8;
         tx_msg[7] = pps_values[PPS_RTA] & 0xFF;
         break;
-      case 10:
+      case 11:
         tx_msg[1] = 0x0B; // Trinkwassertemperatur Soll
         tx_msg[6] = pps_values[PPS_TWS] >> 8;
         tx_msg[7] = pps_values[PPS_TWS] & 0xFF;
         break;
-      case 11:
+      case 12:
         tx_msg[1] = 0x4C; // Präsenz
         tx_msg[7] = pps_values[PPS_AW];
         break;
-      case 12:
+      case 13:
         tx_msg[1] = 0x1E; // Trinkwassertemperatur Reduziert Soll
         tx_msg[6] = pps_values[PPS_TWR] >> 8;
         tx_msg[7] = pps_values[PPS_TWR] & 0xFF;
         break;
-      case 13:
+      case 14:
       {
         if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
           tx_msg[0] = 0xFB; // send time to heater
@@ -122,7 +126,7 @@ uint16_t pps_bus_handling(byte *msg) {
         }
         [[fallthrough]];
       }
-      case 14:
+      case 15:
       {
         if ((pps_time_set == true || pps_wday_set == true) && pps_time_received == true) {
           tx_msg[0] = 0xFE; // unknown telegram
@@ -133,7 +137,7 @@ uint16_t pps_bus_handling(byte *msg) {
         }
         [[fallthrough]];
       }
-      case 15:
+      case 16:
         tx_msg[1] = 0x60;
         tx_msg[2] = pps_values[PPS_E13];
         tx_msg[3] = pps_values[PPS_S13];
@@ -142,7 +146,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E11];
         tx_msg[7] = pps_values[PPS_S11];
         break;
-      case 16:
+      case 17:
         tx_msg[1] = 0x61;
         tx_msg[2] = pps_values[PPS_E23];
         tx_msg[3] = pps_values[PPS_S23];
@@ -151,7 +155,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E21];
         tx_msg[7] = pps_values[PPS_S21];
         break;
-      case 17:
+      case 18:
         tx_msg[1] = 0x62;
         tx_msg[2] = pps_values[PPS_E33];
         tx_msg[3] = pps_values[PPS_S33];
@@ -160,7 +164,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E31];
         tx_msg[7] = pps_values[PPS_S31];
         break;
-      case 18:
+      case 19:
         tx_msg[1] = 0x63;
         tx_msg[2] = pps_values[PPS_E43];
         tx_msg[3] = pps_values[PPS_S43];
@@ -169,7 +173,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E41];
         tx_msg[7] = pps_values[PPS_S41];
         break;
-      case 19:
+      case 20:
         tx_msg[1] = 0x64;
         tx_msg[2] = pps_values[PPS_E53];
         tx_msg[3] = pps_values[PPS_S53];
@@ -178,7 +182,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E51];
         tx_msg[7] = pps_values[PPS_S51];
         break;
-      case 20:
+      case 21:
         tx_msg[1] = 0x65;
         tx_msg[2] = pps_values[PPS_E63];
         tx_msg[3] = pps_values[PPS_S63];
@@ -187,7 +191,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E61];
         tx_msg[7] = pps_values[PPS_S61];
         break;
-      case 21:
+      case 22:
         tx_msg[1] = 0x66;
         tx_msg[2] = pps_values[PPS_E73];
         tx_msg[3] = pps_values[PPS_S73];
@@ -196,11 +200,11 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_E71];
         tx_msg[7] = pps_values[PPS_S71];
         break;
-      case 22:
+      case 23:
         tx_msg[1] = 0x7C;
         tx_msg[7] = pps_values[PPS_FDT];     // Verbleibende Feriendauer in Tagen
         break;
-      case 23:
+      case 24:
         tx_msg[1] = 0x1B;                    // Frostschutz- und Maximaltemperatur
         tx_msg[4] = pps_values[PPS_SMX] >> 8;
         tx_msg[5] = pps_values[PPS_SMX] & 0xFF;
@@ -208,7 +212,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
     }
     msg_cycle++;
-    if (msg_cycle > 23) {
+    if (msg_cycle > 24 || (pps_values[PPS_QTP] == 0x52 && msg_cycle > 5)) {      // QAA50 sends fewer parameters
       msg_cycle = 0;
     }
     if (saved_msg_cycle > 0) {
@@ -239,23 +243,23 @@ uint16_t pps_bus_handling(byte *msg) {
     if ((msg[0] & 0x0E) == 0x0E) {   // Anfragen der Therme nach bestimmten Parametern
       saved_msg_cycle = msg_cycle;
       switch (msg[1]) {
-        case 0x08: msg_cycle = 8; break;
-        case 0x09: msg_cycle = 9; break;
-        case 0x0B: msg_cycle = 10; break;
+        case 0x08: msg_cycle = 9; break;
+        case 0x09: msg_cycle = 10; break;
+        case 0x0B: msg_cycle = 11; break;
         case 0x38: msg_cycle = 0; break;
         case 0x48: msg_cycle = 1; break;
         case 0x49: msg_cycle = 5; break;
-        case 0x4C: msg_cycle = 11; break;
+        case 0x4C: msg_cycle = 12; break;
         case 0x4D: msg_cycle = 2; break;
         case 0x4F: msg_cycle = 3; break;
-        case 0x60: msg_cycle = 15; break;
-        case 0x61: msg_cycle = 16; break;
-        case 0x62: msg_cycle = 17; break;
-        case 0x63: msg_cycle = 18; break;
-        case 0x64: msg_cycle = 19; break;
-        case 0x65: msg_cycle = 20; break;
-        case 0x66: msg_cycle = 21; break;
-        case 0x7C: msg_cycle = 22; break;
+        case 0x60: msg_cycle = 16; break;
+        case 0x61: msg_cycle = 17; break;
+        case 0x62: msg_cycle = 18; break;
+        case 0x63: msg_cycle = 19; break;
+        case 0x64: msg_cycle = 20; break;
+        case 0x65: msg_cycle = 21; break;
+        case 0x66: msg_cycle = 22; break;
+        case 0x7C: msg_cycle = 23; break;
         default:
           printToDebug(PSTR("Unknown request: "));
           SerialPrintRAW(msg, 9);
