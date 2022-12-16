@@ -262,6 +262,7 @@ uint16_t pps_bus_handling(byte *msg) {
         case 0x09: msg_cycle = 10; break;
         case 0x0B: msg_cycle = 11; break;
         case 0x38: msg_cycle = 0; break;
+        case 0x3A: msg_cycle = 26; break;
         case 0x48: msg_cycle = 1; break;
         case 0x49: msg_cycle = 5; break;
         case 0x4C: msg_cycle = 12; break;
@@ -274,6 +275,7 @@ uint16_t pps_bus_handling(byte *msg) {
         case 0x64: msg_cycle = 20; break;
         case 0x65: msg_cycle = 21; break;
         case 0x66: msg_cycle = 22; break;
+        case 0x79: msg_cycle = 25; break;
         case 0x7C: msg_cycle = 23; break;
         default:
           printToDebug(PSTR("Unknown request: "));
