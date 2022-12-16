@@ -33,10 +33,17 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[7] = pps_values[PPS_BA];
         break;
       case 6:
+      {
+        if (pps_values[PPS_AW] == 0) {                 // Set destination temperature (comfort + knob for heating period, otherwise reduced temperature)
+          pps_values[PPS_RTZ] = pps_values[PPS_RTA];
+        } else {
+          pps_values[PPS_RTZ] = pps_values[PPS_RTS] + pps_values[PPS_PDK];
+        }
         tx_msg[1] = 0x19; // Raumtepmeratur Soll
         tx_msg[6] = pps_values[PPS_RTZ] >> 8;
         tx_msg[7] = pps_values[PPS_RTZ] & 0xFF;
         break;
+      }
       case 7:
         tx_msg[1] = 0x56;
         tx_msg[7] = 0x00;
