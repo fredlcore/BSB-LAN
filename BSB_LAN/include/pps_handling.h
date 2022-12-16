@@ -210,6 +210,21 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[5] = pps_values[PPS_SMX] & 0xFF;
         tx_msg[6] = pps_values[PPS_FRS] >> 8;
         tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
+        break;
+// these cases are above the normal msg_cycle range and are executed only upon request by 1E telegram from heater. The msg_cycle condition below should not take these into account, but instead revolve after the case before.
+      case 25:                                // QAA70 sends time if connected to LGM11 only upon request, so this is outside "normal" msg_cycle range
+        tx_msg[0] = 0xFD; // send time to heater
+        tx_msg[1] = 0x79;
+        tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
+        tx_msg[5] = hour(); // hour
+        tx_msg[6] = minute(); // minute
+        tx_msg[7] = second(); // second
+        break;
+      case 26:                                // Unknown command only used in LGM11 only upon request, so this is outside "normal" msg_cycle range
+        tx_msg[1] = 0x3A;
+        tx_msg[6] = 0x01;
+        tx_msg[7] = 0x11;
+        break;
     }
     msg_cycle++;
     if (msg_cycle > 24 || (pps_values[PPS_QTP] == 0x52 && msg_cycle > 5)) {      // QAA50 sends fewer parameters
