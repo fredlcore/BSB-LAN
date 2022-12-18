@@ -1382,6 +1382,15 @@ int findLine(float line
   return save_i;
 }
 
+/** *****************************************************************
+ *  Function: printToWebClientMsg_Didnt_receive_matching_tlg()
+ *  Does:     Just print error message to web client an do delay
+ *
+ * *************************************************************** */
+void printToWebClientMsg_Didnt_receive_matching_tlg(){
+  printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
+  delay(500);
+}
 
 /** *****************************************************************
  *  Function: freeRam()
@@ -5513,15 +5522,13 @@ void loop() {
             flushToWebClient();
             timeout = millis() + 3000;
             while (!bus->Send(TYPE_IQ1, c, msg, tx_msg) && (millis() < timeout)) {
-              printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
-              delay(500);
+              printToWebClientMsg_Didnt_receive_matching_tlg();
             }
             if (msg[4+bus->getBusType()*4] == 0x13) {
               int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
               timeout = millis() + 3000;
               while (!bus->Send(TYPE_IQ2, c, msg, tx_msg) && (millis() < timeout)) {
-                printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
-                delay(500);
+                printToWebClientMsg_Didnt_receive_matching_tlg();
               }
               int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
               int outBufLen = strlen(outBuf);
@@ -5532,8 +5539,7 @@ void loop() {
 #endif
                 timeout = millis() + 3000;
                 while (!bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) && (millis() < timeout)) {
-                  printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
-                  delay(500);
+                  printToWebClientMsg_Didnt_receive_matching_tlg();
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
@@ -5546,8 +5552,7 @@ void loop() {
 #endif
                 timeout = millis() + 3000;
                 while (!bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) && (millis() < timeout)) {
-                  printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
-                  delay(500);
+                  printToWebClientMsg_Didnt_receive_matching_tlg();
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
