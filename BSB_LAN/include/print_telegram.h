@@ -892,6 +892,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_HOURS_N: // u32 h
             case VT_DWORD: // s32
             case VT_DWORD_N: // s32
+            vase VT_DWORD10:
             case VT_ENERGY: // u32 / 1.0 kWh
             case VT_ENERGY_N: // u32 / 1.0 kWh
             case VT_SECONDS_DWORD: //u32? s
