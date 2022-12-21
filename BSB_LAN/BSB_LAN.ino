@@ -3448,6 +3448,7 @@ int set(int line      // the ProgNr of the heater parameter
     // 32-bit representation
     case VT_DWORD:      // can this be merged with the 32-bit above?
     case VT_DWORD_N:
+    case VT_DWORD10:
       {
       if (val[0]!='\0') {
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
