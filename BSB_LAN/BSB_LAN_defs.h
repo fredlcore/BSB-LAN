@@ -1032,12 +1032,6 @@ const char ENUM_CLOSEDOPEN[] PROGMEM_LATEST = {
 "\x01 " MENU_TEXT_CLOSE
 };
 
-const char ENUM701[] PROGMEM_LATEST = {
-"\x00 " ENUM701_00_TEXT "\0"
-"\x01 " ENUM701_01_TEXT "\0"
-"\x02 " ENUM701_02_TEXT
-};
-
 // Sonderbetriebs-Codes
 const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 "\x01 " ENUM_WEEKDAY_01_TEXT "\0"
