@@ -3314,6 +3314,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_MINUTES_SHORT: // ( Fehler - Alarm)
     case VT_MINUTES_SHORT_N: // ( Fehler - Alarm)
     case VT_PERCENT:
+    case VT_PERCENT_NN:
     case VT_PERCENT1:
     case VT_ENUM:          // enumeration types
     case VT_BINARY_ENUM:
