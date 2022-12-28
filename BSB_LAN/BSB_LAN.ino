@@ -3387,6 +3387,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_LITERPERMIN_N:
     case VT_CONSUMPTION:
     case VT_PRESSURE_WORD1:
+    case VT_PRESSURE_1000:
     case VT_PPM:
     case VT_FP02:
     case VT_SECONDS_WORD5:
