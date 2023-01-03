@@ -166,9 +166,9 @@ byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send me
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
 // rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
 byte mqtt_broker_ip_addr[4] = {192,168,178,20}; // MQTT broker ip address. Please use commas instead of dots!!!
-char MQTTUsername[33] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
-char MQTTPassword[33] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
-char MQTTTopicPrefix[33] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
+char MQTTUsername[65] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
+char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
+char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
 
 // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
