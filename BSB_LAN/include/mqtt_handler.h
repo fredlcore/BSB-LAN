@@ -134,8 +134,8 @@ void mqtt_sendtoBroker(float param) {
   }
 
   // debugging..
-  printFmtToDebug(PSTR("Publishing to topic: %s\n"), MQTTTopic.c_str());
-  printFmtToDebug(PSTR("Payload: %s\n"), MQTTPayload.c_str());
+  printFmtToDebug(PSTR("Publishing to topic: %s\r\n"), MQTTTopic.c_str());
+  printFmtToDebug(PSTR("Payload: %s\r\n"), MQTTPayload.c_str());
   // Now publish the json payload only once
   MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
   printlnToDebug(PSTR("Successfully published..."));
@@ -223,11 +223,11 @@ boolean mqtt_connect() {
           mqtt_subscr="fromBroker";
         }
         MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
-        printFmtToDebug(PSTR("Subscribed to topic '%s'\n"), mqtt_subscr);
+        printFmtToDebug(PSTR("Subscribed to topic '%s'\r\n"), mqtt_subscr);
         MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
         MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
         MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("online"), true);
-        printFmtToDebug(PSTR("Published status 'online' to topic '%s'\n"), MQTTWillTopic.c_str());
+        printFmtToDebug(PSTR("Published status 'online' to topic '%s'\r\n"), MQTTWillTopic.c_str());
         return true;
       }
     }
