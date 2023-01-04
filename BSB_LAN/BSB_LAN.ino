@@ -3533,7 +3533,11 @@ int set(int line      // the ProgNr of the heater parameter
       {
       uint32_t t=((int)(atof(val)*decodedTelegram.operand));
       if (setcmd) {
-        param[0]=decodedTelegram.enable_byte;
+        if (val[0]!='\0') {
+          param[0]=decodedTelegram.enable_byte;
+        } else {
+          param[0]=decodedTelegram.enable_byte-1;
+        }
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       } else { // INF message type
