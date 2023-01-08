@@ -136,6 +136,7 @@ UIStrings["MENU_TEXT_OWP"] = "1-Wire bus pins";
 UIStrings["MENU_TEXT_DHP"] = "DHT22 bus pins";
 UIStrings["MENU_TEXT_EXP"] = "Protected GPIO pins";
 UIStrings["MENU_TEXT_MAC"] = "MAC address";
+UIStrings["MENU_TEXT_LIR"] = "Log parameter will be logged now and log interval counter will be reset.";
 UIStrings["MENU_TEXT_LGP"] = "Logging the following parameters every";
 UIStrings["MENU_TEXT_SEC"] = "seconds";
 UIStrings["MENU_TEXT_BZ1"] = "Burner runtime level 1";
