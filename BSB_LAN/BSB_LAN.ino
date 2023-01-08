@@ -6260,6 +6260,7 @@ void loop() {
               break;
             case 'N':     // log now
               log_now = 1;
+              printToWebClient(PSTR(MENU_TEXT_LIR));
               break;
             case 'U':
               if (p[3]=='=') {

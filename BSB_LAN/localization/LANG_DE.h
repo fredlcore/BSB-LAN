@@ -153,6 +153,7 @@
 #define MENU_TEXT_DHP "DHT22 Bus Pins"
 #define MENU_TEXT_EXP "Gesperrte GPIO Pins"
 #define MENU_TEXT_MAC "MAC-Adresse"
+#define MENU_TEXT_LIR "Log-Parameter werden nun geloggt und der Log-Intervall-Zähler wird zurückgesetzt."
 #define MENU_TEXT_LGP "Loggen der folgenden Parameter alle"
 #define MENU_TEXT_SEC "Sekunden"
 #define MENU_TEXT_BZ1 "Brennerlaufzeit Stufe 1"

@@ -136,6 +136,7 @@
 #define MENU_TEXT_DHP "DHT22 bus pins"
 #define MENU_TEXT_EXP "Protected GPIO pins"
 #define MENU_TEXT_MAC "MAC address"
+#define MENU_TEXT_LIR "Log parameter will be logged now and log interval counter will be reset."
 #define MENU_TEXT_LGP "Logging the following parameters every"
 #define MENU_TEXT_SEC "seconds"
 #define MENU_TEXT_BZ1 "Burner runtime level 1"
