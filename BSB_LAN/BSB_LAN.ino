@@ -67,6 +67,7 @@
  * Changelog:
  *       version 3.0
  *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
+ *        - Add new '/LN' URL command to force logging irrespective of current interval.
  *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
  *        - New data type VT_BINARY_ENUM
@@ -6256,6 +6257,9 @@ void loop() {
                 printToWebClient(PSTR(MENU_TEXT_LBO ": "));
                 printyesno(logTelegram & LOGTELEGRAM_BROADCAST_ONLY) ;
               }
+              break;
+            case 'N':     // log now
+              log_now = 1;
               break;
             case 'U':
               if (p[3]=='=') {
