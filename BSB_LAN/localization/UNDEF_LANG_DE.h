@@ -151,6 +151,7 @@
 #undef MENU_TEXT_DHP
 #undef MENU_TEXT_EXP
 #undef MENU_TEXT_MAC
+#undef MENU_TEXT_LIR
 #undef MENU_TEXT_LGP
 #undef MENU_TEXT_SEC
 #undef MENU_TEXT_BZ1

@@ -153,6 +153,7 @@ UIStrings["MENU_TEXT_OWP"] = "1-Wire Bus Pins";
 UIStrings["MENU_TEXT_DHP"] = "DHT22 Bus Pins";
 UIStrings["MENU_TEXT_EXP"] = "Gesperrte GPIO Pins";
 UIStrings["MENU_TEXT_MAC"] = "MAC-Adresse";
+UIStrings["MENU_TEXT_LIR"] = "Log-Parameter werden nun geloggt und der Log-Intervall-Zähler wird zurückgesetzt.";
 UIStrings["MENU_TEXT_LGP"] = "Loggen der folgenden Parameter alle";
 UIStrings["MENU_TEXT_SEC"] = "Sekunden";
 UIStrings["MENU_TEXT_BZ1"] = "Brennerlaufzeit Stufe 1";

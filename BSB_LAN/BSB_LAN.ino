@@ -67,6 +67,7 @@
  * Changelog:
  *       version 3.0
  *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
+ *        - Add new '/LN' URL command to force logging irrespective of current interval.
  *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
  *        - New data type VT_BINARY_ENUM
@@ -4865,7 +4866,7 @@ void loop() {
               char base64_user_pass[88] = { 0 };
               int user_pass_len = strlen(USER_PASS);
               Base64.encode(base64_user_pass, USER_PASS, user_pass_len);
-              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,PSTR("Authorization: Basic"))!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) {
+              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,PSTR("uthorization: Basic"))!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) { // HTML headers seem to be case-insensitive, some clients send "authorization" instead of "Authorization". Here this can be covered by just removing the first letter, but with other HTTP header tests above, this might be more complicated...
                 httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
@@ -6256,6 +6257,10 @@ void loop() {
                 printToWebClient(PSTR(MENU_TEXT_LBO ": "));
                 printyesno(logTelegram & LOGTELEGRAM_BROADCAST_ONLY) ;
               }
+              break;
+            case 'N':     // log now
+              log_now = 1;
+              printToWebClient(PSTR(MENU_TEXT_LIR));
               break;
             case 'U':
               if (p[3]=='=') {
