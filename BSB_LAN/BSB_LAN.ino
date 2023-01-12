@@ -7007,7 +7007,7 @@ void loop() {
     }
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
       WiFi.disconnect();
       WiFi.begin();
