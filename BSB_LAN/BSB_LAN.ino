@@ -1454,7 +1454,6 @@ void SerialPrintHex32(uint32_t val) {
  *   Serial  instance
  * *************************************************************** */
 void SerialPrintData(byte* msg) {
-  Serial.println();
   // Calculate pure data length without housekeeping info
   int data_len=0;
   byte offset = 0;
