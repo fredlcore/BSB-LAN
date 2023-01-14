@@ -1454,10 +1454,11 @@ void SerialPrintHex32(uint32_t val) {
  *   Serial  instance
  * *************************************************************** */
 void SerialPrintData(byte* msg) {
+  Serial.println();
   // Calculate pure data length without housekeeping info
   int data_len=0;
   byte offset = 0;
-  byte msg_type = msg[4+(bus->getBusType()*1)];
+  byte msg_type = msg[4+(bus->getBusType()*4)];
   if (bus_type != BUS_PPS) {
     if (msg_type >= 0x12) {
       offset = 4;
