@@ -97,5 +97,5 @@ Web-Interface screenshots:
 BSB-Adapterplatine in Bestückung für ESP32 Olimex Boards:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter.jpg" size="50%">
 
-BSB-Adapterplatine auf Olimex POE und im 3D-gedrucktem Projekt-Gehäuse:
+BSB-Adapterplatine auf ESP32 Olimex POE im 3D-gedruckten Projekt-Gehäuse:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
