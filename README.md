@@ -97,7 +97,7 @@ Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
 
 BSB-Board populated for ESP32 Olimex boards:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%Adapter.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter.jpg" size="50%">
 
 BSB-Board on Olimex POE inside the project's 3D-printed case:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpeg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
