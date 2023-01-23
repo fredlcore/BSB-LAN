@@ -96,8 +96,8 @@ Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
 
-BSB-Board plain, with location of CL+ and CL- connectors as well as pads framed in red for required pins:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20plain.jpg" size="50%">
+BSB-Board populated for ESP32 Olimex boards:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%Adapter.jpg" size="50%">
 
-BSB-Board and Ethernet Shield plugged into the Arduino Due:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">
+BSB-Board on Olimex POE inside the project's 3D-printed case:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpeg" size="50%">

@@ -94,8 +94,8 @@ Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
 
-BSB-Adapterplatine unbestückt, mit den Anschlüssen CL+ und CL- sowie den zwingend benötigten Pin-Anschlüssen in roter Umrandung:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20plain.jpg" size="50%">
+BSB-Adapterplatine in Bestückung für ESP32 Olimex Boards:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%Adapter.jpg" size="50%">
 
-BSB-Adapterplatine und Ethernet-Shield auf dem Arduino Due:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/BSB-Board%20on%20Arduino%20Due.jpg" size="50%">
+BSB-Adapterplatine auf Olimex POE und im 3D-gedrucktem Projekt-Gehäuse:
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpeg" size="50%">
