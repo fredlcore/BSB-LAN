@@ -132,6 +132,7 @@
 #define DEV_136_ALL  136,255 // AVS75.391/109
 #define DEV_137_ALL  137,255 // AGU2.550 Mischer-ClipIn
 #define DEV_138_ALL  138,255 // Brötje BOB
+#define DEV_147_ALL  147,255 // RVD260
 #define DEV_148_ALL  148,255 // RVD265/109
 #define DEV_162_ALL  162,255 // Brötje WGB 15 E, WGB-S 17/20E
 #define DEV_162_005  162,5   // Brötje Eco-Therm Plus WGB 20E LMS14.001A100 (K.-H. M.)
