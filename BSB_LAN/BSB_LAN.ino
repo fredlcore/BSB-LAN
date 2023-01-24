@@ -1457,7 +1457,7 @@ void SerialPrintData(byte* msg) {
   // Calculate pure data length without housekeeping info
   int data_len=0;
   byte offset = 0;
-  byte msg_type = msg[4+(bus->getBusType()*1)];
+  byte msg_type = msg[4+(bus->getBusType()*4)];
   if (bus_type != BUS_PPS) {
     if (msg_type >= 0x12) {
       offset = 4;
@@ -7009,7 +7009,7 @@ void loop() {
     }
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
-    if (WiFi.status() != WL_CONNECTED) {
+    if (WiFi.status() != WL_CONNECTED && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
       WiFi.disconnect();
       WiFi.begin();
