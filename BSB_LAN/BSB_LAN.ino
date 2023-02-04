@@ -5368,9 +5368,11 @@ void loop() {
 
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
           if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false)) {
+            printTelegram(tx_msg, -1);
             unsigned long startquery = millis();
             while (millis() - startquery < 10000) {
               if (bus->GetMessage(msg)) {
+                printTelegram(msg, -1);
                 uint8_t found_id = 0;
                 bool found = false;
                 if (bus->getBusType() == BUS_BSB && msg[4] == 0x02) {
@@ -5407,7 +5409,7 @@ void loop() {
             printFmtToWebClient(PSTR(MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
-            uint32_t c=0;
+            uint32_t c=0; 
             float l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
@@ -5511,24 +5513,36 @@ void loop() {
             int outBufLen = strlen(outBuf);
             unsigned long timeout = millis() + 3000;
             while (!bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) && (millis() < timeout)) {
+              printTelegram(tx_msg, -1);
+              printTelegram(msg, -1);
               delay(500);
             }
+            printTelegram(tx_msg, -1);
+            printTelegram(msg, -1);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             timeout = millis() + 3000;
             while (!bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) && (millis() < timeout)) {
+              printTelegram(tx_msg, -1);
+              printTelegram(msg, -1);
               delay(500);
             }
+            printTelegram(tx_msg, -1);
+            printTelegram(msg, -1);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             timeout = millis() + 3000;
             while (!bus->Send(TYPE_IQ1, c, msg, tx_msg) && (millis() < timeout)) {
+              printTelegram(tx_msg, -1);
+              printTelegram(msg, -1);
               printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
               delay(500);
             }
+            printTelegram(tx_msg, -1);
+            printTelegram(msg, -1);
             if (msg[4+bus->getBusType()*4] == 0x13) {
               int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
               timeout = millis() + 3000;
