@@ -5411,6 +5411,7 @@ void loop() {
             float l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
+            query_program_and_print_result(6224, PSTR("\r\n"), NULL);
             query_program_and_print_result(6225, PSTR("\r\n"), NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
             query_program_and_print_result(6226, PSTR("\r\n"), NULL);
