@@ -32,10 +32,12 @@
         // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
         let p=[],r=[],a=[],x=y=0;
         d3.dsvFormat(';').parse(t).forEach(function(i){
-          // ms less than 1000 different from previous? -> use same hh:mm
-          if(y&&i.m-y>999){a.push(r);r=[];x=i.t}
+          // start new hh:mm if ms is at least 1000 greater than ...
+          // ... or smaller than (due to a device reset) its previous value:
+          if(y&&(i.m-y>999||i.m-y<0)){a.push(r);r=[];x=i.t}
           y=i.m;
           let k=i.p+' - '+i.d;
+          if(i.u)k+=' ['+i.u+']';
           p[k]=1;
           r[k]=i.v;
           r['t']=x?x:i.t;
