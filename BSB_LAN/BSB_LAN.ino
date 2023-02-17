@@ -5809,7 +5809,9 @@ void loop() {
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
-
+                if (cat_max > ENUM_CAT_NR[cat*2+2]) {
+                  cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                }
                 float j = cat_min;
 //WARNING: simple increment of j was changed because some prognr have decimal part.
                 do{
@@ -5968,6 +5970,9 @@ void loop() {
                     printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
+                    if (cat_max > ENUM_CAT_NR[cat*2+2]) {
+                      cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                    }
 
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
                     printFmtToWebClient(PSTR("\", \"min\": %g, \"max\": %g }"), cat_min, cat_max);
@@ -5985,6 +5990,9 @@ void loop() {
                   }
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
+                  if (cat_max > ENUM_CAT_NR[search_cat+2]) {
+                    cat_max = ENUM_CAT_NR[search_cat+2]-1;
+                  }
                   cat_param = cat_min;
                 } else {
 //WARNING: simple increment of cat_param was changed because some prognr have decimal part.
@@ -6551,6 +6559,9 @@ void loop() {
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
               start = ENUM_CAT_NR[cat];
               end = ENUM_CAT_NR[cat+1];
+              if (end > ENUM_CAT_NR[cat+2]) {
+                end = ENUM_CAT_NR[cat+2]-1;
+              }
             } else {
               // split range
               line_start=range;
