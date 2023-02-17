@@ -78,10 +78,10 @@ inline uint8_t get_cmdtbl_category(int i) {
   for (uint8_t x=0;x<sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0]);x=x+2) {
     cat_min = ENUM_CAT_NR[x];
     cat_max = ENUM_CAT_NR[x+1];
-    if cat_max > ENUM_CAT_NR[x+2] {
+    if (cat_max > ENUM_CAT_NR[x+2]) {
       cat_max = ENUM_CAT_NR[x+2]-1;
     }
-    if (cmdtbl[i].line => cat_min && cmdtbl[i].line <= cat_max) {
+    if (cmdtbl[i].line >= cat_min && cmdtbl[i].line <= cat_max) {
       return x/2;
     }
   }
