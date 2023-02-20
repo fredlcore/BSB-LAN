@@ -524,7 +524,6 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
-  #include <sqlite3.h>
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
   #include <WiFiUdp.h>
