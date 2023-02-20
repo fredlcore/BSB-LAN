@@ -134,6 +134,7 @@ UIStrings["MENU_TEXT_ER1"] = "FEHLER: Ungültiger Parameter!";
 UIStrings["MENU_TEXT_ER2"] = "FEHLER: Ungültiger Wert!";
 UIStrings["MENU_TEXT_ER3"] = "FEHLER: Setzen fehlgeschlagen!";
 UIStrings["MENU_TEXT_ER4"] = "Parameter ist nur lesbar.";
+UIStrings["MENU_TEXT_ER8"] = "Systemweiter Schreibschutz ist in den BSB-LAN-Einstellungen aktiv.";
 UIStrings["MENU_TEXT_ER5"] = "FEHLER: Falscher Typ!";
 UIStrings["MENU_TEXT_ER6"] = "FEHLER: Zeile nicht gefunden!";
 UIStrings["MENU_TEXT_ER7"] = "FEHLER: Geschützter GPIO Pin!";

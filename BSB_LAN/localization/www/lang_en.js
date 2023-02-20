@@ -118,6 +118,7 @@ UIStrings["MENU_TEXT_ER2"] = "ERROR: invalid parameter value!";
 UIStrings["MENU_TEXT_ER3"] = "ERROR: set failed!";
 UIStrings["MENU_TEXT_ER4"] = "parameter is readonly.";
 UIStrings["MENU_TEXT_ER5"] = "ERROR: wrong type!";
+UIStrings["MENU_TEXT_ER8"] = "Global write-protection is active in BSB-LAN settings.";
 UIStrings["MENU_TEXT_ER6"] = "ERROR: line not found!";
 UIStrings["MENU_TEXT_ER7"] = "ERROR: protected GPIO pin!";
 UIStrings["MENU_TEXT_BST"] = "Heater statistics";
