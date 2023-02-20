@@ -118,6 +118,7 @@
 #define MENU_TEXT_ER3 "ERROR: set failed!"
 #define MENU_TEXT_ER4 "parameter is readonly."
 #define MENU_TEXT_ER5 "ERROR: wrong type!"
+#define MENU_TEXT_ER8 "Global write-protection is active in BSB-LAN settings."
 #define MENU_TEXT_ER6 "ERROR: line not found!"
 #define MENU_TEXT_ER7 "ERROR: protected GPIO pin!"
 #define MENU_TEXT_BST "Heater statistics"
