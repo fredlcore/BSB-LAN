@@ -5225,6 +5225,9 @@ void loop() {
                 printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
                 if (setresult == 2) {
                   printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
+                  if ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode == 0) {
+                    printToWebClient(PSTR(" " MENU_TEXT_ER8 "\r\n"));
+                  }
                 }
               } else {
                 if (setcmd) {            // was this a SET command?

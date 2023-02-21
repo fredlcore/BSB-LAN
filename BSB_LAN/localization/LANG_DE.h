@@ -134,6 +134,7 @@
 #define MENU_TEXT_ER2 "FEHLER: Ungültiger Wert!"
 #define MENU_TEXT_ER3 "FEHLER: Setzen fehlgeschlagen!"
 #define MENU_TEXT_ER4 "Parameter ist nur lesbar."
+#define MENU_TEXT_ER8 "Systemweiter Schreibschutz ist in den BSB-LAN-Einstellungen aktiv."
 #define MENU_TEXT_ER5 "FEHLER: Falscher Typ!"
 #define MENU_TEXT_ER6 "FEHLER: Zeile nicht gefunden!"
 #define MENU_TEXT_ER7 "FEHLER: Geschützter GPIO Pin!"

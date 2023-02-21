@@ -116,6 +116,7 @@
 #undef MENU_TEXT_ER3
 #undef MENU_TEXT_ER4
 #undef MENU_TEXT_ER5
+#undef MENU_TEXT_ER8
 #undef MENU_TEXT_ER6
 #undef MENU_TEXT_ER7
 #undef MENU_TEXT_BST
