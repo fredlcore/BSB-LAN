@@ -6178,6 +6178,24 @@ void loop() {
             if (dataFile) {
 
               unsigned long startdump = millis();
+
+              // /D may be followed by a number of KB to read from the file's end only:
+              unsigned long kb = 0;
+              for (char *pp=p+2; *pp && isdigit(*pp); ++pp) kb = 10*kb + *pp-'0';
+              kb *= 1024;
+              if (kb && kb<dataFile.size()) {  // send only the newest data, as requested
+                int b;
+                // transfer header:
+                for (b=dataFile.read(); b!=-1; b=dataFile.read()) {
+                  client.write((byte)b);
+                  if (b=='\n') break;
+                }
+                // skip older data:
+                dataFile.seek(dataFile.size()-kb);
+                // skip log entry line there, which is most likely incomplete:
+                do { b=dataFile.read(); } while (b!=-1 && b!='\n');
+              }
+
               transmitFile(dataFile);
               dataFile.close();
 
