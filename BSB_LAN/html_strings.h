@@ -97,6 +97,16 @@ const char graph_html[] PROGMEM_LATE =
   // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
   // [...]
   "</td></tr></tbody></table>" // close table opened by surrounding html to escape its width limitation
+  "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
+  // to not transfer huge datalog.txt contents w/o need,
+  // we (let the user) limit data to the most recent KB:
+  "<input type='number' id='n' min='1' value='999' onchange='f()'>KB,&nbsp;"
+  // to alleviate d3+c3 performance issues when dealing with
+  // large datasets, we (allow to) filter those datasets
+  // for d3+c3 by using a date range a...b:
+  "<input type='date' id='a' onchange='g()'>"
+  "&nbsp;<output id='i'></output>&nbsp;"
+  "<input type='date' id='b' onchange='g()'>"
   "<div id='c3'></div>"
   "<style>"
     "svg,.c3-tooltip{font:10px sans-serif}"
@@ -110,27 +120,57 @@ const char graph_html[] PROGMEM_LATE =
   "<script src='https://d3js.org/d3.v4.min.js'></script>"
   "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
   "<script>"
-    "fetch('D').then(response=>response.text()).then(t=>{"
-      // abbreviate heading to save javascript code size:
-      "t=t.replace(/.+/,'m;t;p;d;v;u');"
-      // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
-      "let p=[],r=[],a=[],x=y=0;"
-      "d3.dsvFormat(';').parse(t).forEach(function(i){"
-        // ms less than 1000 different from previous? -> use same hh:mm
-        "if(y&&i.m-y>999){a.push(r);r=[];x=i.t}"
-        "y=i.m;"
-        "let k=i.p+' - '+i.d;"
-        "p[k]=1;"
-        "r[k]=i.v;"
-        "r['t']=x?x:i.t;"
+    "let u,t,d=document,"
+        "n=d.querySelector('#n'),"
+        "a=d.querySelector('#a'),"
+        "b=d.querySelector('#b'),"
+        "i=d.querySelector('#i');"
+    "f();"
+    "function f(){"
+      "u='D'+n.value;"
+      // change the url used on this page to download data,
+      // so that the user doesn't accidently /D huge datasets:
+      "d.links[d.links.length-1].href=u;"
+      // 
+      "fetch(u).then(response=>response.text()).then(c=>{"
+        // abbreviate heading to save javascript code size:
+        "t=c.replace(/.+/,'m;t;p;d;v;u')"
+           // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
+           ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');"
+        "u=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
+        "a.value=a.min=b.min=u[0];"           // first = smallest date
+        "b.value=a.max=b.max=u[u.length-1];"  // last = largest date
+        // in large datasets, don't show older data by default:
+        "if(u.length>9999)a.value=u[u.length-9999];"
+        "g();"
       "});"
-      "a.push(r);"
+    "}"
+    "function g(){"
+      // use '!' next to a/b date input fields to signal when there's more:
+      "i.textContent=(a.value==a.min?'':'!')+' ... '+"
+                    "(b.value==b.max?'':'!');"
+      // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
+      "let p=[],r=[],o=[],x=y=0;"
+      "d3.dsvFormat(';').parse(t).forEach(function(i){"
+        "if(a.value<i.t&&i.t<b.value+'x'){"  // only when t=date is in a...b range
+          // start new hh:mm if ms is at least 1000 greater than ...
+          // ... or smaller than (due to a device reset) its previous value:
+          "if(y&&(i.m-y>999||i.m-y<0)){o.push(r);r=[];x=i.t}"
+          "y=i.m;"
+          "let k=i.p+' - '+i.d;"
+          "if(i.u)k+=' ['+i.u+']';"
+          "p[k]=1;"
+          "r[k]=i.v;"
+          "r['t']=x?x:i.t;"
+        "}"
+      "});"
+      "o.push(r);"
       // plot:
-      "let f='%d.%m.%Y %H:%M';"
+      "let f='%Y-%m-%d %H:%M';"
       "let c=c3.generate({"
         "bindto:'#c3',"
         "data:{"
-          "json:a,"
+          "json:o,"
           "keys:{x:'t',value:Object.keys(p)},"
           "xFormat:f+':%S'"
         "},"
@@ -140,7 +180,7 @@ const char graph_html[] PROGMEM_LATE =
         "size:{height:window.innerHeight-20},"
         "onresize:function(){c.resize({height:window.innerHeight-20})}"
       "});"
-    "});"
+    "}"
   "</script>"
   "<table><tbody><tr><td>" // re-open table for surrounding html
   ;
