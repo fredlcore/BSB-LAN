@@ -100,7 +100,7 @@ const char graph_html[] PROGMEM_LATE =
   "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
   // to not transfer huge datalog.txt contents w/o need,
   // we (let the user) limit data to the most recent KB:
-  "<input type='number' id='n' min='1' value='999' onchange='f()'>KB,&nbsp;"
+  "&le;<input type='number' id='n' min='1' value='999' onchange='f()'>KB,&nbsp;"
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b:
