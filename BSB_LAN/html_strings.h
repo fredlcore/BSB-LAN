@@ -99,8 +99,8 @@ const char graph_html[] PROGMEM_LATE =
   "</td></tr></tbody></table>" // close table opened by surrounding html to escape its width limitation
   "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
   // to not transfer huge datalog.txt contents w/o need,
-  // we (let the user) limit data to the most recent KB:
-  "&le;<input type='number' id='n' min='1' value='999' onchange='f()'>KB,&nbsp;"
+  // we (let the user) limit data to the most recent calendar days:
+  "&le;<input type='number' id='n' min='1' value='1' onchange='f()'>d,&nbsp;"
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b:
@@ -120,28 +120,27 @@ const char graph_html[] PROGMEM_LATE =
   "<script src='https://d3js.org/d3.v4.min.js'></script>"
   "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
   "<script>"
-    "let u,t,d=document,"
+    "let l,t,d=document,"
         "n=d.querySelector('#n'),"
         "a=d.querySelector('#a'),"
         "b=d.querySelector('#b'),"
         "i=d.querySelector('#i');"
     "f();"
     "function f(){"
-      "u='D'+n.value;"
       // change the url used on this page to download data,
-      // so that the user doesn't accidently /D huge datasets:
-      "d.links[d.links.length-1].href=u;"
-      // 
-      "fetch(u).then(response=>response.text()).then(c=>{"
+      // so that the user doesn't accidently use /D to load huge datasets,
+      // and make sure to avoid the use of /D0[...] = logfile deletion:
+      "fetch(d.links[d.links.length-1].href='D'+(+n.value||1))"
+        ".then(response=>response.text()).then(c=>{"
         // abbreviate heading to save javascript code size:
         "t=c.replace(/.+/,'m;t;p;d;v;u')"
            // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
            ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');"
-        "u=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
-        "a.value=a.min=b.min=u[0];"           // first = smallest date
-        "b.value=a.max=b.max=u[u.length-1];"  // last = largest date
+        "l=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
+        "a.value=a.min=b.min=l[0];"           // first = smallest date
+        "b.value=a.max=b.max=l[l.length-1];"  // last = largest date
         // in large datasets, don't show older data by default:
-        "if(u.length>9999)a.value=u[u.length-9999];"
+        "if(l.length>9999)a.value=l[l.length-9999];"
         "g();"
       "});"
     "}"
