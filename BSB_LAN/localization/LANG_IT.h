@@ -2420,7 +2420,7 @@
 #define ENUM8390_18_TEXT "24"
 #define ENUM8749_00_TEXT "Non è necessario"
 #define ENUM15000_00_TEXT "Automatica"
-#define ENUM15000_02_TEXT ENUM780_00_TEXT
+#define ENUM15000_02_TEXT MENU_TEXT_OFF
 #define ENUM15044_00_02_TEXT "Modalità automatica: disattivata"
 #define ENUM15044_02_02_TEXT "Modalità automatica: attiva"
 #define ENUM15044_00_08_TEXT "Pompa accesa"
