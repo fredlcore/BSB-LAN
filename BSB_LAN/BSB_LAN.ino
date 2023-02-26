@@ -7029,7 +7029,7 @@ void loop() {
 #endif
 
   if (millis() - maintenance_timer > 60000) {
-    printlnToDebug(PSTR("Ping!"));
+    printFmtToDebug(PSTR("%lu Ping!\r\n"), millis());
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
