@@ -205,6 +205,7 @@ float ipwe_parameters[40] = {
 // - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
 // - saves over 4 KB in compiled BSB-LAN sketch
 #define USE_ADVANCED_PLOT_LOG_FILE
+#define DEFAULT_DAYS_TO_PLOT "1" // must be positive integer value in double quotes!
 
 // Compile CUNO/CUNX/modified MAX!Cube extension.
 #define MAX_CUL
