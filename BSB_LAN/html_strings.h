@@ -91,6 +91,9 @@ const char favicon[] PROGMEM_LATE = {
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
+  #ifndef DEFAULT_DAYS_TO_PLOT  // BSB_LAN_config.h not adapted to new *_default.h?
+  #define DEFAULT_DAYS_TO_PLOT "1"
+  #endif
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
@@ -100,7 +103,7 @@ const char graph_html[] PROGMEM_LATE =
   "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
   // to not transfer huge datalog.txt contents w/o need,
   // we (let the user) limit data to the most recent calendar days:
-  "&le;<input type='number' min='1' value='1' onchange='f()'>d,&nbsp;" // n
+  "&le;<input type='number' min='1' value='" DEFAULT_DAYS_TO_PLOT "' onchange='f()'>d,&nbsp;" // n
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b:
