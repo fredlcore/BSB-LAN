@@ -100,13 +100,13 @@ const char graph_html[] PROGMEM_LATE =
   "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
   // to not transfer huge datalog.txt contents w/o need,
   // we (let the user) limit data to the most recent calendar days:
-  "&le;<input type='number' id='n' min='1' value='1' onchange='f()'>d,&nbsp;"
+  "&le;<input type='number' min='1' value='1' onchange='f()'>d,&nbsp;" // n
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b:
-  "<input type='date' id='a' onchange='g()'>"
-  "&nbsp;<output id='i'></output>&nbsp;"
-  "<input type='date' id='b' onchange='g()'>"
+  "<input type='date' onchange='g()'>" // a
+  "&nbsp;<output></output>&nbsp;"      // i ('...')
+  "<input type='date' onchange='g()'>" // b
   "<div id='c3'></div>"
   "<style>"
     "svg,.c3-tooltip{font:10px sans-serif}"
@@ -120,27 +120,25 @@ const char graph_html[] PROGMEM_LATE =
   "<script src='https://d3js.org/d3.v4.min.js'></script>"
   "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
   "<script>"
-    "let l,t,d=document,"
-        "n=d.querySelector('#n'),"
-        "a=d.querySelector('#a'),"
-        "b=d.querySelector('#b'),"
-        "i=d.querySelector('#i');"
+    "let t,d=document,l=d.links,"
+        "[n,a,b]=d.querySelectorAll('input'),"
+        "i=d.querySelector('output');"
     "f();"
     "function f(){"
       // change the url used on this page to download data,
       // so that the user doesn't accidently use /D to load huge datasets,
       // and make sure to avoid the use of /D0[...] = logfile deletion:
-      "fetch(d.links[d.links.length-1].href='D'+(+n.value||1))"
+      "fetch(l[l.length-1].href='D'+(+n.value||1))"
         ".then(response=>response.text()).then(c=>{"
         // abbreviate heading to save javascript code size:
         "t=c.replace(/.+/,'m;t;p;d;v;u')"
            // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
            ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');"
-        "l=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
-        "a.value=a.min=b.min=l[0];"           // first = smallest date
-        "b.value=a.max=b.max=l[l.length-1];"  // last = largest date
+        "d=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
+        "a.value=a.min=b.min=d[0];"           // first = smallest date
+        "b.value=a.max=b.max=d[d.length-1];"  // last = largest date
         // in large datasets, don't show older data by default:
-        "if(l.length>9999)a.value=l[l.length-9999];"
+        "if(d.length>9999)a.value=d[d.length-9999];"
         "g();"
       "});"
     "}"
