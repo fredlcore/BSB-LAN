@@ -34,7 +34,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 
 **Gasregler:**  
 - [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler) und (aktuelle Generation) [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10212-lms-regler), Anschluss via BSB  
-- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler), Anschluss via PPS   
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler), Anschluss via LPB über OCI420 Plugin  
    
 **Öl-/Solar-/Zonenregler:**  
 - [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via BSB  
