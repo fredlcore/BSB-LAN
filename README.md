@@ -32,7 +32,7 @@ The following overview shows the most common used controllers of the different h
    
 **Gas-fired heating systems controllers:**  
 - [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10211-lmu-controllers) and [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10212-lms-controllers) (latest models), connection via BSB  
-- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10211-lmu-controllers), connection via PPS  
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10211-lmu-controllers), connection via LPB through OCI420 plugin.
    
 **Oil-fired heating systems controllers / solarthermic controllers / zone controllers:**  
 - [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10222-rvs-controllers), connection via BSB  
