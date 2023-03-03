@@ -6,6 +6,8 @@ BSB-LAN ist ein Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
 
+Wem das Projekt gefällt, der kann es über das GitHub Sponsor Programm unterstützen: [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/fredlcore) 
+
 ---
 
 ***Bausätze erhältlich!***  
@@ -32,7 +34,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 
 **Gasregler:**  
 - [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler) und (aktuelle Generation) [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10212-lms-regler), Anschluss via BSB  
-- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler), Anschluss via PPS   
+- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10211-lmu-regler), Anschluss via LPB über OCI420 Plugin  
    
 **Öl-/Solar-/Zonenregler:**  
 - [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via BSB  
