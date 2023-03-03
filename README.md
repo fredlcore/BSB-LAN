@@ -6,6 +6,8 @@ BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.gi
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
+If you like this project and want to support it, you can do so through the GitHub Sponsor program: [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/fredlcore) 
+
 ---
 
 ***Interface kits available!***  
