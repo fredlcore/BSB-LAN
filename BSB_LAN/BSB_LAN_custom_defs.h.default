@@ -8445,8 +8445,8 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 {0x053D1361,  VT_ENUM,          2501,  STR2501,  sizeof(ENUM2501),     ENUM2501,     FL_OEM,       DEV_ALL}, // Durchflussmessung
 {0x053D0FEA,  VT_ONOFF,         2502,  STR2500,  sizeof(ENUM2502),     ENUM2502,     DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Durchfl'schalter Abschaltung
 {0x053D1B92,  VT_SECONDS_SHORT2,2503,  STR2503,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Wartezeit Schalter
-{0x053D1AE1,  VT_LITERPERMIN,   2505,  STR2505,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
 {0x053D0FE8,  VT_SECONDS_SHORT5,2504,  STR2504,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Min Einschaltzeit Schalter
+{0x053D1AE1,  VT_LITERPERMIN,   2505,  STR2505,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schwelle Durchflussdetektion
 {0x053D1ADE,  VT_LPM_SHORT,     2509,  STR2509,  0,                    NULL,         FL_OEM,       DEV_ALL}, // Schaltdiff Durchfl'det Zus'br
 {0x0D3D1121,  VT_TEMP,          2510,  STR2510,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschaltung Temp'grad (Bug in Baxi Luna: 0.8 shown twice)
 {0x0D3D1122,  VT_SECONDS_SHORT, 2511,  STR2511,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Baxi Luna Platinum+ Schnellabschalt Überw'zeit
