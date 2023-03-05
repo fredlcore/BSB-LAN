@@ -158,6 +158,7 @@ void webPrintSite() {
         int index = 0;
         do {
           c = httpclient.read();
+          if (index >= 14) continue;  // don't write beyond version_number[]!
           version_number[index] = c;
           index++;
         } while (c != '\"');
