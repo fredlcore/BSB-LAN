@@ -132,7 +132,6 @@
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3
 #undef MENU_TEXT_ER4
-#undef MENU_TEXT_ER8
 #undef MENU_TEXT_ER5
 #undef MENU_TEXT_ER6
 #undef MENU_TEXT_ER7
@@ -152,7 +151,6 @@
 #undef MENU_TEXT_DHP
 #undef MENU_TEXT_EXP
 #undef MENU_TEXT_MAC
-#undef MENU_TEXT_LIR
 #undef MENU_TEXT_LGP
 #undef MENU_TEXT_SEC
 #undef MENU_TEXT_BZ1
@@ -176,7 +174,6 @@
 #undef MENU_TEXT_LGI
 #undef MENU_TEXT_LGN
 #undef MENU_TEXT_NOQ
-#undef MENU_TEXT_QNC
 #undef MENU_TEXT_QIN
 #undef MENU_TEXT_QDL
 #undef MENU_TEXT_QSC
@@ -196,7 +193,6 @@
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
 #undef MENU_TEXT_NVW
-#undef MENU_TEXT_SDF
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
@@ -2284,7 +2280,6 @@
 #undef ENUM700_01_TEXT
 #undef ENUM700_03_TEXT
 #undef ENUM701_00_TEXT
-#undef ENUM701_01_TEXT
 #undef ENUM701_02_TEXT
 #undef ENUM702_00_TEXT
 #undef ENUM702_01_TEXT

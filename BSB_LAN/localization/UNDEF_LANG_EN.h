@@ -83,7 +83,6 @@
 #undef MENU_TEXT_ON
 #undef MENU_TEXT_OFF
 #undef MENU_TEXT_NOQ
-#undef MENU_TEXT_QNC
 #undef MENU_TEXT_QIN
 #undef MENU_TEXT_QSC
 #undef MENU_TEXT_QFD
@@ -98,7 +97,6 @@
 #undef MENU_TEXT_NVA
 #undef MENU_TEXT_NVN
 #undef MENU_TEXT_NVW
-#undef MENU_TEXT_SDF
 #undef MENU_LINK_TOC
 #undef MENU_LINK_FAQ
 #undef MENU_LINK_URL
@@ -116,7 +114,6 @@
 #undef MENU_TEXT_ER3
 #undef MENU_TEXT_ER4
 #undef MENU_TEXT_ER5
-#undef MENU_TEXT_ER8
 #undef MENU_TEXT_ER6
 #undef MENU_TEXT_ER7
 #undef MENU_TEXT_BST
@@ -135,7 +132,6 @@
 #undef MENU_TEXT_DHP
 #undef MENU_TEXT_EXP
 #undef MENU_TEXT_MAC
-#undef MENU_TEXT_LIR
 #undef MENU_TEXT_LGP
 #undef MENU_TEXT_SEC
 #undef MENU_TEXT_BZ1
