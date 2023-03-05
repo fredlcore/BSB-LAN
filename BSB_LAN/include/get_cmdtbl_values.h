@@ -25,7 +25,7 @@ float get_next_prognr(float currentProgNR, int startFromTableLine){
 //  printFmtToDebug(PSTR("prognr: %.1f, startindex: %d\r\n"), prognr, startFromTableLine);
   do{
     startFromTableLine++;
-    if(cmdtblsize == startFromTableLine) {
+    if(cmdtblsize <= startFromTableLine) {
 //      printFmtToDebug(PSTR("nextprognr: -1\r\n"));
       return -1;
     }
