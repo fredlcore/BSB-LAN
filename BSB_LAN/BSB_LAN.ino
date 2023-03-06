@@ -6212,12 +6212,15 @@ void loop() {
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
-// -cr: the following two lines look redundant to me:
-            } else if (p[2]=='D') { //datalog
-              dataFile = SD.open(datalogFileName);
+              // if the file is available, read from it:
+              if (dataFile) {
+                unsigned long startdump = millis();
+                transmitFile(dataFile);
+                dataFile.close();
+                printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
+              } else printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
             } else { //datalog
               dataFile = SD.open(datalogFileName);
-            }
             // if the file is available, read from it:
             if (dataFile) {
 
@@ -6276,6 +6279,7 @@ void loop() {
               printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
             } else {
               printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+            }
             }
           }
           flushToWebClient();
