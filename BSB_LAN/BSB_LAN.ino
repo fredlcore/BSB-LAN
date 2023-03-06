@@ -71,6 +71,7 @@
  *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
  *        - New data type VT_BINARY_ENUM
+ *        - This release has been supported by the following GitHub Sponsors: Alex, DE-cr
  *       version 2.2
  *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
  *        - Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)
@@ -1254,7 +1255,9 @@ int findLine(float line
   int save_i = 0;
   uint32_t c, save_c = 0;
   float l;
-//  printFmtToDebug(PSTR("line = %.1f\r\n"), line);
+#ifdef DEVELOPER_DEBUG
+  printFmtToDebug(PSTR("line = %.1f\r\n"), line);
+#endif
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
   if (line >= BSP_INTERNAL && line < BSP_END) {
@@ -1327,12 +1330,16 @@ int findLine(float line
   int line_dd = roundf(line * 10);
   while (!(left >= right))
     {
-//    printFmtToDebug(PSTR("get_cmdtbl_line: left = %f, line = %f\r\n"), get_cmdtbl_line(left), line);
+#ifdef DEVELOPER_DEBUG
+    printFmtToDebug(PSTR("get_cmdtbl_line: left = %f, line = %f\r\n"), get_cmdtbl_line(left), line);
+#endif
     if (roundf(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
     mid = left + (right - left) / 2;
     int temp_dd = roundf(get_cmdtbl_line(mid) * 10);
-//    printFmtToDebug(PSTR("get_cmdtbl_line integer: temp = %d, line = %d\r\n"), temp_dd, line_dd);
-//    printFmtToDebug(PSTR("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
+#ifdef DEVELOPER_DEBUG
+    printFmtToDebug(PSTR("get_cmdtbl_line integer: temp = %d, line = %d\r\n"), temp_dd, line_dd);
+    printFmtToDebug(PSTR("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
+#endif
     if (temp_dd == line_dd) {
       if (mid == left + 1) {
             i = mid; break;
@@ -1344,9 +1351,13 @@ int findLine(float line
     } else {
       left = mid + 1;
     }
-//    printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
+#ifdef DEVELOPER_DEBUG
+    printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
+#endif
   }
-//  printFmtToDebug(PSTR("i = %d\r\n"), i);
+#ifdef DEVELOPER_DEBUG
+  printFmtToDebug(PSTR("i = %d\r\n"), i);
+#endif
   if (i == -1) return i;
 
   l = get_cmdtbl_line(i);
@@ -1355,7 +1366,9 @@ int findLine(float line
     uint8_t dev_fam = get_cmdtbl_dev_fam(i);
     uint8_t dev_var = get_cmdtbl_dev_var(i);
     uint8_t dev_flags = get_cmdtbl_flags(i);
-//    printFmtToDebug(PSTR("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n"), l, dev_fam, dev_var, dev_flags);
+#ifdef DEVELOPER_DEBUG
+    printFmtToDebug(PSTR("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n"), l, dev_fam, dev_var, dev_flags);
+#endif
 
     if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
       if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
@@ -2125,11 +2138,7 @@ void generateConfigPage(void) {
   #endif
 
   printToWebClient(PSTR("<BR><BR>\r\n"));
-/*
-  client.println(F("IP address: "));
-  client.println(ip);
-  client.println(F("<BR>"));
-*/
+
 // list of enabled modules
   printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
 
@@ -2475,7 +2484,9 @@ bool SaveConfigFromRAMtoEEPROM() {
   //save new values from RAM to EEPROM
   for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
     if (writeToEEPROM(i)) {
-      //printFmtToDebug(PSTR("Option %d updated. EEPROM address: %04d\n"), i, getEEPROMaddress(i));
+#ifdef DEVELOPER_DEBUG
+      printFmtToDebug(PSTR("Option %d updated. EEPROM address: %04d\n"), i, getEEPROMaddress(i));
+#endif
       switch (i) {
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
@@ -3286,7 +3297,9 @@ int set(int line      // the ProgNr of the heater parameter
       #else
         setTime(hour(), minute(), second(), dow, 1, 2018);
       #endif
-//        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
+#ifdef DEVELOPER_DEBUG
+        printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
+#endif
         pps_wday_set = true;
         break;
       }
@@ -3296,7 +3309,9 @@ int set(int line      // the ProgNr of the heater parameter
         strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
         sscanf(val, sscanf_buf, &hour, &minute, &second);
         setTime(hour, minute, second, weekday(), 1, 2018);
-//        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+#ifdef DEVELOPER_DEBUG
+        printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+#endif
         pps_time_set = true;
         break;
       }
@@ -5455,7 +5470,7 @@ void loop() {
             printFmtToWebClient(PSTR(MENU_TEXT_QRT " %hu..."), found_ids[x]);
             flushToWebClient();
 
-            uint32_t c=0; 
+            uint32_t c=0;
             float l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
@@ -6998,11 +7013,15 @@ void loop() {
 
   while (max_cul->available() && EEPROM_ready) {
     c = max_cul->read();
-//    printFmtToDebug(PSTR("%c"), c);
+#ifdef DEVELOPER_DEBUG
+    printFmtToDebug(PSTR("%c"), c);
+#endif
     if ((c!='\n') && (c!='\r') && (max_str_index<60)) {
       outBuf[max_str_index++]=c;
     } else {
-//      writelnToDebug();
+#ifdef DEVELOPER_DEBUG
+      writelnToDebug();
+#endif
       break;
     }
   }
@@ -7086,7 +7105,9 @@ void loop() {
         strncpy(max_hex_str, outBuf+temp_str_offset, str_len);
         max_hex_str[str_len]='\0';
         max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-//        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
+#ifdef DEVELOPER_DEBUG
+        printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
+#endif
         if (max_msg_type == 0x42) {
           max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
           max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -7161,7 +7182,6 @@ void loop() {
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
-//  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
   printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
   // print your WiFi shield's IP address
   IPAddress t = WiFi.localIP();
@@ -7342,7 +7362,9 @@ void setup() {
     if (crc == initConfigTable(EEPROMversion)) {
   //read parameters
       for (uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
-//        SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
+#ifdef DEVELOPER_DEBUG
+        SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
+#endif
   //read parameter if it version is non-zero
         if (config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
       }
@@ -7376,7 +7398,9 @@ void setup() {
         //do not write here MAX! settings
         if (i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) {
           writeToEEPROM(i);
-//          SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
+  #ifdef DEVELOPER_DEBUG
+          SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
+  #endif
         }
       }
     }
