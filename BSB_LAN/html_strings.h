@@ -62,9 +62,6 @@ const char favicon[] PROGMEM_LATE = {
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
-  #ifndef DEFAULT_DAYS_TO_PLOT  // BSB_LAN_config.h not adapted to new *_default.h?
-  #define DEFAULT_DAYS_TO_PLOT "1"
-  #endif
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
@@ -72,15 +69,12 @@ const char graph_html[] PROGMEM_LATE =
   // [...]
   "</td></tr></tbody></table>" // close table opened by surrounding html to escape its width limitation
   "<style>input{width:auto;text-align:right}</style>" // the preceding html has set width=100% :/
-  // to not transfer huge datalog.txt contents w/o need,
-  // we (let the user) limit data to the most recent calendar days:
-  "&le;<input type='number' min='1' value='" DEFAULT_DAYS_TO_PLOT "' onchange='f()'>d,&nbsp;" // n
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
-  // for d3+c3 by using a date range a...b:
-  "<input type='date' onchange='g()'>" // a
+  // for d3+c3 by using a date range a...b (default: most recent day only):
+  "<input type='date' onchange='f()'>" // a
   "&nbsp;<output></output>&nbsp;"      // i ('...')
-  "<input type='date' onchange='g()'>" // b
+  "<input type='date' onchange='f()'>" // b
   "<div id='c3'></div>"
   "<style>"
     "svg,.c3-tooltip{font:10px sans-serif}"
@@ -94,29 +88,34 @@ const char graph_html[] PROGMEM_LATE =
   "<script src='https://d3js.org/d3.v4.min.js'></script>"
   "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
   "<script>"
-    "let t,d=document,l=d.links,"
-        "[n,a,b]=d.querySelectorAll('input'),"
+    "let al='x',bl,"  // al..bl = data range a..b loaded (i.e. already in RAM)
+        "t,h,d=document,l=d.links,"  // t=datalog text contents, h=href for /D
+        "[a,b]=d.querySelectorAll('input'),"
         "i=d.querySelector('output');"
-    "f();"
+    // get min/max date available in datalog:
+    "fetch('DA').then(r=>r.text()).then(c=>{"
+      "a.min=b.min=c;"
+      "fetch('DB').then(r=>r.text()).then(c=>{"
+        "a.max=b.max=a.value=b.value=c;"
+        "f()" // ...and do initial plot
+      "})"
+    "});"  
     "function f(){"
-      // change the url used on this page to download data,
-      // so that the user doesn't accidently use /D to load huge datasets,
-      // and make sure to avoid the use of /D0[...] = logfile deletion:
-      "fetch(l[l.length-1].href='D'+(+n.value||1))"
-        ".then(response=>response.text()).then(c=>{"
-        // abbreviate heading to save javascript code size:
-        "t=c.replace(/.+/,'m;t;p;d;v;u')"
-           // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
-           ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');"
-        "d=t.match(/\\d{4}-\\d\\d-\\d\\d/g);" // get all dates in data
-        "a.value=a.min=b.min=d[0];"           // first = smallest date
-        "b.value=a.max=b.max=d[d.length-1];"  // last = largest date
-        // in large datasets, don't show older data by default:
-        "if(d.length>9999)a.value=d[d.length-9999];"
-        "g();"
-      "});"
+      // also change the url used on this page to download data,
+      // so that the user doesn't accidently use /D to load huge datasets:
+      "h=l[l.length-1].href='D'+a.value+','+b.value;"
+      "if(a.value<al||b.value>bl)" // only load from server if not already in memory
+        "fetch(h).then(r=>r.text()).then(c=>{"
+          // abbreviate heading to save javascript code size:
+          "t=c.replace(/.+/,'m;t;p;d;v;u')"
+             // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
+             ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');"
+          "al=a.value;"
+          "bl=b.value"
+        "}).then(()=>g());"
+      "else g()"
     "}"
-    "function g(){"
+    "function g(){"  
       // use '!' next to a/b date input fields to signal when there's more:
       "i.textContent=(a.value==a.min?'':'!')+' ... '+"
                     "(b.value==b.max?'':'!');"
@@ -132,7 +131,7 @@ const char graph_html[] PROGMEM_LATE =
           "if(i.u)k+=' ['+i.u+']';"
           "p[k]=1;"
           "r[k]=i.v;"
-          "r['t']=x?x:i.t;"
+          "r['t']=x?x:i.t"
         "}"
       "});"
       "o.push(r);"
@@ -150,7 +149,7 @@ const char graph_html[] PROGMEM_LATE =
         "zoom:{enabled:true},"
         "size:{height:window.innerHeight-20},"
         "onresize:function(){c.resize({height:window.innerHeight-20})}"
-      "});"
+      "})"
     "}"
   "</script>"
   "<table><tbody><tr><td>" // re-open table for surrounding html
