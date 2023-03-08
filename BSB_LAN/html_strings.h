@@ -101,6 +101,7 @@ const char graph_html[] PROGMEM_LATE =
       "})"
     "});"  
     "function f(){"
+      "i.textContent='(busy)';"
       // also change the url used on this page to download data,
       // so that the user doesn't accidently use /D to load huge datasets:
       "h=l[l.length-1].href='D'+a.value+','+b.value;"
