@@ -4551,28 +4551,23 @@ uint16_t setPPS(uint8_t pps_index, int16_t value) {
  * *************************************************************** */
 void transmitFile(File dataFile) {
   int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
+  byte *buf = (byte*)malloc(4<<10);  // try to use 4 KB buffer, for improved transfer rates
+  if (buf) logbuflen=4<<10; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
   flushToWebClient();
-#if !defined(ESP32)
-  int chars_read = dataFile.read(bigBuff , logbuflen);
-#else
-  int chars_read = dataFile.readBytes(bigBuff , logbuflen);
-#endif
+  int chars_read = dataFile.read(buf, logbuflen);
   if (chars_read < 0) {
    printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
    forcedflushToWebClient();
   }
   while (chars_read == logbuflen) {
-    client.write(bigBuff, logbuflen);
-#if !defined(ESP32)
-    chars_read = dataFile.read(bigBuff , logbuflen);
-#else
-    chars_read = dataFile.readBytes(bigBuff , logbuflen);
-#endif
+    client.write(buf, logbuflen);
+    chars_read = dataFile.read(buf, logbuflen);
 #if defined(ESP32)
     esp_task_wdt_reset();
 #endif
     }
-  if (chars_read > 0) client.write(bigBuff, chars_read);
+  if (chars_read > 0) client.write(buf, chars_read);
+  if (buf != (byte*)bigBuff) free(buf);
 }
 
 #endif
