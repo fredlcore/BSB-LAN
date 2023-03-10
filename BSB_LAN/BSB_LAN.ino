@@ -6285,15 +6285,18 @@ void loop() {
                         unsigned long nBytesToDo = datalogToPosition - datalogFromPosition;
                         // the following re-uses code fragments from transmitFile():
                         int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
+                        byte *buf = (byte*)malloc(4<<10);  // try to use 4 KB buffer, for improved transfer rates
+                        if (buf) logbuflen=4<<10; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
                         while (nBytesToDo) {
-                          int n = dataFile.read((byte*)bigBuff, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
+                          int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
                           if (n <= 0) break;  // we're failing silently here!
-                          client.write(bigBuff, n);
+                          client.write(buf, n);
 #ifdef ESP32
                           esp_task_wdt_reset();
 #endif
                           nBytesToDo -= n;
                         }//while (nBytesToDo)
+                        if (buf != (byte*)bigBuff) free(buf);
                       }//if (datalogFromPosition)
                     }//if (n==6)
                     else { // most recent days requested
