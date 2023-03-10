@@ -6256,7 +6256,7 @@ void loop() {
                 n = sscanf(p+2, "%d-%d-%d,%d-%d-%d", &ay,&am,&ad, &by,&bm,&bd);
                 if (n<1 || ay<1) transmitFile(dataFile);  // no or zero limit?
                 else { // limited datalog requested
-                  // transfer header:
+                  // transfer header (no error message in case of read() error => handled in subsequent reading of the actual data, anyway):
                   for (int c=dataFile.read(); c!=-1; c=dataFile.read()) {
                     client.write((byte)c);
                     if (c=='\n') break;
@@ -6289,7 +6289,11 @@ void loop() {
                         if (buf) logbuflen=4<<10; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
                         while (nBytesToDo) {
                           int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
-                          if (n <= 0) break;  // we're failing silently here!
+                          if (n < 0) {
+                            printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+                            forcedflushToWebClient();
+                          }
+                          if (n <= 0) break;
                           client.write(buf, n);
 #ifdef ESP32
                           esp_task_wdt_reset();
