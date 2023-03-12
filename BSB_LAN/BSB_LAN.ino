@@ -6224,7 +6224,7 @@ void loop() {
 #endif
             webPrintFooter();
 #endif
-          } else {  // dump datalog or journal file, or print min/max date in datalog
+          } else {  // dump datalog or journal or datalog index file, or print min/max date in datalog
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
@@ -6244,22 +6244,6 @@ void loop() {
               printToWebClient(date);
             } else if (p[2]=='B') { // datalog max date, for the javascript code in /DG to access
               printFmtToWebClient("%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
-#if 0 // set to 1 for testing
-            } else if (p[2]=='T') { // DT = testing
-              // please note: requires at least 4 KB in datalog.txt, transmits no useful data!
-              if (dataFile = SD.open(datalogFileName)) {
-                int bufsize = 4<<10; // 4 KB
-                byte *buf = (byte*)malloc(bufsize);
-                for (int i=0; i<1<<8; ++i) { // 256 * 4 KB == 1 MB
-                  dataFile.seek(0);
-                  dataFile.read(buf,bufsize);
-                  client.write(buf,bufsize);
-                  esp_task_wdt_reset();
-                }
-                free(buf);
-                dataFile.close();
-              }
-#endif
 #define URL_COMMAND_DI // mostly for debugging, but could also be interesting to some users
 #ifdef URL_COMMAND_DI
             } else if (p[2]=='I') { // datalog index
