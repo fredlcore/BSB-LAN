@@ -6246,6 +6246,7 @@ void loop() {
               printFmtToWebClient("%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
 #if 0 // set to 1 for testing
             } else if (p[2]=='T') { // DT = testing
+              // please note: requires at least 4 KB in datalog.txt, transmits no useful data!
               if (dataFile = SD.open(datalogFileName)) {
                 int bufsize = 4<<10; // 4 KB
                 byte *buf = (byte*)malloc(bufsize);
