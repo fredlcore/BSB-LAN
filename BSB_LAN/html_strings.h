@@ -62,6 +62,9 @@ const char favicon[] PROGMEM_LATE = {
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
+#ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
+#define DEFAULT_DAYS_TO_PLOT "1"
+#endif
 #define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
@@ -76,6 +79,7 @@ const char graph_html[] PROGMEM_LATE =
   "<input type='date' onchange='f()'>" NEWLINE // a
   "&nbsp;<output></output>&nbsp;" NEWLINE      // i ('...')
   "<input type='date' onchange='f()'>" NEWLINE // b
+  " <a href=''>" MENU_TEXT_DDO "</a>" NEWLINE // link to download displayed data (set in code below)
   "<div id='c3'></div>" NEWLINE
   "<style>" NEWLINE
     "svg,.c3-tooltip{font:10px sans-serif}" NEWLINE
@@ -91,18 +95,27 @@ const char graph_html[] PROGMEM_LATE =
   "<script>" NEWLINE
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
         "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /D
+        "w=" DEFAULT_DAYS_TO_PLOT "," NEWLINE
         "[a,b]=d.querySelectorAll('input')," NEWLINE
         "i=d.querySelector('output');" NEWLINE
     // get min/max date available in datalog:
     "fetch('DA').then(r=>r.text()).then(c=>{" NEWLINE
       "a.min=b.min=c;" NEWLINE
       "fetch('DB').then(r=>r.text()).then(c=>{" NEWLINE
-        "a.max=b.max=a.value=b.value=c;" NEWLINE
+        "a.value=a.max=b.max=c;" NEWLINE
+        "b.value=(new Date(Date.now())).toISOString().substring(0,10);" NEWLINE // today
+        "if(w){" NEWLINE // set to default days to plot?
+          "a.value=(new Date((new Date(b.value))" NEWLINE
+                             // subtract w-1 days (there's 86400000==24*60*60*1000 ms in a day):
+                             "- --w*86400000" NEWLINE // minus on Date converts to epoch!
+                           ")).toISOString().substring(0,10);" NEWLINE // get date part of new date
+          "w=0" NEWLINE // we only want to do this once, initially
+        "};" NEWLINE
         "f()" NEWLINE // ...and do initial plot
       "})" NEWLINE
     "});" NEWLINE  
     "function f(){" NEWLINE
-      "i.textContent='(busy)';" NEWLINE
+      "i.textContent='" MENU_TEXT_DLD "';" NEWLINE
       // also change the url used on this page to download data,
       // so that the user doesn't accidently use /D to load huge datasets:
       "h=l[l.length-1].href='D'+a.value+','+b.value;" NEWLINE
@@ -119,7 +132,7 @@ const char graph_html[] PROGMEM_LATE =
     "}" NEWLINE
     "function g(){" NEWLINE  
       // use '!' next to a/b date input fields to signal when there's more:
-      "i.textContent=(a.value==a.min?'':'!')+' ... '+" NEWLINE
+      "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
                     "(b.value==b.max?'':'!');" NEWLINE
       // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
       "let p=[],r=[],o=[],x=y=0;" NEWLINE

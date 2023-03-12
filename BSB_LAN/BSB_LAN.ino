@@ -6243,9 +6243,36 @@ void loop() {
               sprintf(date, "%04d-%02d-%02d", firstDatalogDate.elements.year, firstDatalogDate.elements.month, firstDatalogDate.elements.day);
               printToWebClient(date);
             } else if (p[2]=='B') { // datalog max date, for the javascript code in /DG to access
-              char date[11];
-              sprintf(date, "%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
-              printToWebClient(date);
+              printFmtToWebClient("%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
+#if 0 // set to 1 for testing
+            } else if (p[2]=='T') { // DT = testing
+              if (dataFile = SD.open(datalogFileName)) {
+                int bufsize = 4<<10; // 4 KB
+                byte *buf = (byte*)malloc(bufsize);
+                for (int i=0; i<1<<8; ++i) { // 256 * 4 KB == 1 MB
+                  dataFile.seek(0);
+                  dataFile.read(buf,bufsize);
+                  client.write(buf,bufsize);
+                  esp_task_wdt_reset();
+                }
+                free(buf);
+                dataFile.close();
+              }
+#endif
+#define URL_COMMAND_DI // mostly for debugging, but could also be interesting to some users
+#ifdef URL_COMMAND_DI
+            } else if (p[2]=='I') { // datalog index
+              File indexFile = SD.open(datalogIndexFileName);
+              if (indexFile) {
+                compactDate_t date;
+                unsigned long pos;
+                printToWebClient("Date;DatalogPosition\r\n");
+                while (indexFile.read((byte*)&date,sizeof(date)) > 0 &&
+                       indexFile.read((byte*)&pos ,sizeof(pos )) > 0)
+                  printFmtToWebClient("%04d-%02d-%02d;%lu\r\n", date.elements.year, date.elements.month, date.elements.day, pos);
+                indexFile.close();
+              }//if (indexFile)
+#endif
             } else { //datalog
               dataFile = SD.open(datalogFileName);
               // if the file is available, read from it:
@@ -6257,27 +6284,36 @@ void loop() {
                 if (n<1 || ay<1) transmitFile(dataFile);  // no or zero limit?
                 else { // limited datalog requested
                   // transfer header (no error message in case of read() error => handled in subsequent reading of the actual data, anyway):
-                  for (int c=dataFile.read(); c!=-1; c=dataFile.read()) {
-                    client.write((byte)c);
-                    if (c=='\n') break;
-                  }
+                  char *p = bigBuff;
+                  for (int c=dataFile.read(); c!=-1; c=dataFile.read())
+                    if ((*p++ = c) == '\n') break;
+                  *p = '\0';
+                  client.write((byte*)bigBuff,strlen(bigBuff));
                   File indexFile = SD.open(datalogIndexFileName);
                   if (!indexFile) transmitFile(dataFile);  // no index??
                   else {
                     unsigned long datalogTargetPosition;
                     if (n==6) { // date range requested
-                      compactDate_t a, b, date;
+                      compactDate_t a, b, date, prevDate;
                       a.elements.year = ay;
                       a.elements.month = am;
                       a.elements.day = ad;
                       b.elements.year = by;
                       b.elements.month = bm;
                       b.elements.day = bd;
+                      prevDate.combined = 0;
                       unsigned long datalogFromPosition=0, datalogToPosition=0;
-                      while (indexFile.read((byte*)&date,sizeof(date)) > 0 &&
-                             indexFile.read((byte*)&datalogTargetPosition,sizeof(datalogTargetPosition)) > 0) {
-                        if (date.combined >= a.combined && !datalogFromPosition) datalogFromPosition = datalogTargetPosition;
-                        if (date.combined >  b.combined) { datalogToPosition = datalogTargetPosition; break; }
+                      // read index file backwards (why? => https://github.com/fredlcore/BSB-LAN/issues/539#issuecomment-1464885147):
+                      for (unsigned long pos=indexFile.size(); pos>=datalogIndexEntrySize; pos-=datalogIndexEntrySize) {
+                        indexFile.seek(pos-datalogIndexEntrySize);
+                        if (indexFile.read((byte*)&date,sizeof(date)) <= 0 ||
+                            indexFile.read((byte*)&datalogTargetPosition,sizeof(datalogTargetPosition)) <= 0)
+                          break; // nothing could be read!
+                        if (prevDate.combined && prevDate.combined < date.combined) break; // dates running backwards?
+                        if (date.combined >  b.combined) datalogToPosition = datalogTargetPosition;
+                        if (date.combined >= a.combined) datalogFromPosition = datalogTargetPosition;
+                        else break; // we're already before date a in the index
+                        prevDate = date;
                       }
                       if (datalogFromPosition) {
                         dataFile.seek(datalogFromPosition);
@@ -6858,6 +6894,7 @@ void loop() {
                 indexFile.close();
                 if (!firstDatalogDate.combined) firstDatalogDate.combined = currentDate.combined;
               }
+              else printFmtToDebug(PSTR("Error opening %s for writing!\r\n"), datalogIndexFileName);
             }
             dataFile.print(outBuf);
           }
