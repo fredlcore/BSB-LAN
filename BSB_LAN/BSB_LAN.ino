@@ -706,7 +706,8 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
       // Minimum free space in bytes
       #include <SPIFFS.h>
       #define SD SPIFFS
-      #define MINIMUM_FREE_SPACE_ON_SD 10000
+      // cannot reliably use more than 75 % of SPIFFS (standard size = 1.5 MB):
+      #define MINIMUM_FREE_SPACE_ON_SD (1024L * 1024 * 3/2 * 75/100)
     #endif  // ESP32_USE_SD
   #else     // !ESP32
     #define FILE_APPEND FILE_WRITE  // FILE_APPEND does not exist on Arduino, FILE_WRITE seems to do the same (create if not existing, start writing from EOF onwards)
