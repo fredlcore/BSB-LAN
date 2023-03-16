@@ -4669,8 +4669,7 @@ const char *cleanupDatalog(unsigned nDays) {
 #ifdef ESP32
     SD.totalBytes() - SD.usedBytes();
 #else
-    SD.vol()->freeClusterCount() * SD.vol()->blocksPerCluster() * 512;
-    spaceRequired *= 512; // for !=ESP32, MINIMUM_FREE_SPACE_ON_SD is blocks, not bytes!
+    SD.vol()->freeClusterCount() * SD.vol()->bytesPerCluster();
 #endif
   { // Files opened within this scope will be automatically closed upon leaving it
     File indexFile = SD.open(datalogIndexFileName);
