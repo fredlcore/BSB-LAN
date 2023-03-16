@@ -4684,7 +4684,7 @@ const char *cleanupDatalog(unsigned nDays) {
     File indexTmpFile = SD.open(datalogIndexTemporaryFileName, FILE_WRITE);
     if (!indexTmpFile) return PSTR("Cannot open temporary index");
     compactDate_t date;
-    unsigned long pos, dataStart=0, dataOffset=0, nDataBytes;
+    unsigned long pos, dataStart=0, dataOffset=0, nDataBytes=0;
     indexFile.seek(indexOffset);
     while (nDays--) {
       if (indexFile.read((byte*)&date,sizeof(date)) != sizeof(date) ||
