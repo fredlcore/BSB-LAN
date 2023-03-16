@@ -4723,7 +4723,7 @@ const char *cleanupDatalog(unsigned nDays) {
         if (i % 500 == 0) client.write('\r'), client.write('\n');
         client.flush();
       }
-      int nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
+      unsigned nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
       if (dataFile.read((byte*)bigBuff, nBytesToDo) != nBytesToDo)
         return PSTR("Error reading datalog");
       if (dataTmpFile.write((byte*)bigBuff, nBytesToDo) != nBytesToDo)
