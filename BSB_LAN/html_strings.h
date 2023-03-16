@@ -71,15 +71,15 @@ const char graph_html[] PROGMEM_LATE =
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
   // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
   // [...]
-  "</td></tr></tbody></table>" NEWLINE // close table opened by surrounding html to escape its width limitation
-  "<style>input{width:auto;text-align:right}</style>" NEWLINE // the preceding html has set width=100% :/
+  "<a href=''>" MENU_TEXT_DDO "</a> " NEWLINE // link to download displayed data (set in code below)
   // to alleviate d3+c3 performance issues when dealing with
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b (default: most recent day only):
   "<input type='date' onchange='f()'>" NEWLINE // a
   "&nbsp;<output></output>&nbsp;" NEWLINE      // i ('...')
   "<input type='date' onchange='f()'>" NEWLINE // b
-  " <a href=''>" MENU_TEXT_DDO "</a>" NEWLINE // link to download displayed data (set in code below)
+  "</td></tr></tbody></table>" NEWLINE // close table opened by surrounding html to escape its width limitation
+  "<style>input{width:auto;text-align:right}</style>" NEWLINE // the preceding html has set width=100% :/
   "<div id='c3'></div>" NEWLINE
   "<style>" NEWLINE
     "svg,.c3-tooltip{font:10px sans-serif}" NEWLINE
