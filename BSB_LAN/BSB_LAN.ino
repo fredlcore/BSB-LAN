@@ -4743,7 +4743,7 @@ void readFirstAndPreviousDatalogDateFromFile() {
   firstDatalogDate.combined = previousDatalogDate.combined = 0;
   File indexFile = SD.open(datalogIndexFileName, FILE_READ);
   if (indexFile) {
-    long indexFileSize = indexFile.size();
+    unsigned long indexFileSize = indexFile.size();
     if (indexFileSize >= datalogIndexEntrySize) {
       indexFile.read((byte*)&firstDatalogDate, sizeof(firstDatalogDate));
       indexFile.seek(indexFileSize - datalogIndexEntrySize);
