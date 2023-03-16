@@ -683,7 +683,7 @@ typedef union {
 #if BYTE_ORDER != LITTLE_ENDIAN  // we need this for direct .combined comparisons of two dates
 #error "Unexpected endian, please contact DE-cr on github"
 #endif
-#define datalogIndexEntrySize (sizeof(compactDate_t)+sizeof(long))
+#define datalogIndexEntrySize (sizeof(compactDate_t)+sizeof(uint32_t))
 compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTime() sets currentDate
 
 ComClient client;
