@@ -4724,7 +4724,7 @@ const char *cleanupDatalog(unsigned nDays) {
         client.flush();
       }
       unsigned nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
-      if (dataFile.read((byte*)bigBuff, nBytesToDo) != nBytesToDo)
+      if (dataFile.read((byte*)bigBuff, nBytesToDo) != (int)nBytesToDo)
         return PSTR("Error reading datalog");
       if (dataTmpFile.write((byte*)bigBuff, nBytesToDo) != nBytesToDo)
         return PSTR("Error writing datalog");
@@ -6394,7 +6394,7 @@ void loop() {
                         if (!datalogToPosition) datalogToPosition = dataFile.size();
                         unsigned long nBytesToDo = datalogToPosition - datalogFromPosition;
                         // the following re-uses code fragments from transmitFile():
-                        int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
+                        unsigned logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
                         byte *buf = (byte*)malloc(4<<10);  // try to use 4 KB buffer, for improved transfer rates
                         if (buf) logbuflen=4<<10; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
                         while (nBytesToDo) {
