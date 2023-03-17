@@ -4553,9 +4553,9 @@ void transmitFile(File dataFile) {
   int logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
   byte *buf = 0;
 #ifdef ESP32 // Arduino seems to have problems with the bigger, malloc'ed buffer
-  buf = (byte*)malloc(4<<10);  // try to use 4 KB buffer, for improved transfer rates
+  buf = (byte*)malloc(4096);  // try to use 4 KB buffer, for improved transfer rates
 #endif
-  if (buf) logbuflen=4<<10; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
+  if (buf) logbuflen=4096; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
   flushToWebClient();
   int chars_read = dataFile.read(buf, logbuflen);
   if (chars_read < 0) {
