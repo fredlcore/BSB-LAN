@@ -127,6 +127,9 @@ Does: log bus telegrams to file
       push selected values to an MQTT broker*/
 #define LOGGER
 
+// define the following to speed up the system (especially /D... url commands), at the expense of +20% power consumption
+//#define ESP32_SAVE_D_TIMES_NOT_POWER
+
 #define UDP_LOG_PORT 6502 // fixed here, not configurable via web interface
 
 // Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage

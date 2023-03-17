@@ -7134,8 +7134,9 @@ void setup() {
   SerialOutput->println(F("READY"));
 
 #if defined(ESP32)
-  if (0) // disable the following, because it seems to increase /D times by about 20 %
+#ifndef ESP32_SAVE_D_TIMES_NOT_POWER
   setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
+#endif
   #ifndef WDT_TIMEOUT
   //set watchdog timeout 120 seconds
     #define WDT_TIMEOUT 120
