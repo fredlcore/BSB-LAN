@@ -96,24 +96,20 @@ const char graph_html[] PROGMEM_LATE =
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
         "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /D
         "c,n,e='%Y-%m-%d %H:%M'," NEWLINE // c=C3 plot, n=now date, e=date format
-        "w=" DEFAULT_DAYS_TO_PLOT "," NEWLINE
         "[a,b]=d.querySelectorAll('input')," NEWLINE
         "i=d.querySelector('output');" NEWLINE
     // get min/max date available in datalog:
     "fetch('DA').then(r=>r.text()).then(c=>{" NEWLINE
       "a.min=b.min=c;" NEWLINE
       "fetch('DB').then(r=>r.text()).then(c=>{" NEWLINE
-        "a.value=a.max=b.max=c;" NEWLINE
+        "a.max=b.max=c;" NEWLINE
         "n=new Date();" NEWLINE // today
         "b.value=new Date(n.getTime()-60000*n.getTimezoneOffset())" NEWLINE // local date/time
                         ".toISOString().substring(0,10);" NEWLINE // extract date part
-        "if(w){" NEWLINE // set to default days to plot?
-          "a.value=(new Date((new Date(b.value))" NEWLINE
-                             // subtract w-1 days (there's 86400000==24*60*60*1000 ms in a day):
-                             "- --w*86400000" NEWLINE // minus on Date converts to epoch!
-                           ")).toISOString().substring(0,10);" NEWLINE // get date part of new date
-          "w=0" NEWLINE // we only want to do this once, initially
-        "};" NEWLINE
+        "a.value=new Date((new Date(b.value))" NEWLINE
+                          // subtract default-1 days (there's 86400000==24*60*60*1000 ms in a day):
+                          "-(" DEFAULT_DAYS_TO_PLOT "-1)*86400000)" NEWLINE // minus on Date converts to epoch!
+                        ".toISOString().substring(0,10);" NEWLINE // extract date part
         "f()" NEWLINE // ...and do initial plot
       "})" NEWLINE
     "});" NEWLINE  
