@@ -62,60 +62,114 @@ const char favicon[] PROGMEM_LATE = {
 #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
+#ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
+#define DEFAULT_DAYS_TO_PLOT "1"
+#endif
+#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
   // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
   // [...]
-  "</td></tr></tbody></table>" // close table opened by surrounding html to escape its width limitation
-  "<div id='c3'></div>"
-  "<style>"
-    "svg,.c3-tooltip{font:10px sans-serif}"
-    "div path,line{fill:none;stroke:#000}"
-    ".c3-focused{opacity:1;stroke-width:2px}"
-    ".c3-defocused,.c3-legend-item-hidden{opacity:0.2 !important}"
-    ".c3-tooltip{opacity:0.5;background-color:#eee}"
-    ".c3-tooltip th{background-color:#ccc}"
-    ".c3-tooltip .value{text-align:right}"
-  "</style>"
-  "<script src='https://d3js.org/d3.v4.min.js'></script>"
-  "<script src='https://cdn.jsdelivr.net/npm/c3'></script>"
-  "<script>"
-    "fetch('D').then(response=>response.text()).then(t=>{"
-      // abbreviate heading to save javascript code size:
-      "t=t.replace(/.+/,'m;t;p;d;v;u');"
-      // 'pivot' data (p=params, r=row, a=all, x=prevDate, y=prevMs):
-      "let p=[],r=[],a=[],x=y=0;"
-      "d3.dsvFormat(';').parse(t).forEach(function(i){"
-        // start new hh:mm if ms is at least 1000 greater than ...
-        // ... or smaller than (due to a device reset) its previous value:
-        "if(y&&(i.m-y>999||i.m-y<0)){a.push(r);r=[];x=i.t}"
-        "y=i.m;"
-        "let k=i.p+' - '+i.d;"
-        "if(i.u)k+=' ['+i.u+']';"
-        "p[k]=1;"
-        "r[k]=i.v;"
-        "r['t']=x?x:i.t;"
-      "});"
-      "a.push(r);"
+  "<a href=''>" MENU_TEXT_DDO "</a> " NEWLINE // link to download displayed data (set in code below)
+  // to alleviate d3+c3 performance issues when dealing with
+  // large datasets, we (allow to) filter those datasets
+  // for d3+c3 by using a date range a...b (default: most recent day only):
+  "<input type='date' onchange='f()'>" NEWLINE // a
+  "<output></output>" NEWLINE                  // i ('! - !')
+  "<input type='date' onchange='f()'>" NEWLINE // b
+  "</td></tr></tbody></table>" NEWLINE // close table opened by surrounding html to escape its width limitation
+  "<style>input{width:auto;text-align:right}</style>" NEWLINE // the preceding html has set width=100% :/
+  "<div id='c3'></div>" NEWLINE
+  "<style>" NEWLINE
+    "svg,.c3-tooltip{font:10px sans-serif}" NEWLINE
+    "div path,line{fill:none;stroke:#000}" NEWLINE
+    ".c3-focused{opacity:1;stroke-width:2px}" NEWLINE
+    ".c3-defocused,.c3-legend-item-hidden{opacity:0.2 !important}" NEWLINE
+    ".c3-tooltip{opacity:0.5;background-color:#eee}" NEWLINE
+    ".c3-tooltip th{background-color:#ccc}" NEWLINE
+    ".c3-tooltip .value{text-align:right}" NEWLINE
+  "</style>" NEWLINE
+  "<script src='https://d3js.org/d3.v4.min.js'></script>" NEWLINE
+  "<script src='https://cdn.jsdelivr.net/npm/c3'></script>" NEWLINE
+  "<script>" NEWLINE
+    "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
+        "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /D
+        "c,n,e='%Y-%m-%d %H:%M'," NEWLINE // c=C3 plot, n=now date, e=date format
+        "w=" DEFAULT_DAYS_TO_PLOT "," NEWLINE
+        "[a,b]=d.querySelectorAll('input')," NEWLINE
+        "i=d.querySelector('output');" NEWLINE
+    // get min/max date available in datalog:
+    "fetch('DA').then(r=>r.text()).then(c=>{" NEWLINE
+      "a.min=b.min=c;" NEWLINE
+      "fetch('DB').then(r=>r.text()).then(c=>{" NEWLINE
+        "a.value=a.max=b.max=c;" NEWLINE
+        "n=new Date();" NEWLINE // today
+        "b.value=new Date(n.getTime()-60000*n.getTimezoneOffset())" NEWLINE // local date/time
+                        ".toISOString().substring(0,10);" NEWLINE // extract date part
+        "if(w){" NEWLINE // set to default days to plot?
+          "a.value=(new Date((new Date(b.value))" NEWLINE
+                             // subtract w-1 days (there's 86400000==24*60*60*1000 ms in a day):
+                             "- --w*86400000" NEWLINE // minus on Date converts to epoch!
+                           ")).toISOString().substring(0,10);" NEWLINE // get date part of new date
+          "w=0" NEWLINE // we only want to do this once, initially
+        "};" NEWLINE
+        "f()" NEWLINE // ...and do initial plot
+      "})" NEWLINE
+    "});" NEWLINE  
+    "function f(){" NEWLINE
+      "i.textContent='" MENU_TEXT_DLD "';" NEWLINE
+      // also change the url used on this page to download data,
+      // so that the user doesn't accidently use /D to load huge datasets:
+      "h=l[l.length-1].href='D'+a.value+','+b.value;" NEWLINE
+      "if(a.value<al||b.value>bl)" NEWLINE // only load from server if not already in memory
+        "fetch(h).then(r=>r.text()).then(c=>{" NEWLINE
+          // abbreviate heading to save javascript code size:
+          "t=c.replace(/.+/,'m;t;p;d;v;u')" NEWLINE
+             // change date format for easy comparison: dd.mm.yyyy -> yyyy-mm-dd:
+             ".replace(/(\\d\\d)\\.(\\d\\d)\\.(\\d{4})/g,'$3-$2-$1');" NEWLINE
+          "al=a.value;" NEWLINE
+          "bl=b.value" NEWLINE
+        "}).then(()=>g());" NEWLINE
+      "else g()" NEWLINE
+    "}" NEWLINE
+    "function g(){" NEWLINE  
+      // use '!' next to a/b date input fields to signal when there's more:
+      "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
+                    "(b.value==b.max?'':'!');" NEWLINE
+      // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
+      "let p=[],r=[],o=[],x=y=0,k;" NEWLINE
+      "d3.dsvFormat(';').parse(t).forEach(function(i){" NEWLINE
+        "if(a.value<i.t&&i.t<b.value+'x'){" NEWLINE  // only when t=date is in a...b range
+          // start new hh:mm if ms is at least 1000 greater than ...
+          // ... or smaller than (due to a device reset) its previous value:
+          "if(y&&(i.m-y>999||i.m-y<0)){o.push(r);r=[];x=i.t}" NEWLINE
+          "y=i.m;" NEWLINE
+          "k=i.p+' - '+i.d;" NEWLINE
+          "if(i.u)k+=' ['+i.u+']';" NEWLINE
+          "p[k]=1;" NEWLINE
+          "r[k]=i.v;" NEWLINE
+          "r['t']=x?x:i.t" NEWLINE
+        "}" NEWLINE
+      "});" NEWLINE
+      "o.push(r);" NEWLINE
       // plot:
-      "let f='%d.%m.%Y %H:%M';"
-      "let c=c3.generate({"
-        "bindto:'#c3',"
-        "data:{"
-          "json:a,"
-          "keys:{x:'t',value:Object.keys(p)},"
-          "xFormat:f+':%S'"
-        "},"
-        "point:{show:false},"
-        "axis:{x:{type:'timeseries',tick:{count:3,format:f}}},"
-        "zoom:{enabled:true},"
-        "size:{height:window.innerHeight-20},"
-        "onresize:function(){c.resize({height:window.innerHeight-20})}"
-      "});"
-    "});"
-  "</script>"
-  "<table><tbody><tr><td>" // re-open table for surrounding html
+      "c=c3.generate({" NEWLINE
+        "bindto:'#c3'," NEWLINE
+        "data:{" NEWLINE
+          "json:o," NEWLINE
+          "keys:{x:'t',value:Object.keys(p)}," NEWLINE
+          "xFormat:e+':%S'" NEWLINE
+        "}," NEWLINE
+        "point:{show:false}," NEWLINE
+        "axis:{x:{type:'timeseries',tick:{count:3,format:e}}}," NEWLINE
+        "zoom:{enabled:true}," NEWLINE
+        "size:{height:window.innerHeight-20}," NEWLINE
+        "onresize:function(){c.resize({height:window.innerHeight-20})}" NEWLINE
+      "})" NEWLINE
+    "}" NEWLINE
+  "</script>" NEWLINE
+  "<table><tbody><tr><td>" NEWLINE // re-open table for surrounding html
   ;
 #else // #ifdef USE_ADVANCED_PLOT_LOG_FILE
 /*

@@ -72,6 +72,7 @@
  *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
  *        - New data type VT_BINARY_ENUM
+ *        - To improve handling of large datalogs: date range selection in /DG, new url commands /Da,b /DA /DB /Dn /DI /DKn
  *        - This release has been supported by the following GitHub Sponsors: Alex, DE-cr
  *       version 2.2
  *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
@@ -659,12 +660,32 @@ char DebugBuff[OUTBUF_LEN] = { 0 };
 #if defined(__SAM3X8E__)
 const char averagesFileName[] PROGMEM = "averages.txt";
 const char datalogFileName[] PROGMEM = "datalog.txt";
+const char datalogIndexFileName[] PROGMEM = "datalog.idx";
 const char journalFileName[] PROGMEM = "journal.txt";
+const char datalogTemporaryFileName[] PROGMEM = "datalog.tmp";
+const char datalogIndexTemporaryFileName[] PROGMEM = "dataidx.tmp";
 #elif defined(ESP32)
 const char averagesFileName[] PROGMEM = "/averages.txt";
 const char datalogFileName[] PROGMEM = "/datalog.txt";
+const char datalogIndexFileName[] PROGMEM = "/datalog.idx";
 const char journalFileName[] PROGMEM = "/journal.txt";
+const char datalogTemporaryFileName[] PROGMEM = "/datalog.tmp";
+const char datalogIndexTemporaryFileName[] PROGMEM = "/dataidx.tmp";
 #endif
+
+// datalogIndexFile (c.f. above) is a binary file,
+// in which a set of two values is logged whenever a new calendar date is reached:
+// the calendar day just reached (see typedef below), and the size of the actual datalogFile
+// just before that calendar day.
+typedef union {
+  struct { uint16_t year; uint8_t day, month; } elements;  // order is important here!
+  uint32_t combined;
+} compactDate_t;
+#if BYTE_ORDER != LITTLE_ENDIAN  // we need this for direct .combined comparisons of two dates
+#error "Unexpected endian, please contact DE-cr on github"
+#endif
+#define datalogIndexEntrySize (sizeof(compactDate_t)+sizeof(uint32_t))
+compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTime() sets currentDate
 
 ComClient client;
 #ifdef MQTT
@@ -3011,9 +3032,21 @@ char *GetDateTime(char *date) {
 #if defined(ESP32)
   struct tm now;
   getLocalTime(&now,100);
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),now.tm_mday,now.tm_mon + 1,now.tm_year + 1900,now.tm_hour,now.tm_min,now.tm_sec);
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+            currentDate.elements.day   = now.tm_mday,
+            currentDate.elements.month = now.tm_mon + 1,
+            currentDate.elements.year  = now.tm_year + 1900,
+            now.tm_hour,now.tm_min,now.tm_sec);
+#if 0 // for accelerated testing:
+  currentDate.elements.day   = now.tm_min % 10 + 1;
+  currentDate.elements.month = now.tm_min / 10 + 1;
+#endif
 #else
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),day(),month(),year(),hour(),minute(),second());
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+            currentDate.elements.day   = day(),
+            currentDate.elements.month = month(),
+            currentDate.elements.year  = year(),
+            hour(),minute(),second());
 #endif
   date[19] = 0;
   return date;
@@ -4627,18 +4660,120 @@ void resetAverageCalculation() {
 
 
 #ifdef LOGGER
+
+const char* datalogFileHeader = PSTR("Milliseconds;Date;Parameter;Description;Value;Unit\r\n");
+
+const char *cleanupDatalog(unsigned nDays) {
+  // keep most recent nDays only in datalog:
+  // copy back of files to temporary files, remove old files, rename temporary files
+  unsigned long spaceRequired=MINIMUM_FREE_SPACE_ON_SD, spaceAvailable =
+#ifdef ESP32
+    SD.totalBytes() - SD.usedBytes();
+#else
+    SD.vol()->freeClusterCount() * SD.vol()->bytesPerCluster();
+#endif
+  { // Files opened within this scope will be automatically closed upon leaving it
+    File indexFile = SD.open(datalogIndexFileName);
+    if (!indexFile) return PSTR("Cannot open datalog index");
+    unsigned long nBytes = nDays * datalogIndexEntrySize;
+    spaceRequired += nBytes;
+    long indexOffset = indexFile.size() - nBytes;
+    if (indexOffset <= 0) return PSTR("Nothing to do (not that many days in the datalog)");
+    //-- transfer index:
+    File dataFile = SD.open(datalogFileName);
+    if (!dataFile) return PSTR("Cannot open datalog");
+    File indexTmpFile = SD.open(datalogIndexTemporaryFileName, FILE_WRITE);
+    if (!indexTmpFile) return PSTR("Cannot open temporary index");
+    compactDate_t date;
+    unsigned long pos, dataStart=0, dataOffset=0, nDataBytes=0;
+    indexFile.seek(indexOffset);
+    while (nDays--) {
+      if (indexFile.read((byte*)&date,sizeof(date)) != sizeof(date) ||
+          indexFile.read((byte*)&pos ,sizeof(pos )) != sizeof(pos ))
+        return PSTR("Error reading index file");
+      if (!dataStart) {
+        dataStart = pos;
+        dataOffset = pos - strlen(datalogFileHeader);
+        nDataBytes = dataFile.size() - dataStart;
+        spaceRequired += nDataBytes;
+        if (spaceRequired > spaceAvailable) return PSTR("Not enough space on device");
+      }//if (!dataStart)
+      pos -= dataOffset;
+      if (indexTmpFile.write((byte*)&date,sizeof(date)) != sizeof(date) ||
+          indexTmpFile.write((byte*)&pos ,sizeof(pos )) != sizeof(pos ))
+        return PSTR("Error writing index file");
+    }//while (nDays--)
+    //-- transfer data:
+    File dataTmpFile = SD.open(datalogTemporaryFileName, FILE_WRITE);
+    if (!dataTmpFile) return "Cannot open temporary datalog";
+    // we want to use a buffer size that's a power of 2:
+    unsigned bufSize=1, maxSize=sizeof(bigBuff);
+    while (bufSize <= maxSize) bufSize <<= 1;
+    bufSize >>= 1;
+    // write dataTmpFile:
+    dataTmpFile.print(datalogFileHeader);
+    dataFile.seek(dataStart);
+    unsigned long i=0;
+    while (nDataBytes) {
+#ifdef ESP32
+      esp_task_wdt_reset();
+#endif
+      if (++i % 10 == 0) { // busy indicator
+        client.write('.');
+        if (i % 100 == 0) client.write(' ');
+        if (i % 500 == 0) client.write('\r'), client.write('\n');
+        client.flush();
+      }
+      unsigned nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
+      if (dataFile.read((byte*)bigBuff, nBytesToDo) != (int)nBytesToDo)
+        return PSTR("Error reading datalog");
+      if (dataTmpFile.write((byte*)bigBuff, nBytesToDo) != nBytesToDo)
+        return PSTR("Error writing datalog");
+      nDataBytes -= nBytesToDo;
+    }//while (nDataBytes)
+  }// Files go out of scope and are automatically closed
+  //-- replace original files:
+  SD.remove(datalogFileName);
+  SD.rename(datalogTemporaryFileName, datalogFileName);
+  SD.remove(datalogIndexFileName);
+  SD.rename(datalogIndexTemporaryFileName, datalogIndexFileName);
+  return PSTR("Success");
+}
+
+void readFirstAndPreviousDatalogDateFromFile() {
+  firstDatalogDate.combined = previousDatalogDate.combined = 0;
+  File indexFile = SD.open(datalogIndexFileName, FILE_READ);
+  if (indexFile) {
+    unsigned long indexFileSize = indexFile.size();
+    if (indexFileSize >= datalogIndexEntrySize) {
+      indexFile.read((byte*)&firstDatalogDate, sizeof(firstDatalogDate));
+      indexFile.seek(indexFileSize - datalogIndexEntrySize);
+      indexFile.read((byte*)&previousDatalogDate, sizeof(previousDatalogDate));
+    }
+    indexFile.close();
+  }
+}
+
+void createDatalogIndexFile() {
+  SD.remove(datalogIndexFileName);
+  File indexFile = SD.open(datalogIndexFileName, FILE_WRITE);
+  if (indexFile) indexFile.close();
+  firstDatalogDate.combined = previousDatalogDate.combined = 0;
+}
+
 bool createdatalogFileAndWriteHeader() {
   File dataFile = SD.open(datalogFileName, FILE_WRITE);
   if (dataFile) {
-    strcpy_P(outBuf, PSTR("Milliseconds;Date;Parameter;Description;Value;Unit"));
-    dataFile.println(outBuf);
+    dataFile.print(datalogFileHeader);
     dataFile.close();
     outBuf[0] = 0;
+    createDatalogIndexFile();
     return true;
   }
   return false;
 }
-#endif
+
+#endif //#ifdef LOGGER
 
 #ifdef MAX_CUL
 void connectToMaxCul() {
@@ -6178,30 +6313,128 @@ void loop() {
 #endif
             webPrintFooter();
 #endif
-          } else {  // dump datalog or journal file
+          } else {  //--- dump datalog or journal or datalog index file, or print min/max date in datalog, or clean up datalog
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
-            } else if (p[2]=='D') { //datalog
+              // if the file is available, read from it:
+              if (dataFile) {
+                unsigned long startdump = millis();
+                transmitFile(dataFile);
+                dataFile.close();
+                printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
+              } else printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+            } else if (p[2]=='A') { //--- datalog min date, for the javascript code in /DG to access
+              printFmtToWebClient("%04d-%02d-%02d", firstDatalogDate.elements.year, firstDatalogDate.elements.month, firstDatalogDate.elements.day);
+            } else if (p[2]=='B') { //--- datalog max date, for the javascript code in /DG to access
+              printFmtToWebClient("%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
+            } else if (p[2]=='I') { //--- datalog index
+              File indexFile = SD.open(datalogIndexFileName);
+              if (indexFile) {
+                compactDate_t date;
+                unsigned long pos;
+                printToWebClient("Date;DatalogPosition\r\n");
+                while (indexFile.read((byte*)&date,sizeof(date)) > 0 &&
+                       indexFile.read((byte*)&pos ,sizeof(pos )) > 0)
+                  printFmtToWebClient("%04d-%02d-%02d;%lu\r\n", date.elements.year, date.elements.month, date.elements.day, pos);
+                indexFile.close();
+              }//if (indexFile)
+            } else if (p[2]=='K') { //--- clean up datalog, keeping only the most recent n days
+              int nDays;
+              if (sscanf(p+3,"%d",&nDays)==1 && nDays>0) {
+                printFmtToWebClient("\r\n%s\r\n",cleanupDatalog(nDays));
+                // cleanup after failed cleanupDatalog(), if necessary:
+                SD.remove(datalogTemporaryFileName);
+                SD.remove(datalogIndexTemporaryFileName);
+                // set markers, according to current/new index file:
+                readFirstAndPreviousDatalogDateFromFile();
+              }
+            } else { //--- datalog
               dataFile = SD.open(datalogFileName);
-            } else { //datalog
-              dataFile = SD.open(datalogFileName);
-            }
-            // if the file is available, read from it:
-            if (dataFile) {
-
-              unsigned long startdump = millis();
-              transmitFile(dataFile);
-              dataFile.close();
-
-              printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
-            } else {
-              printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
-            }
-          }
+              // if the file is available, read from it:
+              if (dataFile) {
+                unsigned long startdump = millis();
+                // /D may be followed by a either an a..b date range (yyyy-mm-dd,yyyy-mm-dd) or a number of days to read from the file's end only:
+                int ay, am, ad, by, bm, bd, n;
+                n = sscanf(p+2, "%d-%d-%d,%d-%d-%d", &ay,&am,&ad, &by,&bm,&bd);
+                if (n<1 || ay<1) transmitFile(dataFile);  // no or zero limit?
+                else { // limited datalog requested
+                  // transfer header (no error message in case of read() error => handled in subsequent reading of the actual data, anyway):
+                  client.write((byte*)datalogFileHeader,strlen(datalogFileHeader));
+                  File indexFile = SD.open(datalogIndexFileName);
+                  if (!indexFile) transmitFile(dataFile);  // no index??
+                  else {
+                    unsigned long datalogTargetPosition;
+                    if (n==6) { // date range requested
+                      compactDate_t a, b, date, prevDate;
+                      a.elements.year = ay;
+                      a.elements.month = am;
+                      a.elements.day = ad;
+                      b.elements.year = by;
+                      b.elements.month = bm;
+                      b.elements.day = bd;
+                      prevDate.combined = 0;
+                      unsigned long datalogFromPosition=0, datalogToPosition=0;
+                      // read index file backwards (why? => https://github.com/fredlcore/BSB-LAN/issues/539#issuecomment-1464885147):
+                      for (unsigned long pos=indexFile.size(); pos>=datalogIndexEntrySize; pos-=datalogIndexEntrySize) {
+                        indexFile.seek(pos-datalogIndexEntrySize);
+                        if (indexFile.read((byte*)&date,sizeof(date)) <= 0 ||
+                            indexFile.read((byte*)&datalogTargetPosition,sizeof(datalogTargetPosition)) <= 0)
+                          break; // nothing could be read!
+                        if (prevDate.combined && prevDate.combined < date.combined) break; // dates running backwards?
+                        if (date.combined >  b.combined) datalogToPosition = datalogTargetPosition;
+                        if (date.combined >= a.combined) datalogFromPosition = datalogTargetPosition;
+                        else break; // we're already before date a in the index
+                        prevDate = date;
+                      }
+                      if (datalogFromPosition) {
+                        dataFile.seek(datalogFromPosition);
+                        if (!datalogToPosition) datalogToPosition = dataFile.size();
+                        unsigned long nBytesToDo = datalogToPosition - datalogFromPosition;
+                        // the following re-uses code fragments from transmitFile():
+                        unsigned logbuflen = (OUTBUF_USEFUL_LEN + OUTBUF_LEN > 1024)?1024:(OUTBUF_USEFUL_LEN + OUTBUF_LEN);
+                        byte *buf = 0;
+#ifdef ESP32 // Arduino seems to have problems with the bigger, malloc'ed buffer
+                        buf = (byte*)malloc(4096);  // try to use 4 KB buffer, for improved transfer rates
+#endif
+                        if (buf) logbuflen=4096; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
+                        while (nBytesToDo) {
+                          int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
+                          if (n < 0) {
+                            printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+                            forcedflushToWebClient();
+                          }
+                          if (n <= 0) break;
+                          client.write(buf, n);
+#ifdef ESP32
+                          esp_task_wdt_reset();
+#endif
+                          nBytesToDo -= n;
+                        }//while (nBytesToDo)
+                        if (buf != (byte*)bigBuff) free(buf);
+                      }//if (datalogFromPosition)
+                    }//if (n==6)
+                    else { // most recent days requested
+                      unsigned long bytesToBackup = ay * datalogIndexEntrySize;
+                      unsigned long indexFileSize = indexFile.size();
+                      if (indexFileSize >= bytesToBackup) {  // enough index entries available?
+                        indexFile.seek(indexFileSize - bytesToBackup + sizeof(compactDate_t));
+                        indexFile.read((byte*)&datalogTargetPosition, sizeof(datalogTargetPosition));
+                        dataFile.seek(datalogTargetPosition);  // skip older data
+                      }
+                      transmitFile(dataFile);
+                    }//most recent days requested
+                    indexFile.close();
+                  }//else (!indexFile)
+                }//limited datalog
+                dataFile.close();
+                printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
+              } else printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+            }//datalog
+          }//datalog or journal or min/max datalog date
           flushToWebClient();
           break;
         }
@@ -6728,7 +6961,21 @@ void loop() {
             outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
           }
 #endif
-          if (dataFile) dataFile.print(outBuf);
+          if (dataFile) {
+            if (previousDatalogDate.combined != currentDate.combined) {
+              File indexFile = SD.open(datalogIndexFileName, FILE_APPEND);
+              if (indexFile) {
+                previousDatalogDate.combined = currentDate.combined;
+                long currentDatalogPosition = dataFile.size();
+                indexFile.write((byte*)&currentDate, sizeof(currentDate));
+                indexFile.write((byte*)&currentDatalogPosition, sizeof(currentDatalogPosition));
+                indexFile.close();
+                if (!firstDatalogDate.combined) firstDatalogDate.combined = currentDate.combined;
+              }
+              else printFmtToDebug(PSTR("Error opening %s for writing!\r\n"), datalogIndexFileName);
+            }
+            dataFile.print(outBuf);
+          }
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           outBufLen = 0;
           strcpy_PF(outBuf + outBufLen, decodedTelegram.prognrdescaddr);
@@ -7768,6 +8015,7 @@ void setup() {
   if (!SD.exists(datalogFileName)) {
     createdatalogFileAndWriteHeader();
   }
+  else readFirstAndPreviousDatalogDateFromFile();
 #endif
 
   if (bus->getBusType() != BUS_PPS) {
