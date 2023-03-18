@@ -95,6 +95,7 @@ const char graph_html[] PROGMEM_LATE =
   "<script>" NEWLINE
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
         "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /D
+        "c,n,e='%Y-%m-%d %H:%M'," NEWLINE // c=C3 plot, n=now date, e=date format
         "w=" DEFAULT_DAYS_TO_PLOT "," NEWLINE
         "[a,b]=d.querySelectorAll('input')," NEWLINE
         "i=d.querySelector('output');" NEWLINE
@@ -103,7 +104,9 @@ const char graph_html[] PROGMEM_LATE =
       "a.min=b.min=c;" NEWLINE
       "fetch('DB').then(r=>r.text()).then(c=>{" NEWLINE
         "a.value=a.max=b.max=c;" NEWLINE
-        "b.value=(new Date(Date.now())).toISOString().substring(0,10);" NEWLINE // today
+        "n=new Date();" NEWLINE // today
+        "b.value=new Date(n.getTime()-60000*n.getTimezoneOffset())" NEWLINE // local date/time
+                        ".toISOString().substring(0,10);" NEWLINE // extract date part
         "if(w){" NEWLINE // set to default days to plot?
           "a.value=(new Date((new Date(b.value))" NEWLINE
                              // subtract w-1 days (there's 86400000==24*60*60*1000 ms in a day):
@@ -135,14 +138,14 @@ const char graph_html[] PROGMEM_LATE =
       "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
                     "(b.value==b.max?'':'!');" NEWLINE
       // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
-      "let p=[],r=[],o=[],x=y=0;" NEWLINE
+      "let p=[],r=[],o=[],x=y=0,k;" NEWLINE
       "d3.dsvFormat(';').parse(t).forEach(function(i){" NEWLINE
         "if(a.value<i.t&&i.t<b.value+'x'){" NEWLINE  // only when t=date is in a...b range
           // start new hh:mm if ms is at least 1000 greater than ...
           // ... or smaller than (due to a device reset) its previous value:
           "if(y&&(i.m-y>999||i.m-y<0)){o.push(r);r=[];x=i.t}" NEWLINE
           "y=i.m;" NEWLINE
-          "let k=i.p+' - '+i.d;" NEWLINE
+          "k=i.p+' - '+i.d;" NEWLINE
           "if(i.u)k+=' ['+i.u+']';" NEWLINE
           "p[k]=1;" NEWLINE
           "r[k]=i.v;" NEWLINE
@@ -151,16 +154,15 @@ const char graph_html[] PROGMEM_LATE =
       "});" NEWLINE
       "o.push(r);" NEWLINE
       // plot:
-      "let f='%Y-%m-%d %H:%M';" NEWLINE
-      "let c=c3.generate({" NEWLINE
+      "c=c3.generate({" NEWLINE
         "bindto:'#c3'," NEWLINE
         "data:{" NEWLINE
           "json:o," NEWLINE
           "keys:{x:'t',value:Object.keys(p)}," NEWLINE
-          "xFormat:f+':%S'" NEWLINE
+          "xFormat:e+':%S'" NEWLINE
         "}," NEWLINE
         "point:{show:false}," NEWLINE
-        "axis:{x:{type:'timeseries',tick:{count:3,format:f}}}," NEWLINE
+        "axis:{x:{type:'timeseries',tick:{count:3,format:e}}}," NEWLINE
         "zoom:{enabled:true}," NEWLINE
         "size:{height:window.innerHeight-20}," NEWLINE
         "onresize:function(){c.resize({height:window.innerHeight-20})}" NEWLINE
