@@ -76,7 +76,7 @@ const char graph_html[] PROGMEM_LATE =
   // large datasets, we (allow to) filter those datasets
   // for d3+c3 by using a date range a...b (default: most recent day only):
   "<input type='date' onchange='f()'>" NEWLINE // a
-  "&nbsp;<output></output>&nbsp;" NEWLINE      // i ('...')
+  "<output></output>" NEWLINE                  // i ('! - !')
   "<input type='date' onchange='f()'>" NEWLINE // b
   "</td></tr></tbody></table>" NEWLINE // close table opened by surrounding html to escape its width limitation
   "<style>input{width:auto;text-align:right}</style>" NEWLINE // the preceding html has set width=100% :/
