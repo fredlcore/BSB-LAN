@@ -124,6 +124,8 @@
 #undef MENU_TEXT_24A
 #undef MENU_TEXT_24N
 #undef MENU_TEXT_DTR
+#undef MENU_TEXT_DLD
+#undef MENU_TEXT_DDO
 #undef MENU_TEXT_DTD
 #undef MENU_TEXT_DTF
 #undef MENU_TEXT_DTO
