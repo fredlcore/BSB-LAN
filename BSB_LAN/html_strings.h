@@ -128,7 +128,7 @@ const char graph_html[] PROGMEM_LATE =
       "else g()" NEWLINE
     "}" NEWLINE
     "function g(){" NEWLINE  
-      // use '!' next to a/b date input fields to signal when there's more:
+      // use '!' next to a/b date input fields to signal when there's more (or less):
       "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
                     "(b.value==b.max?'':'!');" NEWLINE
       // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
