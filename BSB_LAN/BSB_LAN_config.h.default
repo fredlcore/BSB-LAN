@@ -129,7 +129,7 @@ Does: log bus telegrams to file
 
 #define UDP_LOG_PORT 6502 // fixed here, not configurable via web interface
 
-// Use SD card adapter on ESP32-based boards instead of SPIFFS flash-based storage
+// Use SD card adapter on ESP32-based boards instead of internal flash-based storage
 //#define ESP32_USE_SD
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.

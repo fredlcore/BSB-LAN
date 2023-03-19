@@ -66,13 +66,16 @@
  *       3.1   - 
  *
  * Changelog:
+ *       version 3.1
+ *        - ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
+ *        - Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS
+ *        - To improve handling of large datalogs: date range selection in /DG, new url commands /Da,b /DA /DB /Dn /DI /DKn
  *       version 3.0
  *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
  *        - Add new '/LN' URL command to force logging irrespective of current interval.
  *        - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
  *        - New SdFat version 2 for Arduino Due
  *        - New data type VT_BINARY_ENUM
- *        - To improve handling of large datalogs: date range selection in /DG, new url commands /Da,b /DA /DB /Dn /DI /DKn
  *        - This release has been supported by the following GitHub Sponsors: Alex, DE-cr
  *       version 2.2
  *        - ATTENTION: Several variables in BSB_LAN_config.h.default have changed their variable type, it's probably best to re-create your BSB_LAN_config.h from scratch.
@@ -724,10 +727,10 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
       #include "SD_MMC.h"
       #define SD SD_MMC
       #define MINIMUM_FREE_SPACE_ON_SD 100000
-    #else   // use SPFISS instead of SD card on ESP32
+    #else   // use internal EEPROM flash memory instead of SD card on ESP32
+      #include <LittleFS.h>
+      #define SD LittleFS
       // Minimum free space in bytes
-      #include <SPIFFS.h>
-      #define SD SPIFFS
       #define MINIMUM_FREE_SPACE_ON_SD 10000
     #endif  // ESP32_USE_SD
   #else     // !ESP32
