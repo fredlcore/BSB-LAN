@@ -71,17 +71,16 @@ const char graph_html[] PROGMEM_LATE =
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
   // 364593010;01.05.2022 00:00:15;8314;Kesselrücklauftemperatur Ist;66.7;°C
   // [...]
-  "<a href=''>" MENU_TEXT_DDO "</a> " NEWLINE // link to download displayed data (set in code below)
-  // to alleviate d3+c3 performance issues when dealing with
-  // large datasets, we (allow to) filter those datasets
-  // for d3+c3 by using a date range a...b (default: most recent day only):
+  // to alleviate d3+c3 performance issues when dealing with large datasets, we (allow to) filter those datasets
+  // for d3+c3 by using a date range a-b (on start-up: DEFAULT_DAYS_TO_PLOT days back from current date only):
+  "<a href>" MENU_TEXT_DDO "</a> " NEWLINE // link to download displayed data a-b (set in code below)
   "<input type='date' onchange='f()'>" NEWLINE // a
   "<output></output>" NEWLINE                  // i ('! - !')
   "<input type='date' onchange='f()'>" NEWLINE // b
   "</td></tr></tbody></table>" NEWLINE // close table opened by surrounding html to escape its width limitation
-  "<style>input{width:auto;text-align:right}</style>" NEWLINE // the preceding html has set width=100% :/
   "<div id='c3'></div>" NEWLINE
   "<style>" NEWLINE
+    "input{width:auto;text-align:right}" NEWLINE // the preceding html has set width=100% :/
     "svg,.c3-tooltip{font:10px sans-serif}" NEWLINE
     "div path,line{fill:none;stroke:#000}" NEWLINE
     ".c3-focused{opacity:1;stroke-width:2px}" NEWLINE
@@ -94,33 +93,28 @@ const char graph_html[] PROGMEM_LATE =
   "<script src='https://cdn.jsdelivr.net/npm/c3'></script>" NEWLINE
   "<script>" NEWLINE
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
-        "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /D
+        "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /Da,b
         "c,n,e='%Y-%m-%d %H:%M'," NEWLINE // c=C3 plot, n=now date, e=date format
-        "w=" DEFAULT_DAYS_TO_PLOT "," NEWLINE
         "[a,b]=d.querySelectorAll('input')," NEWLINE
         "i=d.querySelector('output');" NEWLINE
     // get min/max date available in datalog:
     "fetch('DA').then(r=>r.text()).then(c=>{" NEWLINE
       "a.min=b.min=c;" NEWLINE
       "fetch('DB').then(r=>r.text()).then(c=>{" NEWLINE
-        "a.value=a.max=b.max=c;" NEWLINE
+        "a.max=b.max=c;" NEWLINE
         "n=new Date();" NEWLINE // today
         "b.value=new Date(n.getTime()-60000*n.getTimezoneOffset())" NEWLINE // local date/time
                         ".toISOString().substring(0,10);" NEWLINE // extract date part
-        "if(w){" NEWLINE // set to default days to plot?
-          "a.value=(new Date((new Date(b.value))" NEWLINE
-                             // subtract w-1 days (there's 86400000==24*60*60*1000 ms in a day):
-                             "- --w*86400000" NEWLINE // minus on Date converts to epoch!
-                           ")).toISOString().substring(0,10);" NEWLINE // get date part of new date
-          "w=0" NEWLINE // we only want to do this once, initially
-        "};" NEWLINE
+        "a.value=new Date((new Date(b.value))" NEWLINE
+                          // subtract default-1 days (there's 86400000==24*60*60*1000 ms in a day):
+                          "-(" DEFAULT_DAYS_TO_PLOT "-1)*86400000)" NEWLINE // minus on Date converts to epoch!
+                        ".toISOString().substring(0,10);" NEWLINE // extract date part
         "f()" NEWLINE // ...and do initial plot
       "})" NEWLINE
     "});" NEWLINE  
     "function f(){" NEWLINE
       "i.textContent='" MENU_TEXT_DLD "';" NEWLINE
-      // also change the url used on this page to download data,
-      // so that the user doesn't accidently use /D to load huge datasets:
+      // also change the url used on this page to download just the displayed data:
       "h=l[l.length-1].href='D'+a.value+','+b.value;" NEWLINE
       "if(a.value<al||b.value>bl)" NEWLINE // only load from server if not already in memory
         "fetch(h).then(r=>r.text()).then(c=>{" NEWLINE
@@ -134,7 +128,7 @@ const char graph_html[] PROGMEM_LATE =
       "else g()" NEWLINE
     "}" NEWLINE
     "function g(){" NEWLINE  
-      // use '!' next to a/b date input fields to signal when there's more:
+      // use '!' next to a/b date input fields to signal when there's more (or less):
       "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
                     "(b.value==b.max?'':'!');" NEWLINE
       // 'pivot' data (p=params, r=row, o=all, x=prevDate, y=prevMs):
