@@ -681,7 +681,7 @@ const char datalogIndexTemporaryFileName[] PROGMEM = "/dataidx.tmp";
 // the calendar day just reached (see typedef below), and the size of the actual datalogFile
 // just before that calendar day.
 typedef union {
-  struct { uint16_t year; uint8_t day, month; } elements;  // order is important here!
+  struct { uint8_t day, month; uint16_t year; } elements;  // order is important here!
   uint32_t combined;
 } compactDate_t;
 #if BYTE_ORDER != LITTLE_ENDIAN  // we need this for direct .combined comparisons of two dates
