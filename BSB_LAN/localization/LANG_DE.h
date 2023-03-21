@@ -259,6 +259,7 @@
 #define CF_RX_PIN_TEXT "RX Pin Nummer"
 #define CF_TX_PIN_TEXT "TX Pin Nummer"
 #define CF_CONFIG_LEVEL_TEXT "Erweiterte Einstellungen anzeigen"
+#define CF_ENERGY_SAVE_TEXT "ESP32 Energiesparmodus"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"

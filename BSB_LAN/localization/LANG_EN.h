@@ -210,6 +210,7 @@
 #define CF_RGT2_PRES_PIN_TEXT "RU2 presence button: pin"
 #define CF_RGT3_PRES_PIN_TEXT "RU3 presence button: pin"
 #define CF_SHOW_UNKNOWN_TEXT "Display unknown parameters"
+#define CF_ENERGY_SAVE_TEXT "ESP32 energy saving"
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "Network"
