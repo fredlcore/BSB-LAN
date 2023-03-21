@@ -18,9 +18,9 @@ typedef enum{
   CF_DEST_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus destination address (0x0)
   CF_PPS_MODE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
-  CF_AVERAGESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_AVERAGESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
-  CF_CURRVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_CURRVALUESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
 // Version 2 (Web-config)
   CF_MAC, //Size: 6 bytes. MAC address
   CF_DHCP, //Size: 1 byte. DHCP: 0 - disabled, 1 - enabled
@@ -37,7 +37,7 @@ typedef enum{
   CF_ONEWIREBUS, //Size: 1 byte. One wire bus pin. 0 will be ignored
   CF_DHTBUS, //Size: 10 bytes (sizeof(DHT_Pins)). DHT temperature/humidity bus pins. 0 will be ignored
   CF_IPWE, //Size: 1 byte. IPWE extension: 0 - disabled, 1 - enabled
-  CF_IPWEVALUESLIST, //Size 2 * 40 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_IPWEVALUESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
   CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
   CF_WRITEMODE, //Size: 1 byte. 0 - all parameters will be FL_RONLY, 1 - write ordinary programs, 2 - write OEM programs
@@ -79,6 +79,8 @@ typedef enum{
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (Logger switcher)
   CF_LOGMODE, // Size: 1 byte. Bitwise value. Logging: 0 - disabled, 1 - SD card logging, 2 - send to MQTT, 4 - send to UDP
+// Version 11 (ESP32 energy save mode)
+  CF_ESP32_ENERGY_SAVE,
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -172,6 +174,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
   {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
+  {CF_ESP32_ENERGY_SAVE,11,CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_ENERGY_SAVE_TXT, sizeof(esp32_save_energy)}, //need reboot
 #endif
   {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
