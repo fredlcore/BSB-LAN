@@ -135,9 +135,10 @@ const char graph_html[] PROGMEM_LATE =
       "let p=[],r=[],o=[],x=y=0,k;" NEWLINE
       "d3.dsvFormat(';').parse(t).forEach(function(i){" NEWLINE
         "if(a.value<i.t&&i.t<b.value+'x'){" NEWLINE  // only when t=date is in a...b range
-          // start new hh:mm if ms is at least 1000 greater than ...
+          // the log interval is limited by bsb-lan to be >=10s, therefore
+          // start new hh:mm if ms is at least 10000 greater than ...
           // ... or smaller than (due to a device reset) its previous value:
-          "if(y&&(i.m-y>999||i.m-y<0)){o.push(r);r=[];x=i.t}" NEWLINE
+          "if(y&&(i.m-y>9999||i.m-y<0)){o.push(r);r=[];x=i.t}" NEWLINE
           "y=i.m;" NEWLINE
           "k=i.p+' - '+i.d;" NEWLINE
           "if(i.u)k+=' ['+i.u+']';" NEWLINE
