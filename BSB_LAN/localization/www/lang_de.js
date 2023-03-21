@@ -259,6 +259,7 @@ UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
 UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nummer";
 UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nummer";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Erweiterte Einstellungen anzeigen";
+UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 Energiesparmodus";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";

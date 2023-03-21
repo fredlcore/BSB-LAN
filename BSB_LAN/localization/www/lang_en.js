@@ -210,6 +210,7 @@ UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "RU1 presence button: pin";
 UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RU2 presence button: pin";
 UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RU3 presence button: pin";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
+UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 energy saving";
 
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";
