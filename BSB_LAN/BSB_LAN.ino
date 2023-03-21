@@ -68,6 +68,10 @@
  * Changelog:
  *       version 3.1
  *        - ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
+ *        - ATTENTION: In BSB_LAN_config.h, the structure of log_parameters, avg_parameters and ipwe_parameters has changed and now includes the destination device on the bus!
+ *        - ATTENTION: New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!
+ *        - Parameters can now be queried from other devices on the bus using the ! notation also when logging (including MQTT) or using average or IPWE parameters
+ *        - Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)
  *        - Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS
  *        - To improve handling of large datalogs: date range selection in /DG, new url commands /Da,b /DA /DB /Dn /DI /DKn
  *       version 3.0
@@ -2367,16 +2371,16 @@ if (logTelegram) {
 
 #if defined(WEBCONFIG) || defined(JSONCONFIG)
 uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
-  bool finded = false;
+  bool found = false;
   configuration_struct cfg;
   char sscanf_buf[24];
 
   for (uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++) {
     if (config[f].var_type == CDT_VOID) continue;
     memcpy(&cfg, &config[f], sizeof(cfg));
-    if (cfg.id == option_id) {finded = true; break;}
+    if (cfg.id == option_id) {found = true; break;}
   }
-  if (!finded) {
+  if (!found) {
     return 2;
   }
 
@@ -2445,8 +2449,17 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
         ptr = strchr(ptr, ',');
         if (ptr) ptr[0] = 0;
         ((float *)variable)[j] = atof(ptr_t);
+        char* token = strchr(ptr_t, '!');
+        if (token != NULL) {
+          token++;
+          if (token[0] > 0) {
+            ((float *)variable)[j+1] = atof(token);
+          } else {
+            ((float *)variable)[j+1] = 0;
+          }
+        }
         if (ptr) {ptr[0] = ','; ptr++;}
-        j++;
+        j=j+2;
       }while (ptr && j < cfg.size/sizeof(int));
       // writeToConfigVariable(option_id, variable); not needed here
       break;}
@@ -2528,6 +2541,7 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WIFI_SSID:
         case CF_WIFI_PASSWORD:
         case CF_MDNS_HOSTNAME:
+        case CF_ESP32_ENERGY_SAVE:
           needReboot = true;
           break;
         case CF_BMEBUS:
@@ -2648,11 +2662,14 @@ void printDHTlistToWebClient(byte *variable, uint16_t size) {
 
 void printProglistToWebClient(float *variable, uint16_t size) {
   bool isFirst = true;
-  for (uint16_t j = 0; j < size/sizeof(float); j++) {
+  for (uint16_t j = 0; j < size/sizeof(float); j=j+2) {
     if (variable[j]) {
       if (!isFirst) printToWebClient(PSTR(","));
       isFirst = false;
       printFmtToWebClient(PSTR("%g"), variable[j]);
+      if (variable[j+1] > 0) {
+        printFmtToWebClient(PSTR("!%g"), variable[j+1]);
+      }
     }
   }
 }
@@ -2783,7 +2800,7 @@ void generateWebConfigPage(bool printOnly) {
            printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
            break;
          case CDT_PROGNRLIST:
-           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})((\\.){0,1})((\\d){0,1})))*'"));
+           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})((\\.){0,1})((\\d){0,1})((\\!){0,1})((\\d){0,2})))*'"));
            break;
          }
        printToWebClient(PSTR(" value='"));
@@ -6268,6 +6285,11 @@ void loop() {
 
 #ifdef LOGGER
         if (p[1]=='D') { // access datalog file
+  #if defined(ESP32) && !defined(WIFI)
+          if (esp32_save_energy == true) {
+            setCpuFrequencyMhz(240);
+          }
+  #endif
           if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
             webPrintHeader();
             File dataFile;
@@ -6437,6 +6459,11 @@ void loop() {
             }//datalog
           }//datalog or journal or min/max datalog date
           flushToWebClient();
+  #if defined(ESP32) && !defined(WIFI)
+          if (esp32_save_energy == true) {
+            setCpuFrequencyMhz(80);
+          }
+  #endif
           break;
         }
 #endif
@@ -6576,10 +6603,25 @@ void loop() {
               }
               while (log_token!=0) {
                 float log_parameter = atof(log_token);
+                float dest = 0;
+                char* token = strchr(log_token, '!');
+                if (token != NULL) {
+                  token++;
+                  if (token[0] > 0) {
+                    dest = atof(token);
+                  } else {
+                    dest = 0;
+                  }
+                }
                 if (token_counter < numLogValues) {
                   log_parameters[token_counter] = log_parameter;
-                  printFmtToWebClient(PSTR("%g\r\n"), log_parameters[token_counter]);
-                  token_counter++;
+                  log_parameters[token_counter+1] = dest;
+                  printFmtToWebClient(PSTR("%g"), log_parameters[token_counter]);
+                  if (dest > 0) {
+                    printFmtToWebClient(PSTR("!%g"), dest);
+                  }
+                  printToWebClient(PSTR(" \r\n"));
+                  token_counter = token_counter + 2;
                 }
                 log_token = strtok(NULL,"=,");
               }
@@ -6740,10 +6782,25 @@ void loop() {
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
                 while (avg_token!=0) {
+                  float dest = 0;
+                  char* token = strchr(avg_token, '!');
+                  if (token != NULL) {
+                    token++;
+                    if (token[0] > 0) {
+                      dest = atof(token);
+                    } else {
+                      dest = 0;
+                    }
+                  }
                   if (token_counter < numAverages) {
                     avg_parameters[token_counter] = atof(avg_token);
-                    printFmtToWebClient(PSTR("%g \r\n"), avg_parameters[token_counter]);
-                    token_counter++;
+                    avg_parameters[token_counter+1] = dest;
+                    printFmtToWebClient(PSTR("%g"), avg_parameters[token_counter]);
+                    if (dest > 0) {
+                      printFmtToWebClient(PSTR("!%g"), dest);
+                    }
+                    printToWebClient(PSTR(" \r\n"));
+                    token_counter = token_counter + 2;
                   }
                   avg_token = strtok(NULL,"=,");
                 }
@@ -6900,10 +6957,25 @@ void loop() {
 
       if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
         lastMQTTTime = millis();
-        for (int i=0; i < numLogValues; i++) {
+        uint8_t destAddr = bus->getBusDest();
+        float d_addr = (float)destAddr;
+        uint8_t save_my_dev_fam = my_dev_fam;
+        uint8_t save_my_dev_var = my_dev_var;
+        for (int i=0; i < numLogValues; i=i+2) {
           if (log_parameters[i] > 0) {
-            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            if (log_parameters[i+1] != d_addr) {
+              d_addr = log_parameters[i+1];
+              printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
+              GetDevId();
+            }
+            mqtt_sendtoBroker(log_parameters[i], log_parameters[i+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
+        }
+        if (destAddr != d_addr) {
+          bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+          my_dev_fam = save_my_dev_fam;
+          my_dev_var = save_my_dev_var;
         }
         if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
@@ -6948,9 +7020,19 @@ void loop() {
 #endif
         broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
       }
-      for (int i=0; i < numLogValues; i++) {
+      uint8_t destAddr = bus->getBusDest();
+      float d_addr = (float)destAddr;
+      uint8_t save_my_dev_fam = my_dev_fam;
+      uint8_t save_my_dev_var = my_dev_var;
+      for (int i=0; i < numLogValues; i=i+2) {
         int outBufLen = 0;
         if (log_parameters[i] > 0) {
+          if (log_parameters[i+1] != d_addr) {
+            d_addr = log_parameters[i+1];
+            printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
+            bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
+            GetDevId();
+          }
           query(log_parameters[i]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
@@ -6994,6 +7076,11 @@ void loop() {
       }
       if (dataFile) dataFile.close();
       lastLogTime = millis();
+      if (destAddr != d_addr) {
+        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        my_dev_fam = save_my_dev_fam;
+        my_dev_var = save_my_dev_var;
+      }
     }
   }
 #endif
@@ -7382,16 +7469,6 @@ void setup() {
 
   SerialOutput->println(F("READY"));
 
-#if defined(ESP32)
-  setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
-  #ifndef WDT_TIMEOUT
-  //set watchdog timeout 120 seconds
-    #define WDT_TIMEOUT 120
-  #endif
-  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
-  esp_task_wdt_add(NULL); //add current thread to WDT watch
-#endif
-
 #if defined(__arm__)
   Wire.begin();
   if (!EEPROM.ready()) {
@@ -7436,6 +7513,7 @@ void setup() {
   registerConfigVariable(CF_AVERAGESLIST, (byte *)avg_parameters);
   registerConfigVariable(CF_LOGCURRINTERVAL, (byte *)&log_interval);
   registerConfigVariable(CF_CURRVALUESLIST, (byte *)log_parameters);
+  registerConfigVariable(CF_ESP32_ENERGY_SAVE, (byte *)&esp32_save_energy);
 #ifdef WEBCONFIG
   registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
   registerConfigVariable(CF_MAC, (byte *)mac);
@@ -7497,7 +7575,7 @@ void setup() {
     readFromEEPROM(CF_USEEEPROM);
     readFromEEPROM(CF_VERSION);
   }
-  bool crc_correct = true;
+    bool crc_correct = true;
   if (UseEEPROM == 0x96) {//Read EEPROM when EEPROM contain magic byte (stored configuration)
     readFromEEPROM(CF_CRC32);
     if (crc == initConfigTable(EEPROMversion)) {
@@ -7557,6 +7635,19 @@ void setup() {
   for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
     printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
   }
+
+#if defined(ESP32)
+  if (esp32_save_energy == true) {
+    setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
+    printToDebug("Power-saving activated.\r\n");
+  }
+  #ifndef WDT_TIMEOUT
+  //set watchdog timeout 120 seconds
+    #define WDT_TIMEOUT 120
+  #endif
+  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  esp_task_wdt_add(NULL); //add current thread to WDT watch
+#endif
 
   if (save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl: %d\r\n"),sizeof(cmdtbl));
