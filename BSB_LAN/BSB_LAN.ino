@@ -803,7 +803,7 @@ static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
 #ifdef AVERAGES
-static const int numAverages = sizeof(avg_parameters) / sizeof(avg_parameters[0]);
+static const int numAverages = (sizeof(avg_parameters) / sizeof(avg_parameters[0]))/2;
 float avgValues_Old[numAverages] = {0};
 float avgValues[numAverages] = {0};
 float avgValues_Current[numAverages] = {0};
@@ -1279,7 +1279,7 @@ int findLine(float line
   if (line >= BSP_INTERNAL && line < BSP_END) {
     switch (recognizeVirtualFunctionGroup(line)) {
       case 1: break;
-      case 2:  line = avg_parameters[((uint16_t)line) - BSP_AVERAGES]; if (line == 0) return -1; else break;
+      case 2:  line = avg_parameters[(((uint16_t)line) - BSP_AVERAGES)*2]; if (line == 0) return -1; else break;
       case 3: {
         if (DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == 0) { //pin not assigned to DHT sensor
           return -1;
@@ -2338,8 +2338,8 @@ void generateConfigPage(void) {
     printToWebClient(PSTR(": <BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i] > 0) {
-        printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i], lookup_descr(avg_parameters[i]), BSP_AVERAGES + i);//outBuf will be overwrited here
+      if (avg_parameters[i*2] > 0) {
+        printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i*2], lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
@@ -5935,13 +5935,13 @@ void loop() {
               printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
               not_first = false;
               for (i=0; i<numAverages; i++) {
-                if (avg_parameters[i] > 0) {
+                if (avg_parameters[i*2] > 0) {
                   if (not_first) {
                     printToWebClient(PSTR(",\r\n"));
                   } else {
                     not_first = true;
                   }
-                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i*2]);
                 }
               }
               printToWebClient(PSTR("\r\n  ]"));
@@ -6776,7 +6776,7 @@ void loop() {
                 int token_counter = 0;
                 if (avg_token != 0) {
                   resetAverageCalculation();
-                  for (int i=0;i<numAverages;i++) {
+                  for (int i=0;i<numAverages*2;i++) {
                     avg_parameters[i] = 0;
                   }
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
@@ -6792,7 +6792,7 @@ void loop() {
                       dest = 0;
                     }
                   }
-                  if (token_counter < numAverages) {
+                  if (token_counter < numAverages*2) {
                     avg_parameters[token_counter] = atof(avg_token);
                     avg_parameters[token_counter+1] = dest;
                     printFmtToWebClient(PSTR("%g"), avg_parameters[token_counter]);
@@ -7097,8 +7097,8 @@ void loop() {
         avgCounter = 1;
       }
       for (int i=0; i<numAverages; i++) {
-        if (avg_parameters[i] > 0) {
-          query(avg_parameters[i]);
+        if (avg_parameters[i*2] > 0) {
+          query(avg_parameters[i*2]);
           float reading = strtod(decodedTelegram.value,NULL);
           printFmtToDebug(PSTR("%f\r\n"), reading);
           if (isnan(reading)) {} else {
@@ -7122,7 +7122,7 @@ void loop() {
         File avgfile = SD.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
-          for (int i=0; i<numAverages; i++) {
+          for (int i=0; i<numAverages/2; i++) {
             sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
@@ -7638,7 +7638,7 @@ void setup() {
 
 #if defined(ESP32)
   if (esp32_save_energy == true) {
-    setCpuFrequencyMhz(80);     // reduce speed from 240 MHz to 80 MHz to reduce power consumption by approx. 20% with no significant loss of speed
+    setCpuFrequencyMhz(80);
     printToDebug("Power-saving activated.\r\n");
   }
   #ifndef WDT_TIMEOUT
