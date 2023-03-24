@@ -82,10 +82,10 @@ const char graph_html[] PROGMEM_LATE =
   "<style>" NEWLINE
     "input{width:auto;text-align:right}" NEWLINE // the preceding html has set width=100% :/
     "svg,.c3-tooltip{font:10px sans-serif}" NEWLINE
-    "div path,line{fill:none;stroke:#000}" NEWLINE
+    "div path,line{fill:none;stroke:#aaa}" NEWLINE
     ".c3-focused{opacity:1;stroke-width:2px}" NEWLINE
-    ".c3-defocused,.c3-legend-item-hidden{opacity:0.2 !important}" NEWLINE
-    ".c3-tooltip{opacity:0.5;background-color:#eee}" NEWLINE
+    ".c3-defocused,.c3-legend-item-hidden{opacity:0.5 !important}" NEWLINE
+    ".c3-tooltip{opacity:0.7;background-color:#eee}" NEWLINE
     ".c3-tooltip th{background-color:#ccc}" NEWLINE
     ".c3-tooltip .value{text-align:right}" NEWLINE
   "</style>" NEWLINE
