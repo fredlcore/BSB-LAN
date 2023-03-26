@@ -6720,7 +6720,7 @@ void loop() {
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
             clearEEPROM();
           }
-          printToWebClient(PSTR("Restarting Arduino...\r\n"));
+          printToWebClient(PSTR("Restarting micro-controller...\r\n"));
           webPrintFooter();
           resetBoard();
           break;
