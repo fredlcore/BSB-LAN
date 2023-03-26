@@ -10,7 +10,7 @@ assignees: ''
 **Before submitting a bug report, please make sure that you have checked [chapter 14](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap14.html) of the manual** ("Problems and their Possible Causes"). Most problems that are reported to us can be solved by going through the solutions provided there.
 
 **BSB-LAN Version**
-As displayed in the web-configuration or copy from `bsb-version.h` file. Please make sure that you have installed the most recent version from the master repository. We don't fix bugs for discontinued platforms (such as Arduino Mega).
+As displayed in the web-configuration or copy from `bsb-version.h` file. Please make sure that you have installed the most recent version from the master repository and also updated your BSB_LAN_config.h accordingly. We don't fix bugs for discontinued platforms (such as Arduino Mega).
 
 **Architecture**
 The architecture BSB-LAN is running on (Arduino Mega, Arduino Due, ESP32 NodeMCU, ESP32 Olimex EVB etc.)
