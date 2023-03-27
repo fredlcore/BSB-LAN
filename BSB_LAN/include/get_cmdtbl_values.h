@@ -86,8 +86,10 @@ inline uint8_t get_cmdtbl_category(int i) {
   for (uint8_t cat=0;cat<CAT_UNKNOWN;cat++) {
     cat_min = ENUM_CAT_NR[cat*2];
     cat_max = ENUM_CAT_NR[cat*2+1];
-    if (cat_max > ENUM_CAT_NR[cat*2+2]) {
-      cat_max = ENUM_CAT_NR[cat*2+2]-1;
+    if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
+      if (cat_max > ENUM_CAT_NR[cat*2+2]) {
+        cat_max = ENUM_CAT_NR[cat*2+2]-1;
+      }
     }
     if (cmdtbl[i].line >= cat_min && cmdtbl[i].line <= cat_max) {
       return cat;
