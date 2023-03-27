@@ -6868,10 +6868,15 @@ void loop() {
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
+              if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
+                cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
+              }
               start = ENUM_CAT_NR[cat];
               end = ENUM_CAT_NR[cat+1];
-              if (end > ENUM_CAT_NR[cat+2]) {
-                end = ENUM_CAT_NR[cat+2]-1;
+              if (cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
+                if (end > ENUM_CAT_NR[cat+2]) {
+                  end = ENUM_CAT_NR[cat+2]-1;
+                }
               }
             } else {
               // split range
