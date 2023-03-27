@@ -5982,8 +5982,10 @@ void loop() {
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
-                if (cat_max > ENUM_CAT_NR[cat*2+2]) {
-                  cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
+                  if (cat_max > ENUM_CAT_NR[cat*2+2]) {
+                    cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                  }
                 }
                 float j = cat_min;
 //WARNING: simple increment of j was changed because some prognr have decimal part.
@@ -6143,10 +6145,11 @@ void loop() {
                     printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
-                    if (cat_max > ENUM_CAT_NR[cat*2+2]) {
-                      cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                    if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
+                      if (cat_max > ENUM_CAT_NR[cat*2+2]) {
+                        cat_max = ENUM_CAT_NR[cat*2+2]-1;
+                      }
                     }
-
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
                     printFmtToWebClient(PSTR("\", \"min\": %g, \"max\": %g }"), cat_min, cat_max);
                   }
@@ -6163,8 +6166,10 @@ void loop() {
                   }
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
-                  if (cat_max > ENUM_CAT_NR[search_cat+2]) {
-                    cat_max = ENUM_CAT_NR[search_cat+2]-1;
+                  if (search_cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
+                    if (cat_max > ENUM_CAT_NR[search_cat+2]) {
+                      cat_max = ENUM_CAT_NR[search_cat+2]-1;
+                    }
                   }
                   cat_param = cat_min;
                 } else {
