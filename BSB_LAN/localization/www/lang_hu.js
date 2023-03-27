@@ -1,8 +1,8 @@
 UIStrings["LANGUAGENAME_TEXT"] = "Magyar nyelv";
 UIStrings["MENU_TEXT_YES"] = "Igen";
 UIStrings["MENU_TEXT_NO"] = "Nem";
-UIStrings["MENU_TEXT_ON"] = "Ki";
-UIStrings["MENU_TEXT_OFF"] = "Be";
+UIStrings["MENU_TEXT_ON"] = "Be";
+UIStrings["MENU_TEXT_OFF"] = "Ki";
 UIStrings["MENU_TEXT_OPEN"] = "Nyitva";
 UIStrings["MENU_TEXT_CLOSE"] = "Zárva";
 

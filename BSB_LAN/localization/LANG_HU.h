@@ -1,8 +1,8 @@
 #define LANGUAGENAME_TEXT "Magyar nyelv"
 #define MENU_TEXT_YES "Igen"
 #define MENU_TEXT_NO "Nem"
-#define MENU_TEXT_ON "Ki"
-#define MENU_TEXT_OFF "Be"
+#define MENU_TEXT_ON "Be"
+#define MENU_TEXT_OFF "Ki"
 #define MENU_TEXT_OPEN "Nyitva"
 #define MENU_TEXT_CLOSE "Zárva"
 
