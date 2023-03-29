@@ -65,6 +65,12 @@ const char graph_html[] PROGMEM_LATE =
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
 #endif
+#ifndef D3_LIBRARY_PATH // old BSB_LAN_config.h w/o this definition?
+#define D3_LIBRARY_PATH "https://d3js.org/d3.v4.min.js"
+#endif
+#ifndef C3_LIBRARY_PATH // old BSB_LAN_config.h w/o this definition?
+#define C3_LIBRARY_PATH "https://cdn.jsdelivr.net/npm/c3"
+#endif
 #define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
@@ -89,8 +95,8 @@ const char graph_html[] PROGMEM_LATE =
     "th{background-color:#ccc}" NEWLINE
     ".value{text-align:right}" NEWLINE
   "</style>" NEWLINE
-  "<script src='https://d3js.org/d3.v4.min.js'></script>" NEWLINE
-  "<script src='https://cdn.jsdelivr.net/npm/c3'></script>" NEWLINE
+  "<script src='" D3_LIBRARY_PATH "'></script>" NEWLINE
+  "<script src='" C3_LIBRARY_PATH "'></script>" NEWLINE
   "<script>" NEWLINE
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
         "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /Da,b

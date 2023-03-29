@@ -207,9 +207,18 @@ float ipwe_parameters[80] = {
 // - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
 // - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
 // - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
-// - saves over 4 KB in compiled BSB-LAN sketch
 #define USE_ADVANCED_PLOT_LOG_FILE
 #define DEFAULT_DAYS_TO_PLOT "3" // must be a positive integer value in double quotes!
+// Log file plotting uses two JavaScript libraries, which are usually loaded from the web.
+// Should you prefer to use local copies instead, put the files from the data subdirectory onto your
+// bsb-lan unit's SD card (*), and provide their path names here. For browsers that support gzip
+// compression (what browser doesn't?), it is sufficient to copy the *.gz file versions to your
+// bsb-lan unit, but omit the ".gz" from the path names in the following lines!
+// (*) In case you're using an ESP32's internal memory instead of an SD card, use
+// https://github.com/me-no-dev/arduino-esp32fs-plugin to upload the files.
+// In order for local use of these libraries to work, "#define WEBSERVER" is required!
+//#define D3_LIBRARY_PATH "/d3.js"
+//#define C3_LIBRARY_PATH "/c3.js"
 
 // Compile CUNO/CUNX/modified MAX!Cube extension.
 #define MAX_CUL
