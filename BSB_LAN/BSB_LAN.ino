@@ -799,7 +799,7 @@ volatile byte PressedButtons = 0;
 #define ROOM3_PRESENCE_BUTTON_PRESSED 8
 #endif
 
-static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
+static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0])/2;
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
