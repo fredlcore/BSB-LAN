@@ -5360,6 +5360,22 @@ void loop() {
           if (!isdigit(*p)) {   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
           } else {
+            char* token = strchr(p, '!');
+            if (token != NULL) {
+              token++;
+              if (token[0] > 0) {
+                int d_addr = atoi(token);
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                GetDevId();
+/*
+                query(6225);
+                my_dev_fam = strtod(decodedTelegram.value,NULL);
+                query(6226);
+                my_dev_var = strtod(decodedTelegram.value,NULL);
+*/
+             }
+            }
             line=atof(p);       // convert until non-digit char is found
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match
@@ -5368,22 +5384,6 @@ void loop() {
               uint8_t save_my_dev_fam = my_dev_fam;
               uint8_t save_my_dev_var = my_dev_var;
               p++;                   // position pointer past the '=' sign
-              char* token = strchr(p, '!');
-              if (token != NULL) {
-                token++;
-                if (token[0] > 0) {
-                  int d_addr = atoi(token);
-                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                  GetDevId();
-/*
-                  query(6225);
-                  my_dev_fam = strtod(decodedTelegram.value,NULL);
-                  query(6226);
-                  my_dev_var = strtod(decodedTelegram.value,NULL);
-*/
-               }
-              }
 
               printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
               writelnToDebug();
@@ -5409,6 +5409,7 @@ void loop() {
                 }
               }
               if (bus->getBusDest() != destAddr) {
+                printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
                 bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
@@ -5831,6 +5832,8 @@ void loop() {
           uint8_t destAddr = bus->getBusDest();
           uint8_t tempDestAddr = 0;
           uint8_t tempDestAddrOnPrevIteration = 0;
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
@@ -6119,11 +6122,21 @@ void loop() {
               if (p[2] == 'S' || p[2] == 'W') {
                 json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
               } else {
+                char* token = strchr(json_token, '!');
+                if (token != NULL) {
+                  token++;
+                  if (token[0] > 0) {
+                    tempDestAddr = atoi(token);
+                  }
+                }
                 json_parameter = atof(json_token);
               }
             }
-            if (tempDestAddr != tempDestAddrOnPrevIteration)
+            if (tempDestAddr != tempDestAddrOnPrevIteration) {
+              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), tempDestAddr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), tempDestAddr);
+              GetDevId();
+            }
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter,0,&cmd);
@@ -6268,8 +6281,12 @@ void loop() {
             tempDestAddrOnPrevIteration = tempDestAddr;
             json_parameter = -1;
           }
-          if (tempDestAddr != destAddr)
+          if (tempDestAddr != destAddr) {
+            printFmtToDebug(PSTR("Returning to default destination %d\r\n"), tempDestAddr);
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+          }
 #if defined(JSONCONFIG)
           bool needReboot = false;
           if (p[2]=='W') {
@@ -6872,6 +6889,16 @@ void loop() {
             uint8_t save_my_dev_var = my_dev_var;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
+              char* token = strchr(range, '!');
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  GetDevId();
+                }
+              }
               uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
@@ -6916,6 +6943,7 @@ void loop() {
             }
             query(start,end,0);
             if (bus->getBusDest() != destAddr) {
+              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
@@ -6984,6 +7012,7 @@ void loop() {
           }
         }
         if (destAddr != d_addr) {
+          printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
           bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
@@ -7088,6 +7117,7 @@ void loop() {
       if (dataFile) dataFile.close();
       lastLogTime = millis();
       if (destAddr != d_addr) {
+        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
         bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
