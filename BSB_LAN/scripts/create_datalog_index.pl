@@ -2,8 +2,9 @@
 
 ##
 # bsb-lan utility to re-build datalog.idx from datalog.txt,
-# to be used to replace the existing datalog from the Arduino IDE via
-# Tools -> ESP32 Sketch Data Upload
+# to be used to replace the existing datalog on a bsb-lan's SD card
+# (or for ESP32 w/o SD card: from the Arduino IDE via
+# Tools -> ESP32 Sketch Data Upload)
 
 use strict;
 use warnings;
