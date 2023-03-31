@@ -509,11 +509,14 @@ void loop();
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
     #if defined(RX1)          // poor man's detection of Olimex' builtin button
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 34
     #else                     // GPIO for ESP32-NodeMCU
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 18
     #endif
   #else                       // GPIO for Arduino Due
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 31
   #endif
 #endif
@@ -5989,7 +5992,7 @@ void loop() {
 #endif
           if (p[2] == 'B'){ // backup settings to file
             bool notfirst = false;
-            for (int cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
+            for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
@@ -6159,7 +6162,7 @@ void loop() {
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
-                for (int cat=0;cat<CAT_UNKNOWN;cat++) {
+                for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
@@ -6909,7 +6912,7 @@ void loop() {
                   GetDevId();
                 }
               }
-              uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
+              uint cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
               }
