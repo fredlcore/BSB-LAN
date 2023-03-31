@@ -2339,7 +2339,7 @@ void generateConfigPage(void) {
     printToWebClient(PSTR(": <BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i*2] > 0) {
+      if (avg_parameters[i*2] > 0) {    // TODO: Take care of destination device
         printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i*2], lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
@@ -2351,10 +2351,10 @@ void generateConfigPage(void) {
   printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
   printyesno(LoggingMode & CF_LOGMODE_SD_CARD);
   printToWebClient(PSTR("<BR>\r\n"));
-  for (int i=0; i<numLogValues; i++) {
-    if (log_parameters[i] > 0) {
-      printFmtToWebClient(PSTR("%g - "), log_parameters[i]);
-      printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
+  for (int i=0; i<numLogValues; i++) {      // TODO: Take care of destination device
+    if (log_parameters[i*2] > 0) {
+      printFmtToWebClient(PSTR("%g - "), log_parameters[i*2]);
+      printToWebClient(lookup_descr(log_parameters[i*2]));//outBuf will be overwrited here
       printToWebClient(PSTR("<BR>\r\n"));
     }
   }
@@ -4581,8 +4581,8 @@ uint16_t setPPS(uint8_t pps_index, int16_t value) {
   if (pps_values[pps_index] != value) {
     if (LoggingMode & CF_LOGMODE_SD_CARD) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] == 15000 + pps_index) {
-          log_parameter = log_parameters[i];
+        if (log_parameters[i*2] == 15000 + pps_index) {
+          log_parameter = log_parameters[i*2];
         }
       }
     }
@@ -5945,7 +5945,7 @@ void loop() {
                   } else {
                     not_first = true;
                   }
-                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i*2]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i*2]);    // TODO: Take care of destination device
                 }
               }
               printToWebClient(PSTR("\r\n  ]"));
@@ -5955,14 +5955,14 @@ void loop() {
           #ifdef LOGGER
             printFmtToWebClient(PSTR(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode, log_interval);
             not_first = false;
-            for (i=0; i<numLogValues; i++) {
-              if (log_parameters[i] > 0)  {
+            for (i=0; i<numLogValues; i++) {    // TODO: Take care of destination device
+              if (log_parameters[i*2] > 0)  {
                 if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
                 } else {
                   not_first = true;
                 }
-                printFmtToWebClient(PSTR("    { \"parameter\": %g }"), log_parameters[i]);
+                printFmtToWebClient(PSTR("    { \"parameter\": %g }"), log_parameters[i*2]);
               }
             }
             printToWebClient(PSTR("\r\n  ]"));
@@ -6620,7 +6620,8 @@ void loop() {
               int token_counter = 0;
               if (log_token != 0) {
                 for (int i=0;i<numLogValues;i++) {
-                  log_parameters[i] = 0;
+                  log_parameters[i*2] = 0;
+                  log_parameters[i*2+1] = 0;
                 }
               printToWebClient(PSTR(MENU_TEXT_LGN ": "));
               }
@@ -6799,8 +6800,9 @@ void loop() {
                 int token_counter = 0;
                 if (avg_token != 0) {
                   resetAverageCalculation();
-                  for (int i=0;i<numAverages*2;i++) {
-                    avg_parameters[i] = 0;
+                  for (int i=0;i<numAverages;i++) {
+                    avg_parameters[i*2] = 0;
+                    avg_parameters[i*2+1] = 0;
                   }
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
@@ -7000,15 +7002,15 @@ void loop() {
         float d_addr = (float)destAddr;
         uint8_t save_my_dev_fam = my_dev_fam;
         uint8_t save_my_dev_var = my_dev_var;
-        for (int i=0; i < numLogValues; i=i+2) {
-          if (log_parameters[i] > 0) {
-            if (log_parameters[i+1] != d_addr) {
-              d_addr = log_parameters[i+1];
+        for (int i=0; i < numLogValues; i++) {
+          if (log_parameters[i*2] > 0) {
+            if (log_parameters[i*2+1] != d_addr) {
+              d_addr = log_parameters[i*2+1];
               printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
               GetDevId();
             }
-            mqtt_sendtoBroker(log_parameters[i], log_parameters[i+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            mqtt_sendtoBroker(log_parameters[i*2], log_parameters[i*2+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
         if (destAddr != d_addr) {
@@ -7064,22 +7066,22 @@ void loop() {
       float d_addr = (float)destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
-      for (int i=0; i < numLogValues; i=i+2) {
+      for (int i=0; i < numLogValues; i++) {
         int outBufLen = 0;
-        if (log_parameters[i] > 0) {
-          if (log_parameters[i+1] != d_addr) {
-            d_addr = log_parameters[i+1];
+        if (log_parameters[i*2] > 0) {
+          if (log_parameters[i*2+1] != d_addr) {
+            d_addr = log_parameters[i*2+1];
             printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
             GetDevId();
           }
-          query(log_parameters[i]);
+          query(log_parameters[i*2]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i*2]);
 
 #ifdef AVERAGES
-          if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
+          if ((log_parameters[i*2] >= BSP_AVERAGES && log_parameters[i*2] < BSP_AVERAGES + numAverages)) {
             //averages
             outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
           }
@@ -7139,7 +7141,7 @@ void loop() {
       }
       for (int i=0; i<numAverages; i++) {
         if (avg_parameters[i*2] > 0) {
-          query(avg_parameters[i*2]);
+          query(avg_parameters[i*2]);   // TODO: Take care of destination device
           float reading = strtod(decodedTelegram.value,NULL);
           printFmtToDebug(PSTR("%f\r\n"), reading);
           if (isnan(reading)) {} else {
@@ -7163,7 +7165,7 @@ void loop() {
         File avgfile = SD.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
-          for (int i=0; i<numAverages/2; i++) {
+          for (int i=0; i<numAverages; i++) {   // TODO: Take care of destination device
             sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
