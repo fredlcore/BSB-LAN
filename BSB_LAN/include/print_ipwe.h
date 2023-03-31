@@ -63,7 +63,7 @@ void Ipwe() {
         query(BSP_AVERAGES + i);
         printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
         printToWebClient(PSTR("<br></td><td>"));
-        printToWebClient_prognrdescaddr();    // TODO: Take care of destination device
+        printToWebClient_prognrdescaddr();
         printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
         printToWebClient(STR_IPWEZERO);
         printToWebClient(STR_IPWEZERO);

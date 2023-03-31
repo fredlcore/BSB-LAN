@@ -2339,8 +2339,12 @@ void generateConfigPage(void) {
     printToWebClient(PSTR(": <BR>\r\n"));
 
     for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i*2] > 0) {    // TODO: Take care of destination device
-        printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i*2], lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
+      if (avg_parameters[i*2] > 0) {
+        printFmtToWebClient(PSTR("%g"), avg_parameters[i*2]);//outBuf will be overwrited here
+        if (avg_parameters[i*2+1] != dest_address) {
+          printFmtToWebClient(PSTR("!%s"), avg_parameters[i*2+1]);
+        }
+        printFmtToWebClient(PSTR(" - %s: %d<BR>\r\n"), lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
@@ -2351,9 +2355,13 @@ void generateConfigPage(void) {
   printToWebClient(PSTR(" " MENU_TEXT_SEC ": "));
   printyesno(LoggingMode & CF_LOGMODE_SD_CARD);
   printToWebClient(PSTR("<BR>\r\n"));
-  for (int i=0; i<numLogValues; i++) {      // TODO: Take care of destination device
+  for (int i=0; i<numLogValues; i++) {
     if (log_parameters[i*2] > 0) {
-      printFmtToWebClient(PSTR("%g - "), log_parameters[i*2]);
+      printFmtToWebClient(PSTR("%g"), log_parameters[i*2]);
+      if (log_parameters[i*2+1] != dest_address) {
+        printFmtToWebClient(PSTR("!%s"), log_parameters[i*2+1]);
+      }
+      printToWebClient(PSTR(" - "));
       printToWebClient(lookup_descr(log_parameters[i*2]));//outBuf will be overwrited here
       printToWebClient(PSTR("<BR>\r\n"));
     }
@@ -5945,7 +5953,7 @@ void loop() {
                   } else {
                     not_first = true;
                   }
-                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i*2]);    // TODO: Take care of destination device
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %g }"), avg_parameters[i*2], avg_parameters[i*2+1]);
                 }
               }
               printToWebClient(PSTR("\r\n  ]"));
@@ -5955,14 +5963,14 @@ void loop() {
           #ifdef LOGGER
             printFmtToWebClient(PSTR(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode, log_interval);
             not_first = false;
-            for (i=0; i<numLogValues; i++) {    // TODO: Take care of destination device
+            for (i=0; i<numLogValues; i++) {
               if (log_parameters[i*2] > 0)  {
                 if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
                 } else {
                   not_first = true;
                 }
-                printFmtToWebClient(PSTR("    { \"parameter\": %g }"), log_parameters[i*2]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %g }"), log_parameters[i*2], log_parameters[i*2+1]);
               }
             }
             printToWebClient(PSTR("\r\n  ]"));
@@ -7139,9 +7147,20 @@ void loop() {
         }
         avgCounter = 1;
       }
+      
+      uint8_t destAddr = bus->getBusDest();
+      float d_addr = (float)destAddr;
+      uint8_t save_my_dev_fam = my_dev_fam;
+      uint8_t save_my_dev_var = my_dev_var;
       for (int i=0; i<numAverages; i++) {
         if (avg_parameters[i*2] > 0) {
-          query(avg_parameters[i*2]);   // TODO: Take care of destination device
+          if (avg_parameters[i*2+1] != d_addr) {
+            d_addr = avg_parameters[i*2+1];
+            printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
+            bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
+            GetDevId();
+          }
+          query(avg_parameters[i*2]);
           float reading = strtod(decodedTelegram.value,NULL);
           printFmtToDebug(PSTR("%f\r\n"), reading);
           if (isnan(reading)) {} else {
@@ -7155,6 +7174,13 @@ void loop() {
           printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
         }
       }
+      if (destAddr != d_addr) {
+        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        my_dev_fam = save_my_dev_fam;
+        my_dev_var = save_my_dev_var;
+      }
+
       avgCounter++;
       lastAvgTime = millis() / 60000;
 
@@ -7165,7 +7191,7 @@ void loop() {
         File avgfile = SD.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
-          for (int i=0; i<numAverages; i++) {   // TODO: Take care of destination device
+          for (int i=0; i<numAverages; i++) {
             sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
