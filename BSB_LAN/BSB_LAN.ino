@@ -6840,6 +6840,7 @@ void loop() {
                   }
                   avg_token = strtok(NULL,"=,");
                 }
+                avgCounter = 1;
               }
             }
 #else
@@ -7205,7 +7206,7 @@ void loop() {
   #endif
   }
   } else {
-    avgCounter = 0;
+    avgCounter = 1;
   }
 #endif
 
