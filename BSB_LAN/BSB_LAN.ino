@@ -541,6 +541,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
   #include <WiFiUdp.h>
+  #include <esp_wifi.h>
 WiFiUDP udp, udp_log;
   #if defined(ENABLE_ESP32_OTA)
     #include <WebServer.h>
@@ -7960,11 +7961,11 @@ void setup() {
 
   unsigned long timeout;
   #ifdef ESP32
+  // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
-  // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
-// Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20
+  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
+// Enable the following command if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
 //  esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_LR);  // W.Bra. 23.03.23 LR
 
   printToDebug(PSTR("Setting up WiFi interface"));
