@@ -7963,6 +7963,10 @@ void setup() {
   WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
+// Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
+//  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20
+//  esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_LR);  // W.Bra. 23.03.23 LR
+
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
   timeout = millis();
@@ -7984,10 +7988,14 @@ void setup() {
   if (WiFi.status() != WL_CONNECTED) {
     printlnToDebug(PSTR("Connecting to WiFi network failed."));
   #if defined(ESP32)
+    WiFi.disconnect(false,true); // W.Bra. 06.03.23 wegen Abbrüchen AP
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
     localAP = true;
+// Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
+//    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
+//    esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);  // W.Bra. 23.03.23 11BGN
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
