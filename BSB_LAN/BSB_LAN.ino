@@ -2023,8 +2023,10 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 void init_ota_update(){
   if(enable_ota_update) {
     update_server.on("/", HTTP_GET, []() {
+      char temp_user_pass[64] = { 0 };
+      strncpy(temp_user_pass, USER_PASS, 64);
       if (USER_PASS[0]) {
-        if (!update_server.authenticate(strtok(USER_PASS,":"),strtok(NULL,":"))) {
+        if (!update_server.authenticate(strtok(temp_user_pass,":"),strtok(NULL,":"))) {
           return update_server.requestAuthentication();
         }
       }
