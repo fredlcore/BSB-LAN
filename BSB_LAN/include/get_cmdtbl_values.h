@@ -83,7 +83,7 @@ inline uint16_t get_cmdtbl_enumstr_len(int i) {
 inline uint8_t get_cmdtbl_category(int i) {
   int cat_min = 0;
   int cat_max = 0;
-  for (int8_t cat=0;cat<CAT_UNKNOWN;cat++) {
+  for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
     cat_min = ENUM_CAT_NR[cat*2];
     cat_max = ENUM_CAT_NR[cat*2+1];
     if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
