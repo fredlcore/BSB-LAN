@@ -68,10 +68,10 @@ const char graph_html[] PROGMEM_LATE =
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
 #endif
-#ifndef D3_LIBRARY_PATH
+#ifndef D3_LIBRARY_PATH // old BSB_LAN_config.h w/o this definition?
 #define D3_LIBRARY_PATH "https://d3js.org/d3.v4.min.js"
 #endif
-#ifndef C3_LIBRARY_PATH
+#ifndef C3_LIBRARY_PATH // old BSB_LAN_config.h w/o this definition?
 #define C3_LIBRARY_PATH "https://cdn.jsdelivr.net/npm/c3"
 #endif
 #define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
