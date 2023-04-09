@@ -22,7 +22,7 @@ void Ipwe() {
   int counter = 0;
   int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0])/2;
   uint8_t destAddr = bus->getBusDest();
-  float d_addr = (float)destAddr;
+  uint8_t d_addr = destAddr;
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
   printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
@@ -31,11 +31,24 @@ void Ipwe() {
 
   for (i=0; i < numIPWESensors; i++) {
     if (!ipwe_parameters[i*2]) continue;
-    if (ipwe_parameters[i*2+1] != d_addr) {
-      d_addr = ipwe_parameters[i*2+1];
-      printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
-      bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
-      GetDevId();
+    parameter param;
+    param.number = ipwe_parameters[i*2];
+    param.dest_addr = ipwe_parameters[i*2+1];
+    if (param.dest_addr > -1){
+      if( param.dest_addr != d_addr) {
+        d_addr = param.dest_addr;
+        printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+        bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+        GetDevId();
+      }
+    } else {
+      if (destAddr != d_addr) {
+        d_addr = destAddr;
+        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        my_dev_fam = save_my_dev_fam;
+        my_dev_var = save_my_dev_var;
+      }
     }
     query(ipwe_parameters[i*2]);
     counter++;

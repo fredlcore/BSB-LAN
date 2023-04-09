@@ -63,7 +63,7 @@
  *       2.1   - 30.07.2022
  *       2.2   - 01.11.2022
  *       3.0   - 16.03.2023
- *       3.1   - 
+ *       3.1   -
  *
  * Changelog:
  *       version 3.1
@@ -807,6 +807,11 @@ static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
+typedef struct {
+  float number;
+  int dest_addr;
+} parameter;
+
 #ifdef AVERAGES
 static const int numAverages = (sizeof(avg_parameters) / sizeof(avg_parameters[0]))/2;
 float avgValues_Old[numAverages] = {0};
@@ -983,6 +988,21 @@ int char2int(char input)
 #include "include/print2debug.h"
 /* Functions for management "Ring" output buffer */
 #include "include/print2webclient.h"
+
+// This function will extract parameter number and destination address from string like xxxxx[!yyy],[xxxxx[!yyy][,...]]
+parameter parsingStringToParameter(char *data){
+  parameter param;
+  param.number = atof(data); // convert until non-digit char is found
+  param.dest_addr = -1;
+  char* token = strchr(data, '!');
+  if (token != NULL) {
+    token++;
+    if (token[0] > 0) {
+      param.dest_addr = atoi(token);
+    }
+  }
+  return param;
+}
 
 void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, bool isDownload, long cachingTime) {
   const char *getfarstrings;
@@ -2465,16 +2485,9 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
         char *ptr_t = ptr;
         ptr = strchr(ptr, ',');
         if (ptr) ptr[0] = 0;
-        ((float *)variable)[j] = atof(ptr_t);
-        char* token = strchr(ptr_t, '!');
-        if (token != NULL) {
-          token++;
-          if (token[0] > 0) {
-            ((float *)variable)[j+1] = atof(token);
-          } else {
-            ((float *)variable)[j+1] = 0;
-          }
-        }
+        parameter param = parsingStringToParameter(ptr_t);
+        ((float *)variable)[j] = param.number;
+        ((float *)variable)[j+1] = param.dest_addr;
         if (ptr) {ptr[0] = ','; ptr++;}
         j=j+2;
       }while (ptr && j < cfg.size/sizeof(int));
@@ -5376,29 +5389,27 @@ void loop() {
           if (!isdigit(*p)) {   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
           } else {
-            char* token = strchr(p, '!');
-            if (token != NULL) {
-              token++;
-              if (token[0] > 0) {
-                int d_addr = atoi(token);
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                GetDevId();
+            uint8_t save_my_dev_fam = my_dev_fam;
+            uint8_t save_my_dev_var = my_dev_var;
+            parameter param = parsingStringToParameter(p);
+            line = param.number;
+
+            if (param.dest_addr > -1) {
+              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
+              GetDevId();
 /*
-                query(6225);
-                my_dev_fam = strtod(decodedTelegram.value,NULL);
-                query(6226);
-                my_dev_var = strtod(decodedTelegram.value,NULL);
+              query(6225);
+              my_dev_fam = strtod(decodedTelegram.value,NULL);
+              query(6226);
+              my_dev_var = strtod(decodedTelegram.value,NULL);
 */
-             }
             }
-            line=atof(p);       // convert until non-digit char is found
+
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match
                 printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
             } else {
-              uint8_t save_my_dev_fam = my_dev_fam;
-              uint8_t save_my_dev_var = my_dev_var;
               p++;                   // position pointer past the '=' sign
 
               printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
@@ -6138,14 +6149,9 @@ void loop() {
               if (p[2] == 'S' || p[2] == 'W') {
                 json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
               } else {
-                char* token = strchr(json_token, '!');
-                if (token != NULL) {
-                  token++;
-                  if (token[0] > 0) {
-                    tempDestAddr = atoi(token);
-                  }
-                }
-                json_parameter = atof(json_token);
+                parameter param = parsingStringToParameter(json_token);
+                json_parameter = param.number;
+                if(param.dest_addr > -1) tempDestAddr = param.dest_addr;
               }
             }
             if (tempDestAddr != tempDestAddrOnPrevIteration) {
@@ -6642,23 +6648,14 @@ void loop() {
               printToWebClient(PSTR(MENU_TEXT_LGN ": "));
               }
               while (log_token!=0) {
-                float log_parameter = atof(log_token);
-                float dest = 0;
-                char* token = strchr(log_token, '!');
-                if (token != NULL) {
-                  token++;
-                  if (token[0] > 0) {
-                    dest = atof(token);
-                  } else {
-                    dest = 0;
-                  }
-                }
+                parameter param = parsingStringToParameter(log_token);
+
                 if (token_counter < numLogValues) {
-                  log_parameters[token_counter] = log_parameter;
-                  log_parameters[token_counter+1] = dest;
+                  log_parameters[token_counter] = param.number;
+                  log_parameters[token_counter+1] = param.dest_addr;
                   printFmtToWebClient(PSTR("%g"), log_parameters[token_counter]);
-                  if (dest > 0) {
-                    printFmtToWebClient(PSTR("!%g"), dest);
+                  if (param.dest_addr > -1) {
+                    printFmtToWebClient(PSTR("!%d"), param.dest_addr);
                   }
                   printToWebClient(PSTR(" \r\n"));
                   token_counter = token_counter + 2;
@@ -6818,27 +6815,19 @@ void loop() {
                   resetAverageCalculation();
                   for (int i=0;i<numAverages;i++) {
                     avg_parameters[i*2] = 0;
-                    avg_parameters[i*2+1] = 0;
+                    avg_parameters[i*2+1] = -1;
                   }
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
                 while (avg_token!=0) {
-                  float dest = 0;
-                  char* token = strchr(avg_token, '!');
-                  if (token != NULL) {
-                    token++;
-                    if (token[0] > 0) {
-                      dest = atof(token);
-                    } else {
-                      dest = 0;
-                    }
-                  }
+                  parameter param = parsingStringToParameter(avg_token);
+
                   if (token_counter < numAverages*2) {
-                    avg_parameters[token_counter] = atof(avg_token);
-                    avg_parameters[token_counter+1] = dest;
+                    avg_parameters[token_counter] = param.number;
+                    avg_parameters[token_counter+1] = param.dest_addr;
                     printFmtToWebClient(PSTR("%g"), avg_parameters[token_counter]);
-                    if (dest > 0) {
-                      printFmtToWebClient(PSTR("!%g"), dest);
+                    if (param.dest_addr > -1) {
+                      printFmtToWebClient(PSTR("!%d"), param.dest_addr);
                     }
                     printToWebClient(PSTR(" \r\n"));
                     token_counter = token_counter + 2;
@@ -6908,17 +6897,14 @@ void loop() {
             uint8_t save_my_dev_var = my_dev_var;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
-              char* token = strchr(range, '!');
-              if (token != NULL) {
-                token++;
-                if (token[0] > 0) {
-                  int d_addr = atoi(token);
-                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                  GetDevId();
-                }
+              //Here will be parsing category number not parameter
+              parameter param = parsingStringToParameter(range);
+              if (param.dest_addr > -1) {
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
+                GetDevId();
               }
-              uint cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
+              uint cat = param.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
               }
@@ -6939,26 +6925,21 @@ void loop() {
                 *line_end='\0';
                 line_end++;
               }
-
-              char* token = strchr(range, '!');
-              if (token != NULL) {
-                token++;
-                if (token[0] > 0) {
-                  int d_addr = atoi(token);
-                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                  GetDevId();
+              parameter param = parsingStringToParameter(line_end);
+              end = param.number;
+              if (param.dest_addr > -1) {
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
+                GetDevId();
 /*
-                  query(6225);
-                  my_dev_fam = strtod(decodedTelegram.value,NULL);
-                  query(6226);
-                  my_dev_var = strtod(decodedTelegram.value,NULL);
+                query(6225);
+                my_dev_fam = strtod(decodedTelegram.value,NULL);
+                query(6226);
+                my_dev_var = strtod(decodedTelegram.value,NULL);
 */
-                }
               }
 
               start=atof(line_start);
-              end=atof(line_end);
             }
             query(start,end,0);
             if (bus->getBusDest() != destAddr) {
@@ -7016,18 +6997,31 @@ void loop() {
       if ((((millis() - lastMQTTTime >= (log_interval * 1000)) && log_interval > 0) || log_now > 0) && numLogValues > 0) {
         lastMQTTTime = millis();
         uint8_t destAddr = bus->getBusDest();
-        float d_addr = (float)destAddr;
+        uint8_t d_addr = destAddr;
         uint8_t save_my_dev_fam = my_dev_fam;
         uint8_t save_my_dev_var = my_dev_var;
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i*2] > 0) {
-            if (log_parameters[i*2+1] != d_addr) {
-              d_addr = log_parameters[i*2+1];
-              printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
-              GetDevId();
+            parameter param;
+            param.number = log_parameters[i*2];
+            param.dest_addr = log_parameters[i*2+1];
+            if (param.dest_addr > -1){
+              if( param.dest_addr != d_addr) {
+                d_addr = param.dest_addr;
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                GetDevId();
+              }
+            } else {
+              if (destAddr != d_addr) {
+                d_addr = destAddr;
+                printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+                my_dev_fam = save_my_dev_fam;
+                my_dev_var = save_my_dev_var;
+              }
             }
-            mqtt_sendtoBroker(log_parameters[i*2], log_parameters[i*2+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            mqtt_sendtoBroker(log_parameters[i*2], param.dest_addr);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
         if (destAddr != d_addr) {
@@ -7080,17 +7074,30 @@ void loop() {
         broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
       }
       uint8_t destAddr = bus->getBusDest();
-      float d_addr = (float)destAddr;
+      uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
       for (int i=0; i < numLogValues; i++) {
         int outBufLen = 0;
         if (log_parameters[i*2] > 0) {
-          if (log_parameters[i*2+1] != d_addr) {
-            d_addr = log_parameters[i*2+1];
-            printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
-            GetDevId();
+          parameter param;
+          param.number = log_parameters[i*2];
+          param.dest_addr = log_parameters[i*2+1];
+          if (param.dest_addr > -1){
+            if( param.dest_addr != d_addr) {
+              d_addr = param.dest_addr;
+              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              GetDevId();
+            }
+          } else {
+            if (destAddr != d_addr) {
+              d_addr = destAddr;
+              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+            }
           }
           query(log_parameters[i*2]);
           if (decodedTelegram.prognr < 0) continue;
@@ -7156,18 +7163,31 @@ void loop() {
         }
         avgCounter = 1;
       }
-      
+
       uint8_t destAddr = bus->getBusDest();
-      float d_addr = (float)destAddr;
+      uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
       for (int i=0; i<numAverages; i++) {
         if (avg_parameters[i*2] > 0) {
-          if (avg_parameters[i*2+1] != d_addr) {
-            d_addr = avg_parameters[i*2+1];
-            printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
-            GetDevId();
+          parameter param;
+          param.number = avg_parameters[i*2];
+          param.dest_addr = avg_parameters[i*2+1];
+          if (param.dest_addr > -1){
+            if( param.dest_addr != d_addr) {
+              d_addr = param.dest_addr;
+              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              GetDevId();
+            }
+          } else {
+            if (destAddr != d_addr) {
+              d_addr = destAddr;
+              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+            }
           }
           query(avg_parameters[i*2]);
           float reading = strtod(decodedTelegram.value,NULL);
@@ -7999,7 +8019,7 @@ void setup() {
     IPAddress t = WiFi.softAPIP();
     localAP = true;
 // Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
+//    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
 //    esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);  // W.Bra. 23.03.23 11BGN
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);

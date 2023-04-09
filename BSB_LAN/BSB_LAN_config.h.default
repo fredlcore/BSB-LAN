@@ -114,9 +114,9 @@ byte BME_Sensors = 0; //Define number of BME280 sensors
 #define AVERAGES
 // Create 24h averages from these parameters and save data into averages.txt on SD-card.
 float avg_parameters[80] = {
-// parameter, destination (as in dest_address below)
-  8700, 0,                         // Außentemperatur
-  8326, 0                          // Brenner-Modulation
+// parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
+  8700, -1,                         // Außentemperatur
+  8326, -1                          // Brenner-Modulation
 };
 
 /* Compile module for logging.
@@ -147,20 +147,20 @@ int logTelegram = LOGTELEGRAM_OFF;
 // Data will be written to "datalog.txt"
 unsigned long log_interval = 3600;  // Logging interval (to SD card, UDP and MQTT broker) in seconds
 float log_parameters[80] = {
-// parameter, destination (as in dest_address below)
-  8700, 0,                   // Außentemperatur
-  8743, 0,                  // Vorlauftemperatur
-  8314, 0,                  // Rücklauftemperatur
-//  20000, 0,                 // Spezialparameter: Brenner-Laufzeit Stufe 1
-//  20001, 0,                 // Spezialparameter: Brenner-Takte Stufe 1
-//  20002, 0,                 // Spezialparameter: Brenner-Laufzeit Stufe 2
-//  20003, 0,                 // Spezialparameter: Brenner-Takte Stufe 2
-//  20004, 0,                 // Spezialparameter: TWW-Laufzeit
-//  20005, 0,                 // Spezialparameter: TWW-Takte
-//  20050, 0,                 // Spezialparameter 20050-20099: 24h-Durchschnittswerte
-//  20100, 0,                 // Spezialparameter 20100-20299: DHT22-Sensoren 1-50
-//  20300, 0,                 // Spezialparameter 20300-20499: DS18B20-Sensoren 1-100
-//  20500, 0                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
+// parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
+  8700, -1,                   // Außentemperatur
+  8743, -1,                  // Vorlauftemperatur
+  8314, -1,                  // Rücklauftemperatur
+//  20000, -1,                 // Spezialparameter: Brenner-Laufzeit Stufe 1
+//  20001, -1,                 // Spezialparameter: Brenner-Takte Stufe 1
+//  20002, -1,                 // Spezialparameter: Brenner-Laufzeit Stufe 2
+//  20003, -1,                 // Spezialparameter: Brenner-Takte Stufe 2
+//  20004, -1,                 // Spezialparameter: TWW-Laufzeit
+//  20005, -1,                 // Spezialparameter: TWW-Takte
+//  20050, -1,                 // Spezialparameter 20050-20099: 24h-Durchschnittswerte
+//  20100, -1,                 // Spezialparameter 20100-20299: DHT22-Sensoren 1-50
+//  20300, -1,                 // Spezialparameter 20300-20499: DS18B20-Sensoren 1-100
+//  20500, -1                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
 };
 
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
@@ -186,18 +186,18 @@ byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_24AVG | CF_LOGMODE_MQTT 
 bool enable_ipwe = false;  // true - activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 // Parameters to be displayed in IPWE extension
 float ipwe_parameters[80] = {
-// parameter, destination (as in dest_address below)
-  8700, 0,                  // Außentemperatur
-  8743, 0,                  // Vorlauftemperatur
-  8314, 0,                  // Rücklauftemperatur
-//  8750, 0,                  // Gebläsedrehzahl
-//  8830, 0,                  // Warmwassertemperatur
-//  8740, 0,                  // Raumtemperatur Ist
-//  8741, 0,                  // Raumtemperatur Soll
-//  8326, 0,                  // Brenner-Modulation
-//  8337, 0,                  // Startzähler Brenner
-//  8703, 0,                  // Aussentemperatur gedämpft
-//  8704, 0                   // Aussentemperatur gemischt
+// parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
+  8700, -1,                  // Außentemperatur
+  8743, -1,                  // Vorlauftemperatur
+  8314, -1,                  // Rücklauftemperatur
+//  8750, -1,                  // Gebläsedrehzahl
+//  8830, -1,                  // Warmwassertemperatur
+//  8740, -1,                  // Raumtemperatur Ist
+//  8741, -1,                  // Raumtemperatur Soll
+//  8326, -1,                  // Brenner-Modulation
+//  8337, -1,                  // Startzähler Brenner
+//  8703, -1,                  // Aussentemperatur gedämpft
+//  8704, -1                   // Aussentemperatur gemischt
 };
 
 // If you prefer to use the log file plotting (/DG) used in BSB-LAN 2.1.3, disable the following #define.
@@ -272,7 +272,7 @@ bool enable_version_check = false;
 #define ENABLE_ESP32_OTA
 boolean enable_ota_update = false;
 
-// Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy. 
+// Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy.
 // Reduces WiFi range and log file display times when using and WiFi (LAN not affected). Set to "false" if you have problems with any of these.
 boolean esp32_save_energy = true;
 
