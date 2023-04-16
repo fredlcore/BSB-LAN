@@ -7470,7 +7470,7 @@ void loop() {
 // if WiFi is down, try reconnecting every minute
     if (WiFi.status() != WL_CONNECTED && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
-      WiFi.disconnect();
+      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
       WiFi.begin();
     }
 #endif
@@ -7962,11 +7962,9 @@ void setup() {
   unsigned long timeout;
   #ifdef ESP32
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
-  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
+  esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
-// Enable the following command if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//  esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_LR);  // W.Bra. 23.03.23 LR
 
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
@@ -7989,14 +7987,12 @@ void setup() {
   if (WiFi.status() != WL_CONNECTED) {
     printlnToDebug(PSTR("Connecting to WiFi network failed."));
   #if defined(ESP32)
-    WiFi.disconnect(false,true); // W.Bra. 06.03.23 wegen Abbrüchen AP
+    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
     localAP = true;
-// Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
-//    esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);  // W.Bra. 23.03.23 11BGN
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
@@ -8021,28 +8017,47 @@ void setup() {
 #endif
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
-  // turn the LED on until Ethernet shield is ready and freeClusterCount is over
+  // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
-  long diff = 2200; // + 1 sec with decoration
-  #if defined LOGGER || defined WEBSERVER
+  long diff = 3000;
+
+  if (bus->getBusType() != BUS_PPS) {
+// receive inital date/time from heating system
+    SetDateTime();
+
+// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
+    SetDevId();
+    if (my_dev_fam != 0) {
+      //decoration: double blink by LED to signal succesful detection of device family. effectively wait for a second
+      internalLEDBlinking(250, 2);
+      //end of decoration
+    }
+  } else {
+    if (pps_values[PPS_QTP] == 0xEA) {
+      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
+      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
+    } else {
+      my_dev_fam = DEV_FAM(DEV_PPS);
+      my_dev_var = DEV_VAR(DEV_PPS);
+    }
+  }
+
+#if defined LOGGER || defined WEBSERVER
   printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
-#if !defined(ESP32)
+  #if !defined(ESP32)
   uint32_t freespace = SD.vol()->freeClusterCount();
   freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
-#else
+  #else
   uint64_t freespace = SD.totalBytes() - SD.usedBytes();
   printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
-#endif
-  diff -= (millis() - m); //3 sec - delay
   #endif
-  if (diff > 0)  delay(diff);
-
-  //decoration: double blink by LED before start. wait for a second
-  internalLEDBlinking(250, 2);
-  //end of decoration
+  diff -= (millis() - m); //3 sec - delay
+#endif
+  if (diff > 0) delay(diff);
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
 
   printlnToDebug(PSTR("Start network services"));
   server->begin();
@@ -8191,22 +8206,6 @@ void setup() {
   }
   else readFirstAndPreviousDatalogDateFromFile();
 #endif
-
-  if (bus->getBusType() != BUS_PPS) {
-// receive inital date/time from heating system
-    SetDateTime();
-
-// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
-    SetDevId();
-  } else {
-    if (pps_values[PPS_QTP] == 0xEA) {
-      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
-      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
-    } else {
-      my_dev_fam = DEV_FAM(DEV_PPS);
-      my_dev_var = DEV_VAR(DEV_PPS);
-    }
-  }
 
 #ifdef MAX_CUL
   if (enable_max_cul) {
