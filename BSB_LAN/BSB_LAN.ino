@@ -2887,13 +2887,13 @@ void generateWebConfigPage(bool printOnly) {
        printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
        switch (cfg.var_type) {
          case CDT_MAC:
-           printToWebClient(PSTR("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'"));
+           printToWebClient(PSTR("pattern='((^|,)([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))*$'"));
            break;
          case CDT_IPV4:
-           printToWebClient(PSTR("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'"));
+           printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
            break;
          case CDT_PROGNRLIST:
-           printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?(!\\d{1,2})?)+'"));
+           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})((\\.){0,1})((\\d){0,1})((\\!){0,1})((\\d){0,2})))*'"));
            break;
          }
        printToWebClient(PSTR(" value='"));
@@ -3150,6 +3150,10 @@ char *GetDateTime(char *date) {
             currentDate.elements.month = now.tm_mon + 1,
             currentDate.elements.year  = now.tm_year + 1900,
             now.tm_hour,now.tm_min,now.tm_sec);
+#if 0 // for accelerated testing:
+  currentDate.elements.day   = now.tm_min % 10 + 1;
+  currentDate.elements.month = now.tm_min / 10 + 1;
+#endif
 #else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
             currentDate.elements.day   = day(),
