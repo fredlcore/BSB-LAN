@@ -207,7 +207,6 @@ float ipwe_parameters[80] = {
 // - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
 // - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
 // - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
-// - selective plotting of data from big logs
 #define USE_ADVANCED_PLOT_LOG_FILE
 #define DEFAULT_DAYS_TO_PLOT "3" // must be a positive integer value in double quotes!
 // Log file plotting uses two JavaScript libraries, which are usually loaded from the web.
