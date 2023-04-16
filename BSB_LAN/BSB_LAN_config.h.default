@@ -216,7 +216,7 @@ float ipwe_parameters[80] = {
 // compression (what browser doesn't?), it is sufficient to copy the *.gz file versions to your
 // bsb-lan unit, but omit the ".gz" from the path names you put into the following lines!
 // (*) In case you're using an ESP32's internal memory instead of an SD card, use
-// https://github.com/lorol/arduino-esp32littlefs-plugin to upload the files.
+// https://github.com/me-no-dev/arduino-esp32fs-plugin to upload the files.
 // For local use of these libraries to work, "#define WEBSERVER" is also required!
 //#define D3_LIBRARY_PATH "/d3.js"
 //#define C3_LIBRARY_PATH "/c3.js"
