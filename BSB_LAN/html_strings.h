@@ -67,7 +67,6 @@ const char graph_html[] PROGMEM_LATE =
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
 #endif
-#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
