@@ -94,7 +94,7 @@ void printBYTE(byte *msg,byte data_len) {
  * Global resources used:
  *
  * *************************************************************** */
-void printWORD(byte *msg,byte data_len, long divisor) {
+void printWORD(byte *msg,byte data_len, float divisor) {
   long lval;
   if (data_len == 3) {
     if (msg[bus->getPl_start()]==0) {
@@ -123,7 +123,7 @@ void printWORD(byte *msg,byte data_len, long divisor) {
  * Global resources used:
  *
  * *************************************************************** */
-void printSINT(byte *msg,byte data_len, long multiplier) {
+void printSINT(byte *msg,byte data_len, float multiplier) {
   int16_t lval;
   if (data_len == 3) {
     if (msg[bus->getPl_start()]==0) {
@@ -152,7 +152,7 @@ void printSINT(byte *msg,byte data_len, long multiplier) {
  * Global resources used:
  *
  * *************************************************************** */
- void printDWORD(byte *msg, byte data_len, long divider) {
+ void printDWORD(byte *msg, byte data_len, float divider) {
    long lval;
    if (data_len == 5) {
      if (msg[bus->getPl_start()]==0) {
@@ -876,6 +876,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_HOURS_WORD_N: // u16 h
             case VT_MINUTES_WORD: //u16 min
             case VT_MINUTES_WORD_N: //u16 min
+            case VT_MINUTES_WORD10: //u16 min
             case VT_MSECONDS_WORD: //s16 ms
             case VT_MSECONDS_WORD_N: //s16 ms
             case VT_SECONDS_WORD: //u16 s
