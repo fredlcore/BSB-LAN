@@ -22,7 +22,7 @@ use strict;
 # Set $URL to point to your BSB-LAN installation, including (optional) passkey.
 # Note: No trailing slash!
 
-my $URL = "http://192.168.1.50/4444";
+my $URL = "http://192.168.1.50";
 my $baseID = 0x05;
 my $param_nr = 11000;
 
