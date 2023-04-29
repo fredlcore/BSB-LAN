@@ -416,6 +416,7 @@ const char STR_UINT10[] PROGMEM = "UINT10";
 const char STR_AMP[] PROGMEM = "AMP";
 const char STR_SINT[] PROGMEM = "SINT";
 const char STR_SINT1000[] PROGMEM = "SINT1000";
+const char STR_SINT5[] PROGMEM = "SINT5";
 const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
 const char STR_DWORD[] PROGMEM = "DWORD";
 const char STR_DWORD10[] PROGMEM = "DWORD10";
@@ -656,6 +657,7 @@ typedef enum{
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT_NN,            //  3 Byte - 1 enable 0x01 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
+  VT_SINT5,             //  3 Byte - 1 enable 0x01 / value*5
   VT_PPS_TIME,          //  4 Byte
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
   VT_DWORD_N,           //  5 Byte - 1 enable 0x06 / value
@@ -759,7 +761,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS_WORD_N,     1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
 {VT_MINUTES_WORD,     1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
 {VT_MINUTES_WORD_N,   1.0,    6, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
-{VT_MINUTES_WORD10,   0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
+{VT_MINUTES_WORD10,   0.1,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
 {VT_PERCENT_WORD1,    1.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
 {VT_PERCENT_WORD,     2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
 {VT_PERCENT_100,      100.0,  1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
@@ -819,6 +821,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SINT,             1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT_NN,          1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT1000,         1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
+{VT_SINT5,            0.2,    1, 2, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT5},
 {VT_PPS_TIME,         1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
 {VT_DWORD,            1.0,    1, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
 {VT_DWORD_N,          1.0,    6, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
@@ -826,7 +829,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS,            3600.0, 1, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
 {VT_HOURS_N,          3600.0, 6, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
 {VT_MINUTES,          60.0,   1, 4, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
-{VT_SECONDS_DWORD,    1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
+{VT_SECONDS_DWORD,    1.0,    1, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
 {VT_POWER,            10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
 {VT_POWER100,         100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
 // {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},

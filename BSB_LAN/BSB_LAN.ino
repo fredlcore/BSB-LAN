@@ -509,11 +509,14 @@ void loop();
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
     #if defined(RX1)          // poor man's detection of Olimex' builtin button
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 34
     #else                     // GPIO for ESP32-NodeMCU
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 18
     #endif
   #else                       // GPIO for Arduino Due
+#undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 31
   #endif
 #endif
@@ -538,6 +541,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
   #include <WiFiUdp.h>
+  #include <esp_wifi.h>
 WiFiUDP udp, udp_log;
   #if defined(ENABLE_ESP32_OTA)
     #include <WebServer.h>
@@ -799,7 +803,7 @@ volatile byte PressedButtons = 0;
 #define ROOM3_PRESENCE_BUTTON_PRESSED 8
 #endif
 
-static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0]);
+static const int numLogValues = sizeof(log_parameters) / sizeof(log_parameters[0])/2;
 static const int numCustomFloats = sizeof(custom_floats) / sizeof(custom_floats[0]);
 static const int numCustomLongs = sizeof(custom_longs) / sizeof(custom_longs[0]);
 
@@ -2019,8 +2023,10 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 void init_ota_update(){
   if(enable_ota_update) {
     update_server.on("/", HTTP_GET, []() {
+      char temp_user_pass[64] = { 0 };
+      strncpy(temp_user_pass, USER_PASS, 64);
       if (USER_PASS[0]) {
-        if (!update_server.authenticate(strtok(USER_PASS,":"),strtok(NULL,":"))) {
+        if (!update_server.authenticate(strtok(temp_user_pass,":"),strtok(NULL,":"))) {
           return update_server.requestAuthentication();
         }
       }
@@ -2028,8 +2034,10 @@ void init_ota_update(){
       update_server.send(200, "text/html", serverIndex);
     });
     update_server.on("/update", HTTP_POST, []() {
+      char temp_user_pass[64] = { 0 };
+      strncpy(temp_user_pass, USER_PASS, 64);
       if (USER_PASS[0]) {
-        if (!update_server.authenticate(strtok(USER_PASS,":"),strtok(NULL,":"))) {
+        if (!update_server.authenticate(strtok(temp_user_pass,":"),strtok(NULL,":"))) {
           return update_server.requestAuthentication();
         }
       }
@@ -2159,153 +2167,229 @@ void generateConfigPage(void) {
 // list of enabled modules
   printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
 
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef AVERAGES
+  "AVERAGES"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BME280
+  "BME280"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BUTTONS
+  "BUTTONS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CONFIG_IN_EEPROM
+  "CONFIG_IN_EEPROM"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CUSTOM_COMMANDS
+  "CUSTOM_COMMANDS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
   #ifdef DEBUG
-  "Verbose "
-  #endif
   "DEBUG"
+  #endif
 
-  #ifdef WEBSERVER
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "WEBSERVER"
+  #ifdef DEVELOPER_DEBUG
+  "DEVELOPER_DEBUG"
   #endif
-  #ifdef IPWE
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "IPWE"
-  #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "CUSTOM_COMMANDS"
-  #endif
-  #ifdef MQTT
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MQTT"
-  #endif
-  #ifdef LOGGER
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "LOGGER"
-  #endif
-  #ifdef VERSION_CHECK
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "VERSION_CHECK"
-  #endif
-  #ifdef AVERAGES
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "AVERAGES"
-  #endif
-  #ifdef MAX_CUL
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MAX_CUL"
-  #endif
-  #ifdef ONE_WIRE_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "ONE_WIRE_BUS"
   #endif
   #ifdef DHT_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "DHT_BUS"
   #endif
-  #ifdef BME280
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "BME280"
+  #ifdef ENABLE_ESP32_OTA
+  "ENABLE_ESP32_OTA"
   #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CUSTOM_COMMANDS"
+  #ifdef ESP32_USE_SD
+  "ESP32_USE_SD"
   #endif
-  #ifdef CONFIG_IN_EEPROM
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CONFIG_IN_EEPROM"
+  #ifdef IPWE
+  "IPWE"
   #endif
-  #ifdef WEBCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "WEBCONFIG"
   #endif
   #ifdef JSONCONFIG
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "JSONCONFIG"
   #endif
 
-  #ifdef URLCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "URLCONFIG"
+  #ifdef LOGGER
+  "LOGGER"
   #endif
 
-  #ifdef MDNS_SUPPORT
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "MDNS"
+  #ifdef MAX_CUL
+  "MAX_CUL"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MDNS_SUPPORT
+  "MDNS_SUPPORT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MQTT
+  "MQTT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef OFF_SITE_LOGGER
+  "OFF_SITE_LOGGER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ONE_WIRE_BUS
+  "ONE_WIRE_BUS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef RGT_EMULATOR
+  "RGT_EMULATOR"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ROOM_UNIT
+  "ROOM_UNIT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef USE_ADVANCED_PLOT_LOG_FILE
+  "USE_ADVANCED_PLOT_LOG_FILE"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef VERSION_CHECK
+  "VERSION_CHECK"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBCONFIG
+  "WEBCONFIG"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBSERVER
+  "WEBSERVER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WIFI
+  "WIFI"
   #endif
 
   #if !defined (ANY_MODULE_COMPILED)
@@ -2340,7 +2424,11 @@ void generateConfigPage(void) {
 
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i*2] > 0) {
-        printFmtToWebClient(PSTR("%g - %s: %d<BR>\r\n"), avg_parameters[i*2], lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
+        printFmtToWebClient(PSTR("%g"), avg_parameters[i*2]);//outBuf will be overwrited here
+        if (avg_parameters[i*2+1] != dest_address) {
+          printFmtToWebClient(PSTR("!%s"), avg_parameters[i*2+1]);
+        }
+        printFmtToWebClient(PSTR(" - %s: %d<BR>\r\n"), lookup_descr(avg_parameters[i*2]), BSP_AVERAGES + i);//outBuf will be overwrited here
       }
     }
     printToWebClient(PSTR("<BR>"));
@@ -2352,9 +2440,13 @@ void generateConfigPage(void) {
   printyesno(LoggingMode & CF_LOGMODE_SD_CARD);
   printToWebClient(PSTR("<BR>\r\n"));
   for (int i=0; i<numLogValues; i++) {
-    if (log_parameters[i] > 0) {
-      printFmtToWebClient(PSTR("%g - "), log_parameters[i]);
-      printToWebClient(lookup_descr(log_parameters[i]));//outBuf will be overwrited here
+    if (log_parameters[i*2] > 0) {
+      printFmtToWebClient(PSTR("%g"), log_parameters[i*2]);
+      if (log_parameters[i*2+1] != dest_address) {
+        printFmtToWebClient(PSTR("!%s"), log_parameters[i*2+1]);
+      }
+      printToWebClient(PSTR(" - "));
+      printToWebClient(lookup_descr(log_parameters[i*2]));//outBuf will be overwrited here
       printToWebClient(PSTR("<BR>\r\n"));
     }
   }
@@ -3438,6 +3530,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_HOURS_WORD_N: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
     case VT_MINUTES_WORD_N:
+    case VT_MINUTES_WORD10:
     case VT_UINT5:
     case VT_UINT10:
     case VT_MSECONDS_WORD:
@@ -4581,8 +4674,8 @@ uint16_t setPPS(uint8_t pps_index, int16_t value) {
   if (pps_values[pps_index] != value) {
     if (LoggingMode & CF_LOGMODE_SD_CARD) {
       for (int i=0; i < numLogValues; i++) {
-        if (log_parameters[i] == 15000 + pps_index) {
-          log_parameter = log_parameters[i];
+        if (log_parameters[i*2] == 15000 + pps_index) {
+          log_parameter = log_parameters[i*2];
         }
       }
     }
@@ -5360,6 +5453,22 @@ void loop() {
           if (!isdigit(*p)) {   // now we check for digits - nice
             printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
           } else {
+            char* token = strchr(p, '!');
+            if (token != NULL) {
+              token++;
+              if (token[0] > 0) {
+                int d_addr = atoi(token);
+                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                GetDevId();
+/*
+                query(6225);
+                my_dev_fam = strtod(decodedTelegram.value,NULL);
+                query(6226);
+                my_dev_var = strtod(decodedTelegram.value,NULL);
+*/
+             }
+            }
             line=atof(p);       // convert until non-digit char is found
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match
@@ -5368,22 +5477,6 @@ void loop() {
               uint8_t save_my_dev_fam = my_dev_fam;
               uint8_t save_my_dev_var = my_dev_var;
               p++;                   // position pointer past the '=' sign
-              char* token = strchr(p, '!');
-              if (token != NULL) {
-                token++;
-                if (token[0] > 0) {
-                  int d_addr = atoi(token);
-                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                  GetDevId();
-/*
-                  query(6225);
-                  my_dev_fam = strtod(decodedTelegram.value,NULL);
-                  query(6226);
-                  my_dev_var = strtod(decodedTelegram.value,NULL);
-*/
-               }
-              }
 
               printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
               writelnToDebug();
@@ -5409,6 +5502,7 @@ void loop() {
                 }
               }
               if (bus->getBusDest() != destAddr) {
+                printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
                 bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
@@ -5831,6 +5925,8 @@ void loop() {
           uint8_t destAddr = bus->getBusDest();
           uint8_t tempDestAddr = 0;
           uint8_t tempDestAddrOnPrevIteration = 0;
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
@@ -5942,7 +6038,7 @@ void loop() {
                   } else {
                     not_first = true;
                   }
-                  printFmtToWebClient(PSTR("    { \"parameter\": %g }"), avg_parameters[i*2]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %g }"), avg_parameters[i*2], avg_parameters[i*2+1]);
                 }
               }
               printToWebClient(PSTR("\r\n  ]"));
@@ -5953,13 +6049,13 @@ void loop() {
             printFmtToWebClient(PSTR(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
-              if (log_parameters[i] > 0)  {
+              if (log_parameters[i*2] > 0)  {
                 if (not_first) {
                   printToWebClient(PSTR(",\r\n"));
                 } else {
                   not_first = true;
                 }
-                printFmtToWebClient(PSTR("    { \"parameter\": %g }"), log_parameters[i]);
+                  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %g }"), log_parameters[i*2], log_parameters[i*2+1]);
               }
             }
             printToWebClient(PSTR("\r\n  ]"));
@@ -5978,7 +6074,7 @@ void loop() {
 #endif
           if (p[2] == 'B'){ // backup settings to file
             bool notfirst = false;
-            for (int cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
+            for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
@@ -6119,11 +6215,21 @@ void loop() {
               if (p[2] == 'S' || p[2] == 'W') {
                 json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
               } else {
+                char* token = strchr(json_token, '!');
+                if (token != NULL) {
+                  token++;
+                  if (token[0] > 0) {
+                    tempDestAddr = atoi(token);
+                  }
+                }
                 json_parameter = atof(json_token);
               }
             }
-            if (tempDestAddr != tempDestAddrOnPrevIteration)
+            if (tempDestAddr != tempDestAddrOnPrevIteration) {
+              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), tempDestAddr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), tempDestAddr);
+              GetDevId();
+            }
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter,0,&cmd);
@@ -6138,7 +6244,7 @@ void loop() {
 
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
-                for (int cat=0;cat<CAT_UNKNOWN;cat++) {
+                for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
                     printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
@@ -6268,8 +6374,12 @@ void loop() {
             tempDestAddrOnPrevIteration = tempDestAddr;
             json_parameter = -1;
           }
-          if (tempDestAddr != destAddr)
+          if (tempDestAddr != destAddr) {
+            printFmtToDebug(PSTR("Returning to default destination %d\r\n"), tempDestAddr);
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+          }
 #if defined(JSONCONFIG)
           bool needReboot = false;
           if (p[2]=='W') {
@@ -6603,7 +6713,8 @@ void loop() {
               int token_counter = 0;
               if (log_token != 0) {
                 for (int i=0;i<numLogValues;i++) {
-                  log_parameters[i] = 0;
+                  log_parameters[i*2] = 0;
+                  log_parameters[i*2+1] = 0;
                 }
               printToWebClient(PSTR(MENU_TEXT_LGN ": "));
               }
@@ -6782,8 +6893,9 @@ void loop() {
                 int token_counter = 0;
                 if (avg_token != 0) {
                   resetAverageCalculation();
-                  for (int i=0;i<numAverages*2;i++) {
-                    avg_parameters[i] = 0;
+                  for (int i=0;i<numAverages;i++) {
+                    avg_parameters[i*2] = 0;
+                    avg_parameters[i*2+1] = 0;
                   }
                   printToWebClient(PSTR(MENU_TEXT_24N ": "));
                 }
@@ -6810,6 +6922,7 @@ void loop() {
                   }
                   avg_token = strtok(NULL,"=,");
                 }
+                avgCounter = 1;
               }
             }
 #else
@@ -6872,7 +6985,17 @@ void loop() {
             uint8_t save_my_dev_var = my_dev_var;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
-              uint8_t cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
+              char* token = strchr(range, '!');
+              if (token != NULL) {
+                token++;
+                if (token[0] > 0) {
+                  int d_addr = atoi(token);
+                  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
+                  bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+                  GetDevId();
+                }
+              }
+              uint cat = atoi(&range[1]) * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
               }
@@ -6916,6 +7039,7 @@ void loop() {
             }
             query(start,end,0);
             if (bus->getBusDest() != destAddr) {
+              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
@@ -6972,18 +7096,19 @@ void loop() {
         float d_addr = (float)destAddr;
         uint8_t save_my_dev_fam = my_dev_fam;
         uint8_t save_my_dev_var = my_dev_var;
-        for (int i=0; i < numLogValues; i=i+2) {
-          if (log_parameters[i] > 0) {
-            if (log_parameters[i+1] != d_addr) {
-              d_addr = log_parameters[i+1];
+        for (int i=0; i < numLogValues; i++) {
+          if (log_parameters[i*2] > 0) {
+            if (log_parameters[i*2+1] != d_addr) {
+              d_addr = log_parameters[i*2+1];
               printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
               bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
               GetDevId();
             }
-            mqtt_sendtoBroker(log_parameters[i], log_parameters[i+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            mqtt_sendtoBroker(log_parameters[i*2], log_parameters[i*2+1]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
         if (destAddr != d_addr) {
+          printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
           bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
@@ -7035,22 +7160,22 @@ void loop() {
       float d_addr = (float)destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
-      for (int i=0; i < numLogValues; i=i+2) {
+      for (int i=0; i < numLogValues; i++) {
         int outBufLen = 0;
-        if (log_parameters[i] > 0) {
-          if (log_parameters[i+1] != d_addr) {
-            d_addr = log_parameters[i+1];
+        if (log_parameters[i*2] > 0) {
+          if (log_parameters[i*2+1] != d_addr) {
+            d_addr = log_parameters[i*2+1];
             printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
             GetDevId();
           }
-          query(log_parameters[i]);
+          query(log_parameters[i*2]);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i]);
+          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i*2]);
 
 #ifdef AVERAGES
-          if ((log_parameters[i] >= BSP_AVERAGES && log_parameters[i] < BSP_AVERAGES + numAverages)) {
+          if ((log_parameters[i*2] >= BSP_AVERAGES && log_parameters[i*2] < BSP_AVERAGES + numAverages)) {
             //averages
             outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
           }
@@ -7088,6 +7213,7 @@ void loop() {
       if (dataFile) dataFile.close();
       lastLogTime = millis();
       if (destAddr != d_addr) {
+        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
         bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
@@ -7107,8 +7233,19 @@ void loop() {
         }
         avgCounter = 1;
       }
+      
+      uint8_t destAddr = bus->getBusDest();
+      float d_addr = (float)destAddr;
+      uint8_t save_my_dev_fam = my_dev_fam;
+      uint8_t save_my_dev_var = my_dev_var;
       for (int i=0; i<numAverages; i++) {
         if (avg_parameters[i*2] > 0) {
+          if (avg_parameters[i*2+1] != d_addr) {
+            d_addr = avg_parameters[i*2+1];
+            printFmtToDebug(PSTR("Setting temporary destination to %g\r\n"), d_addr);
+            bus->setBusType(bus->getBusType(), bus->getBusAddr(), (uint8_t)d_addr);
+            GetDevId();
+          }
           query(avg_parameters[i*2]);
           float reading = strtod(decodedTelegram.value,NULL);
           printFmtToDebug(PSTR("%f\r\n"), reading);
@@ -7123,6 +7260,13 @@ void loop() {
           printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
         }
       }
+      if (destAddr != d_addr) {
+        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        my_dev_fam = save_my_dev_fam;
+        my_dev_var = save_my_dev_var;
+      }
+
       avgCounter++;
       lastAvgTime = millis() / 60000;
 
@@ -7133,7 +7277,7 @@ void loop() {
         File avgfile = SD.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
-          for (int i=0; i<numAverages/2; i++) {
+          for (int i=0; i<numAverages; i++) {
             sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
@@ -7144,7 +7288,7 @@ void loop() {
   #endif
   }
   } else {
-    avgCounter = 0;
+    avgCounter = 1;
   }
 #endif
 
@@ -7407,7 +7551,7 @@ void loop() {
 // if WiFi is down, try reconnecting every minute
     if (WiFi.status() != WL_CONNECTED && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
-      WiFi.disconnect();
+      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
       WiFi.begin();
     }
 #endif
@@ -7898,9 +8042,11 @@ void setup() {
 
   unsigned long timeout;
   #ifdef ESP32
-  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
-  WiFi.mode(WIFI_STA); //init wifi mode
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
+  esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
+  WiFi.mode(WIFI_STA); //init wifi mode
+  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
+
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
   timeout = millis();
@@ -7922,10 +8068,12 @@ void setup() {
   if (WiFi.status() != WL_CONNECTED) {
     printlnToDebug(PSTR("Connecting to WiFi network failed."));
   #if defined(ESP32)
+    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
     localAP = true;
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
@@ -7950,28 +8098,47 @@ void setup() {
 #endif
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
-  // turn the LED on until Ethernet shield is ready and freeClusterCount is over
+  // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
-  long diff = 2200; // + 1 sec with decoration
-  #if defined LOGGER || defined WEBSERVER
+  long diff = 3000;
+
+  if (bus->getBusType() != BUS_PPS) {
+// receive inital date/time from heating system
+    SetDateTime();
+
+// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
+    SetDevId();
+    if (my_dev_fam != 0) {
+      //decoration: double blink by LED to signal succesful detection of device family. effectively wait for a second
+      internalLEDBlinking(250, 2);
+      //end of decoration
+    }
+  } else {
+    if (pps_values[PPS_QTP] == 0xEA) {
+      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
+      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
+    } else {
+      my_dev_fam = DEV_FAM(DEV_PPS);
+      my_dev_var = DEV_VAR(DEV_PPS);
+    }
+  }
+
+#if defined LOGGER || defined WEBSERVER
   printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
-#if !defined(ESP32)
+  #if !defined(ESP32)
   uint32_t freespace = SD.vol()->freeClusterCount();
   freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
-#else
+  #else
   uint64_t freespace = SD.totalBytes() - SD.usedBytes();
   printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
-#endif
-  diff -= (millis() - m); //3 sec - delay
   #endif
-  if (diff > 0)  delay(diff);
-
-  //decoration: double blink by LED before start. wait for a second
-  internalLEDBlinking(250, 2);
-  //end of decoration
+  diff -= (millis() - m); //3 sec - delay
+#endif
+  if (diff > 0) delay(diff);
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
 
   printlnToDebug(PSTR("Start network services"));
   server->begin();
@@ -8120,22 +8287,6 @@ void setup() {
   }
   else readFirstAndPreviousDatalogDateFromFile();
 #endif
-
-  if (bus->getBusType() != BUS_PPS) {
-// receive inital date/time from heating system
-    SetDateTime();
-
-// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
-    SetDevId();
-  } else {
-    if (pps_values[PPS_QTP] == 0xEA) {
-      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
-      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
-    } else {
-      my_dev_fam = DEV_FAM(DEV_PPS);
-      my_dev_var = DEV_VAR(DEV_PPS);
-    }
-  }
 
 #ifdef MAX_CUL
   if (enable_max_cul) {
