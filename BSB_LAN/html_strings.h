@@ -20,6 +20,9 @@ const char svg_favicon[] PROGMEM_LATE =
 "</svg>";
 #endif
 
+// The following strings contain html/css/javascript code that has been manually indented; don't let automatic indent break this!
+// *INDENT-OFF*
+
 const char favicon[] PROGMEM_LATE = {
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
   0x00
@@ -462,6 +465,8 @@ const char auth_req_html[] PROGMEM_LATE =
   "<!DOCTYPE HTML>"
   "<HTML><HEAD><TITLE>BSB-LAN</TITLE>"
   "</HEAD><BODY><H1>401 Unauthorized.</H1></BODY></HTML>";
+
+// *INDENT-ON*
 
 #if defined(ESP32)
 const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
