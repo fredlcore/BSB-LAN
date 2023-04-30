@@ -1,3 +1,5 @@
+#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
+
 const char svg_favicon_header[] PROGMEM_LATE =
 "<?xml version=\"1.0\" standalone=\"no\"?>"
 "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\""
@@ -65,7 +67,6 @@ const char graph_html[] PROGMEM_LATE =
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
 #endif
-#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
@@ -416,40 +417,39 @@ const char graph_html[] PROGMEM_LATE =
 
 "});"
 
-"</script>\n";
+"</script>";
 #endif // #ifdef USE_ADVANCED_PLOT_LOG_FILE
 #endif // #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 
 const char header_html[] PROGMEM_LATE =
   "\n"
-  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
-  "<html><head>"
-  "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">"
-  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">"
-  "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">"
-  "<title>BSB-LAN</title>"
-  "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}"
-  "a.logo:hover {background-color: initial; text-decoration: initial;}"
-  "table {width: 100%;  max-width: 1024px;  margin: auto;}"
-  "td {vertical-align: top;}"
-  "td.header {vertical-align: middle;}"
-  "svg.logo {width: 10%; height: 10%}"
-  "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>"
+  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">" NEWLINE
+  "<html><head>" NEWLINE
+  "<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\">" NEWLINE
+  "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0\">" NEWLINE
+  "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">" NEWLINE
+  "<title>BSB-LAN</title>" NEWLINE
+  "<style>A{text-decoration:none}A:visited,active{color:blue}A:hover{color:red;background-color:yellow}A:focus{color:red}" NEWLINE
+  "a.logo:hover{background-color:initial;text-decoration:initial}" NEWLINE
+  "table{width:100%;max-width:1024px;margin:auto}" NEWLINE
+  "td{vertical-align:top}" NEWLINE
+  "td.header{vertical-align:middle}" NEWLINE
+  "svg.logo{width:10%;height:10%}" NEWLINE
+  "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] PROGMEM_LATE =
-  "<script>function set(line){"
-  "var value = document.getElementById('value'+line).value.replace(/\\.$/, '');"
-  "value = value.replaceAll(' ', '_');"
-  "value = value.replace('---', '');"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');"
-  "}"
-  "function setbit(line){"
-  "var x=document.getElementById('value'+line); var value=0;"
-  "for (var i=0; i<x.options.length; i++) {"
-  "if(x.options[i].selected){"
-  "value=value+eval(x.options[i].value);"
-  "}}"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');"
+  "<script>function set(p){" NEWLINE
+    "var v=document.getElementById('value'+p).value.replace(/\\.$/,'')" NEWLINE
+          ".replaceAll(' ','_')" NEWLINE
+          ".replace('---','');" NEWLINE
+    "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
+  "}" NEWLINE
+  "function setbit(p){" NEWLINE
+    "var x=document.getElementById('value'+p),v,i;" NEWLINE
+    "for(v=i=0;i<x.options.length;i++)" NEWLINE
+      "if(x.options[i].selected)" NEWLINE
+        "v=v+eval(x.options[i].value);" NEWLINE
+    "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
   "}</script>";
 const char header_html3[] PROGMEM_LATE =
   "<font face='Arial'>"
@@ -461,7 +461,7 @@ const char auth_req_html[] PROGMEM_LATE =
   "\n"
   "<!DOCTYPE HTML>"
   "<HTML><HEAD><TITLE>BSB-LAN</TITLE>"
-  "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>";
+  "</HEAD><BODY><H1>401 Unauthorized.</H1></BODY></HTML>";
 
 #if defined(ESP32)
 const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";
