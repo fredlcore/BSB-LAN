@@ -25,7 +25,7 @@ void printBIT(byte *msg,byte data_len) {
     }
     printToDebug(decodedTelegram.value);
   } else {
-    printFmtToDebug(PSTR("BYTE len error len!=2: "));
+    printFmtToDebug(PSTR("BIT len error len!=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
   }
@@ -324,7 +324,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision) 
     }
     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
   } else {
-    printToDebug(PSTR("FIXPOINT_BYTE len !=2: "));
+    printToDebug(PSTR("FIXPOINT_BYTE_US len !=2: "));
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
     decodedTelegram.error = 256;
   }
@@ -881,7 +881,6 @@ void printTelegram(byte* msg, float query_line) {
             case VT_MSECONDS_WORD_N: //s16 ms
             case VT_SECONDS_WORD: //u16 s
             case VT_SECONDS_WORD_N: //u16 s
-            case VT_SECONDS_WORD16: //u16 s
             case VT_GRADIENT: // u16
 //            case VT_INTEGRAL: // u16
             case VT_UINT: //  u16
@@ -930,10 +929,13 @@ void printTelegram(byte* msg, float query_line) {
               break;
             case VT_TEMP: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
             case VT_TEMP_N: // s16 / 64.0 - Wert als Temperatur interpretiert (RAW / 64)
+            case VT_SECONDS_WORD2: // u16  - Wert als Temperatur interpretiert (RAW / 5)
+            case VT_SECONDS_WORD2_N: // u16  - Wert als Temperatur interpretiert (RAW / 5)
             case VT_SECONDS_WORD4: // u16  - Wert als Temperatur interpretiert (RAW / 4)
             case VT_SECONDS_WORD4_N: // u16  - Wert als Temperatur interpretiert (RAW / 4)
             case VT_SECONDS_WORD5: // u16  - Wert als Temperatur interpretiert (RAW / 2)
             case VT_SECONDS_WORD5_N: // u16  - Wert als Temperatur interpretiert (RAW / 2)
+            case VT_SECONDS_WORD16: //u16 s
             case VT_TEMP_WORD: // s16  - Wert als Temperatur interpretiert (RAW)
             case VT_TEMP_WORD5_US: // s16  - Wert als Temperatur interpretiert (RAW / 2)
 //            case VT_TEMP_WORD60: //  u16 / 60
