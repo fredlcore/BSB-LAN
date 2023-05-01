@@ -4488,10 +4488,14 @@ void GetDevId() {
   my_dev_fam = msg[10+bus->getBusType()*4];
   my_dev_var = msg[12+bus->getBusType()*4];
   my_dev_id = (msg[15+bus->getBusType()*4] << 24) + (msg[16+bus->getBusType()*4] << 16) + (msg[17+bus->getBusType()*4] << 8) + (msg[18+bus->getBusType()*4]);
+  printFmtToDebug(PSTR("Setting temporary device family/variant to %d/%d\r\n"), my_dev_fam, my_dev_var);
+
+/*
   if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
     my_dev_fam = 64;
     my_dev_var = 97;
   }
+*/
   return;
 }
 
