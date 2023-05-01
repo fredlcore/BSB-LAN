@@ -2167,153 +2167,229 @@ void generateConfigPage(void) {
 // list of enabled modules
   printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
 
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef AVERAGES
+  "AVERAGES"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BME280
+  "BME280"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BUTTONS
+  "BUTTONS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CONFIG_IN_EEPROM
+  "CONFIG_IN_EEPROM"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CUSTOM_COMMANDS
+  "CUSTOM_COMMANDS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
   #ifdef DEBUG
-  "Verbose "
-  #endif
   "DEBUG"
+  #endif
 
-  #ifdef WEBSERVER
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "WEBSERVER"
+  #ifdef DEVELOPER_DEBUG
+  "DEVELOPER_DEBUG"
   #endif
-  #ifdef IPWE
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "IPWE"
-  #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "CUSTOM_COMMANDS"
-  #endif
-  #ifdef MQTT
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MQTT"
-  #endif
-  #ifdef LOGGER
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "LOGGER"
-  #endif
-  #ifdef VERSION_CHECK
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "VERSION_CHECK"
-  #endif
-  #ifdef AVERAGES
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "AVERAGES"
-  #endif
-  #ifdef MAX_CUL
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MAX_CUL"
-  #endif
-  #ifdef ONE_WIRE_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "ONE_WIRE_BUS"
   #endif
   #ifdef DHT_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "DHT_BUS"
   #endif
-  #ifdef BME280
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "BME280"
+  #ifdef ENABLE_ESP32_OTA
+  "ENABLE_ESP32_OTA"
   #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CUSTOM_COMMANDS"
+  #ifdef ESP32_USE_SD
+  "ESP32_USE_SD"
   #endif
-  #ifdef CONFIG_IN_EEPROM
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CONFIG_IN_EEPROM"
+  #ifdef IPWE
+  "IPWE"
   #endif
-  #ifdef WEBCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "WEBCONFIG"
   #endif
   #ifdef JSONCONFIG
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "JSONCONFIG"
   #endif
 
-  #ifdef URLCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "URLCONFIG"
+  #ifdef LOGGER
+  "LOGGER"
   #endif
 
-  #ifdef MDNS_SUPPORT
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "MDNS"
+  #ifdef MAX_CUL
+  "MAX_CUL"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MDNS_SUPPORT
+  "MDNS_SUPPORT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MQTT
+  "MQTT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef OFF_SITE_LOGGER
+  "OFF_SITE_LOGGER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ONE_WIRE_BUS
+  "ONE_WIRE_BUS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef RGT_EMULATOR
+  "RGT_EMULATOR"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ROOM_UNIT
+  "ROOM_UNIT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef USE_ADVANCED_PLOT_LOG_FILE
+  "USE_ADVANCED_PLOT_LOG_FILE"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef VERSION_CHECK
+  "VERSION_CHECK"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBCONFIG
+  "WEBCONFIG"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBSERVER
+  "WEBSERVER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WIFI
+  "WIFI"
   #endif
 
   #if !defined (ANY_MODULE_COMPILED)
@@ -2811,13 +2887,13 @@ void generateWebConfigPage(bool printOnly) {
        printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
        switch (cfg.var_type) {
          case CDT_MAC:
-           printToWebClient(PSTR("pattern='((^|,)([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))*$'"));
+           printToWebClient(PSTR("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'"));
            break;
          case CDT_IPV4:
-           printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
+           printToWebClient(PSTR("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'"));
            break;
          case CDT_PROGNRLIST:
-           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})((\\.){0,1})((\\d){0,1})((\\!){0,1})((\\d){0,2})))*'"));
+           printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?(!\\d{1,2})?)+'"));
            break;
          }
        printToWebClient(PSTR(" value='"));
@@ -3074,10 +3150,6 @@ char *GetDateTime(char *date) {
             currentDate.elements.month = now.tm_mon + 1,
             currentDate.elements.year  = now.tm_year + 1900,
             now.tm_hour,now.tm_min,now.tm_sec);
-#if 0 // for accelerated testing:
-  currentDate.elements.day   = now.tm_min % 10 + 1;
-  currentDate.elements.month = now.tm_min / 10 + 1;
-#endif
 #else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
             currentDate.elements.day   = day(),
