@@ -37,15 +37,12 @@ void Ipwe() {
     if (param.dest_addr > -1){
       if( param.dest_addr != d_addr) {
         d_addr = param.dest_addr;
-        printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-        bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-        GetDevId();
+        set_temp_destination(d_addr);
       }
     } else {
       if (destAddr != d_addr) {
         d_addr = destAddr;
-        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
       }
@@ -61,8 +58,7 @@ void Ipwe() {
     printToWebClient(PSTR("</tr>"));
   }
   if (destAddr != d_addr) {
-    printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-    bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+    return_to_default_destination(destAddr);
     my_dev_fam = save_my_dev_fam;
     my_dev_var = save_my_dev_var;
   }

@@ -1237,6 +1237,18 @@ void printcantalloc(void) {
   printlnToDebug(PSTR("Can't alloc memory"));
 }
 
+void set_temp_destination(int destAddr){
+  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), destAddr);
+  bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+  GetDevId();
+}
+
+
+void return_to_default_destination(int destAddr){
+  printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+  bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+}
+
 /** *****************************************************************
  *  Function:  recognizeVirtualFunctionGroup(uint16_t)
  *  Does:      Calculate and return virtual function "group id"
@@ -5472,9 +5484,7 @@ void loop() {
             line = param.number;
 
             if (param.dest_addr > -1) {
-              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
-              GetDevId();
+              set_temp_destination(param.dest_addr);
 /*
               query(6225);
               my_dev_fam = strtod(decodedTelegram.value,NULL);
@@ -5513,8 +5523,7 @@ void loop() {
                 }
               }
               if (bus->getBusDest() != destAddr) {
-                printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+                return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
               }
@@ -6232,9 +6241,7 @@ void loop() {
               }
             }
             if (tempDestAddr != tempDestAddrOnPrevIteration) {
-              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), tempDestAddr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), tempDestAddr);
-              GetDevId();
+              set_temp_destination(tempDestAddr);
             }
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
@@ -6381,8 +6388,7 @@ void loop() {
             json_parameter = -1;
           }
           if (tempDestAddr != destAddr) {
-            printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-            bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+            return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
           }
@@ -6979,9 +6985,7 @@ void loop() {
               //Here will be parsing category number not parameter
               parameter param = parsingStringToParameter(range);
               if (param.dest_addr > -1) {
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
-                GetDevId();
+                set_temp_destination(param.dest_addr);
               }
               uint cat = param.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
@@ -7007,9 +7011,7 @@ void loop() {
               parameter param = parsingStringToParameter(line_end);
               end = param.number;
               if (param.dest_addr > -1) {
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
-                GetDevId();
+                set_temp_destination(param.dest_addr);
 /*
                 query(6225);
                 my_dev_fam = strtod(decodedTelegram.value,NULL);
@@ -7022,8 +7024,7 @@ void loop() {
             }
             query(start,end,0);
             if (bus->getBusDest() != destAddr) {
-              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
             }
@@ -7087,15 +7088,12 @@ void loop() {
             if (param.dest_addr > -1){
               if( param.dest_addr != d_addr) {
                 d_addr = param.dest_addr;
-                printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-                GetDevId();
+                set_temp_destination(param.dest_addr);
               }
             } else {
               if (destAddr != d_addr) {
                 d_addr = destAddr;
-                printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-                bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+                return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
               }
@@ -7104,8 +7102,7 @@ void loop() {
           }
         }
         if (destAddr != d_addr) {
-          printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-          bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+          return_to_default_destination(destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
         }
@@ -7165,15 +7162,12 @@ void loop() {
           if (param.dest_addr > -1){
             if( param.dest_addr != d_addr) {
               d_addr = param.dest_addr;
-              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
-              GetDevId();
+              set_temp_destination(param.dest_addr);
             }
           } else {
             if (destAddr != d_addr) {
               d_addr = destAddr;
-              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
             }
@@ -7222,8 +7216,7 @@ void loop() {
       if (dataFile) dataFile.close();
       lastLogTime = millis();
       if (destAddr != d_addr) {
-        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
       }
@@ -7255,15 +7248,13 @@ void loop() {
           if (param.dest_addr > -1){
             if( param.dest_addr != d_addr) {
               d_addr = param.dest_addr;
-              printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), d_addr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), d_addr);
+              set_temp_destination(d_addr);
               GetDevId();
             }
           } else {
             if (destAddr != d_addr) {
               d_addr = destAddr;
-              printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-              bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+              return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
             }
@@ -7283,8 +7274,7 @@ void loop() {
         }
       }
       if (destAddr != d_addr) {
-        printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
-        bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+        return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
       }

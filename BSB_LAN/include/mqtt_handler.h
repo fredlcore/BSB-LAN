@@ -332,9 +332,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   parameter param = parsingStringToParameter(C_payload);
 
   if (param.dest_addr > -1) {
-    printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), param.dest_addr);
-    bus->setBusType(bus->getBusType(), bus->getBusAddr(), param.dest_addr);
-    GetDevId();
+    set_temp_destination(param.dest_addr);
   }
 
   String mqtt_Topic;
