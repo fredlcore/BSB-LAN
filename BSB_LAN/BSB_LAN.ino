@@ -2187,153 +2187,229 @@ void generateConfigPage(void) {
 // list of enabled modules
   printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
 
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef AVERAGES
+  "AVERAGES"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BME280
+  "BME280"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef BUTTONS
+  "BUTTONS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CONFIG_IN_EEPROM
+  "CONFIG_IN_EEPROM"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef CUSTOM_COMMANDS
+  "CUSTOM_COMMANDS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
   #ifdef DEBUG
-  "Verbose "
-  #endif
   "DEBUG"
+  #endif
 
-  #ifdef WEBSERVER
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "WEBSERVER"
+  #ifdef DEVELOPER_DEBUG
+  "DEVELOPER_DEBUG"
   #endif
-  #ifdef IPWE
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "IPWE"
-  #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "CUSTOM_COMMANDS"
-  #endif
-  #ifdef MQTT
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MQTT"
-  #endif
-  #ifdef LOGGER
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "LOGGER"
-  #endif
-  #ifdef VERSION_CHECK
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "VERSION_CHECK"
-  #endif
-  #ifdef AVERAGES
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "AVERAGES"
-  #endif
-  #ifdef MAX_CUL
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "MAX_CUL"
-  #endif
-  #ifdef ONE_WIRE_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "ONE_WIRE_BUS"
   #endif
   #ifdef DHT_BUS
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "DHT_BUS"
   #endif
-  #ifdef BME280
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "BME280"
+  #ifdef ENABLE_ESP32_OTA
+  "ENABLE_ESP32_OTA"
   #endif
-  #ifdef CUSTOM_COMMANDS
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CUSTOM_COMMANDS"
+  #ifdef ESP32_USE_SD
+  "ESP32_USE_SD"
   #endif
-  #ifdef CONFIG_IN_EEPROM
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "CONFIG_IN_EEPROM"
+  #ifdef IPWE
+  "IPWE"
   #endif
-  #ifdef WEBCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
-  #endif
-  "WEBCONFIG"
   #endif
   #ifdef JSONCONFIG
-  #if defined (ANY_MODULE_COMPILED)
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
   "JSONCONFIG"
   #endif
 
-  #ifdef URLCONFIG
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "URLCONFIG"
+  #ifdef LOGGER
+  "LOGGER"
   #endif
 
-  #ifdef MDNS_SUPPORT
-  #if defined (ANY_MODULE_COMPILED)
+  #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "MDNS"
+  #ifdef MAX_CUL
+  "MAX_CUL"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MDNS_SUPPORT
+  "MDNS_SUPPORT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef MQTT
+  "MQTT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef OFF_SITE_LOGGER
+  "OFF_SITE_LOGGER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ONE_WIRE_BUS
+  "ONE_WIRE_BUS"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef RGT_EMULATOR
+  "RGT_EMULATOR"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef ROOM_UNIT
+  "ROOM_UNIT"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef USE_ADVANCED_PLOT_LOG_FILE
+  "USE_ADVANCED_PLOT_LOG_FILE"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef VERSION_CHECK
+  "VERSION_CHECK"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBCONFIG
+  "WEBCONFIG"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WEBSERVER
+  "WEBSERVER"
+  #endif
+
+  #ifdef ANY_MODULE_COMPILED
+  ", "
+  #else
+  #define ANY_MODULE_COMPILED
+  #endif
+  #ifdef WIFI
+  "WIFI"
   #endif
 
   #if !defined (ANY_MODULE_COMPILED)
@@ -2824,13 +2900,13 @@ void generateWebConfigPage(bool printOnly) {
        printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
        switch (cfg.var_type) {
          case CDT_MAC:
-           printToWebClient(PSTR("pattern='((^|,)([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2}))*$'"));
+           printToWebClient(PSTR("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'"));
            break;
          case CDT_IPV4:
-           printToWebClient(PSTR("pattern='((^|\\.)((25[0-5])|(2[0-4]\\d)|(1\\d\\d)|([1-9]?\\d))){4}'"));
+           printToWebClient(PSTR("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'"));
            break;
          case CDT_PROGNRLIST:
-           printToWebClient(PSTR("pattern='(((^|,)((\\d){1,5})((\\.){0,1})((\\d){0,1})((\\!){0,1})((\\d){0,2})))*'"));
+           printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?(!\\d{1,2})?)+'"));
            break;
          }
        printToWebClient(PSTR(" value='"));
@@ -3087,10 +3163,6 @@ char *GetDateTime(char *date) {
             currentDate.elements.month = now.tm_mon + 1,
             currentDate.elements.year  = now.tm_year + 1900,
             now.tm_hour,now.tm_min,now.tm_sec);
-#if 0 // for accelerated testing:
-  currentDate.elements.day   = now.tm_min % 10 + 1;
-  currentDate.elements.month = now.tm_min / 10 + 1;
-#endif
 #else
   sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
             currentDate.elements.day   = day(),
@@ -3467,6 +3539,7 @@ int set(int line      // the ProgNr of the heater parameter
     case VT_HOURS_WORD_N: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
     case VT_MINUTES_WORD_N:
+    case VT_MINUTES_WORD10:
     case VT_UINT5:
     case VT_UINT10:
     case VT_MSECONDS_WORD:
@@ -4500,10 +4573,14 @@ void GetDevId() {
   my_dev_fam = msg[10+bus->getBusType()*4];
   my_dev_var = msg[12+bus->getBusType()*4];
   my_dev_id = (msg[15+bus->getBusType()*4] << 24) + (msg[16+bus->getBusType()*4] << 16) + (msg[17+bus->getBusType()*4] << 8) + (msg[18+bus->getBusType()*4]);
+  printFmtToDebug(PSTR("Setting temporary device family/variant to %d/%d\r\n"), my_dev_fam, my_dev_var);
+
+/*
   if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
     my_dev_fam = 64;
     my_dev_var = 97;
   }
+*/
   return;
 }
 
@@ -7494,7 +7571,7 @@ void loop() {
 // if WiFi is down, try reconnecting every minute
     if (WiFi.status() != WL_CONNECTED && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
-      WiFi.disconnect();
+      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
       WiFi.begin();
     }
 #endif
@@ -7986,11 +8063,9 @@ void setup() {
   unsigned long timeout;
   #ifdef ESP32
   // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
-  WiFi.disconnect(true);  //disconnect form wifi to set new wifi connection
+  esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
   WiFi.mode(WIFI_STA); //init wifi mode
   esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
-// Enable the following command if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//  esp_wifi_set_protocol(WIFI_IF_STA, WIFI_PROTOCOL_LR);  // W.Bra. 23.03.23 LR
 
   printToDebug(PSTR("Setting up WiFi interface"));
   WiFi.begin();
@@ -8013,14 +8088,12 @@ void setup() {
   if (WiFi.status() != WL_CONNECTED) {
     printlnToDebug(PSTR("Connecting to WiFi network failed."));
   #if defined(ESP32)
-    WiFi.disconnect(false,true); // W.Bra. 06.03.23 wegen Abbrüchen AP
+    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
     printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
     localAP = true;
-// Enable the following two commands if you have problems connecting to your WiFi router. The tradeoff are (possibly significantly) lower transmission rates.
-//    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
-//    esp_wifi_set_protocol(WIFI_IF_AP, WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N);  // W.Bra. 23.03.23 11BGN
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
@@ -8045,28 +8118,47 @@ void setup() {
 #endif
 
   printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
-  // turn the LED on until Ethernet shield is ready and freeClusterCount is over
+  // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
-  long diff = 2200; // + 1 sec with decoration
-  #if defined LOGGER || defined WEBSERVER
+  long diff = 3000;
+
+  if (bus->getBusType() != BUS_PPS) {
+// receive inital date/time from heating system
+    SetDateTime();
+
+// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
+    SetDevId();
+    if (my_dev_fam != 0) {
+      //decoration: double blink by LED to signal succesful detection of device family. effectively wait for a second
+      internalLEDBlinking(250, 2);
+      //end of decoration
+    }
+  } else {
+    if (pps_values[PPS_QTP] == 0xEA) {
+      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
+      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
+    } else {
+      my_dev_fam = DEV_FAM(DEV_PPS);
+      my_dev_var = DEV_VAR(DEV_PPS);
+    }
+  }
+
+#if defined LOGGER || defined WEBSERVER
   printToDebug(PSTR("Calculating free space on SD..."));
   uint32_t m = millis();
-#if !defined(ESP32)
+  #if !defined(ESP32)
   uint32_t freespace = SD.vol()->freeClusterCount();
   freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
-#else
+  #else
   uint64_t freespace = SD.totalBytes() - SD.usedBytes();
   printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
-#endif
-  diff -= (millis() - m); //3 sec - delay
   #endif
-  if (diff > 0)  delay(diff);
-
-  //decoration: double blink by LED before start. wait for a second
-  internalLEDBlinking(250, 2);
-  //end of decoration
+  diff -= (millis() - m); //3 sec - delay
+#endif
+  if (diff > 0) delay(diff);
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
 
   printlnToDebug(PSTR("Start network services"));
   server->begin();
@@ -8215,22 +8307,6 @@ void setup() {
   }
   else readFirstAndPreviousDatalogDateFromFile();
 #endif
-
-  if (bus->getBusType() != BUS_PPS) {
-// receive inital date/time from heating system
-    SetDateTime();
-
-// receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
-    SetDevId();
-  } else {
-    if (pps_values[PPS_QTP] == 0xEA) {
-      my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
-      my_dev_var = DEV_VAR(DEV_PPS_MCBA);
-    } else {
-      my_dev_fam = DEV_FAM(DEV_PPS);
-      my_dev_var = DEV_VAR(DEV_PPS);
-    }
-  }
 
 #ifdef MAX_CUL
   if (enable_max_cul) {

@@ -1,22 +1,27 @@
+#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
+
 const char svg_favicon_header[] PROGMEM_LATE =
-"<?xml version=\"1.0\" standalone=\"no\"?>"
-"<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\""
-" \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
+  "<?xml version=\"1.0\" standalone=\"no\"?>"
+  "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\""
+  " \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
 const char svg_favicon[] PROGMEM_LATE =
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-"";
+  "";
 #else
-"<svg class='logo' width='400pt' height='400pt' version='1.0' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>"
-"<g transform='translate(0 400) scale(.1 -.1)'>"
-"<path id='B' d='m292 3510c-61-38-62-42-62-537 0-501 0-500 70-536 32-16 69-17 445-15 399 3 411 4 451 25 102 54 151 156 141 293-6 92-35 164-95 238-37 46-41 55-31 74 23 43 39 124 39 203 0 97-27 165-86 213-70 58-100 62-488 62-334 0-353-1-384-20zm708-275c0-60-21-98-64-119-28-13-70-16-235-16h-201v-125-125h246c203 0 252-3 279-16 40-19 65-66 65-123v-41h-305-305v305 305h260 260v-45z'/>"
-"<path d='m1705 3516c-99-31-171-91-210-172-73-155-17-359 122-441 77-45 136-53 406-53h248l24-25c35-34 35-96 0-130l-24-25h-401-400v-126-125l418 3c407 3 418 4 473 26 77 31 142 90 176 160 24 50 27 69 28 152 0 84-3 102-28 152-33 67-90 121-166 157-55 26-59 26-338 31-325 6-318 4-318 91 0 41 4 54 24 70 22 18 44 19 377 19h354v125 125l-362-1c-264 0-374-4-403-13z'/>"
-"<use href='#B' x='2500'/>"
-"<path d='m1932 2152c-138-127-300-298-376-400-82-108-178-298-211-416-21-73-25-110-25-215 0-201 50-337 170-465 59-63 198-172 207-162 2 2-7 28-20 59-34 75-47 143-47 242v85h300 300v-82c0-99-21-206-53-270l-24-47 49 26c105 57 218 175 275 287 86 171 84 414-7 585-47 88-132 195-255 321-62 63-122 133-133 155-47 94-70 236-54 333 5 28 7 52 5 52s-47-40-101-88zm45-772c46-34 139-152 172-217l21-43h-240-240l11 27c30 80 185 263 223 263 7 0 31-14 53-30z'/>"
-"<path d='m2735 1598c-55-43-55-44-55-593v-505h125 125v348 347l123-125c67-69 219-226 337-349l215-223 51-5c48-5 54-3 90 30l39 35 6 1052h-126-125l-2-345-3-345-237 247c-130 137-281 294-335 351l-99 102h-51c-36 0-58-6-78-22z'/>"
-"<path d='m212 1098c3-459 5-515 20-536 41-59 22-57 531-60l467-3v126 125h-385-385v430 430h-125-126l3-512z'/>"
-"</g>"
-"</svg>";
+  "<svg class='logo' width='400pt' height='400pt' version='1.0' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>"
+  "<g transform='translate(0 400) scale(.1 -.1)'>"
+  "<path id='B' d='m292 3510c-61-38-62-42-62-537 0-501 0-500 70-536 32-16 69-17 445-15 399 3 411 4 451 25 102 54 151 156 141 293-6 92-35 164-95 238-37 46-41 55-31 74 23 43 39 124 39 203 0 97-27 165-86 213-70 58-100 62-488 62-334 0-353-1-384-20zm708-275c0-60-21-98-64-119-28-13-70-16-235-16h-201v-125-125h246c203 0 252-3 279-16 40-19 65-66 65-123v-41h-305-305v305 305h260 260v-45z'/>"
+  "<path d='m1705 3516c-99-31-171-91-210-172-73-155-17-359 122-441 77-45 136-53 406-53h248l24-25c35-34 35-96 0-130l-24-25h-401-400v-126-125l418 3c407 3 418 4 473 26 77 31 142 90 176 160 24 50 27 69 28 152 0 84-3 102-28 152-33 67-90 121-166 157-55 26-59 26-338 31-325 6-318 4-318 91 0 41 4 54 24 70 22 18 44 19 377 19h354v125 125l-362-1c-264 0-374-4-403-13z'/>"
+  "<use href='#B' x='2500'/>"
+  "<path d='m1932 2152c-138-127-300-298-376-400-82-108-178-298-211-416-21-73-25-110-25-215 0-201 50-337 170-465 59-63 198-172 207-162 2 2-7 28-20 59-34 75-47 143-47 242v85h300 300v-82c0-99-21-206-53-270l-24-47 49 26c105 57 218 175 275 287 86 171 84 414-7 585-47 88-132 195-255 321-62 63-122 133-133 155-47 94-70 236-54 333 5 28 7 52 5 52s-47-40-101-88zm45-772c46-34 139-152 172-217l21-43h-240-240l11 27c30 80 185 263 223 263 7 0 31-14 53-30z'/>"
+  "<path d='m2735 1598c-55-43-55-44-55-593v-505h125 125v348 347l123-125c67-69 219-226 337-349l215-223 51-5c48-5 54-3 90 30l39 35 6 1052h-126-125l-2-345-3-345-237 247c-130 137-281 294-335 351l-99 102h-51c-36 0-58-6-78-22z'/>"
+  "<path d='m212 1098c3-459 5-515 20-536 41-59 22-57 531-60l467-3v126 125h-385-385v430 430h-125-126l3-512z'/>"
+  "</g>"
+  "</svg>";
 #endif
+
+// The following strings contain html/css/javascript code that has been manually indented; don't let automatic indent break this!
+// *INDENT-OFF*
 
 const char favicon[] PROGMEM_LATE = {
 #if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
@@ -65,7 +70,12 @@ const char graph_html[] PROGMEM_LATE =
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
 #endif
-#define NEWLINE "" // set to "\n" to aid javascript debugging, set to "" to save space in transfer to client
+#ifndef D3_LIBRARY_PATH
+#define D3_LIBRARY_PATH "https://d3js.org/d3.v4.min.js"
+#endif
+#ifndef C3_LIBRARY_PATH
+#define C3_LIBRARY_PATH "https://cdn.jsdelivr.net/npm/c3"
+#endif
   // - example datalog.txt (/D) contents: -
   // Milliseconds;Date;Parameter;Description;Value;Unit
   // 364592808;01.05.2022 00:00:15;8005;Status Kessel;25;
@@ -89,8 +99,8 @@ const char graph_html[] PROGMEM_LATE =
     "th{background-color:#ccc}" NEWLINE
     ".value{text-align:right}" NEWLINE
   "</style>" NEWLINE
-  "<script src='https://d3js.org/d3.v4.min.js'></script>" NEWLINE
-  "<script src='https://cdn.jsdelivr.net/npm/c3'></script>" NEWLINE
+  "<script src='" D3_LIBRARY_PATH "'></script>" NEWLINE
+  "<script src='" C3_LIBRARY_PATH "'></script>" NEWLINE
   "<script>" NEWLINE
     "let al='x',bl," NEWLINE // al..bl = data range a..b loaded (i.e. already in RAM)
         "t,h,d=document,l=d.links," NEWLINE // t=datalog text contents, h=href for /Da,b
@@ -416,40 +426,39 @@ const char graph_html[] PROGMEM_LATE =
 
 "});"
 
-"</script>\n";
+"</script>";
 #endif // #ifdef USE_ADVANCED_PLOT_LOG_FILE
 #endif // #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 
 const char header_html[] PROGMEM_LATE =
   "\n"
-  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">"
-  "<html><head>"
-  "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">"
-  "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0,  minimum-scale=1.0\">"
-  "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">"
-  "<title>BSB-LAN</title>"
-  "<style>A:link  {color:blue;text-decoration: none;} A:visited {color:blue;text-decoration: none;} A:hover {color:red;text-decoration: none;background-color:yellow} A:active {color:blue;text-decoration: none;} A:focus {color:red;text-decoration: none;}"
-  "a.logo:hover {background-color: initial; text-decoration: initial;}"
-  "table {width: 100%;  max-width: 1024px;  margin: auto;}"
-  "td {vertical-align: top;}"
-  "td.header {vertical-align: middle;}"
-  "svg.logo {width: 10%; height: 10%}"
-  "input {width: 100%; box-sizing: border-box;} select {width: 100%;}</style>"
+  "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">" NEWLINE
+  "<html><head>" NEWLINE
+  "<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\">" NEWLINE
+  "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0\">" NEWLINE
+  "<link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\">" NEWLINE
+  "<title>BSB-LAN</title>" NEWLINE
+  "<style>A{text-decoration:none}A:visited,active{color:blue}A:hover{color:red;background-color:yellow}A:focus{color:red}" NEWLINE
+  "a.logo:hover{background-color:initial;text-decoration:initial}" NEWLINE
+  "table{width:100%;max-width:1024px;margin:auto}" NEWLINE
+  "td{vertical-align:top}" NEWLINE
+  "td.header{vertical-align:middle}" NEWLINE
+  "svg.logo{width:10%;height:10%}" NEWLINE
+  "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] PROGMEM_LATE =
-  "<script>function set(line){"
-  "var value = document.getElementById('value'+line).value.replace(/\\.$/, '');"
-  "value = value.replaceAll(' ', '_');"
-  "value = value.replace('---', '');"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');"
-  "}"
-  "function setbit(line){"
-  "var x=document.getElementById('value'+line); var value=0;"
-  "for (var i=0; i<x.options.length; i++) {"
-  "if(x.options[i].selected){"
-  "value=value+eval(x.options[i].value);"
-  "}}"
-  "window.open(document.getElementById('main_link').href+'S'+line+'='+value,'_self');"
+  "<script>function set(p){" NEWLINE
+    "var v=document.getElementById('value'+p).value.replace(/\\.$/,'')" NEWLINE
+          ".replaceAll(' ','_')" NEWLINE
+          ".replace('---','');" NEWLINE
+    "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
+  "}" NEWLINE
+  "function setbit(p){" NEWLINE
+    "var x=document.getElementById('value'+p),v,i;" NEWLINE
+    "for(v=i=0;i<x.options.length;i++)" NEWLINE
+      "if(x.options[i].selected)" NEWLINE
+        "v=v+eval(x.options[i].value);" NEWLINE
+    "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
   "}</script>";
 const char header_html3[] PROGMEM_LATE =
   "<font face='Arial'>"
@@ -461,7 +470,9 @@ const char auth_req_html[] PROGMEM_LATE =
   "\n"
   "<!DOCTYPE HTML>"
   "<HTML><HEAD><TITLE>BSB-LAN</TITLE>"
-  "</HEAD> <BODY><H1>401 Unauthorized.</H1></BODY></HTML>";
+  "</HEAD><BODY><H1>401 Unauthorized.</H1></BODY></HTML>";
+
+// *INDENT-ON*
 
 #if defined(ESP32)
 const char* serverIndex = "<form method='POST' action='/update' enctype='multipart/form-data'><input type='file' name='update'><input type='submit' value='Update'></form>";

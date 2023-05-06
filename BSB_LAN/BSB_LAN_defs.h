@@ -391,6 +391,7 @@ const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
 const char STR_PROPVAL[] PROGMEM = "PROPVAL";
 const char STR_PPM[] PROGMEM = "PPM";
 const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
+const char STR_SECONDS_WORD2[] PROGMEM = "SECONDS_WORD2";
 const char STR_SECONDS_WORD4[] PROGMEM = "SECONDS_WORD4";
 const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
 const char STR_SPEED[] PROGMEM = "SPEED";
@@ -416,6 +417,7 @@ const char STR_UINT10[] PROGMEM = "UINT10";
 const char STR_AMP[] PROGMEM = "AMP";
 const char STR_SINT[] PROGMEM = "SINT";
 const char STR_SINT1000[] PROGMEM = "SINT1000";
+const char STR_SINT5[] PROGMEM = "SINT5";
 const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
 const char STR_DWORD[] PROGMEM = "DWORD";
 const char STR_DWORD10[] PROGMEM = "DWORD10";
@@ -619,6 +621,8 @@ typedef enum{
   VT_MSECONDS_WORD_N,   //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD_N,    //  3 Byte - 1 enable / seconds
+  VT_SECONDS_WORD2,     //  3 Byte - 1 enable / seconds / 5
+  VT_SECONDS_WORD2_N,   //  3 Byte - 1 enable / seconds / 5
   VT_SECONDS_WORD4,     //  3 Byte - 1 enable / seconds / 4
   VT_SECONDS_WORD4_N,   //  3 Byte - 1 enable / seconds / 4
   VT_SECONDS_WORD5,     //  3 Byte - 1 enable / seconds / 2
@@ -656,6 +660,7 @@ typedef enum{
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
   VT_SINT_NN,            //  3 Byte - 1 enable 0x01 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
+  VT_SINT5,             //  3 Byte - 1 enable 0x01 / value*5
   VT_PPS_TIME,          //  4 Byte
   VT_DWORD,             //  5 Byte - 1 enable 0x06 / value
   VT_DWORD_N,           //  5 Byte - 1 enable 0x06 / value
@@ -722,8 +727,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_PRESSURE50,       50.0,   1, 1, DT_VALS, 2,  U_BAR, sizeof(U_BAR), STR_PRESSURE50},
 {VT_SECONDS_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
 {VT_SECONDS_SHORT_N,  1.0,    6, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT},
-{VT_SECONDS_SHORT2,   2.0,    1, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
-{VT_SECONDS_SHORT2_N, 2.0,    6, 1, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
+{VT_SECONDS_SHORT2,   2.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
+{VT_SECONDS_SHORT2_N, 2.0,    6, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT2},
 {VT_SECONDS_SHORT4,   4.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT4},
 {VT_SECONDS_SHORT5,   5.0,    1, 1, DT_VALS, 1,  U_SEC, sizeof(U_SEC), STR_SECONDS_SHORT5},
 {VT_TEMP_SHORT,       1.0,    1, 1, DT_VALS, 0,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT},
@@ -744,7 +749,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_POWER_SHORT_N,    1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
 {VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
 {VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
-{VT_CURRENT1000,      1000.0, 0, 0, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
+{VT_CURRENT1000,      1000.0, 0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
 {VT_DAYS_WORD,        1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
 {VT_ERRORCODE,        1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
 {VT_FP1,              10.0,   1, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FP1},
@@ -759,7 +764,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS_WORD_N,     1.0,    6, 2, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_WORD},
 {VT_MINUTES_WORD,     1.0,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
 {VT_MINUTES_WORD_N,   1.0,    6, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD},
-{VT_MINUTES_WORD10,   0.1,    0, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
+{VT_MINUTES_WORD10,   0.1,    1, 2, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_WORD10},
 {VT_PERCENT_WORD1,    1.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD1},
 {VT_PERCENT_WORD,     2.0,    1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_WORD},
 {VT_PERCENT_100,      100.0,  1, 2, DT_VALS, 1,  U_PERC, sizeof(U_PERC), STR_PERCENT_100},
@@ -782,6 +787,8 @@ PROGMEM_LATE const units optbl[]={
 {VT_MSECONDS_WORD_N,  1.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_MSEC), STR_MSECONDS_WORD},
 {VT_SECONDS_WORD,     1.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
 {VT_SECONDS_WORD_N,   1.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD},
+{VT_SECONDS_WORD2,    5.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD2},
+{VT_SECONDS_WORD2_N,  5.0,    6, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD2},
 {VT_SECONDS_WORD4,    4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
 {VT_SECONDS_WORD4_N,  4.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD4},
 {VT_SECONDS_WORD5,    2.0,    1, 2, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_WORD5},
@@ -809,7 +816,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_LITERPERMIN_N,    10.0,   6, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
 {VT_UINT,             1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
 {VT_UINT_N,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
-{VT_UINT5,            5.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
+{VT_UINT5,            0.2,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
 {VT_UINT10,           10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
 {VT_UINT100_WORD,     100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_UINT100_WORD_N,   100.0,  6, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
@@ -819,6 +826,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_SINT,             1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT_NN,          1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_SINT},
 {VT_SINT1000,         1000,   1, 2+32, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT1000},
+{VT_SINT5,            0.2,    1, 2, DT_VALS, 3,  U_NONE, sizeof(U_NONE), STR_SINT5},
 {VT_PPS_TIME,         1.0,    0, 0, DT_DWHM, 0,  U_NONE, sizeof(U_NONE), STR_PPS_TIME},
 {VT_DWORD,            1.0,    1, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
 {VT_DWORD_N,          1.0,    6, 4, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_DWORD},
@@ -826,7 +834,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_HOURS,            3600.0, 1, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
 {VT_HOURS_N,          3600.0, 6, 4, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS},
 {VT_MINUTES,          60.0,   1, 4, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES},
-{VT_SECONDS_DWORD,    1.0,    0, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
+{VT_SECONDS_DWORD,    1.0,    1, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
 {VT_POWER,            10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
 {VT_POWER100,         100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
 // {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
