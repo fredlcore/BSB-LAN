@@ -6381,7 +6381,7 @@ void loop() {
             json_parameter = -1;
           }
           if (tempDestAddr != destAddr) {
-            printFmtToDebug(PSTR("Returning to default destination %d\r\n"), tempDestAddr);
+            printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
             bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
@@ -8093,7 +8093,7 @@ void setup() {
     WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
     IPAddress t = WiFi.softAPIP();
     localAP = true;
-    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20	
+    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
 
     printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
     printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
