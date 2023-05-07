@@ -6315,7 +6315,7 @@ void loop() {
                 printToWebClient(decodedTelegram.progtypedescaddr);
                 printToWebClient(PSTR("\",\r\n    \"dataType_family\": \""));
                 printToWebClient(decodedTelegram.data_type_descaddr);
-                printToWebClient(PSTR("\",\r\n"));
+                printFmtToWebClient(PSTR("\",\r\n    \"destination\": \"%d\",\r\n"), tempDestAddr);
 
                 if (p[2]=='Q') {
                   printFmtToWebClient(PSTR("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
@@ -6352,7 +6352,7 @@ void loop() {
                 int status = set(json_parameter, json_value_string, json_type);
                 printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %g to \"%s\" with type %d\r\n"), json_parameter, json_value_string, json_type);
+                printFmtToDebug(PSTR("Setting parameter %g to \"%s\" with type %d to destination %d\r\n"), json_parameter, json_value_string, json_type, tempDestAddr);
               }
 
               if (p[2]=='R') {
@@ -6360,7 +6360,7 @@ void loop() {
                 queryDefaultValue(json_parameter, msg, tx_msg);
                 printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Default value of parameter %g is \"%s\"\r\n"), json_parameter, decodedTelegram.value);
+                printFmtToDebug(PSTR("Default value of parameter %g for destination %d is \"%s\"\r\n"), json_parameter, tempDestAddr, decodedTelegram.value);
               }
 
 #if defined(JSONCONFIG)
