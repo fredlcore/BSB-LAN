@@ -885,7 +885,7 @@ unsigned long pps_mcba_timer = millis();
 
 #include "BSB_LAN_EEPROMconfig.h"
 
-static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address
+static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address in EEPROM
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 
 #ifdef BUTTONS
@@ -7739,8 +7739,9 @@ void setup() {
   registerConfigVariable(CF_TX_PIN, (byte *)&bus_pins[1]);
   registerConfigVariable(CF_DEVICE_FAMILY, (byte *)&fixed_device_family);
   registerConfigVariable(CF_DEVICE_VARIANT, (byte *)&fixed_device_variant);
+#endif
+#if defined(JSONCONFIG) || defined(WEBCONFIG)
   registerConfigVariable(CF_CONFIG_LEVEL, (byte *)&config_level);
-
 #endif
 
   readFromEEPROM(CF_PPS_VALUES);

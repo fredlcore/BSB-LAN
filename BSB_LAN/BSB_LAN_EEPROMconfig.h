@@ -163,7 +163,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
 };
 
 PROGMEM_LATE const configuration_struct config[]={
-#ifdef WEBCONFIG
+#if defined(JSONCONFIG) || defined(WEBCONFIG)
   {CF_CONFIG_LEVEL,     9, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_CONFIG_LEVEL_TXT, sizeof(config_level)}, //immediately apply
 #endif
   {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_USEEEPROM_TXT, sizeof(UseEEPROM)}, //immediately apply
