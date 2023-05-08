@@ -6403,7 +6403,9 @@ void loop() {
         if (p[1]=='D') { // access datalog file
   #if defined(ESP32) && !defined(WIFI)
           if (esp32_save_energy == true) {
+            bus->disableInterface();
             setCpuFrequencyMhz(240);
+            bus->enableInterface();
           }
   #endif
           if (p[2]=='0' || ((p[2]=='D' || p[2]=='J') && p[3]=='0')) {  // remove datalog file
@@ -6577,7 +6579,9 @@ void loop() {
           flushToWebClient();
   #if defined(ESP32) && !defined(WIFI)
           if (esp32_save_energy == true) {
+            bus->disableInterface();
             setCpuFrequencyMhz(80);
+            bus->enableInterface();
           }
   #endif
           break;
@@ -7791,19 +7795,6 @@ void setup() {
     printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
   }
 
-#if defined(ESP32)
-  if (esp32_save_energy == true) {
-    setCpuFrequencyMhz(80);
-    printToDebug("Power-saving activated.\r\n");
-  }
-  #ifndef WDT_TIMEOUT
-  //set watchdog timeout 120 seconds
-    #define WDT_TIMEOUT 120
-  #endif
-  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
-  esp_task_wdt_add(NULL); //add current thread to WDT watch
-#endif
-
   if (save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
   printFmtToDebug(PSTR("Size of cmdtbl: %d\r\n"),sizeof(cmdtbl));
   printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
@@ -7859,6 +7850,20 @@ void setup() {
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
   bus->enableInterface();
+#if defined(ESP32)
+  if (esp32_save_energy == true) {
+    bus->disableInterface();
+    setCpuFrequencyMhz(80);
+    bus->enableInterface();
+    printToDebug("Power-saving activated.\r\n");
+  }
+  #ifndef WDT_TIMEOUT
+  //set watchdog timeout 120 seconds
+    #define WDT_TIMEOUT 120
+  #endif
+  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  esp_task_wdt_add(NULL); //add current thread to WDT watch
+#endif
 
 #ifdef ONE_WIRE_BUS
   if (One_Wire_Pin) {

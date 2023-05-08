@@ -63,6 +63,14 @@ void BSB::enableInterface() {
   }
 }
 
+void BSB::disableInterface() {
+  if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
+    Serial1.flush();
+    Serial1.end();
+  }
+}
+
+
 uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   bus_type = bus_type_val;
   switch (bus_type) {
