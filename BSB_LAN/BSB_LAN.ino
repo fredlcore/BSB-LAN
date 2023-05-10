@@ -2167,228 +2167,228 @@ void generateConfigPage(void) {
 // list of enabled modules
   printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
 
+  #ifdef AVERAGES
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef AVERAGES
   "AVERAGES"
   #endif
 
+  #ifdef BME280
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef BME280
   "BME280"
   #endif
 
+  #ifdef BUTTONS
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef BUTTONS
   "BUTTONS"
   #endif
 
+  #ifdef CONFIG_IN_EEPROM
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef CONFIG_IN_EEPROM
   "CONFIG_IN_EEPROM"
   #endif
 
+  #ifdef CUSTOM_COMMANDS
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef CUSTOM_COMMANDS
   "CUSTOM_COMMANDS"
   #endif
 
+  #ifdef DEBUG
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef DEBUG
   "DEBUG"
   #endif
 
+  #ifdef DEVELOPER_DEBUG
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef DEVELOPER_DEBUG
   "DEVELOPER_DEBUG"
   #endif
 
+  #ifdef DHT_BUS
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef DHT_BUS
   "DHT_BUS"
   #endif
 
+  #ifdef ENABLE_ESP32_OTA
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef ENABLE_ESP32_OTA
   "ENABLE_ESP32_OTA"
   #endif
 
+  #ifdef ESP32_USE_SD
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef ESP32_USE_SD
   "ESP32_USE_SD"
   #endif
 
+  #ifdef IPWE
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef IPWE
   "IPWE"
   #endif
 
+  #ifdef JSONCONFIG
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef JSONCONFIG
   "JSONCONFIG"
   #endif
 
+  #ifdef LOGGER
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef LOGGER
   "LOGGER"
   #endif
 
+  #ifdef MAX_CUL
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef MAX_CUL
   "MAX_CUL"
   #endif
 
+  #ifdef MDNS_SUPPORT
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef MDNS_SUPPORT
   "MDNS_SUPPORT"
   #endif
 
+  #ifdef MQTT
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef MQTT
   "MQTT"
   #endif
 
+  #ifdef OFF_SITE_LOGGER
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef OFF_SITE_LOGGER
   "OFF_SITE_LOGGER"
   #endif
 
+  #ifdef ONE_WIRE_BUS
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef ONE_WIRE_BUS
   "ONE_WIRE_BUS"
   #endif
 
+  #ifdef RGT_EMULATOR
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef RGT_EMULATOR
   "RGT_EMULATOR"
   #endif
 
+  #ifdef ROOM_UNIT
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef ROOM_UNIT
   "ROOM_UNIT"
   #endif
 
+  #ifdef USE_ADVANCED_PLOT_LOG_FILE
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef USE_ADVANCED_PLOT_LOG_FILE
   "USE_ADVANCED_PLOT_LOG_FILE"
   #endif
 
+  #ifdef VERSION_CHECK
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef VERSION_CHECK
   "VERSION_CHECK"
   #endif
 
+  #ifdef WEBCONFIG
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef WEBCONFIG
   "WEBCONFIG"
   #endif
 
+  #ifdef WEBSERVER
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef WEBSERVER
   "WEBSERVER"
   #endif
 
+  #ifdef WIFI
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  #ifdef WIFI
   "WIFI"
   #endif
 
@@ -4817,7 +4817,7 @@ const char *cleanupDatalog(unsigned nDays) {
     }//while (nDays--)
     //-- transfer data:
     File dataTmpFile = SD.open(datalogTemporaryFileName, FILE_WRITE);
-    if (!dataTmpFile) return "Cannot open temporary datalog";
+    if (!dataTmpFile) return PSTR("Cannot open temporary datalog");
     // we want to use a buffer size that's a power of 2:
     unsigned bufSize=1, maxSize=sizeof(bigBuff);
     while (bufSize <= maxSize) bufSize <<= 1;
@@ -6457,7 +6457,7 @@ void loop() {
           } else {  //--- dump datalog or journal or datalog index file, or print min/max date in datalog, or clean up datalog
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
             printToWebClient(PSTR("\r\n"));
-            flushToWebClient();
+            flushToWebClient();  // some of the following code uses the same bigBuffer as the ...ToWebClient functions => deliver any remaining content to the client now
             File dataFile;
             if (p[2]=='J') { //journal
               dataFile = SD.open(journalFileName);
