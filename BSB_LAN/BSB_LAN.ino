@@ -71,6 +71,7 @@
  *        - ATTENTION: In BSB_LAN_config.h, the structure of log_parameters, avg_parameters and ipwe_parameters has changed and now includes the destination device on the bus!
  *        - ATTENTION: New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!
  *        - ATTENTION: New variable esp32_save_energy in BSB_LAN_config.h - update before compiling new version.
+ *        - ATTENTION: New variable bssid in BSB_LAN_config.h - defines a fixed BSSID address to connect to when using WiFi on ESP32. 
  *        - Parameters can now be queried from other devices on the bus using the ! notation also when logging (including MQTT) or using average or IPWE parameters
  *        - Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)
  *        - Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS
