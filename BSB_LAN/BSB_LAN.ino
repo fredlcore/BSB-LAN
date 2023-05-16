@@ -7553,10 +7553,16 @@ void loop() {
     }
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
-    if (WiFi.status() != WL_CONNECTED && localAP == false) {
+    bool not_preferred_bssid = false;
+    for (int x=0;x<6;x++) {
+      if (WiFi.BSSID()[x] != bssid[x]) {
+        not_preferred_bssid = true;
+      }
+    }
+
+    if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
       printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
-      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-      WiFi.begin();
+      scanAndConnectToStrongestNetwork();
     }
 #endif
   }
@@ -7566,10 +7572,66 @@ void loop() {
 } // --- loop () ---
 
 #ifdef WIFI
+
+String scanAndConnectToStrongestNetwork() {
+  int sum_bssid = 0;
+  for (int x=0;x<6;x++) {
+    sum_bssid += bssid[x];
+  }
+  if (sum_bssid > 0) {
+    printToDebug(PSTR("Using default BSSID to connect to WiFi..."));
+    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+    WiFi.begin(wifi_ssid, wifi_pass, 0, bssid);
+    unsigned long timeout = millis();
+    while (WiFi.status() != WL_CONNECTED && millis() - timeout < 5000) {
+      delay(100);
+      printFmtToDebug(PSTR("."));
+    }
+    printlnToDebug(PSTR(""));
+    if (WiFi.status() == WL_CONNECTED) {
+      return ("Connection successful using default BSSID.");
+    } else {
+      printlnToDebug(PSTR("Connection with default BSSID failed, trying to scan..."));
+    }
+  }
+  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+  int i_strongest = -1;
+  int32_t rssi_strongest = -100;
+  printFmtToDebug(PSTR("Start scanning for SSID %s\r\n"), wifi_ssid);
+
+  int n = WiFi.scanNetworks(); // WiFi.scanNetworks will return the number of networks found
+
+  printToDebug(PSTR("Scan done."));
+
+  if (n == 0) {
+    printlnToDebug(PSTR("No networks found!"));
+    return ("");
+  } else {
+    printFmtToDebug(PSTR("%d networks found:\r\n"), n);
+    for (int i = 0; i < n; ++i) {
+      // Print SSID and RSSI for each network found
+      printFmtToDebug(PSTR("%d: BSSID: %s  %2ddBm, %3d%%  %9s  %s\r\n"), i, WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i), constrain(2 * (WiFi.RSSI(i) + 100), 0, 100), (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "open" : "encrypted", WiFi.SSID(i).c_str());
+      if ((String(wifi_ssid) == String(WiFi.SSID(i)) && (WiFi.RSSI(i)) > rssi_strongest)) {
+        rssi_strongest = WiFi.RSSI(i);
+        i_strongest = i;
+      }
+    }
+  }
+
+  if (i_strongest < 0) {
+    printFmtToDebug(PSTR("No network with SSID %s found!\r\n"), wifi_ssid);
+    return ("");
+  }
+  printFmtToDebug(PSTR("SSID match found at %d. Connecting...\r\n"), i_strongest);
+  WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
+  return (WiFi.BSSIDstr(i_strongest));
+}
+
 void printWifiStatus()
 {
   // print the SSID of the network you're attached to
   printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
+  printFmtToDebug(PSTR("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n"), WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
   // print your WiFi shield's IP address
   IPAddress t = WiFi.localIP();
   printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
@@ -8061,7 +8123,9 @@ void setup() {
   }
   writelnToDebug();
   #endif
-  WiFi.begin(wifi_ssid, wifi_pass);
+
+  scanAndConnectToStrongestNetwork();
+
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   timeout = millis();
