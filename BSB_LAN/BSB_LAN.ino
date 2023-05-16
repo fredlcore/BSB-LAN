@@ -4842,7 +4842,7 @@ const char *cleanupDatalog(unsigned nDays) {
     }//while (nDays--)
     //-- transfer data:
     File dataTmpFile = SD.open(datalogTemporaryFileName, FILE_WRITE);
-    if (!dataTmpFile) return PSTR("Cannot open temporary datalog");
+    if (!dataTmpFile) return "Cannot open temporary datalog";
     // we want to use a buffer size that's a power of 2:
     unsigned bufSize=1, maxSize=sizeof(bigBuff);
     while (bufSize <= maxSize) bufSize <<= 1;
@@ -6496,9 +6496,7 @@ void loop() {
             } else if (p[2]=='K') { //--- clean up datalog, keeping only the most recent n days
               int nDays;
               if (sscanf(p+3,"%d",&nDays)==1 && nDays>0) {
-                // Be aware: we should flush all characters to client (call flushToWebClient();)
-                // beacuse cleanupDatalog() and printFmtToWebClient() use same buffer;
-                printFmtToWebClient("\r\n%s\r\n", cleanupDatalog(nDays));
+                printFmtToWebClient("\r\n%s\r\n",cleanupDatalog(nDays));
                 // cleanup after failed cleanupDatalog(), if necessary:
                 SD.remove(datalogTemporaryFileName);
                 SD.remove(datalogIndexTemporaryFileName);
