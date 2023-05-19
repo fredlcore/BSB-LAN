@@ -18,9 +18,9 @@ typedef enum{
   CF_DEST_BSBLPBADDR, ///Size: 1 byte. LPB/BSB bus destination address (0x0)
   CF_PPS_MODE, ///Size: 1 byte. PPS can write
   CF_LOGTELEGRAM, //Size: 1 byte. Bitwise: LOGTELEGRAM_OFF = 0, LOGTELEGRAM_ON = 1, LOGTELEGRAM_UNKNOWN_ONLY = 2, LOGTELEGRAM_BROADCAST_ONLY = 4, LOGTELEGRAM_UNKNOWNBROADCAST_ONLY = 6
-  CF_AVERAGESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_AVERAGESLIST, //Size 4 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_LOGCURRINTERVAL, //Size 4 bytes. Unsigned. logging current values interval in seconds
-  CF_CURRVALUESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_CURRVALUESLIST, //Size 4 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
 // Version 2 (Web-config)
   CF_MAC, //Size: 6 bytes. MAC address
   CF_DHCP, //Size: 1 byte. DHCP: 0 - disabled, 1 - enabled
@@ -37,7 +37,7 @@ typedef enum{
   CF_ONEWIREBUS, //Size: 1 byte. One wire bus pin. 0 will be ignored
   CF_DHTBUS, //Size: 10 bytes (sizeof(DHT_Pins)). DHT temperature/humidity bus pins. 0 will be ignored
   CF_IPWE, //Size: 1 byte. IPWE extension: 0 - disabled, 1 - enabled
-  CF_IPWEVALUESLIST, //Size 2 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
+  CF_IPWEVALUESLIST, //Size 4 * 80 bytes. Array of prognrs 1-65535. prognr 0 will be ignored
   CF_MAX, //Size: 1 byte. Enable CUNO/CUNX/modified MAX!Cube
   CF_MAX_IPADDRESS, //Size: 4 bytes. IP v4 address of CUNO/CUNX/modified MAX!Cube.
   CF_WRITEMODE, //Size: 1 byte. 0 - all parameters will be FL_RONLY, 1 - write ordinary programs, 2 - write OEM programs
@@ -163,7 +163,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
 };
 
 PROGMEM_LATE const configuration_struct config[]={
-#ifdef WEBCONFIG
+#if defined(JSONCONFIG) || defined(WEBCONFIG)
   {CF_CONFIG_LEVEL,     9, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_CONFIG_LEVEL_TXT, sizeof(config_level)}, //immediately apply
 #endif
   {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_USEEEPROM_TXT, sizeof(UseEEPROM)}, //immediately apply

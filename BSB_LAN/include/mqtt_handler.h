@@ -37,7 +37,7 @@ const String mqtt_get_client_id() {
   return result;
 }
 
-void mqtt_sendtoBroker(float param, float dest) {
+void mqtt_sendtoBroker(float param, int dest) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
   String MQTTTopic = "";
@@ -57,15 +57,15 @@ void mqtt_sendtoBroker(float param, float dest) {
     // Send data as plain text
     // =============================================
     case 1:
-      // use parameter code as sub-topic 
+      // use parameter code as sub-topic
       if(roundf(param * 10) != roundf(param) * 10) {
         MQTTTopic.concat(String(param, 1));
       } else {
         MQTTTopic.concat(String(param, 0));
       }
-      if (dest > 0) {
+      if (dest > -1) {
         MQTTTopic.concat("!");
-        MQTTTopic.concat(String((uint8_t)dest));
+        MQTTTopic.concat(String(dest));
       }
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
@@ -90,7 +90,7 @@ void mqtt_sendtoBroker(float param, float dest) {
       } else {
         MQTTPayload.concat(String(param, 0));
       }
-      if (dest > 0) {
+      if (dest > -1) {
         MQTTPayload.concat("!");
         MQTTPayload.concat(String(dest));
       }
@@ -122,7 +122,7 @@ void mqtt_sendtoBroker(float param, float dest) {
       } else {
         MQTTPayload.concat(String(param, 0));
       }
-      if (dest > 0) {
+      if (dest > -1) {
         MQTTPayload.concat("!");
         MQTTPayload.concat(String(dest));
       }
@@ -329,19 +329,10 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     C_payload++; //skip I/S
   }
 
-  float I_line=atof(C_payload);
-  float dest = 0;
-  char* token = strchr(C_payload, '!');
-  if (token != NULL) {
-    token++;
-    if (token[0] > 0) {
-      dest = atof(token);
-      printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), dest);
-      bus->setBusType(bus->getBusType(), bus->getBusAddr(), dest);
-      GetDevId();
-    } else {
-      dest = 0;
-    }
+  parameter param = parsingStringToParameter(C_payload);
+
+  if (param.dest_addr > -1) {
+    set_temp_destination(param.dest_addr);
   }
 
   String mqtt_Topic;
@@ -355,16 +346,16 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
 
   if (firstsign==' ') { //query
-    printFmtToDebug(PSTR("%.1f \r\n"), I_line);
+    printFmtToDebug(PSTR("%.1f \r\n"), param.number);
   } else { //command to heater
     C_payload=strchr(C_payload,'=');
     C_payload++;
-    printFmtToDebug(PSTR("%.1f=%s \r\n"), I_line, C_payload);
-    set(I_line,C_payload,firstsign=='S');  //command to heater
+    printFmtToDebug(PSTR("%.1f=%s \r\n"), param.number, C_payload);
+    set(param.number,C_payload,firstsign=='S');  //command to heater
   }
-  mqtt_sendtoBroker(I_line, dest);  //send mqtt-message
+  mqtt_sendtoBroker(param.number, param.dest_addr);  //send mqtt-message
   printlnToDebug(PSTR("##MQTT#############################"));
-  if (destAddr != dest) {
+  if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
     my_dev_fam = save_my_dev_fam;
     my_dev_var = save_my_dev_var;
