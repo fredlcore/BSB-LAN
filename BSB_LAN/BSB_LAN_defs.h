@@ -1053,6 +1053,47 @@ const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 "\x07 " ENUM_WEEKDAY_07_TEXT
 };
 
+// Kontakt-Telegramm RVP320
+const char ENUM_ONOFF0[] PROGMEM_LATEST = {
+"\x00\x00 " MENU_TEXT_OFF "\0"
+"\x00\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF1[] PROGMEM_LATEST = {
+"\x01\x00 " MENU_TEXT_OFF "\0"
+"\x01\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF2[] PROGMEM_LATEST = {
+"\x02\x00 " MENU_TEXT_OFF "\0"
+"\x02\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF3[] PROGMEM_LATEST = {
+"\x03\x00 " MENU_TEXT_OFF "\0"
+"\x03\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF4[] PROGMEM_LATEST = {
+"\x04\x00 " MENU_TEXT_OFF "\0"
+"\x04\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF5[] PROGMEM_LATEST = {
+"\x05\x00 " MENU_TEXT_OFF "\0"
+"\x05\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF6[] PROGMEM_LATEST = {
+"\x06\x00 " MENU_TEXT_OFF "\0"
+"\x06\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF7[] PROGMEM_LATEST = {
+"\x07\x00 " MENU_TEXT_OFF "\0"
+"\x07\xFF " MENU_TEXT_ON
+};
+
+const char ENUM_CUSTOM01[] PROGMEM_LATEST = {
+"\x00\x01 "
+};
+const char ENUM_CUSTOM11[] PROGMEM_LATEST = {
+"\x01\x01 "
+};
+
 //TODO: Move to translations
 const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
 "\x01\x01 " ENUM_LOGMODE_01_TEXT
