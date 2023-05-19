@@ -7582,7 +7582,7 @@ void loop() {
 #endif
 } // --- loop () ---
 
-#ifdef WIFI
+#if defined(WIFI) && defined(ESP32)
 
 String scanAndConnectToStrongestNetwork() {
   int sum_bssid = 0;
@@ -8136,8 +8136,9 @@ void setup() {
   writelnToDebug();
   #endif
 
+  #if defined(ESP32)
   scanAndConnectToStrongestNetwork();
-
+  #endif
   // attempt to connect to WiFi network
   printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
   timeout = millis();
@@ -8165,7 +8166,9 @@ void setup() {
   #if defined(__arm__) || defined(ESP32)
     WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
   #endif
+  #if defined(ESP32)
     printWifiStatus();
+  #endif
   }
 #endif
 
