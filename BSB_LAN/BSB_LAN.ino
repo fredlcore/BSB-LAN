@@ -6986,7 +6986,7 @@ void loop() {
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               //Here will be parsing category number not parameter
-              parameter param = parsingStringToParameter(range);
+              parameter param = parsingStringToParameter(range+1);
               if (param.dest_addr > -1) {
                 set_temp_destination(param.dest_addr);
               }
