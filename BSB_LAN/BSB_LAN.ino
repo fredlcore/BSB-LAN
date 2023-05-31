@@ -2917,7 +2917,7 @@ void generateWebConfigPage(bool printOnly) {
            printToWebClient(PSTR("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'"));
            break;
          case CDT_PROGNRLIST:
-           printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?(!\\d{1,2})?)+'"));
+           printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?((!|!-)\\d{1,3})?)+'"));
            break;
          }
        printToWebClient(PSTR(" value='"));
