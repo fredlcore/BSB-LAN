@@ -7314,12 +7314,14 @@ void loop() {
         k = 1;
       }
       for (uint8_t i = 0; i < k; i++) {
-        if (rgte_sensorid[i][0] != 0) {
+        if (rgte_sensorid[i][0].number != 0) {
           uint8_t z = 0;
           float value = 0;
           for (uint8_t j = 0; j < 5; j++) {
-            if (rgte_sensorid[i][j] != 0) {
-              query(rgte_sensorid[i][j]);
+            if (rgte_sensorid[i][j].number != 0) {
+              if(rgte_sensorid[i][j].dest_addr != -1) set_temp_destination(rgte_sensorid[i][j].dest_addr);
+              query(rgte_sensorid[i][j].number);
+              if(rgte_sensorid[i][j].dest_addr != -1) return_to_default_destination(dest_address);
               if (decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0) {
                 z++;
                 value += atof(decodedTelegram.value);
