@@ -68,7 +68,7 @@
  *
  * Changelog:
  *       version 3.2
- *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets. Please update your BSB_LAN_config.h accordingly to prevent errors!
+ *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
  *       version 3.1
  *        - ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
  *        - ATTENTION: In BSB_LAN_config.h, the structure of log_parameters, avg_parameters and ipwe_parameters has changed and now includes the destination device on the bus!
