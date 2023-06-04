@@ -84,3 +84,9 @@ void printToWebClient_prognrdescaddr() {
     printFmtToWebClient(PSTR(" #%d"), decodedTelegram.sensorid);
   }
 }
+
+
+//Utility Functions
+void printParameterInJSON_ToWebClient(parameter param){
+  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %d }"), param.number, param.dest_addr);
+}

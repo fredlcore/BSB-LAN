@@ -20,7 +20,7 @@
 void Ipwe() {
   int i;
   int counter = 0;
-  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0])/2;
+  int numIPWESensors = sizeof(ipwe_parameters) / sizeof(ipwe_parameters[0]);
   uint8_t destAddr = bus->getBusDest();
   uint8_t d_addr = destAddr;
   uint8_t save_my_dev_fam = my_dev_fam;
@@ -30,13 +30,10 @@ void Ipwe() {
   printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
 
   for (i=0; i < numIPWESensors; i++) {
-    if (!ipwe_parameters[i*2]) continue;
-    parameter param;
-    param.number = ipwe_parameters[i*2];
-    param.dest_addr = ipwe_parameters[i*2+1];
-    if (param.dest_addr > -1){
-      if( param.dest_addr != d_addr) {
-        d_addr = param.dest_addr;
+    if (!ipwe_parameters[i].number) continue;
+    if (ipwe_parameters[i].dest_addr > -1){
+      if( ipwe_parameters[i].dest_addr != d_addr) {
+        d_addr = ipwe_parameters[i].dest_addr;
         set_temp_destination(d_addr);
       }
     } else {
@@ -47,7 +44,7 @@ void Ipwe() {
         my_dev_var = save_my_dev_var;
       }
     }
-    query(ipwe_parameters[i*2]);
+    query(ipwe_parameters[i].number);
     counter++;
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
     printToWebClient_prognrdescaddr();
@@ -67,7 +64,7 @@ void Ipwe() {
 #ifdef AVERAGES
   if (LoggingMode & CF_LOGMODE_24AVG) {
     for (int i=0; i<numAverages; i++) {
-      if (avg_parameters[i*2] > 0) {
+      if (avg_parameters[i].number > 0) {
         counter++;
         query(BSP_AVERAGES + i);
         printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
@@ -85,7 +82,7 @@ void Ipwe() {
 #ifdef ONE_WIRE_BUS
   if (One_Wire_Pin) {
     // output of one wire sensors
-    for (i=0;i<numSensors * 2;i += 2) {
+    for (i = 0; i < numSensors * 2; i += 2) {
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
       query(i + BSP_ONEWIRE);
       printToWebClient(decodedTelegram.value);
@@ -101,7 +98,7 @@ void Ipwe() {
 #ifdef DHT_BUS
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
-  for (i=0;i<numDHTSensors;i++) {
+  for (i = 0; i < numDHTSensors; i++) {
     if (!DHT_Pins[i]) continue;
     query(BSP_DHT22 + 1 + i * 4);
     counter++;
