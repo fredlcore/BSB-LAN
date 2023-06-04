@@ -76,6 +76,7 @@
  *        - Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)
  *        - Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS
  *        - To improve handling of large datalogs: date range selection in /DG, new url commands /Da,b /DA /DB /Dn /DI /DKn
+ *        - This release has been supported by the following GitHub Sponsors: lapixo, nrobadey
  *       version 3.0
  *        - ATTENTION: BSB_LAN_custom_defs.h.default needs to be renamed to BSB_LAN_custom_defs.h and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
  *        - Add new '/LN' URL command to force logging irrespective of current interval.
@@ -4586,7 +4587,6 @@ void GetDevId() {
   my_dev_fam = msg[10+bus->getBusType()*4];
   my_dev_var = msg[12+bus->getBusType()*4];
   my_dev_id = (msg[15+bus->getBusType()*4] << 24) + (msg[16+bus->getBusType()*4] << 16) + (msg[17+bus->getBusType()*4] << 8) + (msg[18+bus->getBusType()*4]);
-  printFmtToDebug(PSTR("Setting temporary device family/variant to %d/%d\r\n"), my_dev_fam, my_dev_var);
 
 /*
   if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
@@ -5831,8 +5831,8 @@ void loop() {
             }
             printTelegram(tx_msg, -1);
             printTelegram(msg, -1);
-            if (msg[4+bus->getBusType()*4] == 0x13) {
-              int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+            int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
+            if (msg[4+bus->getBusType()*4] == 0x13 && IA1_max > 0) {
               timeout = millis() + 3000;
               while (!bus->Send(TYPE_IQ2, c, msg, tx_msg) && (millis() < timeout)) {
                 printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
@@ -7610,7 +7610,7 @@ String scanAndConnectToStrongestNetwork() {
   int32_t rssi_strongest = -100;
   printFmtToDebug(PSTR("Start scanning for SSID %s\r\n"), wifi_ssid);
 
-  int n = WiFi.scanNetworks(); // WiFi.scanNetworks will return the number of networks found
+  int n = WiFi.scanNetworks(false, false); // WiFi.scanNetworks will return the number of networks found
 
   printToDebug(PSTR("Scan done."));
 
