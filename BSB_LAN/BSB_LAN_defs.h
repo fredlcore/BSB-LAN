@@ -806,7 +806,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_VOLTAGE_WORD1,    1.0,    1, 2, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE_WORD1},
 {VT_CELMIN,           1.0,    1, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
 {VT_CELMIN_N,         1.0,    6, 2, DT_VALS, 1,  U_CEL_MIN, sizeof(U_CEL_MIN), STR_CELMIN},
-{VT_FREQ,             200.0,  1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_FREQ},
+{VT_FREQ,             20.0,   1, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_FREQ},
 {VT_FREQ10,           10.0,   1, 2, DT_VALS, 0,  U_HERTZ, sizeof(U_HERTZ), STR_FREQ10},
 {VT_LITERPERHOUR,     1.0,    1, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
 {VT_LITERPERHOUR_N,   1.0,    6, 2, DT_VALS, 0,  U_LITERPERHOUR, sizeof(U_LITERPERHOUR), STR_LITERPERHOUR},
@@ -1107,6 +1107,12 @@ const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
 "\0\x08\x08 " ENUM_LOGMODE_08_TEXT
 //#endif
 
+};
+
+// Keep this for legacy parameter lists
+const char ENUM701[] PROGMEM_LATEST = {
+"\x01 " ENUM648_01_TEXT "\0"
+"\x02 " ENUM700_03_TEXT
 };
 
 // PPS Betriebsart
