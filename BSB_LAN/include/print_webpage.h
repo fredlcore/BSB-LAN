@@ -11,86 +11,86 @@
  *  Global resources used:
  *   client object
  * *************************************************************** */
- void webPrintHeader(void) {
-   flushToWebClient();
-   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
-   printPStr(header_html, sizeof(header_html));
-   #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-   printPStr(header_html2, sizeof(header_html2));
-   #endif
-   printPStr(header_html3, sizeof(header_html3));
- #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-   printToWebClient(PSTR("<a href='/"));
-   printPassKey();
-   printToWebClient(PSTR("' ID=main_link class='logo'>"));
-   printPStr(svg_favicon, sizeof(svg_favicon));
-//   printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
-   printToWebClient(PSTR("</A></center>\r\n"));
-   printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+void webPrintHeader(void) {
+  flushToWebClient();
+  printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
+  printPStr(header_html, sizeof(header_html));
+  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+  printPStr(header_html2, sizeof(header_html2));
+  #endif
+  printPStr(header_html3, sizeof(header_html3));
+#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+  printToWebClient(PSTR("' ID=main_link class='logo'>"));
+  printPStr(svg_favicon, sizeof(svg_favicon));
+//  printToWebClient(PSTR("<img width=10% height=10% src='/favicon.svg'></A>\r\n"));
+  printToWebClient(PSTR("</A></center>\r\n"));
+  printToWebClient(PSTR("<table align=center><tr bgcolor=#f0f0f0>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='/"));
-   printPassKey();
-   printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+  printToWebClient(PSTR("K'>" MENU_TEXT_HFK));
 
-   printToWebClient(PSTR("</a></td>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
-   printToWebClient(PSTR("<a href='/"));
-   printPassKey();
-   printFmtToWebClient(PSTR("K%d'>"), CAT_USERSENSORS);
-   printToWebClient(STR_TEXT_SNS);
+  printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+  printFmtToWebClient(PSTR("K%d'>"), CAT_USERSENSORS);
+  printToWebClient(STR_TEXT_SNS);
 
-   printToWebClient(PSTR("</a></td>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   if (!(LoggingMode & CF_LOGMODE_SD_CARD)) {
-     printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
-   } else {
-     printToWebClient(PSTR("<a href='/"));
-     printPassKey();
-     printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
-     printToWebClient(PSTR("</a></td>"));
-   }
+  if (!(LoggingMode & CF_LOGMODE_SD_CARD)) {
+    printToWebClient(PSTR("<font color=#000000>" MENU_TEXT_DLG "</font></td>"));
+  } else {
+    printToWebClient(PSTR("<a href='/"));
+    printPassKey();
+    printToWebClient(PSTR("DG'>" MENU_TEXT_SLG));
+    printToWebClient(PSTR("</a></td>"));
+  }
 
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='/"));
-   printPassKey();
-   printToWebClient(PSTR("Q' TARGET='_new'>" MENU_TEXT_CHK));
-   printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+  printToWebClient(PSTR("Q' TARGET='_new'>" MENU_TEXT_CHK));
+  printToWebClient(PSTR("</a></td>"));
 
-   printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("</tr>\r\n<tr bgcolor=#f0f0f0>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='/"));
-   printPassKey();
-   printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
+  printToWebClient(PSTR("<a href='/"));
+  printPassKey();
+  printToWebClient(PSTR("C'>" MENU_TEXT_CFG));
 
-   //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
-   printToWebClient(PSTR("</a></td>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  //  client.print(F("</a></td><td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan/blob/master/command_ref/command_ref_" str(LANG) ".md'>" MENU_TEXT_URL));
+  printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='"));
-   printToWebClient(PSTR(MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
+  printToWebClient(PSTR("<a href='"));
+  printToWebClient(PSTR(MENU_LINK_URL "' target='_new'>" MENU_TEXT_URL));
 
-   printToWebClient(PSTR("</a></td>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='"));
-   printToWebClient(PSTR(MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC));
-   printToWebClient(PSTR("</a></td>"));
-   printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
+  printToWebClient(PSTR("<a href='"));
+  printToWebClient(PSTR(MENU_LINK_TOC "' target='new'>" MENU_TEXT_TOC));
+  printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<td class=\"header\" width=20% align=center>"));
 
-   printToWebClient(PSTR("<a href='"));
-   printToWebClient(PSTR(MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ));
-   printToWebClient(PSTR("</a></td>"));
+  printToWebClient(PSTR("<a href='"));
+  printToWebClient(PSTR(MENU_LINK_FAQ "' target='_new'>" MENU_TEXT_FAQ));
+  printToWebClient(PSTR("</a></td>"));
 
- //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
-   printToWebClient(PSTR("</tr></table>"));
+//  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
+  printToWebClient(PSTR("</tr></table>"));
 #endif
-   printToWebClient(PSTR("<p></p><table align=center><tr><td class=\"header\">\r\n"));
-   flushToWebClient();
- } // --- webPrintHeader() ---
+  printToWebClient(PSTR("<p></p><table align=center><tr><td class=\"header\">\r\n"));
+  flushToWebClient();
+} // --- webPrintHeader() ---
 
 
 /** *****************************************************************
