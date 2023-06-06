@@ -5186,7 +5186,7 @@ void loop() {
         if (!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
           httpflags |= HTTP_HEAD_REQ;
 #endif
-        char *u_s = strchr(cLineBuffer,' ');
+        char *u_s = strchr(cLineBuffer,' ');  // what do these lines do?
         if (!u_s) u_s = cLineBuffer;
         char *u_e = strchr(u_s + 1,' ');
         if (u_e) u_e[0] = 0;
