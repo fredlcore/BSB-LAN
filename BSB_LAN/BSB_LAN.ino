@@ -3373,7 +3373,7 @@ void LogTelegram(byte* msg) {
  *  Serial instance
  *  bus    instance
  * *************************************************************** */
-int set(int line      // the ProgNr of the heater parameter
+int set(float line      // the ProgNr of the heater parameter
       , const char *val          // the value to set
       , bool setcmd)       // true: SET msg; false: INF msg
 {
@@ -3418,13 +3418,13 @@ int set(int line      // the ProgNr of the heater parameter
         if (atoi(val)) resetDurations(); return 1; // reset furnace duration
       }
       if ((line >= BSP_FLOAT && line < BSP_FLOAT + numCustomFloats)) {// set custom_float
-        custom_floats[line - BSP_FLOAT] = atof(val);
+        custom_floats[(int)line - BSP_FLOAT] = atof(val);
         return 1;
       }
       if ((line >= BSP_LONG && line < BSP_LONG + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
         strcpy_P(sscanf_buf, PSTR("%ld"));
-        sscanf(val, sscanf_buf, &custom_longs[line - BSP_LONG]);
+        sscanf(val, sscanf_buf, &custom_longs[(int)line - BSP_LONG]);
         return 1;
       }
 
@@ -7556,7 +7556,7 @@ void loop() {
 // if WiFi is down, try reconnecting every minute
     bool not_preferred_bssid = false;
     for (int x=0;x<6;x++) {
-      if (WiFi.BSSID()[x] != bssid[x]) {
+      if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
         not_preferred_bssid = true;
       }
     }
