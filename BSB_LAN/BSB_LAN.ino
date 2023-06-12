@@ -69,6 +69,8 @@
  * Changelog:
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
+ *        - Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.
+ *        - This release has been supported by the following GitHub Sponsors: BraweProg
  *       version 3.1
  *        - ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
  *        - ATTENTION: In BSB_LAN_config.h, the structure of log_parameters, avg_parameters and ipwe_parameters has changed and now includes the destination device on the bus!
@@ -500,6 +502,7 @@
 
 #if defined(ESP32)
 void loop();
+int set(float line, const char *val, bool setcmd);
 #endif
 
 typedef struct {
@@ -514,6 +517,11 @@ typedef struct {
 #include "src/BSB/bsb.h"
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
+
+#define REQUIRED_CONFIG_VERSION 32
+#if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
+  #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
+#endif
 
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
@@ -5186,7 +5194,7 @@ void loop() {
         if (!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
           httpflags |= HTTP_HEAD_REQ;
 #endif
-        char *u_s = strchr(cLineBuffer,' ');  // what do these lines do?
+        char *u_s = strchr(cLineBuffer,' ');
         if (!u_s) u_s = cLineBuffer;
         char *u_e = strchr(u_s + 1,' ');
         if (u_e) u_e[0] = 0;

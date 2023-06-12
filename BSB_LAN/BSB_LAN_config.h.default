@@ -321,6 +321,8 @@ byte destinationServer[128] = "";   // URL string to periodically send values to
 uint16_t destinationPort = 80;      // port number for abovementioned server
 uint32_t destinationDelay = 84600;  // interval in seconds to send values
 
+#define CONFIG_VERSION 32
+
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */
