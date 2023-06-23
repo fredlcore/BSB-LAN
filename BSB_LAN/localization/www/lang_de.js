@@ -3376,7 +3376,7 @@ UIStrings["ENUM10100_80_TEXT"] = "Funk: Uhrzeit eingestellt";
 UIStrings["ENUM14088_00_TEXT"] = "Kein mit Maximalauswahl";
 UIStrings["ENUM15000_00_TEXT"] = "Automatisch";
 UIStrings["ENUM15000_01_TEXT"] = "Manuell";
-#define ENUM15000_02_TEXT MENU_TEXT_OFF
+//#define ENUM15000_02_TEXT MENU_TEXT_OFF. This definition is moved to BSB_LAN/BSB_LAN_defs.h file
 UIStrings["ENUM15044_00_02_TEXT"] = "Auto-Mode: aus";
 UIStrings["ENUM15044_02_02_TEXT"] = "Auto-Mode: an";
 UIStrings["ENUM15044_00_08_TEXT"] = "Pumpe an";
