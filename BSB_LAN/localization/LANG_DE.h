@@ -3376,7 +3376,7 @@
 #define ENUM14088_00_TEXT "Kein mit Maximalauswahl"
 #define ENUM15000_00_TEXT "Automatisch"
 #define ENUM15000_01_TEXT "Manuell"
-#define ENUM15000_02_TEXT MENU_TEXT_OFF
+//#define ENUM15000_02_TEXT MENU_TEXT_OFF. This definition is moved to BSB_LAN/BSB_LAN_defs.h file
 #define ENUM15044_00_02_TEXT "Auto-Mode: aus"
 #define ENUM15044_02_02_TEXT "Auto-Mode: an"
 #define ENUM15044_00_08_TEXT "Pumpe an"

@@ -1116,6 +1116,7 @@ const char ENUM701[] PROGMEM_LATEST = {
 };
 
 // PPS Betriebsart
+#define ENUM15000_02_TEXT MENU_TEXT_OFF
 const char ENUM15000[] PROGMEM_LATEST = {
 "\x00 " ENUM15000_00_TEXT "\0"
 "\x01 " ENUM15000_01_TEXT "\0"
