@@ -1056,6 +1056,12 @@ const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
 
 };
 
+// Keep this for legacy parameter lists
+const char ENUM701[] PROGMEM_LATEST = {
+"\x01 " ENUM648_01_TEXT "\0"
+"\x02 " ENUM700_03_TEXT
+};
+
 // PPS Betriebsart
 const char ENUM15000[] PROGMEM_LATEST = {
 "\x00 " ENUM15000_00_TEXT "\0"
