@@ -284,8 +284,8 @@ bool enable_version_check = false;
 boolean enable_ota_update = false;
 
 // Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy.
-// Reduces WiFi range and log file display times when using and WiFi (LAN not affected). Set to "false" if you have problems with any of these.
-boolean esp32_save_energy = true;
+// Works well when connecting via LAN, but since it reduces WiFi range and log file display times when using WiFi, it is disabled by default.
+boolean esp32_save_energy = false;
 
 // "External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
 //#define WEBSERVER
