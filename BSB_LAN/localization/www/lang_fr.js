@@ -348,6 +348,7 @@ UIStrings["ENUM700_00_TEXT"] = "Hors-gel";
 UIStrings["ENUM700_01_TEXT"] = "Automatique";
 UIStrings["ENUM700_03_TEXT"] = "Confort";
 UIStrings["ENUM701_00_TEXT"] = "Retour au mode horaire";
+UIStrings["ENUM701_01_TEXT"] = "Réduit";
 UIStrings["ENUM701_02_TEXT"] = "Mode confort forcé";
 UIStrings["ENUM8000_17_TEXT"] = "Protection anti-gel";
 UIStrings["ENUM8000_68_TEXT"] = "Chauffage restreint, priorité ECS";
