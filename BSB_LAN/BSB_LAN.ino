@@ -7070,7 +7070,8 @@ void loop() {
     // give the web browser time to receive the data
     delay(1);
     // close the connection:
-    client.flush();
+// Temporarily disable client.flush() due to a bug introduced by ardiuino-esp32 from version 2.0.12 onwards
+//    client.flush();
     client.stop();
   } // endif, client
 
