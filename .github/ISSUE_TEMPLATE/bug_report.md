@@ -50,3 +50,5 @@ If applicable, add screenshots to help explain your problem.
 
 **Additional context**
 Add any other context about the problem here.
+
+**Attach your BSB_LAN_config.h file to your bug report (remove any confidential information if necessary). Bug reports without this file attached will be closed immediately.**
