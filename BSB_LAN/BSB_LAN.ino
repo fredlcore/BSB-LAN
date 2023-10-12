@@ -7879,7 +7879,6 @@ void setup() {
     printFmtToDebug(PSTR("%c"), SerialOutput->read());
   }
   printFmtToDebug(PSTR("BSB-LAN version: %s\r\n"), BSB_VERSION);
-  printlnToDebug(BSB_VERSION);
 // BSB/LPB/PPS bus init
   byte temp_bus_pins[2];
   if (bus_pins[0] && bus_pins[1]) {
@@ -7925,6 +7924,15 @@ void setup() {
   printFmtToDebug(PSTR("Using RX/TX pins %d, %d\r\n"), temp_bus_pins[0], temp_bus_pins[1]);
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
+
+  printToDebug(PSTR("Bus type defined in config: "));
+  switch (bus_type) {
+    case BUS_BSB:  printlnToDebug(PSTR("BSB")); break;
+    case BUS_LPB:  printlnToDebug(PSTR("LPB")); break;
+    case BUS_PPS:  printlnToDebug(PSTR("PPS")); break;
+    default: printlnToDebug(PSTR("unknown!"));
+  }
+
   bus->enableInterface();
 #if defined(ESP32)
   if (esp32_save_energy == true) {
