@@ -2154,7 +2154,7 @@ void generateConfigPage(void) {
   unsigned long m = s / 60;
   unsigned long h = m / 60;
   unsigned d = h / 24;
-  printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu ms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
+  printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
 #ifndef WEBCONFIG
   printlnToWebClient(PSTR(MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
