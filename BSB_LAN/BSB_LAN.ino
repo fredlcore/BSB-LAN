@@ -2148,13 +2148,15 @@ void generateConfigPage(void) {
   printDeviceArchToWebClient();
   printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_VER ": "));
   printToWebClient(BSB_VERSION);
-  printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": "));
-#ifdef WEBCONFIG
-  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu<BR>\r\n"), freeRam(), millis());
-
-#else
-  printFmtToWebClient(PSTR("%d " MENU_TEXT_BYT "<BR>\r\n" MENU_TEXT_UPT ": %lu"), freeRam(), millis());
-  printlnToWebClient(PSTR("<BR>\r\n" MENU_TEXT_BUS ": "));
+  printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": %d " MENU_TEXT_BYT "<BR>\r\n"), freeRam());
+  unsigned long ms = millis();
+  unsigned long s = ms / 1000;
+  unsigned long m = s / 60;
+  unsigned long h = m / 60;
+  unsigned d = h / 24;
+  printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
+#ifndef WEBCONFIG
+  printlnToWebClient(PSTR(MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
 
   switch (bustype) {
