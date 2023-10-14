@@ -73,7 +73,7 @@
  *        - Variable esp32_save_energy now defaults to false because it only seems to make sense when using LAN connection or if you use WiFi and can live with the performance impact.
  *        - Added folder "custom_functions" where code examples for useful functions will be collected which are nevertheless too specific to be added to BSB-LAN's core code.
  *        - Added custom function example for mapping DS18B20 sensors to fixed custom floats parameters
- *        - This release has been supported by the following GitHub Sponsors: BraweProg, Harald
+ *        - This release has been supported by the following GitHub Sponsors: BraweProg, fdobrovolny, Harald
  *       version 3.1
  *        - ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
  *        - ATTENTION: In BSB_LAN_config.h, the structure of log_parameters, avg_parameters and ipwe_parameters has changed and now includes the destination device on the bus!
