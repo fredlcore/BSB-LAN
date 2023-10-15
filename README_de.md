@@ -11,7 +11,7 @@ Wem das Projekt gefällt, der kann es über das GitHub Sponsor Programm unterst�
 ---
 
 ***Bausätze erhältlich!***  
-**Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Due oder ESP32 erhältlich, bei Interesse bitte Frederik eine e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
+**Auf Anfrage sind Platinen mit entsprechenden Bauteilen für die Verwendung am Arduino Due oder ESP32 erhältlich. Mit dem Kauf eines Boards bei uns unterstützt Ihr darüber hinaus die Weiterentwicklung dieses Projekts. Bei Interesse bitte Frederik eine e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
 
 ---
 

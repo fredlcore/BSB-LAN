@@ -11,7 +11,7 @@ If you like this project and want to support it, you can do so through the GitHu
 ---
 
 ***Interface kits available!***  
-**PCB boards with parts are available upon request. If you are interested, please send Frederik an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
+**PCB boards with parts are available upon request. Getting the board from us helps supporting this project in the future, so if you are interested, please send Frederik an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
    
 ---   
    
