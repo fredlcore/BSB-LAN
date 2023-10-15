@@ -47,7 +47,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - [RVS23](https://1coderookie.github.io/BSB-LPB-LAN/kap10.html#10222-rvs-regler), Anschluss via LPB      
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
-- Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB  
+- Brötje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB
 - Bösch: Wärmepumpen mit RVS-Reglern
 - Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus, Trigon S Plus  
 - ATAG: QR  
@@ -64,6 +64,7 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Geminox: Thrs
 - Gruenenwald: Greenheat
 - Hansa: SND
+- Herz: Commotherm 5 DeLuxe
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E
@@ -74,8 +75,9 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Termomax: Termo ÖV
 - Thermics: Energie
 - Thermital: TBox Clima TOP
+- Tifell: Biofell
 - Viessmann: Vitotwin 300-W
-- Wamak: DB
+- Wamak: AiWa, DB
 - Weishaupt: WTU
    
 ***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
