@@ -7569,9 +7569,11 @@ void loop() {
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
     bool not_preferred_bssid = false;
-    for (int x=0;x<6;x++) {
-      if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
-        not_preferred_bssid = true;
+    if (WiFi.BSSID() != NULL) {
+      for (int x=0;x<6;x++) {
+        if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
+          not_preferred_bssid = true;
+        }
       }
     }
 
