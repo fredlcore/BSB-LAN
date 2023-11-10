@@ -4587,6 +4587,7 @@ void query(float line_start  // begin at this line (ProgNr)
     query(line);
     if (decodedTelegram.prognr != -1) {
       if (!no_print) {         // display in web client?
+        if (!client.connected()) return;  // no need to waste time here when client is gone
         query_printHTML();
       }
     }
@@ -4750,14 +4751,14 @@ void transmitFile(File dataFile) {
    printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
    forcedflushToWebClient();
   }
-  while (chars_read == logbuflen) {
+  while (chars_read == logbuflen && client.connected()) {
     client.write(buf, logbuflen);
     chars_read = dataFile.read(buf, logbuflen);
 #if defined(ESP32)
     esp_task_wdt_reset();
 #endif
     }
-  if (chars_read > 0) client.write(buf, chars_read);
+  if (chars_read > 0 && client.connected()) client.write(buf, chars_read);
   if (buf != (byte*)bigBuff) free(buf);
 }
 
@@ -5703,7 +5704,7 @@ void loop() {
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
-          for (int x=0;x<10;x++) {
+          for (int x=0; x<10 && client.connected(); x++) {
             if (found_ids[x]==0xFF) {
               continue;
             }
@@ -5750,7 +5751,7 @@ void loop() {
             if (p[3] == 'F') {
               printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
               flushToWebClient();
-              for (int j=0;j<10000;j++) {
+              for (int j=0; j<10000 && client.connected(); j++) {
                 uint32_t cc = get_cmdtbl_cmd(j);
                 if (cc == c) {
                   continue;
@@ -5855,7 +5856,7 @@ void loop() {
               int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
               int outBufLen = strlen(outBuf);
 
-              for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+              for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected(); IA1_counter++) {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
@@ -5869,7 +5870,7 @@ void loop() {
                 printToWebClient(PSTR("\r\n"));
                 flushToWebClient();
               }
-              for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+              for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected(); IA2_counter++) {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
@@ -6569,7 +6570,7 @@ void loop() {
                         buf = (byte*)malloc(4096);  // try to use 4 KB buffer, for improved transfer rates
 #endif
                         if (buf) logbuflen=4096; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
-                        while (nBytesToDo) {
+                        while (nBytesToDo && client.connected()) {
                           int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
                           if (n < 0) {
                             printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
