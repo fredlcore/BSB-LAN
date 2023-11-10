@@ -5704,7 +5704,7 @@ void loop() {
           } else {
             printToWebClient(PSTR(MENU_TEXT_QFA "!"));
           }
-          for (int x=0;x<10;x++) {
+          for (int x=0; x<10 && client.connected(); x++) {
             if (found_ids[x]==0xFF) {
               continue;
             }
@@ -5751,7 +5751,7 @@ void loop() {
             if (p[3] == 'F') {
               printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
               flushToWebClient();
-              for (int j=0;j<10000;j++) {
+              for (int j=0; j<10000 && client.connected(); j++) {
                 uint32_t cc = get_cmdtbl_cmd(j);
                 if (cc == c) {
                   continue;
@@ -5856,7 +5856,7 @@ void loop() {
               int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
               int outBufLen = strlen(outBuf);
 
-              for (int IA1_counter = 1; IA1_counter <= IA1_max; IA1_counter++) {
+              for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected(); IA1_counter++) {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
@@ -5870,7 +5870,7 @@ void loop() {
                 printToWebClient(PSTR("\r\n"));
                 flushToWebClient();
               }
-              for (int IA2_counter = 1; IA2_counter <= IA2_max; IA2_counter++) {
+              for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected(); IA2_counter++) {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
