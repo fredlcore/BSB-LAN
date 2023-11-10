@@ -4587,6 +4587,7 @@ void query(float line_start  // begin at this line (ProgNr)
     query(line);
     if (decodedTelegram.prognr != -1) {
       if (!no_print) {         // display in web client?
+        if (!client.connected()) return;  // no need to waste time here when client is gone
         query_printHTML();
       }
     }
@@ -4750,14 +4751,14 @@ void transmitFile(File dataFile) {
    printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
    forcedflushToWebClient();
   }
-  while (chars_read == logbuflen) {
+  while (chars_read == logbuflen && client.connected()) {
     client.write(buf, logbuflen);
     chars_read = dataFile.read(buf, logbuflen);
 #if defined(ESP32)
     esp_task_wdt_reset();
 #endif
     }
-  if (chars_read > 0) client.write(buf, chars_read);
+  if (chars_read > 0 && client.connected()) client.write(buf, chars_read);
   if (buf != (byte*)bigBuff) free(buf);
 }
 
@@ -6569,7 +6570,7 @@ void loop() {
                         buf = (byte*)malloc(4096);  // try to use 4 KB buffer, for improved transfer rates
 #endif
                         if (buf) logbuflen=4096; else buf=(byte*)bigBuff;  // fall back to static buffer, if necessary
-                        while (nBytesToDo) {
+                        while (nBytesToDo && client.connected()) {
                           int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
                           if (n < 0) {
                             printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
