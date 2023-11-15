@@ -7591,11 +7591,13 @@ void loop() {
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
     }
+#if defined(ESP32)
     struct tm now;
     getLocalTime(&now,100);
     if (now.tm_year < 100) {
       SetDateTime();
     }
+#endif
 
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
