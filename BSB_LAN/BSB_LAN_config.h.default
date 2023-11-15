@@ -56,6 +56,21 @@ uint8_t bssid[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};  // enter specific BSSI
 #define MDNS_SUPPORT                   // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
 char mDNS_hostname[32] = "BSB-LAN";
 
+/* NTP settings to acquire exact date and time via network.
+ * Attention: This only works with ESP32 microcontrollers so far!
+ * Use pool.ntp.org if your BSB-LAN installation can access the internet.
+ * Otherwise you may also use your router's address if it can act as a NTP server.
+ * The default timezone "CET-1CEST,M3.5.0,M10.5.0/3" covers most Central European countries (GMT+1) and takes care of daylight saving.
+ * Use "EET-2EEST,M3.5.0/3,M10.5.0/4" for Eastern European countries (GMT+2), or 
+ * use "WET0WEST,M3.5.0/1,M10.5.0" for Western European countries (GMT+0).
+ * See here for a full list of timezones for places all over the world:
+ * https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
+*/
+#define USE_NTP       // Disable this in case you don't want to use NTP
+const char ntp_server[20] = "pool.ntp.org";
+const char local_timezone[30] = "CET-1CEST,M3.5.0,M10.5.0/3";
+
+// Debug options
 #define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
@@ -321,7 +336,7 @@ byte destinationServer[128] = "";   // URL string to periodically send values to
 uint16_t destinationPort = 80;      // port number for abovementioned server
 uint32_t destinationDelay = 84600;  // interval in seconds to send values
 
-#define CONFIG_VERSION 32
+#define CONFIG_VERSION 33
 
 /************************************************************************************/
 /************************************************************************************/

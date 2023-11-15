@@ -64,9 +64,13 @@
  *       2.2   - 01.11.2022
  *       3.0   - 16.03.2023
  *       3.1   - 04.06.2023
- *       3.2   - 
+ *       3.2   - 15.11.2023
+ *       3.3   - 
  *
  * Changelog:
+ *       version 3.3
+ *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
+ *        - Support for receiving date and time via NTP instead of taking it from the heater.
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
  *        - Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.
@@ -521,7 +525,7 @@ typedef struct {
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 32
+#define REQUIRED_CONFIG_VERSION 33
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -3453,9 +3457,11 @@ int set(float line      // the ProgNr of the heater parameter
         int dow = atoi(val);
         pps_values[PPS_DOW] = dow;
       #if defined(ESP32)
+/*
         struct tm now;
         getLocalTime(&now,0);
         setTime(now.tm_hour,now.tm_min,now.tm_sec, dow, 1, 2018);
+*/
       #else
         setTime(hour(), minute(), second(), dow, 1, 2018);
       #endif
@@ -4681,13 +4687,31 @@ void SetDateTime() {
   byte tx_msg[33];   // xmit buffer
   uint32_t c;        // command code
 
-  findLine(0,0,&c);
-  if (c!=CMD_UNKNOWN) {     // send only valid command codes
-    if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg)) {
-      if (bus->getBusType() == BUS_LPB) {
-        setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
-      } else {
-        setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
+#if defined(ESP32) && defined(USE_NTP)
+  printlnToDebug(PSTR("Trying to get NTP time..."));
+  struct tm timeinfo;
+  configTime(0, 0, ntp_server);
+  setenv("TZ",local_timezone,1);
+  tzset();
+
+  if(getLocalTime(&timeinfo)){
+    printFmtToDebug(PSTR("Date and time acquired: %02d.%02d.%02d %02d:%02d:%02d\n"), timeinfo.tm_mday, timeinfo.tm_mon, timeinfo.tm_year-100, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+//    setTime(timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_mday, timeinfo.tm_mon, timeinfo.tm_year); // not sure if setTime is necessary here or if configTime already takes care of that?
+    return;
+  } else {
+    printlnToDebug(PSTR("Acquisition failed, trying again in one minute..."));
+  }
+#endif
+
+  if (bus->getBusType() != BUS_PPS) {
+    findLine(0,0,&c);
+    if (c!=CMD_UNKNOWN) {     // send only valid command codes
+      if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg)) {
+        if (bus->getBusType() == BUS_LPB) {
+          setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
+        } else {
+          setTime(rx_msg[14], rx_msg[15], rx_msg[16], rx_msg[12], rx_msg[11], rx_msg[10]+1900);
+        }
       }
     }
   }
@@ -7567,6 +7591,12 @@ void loop() {
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
       SetDevId();
     }
+    struct tm now;
+    getLocalTime(&now,100);
+    if (now.tm_year < 100) {
+      SetDateTime();
+    }
+
 #if defined(WIFI) && defined(ESP32)
 // if WiFi is down, try reconnecting every minute
     bool not_preferred_bssid = false;
@@ -7579,7 +7609,7 @@ void loop() {
     }
 
     if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
-      printFmtToDebug(PSTR("%ul Reconnecting to WiFi...\r\n"), millis());
+      printFmtToDebug(PSTR("Reconnecting to WiFi...\r\n"));
       scanAndConnectToStrongestNetwork();
     }
 #endif
@@ -7647,16 +7677,18 @@ String scanAndConnectToStrongestNetwork() {
 
 void printWifiStatus()
 {
-  // print the SSID of the network you're attached to
-  printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
-  printFmtToDebug(PSTR("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n"), WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
-  // print your WiFi shield's IP address
-  IPAddress t = WiFi.localIP();
-  printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
-
-  // print the received signal strength
-  long rssi = WiFi.RSSI();
-  printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
+  if (WiFi.SSID() != NULL) {
+    // print the SSID of the network you're attached to
+    printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
+    printFmtToDebug(PSTR("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n"), WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
+    // print your WiFi shield's IP address
+    IPAddress t = WiFi.localIP();
+    printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+  
+    // print the received signal strength
+    long rssi = WiFi.RSSI();
+    printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
+  }
 }
 #endif
 
@@ -8202,9 +8234,10 @@ void setup() {
 
   long diff = 3000;
 
+// receive inital date/time either from NTP server or from heating system
+  SetDateTime();
+
   if (bus->getBusType() != BUS_PPS) {
-// receive inital date/time from heating system
-    SetDateTime();
 
 // receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
     SetDevId();
