@@ -2144,6 +2144,39 @@ void printDeviceArchToWebClient(){
   #endif
 }
 
+/** *****************************************************************
+ *  Function:  GetDateTime()
+ *  Does:      Returns human-readable date/time string
+ *
+ * Pass parameters:
+ *   date buffer
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   date/time string
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+char *GetDateTime(char *date) {
+#if defined(ESP32)
+  struct tm now;
+  getLocalTime(&now,100);
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+            currentDate.elements.day   = now.tm_mday,
+            currentDate.elements.month = now.tm_mon + 1,
+            currentDate.elements.year  = now.tm_year + 1900,
+            now.tm_hour,now.tm_min,now.tm_sec);
+#else
+  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+            currentDate.elements.day   = day(),
+            currentDate.elements.month = month(),
+            currentDate.elements.year  = year(),
+            hour(),minute(),second());
+#endif
+  date[19] = 0;
+  return date;
+}
+
 void generateConfigPage(void) {
 #if !defined(WEBCONFIG)
   printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
@@ -2159,7 +2192,6 @@ void generateConfigPage(void) {
   unsigned long h = m / 60;
   unsigned d = h / 24;
   printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
-  char *GetDateTime(char *date);  // forward declaration, to avoid moving that function before this one here
   char tmp_date[20];
   printFmtToWebClient(PSTR(ENUM_CAT_00_TEXT ": %s<BR>\r\n"), GetDateTime(tmp_date));
 #ifndef WEBCONFIG
@@ -3184,39 +3216,6 @@ void generateJSONwithConfig() {
   printToWebClient(PSTR("\r\n    }\r\n"));
 }
 #endif //JSONCONFIG
-
-/** *****************************************************************
- *  Function:  GetDateTime()
- *  Does:      Returns human-readable date/time string
- *
- * Pass parameters:
- *   date buffer
- * Parameters passed back:
- *   none
- * Function value returned:
- *   date/time string
- * Global resources used:
- *   none
- * *************************************************************** */
-char *GetDateTime(char *date) {
-#if defined(ESP32)
-  struct tm now;
-  getLocalTime(&now,100);
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
-            currentDate.elements.day   = now.tm_mday,
-            currentDate.elements.month = now.tm_mon + 1,
-            currentDate.elements.year  = now.tm_year + 1900,
-            now.tm_hour,now.tm_min,now.tm_sec);
-#else
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
-            currentDate.elements.day   = day(),
-            currentDate.elements.month = month(),
-            currentDate.elements.year  = year(),
-            hour(),minute(),second());
-#endif
-  date[19] = 0;
-  return date;
-}
 
 /** *****************************************************************
  *  Function:  LogTelegram()
