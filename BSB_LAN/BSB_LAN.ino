@@ -2159,12 +2159,9 @@ void generateConfigPage(void) {
   unsigned long h = m / 60;
   unsigned d = h / 24;
   printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
-#if defined(ESP32)
-  struct tm timeinfo;
-  if(getLocalTime(&timeinfo)){
-    printFmtToWebClient(PSTR(ENUM_CAT_00_TEXT ": %02d.%02d.%02d %02d:%02d:%02d<BR>\r\n"), timeinfo.tm_mday, timeinfo.tm_mon+1, timeinfo.tm_year-100, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
-  }
-#endif
+  char *GetDateTime(char *date);  // forward declaration, to avoid moving that function before this one here
+  char tmp_date[20];
+  printFmtToWebClient(PSTR(ENUM_CAT_00_TEXT ": %s<BR>\r\n"), GetDateTime(tmp_date));
 #ifndef WEBCONFIG
   printlnToWebClient(PSTR(MENU_TEXT_BUS ": "));
   int bustype = bus->getBusType();
