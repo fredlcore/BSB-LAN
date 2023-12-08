@@ -6159,7 +6159,7 @@ void loop() {
                 do{
                   int i_line = findLine(j, 0, &cmd);
                   if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
-                    continue;
+                    goto next_parameter;
                   }
                   loadPrognrElementsFromTable(j, i_line);
                   if (decodedTelegram.readwrite == FL_WRITEABLE) {//Do not save "read only" or "write only" parameters
@@ -6169,6 +6169,7 @@ void loop() {
                       printFmtToWebClient(PSTR("  \"%g\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\"}"), j, j, decodedTelegram.value, 1);
                     }
                   }
+next_parameter:
                   j = get_next_prognr(j, i_line);
                 }while(j >= cat_min && j <= cat_max);
               }
