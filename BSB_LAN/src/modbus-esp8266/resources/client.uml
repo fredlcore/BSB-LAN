@@ -1,0 +1,21 @@
+@startuml
+!pragma useVerticalIf on
+start
+partition readHreg() {
+if (no request is alreaty running) then (yes)
+ :readHreg;
+endif
+}
+while (request is active)
+partition task() {
+if (responce arrived) then (yes)
+  #palegreen:Execute Transactional Callback;
+  :fill result data;
+endif
+if (responce timeout) then (yes)
+  #palegreen:Execute Transactional Callback;
+endif
+}
+endwhile (no request)
+stop
+@enduml

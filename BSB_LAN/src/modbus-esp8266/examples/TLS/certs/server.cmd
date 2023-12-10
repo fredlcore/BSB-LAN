@@ -1,0 +1,1 @@
+openssl s_server -showcerts -accept 802 -cert server_cer.pem -key server_key.pem -verifyCAfile ca_cer.pem

@@ -1,0 +1,26 @@
+@startuml
+!pragma useVerticalIf on
+start
+partition task() {
+if (valid request arrived) then (yes)
+  #palegreen:Execute onRequest Callback;
+  if (EX_SUCCESS) then (yes)
+    if (correct request parameters) then (yes)
+      :Preapre responce;
+      #palegreen:Execute onGet/onSet Callback for each register in request;
+      #palegreen:Execute onRequestSuccess Callback;
+    else (no)
+      #pink:Return error code;
+      stop
+    endif
+  else (no)
+    #pink:Return error code;
+    stop
+  endif
+else
+  #pink:Return error code;
+  stop
+endif
+}
+stop
+@enduml
