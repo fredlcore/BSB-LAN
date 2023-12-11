@@ -47,9 +47,9 @@ The following overview shows the most common used controllers of the different h
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
 - Broetje: BBK, BBS, BGB, BLW, BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB 
 - Boesch: heat pumps with RVS controller type
-- Elco: Aerotop, Aquatop, Straton, Thision, Thision S, Thision S Plus, Trigon S Plus  
+- Elco: Aerotop, Aquatop, Rendamax, Straton, Thision, Thision S, Thision S Plus, Trigon S Plus  
 - ATAG: QR  
-- Atlantic: Alféa Evolution, Excellia, Extensa, Hynea hybrid duo gaz  
+- Atlantic: Alféa Evolution, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Varmax  
 - Austria Email: LWP, LWPK  
 - Baxi: Luna Platinum
 - Chappée: Klista
