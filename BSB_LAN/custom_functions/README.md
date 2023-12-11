@@ -17,8 +17,7 @@ Theoretically, you can use several of these custom functions at the same time, a
 
 ## DHT22_sensor_controls_fan
 
-This script reads the temperatures from two DHT22 sensors (one outside and one inside) and turns on a fan connected to GPIO 6 in case the 
-absolute inside humidity is higher than the absolute outside humidity and the inside temperature is higher than 15 degrees celsius.
+This script reads the temperatures from two DHT22 sensors (one outside and one inside) and turns on a fan connected to GPIO 6 in case the absolute inside humidity is higher than the absolute outside humidity and the inside temperature is higher than 15 degrees celsius.
 
 ## Map_DS18B20_sensors_to_custom_floats
 
@@ -26,9 +25,7 @@ This script takes the readings of DS18B20 sensors and writes them to the custom 
 
 ## Modbus_Interface
 
-This set of scripts enable BSB-LAN to be accessed via Modbus. Parameters can be read and written. However, take note that no data type
-conversion takes place in this script, so only unsigned 16-bit integer values will be transmitted correctly. All other kinds of data
-types will have to be encoded/decoded accordingly.
+This set of scripts enable BSB-LAN to be accessed via Modbus. Parameters can be read and written. However, take note that no data type conversion takes place in this script, so only unsigned 16-bit integer values will be transmitted correctly. All other kinds of data types will have to be encoded/decoded accordingly. If you can live with sending/receiving temperature values with their decimal places removed, you can use this script for example to set setpoint temperatures, query outside temperatures or change operation modes without having to worry about conversions.
 
 ## Send_NTP_time_to_heater
 
@@ -36,5 +33,4 @@ This script connects to an NTP time server and writes the accurate time to the h
 
 ## Send_room_temperature_based_on_MAX_thermostats
 
-This script collects the current temperature of registered MAX! thermostats, calculates an avaerage and sends this average as the current
-room temperature to the heater (via parameter 10000).
+This script collects the current temperature of registered MAX! thermostats, calculates an avaerage and sends this average as the current room temperature to the heater (via parameter 10000).
