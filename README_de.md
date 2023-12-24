@@ -9,7 +9,7 @@ BSB-LAN ist ein Adapter für den ["Boiler-System-Bus" (BSB)](https://1coderookie
 ---
 
 ***Platinen erhältlich!***  
-**Es sind Platinen für den ESP32 erhältlich, die einfach nur auf den jeweiligen Microcontroller aufgesteckt werden müssen. Mit dem Kauf eines Boards bei uns unterstützt Ihr darüber hinaus die Weiterentwicklung dieses Projekts. Bei Interesse bitte Frederik eine e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
+**Es sind Platinen für den ESP32 erhältlich, die einfach nur auf den jeweiligen Microcontroller aufgesteckt werden müssen. Mit dem Kauf eines Boards unterstützt Ihr darüber hinaus die Weiterentwicklung dieses Projekts. Bei Interesse bitte Frederik eine e-Mail an bsb (ät) code-it.de schicken (Deutsch/Englisch).**  
 
 ---
 
