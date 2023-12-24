@@ -2,24 +2,23 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1011-bsb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1012-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1013-pps). The adapter interface is designed for an *Arduino Due* with Ethernet-Shield and for *ESP32*-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE) for web-based controlling via LAN/WLAN of heating systems such as Elco Thision, Brötje and other heating systems using Siemens controllers. Logging values on microSD-card is also possible. This project supports almost all parameters available on the respective heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
+BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1011-bsb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1012-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1013-pps). The adapter interface is designed for an *ESP32*-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE) or for an *Arduino Due* with Ethernet-Shield for web-based controlling via LAN/WLAN of heating systems such as Elco Thision, Brötje and other heating systems using Siemens controllers. Logging values on microSD-card is also possible. This project supports almost all parameters available on the respective heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
-
-If you like this project and want to support it, you can do so through the GitHub Sponsor program: [![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/fredlcore) 
 
 ---
 
 ***Interface kits available!***  
-**PCB boards with parts are available upon request. Getting the board from us helps supporting this project in the future, so if you are interested, please send Frederik an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
+**Interface boards are available for the ESP32 upon request. These can simply be plugged on top of one of the listed microcontrollers.Getting the board from here helps supporting this project in the future, so if you are interested, please send Frederik an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
    
 ---   
    
-***Please read the [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN)!***  
+@1coderookie has compiled a huge load of information in his [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN) - give him
+a shout-out or support if his work is helping you getting started with BSB-LAN! 
   
 ***Quick Start Guides for the installation and commissioning of the BSB-LAN setups are available here:***  
-***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
 ***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)*** 
+***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
   
 ---  
   
@@ -94,7 +93,7 @@ Instructions on how to configure etc. can be found in the <A HREF="https://1code
 The forum thread that led to the development of this interface can be found <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">here</A>.<BR>
 (Forum is in German, but several members speak English)
 
-Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the Arduino and ESP32 respectively! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
+Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the ESP32 and Arduino Due respectively! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
 
 Web-Interface screenshots:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">

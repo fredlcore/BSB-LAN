@@ -71,6 +71,7 @@
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - Support for receiving date and time via NTP instead of taking it from the heater.
+ *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
  *        - Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.
