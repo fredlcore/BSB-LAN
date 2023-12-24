@@ -17,7 +17,7 @@ BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.gi
 a shout-out or support if his work is helping you getting started with BSB-LAN! 
   
 ***Quick Start Guides for the installation and commissioning of the BSB-LAN setups are available here:***  
-***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)*** 
+***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)***  
 ***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
   
 ---  
