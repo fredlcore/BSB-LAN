@@ -1,0 +1,15 @@
+0.2.3 (2019-02-18)
+  * SSL Client connection, verifySSL function, protocol 0.2.3
+0.2.0 (2019-01-27)
+  * Protocol changed. Status shortened to 2 bytes, added XOR check. Data messages checked by a CRC8.
+  * Developed mechanism of confirming and repeating messages.
+  * Added hardware reset support (hardReset command)
+  * Added support for external 8266 circuit guarding the GPIO15 (SS pin) on reset
+0.1.4 (2019-01-24)
+  * Fixed delays in SPI protocol
+  * Added softReset and protocolVersion commands (might be added earlier)
+0.1.1 (2018-07-03)
+  * Added parameter to init function (SPI max speed)
+  * Enabled STM32F1 architecture although there will be a lot of work yet
+0.1.0 (2017-03-14)
+  * First version for testing

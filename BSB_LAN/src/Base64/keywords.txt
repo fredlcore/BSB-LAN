@@ -1,0 +1,22 @@
+#######################################
+# Syntax Coloring Map For Base64
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+Base64	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+encode	KEYWORD2
+decode	KEYWORD2
+encodedLength	KEYWORD2
+decodedLength	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
