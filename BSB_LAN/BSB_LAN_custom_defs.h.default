@@ -7654,6 +7654,16 @@ PROGMEM_LATE const cmd_t cmdtbl[]={
 // {0x053D1A83,  VT_ENUM,          701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
 // {0x053D1A91,  VT_ENUM,          701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär wärmer
 // {0x053D1A92,  VT_ENUM,          701,   STR701,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Temporär kälter
+/*
+ * Parameters 702 and 703 on Weishaupt controllers only work for reading. 
+ * The reason behind this is that the same Command ID (2D3D020D) is used for sending both the heating mode (automatic, comfort, reduced etc.) as well as the presence.
+ * If you really want to set the parameter, you have to use this command:
+ * /Y03,2D3D020D,XXYY00000001
+ * where XX is a number from 00 to 06 (heating mode, parameter 702) and YY is a number from 00 to 01 (presence mode, parameter 703).
+ * For the meanings of these two settings, see ENUM702 and ENUM703 in LANG_DE.h
+ * ATTENTION: It is quite possible that the remaining values (00000001) also have a special meaning, so it would be worthwhile to monitor any changes when this telegram is generated from the room unit or the heater to identify its meaning.
+ * As a result, sending always 00000001 at the end of this telegram may result in unintended behaviour, so this should only be used with caution.
+*/
 {0x2D3D020D,  VT_CUSTOM_ENUM,   702,   STR702,   sizeof(ENUM702),      ENUM702,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Erstes Payload Byte)
 {0x2D3D020D,  VT_CUSTOM_ENUM,   703,   STR703,   sizeof(ENUM703),      ENUM703,      DEFAULT_FLAG, DEV_ALL}, // Virtueller Parameter: Weishaupt Betriebsart-Wahlschalter (Zweites Payload Byte)
 {0x053D1A83,  VT_ENUM,          704,   STR704,   sizeof(ENUM704),      ENUM704,      DEFAULT_FLAG, DEV_ALL}, // Wärmer / Kälter
