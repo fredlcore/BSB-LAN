@@ -1,3 +1,5 @@
+const char* printError(uint16_t error);  // defined in BSB_LAN.ino
+
 /** *****************************************************************
  *  Function:
  *  Does:

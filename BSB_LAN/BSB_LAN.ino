@@ -1110,6 +1110,39 @@ int recognize_mime(char *str) {
   }
 
 /** *****************************************************************
+ *  Function:  bin2hex()
+ *  Does:      Convert binary date to human-readable HEX codes
+ *
+ * Pass parameters:
+ *   char *toBuffer - address of result buffer
+ *   byte *fromAddr - address of source Array
+ *   int len - source array size
+ *   char delimiter - character for HEX codes delimition. If delimiter == 0 then delimiter will not print to buffer.
+ * Parameters passed back:
+ *   char *toBuffer
+ * Function value returned:
+ *   result length
+ * Global resources used:
+ *   none
+ * *************************************************************** */
+int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter){
+  int resultLen = 0;
+  bool isNotFirst = false;
+  for (int i = 0; i < len; i++) {
+    if(isNotFirst) {
+      if(delimiter != 0) {
+        toBuffer[resultLen] = delimiter;
+        resultLen++;
+      }
+    } else {
+      isNotFirst = true;
+    }
+    resultLen += sprintf_P(toBuffer + resultLen, PSTR("%02X"), fromAddr[i]);
+  }
+  return resultLen;
+}
+
+/** *****************************************************************
  *  Function: calc_enum_offset()
  *  Does:     Takes the 16-Bit char pointer and calculate (or rather estimate) the address in PROGMEM beyond 64kB
  * Pass parameters:
@@ -1262,6 +1295,8 @@ void printcantalloc(void) {
   printlnToDebug(PSTR("Can't alloc memory"));
 }
 
+void GetDevId();  // defined later
+
 void set_temp_destination(short destAddr){
   printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), destAddr);
   bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
@@ -1342,6 +1377,7 @@ int findLine(float line
     switch (recognizeVirtualFunctionGroup(line)) {
       case 1: break;
       case 2:  line = avg_parameters[(((uint16_t)line) - BSP_AVERAGES)].number; if (line == 0) return -1; else break;
+#ifdef DHT_BUS
       case 3: {
         if (DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == 0) { //pin not assigned to DHT sensor
           return -1;
@@ -1355,6 +1391,7 @@ int findLine(float line
         }
         break;
       }
+#endif
       case 4: {
 #if defined(__SAM3X8E__)
         double intpart;
@@ -1542,6 +1579,29 @@ void SerialPrintHex32(uint32_t val) {
   printFmtToDebug(PSTR("%08lX"), val);
 }
 
+/** *****************************************************************
+ *  Function:  SerialPrintRAW()
+ *  Does:      Sends the telegram content in hex to the PC hardware
+ *             serial interface, starting at position null. It stops
+ *             when it has sent the requested number of message bytes.
+ *             WARNING: this routine does not perform a sanity check
+ *             of the length pass parameter.
+ *  Pass parameters:
+ *   byte *msg pointer to the telegram buffer
+ *   byte len  the requested number of bytes to send.
+ * Parameters passed back:
+ *   none
+ * Function value returned:
+ *   none
+ * Global resources used:
+ *   Serial  instance
+ * *************************************************************** */
+void SerialPrintRAW(byte* msg, byte len) {
+  int outBufLen = strlen(outBuf);
+  bin2hex(outBuf + outBufLen, msg, len, ' ');
+  printToDebug(outBuf + outBufLen);
+  outBuf[outBufLen] = 0;
+}
 
 /** *****************************************************************
  *  Function:  SerialPrintData()
@@ -1576,30 +1636,6 @@ void SerialPrintData(byte* msg) {
   SerialPrintRAW(msg + bus->getPl_start() - offset, data_len);
 }
 
-/** *****************************************************************
- *  Function:  SerialPrintRAW()
- *  Does:      Sends the telegram content in hex to the PC hardware
- *             serial interface, starting at position null. It stops
- *             when it has sent the requested number of message bytes.
- *             WARNING: this routine does not perform a sanity check
- *             of the length pass parameter.
- *  Pass parameters:
- *   byte *msg pointer to the telegram buffer
- *   byte len  the requested number of bytes to send.
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   Serial  instance
- * *************************************************************** */
-void SerialPrintRAW(byte* msg, byte len) {
-  int outBufLen = strlen(outBuf);
-  bin2hex(outBuf + outBufLen, msg, len, ' ');
-  printToDebug(outBuf + outBufLen);
-  outBuf[outBufLen] = 0;
-}
-
 void EEPROM_dump() {
   if ((debug_mode == 1 || haveTelnetClient) && EEPROM_ready) {
     printlnToDebug(PSTR("EEPROM dump:"));
@@ -1609,7 +1645,10 @@ void EEPROM_dump() {
   }
 }
 
+void query(float line);  // defined later
+
 #ifdef BUTTONS
+
 void switchPresenceState(uint16_t set_mode, uint16_t current_state) {
   //RGT1 701, 10102
   //RGT2 1001, 10103
@@ -1799,39 +1838,6 @@ char *TranslateAddr(byte addr, char *device) {
 void SerialPrintAddr(byte addr) {
   char device[5];
   printToDebug(TranslateAddr(addr, device));
-}
-
-/** *****************************************************************
- *  Function:  bin2hex()
- *  Does:      Convert binary date to human-readable HEX codes
- *
- * Pass parameters:
- *   char *toBuffer - address of result buffer
- *   byte *fromAddr - address of source Array
- *   int len - source array size
- *   char delimiter - character for HEX codes delimition. If delimiter == 0 then delimiter will not print to buffer.
- * Parameters passed back:
- *   char *toBuffer
- * Function value returned:
- *   result length
- * Global resources used:
- *   none
- * *************************************************************** */
-int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter){
-  int resultLen = 0;
-  bool isNotFirst = false;
-  for (int i = 0; i < len; i++) {
-    if(isNotFirst) {
-      if(delimiter != 0) {
-        toBuffer[resultLen] = delimiter;
-        resultLen++;
-      }
-    } else {
-      isNotFirst = true;
-    }
-    resultLen += sprintf_P(toBuffer + resultLen, PSTR("%02X"), fromAddr[i]);
-  }
-  return resultLen;
 }
 
 /** *****************************************************************
@@ -2077,6 +2083,9 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 #include "include/print_webpage.h"
 
 #if defined(ESP32) && defined(ENABLE_ESP32_OTA)
+
+const char* printError(uint16_t error);  // defined later
+
 void init_ota_update(){
   if(enable_ota_update) {
     update_server.on("/", HTTP_GET, []() {
@@ -5041,6 +5050,10 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
 #include "include/pps_handling.h"
 #include "include/broadcast_msg_handling.h"
 
+#if defined(ESP32)
+String scanAndConnectToStrongestNetwork();
+#endif
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -7740,6 +7753,9 @@ void printWifiStatus()
   }
 }
 
+void removeTemporaryAP();
+void createTemporaryAP();
+
 void networkEvent(WiFiEvent_t event) {
   switch (event) {
     case ARDUINO_EVENT_WIFI_READY:
@@ -7803,7 +7819,6 @@ void dateTime(uint16_t* date, uint16_t* time) {
 
 }
   #endif
-#endif
 
 void startLoggingDevice() {
   Serial.print("LogDestination: ");
@@ -7855,6 +7870,7 @@ void startLoggingDevice() {
     }
   #endif
 }
+#endif
 
 void createTemporaryAP () {
 #if defined ESP32

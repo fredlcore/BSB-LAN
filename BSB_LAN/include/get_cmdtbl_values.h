@@ -9,6 +9,8 @@ inline float get_cmdtbl_line(int i) {
   return cmdtbl[i].line;
 }
 
+uint8_t recognizeVirtualFunctionGroup(float nr); // defined in BSB_LAN.ino
+
 float get_next_prognr(float currentProgNR, int startFromTableLine){
   if(startFromTableLine < 0) {
 #if defined(__SAM3X8E__)

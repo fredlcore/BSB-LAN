@@ -15,6 +15,8 @@ char *build_pvalstr(bool extended);
  * *************************************************************** */
 #ifdef MQTT
 
+void query(float line);  // defined in BSB_LAN.ino
+
 /* Function: mqtt_get_client_id()
  * Does: Gets the client ID to use for the MQTT connection based on the set
  *   MQTT Device ID, if unset, defaults to "BSB-LAN".
