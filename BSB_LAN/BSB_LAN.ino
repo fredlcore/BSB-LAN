@@ -6551,7 +6551,11 @@ next_parameter:
             } else if (p[2]=='K') { //--- clean up datalog, keeping only the most recent n days
               int nDays;
               if (sscanf(p+3,"%d",&nDays)==1 && nDays>0) {
-                printFmtToWebClient("\r\n%s\r\n",cleanupDatalog(nDays));
+                // We should flush all characters to client and use errormsgptr
+                // beacuse cleanupDatalog() and printFmtToWebClient() use same buffer;
+                flushToWebClient();
+                const char *errormsgptr = cleanupDatalog(nDays);
+                printFmtToWebClient("\r\n%s\r\n", errormsgptr);
                 // cleanup after failed cleanupDatalog(), if necessary:
                 SD.remove(datalogTemporaryFileName);
                 SD.remove(datalogIndexTemporaryFileName);
