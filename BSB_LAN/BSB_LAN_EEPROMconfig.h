@@ -43,9 +43,9 @@ typedef enum{
   CF_WRITEMODE, //Size: 1 byte. 0 - all parameters will be FL_RONLY, 1 - write ordinary programs, 2 - write OEM programs
   CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
   CF_MQTT, //Size: 1 byte. MQTT: 0 - disabled, 1 - enabled, plain text, 2 - enabled, JSON
-  CF_MQTT_IPADDRESS, //Size: 4 bytes. MQTT broker IP v4 address
-  CF_MQTT_USERNAME, //Size: 32 bytes.
-  CF_MQTT_PASSWORD, //Size: 32 bytes.
+  CF_MQTT_SERVER, //Size: 33 bytes. MQTT broker domain name or IP address
+  CF_MQTT_USERNAME, //Size: 65 bytes.
+  CF_MQTT_PASSWORD, //Size: 65 bytes.
   CF_MQTT_TOPIC, //Size: 32 bytes.
   CF_MQTT_DEVICE, //Size: 32 bytes.
   CF_ROOM_DEVICE, //Size: 2 bytes. 0x53 = QAA70, 0x52 = QAA50
@@ -209,7 +209,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
 #ifdef WEBCONFIG
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
-  {CF_MQTT_IPADDRESS,   2, CCAT_MQTT,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MQTT_IPADDRESS_TXT, sizeof(mqtt_broker_ip_addr)},//need handler
+  {CF_MQTT_SERVER,      11,CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_SERVER_TXT, sizeof(mqtt_broker_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
