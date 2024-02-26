@@ -71,6 +71,7 @@
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - Support for receiving date and time via NTP instead of taking it from the heater.
+ *        - MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.
  *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
@@ -526,7 +527,7 @@ typedef struct {
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 33
+#define REQUIRED_CONFIG_VERSION 34
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -2760,7 +2761,7 @@ bool SaveConfigFromRAMtoEEPROM() {
 #endif
 #ifdef MQTT
         case CF_MQTT:
-        case CF_MQTT_IPADDRESS:
+        case CF_MQTT_SERVER:
           mqtt_disconnect();
           break;
 #endif
@@ -7124,7 +7125,7 @@ next_parameter:
 #else
   {
 #endif
-    if (mqtt_broker_ip_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { //Address was set and MQTT was enabled
+    if (mqtt_broker_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { //Address was set and MQTT was enabled
 
       mqtt_connect();        //Luposoft, connect to mqtt
       MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
@@ -7828,7 +7829,7 @@ void setup() {
   registerConfigVariable(CF_MAX, (byte *)&enable_max_cul);
   registerConfigVariable(CF_MAX_IPADDRESS, (byte *)max_cul_ip_addr);
   registerConfigVariable(CF_MQTT, (byte *)&mqtt_mode);
-  registerConfigVariable(CF_MQTT_IPADDRESS, (byte *)mqtt_broker_ip_addr);
+  registerConfigVariable(CF_MQTT_SERVER, (byte *)mqtt_broker_addr);
   registerConfigVariable(CF_MQTT_USERNAME, (byte *)MQTTUsername);
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);

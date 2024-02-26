@@ -180,6 +180,16 @@ const String mqtt_get_will_topic() {
  * *************************************************************** */
 
 boolean mqtt_connect() {
+  char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
+  strcpy(tempstr, mqtt_broker_addr);
+  uint16_t mqtt_port = 1883; 
+  char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
+  char* token = strtok(NULL, ":");   // first token: myAddr
+  if (token != 0) {
+    mqtt_port = atoi(token);
+  }
+  free(tempstr);
+
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     uint16_t bufsize;
@@ -201,8 +211,7 @@ boolean mqtt_connect() {
     if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
     }
-    IPAddress MQTTBroker(mqtt_broker_ip_addr[0], mqtt_broker_ip_addr[1], mqtt_broker_ip_addr[2], mqtt_broker_ip_addr[3]);
-    MQTTPubSubClient->setServer(MQTTBroker, 1883);
+    MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
     String MQTTWillTopic = mqtt_get_will_topic();
     String MQTTRealClientId = mqtt_get_client_id();
     int retries = 0;
