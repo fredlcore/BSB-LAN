@@ -210,6 +210,10 @@ UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RU2 presence button: pin";
 UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RU3 presence button: pin";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
 UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 energy saving";
+UIStrings["CF_LOG_DEST_TEXT"] = "Storage device";
+
+UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD card";
+UIStrings["ENUM_LOG_DEST_01_TEXT"] = "Internal flash storage";
 
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";
