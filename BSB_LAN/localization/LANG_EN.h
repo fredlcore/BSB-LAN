@@ -210,6 +210,10 @@
 #define CF_RGT3_PRES_PIN_TEXT "RU3 presence button: pin"
 #define CF_SHOW_UNKNOWN_TEXT "Display unknown parameters"
 #define CF_ENERGY_SAVE_TEXT "ESP32 energy saving"
+#define CF_LOG_DEST_TEXT "Storage device"
+
+#define ENUM_LOG_DEST_00_TEXT "SD card"
+#define ENUM_LOG_DEST_01_TEXT "Internal flash storage"
 
 #define CAT_GENERAL_TEXT "General"
 #define CAT_IPV4_TEXT "Network"

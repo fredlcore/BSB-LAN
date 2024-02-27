@@ -21,7 +21,7 @@
 /*
 Allow to initialize program configuration by reading settings from EEPROM
 byte UseEEPROM = 0; // Configuration is read from this config file.
-                    // Configuration can be stored in EEPROM but will not used while UseEEPROM is zero.
+                    // Configuration can be stored in EEPROM but will not be used while UseEEPROM is zero.
                     // Set zero for fallback startup in case EEPROM configuration is broken.
 byte UseEEPROM = 1; // Configuration will be read from EEPROM. This is the default.
 */
@@ -146,8 +146,9 @@ Does: log bus telegrams to file
 
 #define UDP_LOG_PORT 6502 // fixed here, not configurable via web interface
 
-// Use SD card adapter on ESP32-based boards instead of internal flash-based storage
-//#define ESP32_USE_SD
+// Setting to determine on ESP32 whether to use SD card adapter (if present) or ESP32's internal flash.
+// SD card should always be preferred to protect the ESP32's flash from wearing down.
+uint8_t LogDestination = 0;  // 0 = SD card, 1 = ESP32's flash memory
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
 // Telegrams logged upon boot:
@@ -335,6 +336,8 @@ uint16_t UdpDelay = 15;    // (interval in seconds to send UDP packets)
 byte destinationServer[128] = "";   // URL string to periodically send values to an off-site logger
 uint16_t destinationPort = 80;      // port number for abovementioned server
 uint32_t destinationDelay = 84600;  // interval in seconds to send values
+
+uint8_t network_type = 0;
 
 #define CONFIG_VERSION 34
 

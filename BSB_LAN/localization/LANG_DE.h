@@ -222,6 +222,7 @@
 #define CF_CALCULATION_TEXT "Berechnung"
 #define CF_PROGLIST_TEXT "Parameter"
 #define CF_DEVICES_TEXT "Geräte"
+#define CF_NETWORK_TYPE_TEXT "Netzwerkgerät"
 #define CF_DHCP_TEXT "DHCP verwenden"
 #define CF_IPADDRESS_TEXT "Statische IP-Adresse"
 #define CF_TRUSTEDIPADDRESS_TEXT "Vertrauenswürdige IP-Adresse"
@@ -243,6 +244,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
+#define CF_LOG_DEST_TEXT "Speicherziel"
 #define CF_LOGMODE_TEXT "Log-Modus"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
 #define CF_RGT1_SENSOR_TEXT "RGT1/PPS Temperatursensor Parameter"
@@ -2257,6 +2259,12 @@
 #define ENUM_LOGMODE_02_TEXT "24-Stunden-Durchschnittswerte berechnen"
 #define ENUM_LOGMODE_04_TEXT "An MQTT-Broker senden"
 #define ENUM_LOGMODE_08_TEXT "Als UDP-Nachrichten senden"
+
+#define ENUM_LOG_DEST_00_TEXT "SD-Karte"
+#define ENUM_LOG_DEST_01_TEXT "Interner Flash-Speicher"
+
+#define ENUM_NETWORK_TYPE_00_TEXT "LAN"
+#define ENUM_NETWORK_TYPE_01_TEXT "WiFi"
 
 #define ENUM20_01_TEXT "English"
 #define ENUM20_02_TEXT "Deutsch"

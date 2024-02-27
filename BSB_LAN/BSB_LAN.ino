@@ -72,6 +72,7 @@
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - Support for receiving date and time via NTP instead of taking it from the heater.
  *        - MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.
+ *        - Switching between log storage device (SD card / internal flash) on the ESP32 can now be done in the web interface.
  *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
@@ -756,23 +757,17 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
+uint64_t minimum_SD_size = 0;
 #if defined LOGGER || defined WEBSERVER
   #if defined(ESP32)
-    #if defined(ESP32_USE_SD) // Use SD card adapter on ESP32
       #include "FS.h"
       #include "SD_MMC.h"
-      #define SD SD_MMC
-      #define MINIMUM_FREE_SPACE_ON_SD 100000
-    #else   // use internal EEPROM flash memory instead of SD card on ESP32
       #include <LittleFS.h>
-      #define SD LittleFS
-      // Minimum free space in bytes
-      #define MINIMUM_FREE_SPACE_ON_SD 10000
-    #endif  // ESP32_USE_SD
+FS& SD = SD_MMC;
   #else     // !ESP32
     #define FILE_APPEND FILE_WRITE  // FILE_APPEND does not exist on Arduino, FILE_WRITE seems to do the same (create if not existing, start writing from EOF onwards)
-    //leave at least MINIMUM_FREE_SPACE_ON_SD free blocks on SD
-    #define MINIMUM_FREE_SPACE_ON_SD 100
+    //leave at least minimum_SD_size free blocks on SD
+minimum_SD_size = 100;
     // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
     // do not forget set it up after SdFat upgrading
     #include "src/SdFat/SdFat.h"
@@ -2339,15 +2334,6 @@ void generateConfigPage(void) {
   "ENABLE_ESP32_OTA"
   #endif
 
-  #ifdef ESP32_USE_SD
-  #ifdef ANY_MODULE_COMPILED
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "ESP32_USE_SD"
-  #endif
-
   #ifdef IPWE
   #ifdef ANY_MODULE_COMPILED
   ", "
@@ -2507,7 +2493,7 @@ void generateConfigPage(void) {
   uint32_t fs = (uint32_t)(volFree*SD.vol()->sectorsPerCluster()/2048);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 #else
-  uint64_t fs = (SD.totalBytes() - SD.usedBytes());
+  uint64_t fs = totalBytes()-usedBytes();
   printFmtToWebClient(PSTR(": %llu Bytes<br>\r\n"), fs);
 #endif
 //  printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
@@ -2715,6 +2701,7 @@ bool SaveConfigFromRAMtoEEPROM() {
         // https://forum.arduino.cc/index.php?topic=89469.0
         // Resume: it possible but can cause unpredicable effects
         case CF_MAC:
+        case CF_NETWORK_TYPE:
         case CF_DHCP:
         case CF_IPADDRESS:
         case CF_MASK:
@@ -2726,6 +2713,7 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WIFI_PASSWORD:
         case CF_MDNS_HOSTNAME:
         case CF_ESP32_ENERGY_SAVE:
+        case CF_LOG_DEST:
           needReboot = true;
           break;
         case CF_BMEBUS:
@@ -2803,7 +2791,13 @@ int returnENUMID4ConfigOption(uint8_t id) {
       i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
       break;
     case CF_LOGMODE:
-      i=findLine(65526,0,NULL); //return ENUM_PPS_MODE
+      i=findLine(65526,0,NULL); //return ENUM_LOGMODE
+      break;
+    case CF_NETWORK_TYPE:
+      i=findLine(65525,0,NULL); //return ENUM_NETWORK_TYPE
+      break;
+    case CF_LOG_DEST:
+      i=findLine(65524,0,NULL); //return ENUM_LOG_DEST
       break;
     default:
       i = -1;
@@ -3091,7 +3085,7 @@ void generateWebConfigPage(bool printOnly) {
    } else {
      printToWebClient(PSTR("</output>"));
    }
-    printToWebClient(PSTR("</td></td>\r\n"));
+    printToWebClient(PSTR("</td></tr>\r\n"));
   }
   printToWebClient(PSTR("</tbody></table><p>"));
   if(!printOnly){
@@ -3249,9 +3243,9 @@ void LogTelegram(byte* msg) {
   float dval;
   float line = 0;
 #if !defined(ESP32)
-  if (SD.vol()->freeClusterCount() < MINIMUM_FREE_SPACE_ON_SD) return;
+  if (SD.vol()->freeClusterCount() < minimum_SD_size) return;
 #else
-  if (SD.totalBytes() - SD.usedBytes() < MINIMUM_FREE_SPACE_ON_SD) return;
+  if (totalBytes()-usedBytes() < minimum_SD_size) return;
 #endif
 
   if (bus->getBusType() != BUS_PPS) {
@@ -4856,9 +4850,9 @@ const char* datalogFileHeader = PSTR("Milliseconds;Date;Parameter;Description;Va
 const char *cleanupDatalog(unsigned nDays) {
   // keep most recent nDays only in datalog:
   // copy back of files to temporary files, remove old files, rename temporary files
-  unsigned long spaceRequired=MINIMUM_FREE_SPACE_ON_SD, spaceAvailable =
+  unsigned long spaceRequired=minimum_SD_size, spaceAvailable =
 #ifdef ESP32
-    SD.totalBytes() - SD.usedBytes();
+    totalBytes()-usedBytes();
 #else
     SD.vol()->freeClusterCount() * SD.vol()->bytesPerCluster();
 #endif
@@ -4961,6 +4955,22 @@ bool createdatalogFileAndWriteHeader() {
     return true;
   }
   return false;
+}
+
+uint64_t usedBytes() {
+  if (LogDestination == 0) {
+    return SD_MMC.usedBytes();
+  } else {
+    return LittleFS.usedBytes();
+  }
+}
+
+uint64_t totalBytes() {
+  if (LogDestination == 0) {
+    return SD_MMC.totalBytes();
+  } else {
+    return LittleFS.totalBytes();
+  }
 }
 
 #endif //#ifdef LOGGER
@@ -6052,7 +6062,7 @@ void loop() {
             freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
             printFmtToWebClient(PSTR("%d"), freespace);
 #else
-            uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+            uint64_t freespace = totalBytes()-usedBytes();
             printFmtToWebClient(PSTR("%llu"), freespace);
 #endif
 #else
@@ -7180,11 +7190,11 @@ next_parameter:
       File dataFile;
       if (LoggingMode & CF_LOGMODE_SD_CARD) {
 #if defined(ESP32)
-        uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+        uint64_t freespace = totalBytes()-usedBytes();
 #else
         uint32_t freespace = SD.vol()->freeClusterCount();
 #endif
-        if (freespace > MINIMUM_FREE_SPACE_ON_SD) {
+        if (freespace > minimum_SD_size) {
           dataFile = SD.open(datalogFileName, FILE_APPEND);
           if (!dataFile) {
             // if the file isn't open, pop up an error:
@@ -7806,6 +7816,7 @@ void setup() {
   registerConfigVariable(CF_ESP32_ENERGY_SAVE, (byte *)&esp32_save_energy);
 #ifdef WEBCONFIG
   registerConfigVariable(CF_ROOM_DEVICE, (byte *)&pps_values[PPS_QTP]);
+  registerConfigVariable(CF_NETWORK_TYPE, (byte *)&network_type);
   registerConfigVariable(CF_MAC, (byte *)mac);
   registerConfigVariable(CF_DHCP, (byte *)&useDHCP);
   registerConfigVariable(CF_IPADDRESS, (byte *)ip_addr);
@@ -7834,6 +7845,7 @@ void setup() {
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  registerConfigVariable(CF_LOG_DEST, (byte *)&LogDestination);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (default_flag & FL_SW_CTL_RONLY) {
     registerConfigVariable(CF_WRITEMODE, (byte *)&programWriteMode);
@@ -8087,7 +8099,16 @@ void setup() {
   }
 
 #if defined LOGGER || defined WEBSERVER
-  printToDebug(PSTR("Starting SD.."));
+  #ifdef ESP32
+  if (LogDestination == 0) {
+    SD = SD_MMC;
+    minimum_SD_size = 100000;
+  } else {
+    SD = LittleFS;
+    minimum_SD_size = 10000;
+  }
+  #endif
+  printToDebug(PSTR("Starting SD...\r\n"));
   #ifndef ESP32
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
@@ -8098,16 +8119,16 @@ void setup() {
     printToDebug(PSTR("ok\r\n"));
   }
   #else
-    #if defined(ESP32_USE_SD)
-    if(!SD_MMC.begin("", true)){
-      printToDebug(PSTR("failed\r\n"));
+    if (LogDestination == 0) {
+      if(!SD_MMC.begin("", true)){
+        printToDebug(PSTR("failed\r\n"));
+      } else {
+        printToDebug(PSTR("ok\r\n"));
+      }
+//      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     } else {
-      printToDebug(PSTR("ok\r\n"));
+      LittleFS.begin(true); // format on fail active
     }
-//    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
-    #else
-    SD.begin(true); // format on fail active
-    #endif
   #endif
 #else                     // no SD card
   #ifndef ESP32
@@ -8283,7 +8304,7 @@ void setup() {
   freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
   #else
-  uint64_t freespace = SD.totalBytes() - SD.usedBytes();
+  uint64_t freespace = totalBytes()-usedBytes();
   printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
   #endif
   diff -= (millis() - m); //3 sec - delay
