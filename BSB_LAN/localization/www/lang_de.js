@@ -222,6 +222,7 @@ UIStrings["CF_LOGCURRINTERVAL_TEXT"] = "Logintervall (Sekunden)";
 UIStrings["CF_CALCULATION_TEXT"] = "Berechnung";
 UIStrings["CF_PROGLIST_TEXT"] = "Parameter";
 UIStrings["CF_DEVICES_TEXT"] = "Geräte";
+UIStrings["CF_NETWORK_TYPE_TEXT"] = "Netzwerkgerät";
 UIStrings["CF_DHCP_TEXT"] = "DHCP verwenden";
 UIStrings["CF_IPADDRESS_TEXT"] = "Statische IP-Adresse";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Vertrauenswürdige IP-Adresse";
@@ -243,6 +244,7 @@ UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic Präfix";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
+UIStrings["CF_LOG_DEST_TEXT"] = "Speicherziel";
 UIStrings["CF_LOGMODE_TEXT"] = "Log-Modus";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
 UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1/PPS Temperatursensor Parameter";
@@ -2257,6 +2259,12 @@ UIStrings["ENUM_LOGMODE_01_TEXT"] = "Auf SD-Karte schreiben";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "24-Stunden-Durchschnittswerte berechnen";
 UIStrings["ENUM_LOGMODE_04_TEXT"] = "An MQTT-Broker senden";
 UIStrings["ENUM_LOGMODE_08_TEXT"] = "Als UDP-Nachrichten senden";
+
+UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD-Karte";
+UIStrings["ENUM_LOG_DEST_01_TEXT"] = "Interner Flash-Speicher";
+
+UIStrings["ENUM_NETWORK_TYPE_00_TEXT"] = "LAN";
+UIStrings["ENUM_NETWORK_TYPE_01_TEXT"] = "WiFi";
 
 UIStrings["ENUM20_01_TEXT"] = "English";
 UIStrings["ENUM20_02_TEXT"] = "Deutsch";
