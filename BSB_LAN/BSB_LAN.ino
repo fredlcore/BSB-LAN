@@ -757,17 +757,16 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 // char _ipstr[20];    // addr in format xxx.yyy.zzz.aaa
 // byte __remoteIP[4] = {0,0,0,0};   // IP address in bin format
 
-uint64_t minimum_SD_size = 0;
 #if defined LOGGER || defined WEBSERVER
   #if defined(ESP32)
+uint64_t minimum_SD_size = 0;
       #include "FS.h"
       #include "SD_MMC.h"
       #include <LittleFS.h>
 FS& SD = SD_MMC;
   #else     // !ESP32
+int32_t minimum_SD_size = 0;
     #define FILE_APPEND FILE_WRITE  // FILE_APPEND does not exist on Arduino, FILE_WRITE seems to do the same (create if not existing, start writing from EOF onwards)
-    //leave at least minimum_SD_size free blocks on SD
-minimum_SD_size = 100;
     // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
     // do not forget set it up after SdFat upgrading
     #include "src/SdFat/SdFat.h"
@@ -4958,19 +4957,23 @@ bool createdatalogFileAndWriteHeader() {
 }
 
 uint64_t usedBytes() {
+#ifdef ESP32
   if (LogDestination == 0) {
     return SD_MMC.usedBytes();
   } else {
     return LittleFS.usedBytes();
   }
+#endif
 }
 
 uint64_t totalBytes() {
+#ifdef ESP32
   if (LogDestination == 0) {
     return SD_MMC.totalBytes();
   } else {
     return LittleFS.totalBytes();
   }
+#endif
 }
 
 #endif //#ifdef LOGGER
@@ -8107,6 +8110,8 @@ void setup() {
     SD = LittleFS;
     minimum_SD_size = 10000;
   }
+  #else
+  minimum_SD_size = 100;
   #endif
   printToDebug(PSTR("Starting SD...\r\n"));
   #ifndef ESP32
