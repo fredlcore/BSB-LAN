@@ -510,6 +510,11 @@
 #define PRINT_ONLY_VALUE_LINE 16
 #define PRINT_ENUM_AS_DT_BITS 32
 
+#define LAN 0
+#define WLAN 1
+#define SDCARD 0
+#define FLASH 1
+
 #if defined(ESP32)
 void loop();
 int set(float line, const char *val, bool setcmd);
@@ -528,7 +533,7 @@ typedef struct {
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 34
+#define REQUIRED_CONFIG_VERSION 35
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -584,7 +589,7 @@ EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
   #define strcat_PF strcat
   #define strchr_P strchr
 #else
-  #ifdef WIFI
+  #ifdef WIFISPI
     #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp, udp_log;
   #else
@@ -621,22 +626,20 @@ BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
 #endif
 
 bool client_flag = false;
-#ifdef WIFI
-  #ifdef ESP32
-    #include <WiFi.h>
-bool localAP = false;
-unsigned long localAPtimeout = millis();
-  #else
+
+#ifdef WIFISPI
     #include "src/WiFiSpi/src/WiFiSpi.h"
 using ComServer = WiFiSpiServer;
 using ComClient = WiFiSpiClient;
     #define WiFi WiFiSpi
-  #endif
-#else
-  #ifdef ESP32
+#endif
+
+bool localAP = false;
+unsigned long localAPtimeout = millis();
+#ifdef ESP32
     //#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
     //#define ETH_PHY_POWER 12
-    #include <ETH.h>
+    #include <ETH.h>      // ETH.h also includes WiFi.h
 
 class Eth : public ETHClass {
 public:
@@ -651,16 +654,12 @@ public:
 };
 
 Eth Ethernet;
-  #else
+using ComServer = WiFiServer;
+using ComClient = WiFiClient;
+#else
     #include <Ethernet.h>
 using ComServer = EthernetServer;
 using ComClient = EthernetClient;
-  #endif
-#endif
-
-#ifdef ESP32
-using ComServer = WiFiServer;
-using ComClient = WiFiClient;
 #endif
 
 #if defined(MDNS_SUPPORT)
@@ -2468,13 +2467,13 @@ void generateConfigPage(void) {
   "WEBSERVER"
   #endif
 
-  #ifdef WIFI
+  #ifdef WIFISPI
   #ifdef ANY_MODULE_COMPILED
   ", "
   #else
   #define ANY_MODULE_COMPILED
   #endif
-  "WIFI"
+  "WIFISPI"
   #endif
 
   #if !defined (ANY_MODULE_COMPILED)
@@ -4956,25 +4955,23 @@ bool createdatalogFileAndWriteHeader() {
   return false;
 }
 
-uint64_t usedBytes() {
 #ifdef ESP32
-  if (LogDestination == 0) {
+uint64_t usedBytes() {
+  if (LogDestination == SDCARD) {
     return SD_MMC.usedBytes();
   } else {
     return LittleFS.usedBytes();
   }
-#endif
 }
 
 uint64_t totalBytes() {
-#ifdef ESP32
-  if (LogDestination == 0) {
+  if (LogDestination == SDCARD) {
     return SD_MMC.totalBytes();
   } else {
     return LittleFS.totalBytes();
   }
-#endif
 }
+#endif
 
 #endif //#ifdef LOGGER
 
@@ -5049,41 +5046,40 @@ void loop() {
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
 
-#ifndef WIFI
- if (ip_addr[0] == 0 || useDHCP) {
-    switch (Ethernet.maintain()) {
-      case 1:
-        //renewed fail
-        printlnToDebug(PSTR("Error: renewed fail"));
+  if (network_type == LAN) {
+    if (ip_addr[0] == 0 || useDHCP) {
+      switch (Ethernet.maintain()) {
+        case 1:
+          //renewed fail
+          printlnToDebug(PSTR("Error: renewed fail"));
+          break;
+        case 2:
+          //renewed success
+          printlnToDebug(PSTR("Renewed success"));
+          //print your local IP address:
+          printToDebug(PSTR("My IP address: "));
+          {IPAddress t = Ethernet.localIP();
+          printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
+          break;
+        case 3:
+          //rebind fail
+          printlnToDebug(PSTR("Error: rebind fail"));
+          break;
+        case 4:
+          //rebind success
+          printlnToDebug(PSTR("Rebind success"));
+          //print your local IP address:
+          printToDebug(PSTR("My IP address: "));
+          {IPAddress t = Ethernet.localIP();
+          printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
         break;
-      case 2:
-        //renewed success
-        printlnToDebug(PSTR("Renewed success"));
-        //print your local IP address:
-        printToDebug(PSTR("My IP address: "));
-        {IPAddress t = Ethernet.localIP();
-        printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
-        break;
-      case 3:
-        //rebind fail
-        printlnToDebug(PSTR("Error: rebind fail"));
-        break;
-      case 4:
-        //rebind success
-        printlnToDebug(PSTR("Rebind success"));
-        //print your local IP address:
-        printToDebug(PSTR("My IP address: "));
-        {IPAddress t = Ethernet.localIP();
-        printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
-      break;
-
-      default:
-        //nothing happened
-        break;
+  
+        default:
+          //nothing happened
+          break;
+      }
     }
   }
-#endif
-
   // Monitor the bus and send incoming data to the PC hardware serial
   // interface.
   // Separate telegrams after a pause of more than one character time.
@@ -6480,8 +6476,8 @@ next_parameter:
 
 #ifdef LOGGER
         if (p[1]=='D') { // access datalog file
-  #if defined(ESP32) && !defined(WIFI)
-          if (esp32_save_energy == true) {
+  #if defined(ESP32)
+          if (esp32_save_energy == true && network_type != WLAN) {
             bus->disableInterface();
             setCpuFrequencyMhz(240);
             bus->enableInterface();
@@ -6660,8 +6656,8 @@ next_parameter:
             }//datalog
           }//datalog or journal or min/max datalog date
           flushToWebClient();
-  #if defined(ESP32) && !defined(WIFI)
-          if (esp32_save_energy == true) {
+  #if defined(ESP32)
+          if (esp32_save_energy == true && network_type != WLAN) {
             bus->disableInterface();
             setCpuFrequencyMhz(80);
             bus->enableInterface();
@@ -7133,11 +7129,7 @@ next_parameter:
   } // endif, client
 
 #ifdef MQTT
-#if defined(ESP32) && defined(WIFI)
   if(!localAP){
-#else
-  {
-#endif
     if (mqtt_broker_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { //Address was set and MQTT was enabled
 
       mqtt_connect();        //Luposoft, connect to mqtt
@@ -7195,7 +7187,7 @@ next_parameter:
 #if defined(ESP32)
         uint64_t freespace = totalBytes()-usedBytes();
 #else
-        uint32_t freespace = SD.vol()->freeClusterCount();
+        int32_t freespace = SD.vol()->freeClusterCount();
 #endif
         if (freespace > minimum_SD_size) {
           dataFile = SD.open(datalogFileName, FILE_APPEND);
@@ -7208,11 +7200,14 @@ next_parameter:
       }
       IPAddress broadcast_ip;
       if (LoggingMode & CF_LOGMODE_UDP) {
-#ifdef WIFI
-        IPAddress local_ip = WiFi.localIP();
-#else
-        IPAddress local_ip = Ethernet.localIP();
+        IPAddress local_ip;
+        if (network_type == WLAN) {
+#if defined(ESP32) || defined(WIFISPI)
+          local_ip = WiFi.localIP();
 #endif
+        } else {
+          local_ip = Ethernet.localIP();
+        }
         broadcast_ip = IPAddress(local_ip[0], local_ip[1], local_ip[2], 0xFF);
       }
       uint8_t destAddr = bus->getBusDest();
@@ -7608,8 +7603,8 @@ next_parameter:
   update_server.handleClient();
 #endif
 
-#if defined(WIFI) && defined(ESP32)
-  if (localAP == true && millis() - localAPtimeout > 30 * 60 * 1000) {    // Reboot after 30 minutes running local AP
+#if defined(ESP32)
+  if (network_type == WLAN && (localAP == true && millis() - localAPtimeout > 30 * 60 * 1000)) {    // Reboot after 30 minutes running local AP
     resetBoard();
   }
 #endif
@@ -7629,20 +7624,22 @@ next_parameter:
     }
 #endif
 
-#if defined(WIFI) && defined(ESP32)
-// if WiFi is down, try reconnecting every minute
-    bool not_preferred_bssid = false;
-    if (WiFi.BSSID() != NULL) {
-      for (int x=0;x<6;x++) {
-        if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
-          not_preferred_bssid = true;
+#if defined(ESP32)
+    if (network_type == WLAN) {
+  // if WiFi is down, try reconnecting every minute
+      bool not_preferred_bssid = false;
+      if (WiFi.BSSID() != NULL) {
+        for (int x=0;x<6;x++) {
+          if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
+            not_preferred_bssid = true;
+          }
         }
       }
-    }
-
-    if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
-      printFmtToDebug(PSTR("Reconnecting to WiFi...\r\n"));
-      scanAndConnectToStrongestNetwork();
+  
+      if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
+        printFmtToDebug(PSTR("Reconnecting to WiFi...\r\n"));
+        scanAndConnectToStrongestNetwork();
+      }
     }
 #endif
   }
@@ -7651,7 +7648,7 @@ next_parameter:
 #endif
 } // --- loop () ---
 
-#if defined(WIFI) && defined(ESP32)
+#if defined(ESP32)
 
 String scanAndConnectToStrongestNetwork() {
   int sum_bssid = 0;
@@ -8103,7 +8100,7 @@ void setup() {
 
 #if defined LOGGER || defined WEBSERVER
   #ifdef ESP32
-  if (LogDestination == 0) {
+  if (LogDestination == SDCARD) {
     SD = SD_MMC;
     minimum_SD_size = 100000;
   } else {
@@ -8113,26 +8110,27 @@ void setup() {
   #else
   minimum_SD_size = 100;
   #endif
-  printToDebug(PSTR("Starting SD...\r\n"));
+  printToDebug(PSTR("Starting storage device...\r\n"));
   #ifndef ESP32
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
   if (!SD.begin(4, SPI_DIV3_SPEED)) {
-    printToDebug(PSTR("failed\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+    printToDebug(PSTR("SD card failed.\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
   } else {
-    printToDebug(PSTR("ok\r\n"));
+    printToDebug(PSTR("SD card mounted ok.\r\n"));
   }
   #else
-    if (LogDestination == 0) {
+    if (LogDestination == SDCARD) {
       if(!SD_MMC.begin("", true)){
-        printToDebug(PSTR("failed\r\n"));
+        printToDebug(PSTR("SD card failed\r\n"));
       } else {
-        printToDebug(PSTR("ok\r\n"));
+        printToDebug(PSTR("SD card mounted ok\r\n"));
       }
 //      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     } else {
       LittleFS.begin(true); // format on fail active
+      printToDebug(PSTR("Internal flash memory (LittleFS) mounted ok\r\n"));
     }
   #endif
 #else                     // no SD card
@@ -8147,8 +8145,15 @@ void setup() {
   #endif
 #endif
 
-#ifdef WIFI
-  #ifndef ESP32
+  printToDebug(PSTR("Starting network connection via "));
+  switch (network_type) {
+    case LAN:  printlnToDebug(PSTR("Ethernet/LAN")); break;
+    case WLAN: printlnToDebug(PSTR("WiFi/WLAN")); break;
+  }
+  printToDebug(PSTR("...\r\n"));
+
+
+#ifdef WIFISPI
   WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
 
   // check for the presence of the shield
@@ -8163,8 +8168,6 @@ void setup() {
     // don't continue:
     while (true);
   }
-
-  #endif
 #endif
 
   // setup IP addresses
@@ -8188,81 +8191,85 @@ void setup() {
     } else {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
-#ifndef WIFI
-    Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
+    if (network_type == LAN) {
+      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
+    } else {
+#if defined(ESP32)
+      WiFi.config(ip, gateway, subnet, dnsserver);
+#elif defined(WIFISPI)
+      WiFi.config(ip, dnsserver, gateway, subnet);
+#endif
+    }
   } else {
-    Ethernet.begin(mac); //DHCP
-    printToDebug(PSTR("Waiting for DHCP address"));
-    unsigned long timeout = millis();
-    while (!Ethernet.localIP() && millis() - timeout < 20000) {
-      printToDebug(PSTR("."));
+    if (network_type == LAN) {
+      Ethernet.begin(mac); //DHCP
+      printToDebug(PSTR("Waiting for DHCP address"));
+      unsigned long timeout = millis();
+      while (!Ethernet.localIP() && millis() - timeout < 20000) {
+        printToDebug(PSTR("."));
+        delay(100);
+      }
+      writelnToDebug();
+    }
+  }
+  if (network_type == LAN) {
+    SerialOutput->println(Ethernet.localIP());
+    SerialOutput->println(Ethernet.subnetMask());
+    SerialOutput->println(Ethernet.gatewayIP());
+  } else {
+#if defined(ESP32) || defined(WIFISPI)
+    unsigned long timeout;
+    #ifdef ESP32
+    // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
+    esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
+    WiFi.mode(WIFI_STA); //init wifi mode
+    esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
+  
+    printToDebug(PSTR("Setting up WiFi interface"));
+    WiFi.begin();
+    timeout = millis();
+    while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
       delay(100);
+      printToDebug(PSTR("."));
     }
     writelnToDebug();
-  }
-  SerialOutput->println(Ethernet.localIP());
-  SerialOutput->println(Ethernet.subnetMask());
-  SerialOutput->println(Ethernet.gatewayIP());
-#else
-  #if !defined(ESP32)
-    WiFi.config(ip, dnsserver, gateway, subnet);
-  #else
-    WiFi.config(ip, gateway, subnet, dnsserver);
-  #endif
-  }
 
-  unsigned long timeout;
-  #ifdef ESP32
-  // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
-  esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
-  WiFi.mode(WIFI_STA); //init wifi mode
-  esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
-
-  printToDebug(PSTR("Setting up WiFi interface"));
-  WiFi.begin();
-  timeout = millis();
-  while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
-    delay(100);
-    printToDebug(PSTR("."));
-  }
-  writelnToDebug();
-  #endif
-
-  #if defined(ESP32)
-  scanAndConnectToStrongestNetwork();
-  #endif
-  // attempt to connect to WiFi network
-  printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
-  timeout = millis();
-  delay(1000);
-  while (WiFi.status() != WL_CONNECTED && millis() - timeout < 10000) {
-    printToDebug(PSTR("."));
+    scanAndConnectToStrongestNetwork();
+    #endif
+  
+    // attempt to connect to WiFi network
+    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
+    timeout = millis();
     delay(1000);
-  }
-  if (WiFi.status() != WL_CONNECTED) {
-    printlnToDebug(PSTR("Connecting to WiFi network failed."));
-  #if defined(ESP32)
-    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-    printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
-    WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
-    IPAddress t = WiFi.softAPIP();
-    localAP = true;
-    esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
-
-    printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
-    printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
-  #endif
-  } else {
-  // you're connected now, so print out the data
-    printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
-  #if defined(__arm__) || defined(ESP32)
-    WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
-  #endif
-  #if defined(ESP32)
-    printWifiStatus();
-  #endif
-  }
+    while (WiFi.status() != WL_CONNECTED && millis() - timeout < 10000) {
+      printToDebug(PSTR("."));
+      delay(1000);
+    }
+    if (WiFi.status() != WL_CONNECTED) {
+      printlnToDebug(PSTR("Connecting to WiFi network failed."));
+    #if defined(ESP32)
+      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+      printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
+      WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+      IPAddress t = WiFi.softAPIP();
+      localAP = true;
+      esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
+  
+      printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+      printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
+    #endif
+    } else {
+    // you're connected now, so print out the data
+      printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+    #if defined(__arm__) || defined(ESP32)
+      WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+    #endif
+    #if defined(ESP32)
+      printWifiStatus();
+    #endif
+    }
 #endif
+  }
 
   server = new ComServer(HTTPPort);
   if (save_debug_mode == 2) telnetServer = new ComServer(23);
@@ -8481,11 +8488,13 @@ void setup() {
     MDNS.addService("http", "tcp", 80);
     MDNS.addService("BSB-LAN web service._http", "tcp", 80);
 #else
-#ifdef WIFI
-    mdns.begin(WiFi.localIP(), mDNS_hostname);
-#else
-    mdns.begin(Ethernet.localIP(), mDNS_hostname);
+    if (network_type==WLAN) {
+#if defined(WIFISPI)
+      mdns.begin(WiFi.localIP(), mDNS_hostname);
 #endif
+    } else {
+      mdns.begin(Ethernet.localIP(), mDNS_hostname);
+    }
     mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
 #endif
     printFmtToDebug(PSTR("Starting MDNS service with hostname %s\r\n"), mDNS_hostname);

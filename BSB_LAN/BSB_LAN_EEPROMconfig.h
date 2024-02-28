@@ -190,8 +190,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GF, sizeof(fixed_device_family)},//need reboot
   {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GV, sizeof(fixed_device_variant)},//need reboot
 #ifdef WEBCONFIG
-// Activate this line once we can switch programmatically between LAN card and WiFi. Only relevant for ESP32
-//  {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},//need reboot
+  {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},//need reboot
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
