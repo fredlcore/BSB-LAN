@@ -72,7 +72,9 @@
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - Support for receiving date and time via NTP instead of taking it from the heater.
  *        - MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.
+ *        - Support for optional additional SD card adapter on Joy-It ESP32 NodeMCU. SPI pins can be configured in BSB_LAN_config.h, defaulting to standard SPI pins 5, 18, 19 and 23.
  *        - Switching between log storage device (SD card / internal flash) on the ESP32 can now be done in the web interface.
+ *        - Create temporary WiFi AP in case Ethernet connection fails
  *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
@@ -644,12 +646,13 @@ unsigned long localAPtimeout = millis();
 class Eth : public ETHClass {
 public:
     int maintain(void) const { return 0;} ; // handled internally
-    void begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-      begin(mac);
+    bool begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+      bool success = begin(mac);
       config(ip, gateway, subnet, dnsserver, dnsserver); //Static
+      return success;
     }
-    void begin(uint8_t *mac) {
-      ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+    bool begin(uint8_t *mac) {
+      return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
     }
 };
 
@@ -760,16 +763,22 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
   #if defined(ESP32)
 uint64_t minimum_SD_size = 0;
       #include "FS.h"
-      #include "SD_MMC.h"
       #include <LittleFS.h>
-FS& SD = SD_MMC;
+    # if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
+      #include "SD.h"
+      #include "SPI.h"
+FS& SDCard = SD;
+    #else
+      #include "SD_MMC.h"
+FS& SDCard = SD_MMC;
+    #endif
   #else     // !ESP32
 int32_t minimum_SD_size = 0;
     #define FILE_APPEND FILE_WRITE  // FILE_APPEND does not exist on Arduino, FILE_WRITE seems to do the same (create if not existing, start writing from EOF onwards)
     // set MAINTAIN_FREE_CLUSTER_COUNT to 1 in SdFatConfig.h if you want increase speed of free space calculation
     // do not forget set it up after SdFat upgrading
     #include "src/SdFat/SdFat.h"
-SdFat SD;
+SdFat SDCard;
   #endif    // ESP32
 #endif      // LOGGER || WEBSERVER
 
@@ -2487,8 +2496,8 @@ void generateConfigPage(void) {
 //  uint32_t m = micros();
   printToWebClient(STR_TEXT_FSP);
 #if !defined(ESP32)
-  uint32_t volFree = SD.vol()->freeClusterCount();
-  uint32_t fs = (uint32_t)(volFree*SD.vol()->sectorsPerCluster()/2048);
+  uint32_t volFree = SDCard.vol()->freeClusterCount();
+  uint32_t fs = (uint32_t)(volFree*SDCard.vol()->sectorsPerCluster()/2048);
   printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
 #else
   uint64_t fs = totalBytes()-usedBytes();
@@ -2711,7 +2720,6 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WIFI_PASSWORD:
         case CF_MDNS_HOSTNAME:
         case CF_ESP32_ENERGY_SAVE:
-        case CF_LOG_DEST:
           needReboot = true;
           break;
         case CF_BMEBUS:
@@ -2733,6 +2741,9 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_RGT2_PRES_PIN_ID:
         case CF_RGT3_PRES_PIN_ID:
           needReboot = true;
+          break;
+        case CF_LOG_DEST:
+          startLoggingDevice();
           break;
 #ifdef AVERAGES
         case CF_AVERAGESLIST:
@@ -3241,7 +3252,7 @@ void LogTelegram(byte* msg) {
   float dval;
   float line = 0;
 #if !defined(ESP32)
-  if (SD.vol()->freeClusterCount() < minimum_SD_size) return;
+  if (SDCard.vol()->freeClusterCount() < minimum_SD_size) return;
 #else
   if (totalBytes()-usedBytes() < minimum_SD_size) return;
 #endif
@@ -3290,7 +3301,7 @@ void LogTelegram(byte* msg) {
     default: logThis = false; break;
   }
   if (logThis) {
-    dataFile = SD.open(journalFileName, FILE_APPEND);
+    dataFile = SDCard.open(journalFileName, FILE_APPEND);
     if (dataFile) {
       int outBufLen = 0;
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
@@ -4835,7 +4846,7 @@ void resetAverageCalculation() {
   }
   avgCounter = 1;
   #ifdef LOGGER
-  SD.remove(averagesFileName);
+  SDCard.remove(averagesFileName);
   #endif
 }
 #endif
@@ -4852,19 +4863,19 @@ const char *cleanupDatalog(unsigned nDays) {
 #ifdef ESP32
     totalBytes()-usedBytes();
 #else
-    SD.vol()->freeClusterCount() * SD.vol()->bytesPerCluster();
+    SDCard.vol()->freeClusterCount() * SDCard.vol()->bytesPerCluster();
 #endif
   { // Files opened within this scope will be automatically closed upon leaving it
-    File indexFile = SD.open(datalogIndexFileName);
+    File indexFile = SDCard.open(datalogIndexFileName);
     if (!indexFile) return PSTR("Cannot open datalog index");
     unsigned long nBytes = nDays * datalogIndexEntrySize;
     spaceRequired += nBytes;
     long indexOffset = indexFile.size() - nBytes;
     if (indexOffset <= 0) return PSTR("Nothing to do (not that many days in the datalog)");
     //-- transfer index:
-    File dataFile = SD.open(datalogFileName);
+    File dataFile = SDCard.open(datalogFileName);
     if (!dataFile) return PSTR("Cannot open datalog");
-    File indexTmpFile = SD.open(datalogIndexTemporaryFileName, FILE_WRITE);
+    File indexTmpFile = SDCard.open(datalogIndexTemporaryFileName, FILE_WRITE);
     if (!indexTmpFile) return PSTR("Cannot open temporary index");
     compactDate_t date;
     unsigned long pos, dataStart=0, dataOffset=0, nDataBytes=0;
@@ -4886,7 +4897,7 @@ const char *cleanupDatalog(unsigned nDays) {
         return PSTR("Error writing index file");
     }//while (nDays--)
     //-- transfer data:
-    File dataTmpFile = SD.open(datalogTemporaryFileName, FILE_WRITE);
+    File dataTmpFile = SDCard.open(datalogTemporaryFileName, FILE_WRITE);
     if (!dataTmpFile) return PSTR("Cannot open temporary datalog");
     // we want to use a buffer size that's a power of 2:
     unsigned bufSize=1, maxSize=sizeof(bigBuff);
@@ -4915,16 +4926,16 @@ const char *cleanupDatalog(unsigned nDays) {
     }//while (nDataBytes)
   }// Files go out of scope and are automatically closed
   //-- replace original files:
-  SD.remove(datalogFileName);
-  SD.rename(datalogTemporaryFileName, datalogFileName);
-  SD.remove(datalogIndexFileName);
-  SD.rename(datalogIndexTemporaryFileName, datalogIndexFileName);
+  SDCard.remove(datalogFileName);
+  SDCard.rename(datalogTemporaryFileName, datalogFileName);
+  SDCard.remove(datalogIndexFileName);
+  SDCard.rename(datalogIndexTemporaryFileName, datalogIndexFileName);
   return PSTR("Success");
 }
 
 void readFirstAndPreviousDatalogDateFromFile() {
   firstDatalogDate.combined = previousDatalogDate.combined = 0;
-  File indexFile = SD.open(datalogIndexFileName, FILE_READ);
+  File indexFile = SDCard.open(datalogIndexFileName, FILE_READ);
   if (indexFile) {
     unsigned long indexFileSize = indexFile.size();
     if (indexFileSize >= datalogIndexEntrySize) {
@@ -4937,14 +4948,14 @@ void readFirstAndPreviousDatalogDateFromFile() {
 }
 
 void createDatalogIndexFile() {
-  SD.remove(datalogIndexFileName);
-  File indexFile = SD.open(datalogIndexFileName, FILE_WRITE);
+  SDCard.remove(datalogIndexFileName);
+  File indexFile = SDCard.open(datalogIndexFileName, FILE_WRITE);
   if (indexFile) indexFile.close();
   firstDatalogDate.combined = previousDatalogDate.combined = 0;
 }
 
 bool createdatalogFileAndWriteHeader() {
-  File dataFile = SD.open(datalogFileName, FILE_WRITE);
+  File dataFile = SDCard.open(datalogFileName, FILE_WRITE);
   if (dataFile) {
     dataFile.print(datalogFileHeader);
     dataFile.close();
@@ -4958,7 +4969,11 @@ bool createdatalogFileAndWriteHeader() {
 #ifdef ESP32
 uint64_t usedBytes() {
   if (LogDestination == SDCARD) {
+#if defined(RX1) && defined(TX1)    // Olimex EVB
     return SD_MMC.usedBytes();
+#else
+    return SD.usedBytes();
+#endif
   } else {
     return LittleFS.usedBytes();
   }
@@ -4966,7 +4981,11 @@ uint64_t usedBytes() {
 
 uint64_t totalBytes() {
   if (LogDestination == SDCARD) {
+#if defined(RX1) && defined(TX1)    // Olimex EVB
     return SD_MMC.totalBytes();
+#else
+    return SD.totalBytes();
+#endif
   } else {
     return LittleFS.totalBytes();
   }
@@ -5264,7 +5283,7 @@ void loop() {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
-          File dataFile = SD.open(cLineBuffer + 1);
+          File dataFile = SDCard.open(cLineBuffer + 1);
           if (dataFile) {
             flushToWebClient();
             transmitFile(dataFile);
@@ -5285,7 +5304,7 @@ void loop() {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
 #ifdef WEBSERVER
-          File dataFile = SD.open(cLineBuffer + 1);
+          File dataFile = SDCard.open(cLineBuffer + 1);
           if (dataFile) {
             flushToWebClient();
             transmitFile(dataFile);
@@ -5347,13 +5366,13 @@ void loop() {
           if ((httpflags & HTTP_GZIP)) {
             suffix = strlen(p);
             strcpy_P(p + suffix, PSTR(".gz"));
-            dataFile = SD.open(p);
+            dataFile = SDCard.open(p);
           }
           if (!dataFile) {
             // reuse httpflags
             if (suffix) p[suffix] = 0;
             httpflags &= ~HTTP_GZIP; //can't use gzip because no gzipped file
-            dataFile = SD.open(p);
+            dataFile = SDCard.open(p);
           }
           // if the file is available, read from it:
           if (dataFile) {
@@ -6057,8 +6076,8 @@ void loop() {
             printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined LOGGER || defined WEBSERVER
 #if !defined(ESP32)
-            uint32_t freespace = SD.vol()->freeClusterCount();
-            freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
+            uint32_t freespace = SDCard.vol()->freeClusterCount();
+            freespace = (uint32_t)(freespace*SDCard.vol()->sectorsPerCluster()/2048);
             printFmtToWebClient(PSTR("%d"), freespace);
 #else
             uint64_t freespace = totalBytes()-usedBytes();
@@ -6489,8 +6508,8 @@ next_parameter:
             bool filewasrecreated = false;
 //recreate journal file for telegram logging
             if (p[2]=='J' || p[2]=='0') {
-              SD.remove(journalFileName);
-              dataFile = SD.open(journalFileName, FILE_WRITE);
+              SDCard.remove(journalFileName);
+              dataFile = SDCard.open(journalFileName, FILE_WRITE);
               if (dataFile) {
                 dataFile.close();
                 filewasrecreated = true;
@@ -6504,7 +6523,7 @@ next_parameter:
                   printToDebug(PSTR(", "));
                   printToWebClient(PSTR(", "));
                 }
-              SD.remove(datalogFileName);
+              SDCard.remove(datalogFileName);
               if (createdatalogFileAndWriteHeader()) {
                 filewasrecreated = true;
                 printToDebug(datalogFileName);
@@ -6535,7 +6554,7 @@ next_parameter:
             flushToWebClient();  // some of the following code uses the same bigBuffer as the ...ToWebClient functions => deliver any remaining content to the client now
             File dataFile;
             if (p[2]=='J') { //journal
-              dataFile = SD.open(journalFileName);
+              dataFile = SDCard.open(journalFileName);
               // if the file is available, read from it:
               if (dataFile) {
                 unsigned long startdump = millis();
@@ -6548,7 +6567,7 @@ next_parameter:
             } else if (p[2]=='B') { //--- datalog max date, for the javascript code in /DG to access
               printFmtToWebClient("%04d-%02d-%02d", previousDatalogDate.elements.year, previousDatalogDate.elements.month, previousDatalogDate.elements.day);
             } else if (p[2]=='I') { //--- datalog index
-              File indexFile = SD.open(datalogIndexFileName);
+              File indexFile = SDCard.open(datalogIndexFileName);
               if (indexFile) {
                 compactDate_t date;
                 unsigned long pos;
@@ -6567,13 +6586,13 @@ next_parameter:
                 const char *errormsgptr = cleanupDatalog(nDays);
                 printFmtToWebClient("\r\n%s\r\n", errormsgptr);
                 // cleanup after failed cleanupDatalog(), if necessary:
-                SD.remove(datalogTemporaryFileName);
-                SD.remove(datalogIndexTemporaryFileName);
+                SDCard.remove(datalogTemporaryFileName);
+                SDCard.remove(datalogIndexTemporaryFileName);
                 // set markers, according to current/new index file:
                 readFirstAndPreviousDatalogDateFromFile();
               }
             } else { //--- datalog
-              dataFile = SD.open(datalogFileName);
+              dataFile = SDCard.open(datalogFileName);
               // if the file is available, read from it:
               if (dataFile) {
                 unsigned long startdump = millis();
@@ -6584,7 +6603,7 @@ next_parameter:
                 else { // limited datalog requested
                   // transfer header (no error message in case of read() error => handled in subsequent reading of the actual data, anyway):
                   client.write((byte*)datalogFileHeader,strlen(datalogFileHeader));
-                  File indexFile = SD.open(datalogIndexFileName);
+                  File indexFile = SDCard.open(datalogIndexFileName);
                   if (!indexFile) transmitFile(dataFile);  // no index??
                   else {
                     unsigned long datalogTargetPosition;
@@ -6900,7 +6919,7 @@ next_parameter:
 #ifdef LOGGER
           // what doing this fragment? Just opened and closed file? We really need it?
           // FH: Before, it seemed to be necessary to have the file properly closed. And since I thought you can only properly close it when it's opened before, I was opening it.
-          File dataFile = SD.open(datalogFileName, FILE_APPEND);
+          File dataFile = SDCard.open(datalogFileName, FILE_APPEND);
           if (dataFile) {
             dataFile.close();
           }
@@ -7187,10 +7206,10 @@ next_parameter:
 #if defined(ESP32)
         uint64_t freespace = totalBytes()-usedBytes();
 #else
-        int32_t freespace = SD.vol()->freeClusterCount();
+        int32_t freespace = SDCard.vol()->freeClusterCount();
 #endif
         if (freespace > minimum_SD_size) {
-          dataFile = SD.open(datalogFileName, FILE_APPEND);
+          dataFile = SDCard.open(datalogFileName, FILE_APPEND);
           if (!dataFile) {
             // if the file isn't open, pop up an error:
             printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
@@ -7243,7 +7262,7 @@ next_parameter:
 #endif
           if (dataFile) {
             if (previousDatalogDate.combined != currentDate.combined) {
-              File indexFile = SD.open(datalogIndexFileName, FILE_APPEND);
+              File indexFile = SDCard.open(datalogIndexFileName, FILE_APPEND);
               if (indexFile) {
                 previousDatalogDate.combined = currentDate.combined;
                 long currentDatalogPosition = dataFile.size();
@@ -7341,7 +7360,7 @@ next_parameter:
 
   // write averages to SD card to protect from power off
       if (avg_parameters[0].number > 0) { //write averages if at least one value is set
-        File avgfile = SD.open(averagesFileName, FILE_WRITE);
+        File avgfile = SDCard.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
           for (int i = 0; i < numAverages; i++) {
@@ -7736,6 +7755,102 @@ void dateTime(uint16_t* date, uint16_t* time) {
   #endif
 #endif
 
+void startLoggingDevice() {
+  Serial.print("LogDestination: ");
+  Serial.println(LogDestination);
+  #ifdef ESP32
+  if (LogDestination == SDCARD) {
+#if defined(RX1) && defined(TX1)    // Olimex EVB
+    SDCard = SD_MMC;
+#else
+    SDCard = SD;
+#endif
+    minimum_SD_size = 100000;
+  } else {
+    SDCard = LittleFS;
+    minimum_SD_size = 10000;
+  }
+  #else
+  minimum_SD_size = 100;
+  #endif
+  printToDebug(PSTR("Starting storage device...\r\n"));
+  #ifndef ESP32
+  // disable w5100 while setting up SD
+  pinMode(10,OUTPUT);
+  digitalWrite(10,HIGH);
+  if (!SD.begin(4, SPI_DIV3_SPEED)) {
+    printToDebug(PSTR("SD card failed.\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  } else {
+    printToDebug(PSTR("SD card mounted ok.\r\n"));
+  }
+  #else
+    if (LogDestination == SDCARD) {
+#if defined(RX1) && defined(TX1)    // Olimex EVB
+      SD_MMC.end();
+      if(!SD_MMC.begin("", true)){
+#else                               // Joy-It NodeMCU with SPI-based SD card reader
+      SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
+      SD.end();
+      if(!SD.begin(SD_CS)){
+#endif
+        printToDebug(PSTR("SD card failed\r\n"));
+      } else {
+        printToDebug(PSTR("SD card mounted ok\r\n"));
+      }
+//      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
+    } else {
+      LittleFS.end();
+      LittleFS.begin(true); // format on fail active
+      printToDebug(PSTR("Internal flash memory (LittleFS) mounted ok\r\n"));
+    }
+  #endif
+}
+
+void createTemporaryAP () {
+#if defined ESP32
+  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+  printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
+  WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
+  IPAddress t = WiFi.softAPIP();
+  localAP = true;
+  localAPtimeout = millis();
+  esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
+  printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+  printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
+#endif
+}
+
+void networkEvent(WiFiEvent_t event) {
+  SerialOutput->print(PSTR("Event "));
+  SerialOutput->print(event);
+  SerialOutput->print(PSTR(": "));
+  switch (event) {
+    case SYSTEM_EVENT_ETH_START:
+      SerialOutput->print(PSTR("Ethernet Started."));
+      // Set ETH hostname here if needed
+      ETH.setHostname(mDNS_hostname);
+      break;
+    case SYSTEM_EVENT_ETH_CONNECTED:
+      SerialOutput->print("Ethernet connected.");
+      break;
+    case SYSTEM_EVENT_ETH_GOT_IP:
+      SerialOutput->print(PSTR("Ethernet MAC: "));
+      SerialOutput->print(ETH.macAddress());
+      SerialOutput->print(PSTR(" got IP: "));
+      SerialOutput->print(ETH.localIP());
+      break;
+    case SYSTEM_EVENT_ETH_DISCONNECTED:
+      SerialOutput->print(PSTR("Ethernet disconnected."));
+      break;
+    case SYSTEM_EVENT_ETH_STOP:
+      SerialOutput->print(PSTR("ETH stopped"));
+      break;
+    default:
+      break;
+  }
+  SerialOutput->println();
+}
+
 /** *****************************************************************
  *  Function: setup()
  *  Does:     Sets up the Arduino including its Ethernet shield.
@@ -8099,40 +8214,7 @@ void setup() {
   }
 
 #if defined LOGGER || defined WEBSERVER
-  #ifdef ESP32
-  if (LogDestination == SDCARD) {
-    SD = SD_MMC;
-    minimum_SD_size = 100000;
-  } else {
-    SD = LittleFS;
-    minimum_SD_size = 10000;
-  }
-  #else
-  minimum_SD_size = 100;
-  #endif
-  printToDebug(PSTR("Starting storage device...\r\n"));
-  #ifndef ESP32
-  // disable w5100 while setting up SD
-  pinMode(10,OUTPUT);
-  digitalWrite(10,HIGH);
-  if (!SD.begin(4, SPI_DIV3_SPEED)) {
-    printToDebug(PSTR("SD card failed.\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-  } else {
-    printToDebug(PSTR("SD card mounted ok.\r\n"));
-  }
-  #else
-    if (LogDestination == SDCARD) {
-      if(!SD_MMC.begin("", true)){
-        printToDebug(PSTR("SD card failed\r\n"));
-      } else {
-        printToDebug(PSTR("SD card mounted ok\r\n"));
-      }
-//      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
-    } else {
-      LittleFS.begin(true); // format on fail active
-      printToDebug(PSTR("Internal flash memory (LittleFS) mounted ok\r\n"));
-    }
-  #endif
+  startLoggingDevice();
 #else                     // no SD card
   #ifndef ESP32
   // enable w5100 SPI / LAN
@@ -8151,7 +8233,7 @@ void setup() {
     case WLAN: printlnToDebug(PSTR("WiFi/WLAN")); break;
   }
   printToDebug(PSTR("...\r\n"));
-
+//  WiFi.onEvent(networkEvent);
 
 #ifdef WIFISPI
   WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
@@ -8192,7 +8274,7 @@ void setup() {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
     if (network_type == LAN) {
-      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static
+      if (!Ethernet.begin(mac, ip, dnsserver, gateway, subnet)) createTemporaryAP(); //Static IP
     } else {
 #if defined(ESP32)
       WiFi.config(ip, gateway, subnet, dnsserver);
@@ -8202,7 +8284,7 @@ void setup() {
     }
   } else {
     if (network_type == LAN) {
-      Ethernet.begin(mac); //DHCP
+      if (!Ethernet.begin(mac)) createTemporaryAP();    // DHCP
       printToDebug(PSTR("Waiting for DHCP address"));
       unsigned long timeout = millis();
       while (!Ethernet.localIP() && millis() - timeout < 20000) {
@@ -8233,7 +8315,6 @@ void setup() {
       printToDebug(PSTR("."));
     }
     writelnToDebug();
-
     scanAndConnectToStrongestNetwork();
     #endif
   
@@ -8247,17 +8328,7 @@ void setup() {
     }
     if (WiFi.status() != WL_CONNECTED) {
       printlnToDebug(PSTR("Connecting to WiFi network failed."));
-    #if defined(ESP32)
-      esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-      printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
-      WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
-      IPAddress t = WiFi.softAPIP();
-      localAP = true;
-      esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
-  
-      printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
-      printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
-    #endif
+      createTemporaryAP();      // only effective on ESP32
     } else {
     // you're connected now, so print out the data
       printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
@@ -8309,11 +8380,11 @@ void setup() {
   }
 
 #if defined LOGGER || defined WEBSERVER
-  printToDebug(PSTR("Calculating free space on SD..."));
+  printToDebug(PSTR("Calculating free space on SDCard..."));
   uint32_t m = millis();
   #if !defined(ESP32)
-  uint32_t freespace = SD.vol()->freeClusterCount();
-  freespace = (uint32_t)(freespace*SD.vol()->sectorsPerCluster()/2048);
+  uint32_t freespace = SDCard.vol()->freeClusterCount();
+  freespace = (uint32_t)(freespace*SDCard.vol()->sectorsPerCluster()/2048);
   printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
   #else
   uint64_t freespace = totalBytes()-usedBytes();
@@ -8404,8 +8475,8 @@ void setup() {
 
 // restore average
 #ifdef AVERAGES
-  if (SD.exists(averagesFileName)) {
-    File avgfile = SD.open(averagesFileName, FILE_READ);
+  if (SDCard.exists(averagesFileName)) {
+    File avgfile = SDCard.open(averagesFileName, FILE_READ);
     if (avgfile) {
       char c;
       char num[15];
@@ -8466,7 +8537,7 @@ void setup() {
   }
 #endif
 
-  if (!SD.exists(datalogFileName)) {
+  if (!SDCard.exists(datalogFileName)) {
     createdatalogFileAndWriteHeader();
   }
   else readFirstAndPreviousDatalogDateFromFile();

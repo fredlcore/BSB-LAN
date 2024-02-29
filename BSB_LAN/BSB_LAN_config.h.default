@@ -1,13 +1,10 @@
 /************************************************************************************/
-/************************************************************************************/
+/**********************************************<**************************************/
 /* Settings -   BEGIN                                                               */
 /************************************************************************************/
 /************************************************************************************/
 
 // Upon first installation, rename this file from BSB_lan_config.h.default to BSB_lan_config.h and adjust settings accordingly
-// Users who still use Arduino Mega2560 boards instead of Arduin Due: Please have a look at the very end of this configuration
-// where certain modules are disabled by default due to limited flash memory.
-
 
 /* Select language; so far German is the most complete, with English following.
  * Available languages are: Czech (CS), German (DE), Danish (DA), English (EN), Spanish (ES), Finnish (FI),
@@ -22,28 +19,18 @@
 Allow to initialize program configuration by reading settings from EEPROM
 byte UseEEPROM = 0; // Configuration is read from this config file.
                     // Configuration can be stored in EEPROM but will not be used while UseEEPROM is zero.
-                    // Set zero for fallback startup in case EEPROM configuration is broken.
+                    // Set zero for fallback startup in case EEPROM configuration is broken or you cannot access BSB-LAN anymore.
 byte UseEEPROM = 1; // Configuration will be read from EEPROM. This is the default.
 */
 byte UseEEPROM = 1;
 
 /*
- *  Enter a MAC address, found either on the EthernetShield or use the one below.
- *  Change this if you have more than one BSB-LAN adapter in your LAN, so that there aren't any address conflicts.
- *  MAC address here only affects the LAN shield, it doesn't apply to the WiFi-ESP-solution.
+ * Configuration of the network settings
 */
-byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
-
-/*
- * Initialize the Ethernet server library
- * with the IP address and port you want to use
- * (port 80 is default for HTTP):
-*/
-
 uint8_t network_type = WLAN;            // Set to LAN (0) when using Ethernet connection. Set to WLAN (1) when using WiFi. Arduino users using WiFiSpi have to activate the definement below as well.
 uint16_t HTTPPort = 80;
 bool useDHCP = true;                    // Set to false if you want to use a fixed IP.
-byte ip_addr[4] = {192,168,178,88};     // Please note the commas instead of dots!!!  Set useDHCP to true if you want DHCP.
+byte ip_addr[4] = {192,168,178,88};     // Please note the commas instead of dots!!!  Set useDHCP (above) to false if you want to use a fixed IP.
 byte gateway_addr[4] = {192,168,178,1}; // Gateway address. This is usually your router's IP address. Please note the commas instead of dots!!! Ignored if first value is 0.
 byte dns_addr[4] = {192,168,178,1};     // DNS server. Please note the commas instead of dots!!! Ignored if first value is 0.
 byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas instead of dots!!! Ignored if first value is 0.
@@ -71,14 +58,6 @@ char mDNS_hostname[32] = "BSB-LAN";
 #define USE_NTP       // Disable this in case you don't want to use NTP
 const char ntp_server[20] = "pool.ntp.org";
 const char local_timezone[30] = "CET-1CEST,M3.5.0,M10.5.0/3";
-
-// Debug options
-#define DEBUG         // Compile with verbose DEBUG module if defined
-byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
-byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
-byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
-bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
-//#define DEVELOPER_DEBUG //Very verbose debug output. This option will dramatically slow down MCU performance. Useful for developers not for users.
 
 /* SECURITY OPTIONS
  * There are several options to control and protect access to your heating system. However, keep
@@ -113,29 +92,42 @@ byte trusted_ip_addr2[4] = {0,0,0,0};
 //char USER_PASS[64] = "User:Password";
 char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string length is zero
 
+/*
+ *  Enter a MAC address, found either on the EthernetShield or use the one below.
+ *  Change this if you have more than one BSB-LAN adapter in your LAN, so that there aren't any address conflicts.
+ *  MAC address here only affects the LAN shield, it doesn't apply to the WiFi-ESP-solution.
+*/
+byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
-// Compile module with one wire bus support.
-#define ONE_WIRE_BUS
-byte One_Wire_Pin = 0;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
+// Setting bus type
+uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
+// BSB:
+// - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
+// - 'dest_address' sets destination address, defaults to 0 for heating system.
+// LPB:
+// - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
+// - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for BSB-LAN and segment 0, device 1 for heating system
+byte own_address = 0x42;
+byte dest_address = 0x00;
+// PPS:
+// - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
+bool pps_write = 0;
+byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x5A = QAA10, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/REA70/DC225
+// Setting bus pins
+byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB, 36,5 for Olimex POE and 68,69 for Mega).
 
-// Compile module with DHT temperature/humidity sensors support
-#define DHT_BUS
-// Define the pins for DHT temperature/humidity sensors (Up to 10)
-uint8_t DHT_Pins[10] = {0};
+/* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
+ * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
+ * if heating system is not running when BSB-LAN is powered on.
+*/
+uint16_t fixed_device_family = 0;
+uint16_t fixed_device_variant = 0;
 
-// Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
-// Up to two sensors with 0x76 and 0x77 addresses.
-#define BME280
-byte BME_Sensors = 0; //Define number of BME280 sensors
-
-// Compile module for calculation 24h averages for selected programs
-#define AVERAGES
-// Create 24h averages from these parameters and save data into averages.txt on SD-card.
-parameter avg_parameters[40] = {
-// parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
-  {8700, -1},                         // Außentemperatur
-  {8326, -1}                          // Brenner-Modulation
-};
+// defines default flag for parameters
+// use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
+// use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
+// use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
+#define DEFAULT_FLAG FL_SW_CTL_RONLY
 
 /* Compile module for logging.
 File logging requires a FAT32 formatted micro SD card inserted into the Ethernet shield's card slot.
@@ -146,11 +138,16 @@ Does: log bus telegrams to file
       push selected values to an MQTT broker*/
 #define LOGGER
 
-#define UDP_LOG_PORT 6502 // fixed here, not configurable via web interface
-
 // Setting to determine on ESP32 whether to use SD card adapter (if present) or ESP32's internal flash.
 // SD card should always be preferred to protect the ESP32's flash from wearing down.
-uint8_t LogDestination = 0;  // 0 = SD card, 1 = ESP32's flash memory
+uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD card, FLASH (1) = ESP32's flash memory
+// If you use an SD card reader on the Joy-It ESP32 NodeMCU, you can configure the SPI pins here:
+#define SD_SCK 18
+#define SD_MISO 19
+#define SD_MOSI 23
+#define SD_CS 5
+//#define FORCE_SD_MMC_ON_NODEMCU   // enable this definement if you want to force using the SD_MMC library instead of SPI on an ESP32 NodeMCU
+
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
 // Telegrams logged upon boot:
@@ -182,6 +179,8 @@ parameter log_parameters[40] = {
 //  {20500, -1}                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
 };
 
+#define UDP_LOG_PORT 6502        // Port to send UDP log messages to. Fixed here, not yet configurable via web interface
+
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
 #define MQTT
 byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
@@ -199,6 +198,28 @@ char MQTTDeviceID[32] = "BSB-LAN";
 // Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be any sum of these values.
 byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
 
+// Compile module for calculation 24h averages for selected programs
+#define AVERAGES
+// Create 24h averages from these parameters and save data into averages.txt on SD-card.
+parameter avg_parameters[40] = {
+// parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
+  {8700, -1},                         // Außentemperatur
+  {8326, -1}                          // Brenner-Modulation
+};
+
+// Compile module with one wire bus support.
+#define ONE_WIRE_BUS
+byte One_Wire_Pin = 0;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
+
+// Compile module with DHT temperature/humidity sensors support
+#define DHT_BUS
+// Define the pins for DHT temperature/humidity sensors (Up to 10)
+uint8_t DHT_Pins[10] = {0};
+
+// Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
+// Up to two sensors with 0x76 and 0x77 addresses.
+#define BME280
+byte BME_Sensors = 0; //Define number of BME280 sensors
 
 // Compile IPWE extension
 #define IPWE
@@ -248,40 +269,6 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
   "KEQ0502326",                                // use MAX! serial numbers here which have to have exactly 10 characters
   "KEQ0505080"
 };
-
-
-// defines the number of retries for the query command
-#define QUERY_RETRIES  3
-
-// Setting bus pins and bus type
-
-byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB, 36,5 for Olimex POE and 68,69 for Mega).
-uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
-// BSB:
-// - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
-// - 'dest_address' sets destination address, defaults to 0 for heating system.
-// LPB:
-// - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
-// - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for Arduino/BSB-LAN and segment 0, device 1 for heating system
-byte own_address = 0x42;
-byte dest_address = 0x00;
-// PPS:
-// - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
-bool pps_write = 0;
-byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x5A = QAA10, 0x37 = QAA95, 0x66 = BMU, 0xEA = MCBA/REA70/DC225
-
-/* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
- * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
- * if heating system is not running when Arduino is powered on.
-*/
-uint16_t fixed_device_family = 0;
-uint16_t fixed_device_variant = 0;
-
-// defines default flag for parameters
-// use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
-// use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
-// use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
-#define DEFAULT_FLAG FL_SW_CTL_RONLY
 
 // include commands from BSB_lan_custom.h to be executed at the end of each main loop
 //#define CUSTOM_COMMANDS
@@ -339,7 +326,18 @@ byte destinationServer[128] = "";   // URL string to periodically send values to
 uint16_t destinationPort = 80;      // port number for abovementioned server
 uint32_t destinationDelay = 84600;  // interval in seconds to send values
 
-#define CONFIG_VERSION 35
+// Debug options
+#define DEBUG         // Compile with verbose DEBUG module if defined
+byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
+byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
+byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
+bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
+//#define DEVELOPER_DEBUG //Very verbose debug output. This option will dramatically slow down MCU performance. Useful for developers not for users.
+
+// defines the number of retries for the query command
+#define QUERY_RETRIES  3
+
+#define CONFIG_VERSION 36
 
 /************************************************************************************/
 /************************************************************************************/

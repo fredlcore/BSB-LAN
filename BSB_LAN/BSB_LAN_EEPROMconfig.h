@@ -190,7 +190,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GF, sizeof(fixed_device_family)},//need reboot
   {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GV, sizeof(fixed_device_variant)},//need reboot
 #ifdef WEBCONFIG
-  {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},//need reboot
+  {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
@@ -207,7 +207,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
 #endif
 #ifdef ESP32
-  {CF_LOG_DEST,         12,CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOG_DEST_TXT, sizeof(LogDestination)}, //need reboot
+  {CF_LOG_DEST,         12,CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOG_DEST_TXT, sizeof(LogDestination)}, //need handler
 #endif
   {CF_LOGMODE,          10,CCAT_LOGGING,  CPI_CHECKBOXES,CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
