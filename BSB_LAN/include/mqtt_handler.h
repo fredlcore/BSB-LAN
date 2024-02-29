@@ -211,9 +211,10 @@ boolean mqtt_connect() {
     if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
     }
-    uint8_t MQTT_IP[4];
-    int result = sscanf(mqtt_host, "%d.%d.%d.%d", &MQTT_IP[0], &MQTT_IP[1], &MQTT_IP[2], &MQTT_IP[3]);
+    int addr[4];
+    int result = sscanf(mqtt_host, "%d.%d.%d.%d", &addr[0], &addr[1], &addr[2], &addr[3]);
     if (result == 4) {
+      IPAddress MQTT_IP(addr[0],addr[1],addr[2],addr[3]);
       MQTTPubSubClient->setServer(MQTT_IP, mqtt_port);
     } else {
       MQTTPubSubClient->setServer(mqtt_host, mqtt_port);

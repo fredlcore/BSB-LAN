@@ -7778,7 +7778,7 @@ void startLoggingDevice() {
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
-  if (!SD.begin(4, SPI_DIV3_SPEED)) {
+  if (!SDCard.begin(4, SPI_DIV3_SPEED)) {
     printToDebug(PSTR("SD card failed.\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
   } else {
     printToDebug(PSTR("SD card mounted ok.\r\n"));
@@ -7820,6 +7820,8 @@ void createTemporaryAP () {
 #endif
 }
 
+/*
+#if defined(ESP32)
 void networkEvent(WiFiEvent_t event) {
   SerialOutput->print(PSTR("Event "));
   SerialOutput->print(event);
@@ -7850,6 +7852,8 @@ void networkEvent(WiFiEvent_t event) {
   }
   SerialOutput->println();
 }
+#endif
+*/
 
 /** *****************************************************************
  *  Function: setup()
@@ -8233,7 +8237,9 @@ void setup() {
     case WLAN: printlnToDebug(PSTR("WiFi/WLAN")); break;
   }
   printToDebug(PSTR("...\r\n"));
+#if defined(ESP32)
 //  WiFi.onEvent(networkEvent);
+#endif
 
 #ifdef WIFISPI
   WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
@@ -8274,7 +8280,11 @@ void setup() {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
     if (network_type == LAN) {
+#if defined(ESP32)
       if (!Ethernet.begin(mac, ip, dnsserver, gateway, subnet)) createTemporaryAP(); //Static IP
+#else
+      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static IP
+#endif
     } else {
 #if defined(ESP32)
       WiFi.config(ip, gateway, subnet, dnsserver);
@@ -8284,7 +8294,11 @@ void setup() {
     }
   } else {
     if (network_type == LAN) {
+#if defined(ESP32)
       if (!Ethernet.begin(mac)) createTemporaryAP();    // DHCP
+#else
+      Ethernet.begin(mac);    // DHCP
+#endif
       printToDebug(PSTR("Waiting for DHCP address"));
       unsigned long timeout = millis();
       while (!Ethernet.localIP() && millis() - timeout < 20000) {
