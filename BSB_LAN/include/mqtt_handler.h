@@ -211,7 +211,13 @@ boolean mqtt_connect() {
     if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
     }
-    MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
+    uint8_t MQTT_IP[4];
+    int result = sscanf(mqtt_host, "%d.%d.%d.%d", &MQTT_IP[0], &MQTT_IP[1], &MQTT_IP[2], &MQTT_IP[3]);
+    if (result == 4) {
+      MQTTPubSubClient->setServer(MQTT_IP, mqtt_port);
+    } else {
+      MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
+    }
     String MQTTWillTopic = mqtt_get_will_topic();
     String MQTTRealClientId = mqtt_get_client_id();
     int retries = 0;
