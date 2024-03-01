@@ -75,6 +75,7 @@
  *        - Support for optional additional SD card adapter on Joy-It ESP32 NodeMCU. SPI pins can be configured in BSB_LAN_config.h, defaulting to standard SPI pins 5, 18, 19 and 23.
  *        - Switching between log storage device (SD card / internal flash) on the ESP32 can now be done in the web interface.
  *        - Create temporary WiFi AP in case Ethernet connection fails
+ *        - EEPROM clear pin has changed from 18 to 21 for NodeMCU boards in order not to collide with SPI SD card adapters.
  *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
@@ -548,7 +549,7 @@ typedef struct {
 #define EEPROM_ERASING_PIN 34
     #else                     // GPIO for ESP32-NodeMCU
 #undef EEPROM_ERASING_PIN
-#define EEPROM_ERASING_PIN 18
+#define EEPROM_ERASING_PIN 21
     #endif
   #else                       // GPIO for Arduino Due
 #undef EEPROM_ERASING_PIN
