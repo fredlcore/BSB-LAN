@@ -174,7 +174,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(uint32_t)},
 #ifdef CONFIG_IN_EEPROM
 #ifdef WEBCONFIG
-  {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
+  {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
   {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
   {CF_ESP32_ENERGY_SAVE,11,CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_ENERGY_SAVE_TXT, sizeof(esp32_save_energy)}, //need reboot
@@ -193,11 +193,11 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
   {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply
-  {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
-  {CF_IPADDRESS,        2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_IPADDRESS_TXT, sizeof(ip_addr)}, //need reboot
-  {CF_MASK,             2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MASK_TXT, sizeof(subnet_addr)}, //need reboot
-  {CF_GATEWAY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_GATEWAY_TXT, sizeof(gateway_addr)}, //need reboot
-  {CF_DNS,              2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_DNS_TXT, sizeof(dns_addr)}, //need reboot
+  {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
+  {CF_IPADDRESS,        2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_IPADDRESS_TXT, sizeof(ip_addr)}, //need reboot
+  {CF_MASK,             2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MASK_TXT, sizeof(subnet_addr)}, //need reboot
+  {CF_GATEWAY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_GATEWAY_TXT, sizeof(gateway_addr)}, //need reboot
+  {CF_DNS,              2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_DNS_TXT, sizeof(dns_addr)}, //need reboot
   {CF_WWWPORT,          2, CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_WWWPORT_TXT, sizeof(HTTPPort)}, //need reboot - can't destroy EthernetServer object
   {CF_MAC,              2, CCAT_IPV4,     CPI_TEXT,      CDT_MAC,            OPT_FL_ADVANCED, CF_MAC_TXT, sizeof(mac)}, //need reboot
   {CF_TRUSTEDIPADDRESS, 2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)}, //immediately apply
@@ -212,7 +212,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_LOGMODE,          10,CCAT_LOGGING,  CPI_CHECKBOXES,CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
   {CF_CURRVALUESLIST,   1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(log_parameters)},//immediately apply
-  {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
+  {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
 #ifdef WEBCONFIG
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
