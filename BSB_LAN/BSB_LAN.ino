@@ -70,12 +70,12 @@
  * Changelog:
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
- *        - Support for receiving date and time via NTP instead of taking it from the heater.
+ *        - ESP32: Support for receiving date and time via NTP instead of taking it from the heater.
  *        - MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.
- *        - Support for optional additional SD card adapter on Joy-It ESP32 NodeMCU. SPI pins can be configured in BSB_LAN_config.h, defaulting to standard SPI pins 5, 18, 19 and 23.
- *        - Switching between log storage device (SD card / internal flash) on the ESP32 can now be done in the web interface.
- *        - Create temporary WiFi AP in case Ethernet connection fails
- *        - EEPROM clear pin has changed from 18 to 21 for NodeMCU boards in order not to collide with SPI SD card adapters.
+ *        - ESP32 NodeMCU: Support for optional additional SD card adapter. SPI pins can be configured in BSB_LAN_config.h, defaulting to standard SPI pins 5, 18, 19 and 23.
+ *        - ESP32: Switching between log storage device (SD card / internal flash) can now be done in the web interface.
+ *        - ESP32: Create temporary WiFi AP in case Ethernet connection fails
+ *        - ESP32 NodeMCU: EEPROM clear pin has changed from 18 to 21 in order not to collide with SPI SD card adapters.
  *        - This release has been supported by the following GitHub sponsors: jsimon3
  *       version 3.2
  *        - ATTENTION: In BSB_LAN_config.h, new layout of log_parameters, avg_parameters and ipwe_parameters now written in curly brackets and different size (40 instead of 80) and type ("parameter" instead of "float"). Please update your BSB_LAN_config.h accordingly to prevent errors!
@@ -4970,10 +4970,10 @@ bool createdatalogFileAndWriteHeader() {
 #ifdef ESP32
 uint64_t usedBytes() {
   if (LogDestination == SDCARD) {
-#if defined(RX1) && defined(TX1)    // Olimex EVB
-    return SD_MMC.usedBytes();
-#else
+#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.usedBytes();
+#else                           // Olimex or NodeMCU with SD_MMC
+    return SD_MMC.usedBytes();
 #endif
   } else {
     return LittleFS.usedBytes();
@@ -4982,10 +4982,10 @@ uint64_t usedBytes() {
 
 uint64_t totalBytes() {
   if (LogDestination == SDCARD) {
-#if defined(RX1) && defined(TX1)    // Olimex EVB
-    return SD_MMC.totalBytes();
-#else
+#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.totalBytes();
+#else                           // Olimex or NodeMCU with SD_MMC
+    return SD_MMC.totalBytes();
 #endif
   } else {
     return LittleFS.totalBytes();
@@ -7786,13 +7786,13 @@ void startLoggingDevice() {
   }
   #else
     if (LogDestination == SDCARD) {
-#if defined(RX1) && defined(TX1)    // Olimex EVB
-      SD_MMC.end();
-      if(!SD_MMC.begin("", true)){
-#else                               // Joy-It NodeMCU with SPI-based SD card reader
+#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
       SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
       SD.end();
       if(!SD.begin(SD_CS)){
+#else                               // Olimex or Joy-It NodeMCU with SD_MMC
+      SD_MMC.end();
+      if(!SD_MMC.begin("", true)){
 #endif
         printToDebug(PSTR("SD card failed\r\n"));
       } else {
