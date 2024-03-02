@@ -176,23 +176,25 @@ PROGMEM_LATE const configuration_struct config[]={
 #ifdef WEBCONFIG
   {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
+  #ifdef ESP32
   {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
   {CF_ESP32_ENERGY_SAVE,11,CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_ENERGY_SAVE_TXT, sizeof(esp32_save_energy)}, //need reboot
+  #endif
 #endif
-  {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
-  {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
-  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           OPT_FL_ADVANCED, NULL, sizeof(byte)},//Not used. Leaved for compatibility
-  {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
   {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
   {CF_PPS_MODE,         1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
   {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
+  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           OPT_FL_ADVANCED, NULL, sizeof(byte)},//Not used. Leaved for compatibility
+  {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
   {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GF, sizeof(fixed_device_family)},//need reboot
   {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GV, sizeof(fixed_device_variant)},//need reboot
+  {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
+  {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
 #ifdef WEBCONFIG
   {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
-  {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
-  {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply
+  {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
+  {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
   {CF_IPADDRESS,        2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_IPADDRESS_TXT, sizeof(ip_addr)}, //need reboot
   {CF_MASK,             2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MASK_TXT, sizeof(subnet_addr)}, //need reboot
@@ -200,11 +202,11 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_DNS,              2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_DNS_TXT, sizeof(dns_addr)}, //need reboot
   {CF_WWWPORT,          2, CCAT_IPV4,     CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_WWWPORT_TXT, sizeof(HTTPPort)}, //need reboot - can't destroy EthernetServer object
   {CF_MAC,              2, CCAT_IPV4,     CPI_TEXT,      CDT_MAC,            OPT_FL_ADVANCED, CF_MAC_TXT, sizeof(mac)}, //need reboot
+  {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
+  {CF_BASICAUTH,        2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_BASICAUTH_TXT, sizeof(USER_PASS)},//immediately apply
+  {CF_PASSKEY,          2, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_PASSKEY_TXT, sizeof(PASSKEY)},//immediately apply
   {CF_TRUSTEDIPADDRESS, 2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)}, //immediately apply
   {CF_TRUSTEDIPADDRESS2,2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},//immediately apply
-  {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
-  {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
-  {CF_MDNS_HOSTNAME,    6, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MDNS_HOSTNAME_TXT, sizeof(mDNS_hostname)},//need reboot
 #endif
 #ifdef ESP32
   {CF_LOG_DEST,         12,CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOG_DEST_TXT, sizeof(LogDestination)}, //need handler
@@ -215,24 +217,17 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
 #ifdef WEBCONFIG
-  {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_SERVER,      12,CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_SERVER_TXT, sizeof(mqtt_broker_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
+  {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_WEBSERVER_TXT, 1},
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_BYTE,           OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, CCAT_DHTBUS,   CPI_TEXT,      CDT_DHTBUS,         OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(DHT_Pins)}, //immediately apply
   {CF_BMEBUS,           6, CCAT_BMEBUS,   CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_NUM_TXT, sizeof(BME_Sensors)}, //need reboot
-  {CF_TWW_PUSH_PIN_ID,  5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TWW_PUSH_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
-  {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
-  {CF_RGT1_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT1_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
-  {CF_RGT2_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT2_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
-  {CF_RGT2_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT2_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
-  {CF_RGT3_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT3_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
-  {CF_RGT3_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT3_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_MAX,              2, CCAT_MAX,      CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(enable_max_cul)},//immediately apply
   {CF_MAX_IPADDRESS,    2, CCAT_MAX,      CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
 #endif
@@ -244,6 +239,13 @@ PROGMEM_LATE const configuration_struct config[]={
 #ifdef WEBCONFIG
   {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(enable_ipwe)},//immediately apply
   {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
+  {CF_TWW_PUSH_PIN_ID,  5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TWW_PUSH_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
+  {CF_RGT1_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT1_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT1_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT1_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
+  {CF_RGT2_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT2_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT2_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT2_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
+  {CF_RGT3_SENSOR_ID,   5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_RGT3_SENSOR_TXT, sizeof(rgte_sensorid)/3},//immediately apply
+  {CF_RGT3_PRES_PIN_ID, 5, CCAT_RGT_EMUL, CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RGT3_PRES_PIN_TXT, sizeof(button_on_pin[0])},//need reboot
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_VERBOSE_TXT, sizeof(verbose)},
   {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_MONITOR_TXT, sizeof(monitor)},
