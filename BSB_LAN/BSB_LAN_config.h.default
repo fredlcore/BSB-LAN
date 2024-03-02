@@ -27,7 +27,7 @@ byte UseEEPROM = 1;
 /*
  * Configuration of the network settings
 */
-uint8_t network_type = WLAN;            // Set to LAN (0) when using Ethernet connection. Set to WLAN (1) when using WiFi. Arduino users using WiFiSpi have to activate the definement below as well.
+uint8_t network_type = LAN;             // Set to LAN (0) when using Ethernet connection. Set to WLAN (1) when using WiFi. Arduino users using WiFiSpi have to activate the definement below as well.
 uint16_t HTTPPort = 80;
 bool useDHCP = true;                    // Set to false if you want to use a fixed IP.
 byte ip_addr[4] = {192,168,178,88};     // Please note the commas instead of dots!!!  Set useDHCP (above) to false if you want to use a fixed IP.
