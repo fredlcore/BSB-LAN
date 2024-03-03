@@ -7761,10 +7761,10 @@ void startLoggingDevice() {
   Serial.println(LogDestination);
   #ifdef ESP32
   if (LogDestination == SDCARD) {
-#if defined(RX1) && defined(TX1)    // Olimex EVB
-    SDCard = SD_MMC;
-#else
+#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     SDCard = SD;
+#else
+    SDCard = SD_MMC;
 #endif
     minimum_SD_size = 100000;
   } else {
