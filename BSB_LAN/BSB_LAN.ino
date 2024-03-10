@@ -7739,6 +7739,55 @@ void printWifiStatus()
     printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
   }
 }
+
+void networkEvent(WiFiEvent_t event) {
+  switch (event) {
+    case ARDUINO_EVENT_WIFI_READY:
+    case ARDUINO_EVENT_WIFI_AP_START:
+    case ARDUINO_EVENT_WIFI_AP_STOP:
+    case ARDUINO_EVENT_WIFI_AP_STACONNECTED:
+    case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
+    case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
+      break;
+    case ARDUINO_EVENT_ETH_START:
+      SerialOutput->println(PSTR("Ethernet Started."));
+      // Set ETH hostname here if needed
+      ETH.setHostname(mDNS_hostname);
+      break;
+    case ARDUINO_EVENT_ETH_CONNECTED:
+      SerialOutput->println("Ethernet connected.");
+      if (localAP == true) {
+        removeTemporaryAP();
+      }
+      break;
+    case ARDUINO_EVENT_ETH_GOT_IP:
+      SerialOutput->print(PSTR("Ethernet got IP: "));
+      SerialOutput->println(ETH.localIP());
+      break;
+    case ARDUINO_EVENT_ETH_DISCONNECTED:
+      SerialOutput->println(PSTR("Ethernet disconnected."));
+      if (localAP == true) {
+        removeTemporaryAP();
+      }
+      if (localAP == false) {
+        createTemporaryAP();
+      }
+      break;
+    case ARDUINO_EVENT_ETH_STOP:
+      SerialOutput->println(PSTR("ETH stopped."));
+      if (localAP == true) {
+        removeTemporaryAP();
+      }
+      if (localAP == false) {
+        createTemporaryAP();
+      }
+      break;
+    default:
+      SerialOutput->print(PSTR("Network-Event "));
+      SerialOutput->println(event);
+      break;
+  }
+}
 #endif
 
 
@@ -7821,40 +7870,13 @@ void createTemporaryAP () {
 #endif
 }
 
-/*
-#if defined(ESP32)
-void networkEvent(WiFiEvent_t event) {
-  SerialOutput->print(PSTR("Event "));
-  SerialOutput->print(event);
-  SerialOutput->print(PSTR(": "));
-  switch (event) {
-    case SYSTEM_EVENT_ETH_START:
-      SerialOutput->print(PSTR("Ethernet Started."));
-      // Set ETH hostname here if needed
-      ETH.setHostname(mDNS_hostname);
-      break;
-    case SYSTEM_EVENT_ETH_CONNECTED:
-      SerialOutput->print("Ethernet connected.");
-      break;
-    case SYSTEM_EVENT_ETH_GOT_IP:
-      SerialOutput->print(PSTR("Ethernet MAC: "));
-      SerialOutput->print(ETH.macAddress());
-      SerialOutput->print(PSTR(" got IP: "));
-      SerialOutput->print(ETH.localIP());
-      break;
-    case SYSTEM_EVENT_ETH_DISCONNECTED:
-      SerialOutput->print(PSTR("Ethernet disconnected."));
-      break;
-    case SYSTEM_EVENT_ETH_STOP:
-      SerialOutput->print(PSTR("ETH stopped"));
-      break;
-    default:
-      break;
-  }
-  SerialOutput->println();
+void removeTemporaryAP() {
+//  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+  WiFi.softAPdisconnect(false);
+  localAP = false;
+//  WiFi.enableAP(false);
+  printlnToDebug(PSTR("Temporary AP 'BSB-LAN' deactivated."));
 }
-#endif
-*/
 
 /** *****************************************************************
  *  Function: setup()
@@ -8239,7 +8261,7 @@ void setup() {
   }
   printToDebug(PSTR("...\r\n"));
 #if defined(ESP32)
-//  WiFi.onEvent(networkEvent);
+  WiFi.onEvent(networkEvent);
 #endif
 
 #ifdef WIFISPI
