@@ -1,0 +1,140 @@
+name: PlatformIO CI ESP32
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python_version:
+        - "3.8"
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python_version }}
+
+    - name: Cache
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cache/pip
+          ~/.platformio
+        key: ${{ runner.os }}-python${{ matrix.python_version }}
+
+    - name: Install dependencies
+      run: |
+        pip install --upgrade pip
+        pip install --upgrade platformio
+        platformio update
+
+        # Ethernet library
+        platformio lib -g install 872
+
+    - name: Setup config
+      run: |
+        rm -R BSB_LAN/src/WiFiSpi
+        rm -R BSB_LAN/src/Time
+        cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
+
+    - name: Run PlatformIO CI without LOGGER
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define LOGGER/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without MQTT
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define MQTT/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without AVERAGES
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define AVERAGES/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without ONE_WIRE_BUS
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define ONE_WIRE_BUS/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without DHT_BUS
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define DHT_BUS/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without BME280
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define BME280/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without IPWE
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define IPWE/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without MAXCUL
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define MAXCUL/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without CONFIG_IN_EEPROM
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define CONFIG_IN_EEPROM/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without WEBCONFIG
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define WEBCONFIG/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without JSONCONFIG
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define JSONCONFIG/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without RGT_EMULATOR
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define RGT_EMULATOR/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without BUTTONS
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define BUTTONS/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without ROOM_UNIT
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define ROOM_UNIT/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without OFF_SITE_LOGGER
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define OFF_SITE_LOGGER/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
+
+    - name: Run PlatformIO CI without DEBUG
+      run: |
+        cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+        sed -i '/#define DEBUG/d' BSB_LAN/BSB_LAN_config.h
+        platformio ci --project-option="platform = https://github.com/platformio/platform-espressif32.git" --board=esp32-evb ./BSB_LAN
