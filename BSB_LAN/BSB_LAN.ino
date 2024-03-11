@@ -7740,7 +7740,7 @@ void printWifiStatus()
   }
 }
 
-void networkEvent(WiFiEvent_t event) {
+void netEvent(WiFiEvent_t event) {
   switch (event) {
     case ARDUINO_EVENT_WIFI_READY:
     case ARDUINO_EVENT_WIFI_AP_START:
@@ -7857,7 +7857,7 @@ void startLoggingDevice() {
 }
 
 void createTemporaryAP () {
-#if defined ESP32
+#if defined (ESP32)
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
   printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
   WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
@@ -7871,11 +7871,13 @@ void createTemporaryAP () {
 }
 
 void removeTemporaryAP() {
+#if defined (ESP32)
 //  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
   WiFi.softAPdisconnect(false);
   localAP = false;
 //  WiFi.enableAP(false);
   printlnToDebug(PSTR("Temporary AP 'BSB-LAN' deactivated."));
+#endif
 }
 
 /** *****************************************************************
@@ -8261,7 +8263,7 @@ void setup() {
   }
   printToDebug(PSTR("...\r\n"));
 #if defined(ESP32)
-  WiFi.onEvent(networkEvent);
+  WiFi.onEvent(netEvent);
 #endif
 
 #ifdef WIFISPI
