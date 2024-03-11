@@ -1,2 +1,2 @@
-// Add custom code for setup function here which will be included at the end of the setup function
+// Add custom code for global functions here which will be included in the global section
 
