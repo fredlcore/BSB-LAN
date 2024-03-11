@@ -521,6 +521,8 @@
 #if defined(ESP32)
 void loop();
 int set(float line, const char *val, bool setcmd);
+#else
+#define WiFiEvent_t int         // Very strange that the netEvent() function which is completely guarded by preprocessor directives throws an error on Arduino Due, complaining that WiFiEvent_t is not defined. This workaround fixes this.
 #endif
 
 typedef struct {
