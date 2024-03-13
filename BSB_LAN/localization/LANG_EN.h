@@ -188,7 +188,7 @@
 #define CF_TRUSTEDIPADDRESS_TEXT "Trusted IP address"
 #define CF_MASK_TEXT "Subnet"
 #define CF_WIFI_PASSWORD_TEXT "WLAN password"
-#define CF_WEBSERVER_TEXT "Webserver SD card"
+#define CF_WEBSERVER_TEXT "Webserver SD card / flash memory"
 #define CF_BASICAUTH_TEXT "HTTP authentification"
 #define CF_ONEWIREBUS_DEVICES_TEXT "Devices"
 #define CF_PINS_TEXT "Pins"
