@@ -182,11 +182,11 @@ PROGMEM_LATE const configuration_struct config[]={
   #endif
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_WEBSERVER_TXT, sizeof(webserver)},
   {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
-  {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
   {CF_PPS_MODE,         1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler
   {CF_ROOM_DEVICE,      2, CCAT_BUS,      CPI_DROPDOWN,  CDT_UINT16,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_QAA_TYPE_TXT, sizeof(pps_values[PPS_QTP])},//immediately apply
-  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           OPT_FL_ADVANCED, NULL, sizeof(byte)},//Not used. Leaved for compatibility
+//  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           OPT_FL_ADVANCED, NULL, sizeof(byte)},//Not used. Leaved for compatibility
   {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
+  {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
   {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GF, sizeof(fixed_device_family)},//need reboot
   {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GV, sizeof(fixed_device_variant)},//need reboot
   {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
