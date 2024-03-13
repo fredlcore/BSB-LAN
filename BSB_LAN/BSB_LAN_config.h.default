@@ -42,8 +42,7 @@ uint8_t bssid[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};  // enter specific BSSI
 //#define WIFISPI                         // Activate this on the Arduino to enable WiFi via WiFiSpi. DO NOT enable this on an ESP32.
 #define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
-#define MDNS_SUPPORT                    // Advertises the hostname in the local network. Disable this if you don't want your device to be found under this name in your network.
-char mDNS_hostname[32] = "BSB-LAN";
+char mDNS_hostname[32] = "BSB-LAN";     // Advertises the hostname in the local network. Set this to an empty string if you don't want your device to be found under this name in your network.
 
 /* NTP settings to acquire exact date and time via network.
  * Attention: This only works with ESP32 microcontrollers so far!
@@ -55,8 +54,7 @@ char mDNS_hostname[32] = "BSB-LAN";
  * See here for a full list of timezones for places all over the world:
  * https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv
 */
-#define USE_NTP       // Disable this in case you don't want to use NTP
-const char ntp_server[20] = "pool.ntp.org";
+const char ntp_server[20] = "pool.ntp.org"; // Set to empty string in case you don't want to use NTP
 const char local_timezone[30] = "CET-1CEST,M3.5.0,M10.5.0/3";
 
 /* SECURITY OPTIONS
@@ -129,15 +127,6 @@ uint16_t fixed_device_variant = 0;
 // use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
 
-/* Compile module for logging.
-File logging requires a FAT32 formatted micro SD card inserted into the Ethernet shield's card slot.
-Does: log bus telegrams to file
-      log selected values to file
-      store to SD and load selected 24h averages
-      send selected values as UDP broadcast
-      push selected values to an MQTT broker*/
-#define LOGGER
-
 // Setting to determine on ESP32 whether to use SD card adapter (if present) or ESP32's internal flash.
 // SD card should always be preferred to protect the ESP32's flash from wearing down.
 uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD card, FLASH (1) = ESP32's flash memory
@@ -151,11 +140,11 @@ uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD c
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
 // Telegrams logged upon boot:
-// int logTelegram = LOGTELEGRAM_OFF; // nothing to log,
-// int logTelegram = LOGTELEGRAM_ON;  // log all telegrams,
-// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY;           // log unknown telegrams,
-// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY;         // log broadcast telegrams,
-// int logTelegram = LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWNBROADCAST_ONLY;  // log unknown broadcast telegrams only;
+// int logTelegram = LOGTELEGRAM_OFF;                                       // nothing to log,
+// int logTelegram = LOGTELEGRAM_ON;                                        // log all telegrams,
+// int logTelegram = LOGTELEGRAM_UNKNOWN_ONLY;                              // log unknown telegrams,
+// int logTelegram = LOGTELEGRAM_BROADCAST_ONLY;                            // log broadcast telegrams,
+// int logTelegram = LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY; // log unknown broadcast telegrams only;
 int logTelegram = LOGTELEGRAM_OFF;
 
 // Logging data from parameters
@@ -179,17 +168,14 @@ parameter log_parameters[40] = {
 //  {20500, -1}                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
 };
 
-#define UDP_LOG_PORT 6502        // Port to send UDP log messages to. Fixed here, not yet configurable via web interface
-
 // Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
-#define MQTT
-byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
-// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
-// rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
-char mqtt_broker_addr[33] = "192.168.178.20:1883";    // MQTT broker. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
+char mqtt_broker_addr[33] = "192.168.178.20:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
 char MQTTUsername[65] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Optional: Choose the "topic" for MQTT messages here. In case of empty string, default topic name will be used
+byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
+// rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
 
 // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
@@ -198,8 +184,6 @@ char MQTTDeviceID[32] = "BSB-LAN";
 // Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 -  send values to UDP. Can be any sum of these values.
 byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_UDP
 
-// Compile module for calculation 24h averages for selected programs
-#define AVERAGES
 // Create 24h averages from these parameters and save data into averages.txt on SD-card.
 parameter avg_parameters[40] = {
 // parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
@@ -207,22 +191,16 @@ parameter avg_parameters[40] = {
   {8326, -1}                          // Brenner-Modulation
 };
 
-// Compile module with one wire bus support.
-#define ONE_WIRE_BUS
-byte One_Wire_Pin = 0;         // Define the pin for one wire temperature sensors. 0 - disable oneWire bus
+// Define the pin for one wire temperature sensors. -1 = disable oneWire bus.
+int8_t One_Wire_Pin = -1;
 
-// Compile module with DHT temperature/humidity sensors support
-#define DHT_BUS
-// Define the pins for DHT temperature/humidity sensors (Up to 10)
-uint8_t DHT_Pins[10] = {0};
+// Define the pins for DHT temperature/humidity sensors (Up to 10). -1 = disable DHT sensor.
+int8_t DHT_Pins[10] =  {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
-// Compile module with BME280 temperature/humidity/pressure sensors support on I2C bus.
-// Up to two sensors with 0x76 and 0x77 addresses.
-#define BME280
-byte BME_Sensors = 0; //Define number of BME280 sensors
+// Define the number of BME280 temperature/humidity/pressure sensors on the I2C bus. 0 = disable BME280 sensors.
+// Up to two sensors with 0x76 and 0x77 addresses, up to 16 when using a TCA9548A I2C mulitplexer.
+byte BME_Sensors = 0;
 
-// Compile IPWE extension
-#define IPWE
 bool enable_ipwe = false;  // true - activate IPWE extension (http://xxx.xxx.xxx.xxx/ipwe.cgi)
 // Parameters to be displayed in IPWE extension
 parameter ipwe_parameters[40] = {
@@ -261,8 +239,6 @@ parameter ipwe_parameters[40] = {
 //#define D3_LIBRARY_PATH "/d3.js"
 //#define C3_LIBRARY_PATH "/c3.js"
 
-// Compile CUNO/CUNX/modified MAX!Cube extension.
-#define MAX_CUL
 bool enable_max_cul = false;                // enable or disable connection to CUNO/CUNX/modified MAX!Cube;
 byte max_cul_ip_addr[4] = {192,168,178,5};     // IP of CUNO/CUNX/modified MAX!Cube. Please use commas instead of dots!!!
 char max_device_list[20][11] = {               // list of MAX! wall/heating thermostats that should be polled
@@ -282,10 +258,11 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
  * for up to two weeks in the server's log files to allow for technical as well as abuse analaysis.
  * No other data (such as anything related to your heating system) is transmitted in this process, as you can see in the source code.
 */
-#define VERSION_CHECK
 bool enable_version_check = false;
 
-#define ENABLE_ESP32_OTA
+// Enable ESP32 over-the-air updates. 
+// Pro: You don't need to physically connect your PC to the ESP32 in order to update BSB-LAN.
+// Contra: Someone who has access to your network and finds out about BSB-LAN's username and password can install their own software on the ESP32.
 boolean enable_ota_update = false;
 
 // Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy.
@@ -293,51 +270,15 @@ boolean enable_ota_update = false;
 boolean esp32_save_energy = false;
 
 // "External" web server. Read files from SD-card. Only static content: html, js, css, jpg, etc.
-//#define WEBSERVER
-
-// Configuration will be stored in EEPROM
-#define CONFIG_IN_EEPROM
-
-// Compile web-based configuration and EEPROM config store module extension.
-#define WEBCONFIG
-
-// Compile JSON-based configuration and EEPROM config store module extension.
-#define JSONCONFIG
-
-#define RGT_EMULATOR
-parameter rgte_sensorid[3][5] = {{{0, -1}, {0, -1}, {0, -1}, {0, -1}, {0, -1}}, {{0, -1}, {0, -1}, {0, -1}, {0, -1}, {0, -1}}, {{0, -1}, {0, -1}, {0, -1}, {0, -1}, {0, -1}}}; //Temperature sensor program IDs for RGT1/PPS - RGT3. If zero then RGT will not be emulated. If more than one program set per RGT then average will be calculated and used.
-
-//Enable presence buttons and TWW/DHW push on selected pins.
-// Pins on Mega can be (Digital) 2, 3, 18, 19, 20, 21
-// On Due any Digital pins can be selected excluding 12, 16-21, 31, 33, 53.
-// Make sure you aren't using pins which are already in use for sensors (default: 2, 3, 7) or change them accordingly.
-#define BUTTONS
-uint8_t button_on_pin[4] = {0, 0, 0, 0}; //Order: TWW push, presence ROOM1, presence ROOM2, presence ROOM3
-
-// Variables for future use:
-// Compile room unit replacement extension
-#define ROOM_UNIT
-byte UdpIP[4] = {0,0,0,0}; // (destination IP address for sending UDP packets to, the room unit replacement of FHEM user @fabulous uses that)
-uint16_t UdpDelay = 15;    // (interval in seconds to send UDP packets)
-
-// Compile off-site logger extension
-#define OFF_SITE_LOGGER
-byte destinationServer[128] = "";   // URL string to periodically send values to an off-site logger
-uint16_t destinationPort = 80;      // port number for abovementioned server
-uint32_t destinationDelay = 84600;  // interval in seconds to send values
+boolean webserver = false;
 
 // Debug options
-#define DEBUG         // Compile with verbose DEBUG module if defined
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
-byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface
+byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface. Set to 2 only if you are asked by the developers as the extensive output will significantly slow down the microcontroller.
 byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
-//#define DEVELOPER_DEBUG //Very verbose debug output. This option will dramatically slow down MCU performance. Useful for developers not for users.
 
-// defines the number of retries for the query command
-#define QUERY_RETRIES  3
-
-#define CONFIG_VERSION 36
+#define CONFIG_VERSION 37
 
 /************************************************************************************/
 /************************************************************************************/

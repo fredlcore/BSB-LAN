@@ -15,11 +15,8 @@ void webPrintHeader(void) {
   flushToWebClient();
   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
   printPStr(header_html, sizeof(header_html));
-  #if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
   printPStr(header_html2, sizeof(header_html2));
-  #endif
   printPStr(header_html3, sizeof(header_html3));
-#if !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
   printToWebClient(PSTR("<a href='/"));
   printPassKey();
   printToWebClient(PSTR("' ID=main_link class='logo'>"));
@@ -87,7 +84,6 @@ void webPrintHeader(void) {
 
 //  client.println(F("<td width=20% align=center><a href='http://github.com/fredlcore/bsb_lan' target='new'>GitHub Repo</a></td>"));
   printToWebClient(PSTR("</tr></table>"));
-#endif
   printToWebClient(PSTR("<p></p><table align=center><tr><td class=\"header\">\r\n"));
   flushToWebClient();
 } // --- webPrintHeader() ---
@@ -137,7 +133,6 @@ void webPrintSite() {
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_CFG ":</b> " MENU_DESC_CFG ));
   printlnToWebClient(PSTR("<p><b>" MENU_TEXT_URL ":</b> " MENU_DESC_URL ));
 
-#ifdef VERSION_CHECK
   if (enable_version_check) {
     printlnToWebClient(PSTR("<BR><BR>" MENU_TEXT_NVS "...<BR>"));
     flushToWebClient();
@@ -185,7 +180,6 @@ void webPrintSite() {
       printlnToWebClient(PSTR(MENU_TEXT_NVN));
     }
   }
-#endif
 
   webPrintFooter();
 } // --- webPrintSite() ---

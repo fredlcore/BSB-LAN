@@ -257,26 +257,6 @@ const char CF_CHECKUPDATE_TXT[] PROGMEM = CF_CHECKUPDATE_TEXT;
 const char CF_MDNS_HOSTNAME_TXT[] PROGMEM = CF_MDNS_HOSTNAME_TEXT;
 const char CF_NUM_TXT[] PROGMEM = CF_NUM_TEXT;
 const char CF_OTA_UPDATE_TXT[] PROGMEM = CF_OTA_UPDATE_TEXT;
-#ifdef RGT_EMULATOR
-const char CF_RGT1_SENSOR_TXT[] PROGMEM = CF_RGT1_SENSOR_TEXT;
-const char CF_RGT2_SENSOR_TXT[] PROGMEM = CF_RGT2_SENSOR_TEXT;
-const char CF_RGT3_SENSOR_TXT[] PROGMEM = CF_RGT3_SENSOR_TEXT;
-#else
-const char CF_RGT1_SENSOR_TXT[] PROGMEM = "";
-const char CF_RGT2_SENSOR_TXT[] PROGMEM = "";
-const char CF_RGT3_SENSOR_TXT[] PROGMEM = "";
-#endif
-#ifdef BUTTONS
-const char CF_TWW_PUSH_PIN_TXT[] PROGMEM = CF_TWW_PUSH_PIN_TEXT;
-const char CF_RGT1_PRES_PIN_TXT[] PROGMEM = CF_RGT1_PRES_PIN_TEXT;
-const char CF_RGT2_PRES_PIN_TXT[] PROGMEM = CF_RGT2_PRES_PIN_TEXT;
-const char CF_RGT3_PRES_PIN_TXT[] PROGMEM = CF_RGT3_PRES_PIN_TEXT;
-#else
-const char CF_TWW_PUSH_PIN_TXT[] PROGMEM = "";
-const char CF_RGT1_PRES_PIN_TXT[] PROGMEM = "";
-const char CF_RGT2_PRES_PIN_TXT[] PROGMEM = "";
-const char CF_RGT3_PRES_PIN_TXT[] PROGMEM = "";
-#endif
 const char CF_RX_PIN_TXT[] PROGMEM = CF_RX_PIN_TEXT;
 const char CF_TX_PIN_TXT[] PROGMEM = CF_TX_PIN_TEXT;
 const char CF_CONFIG_LEVEL_TXT[] PROGMEM = CF_CONFIG_LEVEL_TEXT;
@@ -706,7 +686,7 @@ PROGMEM_LATE const units optbl[]={
 {VT_BYTE_N,           1.0,    6, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
 {VT_BYTE10,           10.0,   1, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
 {VT_BYTE10_N,         10.0,   6, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
-{VT_CLOSEDOPEN,       1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
+{VT_CLOSEDOPEN,       1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
 {VT_DAYS,             1.0,    1, 1, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS},
 {VT_ENUM,             1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
 {VT_BINARY_ENUM,      1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
@@ -999,11 +979,8 @@ const char ENUM_BUSTYPE[] PROGMEM_LATEST = {
 const char ENUM_LOGTELEGRAM[] PROGMEM_LATEST = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " MENU_TEXT_LAT "\0"
-"\x02 " MENU_TEXT_BUT " (" MENU_TEXT_OFF ")" "\0"
 "\x03 " MENU_TEXT_BUT "\0"
-"\x04 " MENU_TEXT_LBO " (" MENU_TEXT_OFF ")" "\0"
 "\x05 " MENU_TEXT_LBO "\0"
-"\x06 " MENU_TEXT_UBT " (" MENU_TEXT_OFF ")" "\0"
 "\x07 " MENU_TEXT_UBT
 };
 const char ENUM_DEBUG[] PROGMEM_LATEST = {
@@ -1098,16 +1075,10 @@ const char ENUM_CUSTOM11[] PROGMEM_LATEST = {
 
 //TODO: Move to translations
 const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
-"\x01\x01 " ENUM_LOGMODE_01_TEXT
-#ifdef AVERAGES
-"\0\x02\x02 " ENUM_LOGMODE_02_TEXT
-#endif
-#ifdef MQTT
-"\0\x04\x04 " ENUM_LOGMODE_04_TEXT
-#endif
-//#ifdef UDP
-"\0\x08\x08 " ENUM_LOGMODE_08_TEXT
-//#endif
+"\x01\x01 " ENUM_LOGMODE_01_TEXT "\0"
+"\x02\x02 " ENUM_LOGMODE_02_TEXT "\0"
+"\x04\x04 " ENUM_LOGMODE_04_TEXT "\0"
+"\x08\x08 " ENUM_LOGMODE_08_TEXT
 };
 
 const char ENUM_NETWORK_TYPE[] PROGMEM_LATEST = {
@@ -1118,6 +1089,12 @@ const char ENUM_NETWORK_TYPE[] PROGMEM_LATEST = {
 const char ENUM_LOG_DEST[] PROGMEM_LATEST = {
 "\x00 " ENUM_LOG_DEST_00_TEXT "\0"
 "\x01 " ENUM_LOG_DEST_01_TEXT
+};
+
+const char ENUM_VERBOSE[] PROGMEM_LATEST = {
+"\x00 " ENUM_VERBOSE_00_TEXT "\0"
+"\x01 " ENUM_VERBOSE_01_TEXT "\0"
+"\x02 " ENUM_VERBOSE_02_TEXT
 };
 
 // Keep this for legacy parameter lists
@@ -1344,7 +1321,8 @@ const char ENUM15046[] PROGMEM_LATEST = {
 
 //{CMD_END,     VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
-  //Prognr 65526 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+  //Prognr 65523 - 65534 is a dirty trick for reducing enumerations addresses to the same type
+{0xDEADBEEF,  VT_ENUM,          65523, STR65535, sizeof(ENUM_VERBOSE),      ENUM_VERBOSE,       DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  VT_ENUM,          65524, STR65535, sizeof(ENUM_LOG_DEST),     ENUM_LOG_DEST,      DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  VT_ENUM,          65525, STR65535, sizeof(ENUM_NETWORK_TYPE), ENUM_NETWORK_TYPE,  DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  VT_ENUM,          65526, STR65535, sizeof(ENUM_LOGGER_MODE),  ENUM_LOGGER_MODE,   DEFAULT_FLAG, DEV_ALL}, //
@@ -1356,5 +1334,5 @@ const char ENUM15046[] PROGMEM_LATEST = {
 {0xDEADBEEF,  VT_ENUM,          65532, STR65535, sizeof(ENUM_BUSTYPE),      ENUM_BUSTYPE,       DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  VT_ENUM,          65533, STR65535, sizeof(ENUM_ONOFF),        ENUM_ONOFF,         DEFAULT_FLAG, DEV_ALL}, //
 {0xDEADBEEF,  VT_ENUM,          65534, STR65535, sizeof(ENUM_EEPROM_ONOFF), ENUM_EEPROM_ONOFF,  DEFAULT_FLAG, DEV_ALL}, //
-{CMD_END,     VT_UNKNOWN,       65535, STR65535, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
+{CMD_END,     VT_UNKNOWN,       65535, STR65535, 0,                         NULL,               DEFAULT_FLAG, DEV_ALL}
 };

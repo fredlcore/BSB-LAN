@@ -1,5 +1,3 @@
-#ifdef IPWE
-
 /*************************** IPWE Extension **************************************/
 /** *****************************************************************
  *  Function:  Ipwe()
@@ -60,8 +58,6 @@ void Ipwe() {
     my_dev_var = save_my_dev_var;
   }
 
-
-#ifdef AVERAGES
   if (LoggingMode & CF_LOGMODE_24AVG) {
     for (int i=0; i<numAverages; i++) {
       if (avg_parameters[i].number > 0) {
@@ -78,9 +74,8 @@ void Ipwe() {
       }
     }
   }
-#endif
-#ifdef ONE_WIRE_BUS
-  if (One_Wire_Pin) {
+
+  if (One_Wire_Pin >= 0) {
     // output of one wire sensors
     for (i = 0; i < numSensors * 2; i += 2) {
       printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
@@ -94,12 +89,10 @@ void Ipwe() {
       printToWebClient(PSTR("</tr>"));
     }
   }
-#endif
-#ifdef DHT_BUS
   // output of DHT sensors
   int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
   for (i = 0; i < numDHTSensors; i++) {
-    if (!DHT_Pins[i]) continue;
+    if (DHT_Pins[i] < 0) continue;
     query(BSP_DHT22 + 1 + i * 4);
     counter++;
     printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
@@ -119,8 +112,7 @@ void Ipwe() {
     printToWebClient(STR_IPWEZERO);
     printToWebClient(PSTR("</tr>"));
   }
-#endif
   printToWebClient(PSTR("</tbody></table></form></body></html>\r\n\r\n"));
   forcedflushToWebClient();
 }
-#endif    // --- Ipwe() ---
+// --- Ipwe() ---

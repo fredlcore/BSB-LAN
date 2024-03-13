@@ -13,7 +13,6 @@ char *build_pvalstr(bool extended);
  *  Ethernet instance
  *  MQTT instance
  * *************************************************************** */
-#ifdef MQTT
 
 /* Function: mqtt_get_client_id()
  * Does: Gets the client ID to use for the MQTT connection based on the set
@@ -359,4 +358,3 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   }
 
 }
-#endif

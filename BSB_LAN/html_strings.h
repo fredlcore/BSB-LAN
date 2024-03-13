@@ -5,9 +5,6 @@ const char svg_favicon_header[] PROGMEM_LATE =
   "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20010904//EN\""
   " \"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd\">";
 const char svg_favicon[] PROGMEM_LATE =
-#if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-  "";
-#else
   "<svg class='logo' width='400pt' height='400pt' version='1.0' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>"
   "<g transform='translate(0 400) scale(.1 -.1)'>"
   "<path id='B' d='m292 3510c-61-38-62-42-62-537 0-501 0-500 70-536 32-16 69-17 445-15 399 3 411 4 451 25 102 54 151 156 141 293-6 92-35 164-95 238-37 46-41 55-31 74 23 43 39 124 39 203 0 97-27 165-86 213-70 58-100 62-488 62-334 0-353-1-384-20zm708-275c0-60-21-98-64-119-28-13-70-16-235-16h-201v-125-125h246c203 0 252-3 279-16 40-19 65-66 65-123v-41h-305-305v305 305h260 260v-45z'/>"
@@ -18,15 +15,11 @@ const char svg_favicon[] PROGMEM_LATE =
   "<path d='m212 1098c3-459 5-515 20-536 41-59 22-57 531-60l467-3v126 125h-385-385v430 430h-125-126l3-512z'/>"
   "</g>"
   "</svg>";
-#endif
 
 // The following strings contain html/css/javascript code that has been manually indented; don't let automatic indent break this!
 // *INDENT-OFF*
 
 const char favicon[] PROGMEM_LATE = {
-#if defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
-  0x00
-#else
   0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0xF3, 0xFF,
   0x61, 0x00, 0x00, 0x01, 0xDD, 0x49, 0x44, 0x41, 0x54, 0x38, 0x8D, 0xA5, 0x91, 0x3D, 0x6B, 0x22,
@@ -61,10 +54,8 @@ const char favicon[] PROGMEM_LATE = {
   0x38, 0x0E, 0x00, 0xA7, 0xD3, 0x89, 0xDF, 0x99, 0x5F, 0x39, 0x1E, 0x8F, 0x3F, 0xD7, 0xF8, 0xAF,
   0xF9, 0x02, 0x05, 0xC4, 0x09, 0xEE, 0x49, 0x43, 0x56, 0x4E, 0x00, 0x00, 0x00, 0x00, 0x49, 0x45,
   0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
-#endif
 };
 
-#if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 const char graph_html[] PROGMEM_LATE =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
@@ -428,7 +419,6 @@ const char graph_html[] PROGMEM_LATE =
 
 "</script>";
 #endif // #ifdef USE_ADVANCED_PLOT_LOG_FILE
-#endif // #if !defined(I_WILL_USE_EXTERNAL_INTERFACE) && !defined(I_DO_NOT_NEED_NATIVE_WEB_INTERFACE)
 
 const char header_html[] PROGMEM_LATE =
   "\n"

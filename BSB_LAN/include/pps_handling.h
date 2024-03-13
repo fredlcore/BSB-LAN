@@ -252,12 +252,10 @@ uint16_t pps_bus_handling(byte *msg) {
         printFmtToDebug(PSTR("%lu "), millis());
       }
       printTelegram(tx_msg, -1);
-#ifdef LOGGER
       if (!monitor) {
         LogTelegram(msg);
         LogTelegram(tx_msg);
       }
-#endif
     }
 
   } else {    // parse heating system data
@@ -288,7 +286,6 @@ uint16_t pps_bus_handling(byte *msg) {
           printToDebug(PSTR("Unknown request: "));
           SerialPrintRAW(msg, 9);
           writelnToDebug();
-#ifdef LOGGER
 /*
                 File dataFile = SD.open(journalFileName, FILE_WRITE);
                 if (dataFile) {
@@ -299,7 +296,6 @@ uint16_t pps_bus_handling(byte *msg) {
                 }
                 dataFile.close();
 */
-#endif
         break;
 /*
 Weitere noch zu überprüfende Telegramme:
@@ -471,9 +467,7 @@ ich mir da nicht)
 
     if (verbose && !monitor) {     // verbose output for PPS after time-critical sending procedure
       printTelegram(msg, -1);
-#ifdef LOGGER
       LogTelegram(msg);
-#endif
     }
   } // End parse PPS heating data
   return log_now;
@@ -503,11 +497,9 @@ void pps_query_mcba() {
       printFmtToDebug(PSTR("%lu "), millis());
     }
     printTelegram(tx_msg, -1);
-#ifdef LOGGER
     if (!monitor) {
       LogTelegram(tx_msg);
     }
-#endif
   }
   msg_cycle++;
   if (msg_cycle > 3) {
