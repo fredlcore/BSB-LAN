@@ -227,7 +227,7 @@ parameter ipwe_parameters[40] = {
 // bsb-lan unit, but omit the ".gz" from the path names you put into the following lines!
 // (*) In case you're using an ESP32's internal memory instead of an SD card, use
 // https://github.com/lorol/arduino-esp32littlefs-plugin to upload the files.
-// For local use of these libraries to work, enabling webserver functionality in /C is also required!
+// For local use of these libraries to work, enabling webserver functionality is also required!
 //#define D3_LIBRARY_PATH "/d3.js"
 //#define C3_LIBRARY_PATH "/c3.js"
 
