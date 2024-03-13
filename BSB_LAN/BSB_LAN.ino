@@ -537,6 +537,7 @@
 
 // Forward declarations
 #if defined(ESP32)
+#include <Arduino.h> // for definition of the data types uint64_t and String
 uint64_t usedBytes();
 uint64_t totalBytes();
 String scanAndConnectToStrongestNetwork();
