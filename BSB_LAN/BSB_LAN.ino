@@ -2177,15 +2177,6 @@ void generateConfigPage(void) {
   "CUSTOM_COMMANDS"
   #endif
 
-  #ifdef USE_ADVANCED_PLOT_LOG_FILE
-  #ifdef ANY_MODULE_COMPILED
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "USE_ADVANCED_PLOT_LOG_FILE"
-  #endif
-
   #ifdef WIFISPI
   #ifdef ANY_MODULE_COMPILED
   ", "
