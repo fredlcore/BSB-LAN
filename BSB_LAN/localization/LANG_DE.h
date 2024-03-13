@@ -232,7 +232,7 @@
 #define CF_WWWPORT_TEXT "TCP Port"
 #define CF_WIFI_SSID_TEXT "WLAN SSID"
 #define CF_WIFI_PASSWORD_TEXT "WLAN Passwort"
-#define CF_WEBSERVER_TEXT "Webserver SD-Karte"
+#define CF_WEBSERVER_TEXT "Webserver SD-Karte / Flash-Speicher"
 #define CF_PASSKEY_TEXT "URL Passkey"
 #define CF_BASICAUTH_TEXT "HTTP-Authentifizierung"
 #define CF_PINS_TEXT "Pins"
