@@ -34,3 +34,14 @@ This script connects to an NTP time server and writes the accurate time to the h
 ## Send room temperature based on MAX thermostats
 
 This script collects the current temperature of registered MAX! thermostats, calculates an avaerage and sends this average as the current room temperature to the heater (via parameter 10000).
+
+## Emulation of Room Unit and Presence Buttons
+
+_The pushbutton functionality will need adjustments and is not compatible out-of-the-box from version 3 onwards._  
+
+With the setup of the BSB-LAN adapter a room unit can be emulated if you add one or more sensors and push buttons.
+The following functions are implemented in the code:
+- Integration fo connected sensors for measuring and transmitting the room temperature(s) to the desired heating circuit(s)
+- Triggering a DHW push by using a pushbutton
+- Using the presence function for the heating circuits 1-3 by using a pushbutton (automatic detection of the present state with the corresponding change between comfort and reduced mode in the automatic mode).
+More details can be found in the README file in each folder.
