@@ -247,13 +247,6 @@
 #define CF_LOG_DEST_TEXT "Speicherziel"
 #define CF_LOGMODE_TEXT "Log-Modus"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
-#define CF_RGT1_SENSOR_TEXT "RGT1/PPS Temperatursensor Parameter"
-#define CF_RGT2_SENSOR_TEXT "RGT2 Temperatursensor Parameter"
-#define CF_RGT3_SENSOR_TEXT "RGT3 Temperatursensor Parameter"
-#define CF_TWW_PUSH_PIN_TEXT "TWW-Push Taste: Pin"
-#define CF_RGT1_PRES_PIN_TEXT "RGT1 Präsenztaste: Pin"
-#define CF_RGT2_PRES_PIN_TEXT "RGT2 Präsenztaste: Pin"
-#define CF_RGT3_PRES_PIN_TEXT "RGT3 Präsenztaste: Pin"
 #define CF_MDNS_HOSTNAME_TEXT "mDNS Hostname"
 #define CF_NUM_TEXT "Sensoren"
 #define CF_OTA_UPDATE_TEXT "OTA Update"
@@ -2262,6 +2255,10 @@
 
 #define ENUM_LOG_DEST_00_TEXT "SD-Karte"
 #define ENUM_LOG_DEST_01_TEXT "Interner Flash-Speicher"
+#define ENUM_VERBOSE_00_TEXT MENU_TEXT_OFF
+#define ENUM_VERBOSE_01_TEXT MENU_TEXT_ON
+#define ENUM_VERBOSE_02_TEXT "Entwickler"
+
 
 #define ENUM_NETWORK_TYPE_00_TEXT "LAN"
 #define ENUM_NETWORK_TYPE_01_TEXT "WiFi"

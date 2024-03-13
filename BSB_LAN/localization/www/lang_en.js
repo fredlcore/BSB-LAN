@@ -201,19 +201,15 @@ UIStrings["CF_MQTT_DEVICE_TEXT"] = "Device ID";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
 UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
-UIStrings["CF_RGT1_SENSOR_TEXT"] = "RU1/PPS temperature sensor parameter";
-UIStrings["CF_RGT2_SENSOR_TEXT"] = "RU2 temperature sensor parameter";
-UIStrings["CF_RGT3_SENSOR_TEXT"] = "RU3 temperature sensor parameter";
-UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "DHW push button: pin";
-UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "RU1 presence button: pin";
-UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RU2 presence button: pin";
-UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RU3 presence button: pin";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
 UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 energy saving";
 UIStrings["CF_LOG_DEST_TEXT"] = "Storage device";
 
 UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD card";
 UIStrings["ENUM_LOG_DEST_01_TEXT"] = "Internal flash storage";
+#define ENUM_VERBOSE_00_TEXT MENU_TEXT_OFF
+#define ENUM_VERBOSE_01_TEXT MENU_TEXT_ON
+UIStrings["ENUM_VERBOSE_02_TEXT"] = "Developer";
 
 UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";

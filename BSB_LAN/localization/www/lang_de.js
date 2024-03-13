@@ -247,13 +247,6 @@ UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
 UIStrings["CF_LOG_DEST_TEXT"] = "Speicherziel";
 UIStrings["CF_LOGMODE_TEXT"] = "Log-Modus";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
-UIStrings["CF_RGT1_SENSOR_TEXT"] = "RGT1/PPS Temperatursensor Parameter";
-UIStrings["CF_RGT2_SENSOR_TEXT"] = "RGT2 Temperatursensor Parameter";
-UIStrings["CF_RGT3_SENSOR_TEXT"] = "RGT3 Temperatursensor Parameter";
-UIStrings["CF_TWW_PUSH_PIN_TEXT"] = "TWW-Push Taste: Pin";
-UIStrings["CF_RGT1_PRES_PIN_TEXT"] = "RGT1 Präsenztaste: Pin";
-UIStrings["CF_RGT2_PRES_PIN_TEXT"] = "RGT2 Präsenztaste: Pin";
-UIStrings["CF_RGT3_PRES_PIN_TEXT"] = "RGT3 Präsenztaste: Pin";
 UIStrings["CF_MDNS_HOSTNAME_TEXT"] = "mDNS Hostname";
 UIStrings["CF_NUM_TEXT"] = "Sensoren";
 UIStrings["CF_OTA_UPDATE_TEXT"] = "OTA Update";
@@ -2262,6 +2255,10 @@ UIStrings["ENUM_LOGMODE_08_TEXT"] = "Als UDP-Nachrichten senden";
 
 UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD-Karte";
 UIStrings["ENUM_LOG_DEST_01_TEXT"] = "Interner Flash-Speicher";
+#define ENUM_VERBOSE_00_TEXT MENU_TEXT_OFF
+#define ENUM_VERBOSE_01_TEXT MENU_TEXT_ON
+UIStrings["ENUM_VERBOSE_02_TEXT"] = "Entwickler";
+
 
 UIStrings["ENUM_NETWORK_TYPE_00_TEXT"] = "LAN";
 UIStrings["ENUM_NETWORK_TYPE_01_TEXT"] = "WiFi";
