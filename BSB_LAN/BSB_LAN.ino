@@ -463,9 +463,11 @@
  *
  */
 
- #if defined(__AVR__)
- #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
- #endif
+#if defined(__AVR__)
+#error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
+#endif
+
+#include <Arduino.h>
 
 #define LOGTELEGRAM_OFF 0
 #define LOGTELEGRAM_ON 1
@@ -565,7 +567,6 @@ typedef struct {
   short int dest_addr;
 } parameter;
 
-#include <Arduino.h>
 #include "src/Base64/src/Base64.h"
 
 //#include "src/BSB/BSBSoftwareSerial.h"
