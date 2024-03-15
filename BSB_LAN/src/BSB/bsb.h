@@ -13,6 +13,10 @@
 //#include "util/crc16.h"
 #endif
 
+#define BUS_OK 1
+#define BUS_NOTFREE -1
+#define BUS_NOMATCH -2
+
 // See this page for further details:
 // http://www.mikrocontroller.net/topic/218643
 /*

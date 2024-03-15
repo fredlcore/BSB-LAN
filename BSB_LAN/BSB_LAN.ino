@@ -5456,7 +5456,7 @@ void loop() {
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             timeout = millis() + 3000;
-            while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK 0 && (millis() < timeout)) {
+            while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
               delay(500);
