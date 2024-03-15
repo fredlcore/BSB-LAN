@@ -79,6 +79,7 @@
 #define FL_OEM          8   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
 #define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
 #define FL_EEPROM       32  // Flag to determine whether value should be written to EEPROM
+#define FL_QINF_ONLY    64  // Flag to determine whether parameter needs to be queried via TYP_QUR or TYP_QINF (so far applies to Weishaupt only)
 #define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 /* heating systems */
 

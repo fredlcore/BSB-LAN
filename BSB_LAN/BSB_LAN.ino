@@ -3548,7 +3548,11 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_CUSTOM_ENUM:
     {
       uint8_t t=atoi(val);
-      bus->Send(TYPE_QINF, c, msg, tx_msg);
+      int8_t return_value = bus->Send(TYPE_QINF, c, msg, tx_msg);
+      if (return_value < 0) {
+        printlnToWebClient("No response to initial query, cannot get required data, aborting.");
+        printFmtToDebug("Error: %d", return_value);
+      }
       int data_len;
       if (bus->getBusType() == BUS_LPB) {
         data_len=msg[bus->getLen_idx()]-14;     // get packet length, then subtract
@@ -4126,7 +4130,11 @@ void query(float line) {  // line (ProgNr)
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
         while (retry) {
+          uint8_t flags = get_cmdtbl_flags(i);
           uint8_t query_type = TYPE_QUR;
+          if (flags & FL_QINF_ONLY) {
+            query_type = TYPE_QINF;
+          }
           if (bus->Send(query_type, c, msg, tx_msg) == 1) {
             // Decode the xmit telegram and send it to the PC serial interface
             if (verbose) {
