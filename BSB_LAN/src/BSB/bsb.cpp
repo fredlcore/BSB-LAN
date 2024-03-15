@@ -348,7 +348,7 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 }
 
 // Low-Level sending of message to bus
-inline bool BSB::_send(byte* msg) {
+inline int8_t BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
   byte data, len;
   if (bus_type != 2) {
@@ -401,7 +401,7 @@ inline bool BSB::_send(byte* msg) {
   waitfree = random(1,20) + 3 + 59; // range 63 .. 82 ms, BSB mimimum delay between telegrams is 59 ms (25 for LPB -> miwi), plus duration of one full (32 bytes) telegram (3 ms), plus random amount of 1-20 ms.
   { // block begins
     if(millis()-start_timer > timeoutabort){  // one second has elapsed
-      return false;
+      return -1;
     }
     if (bus_type != 2) {
       unsigned long timeout = millis();
@@ -503,7 +503,7 @@ Ob damit weiterhin eine Bus-Kollisionserkennung möglich ist, muss noch geprüft
         char c = readByte();
         c = c;
       }
-      return true;  // In case we emulate a DC225, we are regularly sending single byte (0x17) messages, so abort loop after first byte.
+      return 1;  // In case we emulate a DC225, we are regularly sending single byte (0x17) messages, so abort loop after first byte.
     }
 /*
 //    if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read())) {  // Test RX pin (logical 1 is 0 with HardwareSerial and 1 with SoftwareSerial inverted)
@@ -555,10 +555,10 @@ Ob damit weiterhin eine Bus-Kollisionserkennung möglich ist, muss noch geprüft
     sei();
 #endif
   }
-  return true;
+  return 1;
 }
 
-bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
+int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
   byte i;
   byte offset = 0;
 
@@ -619,8 +619,9 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       tx_msg[9+i] = param[i];
     }
   }
-  if(!_send(tx_msg)) return false;
-  if(!wait_for_reply) return true;
+  int8_t return_value = _send(tx_msg);
+  if(return_value =! 1) return return_value;
+  if(!wait_for_reply) return return_value;
 
   i=15;
 
@@ -634,7 +635,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
       i--;
       byte msg_type = rx_msg[4+(bus_type*4)];
       if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type=0x14 && msg_type == 0x15))) {
-        return true;
+        return 1;
       }
       if (bus_type == 1) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
@@ -643,7 +644,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 	}
 */
         if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
-          return true;
+          return 1;
 	      } else {
 #if DEBUG_LL
           Serial.println(F("Message received, but not for us:"));
@@ -652,7 +653,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
         }
       } else {
         if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
-          return true;
+          return 1;
 	      } else {
 #if DEBUG_LL
           Serial.println(F("Message received, but not for us:"));
@@ -669,7 +670,7 @@ bool BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* par
 #endif
   print(tx_msg);
 
-  return false;
+  return -2;
 }
 
 bool BSB::rx_pin_read() {  // not tested if this will work on ESP32
