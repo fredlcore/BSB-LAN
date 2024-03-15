@@ -629,6 +629,7 @@ EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
   #define strchr_P strchr
 #else
   #ifdef WIFISPI
+    #warning "Support for WiFi on Arduino Due may be removed in future versions. Please inform Frederik (bsb (ät) code-it.de) that you are still using it."
     #include "src/WiFiSpi/src/WiFiSpiUdp.h"
 WiFiSpiUdp udp, udp_log;
   #else
@@ -6629,7 +6630,7 @@ next_parameter:
       loopCount++;
       if (loopCount > 1000) {
         client.stop();
-        printlnToDebug(PSTR("\r\nTimeout"));
+        printlnToDebug(PSTR("\r\nBrowser keeps connection open without sending data, so we're closing now..."));
       }
 
     }
