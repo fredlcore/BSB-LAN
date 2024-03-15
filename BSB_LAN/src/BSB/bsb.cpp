@@ -620,7 +620,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
     }
   }
   int8_t return_value = _send(tx_msg);
-  if(return_value =! 1) return return_value;
+  if(return_value != 1) return return_value;
   if(!wait_for_reply) return return_value;
 
   i=15;
