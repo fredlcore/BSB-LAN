@@ -469,6 +469,10 @@
 
 #include <Arduino.h>
 
+#define BUS_OK 1
+#define BUS_NOTFREE -1
+#define BUS_NOMATCH -2
+
 #define LOGTELEGRAM_OFF 0
 #define LOGTELEGRAM_ON 1
 #define LOGTELEGRAM_UNKNOWN_ONLY 2
@@ -3550,7 +3554,7 @@ int set(float line      // the ProgNr of the heater parameter
     {
       uint8_t t=atoi(val);
       int8_t return_value = bus->Send(TYPE_QINF, c, msg, tx_msg);
-      if (return_value < 0) {
+      if (return_value != BUS_OK) {
         printlnToWebClient("No response to initial query, cannot get required data, aborting.");
         printFmtToDebug("Error: %d", return_value);
       }
@@ -3610,7 +3614,7 @@ int set(float line      // the ProgNr of the heater parameter
              , tx_msg      // xmit buffer
              , param       // payload
              , param_len   // payload length
-             , setcmd) < 0)    // wait_for_reply
+             , setcmd) != BUS_OK)    // wait_for_reply
   {
     printFmtToDebug(PSTR("set failed\r\n"));
     return 0;
@@ -3665,7 +3669,7 @@ int queryDefaultValue(float line, byte *msg, byte *tx_msg) {
     decodedTelegram.error = 258; //not found
     return 0;
   } else {
-    if (bus->Send(TYPE_QRV, c, msg, tx_msg) < 0) {
+    if (bus->Send(TYPE_QRV, c, msg, tx_msg) != BUS_OK) {
       decodedTelegram.error = 261; //query failed
       return 0;
     } else {
@@ -4136,7 +4140,7 @@ void query(float line) {  // line (ProgNr)
           if (flags & FL_QINF_ONLY) {
             query_type = TYPE_QINF;
           }
-          if (bus->Send(query_type, c, msg, tx_msg) == 1) {
+          if (bus->Send(query_type, c, msg, tx_msg) == BUS_OK) {
             // Decode the xmit telegram and send it to the PC serial interface
             if (verbose) {
               printTelegram(tx_msg, line);
@@ -4350,7 +4354,7 @@ void SetDateTime() {
   if (bus->getBusType() != BUS_PPS) {
     findLine(0,0,&c);
     if (c!=CMD_UNKNOWN) {     // send only valid command codes
-      if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg) == 1) {
+      if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg) == BUS_OK) {
         if (bus->getBusType() == BUS_LPB) {
           setTime(rx_msg[18], rx_msg[19], rx_msg[20], rx_msg[16], rx_msg[15], rx_msg[14]+1900);
         } else {
@@ -5300,7 +5304,7 @@ void loop() {
           flushToWebClient();
 
           uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-          if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false) == 1) {
+          if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false) == BUS_OK) {
             printTelegram(tx_msg, -1);
             unsigned long startquery = millis();
             while (millis() - startquery < 10000) {
@@ -5397,7 +5401,7 @@ void loop() {
 #endif
                 if (((dev_fam != temp_dev_fam && dev_fam != DEV_FAM(DEV_ALL)) || (dev_var != temp_dev_var && dev_var != DEV_VAR(DEV_ALL))) && c!=CMD_UNKNOWN) {
                   printFmtToDebug(PSTR("%02X\r\n"), c);
-                  if (bus->Send(TYPE_QUR, c, msg, tx_msg) < 0) {
+                  if (bus->Send(TYPE_QUR, c, msg, tx_msg) != BUS_OK) {
                     print_bus_send_failed();
                   } else {
                     if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
@@ -5441,7 +5445,7 @@ void loop() {
             c = 0;
             int outBufLen = strlen(outBuf);
             unsigned long timeout = millis() + 3000;
-            while (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) < 0 && (millis() < timeout)) {
+            while (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
               delay(500);
@@ -5452,7 +5456,7 @@ void loop() {
             printToWebClient(outBuf + outBufLen);
             printToWebClient(PSTR("\r\n"));
             timeout = millis() + 3000;
-            while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) < 0 && (millis() < timeout)) {
+            while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK 0 && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
               delay(500);
@@ -5464,7 +5468,7 @@ void loop() {
             printToWebClient(PSTR("\r\n"));
             flushToWebClient();
             timeout = millis() + 3000;
-            while (bus->Send(TYPE_IQ1, c, msg, tx_msg) < 0 && (millis() < timeout)) {
+            while (bus->Send(TYPE_IQ1, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
               printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
@@ -5475,7 +5479,7 @@ void loop() {
             int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
             if (msg[4+bus->getBusType()*4] == 0x13 && IA1_max > 0) {
               timeout = millis() + 3000;
-              while (bus->Send(TYPE_IQ2, c, msg, tx_msg) < 0 && (millis() < timeout)) {
+              while (bus->Send(TYPE_IQ2, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                 printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
                 delay(500);
               }
@@ -5487,7 +5491,7 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 3000;
-                while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) < 0 && (millis() < timeout)) {
+                while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                   printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
                   delay(500);
                 }
@@ -5501,7 +5505,7 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 3000;
-                while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) < 0 && (millis() < timeout)) {
+                while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                   printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
                   delay(500);
                 }
@@ -5538,7 +5542,7 @@ void loop() {
               }
             }
             int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
-            if (return_value < 0) {
+            if (return_value != BUS_OK) {
               print_bus_send_failed();
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
