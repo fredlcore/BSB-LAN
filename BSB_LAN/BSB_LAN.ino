@@ -3604,7 +3604,7 @@ int set(float line      // the ProgNr of the heater parameter
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
 
   if ((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {
-    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FF00) | (c & 0x000000FF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
+    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
   }
 
   // Send telegram to the bus
@@ -4113,6 +4113,14 @@ void query(float line) {  // line (ProgNr)
 #endif
 
   i=findLine(line,0,&c);
+  uint8_t query_type = TYPE_QUR;
+  uint8_t flags = get_cmdtbl_flags(i);
+  if (flags & FL_QINF_ONLY) {
+    query_type = TYPE_QINF;
+    if (flags & FL_SPECIAL_INF) {
+      c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
+    }
+  }
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
     uint8_t flags = get_cmdtbl_flags(i);
@@ -4135,10 +4143,6 @@ void query(float line) {  // line (ProgNr)
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
         while (retry) {
-          uint8_t query_type = TYPE_QUR;
-          if (get_cmdtbl_flags(i) & FL_QINF_ONLY) {
-            query_type = TYPE_QINF;
-          }
           if (bus->Send(query_type, c, msg, tx_msg) == BUS_OK) {
             // Decode the xmit telegram and send it to the PC serial interface
             if (verbose) {
