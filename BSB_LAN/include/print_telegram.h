@@ -718,6 +718,10 @@ void printTelegram(byte* msg, float query_line) {
   if (query_line != -1) {
     while (1) {
       i = findLine(query_line,i,&c);
+      uint8_t dev_flags = get_cmdtbl_flags(i);
+      if (dev_flags & FL_SPECIAL_INF) {
+        c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
+      }
       if (i != -1) {
         if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF)) {
           save_i = i;
@@ -736,10 +740,13 @@ void printTelegram(byte* msg, float query_line) {
     c=get_cmdtbl_cmd(i);
     line = get_cmdtbl_line(i);
     while (c!=CMD_END) {
+      uint8_t dev_flags = get_cmdtbl_flags(i);
+      if (dev_flags & FL_SPECIAL_INF) {
+        c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
+      }
       if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
-        uint8_t dev_flags = get_cmdtbl_flags(i);
         match_line = get_cmdtbl_line(i);
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
           if (dev_fam == my_dev_fam && dev_var == my_dev_var) {

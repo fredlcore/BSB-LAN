@@ -4114,16 +4114,13 @@ void query(float line) {  // line (ProgNr)
 
   i=findLine(line,0,&c);
   uint8_t query_type = TYPE_QUR;
-  uint8_t flags = get_cmdtbl_flags(i);
-  if (flags & FL_QINF_ONLY) {
+  uint8_t dev_flags = get_cmdtbl_flags(i);
+  if (dev_flags & FL_SPECIAL_INF) {
     query_type = TYPE_QINF;
-    if (flags & FL_SPECIAL_INF) {
-      c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
-    }
+    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
   }
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
-    uint8_t flags = get_cmdtbl_flags(i);
     if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
       printFmtToDebug(PSTR("%g "), line);
       loadCategoryDescAddr();
@@ -4139,7 +4136,7 @@ void query(float line) {  // line (ProgNr)
       return;
     }
     //printlnToDebug(PSTR("found"));
-    if (c!=CMD_UNKNOWN && (flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
+    if (c!=CMD_UNKNOWN && (dev_flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
         while (retry) {
