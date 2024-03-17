@@ -4135,9 +4135,8 @@ void query(float line) {  // line (ProgNr)
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
         while (retry) {
-          uint8_t flags = get_cmdtbl_flags(i);
           uint8_t query_type = TYPE_QUR;
-          if (flags & FL_QINF_ONLY) {
+          if (get_cmdtbl_flags(i) & FL_QINF_ONLY) {
             query_type = TYPE_QINF;
           }
           if (bus->Send(query_type, c, msg, tx_msg) == BUS_OK) {
