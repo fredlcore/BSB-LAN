@@ -3553,7 +3553,11 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_CUSTOM_ENUM:
     {
       uint8_t t=atoi(val);
-      int8_t return_value = bus->Send(TYPE_QINF, c, msg, tx_msg);
+      uint32_t c_temp = c;
+      if ((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {
+        c_temp=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);  // Bytes 1+2 of CoID will be swapped for QINF command, but need to remain as-is for FL_SPECIAL_INF parameters, so swap here again.
+      }
+      int8_t return_value = bus->Send(TYPE_QINF, c_temp, msg, tx_msg);
       if (return_value != BUS_OK) {
         printlnToWebClient("No response to initial query, cannot get required data, aborting.");
         printFmtToDebug("Error: %d", return_value);
@@ -3602,10 +3606,6 @@ int set(float line      // the ProgNr of the heater parameter
   writelnToDebug();
 
   uint8_t t=setcmd?TYPE_SET:TYPE_INF;
-
-  if ((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {
-    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
-  }
 
   // Send telegram to the bus
   if (bus->Send(t           // message type
@@ -4117,7 +4117,7 @@ void query(float line) {  // line (ProgNr)
   uint8_t dev_flags = get_cmdtbl_flags(i);
   if (dev_flags & FL_SPECIAL_INF) {
     query_type = TYPE_QINF;
-    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // because send reverses first two bytes, reverse here already to take care of special inf telegrams that don't reverse first two bytes
+    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
   }
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
