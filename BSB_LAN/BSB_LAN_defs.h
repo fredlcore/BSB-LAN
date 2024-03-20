@@ -77,10 +77,11 @@
 #define FL_WONLY        2
 #define FL_NO_CMD       4
 #define FL_OEM          8   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
-#define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that reverse first two bytes (like room temperature) and those who don't (like outside temperature)
+#define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that directly start with the payload (like room temperature) and those who don't (like outside temperature)
 #define FL_EEPROM       32  // Flag to determine whether value should be written to EEPROM
-#define FL_QINF_ONLY    64  // Flag to determine whether parameter needs to be queried via TYP_QUR or TYP_QINF (so far applies to Weishaupt only)
-#define FL_SW_CTL_RONLY 128 //Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
+#define FL_QINF_ONLY    64  // Flag to determine whether parameter needs to be queried via TYP_QUR or TYP_QINF
+#define FL_SW_CTL_RONLY 128 // Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
+#define FL_NOSWAP_QUR   256 // Do not swap first two bytes for QUR telegram
 /* heating systems */
 
 #define DEV_021_ALL  21,255 // RVL470
@@ -488,7 +489,7 @@ typedef struct {
   const char  *desc;               // description test
   uint16_t    enumstr_len;         // sizeof enum
   const char  *enumstr;            // enum string
-  uint8_t     flags;               // e.g. FL_RONLY
+  uint16_t    flags;               // e.g. FL_RONLY
   uint8_t     dev_fam;             // device family
   uint8_t     dev_var;             // device variant
 //  uint32_t    devices;           // e.g. DEV_ALL, DEV_097_ALL, DEV_162_ALL+DEV_163_ALL, DEV_ALL-DEV_097_ALL
