@@ -718,7 +718,7 @@ void printTelegram(byte* msg, float query_line) {
   if (query_line != -1) {
     while (1) {
       i = findLine(query_line,i,&c);
-      uint8_t dev_flags = get_cmdtbl_flags(i);
+      uint16_t dev_flags = get_cmdtbl_flags(i);
       if (dev_flags & FL_SPECIAL_INF) {
         c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
       }
@@ -741,7 +741,7 @@ void printTelegram(byte* msg, float query_line) {
     line = get_cmdtbl_line(i);
     while (c!=CMD_END) {
       if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
-        uint8_t dev_flags = get_cmdtbl_flags(i);
+        uint16_t dev_flags = get_cmdtbl_flags(i);
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
         match_line = get_cmdtbl_line(i);

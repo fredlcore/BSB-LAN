@@ -325,7 +325,7 @@ ich mir da nicht)
         }
         i--;
       }
-      uint8_t flags=get_cmdtbl_flags(i);
+      uint16_t flags=get_cmdtbl_flags(i);
       if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && pps_time_received == false)) {
         switch (msg[1+pps_offset]) {
           case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein

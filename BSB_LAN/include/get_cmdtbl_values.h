@@ -103,6 +103,6 @@ inline uint8_t get_cmdtbl_dev_var(int i) {
   return cmdtbl[i].dev_var;
 }
 
-inline uint8_t get_cmdtbl_flags(int i) {
+inline uint16_t get_cmdtbl_flags(int i) {
   return cmdtbl[i].flags;
 }

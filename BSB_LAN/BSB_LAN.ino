@@ -1407,7 +1407,7 @@ int findLine(float line
     c = get_cmdtbl_cmd(i);
     uint8_t dev_fam = get_cmdtbl_dev_fam(i);
     uint8_t dev_var = get_cmdtbl_dev_var(i);
-    uint8_t dev_flags = get_cmdtbl_flags(i);
+    uint16_t dev_flags = get_cmdtbl_flags(i);
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n"), l, dev_fam, dev_var, dev_flags);
 
     if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
@@ -1571,7 +1571,7 @@ void EEPROM_dump() {
   }
 }
 
-bool programIsreadOnly(uint8_t param_len) {
+bool programIsreadOnly(uint16_t param_len) {
   if ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY) { //software-controlled
     switch (programWriteMode) {
       case 0: return true; //All read-only.
@@ -1607,7 +1607,7 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.enumstr_len=get_cmdtbl_enumstr_len(i);
   //calc_enum_offset() MUST be after decodedTelegram.type = get_cmdtbl_type() because depend from it (VT_CUSTOM_BIT)
   decodedTelegram.enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), decodedTelegram.enumstr_len, decodedTelegram.type == VT_CUSTOM_BIT?1:0);
-  uint8_t flags=get_cmdtbl_flags(i);
+  uint16_t flags=get_cmdtbl_flags(i);
   if (programIsreadOnly(flags)) {
     decodedTelegram.readwrite = FL_RONLY; //read only
   } else if ((flags & FL_WONLY) == FL_WONLY) {
@@ -3162,7 +3162,7 @@ int set(float line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 
-    uint8_t flags=get_cmdtbl_flags(i);
+    uint16_t flags=get_cmdtbl_flags(i);
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
 //    if(EEPROM_ready && (allow_write_pps_values[cmd_no / 8] & (1 << (cmd_no % 8)))) {
       printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
@@ -4110,7 +4110,7 @@ void query(float line) {  // line (ProgNr)
 
   i=findLine(line,0,&c);
   uint8_t query_type = TYPE_QUR;
-  uint8_t dev_flags = get_cmdtbl_flags(i);
+  uint16_t dev_flags = get_cmdtbl_flags(i);
   if (dev_flags & FL_QINF_ONLY) {
     query_type = TYPE_QINF;
   }
@@ -7613,7 +7613,7 @@ void setup() {
     int l = findLine(15000+i,temp_idx,&temp_c);
     if (l==-1) continue;
     // fill bitwise array with flags
-    uint8_t flags=get_cmdtbl_flags(l);
+    uint16_t flags=get_cmdtbl_flags(l);
     if ((flags & FL_EEPROM) == FL_EEPROM) {
       allow_write_pps_values[i / 8] |= (1 << (i % 8));
     }
