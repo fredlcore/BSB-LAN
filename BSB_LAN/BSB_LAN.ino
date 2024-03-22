@@ -4894,7 +4894,6 @@ void loop() {
         if (!strcmp_P(cLineBuffer, PSTR("/favicon.svg"))) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient(PSTR("\r\n"));
-          printPStr(svg_favicon_header, sizeof(svg_favicon_header));
           printPStr(svg_favicon, sizeof(svg_favicon));
           flushToWebClient();
           break;
