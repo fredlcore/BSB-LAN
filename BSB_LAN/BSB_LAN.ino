@@ -1993,10 +1993,6 @@ void UpdateMaxDeviceList() {
   writeToEEPROM(CF_MAX_DEVADDR);
 }
 
-void print_bus_send_failed(void) {
-  printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
-}
-
 void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
   for (uint16_t x=0;x<outstr_len-1;x++) {
     bigBuff[bigBuffPos] = pgm_read_byte_far(outstr+x);
@@ -5400,7 +5396,7 @@ void loop() {
                 if (((dev_fam != temp_dev_fam && dev_fam != DEV_FAM(DEV_ALL)) || (dev_var != temp_dev_var && dev_var != DEV_VAR(DEV_ALL))) && c!=CMD_UNKNOWN) {
                   printFmtToDebug(PSTR("%02X\r\n"), c);
                   if (bus->Send(TYPE_QUR, c, msg, tx_msg) != BUS_OK) {
-                    print_bus_send_failed();
+                    printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
                   } else {
                     if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
                       // Decode the xmit telegram and send it to the PC serial interface
@@ -5541,7 +5537,7 @@ void loop() {
             }
             int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
             if (return_value != BUS_OK) {
-              print_bus_send_failed();
+              printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
               printTelegram(tx_msg, -1);
