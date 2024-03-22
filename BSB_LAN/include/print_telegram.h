@@ -719,10 +719,7 @@ void printTelegram(byte* msg, float query_line) {
     while (1) {
       i = findLine(query_line,i,&c);
       uint16_t dev_flags = get_cmdtbl_flags(i);
-      if (dev_flags & FL_NOSWAP_QUR) {
-        c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
-      }
-      if (dev_flags & FL_SPECIAL_INF) {
+      if (dev_flags & FL_NOSWAP_QUR) {  // if the QUR telegram is modified (in the sense that the first two bytes are not swapped), then the ANS telegram is also affected in the same way (i.e. the first two bytes are swapped here)
         c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
       }
       if (i != -1) {
