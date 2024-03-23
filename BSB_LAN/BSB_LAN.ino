@@ -691,6 +691,9 @@ public:
     bool begin(uint8_t *mac) {
       return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
     }
+    bool connected() {
+      return WiFiGenericClass::getStatusBits() & ETH_CONNECTED_BIT;
+    }
 };
 
 Eth Ethernet;
@@ -7264,8 +7267,12 @@ void netEvent(WiFiEvent_t event) {
       }
       break;
     case ARDUINO_EVENT_ETH_GOT_IP:
-      SerialOutput->print("Ethernet got IP: ");
-      SerialOutput->println(ETH.localIP());
+      SerialOutput->print(F("Ethernet got IP: "));
+      SerialOutput->print(ETH.localIP());
+      SerialOutput->print(F(" netmask: "));
+      SerialOutput->print(ETH.subnetMask());
+      SerialOutput->print(F(" gateway: "));
+      SerialOutput->println(ETH.gatewayIP());
       break;
     case ARDUINO_EVENT_ETH_DISCONNECTED:
       SerialOutput->println("Ethernet disconnected.");
@@ -7739,10 +7746,10 @@ void setup() {
 
   printToDebug("Starting network connection via ");
   switch (network_type) {
-    case LAN:  printlnToDebug("Ethernet/LAN"); break;
-    case WLAN: printlnToDebug("WiFi/WLAN"); break;
+    case LAN:  printToDebug(PSTR("Ethernet/LAN")); break;
+    case WLAN: printToDebug(PSTR("WiFi/WLAN")); break;
   }
-  printToDebug("...\r\n");
+  printlnToDebug(PSTR("..."));
 #if defined(ESP32)
   WiFi.onEvent(netEvent);
 #endif
@@ -7786,11 +7793,7 @@ void setup() {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
     if (network_type == LAN) {
-#if defined(ESP32)
-      if (!Ethernet.begin(mac, ip, dnsserver, gateway, subnet)) createTemporaryAP(); //Static IP
-#else
       Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static IP
-#endif
     } else {
 #if defined(ESP32)
       WiFi.config(ip, gateway, subnet, dnsserver);
@@ -7800,23 +7803,30 @@ void setup() {
     }
   } else {
     if (network_type == LAN) {
-#if defined(ESP32)
-      if (!Ethernet.begin(mac)) createTemporaryAP();    // DHCP
-#else
-      Ethernet.begin(mac);    // DHCP
-#endif
-      printToDebug("Waiting for DHCP address");
-      unsigned long timeout = millis();
-      while (!Ethernet.localIP() && millis() - timeout < 20000) {
-        printToDebug(".");
-        delay(100);
+      if (Ethernet.begin(mac)) {  // DHCP
+        if (!Ethernet.localIP()) {
+          printToDebug(PSTR("Waiting for DHCP address"));
+          unsigned long timeout = millis();
+          while (!Ethernet.localIP() && millis() - timeout < 20000) {
+              printToDebug(PSTR("."));
+              delay(100);
+          }
+          writelnToDebug();
+        }
       }
-      writelnToDebug();
     }
   }
+
+#if defined(ESP32)
+  if (network_type == LAN && !Ethernet.connected()) createTemporaryAP();
+#endif
+
   if (network_type == LAN) {
-    SerialOutput->println(Ethernet.localIP());
-    SerialOutput->println(Ethernet.subnetMask());
+    SerialOutput->print(F("IP: "));
+    SerialOutput->print(Ethernet.localIP());
+    SerialOutput->print(F(" netmask: "));
+    SerialOutput->print(Ethernet.subnetMask());
+    SerialOutput->print(F(" gateway: "));
     SerialOutput->println(Ethernet.gatewayIP());
   } else {
 #if defined(ESP32) || defined(WIFISPI)
@@ -7871,7 +7881,7 @@ void setup() {
   }
 #endif
 
-  printToDebug("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n");
+  printlnToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready..."));
   // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
