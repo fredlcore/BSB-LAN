@@ -6852,7 +6852,7 @@ next_parameter:
       lastAvgTime = millis() / 60000;
 
       // write averages to SD card to protect from power off
-      if ((LoggingMode && CF_LOGMODE_SD_CARD) && avg_parameters[0].number > 0) { //write averages if at least one value is set
+      if ((LoggingMode & CF_LOGMODE_SD_CARD) && avg_parameters[0].number > 0) { //write averages if at least one value is set
         File avgfile = SDCard.open(averagesFileName, FILE_WRITE);
         if (avgfile) {
           avgfile.seek(0);
@@ -7629,7 +7629,7 @@ void setup() {
     pps_values[PPS_RTI] = 0;
   }
 
-  if (LoggingMode && CF_LOGMODE_SD_CARD) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD) {
     startLoggingDevice();
   } else {
 #ifndef ESP32
@@ -7772,7 +7772,7 @@ void setup() {
   if (save_debug_mode == 2) telnetServer = new ComServer(23);
 
 #ifndef ESP32
-  if (!(LoggingMode && CF_LOGMODE_SD_CARD)) {
+  if (!(LoggingMode & CF_LOGMODE_SD_CARD)) {
     digitalWrite(10,HIGH);
   }
 #endif
@@ -7805,7 +7805,7 @@ void setup() {
     }
   }
 
-  if (LoggingMode && CF_LOGMODE_SD_CARD) {
+  if (LoggingMode & CF_LOGMODE_SD_CARD) {
     printToDebug(PSTR("Calculating free space on SDCard..."));
     uint32_t m = millis();
 #if !defined(ESP32)
@@ -7896,7 +7896,7 @@ void setup() {
 #endif
 
 // restore average
-  if (LoggingMode && CF_LOGMODE_24AVG && CF_LOGMODE_SD_CARD) {
+  if (LoggingMode & CF_LOGMODE_24AVG || LoggingMode & CF_LOGMODE_SD_CARD) {
     if (SDCard.exists(averagesFileName)) {
       File avgfile = SDCard.open(averagesFileName, FILE_READ);
       if (avgfile) {
