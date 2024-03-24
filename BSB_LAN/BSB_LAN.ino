@@ -7320,6 +7320,7 @@ void setup() {
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 #endif
 
+  delay(1000); // wait USB serial connection to establish
   SerialOutput->println(F("READY"));
 
 #if defined(__arm__)
