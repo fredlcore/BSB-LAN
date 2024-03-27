@@ -5530,17 +5530,15 @@ void loop() {
             uint8_t counter = 13;
             if (p[counter] == ',') {
               counter++;
-              while (p[counter] && p[counter+1]) {
-                if (p[counter == '!']) {
-                  tempDestAddr = atoi(&p[counter+1]);
-                  set_temp_destination(tempDestAddr);
-                  break;
-                } else {
-                  param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
-                  param_len++;
-                  counter = counter + 2;
-                }
+              while (p[counter] && p[counter+1] && p[counter] != '!') {
+                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                param_len++;
+                counter = counter + 2;
               }
+            }
+            if (p[counter] == '!') {
+              tempDestAddr = atoi(&p[counter+1]);
+              set_temp_destination(tempDestAddr);
             }
             int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
             if (return_value != BUS_OK) {
