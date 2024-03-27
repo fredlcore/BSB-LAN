@@ -5520,8 +5520,10 @@ void loop() {
           break;
         }
         if (p[1]=='Y') {
+          webPrintHeader();
           if (debug_mode) {
-            webPrintHeader();
+            uint8_t destAddr = bus->getBusDest();
+            uint8_t tempDestAddr = destAddr;
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
             uint8_t param[MAX_PARAM_LEN] = { 0 };
@@ -5530,9 +5532,15 @@ void loop() {
             if (p[counter] == ',') {
               counter++;
               while (p[counter] && p[counter+1]) {
-                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
-                param_len++;
-                counter = counter + 2;
+                if (p[counter == '!']) {
+                  tempDestAddr = atoi(&p[counter+1]);
+                  set_temp_destination(tempDestAddr);
+                  break;
+                } else {
+                  param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                  param_len++;
+                  counter = counter + 2;
+                }
               }
             }
             int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
@@ -5559,8 +5567,13 @@ void loop() {
             printToWebClient(outBuf);
             outBuf[0] = 0;
             writelnToWebClient();
-            webPrintFooter();
+            if (destAddr != tempDestAddr) {
+              return_to_default_destination(destAddr);
+            }
+          } else {
+            printToWebClient(PSTR("Activate debug mode in configuration in order to use /Y command!<BR>\r\n"));
           }
+          webPrintFooter();
           break;
         }
         if (p[1]=='J') {
