@@ -3408,7 +3408,7 @@ int set(float line      // the ProgNr of the heater parameter
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       } else { // INF message type
-        if ((get_cmdtbl_flags(i) & FL_SPECIAL_INF) == FL_SPECIAL_INF) {  // Case for outside temperature
+        if ((get_cmdtbl_flags(i) & FL_SPECIAL_INF)) {  // Case for outside temperature
           param[0]=0;
           param[1]=(t >> 8);
           param[2]= t & 0xff;
