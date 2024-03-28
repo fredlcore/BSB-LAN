@@ -13,6 +13,9 @@
 //#include "util/crc16.h"
 #endif
 
+#define BUS_BSB 0
+#define BUS_LPB 1
+#define BUS_PPS 2
 #define BUS_OK 1
 #define BUS_NOTFREE -1
 #define BUS_NOMATCH -2
