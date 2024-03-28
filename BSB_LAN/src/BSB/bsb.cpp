@@ -117,7 +117,7 @@ uint8_t BSB::getBusDest() {
 
 uint8_t BSB::getLen_idx() {
 /*
-  if (bus_type == 2) {
+  if (bus_type == BUS_PPS) {
     return len_idx +1;  // different only for BUS_PPS
   }
 */
@@ -202,10 +202,10 @@ bool BSB::GetMessage(byte* msg) {
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == 2 && ((read & 0x07) || (read & 0x0D) || (read & 0x0E) || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
+    if ((bus_type == 0 && (read == 0xDC || read == 0xDE)) || (bus_type == 1 && read == 0x78) || (bus_type == BUS_PPS && ((read & 0x07) || (read & 0x0D) || (read & 0x0E) || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
-      if (bus_type == 2 && (read & 0x07)) {   // PPS RTS telegram (0x17)?
+      if (bus_type == BUS_PPS && (read & 0x07)) {   // PPS RTS telegram (0x17)?
 //      	uint8_t PPS_write_enabled = myAddr;
 //      	if (PPS_write_enabled == 1) {
           return true; // PPS-Bus request byte 0x17 just contains one byte, so return
@@ -237,7 +237,7 @@ bool BSB::GetMessage(byte* msg) {
 #endif
         // Break if message seems to be completely received (i==msg.length)
         if (i > len_idx) {
-          if (bus_type == 2) {
+          if (bus_type == BUS_PPS) {
             break;
           }
           if ( msg[len_idx] > 32 ) // check for maximum message length
@@ -265,7 +265,7 @@ bool BSB::GetMessage(byte* msg) {
 
       // We should have read the message completely. Now check and return
 
-      if (bus_type == 2) {
+      if (bus_type == BUS_PPS) {
         if (i == len_idx+1) {
 	        len_idx = 8;
           return true; // TODO: add CRC check before returning true/false
@@ -385,7 +385,7 @@ inline int8_t BSB::_send(byte* msg) {
       msg[len-1] = (crc >> 8);
       msg[len] = (crc & 0xFF);
     }
-    if (bus_type == 2) {
+    if (bus_type == BUS_PPS) {
       uint8_t crc = CRC_PPS (msg, len);
       msg[len] = crc;
     }
@@ -562,7 +562,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   byte i;
   byte offset = 0;
 
-  if (bus_type == 2) {
+  if (bus_type == BUS_PPS) {
     return _send(tx_msg);
   }
 
