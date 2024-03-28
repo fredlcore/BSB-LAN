@@ -660,11 +660,12 @@ void printTelegram(byte* msg, float query_line) {
 #endif
 */
 
-  decodedTelegram.msg_type = msg[4+(bus->getBusType()*4)];
+  uint8_t bus_type = bus->getBusType();
+  decodedTelegram.msg_type = msg[4+(bus_type*4)];
 
-  if (bus->getBusType() != BUS_PPS) {
+  if (bus_type != BUS_PPS) {
     // source
-    SerialPrintAddr(msg[1+(bus->getBusType()*2)]); // source address
+    SerialPrintAddr(msg[1+(bus_type*2)]); // source address
     printToDebug(PSTR("->"));
     SerialPrintAddr(msg[2]); // destination address
     printToDebug(PSTR(" "));
@@ -692,7 +693,7 @@ void printTelegram(byte* msg, float query_line) {
   uint32_t cmd = 0;
   //  uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && pps_write != 1)];
   uint8_t pps_cmd = msg[1];
-  switch (bus->getBusType()) {
+  switch (bus_type) {
     case BUS_BSB:
       if ((msg[4] & 0x0F)==TYPE_QUR || (msg[4] & 0x0F)==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
         cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
@@ -743,7 +744,7 @@ void printTelegram(byte* msg, float query_line) {
     c=get_cmdtbl_cmd(i);
     line = get_cmdtbl_line(i);
     while (c!=CMD_END) {
-      if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus->getBusType() == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
+      if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus_type == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
         uint16_t dev_flags = get_cmdtbl_flags(i);
         uint8_t dev_fam = get_cmdtbl_dev_fam(i);
         uint8_t dev_var = get_cmdtbl_dev_var(i);
@@ -791,9 +792,9 @@ void printTelegram(byte* msg, float query_line) {
       }
     }
   }
-  if (!known || (msg[0] & 0x07)) { // no hex code match or PPS RTS telegram type (0x17)
+  if (!known || (bus_type == BUS_PPS && (msg[0] & 0x07))) { // no hex code match or PPS RTS telegram type (0x17)
     // Entry in command table is "UNKNOWN" (0x00000000)
-    if (bus->getBusType() != BUS_PPS) {
+    if (bus_type != BUS_PPS) {
       printToDebug(PSTR("     "));
       if (decodedTelegram.msg_type < 0x12 || decodedTelegram.msg_type > 0x20) {
         printFmtToDebug(PSTR("%08lX "), cmd);             // print what we have got
@@ -818,7 +819,7 @@ void printTelegram(byte* msg, float query_line) {
 
   // decode parameter
   int data_len=0;
-  switch (bus->getBusType()) {
+  switch (bus_type) {
     case BUS_BSB:
     if (decodedTelegram.msg_type < 0x12 || decodedTelegram.msg_type > 0x20) {
       data_len=msg[bus->getLen_idx()]-11;     // get packet length, then subtract
@@ -1042,20 +1043,20 @@ void printTelegram(byte* msg, float query_line) {
 */
             case VT_WEEKDAY:
             case VT_ENUM: // enum
-              if (data_len == 2 || data_len == 3 || bus->getBusType() == BUS_PPS) {
-                if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus->getBusType() == BUS_PPS)) {
+              if (data_len == 2 || data_len == 3 || bus_type == BUS_PPS) {
+                if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   if (decodedTelegram.enumstr!=0) {
                     if (data_len == 2) {
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+1],1);
                     } else if (data_len == 3) {                            // Fujitsu: data_len == 3
                       uint8_t pps_offset = 0;
-                      if (bus->getBusType() == BUS_PPS) pps_offset = 1;
+                      if (bus_type == BUS_PPS) pps_offset = 1;
                       long lval;
                       lval=(long(msg[bus->getPl_start()+1-pps_offset])<<8)+long(msg[bus->getPl_start()+2-pps_offset]);
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,lval,1);
                     } else {
                       uint8_t pps_offset = 0;
-                      if (bus->getBusType() == BUS_PPS) pps_offset = 1;
+                      if (bus_type == BUS_PPS) pps_offset = 1;
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   } else {
@@ -1168,7 +1169,7 @@ void printTelegram(byte* msg, float query_line) {
           }
         }
       } else {
-        if (bus->getBusType() != BUS_PPS) {
+        if (bus_type != BUS_PPS) {
           SerialPrintData(msg);
         }
 //        writelnToDebug();
@@ -1177,12 +1178,12 @@ void printTelegram(byte* msg, float query_line) {
       }
     }
   }
-  if (bus->getBusType() != BUS_PPS || (bus->getBusType() == BUS_PPS && !monitor)) {
+  if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
     writelnToDebug();
   }
   if (verbose) {
-    if (bus->getBusType() != BUS_PPS) {
-      SerialPrintRAW(msg,msg[bus->getLen_idx()]+bus->getBusType());
+    if (bus_type != BUS_PPS) {
+      SerialPrintRAW(msg,msg[bus->getLen_idx()]+bus_type);
     } else {
       SerialPrintRAW(msg, 9);
     }
