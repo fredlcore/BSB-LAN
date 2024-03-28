@@ -335,6 +335,7 @@ ich mir da nicht)
           case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
           case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Reduziert Soll (?)
           case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
+          case 0x10: pps_values[PPS_AT] = temp; break; // Außentemperatur bei LGM11, 0x10 Telegramm hat an msg[2] einen teilweise regelmäßig aber sprunghaft wechselnden Wert, danach fest 64 01 57
           case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
           case 0x19: log_now = setPPS(PPS_RTZ, temp); break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
           case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
