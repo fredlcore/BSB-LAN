@@ -1,4 +1,6 @@
 char *build_pvalstr(bool extended);
+unsigned long mqtt_reconnect_timer;
+
 //Luposoft: function mqtt_sendtoBroker
 /*  Function: mqtt_sendtoBroker()
  *  Does:     send messages to mqtt-broker
@@ -171,14 +173,14 @@ const String mqtt_get_will_topic() {
  * Parameters passed back:
  *  none
  * Function value returned:
- *  boolean
+ *  bool
  * Global resources used:
  *  Serial instance
  *  Ethernet instance
  *  MQTT instance
  * *************************************************************** */
 
-boolean mqtt_connect() {
+bool mqtt_connect() {
   char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
   strcpy(tempstr, mqtt_broker_addr);
   uint16_t mqtt_port = 1883; 
@@ -189,6 +191,7 @@ boolean mqtt_connect() {
   }
   free(tempstr);
 
+  bool first_connect = false;
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     uint16_t bufsize;
@@ -200,8 +203,21 @@ boolean mqtt_connect() {
       default: bufsize = 32; break;
     }
     MQTTPubSubClient->setBufferSize(bufsize);
+    mqtt_reconnect_timer = 0;
+    first_connect = true;
   }
   if (!MQTTPubSubClient->connected()) {
+    if (!first_connect && !mqtt_reconnect_timer) {
+      // We just lost connection, don't try to reconnect immediately
+      mqtt_reconnect_timer = millis();
+      printlnToDebug(PSTR("MQTT connection lost"));
+      return false;
+    }
+    if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 1000) {
+      // Wait 1s between reconnection attempts
+      return false;
+    }
+
     char* MQTTUser = NULL;
     if(MQTTUsername[0]) {
       MQTTUser = MQTTUsername;
@@ -213,31 +229,27 @@ boolean mqtt_connect() {
     MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
     String MQTTWillTopic = mqtt_get_will_topic();
     String MQTTRealClientId = mqtt_get_client_id();
-    int retries = 0;
     printFmtToDebug(PSTR("Client ID: %s\r\n"), MQTTRealClientId.c_str());
     printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
-    while (!MQTTPubSubClient->connected() && retries < 3) {
-      MQTTPubSubClient->connect(MQTTRealClientId.c_str(), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
-      retries++;
-      if (!MQTTPubSubClient->connected()) {
-        delay(1000);
-        printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
+    MQTTPubSubClient->connect(MQTTRealClientId.c_str(), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
+    if (!MQTTPubSubClient->connected()) {
+      printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
+    } else {
+      printlnToDebug(PSTR("Connected to MQTT broker, updating will topic"));
+      mqtt_reconnect_timer = 0;
+      const char* mqtt_subscr;
+      if (MQTTTopicPrefix[0]) {
+        mqtt_subscr = MQTTTopicPrefix;
       } else {
-        printlnToDebug(PSTR("Connect to MQTT broker, updating will topic"));
-        const char* mqtt_subscr;
-        if (MQTTTopicPrefix[0]) {
-          mqtt_subscr = MQTTTopicPrefix;
-        } else {
-          mqtt_subscr="fromBroker";
-        }
-        MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
-        printFmtToDebug(PSTR("Subscribed to topic '%s'\r\n"), mqtt_subscr);
-        MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
-        MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
-        MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("online"), true);
-        printFmtToDebug(PSTR("Published status 'online' to topic '%s'\r\n"), MQTTWillTopic.c_str());
-        return true;
+        mqtt_subscr="fromBroker";
       }
+      MQTTPubSubClient->subscribe(mqtt_subscr);   //Luposoft: set the topic listen to
+      printFmtToDebug(PSTR("Subscribed to topic '%s'\r\n"), mqtt_subscr);
+      MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
+      MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+      MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("online"), true);
+      printFmtToDebug(PSTR("Published status 'online' to topic '%s'\r\n"), MQTTWillTopic.c_str());
+      return true;
     }
   } else {
     return true;
