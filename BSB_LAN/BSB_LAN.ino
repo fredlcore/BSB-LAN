@@ -3078,10 +3078,15 @@ int set(float line      // the ProgNr of the heater parameter
   i=findLine(line,0,&c);   // find the ProgNr and get the command code
   if (i<0) return 0;        // no match
 
+  uint16_t dev_flags = get_cmdtbl_flags(i);
   // Check for readonly parameter
-  if (programIsreadOnly(get_cmdtbl_flags(i))) {
+  if (programIsreadOnly(dev_flags)) {
     printlnToDebug(PSTR("Parameter is readonly!"));
     return 2;   // return value for trying to set a readonly parameter
+  }
+  if (dev_flags & FL_SPECIAL_INF) {
+    printlnToDebug(PSTR("Parameter is of SPECIAL_INF type and thus requires setting via INF, not SET, doing the switch for you now..."));
+    setcmd = false;     // SPECIAL_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
   }
 
   // Force to publish MQTT update in 1s as state may have been modified by this SET command
