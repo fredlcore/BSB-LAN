@@ -3,8 +3,7 @@ void broadcast_msg_handling(byte *msg){
   if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF) { // handle broadcast messages
   // Decode the rcv telegram and send it to the PC serial interface
     if (!verbose && !monitor) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
-      printTelegram(msg, -1);
-      LogTelegram(msg);
+      LogTelegram(msg, -1);
     }
 
     // Filter Brenner Status messages

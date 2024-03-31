@@ -1,24 +1,9 @@
 char *build_pvalstr(bool extended);
 unsigned long mqtt_reconnect_timer;
 
-//Luposoft: function mqtt_sendtoBroker
-/*  Function: mqtt_sendtoBroker()
- *  Does:     send messages to mqtt-broker
- * Pass parameters:
- *  int param
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  Serial instance
- *  Ethernet instance
- *  MQTT instance
- * *************************************************************** */
-
 /* Function: mqtt_get_client_id()
  * Does: Gets the client ID to use for the MQTT connection based on the set
- *   MQTT Device ID, if unset, defaults to "BSB-LAN".
+ *       MQTT Device ID, if unset, defaults to "BSB-LAN".
  * Pass parameters:
  *   none
  * Function value returned
@@ -38,7 +23,21 @@ const String mqtt_get_client_id() {
   return result;
 }
 
-void mqtt_sendtoBroker(parameter param) {
+/* Function: mqtt_sendtoBroker()
+ * Does: Send messages to mqtt-broker
+ * Pass parameters:
+ *  short int dest_addr - destination address or -1
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ *  MQTT instance
+ */
+
+void mqtt_sendtoBroker(short int dest_addr) {
   // Declare local variables and start building json if enabled
   String MQTTPayload = "";
   String MQTTTopic = "";
@@ -50,7 +49,8 @@ void mqtt_sendtoBroker(parameter param) {
     MQTTTopic = "BSB-LAN/";
   }
 
-  query(param.number);
+  float prognr = decodedTelegram.prognr;
+  String param_number = String(prognr, (roundf(prognr * 10) != roundf(prognr) * 10)?1:0);
 
   switch(mqtt_mode)
   {
@@ -59,10 +59,10 @@ void mqtt_sendtoBroker(parameter param) {
     // =============================================
     case 1:
       // use parameter code as sub-topic
-      MQTTTopic.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
-      if (param.dest_addr > -1) {
+      MQTTTopic.concat(param_number);
+      if (dest_addr > -1) {
         MQTTTopic.concat("!");
-        MQTTTopic.concat(String(param.dest_addr));
+        MQTTTopic.concat(String(dest_addr));
       }
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
@@ -82,10 +82,10 @@ void mqtt_sendtoBroker(parameter param) {
       MQTTPayload.concat(F("{\""));
       MQTTPayload.concat(mqtt_get_client_id());
       MQTTPayload.concat(F("\":{\"status\":{\""));
-      MQTTPayload.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
-      if (param.dest_addr > -1) {
+      MQTTPayload.concat(param_number);
+      if (dest_addr > -1) {
         MQTTPayload.concat("!");
-        MQTTPayload.concat(String(param.dest_addr));
+        MQTTPayload.concat(String(dest_addr));
       }
       MQTTPayload.concat(F("\":\""));
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
@@ -110,10 +110,10 @@ void mqtt_sendtoBroker(parameter param) {
         MQTTPayload.concat(F("BSB-LAN"));
       }
       MQTTPayload.concat(F("\":{\"id\":"));
-      MQTTPayload.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
-      if (param.dest_addr > -1) {
+      MQTTPayload.concat(param_number);
+      if (dest_addr > -1) {
         MQTTPayload.concat("!");
-        MQTTPayload.concat(String(param.dest_addr));
+        MQTTPayload.concat(String(dest_addr));
       }
       MQTTPayload.concat(F(",\"name\":\""));
       MQTTPayload.concat(decodedTelegram.prognrdescaddr);
@@ -138,12 +138,12 @@ void mqtt_sendtoBroker(parameter param) {
   printFmtToDebug(PSTR("Publishing to topic: %s\r\n"), MQTTTopic.c_str());
   printFmtToDebug(PSTR("Payload: %s\r\n"), MQTTPayload.c_str());
   // Now publish the json payload only once
-  MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+  MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str(), true);
   printlnToDebug(PSTR("Successfully published..."));
 }
 
 /* Function: mqtt_get_will_topic()
- * Does:    Constructs the MQTT Will Topic used throught the system
+ * Does: Constructs the MQTT Will Topic used throught the system
  * Pass parameters:
  *   none
  * Function value returned
@@ -164,10 +164,8 @@ const String mqtt_get_will_topic() {
   return MQTTLWTopic;
 }
 
-//Luposoft: Funktionen mqtt_connect
-/*  Function: mqtt_connect()
- *  Does:     connect to mqtt broker
-
+/* Function: mqtt_connect()
+ *  Does: Connect to MQTT broker
  * Pass parameters:
  *  none
  * Parameters passed back:
@@ -178,7 +176,7 @@ const String mqtt_get_will_topic() {
  *  Serial instance
  *  Ethernet instance
  *  MQTT instance
- * *************************************************************** */
+ */
 
 bool mqtt_connect() {
   char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
@@ -258,8 +256,8 @@ bool mqtt_connect() {
 }
 
 /* Function: mqtt_disconnect()
- * Does:     Will disconnect from the MQTT Broker if connected.
- *           Frees accociated resources
+ * Does: Will disconnect from the MQTT broker if connected.
+ *       Frees associated resources
  * Pass parameters:
  *  none
  * Parameters passed back:
@@ -290,11 +288,10 @@ void mqtt_disconnect() {
   }
 }
 
-//Luposoft: Funktionen mqtt_callback
 /*  Function: mqtt_callback()
- *  Does:     will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
- *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
-              send command to heater and return an acknowledge to broker
+ *  Does: Will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
+ *        Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
+          send command to heater and return an acknowledge to broker
  * Pass parameters:
  *  topic,payload,length
  * Parameters passed back:
@@ -304,7 +301,7 @@ void mqtt_disconnect() {
  * Global resources used:
  *  Serial instance
  *  Ethernet instance
- * *************************************************************** */
+ */
 
 void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   uint8_t destAddr = bus->getBusDest();
@@ -361,7 +358,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     printFmtToDebug(PSTR("%.1f=%s \r\n"), param.number, C_payload);
     set(param.number,C_payload,firstsign=='S');  //command to heater
   }
-  mqtt_sendtoBroker(param);  //send mqtt-message
+  query(param.number);
+  mqtt_sendtoBroker(param.dest_addr);  //send mqtt-message
   printlnToDebug(PSTR("##MQTT#############################"));
   if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
