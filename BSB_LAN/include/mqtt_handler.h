@@ -27,15 +27,15 @@ unsigned long mqtt_reconnect_timer;
  *   none
  */
 
-const String mqtt_get_client_id() {
+const char* mqtt_get_client_id() {
   // Build Client ID
-  String result = "";
+  const char* clientIDptr;
   if (MQTTDeviceID[0]) {
-    result.concat(MQTTDeviceID);
+    clientIDptr = MQTTDeviceID;
   } else {
-    result.concat(PSTR("BSB-LAN"));
+    clientIDptr = PSTR("BSB-LAN");
   }
-  return result;
+  return clientIDptr;
 }
 
 void mqtt_sendtoBroker(parameter param) {
@@ -152,16 +152,16 @@ void mqtt_sendtoBroker(parameter param) {
  *   none
  */
 
-const String mqtt_get_will_topic() {
+char* mqtt_get_will_topic() {
   // Build (Last) Will Topic
-  String MQTTLWTopic = "";
+  outBuf[0] = 0;
   if (MQTTTopicPrefix[0]) {
-    MQTTLWTopic = MQTTTopicPrefix;
-    MQTTLWTopic.concat(F("/status"));
+    strcpy_P(outBuf, MQTTTopicPrefix);
+    strcat(outBuf, PSTR("/status"));
   } else {
-    MQTTLWTopic = F("BSB-LAN/status");
+    strcpy_P(outBuf, PSTR("BSB-LAN/status"));
   }
-  return MQTTLWTopic;
+  return outBuf;
 }
 
 //Luposoft: Funktionen mqtt_connect
@@ -227,11 +227,9 @@ bool mqtt_connect() {
       MQTTPass = MQTTPassword;
     }
     MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
-    String MQTTWillTopic = mqtt_get_will_topic();
-    String MQTTRealClientId = mqtt_get_client_id();
-    printFmtToDebug(PSTR("Client ID: %s\r\n"), MQTTRealClientId.c_str());
-    printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
-    MQTTPubSubClient->connect(MQTTRealClientId.c_str(), MQTTUser, MQTTPass, MQTTWillTopic.c_str(), 0, true, PSTR("offline"));
+    printFmtToDebug(PSTR("Client ID: %s\r\n"), mqtt_get_client_id());
+    printFmtToDebug(PSTR("Will topic: %s\r\n"), mqtt_get_will_topic());
+    MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 0, true, PSTR("offline"));
     if (!MQTTPubSubClient->connected()) {
       printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
     } else {
@@ -247,8 +245,8 @@ bool mqtt_connect() {
       printFmtToDebug(PSTR("Subscribed to topic '%s'\r\n"), mqtt_subscr);
       MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
       MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
-      MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("online"), true);
-      printFmtToDebug(PSTR("Published status 'online' to topic '%s'\r\n"), MQTTWillTopic.c_str());
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), PSTR("online"), true);
+      printFmtToDebug(PSTR("Published status 'online' to topic '%s'\r\n"), mqtt_get_will_topic());
       return true;
     }
   } else {
