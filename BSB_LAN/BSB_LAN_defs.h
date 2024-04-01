@@ -82,8 +82,9 @@
 #define FL_QINF_ONLY    64  // Flag to determine whether parameter needs to be queried via TYP_QUR or TYP_QINF
 #define FL_SW_CTL_RONLY 128 // Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 #define FL_NOSWAP_QUR   256 // Do not swap first two bytes for QUR telegram
-/* heating systems */
+#define FL_FORCE_INF    512 // Command ID is always used with INF telegrams, so force INF even if SET is requested.
 
+/* heating systems */
 #define DEV_021_ALL  21,255 // RVL470
 #define DEV_023_ALL  23,255 // Grünenwald RVA46.531/109
 #define DEV_025_ALL  25,255 // EVI-HEAT Combi-7 / RVA43.222/109
