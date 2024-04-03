@@ -26,7 +26,7 @@
 }
 
 void writelnToDebug() {
-  strcpy(DebugBuff, PSTR("\r\n"));
+  strcpy(DebugBuff, "\r\n");
   switch (debug_mode) {
     case 1: SerialOutput->print(DebugBuff); break;
     case 2: if (haveTelnetClient)telnetClient.print(DebugBuff); break;

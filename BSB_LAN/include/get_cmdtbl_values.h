@@ -22,15 +22,15 @@ float get_next_prognr(float currentProgNR, int startFromTableLine){
   int cmdtblsize = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   float prognr = get_cmdtbl_line(startFromTableLine);
   float nextprognr = -1;
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("prognr: %.1f, startindex: %d\r\n"), prognr, startFromTableLine);
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("prognr: %.1f, startindex: %d\r\n", prognr, startFromTableLine);
   do{
     startFromTableLine++;
     if(cmdtblsize <= startFromTableLine) {
-      if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("nextprognr: -1\r\n"));
+      if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: -1\r\n");
       return -1;
     }
     nextprognr = get_cmdtbl_line(startFromTableLine);
-    if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("nextindex: %d\r\n"), startFromTableLine);
+    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextindex: %d\r\n", startFromTableLine);
   } while (prognr == nextprognr);
   if(currentProgNR >= BSP_INTERNAL && currentProgNR < BSP_END) {
     float prognrDiff = currentProgNR - prognr;
@@ -55,7 +55,7 @@ float get_next_prognr(float currentProgNR, int startFromTableLine){
       }
     }
   }
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("nextprognr: %.1f\r\n"), nextprognr);
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: %.1f\r\n", nextprognr);
   return nextprognr;
 }
 

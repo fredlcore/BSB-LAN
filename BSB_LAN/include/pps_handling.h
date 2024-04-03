@@ -249,7 +249,7 @@ uint16_t pps_bus_handling(byte *msg) {
       if (!monitor) {
         printTelegram(msg, -1);
       } else {
-        printFmtToDebug(PSTR("%lu "), millis());
+        printFmtToDebug("%lu ", millis());
       }
       printTelegram(tx_msg, -1);
       if (!monitor) {
@@ -283,14 +283,14 @@ uint16_t pps_bus_handling(byte *msg) {
         case 0x79: msg_cycle = 25; break;
         case 0x7C: msg_cycle = 23; break;
         default:
-          printToDebug(PSTR("Unknown request: "));
+          printToDebug("Unknown request: ");
           SerialPrintRAW(msg, 9);
           writelnToDebug();
 /*
                 File dataFile = SD.open(journalFileName, FILE_WRITE);
                 if (dataFile) {
                   int outBufLen = 0;
-                  outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;Unknown PPS telegram;"), millis(), GetDateTime(outBuf + outBufLen + 80));
+                  outBufLen += sprintf_P(outBuf + outBufLen, "%lu;%s;Unknown PPS telegram;", millis(), GetDateTime(outBuf + outBufLen + 80));
                   bin2hex(outBuf + outBufLen, msg, 9+(pps_write!=1 && msg[0] == 0x17), ' ');
                   dataFile.println(outBuf);
                 }
@@ -438,7 +438,7 @@ ich mir da nicht)
             break;
           case 0x00: break;
           default:
-            printToDebug(PSTR("Unknown telegram: "));
+            printToDebug("Unknown telegram: ");
             SerialPrintRAW(msg, 9 + pps_offset);
             writelnToDebug();
             break;
@@ -446,23 +446,23 @@ ich mir da nicht)
       }
 
 /*
-            printToDebug(PSTR("Outside Temperature: "));
+            printToDebug("Outside Temperature: ");
             DebugOutput.println(outside_temp);
-            printToDebug(PSTR("Boiler Temperature: "));
+            printToDebug("Boiler Temperature: ");
             DebugOutput.println(boiler_temp);
-            printToDebug(PSTR("Mixer Flow Temperature: "));
+            printToDebug("Mixer Flow Temperature: ");
             DebugOutput.println(mixer_flow_temp);
-            printToDebug(PSTR("Flow Temperature: "));
+            printToDebug("Flow Temperature: ");
             DebugOutput.println(flow_temp);
-            printToDebug(PSTR("Weighted Temperature: "));
+            printToDebug("Weighted Temperature: ");
             DebugOutput.println(weighted_temp);
-            printToDebug(PSTR("Boiler active: "));
+            printToDebug("Boiler active: ");
             if (boiler_active) {
-              printlnToDebug(PSTR("yes"));
+              printlnToDebug("yes");
             } else {
-              printlnToDebug(PSTR("no"));
+              printlnToDebug("no");
             }
-            printToDebug(PSTR("Time: ")); DebugOutput.print(d); DebugOutput.print(", "); DebugOutput.print(h); DebugOutput.print(":"); DebugOutput.print(m); DebugOutput.print(":"); DebugOutput.println(s);
+            printToDebug("Time: "); DebugOutput.print(d); DebugOutput.print(", "); DebugOutput.print(h); DebugOutput.print(":"); DebugOutput.print(m); DebugOutput.print(":"); DebugOutput.println(s);
 */
     } // End parsing 0x1D heater telegrams
 
@@ -495,7 +495,7 @@ void pps_query_mcba() {
   }
   if (verbose) {     // verbose output for PPS after time-critical sending procedure
     if (monitor) {
-      printFmtToDebug(PSTR("%lu "), millis());
+      printFmtToDebug("%lu ", millis());
     }
     printTelegram(tx_msg, -1);
     if (!monitor) {

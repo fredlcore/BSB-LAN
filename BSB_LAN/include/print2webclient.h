@@ -18,13 +18,13 @@
 void flushToWebClient() {
   if (bigBuffPos > 0) {
     // for debug purposes
-    //if (bigBuffPos > sizeof(bigBuff)) printlnToDebug(PSTR("bigBuffPos > bigBuff size"));
+    //if (bigBuffPos > sizeof(bigBuff)) printlnToDebug("bigBuffPos > bigBuff size");
     client.write(bigBuff, bigBuffPos);
     bigBuffPos = 0;
     return;
   }
 // for debug purposes
-//  if (bigBuffPos < 0)  printlnToDebug(PSTR("bigBuffPos is negative"));
+//  if (bigBuffPos < 0)  printlnToDebug("bigBuffPos is negative");
 }
 
 void forcedflushToWebClient() {
@@ -36,7 +36,7 @@ void forcedflushToWebClient() {
 }
 
 int writelnToWebClient() {
-  int len = strlen(strcpy(bigBuff + bigBuffPos, PSTR("\r\n")));
+  int len = strlen(strcpy(bigBuff + bigBuffPos, "\r\n"));
   bigBuffPos += len;
   return len;
 }
@@ -76,17 +76,17 @@ int printFmtToWebClient(const char *format, ...) {
 void printToWebClient_prognrdescaddr() {
   if (decodedTelegram.prognr < 0) return;
   if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_DHT22) {
-    printToWebClient(PSTR(STR_24A_TEXT));
-    printToWebClient(PSTR(". "));
+    printToWebClient(STR_24A_TEXT);
+    printToWebClient(". ");
   }
   printToWebClient(decodedTelegram.prognrdescaddr);
   if (decodedTelegram.sensorid) {
-    printFmtToWebClient(PSTR(" #%d"), decodedTelegram.sensorid);
+    printFmtToWebClient(" #%d", decodedTelegram.sensorid);
   }
 }
 
 
 //Utility Functions
 void printParameterInJSON_ToWebClient(parameter param){
-  printFmtToWebClient(PSTR("    { \"parameter\": %g, \"destination\": %d }"), param.number, param.dest_addr);
+  printFmtToWebClient("    { \"parameter\": %g, \"destination\": %d }", param.number, param.dest_addr);
 }

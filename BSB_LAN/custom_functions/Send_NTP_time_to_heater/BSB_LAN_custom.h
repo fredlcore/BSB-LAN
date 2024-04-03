@@ -9,7 +9,7 @@ if (custom_timer > custom_timer_compare+600000) {    // every 10 minutes
   char date_string[20];
   struct tm now;
   getLocalTime(&now,100);
-  sprintf_P(date_string,PSTR("%02d.%02d.%d_%02d:%02d:%02d"), now.tm_mday, now.tm_mon + 1, now.tm_year + 1900, now.tm_hour,now.tm_min,now.tm_sec);
+  sprintf_P(date_string,"%02d.%02d.%d_%02d:%02d:%02d", now.tm_mday, now.tm_mon + 1, now.tm_year + 1900, now.tm_hour,now.tm_min,now.tm_sec);
   if (now.tm_year > 100 && now.tm_hour > 4) {       // only send time after 04:00 in case that day the heater changes time because of daylight saving
     set(0,date_string,1);
   }

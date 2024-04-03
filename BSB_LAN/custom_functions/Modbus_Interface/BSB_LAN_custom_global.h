@@ -12,7 +12,7 @@ ModbusTCP mb;
 
 // Remove this function when using Modbus RTU (over serial/RS485)
 bool cbConn(IPAddress ip) {     
-  Serial.print(PSTR("Modbus connection from IP: "));
+  Serial.print("Modbus connection from IP: ");
   Serial.println(ip);
   return true;  // return false for example to prevent forbidden IP ranges
 }

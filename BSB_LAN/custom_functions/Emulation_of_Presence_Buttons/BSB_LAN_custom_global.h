@@ -36,7 +36,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state) {
   char buf[9];
   unsigned int i0, i1;
   query(current_state);
-  strcpy_P(buf, PSTR("%02x%02x"));
+  strcpy_P(buf, "%02x%02x");
   if (2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
   if (i0 != 0x01) return; // 1 = Automatic
   switch (i1) {
@@ -46,6 +46,6 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state) {
     case 0x04: state = 0x01; break; //Automatic Reduced mode, but pushed into Comfort -> Automatic Reduced
     default: return;
   }
-  sprintf_P(buf, PSTR("%d"), state);
+  sprintf_P(buf, "%d", state);
   set(set_mode, buf, true);
 }

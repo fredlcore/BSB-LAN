@@ -90,7 +90,7 @@ bool writeToEEPROM(uint8_t id) {
   if (!EEPROM_ready) return false;
   bool EEPROMwasChanged = false;
   if (!options[id].option_address) return false;
-//  printFmtToDebug(PSTR("Option %d, EEPROM Address %04X, set value: "), id, options[id].eeprom_address);
+//  printFmtToDebug("Option %d, EEPROM Address %04X, set value: ", id, options[id].eeprom_address);
   for (uint16_t i = 0; i < getVariableSize(id); i++) {
 //Some PPS values will changing and writing too frequently. For prevention EEPROM deterioration  if PPS value has no flag it will be skipped.
     if(id == CF_PPS_VALUES && !(allow_write_pps_values[(i / sizeof(pps_values[0])) / 8] & (1 << ((i / sizeof(pps_values[0])) % 8)))){
@@ -98,7 +98,7 @@ bool writeToEEPROM(uint8_t id) {
     }
     if (options[id].option_address[i] != EEPROM.read(i + options[id].eeprom_address)) {
       EEPROM.write(i + options[id].eeprom_address, options[id].option_address[i]);
-//      printFmtToDebug(PSTR("%02X "), options[id].option_address[i]);
+//      printFmtToDebug("%02X ", options[id].option_address[i]);
       EEPROMwasChanged = true;
     }
   }
@@ -106,7 +106,7 @@ bool writeToEEPROM(uint8_t id) {
   if (EEPROMwasChanged)
     EEPROM.commit();
 #endif
-//  printToDebug(PSTR("\r\n"));
+//  printToDebug("\r\n");
   return EEPROMwasChanged;
 }
 

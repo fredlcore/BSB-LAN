@@ -23,9 +23,9 @@ void Ipwe() {
   uint8_t d_addr = destAddr;
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
-  printFmtToDebug(PSTR("IPWE sensors: %d\r\n"), numIPWESensors);
+  printFmtToDebug("IPWE sensors: %d\r\n", numIPWESensors);
   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
-  printToWebClient(PSTR("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>"));
+  printToWebClient("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>");
 
   for (i=0; i < numIPWESensors; i++) {
     if (!ipwe_parameters[i].number) continue;
@@ -44,13 +44,13 @@ void Ipwe() {
     }
     query(ipwe_parameters[i].number);
     counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+    printFmtToWebClient("<tr><td>T<br></td><td>%d<br></td><td>", counter);
     printToWebClient_prognrdescaddr();
-    printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+    printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
-    printToWebClient(PSTR("</tr>"));
+    printToWebClient("</tr>");
   }
   if (destAddr != d_addr) {
     return_to_default_destination(destAddr);
@@ -63,14 +63,14 @@ void Ipwe() {
       if (avg_parameters[i].number > 0) {
         counter++;
         query(BSP_AVERAGES + i);
-        printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d"), counter);
-        printToWebClient(PSTR("<br></td><td>"));
+        printFmtToWebClient("<tr><td>T<br></td><td>%d", counter);
+        printToWebClient("<br></td><td>");
         printToWebClient_prognrdescaddr();
-        printFmtToWebClient(PSTR("<br></td><td>%s&nbsp;%s<br></td>"), decodedTelegram.value, decodedTelegram.unit);
+        printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit);
         printToWebClient(STR_IPWEZERO);
         printToWebClient(STR_IPWEZERO);
         printToWebClient(STR_IPWEZERO);
-        printToWebClient(PSTR("</tr>"));
+        printToWebClient("</tr>");
       }
     }
   }
@@ -78,15 +78,15 @@ void Ipwe() {
   if (One_Wire_Pin >= 0) {
     // output of one wire sensors
     for (i = 0; i < numSensors * 2; i += 2) {
-      printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
+      printFmtToWebClient("<tr><td>T<br></td><td>%d<br></td><td>", counter);
       query(i + BSP_ONEWIRE);
       printToWebClient(decodedTelegram.value);
       query(i + BSP_ONEWIRE + 1);
-      printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+      printFmtToWebClient("<br></td><td>%s<br></td>", decodedTelegram.value);
       printToWebClient(STR_IPWEZERO);
       printToWebClient(STR_IPWEZERO);
       printToWebClient(STR_IPWEZERO);
-      printToWebClient(PSTR("</tr>"));
+      printToWebClient("</tr>");
     }
   }
   // output of DHT sensors
@@ -95,24 +95,24 @@ void Ipwe() {
     if (DHT_Pins[i] < 0) continue;
     query(BSP_DHT22 + 1 + i * 4);
     counter++;
-    printFmtToWebClient(PSTR("<tr><td>T<br></td><td>%d<br></td><td>"), counter);
-    printFmtToWebClient(PSTR("DHT sensor %d temperature"), DHT_Pins[i]);
-    printFmtToWebClient(PSTR("<br></td><td>%s<br></td>"), decodedTelegram.value);
+    printFmtToWebClient("<tr><td>T<br></td><td>%d<br></td><td>", counter);
+    printFmtToWebClient("DHT sensor %d temperature", DHT_Pins[i]);
+    printFmtToWebClient("<br></td><td>%s<br></td>", decodedTelegram.value);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
-    printToWebClient(PSTR("</tr>"));
+    printToWebClient("</tr>");
     counter++;
     query(BSP_DHT22 + 2 + i * 4);
-    printFmtToWebClient(PSTR("<tr><td>F<br></td><td>%d<br></td><td>"), counter);
-    printFmtToWebClient(PSTR("DHT sensor %d humidity<br></td>"), DHT_Pins[i]);
+    printFmtToWebClient("<tr><td>F<br></td><td>%d<br></td><td>", counter);
+    printFmtToWebClient("DHT sensor %d humidity<br></td>", DHT_Pins[i]);
     printToWebClient(STR_IPWEZERO);
-    printFmtToWebClient(PSTR("<td>%s<br></td>"), decodedTelegram.value);
+    printFmtToWebClient("<td>%s<br></td>", decodedTelegram.value);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
-    printToWebClient(PSTR("</tr>"));
+    printToWebClient("</tr>");
   }
-  printToWebClient(PSTR("</tbody></table></form></body></html>\r\n\r\n"));
+  printToWebClient("</tbody></table></form></body></html>\r\n\r\n");
   forcedflushToWebClient();
 }
 // --- Ipwe() ---

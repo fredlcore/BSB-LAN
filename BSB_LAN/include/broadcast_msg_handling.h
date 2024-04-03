@@ -16,7 +16,7 @@ void broadcast_msg_handling(byte *msg){
     }
 
     if (cmd==0x31000212) {    // TWW Status
-      printFmtToDebug(PSTR("INF: TWW-Status: %d\r\n"), msg[11]);
+      printFmtToDebug("INF: TWW-Status: %d\r\n", msg[11]);
 
       if ((msg[11] & 0x08) == 0x08) {  // See parameter 10018
         if (TWW_start==0) {        // has not been timed
@@ -40,7 +40,7 @@ void broadcast_msg_handling(byte *msg){
     if (cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
       unsigned long brenner_end;
       bool reset_brenner_timer = 0;
-      printFmtToDebug(PSTR("INF: Brennerstatus: %d\r\n"), msg[bus->getPl_start()]);      // first payload byte
+      printFmtToDebug("INF: Brennerstatus: %d\r\n", msg[bus->getPl_start()]);      // first payload byte
 
       if ((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
         if (brenner_start==0) {        // has not been timed

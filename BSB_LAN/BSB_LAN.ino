@@ -625,7 +625,7 @@ WiFiUDP udp, udp_log;
   #include <Update.h>
 WebServer update_server(8080);
 
-EEPROMClass EEPROM_ESP((const char *)PSTR("nvs"));
+EEPROMClass EEPROM_ESP((const char *)"nvs");
   #define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 
   #define strcpy_PF strcpy
@@ -944,18 +944,18 @@ unsigned long connectTime[MAX_SOCK_NUM];
 void ShowSockStatus()
 {
   for (int i = 0; i < MAX_SOCK_NUM; i++) {
-    printFmtToDebug(PSTR("Socket#%d"), i);
+    printFmtToDebug("Socket#%d", i);
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     uint8_t s = W5100.readSnSR(i);
     SPI.endTransaction();
     socketStat[i] = s;
-    printFmtToDebug(PSTR(":0x%02X %d D:"), s, W5100.readSnPORT(i));
+    printFmtToDebug(":0x%02X %d D:", s, W5100.readSnPORT(i));
     uint8_t dip[4];
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
     W5100.readSnDIPR(i, dip);
     SPI.endTransaction();
     SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
-    printFmtToDebug(PSTR("%d.%d.%d.%d(%d)\r\n"), dip[0], dip[1], dip[2], dip[3], W5100.readSnDPORT(i));
+    printFmtToDebug("%d.%d.%d.%d(%d)\r\n", dip[0], dip[1], dip[2], dip[3], W5100.readSnDPORT(i));
     SPI.endTransaction();
   }
 }
@@ -971,12 +971,12 @@ void checkSockStatus()
 
     if ((s == 0x14) || (s == 0x1C)) {
         if (thisTime - connectTime[i] > 30000UL) {
-          printFmtToDebug(PSTR("\r\nSocket frozen: %d\r\n"), i);
+          printFmtToDebug("\r\nSocket frozen: %d\r\n", i);
           SPI.beginTransaction(SPI_ETHERNET_SETTINGS);
           W5100.execCmdSn(s, Sock_DISCON);
           SPI.endTransaction();
 
-          printlnToDebug(PSTR("Socket freed."));
+          printlnToDebug("Socket freed.");
           ShowSockStatus();
         }
     } else {
@@ -1078,48 +1078,48 @@ parameter parsingStringToParameter(char *data){
 void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, bool isDownload, long cachingTime) {
   const char *getfarstrings;
   long autoDetectCachingTime = 590800; // 590800 = 7 days. If -1 then no-cache, no-store etc.
-  printFmtToWebClient(PSTR("HTTP/1.1 %d "), code);
+  printFmtToWebClient("HTTP/1.1 %d ", code);
   switch (code) {
-    case HTTP_OK: printToWebClient(PSTR("OK")); break;
-    case HTTP_NOT_MODIFIED: printToWebClient(PSTR("Not Modified")); break;
-    case HTTP_AUTH_REQUIRED: printToWebClient(PSTR("Authorization Required")); break;
-    case HTTP_NOT_FOUND: printToWebClient(PSTR("Not Found")); break;
+    case HTTP_OK: printToWebClient("OK"); break;
+    case HTTP_NOT_MODIFIED: printToWebClient("Not Modified"); break;
+    case HTTP_AUTH_REQUIRED: printToWebClient("Authorization Required"); break;
+    case HTTP_NOT_FOUND: printToWebClient("Not Found"); break;
     default: break;
   }
-  printToWebClient(PSTR("\r\nContent-Type: ")); // 17 bytes with zero
+  printToWebClient("\r\nContent-Type: "); // 17 bytes with zero
   switch (mimetype) {
-    case MIME_TYPE_TEXT_HTML: getfarstrings = PSTR("text/html"); break;
-    case MIME_TYPE_TEXT_CSS: getfarstrings = PSTR("text/css"); break;
-    case MIME_TYPE_APP_JS: getfarstrings = PSTR("application/x-javascript"); break;
-    case MIME_TYPE_APP_XML: getfarstrings = PSTR("application/xml"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_HTML: getfarstrings = "text/html"; break;
+    case MIME_TYPE_TEXT_CSS: getfarstrings = "text/css"; break;
+    case MIME_TYPE_APP_JS: getfarstrings = "application/x-javascript"; break;
+    case MIME_TYPE_APP_XML: getfarstrings = "application/xml"; autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
     // case 5 below
-    case MIME_TYPE_APP_JSON: getfarstrings = PSTR("application/json"); autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
-    case MIME_TYPE_TEXT_PLAIN: getfarstrings = PSTR("text/plain"); autoDetectCachingTime = 60; break;
-    case MIME_TYPE_IMAGE_JPEG: getfarstrings = PSTR("image/jpeg"); break;
-    case MIME_TYPE_IMAGE_GIF: getfarstrings = PSTR("image/gif"); break;
-    case MIME_TYPE_IMAGE_SVG: getfarstrings = PSTR("image/svg+xml"); break;
-    case MIME_TYPE_IMAGE_PNG: getfarstrings = PSTR("image/png"); break;
-    case MIME_TYPE_IMAGE_ICON: getfarstrings = PSTR("image/x-icon"); autoDetectCachingTime = 2592000; break; // 30 days
-    case MIME_TYPE_APP_GZ: getfarstrings = PSTR("application/x-gzip"); break;
-    case MIME_TYPE_FORCE_DOWNLOAD: getfarstrings = PSTR("application/force-download"); break;
+    case MIME_TYPE_APP_JSON: getfarstrings = "application/json"; autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
+    case MIME_TYPE_TEXT_PLAIN: getfarstrings = "text/plain"; autoDetectCachingTime = 60; break;
+    case MIME_TYPE_IMAGE_JPEG: getfarstrings = "image/jpeg"; break;
+    case MIME_TYPE_IMAGE_GIF: getfarstrings = "image/gif"; break;
+    case MIME_TYPE_IMAGE_SVG: getfarstrings = "image/svg+xml"; break;
+    case MIME_TYPE_IMAGE_PNG: getfarstrings = "image/png"; break;
+    case MIME_TYPE_IMAGE_ICON: getfarstrings = "image/x-icon"; autoDetectCachingTime = 2592000; break; // 30 days
+    case MIME_TYPE_APP_GZ: getfarstrings = "application/x-gzip"; break;
+    case MIME_TYPE_FORCE_DOWNLOAD: getfarstrings = "application/force-download"; break;
     case MIME_TYPE_TEXT_TEXT:
-    default: getfarstrings = PSTR("text"); autoDetectCachingTime = 60; break;
+    default: getfarstrings = "text"; autoDetectCachingTime = 60; break;
   }
   printToWebClient(getfarstrings);
   if (cachingTime == HTTP_AUTO_CACHE_AGE)cachingTime = autoDetectCachingTime;
-  if (addcharset)printToWebClient(PSTR("; charset=utf-8"));
-  printToWebClient(PSTR("\r\n"));
-  if (isGzip) printToWebClient(PSTR("Content-Encoding: gzip\r\n"));
-  printToWebClient(PSTR("Cache-Control: "));
+  if (addcharset)printToWebClient("; charset=utf-8");
+  printToWebClient("\r\n");
+  if (isGzip) printToWebClient("Content-Encoding: gzip\r\n");
+  printToWebClient("Cache-Control: ");
   if (cachingTime > 0) {
     //max-age=84400 = one day, max-age=590800 = 7 days, max-age=2592000 = 30 days.
-    printFmtToWebClient(PSTR("max-age=%ld, public"), cachingTime);
+    printFmtToWebClient("max-age=%ld, public", cachingTime);
   } else {
-    printToWebClient(PSTR("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0"));
+    printToWebClient("no-cache, no-store, must-revalidate\r\nPragma: no-cache\r\nExpires: 0");
   }
-  printToWebClient(PSTR("\r\n"));
+  printToWebClient("\r\n");
   if (isDownload) {
-    printToWebClient(PSTR("Content-Disposition: attachment; filename=\"BSB-LAN-"));
+    printToWebClient("Content-Disposition: attachment; filename=\"BSB-LAN-");
     printFmtToWebClient("%03u-%03u-%u.txt\"\r\n", my_dev_fam, my_dev_var, my_dev_id);
   }
 }
@@ -1139,17 +1139,17 @@ int recognize_mime(char *str) {
     i++;
   }
 
-  if (!strcmp_P(mimebuf, PSTR("html")) || !strcmp_P(mimebuf, PSTR("htm"))) mimetype = MIME_TYPE_TEXT_HTML;
-  else if (!strcmp_P(mimebuf, PSTR("css"))) mimetype = MIME_TYPE_TEXT_CSS;
-  else if (!strcmp_P(mimebuf, PSTR("js"))) mimetype = MIME_TYPE_APP_JS;
-  else if (!strcmp_P(mimebuf, PSTR("xml"))) mimetype = MIME_TYPE_APP_XML;
-  else if (!strcmp_P(mimebuf, PSTR("txt"))) mimetype = MIME_TYPE_TEXT_TEXT;
-  else if (!strcmp_P(mimebuf, PSTR("jpg"))) mimetype = MIME_TYPE_IMAGE_JPEG;
-  else if (!strcmp_P(mimebuf, PSTR("gif"))) mimetype = MIME_TYPE_IMAGE_GIF;
-  else if (!strcmp_P(mimebuf, PSTR("svg"))) mimetype = MIME_TYPE_IMAGE_SVG;
-  else if (!strcmp_P(mimebuf, PSTR("png"))) mimetype = MIME_TYPE_IMAGE_PNG;
-  else if (!strcmp_P(mimebuf, PSTR("ico"))) mimetype = MIME_TYPE_IMAGE_ICON;
-  else if (!strcmp_P(mimebuf, PSTR("gz"))) mimetype = MIME_TYPE_APP_GZ;
+  if (!strcmp_P(mimebuf, "html") || !strcmp_P(mimebuf, "htm")) mimetype = MIME_TYPE_TEXT_HTML;
+  else if (!strcmp_P(mimebuf, "css")) mimetype = MIME_TYPE_TEXT_CSS;
+  else if (!strcmp_P(mimebuf, "js")) mimetype = MIME_TYPE_APP_JS;
+  else if (!strcmp_P(mimebuf, "xml")) mimetype = MIME_TYPE_APP_XML;
+  else if (!strcmp_P(mimebuf, "txt")) mimetype = MIME_TYPE_TEXT_TEXT;
+  else if (!strcmp_P(mimebuf, "jpg")) mimetype = MIME_TYPE_IMAGE_JPEG;
+  else if (!strcmp_P(mimebuf, "gif")) mimetype = MIME_TYPE_IMAGE_GIF;
+  else if (!strcmp_P(mimebuf, "svg")) mimetype = MIME_TYPE_IMAGE_SVG;
+  else if (!strcmp_P(mimebuf, "png")) mimetype = MIME_TYPE_IMAGE_PNG;
+  else if (!strcmp_P(mimebuf, "ico")) mimetype = MIME_TYPE_IMAGE_ICON;
+  else if (!strcmp_P(mimebuf, "gz")) mimetype = MIME_TYPE_APP_GZ;
 //          else mimetype = 0;
   // You can add more MIME types here
   return mimetype;
@@ -1286,7 +1286,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
         if (delimiter) printToWebClient(delimiter);
       }
     }
-    if (print_mode & PRINT_VALUE) printFmtToWebClient(PSTR("%u"), val);
+    if (print_mode & PRINT_VALUE) printFmtToWebClient("%u", val);
     if (print_mode & PRINT_DESCRIPTION && print_mode & PRINT_VALUE_FIRST) {
       //                      All enums except DT_BITS                                               DT_BITS  enums
       if (alt_delimiter && ((value == val && !(print_mode & PRINT_ENUM_AS_DT_BITS)) || ((value & bitmask) == (val & bitmask) && (print_mode & PRINT_ENUM_AS_DT_BITS)))) {
@@ -1305,18 +1305,18 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
 #include "include/get_cmdtbl_values.h"
 
 void printcantalloc(void) {
-  printlnToDebug(PSTR("Can't alloc memory"));
+  printlnToDebug("Can't alloc memory");
 }
 
 void set_temp_destination(short destAddr){
-  printFmtToDebug(PSTR("Setting temporary destination to %d\r\n"), destAddr);
+  printFmtToDebug("Setting temporary destination to %d\r\n", destAddr);
   bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
   GetDevId();
 }
 
 
 void return_to_default_destination(int destAddr){
-  printFmtToDebug(PSTR("Returning to default destination %d\r\n"), destAddr);
+  printFmtToDebug("Returning to default destination %d\r\n", destAddr);
   bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
 }
 
@@ -1371,7 +1371,7 @@ int findLine(float line
   int save_i = 0;
   uint32_t c, save_c = 0;
   float l;
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("line = %.1f\r\n"), line);
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("line = %.1f\r\n", line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
   if (line >= BSP_INTERNAL && line < BSP_END) {
@@ -1440,13 +1440,13 @@ int findLine(float line
   int line_dd = roundf(line * 10);
   while (!(left >= right))
     {
-    if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("get_cmdtbl_line: left = %f, line = %f\r\n"), get_cmdtbl_line(left), line);
+    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("get_cmdtbl_line: left = %f, line = %f\r\n", get_cmdtbl_line(left), line);
     if (roundf(get_cmdtbl_line(left) * 10) == line_dd){ i = left; break; }
     mid = left + (right - left) / 2;
     int temp_dd = roundf(get_cmdtbl_line(mid) * 10);
     if (verbose == DEVELOPER_DEBUG) {
-      printFmtToDebug(PSTR("get_cmdtbl_line integer: temp = %d, line = %d\r\n"), temp_dd, line_dd);
-      printFmtToDebug(PSTR("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n"), get_cmdtbl_line(left), get_cmdtbl_line(mid));
+      printFmtToDebug("get_cmdtbl_line integer: temp = %d, line = %d\r\n", temp_dd, line_dd);
+      printFmtToDebug("get_cmdtbl_line: left = %.1f, mid = %.1f\r\n", get_cmdtbl_line(left), get_cmdtbl_line(mid));
     }
     if (temp_dd == line_dd) {
       if (mid == left + 1) {
@@ -1459,9 +1459,9 @@ int findLine(float line
     } else {
       left = mid + 1;
     }
-    if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("left = %d, mid = %d, right = %d\r\n"), left, mid, right);
+    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("left = %d, mid = %d, right = %d\r\n", left, mid, right);
   }
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("i = %d\r\n"), i);
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("i = %d\r\n", i);
   if (i == -1) return i;
 
   l = get_cmdtbl_line(i);
@@ -1470,7 +1470,7 @@ int findLine(float line
     uint8_t dev_fam = get_cmdtbl_dev_fam(i);
     uint8_t dev_var = get_cmdtbl_dev_var(i);
     uint16_t dev_flags = get_cmdtbl_flags(i);
-    if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n"), l, dev_fam, dev_var, dev_flags);
+    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n", l, dev_fam, dev_var, dev_flags);
 
     if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
       if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
@@ -1545,7 +1545,7 @@ int freeRam () {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex(byte val) {
-  printFmtToDebug(PSTR("%02X"), val);  // add a leading zero to single-digit values
+  printFmtToDebug("%02X", val);  // add a leading zero to single-digit values
 }
 
 /** *****************************************************************
@@ -1563,7 +1563,7 @@ void SerialPrintHex(byte val) {
  *    Serial  instance
  * *************************************************************** */
 void SerialPrintHex32(uint32_t val) {
-  printFmtToDebug(PSTR("%08lX"), val);
+  printFmtToDebug("%08lX", val);
 }
 
 
@@ -1626,9 +1626,9 @@ void SerialPrintRAW(byte* msg, byte len) {
 
 void EEPROM_dump() {
   if ((debug_mode == 1 || haveTelnetClient) && EEPROM_ready) {
-    printlnToDebug(PSTR("EEPROM dump:"));
+    printlnToDebug("EEPROM dump:");
     for (uint16_t x=0; x<EEPROM_SIZE; x++) {
-      printFmtToDebug(PSTR("%02X "), EEPROM.read(x));
+      printFmtToDebug("%02X ", EEPROM.read(x));
     }
   }
 }
@@ -1757,21 +1757,21 @@ void resetDecodedTelegram() {
 char *TranslateAddr(byte addr, char *device) {
   const char *p = NULL;
   switch (addr & 0x7F) {
-    case ADDR_HEIZ: p = PSTR("HEIZ"); break;
-    case ADDR_EM1: p = PSTR("EM1"); break;
-    case ADDR_EM2: p = PSTR("EM2"); break;
-    case ADDR_RGT1: p = PSTR("RGT1"); break;
-    case ADDR_RGT2: p = PSTR("RGT2"); break;
-    case ADDR_RGT3: p = PSTR("RGT3"); break;
-    case ADDR_SRVC: p = PSTR("SRVC"); break;
-    case ADDR_DSP1: p = PSTR("DSP1"); break;
-    case ADDR_DSP2: p = PSTR("DSP2"); break;
-    case ADDR_DSP3: p = PSTR("DSP3"); break;
-    case ADDR_LAN: p = PSTR("LAN"); break;
-    case ADDR_OZW: p = PSTR("OZW"); break;
-    case ADDR_FUNK: p = PSTR("FUNK"); break;
-    case ADDR_RC: p = PSTR("REMO"); break;
-    case ADDR_ALL: p = PSTR("ALL "); break;
+    case ADDR_HEIZ: p = "HEIZ"; break;
+    case ADDR_EM1: p = "EM1"; break;
+    case ADDR_EM2: p = "EM2"; break;
+    case ADDR_RGT1: p = "RGT1"; break;
+    case ADDR_RGT2: p = "RGT2"; break;
+    case ADDR_RGT3: p = "RGT3"; break;
+    case ADDR_SRVC: p = "SRVC"; break;
+    case ADDR_DSP1: p = "DSP1"; break;
+    case ADDR_DSP2: p = "DSP2"; break;
+    case ADDR_DSP3: p = "DSP3"; break;
+    case ADDR_LAN: p = "LAN"; break;
+    case ADDR_OZW: p = "OZW"; break;
+    case ADDR_FUNK: p = "FUNK"; break;
+    case ADDR_RC: p = "REMO"; break;
+    case ADDR_ALL: p = "ALL "; break;
     default: bin2hex(device, &addr, 1, 0); break;
   }
   if (p) strcpy_P(device, p);
@@ -1829,7 +1829,7 @@ int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter){
     } else {
       isNotFirst = true;
     }
-    resultLen += sprintf_P(toBuffer + resultLen, PSTR("%02X"), fromAddr[i]);
+    resultLen += sprintf_P(toBuffer + resultLen, "%02X", fromAddr[i]);
   }
   return resultLen;
 }
@@ -1852,21 +1852,21 @@ char *TranslateType(byte type, char *mtype) {
     type = type & 0x0F;
   }
   switch (type) {
-    case TYPE_QINF: p = PSTR("QINF"); break;
-    case TYPE_INF: p = PSTR("INF"); break;
-    case TYPE_SET: p = PSTR("SET"); break;
-    case TYPE_ACK: p = PSTR("ACK"); break;
-    case TYPE_NACK: p = PSTR("NACK"); break;
-    case TYPE_QUR: p = PSTR("QUR"); break;
-    case TYPE_ANS: p = PSTR("ANS"); break;
-    case TYPE_QRV: p = PSTR("QRV"); break;
-    case TYPE_ARV: p = PSTR("ARV"); break;
-    case TYPE_ERR: p = PSTR("ERR"); break;
-    case TYPE_QRE: p = PSTR("QRE"); break;
-    case TYPE_IQ1: p = PSTR("IQ1"); break;
-    case TYPE_IA1: p = PSTR("IA1"); break;
-    case TYPE_IQ2: p = PSTR("IQ2"); break;
-    case TYPE_IA2: p = PSTR("IA2"); break;
+    case TYPE_QINF: p = "QINF"; break;
+    case TYPE_INF: p = "INF"; break;
+    case TYPE_SET: p = "SET"; break;
+    case TYPE_ACK: p = "ACK"; break;
+    case TYPE_NACK: p = "NACK"; break;
+    case TYPE_QUR: p = "QUR"; break;
+    case TYPE_ANS: p = "ANS"; break;
+    case TYPE_QRV: p = "QRV"; break;
+    case TYPE_ARV: p = "ARV"; break;
+    case TYPE_ERR: p = "ERR"; break;
+    case TYPE_QRE: p = "QRE"; break;
+    case TYPE_IQ1: p = "IQ1"; break;
+    case TYPE_IA1: p = "IA1"; break;
+    case TYPE_IQ2: p = "IQ2"; break;
+    case TYPE_IA2: p = "IA2"; break;
     // If no match found: print the hex value
     default: bin2hex(mtype, &type, 1, 0); break;
   } // endswitch
@@ -1934,7 +1934,7 @@ int undefinedValueToBuffer(char *p) {
 void printPassKey(void) {
   if (PASSKEY[0]) {
     printToWebClient(PASSKEY);
-    printToWebClient(PSTR("/"));
+    printToWebClient("/");
   }
 }
 
@@ -1951,11 +1951,11 @@ void printPassKey(void) {
  * *************************************************************** */
 void printyesno(bool i) {
   if (i) {
-    printToWebClient(PSTR(MENU_TEXT_YES "<BR>"));
+    printToWebClient(MENU_TEXT_YES "<BR>");
   } else {
-    printToWebClient(PSTR(MENU_TEXT_NO "<BR>"));
+    printToWebClient(MENU_TEXT_NO "<BR>");
   }
-  printToWebClient(PSTR("\r\n"));
+  printToWebClient("\r\n");
 }
 
 /** *****************************************************************
@@ -1973,7 +1973,7 @@ void printyesno(bool i) {
  void printDebugValueAndUnit(char *p1, char *p2) {
    printToDebug(p1);
    if (p2[0] != 0) {
-     printFmtToDebug(PSTR(" %s"), p2);
+     printFmtToDebug(" %s", p2);
    }
 }
 
@@ -2045,7 +2045,7 @@ void UpdateMaxDeviceList() {
            ((char *)&max_addr)[i] = EEPROM.read(getEEPROMaddress(CF_MAX_DEVADDR) + sizeof(max_devices[0]) * z + i);
           }
           max_devices[x] = max_addr;
-          printFmtToDebug(PSTR("Adding known Max ID to list: %08lX\r\n"), max_devices[x]);
+          printFmtToDebug("Adding known Max ID to list: %08lX\r\n", max_devices[x]);
         }
         break;
       }
@@ -2098,7 +2098,7 @@ void init_ota_update(){
     }, []() {
       HTTPUpload& upload = update_server.upload();
       if (upload.status == UPLOAD_FILE_START) {
-        printlnToDebug(PSTR("Updating ESP32 firmware..."));
+        printlnToDebug("Updating ESP32 firmware...");
         uint32_t maxSketchSpace = 0x140000;
         if (!Update.begin(maxSketchSpace)) { //start with max available size
           Update.printError(Serial);
@@ -2109,7 +2109,7 @@ void init_ota_update(){
         }
       } else if (upload.status == UPLOAD_FILE_END) {
         if (Update.end(true)) { //true to set the size to the current progress
-          printlnToDebug(PSTR("Update success, rebooting..."));
+          printlnToDebug("Update success, rebooting...");
         } else {
           Update.printError(Serial);
         }
@@ -2117,7 +2117,7 @@ void init_ota_update(){
       yield();
     });
     update_server.begin();
-    printlnToDebug(PSTR("Update Server started on port 8080."));
+    printlnToDebug("Update Server started on port 8080.");
   }
 }
 #endif
@@ -2134,11 +2134,11 @@ char *lookup_descr(float line) {
 
 void printDeviceArchToWebClient(){
   #if defined(ESP32)
-    printToWebClient(PSTR("ESP32"));
+    printToWebClient("ESP32");
   #elif defined(__SAM3X8E__)
-    printToWebClient(PSTR("Due"));
+    printToWebClient("Due");
   #else
-    printToWebClient(PSTR("Unknown"));
+    printToWebClient("Unknown");
   #endif
 }
 
@@ -2159,13 +2159,13 @@ char *GetDateTime(char *date) {
 #if defined(ESP32)
   struct tm now;
   getLocalTime(&now,100);
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+  sprintf_P(date,"%02d.%02d.%d %02d:%02d:%02d",
             currentDate.elements.day   = now.tm_mday,
             currentDate.elements.month = now.tm_mon + 1,
             currentDate.elements.year  = now.tm_year + 1900,
             now.tm_hour,now.tm_min,now.tm_sec);
 #else
-  sprintf_P(date,PSTR("%02d.%02d.%d %02d:%02d:%02d"),
+  sprintf_P(date,"%02d.%02d.%d %02d:%02d:%02d",
             currentDate.elements.day   = day(),
             currentDate.elements.month = month(),
             currentDate.elements.year  = year(),
@@ -2176,61 +2176,61 @@ char *GetDateTime(char *date) {
 }
 
 void generateConfigPage(void) {
-  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
-  printToWebClient(PSTR("<BR>" MENU_TEXT_MCU ": "));
+  printlnToWebClient(MENU_TEXT_CFG "<BR>");
+  printToWebClient("<BR>" MENU_TEXT_MCU ": ");
   printDeviceArchToWebClient();
-  printToWebClient(PSTR("<BR>\r\n" MENU_TEXT_VER ": "));
+  printToWebClient("<BR>\r\n" MENU_TEXT_VER ": ");
   printToWebClient(BSB_VERSION);
-  printFmtToWebClient(PSTR("<BR>\r\n" MENU_TEXT_RAM ": %d " MENU_TEXT_BYT "<BR>\r\n"), freeRam());
+  printFmtToWebClient("<BR>\r\n" MENU_TEXT_RAM ": %d " MENU_TEXT_BYT "<BR>\r\n", freeRam());
   unsigned long ms = millis();
   unsigned long s = ms / 1000;
   unsigned long m = s / 60;
   unsigned long h = m / 60;
   unsigned d = h / 24;
-  printFmtToWebClient(PSTR(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n"), ms, d, h%24, m%60, s%60, ms%1000);
+  printFmtToWebClient(MENU_TEXT_UPT ": %lu\r\nms = %ud+%02lu:%02lu:%02lu.%03lu<BR>\r\n", ms, d, h%24, m%60, s%60, ms%1000);
   char tmp_date[20];
-  printFmtToWebClient(PSTR(ENUM_CAT_00_TEXT ": %s<BR>\r\n"), GetDateTime(tmp_date));
-  printlnToWebClient(PSTR(MENU_TEXT_BUS ": "));
+  printFmtToWebClient(ENUM_CAT_00_TEXT ": %s<BR>\r\n", GetDateTime(tmp_date));
+  printlnToWebClient(MENU_TEXT_BUS ": ");
   int bustype = bus->getBusType();
 
   switch (bustype) {
-    case 0: printToWebClient(PSTR("BSB")); break;
-    case 1: printToWebClient(PSTR("LPB")); break;
-    case 2: printToWebClient(PSTR("PPS")); break;
+    case 0: printToWebClient("BSB"); break;
+    case 1: printToWebClient("LPB"); break;
+    case 2: printToWebClient("PPS"); break;
   }
   if (bustype != BUS_PPS) {
-    printFmtToWebClient(PSTR(" (%d, %d) "), bus->getBusAddr(), bus->getBusDest());
+    printFmtToWebClient(" (%d, %d) ", bus->getBusAddr(), bus->getBusDest());
 
     if ((default_flag & FL_RONLY) == FL_RONLY || ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && !programWriteMode)) {
-      printToWebClient(PSTR(MENU_TEXT_BRO));
+      printToWebClient(MENU_TEXT_BRO);
     } else {
-      printToWebClient(PSTR(MENU_TEXT_BRW));
+      printToWebClient(MENU_TEXT_BRW);
     }
   } else {
     if (pps_write == 1) {
-      printToWebClient(PSTR(" (" MENU_TEXT_BRW ")"));
+      printToWebClient(" (" MENU_TEXT_BRW ")");
     } else {
-      printToWebClient(PSTR(" (" MENU_TEXT_BRO ")"));
+      printToWebClient(" (" MENU_TEXT_BRO ")");
     }
   }
-  printToWebClient(PSTR("<BR>\r\n"));
+  printToWebClient("<BR>\r\n");
   if (webserver && (LoggingMode & CF_LOGMODE_SD_CARD)) {
 //    uint32_t m = micros();
     printToWebClient(STR_TEXT_FSP);
 #if !defined(ESP32)
     uint32_t volFree = SDCard.vol()->freeClusterCount();
     uint32_t fs = (uint32_t)(volFree*SDCard.vol()->sectorsPerCluster()/2048);
-    printFmtToWebClient(PSTR(": %lu MB<br>\r\n"), fs);
+    printFmtToWebClient(": %lu MB<br>\r\n", fs);
 #else
     uint64_t fs = totalBytes()-usedBytes();
-    printFmtToWebClient(PSTR(": %llu Bytes<br>\r\n"), fs);
+    printFmtToWebClient(": %llu Bytes<br>\r\n", fs);
 #endif
-//    printFmtToWebClient(PSTR("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n"), fs, volFree, micros() - m);
+//    printFmtToWebClient("Free space: %lu MB<br>free clusters: %lu<BR>freeClusterCount() call time: %lu microseconds<BR><br>\r\n", fs, volFree, micros() - m);
   }
-  printToWebClient(PSTR("<BR>\r\n"));
+  printToWebClient("<BR>\r\n");
 
 // list of enabled modules
-  printToWebClient(PSTR(MENU_TEXT_MOD ": <BR>\r\n"
+  printToWebClient(MENU_TEXT_MOD ": <BR>\r\n"
 
   #ifdef CUSTOM_COMMANDS
   #ifdef ANY_MODULE_COMPILED
@@ -2262,11 +2262,11 @@ void generateConfigPage(void) {
   #if !defined (ANY_MODULE_COMPILED)
   "NONE"
   #endif
-  "<BR><BR>\r\n"));
+  "<BR><BR>\r\n");
 
   // end of list of enabled modules
 
-  printToWebClient(PSTR("<BR>\r\n"));
+  printToWebClient("<BR>\r\n");
 }
 
 uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
@@ -2319,7 +2319,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
         char *ptr_t = ptr;
         ptr = strchr(ptr, ',');
         if (ptr) ptr[0] = 0;
-        strcpy_P(sscanf_buf, PSTR("%x:%x:%x:%x:%x:%x"));
+        strcpy_P(sscanf_buf, "%x:%x:%x:%x:%x:%x");
         if(sscanf(ptr_t, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5) == 6) {
           ((byte *)variable)[j * sizeof(mac) + 0] = (byte)(i0 & 0xFF);
           ((byte *)variable)[j * sizeof(mac) + 1] = (byte)(i1 & 0xFF);
@@ -2335,7 +2335,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
     }
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
-      strcpy_P(sscanf_buf, PSTR("%u.%u.%u.%u"));
+      strcpy_P(sscanf_buf, "%u.%u.%u.%u");
       sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3);
       byte variable[4];
       variable[0] = (byte)(i0 & 0xFF);
@@ -2410,7 +2410,7 @@ bool SaveConfigFromRAMtoEEPROM() {
   //save new values from RAM to EEPROM
   for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
     if (writeToEEPROM(i)) {
-      if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("Option %d updated. EEPROM address: %04d\n"), i, getEEPROMaddress(i));
+      if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Option %d updated. EEPROM address: %04d\n", i, getEEPROMaddress(i));
       switch (i) {
         case CF_BUSTYPE:
         case CF_OWN_BSBLPBADDR:
@@ -2455,7 +2455,7 @@ bool SaveConfigFromRAMtoEEPROM() {
             init_ota_update();
           } else {
             update_server.stop();
-            printlnToDebug(PSTR("Update Server stopped."));
+            printlnToDebug("Update Server stopped.");
           }
           break;
 #endif
@@ -2539,7 +2539,7 @@ void printMAClistToWebClient(byte *variable, uint16_t size) {
       }
     }
     if (mac_valid) {
-      if (!isFirst) printToWebClient(PSTR(","));
+      if (!isFirst) printToWebClient(",");
       isFirst = false;
       bin2hex(outBuf, variable + j * sizeof(mac), sizeof(mac), ':');
       printToWebClient(outBuf);
@@ -2554,9 +2554,9 @@ void printDHTlistToWebClient(byte *variable, uint16_t size) {
   bool isFirst = true;
   for (uint16_t j = 0; j < size/sizeof(byte); j++) {
     if (signed_variable[j]>=0) {
-      if (!isFirst) printToWebClient(PSTR(","));
+      if (!isFirst) printToWebClient(",");
       isFirst = false;
-      printFmtToWebClient(PSTR("%d"), signed_variable[j]);
+      printFmtToWebClient("%d", signed_variable[j]);
     }
   }
 }
@@ -2565,11 +2565,11 @@ void printProglistToWebClient(parameter *variable, uint16_t size) {
   bool isFirst = true;
   for (uint16_t j = 0; j < size/sizeof(parameter); j++) {
     if (variable[j].number) {
-      if (!isFirst) printToWebClient(PSTR(","));
+      if (!isFirst) printToWebClient(",");
       isFirst = false;
-      printFmtToWebClient(PSTR("%g"), variable[j].number);
+      printFmtToWebClient("%g", variable[j].number);
       if (variable[j].dest_addr > 0) {
-        printFmtToWebClient(PSTR("!%d"), variable[j].dest_addr);
+        printFmtToWebClient("!%d", variable[j].dest_addr);
       }
     }
   }
@@ -2579,9 +2579,9 @@ void printMAXlistToWebClient(byte *variable, uint16_t size) {
   bool isFirst = true;
   for (uint16_t j = 0; j < size/sizeof(byte); j += sizeof(max_device_list[0])) {
     if (variable[j]) {
-      if (!isFirst) printToWebClient(PSTR(","));
+      if (!isFirst) printToWebClient(",");
       isFirst = false;
-      printFmtToWebClient(PSTR("%s"), variable + j);
+      printFmtToWebClient("%s", variable + j);
     }
   }
 }
@@ -2601,11 +2601,11 @@ void applyingConfig() {
     }
 
     if (c == '=') { //key/value delimiter
-      char *ptr = strstr_P(outBuf, PSTR("option_"));
+      char *ptr = strstr_P(outBuf, "option_");
       if (!ptr) continue;
       ptr += 7; //len of "option_" string
       option_id = atoi(ptr) - 1;
-      printFmtToDebug(PSTR("Option ID: %d\r\n"), option_id);
+      printFmtToDebug("Option ID: %d\r\n", option_id);
       k_flag = true;
       i = 0;
       outBuf[i] = 0;
@@ -2618,7 +2618,7 @@ void applyingConfig() {
       }
 
       if (takeNewConfigValueFromUI_andWriteToRAM(option_id, outBuf)  == 1)
-        printFmtToDebug(PSTR("Option value: %s\r\n"), outBuf);
+        printFmtToDebug("Option value: %s\r\n", outBuf);
 
       k_flag = false;
       i = 0;
@@ -2649,20 +2649,20 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentS
   if(printCurrentSelectionOnly){
     listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE, DO_NOT_PRINT_DISABLED_VALUE);
   } else {
-    listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+    listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
   }
 }
 
 void generateWebConfigPage(bool printOnly) {
-  printlnToWebClient(PSTR(MENU_TEXT_CFG "<BR>"));
+  printlnToWebClient(MENU_TEXT_CFG "<BR>");
   if(!printOnly){
     //This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
-    printToWebClient(PSTR("<script>function bvc(e,v){o=e.closest('div').querySelector('input');n=Number(o.value);n&v?p=n-v:p=n+v;o.value=p}</script>"));
-    printToWebClient(PSTR("<form id=\"config\" method=\"post\" action=\""));
-    if (PASSKEY[0]) {printToWebClient(PSTR("/")); printToWebClient(PASSKEY);}
-    printToWebClient(PSTR("/CI\">"));
+    printToWebClient("<script>function bvc(e,v){o=e.closest('div').querySelector('input');n=Number(o.value);n&v?p=n-v:p=n+v;o.value=p}</script>");
+    printToWebClient("<form id=\"config\" method=\"post\" action=\"");
+    if (PASSKEY[0]) {printToWebClient("/"); printToWebClient(PASSKEY);}
+    printToWebClient("/CI\">");
   }
-  printToWebClient(PSTR("<table align=\"center\"><tbody>\r\n"));
+  printToWebClient("<table align=\"center\"><tbody>\r\n");
   for (uint16_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
     configuration_struct cfg;
 
@@ -2676,7 +2676,7 @@ void generateWebConfigPage(bool printOnly) {
     byte *variable = getConfigVariableAddress(cfg.id);
     if (!variable) continue;
 
-    printToWebClient(PSTR("<tr><td>"));
+    printToWebClient("<tr><td>");
 //Print param category
     printToWebClient(catalist[cfg.category].desc);
     const char fieldDelimiter[] PROGMEM = "</td><td>\r\n";
@@ -2690,31 +2690,31 @@ void generateWebConfigPage(bool printOnly) {
     if(!printOnly){
       switch (cfg.input_type) {
         case CPI_TEXT:
-        printFmtToWebClient(PSTR("<input type=text id='option_%d' name='option_%d' "), cfg.id + 1, cfg.id + 1);
+        printFmtToWebClient("<input type=text id='option_%d' name='option_%d' ", cfg.id + 1, cfg.id + 1);
         switch (cfg.var_type) {
           case CDT_MAC:
-            printToWebClient(PSTR("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'"));
+            printToWebClient("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'");
             break;
           case CDT_IPV4:
-            printToWebClient(PSTR("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'"));
+            printToWebClient("pattern='((^|\\.)(25[0-5]|2[0-4]\\d|[01]?\\d{1,2})){4}'");
             break;
           case CDT_PROGNRLIST:
-            printToWebClient(PSTR("pattern='((^|,)\\d{1,5}(\\.\\d)?((!|!-)\\d{1,3})?)+'"));
+            printToWebClient("pattern='((^|,)\\d{1,5}(\\.\\d)?((!|!-)\\d{1,3})?)+'");
             break;
           }
-        printToWebClient(PSTR(" value='"));
+        printToWebClient(" value='");
         break;
         case CPI_SWITCH:
         case CPI_DROPDOWN:
-           printFmtToWebClient(PSTR("<select id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+           printFmtToWebClient("<select id='option_%d' name='option_%d'>\r\n", cfg.id + 1, cfg.id + 1);
         break;
         case CPI_CHECKBOXES:
-           printFmtToWebClient(PSTR("<div><input type=hidden id='option_%d' name='option_%d' value='%d'>\r\n"), cfg.id + 1, cfg.id + 1, (int)variable[0]);
+           printFmtToWebClient("<div><input type=hidden id='option_%d' name='option_%d' value='%d'>\r\n", cfg.id + 1, cfg.id + 1, (int)variable[0]);
         break;
         default: break;
       }
     } else {
-      printFmtToWebClient(PSTR("<output id='option_%d' name='option_%d'>\r\n"), cfg.id + 1, cfg.id + 1);
+      printFmtToWebClient("<output id='option_%d' name='option_%d'>\r\n", cfg.id + 1, cfg.id + 1);
     }
   
   
@@ -2722,7 +2722,7 @@ void generateWebConfigPage(bool printOnly) {
       case CDT_VOID: break;
       case CDT_BYTE:
         switch (cfg.input_type) {
-          case CPI_TEXT: printFmtToWebClient(PSTR("%d"), (int)variable[0]); break;
+          case CPI_TEXT: printFmtToWebClient("%d", (int)variable[0]); break;
           case CPI_SWITCH:{
             int i;
             switch (cfg.id) {
@@ -2740,7 +2740,7 @@ void generateWebConfigPage(bool printOnly) {
             if (i > 0) {
               uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
               uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-              listEnumValues(enumstr, enumstr_len, PSTR("<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,"), PSTR(")\">"), PSTR(")\" checked>"), PSTR("</label>"), NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS, DO_NOT_PRINT_DISABLED_VALUE);
+              listEnumValues(enumstr, enumstr_len, "<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,", ")\">", ")\" checked>", "</label>", NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS, DO_NOT_PRINT_DISABLED_VALUE);
             }
             break;}
           case CPI_DROPDOWN:{
@@ -2753,12 +2753,12 @@ void generateWebConfigPage(bool printOnly) {
         break;
       case CDT_INT8:
         if (((int8_t *)variable)[0] >= 0) {
-          printFmtToWebClient(PSTR("%d"), ((int8_t *)variable)[0]);
+          printFmtToWebClient("%d", ((int8_t *)variable)[0]);
         }
         break;
       case CDT_UINT16:
         switch (cfg.input_type) {
-          case CPI_TEXT: printFmtToWebClient(PSTR("%u"), ((uint16_t *)variable)[0]); break;
+          case CPI_TEXT: printFmtToWebClient("%u", ((uint16_t *)variable)[0]); break;
           case CPI_DROPDOWN:{
             int i;
             switch (cfg.id) {
@@ -2776,16 +2776,16 @@ void generateWebConfigPage(bool printOnly) {
           }
         break;
       case CDT_UINT32:
-        printFmtToWebClient(PSTR("%lu"), ((uint32_t *)variable)[0]);
+        printFmtToWebClient("%lu", ((uint32_t *)variable)[0]);
         break;
       case CDT_STRING:
-        printFmtToWebClient(PSTR("%s"), (char *)variable);
+        printFmtToWebClient("%s", (char *)variable);
         break;
       case CDT_MAC:
         printMAClistToWebClient((byte *)variable, cfg.size);
         break;
       case CDT_IPV4:
-        printFmtToWebClient(PSTR("%u.%u.%u.%u"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
+        printFmtToWebClient("%u.%u.%u.%u", (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
         break;
       case CDT_PROGNRLIST:
         printProglistToWebClient((parameter *)variable, cfg.size);
@@ -2802,33 +2802,33 @@ void generateWebConfigPage(bool printOnly) {
   //Closing tag
     if(!printOnly){
       switch (cfg.input_type) {
-        case CPI_TEXT: printToWebClient(PSTR("'>")); break;
+        case CPI_TEXT: printToWebClient("'>"); break;
         case CPI_SWITCH:
-        case CPI_DROPDOWN: printToWebClient(PSTR("</select>")); break;
-        case CPI_CHECKBOXES: printToWebClient(PSTR("</div>"));break;
+        case CPI_DROPDOWN: printToWebClient("</select>"); break;
+        case CPI_CHECKBOXES: printToWebClient("</div>");break;
         default: break;
       }
     } else {
-      printToWebClient(PSTR("</output>"));
+      printToWebClient("</output>");
     }
-    printToWebClient(PSTR("</td></tr>\r\n"));
+    printToWebClient("</td></tr>\r\n");
   }
-  printToWebClient(PSTR("</tbody></table><p>"));
+  printToWebClient("</tbody></table><p>");
   if(!printOnly){
-    printToWebClient(PSTR("<input type=\"submit\" value=\""));
+    printToWebClient("<input type=\"submit\" value=\"");
     printToWebClient(STR_SAVE);
-    printToWebClient(PSTR("\"></p>\r\n</form>\r\n"));
+    printToWebClient("\"></p>\r\n</form>\r\n");
   }
 }
 
 void printConfigJSONPossibleValues(int i, bool its_a_bits_enum) {
-  printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
+  printToWebClient("    \"possibleValues\": [\r\n");
   uint16_t enumstr_len=get_cmdtbl_enumstr_len(i);
   uint_farptr_t enumstr = calc_enum_offset(get_cmdtbl_enumstr(i), enumstr_len, 0);
-  listEnumValues(enumstr, enumstr_len, PSTR("      { \"enumValue\": \""), PSTR("\", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0,
+  listEnumValues(enumstr, enumstr_len, "      { \"enumValue\": \"", "\", \"desc\": \"", NULL, "\" }", ",\r\n", 0,
     its_a_bits_enum?PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS:
     PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
-  printToWebClient(PSTR("\r\n      ]"));
+  printToWebClient("\r\n      ]");
 }
 
 void generateJSONwithConfig() {
@@ -2843,23 +2843,23 @@ void generateJSONwithConfig() {
     if(config_level == 1 && !(cfg.flags & OPT_FL_ADVANCED)) continue;
     byte *variable = getConfigVariableAddress(cfg.id);
     if (!variable) continue;
-    if (notFirst) {printToWebClient(PSTR("\r\n    },\r\n"));} else notFirst = true;
+    if (notFirst) {printToWebClient("\r\n    },\r\n");} else notFirst = true;
 
-    printFmtToWebClient(PSTR("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \""), i, cfg.id, cfg.var_type, cfg.input_type);
+    printFmtToWebClient("  \"%d\": {\r\n    \"parameter\": %d,\r\n    \"type\": %d,\r\n    \"format\": %d,\r\n    \"category\": \"", i, cfg.id, cfg.var_type, cfg.input_type);
 //Print param category
     printToWebClient(catalist[cfg.category].desc);
 
-    printToWebClient(PSTR("\",\r\n    \"name\": \""));
+    printToWebClient("\",\r\n    \"name\": \"");
 //Param Name
     printToWebClient(cfg.desc);
-    printToWebClient(PSTR("\",\r\n    \"value\": \""));
+    printToWebClient("\",\r\n    \"value\": \"");
 //Param Value
 
     switch (cfg.var_type) {
       case CDT_VOID: break;
       case CDT_BYTE:
         switch (cfg.input_type) {
-          case CPI_TEXT: printFmtToWebClient(PSTR("%d\""), (int)variable[0]); break;
+          case CPI_TEXT: printFmtToWebClient("%d\"", (int)variable[0]); break;
           case CPI_SWITCH:{
             int i;
             switch (cfg.id) {
@@ -2870,14 +2870,14 @@ void generateJSONwithConfig() {
                 i=findLine(65533,0,NULL); //return ENUM_ONOFF
                 break;
             }
-            printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
+            printFmtToWebClient("%u\",\r\n", (uint16_t)variable[0]);
             printConfigJSONPossibleValues(i, false);
             break;}
           case CPI_CHECKBOXES:
           case CPI_DROPDOWN:{
             int i = returnENUMID4ConfigOption(cfg.id);
             if (i > 0) {
-              printFmtToWebClient(PSTR("%u\",\r\n"), (uint16_t)variable[0]);
+              printFmtToWebClient("%u\",\r\n", (uint16_t)variable[0]);
               printConfigJSONPossibleValues(i, cfg.input_type == CPI_CHECKBOXES);
             }
             break;}
@@ -2885,12 +2885,12 @@ void generateJSONwithConfig() {
         break;
       case CDT_INT8:
         if (((int8_t *)variable)[0] >= 0) {
-          printFmtToWebClient(PSTR("%d\""), ((int8_t *)variable)[0]);
+          printFmtToWebClient("%d\"", ((int8_t *)variable)[0]);
         }
         break;
       case CDT_UINT16:
         switch (cfg.input_type) {
-          case CPI_TEXT: printFmtToWebClient(PSTR("%u\""), ((uint16_t *)variable)[0]); break;
+          case CPI_TEXT: printFmtToWebClient("%u\"", ((uint16_t *)variable)[0]); break;
           case CPI_DROPDOWN:{
             int i;
             switch (cfg.id) {
@@ -2902,42 +2902,42 @@ void generateJSONwithConfig() {
                 break;
             }
             if (i > 0) {
-              printFmtToWebClient(PSTR("%u\",\r\n"), ((uint16_t *)variable)[0]);
+              printFmtToWebClient("%u\",\r\n", ((uint16_t *)variable)[0]);
               printConfigJSONPossibleValues(i, false);
             }
             break;}
           }
         break;
       case CDT_UINT32:
-        printFmtToWebClient(PSTR("%lu\""), ((uint32_t *)variable)[0]);
+        printFmtToWebClient("%lu\"", ((uint32_t *)variable)[0]);
         break;
       case CDT_STRING:
-        printFmtToWebClient(PSTR("%s\""), (char *)variable);
+        printFmtToWebClient("%s\"", (char *)variable);
         break;
       case CDT_MAC:
         printMAClistToWebClient((byte *)variable, cfg.size);
-        printToWebClient(PSTR("\""));
-   //       printFmtToWebClient(PSTR("%02X:%02X:%02X:%02X:%02X:%02X"), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
+        printToWebClient("\"");
+   //       printFmtToWebClient("%02X:%02X:%02X:%02X:%02X:%02X", (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3], (int)variable[4], (int)variable[5]);
         break;
       case CDT_IPV4:
-        printFmtToWebClient(PSTR("%u.%u.%u.%u\""), (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
+        printFmtToWebClient("%u.%u.%u.%u\"", (int)variable[0], (int)variable[1], (int)variable[2], (int)variable[3]);
         break;
       case CDT_PROGNRLIST:
         printProglistToWebClient((parameter *)variable, cfg.size);
-        printToWebClient(PSTR("\""));
+        printToWebClient("\"");
         break;
       case CDT_DHTBUS:
         printDHTlistToWebClient((byte *)variable, cfg.size);
-        printToWebClient(PSTR("\""));
+        printToWebClient("\"");
         break;
       case CDT_MAXDEVICELIST:
         printMAXlistToWebClient((byte *)variable, cfg.size);
-        printToWebClient(PSTR("\""));
+        printToWebClient("\"");
         break;
       default: break;
     }
   }
-  printToWebClient(PSTR("\r\n    }\r\n"));
+  printToWebClient("\r\n    }\r\n");
 }
 
 /** *****************************************************************
@@ -3021,40 +3021,40 @@ void LogTelegram(byte* msg) {
     dataFile = SDCard.open(journalFileName, FILE_APPEND);
     if (dataFile) {
       int outBufLen = 0;
-      outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
+      outBufLen += sprintf_P(outBuf, "%lu;%s;", millis(), GetDateTime(outBuf + outBufLen + 80));
       if (!known) {                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR("UNKNOWN")));
+        outBufLen += strlen(strcpy_P(outBuf + outBufLen, "UNKNOWN"));
       } else {
         // Entry in command table is a documented command code
         line=get_cmdtbl_line(i);
         cmd_type=get_cmdtbl_type(i);
-        outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%g"), line);
+        outBufLen += sprintf_P(outBuf + outBufLen, "%g", line);
         }
 
       uint8_t msg_len = 0;
       if (bus->getBusType() != BUS_PPS) {
-        outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s->%s %s;"), TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+(bus->getBusType()*4)], outBuf + outBufLen + 60));
+        outBufLen += sprintf_P(outBuf + outBufLen, ";%s->%s %s;", TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+(bus->getBusType()*4)], outBuf + outBufLen + 60));
         msg_len = msg[bus->getLen_idx()]+bus->getBusType();
       } else {
-        strcat_P(outBuf + outBufLen, PSTR(";"));
+        strcat_P(outBuf + outBufLen, ";");
         const char *getfarstrings;
         switch (msg[0] & 0x0F) {                              // messages from heater
-          case 0x0D: getfarstrings = PSTR("PPS INF"); break;  // 0x1D
-          case 0x0E: getfarstrings = PSTR("PPS REQ"); break;  // 0x1E
-          case 0x07: getfarstrings = PSTR("PPS RTS"); break;  // 0x17
-          default: getfarstrings = PSTR(""); break;
+          case 0x0D: getfarstrings = "PPS INF"; break;  // 0x1D
+          case 0x0E: getfarstrings = "PPS REQ"; break;  // 0x1E
+          case 0x07: getfarstrings = "PPS RTS"; break;  // 0x17
+          default: getfarstrings = ""; break;
         }
         switch (msg[0]) {                                     // messages from room unit - had to split this up because some PPS devices change high byte, but room units not, so 0x1D and 0xFD would clash
           case 0xF8:
           case 0xFB:
           case 0xFD:
           case 0xFE:
-            getfarstrings = PSTR("PPS ANS"); break;
-          default: getfarstrings = PSTR(""); break;
+            getfarstrings = "PPS ANS"; break;
+          default: getfarstrings = ""; break;
         }
         strcat_P(outBuf + outBufLen, getfarstrings);
-        strcat_P(outBuf + outBufLen, PSTR(";"));
+        strcat_P(outBuf + outBufLen, ";");
         outBufLen += strlen(outBuf + outBufLen);
 //            msg_len = 9+(msg[0]==0x17 && pps_write != 1);
         msg_len = 9;
@@ -3064,7 +3064,7 @@ void LogTelegram(byte* msg) {
       // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
 
       if (bus->getBusType() != BUS_PPS && (msg[4+(bus->getBusType()*4)] == TYPE_INF || msg[4+(bus->getBusType()*4)] == TYPE_SET || msg[4+(bus->getBusType()*4)] == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
-        outBufLen += strlen(strcat_P(outBuf + outBufLen, PSTR(";")));
+        outBufLen += strlen(strcat_P(outBuf + outBufLen, ";"));
         if (bus->getBusType() == BUS_LPB) {
           data_len=msg[1]-14;
         } else {
@@ -3088,7 +3088,7 @@ void LogTelegram(byte* msg) {
         if (p != NULL) *p=',';
         outBufLen += strlen(outBuf + outBufLen);
       }
-      strcat_P(outBuf + outBufLen, PSTR("\r\n"));
+      strcat_P(outBuf + outBufLen, "\r\n");
       dataFile.print(outBuf);
       dataFile.close();
     }
@@ -3143,11 +3143,11 @@ int set(float line      // the ProgNr of the heater parameter
   uint16_t dev_flags = get_cmdtbl_flags(i);
   // Check for readonly parameter
   if (programIsreadOnly(dev_flags)) {
-    printlnToDebug(PSTR("Parameter is readonly!"));
+    printlnToDebug("Parameter is readonly!");
     return 2;   // return value for trying to set a readonly parameter
   }
   if ((dev_flags & FL_FORCE_INF) && setcmd) {
-    printlnToDebug(PSTR("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now..."));
+    printlnToDebug("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now...");
     setcmd = false;     // SPECIAL_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
   }
 
@@ -3171,7 +3171,7 @@ int set(float line      // the ProgNr of the heater parameter
       }
       if ((line >= BSP_LONG && line < BSP_LONG + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
-        strcpy_P(sscanf_buf, PSTR("%ld"));
+        strcpy_P(sscanf_buf, "%ld");
         sscanf(val, sscanf_buf, &custom_longs[(int)line - BSP_LONG]);
         return 1;
       }
@@ -3196,17 +3196,17 @@ int set(float line      // the ProgNr of the heater parameter
       #else
         setTime(hour(), minute(), second(), dow, 1, 2018);
       #endif
-        if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("Setting weekday to %d\r\n"), weekday());
+        if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Setting weekday to %d\r\n", weekday());
         pps_wday_set = true;
         break;
       }
       case VT_PPS_TIME:
       {
         int hour=0, minute=0, second=0;
-        strcpy_P(sscanf_buf, PSTR("%d.%d.%d"));
+        strcpy_P(sscanf_buf, "%d.%d.%d");
         sscanf(val, sscanf_buf, &hour, &minute, &second);
         setTime(hour, minute, second, weekday(), 1, 2018);
-        if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("Setting time to %d:%d:%d\r\n"), hour, minute, second);
+        if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Setting time to %d:%d:%d\r\n", hour, minute, second);
         pps_time_set = true;
         break;
       }
@@ -3228,7 +3228,7 @@ int set(float line      // the ProgNr of the heater parameter
     uint16_t flags=get_cmdtbl_flags(i);
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
 //    if(EEPROM_ready && (allow_write_pps_values[cmd_no / 8] & (1 << (cmd_no % 8)))) {
-      printFmtToDebug(PSTR("Writing EEPROM slot %d with value %u"), cmd_no, pps_values[cmd_no]);
+      printFmtToDebug("Writing EEPROM slot %d with value %u", cmd_no, pps_values[cmd_no]);
       writelnToDebug();
       writeToEEPROM(CF_PPS_VALUES);
     }
@@ -3504,25 +3504,25 @@ int set(float line      // the ProgNr of the heater parameter
       if (val[0]!='\0') {
         switch(decodedTelegram.type){
           case VT_YEAR:
-            strcpy_P(sscanf_buf, PSTR("%d"));
+            strcpy_P(sscanf_buf, "%d");
             if (1 != sscanf(val, sscanf_buf, &y)) {
               decodedTelegram.error = 262;
-              error_msg = PSTR("year!");
+              error_msg = "year!";
             } else {
               // Send to the PC hardware serial interface (DEBUG)
-              printFmtToDebug(PSTR("year: %d\r\n"), y);
+              printFmtToDebug("year: %d\r\n", y);
               date_flag = 0x0F;
             }
           break;
           case VT_DAYMONTH:
           case VT_VACATIONPROG:
-            strcpy_P(sscanf_buf, PSTR("%d.%d."));
+            strcpy_P(sscanf_buf, "%d.%d.");
             if (2 != sscanf(val, sscanf_buf, &d, &m)) {
               decodedTelegram.error = 262;
-              error_msg = PSTR("day/month!");
+              error_msg = "day/month!";
             } else {
               // Send to the PC hardware serial interface (DEBUG)
-              printFmtToDebug(PSTR("day/month: %d.%d.\r\n"), d, m);
+              printFmtToDebug("day/month: %d.%d.\r\n", d, m);
               if (decodedTelegram.type == VT_DAYMONTH) {
                 date_flag = 0x16;
               } else {
@@ -3531,30 +3531,30 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_TIME:
-            strcpy_P(sscanf_buf, PSTR("%d:%d:%d"));
+            strcpy_P(sscanf_buf, "%d:%d:%d");
             if (3 != sscanf(val, sscanf_buf, &hour, &min, &sec)) {
               decodedTelegram.error = 262;
-              error_msg = PSTR("time!");
+              error_msg = "time!";
             } else {
               // Send to the PC hardware serial interface (DEBUG)
-              printFmtToDebug(PSTR("time: %d:%d:%d\r\n"), hour, min, sec);
+              printFmtToDebug("time: %d:%d:%d\r\n", hour, min, sec);
               date_flag = 0x1D;
             }
           break;
           case VT_DATETIME:
-            strcpy_P(sscanf_buf, PSTR("%d.%d.%d_%d:%d:%d"));
+            strcpy_P(sscanf_buf, "%d.%d.%d_%d:%d:%d");
             if (6 != sscanf(val, sscanf_buf, &d, &m, &y, &hour, &min, &sec)) {
               decodedTelegram.error = 262;
-              error_msg = PSTR("date/time!");
+              error_msg = "date/time!";
             } else {
               // Send to the PC hardware serial interface (DEBUG)
-              printFmtToDebug(PSTR("date time: %d.%d.%d %d:%d:%d\r\n"), d, m, y, hour, min, sec);
+              printFmtToDebug("date time: %d.%d.%d %d:%d:%d\r\n", d, m, y, hour, min, sec);
               date_flag = 0x00;
             }
           break;
         }
         if(decodedTelegram.error == 262){
-          printToDebug(PSTR("Too few/many arguments for "));
+          printToDebug("Too few/many arguments for ");
           printlnToDebug(error_msg);
           return 0;
         }
@@ -3590,7 +3590,7 @@ int set(float line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      strcpy_P(sscanf_buf, PSTR("%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d"));
+      strcpy_P(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
       ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
       if (ret<4)      // BEGIN hour/minute and END hour/minute
@@ -3629,7 +3629,7 @@ int set(float line      // the ProgNr of the heater parameter
       }
 
       if (data_len > 18) {
-        printFmtToDebug(PSTR("Set failed, invalid data length: %d\r\n"), data_len);
+        printFmtToDebug("Set failed, invalid data length: %d\r\n", data_len);
         return 0;
       }
 
@@ -3654,13 +3654,13 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_UNKNOWN:
 */
     default:
-      printlnToDebug(PSTR("Unknown type or read-only parameter"));
+      printlnToDebug("Unknown type or read-only parameter");
       return 2;
     break;
   } // endswitch
 
   // Send a message to PC hardware serial port
-  printFmtToDebug(PSTR("setting line: %g val: "), line);
+  printFmtToDebug("setting line: %g val: ", line);
   SerialPrintRAW(param,param_len);
   writelnToDebug();
 
@@ -3675,7 +3675,7 @@ int set(float line      // the ProgNr of the heater parameter
              , param_len   // payload length
              , setcmd) != BUS_OK)    // wait_for_reply
   {
-    printFmtToDebug(PSTR("set failed\r\n"));
+    printFmtToDebug("set failed\r\n");
     return 0;
   }
 
@@ -3693,7 +3693,7 @@ int set(float line      // the ProgNr of the heater parameter
   LogTelegram(msg);
   // Expect an acknowledgement to our SET telegram
   if (msg[4+(bus->getBusType()*4)]!=TYPE_ACK) {      // msg type at 4 (BSB) or 8 (LPB)
-    printlnToDebug(PSTR("set failed NACK"));
+    printlnToDebug("set failed NACK");
     return 0;
   }
 
@@ -3749,15 +3749,15 @@ int queryDefaultValue(float line, byte *msg, byte *tx_msg) {
 const char* printError(uint16_t error) {
   const char *errormsgptr;
   switch (error) {
-    case 0: errormsgptr =  PSTR(""); break;
-    case 7: errormsgptr = PSTR(" (parameter not supported)"); break;
-    case 256: errormsgptr = PSTR(" - decoding error"); break;
-    case 257: errormsgptr =  PSTR(" unknown command"); break;
-    case 258: errormsgptr = PSTR(" - not found"); break;
-    case 259: errormsgptr = PSTR(" no enum str"); break;
-    case 260: errormsgptr = PSTR(" - unknown type"); break;
-    case 261: errormsgptr =  PSTR(" query failed"); break;
-    default: if (error < 256) errormsgptr = PSTR(" (bus error)"); else errormsgptr = PSTR(" (??? error)"); break;
+    case 0: errormsgptr =  ""; break;
+    case 7: errormsgptr = " (parameter not supported)"; break;
+    case 256: errormsgptr = " - decoding error"; break;
+    case 257: errormsgptr =  " unknown command"; break;
+    case 258: errormsgptr = " - not found"; break;
+    case 259: errormsgptr = " no enum str"; break;
+    case 260: errormsgptr = " - unknown type"; break;
+    case 261: errormsgptr =  " query failed"; break;
+    default: if (error < 256) errormsgptr = " (bus error)"; else errormsgptr = " (??? error)"; break;
   }
   return errormsgptr;
 }
@@ -3782,38 +3782,38 @@ char *build_pvalstr(bool extended) {
   int len = 0;
   outBuf[len] = 0;
   if (extended && decodedTelegram.error != 257 && decodedTelegram.prognr >= 0) {
-    len+=sprintf_P(outBuf, PSTR("%g "), decodedTelegram.prognr);
+    len+=sprintf_P(outBuf, "%g ", decodedTelegram.prognr);
 
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.catdescaddr));
-    len+=strlen(strcpy_P(outBuf + len, PSTR(" - ")));
+    len+=strlen(strcpy_P(outBuf + len, " - "));
     if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_AVERAGES + numAverages) {
-      len+=strlen(strcpy_P(outBuf + len, PSTR(STR_24A_TEXT)));
-      len+=strlen(strcpy_P(outBuf + len, PSTR(". ")));
+      len+=strlen(strcpy_P(outBuf + len, STR_24A_TEXT));
+      len+=strlen(strcpy_P(outBuf + len, ". "));
     }
     len+=strlen(strcpy_PF(outBuf + len, decodedTelegram.prognrdescaddr));
     if (decodedTelegram.sensorid) {
-      len+=sprintf_P(outBuf + len, PSTR(" #%d"), decodedTelegram.sensorid);
+      len+=sprintf_P(outBuf + len, " #%d", decodedTelegram.sensorid);
     }
-    len+=strlen(strcpy_P(outBuf + len, PSTR(": ")));
+    len+=strlen(strcpy_P(outBuf + len, ": "));
   }
   if (decodedTelegram.value[0] != 0 && decodedTelegram.error != 260) {
     len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
   }
   if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
     if (decodedTelegram.enumdescaddr) {
-      strcpy_P(outBuf + len, PSTR(" - "));
+      strcpy_P(outBuf + len, " - ");
       strcat_PF(outBuf + len, decodedTelegram.enumdescaddr);
       len+=strlen(outBuf + len);
      }
   } else {
     if (decodedTelegram.unit[0] != 0 && decodedTelegram.error != 7) {
-      strcpy_P(outBuf + len, PSTR(" "));
+      strcpy_P(outBuf + len, " ");
       strcat(outBuf + len, decodedTelegram.unit);
       len+=strlen(outBuf + len);
     }
   }
   if (decodedTelegram.telegramDump) {
-    strcpy_P(outBuf + len, PSTR(" "));
+    strcpy_P(outBuf + len, " ");
     strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
@@ -3830,7 +3830,7 @@ void query_program_and_print_result(int line, const char* prefix, const char* su
   if (suffix) {
     printToWebClient(suffix);
   } else {
-    printToWebClient(PSTR(": "));
+    printToWebClient(": ");
   }
   printToWebClient(build_pvalstr(0));
 }
@@ -3853,9 +3853,9 @@ void query_program_and_print_result(int line, const char* prefix, const char* su
 void query_printHTML() {
   if (decodedTelegram.msg_type == TYPE_ERR) {
     if (decodedTelegram.error == 7 && !show_unknown) return;
-    printToWebClient(PSTR("<tr style='color: #7f7f7f'><td>"));
+    printToWebClient("<tr style='color: #7f7f7f'><td>");
   } else {
-    printToWebClient(PSTR("<tr><td>"));
+    printToWebClient("<tr><td>");
   }
   printToWebClient(build_pvalstr(1));
 
@@ -3869,7 +3869,7 @@ void query_printHTML() {
           data_len=msg[len_idx]-11;     // get packet length, then subtract
         }
         for (i=0;i<=data_len-1;i++) {
-          if (msg[pl_start+i] < 16) client.print(F("0"));  // add a leading zero to single-digit values
+          if (msg[pl_start+i] < 16) client.print("0");  // add a leading zero to single-digit values
           client.print(msg[pl_start+i], HEX);
         }
       }
@@ -3879,11 +3879,11 @@ void query_printHTML() {
       printToWebClient(fieldDelimiter);
       if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
         if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-          printToWebClient(PSTR("<select "));
+          printToWebClient("<select ");
           if (decodedTelegram.data_type == DT_BITS) {
-            printToWebClient(PSTR("multiple "));
+            printToWebClient("multiple ");
           }
-          printFmtToWebClient(PSTR("id='value%g'>\r\n"), decodedTelegram.prognr);
+          printFmtToWebClient("id='value%g'>\r\n", decodedTelegram.prognr);
           uint16_t value = 0;
           if (decodedTelegram.data_type == DT_BITS) {
             for (int i = 0; i < 8; i++) {
@@ -3896,28 +3896,28 @@ void query_printHTML() {
             }
             if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
           }
-          listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, PSTR("'>"), STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
+          listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
             decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
             (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST),
             decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
-          printToWebClient(PSTR("</select>"));
+          printToWebClient("</select>");
           printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printToWebClient(PSTR("<input type=button value='Set' onclick=\"set"));
+            printToWebClient("<input type=button value='Set' onclick=\"set");
             if (decodedTelegram.type == VT_BIT) {
-              printToWebClient(PSTR("bit"));
+              printToWebClient("bit");
             }
-            printFmtToWebClient(PSTR("(%g)\">"), decodedTelegram.prognr);
+            printFmtToWebClient("(%g)\">", decodedTelegram.prognr);
           }
         } else {
-          printFmtToWebClient(PSTR("<input type=text id='value%g' VALUE='%s'>"), decodedTelegram.prognr, decodedTelegram.value);
+          printFmtToWebClient("<input type=text id='value%g' VALUE='%s'>", decodedTelegram.prognr, decodedTelegram.value);
           printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printFmtToWebClient(PSTR("<input type=button value='Set' onclick=\"set(%g)\">"), decodedTelegram.prognr);
+            printFmtToWebClient("<input type=button value='Set' onclick=\"set(%g)\">", decodedTelegram.prognr);
           }
         }
       }
-      printToWebClient(PSTR("</td></tr>\r\n"));
+      printToWebClient("</td></tr>\r\n");
 
 // TODO: check at least for data length (only used for temperature values)
 /*
@@ -3951,7 +3951,7 @@ void tcaselect(uint8_t i) {
  * *************************************************************** */
 void queryVirtualPrognr(float line, int table_line) {
   loadCategoryDescAddr(); //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
-  printFmtToDebug(PSTR("\r\nVirtual parameter %g queried. Table line %d\r\n"), line, table_line);
+  printFmtToDebug("\r\nVirtual parameter %g queried. Table line %d\r\n", line, table_line);
   decodedTelegram.msg_type = TYPE_ANS;
   decodedTelegram.prognr = line;
   switch (recognizeVirtualFunctionGroup(line)) {
@@ -3967,9 +3967,9 @@ void queryVirtualPrognr(float line, int table_line) {
         case BSP_INTERNAL + 6: val = 0; break;
       }
 #if !defined(ESP32)
-      sprintf_P(decodedTelegram.value, PSTR("%ld"), val);
+      sprintf_P(decodedTelegram.value, "%ld", val);
 #else
-      sprintf_P(decodedTelegram.value, PSTR("%d"), val);
+      sprintf_P(decodedTelegram.value, "%d", val);
 #endif
       return;
     }
@@ -3983,7 +3983,7 @@ void queryVirtualPrognr(float line, int table_line) {
       size_t log_sensor = roundf(line - BSP_DHT22);
       int tempLine = (int)roundf((line - BSP_DHT22) * 10) % 10;
       if (tempLine == 0) { //print sensor ID
-        sprintf_P(decodedTelegram.value, PSTR("%d"), DHT_Pins[log_sensor]);
+        sprintf_P(decodedTelegram.value, "%d", DHT_Pins[log_sensor]);
         return;
       }
       unsigned long temp_timer = millis();
@@ -3998,25 +3998,25 @@ void queryVirtualPrognr(float line, int table_line) {
 #endif
       }
 
-      printFmtToDebug(PSTR("DHT22 sensor: %d - "), last_DHT_pin);
+      printFmtToDebug("DHT22 sensor: %d - ", last_DHT_pin);
       switch (dht.getStatus()) {
         case DHTesp::ERROR_CHECKSUM:
           decodedTelegram.error = 256;
-          printlnToDebug(PSTR("Checksum error"));
+          printlnToDebug("Checksum error");
           break;
           case DHTesp::ERROR_TIMEOUT:
           decodedTelegram.error = 261;
-          printlnToDebug(PSTR("Time out error"));
+          printlnToDebug("Time out error");
          break;
         default:
-          printlnToDebug(PSTR("OK"));
+          printlnToDebug("OK");
           break;
       }
 
       float hum = dht.getHumidity();
       float temp = dht.getTemperature();
       if (hum > 0 && hum < 101) {
-        printFmtToDebug(PSTR("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n"), log_sensor, temp, log_sensor, hum);
+        printFmtToDebug("#dht_temp[%d]: %.2f, hum[%d]:  %.2f\r\n", log_sensor, temp, log_sensor, hum);
         switch (tempLine) {
           case 1: //print sensor Current temperature
             _printFIXPOINT(decodedTelegram.value, temp, 2);
@@ -4069,7 +4069,7 @@ void queryVirtualPrognr(float line, int table_line) {
               break;
             case 1:
               if (max_dst_temp[log_sensor] > 0) {
-                sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_cur_temp[log_sensor] / 10));
+                sprintf_P(decodedTelegram.value, "%.2f", ((float)max_cur_temp[log_sensor] / 10));
               } else {
                 decodedTelegram.error = 261;
                 undefinedValueToBuffer(decodedTelegram.value);
@@ -4077,7 +4077,7 @@ void queryVirtualPrognr(float line, int table_line) {
               break;
             case 2:
               if (max_dst_temp[log_sensor] > 0) {
-                sprintf_P(decodedTelegram.value, PSTR("%.2f"), ((float)max_dst_temp[log_sensor] / 2));
+                sprintf_P(decodedTelegram.value, "%.2f", ((float)max_dst_temp[log_sensor] / 2));
               } else {
                 decodedTelegram.error = 261;
                 undefinedValueToBuffer(decodedTelegram.value);
@@ -4085,7 +4085,7 @@ void queryVirtualPrognr(float line, int table_line) {
               break;
             case 3:
               if (max_valve[log_sensor] > -1) {
-                sprintf_P(decodedTelegram.value, PSTR("%d"), max_valve[log_sensor]);
+                sprintf_P(decodedTelegram.value, "%d", max_valve[log_sensor]);
               } else {
                 decodedTelegram.error = 261;
                 undefinedValueToBuffer(decodedTelegram.value);
@@ -4098,11 +4098,11 @@ void queryVirtualPrognr(float line, int table_line) {
     break;
     }
     case 6: {
-      sprintf_P(decodedTelegram.value, PSTR("%.2f"), custom_floats[((uint16_t)line) - BSP_FLOAT]);
+      sprintf_P(decodedTelegram.value, "%.2f", custom_floats[((uint16_t)line) - BSP_FLOAT]);
       return;
     }
     case 7: {
-      sprintf_P(decodedTelegram.value, PSTR("%ld"), custom_longs[((uint16_t)line) - BSP_LONG]);
+      sprintf_P(decodedTelegram.value, "%ld", custom_longs[((uint16_t)line) - BSP_LONG]);
       return;
     }
     case 8: {
@@ -4110,9 +4110,9 @@ void queryVirtualPrognr(float line, int table_line) {
       uint8_t selector = ((int)roundf((line - BSP_BME280) * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
-          sprintf_P(decodedTelegram.value, PSTR("%02X-%02X"), log_sensor & 0x07, 0x76 + log_sensor / 8);
+          sprintf_P(decodedTelegram.value, "%02X-%02X", log_sensor & 0x07, 0x76 + log_sensor / 8);
         } else {
-          sprintf_P(decodedTelegram.value, PSTR("%02X"), 0x76 + log_sensor);
+          sprintf_P(decodedTelegram.value, "%02X", 0x76 + log_sensor);
         }
         return;
       }
@@ -4183,11 +4183,11 @@ void query(float line) {  // line (ProgNr)
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
     if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
-      printFmtToDebug(PSTR("%g "), line);
+      printFmtToDebug("%g ", line);
       loadCategoryDescAddr();
-      printToDebug(PSTR(" - "));
+      printToDebug(" - ");
       printToDebug(decodedTelegram.prognrdescaddr);
-      printToDebug(PSTR(" - write-only\r\n"));
+      printToDebug(" - write-only\r\n");
       return;
     }
 
@@ -4196,7 +4196,7 @@ void query(float line) {  // line (ProgNr)
       queryVirtualPrognr(line, i);
       return;
     }
-    //printlnToDebug(PSTR("found"));
+    //printlnToDebug("found");
     if (c!=CMD_UNKNOWN && (dev_flags & FL_NO_CMD) != FL_NO_CMD) {     // send only valid command codes
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
@@ -4210,7 +4210,7 @@ void query(float line) {  // line (ProgNr)
 
             // Decode the rcv telegram and send it to the PC serial interface
             printTelegram(msg, line);
-            printFmtToDebug(PSTR("#%g: "), line);
+            printFmtToDebug("#%g: ", line);
             printlnToDebug(build_pvalstr(0));
             SerialOutput->flush();
             LogTelegram(msg);
@@ -4222,9 +4222,9 @@ void query(float line) {  // line (ProgNr)
         } // endwhile, maximum number of retries reached
         if (retry==0) {
           if (bus->getBusType() == BUS_LPB && msg[8] == TYPE_ERR) {    // only for BSB because some LPB systems do not really send proper error messages
-            printFmtToDebug(PSTR("error %d\r\n"), msg[9]); //%d
+            printFmtToDebug("error %d\r\n", msg[9]); //%d
           } else {
-            printFmtToDebug(PSTR("%g\r\n"), line);
+            printFmtToDebug("%g\r\n", line);
           }
           decodedTelegram.error = 261;
         }
@@ -4254,16 +4254,16 @@ void query(float line) {  // line (ProgNr)
 */
         printTelegram(msg, line);
 
-        printFmtToDebug(PSTR("#%g: "), line);
+        printFmtToDebug("#%g: ", line);
         printlnToDebug(build_pvalstr(0));
         SerialOutput->flush();
       }
     } else {
-      //printlnToDebug(PSTR("unknown command"));
+      //printlnToDebug("unknown command");
       //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%.1f unknown command",line);
     } // endelse, valid / invalid command codes
   } else {
-    //printlnToDebug(PSTR("line not found"));
+    //printlnToDebug("line not found");
     //if (line_start==line_end) outBufLen+=sprintf(outBuf+outBufLen,"%.1f line not found",line);
   } // endelse, line (ProgNr) found / not found
 } // --- query() ---
@@ -4364,16 +4364,16 @@ void SetDevId() {
     family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
   }
   if (!known) {
-    printToDebug(PSTR("Your device family no. "));
+    printToDebug("Your device family no. ");
     DebugOutput.print(device_id);
-    printlnToDebug(PSTR(" is not yet known to BSB-LAN. Certain parameters will be disabled."));
-    printlnToDebug(PSTR("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems."));
+    printlnToDebug(" is not yet known to BSB-LAN. Certain parameters will be disabled.");
+    printlnToDebug("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems.");
     dev_id=DEV_ALL;
   } else {
     dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
   }
 */
-  printFmtToDebug(PSTR("Device family: %d\r\nDevice variant: %d\r\n"), my_dev_fam, my_dev_var);
+  printFmtToDebug("Device family: %d\r\nDevice variant: %d\r\n", my_dev_fam, my_dev_var);
 }
 
 /** *****************************************************************
@@ -4396,18 +4396,18 @@ void SetDateTime() {
 
 #if defined(ESP32)
   if (ntp_server[0]) {
-    printlnToDebug(PSTR("Trying to get NTP time..."));
+    printlnToDebug("Trying to get NTP time...");
     struct tm timeinfo;
     configTime(0, 0, ntp_server);
     setenv("TZ",local_timezone,1);
     tzset();
 
     if(getLocalTime(&timeinfo)){
-      printFmtToDebug(PSTR("Date and time acquired: %02d.%02d.%02d %02d:%02d:%02d\r\n"), timeinfo.tm_mday, timeinfo.tm_mon+1, timeinfo.tm_year-100, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+      printFmtToDebug("Date and time acquired: %02d.%02d.%02d %02d:%02d:%02d\r\n", timeinfo.tm_mday, timeinfo.tm_mon+1, timeinfo.tm_year-100, timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
 //      setTime(timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec, timeinfo.tm_mday, timeinfo.tm_mon, timeinfo.tm_year); // not sure if setTime is necessary here or if configTime already takes care of that?
       return;
     } else {
-      printlnToDebug(PSTR("Acquisition failed, trying again in one minute..."));
+      printlnToDebug("Acquisition failed, trying again in one minute...");
     }
   }
 #endif
@@ -4478,7 +4478,7 @@ void transmitFile(File dataFile) {
   flushToWebClient();
   int chars_read = dataFile.read(buf, logbuflen);
   if (chars_read < 0) {
-   printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+   printToWebClient("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible.");
    forcedflushToWebClient();
   }
   while (chars_read == logbuflen && client.connected()) {
@@ -4518,7 +4518,7 @@ void resetBoard() {
 #elif defined(ESP32)
   ESP.restart();
 #else
-  printlnToDebug(PSTR("Reset function not implementing"));
+  printlnToDebug("Reset function not implementing");
 #endif
 
 }
@@ -4535,7 +4535,7 @@ void resetAverageCalculation() {
   }
 }
 
-const char* datalogFileHeader = PSTR("Milliseconds;Date;Parameter;Description;Value;Unit\r\n");
+const char* datalogFileHeader = "Milliseconds;Date;Parameter;Description;Value;Unit\r\n";
 
 const char *cleanupDatalog(unsigned nDays) {
   // keep most recent nDays only in datalog:
@@ -4548,38 +4548,38 @@ const char *cleanupDatalog(unsigned nDays) {
 #endif
   { // Files opened within this scope will be automatically closed upon leaving it
     File indexFile = SDCard.open(datalogIndexFileName);
-    if (!indexFile) return PSTR("Cannot open datalog index");
+    if (!indexFile) return "Cannot open datalog index";
     unsigned long nBytes = nDays * datalogIndexEntrySize;
     spaceRequired += nBytes;
     long indexOffset = indexFile.size() - nBytes;
-    if (indexOffset <= 0) return PSTR("Nothing to do (not that many days in the datalog)");
+    if (indexOffset <= 0) return "Nothing to do (not that many days in the datalog)";
     //-- transfer index:
     File dataFile = SDCard.open(datalogFileName);
-    if (!dataFile) return PSTR("Cannot open datalog");
+    if (!dataFile) return "Cannot open datalog";
     File indexTmpFile = SDCard.open(datalogIndexTemporaryFileName, FILE_WRITE);
-    if (!indexTmpFile) return PSTR("Cannot open temporary index");
+    if (!indexTmpFile) return "Cannot open temporary index";
     compactDate_t date;
     unsigned long pos, dataStart=0, dataOffset=0, nDataBytes=0;
     indexFile.seek(indexOffset);
     while (nDays--) {
       if (indexFile.read((byte*)&date,sizeof(date)) != sizeof(date) ||
           indexFile.read((byte*)&pos ,sizeof(pos )) != sizeof(pos ))
-        return PSTR("Error reading index file");
+        return "Error reading index file";
       if (!dataStart) {
         dataStart = pos;
         dataOffset = pos - strlen(datalogFileHeader);
         nDataBytes = dataFile.size() - dataStart;
         spaceRequired += nDataBytes;
-        if (spaceRequired > spaceAvailable) return PSTR("Not enough space on device");
+        if (spaceRequired > spaceAvailable) return "Not enough space on device";
       }//if (!dataStart)
       pos -= dataOffset;
       if (indexTmpFile.write((byte*)&date,sizeof(date)) != sizeof(date) ||
           indexTmpFile.write((byte*)&pos ,sizeof(pos )) != sizeof(pos ))
-        return PSTR("Error writing index file");
+        return "Error writing index file";
     }//while (nDays--)
     //-- transfer data:
     File dataTmpFile = SDCard.open(datalogTemporaryFileName, FILE_WRITE);
-    if (!dataTmpFile) return PSTR("Cannot open temporary datalog");
+    if (!dataTmpFile) return "Cannot open temporary datalog";
     // we want to use a buffer size that's a power of 2:
     unsigned bufSize=1, maxSize=sizeof(bigBuff);
     while (bufSize <= maxSize) bufSize <<= 1;
@@ -4600,9 +4600,9 @@ const char *cleanupDatalog(unsigned nDays) {
       }
       unsigned nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
       if (dataFile.read((byte*)bigBuff, nBytesToDo) != (int)nBytesToDo)
-        return PSTR("Error reading datalog");
+        return "Error reading datalog";
       if (dataTmpFile.write((byte*)bigBuff, nBytesToDo) != nBytesToDo)
-        return PSTR("Error writing datalog");
+        return "Error writing datalog";
       nDataBytes -= nBytesToDo;
     }//while (nDataBytes)
   }// Files go out of scope and are automatically closed
@@ -4611,7 +4611,7 @@ const char *cleanupDatalog(unsigned nDays) {
   SDCard.rename(datalogTemporaryFileName, datalogFileName);
   SDCard.remove(datalogIndexFileName);
   SDCard.rename(datalogIndexTemporaryFileName, datalogIndexFileName);
-  return PSTR("Success");
+  return "Success";
 }
 
 void readFirstAndPreviousDatalogDateFromFile() {
@@ -4682,16 +4682,16 @@ void connectToMaxCul() {
   }
 
   max_cul = new ComClient();
-  printToDebug(PSTR("Connection to max_cul: "));
+  printToDebug("Connection to max_cul: ");
   if (max_cul->connect(IPAddress(max_cul_ip_addr[0], max_cul_ip_addr[1], max_cul_ip_addr[2], max_cul_ip_addr[3]), 2323)) {
-    printlnToDebug(PSTR("established"));
+    printlnToDebug("established");
   } else {
-    printlnToDebug(PSTR("failed"));
+    printlnToDebug("failed");
   }
 }
 
 void clearEEPROM(void) {
-  printlnToDebug(PSTR("Clearing EEPROM..."));
+  printlnToDebug("Clearing EEPROM...");
 #if defined(ESP32)
   for (uint16_t x=0; x<EEPROM_SIZE; x++) {
     EEPROM.write(x, 0xFF);
@@ -4701,7 +4701,7 @@ void clearEEPROM(void) {
   uint8_t empty_block[4096] = { 0xFF };
   EEPROM.fastBlockWrite(0, empty_block, 4096);
 #endif
-  printlnToDebug(PSTR("Cleared EEPROM"));
+  printlnToDebug("Cleared EEPROM");
 }
 
 void internalLEDBlinking(uint16_t period, uint16_t count) {
@@ -4747,27 +4747,27 @@ void loop() {
       switch (Ethernet.maintain()) {
         case 1:
           //renewed fail
-          printlnToDebug(PSTR("Error: renewed fail"));
+          printlnToDebug("Error: renewed fail");
           break;
         case 2:
           //renewed success
-          printlnToDebug(PSTR("Renewed success"));
+          printlnToDebug("Renewed success");
           //print your local IP address:
-          printToDebug(PSTR("My IP address: "));
+          printToDebug("My IP address: ");
           {IPAddress t = Ethernet.localIP();
-          printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
+          printFmtToDebug("%d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);}
           break;
         case 3:
           //rebind fail
-          printlnToDebug(PSTR("Error: rebind fail"));
+          printlnToDebug("Error: rebind fail");
           break;
         case 4:
           //rebind success
-          printlnToDebug(PSTR("Rebind success"));
+          printlnToDebug("Rebind success");
           //print your local IP address:
-          printToDebug(PSTR("My IP address: "));
+          printToDebug("My IP address: ");
           {IPAddress t = Ethernet.localIP();
-          printFmtToDebug(PSTR("%d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);}
+          printFmtToDebug("%d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);}
         break;
   
         default:
@@ -4828,7 +4828,7 @@ void loop() {
     if ((trusted_ip_addr[0] != 0 && ! (remoteIP == trusted_ip_addr))
        && (trusted_ip_addr2[0] != 0 && ! (remoteIP == trusted_ip_addr2))) {
           // reject clients from unauthorized IP addresses;
-      printFmtToDebug(PSTR("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n"),
+      printFmtToDebug("Rejected access from %d.%d.%d.%d (Trusted 1: %d.%d.%d.%d, Trusted 2: %d.%d.%d.%d.\r\n",
         remoteIP[0], remoteIP[1], remoteIP[2], remoteIP[3],
         trusted_ip_addr[0], trusted_ip_addr[1], trusted_ip_addr[2], trusted_ip_addr[3],
         trusted_ip_addr2[0], trusted_ip_addr2[1], trusted_ip_addr2[2], trusted_ip_addr2[3]);
@@ -4844,17 +4844,17 @@ void loop() {
         loopCount = 0;
         if (client.available()) {
           c = client.read();       // read one character
-          printFmtToDebug(PSTR("%c"), c);         // and send it to hardware UART
+          printFmtToDebug("%c", c);         // and send it to hardware UART
         }
         if (SerialOutput->available()) {
           c = SerialOutput->read();
-          printFmtToDebug(PSTR("%c"), c);         // and send it to hardware UART
+          printFmtToDebug("%c", c);         // and send it to hardware UART
           int timeout = 0;
           while (SerialOutput->available() == 0 && c!='\r' && c!='\n') {
             delay(1);
             timeout++;
             if (timeout > 2000) {
-              printlnToDebug(PSTR("Serial input timeout"));
+              printlnToDebug("Serial input timeout");
               break;
             }
           }
@@ -4891,11 +4891,11 @@ void loop() {
               // you're starting a new line
               currentLineIsBlank = true;
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,PSTR("Accept-Encoding")) != 0 && strstr_P(outBuf+16 + buffershift, PSTR("gzip")) != 0) {
+              if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,"Accept-Encoding") != 0 && strstr_P(outBuf+16 + buffershift, "gzip") != 0) {
                 httpflags |= HTTP_GZIP;
               }
               if (!(httpflags & HTTP_ETAG)) {
-                char *ptr = strstr_P(outBuf + buffershift, PSTR("If-None-Match:"));
+                char *ptr = strstr_P(outBuf + buffershift, "If-None-Match:");
                 if (ptr != 0) {
                   httpflags |= HTTP_ETAG;
                   ptr = strchr(ptr, ':');
@@ -4903,14 +4903,14 @@ void loop() {
                     ptr++;
                   } while (ptr[0] == ' ');
                   strcpy(outBuf, ptr); //Copy ETag to buffer. Note: '\r\n' present at end
-//                  printFmtToDebug(PSTR("ETag string: %s\r\n"), outBuf);
+//                  printFmtToDebug("ETag string: %s\r\n", outBuf);
                 }
               }
               //Execute only if flag not set because strstr more expensive than bitwise operation
               char base64_user_pass[88] = { 0 };
               int user_pass_len = strlen(USER_PASS);
               Base64.encode(base64_user_pass, USER_PASS, user_pass_len);
-              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,PSTR("uthorization: Basic"))!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) { // HTML headers seem to be case-insensitive, some clients send "authorization" instead of "Authorization". Here this can be covered by just removing the first letter, but with other HTTP header tests above, this might be more complicated...
+              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,"uthorization: Basic")!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) { // HTML headers seem to be case-insensitive, some clients send "authorization" instead of "Authorization". Here this can be covered by just removing the first letter, but with other HTTP header tests above, this might be more complicated...
                 httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
@@ -4936,7 +4936,7 @@ void loop() {
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
         // Check for HEAD request (for file caching)
-        if (!strncmp_P(cLineBuffer, PSTR("HEAD"), 4))
+        if (!strncmp_P(cLineBuffer, "HEAD", 4))
           httpflags |= HTTP_HEAD_REQ;
         char *u_s = strchr(cLineBuffer,' ');
         if (!u_s) u_s = cLineBuffer;
@@ -4944,23 +4944,23 @@ void loop() {
         if (u_e) u_e[0] = 0;
         if (u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
 // IPWE START
-        if (enable_ipwe && !strcmp_P(cLineBuffer, PSTR("/ipwe.cgi"))) {
+        if (enable_ipwe && !strcmp_P(cLineBuffer, "/ipwe.cgi")) {
           Ipwe();
           break;
         }
 // IPWE END
 
-        if (!strcmp_P(cLineBuffer, PSTR("/favicon.ico"))) {
+        if (!strcmp_P(cLineBuffer, "/favicon.ico")) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
-          printToWebClient(PSTR("\r\n"));
+          printToWebClient("\r\n");
           printPStr(favicon, sizeof(favicon));
           flushToWebClient();
           break;
         }
 
-        if (!strcmp_P(cLineBuffer, PSTR("/favicon.svg"))) {
+        if (!strcmp_P(cLineBuffer, "/favicon.svg")) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
-          printToWebClient(PSTR("\r\n"));
+          printToWebClient("\r\n");
           printPStr(svg_favicon, sizeof(svg_favicon));
           flushToWebClient();
           break;
@@ -4976,7 +4976,7 @@ void loop() {
           }
           *p='\0';     // mark end of string
           if (strncmp(cLineBuffer+1, PASSKEY, strlen(PASSKEY))) {
-            printlnToDebug(PSTR("no matching passkey"));
+            printlnToDebug("no matching passkey");
             while(client.available()) client.read();
             client.stop();
             //do not print header and footer. It is security breach
@@ -4986,10 +4986,10 @@ void loop() {
         }
 
         if (webserver) {
-          printToDebug(PSTR("URL: "));
-          if (!strcmp_P(p, PSTR("/"))) {
+          printToDebug("URL: ");
+          if (!strcmp_P(p, "/")) {
             httpflags |= HTTP_GET_ROOT;
-            strcpy_P(p + 1, PSTR("index.html"));
+            strcpy_P(p + 1, "index.html");
           }
             printlnToDebug(p);
           char *dot = strchr(p, '.');
@@ -5009,7 +5009,7 @@ void loop() {
             int suffix = 0;
             if ((httpflags & HTTP_GZIP)) {
               suffix = strlen(p);
-              strcpy_P(p + suffix, PSTR(".gz"));
+              strcpy_P(p + suffix, ".gz");
               dataFile = SDCard.open(p);
             }
             if (!dataFile) {
@@ -5053,13 +5053,13 @@ void loop() {
               }}
 #endif
               if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-                if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, PSTR("\"%02d%02d%d%02d%02d%02d%lu\""), dayval, monthval, lastWrtYr, hourval, minval, secval, filesize))) {
+                if (memcmp(outBuf, outBuf + buffershift, sprintf_P(outBuf + buffershift, "\"%02d%02d%d%02d%02d%02d%lu\"", dayval, monthval, lastWrtYr, hourval, minval, secval, filesize))) {
                   // reuse httpflags
                   httpflags &= ~HTTP_ETAG; //ETag not match
                 }
               }
 
-              printToDebug(PSTR("File opened from SD: "));
+              printToDebug("File opened from SD: ");
               printlnToDebug(p);
 
               uint16_t code = 0;
@@ -5074,22 +5074,22 @@ void loop() {
                 char downame[4];
                 uint8_t dowval =  dayofweek((uint8_t)dayval, (uint8_t)monthval, lastWrtYr);
                 if (dowval < 1 && dowval > 7) dowval = 8;
-                memcpy_P(downame, PSTR("MonTueWedThuFriSatSunERR") + dowval * 3 - 3, 3);
+                memcpy_P(downame, "MonTueWedThuFriSatSunERR" + dowval * 3 - 3, 3);
                 downame[3] = 0;
 
                 if (monthval < 1 && monthval > 12) monthval = 13;
-                memcpy_P(monthname, PSTR("JanFebMarAprMayJunJulAugSepOctNovDecERR") + monthval * 3 - 3, 3);
+                memcpy_P(monthname, "JanFebMarAprMayJunJulAugSepOctNovDecERR" + monthval * 3 - 3, 3);
                 monthname[3] = 0;
-                printFmtToWebClient(PSTR("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n"), downame, dayval, monthname, lastWrtYr, hourval, minval, secval);
+                printFmtToWebClient("Last-Modified: %s, %02d %s %d %02d:%02d:%02d GMT\r\n", downame, dayval, monthname, lastWrtYr, hourval, minval, secval);
               }
               //max-age=84400 = one day, max-age=2592000 = 30 days. Last string in header, double \r\n
-              printFmtToWebClient(PSTR("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n"), dayval, monthval, lastWrtYr, hourval, minval, secval, filesize, filesize);
+              printFmtToWebClient("ETag: \"%02d%02d%d%02d%02d%02d%lu\"\r\nContent-Length: %lu\r\n\r\n", dayval, monthval, lastWrtYr, hourval, minval, secval, filesize, filesize);
               flushToWebClient();
               //Send file if !HEAD request received or ETag not match
               if (!(httpflags & HTTP_ETAG) && !(httpflags & HTTP_HEAD_REQ)) {
                 transmitFile(dataFile);
               }
-              printToDebug((httpflags & HTTP_HEAD_REQ)?PSTR("HEAD"):PSTR("GET")); printlnToDebug(PSTR(" request received"));
+              printToDebug((httpflags & HTTP_HEAD_REQ)?"HEAD":"GET"); printlnToDebug(" request received");
 
               dataFile.close();
             } else {
@@ -5099,7 +5099,7 @@ void loop() {
                 break;
               }
               printHTTPheader(HTTP_NOT_FOUND, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
-              printToWebClient(PSTR("\r\n<h2>File not found!</h2><br>File name: "));
+              printToWebClient("\r\n<h2>File not found!</h2><br>File name: ");
               printToWebClient(p);
               flushToWebClient();
             }
@@ -5111,9 +5111,9 @@ void loop() {
           while (client.available()) client.read();
         } else {
           if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-            strcpy_P(outBuf + buffershift, PSTR("\""));
+            strcpy_P(outBuf + buffershift, "\"");
             strcat_P(outBuf + buffershift, BSB_VERSION);
-            strcat_P(outBuf + buffershift, PSTR("\""));
+            strcat_P(outBuf + buffershift, "\"");
             if (memcmp(outBuf, outBuf + buffershift, strlen(outBuf + buffershift))) {
               // reuse httpflags
               httpflags &= ~HTTP_ETAG; //ETag not match
@@ -5121,13 +5121,13 @@ void loop() {
           }
         }
         // simply print the website
-        if (!webserver && !strcmp_P(p, PSTR("/"))) {
+        if (!webserver && !strcmp_P(p, "/")) {
           webPrintSite();
           break;
         }
 
         // Answer to unknown requests
-        if (!isdigit(p[1]) && strchr_P(PSTR("ABCDEGIJKLMNPQRSUVWXY"), p[1])==NULL) {
+        if (!isdigit(p[1]) && strchr_P("ABCDEGIJKLMNPQRSUVWXY", p[1])==NULL) {
           webPrintHeader();
           webPrintFooter();
           break;
@@ -5145,11 +5145,11 @@ void loop() {
           verbose=atoi(p);
           webPrintHeader();
           if (verbose>0) {
-            printToWebClient(PSTR(MENU_TEXT_VB1 "<BR>"));
+            printToWebClient(MENU_TEXT_VB1 "<BR>");
           } else {
-            printToWebClient(PSTR(MENU_TEXT_VB2 "<BR>"));
+            printToWebClient(MENU_TEXT_VB2 "<BR>");
           }
-          printToWebClient(PSTR("\r\n" MENU_TEXT_VB3 "\r\n"));
+          printToWebClient("\r\n" MENU_TEXT_VB3 "\r\n");
           webPrintFooter();
           break;
         }
@@ -5159,12 +5159,12 @@ void loop() {
           monitor=atoi(p);    // .. to convert
           webPrintHeader();
           if (monitor>0) {
-            printToWebClient(PSTR(MENU_TEXT_SR1));
+            printToWebClient(MENU_TEXT_SR1);
             monitor = 1;
           } else {
-            printToWebClient(PSTR(MENU_TEXT_SR2));
+            printToWebClient(MENU_TEXT_SR2);
           }
-          printToWebClient(PSTR("\r\n" MENU_TEXT_SR3 "\r\n"));
+          printToWebClient("\r\n" MENU_TEXT_SR3 "\r\n");
           webPrintFooter();
           break;
         }
@@ -5187,7 +5187,7 @@ void loop() {
           if (!(httpflags & HTTP_FRAG)) webPrintHeader();
 
           if (!isdigit(*p)) {   // now we check for digits - nice
-            printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
+            printToWebClient(MENU_TEXT_ER1 "\r\n");
           } else {
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
@@ -5206,22 +5206,22 @@ void loop() {
 
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match
-                printToWebClient(PSTR(MENU_TEXT_ER2 "\r\n"));
+                printToWebClient(MENU_TEXT_ER2 "\r\n");
             } else {
               p++;                   // position pointer past the '=' sign
 
-              printFmtToDebug(PSTR("set ProgNr %g = %s"), line, p);
+              printFmtToDebug("set ProgNr %g = %s", line, p);
               writelnToDebug();
               // Now send it out to the bus
               int setresult = 0;
               setresult = set(line,p,setcmd);
 
               if (setresult!=1) {
-                printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
+                printToWebClient(MENU_TEXT_ER3 "\r\n");
                 if (setresult == 2) {
-                  printToWebClient(PSTR(" - " MENU_TEXT_ER4 "\r\n"));
+                  printToWebClient(" - " MENU_TEXT_ER4 "\r\n");
                   if ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode == 0) {
-                    printToWebClient(PSTR(" " MENU_TEXT_ER8 "\r\n"));
+                    printToWebClient(" " MENU_TEXT_ER8 "\r\n");
                   }
                 }
               } else {
@@ -5248,20 +5248,20 @@ void loop() {
         if (p[1]=='K' && !isdigit(p[2])) {
           //list categories
           webPrintHeader();
-          printToWebClient(PSTR("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n"));
+          printToWebClient("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n");
           float  cat_min = -1, cat_max = -1;
           for (int cat=0;cat<CAT_UNKNOWN;cat++) {
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
-              printFmtToWebClient(PSTR("<tr><td><a href='K%d'>"), cat);
+              printFmtToWebClient("<tr><td><a href='K%d'>", cat);
               printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
               cat_min = ENUM_CAT_NR[cat*2];
               cat_max = ENUM_CAT_NR[cat*2+1];
               printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
               writelnToDebug();
-              printFmtToWebClient(PSTR("</a></td><td>%g - %g</td></tr>\r\n"), cat_min, cat_max);
+              printFmtToWebClient("</a></td><td>%g - %g</td></tr>\r\n", cat_min, cat_max);
             }
           }
-          printToWebClient(PSTR("</table>"));
+          printToWebClient("</table>");
           webPrintFooter();
           flushToWebClient();
           break;
@@ -5284,12 +5284,12 @@ void loop() {
               case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
             }
             if (flag) {
-              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, PSTR(" - "), NULL, PSTR("<br>\r\n"), NULL, 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, flag - 1);
+              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, " - ", NULL, "<br>\r\n", NULL, 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, flag - 1);
             } else {
-              printToWebClient(PSTR(MENU_TEXT_ER5));
+              printToWebClient(MENU_TEXT_ER5);
             }
           } else {
-            printToWebClient(PSTR(MENU_TEXT_ER6));
+            printToWebClient(MENU_TEXT_ER6);
           }
           webPrintFooter();
           break;
@@ -5299,17 +5299,17 @@ void loop() {
           webPrintHeader();
           if (!queryDefaultValue(atof(&p[2]), msg, tx_msg)) {
             if (decodedTelegram.error == 258) {
-              printToWebClient(PSTR(MENU_TEXT_ER6 "\r\n"));
+              printToWebClient(MENU_TEXT_ER6 "\r\n");
             } else if (decodedTelegram.error == 261) {
               printlnToDebug(printError(decodedTelegram.error));  // to PC hardware serial I/F
-              printToWebClient(PSTR(MENU_TEXT_ER3 "\r\n"));
+              printToWebClient(MENU_TEXT_ER3 "\r\n");
             }
           } else {
 // TODO: replace pvalstr with data from decodedTelegram structure
             build_pvalstr(0);
             if (outBuf[0]>0) {
               printToWebClient(outBuf);
-              printToWebClient(PSTR("<br>"));
+              printToWebClient("<br>");
             }
           }
           webPrintFooter();
@@ -5318,15 +5318,15 @@ void loop() {
         if (p[1]=='Q' && p[2] !='D') {
           webPrintHeader();
           if (bus_type > 1) {
-            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+            printToWebClient(MENU_TEXT_NOQ "\r\n\r\n");
           } else {
             if (my_dev_fam == 0) {
-              printToWebClient(PSTR(MENU_TEXT_QNC "<BR>\r\n"));
+              printToWebClient(MENU_TEXT_QNC "<BR>\r\n");
             } else {
-              printToWebClient(PSTR(MENU_TEXT_QIN "<BR><BR>\r\n"));
-              printToWebClient(PSTR("<A HREF='/"));
+              printToWebClient(MENU_TEXT_QIN "<BR><BR>\r\n");
+              printToWebClient("<A HREF='/");
               printPassKey();
-              printToWebClient(PSTR("QD'>" MENU_TEXT_QDL "</A><BR>\r\n"));
+              printToWebClient("QD'>" MENU_TEXT_QDL "</A><BR>\r\n");
             }
           }
           webPrintFooter();
@@ -5336,26 +5336,26 @@ void loop() {
 //          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
           if (bus_type > 1) {
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
-            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+            printToWebClient(MENU_TEXT_NOQ "\r\n\r\n");
             break;
           }
 
           printHTTPheader(HTTP_OK, MIME_TYPE_FORCE_DOWNLOAD, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_IS_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
-          printToWebClient(PSTR("\r\n"));
+          printToWebClient("\r\n");
           flushToWebClient();
 
           if (bus_type > 1) {
-            printToWebClient(PSTR(MENU_TEXT_NOQ "\r\n\r\n"));
+            printToWebClient(MENU_TEXT_NOQ "\r\n\r\n");
             break;
           }
 
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
-          printToWebClient(PSTR(MENU_TEXT_QIN "\r\n\r\n"));
-          printToWebClient(PSTR(MENU_TEXT_VER ": "));
+          printToWebClient(MENU_TEXT_QIN "\r\n\r\n");
+          printToWebClient(MENU_TEXT_VER ": ");
           printToWebClient(BSB_VERSION);
-          printToWebClient(PSTR("\r\n"));
-          printToWebClient(PSTR(MENU_TEXT_QSC "...\r\n"));
+          printToWebClient("\r\n");
+          printToWebClient(MENU_TEXT_QSC "...\r\n");
           switch (bus->getBusType()) {
             case BUS_BSB: bus->setBusType(BUS_BSB, myAddr, 0x7F); break;
             case BUS_LPB: bus->setBusType(BUS_LPB, myAddr, 0xFF); break;
@@ -5389,61 +5389,61 @@ void loop() {
                   }
                 }
                 if (!found) {
-                  printFmtToWebClient(PSTR(MENU_TEXT_QFD ": %hu\r\n"),found_id);
+                  printFmtToWebClient(MENU_TEXT_QFD ": %hu\r\n",found_id);
                   flushToWebClient();
                 }
               }
               delay(1);
             }
           } else {
-            printToWebClient(PSTR(MENU_TEXT_QFA "!"));
+            printToWebClient(MENU_TEXT_QFA "!");
           }
           for (int x=0; x<10 && client.connected(); x++) {
             if (found_ids[x]==0xFF) {
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(PSTR(MENU_TEXT_QRT " %hu..."), found_ids[x]);
+            printFmtToWebClient(MENU_TEXT_QRT " %hu...", found_ids[x]);
             flushToWebClient();
 
             uint32_t c=0;
             float l;
             int orig_dev_fam = my_dev_fam;
             int orig_dev_var = my_dev_var;
-            query_program_and_print_result(6224, PSTR("\r\n"), NULL);
-            query_program_and_print_result(6225, PSTR("\r\n"), NULL);
+            query_program_and_print_result(6224, "\r\n", NULL);
+            query_program_and_print_result(6225, "\r\n", NULL);
             int temp_dev_fam = strtod(decodedTelegram.value,NULL);
-            query_program_and_print_result(6226, PSTR("\r\n"), NULL);
+            query_program_and_print_result(6226, "\r\n", NULL);
             int temp_dev_var = strtod(decodedTelegram.value,NULL);
             my_dev_fam = temp_dev_fam;
             my_dev_var = temp_dev_var;
             if (temp_dev_fam == 97) temp_dev_fam = 64;
 /*
             for (uint16_t q = 0; q < sizeof(proglist4q)/sizeof(proglist4q[0]); q++) {
-              query_program_and_print_result(proglist4q[q], PSTR("\r\n"), NULL);
+              query_program_and_print_result(proglist4q[q], "\r\n", NULL);
               forcedflushToWebClient();
             }
-            query_program_and_print_result(10003, PSTR("\r\n"), PSTR(" (10003): "));
-            query_program_and_print_result(10004, PSTR("\r\n"), PSTR(" (10004): "));
-            printToWebClient(PSTR("\r\n"));
+            query_program_and_print_result(10003, "\r\n", " (10003): ");
+            query_program_and_print_result(10004, "\r\n", " (10004): ");
+            printToWebClient("\r\n");
             flushToWebClient();
 
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(params4q[0]); i++) {
-              printFmtToWebClient(PSTR("%.1f;"), params4q[i]);
+              printFmtToWebClient("%.1f;", params4q[i]);
             }
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
             for (uint16_t i=0; i<sizeof(params4q)/sizeof(float); i++) {
               query(params4q[i]); printToWebClient(decodedTelegram.value);
-              printToWebClient(PSTR(";"));
+              printToWebClient(";");
             }
 
-            printToWebClient(PSTR("\r\n\r\n"));
+            printToWebClient("\r\n\r\n");
 */
             my_dev_fam = orig_dev_fam;
             my_dev_var = orig_dev_var;
 
             if (p[3] == 'F') {
-              printToWebClient(PSTR(MENU_TEXT_QST "...\r\n"));
+              printToWebClient(MENU_TEXT_QST "...\r\n");
               flushToWebClient();
               for (int j=0; j<10000 && client.connected(); j++) {
                 uint32_t cc = get_cmdtbl_cmd(j);
@@ -5460,9 +5460,9 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 if (((dev_fam != temp_dev_fam && dev_fam != DEV_FAM(DEV_ALL)) || (dev_var != temp_dev_var && dev_var != DEV_VAR(DEV_ALL))) && c!=CMD_UNKNOWN) {
-                  printFmtToDebug(PSTR("%02X\r\n"), c);
+                  printFmtToDebug("%02X\r\n", c);
                   if (bus->Send(TYPE_QUR, c, msg, tx_msg) != BUS_OK) {
-                    printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+                    printlnToDebug("bus send failed");  // to PC hardware serial I/F
                   } else {
                     if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
                       // Decode the xmit telegram and send it to the PC serial interface
@@ -5478,19 +5478,19 @@ void loop() {
                         my_dev_fam = orig_dev_fam;
                         my_dev_var = orig_dev_var;
                         if (decodedTelegram.msg_type == TYPE_ERR) { //pvalstr[0]<1 - unknown command
-                          printFmtToWebClient(PSTR("\r\n%g - "), l);
+                          printFmtToWebClient("\r\n%g - ", l);
                           printToWebClient(decodedTelegram.catdescaddr);
-                          printToWebClient(PSTR(" - "));
+                          printToWebClient(" - ");
                           printToWebClient_prognrdescaddr();
-                          printFmtToWebClient(PSTR("\r\n0x%08X\r\n"), c);
+                          printFmtToWebClient("\r\n0x%08X\r\n", c);
                           int outBufLen = strlen(outBuf);
                           bin2hex(outBuf + outBufLen, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                           printToWebClient(outBuf + outBufLen);
-                          printToWebClient(PSTR("\r\n"));
+                          printToWebClient("\r\n");
                           bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                           printToWebClient(outBuf + outBufLen);
                           outBuf[outBufLen] = 0;
-                          printToWebClient(PSTR("\r\n"));
+                          printToWebClient("\r\n");
                         }
                         forcedflushToWebClient(); //browser will build page immediately
                       }
@@ -5498,10 +5498,10 @@ void loop() {
                   }
                 }
               }
-              printToWebClient(PSTR("\r\n" MENU_TEXT_QTE ".\r\n"));
+              printToWebClient("\r\n" MENU_TEXT_QTE ".\r\n");
               flushToWebClient();
             }
-            printToWebClient(PSTR("\r\nComplete dump:\r\n"));
+            printToWebClient("\r\nComplete dump:\r\n");
             c = 0;
             int outBufLen = strlen(outBuf);
             unsigned long timeout = millis() + 3000;
@@ -5514,7 +5514,7 @@ void loop() {
             printTelegram(msg, -1);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
             timeout = millis() + 3000;
             while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
@@ -5525,13 +5525,13 @@ void loop() {
             printTelegram(msg, -1);
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
             flushToWebClient();
             timeout = millis() + 3000;
             while (bus->Send(TYPE_IQ1, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
-              printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
+              printToWebClient("Didn't receive matching telegram, resending...\r\n");
               delay(500);
             }
             printTelegram(tx_msg, -1);
@@ -5540,7 +5540,7 @@ void loop() {
             if (msg[4+bus->getBusType()*4] == 0x13 && IA1_max > 0) {
               timeout = millis() + 3000;
               while (bus->Send(TYPE_IQ2, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-                printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
+                printToWebClient("Didn't receive matching telegram, resending...\r\n");
                 delay(500);
               }
               int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
@@ -5552,12 +5552,12 @@ void loop() {
 #endif
                 timeout = millis() + 3000;
                 while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-                  printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
+                  printToWebClient("Didn't receive matching telegram, resending...\r\n");
                   delay(500);
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
-                printToWebClient(PSTR("\r\n"));
+                printToWebClient("\r\n");
                 flushToWebClient();
               }
               for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected(); IA2_counter++) {
@@ -5566,21 +5566,21 @@ void loop() {
 #endif
                 timeout = millis() + 3000;
                 while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-                  printToWebClient(PSTR("Didn't receive matching telegram, resending...\r\n"));
+                  printToWebClient("Didn't receive matching telegram, resending...\r\n");
                   delay(500);
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
-                printToWebClient(PSTR("\r\n"));
+                printToWebClient("\r\n");
                 flushToWebClient();
               }
               outBuf[outBufLen] = 0;
             } else {
-              printToWebClient(PSTR("\r\nNot supported by this device. No problem.\r\n"));
+              printToWebClient("\r\nNot supported by this device. No problem.\r\n");
             }
           }
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-          printToWebClient(PSTR("\r\n" MENU_TEXT_QFE ".\r\n"));
+          printToWebClient("\r\n" MENU_TEXT_QFE ".\r\n");
 //            if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
@@ -5609,7 +5609,7 @@ void loop() {
             }
             int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
             if (return_value != BUS_OK) {
-              printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
+              printlnToDebug("bus send failed");  // to PC hardware serial I/F
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
               printTelegram(tx_msg, -1);
@@ -5622,11 +5622,11 @@ void loop() {
             build_pvalstr(1);
             if (outBuf[0]>0) {
               printToWebClient(outBuf);
-              printToWebClient(PSTR("<br>"));
+              printToWebClient("<br>");
             }
             bin2hex(outBuf, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf);
-            printToWebClient(PSTR("\r\n<br>\r\n"));
+            printToWebClient("\r\n<br>\r\n");
             bin2hex(outBuf, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf);
             outBuf[0] = 0;
@@ -5635,7 +5635,7 @@ void loop() {
               return_to_default_destination(destAddr);
             }
           } else {
-            printToWebClient(PSTR("Activate debug mode in configuration in order to use /Y command!<BR>\r\n"));
+            printToWebClient("Activate debug mode in configuration in order to use /Y command!<BR>\r\n");
           }
           webPrintFooter();
           break;
@@ -5672,25 +5672,25 @@ void loop() {
 
             printHTTPheader(http_code, MIME_TYPE_APP_JSON, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, cache_time);
             if (cache_time != HTTP_DO_NOT_CACHE) {
-              printToWebClient(PSTR("ETag: \""));
+              printToWebClient("ETag: \"");
               printToWebClient(BSB_VERSION);
-              printToWebClient(PSTR("\"\r\n"));
+              printToWebClient("\"\r\n");
             }
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
             if (http_code == HTTP_NOT_MODIFIED) {
               forcedflushToWebClient();
               break;
             }
           }
-          printToWebClient(PSTR("{\r\n"));
-          if (strchr_P(PSTR("BCIKLQRSVW"), p[2]) == NULL) {  // ignoring unknown JSON commands
-            printToWebClient(PSTR("}"));
+          printToWebClient("{\r\n");
+          if (strchr_P("BCIKLQRSVW", p[2]) == NULL) {  // ignoring unknown JSON commands
+            printToWebClient("}");
             forcedflushToWebClient();
             break;
           }
 
           if (p[2] == 'V'){ // JSON API version
-            printFmtToWebClient(PSTR("\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"\r\n}"));
+            printFmtToWebClient("\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"\r\n}");
             forcedflushToWebClient();
             break;
           }
@@ -5698,22 +5698,22 @@ void loop() {
           if (p[2] == 'I'){ // dump configuration in JSON
             bool not_first = false;
             int i;
-            printToWebClient(PSTR("  \"name\": \"BSB-LAN\",\r\n  \"version\": \""));
+            printToWebClient("  \"name\": \"BSB-LAN\",\r\n  \"version\": \"");
             printToWebClient(BSB_VERSION);
-            printToWebClient(PSTR("\",\r\n  \"hardware\": \""));
+            printToWebClient("\",\r\n  \"hardware\": \"");
             printDeviceArchToWebClient();
-            printFmtToWebClient(PSTR("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": "), freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+            printFmtToWebClient("\",\r\n  \"freeram\": %d,\r\n  \"uptime\": %lu,\r\n  \"MAC\": \"%02hX:%02hX:%02hX:%02hX:%02hX:%02hX\",\r\n  \"freespace\": ", freeRam(), millis(), mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
             if (LoggingMode & CF_LOGMODE_SD_CARD) {
 #if !defined(ESP32)
               uint32_t freespace = SDCard.vol()->freeClusterCount();
               freespace = (uint32_t)(freespace*SDCard.vol()->sectorsPerCluster()/2048);
-              printFmtToWebClient(PSTR("%d"), freespace);
+              printFmtToWebClient("%d", freespace);
 #else
               uint64_t freespace = totalBytes()-usedBytes();
-              printFmtToWebClient(PSTR("%llu"), freespace);
+              printFmtToWebClient("%llu", freespace);
 #endif
             } else {
-              printFmtToWebClient(PSTR("0"));
+              printFmtToWebClient("0");
             }
 
 // Bus info
@@ -5726,69 +5726,69 @@ void loop() {
             }
 
             switch (i) {
-              case 0: strcpy_P(json_value_string, PSTR("BSB")); break; //reuse json_value_string for lesser memory usage
-              case 1: strcpy_P(json_value_string, PSTR("LPB")); break;
-              case 2: strcpy_P(json_value_string, PSTR("PPS")); break;
+              case 0: strcpy_P(json_value_string, "BSB"); break; //reuse json_value_string for lesser memory usage
+              case 1: strcpy_P(json_value_string, "LPB"); break;
+              case 2: strcpy_P(json_value_string, "PPS"); break;
             }
-            printFmtToWebClient(PSTR(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n"), json_value_string, json_parameter);
-            printFmtToWebClient(PSTR("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n"), bus->getBusAddr(), bus->getBusDest());
+            printFmtToWebClient(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n", json_value_string, json_parameter);
+            printFmtToWebClient("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n", bus->getBusAddr(), bus->getBusDest());
 //enabled options
-            printFmtToWebClient(PSTR("  \"monitor\": %d,\r\n  \"verbose\": %d"), monitor, verbose);
+            printFmtToWebClient("  \"monitor\": %d,\r\n  \"verbose\": %d", monitor, verbose);
 
-            printFmtToWebClient(PSTR(",\r\n  \"onewirebus\": %d"), One_Wire_Pin);
-            printFmtToWebClient(PSTR(",\r\n  \"onewiresensors\": %d"), numSensors);
-            printToWebClient(PSTR(",\r\n  \"dhtbus\": [\r\n"));
+            printFmtToWebClient(",\r\n  \"onewirebus\": %d", One_Wire_Pin);
+            printFmtToWebClient(",\r\n  \"onewiresensors\": %d", numSensors);
+            printToWebClient(",\r\n  \"dhtbus\": [\r\n");
             not_first = false;
             int numDHTSensors = sizeof(DHT_Pins) / sizeof(DHT_Pins[0]);
             for (i=0;i<numDHTSensors;i++) {
               if (DHT_Pins[i] >= -1) {
                 if (not_first) {
-                  printToWebClient(PSTR(",\r\n"));
+                  printToWebClient(",\r\n");
                 } else {
                   not_first = true;
                 }
-                printFmtToWebClient(PSTR("    { \"pin\": %d }"), DHT_Pins[i]);
+                printFmtToWebClient("    { \"pin\": %d }", DHT_Pins[i]);
               }
             }
-            printToWebClient(PSTR("\r\n  ]"));
+            printToWebClient("\r\n  ]");
 
 //averages
             if (LoggingMode & CF_LOGMODE_24AVG) {
-              printToWebClient(PSTR(",\r\n  \"averages\": [\r\n"));
+              printToWebClient(",\r\n  \"averages\": [\r\n");
               not_first = false;
               for (i = 0; i < numAverages; i++) {
                 if (avg_parameters[i].number > 0) {
                   if (not_first) {
-                    printToWebClient(PSTR(",\r\n"));
+                    printToWebClient(",\r\n");
                   } else {
                     not_first = true;
                   }
                   printParameterInJSON_ToWebClient(avg_parameters[i]);
                 }
               }
-              printToWebClient(PSTR("\r\n  ]"));
+              printToWebClient("\r\n  ]");
             }
 // logged parameters
-            printFmtToWebClient(PSTR(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n"), LoggingMode, log_interval);
+            printFmtToWebClient(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n", LoggingMode, log_interval);
             not_first = false;
             for (i=0; i<numLogValues; i++) {
               if (log_parameters[i].number > 0)  {
                 if (not_first) {
-                  printToWebClient(PSTR(",\r\n"));
+                  printToWebClient(",\r\n");
                 } else {
                   not_first = true;
                 }
                 printParameterInJSON_ToWebClient(log_parameters[i]);
               }
             }
-            printToWebClient(PSTR("\r\n  ]"));
-            printToWebClient(PSTR("\r\n}\r\n"));
+            printToWebClient("\r\n  ]");
+            printToWebClient("\r\n}\r\n");
             forcedflushToWebClient();
             break;
           }
           if (p[2] == 'L') {
             generateJSONwithConfig();
-            printToWebClient(PSTR("\r\n}\r\n"));
+            printToWebClient("\r\n}\r\n");
             forcedflushToWebClient();
             break;
           }
@@ -5814,8 +5814,8 @@ void loop() {
                   if (decodedTelegram.readwrite == FL_WRITEABLE) {//Do not save "read only" or "write only" parameters
                     query(j);
                     if (decodedTelegram.error == 0) {//Do not save parameters with errors
-                      if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
-                      printFmtToWebClient(PSTR("  \"%g\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\"}"), j, j, decodedTelegram.value, 1);
+                      if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
+                      printFmtToWebClient("  \"%g\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\"}", j, j, decodedTelegram.value, 1);
                     }
                   }
 next_parameter:
@@ -5823,7 +5823,7 @@ next_parameter:
                 }while(j >= cat_min && j <= cat_max);
               }
             }
-            printToWebClient(PSTR("\r\n}\r\n"));
+            printToWebClient("\r\n}\r\n");
             forcedflushToWebClient();
             break;
           }
@@ -5960,8 +5960,8 @@ next_parameter:
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
-                    if (notfirst) {printToWebClient(PSTR(",\r\n"));} else {notfirst = true;}
-                    printFmtToWebClient(PSTR("\"%d\": { \"name\": \""), cat);
+                    if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
+                    printFmtToWebClient("\"%d\": { \"name\": \"", cat);
                     printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
@@ -5971,7 +5971,7 @@ next_parameter:
                       }
                     }
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
-                    printFmtToWebClient(PSTR("\", \"min\": %g, \"max\": %g }"), cat_min, cat_max);
+                    printFmtToWebClient("\", \"min\": %g, \"max\": %g }", cat_min, cat_max);
                   }
                 }
                 json_token = NULL;
@@ -6010,73 +6010,73 @@ next_parameter:
                   continue;
                 }
 
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 if (p[2]=='Q') {
                   query(json_parameter);
                 } else {
                   loadPrognrElementsFromTable(json_parameter, i_line);
                   decodedTelegram.prognr = json_parameter;
                 }
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"name\": \""), json_parameter);
+                printFmtToWebClient("  \"%g\": {\r\n    \"name\": \"", json_parameter);
                 printToWebClient_prognrdescaddr();
-                printToWebClient(PSTR("\",\r\n    \"dataType_name\": \""));
+                printToWebClient("\",\r\n    \"dataType_name\": \"");
                 printToWebClient(decodedTelegram.progtypedescaddr);
-                printToWebClient(PSTR("\",\r\n    \"dataType_family\": \""));
+                printToWebClient("\",\r\n    \"dataType_family\": \"");
                 printToWebClient(decodedTelegram.data_type_descaddr);
-                printFmtToWebClient(PSTR("\",\r\n    \"destination\": \"%d\",\r\n"), tempDestAddr);
+                printFmtToWebClient("\",\r\n    \"destination\": \"%d\",\r\n", tempDestAddr);
 
                 if (p[2]=='Q') {
-                  printFmtToWebClient(PSTR("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \""), decodedTelegram.error, decodedTelegram.value);
+                  printFmtToWebClient("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \"", decodedTelegram.error, decodedTelegram.value);
                   if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr)
                     printToWebClient(decodedTelegram.enumdescaddr);
-                  printToWebClient(PSTR("\",\r\n"));
+                  printToWebClient("\",\r\n");
                 }
 
                 if (p[2] != 'Q') {
-                  printToWebClient(PSTR("    \"possibleValues\": [\r\n"));
+                  printToWebClient("    \"possibleValues\": [\r\n");
                     if (decodedTelegram.enumstr_len > 0) {
-                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, PSTR("      { \"enumValue\": "), PSTR(", \"desc\": \""), NULL, PSTR("\" }"), PSTR(",\r\n"), 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, "      { \"enumValue\": ", ", \"desc\": \"", NULL, "\" }", ",\r\n", 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
                     }
 
-                  printFmtToWebClient(PSTR("\r\n    ],\r\n    \"isswitch\": %d,\r\n"), decodedTelegram.isswitch);
+                  printFmtToWebClient("\r\n    ],\r\n    \"isswitch\": %d,\r\n", decodedTelegram.isswitch);
                 }
                 if (decodedTelegram.data_type == DT_VALS) {
                   char pre_buf[10];
                   pre_buf[0] = 0;
                   if (decodedTelegram.precision != 0) {
-                    strcpy_P(pre_buf, PSTR("0."));
+                    strcpy_P(pre_buf, "0.");
                     for (uint8_t j = 1; j < decodedTelegram.precision; j ++) {
-                      strcat_P(pre_buf, PSTR("0"));
+                      strcat_P(pre_buf, "0");
                     }
                   }
-                  strcat_P(pre_buf, PSTR("1"));
-                  printFmtToWebClient(PSTR("    \"precision\": %s,\r\n"), pre_buf);
+                  strcat_P(pre_buf, "1");
+                  printFmtToWebClient("    \"precision\": %s,\r\n", pre_buf);
                 }
-                printFmtToWebClient(PSTR("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }"), decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.readwrite, decodedTelegram.unit);
+                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.readwrite, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 int status = set(json_parameter, json_value_string, json_type);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
+                printFmtToWebClient("  \"%g\": {\r\n    \"status\": %d\r\n  }", json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %g to \"%s\" with type %d to destination %d\r\n"), json_parameter, json_value_string, json_type, tempDestAddr);
+                printFmtToDebug("Setting parameter %g to \"%s\" with type %d to destination %d\r\n", json_parameter, json_value_string, json_type, tempDestAddr);
               }
 
               if (p[2]=='R') {
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 queryDefaultValue(json_parameter, msg, tx_msg);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }"), json_parameter, decodedTelegram.error, decodedTelegram.value);
+                printFmtToWebClient("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }", json_parameter, decodedTelegram.error, decodedTelegram.value);
 
-                printFmtToDebug(PSTR("Default value of parameter %g for destination %d is \"%s\"\r\n"), json_parameter, tempDestAddr, decodedTelegram.value);
+                printFmtToDebug("Default value of parameter %g for destination %d is \"%s\"\r\n", json_parameter, tempDestAddr, decodedTelegram.value);
               }
 
               if (p[2]=='W') {
-                if (!been_here) been_here = true; else printToWebClient(PSTR(",\r\n"));
+                if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 int status = takeNewConfigValueFromUI_andWriteToRAM(json_parameter, outBuf);
-                printFmtToWebClient(PSTR("  \"%g\": {\r\n    \"status\": %d\r\n  }"), json_parameter, status);
+                printFmtToWebClient("  \"%g\": {\r\n    \"status\": %d\r\n  }", json_parameter, status);
 
-                printFmtToDebug(PSTR("Setting parameter %g to \"%s\"\r\n"), json_parameter, outBuf);
+                printFmtToDebug("Setting parameter %g to \"%s\"\r\n", json_parameter, outBuf);
               }
 
               if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
@@ -6096,7 +6096,7 @@ next_parameter:
             needReboot = SaveConfigFromRAMtoEEPROM();
             UpdateMaxDeviceList(); //Update list MAX! devices
           }
-          printFmtToWebClient(PSTR("\r\n}\r\n"));
+          printFmtToWebClient("\r\n}\r\n");
           forcedflushToWebClient();
           if (needReboot) {
             resetBoard();
@@ -6130,8 +6130,8 @@ next_parameter:
 //recreate datalog file for programs values logging
               if (p[2]=='D' || p[2]=='0') {
                 if (p[2]=='0') {
-                  printToDebug(PSTR(", "));
-                  printToWebClient(PSTR(", "));
+                  printToDebug(", ");
+                  printToWebClient(", ");
                 }
               SDCard.remove(datalogFileName);
               if (createdatalogFileAndWriteHeader()) {
@@ -6141,20 +6141,20 @@ next_parameter:
               }
             }
             if (filewasrecreated) {
-              printToWebClient(PSTR(MENU_TEXT_DTR "\r\n"));
-              printToDebug(PSTR(": file(s) was removed and recreated."));
+              printToWebClient(MENU_TEXT_DTR "\r\n");
+              printToDebug(": file(s) was removed and recreated.");
             } else {
-              printToWebClient(PSTR(MENU_TEXT_DTF "\r\n"));
+              printToWebClient(MENU_TEXT_DTF "\r\n");
             }
             webPrintFooter();
           } else if (p[2]=='G') {
             webPrintHeader();
-            printToWebClient(PSTR("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\r\n"));
+            printToWebClient("<A HREF='D'>" MENU_TEXT_DTD "</A><div align=center></div>\r\n");
             printPStr(graph_html, sizeof(graph_html));
             webPrintFooter();
           } else {  //--- dump datalog or journal or datalog index file, or print min/max date in datalog, or clean up datalog
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
             flushToWebClient();  // some of the following code uses the same bigBuffer as the ...ToWebClient functions => deliver any remaining content to the client now
             File dataFile;
             if (p[2]=='J') { //journal
@@ -6164,8 +6164,8 @@ next_parameter:
                 unsigned long startdump = millis();
                 transmitFile(dataFile);
                 dataFile.close();
-                printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
-              } else printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+                printFmtToDebug("Duration: %lu\r\n", millis()-startdump);
+              } else printToWebClient(MENU_TEXT_DTO "\r\n");
             } else if (p[2]=='A') { //--- datalog min date, for the javascript code in /DG to access
               printFmtToWebClient("%04d-%02d-%02d", firstDatalogDate.elements.year, firstDatalogDate.elements.month, firstDatalogDate.elements.day);
             } else if (p[2]=='B') { //--- datalog max date, for the javascript code in /DG to access
@@ -6247,7 +6247,7 @@ next_parameter:
                         while (nBytesToDo && client.connected()) {
                           int n = dataFile.read(buf, nBytesToDo<logbuflen ?nBytesToDo :logbuflen);
                           if (n < 0) {
-                            printToWebClient(PSTR("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible."));
+                            printToWebClient("Error: Failed to read from SD card - if problem remains after reformatting, card may be incompatible.");
                             forcedflushToWebClient();
                           }
                           if (n <= 0) break;
@@ -6274,8 +6274,8 @@ next_parameter:
                   }//else (!indexFile)
                 }//limited datalog
                 dataFile.close();
-                printFmtToDebug(PSTR("Duration: %lu\r\n"), millis()-startdump);
-              } else printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
+                printFmtToDebug("Duration: %lu\r\n", millis()-startdump);
+              } else printToWebClient(MENU_TEXT_DTO "\r\n");
             }//datalog
           }//datalog or journal or min/max datalog date
           flushToWebClient();
@@ -6301,7 +6301,7 @@ next_parameter:
                   UseEEPROM = 0x69;
                 }
               }
-//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+//                printToWebClient(MENU_TEXT_LBO ": ");
               if (UseEEPROM == 0x96) {
                 printyesno(1) ;
               } else {
@@ -6312,7 +6312,7 @@ next_parameter:
                 for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
                   writeToEEPROM(i);
                 }
-//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+//                printToWebClient(MENU_TEXT_LBO ": ");
 //                printyesno(UseEEPROM) ;
               break;
             case 'I': {//Parse HTTP form and implement changes
@@ -6357,7 +6357,7 @@ next_parameter:
                 } else {
                   LoggingMode &= ~CF_LOGMODE_SD_CARD;
                 }
-//                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+//                printToWebClient(MENU_TEXT_LBO ": ");
                 printyesno(LoggingMode & CF_LOGMODE_SD_CARD) ;
               }
               break;
@@ -6369,13 +6369,13 @@ next_parameter:
                   if (logTelegram & LOGTELEGRAM_BROADCAST_ONLY)
                     logTelegram -= LOGTELEGRAM_BROADCAST_ONLY;
                 }
-                printToWebClient(PSTR(MENU_TEXT_LBO ": "));
+                printToWebClient(MENU_TEXT_LBO ": ");
                 printyesno(logTelegram & LOGTELEGRAM_BROADCAST_ONLY) ;
               }
               break;
             case 'N':     // log now
               log_now = 1;
-              printToWebClient(PSTR(MENU_TEXT_LIR));
+              printToWebClient(MENU_TEXT_LIR);
               break;
             case 'U':
               if (p[3]=='=') {
@@ -6385,7 +6385,7 @@ next_parameter:
                   if (logTelegram & LOGTELEGRAM_UNKNOWN_ONLY)
                     logTelegram -= LOGTELEGRAM_UNKNOWN_ONLY; //clear bit
                 }
-                printToWebClient(PSTR(MENU_TEXT_BUT ": "));
+                printToWebClient(MENU_TEXT_BUT ": ");
                 printyesno(logTelegram & LOGTELEGRAM_UNKNOWN_ONLY);
               }
               break;
@@ -6400,8 +6400,8 @@ next_parameter:
 //                if (log_interval < 10) {log_interval = 10;}
                 lastLogTime = millis();
                 lastMQTTTime = millis();
-                printFmtToWebClient(PSTR(MENU_TEXT_LGI ": %d"), log_interval);
-                printToWebClient(PSTR(" " MENU_TEXT_SEC "<BR>\r\n"));
+                printFmtToWebClient(MENU_TEXT_LGI ": %d", log_interval);
+                printToWebClient(" " MENU_TEXT_SEC "<BR>\r\n");
               }
               log_token = strtok(NULL,"=,");    // subsequent tokens: logging parameters
               int token_counter = 0;
@@ -6410,17 +6410,17 @@ next_parameter:
                   log_parameters[i].number = 0;
                   log_parameters[i].dest_addr = -1;
                 }
-              printToWebClient(PSTR(MENU_TEXT_LGN ": "));
+              printToWebClient(MENU_TEXT_LGN ": ");
               }
               while (log_token!=0) {
                 log_parameters[token_counter] = parsingStringToParameter(log_token);
 
                 if (token_counter < numLogValues) {
-                  printFmtToWebClient(PSTR("%g"), log_parameters[token_counter].number);
+                  printFmtToWebClient("%g", log_parameters[token_counter].number);
                   if (log_parameters[token_counter].dest_addr > -1) {
-                    printFmtToWebClient(PSTR("!%d"), log_parameters[token_counter].dest_addr);
+                    printFmtToWebClient("!%d", log_parameters[token_counter].dest_addr);
                   }
-                  printToWebClient(PSTR(" \r\n"));
+                  printToWebClient(" \r\n");
                   token_counter++;
                 }
                 log_token = strtok(NULL,"=,");
@@ -6434,11 +6434,11 @@ next_parameter:
             } else {
               if (logTelegram & LOGTELEGRAM_ON) logTelegram -= LOGTELEGRAM_ON; //clear bit
             }
-            printToWebClient(PSTR(MENU_TEXT_LOT ": "));
+            printToWebClient(MENU_TEXT_LOT ": ");
             printyesno(logTelegram);
             break;
           default:
-            printToWebClient(PSTR(MENU_TEXT_ER1));
+            printToWebClient(MENU_TEXT_ER1);
             break;
           }
         webPrintFooter();
@@ -6460,39 +6460,39 @@ next_parameter:
             destAddr = (uint8_t)val;
           }
 
-          printToWebClient(PSTR(MENU_TEXT_BUS ": "));
+          printToWebClient(MENU_TEXT_BUS ": ");
           uint8_t savedbus = bus_type;
           bus_type = p[2] - '0';
           switch (bus_type) {
             case 0:
               own_address = myAddr;
               dest_address = destAddr;
-              printToWebClient(PSTR("BSB"));
+              printToWebClient("BSB");
               break;
             case 1:
               own_address = myAddr;
               dest_address = destAddr;
-              printToWebClient(PSTR("LPB"));
+              printToWebClient("LPB");
               break;
             case 2:
               pps_write = myAddr;
-              printToWebClient(PSTR("PPS"));
+              printToWebClient("PPS");
               break;
             default:
               bus_type = savedbus;
               break;
           }
           setBusType(); //Apply changes
-          printToWebClient(PSTR("\r\n"));
+          printToWebClient("\r\n");
           if (bus->getBusType() != BUS_PPS) {
-            printFmtToWebClient(PSTR(" (%d, %d)"), myAddr, destAddr);
+            printFmtToWebClient(" (%d, %d)", myAddr, destAddr);
           } else {
             if (pps_write == 1) {
-              printToWebClient(PSTR(" " MENU_TEXT_BRW));
+              printToWebClient(" " MENU_TEXT_BRW);
             } else {
-              printToWebClient(PSTR(" " MENU_TEXT_BRO));
+              printToWebClient(" " MENU_TEXT_BRO);
             }
-            printToWebClient(PSTR("\r\n"));
+            printToWebClient("\r\n");
           }
 
           SetDevId();
@@ -6502,7 +6502,7 @@ next_parameter:
         if (p[1]=='N'){           // Reset Arduino...
           webPrintHeader();
           if (p[2]=='E') {
-            printToWebClient(PSTR("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\r\n"));
+            printToWebClient("Clearing EEPROM (affects MAX! devices and PPS-Bus settings)...<BR>\r\n");
             forcedflushToWebClient();
           }
 
@@ -6518,7 +6518,7 @@ next_parameter:
           if (p[2]=='E' && EEPROM_ready) { //...and clear EEPROM
             clearEEPROM();
           }
-          printToWebClient(PSTR("Restarting micro-controller...\r\n"));
+          printToWebClient("Restarting micro-controller...\r\n");
           webPrintFooter();
           resetBoard();
           break;
@@ -6530,10 +6530,10 @@ next_parameter:
         while (range!=0) {
           if (range[0]=='U') { // output user-defined custom_array variable
             for (int i=0;i<numCustomFloats;i++) {
-              printFmtToWebClient(PSTR("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n"), i, custom_floats[i]);
+              printFmtToWebClient("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n", i, custom_floats[i]);
             }
             for (int i=0;i<numCustomLongs;i++) {
-              printFmtToWebClient(PSTR("<tr><td>\r\ncustom_long[%d]: %ld\r\n</td></tr>\r\n"),i, custom_longs[i]);
+              printFmtToWebClient("<tr><td>\r\ncustom_long[%d]: %ld\r\n</td></tr>\r\n",i, custom_longs[i]);
             }
           } else if (range[0]=='X') { // handle MAX command
             if (enable_max_cul) {
@@ -6543,17 +6543,17 @@ next_parameter:
                 if (max_cur_temp[x] > 0) {
                   max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
                   max_avg_count++;
-                  printFmtToWebClient(PSTR("<tr><td>%s (%lx): %.2f / %.2f"), max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
+                  printFmtToWebClient("<tr><td>%s (%lx): %.2f / %.2f", max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
                   if (max_valve[x] > -1) {
-                    printFmtToWebClient(PSTR(" (%hd%%)"), max_valve[x]);
+                    printFmtToWebClient(" (%hd%%)", max_valve[x]);
                   }
-                  printToWebClient(PSTR("</td></tr>"));
+                  printToWebClient("</td></tr>");
                 }
               }
               if (max_avg_count > 0) {
-                printFmtToWebClient(PSTR("<tr><td>AvgMax: %.2f</td></tr>\r\n"), max_avg / max_avg_count);
+                printFmtToWebClient("<tr><td>AvgMax: %.2f</td></tr>\r\n", max_avg / max_avg_count);
               } else {
-                printToWebClient(PSTR("<tr><td>" MENU_TEXT_MXN "</td></tr>"));
+                printToWebClient("<tr><td>" MENU_TEXT_MXN "</td></tr>");
               }
             }
           } else if (range[0]=='A') { // handle average command
@@ -6575,17 +6575,17 @@ next_parameter:
                     avg_parameters[i].number = 0;
                     avg_parameters[i].dest_addr = -1;
                   }
-                  printToWebClient(PSTR(MENU_TEXT_24N ": "));
+                  printToWebClient(MENU_TEXT_24N ": ");
                 }
                 while (avg_token!=0) {
                   avg_parameters[token_counter] = parsingStringToParameter(avg_token);
 
                   if (token_counter < numAverages*2) {
-                    printFmtToWebClient(PSTR("%g"), avg_parameters[token_counter].number);
+                    printFmtToWebClient("%g", avg_parameters[token_counter].number);
                     if (avg_parameters[token_counter].dest_addr > -1) {
-                      printFmtToWebClient(PSTR("!%d"), avg_parameters[token_counter].dest_addr);
+                      printFmtToWebClient("!%d", avg_parameters[token_counter].dest_addr);
                     }
-                    printToWebClient(PSTR(" \r\n"));
+                    printToWebClient(" \r\n");
                     token_counter++;
                   }
                   avg_token = strtok(NULL,"=,");
@@ -6599,7 +6599,7 @@ next_parameter:
 //            bool error = false;
             p=range+1;
             if (!isdigit(*p)) {   // now we check for digits
-              printToWebClient(PSTR(MENU_TEXT_ER1 "\r\n"));
+              printToWebClient(MENU_TEXT_ER1 "\r\n");
               break;
             }
             pin=(uint8_t)atoi(p);       // convert until non-digit char is found
@@ -6613,7 +6613,7 @@ next_parameter:
               if (dir_token!=NULL) {
                 if (*dir_token=='I') {
                   pinMode(pin, INPUT);
-                  printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
+                  printFmtToDebug("Pin %d set to input.\r\n", pin);
                 }
               }
               val=digitalRead(pin);
@@ -6624,7 +6624,7 @@ next_parameter:
                 p[i] |= 0x20; //to lower case
                 i++;
               }
-              if (!strncmp_P(p, PSTR("on"), 2) || !strncmp_P(p, PSTR("high"), 2) || *p=='1') {
+              if (!strncmp_P(p, "on", 2) || !strncmp_P(p, "high", 2) || *p=='1') {
                 val=HIGH;
               } else {
                 val=LOW;
@@ -6632,11 +6632,11 @@ next_parameter:
               pinMode(pin, OUTPUT); // TODO: does this case a problem if already set as output?
               digitalWrite(pin, val);
             }
-            printFmtToWebClient(PSTR("GPIO%hu: %d"), pin, val!=LOW?1:0);
+            printFmtToWebClient("GPIO%hu: %d", pin, val!=LOW?1:0);
           } else if (range[0]=='B') {
             if (range[1]=='0') { // reset furnace duration
               printToWebClient(STR20006);
-              printToWebClient(PSTR(".<br>\r\n"));
+              printToWebClient(".<br>\r\n");
               resetDurations();
             }
           } else {
@@ -6705,7 +6705,7 @@ next_parameter:
       loopCount++;
       if (loopCount > 1000) {
         client.stop();
-        printlnToDebug(PSTR("\r\nBrowser keeps connection open without sending data, so we're closing now..."));
+        printlnToDebug("\r\nBrowser keeps connection open without sending data, so we're closing now...");
       }
 
     }
@@ -6717,7 +6717,7 @@ next_parameter:
 */
     client_flag = false;
     if (client.available()) {
-      printToDebug(PSTR("\r\nClient buffer gets discarded:\r\n"));
+      printToDebug("\r\nClient buffer gets discarded:\r\n");
       while (client.available()) Serial.print((char)client.read());
     }
 
@@ -6765,7 +6765,7 @@ next_parameter:
         }
         if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
-          printlnToDebug(PSTR("MQTT will be disconnected on order through web interface"));
+          printlnToDebug("MQTT will be disconnected on order through web interface");
         }
       }
     }
@@ -6789,8 +6789,8 @@ next_parameter:
           dataFile = SDCard.open(datalogFileName, FILE_APPEND);
           if (!dataFile) {
             // if the file isn't open, pop up an error:
-            printToWebClient(PSTR(MENU_TEXT_DTO "\r\n"));
-            printFmtToDebug(PSTR("Error opening %s!\r\n"), datalogFileName);
+            printToWebClient(MENU_TEXT_DTO "\r\n");
+            printFmtToDebug("Error opening %s!\r\n", datalogFileName);
           }
         }
       }
@@ -6829,11 +6829,11 @@ next_parameter:
           query(log_parameters[i].number);
           if (decodedTelegram.prognr < 0) continue;
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR("%lu;%s;%g;"), millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i].number);
+          outBufLen += sprintf_P(outBuf + outBufLen, "%lu;%s;%g;", millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i].number);
 
           if ((log_parameters[i].number >= BSP_AVERAGES && log_parameters[i].number < BSP_AVERAGES + numAverages)) {
             //averages
-            outBufLen += strlen(strcpy_P(outBuf + outBufLen, PSTR(STR_24A_TEXT ". ")));
+            outBufLen += strlen(strcpy_P(outBuf + outBufLen, STR_24A_TEXT ". "));
           }
           if (dataFile) {
             if (previousDatalogDate.combined != currentDate.combined) {
@@ -6846,7 +6846,7 @@ next_parameter:
                 indexFile.close();
                 if (!firstDatalogDate.combined) firstDatalogDate.combined = currentDate.combined;
               }
-              else printFmtToDebug(PSTR("Error opening %s for writing!\r\n"), datalogIndexFileName);
+              else printFmtToDebug("Error opening %s for writing!\r\n", datalogIndexFileName);
             }
             dataFile.print(outBuf);
           }
@@ -6857,9 +6857,9 @@ next_parameter:
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           outBufLen = 0;
           if (decodedTelegram.sensorid) {
-            outBufLen += sprintf_P(outBuf + outBufLen, PSTR("#%d"), decodedTelegram.sensorid);
+            outBufLen += sprintf_P(outBuf + outBufLen, "#%d", decodedTelegram.sensorid);
           }
-          outBufLen += sprintf_P(outBuf + outBufLen, PSTR(";%s;%s\r\n"), decodedTelegram.value, decodedTelegram.unit);
+          outBufLen += sprintf_P(outBuf + outBufLen, ";%s;%s\r\n", decodedTelegram.value, decodedTelegram.unit);
           if (dataFile) dataFile.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.endPacket();
@@ -6908,7 +6908,7 @@ next_parameter:
           }
           query(avg_parameters[i].number);
           float reading = strtod(decodedTelegram.value,NULL);
-          printFmtToDebug(PSTR("%f\r\n"), reading);
+          printFmtToDebug("%f\r\n", reading);
           if (isnan(reading)) {} else {
             avgValues_Current[i] = (avgValues_Current[i] * (avgCounter-1) + reading) / avgCounter;
             if (avgValues_Old[i] == -9999) {
@@ -6917,7 +6917,7 @@ next_parameter:
               avgValues[i] = ((avgValues_Old[i]*(1440-avgCounter))+(avgValues_Current[i]*avgCounter)) / 1440;
             }
           }
-          printFmtToDebug(PSTR("%f\r\n"), avgValues[i]);
+          printFmtToDebug("%f\r\n", avgValues[i]);
         }
       }
       if (destAddr != d_addr) {
@@ -6935,7 +6935,7 @@ next_parameter:
         if (avgfile) {
           avgfile.seek(0);
           for (int i = 0; i < numAverages; i++) {
-            sprintf_P(outBuf, PSTR("%f\r\n%f\r\n%f\r\n"), avgValues[i], avgValues_Old[i], avgValues_Current[i]);
+            sprintf_P(outBuf, "%f\r\n%f\r\n%f\r\n", avgValues[i], avgValues_Old[i], avgValues_Current[i]);
             avgfile.print(outBuf);
           }
           avgfile.println(avgCounter);
@@ -6981,7 +6981,7 @@ next_parameter:
 
     while (max_cul->available() && EEPROM_ready) {
       c = max_cul->read();
-      printFmtToDebug(PSTR("%c"), c);
+      printFmtToDebug("%c", c);
       if ((c!='\n') && (c!='\r') && (max_str_index<60)) {
         outBuf[max_str_index++]=c;
       } else {
@@ -7024,11 +7024,11 @@ next_parameter:
             max_id[x] = (char)strtoul(max_hex_str,NULL,16);
           }
           max_id[sizeof(max_device_list[0]) - 1] = '\0';
-          printFmtToDebug(PSTR("MAX device info received:\r\n%08lX\r\n%s\r\n"), max_addr, max_id);
+          printFmtToDebug("MAX device info received:\r\n%08lX\r\n%s\r\n", max_addr, max_id);
   
           for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
             if (max_devices[x] == max_addr) {
-              printlnToDebug(PSTR("Device already in EEPROM"));
+              printlnToDebug("Device already in EEPROM");
               known_eeprom = true;
               break;
             }
@@ -7042,7 +7042,7 @@ next_parameter:
   
                 writeToEEPROM(CF_MAX_DEVICES);
                 writeToEEPROM(CF_MAX_DEVADDR);
-                printlnToDebug(PSTR("Device stored in EEPROM"));
+                printlnToDebug("Device stored in EEPROM");
                 break;
               }
             }
@@ -7053,7 +7053,7 @@ next_parameter:
           strncpy(max_hex_str, outBuf+27, 2);
           max_hex_str[2]='\0';
           max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
-          printFmtToDebug(PSTR("Valve position from associated thermostat received:\r\n%08lX\r\n%lu\r\n"), max_addr, max_valve[max_idx]);
+          printFmtToDebug("Valve position from associated thermostat received:\r\n%08lX\r\n%lu\r\n", max_addr, max_valve[max_idx]);
         }
   
         if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
@@ -7069,7 +7069,7 @@ next_parameter:
           strncpy(max_hex_str, outBuf+temp_str_offset, str_len);
           max_hex_str[str_len]='\0';
           max_temp_status = (uint32_t)strtoul(max_hex_str,NULL,16);
-          if (verbose == DEVELOPER_DEBUG) printFmtToDebug(PSTR("%d\r\n%08lX\r\n"), max_msg_len, max_temp_status);
+          if (verbose == DEVELOPER_DEBUG) printFmtToDebug("%d\r\n%08lX\r\n", max_msg_len, max_temp_status);
           if (max_msg_type == 0x42) {
             max_cur_temp[max_idx] = (((max_temp_status & 0x8000) >> 7) + ((max_temp_status & 0xFF)));
             max_dst_temp[max_idx] = (max_temp_status & 0x7F00) >> 8;
@@ -7080,8 +7080,8 @@ next_parameter:
             max_valve[max_idx] = (max_temp_status & 0xFF000000) >> 24;
           }
   
-          printlnToDebug(PSTR("MAX temperature message received:"));
-          printFmtToDebug(PSTR("%08lX\r\n%f\r\n%f\r\n%lu\r\n"), max_addr, ((float)max_cur_temp[max_idx] / 10), (float)(max_dst_temp[max_idx] / 2), max_valve[max_idx]);
+          printlnToDebug("MAX temperature message received:");
+          printFmtToDebug("%08lX\r\n%f\r\n%f\r\n%lu\r\n", max_addr, ((float)max_cur_temp[max_idx] / 10), (float)(max_dst_temp[max_idx] / 2), max_valve[max_idx]);
         }
       }
     }
@@ -7094,7 +7094,7 @@ next_parameter:
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
       haveTelnetClient = true;
-      printToDebug(PSTR("Version: "));
+      printToDebug("Version: ");
       printlnToDebug(BSB_VERSION);
     }
     if (!telnetClient.connected()) {
@@ -7119,7 +7119,7 @@ next_parameter:
 #endif
 
   if (millis() - maintenance_timer > 60000) {
-    printFmtToDebug(PSTR("%lu Ping!\r\n"), millis());
+    printFmtToDebug("%lu Ping!\r\n", millis());
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
@@ -7146,7 +7146,7 @@ next_parameter:
       }
   
       if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
-        printFmtToDebug(PSTR("Reconnecting to WiFi...\r\n"));
+        printFmtToDebug("Reconnecting to WiFi...\r\n");
         scanAndConnectToStrongestNetwork();
       }
     }
@@ -7165,37 +7165,37 @@ void scanAndConnectToStrongestNetwork() {
     sum_bssid += bssid[x];
   }
   if (sum_bssid > 0) {
-    printToDebug(PSTR("Using default BSSID to connect to WiFi..."));
+    printToDebug("Using default BSSID to connect to WiFi...");
     esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
     WiFi.begin(wifi_ssid, wifi_pass, 0, bssid);
     unsigned long timeout = millis();
     while (WiFi.status() != WL_CONNECTED && millis() - timeout < 5000) {
       delay(100);
-      printFmtToDebug(PSTR("."));
+      printFmtToDebug(".");
     }
-    printlnToDebug(PSTR(""));
+    printlnToDebug("");
     if (WiFi.status() == WL_CONNECTED) {
-      printlnToDebug(PSTR("Connection successful using default BSSID."));
+      printlnToDebug("Connection successful using default BSSID.");
     } else {
-      printlnToDebug(PSTR("Connection with default BSSID failed, trying to scan..."));
+      printlnToDebug("Connection with default BSSID failed, trying to scan...");
     }
   }
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
   int i_strongest = -1;
   int32_t rssi_strongest = -100;
-  printFmtToDebug(PSTR("Start scanning for SSID %s\r\n"), wifi_ssid);
+  printFmtToDebug("Start scanning for SSID %s\r\n", wifi_ssid);
 
   int n = WiFi.scanNetworks(false, false); // WiFi.scanNetworks will return the number of networks found
 
-  printToDebug(PSTR("Scan done."));
+  printToDebug("Scan done.");
 
   if (n == 0) {
-    printlnToDebug(PSTR("No networks found!"));
+    printlnToDebug("No networks found!");
   } else {
-    printFmtToDebug(PSTR("%d networks found:\r\n"), n);
+    printFmtToDebug("%d networks found:\r\n", n);
     for (int i = 0; i < n; ++i) {
       // Print SSID and RSSI for each network found
-      printFmtToDebug(PSTR("%d: BSSID: %s  %2ddBm, %3d%%  %9s  %s\r\n"), i, WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i), constrain(2 * (WiFi.RSSI(i) + 100), 0, 100), (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "open" : "encrypted", WiFi.SSID(i).c_str());
+      printFmtToDebug("%d: BSSID: %s  %2ddBm, %3d%%  %9s  %s\r\n", i, WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i), constrain(2 * (WiFi.RSSI(i) + 100), 0, 100), (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "open" : "encrypted", WiFi.SSID(i).c_str());
       if (strcmp(wifi_ssid, WiFi.SSID(i).c_str()) == 0 && (WiFi.RSSI(i) > rssi_strongest)) {
         rssi_strongest = WiFi.RSSI(i);
         i_strongest = i;
@@ -7204,9 +7204,9 @@ void scanAndConnectToStrongestNetwork() {
   }
 
   if (i_strongest < 0) {
-    printFmtToDebug(PSTR("No network with SSID %s found!\r\n"), wifi_ssid);
+    printFmtToDebug("No network with SSID %s found!\r\n", wifi_ssid);
   }
-  printFmtToDebug(PSTR("SSID match found at %d. Connecting...\r\n"), i_strongest);
+  printFmtToDebug("SSID match found at %d. Connecting...\r\n", i_strongest);
   WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
 }
 
@@ -7214,15 +7214,15 @@ void printWifiStatus()
 {
   if (WiFi.SSID() != NULL) {
     // print the SSID of the network you're attached to
-    printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID().c_str());
-    printFmtToDebug(PSTR("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n"), WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
+    printFmtToDebug("SSID: %s\r\n", WiFi.SSID().c_str());
+    printFmtToDebug("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n", WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
     // print your WiFi shield's IP address
     IPAddress t = WiFi.localIP();
-    printFmtToDebug(PSTR("IP Address: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
+    printFmtToDebug("IP Address: %d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);
   
     // print the received signal strength
     long rssi = WiFi.RSSI();
-    printFmtToDebug(PSTR("Signal strength (RSSI): %l dBm\r\n"), rssi);
+    printFmtToDebug("Signal strength (RSSI): %l dBm\r\n", rssi);
   }
 }
 
@@ -7236,7 +7236,7 @@ void netEvent(WiFiEvent_t event) {
     case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
       break;
     case ARDUINO_EVENT_ETH_START:
-      SerialOutput->println(PSTR("Ethernet Started."));
+      SerialOutput->println("Ethernet Started.");
       // Set ETH hostname here if needed
       ETH.setHostname(mDNS_hostname);
       break;
@@ -7247,11 +7247,11 @@ void netEvent(WiFiEvent_t event) {
       }
       break;
     case ARDUINO_EVENT_ETH_GOT_IP:
-      SerialOutput->print(PSTR("Ethernet got IP: "));
+      SerialOutput->print("Ethernet got IP: ");
       SerialOutput->println(ETH.localIP());
       break;
     case ARDUINO_EVENT_ETH_DISCONNECTED:
-      SerialOutput->println(PSTR("Ethernet disconnected."));
+      SerialOutput->println("Ethernet disconnected.");
       if (localAP == true) {
         removeTemporaryAP();
       }
@@ -7260,7 +7260,7 @@ void netEvent(WiFiEvent_t event) {
       }
       break;
     case ARDUINO_EVENT_ETH_STOP:
-      SerialOutput->println(PSTR("ETH stopped."));
+      SerialOutput->println("ETH stopped.");
       if (localAP == true) {
         removeTemporaryAP();
       }
@@ -7270,7 +7270,7 @@ void netEvent(WiFiEvent_t event) {
       break;
     default:
 /*
-      SerialOutput->print(PSTR("Network-Event "));
+      SerialOutput->print("Network-Event ");
       SerialOutput->println(event);
 */
       break;
@@ -7309,15 +7309,15 @@ void startLoggingDevice() {
   #else
   minimum_SD_size = 100;
   #endif
-  printToDebug(PSTR("Starting storage device...\r\n"));
+  printToDebug("Starting storage device...\r\n");
   #ifndef ESP32
   // disable w5100 while setting up SD
   pinMode(10,OUTPUT);
   digitalWrite(10,HIGH);
   if (!SDCard.begin(4, SPI_DIV3_SPEED)) {
-    printToDebug(PSTR("SD card failed.\r\n")); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+    printToDebug("SD card failed.\r\n"); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
   } else {
-    printToDebug(PSTR("SD card mounted ok.\r\n"));
+    printToDebug("SD card mounted ok.\r\n");
   }
   #else
     if (LogDestination == SDCARD) {
@@ -7329,15 +7329,15 @@ void startLoggingDevice() {
       SD_MMC.end();
       if(!SD_MMC.begin("", true)){
 #endif
-        printToDebug(PSTR("SD card failed\r\n"));
+        printToDebug("SD card failed\r\n");
       } else {
-        printToDebug(PSTR("SD card mounted ok\r\n"));
+        printToDebug("SD card mounted ok\r\n");
       }
 //      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
     } else {
       LittleFS.end();
       LittleFS.begin(true); // format on fail active
-      printToDebug(PSTR("Internal flash memory (LittleFS) mounted ok\r\n"));
+      printToDebug("Internal flash memory (LittleFS) mounted ok\r\n");
     }
   #endif
 }
@@ -7345,14 +7345,14 @@ void startLoggingDevice() {
 void createTemporaryAP () {
 #if defined (ESP32)
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-  printlnToDebug(PSTR(" Setting up AP 'BSB-LAN'"));
+  printlnToDebug(" Setting up AP 'BSB-LAN'");
   WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
   IPAddress t = WiFi.softAPIP();
   localAP = true;
   localAPtimeout = millis();
   esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
-  printFmtToDebug(PSTR("IP address of BSB-LAN: %d.%d.%d.%d\r\n"), t[0], t[1], t[2], t[3]);
-  printlnToDebug(PSTR("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address."));
+  printFmtToDebug("IP address of BSB-LAN: %d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);
+  printlnToDebug("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address.");
 #endif
 }
 
@@ -7362,7 +7362,7 @@ void removeTemporaryAP() {
   WiFi.softAPdisconnect(false);
   localAP = false;
 //  WiFi.enableAP(false);
-  printlnToDebug(PSTR("Temporary AP 'BSB-LAN' deactivated."));
+  printlnToDebug("Temporary AP 'BSB-LAN' deactivated.");
 #endif
 }
 
@@ -7397,13 +7397,13 @@ void setup() {
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
 #endif
 
-  SerialOutput->println(F("READY"));
+  SerialOutput->println("READY");
 
 #if defined(__arm__)
   Wire.begin();
   if (!EEPROM.ready()) {
     EEPROM_ready = false;
-    SerialOutput->println(F("EEPROM not ready"));
+    SerialOutput->println("EEPROM not ready");
   }
 #endif
 
@@ -7491,7 +7491,7 @@ void setup() {
   readFromEEPROM(CF_PPS_VALUES);
   byte UseEEPROM_in_config_h = UseEEPROM;
   if (UseEEPROM) { //Read EEPROM when it allowed from config file
-    SerialOutput->println(F("Reading EEPROM"));
+    SerialOutput->println("Reading EEPROM");
     readFromEEPROM(CF_USEEEPROM);
     readFromEEPROM(CF_VERSION);
   }
@@ -7501,28 +7501,28 @@ void setup() {
     if (crc == initConfigTable(EEPROMversion)) {
   //read parameters
       for (uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
-        if (verbose == DEVELOPER_DEBUG) SerialOutput->print(F(" Read parameter # ")); SerialOutput->println(i);
+        if (verbose == DEVELOPER_DEBUG) SerialOutput->print(" Read parameter # "); SerialOutput->println(i);
   //read parameter if it version is non-zero
         if (config[i].version > 0 && config[i].version <= EEPROMversion) readFromEEPROM(config[i].id);
       }
     } else {
-      SerialOutput->println(F("EEPROM schema CRC mismatch"));
+      SerialOutput->println("EEPROM schema CRC mismatch");
       crc_correct = false;
     }
   } else {
-    SerialOutput->println(F("Using settings from config file"));
+    SerialOutput->println("Using settings from config file");
     initConfigTable(EEPROMversion); //Need to init config table in any case because we can change opinion and can enable store config in EEPROM.
   }
-  SerialOutput->println(F("Reading done."));
+  SerialOutput->println("Reading done.");
 
   //calculate maximal version
   uint8_t maxconfversion = 0;
   for (uint8_t i = 0; i < sizeof(config)/sizeof(config[0]); i++) {
     if (config[i].version > maxconfversion) maxconfversion = config[i].version;
   }
-  SerialOutput->print(F("EEPROM schema v."));
+  SerialOutput->print("EEPROM schema v.");
   SerialOutput->print(EEPROMversion);
-  SerialOutput->print(F(" Program schema v."));
+  SerialOutput->print(" Program schema v.");
   SerialOutput->println(maxconfversion);
 
   if (maxconfversion != EEPROMversion || !crc_correct) { //Update config "Schema" in EEPROM
@@ -7530,12 +7530,12 @@ void setup() {
     EEPROMversion = maxconfversion; //store new version
     if (UseEEPROM_in_config_h == 0x01) {//Update EEPROM when config file contain UseEEPROM = 1
       if (UseEEPROM != 0x69 && UseEEPROM != 0x96) UseEEPROM = 0x96;
-      SerialOutput->println(F("Update EEPROM schema"));
+      SerialOutput->println("Update EEPROM schema");
       for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
         //do not write here MAX! settings
         if (i != CF_MAX_DEVICES && i != CF_MAX_DEVADDR) {
           writeToEEPROM(i);
-          if (verbose == DEVELOPER_DEBUG) SerialOutput->print(F("Write option # ")); SerialOutput->println(i);
+          if (verbose == DEVELOPER_DEBUG) SerialOutput->print("Write option # "); SerialOutput->println(i);
         }
       }
     }
@@ -7548,17 +7548,17 @@ void setup() {
   debug_mode = 1; //force using Serial debug until setup is end.
 
   for (uint8_t i = 0; i < CF_LAST_OPTION; i++) {
-    printFmtToDebug(PSTR("Address EEPROM option %d: %d\r\n"), i, getEEPROMaddress(i));
+    printFmtToDebug("Address EEPROM option %d: %d\r\n", i, getEEPROMaddress(i));
   }
 
-  if (save_debug_mode == 2) printToDebug(PSTR("Logging output to Telnet\r\n"));
-  printFmtToDebug(PSTR("Size of cmdtbl: %d\r\n"),sizeof(cmdtbl));
-  printFmtToDebug(PSTR("free RAM: %d\r\n"), freeRam());
+  if (save_debug_mode == 2) printToDebug("Logging output to Telnet\r\n");
+  printFmtToDebug("Size of cmdtbl: %d\r\n",sizeof(cmdtbl));
+  printFmtToDebug("free RAM: %d\r\n", freeRam());
 
   while (SerialOutput->available()) { // UART buffer often still contains characters after reset if power is not cut
-    printFmtToDebug(PSTR("%c"), SerialOutput->read());
+    printFmtToDebug("%c", SerialOutput->read());
   }
-  printFmtToDebug(PSTR("BSB-LAN version: %s\r\n"), BSB_VERSION);
+  printFmtToDebug("BSB-LAN version: %s\r\n", BSB_VERSION);
 // BSB/LPB/PPS bus init
   byte temp_bus_pins[2];
   if (bus_pins[0] && bus_pins[1]) {
@@ -7568,9 +7568,9 @@ void setup() {
 #if defined(ESP32)
   #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
     #if ETH_PHY_POWER == 12
-      printToDebug(PSTR("Microcontroller: ESP32/Olimex PoE\r\n"));
+      printToDebug("Microcontroller: ESP32/Olimex PoE\r\n");
     #else
-      printToDebug(PSTR("Microcontroller: ESP32/Olimex EVB\r\n"));
+      printToDebug("Microcontroller: ESP32/Olimex EVB\r\n");
     #endif
     pinMode(4, INPUT);
     if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
@@ -7585,12 +7585,12 @@ void setup() {
       temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
     }
   #else
-    printToDebug(PSTR("Microcontroller: ESP32/NodeMCU\r\n"));
+    printToDebug("Microcontroller: ESP32/NodeMCU\r\n");
     temp_bus_pins[0] = 16;          // NodeMCU ESP32
     temp_bus_pins[1] = 17;
   #endif
 #else  // Due
-    printToDebug(PSTR("Microcontroller: ARM/Arduino Due\r\n"));
+    printToDebug("Microcontroller: ARM/Arduino Due\r\n");
     // HardwareSerial
     temp_bus_pins[0] = 19;
     temp_bus_pins[1] = 18;
@@ -7601,16 +7601,16 @@ void setup() {
   pinMode(temp_bus_pins[0], INPUT); //RX-pin of hardware serial on Due
 #endif
 
-  printFmtToDebug(PSTR("Using RX/TX pins %d, %d\r\n"), temp_bus_pins[0], temp_bus_pins[1]);
+  printFmtToDebug("Using RX/TX pins %d, %d\r\n", temp_bus_pins[0], temp_bus_pins[1]);
   bus = new BSB(temp_bus_pins[0], temp_bus_pins[1]);
   setBusType(); //set BSB/LPB/PPS mode
 
-  printToDebug(PSTR("Bus type defined in config: "));
+  printToDebug("Bus type defined in config: ");
   switch (bus_type) {
-    case BUS_BSB:  printlnToDebug(PSTR("BSB")); break;
-    case BUS_LPB:  printlnToDebug(PSTR("LPB")); break;
-    case BUS_PPS:  printlnToDebug(PSTR("PPS")); break;
-    default: printlnToDebug(PSTR("unknown!"));
+    case BUS_BSB:  printlnToDebug("BSB"); break;
+    case BUS_LPB:  printlnToDebug("LPB"); break;
+    case BUS_PPS:  printlnToDebug("PPS"); break;
+    default: printlnToDebug("unknown!");
   }
 
   bus->enableInterface();
@@ -7630,7 +7630,7 @@ void setup() {
 #endif
 
   if (One_Wire_Pin >= 0) {
-    printToDebug(PSTR("Init One Wire bus...\r\n"));
+    printToDebug("Init One Wire bus...\r\n");
     // Setup a oneWire instance to communicate with any OneWire devices
     oneWire = new OneWire(One_Wire_Pin);
     // Pass our oneWire reference to Dallas Temperature.
@@ -7638,11 +7638,11 @@ void setup() {
     // check ds18b20 sensors
     sensors->begin();
     numSensors=sensors->getDeviceCount();
-    printFmtToDebug(PSTR("numSensors: %d\r\n"), numSensors);
+    printFmtToDebug("numSensors: %d\r\n", numSensors);
   }
 
   if(BME_Sensors) {
-    printToDebug(PSTR("Init BMx280 sensor(s)...\r\n"));
+    printToDebug("Init BMx280 sensor(s)...\r\n");
     if(BME_Sensors > 16) BME_Sensors = 16;
     bme = new BlueDot_BME280[BME_Sensors];
     for (uint8_t f = 0; f < BME_Sensors; f++) {
@@ -7666,19 +7666,19 @@ void setup() {
       bme[f].parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
       bool sensor_found = true;
       switch(bme[f].init()){
-        case 0x58: printToDebug(PSTR("BMP280")); break;
-        case 0x60: printToDebug(PSTR("BME280")); break;
-        default: printToDebug(PSTR("Sensor")); sensor_found = false; break;
+        case 0x58: printToDebug("BMP280"); break;
+        case 0x60: printToDebug("BME280"); break;
+        default: printToDebug("Sensor"); sensor_found = false; break;
       }
-      printFmtToDebug(PSTR(" with address 0x%x "), bme[f].parameter.I2CAddress);
+      printFmtToDebug(" with address 0x%x ", bme[f].parameter.I2CAddress);
       if (!sensor_found) {
-        printToDebug(PSTR("NOT "));
+        printToDebug("NOT ");
       }
-      printToDebug(PSTR("found\r\n"));
+      printToDebug("found\r\n");
     }
   }
 
-  printToDebug(PSTR("PPS settings:\r\n"));
+  printToDebug("PPS settings:\r\n");
   uint32_t temp_c = 0;
   int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
@@ -7694,7 +7694,7 @@ void setup() {
         pps_values[i] = 0;
       }
       if (pps_values[i] > 0 && pps_values[i]< (int16_t)0xFFFF) {
-        printFmtToDebug(PSTR("Slot %d, value: %u\r\n"), i, pps_values[i]);
+        printFmtToDebug("Slot %d, value: %u\r\n", i, pps_values[i]);
       }
 //    }
   }
@@ -7720,12 +7720,12 @@ void setup() {
 #endif
   }
 
-  printToDebug(PSTR("Starting network connection via "));
+  printToDebug("Starting network connection via ");
   switch (network_type) {
-    case LAN:  printlnToDebug(PSTR("Ethernet/LAN")); break;
-    case WLAN: printlnToDebug(PSTR("WiFi/WLAN")); break;
+    case LAN:  printlnToDebug("Ethernet/LAN"); break;
+    case WLAN: printlnToDebug("WiFi/WLAN"); break;
   }
-  printToDebug(PSTR("...\r\n"));
+  printToDebug("...\r\n");
 #if defined(ESP32)
   WiFi.onEvent(netEvent);
 #endif
@@ -7735,13 +7735,13 @@ void setup() {
 
   // check for the presence of the shield
   if (WiFi.status() == WL_NO_SHIELD) {
-    printToDebug(PSTR("WiFi shield not present. Cannot continue.\r\n"));
+    printToDebug("WiFi shield not present. Cannot continue.\r\n");
     // don't continue
     while (true);
   }
 
   if (!WiFi.checkProtocolVersion()) {
-    printToDebug(PSTR("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP.\r\n"));
+    printToDebug("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP.\r\n");
     // don't continue:
     while (true);
   }
@@ -7788,10 +7788,10 @@ void setup() {
 #else
       Ethernet.begin(mac);    // DHCP
 #endif
-      printToDebug(PSTR("Waiting for DHCP address"));
+      printToDebug("Waiting for DHCP address");
       unsigned long timeout = millis();
       while (!Ethernet.localIP() && millis() - timeout < 20000) {
-        printToDebug(PSTR("."));
+        printToDebug(".");
         delay(100);
       }
       writelnToDebug();
@@ -7810,31 +7810,31 @@ void setup() {
     WiFi.mode(WIFI_STA); //init wifi mode
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
   
-    printToDebug(PSTR("Setting up WiFi interface"));
+    printToDebug("Setting up WiFi interface");
     WiFi.begin();
     timeout = millis();
     while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
       delay(100);
-      printToDebug(PSTR("."));
+      printToDebug(".");
     }
     writelnToDebug();
     scanAndConnectToStrongestNetwork();
     #endif
   
     // attempt to connect to WiFi network
-    printFmtToDebug(PSTR("Attempting to connect to WPA SSID: %s"), wifi_ssid);
+    printFmtToDebug("Attempting to connect to WPA SSID: %s", wifi_ssid);
     timeout = millis();
     delay(1000);
     while (WiFi.status() != WL_CONNECTED && millis() - timeout < 10000) {
-      printToDebug(PSTR("."));
+      printToDebug(".");
       delay(1000);
     }
     if (WiFi.status() != WL_CONNECTED) {
-      printlnToDebug(PSTR("Connecting to WiFi network failed."));
+      printlnToDebug("Connecting to WiFi network failed.");
       createTemporaryAP();      // only effective on ESP32
     } else {
     // you're connected now, so print out the data
-      printToDebug(PSTR("\r\nYou're connected to the network:\r\n"));
+      printToDebug("\r\nYou're connected to the network:\r\n");
     #if defined(__arm__) || defined(ESP32)
       WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
     #endif
@@ -7854,7 +7854,7 @@ void setup() {
   }
 #endif
 
-  printToDebug(PSTR("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n"));
+  printToDebug("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n");
   // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
@@ -7883,22 +7883,22 @@ void setup() {
   }
 
   if (LoggingMode & CF_LOGMODE_SD_CARD) {
-    printToDebug(PSTR("Calculating free space on SDCard..."));
+    printToDebug("Calculating free space on SDCard...");
     uint32_t m = millis();
 #if !defined(ESP32)
     uint32_t freespace = SDCard.vol()->freeClusterCount();
     freespace = (uint32_t)(freespace*SDCard.vol()->sectorsPerCluster()/2048);
-    printFmtToDebug(PSTR("%d MB free\r\n"), freespace);
+    printFmtToDebug("%d MB free\r\n", freespace);
 #else
     uint64_t freespace = totalBytes()-usedBytes();
-    printFmtToDebug(PSTR("%llu Bytes free\r\n"), freespace);
+    printFmtToDebug("%llu Bytes free\r\n", freespace);
 #endif
     diff -= (millis() - m); //3 sec - delay
   }
   if (diff > 0) delay(diff);
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
 
-  printlnToDebug(PSTR("Start network services"));
+  printlnToDebug("Start network services");
   server->begin();
 
   if (save_debug_mode == 2)
@@ -7955,7 +7955,7 @@ void setup() {
     temp_offset1 = pgm_read_word_far(pgm_get_far_address(cmdtbl[0].enumstr) + index_first_enum * sizeof(cmdtbl[0]));
     if (temp_offset1 > 0 && temp_offset1 < 65535) {
       DebugOutput.print(i);
-      DebugOutput.print(F("\t"));
+      DebugOutput.print("\t");
       DebugOutput.println(temp_offset1, HEX);
     }
   }
@@ -8059,9 +8059,9 @@ void setup() {
     } else {
       mdns.begin(Ethernet.localIP(), mDNS_hostname);
     }
-    mdns.addServiceRecord(PSTR("BSB-LAN web service._http"), HTTPPort, MDNSServiceTCP);
+    mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
 #endif
-    printFmtToDebug(PSTR("Starting MDNS service with hostname %s\r\n"), mDNS_hostname);
+    printFmtToDebug("Starting MDNS service with hostname %s\r\n", mDNS_hostname);
   }
 
 // Set up web-based over-the-air updates for ESP32
@@ -8076,6 +8076,6 @@ void setup() {
 #if !defined(ESP32)
   FsDateTime::setCallback(dateTime);
 #endif
-  printlnToDebug(PSTR("Setup complete"));
+  printlnToDebug("Setup complete");
   debug_mode = save_debug_mode; //restore actual debug mode
 }

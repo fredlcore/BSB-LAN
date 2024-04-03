@@ -19,13 +19,13 @@ if (custom_timer > custom_timer_compare+20000) {    // every 20 seconds
   double abs_hum_outside = 216.7*(hum[1]/100.0*6.112*exp(17.62*temp[1]/(243.12+temp[1]))/(273.15+temp[1]));
 /*
   // Debug output
-  Serial.print(F("Absolute humidity inside: "));
+  Serial.print("Absolute humidity inside: ");
   Serial.println(abs_hum_inside);
-  Serial.print(F("Absolute humidity outside: "));
+  Serial.print("Absolute humidity outside: ");
   Serial.println(abs_hum_outside);
-  Serial.print(F("Temperature inside: "));
+  Serial.print("Temperature inside: ");
   Serial.println(temp[0]);
-  Serial.print(F("Temperature outside: "));
+  Serial.print("Temperature outside: ");
   Serial.println(temp[1]);
 */
 

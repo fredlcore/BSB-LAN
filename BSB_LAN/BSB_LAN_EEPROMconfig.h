@@ -228,7 +228,7 @@ PROGMEM_LATE const configuration_struct config[]={
   {CF_MAX_IPADDRESS,    2, CCAT_MAX,      CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MAX_IPADDRESS_TXT, sizeof(max_cul_ip_addr)}, //need reboot. Can use handler to reconfigure in future
   {CF_MAX_DEVICES,      0, CCAT_MAX,      CPI_TEXT,      CDT_MAXDEVICELIST,  OPT_FL_ADVANCED, CF_DEVICES_TXT, sizeof(max_device_list)}, //Need to call UpdateMaxDeviceList() before saving to EEPROM
   {CF_MAX_DEVADDR,      0, CCAT_MAX,      CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, MAX_CUL_DEVICES * sizeof(uint32_t)},
-  {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(pps_values)}, //printlnToDebug(PSTR("Reading EEPROM..."));  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
+  {CF_PPS_VALUES,       0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(pps_values)}, //printlnToDebug("Reading EEPROM...");  for (int i=PPS_TWS;i<=PPS_BRS;i++){ ...}
   {CF_IPWE,             2, CCAT_IPWE,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(enable_ipwe)},//immediately apply
   {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
