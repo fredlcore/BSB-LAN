@@ -545,7 +545,7 @@
 #if defined(ESP32)
 uint64_t usedBytes();
 uint64_t totalBytes();
-String scanAndConnectToStrongestNetwork();
+void scanAndConnectToStrongestNetwork();
 void removeTemporaryAP();
 void createTemporaryAP();
 #else
@@ -720,6 +720,13 @@ Stream *SerialOutput;
 //BSB bus definitions
 BSB *bus;
 //end BSB bus definitions
+
+// Define a structure to hold a buffer and its size
+typedef struct {
+    char* buffer;
+    size_t size;
+    size_t currentLength; // Track current length to avoid recomputing
+} StringBuffer;
 
 /* buffer to print output lines and to load PROGMEM values in RAM*/
 #define OUTBUF_LEN  450
@@ -982,6 +989,61 @@ void checkSockStatus()
 }
 
 #endif
+
+void initStringBuffer(StringBuffer* sb, char* buf, size_t bufSize) {
+    sb->buffer = buf;
+    sb->size = bufSize;
+    sb->currentLength = strlen(buf); // Initialize current length
+}
+
+/*
+void logParameter(const char* format, va_list args) {
+    for (const char* p = format; *p; p++) {
+        if (*p != '%') {
+            continue; // Not a format specifier, skip
+        }
+        switch (*++p) { // Check the next character to determine the type
+            case 's': { // String
+                char* str = va_arg(args, char*);
+                printf("String: %s\n", str);
+                break;
+            }
+            case 'd': { // Integer
+                int val = va_arg(args, int);
+                printf("Integer: %d\n", val);
+                break;
+            }
+            case 'f': { // Float (note: 'float' is promoted to 'double' when passed through '...')
+                double dbl = va_arg(args, double);
+                printf("Float: %f\n", dbl);
+                break;
+            }
+        }
+    }
+}
+*/
+
+void appendStringBuffer(StringBuffer* sb, const char* format, ...) {
+    va_list args;
+/*
+    va_start(args, format);
+
+    // Log parameters
+    logParameter(format, args);
+
+    // Reset va_list for the actual appending
+    va_end(args);
+*/
+    va_start(args, format);
+
+    size_t remainingSpace = sb->size - sb->currentLength; // Calculate remaining space
+    // Use vsnprintf with calculated current length and remaining space
+    int charsWritten = vsnprintf(sb->buffer + sb->currentLength, remainingSpace, format, args);
+    if (charsWritten > 0) {
+        sb->currentLength += (size_t)charsWritten > remainingSpace ? remainingSpace : (size_t)charsWritten;
+    }
+    va_end(args);
+}
 
 int char2int(char input)
 {
@@ -7097,7 +7159,7 @@ next_parameter:
 
 #if defined(ESP32)
 
-String scanAndConnectToStrongestNetwork() {
+void scanAndConnectToStrongestNetwork() {
   int sum_bssid = 0;
   for (int x=0;x<6;x++) {
     sum_bssid += bssid[x];
@@ -7113,7 +7175,7 @@ String scanAndConnectToStrongestNetwork() {
     }
     printlnToDebug(PSTR(""));
     if (WiFi.status() == WL_CONNECTED) {
-      return ("Connection successful using default BSSID.");
+      printlnToDebug(PSTR("Connection successful using default BSSID."));
     } else {
       printlnToDebug(PSTR("Connection with default BSSID failed, trying to scan..."));
     }
@@ -7129,13 +7191,12 @@ String scanAndConnectToStrongestNetwork() {
 
   if (n == 0) {
     printlnToDebug(PSTR("No networks found!"));
-    return ("");
   } else {
     printFmtToDebug(PSTR("%d networks found:\r\n"), n);
     for (int i = 0; i < n; ++i) {
       // Print SSID and RSSI for each network found
       printFmtToDebug(PSTR("%d: BSSID: %s  %2ddBm, %3d%%  %9s  %s\r\n"), i, WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i), constrain(2 * (WiFi.RSSI(i) + 100), 0, 100), (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "open" : "encrypted", WiFi.SSID(i).c_str());
-      if ((String(wifi_ssid) == String(WiFi.SSID(i)) && (WiFi.RSSI(i)) > rssi_strongest)) {
+      if (strcmp(wifi_ssid, WiFi.SSID(i).c_str()) == 0 && (WiFi.RSSI(i) > rssi_strongest)) {
         rssi_strongest = WiFi.RSSI(i);
         i_strongest = i;
       }
@@ -7144,18 +7205,16 @@ String scanAndConnectToStrongestNetwork() {
 
   if (i_strongest < 0) {
     printFmtToDebug(PSTR("No network with SSID %s found!\r\n"), wifi_ssid);
-    return ("");
   }
   printFmtToDebug(PSTR("SSID match found at %d. Connecting...\r\n"), i_strongest);
   WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
-  return (WiFi.BSSIDstr(i_strongest));
 }
 
 void printWifiStatus()
 {
   if (WiFi.SSID() != NULL) {
     // print the SSID of the network you're attached to
-    printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID());
+    printFmtToDebug(PSTR("SSID: %s\r\n"), WiFi.SSID().c_str());
     printFmtToDebug(PSTR("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n"), WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
     // print your WiFi shield's IP address
     IPAddress t = WiFi.localIP();
@@ -7210,8 +7269,10 @@ void netEvent(WiFiEvent_t event) {
       }
       break;
     default:
+/*
       SerialOutput->print(PSTR("Network-Event "));
       SerialOutput->println(event);
+*/
       break;
   }
 }

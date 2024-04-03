@@ -40,14 +40,17 @@ const char* mqtt_get_client_id() {
 
 void mqtt_sendtoBroker(parameter param) {
   // Declare local variables and start building json if enabled
-  String MQTTPayload = "";
-  String MQTTTopic = "";
+  char MQTTPayload[2048] = "";
+  char MQTTTopic[80] = "";
+  StringBuffer sb_payload;
+  StringBuffer sb_topic;
+  initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
+  initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
 
   if (MQTTTopicPrefix[0]) {
-    MQTTTopic = MQTTTopicPrefix;
-    MQTTTopic.concat(F("/"));
+    appendStringBuffer(&sb_topic, PSTR("%s/"), MQTTTopicPrefix);
   } else {
-    MQTTTopic = "BSB-LAN/";
+    appendStringBuffer(&sb_topic, "%s", PSTR("BSB-LAN/"));
   }
 
   query(param.number);
@@ -59,17 +62,16 @@ void mqtt_sendtoBroker(parameter param) {
     // =============================================
     case 1:
       // use parameter code as sub-topic
-      MQTTTopic.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
+      appendStringBuffer(&sb_topic, "%s", String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
       if (param.dest_addr > -1) {
-        MQTTTopic.concat("!");
-        MQTTTopic.concat(String(param.dest_addr));
+        appendStringBuffer(&sb_topic, PSTR("!%d"), param.dest_addr);
       }
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
 //---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
-        MQTTPayload.concat(build_pvalstr(0));
+        appendStringBuffer(&sb_payload, PSTR("%s"), build_pvalstr(0));
       } else {
-        MQTTPayload.concat(decodedTelegram.value);
+        appendStringBuffer(&sb_payload, PSTR("%s"), decodedTelegram.value);
       }
       break;
     // =============================================
@@ -77,57 +79,43 @@ void mqtt_sendtoBroker(parameter param) {
     // =============================================
     case 2:
       // use sub-topic json
-      MQTTTopic.concat(F("json"));
+      appendStringBuffer(&sb_topic, "%s", PSTR("json"));
       // Build the json heading
-      MQTTPayload.concat(F("{\""));
-      MQTTPayload.concat(mqtt_get_client_id());
-      MQTTPayload.concat(F("\":{\"status\":{\""));
-      MQTTPayload.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
+      appendStringBuffer(&sb_payload, "{\"%s\":{\"status\":{\"%s", mqtt_get_client_id(), String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
       if (param.dest_addr > -1) {
-        MQTTPayload.concat("!");
-        MQTTPayload.concat(String(param.dest_addr));
+        appendStringBuffer(&sb_payload, "!%d", param.dest_addr);
       }
-      MQTTPayload.concat(F("\":\""));
+      appendStringBuffer(&sb_payload, "\":\"");
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
 //---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
 //---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
-        MQTTPayload.concat(build_pvalstr(0));
+        appendStringBuffer(&sb_payload, "%s", build_pvalstr(0));
       } else {
-        MQTTPayload.concat(decodedTelegram.value);
+        appendStringBuffer(&sb_payload, "%s", decodedTelegram.value);
       }
-      MQTTPayload.concat(F("\"}}}"));
+      appendStringBuffer(&sb_payload, "\"}}}");
       break;
     // =============================================
     // send full json message
     // =============================================
     case 3:
-      MQTTTopic.concat(F("json"));
+      appendStringBuffer(&sb_topic, "%s", "json");
       // Build the json heading
-      MQTTPayload.concat(F("{\""));
+      appendStringBuffer(&sb_payload, "{\"");
       if (MQTTDeviceID[0]) {
-        MQTTPayload.concat(MQTTDeviceID);
+        appendStringBuffer(&sb_payload, "%s", MQTTDeviceID);
       } else {
-        MQTTPayload.concat(F("BSB-LAN"));
+        appendStringBuffer(&sb_payload, "%s", "BSB-LAN");
       }
-      MQTTPayload.concat(F("\":{\"id\":"));
-      MQTTPayload.concat(String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
+      appendStringBuffer(&sb_payload, "\":{\"id\":%s", String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0));
       if (param.dest_addr > -1) {
-        MQTTPayload.concat("!");
-        MQTTPayload.concat(String(param.dest_addr));
+        appendStringBuffer(&sb_payload, "!%d", param.dest_addr);
       }
-      MQTTPayload.concat(F(",\"name\":\""));
-      MQTTPayload.concat(decodedTelegram.prognrdescaddr);
-      MQTTPayload.concat(F("\",\"value\": \""));
-      MQTTPayload.concat(decodedTelegram.value);
-      MQTTPayload.concat(F("\",\"desc\": \""));
+      appendStringBuffer(&sb_payload, ",\"name\":\"%s\",\"value\": \"%s\",\"desc\": \"", decodedTelegram.prognrdescaddr, decodedTelegram.value);
       if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
-        MQTTPayload.concat(decodedTelegram.enumdescaddr);
+        appendStringBuffer(&sb_payload, "%s", decodedTelegram.enumdescaddr);
       }
-      MQTTPayload.concat(F("\",\"unit\": \""));
-      MQTTPayload.concat(decodedTelegram.unit);
-      MQTTPayload.concat(F("\",\"error\": "));
-      MQTTPayload.concat(String(decodedTelegram.error));
-      MQTTPayload.concat(F("}}"));
+      appendStringBuffer(&sb_payload, "\",\"unit\": \"%s\",\"error\": %d}}", decodedTelegram.unit, decodedTelegram.error);
       break;
     default:
       printFmtToDebug(PSTR("Invalid mqtt mode: %d. Must be 1,2 or 3. Skipping publish."),mqtt_mode);
@@ -135,10 +123,10 @@ void mqtt_sendtoBroker(parameter param) {
   }
 
   // debugging..
-  printFmtToDebug(PSTR("Publishing to topic: %s\r\n"), MQTTTopic.c_str());
-  printFmtToDebug(PSTR("Payload: %s\r\n"), MQTTPayload.c_str());
+  printFmtToDebug(PSTR("Publishing to topic: %s\r\n"), MQTTTopic);
+  printFmtToDebug(PSTR("Payload: %s\r\n"), MQTTPayload);
   // Now publish the json payload only once
-  MQTTPubSubClient->publish(MQTTTopic.c_str(), MQTTPayload.c_str());
+  MQTTPubSubClient->publish(MQTTTopic, MQTTPayload);
   printlnToDebug(PSTR("Successfully published..."));
 }
 
@@ -213,7 +201,7 @@ bool mqtt_connect() {
       printlnToDebug(PSTR("MQTT connection lost"));
       return false;
     }
-    if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 1000) {
+    if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 10000) {
       // Wait 1s between reconnection attempts
       return false;
     }
@@ -226,12 +214,14 @@ bool mqtt_connect() {
     if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
     }
+    printFmtToDebug("Connecting to MQTT broker %s on port %d...\r\n", mqtt_host, mqtt_port);
     MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
     printFmtToDebug(PSTR("Client ID: %s\r\n"), mqtt_get_client_id());
     printFmtToDebug(PSTR("Will topic: %s\r\n"), mqtt_get_will_topic());
     MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 0, true, PSTR("offline"));
     if (!MQTTPubSubClient->connected()) {
       printlnToDebug(PSTR("Failed to connect to MQTT broker, retrying..."));
+      mqtt_reconnect_timer = millis();
     } else {
       printlnToDebug(PSTR("Connected to MQTT broker, updating will topic"));
       mqtt_reconnect_timer = 0;
