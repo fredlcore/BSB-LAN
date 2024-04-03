@@ -335,7 +335,7 @@ ich mir da nicht)
           case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
           case 0x0C: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Reduziert Soll (?)
           case 0x0E: pps_values[PPS_KVS] = temp; break; // Vorlauftemperatur Soll (?)
-          case 0x10: pps_values[PPS_AT] = temp; break; // Außentemperatur bei LGM11, 0x10 Telegramm hat an msg[2] einen teilweise regelmäßig aber sprunghaft wechselnden Wert, danach fest 64 01 57
+          case 0x10: pps_values[PPS_KVT] = temp; my_dev_var = 3; break; // Kesselvorlauftemperatur bei LGM11, gleichzeitig Erkennung von LGM11 (Problem, falls 0x10 auch bei andersartigen Reglern vorkommen würde). 0x10 Telegramm hat an msg[2] einen teilweise regelmäßig aber sprunghaft wechselnden Wert, danach fest 64 01 57
           case 0x18: pps_values[PPS_PDK] = temp; break; // Position Drehknopf
           case 0x19: log_now = setPPS(PPS_RTZ, temp); break; // Raumtemperatur Zieltemperatur (nur bei Komforttemperatur, dann zzgl. Einstellung am Drehknopf)
           case 0x1E: pps_values[PPS_TWR] = temp; break; // Trinkwasser-Soll Reduziert
@@ -347,7 +347,7 @@ ich mir da nicht)
           case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
           case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
           case 0x4A:
-            pps_values[PPS_KVT] = temp;               // Kesselvorlauftemperatur bei MCBA-Systemen
+            pps_values[PPS_KVS] = temp;               // Vorlauftemperatur-Soll bei MCBA-Systemen
             pps_values[PPS_MOD] = msg[3+pps_offset];  // Brennermodulation bei MCBA-Systemen
             setPPS(PPS_BRS, msg[5+pps_offset]);       // Brennerstatus bei MCBA_Systemen
             break;

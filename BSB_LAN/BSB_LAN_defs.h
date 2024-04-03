@@ -165,6 +165,7 @@
 #define DEV_NONE     0,0
 #define DEV_PPS      0,1
 #define DEV_PPS_MCBA 0,2
+#define DEV_PPS_EC   0,3
 
 #define DEV_FAM_(X, Y) ((X))
 #define DEV_VAR_(X, Y) ((Y))
@@ -1232,6 +1233,7 @@ const char ENUM15046[] PROGMEM_LATEST = {
 {0x2D29001E,  VT_TEMP,          15030, STR15030, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D57001F,  VT_TEMP,          15031, STR15031, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
 {0x2D2E0020,  VT_TEMP,          15032, STR15032, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Kesselvorlauftemperatur
+{0x2D100020,  VT_TEMP,          15032, STR15032, 0,                    NULL,         FL_RONLY, DEV_PPS_EC},  // Kesselvorlauftemperatur
 {0x2D0E0021,  VT_TEMP,          15033, STR15033, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Kesselvorlauftemperatur Soll (writing only makes sense on MCBA/DC225 systems)
 {0x2D2C0022,  VT_TEMP,          15034, STR15034, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Mischervorlauftemperatur
 {0x2D190023,  VT_TEMP,          15035, STR15035, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Zieltemperatur (entweder Absenktemperatur oder Komforttemperatur zzgl. Drehknopfposition)
