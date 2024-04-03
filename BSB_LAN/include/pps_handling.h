@@ -247,14 +247,10 @@ uint16_t pps_bus_handling(byte *msg) {
 
     if (verbose) {     // verbose output for PPS after time-critical sending procedure
       if (!monitor) {
-        printTelegram(msg, -1);
+        LogTelegram(msg, -1);
+        LogTelegram(tx_msg, -1);
       } else {
         printFmtToDebug(PSTR("%lu "), millis());
-      }
-      printTelegram(tx_msg, -1);
-      if (!monitor) {
-        LogTelegram(msg);
-        LogTelegram(tx_msg);
       }
     }
 
@@ -467,8 +463,7 @@ ich mir da nicht)
     } // End parsing 0x1D heater telegrams
 
     if (verbose && !monitor) {     // verbose output for PPS after time-critical sending procedure
-      printTelegram(msg, -1);
-      LogTelegram(msg);
+      LogTelegram(msg, -1);
     }
   } // End parse PPS heating data
   return log_now;
@@ -494,12 +489,10 @@ void pps_query_mcba() {
     bus->Send(0, 0, rx_msg, tx_msg);
   }
   if (verbose) {     // verbose output for PPS after time-critical sending procedure
-    if (monitor) {
-      printFmtToDebug(PSTR("%lu "), millis());
-    }
-    printTelegram(tx_msg, -1);
     if (!monitor) {
-      LogTelegram(tx_msg);
+      LogTelegram(tx_msg, -1);
+    } else {
+      printFmtToDebug(PSTR("%lu "), millis());
     }
   }
   msg_cycle++;

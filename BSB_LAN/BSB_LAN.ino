@@ -2886,14 +2886,17 @@ void generateJSONwithConfig() {
  *  Pass parameters:
  *   byte *msg pointer to the telegram buffer
  * Parameters passed back:
- *   none
+ *   char * pvalstr
  * Function value returned:
  *   none
  * Global resources used:
  *   log_parameters
  * *************************************************************** */
-void LogTelegram(byte* msg) {
-  if (!(logTelegram & LOGTELEGRAM_ON) || !(LoggingMode & CF_LOGMODE_SD_CARD)) return;
+void LogTelegram(byte* msg, float query_line) {
+  printTelegram(msg, query_line);
+  // printTelegram has populated decodedTelegram
+  if (logTelegram & LOGTELEGRAM_OFF) return;
+  if (!(LoggingMode & (CF_LOGMODE_SD_CARD | CF_LOGMODE_MQTT))) return;
   File dataFile;
   uint32_t cmd;
   int i=0;        // begin with line 0
@@ -2906,13 +2909,18 @@ void LogTelegram(byte* msg) {
   int data_len;
   float dval;
   float line = 0;
+  if (LoggingMode & CF_LOGMODE_SD_CARD) {
 #if !defined(ESP32)
-  if (SDCard.vol()->freeClusterCount() < minimum_SD_size) return;
+    if (SDCard.vol()->freeClusterCount() < minimum_SD_size) return;
 #else
-  if (totalBytes()-usedBytes() < minimum_SD_size) return;
+    if (totalBytes()-usedBytes() < minimum_SD_size) return;
 #endif
+    dataFile = SDCard.open(journalFileName, FILE_APPEND);
+  }
 
+  bool is_query = false;
   if (bus->getBusType() != BUS_PPS) {
+    if (msg[4+(bus->getBusType()*4)]==TYPE_QUR) is_query = true;
     if (msg[4+(bus->getBusType()*4)]==TYPE_QUR || msg[4+(bus->getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
       cmd=(uint32_t)msg[6+(bus->getBusType()*4)]<<24 | (uint32_t)msg[5+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
     } else {
@@ -2956,8 +2964,13 @@ void LogTelegram(byte* msg) {
     default: logThis = false; break;
   }
   if (logThis) {
-    dataFile = SDCard.open(journalFileName, FILE_APPEND);
-    if (dataFile) {
+    if (LoggingMode & CF_LOGMODE_MQTT) {
+      printlnToDebug(PSTR("Send to MQTT"));
+      if ((decodedTelegram.prognr != -1) and (!is_query)) {
+        mqtt_sendtoBroker(-1);
+      }
+    }
+    if ((LoggingMode & CF_LOGMODE_SD_CARD) && dataFile) {
       int outBufLen = 0;
       outBufLen += sprintf_P(outBuf, PSTR("%lu;%s;"), millis(), GetDateTime(outBuf + outBufLen + 80));
       if (!known) {                          // no hex code match
@@ -3028,8 +3041,10 @@ void LogTelegram(byte* msg) {
       }
       strcat_P(outBuf + outBufLen, PSTR("\r\n"));
       dataFile.print(outBuf);
-      dataFile.close();
     }
+  }
+  if (LoggingMode & CF_LOGMODE_SD_CARD) {
+    if (dataFile) dataFile.close();
   }
 }
 
@@ -3619,16 +3634,14 @@ int set(float line      // the ProgNr of the heater parameter
 
   // Decode the xmit telegram and send it to the PC serial interface
   if (verbose) {
-    printTelegram(tx_msg, line);
-    LogTelegram(tx_msg);
+    LogTelegram(tx_msg, line);
   }
 
   // no answer for TYPE_INF
   if (t!=TYPE_SET) return 1;
 
   // Decode the rcv telegram and send it to the PC serial interface
-  printTelegram(msg, line);
-  LogTelegram(msg);
+  LogTelegram(msg, line);
   // Expect an acknowledgement to our SET telegram
   if (msg[4+(bus->getBusType()*4)]!=TYPE_ACK) {      // msg type at 4 (BSB) or 8 (LPB)
     printlnToDebug(PSTR("set failed NACK"));
@@ -3672,13 +3685,11 @@ int queryDefaultValue(float line, byte *msg, byte *tx_msg) {
     } else {
       // Decode the xmit telegram and send it to the debug interface
       if (verbose) {
-        printTelegram(tx_msg, line);
-        LogTelegram(tx_msg);
+        LogTelegram(tx_msg, line);
       }
 
       // Decode the rcv telegram and send it to the debug interface
-      printTelegram(msg, line);   // send to debug interface
-      LogTelegram(msg);
+      LogTelegram(msg, line);
     }
   }
   return 1;
@@ -4142,16 +4153,14 @@ void query(float line) {  // line (ProgNr)
           if (bus->Send(query_type, c, msg, tx_msg) == BUS_OK) {
             // Decode the xmit telegram and send it to the PC serial interface
             if (verbose) {
-              printTelegram(tx_msg, line);
-              LogTelegram(tx_msg);
+              LogTelegram(tx_msg, line);
             }
 
             // Decode the rcv telegram and send it to the PC serial interface
-            printTelegram(msg, line);
+            LogTelegram(msg, line);
             printFmtToDebug(PSTR("#%g: "), line);
             printlnToDebug(build_pvalstr(0));
             SerialOutput->flush();
-            LogTelegram(msg);
             break;   // success, break out of while loop
           } else {
             printlnToDebug(printError(261)); //query failed
@@ -4721,7 +4730,7 @@ void loop() {
   if (monitor) {
     busmsg=bus->Monitor(msg);
     if (busmsg==true) {
-      LogTelegram(msg);
+      LogTelegram(msg, -1);
     }
   }
   if (!monitor || busmsg == true) {
@@ -4730,8 +4739,7 @@ void loop() {
     if (bus->GetMessage(msg) || busmsg == true) { // message was syntactically correct
        // Decode the rcv telegram and send it to the PC serial interface
       if (verbose && bus->getBusType() != BUS_PPS && !monitor) {  // verbose output for PPS comes later
-        printTelegram(msg, -1);
-        LogTelegram(msg);
+        LogTelegram(msg, -1);
       }
 
       // Is this a broadcast message?
@@ -5404,11 +5412,9 @@ void loop() {
                   } else {
                     if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
                       // Decode the xmit telegram and send it to the PC serial interface
-                      printTelegram(tx_msg, -1);
-                      LogTelegram(tx_msg);
+                      LogTelegram(tx_msg, -1);
                       // Decode the rcv telegram and send it to the PC serial interface
-                      printTelegram(msg, -1);   // send to hardware serial interface
-                      LogTelegram(msg);
+                      LogTelegram(msg, -1);
                       if (decodedTelegram.msg_type != TYPE_ERR) { //pvalstr[0]<1 - unknown command
                         my_dev_fam = temp_dev_fam;
                         my_dev_var = temp_dev_var;
@@ -5550,12 +5556,10 @@ void loop() {
               printlnToDebug(PSTR("bus send failed"));  // to PC hardware serial I/F
             } else {
               // Decode the xmit telegram and send it to the PC serial interface
-              printTelegram(tx_msg, -1);
-              LogTelegram(tx_msg);
+              LogTelegram(tx_msg, -1);
             }
             // Decode the rcv telegram and send it to the PC serial interface
-            printTelegram(msg, -1);   // send to hardware serial interface
-            LogTelegram(msg);
+            LogTelegram(msg, -1);
   // TODO: replace pvalstr with data from decodedTelegram structure
             build_pvalstr(1);
             if (outBuf[0]>0) {
@@ -6693,7 +6697,8 @@ next_parameter:
                 my_dev_var = save_my_dev_var;
               }
             }
-            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            query(log_parameters[i].number);
+            mqtt_sendtoBroker(log_parameters[i].dest_addr);
           }
         }
         if (destAddr != d_addr) {
