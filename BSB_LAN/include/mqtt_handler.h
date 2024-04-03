@@ -22,7 +22,7 @@ unsigned long mqtt_reconnect_timer;
  * Pass parameters:
  *   none
  * Function value returned
- *   MQTT client ID as C++ String instance
+ *   MQTT client ID as pointer to char array
  * Global resources used:
  *   none
  */
@@ -147,7 +147,7 @@ void mqtt_sendtoBroker(parameter param) {
  * Pass parameters:
  *   none
  * Function value returned
- *   MQTT last will topic as C++ String instance
+ *   MQTT last will topic as pointer to char array
  * Global resources used:
  *   none
  */
@@ -273,10 +273,9 @@ bool mqtt_connect() {
 void mqtt_disconnect() {
   if (MQTTPubSubClient) {
     if (MQTTPubSubClient->connected()) {
-      String MQTTWillTopic = mqtt_get_will_topic();
       printlnToDebug(PSTR("Disconnect from MQTT broker, updating will topic"));
-      printFmtToDebug(PSTR("Will topic: %s\r\n"), MQTTWillTopic.c_str());
-      MQTTPubSubClient->publish(MQTTWillTopic.c_str(), PSTR("offline"), true);
+      printFmtToDebug(PSTR("Will topic: %s\r\n"), mqtt_get_will_topic());
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), PSTR("offline"), true);
       MQTTPubSubClient->disconnect();
     } else {
       printlnToDebug(PSTR("Dropping unconnected MQTT client"));
@@ -341,15 +340,14 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     set_temp_destination(param.dest_addr);
   }
 
-  String mqtt_Topic;
+  char mqtt_Topic[75];
   if (MQTTTopicPrefix[0]) {
-    mqtt_Topic = MQTTTopicPrefix;
-    mqtt_Topic.concat(F("/"));
+    strcpy_P(mqtt_Topic, MQTTTopicPrefix);
+    strcat(outBuf, PSTR("/MQTT"));
   } else {
-    mqtt_Topic = "BSB-LAN/";
+    strcpy_P(mqtt_Topic, PSTR("BSB-LAN/MQTT"));
   }
-  mqtt_Topic.concat(F("MQTT"));
-  MQTTPubSubClient->publish(mqtt_Topic.c_str(), C_value);
+  MQTTPubSubClient->publish(mqtt_Topic, C_value);
 
   if (firstsign==' ') { //query
     printFmtToDebug(PSTR("%.1f \r\n"), param.number);
