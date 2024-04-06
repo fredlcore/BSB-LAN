@@ -316,8 +316,8 @@ ich mir da nicht)
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
       uint16_t temp = (msg[6] << 8) + msg[7];
       uint16_t i = sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;
-      while (i > 0 && get_cmdtbl_line(i) >= 15000) {
-        uint32_t cmd = get_cmdtbl_cmd(i);
+      while (i > 0 && cmdtbl[i].line >= 15000) {
+        uint32_t cmd = cmdtbl[i].cmd;
         cmd = (cmd & 0x00FF0000) >> 16;
 //              if (cmd == msg[1+pps_offset]) {
         if (cmd == msg[1]) {
@@ -325,7 +325,7 @@ ich mir da nicht)
         }
         i--;
       }
-      uint16_t flags=get_cmdtbl_flags(i);
+      uint16_t flags=cmdtbl[i].flags;
       if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && pps_time_received == false)) {
         switch (msg[1+pps_offset]) {
           case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein

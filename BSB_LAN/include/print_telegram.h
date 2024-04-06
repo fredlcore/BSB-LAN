@@ -722,7 +722,7 @@ void printTelegram(byte* msg, float query_line) {
   if (query_line != -1) {
     while (1) {
       i = findLine(query_line,i,&c);
-      uint16_t dev_flags = get_cmdtbl_flags(i);
+      uint16_t dev_flags = cmdtbl[i].flags;
       if (dev_flags & FL_NOSWAP_QUR) {  // if the QUR telegram is modified (in the sense that the first two bytes are not swapped), then the ANS telegram is also affected in the same way (i.e. the first two bytes are swapped here)
         c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
       }
@@ -741,14 +741,14 @@ void printTelegram(byte* msg, float query_line) {
 
   } else {
     int line = 0, match_line = 0;
-    c=get_cmdtbl_cmd(i);
-    line = get_cmdtbl_line(i);
+    c=cmdtbl[i].cmd;
+    line = cmdtbl[i].line;
     while (c!=CMD_END) {
       if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus_type == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
-        uint16_t dev_flags = get_cmdtbl_flags(i);
-        uint8_t dev_fam = get_cmdtbl_dev_fam(i);
-        uint8_t dev_var = get_cmdtbl_dev_var(i);
-        match_line = get_cmdtbl_line(i);
+        uint16_t dev_flags = cmdtbl[i].flags;
+        uint8_t dev_fam = cmdtbl[i].dev_fam;
+        uint8_t dev_var = cmdtbl[i].dev_var;
+        match_line = cmdtbl[i].line;
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
           if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
             if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
@@ -785,8 +785,8 @@ void printTelegram(byte* msg, float query_line) {
       }
 
       i++;
-      line = get_cmdtbl_line(i);
-      c=get_cmdtbl_cmd(i);
+      line = cmdtbl[i].line;
+      c=cmdtbl[i].cmd;
       if (line > match_line && known == false) {
         score = 0;
       }
@@ -803,7 +803,7 @@ void printTelegram(byte* msg, float query_line) {
   } else {
     i = save_i;
     // Entry in command table is a documented command code
-    decodedTelegram.prognr=get_cmdtbl_line(i);
+    decodedTelegram.prognr=cmdtbl[i].line;
 
     printFmtToDebug("%4.1f ",decodedTelegram.prognr);
 
