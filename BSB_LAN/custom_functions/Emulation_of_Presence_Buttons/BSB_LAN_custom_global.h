@@ -36,7 +36,7 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state) {
   char buf[9];
   unsigned int i0, i1;
   query(current_state);
-  strcpy_P(buf, "%02x%02x");
+  strcpy(buf, "%02x%02x");
   if (2 != sscanf(decodedTelegram.value, buf, &i0, &i1)) return;
   if (i0 != 0x01) return; // 1 = Automatic
   switch (i1) {

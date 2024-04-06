@@ -12,7 +12,7 @@
     for (uint8_t i = 0; i < 8; i++) {
       switch (PressedButtons & (0x01 << i)) {
         case TWW_PUSH_BUTTON_PRESSED:
-          strcpy_P(decodedTelegram.value, "1");
+          strcpy(decodedTelegram.value, "1");
           set(1603, decodedTelegram.value, true);
           PressedButtons &= ~TWW_PUSH_BUTTON_PRESSED;
           break;

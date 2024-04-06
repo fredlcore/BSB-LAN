@@ -543,8 +543,8 @@ void printTimeProg(byte *msg,byte data_len) {
       if (msg[k]<24) {
         len+=sprintf_P(decodedTelegram.value+len,"%02d:%02d-%02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       } else {
-//        len += strlen(strcpy_P(decodedTelegram.value+len,"--:-- - --:--"));
-        strcpy_P(decodedTelegram.value+len,"##:##-##:##");
+//        len += strlen(strcpy(decodedTelegram.value+len,"--:-- - --:--"));
+        strcpy(decodedTelegram.value+len,"##:##-##:##");
         len += 11;
       }
     }
@@ -579,7 +579,7 @@ void printTime(byte *msg,byte data_len) {
       if (msg[bus->getPl_start()]==0) {
         sprintf_P(decodedTelegram.value,"%02d:%02d",msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
       } else {
-        strcpy_P(decodedTelegram.value,"--:--");
+        strcpy(decodedTelegram.value,"--:--");
       }
       printToDebug(decodedTelegram.value);
     }
@@ -1065,7 +1065,7 @@ void printTelegram(byte* msg, float query_line) {
                     SerialPrintData(msg);
                   }
                 } else {
-                  strcpy_P(decodedTelegram.value, "65535");
+                  strcpy(decodedTelegram.value, "65535");
                   decodedTelegram.enumdescaddr = STR_DISABLED;
 //                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
@@ -1124,7 +1124,7 @@ void printTelegram(byte* msg, float query_line) {
                   strcpy(decodedTelegram.value,(char*)&msg[bus->getPl_start()]);
                   remove_char(decodedTelegram.value, '\'');
                 } else {
-                  strcpy_P(decodedTelegram.value,"-");
+                  strcpy(decodedTelegram.value,"-");
                 }
                  printToDebug(decodedTelegram.value);
               } else {
