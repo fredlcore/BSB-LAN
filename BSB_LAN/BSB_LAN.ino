@@ -7290,6 +7290,37 @@ void dateTime(uint16_t* date, uint16_t* time) {
 void startLoggingDevice() {
   Serial.print("LogDestination: ");
   Serial.println(LogDestination);
+  printToDebug("Starting storage device...\r\n");
+  #ifndef ESP32
+  // disable w5100 while setting up SD
+  pinMode(10,OUTPUT);
+  digitalWrite(10,HIGH);
+  if (!SDCard.begin(4, SPI_DIV3_SPEED)) {
+    printToDebug("SD card failed.\r\n"); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
+  } else {
+    printToDebug("SD card mounted ok.\r\n");
+  }
+  #else
+  if (LogDestination == SDCARD) {
+#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+    SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
+    SD.end();
+    if(!SD.begin(SD_CS)){
+#else                               // Olimex or Joy-It NodeMCU with SD_MMC
+    SD_MMC.end();
+    if(!SD_MMC.begin("", true)){
+#endif
+      printToDebug("SD card failed\r\n");
+    } else {
+      printToDebug("SD card mounted ok\r\n");
+    }
+//    pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
+  } else {
+    LittleFS.end();
+    LittleFS.begin(true); // format on fail active
+    printToDebug("Internal flash memory (LittleFS) mounted ok\r\n");
+  }
+  #endif
   #ifdef ESP32
   if (LogDestination == SDCARD) {
 #if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
@@ -7304,37 +7335,6 @@ void startLoggingDevice() {
   }
   #else
   minimum_SD_size = 100;
-  #endif
-  printToDebug("Starting storage device...\r\n");
-  #ifndef ESP32
-  // disable w5100 while setting up SD
-  pinMode(10,OUTPUT);
-  digitalWrite(10,HIGH);
-  if (!SDCard.begin(4, SPI_DIV3_SPEED)) {
-    printToDebug("SD card failed.\r\n"); // change SPI_DIV3_SPEED to SPI_HALF_SPEED if you are still having problems getting your SD card detected
-  } else {
-    printToDebug("SD card mounted ok.\r\n");
-  }
-  #else
-    if (LogDestination == SDCARD) {
-#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
-      SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
-      SD.end();
-      if(!SD.begin(SD_CS)){
-#else                               // Olimex or Joy-It NodeMCU with SD_MMC
-      SD_MMC.end();
-      if(!SD_MMC.begin("", true)){
-#endif
-        printToDebug("SD card failed\r\n");
-      } else {
-        printToDebug("SD card mounted ok\r\n");
-      }
-//      pinMode(TX1, OUTPUT);  // temporary workaround until most recent version of SD_MMC.cpp with slot.width = 1 is part of Arduino installation (should be release 1.0.5)
-    } else {
-      LittleFS.end();
-      LittleFS.begin(true); // format on fail active
-      printToDebug("Internal flash memory (LittleFS) mounted ok\r\n");
-    }
   #endif
 }
 
