@@ -3,7 +3,7 @@
 // The following strings contain html/css/javascript code that has been manually indented; don't let automatic indent break this!
 // *INDENT-OFF*
 
-const char svg_favicon[] PROGMEM_LATE =
+const char svg_favicon[] =
   "<svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>"
     "<path id='b' d='m98 47-63 1c-6 0-12 4-11 11v88c1 5 3 10 10 11l79-1c25-1"
     " 24-53 4-61 11-5 18-49-19-49zM48 72h52c1 10-2 18-11 19l-38 1v22l43-1c14"
@@ -17,7 +17,7 @@ const char svg_favicon[] PROGMEM_LATE =
     " 0-18h-48c-42-5-37-67 0-67z'/>"
   "</svg>";
 
-const char favicon[] PROGMEM_LATE = {
+const char favicon[] = {
   0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, 0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
   0x00, 0x00, 0x00, 0x10, 0x00, 0x00, 0x00, 0x10, 0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0xF3, 0xFF,
   0x61, 0x00, 0x00, 0x01, 0xDD, 0x49, 0x44, 0x41, 0x54, 0x38, 0x8D, 0xA5, 0x91, 0x3D, 0x6B, 0x22,
@@ -54,7 +54,7 @@ const char favicon[] PROGMEM_LATE = {
   0x4E, 0x44, 0xAE, 0x42, 0x60, 0x82
 };
 
-const char graph_html[] PROGMEM_LATE =
+const char graph_html[] =
 #ifdef USE_ADVANCED_PLOT_LOG_FILE
 #ifndef DEFAULT_DAYS_TO_PLOT // old BSB_LAN_config.h w/o this definition?
 #define DEFAULT_DAYS_TO_PLOT "1"
@@ -418,7 +418,7 @@ const char graph_html[] PROGMEM_LATE =
 "</script>";
 #endif // #ifdef USE_ADVANCED_PLOT_LOG_FILE
 
-const char header_html[] PROGMEM_LATE =
+const char header_html[] =
   "\n"
   "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01//EN\">" NEWLINE
   "<html><head>" NEWLINE
@@ -434,7 +434,7 @@ const char header_html[] PROGMEM_LATE =
   "svg.logo{width:10%;height:10%}" NEWLINE
   "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
-const char header_html2[] PROGMEM_LATE =
+const char header_html2[] =
   "<script>function set(p){" NEWLINE
     "var v=document.getElementById('value'+p).value.replace(/\\.$/,'')" NEWLINE
           ".replaceAll(' ','_')" NEWLINE
@@ -448,11 +448,11 @@ const char header_html2[] PROGMEM_LATE =
         "v=v+eval(x.options[i].value);" NEWLINE
     "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
   "}</script>";
-const char header_html3[] PROGMEM_LATE =
+const char header_html3[] =
   "<font face='Arial'>"
   "<center>";
 
-const char auth_req_html[] PROGMEM_LATE =
+const char auth_req_html[] =
   "WWW-Authenticate: Basic realm=\"Secure Area\"\n"
   "Connnection: close\n"
   "\n"

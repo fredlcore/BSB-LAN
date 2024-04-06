@@ -153,7 +153,7 @@ typedef struct {
   const char* desc;	// pointer to text to be displayed for category of option - is text length necessary if we just read until NULL?
 } category_list_struct;
 
-PROGMEM_LATE const category_list_struct catalist[]={
+const category_list_struct catalist[]={
   {CCAT_GENERAL,        CAT_GENERAL_TXT},
   {CCAT_IPV4,           CAT_IPV4_TXT},
   {CCAT_MQTT,           CAT_MQTT_TXT},
@@ -169,7 +169,7 @@ PROGMEM_LATE const category_list_struct catalist[]={
   {CCAT_BMEBUS,         CAT_BMEBUS_TXT}
 };
 
-PROGMEM_LATE const configuration_struct config[]={
+const configuration_struct config[]={
   {CF_CONFIG_LEVEL,     9, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_CONFIG_LEVEL_TXT, sizeof(config_level)}, //immediately apply
   {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_USEEEPROM_TXT, sizeof(UseEEPROM)}, //immediately apply
   {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(byte)},

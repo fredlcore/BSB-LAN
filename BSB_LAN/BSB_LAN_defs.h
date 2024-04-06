@@ -22,13 +22,9 @@
 #include FILE1
 #include FILE2
 
-#if defined(__AVR__)
-#define PROGMEM_LATE __attribute__ (( __section__(".fini1") ))
-#define PROGMEM_LATEST __attribute__ (( __section__(".fini1") ))
-#else
+// For compatibility reasons
 #define PROGMEM_LATE
 #define PROGMEM_LATEST
-#endif
 
 /* telegram types */
 #define TYPE_00   0x00 // undecoded type sent after date/time change
@@ -178,7 +174,7 @@ typedef struct {
   uint32_t   dev_bit_id;             // Bitmuster
 } device_table;
 
-PROGMEM_LATE const device_table dev_tbl[]={
+const device_table dev_tbl[]={
 //{1,   DEV_LPB},
 {28,  DEV_028_ALL},
 {85,  DEV_085_ALL},
@@ -203,8 +199,8 @@ PROGMEM_LATE const device_table dev_tbl[]={
 };
 */
 
-const float proglist4q[] PROGMEM_LATEST = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
-const float params4q[] PROGMEM_LATEST = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const float proglist4q[] = {6224, 6220, 6221, 6227, 6228, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
+const float params4q[] = {6225, 6226, 6224, 6220, 6221, 6227, 6229, 6231, 6232, 6233, 6234, 6235, 6223, 6236, 6258, 6259, 6343, 6344};
 typedef enum { //BSP = base sensors program
   BSP_INTERNAL = 20000,    // brenner durations, internal functions
   BSP_AVERAGES = 20050,  //averages values (check size!)
@@ -218,70 +214,70 @@ typedef enum { //BSP = base sensors program
 } dt_sensors_base_prog_t;
 
 //WEBCONFIG
-const char CF_USEEEPROM_TXT[] PROGMEM = CF_USEEEPROM_TEXT;
-const char CF_BUSTYPE_TXT[] PROGMEM = CF_BUSTYPE_TEXT;
-const char CF_OWN_BSBLPBADDR_TXT[] PROGMEM = CF_OWN_ADDR_TEXT;
-const char CF_DEST_BSBLPBADDR_TXT[] PROGMEM = CF_DEST_ADDR_TEXT;
-const char CF_PPS_WRITE_TXT[] PROGMEM = CF_PPS_WRITE_TEXT;
-const char CF_LOGTELEGRAM_TXT[] PROGMEM = CF_LOGTELEGRAM_TEXT;
-const char CF_CALCULATION_TXT[] PROGMEM = CF_CALCULATION_TEXT;
-const char CF_LOGCURRINTERVAL_TXT[] PROGMEM = CF_LOGCURRINTERVAL_TEXT;
-const char CF_PROGLIST_TXT[] PROGMEM = CF_PROGLIST_TEXT;
-const char CF_DEVICES_TXT[] PROGMEM = CF_DEVICES_TEXT;
-const char CF_MAC_TXT[] PROGMEM = MENU_TEXT_MAC;
-const char CF_DHCP_TXT[] PROGMEM = CF_DHCP_TEXT;
-const char CF_IPADDRESS_TXT[] PROGMEM = CF_IPADDRESS_TEXT;
-const char CF_TRUSTEDIPADDRESS_TXT[] PROGMEM = CF_TRUSTEDIPADDRESS_TEXT;
-const char CF_NETWORK_TYPE_TXT[] PROGMEM = CF_NETWORK_TYPE_TEXT;
-const char CF_WIFI_SSID_TXT[] PROGMEM = CF_WIFI_SSID_TEXT;
-const char CF_WIFI_PASSWORD_TXT[] PROGMEM = CF_WIFI_PASSWORD_TEXT;
-const char CF_MASK_TXT[] PROGMEM = CF_MASK_TEXT;
-const char CF_GATEWAY_TXT[] PROGMEM = CF_GATEWAY_TEXT;
-const char CF_DNS_TXT[] PROGMEM = CF_DNS_TEXT;
-const char CF_WWWPORT_TXT[] PROGMEM = CF_WWWPORT_TEXT;
-const char CF_WEBSERVER_TXT[] PROGMEM = CF_WEBSERVER_TEXT;
-const char CF_PASSKEY_TXT[] PROGMEM = CF_PASSKEY_TEXT;
-const char CF_QAA_TYPE_TXT[] PROGMEM = CF_QAA_TYPE_TEXT;
-const char CF_BASICAUTH_TXT[] PROGMEM = CF_BASICAUTH_TEXT;
-const char CF_PINS_TXT[] PROGMEM = CF_PINS_TEXT;
-const char CF_USE_TXT[] PROGMEM = CF_USE_TEXT;
-const char CF_MAX_IPADDRESS_TXT[] PROGMEM = CF_MAX_IPADDRESS_TEXT;
-const char CF_WRITEMODE_TXT[] PROGMEM = CF_WRITEMODE_TEXT;
-const char CF_VERBOSE_TXT[] PROGMEM = MENU_TEXT_VBL;
-const char CF_MONITOR_TXT[] PROGMEM = MENU_TEXT_MMD;
-const char CF_SHOW_UNKNOWN_TXT[] PROGMEM = CF_SHOW_UNKNOWN_TEXT;
-const char CF_MQTT_SERVER_TXT[] PROGMEM = CF_MQTT_SERVER_TEXT;
-const char CF_MQTT_USERNAME_TXT[] PROGMEM = CF_MQTT_USERNAME_TEXT;
-const char CF_MQTT_PASSWORD_TXT[] PROGMEM = CF_MQTT_PASSWORD_TEXT;
-const char CF_MQTT_TOPIC_TXT[] PROGMEM = CF_MQTT_TOPIC_TEXT;
-const char CF_MQTT_DEVICE_TXT[] PROGMEM = CF_MQTT_DEVICE_TEXT;
-const char CF_LOG_DEST_TXT[] PROGMEM = CF_LOG_DEST_TEXT;
-const char CF_LOGMODE_TXT[] PROGMEM = CF_LOGMODE_TEXT;
-const char CF_CHECKUPDATE_TXT[] PROGMEM = CF_CHECKUPDATE_TEXT;
-const char CF_MDNS_HOSTNAME_TXT[] PROGMEM = CF_MDNS_HOSTNAME_TEXT;
-const char CF_NUM_TXT[] PROGMEM = CF_NUM_TEXT;
-const char CF_OTA_UPDATE_TXT[] PROGMEM = CF_OTA_UPDATE_TEXT;
-const char CF_RX_PIN_TXT[] PROGMEM = CF_RX_PIN_TEXT;
-const char CF_TX_PIN_TXT[] PROGMEM = CF_TX_PIN_TEXT;
-const char CF_CONFIG_LEVEL_TXT[] PROGMEM = CF_CONFIG_LEVEL_TEXT;
-const char CF_ENERGY_SAVE_TXT[] PROGMEM = CF_ENERGY_SAVE_TEXT;
+const char CF_USEEEPROM_TXT[] = CF_USEEEPROM_TEXT;
+const char CF_BUSTYPE_TXT[] = CF_BUSTYPE_TEXT;
+const char CF_OWN_BSBLPBADDR_TXT[] = CF_OWN_ADDR_TEXT;
+const char CF_DEST_BSBLPBADDR_TXT[] = CF_DEST_ADDR_TEXT;
+const char CF_PPS_WRITE_TXT[] = CF_PPS_WRITE_TEXT;
+const char CF_LOGTELEGRAM_TXT[] = CF_LOGTELEGRAM_TEXT;
+const char CF_CALCULATION_TXT[] = CF_CALCULATION_TEXT;
+const char CF_LOGCURRINTERVAL_TXT[] = CF_LOGCURRINTERVAL_TEXT;
+const char CF_PROGLIST_TXT[] = CF_PROGLIST_TEXT;
+const char CF_DEVICES_TXT[] = CF_DEVICES_TEXT;
+const char CF_MAC_TXT[] = MENU_TEXT_MAC;
+const char CF_DHCP_TXT[] = CF_DHCP_TEXT;
+const char CF_IPADDRESS_TXT[] = CF_IPADDRESS_TEXT;
+const char CF_TRUSTEDIPADDRESS_TXT[] = CF_TRUSTEDIPADDRESS_TEXT;
+const char CF_NETWORK_TYPE_TXT[] = CF_NETWORK_TYPE_TEXT;
+const char CF_WIFI_SSID_TXT[] = CF_WIFI_SSID_TEXT;
+const char CF_WIFI_PASSWORD_TXT[] = CF_WIFI_PASSWORD_TEXT;
+const char CF_MASK_TXT[] = CF_MASK_TEXT;
+const char CF_GATEWAY_TXT[] = CF_GATEWAY_TEXT;
+const char CF_DNS_TXT[] = CF_DNS_TEXT;
+const char CF_WWWPORT_TXT[] = CF_WWWPORT_TEXT;
+const char CF_WEBSERVER_TXT[] = CF_WEBSERVER_TEXT;
+const char CF_PASSKEY_TXT[] = CF_PASSKEY_TEXT;
+const char CF_QAA_TYPE_TXT[] = CF_QAA_TYPE_TEXT;
+const char CF_BASICAUTH_TXT[] = CF_BASICAUTH_TEXT;
+const char CF_PINS_TXT[] = CF_PINS_TEXT;
+const char CF_USE_TXT[] = CF_USE_TEXT;
+const char CF_MAX_IPADDRESS_TXT[] = CF_MAX_IPADDRESS_TEXT;
+const char CF_WRITEMODE_TXT[] = CF_WRITEMODE_TEXT;
+const char CF_VERBOSE_TXT[] = MENU_TEXT_VBL;
+const char CF_MONITOR_TXT[] = MENU_TEXT_MMD;
+const char CF_SHOW_UNKNOWN_TXT[] = CF_SHOW_UNKNOWN_TEXT;
+const char CF_MQTT_SERVER_TXT[] = CF_MQTT_SERVER_TEXT;
+const char CF_MQTT_USERNAME_TXT[] = CF_MQTT_USERNAME_TEXT;
+const char CF_MQTT_PASSWORD_TXT[] = CF_MQTT_PASSWORD_TEXT;
+const char CF_MQTT_TOPIC_TXT[] = CF_MQTT_TOPIC_TEXT;
+const char CF_MQTT_DEVICE_TXT[] = CF_MQTT_DEVICE_TEXT;
+const char CF_LOG_DEST_TXT[] = CF_LOG_DEST_TEXT;
+const char CF_LOGMODE_TXT[] = CF_LOGMODE_TEXT;
+const char CF_CHECKUPDATE_TXT[] = CF_CHECKUPDATE_TEXT;
+const char CF_MDNS_HOSTNAME_TXT[] = CF_MDNS_HOSTNAME_TEXT;
+const char CF_NUM_TXT[] = CF_NUM_TEXT;
+const char CF_OTA_UPDATE_TXT[] = CF_OTA_UPDATE_TEXT;
+const char CF_RX_PIN_TXT[] = CF_RX_PIN_TEXT;
+const char CF_TX_PIN_TXT[] = CF_TX_PIN_TEXT;
+const char CF_CONFIG_LEVEL_TXT[] = CF_CONFIG_LEVEL_TEXT;
+const char CF_ENERGY_SAVE_TXT[] = CF_ENERGY_SAVE_TEXT;
 
-const char CAT_GENERAL_TXT[] PROGMEM = CAT_GENERAL_TEXT;
-const char CAT_IPV4_TXT[] PROGMEM = CAT_IPV4_TEXT;
-const char CAT_MQTT_TXT[] PROGMEM = CAT_MQTT_TEXT;
-const char CAT_BUS_TXT[] PROGMEM = CAT_BUS_TEXT;
-const char CAT_IPWE_TXT[] PROGMEM = CAT_IPWE_TEXT;
-const char CAT_DHTBUS_TXT[] PROGMEM = CAT_DHTBUS_TEXT;
-const char CAT_ONEWIREBUS_TXT[] PROGMEM = CAT_ONEWIREBUS_TEXT;
-const char CAT_DEBUG_TXT[] PROGMEM = CAT_DEBUG_TEXT;
-const char CAT_MAX_TXT[] PROGMEM = CAT_MAX_TEXT;
-const char CAT_LOGGING_TXT[] PROGMEM = CAT_LOGGING_TEXT;
-const char CAT_24HAVG_TXT[] PROGMEM = CAT_24HAVG_TEXT;
-const char CAT_RGT_EMUL_TXT[] PROGMEM = CAT_RGT_EMUL_TEXT;
-const char CAT_BMEBUS_TXT[] PROGMEM = CAT_BMEBUS_TEXT;
+const char CAT_GENERAL_TXT[] = CAT_GENERAL_TEXT;
+const char CAT_IPV4_TXT[] = CAT_IPV4_TEXT;
+const char CAT_MQTT_TXT[] = CAT_MQTT_TEXT;
+const char CAT_BUS_TXT[] = CAT_BUS_TEXT;
+const char CAT_IPWE_TXT[] = CAT_IPWE_TEXT;
+const char CAT_DHTBUS_TXT[] = CAT_DHTBUS_TEXT;
+const char CAT_ONEWIREBUS_TXT[] = CAT_ONEWIREBUS_TEXT;
+const char CAT_DEBUG_TXT[] = CAT_DEBUG_TEXT;
+const char CAT_MAX_TXT[] = CAT_MAX_TEXT;
+const char CAT_LOGGING_TXT[] = CAT_LOGGING_TEXT;
+const char CAT_24HAVG_TXT[] = CAT_24HAVG_TEXT;
+const char CAT_RGT_EMUL_TXT[] = CAT_RGT_EMUL_TEXT;
+const char CAT_BMEBUS_TXT[] = CAT_BMEBUS_TEXT;
 
-const char STR_TEXT_FSP[] PROGMEM = MENU_TEXT_FSP;
-const char STR_TEXT_SNS[] PROGMEM = MENU_TEXT_SNS;
+const char STR_TEXT_FSP[] = MENU_TEXT_FSP;
+const char STR_TEXT_SNS[] = MENU_TEXT_SNS;
 typedef enum {
   DT_VALS,    // plain value
   DT_ENUM,    // value (8/16 Bit) followed by space followed by text
@@ -296,180 +292,180 @@ typedef enum {
   DT_THMS,    // time (hours:minute:seconds)
 } dt_types_t;
 
-const char STR_VALS[] PROGMEM = "VALS";
-const char STR_ENUM[] PROGMEM = "ENUM";
-const char STR_BITS[] PROGMEM = "BITS";
-const char STR_WDAY[] PROGMEM = "WDAY";
-const char STR_HHMM[] PROGMEM = "HHMM";
-const char STR_DTTM[] PROGMEM = "DTTM";
-const char STR_DDMM[] PROGMEM = "DDMM";
-const char STR_STRN[] PROGMEM = "STRN";
-const char STR_DWHM[] PROGMEM = "DWHM";
-const char STR_TMPR[] PROGMEM = "TMPR";
-const char STR_THMS[] PROGMEM = "THMS";
-const char STR_DISABLED[] PROGMEM = "---";
+const char STR_VALS[] = "VALS";
+const char STR_ENUM[] = "ENUM";
+const char STR_BITS[] = "BITS";
+const char STR_WDAY[] = "WDAY";
+const char STR_HHMM[] = "HHMM";
+const char STR_DTTM[] = "DTTM";
+const char STR_DDMM[] = "DDMM";
+const char STR_STRN[] = "STRN";
+const char STR_DWHM[] = "DWHM";
+const char STR_TMPR[] = "TMPR";
+const char STR_THMS[] = "THMS";
+const char STR_DISABLED[] = "---";
 
-const char STR_IPWEZERO[] PROGMEM = "<td>0<br></td>";
-const char STR_OPTION_VALUE[] PROGMEM = "<option value='";
-const char STR_CLOSE_OPTION[] PROGMEM = "</option>\r\n";
-const char STR_SELECTED[] PROGMEM = "' selected>";
+const char STR_IPWEZERO[] = "<td>0<br></td>";
+const char STR_OPTION_VALUE[] = "<option value='";
+const char STR_CLOSE_OPTION[] = "</option>\r\n";
+const char STR_SELECTED[] = "' selected>";
 
 
-const char STR_BIT[] PROGMEM = "BIT";
-const char STR_BYTE[] PROGMEM = "BYTE";
-const char STR_BYTE10[] PROGMEM = "BYTE10";
-const char STR_CLOSEDOPEN[] PROGMEM = "CLOSEDOPEN";
-const char STR_DAYS[] PROGMEM = "DAYS";
-const char STR_GRADIENT_SHORT[] PROGMEM = "GRADIENT_SHORT";
-const char STR_HOURS_SHORT[] PROGMEM = "HOURS_SHORT";
-const char STR_LPBADDR[] PROGMEM = "LPBADDR";
-const char STR_MINUTES_SHORT[] PROGMEM = "MINUTES_SHORT";
-const char STR_MONTHS[] PROGMEM = "MONTHS";
-const char STR_ONOFF[] PROGMEM = "ONOFF";
-const char STR_PERCENT[] PROGMEM = "PERCENT";
-const char STR_PERCENT5[] PROGMEM = "PERCENT5";
-const char STR_PRESSURE[] PROGMEM = "PRESSURE";
-const char STR_PRESSURE50[] PROGMEM = "PRESSURE50";
-const char STR_SECONDS_SHORT[] PROGMEM = "SECONDS_SHORT";
-const char STR_SECONDS_SHORT2[] PROGMEM = "SECONDS_SHORT2";
-const char STR_SECONDS_SHORT4[] PROGMEM = "SECONDS_SHORT4";
-const char STR_SECONDS_SHORT5[] PROGMEM = "SECONDS_SHORT5";
-const char STR_TEMP_SHORT[] PROGMEM = "TEMP_SHORT";
-const char STR_TEMP_SHORT_US[] PROGMEM = "TEMP_SHORT_US";
-const char STR_TEMP_SHORT5[] PROGMEM = "TEMP_SHORT5";
-const char STR_TEMP_SHORT5_US[] PROGMEM = "TEMP_SHORT5_US";
-const char STR_TEMP_SHORT64[] PROGMEM = "TEMP_SHORT64";
-const char STR_TEMP_PER_MIN[] PROGMEM = "TEMP_PER_MIN";
-const char STR_VOLTAGE[] PROGMEM = "VOLTAGE";
-const char STR_VOLTAGEONOFF[] PROGMEM = "VOLTAGEONOFF";
-const char STR_WEEKDAY[] PROGMEM = "WEEKDAY";
-const char STR_LITER[] PROGMEM = "LITER";
-const char STR_MSECONDS_WORD[] PROGMEM = "MSECONDS_WORD";
-const char STR_POWER_SHORT[] PROGMEM = "POWER_SHORT";
-const char STR_YESNO[] PROGMEM = "YESNO";
-const char STR_SPF[] PROGMEM = "SPF";
-const char STR_CURRENT[] PROGMEM = "CURRENT";
-const char STR_CURRENT1000[] PROGMEM = "CURRENT1000";
-const char STR_DAYS_WORD[] PROGMEM = "DAYS_WORD";
-const char STR_ERRORCODE[] PROGMEM = "ERRORCODE";
-const char STR_FP1[] PROGMEM = "FP1";
-const char STR_FP02[] PROGMEM = "FP02";
-const char STR_GRADIENT[] PROGMEM = "GRADIENT";
-const char STR_INTEGRAL[] PROGMEM = "INTEGRAL";
-const char STR_MONTHS_WORD[] PROGMEM = "MONTHS_WORD";
-const char STR_HOUR_MINUTES[] PROGMEM = "HOUR_MINUTES";
-const char STR_HOURS_WORD[] PROGMEM = "HOURS_WORD";
-const char STR_METER[] PROGMEM = "METER";
-const char STR_SECONDS_WORD16[] PROGMEM = "SECONDS_WORD16";
-const char STR_MINUTES_WORD[] PROGMEM = "MINUTES_WORD";
-const char STR_MINUTES_WORD10[] PROGMEM = "MINUTES_WORD10";
-const char STR_PERCENT_WORD1[] PROGMEM = "PERCENT_WORD1";
-const char STR_PERCENT_WORD[] PROGMEM = "PERCENT_WORD";
-const char STR_PERCENT1[] PROGMEM = "PERCENT1";
-const char STR_PERCENT_100[] PROGMEM = "PERCENT_100";
-const char STR_POWER_WORD[] PROGMEM = "POWER_WORD";
-const char STR_POWER_WORD100[] PROGMEM = "POWER_WORD100";
-const char STR_ENERGY_WORD[] PROGMEM = "ENERGY_WORD";
-const char STR_ENERGY_CONTENT[] PROGMEM = "ENERGY_CONTENT";
-const char STR_PRESSURE_WORD1[] PROGMEM = "PRESSURE_WORD1";
-const char STR_PRESSURE_WORD[] PROGMEM = "PRESSURE_WORD";
-const char STR_PRESSURE_1000[] PROGMEM = "PRESSURE_1000";
-const char STR_PROPVAL[] PROGMEM = "PROPVAL";
-const char STR_PPM[] PROGMEM = "PPM";
-const char STR_SECONDS_WORD[] PROGMEM = "SECONDS_WORD";
-const char STR_SECONDS_WORD2[] PROGMEM = "SECONDS_WORD2";
-const char STR_SECONDS_WORD4[] PROGMEM = "SECONDS_WORD4";
-const char STR_SECONDS_WORD5[] PROGMEM = "SECONDS_WORD5";
-const char STR_SPEED[] PROGMEM = "SPEED";
-const char STR_SPEED2[] PROGMEM = "SPEED2";
-const char STR_TEMP[] PROGMEM = "TEMP";
-const char STR_TEMP_WORD[] PROGMEM = "TEMP_WORD";
-const char STR_TEMP_WORD60[] PROGMEM = "TEMP_WORD60";
-const char STR_TEMP_WORD5_US[] PROGMEM = "TEMP_WORD5_US";
-const char STR_TEMP_DWORD[] PROGMEM = "TEMP_DWORD";
-const char STR_VOLTAGE_WORD[] PROGMEM = "VOLTAGE_WORD";
-const char STR_VOLTAGE_WORD1[] PROGMEM = "VOLTAGE_WORD1";
-const char STR_M3H[] PROGMEM = "M3H";
-const char STR_CELMIN[] PROGMEM = "CELMIN";
-const char STR_FREQ[] PROGMEM = "FREQ";
-const char STR_FREQ10[] PROGMEM = "FREQ10";
-const char STR_LITERPERHOUR[] PROGMEM = "LITERPERHOUR";
-const char STR_LITERPERHOUR100[] PROGMEM = "LITERPERHOUR100";
-const char STR_LITERPERMIN[] PROGMEM = "LITERPERMIN";
-const char STR_LPM_SHORT[] PROGMEM = "LPM_SHORT";
-const char STR_UINT[] PROGMEM = "UINT";
-const char STR_UINT5[] PROGMEM = "UINT5";
-const char STR_UINT10[] PROGMEM = "UINT10";
-const char STR_AMP[] PROGMEM = "AMP";
-const char STR_SINT[] PROGMEM = "SINT";
-const char STR_SINT1000[] PROGMEM = "SINT1000";
-const char STR_SINT5[] PROGMEM = "SINT5";
-const char STR_PPS_TIME[] PROGMEM = "PPS_TIME";
-const char STR_DWORD[] PROGMEM = "DWORD";
-const char STR_DWORD10[] PROGMEM = "DWORD10";
-const char STR_HOURS[] PROGMEM = "HOURS";
-const char STR_MINUTES[] PROGMEM = "MINUTES";
-const char STR_SECONDS_DWORD[] PROGMEM = "SECONDS_DWORD";
-const char STR_POWER[] PROGMEM = "POWER";
-const char STR_POWER_W[] PROGMEM = "POWER_W";
-const char STR_POWER100[] PROGMEM = "POWER100";
-const char STR_ENERGY_MWH[] PROGMEM = "ENERGY_MWH";
-const char STR_ENERGY10[] PROGMEM = "ENERGY10";
-const char STR_ENERGY[] PROGMEM = "ENERGY";
-const char STR_UINT100[] PROGMEM = "UINT100";
-const char STR_DATETIME[] PROGMEM = "DATETIME";
-const char STR_YEAR[] PROGMEM = "YEAR";
-const char STR_DAYMONTH[] PROGMEM = "DAYMONTH";
-const char STR_TIME[] PROGMEM = "TIME";
-const char STR_VACATIONPROG[] PROGMEM = "VACATIONPROG";
-const char STR_TIMEPROG[] PROGMEM = "TIMEPROG";
-const char STR_STRING[] PROGMEM = "STRING";
-const char STR_CUSTOM_ENUM[] PROGMEM = "CUSTOM_ENUM";
-const char STR_CUSTOM_BYTE[] PROGMEM = "CUSTOM_BYTE";
-const char STR_CUSTOM_BIT[] PROGMEM = "CUSTOM_BIT";
-const char STR_GR_PER_CUBM[] PROGMEM = "GR_PER_CUBM";
-const char STR_FLOAT[] PROGMEM = "FLOAT";
-const char STR_LONG[] PROGMEM = "LONG";
-const char STR_ATM_PRESSURE[] PROGMEM = "ATM_PRESSURE";
-const char STR_ALTITUDE[] PROGMEM = "ALTITUDE";
-const char STR_CUBICMETER[] PROGMEM = "CUBICMETER";
-const char STR_UNKNOWN[] PROGMEM = "UNKNOWN";
+const char STR_BIT[] = "BIT";
+const char STR_BYTE[] = "BYTE";
+const char STR_BYTE10[] = "BYTE10";
+const char STR_CLOSEDOPEN[] = "CLOSEDOPEN";
+const char STR_DAYS[] = "DAYS";
+const char STR_GRADIENT_SHORT[] = "GRADIENT_SHORT";
+const char STR_HOURS_SHORT[] = "HOURS_SHORT";
+const char STR_LPBADDR[] = "LPBADDR";
+const char STR_MINUTES_SHORT[] = "MINUTES_SHORT";
+const char STR_MONTHS[] = "MONTHS";
+const char STR_ONOFF[] = "ONOFF";
+const char STR_PERCENT[] = "PERCENT";
+const char STR_PERCENT5[] = "PERCENT5";
+const char STR_PRESSURE[] = "PRESSURE";
+const char STR_PRESSURE50[] = "PRESSURE50";
+const char STR_SECONDS_SHORT[] = "SECONDS_SHORT";
+const char STR_SECONDS_SHORT2[] = "SECONDS_SHORT2";
+const char STR_SECONDS_SHORT4[] = "SECONDS_SHORT4";
+const char STR_SECONDS_SHORT5[] = "SECONDS_SHORT5";
+const char STR_TEMP_SHORT[] = "TEMP_SHORT";
+const char STR_TEMP_SHORT_US[] = "TEMP_SHORT_US";
+const char STR_TEMP_SHORT5[] = "TEMP_SHORT5";
+const char STR_TEMP_SHORT5_US[] = "TEMP_SHORT5_US";
+const char STR_TEMP_SHORT64[] = "TEMP_SHORT64";
+const char STR_TEMP_PER_MIN[] = "TEMP_PER_MIN";
+const char STR_VOLTAGE[] = "VOLTAGE";
+const char STR_VOLTAGEONOFF[] = "VOLTAGEONOFF";
+const char STR_WEEKDAY[] = "WEEKDAY";
+const char STR_LITER[] = "LITER";
+const char STR_MSECONDS_WORD[] = "MSECONDS_WORD";
+const char STR_POWER_SHORT[] = "POWER_SHORT";
+const char STR_YESNO[] = "YESNO";
+const char STR_SPF[] = "SPF";
+const char STR_CURRENT[] = "CURRENT";
+const char STR_CURRENT1000[] = "CURRENT1000";
+const char STR_DAYS_WORD[] = "DAYS_WORD";
+const char STR_ERRORCODE[] = "ERRORCODE";
+const char STR_FP1[] = "FP1";
+const char STR_FP02[] = "FP02";
+const char STR_GRADIENT[] = "GRADIENT";
+const char STR_INTEGRAL[] = "INTEGRAL";
+const char STR_MONTHS_WORD[] = "MONTHS_WORD";
+const char STR_HOUR_MINUTES[] = "HOUR_MINUTES";
+const char STR_HOURS_WORD[] = "HOURS_WORD";
+const char STR_METER[] = "METER";
+const char STR_SECONDS_WORD16[] = "SECONDS_WORD16";
+const char STR_MINUTES_WORD[] = "MINUTES_WORD";
+const char STR_MINUTES_WORD10[] = "MINUTES_WORD10";
+const char STR_PERCENT_WORD1[] = "PERCENT_WORD1";
+const char STR_PERCENT_WORD[] = "PERCENT_WORD";
+const char STR_PERCENT1[] = "PERCENT1";
+const char STR_PERCENT_100[] = "PERCENT_100";
+const char STR_POWER_WORD[] = "POWER_WORD";
+const char STR_POWER_WORD100[] = "POWER_WORD100";
+const char STR_ENERGY_WORD[] = "ENERGY_WORD";
+const char STR_ENERGY_CONTENT[] = "ENERGY_CONTENT";
+const char STR_PRESSURE_WORD1[] = "PRESSURE_WORD1";
+const char STR_PRESSURE_WORD[] = "PRESSURE_WORD";
+const char STR_PRESSURE_1000[] = "PRESSURE_1000";
+const char STR_PROPVAL[] = "PROPVAL";
+const char STR_PPM[] = "PPM";
+const char STR_SECONDS_WORD[] = "SECONDS_WORD";
+const char STR_SECONDS_WORD2[] = "SECONDS_WORD2";
+const char STR_SECONDS_WORD4[] = "SECONDS_WORD4";
+const char STR_SECONDS_WORD5[] = "SECONDS_WORD5";
+const char STR_SPEED[] = "SPEED";
+const char STR_SPEED2[] = "SPEED2";
+const char STR_TEMP[] = "TEMP";
+const char STR_TEMP_WORD[] = "TEMP_WORD";
+const char STR_TEMP_WORD60[] = "TEMP_WORD60";
+const char STR_TEMP_WORD5_US[] = "TEMP_WORD5_US";
+const char STR_TEMP_DWORD[] = "TEMP_DWORD";
+const char STR_VOLTAGE_WORD[] = "VOLTAGE_WORD";
+const char STR_VOLTAGE_WORD1[] = "VOLTAGE_WORD1";
+const char STR_M3H[] = "M3H";
+const char STR_CELMIN[] = "CELMIN";
+const char STR_FREQ[] = "FREQ";
+const char STR_FREQ10[] = "FREQ10";
+const char STR_LITERPERHOUR[] = "LITERPERHOUR";
+const char STR_LITERPERHOUR100[] = "LITERPERHOUR100";
+const char STR_LITERPERMIN[] = "LITERPERMIN";
+const char STR_LPM_SHORT[] = "LPM_SHORT";
+const char STR_UINT[] = "UINT";
+const char STR_UINT5[] = "UINT5";
+const char STR_UINT10[] = "UINT10";
+const char STR_AMP[] = "AMP";
+const char STR_SINT[] = "SINT";
+const char STR_SINT1000[] = "SINT1000";
+const char STR_SINT5[] = "SINT5";
+const char STR_PPS_TIME[] = "PPS_TIME";
+const char STR_DWORD[] = "DWORD";
+const char STR_DWORD10[] = "DWORD10";
+const char STR_HOURS[] = "HOURS";
+const char STR_MINUTES[] = "MINUTES";
+const char STR_SECONDS_DWORD[] = "SECONDS_DWORD";
+const char STR_POWER[] = "POWER";
+const char STR_POWER_W[] = "POWER_W";
+const char STR_POWER100[] = "POWER100";
+const char STR_ENERGY_MWH[] = "ENERGY_MWH";
+const char STR_ENERGY10[] = "ENERGY10";
+const char STR_ENERGY[] = "ENERGY";
+const char STR_UINT100[] = "UINT100";
+const char STR_DATETIME[] = "DATETIME";
+const char STR_YEAR[] = "YEAR";
+const char STR_DAYMONTH[] = "DAYMONTH";
+const char STR_TIME[] = "TIME";
+const char STR_VACATIONPROG[] = "VACATIONPROG";
+const char STR_TIMEPROG[] = "TIMEPROG";
+const char STR_STRING[] = "STRING";
+const char STR_CUSTOM_ENUM[] = "CUSTOM_ENUM";
+const char STR_CUSTOM_BYTE[] = "CUSTOM_BYTE";
+const char STR_CUSTOM_BIT[] = "CUSTOM_BIT";
+const char STR_GR_PER_CUBM[] = "GR_PER_CUBM";
+const char STR_FLOAT[] = "FLOAT";
+const char STR_LONG[] = "LONG";
+const char STR_ATM_PRESSURE[] = "ATM_PRESSURE";
+const char STR_ALTITUDE[] = "ALTITUDE";
+const char STR_CUBICMETER[] = "CUBICMETER";
+const char STR_UNKNOWN[] = "UNKNOWN";
 
-const char U_METER[] PROGMEM = UNIT_METER_TEXT;
-const char U_MONTHS[] PROGMEM = UNIT_MONTHS_TEXT;
-const char U_DAYS[] PROGMEM = UNIT_DAYS_TEXT;
-const char U_HOUR[] PROGMEM = UNIT_HOUR_TEXT;
-const char U_MIN[] PROGMEM = UNIT_MIN_TEXT;
-const char U_SEC[] PROGMEM = UNIT_SEC_TEXT;
-const char U_MSEC[] PROGMEM = UNIT_MSEC_TEXT;
-const char U_DEG[] PROGMEM = UNIT_DEG_TEXT;
-const char U_PERC[] PROGMEM = UNIT_PERC_TEXT;
-const char U_RPM[] PROGMEM = UNIT_RPM_TEXT;
-const char U_WATT[] PROGMEM = UNIT_WATT_TEXT;
-const char U_KW[] PROGMEM = UNIT_KW_TEXT;
-const char U_KWH[] PROGMEM = UNIT_KWH_TEXT;
-const char U_KWHM3[] PROGMEM = UNIT_KWHM3_TEXT;
-const char U_MWH[] PROGMEM = UNIT_MWH_TEXT;
-const char U_M3H[] PROGMEM = UNIT_M3H_TEXT;
-const char U_CURR[] PROGMEM = UNIT_CURR_TEXT;
-const char U_BAR[] PROGMEM = UNIT_BAR_TEXT;
-const char U_VOLT[] PROGMEM = UNIT_VOLT_TEXT;
-const char U_GRADIENT[] PROGMEM = UNIT_GRADIENT_TEXT;
-const char U_GRADIENTKS[] PROGMEM = UNIT_GRADIENTKS_TEXT;
-const char U_TEMP_PER_MIN[] PROGMEM = UNIT_TEMP_PER_MIN_TEXT;
-const char U_INTEGRAL[] PROGMEM = UNIT_INTEGRAL_TEXT;
-const char U_CEL_MIN[] PROGMEM = UNIT_CEL_MIN_TEXT;
-const char U_LITER[] PROGMEM = UNIT_LITER_TEXT;
-const char U_LITERPERHOUR[] PROGMEM = UNIT_LITERPERHOUR_TEXT;
-const char U_LITERPERMIN[] PROGMEM = UNIT_LITERPERMIN_TEXT;
-const char U_GR_PER_CUBM[] PROGMEM = UNIT_GR_PER_CUBM_TEXT;
-const char U_ATM_PRESSURE[] PROGMEM = UNIT_HPA_TEXT;
-const char U_ALTITUDE[] PROGMEM = UNIT_METER_TEXT;
-const char U_PPM[] PROGMEM = UNIT_PPM_TEXT;
-const char U_CM[] PROGMEM = UNIT_CM_TEXT;
-const char U_AMP[] PROGMEM = UNIT_AMP_TEXT;
-const char U_HERTZ[] PROGMEM = UNIT_HERTZ_TEXT;
-const char U_NONE[] PROGMEM = "";
+const char U_METER[] = UNIT_METER_TEXT;
+const char U_MONTHS[] = UNIT_MONTHS_TEXT;
+const char U_DAYS[] = UNIT_DAYS_TEXT;
+const char U_HOUR[] = UNIT_HOUR_TEXT;
+const char U_MIN[] = UNIT_MIN_TEXT;
+const char U_SEC[] = UNIT_SEC_TEXT;
+const char U_MSEC[] = UNIT_MSEC_TEXT;
+const char U_DEG[] = UNIT_DEG_TEXT;
+const char U_PERC[] = UNIT_PERC_TEXT;
+const char U_RPM[] = UNIT_RPM_TEXT;
+const char U_WATT[] = UNIT_WATT_TEXT;
+const char U_KW[] = UNIT_KW_TEXT;
+const char U_KWH[] = UNIT_KWH_TEXT;
+const char U_KWHM3[] = UNIT_KWHM3_TEXT;
+const char U_MWH[] = UNIT_MWH_TEXT;
+const char U_M3H[] = UNIT_M3H_TEXT;
+const char U_CURR[] = UNIT_CURR_TEXT;
+const char U_BAR[] = UNIT_BAR_TEXT;
+const char U_VOLT[] = UNIT_VOLT_TEXT;
+const char U_GRADIENT[] = UNIT_GRADIENT_TEXT;
+const char U_GRADIENTKS[] = UNIT_GRADIENTKS_TEXT;
+const char U_TEMP_PER_MIN[] = UNIT_TEMP_PER_MIN_TEXT;
+const char U_INTEGRAL[] = UNIT_INTEGRAL_TEXT;
+const char U_CEL_MIN[] = UNIT_CEL_MIN_TEXT;
+const char U_LITER[] = UNIT_LITER_TEXT;
+const char U_LITERPERHOUR[] = UNIT_LITERPERHOUR_TEXT;
+const char U_LITERPERMIN[] = UNIT_LITERPERMIN_TEXT;
+const char U_GR_PER_CUBM[] = UNIT_GR_PER_CUBM_TEXT;
+const char U_ATM_PRESSURE[] = UNIT_HPA_TEXT;
+const char U_ALTITUDE[] = UNIT_METER_TEXT;
+const char U_PPM[] = UNIT_PPM_TEXT;
+const char U_CM[] = UNIT_CM_TEXT;
+const char U_AMP[] = UNIT_AMP_TEXT;
+const char U_HERTZ[] = UNIT_HERTZ_TEXT;
+const char U_NONE[] = "";
 
 typedef struct {
   uint8_t   type;             // message type (e.g. VT_TEMP)
@@ -502,7 +498,7 @@ typedef struct {
   const char  *type_text;
 } dt_types;
 
-PROGMEM_LATE const dt_types dt_types_text[]={
+const dt_types dt_types_text[]={
   {DT_VALS, STR_VALS},
   {DT_ENUM, STR_ENUM},
   {DT_BITS, STR_BITS},
@@ -684,7 +680,7 @@ typedef enum{
 }vt_type_t;
 
 /* order of types must according to vt_type_t enum */
-PROGMEM_LATE const units optbl[]={
+const units optbl[]={
 {VT_BIT,              1.0,    1, 1, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
 {VT_BYTE,             1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
 {VT_BYTE_N,           1.0,    6, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
@@ -849,184 +845,184 @@ PROGMEM_LATE const units optbl[]={
 {VT_UNKNOWN,          1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
-const char STR10100[] PROGMEM = STR10100_TEXT;
-const char STR10101[] PROGMEM = STR10101_TEXT;
-const char STR10102[] PROGMEM = STR10102_TEXT;
-const char STR10103[] PROGMEM = STR10103_TEXT;
-const char STR10104[] PROGMEM = STR10104_TEXT;
+const char STR10100[] = STR10100_TEXT;
+const char STR10101[] = STR10101_TEXT;
+const char STR10102[] = STR10102_TEXT;
+const char STR10103[] = STR10103_TEXT;
+const char STR10104[] = STR10104_TEXT;
 
-const char STR10200[] PROGMEM = STR10200_TEXT;
+const char STR10200[] = STR10200_TEXT;
 
-const char STR14081[] PROGMEM = STR14081_TEXT;
-const char STR14082[] PROGMEM = STR14082_TEXT;
-const char STR14083[] PROGMEM = STR14083_TEXT;
-const char STR14084[] PROGMEM = STR14084_TEXT;
-const char STR14085[] PROGMEM = STR14085_TEXT;
-const char STR14086[] PROGMEM = STR14086_TEXT;
-const char STR14087[] PROGMEM = STR14087_TEXT;
-const char STR14088[] PROGMEM = STR14088_TEXT;
-const char STR14089[] PROGMEM = STR14089_TEXT;
+const char STR14081[] = STR14081_TEXT;
+const char STR14082[] = STR14082_TEXT;
+const char STR14083[] = STR14083_TEXT;
+const char STR14084[] = STR14084_TEXT;
+const char STR14085[] = STR14085_TEXT;
+const char STR14086[] = STR14086_TEXT;
+const char STR14087[] = STR14087_TEXT;
+const char STR14088[] = STR14088_TEXT;
+const char STR14089[] = STR14089_TEXT;
 
-const char STR15000[] PROGMEM = STR15000_TEXT;
-const char STR15001[] PROGMEM = STR15001_TEXT;
-const char STR15002[] PROGMEM = STR15002_TEXT;
-const char STR15003[] PROGMEM = STR15003_TEXT;
-const char STR15004[] PROGMEM = STR15004_TEXT;
-const char STR15005[] PROGMEM = STR15005_TEXT;
-const char STR15006[] PROGMEM = STR15006_TEXT;
-const char STR15007[] PROGMEM = STR15007_TEXT;
-const char STR15008[] PROGMEM = STR15008_TEXT;
-const char STR15020[] PROGMEM = STR15020_TEXT;
-const char STR15021[] PROGMEM = STR15021_TEXT;
-const char STR15022[] PROGMEM = STR15022_TEXT;
-const char STR15023[] PROGMEM = STR15023_TEXT;
-const char STR15030[] PROGMEM = STR15030_TEXT;
-const char STR15031[] PROGMEM = STR15031_TEXT;
-const char STR15032[] PROGMEM = STR15032_TEXT;
-const char STR15033[] PROGMEM = STR15033_TEXT;
-const char STR15034[] PROGMEM = STR15034_TEXT;
-const char STR15035[] PROGMEM = STR15035_TEXT;
-const char STR15036[] PROGMEM = STR15036_TEXT;
-const char STR15040[] PROGMEM = STR15040_TEXT;
-const char STR15041[] PROGMEM = STR15041_TEXT;
-const char STR15042[] PROGMEM = STR15042_TEXT;
-const char STR15043[] PROGMEM = STR15043_TEXT;
-const char STR15044[] PROGMEM = STR15044_TEXT;
-const char STR15045[] PROGMEM = STR15045_TEXT;
-const char STR15046[] PROGMEM = STR15046_TEXT;
-const char STR15050[] PROGMEM = STR15050_TEXT;
-const char STR15051[] PROGMEM = STR15051_TEXT;
-const char STR15052[] PROGMEM = STR15052_TEXT;
-const char STR15053[] PROGMEM = STR15053_TEXT;
-const char STR15054[] PROGMEM = STR15054_TEXT;
-const char STR15055[] PROGMEM = STR15055_TEXT;
-const char STR15056[] PROGMEM = STR15056_TEXT;
-const char STR15057[] PROGMEM = STR15057_TEXT;
-const char STR15058[] PROGMEM = STR15058_TEXT;
-const char STR15059[] PROGMEM = STR15059_TEXT;
-const char STR15060[] PROGMEM = STR15060_TEXT;
-const char STR15061[] PROGMEM = STR15061_TEXT;
-const char STR15062[] PROGMEM = STR15062_TEXT;
-const char STR15063[] PROGMEM = STR15063_TEXT;
-const char STR15064[] PROGMEM = STR15064_TEXT;
-const char STR15065[] PROGMEM = STR15065_TEXT;
-const char STR15066[] PROGMEM = STR15066_TEXT;
-const char STR15067[] PROGMEM = STR15067_TEXT;
-const char STR15068[] PROGMEM = STR15068_TEXT;
-const char STR15069[] PROGMEM = STR15069_TEXT;
-const char STR15070[] PROGMEM = STR15070_TEXT;
-const char STR15071[] PROGMEM = STR15071_TEXT;
-const char STR15072[] PROGMEM = STR15072_TEXT;
-const char STR15073[] PROGMEM = STR15073_TEXT;
-const char STR15074[] PROGMEM = STR15074_TEXT;
-const char STR15075[] PROGMEM = STR15075_TEXT;
-const char STR15076[] PROGMEM = STR15076_TEXT;
-const char STR15077[] PROGMEM = STR15077_TEXT;
-const char STR15078[] PROGMEM = STR15078_TEXT;
-const char STR15079[] PROGMEM = STR15079_TEXT;
-const char STR15080[] PROGMEM = STR15080_TEXT;
-const char STR15081[] PROGMEM = STR15081_TEXT;
-const char STR15082[] PROGMEM = STR15082_TEXT;
-const char STR15083[] PROGMEM = STR15083_TEXT;
-const char STR15084[] PROGMEM = STR15084_TEXT;
-const char STR15085[] PROGMEM = STR15085_TEXT;
-const char STR15086[] PROGMEM = STR15086_TEXT;
-const char STR15087[] PROGMEM = STR15087_TEXT;
-const char STR15088[] PROGMEM = STR15088_TEXT;
-const char STR15089[] PROGMEM = STR15089_TEXT;
-const char STR15090[] PROGMEM = STR15090_TEXT;
-const char STR15091[] PROGMEM = STR15091_TEXT;
+const char STR15000[] = STR15000_TEXT;
+const char STR15001[] = STR15001_TEXT;
+const char STR15002[] = STR15002_TEXT;
+const char STR15003[] = STR15003_TEXT;
+const char STR15004[] = STR15004_TEXT;
+const char STR15005[] = STR15005_TEXT;
+const char STR15006[] = STR15006_TEXT;
+const char STR15007[] = STR15007_TEXT;
+const char STR15008[] = STR15008_TEXT;
+const char STR15020[] = STR15020_TEXT;
+const char STR15021[] = STR15021_TEXT;
+const char STR15022[] = STR15022_TEXT;
+const char STR15023[] = STR15023_TEXT;
+const char STR15030[] = STR15030_TEXT;
+const char STR15031[] = STR15031_TEXT;
+const char STR15032[] = STR15032_TEXT;
+const char STR15033[] = STR15033_TEXT;
+const char STR15034[] = STR15034_TEXT;
+const char STR15035[] = STR15035_TEXT;
+const char STR15036[] = STR15036_TEXT;
+const char STR15040[] = STR15040_TEXT;
+const char STR15041[] = STR15041_TEXT;
+const char STR15042[] = STR15042_TEXT;
+const char STR15043[] = STR15043_TEXT;
+const char STR15044[] = STR15044_TEXT;
+const char STR15045[] = STR15045_TEXT;
+const char STR15046[] = STR15046_TEXT;
+const char STR15050[] = STR15050_TEXT;
+const char STR15051[] = STR15051_TEXT;
+const char STR15052[] = STR15052_TEXT;
+const char STR15053[] = STR15053_TEXT;
+const char STR15054[] = STR15054_TEXT;
+const char STR15055[] = STR15055_TEXT;
+const char STR15056[] = STR15056_TEXT;
+const char STR15057[] = STR15057_TEXT;
+const char STR15058[] = STR15058_TEXT;
+const char STR15059[] = STR15059_TEXT;
+const char STR15060[] = STR15060_TEXT;
+const char STR15061[] = STR15061_TEXT;
+const char STR15062[] = STR15062_TEXT;
+const char STR15063[] = STR15063_TEXT;
+const char STR15064[] = STR15064_TEXT;
+const char STR15065[] = STR15065_TEXT;
+const char STR15066[] = STR15066_TEXT;
+const char STR15067[] = STR15067_TEXT;
+const char STR15068[] = STR15068_TEXT;
+const char STR15069[] = STR15069_TEXT;
+const char STR15070[] = STR15070_TEXT;
+const char STR15071[] = STR15071_TEXT;
+const char STR15072[] = STR15072_TEXT;
+const char STR15073[] = STR15073_TEXT;
+const char STR15074[] = STR15074_TEXT;
+const char STR15075[] = STR15075_TEXT;
+const char STR15076[] = STR15076_TEXT;
+const char STR15077[] = STR15077_TEXT;
+const char STR15078[] = STR15078_TEXT;
+const char STR15079[] = STR15079_TEXT;
+const char STR15080[] = STR15080_TEXT;
+const char STR15081[] = STR15081_TEXT;
+const char STR15082[] = STR15082_TEXT;
+const char STR15083[] = STR15083_TEXT;
+const char STR15084[] = STR15084_TEXT;
+const char STR15085[] = STR15085_TEXT;
+const char STR15086[] = STR15086_TEXT;
+const char STR15087[] = STR15087_TEXT;
+const char STR15088[] = STR15088_TEXT;
+const char STR15089[] = STR15089_TEXT;
+const char STR15090[] = STR15090_TEXT;
+const char STR15091[] = STR15091_TEXT;
 
-const char STR20000[] PROGMEM = MENU_TEXT_BZ1;
-const char STR20001[] PROGMEM = MENU_TEXT_BT1;
-const char STR20002[] PROGMEM = MENU_TEXT_BZ2;
-const char STR20003[] PROGMEM = MENU_TEXT_BT2;
-const char STR20004[] PROGMEM = MENU_TEXT_TZ1;
-const char STR20005[] PROGMEM = MENU_TEXT_TT1;
-const char STR20006[] PROGMEM = MENU_TEXT_BRS;
+const char STR20000[] = MENU_TEXT_BZ1;
+const char STR20001[] = MENU_TEXT_BT1;
+const char STR20002[] = MENU_TEXT_BZ2;
+const char STR20003[] = MENU_TEXT_BT2;
+const char STR20004[] = MENU_TEXT_TZ1;
+const char STR20005[] = MENU_TEXT_TT1;
+const char STR20006[] = MENU_TEXT_BRS;
 
-const char STR20100[] PROGMEM = STR20100_TEXT;
-const char STR20101[] PROGMEM = STR20101_TEXT;
-const char STR20102[] PROGMEM = STR20102_TEXT;
-const char STR20103[] PROGMEM = STR20103_TEXT;
-const char STR20200[] PROGMEM = STR20200_TEXT;
-const char STR20201[] PROGMEM = STR20201_TEXT;
-const char STR20202[] PROGMEM = STR20202_TEXT;
-const char STR20203[] PROGMEM = STR20203_TEXT;
-const char STR20204[] PROGMEM = STR20204_TEXT;
-const char STR20205[] PROGMEM = STR20205_TEXT;
-const char STR20300[] PROGMEM = STR20300_TEXT;
-const char STR20301[] PROGMEM = STR20301_TEXT;
-const char STR20500[] PROGMEM = STR20500_TEXT;
-const char STR20501[] PROGMEM = STR20501_TEXT;
-const char STR20502[] PROGMEM = STR20502_TEXT;
-const char STR20503[] PROGMEM = STR20503_TEXT;
-const char STR20700[] PROGMEM = STR20700_TEXT;
-const char STR20800[] PROGMEM = STR20800_TEXT;
+const char STR20100[] = STR20100_TEXT;
+const char STR20101[] = STR20101_TEXT;
+const char STR20102[] = STR20102_TEXT;
+const char STR20103[] = STR20103_TEXT;
+const char STR20200[] = STR20200_TEXT;
+const char STR20201[] = STR20201_TEXT;
+const char STR20202[] = STR20202_TEXT;
+const char STR20203[] = STR20203_TEXT;
+const char STR20204[] = STR20204_TEXT;
+const char STR20205[] = STR20205_TEXT;
+const char STR20300[] = STR20300_TEXT;
+const char STR20301[] = STR20301_TEXT;
+const char STR20500[] = STR20500_TEXT;
+const char STR20501[] = STR20501_TEXT;
+const char STR20502[] = STR20502_TEXT;
+const char STR20503[] = STR20503_TEXT;
+const char STR20700[] = STR20700_TEXT;
+const char STR20800[] = STR20800_TEXT;
 
-const char STR65535[] PROGMEM = "";
+const char STR65535[] = "";
 // A catch-all description string for unrecognised command codes
-const char STR99999[] PROGMEM = STR99999_TEXT;
+const char STR99999[] = STR99999_TEXT;
 
 //WEBCONFIG
 //Read/write config in EEPROM
-const char ENUM_EEPROM_ONOFF[] PROGMEM_LATEST = {
+const char ENUM_EEPROM_ONOFF[] = {
 "\x69 " MENU_TEXT_OFF "\0"
 "\x96 " MENU_TEXT_ON
 };
 
-const char ENUM_BUSTYPE[] PROGMEM_LATEST = {
+const char ENUM_BUSTYPE[] = {
 "\x00 " "BSB" "\0"
 "\x01 " "LPB" "\0"
 "\x02 " "PPS"
 };
-const char ENUM_LOGTELEGRAM[] PROGMEM_LATEST = {
+const char ENUM_LOGTELEGRAM[] = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " MENU_TEXT_LAT "\0"
 "\x03 " MENU_TEXT_BUT "\0"
 "\x05 " MENU_TEXT_LBO "\0"
 "\x07 " MENU_TEXT_UBT
 };
-const char ENUM_DEBUG[] PROGMEM_LATEST = {
+const char ENUM_DEBUG[] = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " ENUM_DEBUG_SERIAL_TEXT "\0"
 "\x02 " ENUM_DEBUG_TELNET_TEXT
 };
-const char ENUM_MQTT[] PROGMEM_LATEST = {
+const char ENUM_MQTT[] = {
 "\x01 " ENUM_MQTT_PLAIN_TEXT "\0"
 "\x02 " ENUM_MQTT_JSON_TEXT "\0"
 "\x03 " ENUM_MQTT_JSON2_TEXT
 };
-const char ENUM_PPS_MODE[] PROGMEM_LATEST = {
+const char ENUM_PPS_MODE[] = {
 "\x00 " ENUM_PPS_MODE_PASSIVE_TEXT "\0"
 "\x01 " ENUM_PPS_MODE_QAA_TEXT
 };
-const char ENUM_WRITEMODE[] PROGMEM_LATEST = {
+const char ENUM_WRITEMODE[] = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " ENUM_WRITE_ENG_TEXT "\0"
 "\x02 " ENUM_WRITE_OEM_TEXT
 };
 
-const char ENUM_VOLTAGEONOFF[] PROGMEM_LATEST = {
+const char ENUM_VOLTAGEONOFF[] = {
 "\x00 " "0 " UNIT_VOLT_TEXT "\0"
 "\x01 " "230 " UNIT_VOLT_TEXT
 };
 
-const char ENUM_ONOFF[] PROGMEM_LATEST = {
+const char ENUM_ONOFF[] = {
 "\x00 " MENU_TEXT_OFF "\0"
 "\x01 " MENU_TEXT_ON
 };
-const char ENUM_YESNO[] PROGMEM_LATEST = {
+const char ENUM_YESNO[] = {
 "\x00 " MENU_TEXT_NO "\0"
 "\x01 " MENU_TEXT_YES
 };
-const char ENUM_CLOSEDOPEN[] PROGMEM_LATEST = {
+const char ENUM_CLOSEDOPEN[] = {
 "\x00 " MENU_TEXT_OPEN "\0"
 "\x01 " MENU_TEXT_CLOSE
 };
 
 // Sonderbetriebs-Codes
-const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
+const char ENUM_WEEKDAY[] = {
 "\x01 " ENUM_WEEKDAY_01_TEXT "\0"
 "\x02 " ENUM_WEEKDAY_02_TEXT "\0"
 "\x03 " ENUM_WEEKDAY_03_TEXT "\0"
@@ -1037,85 +1033,85 @@ const char ENUM_WEEKDAY[] PROGMEM_LATEST = {
 };
 
 // Kontakt-Telegramm RVP320
-const char ENUM_ONOFF0[] PROGMEM_LATEST = {
+const char ENUM_ONOFF0[] = {
 "\x00\x00 " MENU_TEXT_OFF "\0"
 "\x00\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF1[] PROGMEM_LATEST = {
+const char ENUM_ONOFF1[] = {
 "\x01\x00 " MENU_TEXT_OFF "\0"
 "\x01\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF2[] PROGMEM_LATEST = {
+const char ENUM_ONOFF2[] = {
 "\x02\x00 " MENU_TEXT_OFF "\0"
 "\x02\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF3[] PROGMEM_LATEST = {
+const char ENUM_ONOFF3[] = {
 "\x03\x00 " MENU_TEXT_OFF "\0"
 "\x03\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF4[] PROGMEM_LATEST = {
+const char ENUM_ONOFF4[] = {
 "\x04\x00 " MENU_TEXT_OFF "\0"
 "\x04\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF5[] PROGMEM_LATEST = {
+const char ENUM_ONOFF5[] = {
 "\x05\x00 " MENU_TEXT_OFF "\0"
 "\x05\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF6[] PROGMEM_LATEST = {
+const char ENUM_ONOFF6[] = {
 "\x06\x00 " MENU_TEXT_OFF "\0"
 "\x06\xFF " MENU_TEXT_ON
 };
-const char ENUM_ONOFF7[] PROGMEM_LATEST = {
+const char ENUM_ONOFF7[] = {
 "\x07\x00 " MENU_TEXT_OFF "\0"
 "\x07\xFF " MENU_TEXT_ON
 };
 
-const char ENUM_CUSTOM01[] PROGMEM_LATEST = {
+const char ENUM_CUSTOM01[] = {
 "\x00\x01 "
 };
-const char ENUM_CUSTOM11[] PROGMEM_LATEST = {
+const char ENUM_CUSTOM11[] = {
 "\x01\x01 "
 };
 
 //TODO: Move to translations
-const char ENUM_LOGGER_MODE[] PROGMEM_LATEST = {
+const char ENUM_LOGGER_MODE[] = {
 "\x01\x01 " ENUM_LOGMODE_01_TEXT "\0"
 "\x02\x02 " ENUM_LOGMODE_02_TEXT "\0"
 "\x04\x04 " ENUM_LOGMODE_04_TEXT "\0"
 "\x08\x08 " ENUM_LOGMODE_08_TEXT
 };
 
-const char ENUM_NETWORK_TYPE[] PROGMEM_LATEST = {
+const char ENUM_NETWORK_TYPE[] = {
 "\x00 " ENUM_NETWORK_TYPE_00_TEXT "\0"
 "\x01 " ENUM_NETWORK_TYPE_01_TEXT
 };
 
-const char ENUM_LOG_DEST[] PROGMEM_LATEST = {
+const char ENUM_LOG_DEST[] = {
 "\x00 " ENUM_LOG_DEST_00_TEXT "\0"
 "\x01 " ENUM_LOG_DEST_01_TEXT
 };
 
-const char ENUM_VERBOSE[] PROGMEM_LATEST = {
+const char ENUM_VERBOSE[] = {
 "\x00 " ENUM_VERBOSE_00_TEXT "\0"
 "\x01 " ENUM_VERBOSE_01_TEXT "\0"
 "\x02 " ENUM_VERBOSE_02_TEXT
 };
 
 // Keep this for legacy parameter lists
-const char ENUM701[] PROGMEM_LATEST = {
+const char ENUM701[] = {
 "\x01 " ENUM648_01_TEXT "\0"
 "\x02 " ENUM700_03_TEXT
 };
 
 // PPS Betriebsart
 #define ENUM15000_02_TEXT MENU_TEXT_OFF
-const char ENUM15000[] PROGMEM_LATEST = {
+const char ENUM15000[] = {
 "\x00 " ENUM15000_00_TEXT "\0"
 "\x01 " ENUM15000_01_TEXT "\0"
 "\x02 " ENUM15000_02_TEXT
 };
 
-const char ENUM15044[] PROGMEM_LATEST = {
+const char ENUM15044[] = {
 "\x00\x01 " "?" "\0"
 "\x01\x01 " "?" "\0"
 "\x00\x02 " ENUM15044_00_02_TEXT "\0"
@@ -1128,7 +1124,7 @@ const char ENUM15044[] PROGMEM_LATEST = {
 "\x10\x10 " ENUM15044_10_10_TEXT
 };
 
-const char ENUM15046[] PROGMEM_LATEST = {
+const char ENUM15046[] = {
 "\x52 " ENUM15046_52_TEXT "\0"
 "\x53 " ENUM15046_53_TEXT "\0"
 "\x5a " ENUM15046_5a_TEXT "\0"
