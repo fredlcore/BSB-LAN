@@ -162,7 +162,7 @@
 #define MENU_TEXT_LGI "New logging interval"
 #define MENU_TEXT_LGN "New logging parameters"
 #define MENU_TEXT_LOT "Log of telegrams"
-#define MENU_TEXT_FSP "Free space on SD card"
+#define MENU_TEXT_FSP "Free space in file system"
 
 #define STR_24A_TEXT "24h average"
 
@@ -188,7 +188,7 @@
 #define CF_TRUSTEDIPADDRESS_TEXT "Trusted IP address"
 #define CF_MASK_TEXT "Subnet"
 #define CF_WIFI_PASSWORD_TEXT "WLAN password"
-#define CF_WEBSERVER_TEXT "Webserver SD card / flash memory"
+#define CF_WEBSERVER_TEXT "Webserver file system"
 #define CF_BASICAUTH_TEXT "HTTP authentification"
 #define CF_ONEWIREBUS_DEVICES_TEXT "Devices"
 #define CF_PINS_TEXT "Pins"
@@ -202,7 +202,7 @@
 #define CF_LOGMODE_TEXT "Logging mode"
 #define CF_CHECKUPDATE_TEXT "Check for updates"
 #define CF_SHOW_UNKNOWN_TEXT "Display unknown parameters"
-#define CF_ENERGY_SAVE_TEXT "ESP32 energy saving"
+#define CF_ENERGY_SAVE_TEXT "Energy saving"
 #define CF_LOG_DEST_TEXT "Storage device"
 
 #define ENUM_LOG_DEST_00_TEXT "SD card"

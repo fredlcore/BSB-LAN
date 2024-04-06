@@ -205,7 +205,7 @@
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
 #define MENU_TEXT_LOT "Telegramme loggen"
-#define MENU_TEXT_FSP "Freier Speicher auf SD Karte"
+#define MENU_TEXT_FSP "Freier Speicher im Dateisystem"
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 
@@ -232,7 +232,7 @@
 #define CF_WWWPORT_TEXT "TCP Port"
 #define CF_WIFI_SSID_TEXT "WLAN SSID"
 #define CF_WIFI_PASSWORD_TEXT "WLAN Passwort"
-#define CF_WEBSERVER_TEXT "Webserver SD-Karte / Flash-Speicher"
+#define CF_WEBSERVER_TEXT "Webserver Dateisystem"
 #define CF_PASSKEY_TEXT "URL Passkey"
 #define CF_BASICAUTH_TEXT "HTTP-Authentifizierung"
 #define CF_PINS_TEXT "Pins"
@@ -254,7 +254,7 @@
 #define CF_RX_PIN_TEXT "RX Pin Nummer"
 #define CF_TX_PIN_TEXT "TX Pin Nummer"
 #define CF_CONFIG_LEVEL_TEXT "Erweiterte Einstellungen anzeigen"
-#define CF_ENERGY_SAVE_TEXT "ESP32 Energiesparmodus"
+#define CF_ENERGY_SAVE_TEXT "Energiesparmodus"
 
 #define CAT_GENERAL_TEXT "Generell"
 #define CAT_IPV4_TEXT "Netzwerk"
