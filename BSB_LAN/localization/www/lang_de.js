@@ -205,7 +205,7 @@ UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN/inhaltsv
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
-UIStrings["MENU_TEXT_FSP"] = "Freier Speicher auf SD Karte";
+UIStrings["MENU_TEXT_FSP"] = "Freier Speicher im Dateisystem";
 
 UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
 
@@ -232,7 +232,7 @@ UIStrings["CF_DNS_TEXT"] = "DNS Server";
 UIStrings["CF_WWWPORT_TEXT"] = "TCP Port";
 UIStrings["CF_WIFI_SSID_TEXT"] = "WLAN SSID";
 UIStrings["CF_WIFI_PASSWORD_TEXT"] = "WLAN Passwort";
-UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD-Karte / Flash-Speicher";
+UIStrings["CF_WEBSERVER_TEXT"] = "Webserver Dateisystem";
 UIStrings["CF_PASSKEY_TEXT"] = "URL Passkey";
 UIStrings["CF_BASICAUTH_TEXT"] = "HTTP-Authentifizierung";
 UIStrings["CF_PINS_TEXT"] = "Pins";
@@ -254,7 +254,7 @@ UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Unbekannte Parameter anzeigen";
 UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nummer";
 UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nummer";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Erweiterte Einstellungen anzeigen";
-UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 Energiesparmodus";
+UIStrings["CF_ENERGY_SAVE_TEXT"] = "Energiesparmodus";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
