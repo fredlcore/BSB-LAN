@@ -140,12 +140,12 @@ uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD c
 
 // Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
 // Telegrams logged upon boot:
-// int logTelegram = LOGTELEGRAM_OFF;                                       // nothing to log,
-// int logTelegram = LOGTELEGRAM_ON;                                        // log all telegrams,
-// int logTelegram = LOGTELEGRAM_UNKNOWN_ONLY;                              // log unknown telegrams,
-// int logTelegram = LOGTELEGRAM_BROADCAST_ONLY;                            // log broadcast telegrams,
-// int logTelegram = LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY; // log unknown broadcast telegrams only;
-int logTelegram = LOGTELEGRAM_OFF;
+// uint8_t logTelegram = LOGTELEGRAM_OFF;                                       // nothing to log,
+// uint8_t logTelegram = LOGTELEGRAM_ON;                                        // log all telegrams,
+// uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY;                              // log unknown telegrams,
+// uint8_t logTelegram = LOGTELEGRAM_BROADCAST_ONLY;                            // log broadcast telegrams,
+// uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY; // log unknown broadcast telegrams only;
+uint8_t logTelegram = LOGTELEGRAM_OFF;
 
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command during runtime
@@ -278,7 +278,7 @@ byte verbose = 1;     // If set to 1, all messages on the bus are printed to deb
 byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
 
-#define CONFIG_VERSION 37
+#define CONFIG_VERSION 38
 
 /************************************************************************************/
 /************************************************************************************/

@@ -577,7 +577,7 @@ typedef struct {
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 36
+#define REQUIRED_CONFIG_VERSION 38
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -1134,17 +1134,17 @@ int recognize_mime(char *str) {
     i++;
   }
 
-  if (!strcmp_P(mimebuf, "html") || !strcmp_P(mimebuf, "htm")) mimetype = MIME_TYPE_TEXT_HTML;
-  else if (!strcmp_P(mimebuf, "css")) mimetype = MIME_TYPE_TEXT_CSS;
-  else if (!strcmp_P(mimebuf, "js")) mimetype = MIME_TYPE_APP_JS;
-  else if (!strcmp_P(mimebuf, "xml")) mimetype = MIME_TYPE_APP_XML;
-  else if (!strcmp_P(mimebuf, "txt")) mimetype = MIME_TYPE_TEXT_TEXT;
-  else if (!strcmp_P(mimebuf, "jpg")) mimetype = MIME_TYPE_IMAGE_JPEG;
-  else if (!strcmp_P(mimebuf, "gif")) mimetype = MIME_TYPE_IMAGE_GIF;
-  else if (!strcmp_P(mimebuf, "svg")) mimetype = MIME_TYPE_IMAGE_SVG;
-  else if (!strcmp_P(mimebuf, "png")) mimetype = MIME_TYPE_IMAGE_PNG;
-  else if (!strcmp_P(mimebuf, "ico")) mimetype = MIME_TYPE_IMAGE_ICON;
-  else if (!strcmp_P(mimebuf, "gz")) mimetype = MIME_TYPE_APP_GZ;
+  if (!strcmp(mimebuf, "html") || !strcmp(mimebuf, "htm")) mimetype = MIME_TYPE_TEXT_HTML;
+  else if (!strcmp(mimebuf, "css")) mimetype = MIME_TYPE_TEXT_CSS;
+  else if (!strcmp(mimebuf, "js")) mimetype = MIME_TYPE_APP_JS;
+  else if (!strcmp(mimebuf, "xml")) mimetype = MIME_TYPE_APP_XML;
+  else if (!strcmp(mimebuf, "txt")) mimetype = MIME_TYPE_TEXT_TEXT;
+  else if (!strcmp(mimebuf, "jpg")) mimetype = MIME_TYPE_IMAGE_JPEG;
+  else if (!strcmp(mimebuf, "gif")) mimetype = MIME_TYPE_IMAGE_GIF;
+  else if (!strcmp(mimebuf, "svg")) mimetype = MIME_TYPE_IMAGE_SVG;
+  else if (!strcmp(mimebuf, "png")) mimetype = MIME_TYPE_IMAGE_PNG;
+  else if (!strcmp(mimebuf, "ico")) mimetype = MIME_TYPE_IMAGE_ICON;
+  else if (!strcmp(mimebuf, "gz")) mimetype = MIME_TYPE_APP_GZ;
 //          else mimetype = 0;
   // You can add more MIME types here
   return mimetype;
@@ -1770,7 +1770,7 @@ char *TranslateAddr(byte addr, char *device) {
     case ADDR_ALL: p = "ALL "; break;
     default: bin2hex(device, &addr, 1, 0); break;
   }
-  if (p) strcpy_P(device, p);
+  if (p) strcpy(device, p);
   device[4] = 0;
   return device;
 }
@@ -1866,7 +1866,7 @@ char *TranslateType(byte type, char *mtype) {
     // If no match found: print the hex value
     default: bin2hex(mtype, &type, 1, 0); break;
   } // endswitch
-  if (p) strcpy_P(mtype, p);
+  if (p) strcpy(mtype, p);
   mtype[4] = 0;
   return mtype;
 }
@@ -2315,7 +2315,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
         char *ptr_t = ptr;
         ptr = strchr(ptr, ',');
         if (ptr) ptr[0] = 0;
-        strcpy_P(sscanf_buf, "%x:%x:%x:%x:%x:%x");
+        strcpy(sscanf_buf, "%x:%x:%x:%x:%x:%x");
         if(sscanf(ptr_t, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5) == 6) {
           ((byte *)variable)[j * sizeof(mac) + 0] = (byte)(i0 & 0xFF);
           ((byte *)variable)[j * sizeof(mac) + 1] = (byte)(i1 & 0xFF);
@@ -2331,7 +2331,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
     }
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
-      strcpy_P(sscanf_buf, "%u.%u.%u.%u");
+      strcpy(sscanf_buf, "%u.%u.%u.%u");
       sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3);
       byte variable[4];
       variable[0] = (byte)(i0 & 0xFF);
@@ -2597,7 +2597,7 @@ void applyingConfig() {
     }
 
     if (c == '=') { //key/value delimiter
-      char *ptr = strstr_P(outBuf, "option_");
+      char *ptr = strstr(outBuf, "option_");
       if (!ptr) continue;
       ptr += 7; //len of "option_" string
       option_id = atoi(ptr) - 1;
@@ -2990,6 +2990,7 @@ void LogTelegram(byte* msg) {
       uint8_t dev_var = cmdtbl[i].dev_var;
       if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
+          known=1;
           break;
         } else if ((!known && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
           known=1;
@@ -3008,9 +3009,9 @@ void LogTelegram(byte* msg) {
   bool logThis = false;
   switch (logTelegram) {
     case LOGTELEGRAM_ON: logThis = true; break;
-    case LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY: if (known == 0)  logThis = true; break;
-    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY: if ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB))  logThis = true; break;
-    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY+LOGTELEGRAM_UNKNOWN_ONLY: if (known == 0 && ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB))) logThis = true; break;
+    case LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY: {if (known == 0)  logThis = true; break;}
+    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY: {if ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) logThis = true; break;}
+    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY+LOGTELEGRAM_UNKNOWN_ONLY: {if (known == 0 && ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB))) logThis = true; break;}
     default: logThis = false; break;
   }
   if (logThis) {
@@ -3020,20 +3021,20 @@ void LogTelegram(byte* msg) {
       outBufLen += sprintf_P(outBuf, "%lu;%s;", millis(), GetDateTime(outBuf + outBufLen + 80));
       if (!known) {                          // no hex code match
       // Entry in command table is "UNKNOWN" (0x00000000)
-        outBufLen += strlen(strcpy_P(outBuf + outBufLen, "UNKNOWN"));
+        outBufLen += strlen(strcpy(outBuf + outBufLen, "UNKNOWN"));
       } else {
         // Entry in command table is a documented command code
         line=cmdtbl[i].line;
         cmd_type=cmdtbl[i].type;
         outBufLen += sprintf_P(outBuf + outBufLen, "%g", line);
-        }
+      }
 
       uint8_t msg_len = 0;
       if (bus->getBusType() != BUS_PPS) {
         outBufLen += sprintf_P(outBuf + outBufLen, ";%s->%s %s;", TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+(bus->getBusType()*4)], outBuf + outBufLen + 60));
         msg_len = msg[bus->getLen_idx()]+bus->getBusType();
       } else {
-        strcat_P(outBuf + outBufLen, ";");
+        strcat(outBuf + outBufLen, ";");
         const char *getfarstrings;
         switch (msg[0] & 0x0F) {                              // messages from heater
           case 0x0D: getfarstrings = "PPS INF"; break;  // 0x1D
@@ -3049,8 +3050,8 @@ void LogTelegram(byte* msg) {
             getfarstrings = "PPS ANS"; break;
           default: getfarstrings = ""; break;
         }
-        strcat_P(outBuf + outBufLen, getfarstrings);
-        strcat_P(outBuf + outBufLen, ";");
+        strcat(outBuf + outBufLen, getfarstrings);
+        strcat(outBuf + outBufLen, ";");
         outBufLen += strlen(outBuf + outBufLen);
 //            msg_len = 9+(msg[0]==0x17 && pps_write != 1);
         msg_len = 9;
@@ -3058,18 +3059,20 @@ void LogTelegram(byte* msg) {
 
       outBufLen += bin2hex(outBuf + outBufLen, msg, msg_len, ' ');
       // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
-
-      if (bus->getBusType() != BUS_PPS && (msg[4+(bus->getBusType()*4)] == TYPE_INF || msg[4+(bus->getBusType()*4)] == TYPE_SET || msg[4+(bus->getBusType()*4)] == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
-        outBufLen += strlen(strcat_P(outBuf + outBufLen, ";"));
+      uint8_t msg_type = msg[4+(bus->getBusType()*4)];
+      if (bus->getBusType() != BUS_PPS && (msg_type == TYPE_INF || msg_type == TYPE_SET || msg_type == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
+        outBufLen += strlen(strcat(outBuf + outBufLen, ";"));
+// payload length includes one byte for enable/disable byte, except for INF telegrams which have none of these. We have to subtract this one and add it back if it's an INF.
         if (bus->getBusType() == BUS_LPB) {
-          data_len=msg[1]-14;
+          data_len=msg[1]-14-1+(msg_type==TYPE_INF);
         } else {
-          data_len=msg[3]-11;
+          data_len=msg[3]-11-1+(msg_type==TYPE_INF);
         }
         dval = 0;
         operand=optbl[cmd_type].operand;
         precision=optbl[cmd_type].precision;
-
+/*
+// Check whether this for loop was really wrong for all those years...
         for (i=0;i<data_len-1+bus->getBusType();i++) {
           if (bus->getBusType() == BUS_LPB) {
             dval = dval + long(msg[14+i-(msg[8]==TYPE_INF)]<<((data_len-2-i)*8));
@@ -3077,6 +3080,15 @@ void LogTelegram(byte* msg) {
             dval = dval + long(msg[10+i-(msg[4]==TYPE_INF)]<<((data_len-2-i)*8));
           }
         }
+*/
+        for (i=0;i<data_len;i++) {
+          if (bus->getBusType() == BUS_LPB) {
+            dval = dval + long(msg[14+i-(msg_type==TYPE_INF)]<<((data_len-1-i)*8));   // Starts one byte after payload begins, except for INF
+          } else {
+            dval = dval + long(msg[10+i-(msg_type==TYPE_INF)]<<((data_len-1-i)*8));
+          }
+        }
+
         dval = dval / operand;
         _printFIXPOINT(outBuf + outBufLen, dval, precision);
         // print ',' instead '.'
@@ -3084,7 +3096,7 @@ void LogTelegram(byte* msg) {
         if (p != NULL) *p=',';
         outBufLen += strlen(outBuf + outBufLen);
       }
-      strcat_P(outBuf + outBufLen, "\r\n");
+      strcat(outBuf + outBufLen, "\r\n");
       dataFile.print(outBuf);
       dataFile.close();
     }
@@ -3167,7 +3179,7 @@ int set(float line      // the ProgNr of the heater parameter
       }
       if ((line >= BSP_LONG && line < BSP_LONG + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
-        strcpy_P(sscanf_buf, "%ld");
+        strcpy(sscanf_buf, "%ld");
         sscanf(val, sscanf_buf, &custom_longs[(int)line - BSP_LONG]);
         return 1;
       }
@@ -3199,7 +3211,7 @@ int set(float line      // the ProgNr of the heater parameter
       case VT_PPS_TIME:
       {
         int hour=0, minute=0, second=0;
-        strcpy_P(sscanf_buf, "%d.%d.%d");
+        strcpy(sscanf_buf, "%d.%d.%d");
         sscanf(val, sscanf_buf, &hour, &minute, &second);
         setTime(hour, minute, second, weekday(), 1, 2018);
         if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Setting time to %d:%d:%d\r\n", hour, minute, second);
@@ -3500,7 +3512,7 @@ int set(float line      // the ProgNr of the heater parameter
       if (val[0]!='\0') {
         switch(decodedTelegram.type){
           case VT_YEAR:
-            strcpy_P(sscanf_buf, "%d");
+            strcpy(sscanf_buf, "%d");
             if (1 != sscanf(val, sscanf_buf, &y)) {
               decodedTelegram.error = 262;
               error_msg = "year!";
@@ -3512,7 +3524,7 @@ int set(float line      // the ProgNr of the heater parameter
           break;
           case VT_DAYMONTH:
           case VT_VACATIONPROG:
-            strcpy_P(sscanf_buf, "%d.%d.");
+            strcpy(sscanf_buf, "%d.%d.");
             if (2 != sscanf(val, sscanf_buf, &d, &m)) {
               decodedTelegram.error = 262;
               error_msg = "day/month!";
@@ -3527,7 +3539,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_TIME:
-            strcpy_P(sscanf_buf, "%d:%d:%d");
+            strcpy(sscanf_buf, "%d:%d:%d");
             if (3 != sscanf(val, sscanf_buf, &hour, &min, &sec)) {
               decodedTelegram.error = 262;
               error_msg = "time!";
@@ -3538,7 +3550,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_DATETIME:
-            strcpy_P(sscanf_buf, "%d.%d.%d_%d:%d:%d");
+            strcpy(sscanf_buf, "%d.%d.%d_%d:%d:%d");
             if (6 != sscanf(val, sscanf_buf, &d, &m, &y, &hour, &min, &sec)) {
               decodedTelegram.error = 262;
               error_msg = "date/time!";
@@ -3586,7 +3598,7 @@ int set(float line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      strcpy_P(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
+      strcpy(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
       ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
       if (ret<4)      // BEGIN hour/minute and END hour/minute
@@ -3781,40 +3793,40 @@ char *build_pvalstr(bool extended) {
     len+=sprintf_P(outBuf, "%g ", decodedTelegram.prognr);
 
     len+=strlen(strcpy(outBuf + len, decodedTelegram.catdescaddr));
-    len+=strlen(strcpy_P(outBuf + len, " - "));
+    len+=strlen(strcpy(outBuf + len, " - "));
     if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_AVERAGES + numAverages) {
-      len+=strlen(strcpy_P(outBuf + len, STR_24A_TEXT));
-      len+=strlen(strcpy_P(outBuf + len, ". "));
+      len+=strlen(strcpy(outBuf + len, STR_24A_TEXT));
+      len+=strlen(strcpy(outBuf + len, ". "));
     }
     len+=strlen(strcpy(outBuf + len, decodedTelegram.prognrdescaddr));
     if (decodedTelegram.sensorid) {
       len+=sprintf_P(outBuf + len, " #%d", decodedTelegram.sensorid);
     }
-    len+=strlen(strcpy_P(outBuf + len, ": "));
+    len+=strlen(strcpy(outBuf + len, ": "));
   }
   if (decodedTelegram.value[0] != 0 && decodedTelegram.error != 260) {
     len+=strlen(strcpy(outBuf + len, decodedTelegram.value));
   }
   if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
     if (decodedTelegram.enumdescaddr) {
-      strcpy_P(outBuf + len, " - ");
+      strcpy(outBuf + len, " - ");
       strcat(outBuf + len, decodedTelegram.enumdescaddr);
       len+=strlen(outBuf + len);
      }
   } else {
     if (decodedTelegram.unit[0] != 0 && decodedTelegram.error != 7) {
-      strcpy_P(outBuf + len, " ");
+      strcpy(outBuf + len, " ");
       strcat(outBuf + len, decodedTelegram.unit);
       len+=strlen(outBuf + len);
     }
   }
   if (decodedTelegram.telegramDump) {
-    strcpy_P(outBuf + len, " ");
+    strcpy(outBuf + len, " ");
     strcat(outBuf + len, decodedTelegram.telegramDump);
     len+=strlen(outBuf + len);
   }
 
-  strcpy_P(outBuf + len, printError(decodedTelegram.error));
+  strcpy(outBuf + len, printError(decodedTelegram.error));
   return outBuf;
 }
 
@@ -4887,11 +4899,11 @@ void loop() {
               // you're starting a new line
               currentLineIsBlank = true;
               //Execute only if flag not set because strstr more expensive than bitwise operation
-              if (!(httpflags & HTTP_GZIP) && strstr_P(outBuf + buffershift,"Accept-Encoding") != 0 && strstr_P(outBuf+16 + buffershift, "gzip") != 0) {
+              if (!(httpflags & HTTP_GZIP) && strstr(outBuf + buffershift,"Accept-Encoding") != 0 && strstr(outBuf+16 + buffershift, "gzip") != 0) {
                 httpflags |= HTTP_GZIP;
               }
               if (!(httpflags & HTTP_ETAG)) {
-                char *ptr = strstr_P(outBuf + buffershift, "If-None-Match:");
+                char *ptr = strstr(outBuf + buffershift, "If-None-Match:");
                 if (ptr != 0) {
                   httpflags |= HTTP_ETAG;
                   ptr = strchr(ptr, ':');
@@ -4906,7 +4918,7 @@ void loop() {
               char base64_user_pass[88] = { 0 };
               int user_pass_len = strlen(USER_PASS);
               Base64.encode(base64_user_pass, USER_PASS, user_pass_len);
-              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr_P(outBuf + buffershift,"uthorization: Basic")!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) { // HTML headers seem to be case-insensitive, some clients send "authorization" instead of "Authorization". Here this can be covered by just removing the first letter, but with other HTTP header tests above, this might be more complicated...
+              if (!(httpflags & HTTP_AUTH) && USER_PASS[0] && strstr(outBuf + buffershift,"uthorization: Basic")!=0 && strstr(outBuf + buffershift,base64_user_pass)!=0) { // HTML headers seem to be case-insensitive, some clients send "authorization" instead of "Authorization". Here this can be covered by just removing the first letter, but with other HTTP header tests above, this might be more complicated...
                 httpflags |= HTTP_AUTH;
               }
               memset(outBuf + buffershift,0, charcount);
@@ -4932,7 +4944,7 @@ void loop() {
         // GET / HTTP/1.1 (anforderung website)
         // GET /710 HTTP/1.0 (befehlseingabe)
         // Check for HEAD request (for file caching)
-        if (!strncmp_P(cLineBuffer, "HEAD", 4))
+        if (!strncmp(cLineBuffer, "HEAD", 4))
           httpflags |= HTTP_HEAD_REQ;
         char *u_s = strchr(cLineBuffer,' ');
         if (!u_s) u_s = cLineBuffer;
@@ -4940,13 +4952,13 @@ void loop() {
         if (u_e) u_e[0] = 0;
         if (u_s != cLineBuffer) strcpy(cLineBuffer, u_s + 1);
 // IPWE START
-        if (enable_ipwe && !strcmp_P(cLineBuffer, "/ipwe.cgi")) {
+        if (enable_ipwe && !strcmp(cLineBuffer, "/ipwe.cgi")) {
           Ipwe();
           break;
         }
 // IPWE END
 
-        if (!strcmp_P(cLineBuffer, "/favicon.ico")) {
+        if (!strcmp(cLineBuffer, "/favicon.ico")) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient("\r\n");
           printPStr(favicon, sizeof(favicon));
@@ -4954,7 +4966,7 @@ void loop() {
           break;
         }
 
-        if (!strcmp_P(cLineBuffer, "/favicon.svg")) {
+        if (!strcmp(cLineBuffer, "/favicon.svg")) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_SVG, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient("\r\n");
           printPStr(svg_favicon, sizeof(svg_favicon));
@@ -4983,9 +4995,9 @@ void loop() {
 
         if (webserver) {
           printToDebug("URL: ");
-          if (!strcmp_P(p, "/")) {
+          if (!strcmp(p, "/")) {
             httpflags |= HTTP_GET_ROOT;
-            strcpy_P(p + 1, "index.html");
+            strcpy(p + 1, "index.html");
           }
             printlnToDebug(p);
           char *dot = strchr(p, '.');
@@ -5005,7 +5017,7 @@ void loop() {
             int suffix = 0;
             if ((httpflags & HTTP_GZIP)) {
               suffix = strlen(p);
-              strcpy_P(p + suffix, ".gz");
+              strcpy(p + suffix, ".gz");
               dataFile = SDCard.open(p);
             }
             if (!dataFile) {
@@ -5107,9 +5119,9 @@ void loop() {
           while (client.available()) client.read();
         } else {
           if ((httpflags & HTTP_ETAG))  { //Compare ETag if presented
-            strcpy_P(outBuf + buffershift, "\"");
-            strcat_P(outBuf + buffershift, BSB_VERSION);
-            strcat_P(outBuf + buffershift, "\"");
+            strcpy(outBuf + buffershift, "\"");
+            strcat(outBuf + buffershift, BSB_VERSION);
+            strcat(outBuf + buffershift, "\"");
             if (memcmp(outBuf, outBuf + buffershift, strlen(outBuf + buffershift))) {
               // reuse httpflags
               httpflags &= ~HTTP_ETAG; //ETag not match
@@ -5117,7 +5129,7 @@ void loop() {
           }
         }
         // simply print the website
-        if (!webserver && !strcmp_P(p, "/")) {
+        if (!webserver && !strcmp(p, "/")) {
           webPrintSite();
           break;
         }
@@ -5722,9 +5734,9 @@ void loop() {
             }
 
             switch (i) {
-              case 0: strcpy_P(json_value_string, "BSB"); break; //reuse json_value_string for lesser memory usage
-              case 1: strcpy_P(json_value_string, "LPB"); break;
-              case 2: strcpy_P(json_value_string, "PPS"); break;
+              case 0: strcpy(json_value_string, "BSB"); break; //reuse json_value_string for lesser memory usage
+              case 1: strcpy(json_value_string, "LPB"); break;
+              case 2: strcpy(json_value_string, "PPS"); break;
             }
             printFmtToWebClient(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n", json_value_string, json_parameter);
             printFmtToWebClient("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n", bus->getBusAddr(), bus->getBusDest());
@@ -6040,12 +6052,12 @@ next_parameter:
                   char pre_buf[10];
                   pre_buf[0] = 0;
                   if (decodedTelegram.precision != 0) {
-                    strcpy_P(pre_buf, "0.");
+                    strcpy(pre_buf, "0.");
                     for (uint8_t j = 1; j < decodedTelegram.precision; j ++) {
-                      strcat_P(pre_buf, "0");
+                      strcat(pre_buf, "0");
                     }
                   }
-                  strcat_P(pre_buf, "1");
+                  strcat(pre_buf, "1");
                   printFmtToWebClient("    \"precision\": %s,\r\n", pre_buf);
                 }
                 printFmtToWebClient("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.readwrite, decodedTelegram.unit);
@@ -6620,7 +6632,7 @@ next_parameter:
                 p[i] |= 0x20; //to lower case
                 i++;
               }
-              if (!strncmp_P(p, "on", 2) || !strncmp_P(p, "high", 2) || *p=='1') {
+              if (!strncmp(p, "on", 2) || !strncmp(p, "high", 2) || *p=='1') {
                 val=HIGH;
               } else {
                 val=LOW;
@@ -6829,7 +6841,7 @@ next_parameter:
 
           if ((log_parameters[i].number >= BSP_AVERAGES && log_parameters[i].number < BSP_AVERAGES + numAverages)) {
             //averages
-            outBufLen += strlen(strcpy_P(outBuf + outBufLen, STR_24A_TEXT ". "));
+            outBufLen += strlen(strcpy(outBuf + outBufLen, STR_24A_TEXT ". "));
           }
           if (dataFile) {
             if (previousDatalogDate.combined != currentDate.combined) {

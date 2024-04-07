@@ -87,6 +87,8 @@ typedef enum{
 // Version 12 (MQTT server (changed above), network type, log destination)
   CF_LOG_DEST,
   CF_NETWORK_TYPE,
+// Version 13 (introduce dummy variable to easily change minimum EEPROM schema version in case of change in variable type etc.)
+  CF_DUMMY,
 //Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
@@ -172,7 +174,7 @@ const category_list_struct catalist[]={
 const configuration_struct config[]={
   {CF_CONFIG_LEVEL,     9, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_CONFIG_LEVEL_TXT, sizeof(config_level)}, //immediately apply
   {CF_USEEEPROM,        0, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_USEEEPROM_TXT, sizeof(UseEEPROM)}, //immediately apply
-  {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(byte)},
+  {CF_VERSION,          0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(uint16_t)},
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(uint32_t)},
   {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
@@ -234,7 +236,8 @@ const configuration_struct config[]={
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_VERBOSE_TXT, sizeof(verbose)},
   {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_MONITOR_TXT, sizeof(monitor)},
-  {CF_SHOW_UNKNOWN,     7, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(show_unknown)}//immediately apply
+  {CF_SHOW_UNKNOWN,     7, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(show_unknown)},//immediately apply
+  {CF_DUMMY,           13, CCAT_DEBUG,    CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(byte)},// dummy variable for forcing new EEPROM schema version
 };
 
 typedef struct{

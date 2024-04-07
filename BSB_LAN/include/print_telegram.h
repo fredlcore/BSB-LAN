@@ -606,7 +606,7 @@ void printLPBAddr(byte *msg,byte data_len) {
 
   if (data_len == 2) {
     if (msg[bus->getPl_start()]==0) {   // payload Int8 value
-      sprintf_P(decodedTelegram.value,"%02d.%02d",msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0f)+1);
+      sprintf_P(decodedTelegram.value,"%02d.%02d",msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0F)+1);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -792,7 +792,7 @@ void printTelegram(byte* msg, float query_line) {
       }
     }
   }
-  if (!known || (bus_type == BUS_PPS && (msg[0] & 0x07))) { // no hex code match or PPS RTS telegram type (0x17)
+  if (!known || (bus_type == BUS_PPS && (msg[0] & 0x0F) == 0x07)) { // no hex code match or PPS RTS telegram type (0x17)
     // Entry in command table is "UNKNOWN" (0x00000000)
     if (bus_type != BUS_PPS) {
       printToDebug("     ");
@@ -835,7 +835,7 @@ void printTelegram(byte* msg, float query_line) {
     }
     break;
     case BUS_PPS:
-    if (!(msg[0] & 0x07) && !(msg[0] & 0x0E)) {   // PPS telegram types 0x17 and 0x1E do not contain payload
+    if ((msg[0] & 0x0F) != 0x07 && (msg[0] & 0x0F) != 0x0E) {   // PPS telegram types 0x17 and 0x1E do not contain payload
       data_len = 3;
     } else {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x17 and 0x1E)
