@@ -78,6 +78,7 @@
  *        - Polling current time from NTP server is active by default. Deactivate by setting ntp_server to empty string.
  *        - New parameter flag FL_NOSWAP_QUR for parameters that do not swap the first two bytes of command ID in QUR telegram
  *        - New parameter flag FL_FORCE_INF for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if /S is used to set the parameter (allows setting room temperature via web interface)
+ *        - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
  *        - Various bugfixes, among others logging of bus telegrams on storage device.
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
@@ -2988,7 +2989,7 @@ void LogTelegram(byte* msg) {
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while (c!=CMD_END) {
     line=cmdtbl[i].line;
-    if ((bus->getBusType() != BUS_PPS && c == cmd) || (bus->getBusType() == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
+    if ((bus->getBusType() != BUS_PPS && (c & 0xFF00FFFF) == (cmd & 0xFF00FFFF)) || (bus->getBusType() == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
       uint8_t dev_fam = cmdtbl[i].dev_fam;
       uint8_t dev_var = cmdtbl[i].dev_var;
       if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
@@ -3001,7 +3002,7 @@ void LogTelegram(byte* msg) {
         }
       }
     }
-    if (known && c!=cmd) {
+    if (known && (c & 0xFF00FFFF) != (cmd & 0xFF00FFFF)) {
       i=save_i;
       break;
     }
@@ -3012,9 +3013,9 @@ void LogTelegram(byte* msg) {
   bool logThis = false;
   switch (logTelegram) {
     case LOGTELEGRAM_ON: logThis = true; break;
-    case LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY: {if (known == 0)  logThis = true; break;}
-    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY: {if ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) logThis = true; break;}
-    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY+LOGTELEGRAM_UNKNOWN_ONLY: {if (known == 0 && ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB))) logThis = true; break;}
+    case LOGTELEGRAM_ON + LOGTELEGRAM_UNKNOWN_ONLY: if (known == 0)  logThis = true; break;
+    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY: if ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) logThis = true; break;
+    case LOGTELEGRAM_ON + LOGTELEGRAM_BROADCAST_ONLY+LOGTELEGRAM_UNKNOWN_ONLY: if (known == 0 && ((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB))) logThis = true; break;
     default: logThis = false; break;
   }
   if (logThis) {
@@ -3039,19 +3040,22 @@ void LogTelegram(byte* msg) {
       } else {
         strcat(outBuf + outBufLen, ";");
         const char *getfarstrings;
-        switch (msg[0] & 0x0F) {                              // messages from heater
-          case 0x0D: getfarstrings = "PPS INF"; break;  // 0x1D
-          case 0x0E: getfarstrings = "PPS REQ"; break;  // 0x1E
-          case 0x07: getfarstrings = "PPS RTS"; break;  // 0x17
-          default: getfarstrings = ""; break;
-        }
-        switch (msg[0]) {                                     // messages from room unit - had to split this up because some PPS devices change high byte, but room units not, so 0x1D and 0xFD would clash
-          case 0xF8:
-          case 0xFB:
-          case 0xFD:
-          case 0xFE:
-            getfarstrings = "PPS ANS"; break;
-          default: getfarstrings = ""; break;
+        if (msg[0] < 0xF0) {
+          switch (msg[0] & 0x0F) {                              // messages from heater
+            case 0x0D: getfarstrings = "PPS INF"; break;  // 0x1D
+            case 0x0E: getfarstrings = "PPS REQ"; break;  // 0x1E
+            case 0x07: getfarstrings = "PPS RTS"; break;  // 0x17
+            default: getfarstrings = ""; break;
+          }
+        } else {
+          switch (msg[0]) {                                     // messages from room unit - had to split this up because some PPS devices change high byte, but room units not, so 0x1D and 0xFD would clash
+            case 0xF8:
+            case 0xFB:
+            case 0xFD:
+            case 0xFE:
+              getfarstrings = "PPS ANS"; break;
+            default: getfarstrings = ""; break;
+          }
         }
         strcat(outBuf + outBufLen, getfarstrings);
         strcat(outBuf + outBufLen, ";");
@@ -4849,6 +4853,7 @@ void loop() {
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
+    boolean isSerial = false;
     while (client.connected() || SerialOutput->available()) {
       if (client.available() || SerialOutput->available()) {
 
@@ -4858,6 +4863,7 @@ void loop() {
           printFmtToDebug("%c", c);         // and send it to hardware UART
         }
         if (SerialOutput->available()) {
+          isSerial = true;
           c = SerialOutput->read();
           printFmtToDebug("%c", c);         // and send it to hardware UART
           int timeout = 0;
@@ -4934,7 +4940,7 @@ void loop() {
         }
         cLineBuffer[bPlaceInBuffer++]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
-        if (USER_PASS[0] && !(httpflags & HTTP_AUTH)) {
+        if (USER_PASS[0] && !(httpflags & HTTP_AUTH) && isSerial == false) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
           printPStr(auth_req_html, sizeof(auth_req_html));
           forcedflushToWebClient();

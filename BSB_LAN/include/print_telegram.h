@@ -674,18 +674,21 @@ void printTelegram(byte* msg, float query_line) {
     printFmtToDebug(" ");
   } else {
     if (!monitor) {
-      switch (msg[0] & 0x0F) {
-        case 0x0D: printToDebug("PPS INF "); break;   // 0x1D
-        case 0x0E: printToDebug("PPS REQ "); break;   // 0x1E
-        case 0x07: printToDebug("PPS RTS "); break;   // 0x17
-        default: break;
-      }
-      switch (msg[0]) {
-        case 0xF8:
-        case 0xFB:
-        case 0xFD:
-        case 0xFE: printToDebug("PPS ANS "); break;
-        default: break;
+      if (msg[0] < 0xF0) {
+        switch (msg[0] & 0x0F) {
+          case 0x0D: printToDebug("PPS INF "); break;   // 0x1D
+          case 0x0E: printToDebug("PPS REQ "); break;   // 0x1E
+          case 0x07: printToDebug("PPS RTS "); break;   // 0x17
+          default: break;
+        }
+      } else {
+        switch (msg[0]) {
+          case 0xF8:
+          case 0xFB:
+          case 0xFD:
+          case 0xFE: printToDebug("PPS ANS "); break;
+          default: break;
+        }
       }
     }
   }

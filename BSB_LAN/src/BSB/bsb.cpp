@@ -202,10 +202,10 @@ bool BSB::GetMessage(byte* msg) {
 #endif    
     
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
-    if ((bus_type == BUS_BSB && (read == 0xDC || read == 0xDE)) || (bus_type == BUS_LPB && read == 0x78) || (bus_type == BUS_PPS && ((read & 0x07) || (read & 0x0D) || (read & 0x0E) || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
+    if ((bus_type == BUS_BSB && (read == 0xDC || read == 0xDE)) || (bus_type == BUS_LPB && read == 0x78) || (bus_type == BUS_PPS && ((read & 0x0F) == 0x07 || (read & 0x0F) == 0x0D || (read & 0x0F) == 0x0E || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
-      if (bus_type == BUS_PPS && (read & 0x07)) {   // PPS RTS telegram (0x17)?
+      if (bus_type == BUS_PPS && (read & 0x0F) == 0x07) {   // PPS RTS telegram (0x17)?
 //      	uint8_t PPS_write_enabled = myAddr;
 //      	if (PPS_write_enabled == 1) {
           return true; // PPS-Bus request byte 0x17 just contains one byte, so return
