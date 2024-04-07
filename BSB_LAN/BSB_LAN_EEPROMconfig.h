@@ -137,22 +137,22 @@ typedef enum {
 
 
 typedef struct {
-	uint8_t id;		// a unique identifier that can be used for the input tag name (cf_params)
-  uint8_t version; //config version which can manage this parameter
-  uint8_t category;	// for grouping configuration options (cdt_params)
-  uint8_t input_type;	// input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown, 4 - bitwise (checkboxes)
-  uint8_t var_type;	// variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
-  uint8_t flags; // options flags: 1 - basic option, 2 - advanced option
-  const char* desc;	// pointer to text to be displayed for option - is text length necessary if we just read until NULL?
-  uint16_t size; //data length in EEPROM
+  uint8_t id;          // a unique identifier that can be used for the input tag name (cf_params)
+  uint8_t version;     // config version which can manage this parameter
+  uint8_t category;    // for grouping configuration options (cdt_params)
+  uint8_t input_type;  // input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown, 4 - bitwise (checkboxes)
+  uint8_t var_type;    // variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
+  uint8_t flags;       // options flags: 1 - basic option, 2 - advanced option
+  const char* desc;    // pointer to text to be displayed for option - is text length necessary if we just read until NULL?
+  uint16_t size;       // data length in EEPROM
 } configuration_struct;
 
 #define OPT_FL_BASIC 1
 #define OPT_FL_ADVANCED 2
 
 typedef struct {
-	uint8_t id;		// a unique identifier of param Category
-  const char* desc;	// pointer to text to be displayed for category of option - is text length necessary if we just read until NULL?
+  uint8_t id;          // a unique identifier of param Category
+  const char* desc;    // pointer to text to be displayed for category of option - is text length necessary if we just read until NULL?
 } category_list_struct;
 
 const category_list_struct catalist[]={
@@ -178,10 +178,10 @@ const configuration_struct config[]={
   {CF_CRC32,            0, CCAT_GENERAL,  CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, NULL, sizeof(uint32_t)},
   {CF_WRITEMODE,        2, CCAT_GENERAL,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WRITEMODE_TXT, sizeof(programWriteMode)},
   {CF_CHECKUPDATE,      3, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_CHECKUPDATE_TXT, sizeof(enable_version_check)}, //immediately apply
-  #ifdef ESP32
+#ifdef ESP32
   {CF_OTA_UPDATE,       6, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_OTA_UPDATE_TXT, sizeof(enable_ota_update)}, //immediately apply
   {CF_ESP32_ENERGY_SAVE,11,CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_ENERGY_SAVE_TXT, sizeof(esp32_save_energy)}, //need reboot
-  #endif
+#endif
   {CF_WEBSERVER,        2, CCAT_GENERAL,  CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_WEBSERVER_TXT, sizeof(webserver)},
   {CF_BUSTYPE,          1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_BUSTYPE_TXT, sizeof(bus_type)},//need handler
   {CF_PPS_MODE,         1, CCAT_BUS,      CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PPS_WRITE_TXT, sizeof(pps_write)},//need handler

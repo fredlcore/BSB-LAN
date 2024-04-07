@@ -162,7 +162,7 @@ UIStrings["MENU_TEXT_LBO"] = "Log broadcast bus-telegrams only";
 UIStrings["MENU_TEXT_LGI"] = "New logging interval";
 UIStrings["MENU_TEXT_LGN"] = "New logging parameters";
 UIStrings["MENU_TEXT_LOT"] = "Log of telegrams";
-UIStrings["MENU_TEXT_FSP"] = "Free space on SD card";
+UIStrings["MENU_TEXT_FSP"] = "Free space in file system";
 
 UIStrings["STR_24A_TEXT"] = "24h average";
 
@@ -188,7 +188,7 @@ UIStrings["CF_MAC_TEXT"] = "MAC address";
 UIStrings["CF_TRUSTEDIPADDRESS_TEXT"] = "Trusted IP address";
 UIStrings["CF_MASK_TEXT"] = "Subnet";
 UIStrings["CF_WIFI_PASSWORD_TEXT"] = "WLAN password";
-UIStrings["CF_WEBSERVER_TEXT"] = "Webserver SD card / flash memory";
+UIStrings["CF_WEBSERVER_TEXT"] = "Webserver file system";
 UIStrings["CF_BASICAUTH_TEXT"] = "HTTP authentification";
 UIStrings["CF_ONEWIREBUS_DEVICES_TEXT"] = "Devices";
 UIStrings["CF_PINS_TEXT"] = "Pins";
@@ -202,7 +202,7 @@ UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
 UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
-UIStrings["CF_ENERGY_SAVE_TEXT"] = "ESP32 energy saving";
+UIStrings["CF_ENERGY_SAVE_TEXT"] = "Energy saving";
 UIStrings["CF_LOG_DEST_TEXT"] = "Storage device";
 
 UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD card";
