@@ -18,7 +18,7 @@ void broadcast_msg_handling(byte *msg){
     if (cmd==0x31000212) {    // TWW Status
       printFmtToDebug("INF: TWW-Status: %d\r\n", msg[11]);
 
-      if ((msg[11] & 0x08) == 0x08) {  // See parameter 10018
+      if ((msg[11] & 0x0F) == 0x08) {  // See parameter 10018
         if (TWW_start==0) {        // has not been timed
           TWW_start=millis();   // keep current timestamp
           TWW_count++;          // increment number of starts
@@ -42,7 +42,7 @@ void broadcast_msg_handling(byte *msg){
       bool reset_brenner_timer = 0;
       printFmtToDebug("INF: Brennerstatus: %d\r\n", msg[bus->getPl_start()]);      // first payload byte
 
-      if ((msg[bus->getPl_start()] & 0x04) == 0x04) {       // Stufe 1
+      if ((msg[bus->getPl_start()] & 0x0F) == 0x04) {       // Stufe 1
         if (brenner_start==0) {        // has not been timed
           brenner_start=millis();   // keep current timestamp
           brenner_count++;          // increment number of starts
@@ -82,7 +82,7 @@ void broadcast_msg_handling(byte *msg){
         }
         reset_brenner_timer = 0;
       }
-      if ((msg[bus->getPl_start()] & 0x04) != 0x04) {    // brenner off
+      if ((msg[bus->getPl_start()] & 0x0F) != 0x04) {    // brenner off
         brenner_end=millis();      // timestamp the end
         brenner_stufe=0;
         if (brenner_start!=0) {        // start has been timed

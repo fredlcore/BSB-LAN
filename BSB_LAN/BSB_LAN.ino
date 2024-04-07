@@ -70,12 +70,15 @@
  *
  * Changelog:
  *       version 3.4
- *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
+ *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
  *        - Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.
  *        - Polling current time from NTP server is active by default. Deactivate by setting ntp_server to empty string.
+ *        - New parameter flag FL_NOSWAP_QUR for parameters that do not swap the first two bytes of command ID in QUR telegram
+ *        - New parameter flag FL_FORCE_INF for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if /S is used to set the parameter (allows setting room temperature via web interface)
+ *        - Various bugfixes, among others logging of bus telegrams on storage device.
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - ESP32: Support for receiving date and time via NTP instead of taking it from the heater.
