@@ -87,8 +87,6 @@ const char graph_html[] =
     ".c3-tooltip{opacity:0.7;background-color:#eee}" NEWLINE
     "th{background-color:#ccc}" NEWLINE
     ".value{text-align:right}" NEWLINE
-    // add BSB-LAN watermark (remove the following line if you don't like it):
-    ".c3:before{position:absolute;z-index:-1;width:100%;height:100%;content:'';opacity:.02;background:url('favicon.svg')no-repeat center}" NEWLINE
   "</style>" NEWLINE
   "<script src='" D3_LIBRARY_PATH "'></script>" NEWLINE
   "<script src='" C3_LIBRARY_PATH "'></script>" NEWLINE
@@ -434,6 +432,8 @@ const char header_html[] =
   "td{vertical-align:top}" NEWLINE
   "td.header{vertical-align:middle}" NEWLINE
   "svg.logo{width:10%;height:10%}" NEWLINE
+  "body:before{position:absolute;top:25%;width:100%;height:75%;content:'';opacity:.02;" NEWLINE
+              "background:url('favicon.svg')center no-repeat;background-size:75% 75%}" NEWLINE
   "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] =
