@@ -11,7 +11,7 @@ void broadcast_msg_handling(byte *msg){
 
     uint32_t cmd;
     cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
-    if (cmd==0x0500006C && ntp_server[0]) {   // set Time from BC unless NTP is used, same CommandID for BSB and LPB
+    if (cmd==0x0500006C && !ntp_server[0]) {   // set Time from BC unless NTP is used, same CommandID for BSB and LPB
       setTime(msg[bus->getPl_start()+5], msg[bus->getPl_start()+6], msg[bus->getPl_start()+7], msg[bus->getPl_start()+3], msg[bus->getPl_start()+2], msg[bus->getPl_start()+1]+1900);
     }
 
