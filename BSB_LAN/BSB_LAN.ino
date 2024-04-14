@@ -78,6 +78,7 @@
  *        - Polling current time from NTP server is active by default. Deactivate by setting ntp_server to empty string.
  *        - New parameter flag FL_NOSWAP_QUR for parameters that do not swap the first two bytes of command ID in QUR telegram
  *        - New parameter flag FL_FORCE_INF for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if /S is used to set the parameter (allows setting room temperature via web interface)
+ *        - BSB-LAN logo watermark in log graph display (DE-cr)
  *        - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
  *        - Various bugfixes, among others logging of bus telegrams on storage device.
  *       version 3.3
@@ -571,7 +572,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft
 
 typedef struct {
   float number;
-  short int dest_addr;
+  int16_t dest_addr;
 } parameter;
 
 #include "src/Base64/src/Base64.h"
@@ -2214,7 +2215,7 @@ void generateConfigPage(void) {
     }
   }
   printToWebClient("<BR>\r\n");
-  if (webserver && (LoggingMode & CF_LOGMODE_SD_CARD)) {
+  if (webserver || (LoggingMode & CF_LOGMODE_SD_CARD)) {
 //    uint32_t m = micros();
     printToWebClient(STR_TEXT_FSP);
 #if !defined(ESP32)
@@ -4428,6 +4429,7 @@ void SetDateTime() {
 #endif
 
   if (bus->getBusType() != BUS_PPS) {
+    printlnToDebug("Trying to get date and time from heater...");
     findLine(0,0,&c);
     if (c!=CMD_UNKNOWN) {     // send only valid command codes
       if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg) == BUS_OK) {
