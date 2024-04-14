@@ -46,6 +46,7 @@ char mDNS_hostname[32] = "BSB-LAN";     // Advertises the hostname in the local 
 
 /* NTP settings to acquire exact date and time via network.
  * Attention: This only works with ESP32 microcontrollers so far!
+ * Set to empty string to disable (or generally on Arduino Due) and receive time from heater instead.
  * Use pool.ntp.org if your BSB-LAN installation can access the internet.
  * Otherwise you may also use your router's address if it can act as a NTP server.
  * The default timezone "CET-1CEST,M3.5.0,M10.5.0/3" covers most Central European countries (GMT+1) and takes care of daylight saving.
