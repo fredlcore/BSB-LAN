@@ -278,6 +278,12 @@ const char CAT_BMEBUS_TXT[] = CAT_BMEBUS_TEXT;
 
 const char STR_TEXT_FSP[] = MENU_TEXT_FSP;
 const char STR_TEXT_SNS[] = MENU_TEXT_SNS;
+
+const char STR_YES[] = MENU_TEXT_YES;
+const char STR_NO[] = MENU_TEXT_NO;
+const char STR_ON[] = MENU_TEXT_ON;
+const char STR_OFF[] = MENU_TEXT_OFF;
+
 typedef enum {
   DT_VALS,    // plain value
   DT_ENUM,    // value (8/16 Bit) followed by space followed by text
@@ -525,6 +531,7 @@ typedef enum{
   VT_ENUM,              //* 2 Byte - 1 enable 0x01 / value        Choice
   VT_BINARY_ENUM,       //* 2 Byte - 1 enable 0x01 / value        Choice
   VT_GRADIENT_SHORT,    //  2 Byte - 1 enable / value min/K
+  VT_GRADIENT_SHORT_NN, //  2 Byte - 1 enable / value min/K
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_HOURS_SHORT_N,       //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
@@ -555,6 +562,7 @@ typedef enum{
   VT_TEMP_SHORT5_US,    //  2 Byte - 1 enable 0x01 / value/2 (unsigned)
   VT_TEMP_SHORT64,      //  2 Byte - 1 enable 0x01 / value/64 (signed)
   VT_TEMP_PER_MIN,      //  2 Byte - 1 enable 0x06 / value
+  VT_TEMP_PER_MIN_NN,   //  2 Byte - 1 enable 0x06 / value
   VT_VOLTAGE,           //  2 Byte - 1 enable / volt z.B. 2.9V
   VT_VOLTAGE_N,         //  2 Byte - 6 enable / volt z.B. 2.9V
   VT_VOLTAGEONOFF,      //  2 Byte - 1 enable / volt 0V (0x00) or 230V (0xFF)
@@ -691,6 +699,7 @@ const units optbl[]={
 {VT_ENUM,             1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
 {VT_BINARY_ENUM,      1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ENUM},
 {VT_GRADIENT_SHORT,   1.0,    6, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
+{VT_GRADIENT_SHORT_NN,1.0,    1, 6, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
 {VT_HOURS_SHORT,      1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_HOURS_SHORT_N,    1.0,    6, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_LPBADDR,          1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
@@ -721,6 +730,7 @@ const units optbl[]={
 {VT_TEMP_SHORT5_US,   2.0,    1, 1, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_SHORT5_US},
 {VT_TEMP_SHORT64,     64.0,   1, 1, DT_VALS, 5,  U_GRADIENTKS, sizeof(U_GRADIENTKS), STR_TEMP_SHORT64},
 {VT_TEMP_PER_MIN,     1.0,    6, 1, DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
+{VT_TEMP_PER_MIN_NN,  1.0,    1, 1, DT_VALS, 0,  U_TEMP_PER_MIN, sizeof(U_TEMP_PER_MIN), STR_TEMP_PER_MIN},
 {VT_VOLTAGE,          10.0,   1, 1, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
 {VT_VOLTAGE_N,        10.0,   6, 1, DT_VALS, 1,  U_VOLT, sizeof(U_VOLT), STR_VOLTAGE},
 {VT_VOLTAGEONOFF,     1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_VOLTAGEONOFF},
