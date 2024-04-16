@@ -18,7 +18,7 @@ void printBIT(byte *msg,byte data_len) {
         data_len = 2;
       }
       for (int i=7;i>=0;i--) {
-        len += sprintf_P(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+1+data_len-2] >> i & 1);
+        len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+1+data_len-2] >> i & 1);
       }
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
@@ -46,7 +46,7 @@ void printBIT(byte *msg,byte data_len) {
 void printCustomBIT(byte *msg,byte idx) {
   int len = 0;
   for (int i=7;i>=0;i--) {
-    len += sprintf_P(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+idx] >> i & 1);
+    len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+idx] >> i & 1);
   }
   printToDebug(decodedTelegram.value);
 }
@@ -69,8 +69,8 @@ void printBYTE(byte *msg,byte data_len) {
 
   if (data_len == 2 || bus->getBusType() == BUS_PPS) {
     if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
-//      sprintf_P(decodedTelegram.value,"%d",msg[bus->getPl_start()+1+pps_offset]);
-      sprintf_P(decodedTelegram.value,"%d",msg[bus->getPl_start()+1]);
+//      sprintf(decodedTelegram.value,"%d",msg[bus->getPl_start()+1+pps_offset]);
+      sprintf(decodedTelegram.value,"%d",msg[bus->getPl_start()+1]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -99,7 +99,7 @@ void printWORD(byte *msg,byte data_len, float divisor) {
   if (data_len == 3) {
     if (msg[bus->getPl_start()]==0) {
       lval=((long(msg[bus->getPl_start()+1])<<8)+long(msg[bus->getPl_start()+2])) / divisor;
-      sprintf_P(decodedTelegram.value,"%ld",lval);
+      sprintf(decodedTelegram.value,"%ld",lval);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -128,7 +128,7 @@ void printSINT(byte *msg,byte data_len, float multiplier) {
   if (data_len == 3) {
     if (msg[bus->getPl_start()]==0) {
       lval=(((int16_t)(msg[bus->getPl_start()+1])<<8) + (int16_t)(msg[bus->getPl_start()+2])) * multiplier;
-      sprintf_P(decodedTelegram.value,"%d",lval);
+      sprintf(decodedTelegram.value,"%d",lval);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -157,7 +157,7 @@ void printSINT(byte *msg,byte data_len, float multiplier) {
    if (data_len == 5) {
      if (msg[bus->getPl_start()]==0) {
        lval=((long(msg[bus->getPl_start()+1])<<24)+(long(msg[bus->getPl_start()+2])<<16)+(long(msg[bus->getPl_start()+3])<<8)+long(msg[bus->getPl_start()+4]))/divider;
-       sprintf_P(decodedTelegram.value,"%ld",lval);
+       sprintf(decodedTelegram.value,"%ld",lval);
      } else {
        undefinedValueToBuffer(decodedTelegram.value);
      }
@@ -193,7 +193,7 @@ int _printFIXPOINT(char *p, float dval, int precision) {
   dval+=5.0/rval; //rounding
   a=(int)(dval);
   if (precision==0) {
-    len+=sprintf_P(p+len,"%d",a);
+    len+=sprintf(p+len,"%d",a);
   } else {
     rval/=10.0;
     b=(int)(dval*rval - a*rval);
@@ -365,13 +365,13 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
     }
     if (c<enumstr_len) {
       decodedTelegram.enumdescaddr = enumstr+c;
-      sprintf_P(decodedTelegram.value, "%d", val);
+      sprintf(decodedTelegram.value, "%d", val);
       if (print_val) {
         printFmtToDebug("%s - ", decodedTelegram.value);
       }
       printToDebug(decodedTelegram.enumdescaddr);
     } else {
-      sprintf_P(decodedTelegram.value, "%d", search_val);
+      sprintf(decodedTelegram.value, "%d", search_val);
       printToDebug(decodedTelegram.value);
       decodedTelegram.error = 258;
     }
@@ -394,7 +394,7 @@ void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enums
   if (data_len == 2 || bus->getBusType() == BUS_PPS) {
     if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
       printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+1]?1:0,1);
-      sprintf_P(decodedTelegram.value,"%d",msg[bus->getPl_start()+1]); //store real value
+      sprintf(decodedTelegram.value,"%d",msg[bus->getPl_start()+1] & 1); // store either 0 or 1 (not 255)
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
       printToDebug(decodedTelegram.value);
@@ -436,13 +436,13 @@ void printCustomENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_
     }
     if (c<enumstr_len) {
       decodedTelegram.enumdescaddr = enumstr+c;
-      sprintf_P(decodedTelegram.value, "%d", val);
+      sprintf(decodedTelegram.value, "%d", val);
       if (print_val) {
         printFmtToDebug("%s - ", decodedTelegram.value);
       }
       printToDebug(decodedTelegram.enumdescaddr);
     } else {
-      sprintf_P(decodedTelegram.value, "%d", search_val);
+      sprintf(decodedTelegram.value, "%d", search_val);
       printToDebug(decodedTelegram.value);
       decodedTelegram.error = 258;
     }
@@ -466,17 +466,17 @@ void printDateTime(byte *msg,byte data_len, uint8_t telegram_type) {
     if (msg[bus->getPl_start()]==0) {
       switch(telegram_type){
         case VT_DATETIME:
-          sprintf_P(decodedTelegram.value,"%02d.%02d.%d %02d:%02d:%02d",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+          sprintf(decodedTelegram.value,"%02d.%02d.%d %02d:%02d:%02d",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2],msg[bus->getPl_start()+1]+1900,msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
           break;
         case VT_YEAR:
-          sprintf_P(decodedTelegram.value,"%d",msg[bus->getPl_start()+1]+1900);
+          sprintf(decodedTelegram.value,"%d",msg[bus->getPl_start()+1]+1900);
           break;
         case VT_DAYMONTH:
         case VT_VACATIONPROG:
-          sprintf_P(decodedTelegram.value,"%02d.%02d.",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+          sprintf(decodedTelegram.value,"%02d.%02d.",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
           break;
         case VT_TIME:
-          sprintf_P(decodedTelegram.value,"%02d:%02d:%02d",msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
+          sprintf(decodedTelegram.value,"%02d:%02d:%02d",msg[bus->getPl_start()+5],msg[bus->getPl_start()+6],msg[bus->getPl_start()+7]);
         break;
       }
     } else {
@@ -506,7 +506,7 @@ void printDate(byte *msg,byte data_len) {
 
   if (data_len == 9) {
     if (msg[bus->getPl_start()]==0) {
-      sprintf_P(decodedTelegram.value,"%02d.%02d.",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
+      sprintf(decodedTelegram.value,"%02d.%02d.",msg[bus->getPl_start()+3],msg[bus->getPl_start()+2]);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -541,7 +541,7 @@ void printTimeProg(byte *msg,byte data_len) {
       }
       byte k = bus->getPl_start() + i * 4;
       if (msg[k]<24) {
-        len+=sprintf_P(decodedTelegram.value+len,"%02d:%02d-%02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+        len+=sprintf(decodedTelegram.value+len,"%02d:%02d-%02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
       } else {
 //        len += strlen(strcpy(decodedTelegram.value+len,"--:-- - --:--"));
         strcpy(decodedTelegram.value+len,"##:##-##:##");
@@ -573,11 +573,11 @@ void printTime(byte *msg,byte data_len) {
 
   if (data_len == 3) {
     if (bus->getBusType() == BUS_PPS) {
-      sprintf_P(decodedTelegram.value,"%02d:%02d",msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10);
+      sprintf(decodedTelegram.value,"%02d:%02d",msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10);
       printFmtToDebug("%02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d, %02d:%02d-%02d:%02d", msg[bus->getPl_start()+1] / 6, (msg[bus->getPl_start()+1] % 6) * 10, msg[bus->getPl_start()] / 6, (msg[bus->getPl_start()] % 6) * 10, msg[bus->getPl_start()-1] / 6, (msg[bus->getPl_start()-1] % 6) * 10, msg[bus->getPl_start()-2] / 6, (msg[bus->getPl_start()-2] % 6) * 10, msg[bus->getPl_start()-3] / 6, (msg[bus->getPl_start()-3] % 6) * 10, msg[bus->getPl_start()-4] / 6, (msg[bus->getPl_start()-4] % 6) * 10);
     } else {
       if (msg[bus->getPl_start()]==0) {
-        sprintf_P(decodedTelegram.value,"%02d:%02d",msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
+        sprintf(decodedTelegram.value,"%02d:%02d",msg[bus->getPl_start()+1],msg[bus->getPl_start()+2]);
       } else {
         strcpy(decodedTelegram.value,"--:--");
       }
@@ -606,7 +606,7 @@ void printLPBAddr(byte *msg,byte data_len) {
 
   if (data_len == 2) {
     if (msg[bus->getPl_start()]==0) {   // payload Int8 value
-      sprintf_P(decodedTelegram.value,"%02d.%02d",msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0F)+1);
+      sprintf(decodedTelegram.value,"%02d.%02d",msg[bus->getPl_start()+1]>>4,(msg[bus->getPl_start()+1] & 0x0F)+1);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
@@ -1101,9 +1101,9 @@ void printTelegram(byte* msg, float query_line) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
                 }
 #if !defined(ESP32)
-                sprintf_P(decodedTelegram.value,"%lu",val);
+                sprintf(decodedTelegram.value,"%lu",val);
 #else
-                sprintf_P(decodedTelegram.value,"%u",val);
+                sprintf(decodedTelegram.value,"%u",val);
 #endif
                 printToDebug(decodedTelegram.value);
               } else {
@@ -1138,7 +1138,7 @@ void printTelegram(byte* msg, float query_line) {
               break;
             case VT_PPS_TIME: // PPS: Time and day of week
             {
-              sprintf_P(decodedTelegram.value, "%02d:%02d:%02d", hour(), minute(), second());
+              sprintf(decodedTelegram.value, "%02d:%02d:%02d", hour(), minute(), second());
               printToDebug(decodedTelegram.value);
               break;
             }

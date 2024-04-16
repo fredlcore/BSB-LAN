@@ -80,6 +80,7 @@
  *        - New parameter flag FL_NOSWAP_QUR for parameters that do not swap the first two bytes of command ID in QUR telegram
  *        - New parameter flag FL_FORCE_INF for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if /S is used to set the parameter (allows setting room temperature via web interface)
  *        - BSB-LAN logo watermark in log graph display (DE-cr)
+ *        - Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. 
  *        - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
  *        - Various bugfixes, among others logging of bus telegrams on storage device.
  *       version 3.3
@@ -3910,9 +3911,6 @@ void query_printHTML() {
             }
           } else {
             value = strtod(decodedTelegram.value, NULL);
-            if ((decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO|| decodedTelegram.type == VT_CLOSEDOPEN || decodedTelegram.type == VT_VOLTAGEONOFF) && value != 0) {
-              value = 1;
-            }
             if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
           }
           listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
