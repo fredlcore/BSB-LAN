@@ -93,6 +93,8 @@
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
 #undef MENU_TEXT_TOC
+#undef MENU_TEXT_MAC
+#undef MENU_TEXT_MAR
 #undef MENU_TEXT_MOD
 #undef MENU_TEXT_NVS
 #undef MENU_TEXT_NVA
@@ -108,9 +110,6 @@
 #undef MENU_TEXT_VB1
 #undef MENU_TEXT_VB2
 #undef MENU_TEXT_VB3
-#undef MENU_TEXT_SR1
-#undef MENU_TEXT_SR2
-#undef MENU_TEXT_SR3
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3

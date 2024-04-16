@@ -125,9 +125,6 @@
 #undef MENU_TEXT_VB1
 #undef MENU_TEXT_VB2
 #undef MENU_TEXT_VB3
-#undef MENU_TEXT_SR1
-#undef MENU_TEXT_SR2
-#undef MENU_TEXT_SR3
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3
@@ -172,6 +169,8 @@
 #undef MENU_TEXT_BUT
 #undef MENU_TEXT_UBT
 #undef MENU_TEXT_MMD
+#undef MENU_TEXT_MAC
+#undef MENU_TEXT_MAR
 #undef MENU_TEXT_VBL
 #undef MENU_TEXT_AVT
 #undef MENU_TEXT_LBO
