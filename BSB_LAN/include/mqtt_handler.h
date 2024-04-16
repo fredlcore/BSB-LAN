@@ -46,6 +46,7 @@ void mqtt_sendtoBroker(parameter param) {
   StringBuffer sb_topic;
   initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
   initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
+  appendStringBuffer(&sb_topic, "%s/", MQTTTopicPrefix);
 
   query(param.number);
 
@@ -317,7 +318,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 
   char mqtt_Topic[75];
   strcpy(mqtt_Topic, MQTTTopicPrefix);
-  strcat(outBuf, "/MQTT");
+  strcat(mqtt_Topic, "/MQTT");
   MQTTPubSubClient->publish(mqtt_Topic, C_value);
 
   if (firstsign==' ') { //query
@@ -361,18 +362,16 @@ void mqtt_send_discovery(boolean create=true) {
   \"unique_id\":\"%g-%d-%d\", \
   \"state_topic\":\"%s/%g\",", line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, MQTTTopicPrefix, line);
       if (decodedTelegram.isswitch) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:toggle-switch\"," NEWLINE);
+//        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:toggle-switch\"," NEWLINE);
+      } else if ((decodedTelegram.type >= VT_TEMP_SHORT && decodedTelegram.type <= VT_TEMP_SHORT64) || (decodedTelegram.type >= VT_TEMP && decodedTelegram.type <= VT_TEMP_WORD5_US) || decodedTelegram.type == VT_TEMP_DWORD) {
+          appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:thermometer\"," NEWLINE);
       } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
         appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:numeric\"," NEWLINE);
-      } else {
-        if ((decodedTelegram.type >= VT_TEMP_SHORT && decodedTelegram.type <= VT_TEMP_SHORT64) || (decodedTelegram.type >= VT_TEMP && decodedTelegram.type <= VT_TEMP_WORD5_US) || decodedTelegram.type == VT_TEMP_DWORD) {
-          appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:temperature\"," NEWLINE);
-        }
       }
       if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
         if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
           appendStringBuffer(&sb_topic, "%s", "binary_sensor/");
-          appendStringBuffer(&sb_payload, "%s", "\"value_template\": \"{{ 'ON' if value.split(' - ')[0] == '1' else 'OFF' }}\"," NEWLINE);
+          appendStringBuffer(&sb_payload, "%s", "\"value_template\": \"{{ 'OFF' if value.split(' - ')[0] == '0' else 'ON' }}\"," NEWLINE);
         } else {
           appendStringBuffer(&sb_topic, "%s", "sensor/");
           appendStringBuffer(&sb_payload, "  \"unit_of_measurement\":\"%s\"," NEWLINE, decodedTelegram.unit);
@@ -393,14 +392,14 @@ void mqtt_send_discovery(boolean create=true) {
   \"state_on\": \"1 - %s\", \
   \"state_off\": \"0 - %s\", \
   \"command_topic\": \"%s\", \
-  \"payload_on\": \"S%g!%d=1\", \
-  \"payload_off\": \"S%g!%d=0\",", value_on, value_off, MQTTTopicPrefix, line, destAddr, line, destAddr);
+  \"payload_on\": \"S%g=1\", \
+  \"payload_off\": \"S%g=0\",", value_on, value_off, MQTTTopicPrefix, line, line);
         } else if (decodedTelegram.type == VT_ENUM || decodedTelegram.isswitch) {
           appendStringBuffer(&sb_topic, "%s", "select/");
           appendStringBuffer(&sb_payload, " \
   \"command_topic\":\"%s\", \
-  \"command_template\": \"S%g!%d={{ value.split(' - ')[0] }}\", \
-  \"options\": [", MQTTTopicPrefix, line, destAddr);
+  \"command_template\": \"S%g={{ value.split(' - ')[0] }}\", \
+  \"options\": [", MQTTTopicPrefix, line);
 
           // We can be more relaxed in parsing the ENUMs here because all the special cases (VT_CUSTOM_ENUM or ENUMs with more than one byte etc.) are already handled above.
           uint16_t val = 0;
@@ -419,7 +418,7 @@ void mqtt_send_discovery(boolean create=true) {
           appendStringBuffer(&sb_payload, " \
   \"unit_of_measurement\":\"%s\", \
   \"command_topic\":\"%s\", \
-  \"command_template\": \"S%g!%d={{value}}\",", decodedTelegram.unit, MQTTTopicPrefix, line, destAddr);
+  \"command_template\": \"S%g={{value}}\",", decodedTelegram.unit, MQTTTopicPrefix, line);
         }
       }
       appendStringBuffer(&sb_topic, "%g_%d_%d", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var);
