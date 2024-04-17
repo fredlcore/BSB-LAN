@@ -169,7 +169,7 @@
 #undef MENU_TEXT_BUT
 #undef MENU_TEXT_UBT
 #undef MENU_TEXT_MMD
-#undef MENU_TEXT_MAC
+#undef MENU_TEXT_MAS
 #undef MENU_TEXT_MAR
 #undef MENU_TEXT_VBL
 #undef MENU_TEXT_AVT
