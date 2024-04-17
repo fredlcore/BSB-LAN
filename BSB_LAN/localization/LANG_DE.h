@@ -172,7 +172,7 @@
 #define MENU_TEXT_BUT "Nur unbekannte Bus-Telegramme loggen"
 #define MENU_TEXT_UBT "Nur unbekannte Broadcast Bus-Telegramme loggen"
 #define MENU_TEXT_MMD "Monitor Modus"
-#define MENU_TEXT_MAC "Erzeuge Geräte über MQTT Auto Discovery..."
+#define MENU_TEXT_MAS "Erzeuge Geräte über MQTT Auto Discovery..."
 #define MENU_TEXT_MAR "Entferne Geräte über MQTT Auto Discovery..."
 #define MENU_TEXT_VBL "Verbositätsmodus"
 #define MENU_TEXT_AVT "Berechnung von 24h-Mittelwerten für die folgenden Parameter"

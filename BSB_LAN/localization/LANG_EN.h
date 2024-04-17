@@ -94,7 +94,7 @@
 #define MENU_TEXT_QTE "Test finished"
 #define MENU_TEXT_QFE "Done"
 #define MENU_TEXT_TOC "Manual"
-#define MENU_TEXT_MAC "Creating devices via MQTT auto discovery..."
+#define MENU_TEXT_MAS "Creating devices via MQTT auto discovery..."
 #define MENU_TEXT_MAR "Removing devices via MQTT auto discovery..."
 #define MENU_TEXT_MOD "Installed modules"
 #define MENU_TEXT_NVS "Checking for newer version"
