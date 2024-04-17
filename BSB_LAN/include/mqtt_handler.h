@@ -48,8 +48,6 @@ void mqtt_sendtoBroker(parameter param) {
   initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
   appendStringBuffer(&sb_topic, "%s/", MQTTTopicPrefix);
 
-  query(param.number);
-
   switch(mqtt_mode)
   {
     // =============================================
@@ -123,6 +121,20 @@ void mqtt_sendtoBroker(parameter param) {
   // Now publish the json payload only once
   MQTTPubSubClient->publish(MQTTTopic, MQTTPayload);
   printlnToDebug("Successfully published...");
+}
+
+void LogToMQTT (float line) {
+  parameter param;
+  param.number = line;
+  uint8_t current_dest = bus->getBusDest();
+  if (current_dest==dest_address) {   // dest_address holds the standard destination address
+    param.dest_addr = -1;
+  } else {
+    param.dest_addr = current_dest;
+  }
+  if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
+    mqtt_sendtoBroker(param);
+  }
 }
 
 /* Function: mqtt_get_will_topic()
@@ -293,8 +305,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   char firstsign;
   firstsign=' ';
   switch ((char)payload[0]) {
-    case 'I':{firstsign='I';printToDebug("I");break;}
-    case 'S':{firstsign='S';printToDebug("S");break;}
+    case 'I': {firstsign='I';printToDebug("I");break;}
+    case 'S': {firstsign='S';printToDebug("S");break;}
   }
   //buffer overflow protection    //dukess
   if (length > sizeof(C_value) - 5) { // fschaeck: changed from 4 to 5 bytes
@@ -305,8 +317,8 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
     C_value[i+4]=char(payload[i]);
   }
   C_value[length+4]='\0';
-  char*C_payload=C_value+ 4;  //dukess
-  if (firstsign!=' ') {
+  char* C_payload = C_value+4;  //dukess
+  if (firstsign != ' ') {
     C_payload++; //skip I/S
   }
 
@@ -322,14 +334,15 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
   MQTTPubSubClient->publish(mqtt_Topic, C_value);
 
   if (firstsign==' ') { //query
-    printFmtToDebug("%.1f \r\n", param.number);
+    printFmtToDebug("%g \r\n", param.number);
   } else { //command to heater
     C_payload=strchr(C_payload,'=');
     C_payload++;
     printFmtToDebug("%.1f=%s \r\n", param.number, C_payload);
     set(param.number,C_payload,firstsign=='S');  //command to heater
   }
-  mqtt_sendtoBroker(param);  //send mqtt-message
+  query(param.number);
+//  mqtt_sendtoBroker(param);  //send mqtt-message      <-- no longer necessary, as query() will call mqtt_sendtoBroker itself
   printlnToDebug("##MQTT#############################");
   if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
@@ -347,7 +360,12 @@ void mqtt_send_discovery(boolean create=true) {
   StringBuffer sb_topic;
   int i = 0;
   float line = 0;
-  while (line < 10000) {
+  if (bus->getBusType() == BUS_PPS) {
+    line = 15000;
+  }
+  while (line < 21000) {
+    if (line == 19999) line++;    // skip entry for unknown parameter
+    if (bus->getBusType() != BUS_PPS && line == 15000) line = 16000;
     i=findLine(line,0,NULL);
     if (i>=0) {
       MQTTPayload[0] = '\0';
@@ -355,16 +373,27 @@ void mqtt_send_discovery(boolean create=true) {
       initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
       initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
       loadPrognrElementsFromTable(line, i);
+      loadCategoryDescAddr();
       appendStringBuffer(&sb_topic, "%s", "homeassistant/");
       appendStringBuffer(&sb_payload, " \
 { \
-  \"name\":\"%g - %s\", \
+  \"name\":\"%02d %s - %g - %s\", \
   \"unique_id\":\"%g-%d-%d\", \
-  \"state_topic\":\"%s/%g\",", line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, MQTTTopicPrefix, line);
+  \"state_topic\":\"%s/%g\",", decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, MQTTTopicPrefix, line);
       if (decodedTelegram.isswitch) {
-//        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:toggle-switch\"," NEWLINE);
-      } else if ((decodedTelegram.type >= VT_TEMP_SHORT && decodedTelegram.type <= VT_TEMP_SHORT64) || (decodedTelegram.type >= VT_TEMP && decodedTelegram.type <= VT_TEMP_WORD5_US) || decodedTelegram.type == VT_TEMP_DWORD) {
-          appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:thermometer\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:toggle-switch\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:thermometer\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:percent\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:calendar\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_HOUR) || !strcmp(decodedTelegram.unit, U_MIN) || !strcmp(decodedTelegram.unit, U_SEC) || !strcmp(decodedTelegram.unit, U_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:clock\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_RPM)) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:fan\"," NEWLINE);
+      } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
+        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:lightning-bolt\"," NEWLINE);
       } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
         appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:numeric\"," NEWLINE);
       }

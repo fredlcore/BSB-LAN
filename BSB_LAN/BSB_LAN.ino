@@ -4213,6 +4213,9 @@ void query(float line) {  // line (ProgNr)
 // virtual programs
     if ((line >= BSP_INTERNAL && line < BSP_END)) {
       queryVirtualPrognr(line, i);
+      if (LoggingMode & CF_LOGMODE_MQTT) {
+        LogToMQTT(line);
+      }
       return;
     }
     //printlnToDebug("found");
@@ -4233,6 +4236,9 @@ void query(float line) {  // line (ProgNr)
             printlnToDebug(build_pvalstr(0));
             SerialOutput->flush();
             LogTelegram(msg);
+            if (LoggingMode & CF_LOGMODE_MQTT) {
+              LogToMQTT(line);
+            }
             break;   // success, break out of while loop
           } else {
             printlnToDebug(printError(261)); //query failed
@@ -4275,6 +4281,9 @@ void query(float line) {  // line (ProgNr)
 
         printFmtToDebug("#%g: ", line);
         printlnToDebug(build_pvalstr(0));
+        if (LoggingMode & CF_LOGMODE_MQTT) {
+          LogToMQTT(line);
+        }
         SerialOutput->flush();
       }
     } else {
@@ -5181,7 +5190,7 @@ void loop() {
           boolean create=atoi(p);    // .. to convert
           webPrintHeader();
           if (create == true) {
-            printlnToWebClient(MENU_TEXT_MAC);
+            printlnToWebClient(MENU_TEXT_MAS);
           } else {
             printlnToWebClient(MENU_TEXT_MAR);
           }
@@ -6779,6 +6788,8 @@ next_parameter:
                 my_dev_var = save_my_dev_var;
               }
             }
+            parameter param = log_parameters[i];
+            query(param.number);
             mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
