@@ -127,6 +127,9 @@ UIStrings["MENU_DESC_URL"] = "Zeigt Ihnen eine Übersicht der Befehle an, die Si
 UIStrings["MENU_TEXT_VB1"] = "Verbositätsmodus aktiviert!";
 UIStrings["MENU_TEXT_VB2"] = "Verbositätsmodus deaktiviert!";
 UIStrings["MENU_TEXT_VB3"] = "Der Verbositäts-Modus betrifft sowohl die serielle Konsole des Arduino Mega2560 als auch (optional) das Loggen der Bus-Daten auf die microSD-Karte, so dass die Karte u.U. sehr schnell voll wird! Die html-Ausgabe bleibt unverändert.";
+UIStrings["MENU_TEXT_CLH"] = "Hier klicken";
+UIStrings["MENU_TEXT_MQ1"] = "um den MQTT Auto Discovery Prozess zu starten (dies kann etwas dauern).";
+UIStrings["MENU_TEXT_MQ0"] = "um die MQTT Auto Discovery Einträge zu entfernen (dies kann etwas dauern).";
 
 UIStrings["MENU_TEXT_ER1"] = "FEHLER: Ungültiger Parameter!";
 UIStrings["MENU_TEXT_ER2"] = "FEHLER: Ungültiger Wert!";
