@@ -74,7 +74,8 @@
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
  *        - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command /M1, to remove them call /M0. 
- *        - Previously used /M1 and /M0 for toggling monitor function has been removed since it can now be accessed via the configuration in the webinterface.
+ *        - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
+ *        - Previously used /M1 and /M0 for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
  *        - MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)
  *        - Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.
@@ -2183,7 +2184,6 @@ char *GetDateTime(char *date) {
 }
 
 void generateConfigPage(void) {
-  printlnToWebClient(MENU_TEXT_CFG "<BR>");
   printToWebClient("<BR>" MENU_TEXT_MCU ": ");
   printDeviceArchToWebClient();
   printToWebClient("<BR>\r\n" MENU_TEXT_VER ": ");
@@ -2272,6 +2272,14 @@ void generateConfigPage(void) {
   "<BR><BR>\r\n");
 
   // end of list of enabled modules
+
+  printToWebClient("<a href='/");
+  printPassKey();
+  printToWebClient("M1'>" MENU_TEXT_CLH "</a> " MENU_TEXT_MQ1);
+  printToWebClient("<br><a href='/");
+  printPassKey();
+  printToWebClient("M0'>" MENU_TEXT_CLH "</a> " MENU_TEXT_MQ0);
+  printToWebClient("<br><BR>");
 
   printToWebClient("<BR>\r\n");
 }
@@ -6351,7 +6359,7 @@ next_parameter:
             case 'I': {//Parse HTTP form and implement changes
               applyingConfig();
               generateWebConfigPage(false);
-              generateConfigPage();
+              generateConfigPage(); 
               UpdateMaxDeviceList(); //Update list MAX! devices
               if (!(httpflags & HTTP_FRAG)) webPrintFooter();
               flushToWebClient();
