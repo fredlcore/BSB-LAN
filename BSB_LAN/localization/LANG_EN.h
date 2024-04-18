@@ -105,13 +105,16 @@
 #define MENU_LINK_TOC "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html"
 #define MENU_LINK_FAQ "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html"
 #define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#51-url-commands"
-
 #define MENU_DESC_HFK "Allows you to query or set parameters of your heating system, sorted in different clickable categories."
 #define MENU_DESC_CFG "Displays a list of configuration options. You can change most of these by using the extended URL commands."
 #define MENU_DESC_URL "Displays a list of extended commands which you can access by directly entering them in the browser's address line. These commands are also necessary to link up BSB-LAN to any home automation system such as FHEM."
 #define MENU_TEXT_VB1 "Verbose mode activated!"
 #define MENU_TEXT_VB2 "Verbose mode deactivated!"
 #define MENU_TEXT_VB3 "Verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, so this can fill up your card pretty fast! The html output is kept unchanged."
+#define MENU_TEXT_CLH "Click here"
+#define MENU_TEXT_MQ1 "to start the MQTT Auto Discovery process (this may take a while)."
+#define MENU_TEXT_MQ0 "to remove the MQTT Auto Discovery entries (this may take a while)."
+
 #define MENU_TEXT_ER1 "ERROR: invalid parameter line!"
 #define MENU_TEXT_ER2 "ERROR: invalid parameter value!"
 #define MENU_TEXT_ER3 "ERROR: set failed!"
