@@ -110,6 +110,9 @@
 #undef MENU_TEXT_VB1
 #undef MENU_TEXT_VB2
 #undef MENU_TEXT_VB3
+#undef MENU_TEXT_CLH
+#undef MENU_TEXT_MQ1
+#undef MENU_TEXT_MQ0
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3

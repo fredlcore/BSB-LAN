@@ -105,13 +105,16 @@ UIStrings["MENU_TEXT_SDF"] = "Attention! This BSB-LAN installation only contains
 UIStrings["MENU_LINK_TOC"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/toc.html";
 UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html";
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#51-url-commands";
-
 UIStrings["MENU_DESC_HFK"] = "Allows you to query or set parameters of your heating system, sorted in different clickable categories.";
 UIStrings["MENU_DESC_CFG"] = "Displays a list of configuration options. You can change most of these by using the extended URL commands.";
 UIStrings["MENU_DESC_URL"] = "Displays a list of extended commands which you can access by directly entering them in the browser's address line. These commands are also necessary to link up BSB-LAN to any home automation system such as FHEM.";
 UIStrings["MENU_TEXT_VB1"] = "Verbose mode activated!";
 UIStrings["MENU_TEXT_VB2"] = "Verbose mode deactivated!";
 UIStrings["MENU_TEXT_VB3"] = "Verbose output affects both the serial console of the mega2560 as well as (optional) logging bus data to SD card, so this can fill up your card pretty fast! The html output is kept unchanged.";
+UIStrings["MENU_TEXT_CLH"] = "Click here";
+UIStrings["MENU_TEXT_MQ1"] = "to start the MQTT Auto Discovery process (this may take a while).";
+UIStrings["MENU_TEXT_MQ0"] = "to remove the MQTT Auto Discovery entries (this may take a while).";
+
 UIStrings["MENU_TEXT_ER1"] = "ERROR: invalid parameter line!";
 UIStrings["MENU_TEXT_ER2"] = "ERROR: invalid parameter value!";
 UIStrings["MENU_TEXT_ER3"] = "ERROR: set failed!";
