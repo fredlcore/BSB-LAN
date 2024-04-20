@@ -486,7 +486,7 @@
 #undef BOARD
 #define BOARD ESP32_NODEMCU
 #else
-define BOARD ARDUINO_DUE
+#define BOARD ARDUINO_DUE
 #endif
 
 #include <Arduino.h>
