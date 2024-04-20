@@ -477,6 +477,18 @@
 #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
 #endif
 
+#define ESP32_OLIMEX 1
+#define ESP32_NODEMCU 2
+#define ARDUINO_DUE 3
+#if ((RX1 == 36) && defined(ESP32))
+#define BOARD ESP32_OLIMEX
+#elif defined(ESP32)
+#undef BOARD
+#define BOARD ESP32_NODEMCU
+#else
+define BOARD ARDUINO_DUE
+#endif
+
 #include <Arduino.h>
 
 #define BUS_OK 1
@@ -553,6 +565,11 @@
 #define UDP_LOG_PORT 6502 // UDP log port number
 #define QUERY_RETRIES  3
 
+typedef struct {
+  float number;
+  int16_t dest_addr;
+} parameter;
+
 // Forward declarations
 #if defined(ESP32)
 uint64_t usedBytes();
@@ -576,11 +593,7 @@ void resetAverageCalculation();
 void connectToMaxCul();
 void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
-
-typedef struct {
-  float number;
-  int16_t dest_addr;
-} parameter;
+void mqtt_sendtoBroker(parameter param);
 
 #include "src/Base64/src/Base64.h"
 
@@ -597,7 +610,7 @@ typedef struct {
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
-    #if defined(RX1)          // poor man's detection of Olimex' builtin button
+    #if (BOARD == ESP32_OLIMEX)          // poor man's detection of Olimex' builtin button
 #undef EEPROM_ERASING_PIN
 #define EEPROM_ERASING_PIN 34
     #else                     // GPIO for ESP32-NodeMCU
@@ -802,7 +815,7 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 uint64_t minimum_SD_size = 0;
     #include "FS.h"
     #include <LittleFS.h>
-  #if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
+  #if (BOARD == ESP32_OLIMEX && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
     #include "SD.h"
     #include "SPI.h"
 FS& SDCard = SD;
@@ -4687,7 +4700,7 @@ bool createdatalogFileAndWriteHeader() {
 #ifdef ESP32
 uint64_t usedBytes() {
   if (LogDestination == SDCARD) {
-#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.usedBytes();
 #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.usedBytes();
@@ -4699,7 +4712,7 @@ uint64_t usedBytes() {
 
 uint64_t totalBytes() {
   if (LogDestination == SDCARD) {
-#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.totalBytes();
 #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.totalBytes();
@@ -7349,7 +7362,7 @@ void startLoggingDevice() {
   }
   #else
   if (LogDestination == SDCARD) {
-#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
     SD.end();
     if(!SD.begin(SD_CS)){
@@ -7370,7 +7383,7 @@ void startLoggingDevice() {
   #endif
   #ifdef ESP32
   if (LogDestination == SDCARD) {
-#if (!defined(RX1) && !defined(TX1) && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     SDCard = SD;
 #else
     SDCard = SD_MMC;
@@ -7609,7 +7622,7 @@ void setup() {
     temp_bus_pins[1] = bus_pins[1];
   } else {
 #if defined(ESP32)
-  #if defined(RX1) && defined(TX1)    // Olimex ESP32-EVB
+  #if (BOARD == ESP32_OLIMEX)    // Olimex ESP32-EVB
     #if ETH_PHY_POWER == 12
       printToDebug("Microcontroller: ESP32/Olimex PoE\r\n");
     #else
