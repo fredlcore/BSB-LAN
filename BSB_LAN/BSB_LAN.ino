@@ -815,7 +815,7 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 uint64_t minimum_SD_size = 0;
     #include "FS.h"
     #include <LittleFS.h>
-  #if (BOARD == ESP32_OLIMEX && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
+  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
     #include "SD.h"
     #include "SPI.h"
 FS& SDCard = SD;
@@ -4700,11 +4700,11 @@ bool createdatalogFileAndWriteHeader() {
 #ifdef ESP32
 uint64_t usedBytes() {
   if (LogDestination == SDCARD) {
-#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.usedBytes();
-#else                           // Olimex or NodeMCU with SD_MMC
+  #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.usedBytes();
-#endif
+  #endif
   } else {
     return LittleFS.usedBytes();
   }
@@ -4712,11 +4712,11 @@ uint64_t usedBytes() {
 
 uint64_t totalBytes() {
   if (LogDestination == SDCARD) {
-#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
     return SD.totalBytes();
-#else                           // Olimex or NodeMCU with SD_MMC
+  #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.totalBytes();
-#endif
+  #endif
   } else {
     return LittleFS.totalBytes();
   }
