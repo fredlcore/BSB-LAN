@@ -661,17 +661,26 @@ void printTelegram(byte* msg, float query_line) {
 */
 
   uint8_t bus_type = bus->getBusType();
-  decodedTelegram.msg_type = msg[4+(bus_type*4)];
+  uint8_t save_setmode = msg[bus->getPl_start()];
+  uint8_t msg_source_addr = 0;
+  uint8_t msg_dest_addr = 0;
 
   if (bus_type != BUS_PPS) {
+    decodedTelegram.msg_type = msg[4+(bus_type*4)];
+    msg_source_addr = msg[1+(bus_type*2)];
+    msg_dest_addr = msg[2];
     // source
-    SerialPrintAddr(msg[1+(bus_type*2)]); // source address
+    SerialPrintAddr(msg_source_addr); // source address
     printToDebug("->");
-    SerialPrintAddr(msg[2]); // destination address
+    SerialPrintAddr(msg_dest_addr); // destination address
     printToDebug(" ");
     // msg[3] contains the message length, not handled here
     SerialPrintType(decodedTelegram.msg_type); // message type, human readable
     printFmtToDebug(" ");
+
+    if (decodedTelegram.msg_type == TYPE_SET) {   // temporarily 
+      msg[bus->getPl_start()]=0;
+    }
   } else {
     if (!monitor) {
       if (msg[0] < 0xF0) {
@@ -1180,6 +1189,19 @@ void printTelegram(byte* msg, float query_line) {
         decodedTelegram.error = 257;
       }
     }
+  }
+  if (decodedTelegram.msg_type == TYPE_SET && decodedTelegram.prognr > -1 && msg_source_addr != bus->getBusAddr()) {   // restore enable/disable SET byte and log to MQTT if sender is not us
+    parameter param;
+    param.number = decodedTelegram.prognr;
+    if (msg_dest_addr != bus->getBusDest()) {
+      param.dest_addr = msg_dest_addr;
+    } else {
+      param.dest_addr = -1;
+    }
+    if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
+      mqtt_sendtoBroker(param);
+    }
+    msg[bus->getPl_start()] = save_setmode;
   }
   if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
     writelnToDebug();
