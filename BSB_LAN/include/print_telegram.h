@@ -1190,19 +1190,7 @@ void printTelegram(byte* msg, float query_line) {
       }
     }
   }
-  if (decodedTelegram.msg_type == TYPE_SET && decodedTelegram.prognr > -1 && msg_source_addr != bus->getBusAddr()) {   // restore enable/disable SET byte and log to MQTT if sender is not us
-    parameter param;
-    param.number = decodedTelegram.prognr;
-    if (msg_dest_addr != bus->getBusDest()) {
-      param.dest_addr = msg_dest_addr;
-    } else {
-      param.dest_addr = -1;
-    }
-    if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
-      mqtt_sendtoBroker(param);
-    }
-    msg[bus->getPl_start()] = save_setmode;
-  }
+  msg[bus->getPl_start()] = save_setmode;
   if (bus_type != BUS_PPS || (bus_type == BUS_PPS && !monitor)) {
     writelnToDebug();
   }
@@ -1213,5 +1201,17 @@ void printTelegram(byte* msg, float query_line) {
       SerialPrintRAW(msg, 9);
     }
     writelnToDebug();
+  }
+  if ((decodedTelegram.msg_type == TYPE_SET || decodedTelegram.msg_type == TYPE_INF) && decodedTelegram.prognr > -1 && msg_source_addr != bus->getBusAddr()) {   // restore enable/disable SET byte and log to MQTT if sender is not us
+    parameter param;
+    param.number = decodedTelegram.prognr;
+    if (msg_dest_addr != bus->getBusDest() && decodedTelegram.msg_type != TYPE_INF) {
+      param.dest_addr = msg_dest_addr;
+    } else {
+      param.dest_addr = -1;
+    }
+    if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
+      mqtt_sendtoBroker(param);
+    }
   }
 }

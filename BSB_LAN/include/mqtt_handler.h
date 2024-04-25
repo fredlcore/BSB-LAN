@@ -127,7 +127,7 @@ void LogToMQTT (float line) {
   parameter param;
   param.number = line;
   uint8_t current_dest = bus->getBusDest();
-  if (current_dest==dest_address) {   // dest_address holds the standard destination address
+  if (current_dest==dest_address || decodedTelegram.msg_type == TYPE_INF) {   // dest_address holds the standard destination address
     param.dest_addr = -1;
   } else {
     param.dest_addr = current_dest;

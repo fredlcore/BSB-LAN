@@ -486,6 +486,7 @@
 #undef BOARD
 #define BOARD ESP32_NODEMCU
 #else
+#undef BOARD
 #define BOARD ARDUINO_DUE
 #endif
 
@@ -5499,7 +5500,7 @@ void loop() {
             if (p[3] == 'F') {
               printToWebClient(MENU_TEXT_QST "...\r\n");
               flushToWebClient();
-              for (int j=0; j<10000 && client.connected(); j++) {
+              for (int j=0; cmdtbl[j].line < 15000 && client.connected(); j++) {
                 uint32_t cc = cmdtbl[j].cmd;
                 if (cc == c) {
                   continue;
@@ -6811,7 +6812,7 @@ next_parameter:
             }
             parameter param = log_parameters[i];
             query(param.number);
-            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+//            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
           }
         }
         if (destAddr != d_addr) {
