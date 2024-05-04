@@ -478,20 +478,20 @@
 #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
 #endif
 
+#include <Arduino.h>
+
 #define ESP32_OLIMEX 1
 #define ESP32_NODEMCU 2
 #define ARDUINO_DUE 3
-#if ((RX1 == 36) && defined(ESP32))
-#define BOARD ESP32_OLIMEX
-#elif defined(ESP32)
-#undef BOARD
-#define BOARD ESP32_NODEMCU
+#if defined(ESP32)
+  #if (RX1 == 36)
+    #define BOARD ESP32_OLIMEX
+  #else
+    #define BOARD ESP32_NODEMCU
+  #endif
 #else
-#undef BOARD
-#define BOARD ARDUINO_DUE
+  #define BOARD ARDUINO_DUE
 #endif
-
-#include <Arduino.h>
 
 #define BUS_OK 1
 #define BUS_NOTFREE -1
