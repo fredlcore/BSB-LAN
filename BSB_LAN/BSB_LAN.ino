@@ -74,6 +74,7 @@
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
  *        - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command /M1, to remove them call /M0. 
+ *        - ATTENTION: MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
  *        - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
  *        - Previously used /M1 and /M0 for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.

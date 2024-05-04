@@ -72,7 +72,7 @@
 #define FL_RONLY        1
 #define FL_WONLY        2
 #define FL_NO_CMD       4
-#define FL_OEM          8   // Known OEM parameters are set to read-only by default. If you want to have general write-access (not recommended!) to OEM parameters, set FL_OEM to 8.
+#define FL_OEM          8   // Flag for OEM parameters (read-only by default)
 #define FL_SPECIAL_INF  16  // Flag to distinguish between INF telegrams that directly start with the payload (like room temperature) and those who don't (like outside temperature)
 #define FL_EEPROM       32  // Flag to determine whether value should be written to EEPROM
 #define FL_QINF_ONLY    64  // Flag to determine whether parameter needs to be queried via TYP_QUR or TYP_QINF
