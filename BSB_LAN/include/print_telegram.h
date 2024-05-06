@@ -14,9 +14,6 @@ void printBIT(byte *msg,byte data_len) {
   int len = 0;
   if (data_len == 2 || data_len == 3) {
     if (msg[bus->getPl_start()]==0 || data_len == 3) {
-      if (bus->getBusType() == BUS_PPS) {
-        data_len = 2;
-      }
       for (int i=7;i>=0;i--) {
         len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+1+data_len-2] >> i & 1);
       }
@@ -848,7 +845,7 @@ void printTelegram(byte* msg, float query_line) {
     break;
     case BUS_PPS:
     if ((msg[0] & 0x0F) != 0x07 && (msg[0] & 0x0F) != 0x0E) {   // PPS telegram types 0x17 and 0x1E do not contain payload
-      data_len = 3;
+      data_len = 2;
     } else {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x17 and 0x1E)
     }
@@ -1055,21 +1052,15 @@ void printTelegram(byte* msg, float query_line) {
 */
             case VT_WEEKDAY:
             case VT_ENUM: // enum
-              if (data_len == 2 || data_len == 3 || bus_type == BUS_PPS) {
+              if (data_len == 2 || data_len == 3) {
                 if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   if (decodedTelegram.enumstr!=0) {
                     if (data_len == 2) {
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+1],1);
                     } else if (data_len == 3) {                            // Fujitsu: data_len == 3
-                      uint8_t pps_offset = 0;
-                      if (bus_type == BUS_PPS) pps_offset = 1;
                       long lval;
-                      lval=(long(msg[bus->getPl_start()+1-pps_offset])<<8)+long(msg[bus->getPl_start()+2-pps_offset]);
+                      lval=(long(msg[bus->getPl_start()+1])<<8)+long(msg[bus->getPl_start()+2]);
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,lval,1);
-                    } else {
-                      uint8_t pps_offset = 0;
-                      if (bus_type == BUS_PPS) pps_offset = 1;
-                      printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+2-pps_offset],1);
                     }
                   } else {
                     decodedTelegram.error = 259;
