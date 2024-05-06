@@ -845,7 +845,7 @@ void printTelegram(byte* msg, float query_line) {
     break;
     case BUS_PPS:
     if ((msg[0] & 0x0F) != 0x07 && (msg[0] & 0x0F) != 0x0E) {   // PPS telegram types 0x17 and 0x1E do not contain payload
-      data_len = 2;
+      data_len = 3;
     } else {
       data_len = 0; // Do not try to decode request telegrams coming from the heataer (0x17 and 0x1E)
     }
@@ -1055,7 +1055,7 @@ void printTelegram(byte* msg, float query_line) {
               if (data_len == 2 || data_len == 3) {
                 if ((msg[bus->getPl_start()]==0 && data_len==2) || (msg[bus->getPl_start()]==0 && data_len==3) || (bus_type == BUS_PPS)) {
                   if (decodedTelegram.enumstr!=0) {
-                    if (data_len == 2) {
+                    if (data_len == 2 || bus_type == BUS_PPS) {
                       printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+1],1);
                     } else if (data_len == 3) {                            // Fujitsu: data_len == 3
                       long lval;
