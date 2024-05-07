@@ -242,7 +242,7 @@ uint16_t pps_bus_handling(byte *msg) {
       saved_msg_cycle = 0;
     }
     if (tx_msg[1] != 0xFF &&  pps_write == 1) {
-      if (pps_values[PPS_RTI] != 0 || pps_values[PPS_RTS]) != 0 || pps_values[PPS_RTA] != 0 || pps_values[PPS_TWS] != 0 || pps_values[PPS_TWR] != 0) {
+      if (pps_values[PPS_RTI] != 0 || pps_values[PPS_RTS] != 0 || pps_values[PPS_RTA] != 0 || pps_values[PPS_TWS] != 0 || pps_values[PPS_TWR] != 0) {
         printlnToDebug("Not sending values to heater due to invalid temperature values in BSB-LAN.")
       } else {
         bus->Send(0, 0, rx_msg, tx_msg);
