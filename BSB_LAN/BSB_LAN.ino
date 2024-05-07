@@ -7760,9 +7760,11 @@ void setup() {
     pps_values[PPS_QTP] = QAA_TYPE;
     writeToEEPROM(CF_ROOM_DEVICE);
   }
-  if (pps_values[PPS_RTI] != 0) {
+/*
+  if (pps_values[PPS_RTI] != 0) { // should not be necessary to clear room temperature after reboot, as it is not written to EEPROM
     pps_values[PPS_RTI] = 0;
   }
+*/
 
   if (LoggingMode & CF_LOGMODE_SD_CARD) {
     startLoggingDevice();

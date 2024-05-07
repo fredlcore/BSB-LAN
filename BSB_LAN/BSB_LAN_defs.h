@@ -1234,7 +1234,7 @@ const char ENUM15046[] = {
 {0x2D570014,  VT_ONOFF,         15020, STR15020, sizeof(ENUM_ONOFF),   ENUM_ONOFF,   FL_RONLY, DEV_ALL},     // Trinkwasserladung
 {0x2D2B0015,  VT_TEMP,          15021, STR15021, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Trinkwassertemperatur Ist
 {0x2D1E0016,  VT_TEMP,          15022, STR15022, 0,                    NULL,         FL_RONLY, DEV_PPS},     // Trinkwassertemperatur Reduziert Soll
-{0x2D0B0017,  VT_TEMP,          15023, STR15023, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS}, // Trinkwassertemperatur Soll
+{0x2D0B0017,  VT_TEMP,          15023, STR15023, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Trinkwassertemperatur Soll
 {0x2D0C0017,  VT_TEMP,          15023, STR15023, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_PPS_MCBA}, // Trinkwassertemperatur Soll
 {0x2D29001E,  VT_TEMP,          15030, STR15030, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur
 {0x2D57001F,  VT_TEMP,          15031, STR15031, 0,                    NULL,         FL_RONLY, DEV_ALL},     // Außentemperatur gemischt
