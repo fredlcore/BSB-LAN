@@ -49,6 +49,9 @@ void BSB::enableInterface() {
   if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
 #if defined(ESP32)
     Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
+    Serial1.setRxFIFOFull(1);
+    Serial1.setRxTimeout(2);
+/*
     uart_intr_config_t uart_intr;
     uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
                             | UART_RXFIFO_TOUT_INT_ENA_M
@@ -57,6 +60,7 @@ void BSB::enableInterface() {
     uart_intr.rx_timeout_thresh = 2; // ,  //10 works well for my short messages I need send/receive
     uart_intr.txfifo_empty_intr_thresh = 10; //UART_EMPTY_THRESH_DEFAULT
     uart_intr_config(UART_NUM_1, &uart_intr);
+*/
 #else
     Serial1.begin(4800, SERIAL_8O1);
 #endif    
@@ -214,7 +218,9 @@ bool BSB::GetMessage(byte* msg) {
           }
           delay(1);
         }
-        return true;  // No more bytes incoming? PPS-Bus request byte 0x17 just contains one byte, so return
+        if (serial->available() == 0) {
+          return true;  // No more bytes incoming? PPS-Bus request byte 0x17 just contains one byte, so return
+        }
       }
 
 //      	uint8_t PPS_write_enabled = myAddr;
