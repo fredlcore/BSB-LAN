@@ -206,23 +206,27 @@ bool BSB::GetMessage(byte* msg) {
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
       if (bus_type == BUS_PPS && (read & 0x0F) == 0x07) {   // PPS RTS telegram (0x17)?
+        // make sure we're not in the middle of an ongoing telegram
+        unsigned long wait_timer = millis();
+        while (millis()-wait_timer <= 4) {    // wait up to 4ms for a new byte to be reported by HardwareSerial
+          if (serial->available() > 0) {
+            break;
+          }
+          delay(1);
+        }
+        return true;  // No more bytes incoming? PPS-Bus request byte 0x17 just contains one byte, so return
+      }
+
 //      	uint8_t PPS_write_enabled = myAddr;
 //      	if (PPS_write_enabled == 1) {
-          return true; // PPS-Bus request byte 0x17 just contains one byte, so return
+//          return true; // PPS-Bus request byte 0x17 just contains one byte, so return
 //      	} else {
 //      	  len_idx = 9;
 //	      }
-      }
 
       // Delay for more data
-      if (HwSerial == true) {
+      if (HwSerial == true && serial->available() == 0) {
         delay(4);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed. Also, why 3ms are fine for the Mega, but at least 4ms are necessary on the Due
-      } else {
-        delay(1);   // Or should I wonder why SoftwareSerial is fine with just 1ms? 
-                    // At 4800bps 8O1, one byte needs 11 Bit to be transferred. One bit takes 0.2ms transmit time. Thus, 11 bits
-                    // take 2.2ms, and therefore, obviously, a new byte can only appear after 2.2ms.
-                    // The question is if serial.available() reacts differently in SoftwareSerial and HardwareSerial - maybe
-                    // SoftwareSerial reacts as soon as a new bit comes in, and HardwareSerial only notifies once a full byte is ready?
       }
       // read the rest of the message
       while (serial->available() > 0) {
