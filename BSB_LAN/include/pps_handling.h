@@ -4,6 +4,11 @@ uint16_t pps_bus_handling(byte *msg) {
   if ((msg[0] & 0x0F) == 0x07 && msg[0] != 0xB7 && pps_write == 1) { // Send client data upon PPS RTS telegram (0x17), but not upon (yet unknown) telegram type 0xB7 (noticed on an LGM11 system, see commits from 10.12.2022 until 17.12.2022 based on data supplied by Bern. Lübb.)
     byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     byte rx_msg[10] = { 0 };
+
+    if (msg[1] | msg[2] | msg[3] | msg[4] | msg[5] > 0) {
+      return 0;   // RTS telegram needs to consist of one byte only. If there is more, then we were too slow to act and the heater has already sent the next telegram, so we have to discard this one.
+    }
+
     switch (msg_cycle) {
       case 0:
         tx_msg[1] = 0x38; // Typ
