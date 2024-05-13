@@ -9,6 +9,7 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[1] = 0x38; // Typ
         if (pps_values[PPS_QTP] == 0) pps_values[PPS_QTP] = QAA_TYPE;
         tx_msg[7] = pps_values[PPS_QTP];
+        if (QAA_TYPE == 0x43) tx_msg[7] = 0x53;  // QAA on RVD130 needs to be differentiated internally, but externally show like a QAA, so it needs to become 0x53.
         break;
       case 1:
         tx_msg[1] = 0x18; // Position Drehknopf
