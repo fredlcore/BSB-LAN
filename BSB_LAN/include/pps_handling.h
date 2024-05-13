@@ -1,14 +1,9 @@
 // PPS-Bus handling
 uint16_t pps_bus_handling(byte *msg) {
   uint16_t log_now = 0;
-  if ((msg[0] & 0x0F) == 0x07 && msg[0] != 0xB7 && pps_write == 1) { // Send client data upon PPS RTS telegram (0x17), but not upon (yet unknown) telegram type 0xB7 (noticed on an LGM11 system, see commits from 10.12.2022 until 17.12.2022 based on data supplied by Bern. Lübb.)
+  if ((((msg[0] & 0x0F) == 0x07 && QAA_TYPE == 0xEB) || msg[0] == 0x17) && pps_write == 1) { // Send client data upon PPS RTS telegram (0x17). For RVD130 heaters (which increase the high nibble of magic bytes), send if lower nibble is 0x07. Handling it generally this way led to problems with RVA53 or LGM11 heaters which use high nibble apparently to communicate with other devices on the bus. TODO: Test if changed PPS device unit on QAA70 also affects this.
     byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     byte rx_msg[10] = { 0 };
-
-    if ((msg[1] | msg[2] | msg[3] | msg[4] | msg[5]) > 0) {
-      return 0;   // RTS telegram needs to consist of one byte only. If there is more, then we were too slow to act and the heater has already sent the next telegram, so we have to discard this one.
-    }
-
     switch (msg_cycle) {
       case 0:
         tx_msg[1] = 0x38; // Typ
@@ -247,9 +242,9 @@ uint16_t pps_bus_handling(byte *msg) {
       saved_msg_cycle = 0;
     }
     if (tx_msg[1] != 0xFF &&  pps_write == 1) {
-      if (pps_values[PPS_RTI] != 0 && pps_values[PPS_RTS] != 0 && pps_values[PPS_RTA] != 0 && pps_values[PPS_TWS] != 0) {
-        bus->Send(0, 0, rx_msg, tx_msg);
-      }
+//      if (pps_values[PPS_RTI] != 0 && pps_values[PPS_RTS] != 0 && pps_values[PPS_RTA] != 0 && pps_values[PPS_TWS] != 0) {
+      bus->Send(0, 0, rx_msg, tx_msg);
+//      }
     }
 
     if (verbose) {     // verbose output for PPS after time-critical sending procedure
@@ -258,20 +253,22 @@ uint16_t pps_bus_handling(byte *msg) {
       } else {
         printFmtToDebug("%lu ", millis());
       }
+/*
       if (pps_values[PPS_RTI] == 0 || pps_values[PPS_RTS] == 0 || pps_values[PPS_RTA] == 0 || pps_values[PPS_TWS] == 0) {
         printlnToDebug("Not sending values to heater due to invalid temperature values in BSB-LAN.")
       } else {
+*/
         printTelegram(tx_msg, -1);
         if (!monitor) {
           LogTelegram(msg);
           LogTelegram(tx_msg);
         }
-      }
+//      }
     }
 
   } else {    // parse heating system data
 
-    if ((msg[0] & 0x0F) == 0x0E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E
+    if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0xEB) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
       saved_msg_cycle = msg_cycle;
       switch (msg[1]) {
         case 0x08: msg_cycle = 9; break;
@@ -320,7 +317,7 @@ ich mir da nicht)
 */
 
       }
-    } else {    // Info-Telegramme von der Therme (0x1D)
+    } else if ((msg[0] & 0x0F) == 0x0D) {    // Info-Telegramme von der Therme (0x1D)
 
 //            uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1);
       uint8_t pps_offset = 0;
