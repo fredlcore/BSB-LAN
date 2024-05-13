@@ -80,6 +80,7 @@
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
  *        - MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)
  *        - Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.
+ *        - New PPS room unit variant for RVD130, which increases high nibble of magic byte at every transaction.
  *        - Polling current time from NTP server is active by default. Deactivate by setting ntp_server to empty string.
  *        - New parameter flag FL_NOSWAP_QUR for parameters that do not swap the first two bytes of command ID in QUR telegram
  *        - New parameter flag FL_FORCE_INF for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if /S is used to set the parameter (allows setting room temperature via web interface)
@@ -7626,41 +7627,39 @@ void setup() {
     printFmtToDebug("%c", SerialOutput->read());
   }
   printFmtToDebug("BSB-LAN version: %s\r\n", BSB_VERSION);
+#if defined(ESP32)
+  printFmtToDebug("Microcontroller: %s\r\n", ARDUINO_BOARD);
+#else
+  printFmtToDebug("Microcontroller: %s\r\n", USB_PRODUCT);
+#endif
 // BSB/LPB/PPS bus init
   byte temp_bus_pins[2];
   if (bus_pins[0] && bus_pins[1]) {
-    temp_bus_pins[0] = bus_pins[0];
-    temp_bus_pins[1] = bus_pins[1];
+    temp_bus_pins[0] = bus_pins[0];   // RX
+    temp_bus_pins[1] = bus_pins[1];   // TX
   } else {
-#if defined(ESP32)
-  #if (BOARD == ESP32_OLIMEX)    // Olimex ESP32-EVB
-    #if defined(ARDUINO_ESP32_POE)
-      printToDebug("Microcontroller: ESP32/Olimex PoE\r\n");
-    #else
-      printToDebug("Microcontroller: ESP32/Olimex EVB\r\n");
-    #endif
-    pinMode(4, INPUT);
-    if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
-      temp_bus_pins[0] = RX1;
-    #if defined(ARDUINO_ESP32_POE)  // Olimex ESP32 PoE?
-      temp_bus_pins[1] = 5;         // use GPIO5 / UEXT pin 10 for TX on Olimex ESP32 PoE
-    #else
-      temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX on Olime ESP32 EVB
-    #endif
-    } else {
-      temp_bus_pins[0] = RX1;
-      temp_bus_pins[1] = TX1;       // otherwise use standard TX pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
-    }
-  #else
-    printToDebug("Microcontroller: ESP32/NodeMCU\r\n");
-    temp_bus_pins[0] = 16;          // NodeMCU ESP32
-    temp_bus_pins[1] = 17;
-  #endif
-#else  // Due
-    printToDebug("Microcontroller: ARM/Arduino Due\r\n");
-    // HardwareSerial
-    temp_bus_pins[0] = 19;
-    temp_bus_pins[1] = 18;
+#if defined(ARDUINO_ESP32_EVB)
+      pinMode(4, INPUT);
+      temp_bus_pins[0] = 36;          // RX1
+      if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
+        temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX1 on Olime ESP32 EVB
+      } else {
+        temp_bus_pins[1] = 4;         // otherwise use standard TX1 pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
+      }
+#elif (defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO))
+      pinMode(4, INPUT);
+      temp_bus_pins[0] = 36;        // RX1
+      if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
+        temp_bus_pins[1] = 5;         // use GPIO5 / UEXT pin 10 for TX1 on Olimex ESP32 PoE
+      } else {
+        temp_bus_pins[1] = 4;         // otherwise use standard TX1 pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
+      }
+#elif defined(ARDUINO_SAM_DUE)
+      temp_bus_pins[0] = 19;          // RX2
+      temp_bus_pins[1] = 18;          // TX2
+#else
+      temp_bus_pins[0] = 16;          // NodeMCU ESP32 RX2
+      temp_bus_pins[1] = 17;          // TX2
 #endif
   }
 
