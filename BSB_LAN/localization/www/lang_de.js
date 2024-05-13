@@ -3397,6 +3397,7 @@ UIStrings["ENUM15046_5a_TEXT"] = "QAA 10";
 UIStrings["ENUM15046_37_TEXT"] = "QAA 95";
 UIStrings["ENUM15046_66_TEXT"] = "BMU";
 UIStrings["ENUM15046_ea_TEXT"] = "DC225/MCBA/REA70";
+UIStrings["ENUM15046_eb_TEXT"] = "RVD130";
 UIStrings["ENUM_ERROR_00_TEXT"] = "kein Fehler";
 UIStrings["ENUM_ERROR_0a_TEXT"] = "Außentemperatur Fühlerfehler";
 UIStrings["ENUM_ERROR_14_TEXT"] = "Kesseltemperatur 1 Fühlerfehler";
