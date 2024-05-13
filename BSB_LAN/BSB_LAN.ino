@@ -883,6 +883,7 @@ struct decodedTelegram_t {
 //Commented fields for future use
 int cat; //category number
 float prognr; //program number
+uint32_t cmd; // Command ID
 uint_farptr_t catdescaddr; //category description string address
 uint_farptr_t prognrdescaddr; //prognr description string address
 uint_farptr_t enumdescaddr; //enum description string address
@@ -1302,56 +1303,6 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   }
 }
 
-float get_next_prognr(float currentProgNR, int startFromTableLine){
-  if(startFromTableLine < 0) {
-#if defined(__SAM3X8E__)
-    double intpart;
-#else
-    float intpart;
-#endif
-    modf(currentProgNR, &intpart);
-    return intpart + 1;
-  }
-  int cmdtblsize = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
-  float prognr = cmdtbl[startFromTableLine].line;
-  float nextprognr = -1;
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("prognr: %.1f, startindex: %d\r\n", prognr, startFromTableLine);
-  do{
-    startFromTableLine++;
-    if(cmdtblsize <= startFromTableLine) {
-      if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: -1\r\n");
-      return -1;
-    }
-    nextprognr = cmdtbl[startFromTableLine].line;
-    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextindex: %d\r\n", startFromTableLine);
-  } while (prognr == nextprognr);
-  if(currentProgNR >= BSP_INTERNAL && currentProgNR < BSP_END) {
-    float prognrDiff = currentProgNR - prognr;
-#if defined(__SAM3X8E__)
-    double intpart1, intpart2;
-#else
-    float intpart1, intpart2;
-#endif
-    modf(prognr, &intpart1);
-    modf(nextprognr, &intpart2);
-    if(intpart1 == intpart2) {
-      nextprognr += prognrDiff;
-    } else {
-      if(recognizeVirtualFunctionGroup(currentProgNR + 1)){
-#if defined(__SAM3X8E__)
-          double intpart;
-#else
-          float intpart;
-#endif
-        modf(currentProgNR, &intpart);
-        nextprognr = intpart + 1;
-      }
-    }
-  }
-  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: %.1f\r\n", nextprognr);
-  return nextprognr;
-}
-
 inline uint8_t get_cmdtbl_category(int i) {
   int cat_min = 0;
   int cat_max = 0;
@@ -1424,14 +1375,12 @@ uint8_t recognizeVirtualFunctionGroup(float nr) {
  * Global resources used:
  *  none
  * *************************************************************** */
-int findLine(float line
-           , uint16_t start_idx  //
-           , uint32_t *cmd)      // 32-bit command code
+int findLine(float line)
 {
   uint8_t found = 0;
   int i = -1;
   int save_i = 0;
-  uint32_t c, save_c = 0;
+  uint32_t c;
   float l;
   if (verbose == DEVELOPER_DEBUG) printFmtToDebug("line = %.1f\r\n", line);
 
@@ -1496,10 +1445,17 @@ int findLine(float line
 
   // binary search for the line in cmdtbl
 
+  int line_dd = roundf(line * 10);
+  for (int j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
+    if (roundf(cmdtbl[j].line * 10) == line_dd) {
+      i = j;
+      break;
+    }
+  }
+/*
   int left = start_idx;
   int right = (int)(sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1);
   int mid = 0;
-  int line_dd = roundf(line * 10);
   while (!(left >= right))
     {
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug("get_cmdtbl_line: left = %f, line = %f\r\n", cmdtbl[left].line, line);
@@ -1524,6 +1480,7 @@ int findLine(float line
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug("left = %d, mid = %d, right = %d\r\n", left, mid, right);
   }
   if (verbose == DEVELOPER_DEBUG) printFmtToDebug("i = %d\r\n", i);
+*/
   if (i == -1) return i;
 
   l = cmdtbl[i].line;
@@ -1545,7 +1502,6 @@ int findLine(float line
         } else {
           found=1;
           save_i=i;
-          save_c=c;
           break;
         }
       } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
@@ -1558,7 +1514,6 @@ int findLine(float line
         } else {
           found=1;
           save_i=i;
-          save_c=c;
         }
       }
     }
@@ -1569,10 +1524,61 @@ int findLine(float line
   if (!found) {
     return -1;
   }
-  if (cmd!=NULL) *cmd=save_c;
   return save_i;
 }
 
+float get_next_prognr(float currentProgNr){
+  int startFromTableLine = findLine(currentProgNr);
+
+  if(startFromTableLine < 0) {    // Parameter does not exist? Then there is no same parameter with a decimal part, so skip to next integer
+#if defined(__SAM3X8E__)
+    double intpart;
+#else
+    float intpart;
+#endif
+    modf(currentProgNr, &intpart);
+    return intpart + 1;
+  }
+
+  int cmdtblsize = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
+  float prognr = cmdtbl[startFromTableLine].line;
+  float nextprognr = -1;
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("prognr: %.1f, startindex: %d\r\n", prognr, startFromTableLine);
+  do{
+    startFromTableLine++;
+    if(cmdtblsize <= startFromTableLine) {
+      if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: -1\r\n");
+      return -1;
+    }
+    nextprognr = cmdtbl[startFromTableLine].line;
+    if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextindex: %d\r\n", startFromTableLine);
+  } while (prognr == nextprognr);
+  if(currentProgNr >= BSP_INTERNAL && currentProgNr < BSP_END) {
+    float prognrDiff = currentProgNr - prognr;
+#if defined(__SAM3X8E__)
+    double intpart1, intpart2;
+#else
+    float intpart1, intpart2;
+#endif
+    modf(prognr, &intpart1);
+    modf(nextprognr, &intpart2);
+    if(intpart1 == intpart2) {
+      nextprognr += prognrDiff;
+    } else {
+      if(recognizeVirtualFunctionGroup(currentProgNr + 1)){
+#if defined(__SAM3X8E__)
+          double intpart;
+#else
+          float intpart;
+#endif
+        modf(currentProgNr, &intpart);
+        nextprognr = intpart + 1;
+      }
+    }
+  }
+  if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: %.1f\r\n", nextprognr);
+  return nextprognr;
+}
 
 /** *****************************************************************
  *  Function: freeRam()
@@ -1686,7 +1692,8 @@ bool programIsreadOnly(uint16_t param_len) {
   *   decodedTelegram
   * *************************************************************** */
 void loadPrognrElementsFromTable(float nr, int i) {
-  if (i<0) i = findLine(19999,0,NULL); // Using "Unknown command" if not found
+  if (i<0) i = findLine(19999); // Using "Unknown command" if not found
+  decodedTelegram.cmd = cmdtbl[i].cmd;
   decodedTelegram.prognrdescaddr = cmdtbl[i].desc;
   decodedTelegram.type = cmdtbl[i].type;
   decodedTelegram.cat=get_cmdtbl_category(i);
@@ -2146,9 +2153,9 @@ void init_ota_update(){
 #endif
 
 char *lookup_descr(float line) {
-  int i=findLine(line,0,NULL);
+  int i=findLine(line);
   if (i<0) {                    // Not found (for this heating system)?
-    strcpy(outBuf, cmdtbl[findLine(19999,0,NULL)].desc); // Unknown command has line no. 19999
+    strcpy(outBuf, cmdtbl[findLine(19999)].desc); // Unknown command has line no. 19999
   } else {
     strcpy(outBuf, cmdtbl[i].desc);
   }
@@ -2522,34 +2529,34 @@ int returnENUMID4ConfigOption(uint8_t id) {
   int i = 0;
   switch (id) {
     case CF_BUSTYPE:
-      i=findLine(65532,0,NULL); //return ENUM_BUSTYPE
+      i=findLine(65532); //return ENUM_BUSTYPE
       break;
     case CF_LOGTELEGRAM:
-      i=findLine(65531,0,NULL); //return ENUM_LOGTELEGRAM
+      i=findLine(65531); //return ENUM_LOGTELEGRAM
       break;
     case CF_DEBUG:
-      i=findLine(65530,0,NULL); //return ENUM_DEBUG
+      i=findLine(65530); //return ENUM_DEBUG
       break;
     case CF_MQTT:
-      i=findLine(65529,0,NULL); //return ENUM_MQTT
+      i=findLine(65529); //return ENUM_MQTT
       break;
     case CF_WRITEMODE:
-      i=findLine(65528,0,NULL); //return ENUM_WRITEMODE
+      i=findLine(65528); //return ENUM_WRITEMODE
       break;
     case CF_PPS_MODE:
-      i=findLine(65527,0,NULL); //return ENUM_PPS_MODE
+      i=findLine(65527); //return ENUM_PPS_MODE
       break;
     case CF_LOGMODE:
-      i=findLine(65526,0,NULL); //return ENUM_LOGMODE
+      i=findLine(65526); //return ENUM_LOGMODE
       break;
     case CF_NETWORK_TYPE:
-      i=findLine(65525,0,NULL); //return ENUM_NETWORK_TYPE
+      i=findLine(65525); //return ENUM_NETWORK_TYPE
       break;
     case CF_LOG_DEST:
-      i=findLine(65524,0,NULL); //return ENUM_LOG_DEST
+      i=findLine(65524); //return ENUM_LOG_DEST
       break;
     case CF_VERBOSE:
-      i=findLine(65523,0,NULL); //return ENUM_VERBOSE
+      i=findLine(65523); //return ENUM_VERBOSE
       break;
     default:
       i = -1;
@@ -2757,10 +2764,10 @@ void generateWebConfigPage(bool printOnly) {
             int i;
             switch (cfg.id) {
               case CF_USEEEPROM:
-                i=findLine(65534,0,NULL); //return ENUM_EEPROM_ONOFF
+                i=findLine(65534); //return ENUM_EEPROM_ONOFF
                 break;
               default:
-                i=findLine(65533,0,NULL); //return ENUM_ONOFF
+                i=findLine(65533); //return ENUM_ONOFF
                 break;
             }
             printConfigWebPossibleValues(i, (uint16_t)variable[0], printOnly);
@@ -2793,7 +2800,7 @@ void generateWebConfigPage(bool printOnly) {
             int i;
             switch (cfg.id) {
               case CF_ROOM_DEVICE:
-                i=findLine(15000 + PPS_QTP,0,NULL); //return ENUM15062 (device type)
+                i=findLine(15000 + PPS_QTP); //return ENUM15062 (device type)
                 break;
               default:
                 i = -1;
@@ -2894,10 +2901,10 @@ void generateJSONwithConfig() {
             int i;
             switch (cfg.id) {
               case CF_USEEEPROM:
-                i=findLine(65534,0,NULL); //return ENUM_EEPROM_ONOFF
+                i=findLine(65534); //return ENUM_EEPROM_ONOFF
                 break;
               default:
-                i=findLine(65533,0,NULL); //return ENUM_ONOFF
+                i=findLine(65533); //return ENUM_ONOFF
                 break;
             }
             printFmtToWebClient("%u\",\r\n", (uint16_t)variable[0]);
@@ -2925,7 +2932,7 @@ void generateJSONwithConfig() {
             int i;
             switch (cfg.id) {
               case CF_ROOM_DEVICE:
-                i=findLine(15000 + PPS_QTP,0,NULL); //return ENUM15062 (device type)
+                i=findLine(15000 + PPS_QTP); //return ENUM15062 (device type)
                 break;
               default:
                 i = -1;
@@ -3170,7 +3177,6 @@ int set(float line      // the ProgNr of the heater parameter
   byte msg[33];            // we know the maximum length
   byte tx_msg[33];
   int i;
-  uint32_t c;              // command code
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
   uint8_t param_len = 0;
   char sscanf_buf[36]; //Max format length is VT_TIMEPROG
@@ -3182,7 +3188,8 @@ int set(float line      // the ProgNr of the heater parameter
     return 0;
   }
   // Search the command table from the start for a matching line nbr.
-  i=findLine(line,0,&c);   // find the ProgNr and get the command code
+  i=findLine(line);   // find the ProgNr and get the command code
+  uint32_t c = cmdtbl[i].cmd;
   if (i<0) return 0;        // no match
 
   uint16_t dev_flags = cmdtbl[i].flags;
@@ -3762,13 +3769,13 @@ int set(float line      // the ProgNr of the heater parameter
  *  bus    instance
  * *************************************************************** */
 int queryDefaultValue(float line, byte *msg, byte *tx_msg) {
-  uint32_t c;
   resetDecodedTelegram();
   if (line < 0) {
     decodedTelegram.error = 258; //not found
     return 0;
   }
-  int i=findLine(line,0,&c);
+  int i=findLine(line);
+  uint32_t c = cmdtbl[i].cmd;
   if ( i < 0) {
     decodedTelegram.error = 258; //not found
     return 0;
@@ -4205,7 +4212,6 @@ void queryVirtualPrognr(float line, int table_line) {
 void query(float line) {  // line (ProgNr)
   byte msg[33] = { 0 };      // response buffer
   byte tx_msg[33] = { 0 };   // xmit buffer
-  uint32_t c;        // command code
   int i=0;
   int retry;
   resetDecodedTelegram();
@@ -4213,7 +4219,8 @@ void query(float line) {  // line (ProgNr)
   esp_task_wdt_reset();
 #endif
 
-  i=findLine(line,0,&c);
+  i=findLine(line);
+  uint32_t c = cmdtbl[i].cmd;
   uint8_t query_type = TYPE_QUR;
   uint16_t dev_flags = cmdtbl[i].flags;
   if (dev_flags & FL_QINF_ONLY) {
@@ -4355,7 +4362,7 @@ void query(float line_start  // begin at this line (ProgNr)
         query_printHTML();
       }
     }
-    line = get_next_prognr(line, findLine(line, 0, NULL));
+    line = get_next_prognr(line);
   } while(line >= line_start && line <= line_end); // endfor, for each valid line (ProgNr) command within selected range
 }
 
@@ -4443,7 +4450,6 @@ void SetDevId() {
 void SetDateTime() {
   byte rx_msg[33];      // response buffer
   byte tx_msg[33];   // xmit buffer
-  uint32_t c;        // command code
 
 #if defined(ESP32)
   if (ntp_server[0]) {
@@ -4465,7 +4471,7 @@ void SetDateTime() {
 
   if (bus->getBusType() != BUS_PPS) {
     printlnToDebug("Trying to get date and time from heater...");
-    findLine(0,0,&c);
+    uint32_t c = cmdtbl[findLine(0)].cmd;
     if (c!=CMD_UNKNOWN) {     // send only valid command codes
       if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg) == BUS_OK) {
         if (bus->getBusType() == BUS_LPB) {
@@ -5326,7 +5332,7 @@ void loop() {
         if (p[1]=='E') {
           webPrintHeader();
           uint16_t line = atof(&p[2]);
-          int i=findLine(line,0,NULL);
+          int i=findLine(line);
           if (i>=0) {
             loadPrognrElementsFromTable(line, i);
             uint8_t flag = 0;
@@ -5862,7 +5868,8 @@ void loop() {
                 float j = cat_min;
 //WARNING: simple increment of j was changed because some prognr have decimal part.
                 do{
-                  int i_line = findLine(j, 0, &cmd);
+                  int i_line = findLine(j);
+                  cmd = cmdtbl[i_line].cmd;
                   if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                     goto next_parameter;
                   }
@@ -5875,7 +5882,7 @@ void loop() {
                     }
                   }
 next_parameter:
-                  j = get_next_prognr(j, i_line);
+                  j = get_next_prognr(j);
                 }while(j >= cat_min && j <= cat_max);
               }
             }
@@ -6002,7 +6009,8 @@ next_parameter:
             }
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
-                int i_line=findLine(json_parameter,0,&cmd);
+                int i_line=findLine(json_parameter);
+                cmd = cmdtbl[i_line].cmd;
                 if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL))) { //CMD_UNKNOWN except virtual programs
                   json_token = strtok(NULL,",");
                   continue;
@@ -6050,7 +6058,7 @@ next_parameter:
                   cat_param = cat_min;
                 } else {
 //WARNING: simple increment of cat_param was changed because some prognr have decimal part.
-                  cat_param = get_next_prognr(cat_param, findLine(cat_param,0,NULL));
+                  cat_param = get_next_prognr(cat_param);
                 }
                 if (cat_param <= cat_max) {
                   json_parameter = cat_param; // we still have work to do
@@ -6061,7 +6069,8 @@ next_parameter:
               }
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
-                int i_line=findLine(json_parameter,0,&cmd);
+                int i_line=findLine(json_parameter);
+                cmd = cmdtbl[i_line].cmd;
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
@@ -7737,10 +7746,8 @@ void setup() {
   }
 
   printToDebug("PPS settings:\r\n");
-  uint32_t temp_c = 0;
-  int temp_idx = findLine(15000,0,&temp_c);
   for (int i=0; i<PPS_ANZ; i++) {
-    int l = findLine(15000+i,temp_idx,&temp_c);
+    int l = findLine(15000+i);
     if (l==-1) continue;
     // fill bitwise array with flags
     uint16_t flags=cmdtbl[l].flags;

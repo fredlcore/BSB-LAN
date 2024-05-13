@@ -366,7 +366,7 @@ void mqtt_send_discovery(boolean create=true) {
   while (line < 21000) {
     if (line == 19999) line++;    // skip entry for unknown parameter
     if (bus->getBusType() != BUS_PPS && line == 15000) line = 16000;
-    i=findLine(line,0,NULL);
+    i=findLine(line);
     if (i>=0) {
       MQTTPayload[0] = '\0';
       MQTTTopic[0] = '\0';
@@ -465,6 +465,6 @@ void mqtt_send_discovery(boolean create=true) {
       }
       MQTTPubSubClient->publish(MQTTTopic, MQTTPayload);
     }
-    line = get_next_prognr(line, findLine(line, 0, NULL));
+    line = get_next_prognr(line);
   }
 }
