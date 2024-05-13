@@ -484,7 +484,7 @@
 #define ESP32_NODEMCU 2
 #define ARDUINO_DUE 3
 #if defined(ESP32)
-  #if (RX1 == 36)
+  #if (defined(ARDUINO_ESP32_EVB) || defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO))
     #define BOARD ESP32_OLIMEX
   #else
     #define BOARD ESP32_NODEMCU
@@ -7634,15 +7634,15 @@ void setup() {
   } else {
 #if defined(ESP32)
   #if (BOARD == ESP32_OLIMEX)    // Olimex ESP32-EVB
-    #if ETH_PHY_POWER == 12
+    #if defined(ARDUINO_ESP32_POE)
       printToDebug("Microcontroller: ESP32/Olimex PoE\r\n");
     #else
       printToDebug("Microcontroller: ESP32/Olimex EVB\r\n");
     #endif
     pinMode(4, INPUT);
-    if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is below 4.2
+    if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
       temp_bus_pins[0] = RX1;
-    #if ETH_PHY_POWER == 12         // Olimex ESP32 PoE?
+    #if defined(ARDUINO_ESP32_POE)  // Olimex ESP32 PoE?
       temp_bus_pins[1] = 5;         // use GPIO5 / UEXT pin 10 for TX on Olimex ESP32 PoE
     #else
       temp_bus_pins[1] = 17;        // use GPIO17 / UEXT pin 10 for TX on Olime ESP32 EVB
