@@ -1140,8 +1140,8 @@ const char ENUM15046[] = {
 "\x5a " ENUM15046_5a_TEXT "\0"
 "\x37 " ENUM15046_37_TEXT "\0"
 "\x66 " ENUM15046_66_TEXT "\0"
-"\xea " ENUM15046_ea_TEXT "\0"        // Use unused value 0xEA for MCBA/DC225 type
-"\xeb " ENUM15046_eb_TEXT             // Use unused value 0xEB for RVD130 (which increments high nibble for each magic byte)
+"\x43 " ENUM15046_43_TEXT "\0"        // Use unused value 0x43 (0x53 from QAA70 minus 0x10) for RVD130 (which increments high nibble for each magic byte)
+"\xea " ENUM15046_ea_TEXT             // Use unused value 0xEA for MCBA/DC225 type
 };
 
 #include "BSB_LAN_custom_defs.h"

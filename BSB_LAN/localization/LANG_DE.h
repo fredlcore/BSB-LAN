@@ -3397,7 +3397,7 @@
 #define ENUM15046_37_TEXT "QAA 95"
 #define ENUM15046_66_TEXT "BMU"
 #define ENUM15046_ea_TEXT "DC225/MCBA/REA70"
-#define ENUM15046_eb_TEXT "RVD130"
+#define ENUM15046_43_TEXT "RVD130"
 #define ENUM_ERROR_00_TEXT "kein Fehler"
 #define ENUM_ERROR_0a_TEXT "Außentemperatur Fühlerfehler"
 #define ENUM_ERROR_14_TEXT "Kesseltemperatur 1 Fühlerfehler"

@@ -1,7 +1,7 @@
 // PPS-Bus handling
 uint16_t pps_bus_handling(byte *msg) {
   uint16_t log_now = 0;
-  if ((((msg[0] & 0x0F) == 0x07 && QAA_TYPE == 0xEB) || msg[0] == 0x17) && pps_write == 1) { // Send client data upon PPS RTS telegram (0x17). For RVD130 heaters (which increase the high nibble of magic bytes), send if lower nibble is 0x07. Handling it generally this way led to problems with RVA53 or LGM11 heaters which use high nibble apparently to communicate with other devices on the bus. TODO: Test if changed PPS device unit on QAA70 also affects this.
+  if ((((msg[0] & 0x0F) == 0x07 && QAA_TYPE == 0x43) || msg[0] == 0x17) && pps_write == 1) { // Send client data upon PPS RTS telegram (0x17). For RVD130 heaters (which increase the high nibble of magic bytes), send if lower nibble is 0x07. Handling it generally this way led to problems with RVA53 or LGM11 heaters which use high nibble apparently to communicate with other devices on the bus. TODO: Test if changed PPS device unit on QAA70 also affects this.
     byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     byte rx_msg[10] = { 0 };
     switch (msg_cycle) {
@@ -268,7 +268,7 @@ uint16_t pps_bus_handling(byte *msg) {
 
   } else {    // parse heating system data
 
-    if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0xEB) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
+    if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0x43) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
       saved_msg_cycle = msg_cycle;
       switch (msg[1]) {
         case 0x08: msg_cycle = 9; break;
