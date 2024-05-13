@@ -5,7 +5,7 @@ uint16_t pps_bus_handling(byte *msg) {
     byte tx_msg[] = {0xFD, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
     byte rx_msg[10] = { 0 };
 
-    if (msg[1] | msg[2] | msg[3] | msg[4] | msg[5] > 0) {
+    if ((msg[1] | msg[2] | msg[3] | msg[4] | msg[5]) > 0) {
       return 0;   // RTS telegram needs to consist of one byte only. If there is more, then we were too slow to act and the heater has already sent the next telegram, so we have to discard this one.
     }
 
