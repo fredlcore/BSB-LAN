@@ -54,21 +54,25 @@ The following overview shows the most common used controllers of the different h
 - Chappée: Klista
 - CTA: Optiheat  
 - Deville: 9942, 9981
+- ECO: AiWA, AW, BW, DW, heatLite, Star, TBW, TWW, WW, WWi, TWW
+- EcoStar: Ecodense WT-S 45
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo
 - Geminox: Thrs
 - Gruenenwald: Greenheat
+- GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
-- MHG: Procon E
+- MHG: Procon E, ecoWP Xe
 - Oilon: SH, SHx
 - Olymp: SHS, WHS
 - Sieger: TG11
 - Sixmadun: TG11BE
+- Sunex: Nexus
 - Termomax: Termo ÖV
 - Thermics: Energie
 - Thermital: TBox Clima TOP
