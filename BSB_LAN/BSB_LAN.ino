@@ -1618,7 +1618,7 @@ void SerialPrintData(byte* msg) {
   byte offset = 0;
   byte msg_type = msg[4+(bus->getBusType()*4)];
   if (bus_type != BUS_PPS) {
-    if (msg_type >= 0x12) {
+    if (msg_type >= 0x12 && msg_tye <= 0x15) {
       offset = 4;
     }
   }
