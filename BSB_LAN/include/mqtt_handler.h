@@ -185,16 +185,8 @@ bool mqtt_connect() {
   bool first_connect = false;
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
-    uint16_t bufsize;
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    switch (mqtt_mode) {
-      case 3: bufsize = 1024; break;
-      case 2: bufsize = 512; break;
-      case 1: bufsize = 128; break;
-      default: bufsize = 32; break;
-    }
     MQTTPubSubClient->setBufferSize(1024);
-//    MQTTPubSubClient->setBufferSize(bufsize);
     mqtt_reconnect_timer = 0;
     first_connect = true;
   }
@@ -353,7 +345,7 @@ void mqtt_callback(char* topic, byte* payload, unsigned int length) {
 }
 
 void mqtt_send_discovery(boolean create=true) {
-  uint8_t destAddr = bus->getBusDest();
+//  uint8_t destAddr = bus->getBusDest();
   char MQTTPayload[2048] = "";
   char MQTTTopic[80] = "";
   StringBuffer sb_payload;
