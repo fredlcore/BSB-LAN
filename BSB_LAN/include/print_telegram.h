@@ -390,8 +390,9 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
 void printCHOICE(byte *msg, byte data_len, uint_farptr_t enumstr, uint16_t enumstr_len) {
   if (data_len == 2 || bus->getBusType() == BUS_PPS) {
     if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
-      printENUM(enumstr,enumstr_len,msg[bus->getPl_start()+1]?1:0,1);
-      sprintf(decodedTelegram.value,"%d",msg[bus->getPl_start()+1] & 1); // store either 0 or 1 (not 255)
+      uint16_t search_val = msg[bus->getPl_start()+1] & 1;  // store either 0 or 1 (not 255)
+      printENUM(enumstr,enumstr_len,search_val,1);
+      sprintf(decodedTelegram.value,"%d",search_val);
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
       printToDebug(decodedTelegram.value);

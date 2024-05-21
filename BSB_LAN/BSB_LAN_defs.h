@@ -319,6 +319,7 @@ const char STR_SELECTED[] = "' selected>";
 
 const char STR_BIT[] = "BIT";
 const char STR_BYTE[] = "BYTE";
+const char STR_BYTE5[] = "BYTE5";
 const char STR_BYTE10[] = "BYTE10";
 const char STR_CLOSEDOPEN[] = "CLOSEDOPEN";
 const char STR_DAYS[] = "DAYS";
@@ -524,6 +525,7 @@ typedef enum{
   VT_BIT,               //  2 Byte - 1 enable 0x01 / value
   VT_BYTE,              //  2 Byte - 1 enable 0x01 / value
   VT_BYTE_N,            //  2 Byte - 1 enable 0x06 / value
+  VT_BYTE5_N,           //  2 Byte - 1 enable 0x06 / value/5
   VT_BYTE10,            //  2 Byte - 1 enable 0x01 / value/10
   VT_BYTE10_N,          //  2 Byte - 1 enable 0x01 / value/10
   VT_CLOSEDOPEN,        //  2 Byte - 1 enable 0x01 / 0=Offen 1=Geschlossen Choice
@@ -692,6 +694,7 @@ const units optbl[]={
 {VT_BIT,              1.0,    1, 1, DT_BITS, 0,  U_NONE, sizeof(U_NONE), STR_BIT},
 {VT_BYTE,             1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
 {VT_BYTE_N,           1.0,    6, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE},
+{VT_BYTE5_N,          5.0,    6, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_BYTE5},
 {VT_BYTE10,           10.0,   1, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
 {VT_BYTE10_N,         10.0,   6, 1, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_BYTE10},
 {VT_CLOSEDOPEN,       1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_CLOSEDOPEN},
@@ -738,7 +741,7 @@ const units optbl[]={
 {VT_YESNO,            1.0,    1, 1, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_YESNO},
 {VT_LITER,            1.0,    1, 2, DT_VALS, 0,  U_LITER, sizeof(U_LITER), STR_LITER},
 {VT_POWER_SHORT,      1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
-{VT_POWER_SHORT_N,    1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
+{VT_POWER_SHORT_N,    1.0,    6, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
 {VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
 {VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
 {VT_CURRENT1000,      1000.0, 0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
@@ -1045,42 +1048,49 @@ const char ENUM_WEEKDAY[] = {
 // Kontakt-Telegramm RVP320
 const char ENUM_ONOFF0[] = {
 "\x00\x00 " MENU_TEXT_OFF "\0"
-"\x00\xFF " MENU_TEXT_ON
+"\x00\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF1[] = {
 "\x01\x00 " MENU_TEXT_OFF "\0"
-"\x01\xFF " MENU_TEXT_ON
+"\x01\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF2[] = {
 "\x02\x00 " MENU_TEXT_OFF "\0"
-"\x02\xFF " MENU_TEXT_ON
+"\x02\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF3[] = {
 "\x03\x00 " MENU_TEXT_OFF "\0"
-"\x03\xFF " MENU_TEXT_ON
+"\x03\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF4[] = {
 "\x04\x00 " MENU_TEXT_OFF "\0"
-"\x04\xFF " MENU_TEXT_ON
+"\x04\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF5[] = {
 "\x05\x00 " MENU_TEXT_OFF "\0"
-"\x05\xFF " MENU_TEXT_ON
+"\x05\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF6[] = {
 "\x06\x00 " MENU_TEXT_OFF "\0"
-"\x06\xFF " MENU_TEXT_ON
+"\x06\x01 " MENU_TEXT_ON
 };
 const char ENUM_ONOFF7[] = {
 "\x07\x00 " MENU_TEXT_OFF "\0"
-"\x07\xFF " MENU_TEXT_ON
+"\x07\x01 " MENU_TEXT_ON
 };
+
 
 const char ENUM_CUSTOM01[] = {
 "\x00\x01 "
 };
 const char ENUM_CUSTOM11[] = {
 "\x01\x01 "
+};
+const char ENUM_CUSTOM41[] = {
+"\x04\x01 "
+};
+const char ENUM_CUSTOM51[] = {
+"\x05\x01 "
 };
 
 //TODO: Move to translations

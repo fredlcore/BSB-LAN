@@ -5506,7 +5506,7 @@ void loop() {
             my_dev_var = orig_dev_var;
 
             if (p[3] == 'F') {
-              printToWebClient(MENU_TEXT_QST "...\r\n");
+              printToWebClient("\r\n" MENU_TEXT_QST "...\r\n");
               flushToWebClient();
               for (int j=0; cmdtbl[j].line < 15000 && client.connected(); j++) {
                 uint32_t cc = cmdtbl[j].cmd;
