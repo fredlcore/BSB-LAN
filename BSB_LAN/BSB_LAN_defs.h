@@ -1048,35 +1048,35 @@ const char ENUM_WEEKDAY[] = {
 // Kontakt-Telegramm RVP320
 const char ENUM_ONOFF0[] = {
 "\x00\x00 " MENU_TEXT_OFF "\0"
-"\x00\x01 " MENU_TEXT_ON
+"\x00\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF1[] = {
 "\x01\x00 " MENU_TEXT_OFF "\0"
-"\x01\x01 " MENU_TEXT_ON
+"\x01\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF2[] = {
 "\x02\x00 " MENU_TEXT_OFF "\0"
-"\x02\x01 " MENU_TEXT_ON
+"\x02\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF3[] = {
 "\x03\x00 " MENU_TEXT_OFF "\0"
-"\x03\x01 " MENU_TEXT_ON
+"\x03\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF4[] = {
 "\x04\x00 " MENU_TEXT_OFF "\0"
-"\x04\x01 " MENU_TEXT_ON
+"\x04\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF5[] = {
 "\x05\x00 " MENU_TEXT_OFF "\0"
-"\x05\x01 " MENU_TEXT_ON
+"\x05\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF6[] = {
 "\x06\x00 " MENU_TEXT_OFF "\0"
-"\x06\x01 " MENU_TEXT_ON
+"\x06\xFF " MENU_TEXT_ON
 };
 const char ENUM_ONOFF7[] = {
 "\x07\x00 " MENU_TEXT_OFF "\0"
-"\x07\x01 " MENU_TEXT_ON
+"\x07\xFF " MENU_TEXT_ON
 };
 
 
@@ -1091,6 +1091,9 @@ const char ENUM_CUSTOM41[] = {
 };
 const char ENUM_CUSTOM51[] = {
 "\x05\x01 "
+};
+const char ENUM_CUSTOM54[] = {
+"\x05\x04 "
 };
 
 //TODO: Move to translations
@@ -1145,14 +1148,19 @@ const char ENUM15044[] = {
 };
 
 const char ENUM15046[] = {
+"\x37 " ENUM15046_37_TEXT "\0"
+"\x4d " ENUM15046_4d_TEXT "\0"
+"\x4e " ENUM15046_4e_TEXT "\0"
 "\x52 " ENUM15046_52_TEXT "\0"
 "\x53 " ENUM15046_53_TEXT "\0"
+"\x58 " ENUM15046_58_TEXT "\0"
 "\x5a " ENUM15046_5a_TEXT "\0"
-"\x37 " ENUM15046_37_TEXT "\0"
+"\x5b " ENUM15046_5b_TEXT "\0"
+"\x5d " ENUM15046_5d_TEXT "\0"
 "\x66 " ENUM15046_66_TEXT "\0"
-"\x43 " ENUM15046_43_TEXT "\0"        // Use unused value 0x43 (0x53 from QAA70 minus 0x10) for RVD130 (which increments high nibble for each magic byte)
-"\xea " ENUM15046_ea_TEXT             // Use unused value 0xEA for MCBA/DC225 type
+"\x43 " ENUM15046_43_TEXT       // Use unused value 0x43 (0x53 from QAA70 minus 0x10) for RVD130 (which increments high nibble for each magic byte)
 };
+// 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10, 0x4E = QAW20, 0x58 = MCBA/REA70/DC225, 0x5A = QAA10, 0x5B = QAA20, 0x5D = QAA12/13, 0x66 = BMU, 0x43 = RVD130
 
 #include "BSB_LAN_custom_defs.h"
 
