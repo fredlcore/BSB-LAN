@@ -3314,6 +3314,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_BIT:
     case VT_BYTE:
     case VT_BYTE_N:
+    case VT_BYTE5_N:
     case VT_BYTE10:
     case VT_BYTE10_N:
     case VT_TEMP_SHORT:
@@ -4868,7 +4869,7 @@ void loop() {
    // At this point drop possible GetMessage() failures silently
 
     // Handle PPS MCBA heaters where BSB-LAN has to act as a master and treat the heater as a room unit %-/
-    if (pps_values[PPS_QTP] == 0xEA && pps_write == 1) {
+    if (pps_values[PPS_QTP] == 0x58 && pps_write == 1) {
       if (millis() - pps_mcba_timer > 500) {
         pps_query_mcba();
         pps_mcba_timer = millis();
@@ -7939,7 +7940,7 @@ void setup() {
       //end of decoration
     }
   } else {
-    if (pps_values[PPS_QTP] == 0xEA) {
+    if (pps_values[PPS_QTP] == 0x58) {
       my_dev_fam = DEV_FAM(DEV_PPS_MCBA);
       my_dev_var = DEV_VAR(DEV_PPS_MCBA);
     } else {
