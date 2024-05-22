@@ -978,6 +978,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_POWER_WORD_N: // u16 / 10.0 kW
             case VT_POWER_WORD100: // u16 / 100.0 kW
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
+            case VT_ENERGY_WORD_N: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100
             case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
             case VT_CURRENT: // u16 / 100 uA
@@ -1004,6 +1005,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_UINT5: //  u16 * 5
             case VT_UINT10: //  u16 / 10
             case VT_CUBICMETER: //  u32 / 10
+            case VT_CUBICMETER_N: //  u32 / 10
             case VT_POWER: // u32 / 10.0 kW
             case VT_TEMP_DWORD: // u32 / 10.0 kW
             case VT_AMP:

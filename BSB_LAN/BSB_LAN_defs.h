@@ -602,6 +602,7 @@ typedef enum{
   VT_POWER_WORD100,     //  3 Byte - 1 enable / value/100 kW
   VT_POWER_WORD100_N,   //  3 Byte - 1 enable / value/100 kW
   VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
+  VT_ENERGY_WORD_N,     //  3 Byte - 1 enable / value/10 kWh
   VT_ENERGY_CONTENT,    //  3 Byte - 1 enable / value/10 kWh/m³
   VT_PRESSURE_WORD,     //  3 Byte - 1 enable / bar/10.0
   VT_PRESSURE_WORD_NN,  //  3 Byte - 1 enable / bar/10.0
@@ -643,7 +644,7 @@ typedef enum{
   VT_LITERPERMIN_N,     //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x01 / value
   VT_UINT_N,            //  3 Byte - 1 enable 0x06 / value
-  VT_UINT2_N            //  3 Byte - 1 enable / value / 5
+  VT_UINT2_N,            //  3 Byte - 1 enable / value / 5
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_UINT100_WORD,      //  3 Byte - 1 enable / value / 100
@@ -672,6 +673,7 @@ typedef enum{
   VT_ENERGY_MWH_N,      //  5 Byte - 1 enable / value/100 MWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
   VT_CUBICMETER,        //  5 Byte - 1 enable / value / 10
+  VT_CUBICMETER_N,      //  5 Byte - 1 enable / value / 10
   VT_TEMP_DWORD,        //  5 Byte - 1 enable / value / 64
   VT_DATETIME,          //* 9 Byte - 1 enable 0x01 / year+1900 month day weekday hour min sec
   VT_YEAR,              // subset of VT_DATETIME
