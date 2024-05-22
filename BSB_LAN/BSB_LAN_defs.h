@@ -401,6 +401,7 @@ const char STR_LITERPERHOUR100[] = "LITERPERHOUR100";
 const char STR_LITERPERMIN[] = "LITERPERMIN";
 const char STR_LPM_SHORT[] = "LPM_SHORT";
 const char STR_UINT[] = "UINT";
+const char STR_UINT2[] = "UINT2";
 const char STR_UINT5[] = "UINT5";
 const char STR_UINT10[] = "UINT10";
 const char STR_AMP[] = "AMP";
@@ -642,6 +643,7 @@ typedef enum{
   VT_LITERPERMIN_N,     //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x01 / value
   VT_UINT_N,            //  3 Byte - 1 enable 0x06 / value
+  VT_UINT2_N            //  3 Byte - 1 enable / value / 5
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_UINT100_WORD,      //  3 Byte - 1 enable / value / 100
@@ -769,7 +771,8 @@ const units optbl[]={
 {VT_POWER_WORD_N,     10.0,   6, 2, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER_WORD},
 {VT_POWER_WORD100,    100.0,  1, 2, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
 {VT_POWER_WORD100_N,  100.0,  6, 2, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER_WORD100},
-{VT_ENERGY_WORD,      10.0,   0, 2, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
+{VT_ENERGY_WORD,      10.0,   1, 2, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
+{VT_ENERGY_WORD_N,    10.0,   6, 2, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY_WORD},
 {VT_ENERGY_CONTENT,   10.0,   0, 2, DT_VALS, 1,  U_KWHM3, sizeof(U_KWHM3), STR_ENERGY_CONTENT},
 {VT_PRESSURE_WORD,    10.0,   6, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
 {VT_PRESSURE_WORD_NN, 10.0,   1, 2, DT_VALS, 1,  U_BAR, sizeof(U_BAR), STR_PRESSURE_WORD},
@@ -811,6 +814,7 @@ const units optbl[]={
 {VT_LITERPERMIN_N,    10.0,   6, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LITERPERMIN},
 {VT_UINT,             1.0,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
 {VT_UINT_N,           1.0,    6, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT},
+{VT_UINT2_N,          5.0,    6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT2},
 {VT_UINT5,            0.2,    1, 2, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_UINT5},
 {VT_UINT10,           10.0,   6, 2, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UINT10},
 {VT_UINT100_WORD,     100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
@@ -839,6 +843,7 @@ const units optbl[]={
 {VT_ENERGY_MWH_N,     100.0,  6, 4, DT_VALS, 0,  U_MWH, sizeof(U_MWH), STR_ENERGY_MWH},
 {VT_UINT100,          100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
 {VT_CUBICMETER,       10.0,   1, 4, DT_VALS, 1,  U_CM, sizeof(U_CM), STR_CUBICMETER},
+{VT_CUBICMETER_N,     10.0,   6, 4, DT_VALS, 1,  U_CM, sizeof(U_CM), STR_CUBICMETER},
 {VT_TEMP_DWORD,       64.0,   1, 4, DT_VALS, 1,  U_DEG, sizeof(U_DEG), STR_TEMP_DWORD},
 {VT_DATETIME,         1.0,    1, 8+32, DT_DTTM, 0,  U_NONE, sizeof(U_NONE), STR_DATETIME},
 {VT_YEAR,             1.0,    1, 8+32, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_YEAR},

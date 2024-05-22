@@ -1000,7 +1000,8 @@ void printTelegram(byte* msg, float query_line) {
             case VT_UINT100:  // u32 / 100
             case VT_UINT100_WORD:  // u16 / 100
             case VT_UINT100_WORD_N:  // u16 / 100
-            case VT_UINT5: //  u16 / 5
+            case VT_UINT2_N: //  u16 / 5
+            case VT_UINT5: //  u16 * 5
             case VT_UINT10: //  u16 / 10
             case VT_CUBICMETER: //  u32 / 10
             case VT_POWER: // u32 / 10.0 kW
