@@ -24,8 +24,6 @@ const char ENUM_CAT[] = {
 "\x02 " ENUM_CAT_31_TEXT "\0"
 "\x03 " ENUM_CAT_3d_TEXT "\0"
 "\x04 " ENUM_CAT_40_TEXT "\0"
-"\x05 " ENUM_CAT_41_TEXT "\0"
-"\x06 " ENUM_CAT_42_TEXT "\0"
 "\x07 " ENUM_CAT_43_TEXT "\0"
 "\x08 " ENUM_CAT_44_TEXT "\0"
 "\x09 " ENUM_CAT_45_TEXT
@@ -37,8 +35,6 @@ const float ENUM_CAT_NR[] = {
   5700, 6699,
   8700, 9075,
   10000, 11999,
-  13000, 13999,
-  14000, 14999,
   15000, 15099,
   20000, 20899 //Virtual category for durations, averages, One Wire, DHT22, MAX! sensors, custom floats and longs
 };
