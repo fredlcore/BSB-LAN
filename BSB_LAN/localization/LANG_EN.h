@@ -165,6 +165,7 @@
 #define MENU_TEXT_LGN "New logging parameters"
 #define MENU_TEXT_LOT "Log of telegrams"
 #define MENU_TEXT_FSP "Free space in file system"
+#define MENU_TEXT_CNV "Category not valid for destination device."
 
 #define STR_24A_TEXT "24h average"
 
