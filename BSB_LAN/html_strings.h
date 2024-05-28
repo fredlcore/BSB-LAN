@@ -437,11 +437,11 @@ const char header_html[] =
   "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] =
-  "<script>function set(p){" NEWLINE
-    "var v=document.getElementById('value'+p).value.replace(/\\.$/,'')" NEWLINE
+  "<script>function set(p,d){" NEWLINE
+    "var v=document.getElementById('value'+p+'-'+d).value.replace(/\\.$/,'')" NEWLINE
           ".replaceAll(' ','_')" NEWLINE
           ".replace('---','');" NEWLINE
-    "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
+    "window.open(document.getElementById('main_link').href+'S'+p+'!'+d+'='+v,'_self')" NEWLINE
   "}" NEWLINE
   "function setbit(p){" NEWLINE
     "var x=document.getElementById('value'+p),v,i;" NEWLINE
