@@ -75,8 +75,10 @@
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
  *        - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command /M1, to remove them call /M0. 
  *        - ATTENTION: MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
+ *        - "Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)
  *        - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
  *        - Previously used /M1 and /M0 for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
+ *        - Listing categories with /K now also works with destination device.
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
  *        - MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)
  *        - Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.
@@ -892,7 +894,7 @@ uint_farptr_t enumstr; //address of first element of enum
 uint_farptr_t progtypedescaddr; //program type description string address
 uint_farptr_t data_type_descaddr; //data type description DT_*, dt_types_text[?].type_text
 uint16_t enumstr_len;  //enum length
-uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command
+uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command, 263 - invalid category
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
 uint8_t readwrite; // 0 - read/write, 1 - read only, 2 - write only
@@ -1310,12 +1312,14 @@ inline uint8_t get_cmdtbl_category(int i) {
   for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
     cat_min = ENUM_CAT_NR[cat*2];
     cat_max = ENUM_CAT_NR[cat*2+1];
+/*
     if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
       if (cat_max > ENUM_CAT_NR[cat*2+2]) {
         cat_max = ENUM_CAT_NR[cat*2+2]-1;
       }
     }
-    if (cmdtbl[i].line >= cat_min && cmdtbl[i].line <= cat_max) {
+*/
+    if (cmdtbl[i].line >= cat_min && cmdtbl[i].line < cat_max+1) {
       return cat;
     }
   }
@@ -1323,15 +1327,27 @@ inline uint8_t get_cmdtbl_category(int i) {
 //  return cmdtbl[i].category;
 }
 
-void set_temp_destination(short destAddr){
-  printFmtToDebug("Setting temporary destination to %d\r\n", destAddr);
-  bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-  GetDevId();
+void set_temp_destination(int16_t destAddr){
+  if (destAddr != bus->getBusDest()) {
+    printFmtToDebug("Setting temporary destination to %d\r\n", destAddr);
+    bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+    GetDevId();
+  } else {
+    if (debug_mode == DEVELOPER_DEBUG) {
+      printFmtToDebug("Bus destination already set to %d, no change necessary.\r\n", destAddr);
+    }
+  }
 }
 
 void return_to_default_destination(int destAddr){
-  printFmtToDebug("Returning to default destination %d\r\n", destAddr);
-  bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+  if (destAddr != bus->getBusDest()) {
+    printFmtToDebug("Returning to default destination %d\r\n", destAddr);
+    bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+  } else {
+    if (debug_mode == DEVELOPER_DEBUG) {
+      printFmtToDebug("Bus destination already set to %d, no change necessary.\r\n", destAddr);
+    }
+  }
 }
 
 /** *****************************************************************
@@ -3938,7 +3954,7 @@ void query_printHTML() {
           if (decodedTelegram.data_type == DT_BITS) {
             printToWebClient("multiple ");
           }
-          printFmtToWebClient("id='value%g'>\r\n", decodedTelegram.prognr);
+          printFmtToWebClient("id='value%g-%d'>\r\n", decodedTelegram.prognr, bus->getBusDest());
           uint16_t value = 0;
           if (decodedTelegram.data_type == DT_BITS) {
             for (int i = 0; i < 8; i++) {
@@ -3959,13 +3975,13 @@ void query_printHTML() {
             if (decodedTelegram.type == VT_BIT) {
               printToWebClient("bit");
             }
-            printFmtToWebClient("(%g)\">", decodedTelegram.prognr);
+            printFmtToWebClient("(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
           }
         } else {
-          printFmtToWebClient("<input type=text id='value%g' VALUE='%s'>", decodedTelegram.prognr, decodedTelegram.value);
+          printFmtToWebClient("<input type=text id='value%g-%d' VALUE='%s'>", decodedTelegram.prognr, bus->getBusDest(), decodedTelegram.value);
           printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printFmtToWebClient("<input type=button value='Set' onclick=\"set(%g)\">", decodedTelegram.prognr);
+            printFmtToWebClient("<input type=button value='Set' onclick=\"set(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
           }
         }
       }
@@ -4361,12 +4377,15 @@ void query(float line_start  // begin at this line (ProgNr)
     query(line);
     if (decodedTelegram.prognr != -1) {
       if (!no_print) {         // display in web client?
-        if (!client.connected()) return;  // no need to waste time here when client is gone
+        if (!client.connected()) {
+          printToDebug("Client no longer connected, aborting query...\r\n");
+          return;  // no need to waste time here when client is gone
+        }
         query_printHTML();
       }
     }
     line = get_next_prognr(line);
-  } while(line >= line_start && line <= line_end); // endfor, for each valid line (ProgNr) command within selected range
+  } while(line >= line_start && line < line_end+1); // endfor, for each valid line (ProgNr) command within selected range
 }
 
 void GetDevId() {
@@ -5311,24 +5330,37 @@ void loop() {
         }
         // list categories
         if (p[1]=='K' && !isdigit(p[2])) {
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
+          uint8_t destAddr = bus->getBusDest();
+          if (p[2]=='!') {
+            set_temp_destination(atoi(&p[3]));
+          }
           //list categories
           webPrintHeader();
           printToWebClient("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n");
           float  cat_min = -1, cat_max = -1;
           for (int cat=0;cat<CAT_UNKNOWN;cat++) {
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
-              printFmtToWebClient("<tr><td><a href='K%d'>", cat);
-              printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
-              cat_min = ENUM_CAT_NR[cat*2];
-              cat_max = ENUM_CAT_NR[cat*2+1];
-              printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+              printKat(cat,1);
+              if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
+                printFmtToWebClient("<tr><td><a href='K%d!%d'>", cat, bus->getBusDest());
+                cat_min = ENUM_CAT_NR[cat*2];
+                cat_max = ENUM_CAT_NR[cat*2+1];
+                printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
+                printFmtToWebClient("</a></td><td>%g - %g</td></tr>\r\n", cat_min, cat_max);
+              }
               writelnToDebug();
-              printFmtToWebClient("</a></td><td>%g - %g</td></tr>\r\n", cat_min, cat_max);
             }
           }
           printToWebClient("</table>");
           webPrintFooter();
           flushToWebClient();
+          if (bus->getBusDest() != destAddr) {
+            return_to_default_destination(destAddr);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+          }
           break;
         }
         // list enum values
@@ -5863,11 +5895,13 @@ void loop() {
               if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
+/*
                 if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                   if (cat_max > ENUM_CAT_NR[cat*2+2]) {
                     cat_max = ENUM_CAT_NR[cat*2+2]-1;
                   }
                 }
+*/
                 float j = cat_min;
 //WARNING: simple increment of j was changed because some prognr have decimal part.
                 do{
@@ -6029,14 +6063,16 @@ next_parameter:
                   if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
-                    printENUM(ENUM_CAT,sizeof(ENUM_CAT),cat,1);
+                    printKat(cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
+/*
                     if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                       if (cat_max > ENUM_CAT_NR[cat*2+2]) {
                         cat_max = ENUM_CAT_NR[cat*2+2]-1;
                       }
                     }
+*/
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
                     printFmtToWebClient("\", \"min\": %g, \"max\": %g }", cat_min, cat_max);
                   }
@@ -6053,11 +6089,13 @@ next_parameter:
                   }
                   cat_min = ENUM_CAT_NR[search_cat];
                   cat_max = ENUM_CAT_NR[search_cat+1];
+/*
                   if (search_cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                     if (cat_max > ENUM_CAT_NR[search_cat+2]) {
                       cat_max = ENUM_CAT_NR[search_cat+2]-1;
                     }
                   }
+*/
                   cat_param = cat_min;
                 } else {
 //WARNING: simple increment of cat_param was changed because some prognr have decimal part.
@@ -6721,17 +6759,20 @@ next_parameter:
               if (param.dest_addr > -1) {
                 set_temp_destination(param.dest_addr);
               }
+              printKat(param.number,1);
               uint cat = param.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
               }
               start = ENUM_CAT_NR[cat];
               end = ENUM_CAT_NR[cat+1];
+/*
               if (cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                 if (end > ENUM_CAT_NR[cat+2]) {
                   end = ENUM_CAT_NR[cat+2]-1;
                 }
               }
+*/
             } else {
               // split range
               line_start=range;
@@ -6756,7 +6797,11 @@ next_parameter:
 
               start=atof(line_start);
             }
-            query(start,end,0);
+            if (decodedTelegram.error == 263) {
+              printlnToWebClient(MENU_TEXT_CNV);
+            } else {
+              query(start,end,0);
+            }
             if (bus->getBusDest() != destAddr) {
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
