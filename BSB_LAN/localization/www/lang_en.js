@@ -165,6 +165,7 @@ UIStrings["MENU_TEXT_LGI"] = "New logging interval";
 UIStrings["MENU_TEXT_LGN"] = "New logging parameters";
 UIStrings["MENU_TEXT_LOT"] = "Log of telegrams";
 UIStrings["MENU_TEXT_FSP"] = "Free space in file system";
+UIStrings["MENU_TEXT_CNV"] = "Category not valid for destination device.";
 
 UIStrings["STR_24A_TEXT"] = "24h average";
 

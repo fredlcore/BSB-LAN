@@ -209,6 +209,7 @@ UIStrings["MENU_LINK_FAQ"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap15.ht
 UIStrings["MENU_LINK_URL"] = "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle";
 UIStrings["MENU_TEXT_LOT"] = "Telegramme loggen";
 UIStrings["MENU_TEXT_FSP"] = "Freier Speicher im Dateisystem";
+UIStrings["MENU_TEXT_CNV"] = "Kategorie nicht für dieses Zielgerät verfügbar.";
 
 UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
 
