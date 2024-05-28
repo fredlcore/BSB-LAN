@@ -375,6 +375,55 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
+void printKat(uint8_t cat, int print_val) {
+  const char* enumstr = ENUM_CAT;
+  const uint16_t enumstr_len = sizeof(ENUM_CAT);
+  uint8_t val = 0;
+  decodedTelegram.enumdescaddr = 0;
+  decodedTelegram.error = 0;
+  uint8_t cat_dev_fam = 0;
+  uint8_t cat_dev_var = 0;
+  if (enumstr!=0) {
+    uint16_t c=0;
+    while (c<enumstr_len) {
+      if (*(enumstr+c+3)==' ') {
+        cat_dev_fam = *(enumstr+c+1);
+        cat_dev_var = *(enumstr+c+2);
+        val=*(enumstr+c);
+        c+=2;
+      } else if (*(enumstr+c+1)==' ') {
+        val=*(enumstr+c);
+        cat_dev_fam = my_dev_fam;
+        cat_dev_var = my_dev_var;
+      }
+      //skip leading space
+      c+=2;
+      if (val==cat) {
+       // enum value found
+       break;
+      }
+      while (*(enumstr+c)!=0) c++;
+      c++;
+    }
+    if (c<enumstr_len) {
+      decodedTelegram.enumdescaddr = enumstr+c;
+      sprintf(decodedTelegram.value, "%d", val);
+      if (print_val) {
+        printFmtToDebug("%s - ", decodedTelegram.value);
+      }
+      printToDebug(decodedTelegram.enumdescaddr);
+      if (cat_dev_fam != my_dev_fam || cat_dev_var != my_dev_var) {
+        printToDebug(" (invalid category for destination device)");
+        decodedTelegram.error = 263;
+      }
+    } else {
+      sprintf(decodedTelegram.value, "%d", cat);
+      printToDebug(decodedTelegram.value);
+      decodedTelegram.error = 258;
+    }
+  }
+}
+
 /** *****************************************************************
  *  Function:
  *  Does:
@@ -618,7 +667,7 @@ void printLPBAddr(byte *msg,byte data_len) {
 
 //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
 void loadCategoryDescAddr() {
-  printENUM(ENUM_CAT, sizeof(ENUM_CAT), decodedTelegram.cat, 0);
+  printKat(decodedTelegram.cat, 0);
   decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
   decodedTelegram.enumdescaddr = 0;
   decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
@@ -760,6 +809,13 @@ void printTelegram(byte* msg, float query_line) {
         uint8_t dev_fam = cmdtbl[i].dev_fam;
         uint8_t dev_var = cmdtbl[i].dev_var;
         match_line = cmdtbl[i].line;
+        // Scoring system to find a command ID in the table:
+        // 1 point: command ID is DEV_ALL (255, 255), but command ID is FL_NO_CMD (no longer in active use since version 3.0)
+        // 2 points: command ID is DEV_ALL, and is not FL_NO_CMD
+        // 3 points: command ID matches own device family, not device variant, but is FL_NO_CMD
+        // 4 points: command ID matches own device family, and is not FL_NO_CMD
+        // 5 points: command ID machtes own device family and variant, but is FL_NO_CMD
+        // 6 points: command ID matches own device family and variant. Most exact match, abort further search.
         if ((dev_fam == my_dev_fam || dev_fam == 255) && (dev_var == my_dev_var || dev_var == 255)) {
           if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
             if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
@@ -791,6 +847,12 @@ void printTelegram(byte* msg, float query_line) {
               save_i = i;
               score = 4;
             }
+          }
+        } else {          // Command ID found in other device family's entry. Store this as a last resort.
+          score = 0;
+          if (known != true) {
+            known = true;
+            save_i = i;
           }
         }
       }
