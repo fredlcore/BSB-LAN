@@ -487,10 +487,9 @@ Ob damit weiterhin eine Bus-Kollisionserkennung möglich ist, muss noch geprüft
 */
 
 /*
-FH 30.05.2024: Mit Umstieg auf ESP32 SDK 2.0.17 kommen gesendete Daten zumindest teilweise wieder auf der Empfangsleitung an.
-Aufgefallen ist dies durch doppelte INF-Telegramme, andere Telegramme sind davon seltsamerweise nicht betroffen. 
-Eine Pause von doppelter Telegrammlänge plus 10 ms sorgt dafür, dass diese empfangenen Daten wieder ausgefiltert werden können.
-Zu prüfen wäre, ob das etwas mit der Konfiguration des UART zu tun hat, wo bisher nur die Empfangsleitung eine Konfigurationsmöglichkeit für eine Signalisierung eines vollen Puffers und eine Puffergröße bietet.
+FH 30.05.2024: Anscheinend kamen die gesendeten Daten auch weiterhin auf der Empfangsleitung an, wurden aber durch den Test 
+auf den entsprechenden Empfänger dann gleich wieder verworfen. Als Konsequenz wurde der 50ms RX-Test wieder vom Adruino Due auch auf
+die ESP32 ausgeweitet.
 */
 
 #if defined(__AVR__)
@@ -538,14 +537,14 @@ Zu prüfen wäre, ob das etwas mit der Konfiguration des UART zu tun hat, wo bis
 */
   }
   if (HwSerial == true) {
-#if !defined(ESP32)
+//#if !defined(ESP32)
     serial->flush();
     unsigned long timeout = millis();
     while ((millis()-timeout < 50) && serial->available() == 0) {
       delay(1);
     }
-#endif
-    delay(loop_len*2+10);      // Wait up to 32 characters for the maximum number of bytes in a telegram to show up again on RX after sending it via TX.
+//#endif
+//    delay(loop_len*2+10);      // Wait up to 32 characters for the maximum number of bytes in a telegram to show up again on RX after sending it via TX.
     if (serial->available()) {      
       for (uint8_t i=0; i<=loop_len; i++) {
         char readdata = readByte();
