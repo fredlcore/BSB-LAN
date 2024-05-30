@@ -71,9 +71,6 @@ UIStrings["MENU_DESC_URL"] = "Mostra una panoramica dei comandi che è possibile
 UIStrings["MENU_TEXT_VB1"] = "Modalità verbose abilitata!";
 UIStrings["MENU_TEXT_VB2"] = "Modalità verbose disabilitata!";
 UIStrings["MENU_TEXT_VB3"] = "La modalità verbose influenza sia la console seriale dell'Arduino Mega2560 sia (facoltativamente) la registrazione dei dati del bus sulla scheda microSD, pertanto la scheda potrebbe riempirsi molto rapidamente! L'output html rimane invariato. ";
-UIStrings["MENU_TEXT_SR1"] = "Monitor seriale abilitato!";
-UIStrings["MENU_TEXT_SR2"] = "Monitor seriale disabilitato!";
-UIStrings["MENU_TEXT_SR3"] = "Solo l'output seriale è interessato.";
 UIStrings["MENU_TEXT_ER1"] = "ERRORE: parametro non valido!";
 UIStrings["MENU_TEXT_ER2"] = "ERRORE: valore non valido!";
 UIStrings["MENU_TEXT_ER3"] = "ERRORE: impossibile impostare!";
@@ -2420,7 +2417,7 @@ UIStrings["ENUM8390_17_TEXT"] = "23";
 UIStrings["ENUM8390_18_TEXT"] = "24";
 UIStrings["ENUM8749_00_TEXT"] = "Non è necessario";
 UIStrings["ENUM15000_00_TEXT"] = "Automatica";
-#define ENUM15000_02_TEXT ENUM780_00_TEXT
+#define ENUM15000_02_TEXT MENU_TEXT_OFF
 UIStrings["ENUM15044_00_02_TEXT"] = "Modalità automatica: disattivata";
 UIStrings["ENUM15044_02_02_TEXT"] = "Modalità automatica: attiva";
 UIStrings["ENUM15044_00_08_TEXT"] = "Pompa accesa";
