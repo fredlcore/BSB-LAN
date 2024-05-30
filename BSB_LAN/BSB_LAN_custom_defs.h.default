@@ -7167,20 +7167,6 @@ const cmd_t cmdtbl[]={
 {0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätefamilie
 {0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätevariante
 {0x053D0521,  VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
-{0x2D3D0215,  VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
-{0x2E3E0215,  VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
-{0x2F3F0215,  VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
-
-// LMU64 commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
-
-// RVD/RVP and other older controller commands (may be appearing in other categories as well, but due to different numbering schemes we will try to list them here with an offset of 13000)
-
-{0x053D076E,  VT_SECONDS_WORD,  14081, STR14081, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Laufzeit Auf/Zu Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
-{0x053D076C,  VT_TEMP,          14082, STR14082, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // P-Band XP Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
-{0x053D076D,  VT_SECONDS_WORD,  14083, STR14083, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Nachstellzeit TN Antrieb Umformer // logged from ACS700 diagnosis software from RVD265/109
-{0x053D0771,  VT_TEMP,          14084, STR14084, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Überhöhung Sollwert Mischer/Wärmetauscher // logged from ACS700 diagnosis software from RVD265/109
-{0x053D0780,  VT_TEMP,          14085, STR14085, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Maximalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
-{0x053D0781,  VT_TEMP,          14086, STR14086, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Gemeinsame Vorlauftemperatur Minimalbegrenzung // logged from ACS700 diagnosis software from RVD265/109
-{0x053D0656,  VT_TEMP,          14087, STR14087, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Temperaturanforderung Externer Wärmebedarfskontakt // logged from ACS700 diagnosis software from RVD265/109
-{0x053D0656,  VT_ENUM,          14088, STR14088, sizeof(ENUM14088),    ENUM14088,    DEFAULT_FLAG, DEV_ALL},  // Externer Wärmebedarf Vorrang // logged from ACS700 diagnosis software from RVD265/109
-{0x053D079F,  VT_TEMP,          14089, STR14089, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL},  // Wärmebedarfseingang DC 0..10V // logged from ACS700 diagnosis software from RVD265/109
+{0x2D3D0215,  VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
+{0x2E3E0215,  VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
+{0x2F3F0215,  VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
