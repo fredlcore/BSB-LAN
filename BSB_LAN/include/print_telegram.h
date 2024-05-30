@@ -375,7 +375,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
-void printKat(uint8_t cat, int print_val) {
+void printKat(uint8_t cat, int print_val, boolean debug_output) {
   const char* enumstr = ENUM_CAT;
   const uint16_t enumstr_len = sizeof(ENUM_CAT);
   uint8_t val = 0;
@@ -408,17 +408,17 @@ void printKat(uint8_t cat, int print_val) {
     if (c<enumstr_len) {
       decodedTelegram.enumdescaddr = enumstr+c;
       sprintf(decodedTelegram.value, "%d", val);
-      if (print_val) {
+      if (print_val && debug_output == true) {
         printFmtToDebug("%s - ", decodedTelegram.value);
       }
-      printToDebug(decodedTelegram.enumdescaddr);
+      if (debug_output == true) printToDebug(decodedTelegram.enumdescaddr);
       if (cat_dev_fam != my_dev_fam || cat_dev_var != my_dev_var) {
-        printToDebug(" (invalid category for destination device)");
+        if (debug_output == true) printToDebug(" (invalid category for destination device)");
         decodedTelegram.error = 263;
       }
     } else {
       sprintf(decodedTelegram.value, "%d", cat);
-      printToDebug(decodedTelegram.value);
+      if (debug_output == true) printToDebug(decodedTelegram.value);
       decodedTelegram.error = 258;
     }
   }
@@ -753,23 +753,16 @@ void printTelegram(byte* msg, float query_line) {
   //  uint8_t pps_cmd = msg[1 + (msg[0] == 0x17 && pps_write != 1)];
   uint8_t pps_cmd = msg[1];
   switch (bus_type) {
-    case BUS_BSB:
-      if ((msg[4] & 0x0F)==TYPE_QUR || (msg[4] & 0x0F)==TYPE_SET) { //QUERY and SET: byte 5 and 6 are in reversed order
-        cmd=(uint32_t)msg[6]<<24 | (uint32_t)msg[5]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-      } else {
-        cmd=(uint32_t)msg[5]<<24 | (uint32_t)msg[6]<<16 | (uint32_t)msg[7] << 8 | (uint32_t)msg[8];
-      }
-      break;
-    case BUS_LPB:
-      if ((msg[8] & 0x0F)==TYPE_QUR || (msg[8] & 0x0F)==TYPE_SET) { //QUERY and SET: byte 9 and 10 are in reversed order
-        cmd=(uint32_t)msg[10]<<24 | (uint32_t)msg[9]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
-      } else {
-        cmd=(uint32_t)msg[9]<<24 | (uint32_t)msg[10]<<16 | (uint32_t)msg[11] << 8 | (uint32_t)msg[12];
-      }
-      break;
     case BUS_PPS:
       cmd = 0x2D000000 + ((uint16_t)query_line) - 15000;    // PPS commands start at parameter no. 15000
       cmd = cmd + (pps_cmd * 0x10000);
+      break;
+    default:
+      if ((msg[4+bus->offset] & 0x0F)==TYPE_QUR || (msg[4+bus->offset] & 0x0F)==TYPE_SET) { //QUERY and SET: First two bytes of CommandID are in reversed order
+        cmd=(uint32_t)msg[6+bus->offset]<<24 | (uint32_t)msg[5+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
+      } else {
+        cmd=(uint32_t)msg[5+bus->offset]<<24 | (uint32_t)msg[6+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
+      }
       break;
   }
   // search for the command code in cmdtbl
@@ -783,7 +776,7 @@ void printTelegram(byte* msg, float query_line) {
       i = findLine(query_line);
       c = cmdtbl[i].cmd;
       uint16_t dev_flags = cmdtbl[i].flags;
-      if (dev_flags & FL_NOSWAP_QUR) {  // if the QUR telegram is modified (in the sense that the first two bytes are not swapped), then the ANS telegram is also affected in the same way (i.e. the first two bytes are swapped here)
+      if (((dev_flags & FL_NOSWAP_QUR) || (msg[4+bus->offset] & 0x0F) == TYPE_INF)) {  // if the QUR telegram is modified (in the sense that the first two bytes are not swapped), then the ANS telegram is also affected in the same way (i.e. the first two bytes are swapped here)
         c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
       }
       if (i != -1) {

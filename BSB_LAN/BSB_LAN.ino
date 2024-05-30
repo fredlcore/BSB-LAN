@@ -70,6 +70,7 @@
  *
  * Changelog:
  *       version 3.4
+ *        - ATTENTION: For ESP32, BSB-LAN requires framework version 2.0.17 - the newer versions 3.0.0 and above do not work (yet)!
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
@@ -599,6 +600,7 @@ void connectToMaxCul();
 void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 void mqtt_sendtoBroker(parameter param);
+void printKat(uint8_t cat, int print_val, boolean debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
@@ -610,6 +612,9 @@ void mqtt_sendtoBroker(parameter param);
 #define REQUIRED_CONFIG_VERSION 38
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
+#endif
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+  #error "You are using version 3.0.0 or above of the ESP32 framework. BSB-LAN currently only runs under version 2.0.17. Please switch to that version in the board manager of the Arduino IDE."
 #endif
 
 #define EEPROM_SIZE 0x1000
@@ -1310,8 +1315,10 @@ inline uint8_t get_cmdtbl_category(int i) {
   int cat_min = 0;
   int cat_max = 0;
   for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-    cat_min = ENUM_CAT_NR[cat*2];
-    cat_max = ENUM_CAT_NR[cat*2+1];
+    printKat(cat, 0, false);
+    if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
+      cat_min = ENUM_CAT_NR[cat*2];
+      cat_max = ENUM_CAT_NR[cat*2+1];
 /*
     if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
       if (cat_max > ENUM_CAT_NR[cat*2+2]) {
@@ -1319,8 +1326,9 @@ inline uint8_t get_cmdtbl_category(int i) {
       }
     }
 */
-    if (cmdtbl[i].line >= cat_min && cmdtbl[i].line < cat_max+1) {
-      return cat;
+      if (cmdtbl[i].line >= cat_min && cmdtbl[i].line < cat_max+1) {
+        return cat;
+      }
     }
   }
   return 0;
@@ -1632,7 +1640,7 @@ void SerialPrintData(byte* msg) {
   // Calculate pure data length without housekeeping info
   int data_len=0;
   byte offset = 0;
-  byte msg_type = msg[4+(bus->getBusType()*4)];
+  byte msg_type = msg[4+bus->offset];
   if (bus_type != BUS_PPS) {
     if (msg_type >= 0x12 && msg_type <= 0x15) {
       offset = 4;
@@ -3029,10 +3037,10 @@ void LogTelegram(byte* msg) {
 #endif
 
   if (bus->getBusType() != BUS_PPS) {
-    if (msg[4+(bus->getBusType()*4)]==TYPE_QUR || msg[4+(bus->getBusType()*4)]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
-      cmd=(uint32_t)msg[6+(bus->getBusType()*4)]<<24 | (uint32_t)msg[5+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
+    if (msg[4+bus->offset]==TYPE_QUR || msg[4+bus->offset]==TYPE_SET || (((msg[2]!=ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]<0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+bus->offset]==TYPE_INF)) { //QUERY and SET: byte 5 and 6 are in reversed order
+      cmd=(uint32_t)msg[6+bus->offset]<<24 | (uint32_t)msg[5+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
     } else {
-      cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
+      cmd=(uint32_t)msg[5+bus->offset]<<24 | (uint32_t)msg[6+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
     }
   } else {
 //      cmd=msg[1+(msg[0]==0x17 && pps_write != 1)];
@@ -3089,7 +3097,7 @@ void LogTelegram(byte* msg) {
 
       uint8_t msg_len = 0;
       if (bus->getBusType() != BUS_PPS) {
-        outBufLen += sprintf_P(outBuf + outBufLen, ";%s->%s %s;", TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+(bus->getBusType()*4)], outBuf + outBufLen + 60));
+        outBufLen += sprintf_P(outBuf + outBufLen, ";%s->%s %s;", TranslateAddr(msg[1+(bus->getBusType()*2)], outBuf + outBufLen + 40), TranslateAddr(msg[2], outBuf + outBufLen + 50), TranslateType(msg[4+bus->offset], outBuf + outBufLen + 60));
         msg_len = msg[bus->getLen_idx()]+bus->getBusType();
       } else {
         strcat(outBuf + outBufLen, ";");
@@ -3120,7 +3128,7 @@ void LogTelegram(byte* msg) {
 
       outBufLen += bin2hex(outBuf + outBufLen, msg, msg_len, ' ');
       // additionally log data payload in addition to raw messages when data payload is max. 32 Bit
-      uint8_t msg_type = msg[4+(bus->getBusType()*4)];
+      uint8_t msg_type = msg[4+bus->offset];
       if (bus->getBusType() != BUS_PPS && (msg_type == TYPE_INF || msg_type == TYPE_SET || msg_type == TYPE_ANS) && msg[bus->getLen_idx()] < 17+bus->getBusType()) {
         outBufLen += strlen(strcat(outBuf + outBufLen, ";"));
 // payload length includes one byte for enable/disable byte, except for INF telegrams which have none of these. We have to subtract this one and add it back if it's an INF.
@@ -3217,7 +3225,7 @@ int set(float line      // the ProgNr of the heater parameter
   }
   if ((dev_flags & FL_FORCE_INF) && setcmd) {
     printlnToDebug("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now...");
-    setcmd = false;     // SPECIAL_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
+    setcmd = false;     // FORCE_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
   }
 
   // Force to publish MQTT update in 1s as state may have been modified by this SET command
@@ -3763,7 +3771,7 @@ int set(float line      // the ProgNr of the heater parameter
   printTelegram(msg, line);
   LogTelegram(msg);
   // Expect an acknowledgement to our SET telegram
-  if (msg[4+(bus->getBusType()*4)]!=TYPE_ACK) {      // msg type at 4 (BSB) or 8 (LPB)
+  if (msg[4+bus->offset]!=TYPE_ACK) {      // msg type at 4 (BSB) or 8 (LPB)
     printlnToDebug("set failed NACK");
     return 0;
   }
@@ -4317,7 +4325,7 @@ void query(float line) {  // line (ProgNr)
         }
 
         msg[1] = ((cmd & 0x00FF0000) >> 16);
-        msg[4+(bus->getBusType()*4)]=TYPE_ANS;
+        msg[4+bus->offset]=TYPE_ANS;
         msg[bus->getPl_start()]=temp_val >> 8;
         msg[bus->getPl_start()+1]=temp_val & 0xFF;
 /*
@@ -5561,7 +5569,7 @@ void loop() {
                   if (bus->Send(TYPE_QUR, c, msg, tx_msg) != BUS_OK) {
                     printlnToDebug("bus send failed");  // to PC hardware serial I/F
                   } else {
-                    if (msg[4+(bus->getBusType()*4)]!=TYPE_ERR) {
+                    if (msg[4+bus->offset]!=TYPE_ERR) {
                       // Decode the xmit telegram and send it to the PC serial interface
                       printTelegram(tx_msg, -1);
                       LogTelegram(tx_msg);
@@ -5892,7 +5900,8 @@ void loop() {
           if (p[2] == 'B'){ // backup settings to file
             bool notfirst = false;
             for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
-              if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+              if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+
                 cat_min = ENUM_CAT_NR[cat * 2];
                 cat_max = ENUM_CAT_NR[cat * 2 + 1];
 /*
@@ -6060,10 +6069,10 @@ next_parameter:
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-                  if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+                  printKat(cat,1);
+                  if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
-                    printKat(cat,1);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
 /*

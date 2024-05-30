@@ -80,17 +80,19 @@ uint8_t BSB::setBusType(uint8_t bus_type_val, uint16_t addr, uint16_t d_addr) {
   switch (bus_type) {
     case 0:
       len_idx = 3;
+      offset = 0;
       pl_start = 9;
       break;
     case 1:
       len_idx = 1;
+      offset = 4;
       pl_start = 13;
       break;
     case 2:
       len_idx = 8;
       pl_start = 6;
       break;
-    default: len_idx = 3; pl_start = 9; break;
+    default: len_idx = 3; pl_start = 9; offset = 0; break;
   }
   if (addr<=0xff) {
     myAddr = addr & 0xFF;
@@ -643,7 +645,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
       Serial.println(3000-(timeout-millis()));
 #endif
       i--;
-      byte msg_type = rx_msg[4+(bus_type*4)];
+      byte msg_type = rx_msg[4+offset];
       if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type=0x14 && msg_type == 0x15))) {
         return BUS_OK;
       }
