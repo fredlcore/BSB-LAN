@@ -219,9 +219,13 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision) {
   int8_t pps_offset = (bus->getBusType() == BUS_PPS);
 
   if (data_len == 3 || data_len == 5) {
-    if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS) {
+    if (msg[bus->getPl_start()]==0 || bus->getBusType() == BUS_PPS || (decodedTelegram.flags & FL_SPECIAL_INF)) {
       if (data_len == 3) {
-        dval=float((int16_t)(msg[bus->getPl_start()+1-pps_offset] << 8) + (int16_t)msg[bus->getPl_start()+2-pps_offset]) / divider;
+        if (decodedTelegram.flags & FL_SPECIAL_INF) {
+          dval=float((int16_t)(msg[bus->getPl_start()] << 8) + (int16_t)msg[bus->getPl_start()+1]) / divider;
+        } else {
+          dval=float((int16_t)(msg[bus->getPl_start()+1-pps_offset] << 8) + (int16_t)msg[bus->getPl_start()+2-pps_offset]) / divider;
+        }
       } else {
         dval=float((int16_t)(msg[bus->getPl_start()+3-pps_offset] << 8) + (int16_t)msg[bus->getPl_start()+4-pps_offset]) / divider;
       }

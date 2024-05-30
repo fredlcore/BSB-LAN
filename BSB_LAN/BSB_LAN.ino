@@ -70,6 +70,9 @@
  *
  * Changelog:
  *       version 3.4
+ *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 must now have the additional flag FL_SPECIAL_INF, otherwise setting temperature will not work! 
+ *        - ATTENTION: BREAKING CHANGE! Outside temperature simulation parameter 10017 must have FL_SPECIAL_INF flag removed, otherwise setting temperature will not work! 
+ *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have FL_SPECIAL_INF flag removd, otherwise setting temperature will not work! 
  *        - ATTENTION: For ESP32, BSB-LAN requires framework version 2.0.17 - the newer versions 3.0.0 and above do not work (yet)!
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
@@ -902,6 +905,7 @@ uint16_t enumstr_len;  //enum length
 uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command, 263 - invalid category
 uint8_t msg_type; //telegram type
 uint8_t tlg_addr; //telegram address
+uint16_t flags; //flags
 uint8_t readwrite; // 0 - read/write, 1 - read only, 2 - write only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
 uint8_t type; //prog type (cmdtbl[].type). VT_*
@@ -1724,10 +1728,10 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.cat=get_cmdtbl_category(i);
   decodedTelegram.enumstr_len=cmdtbl[i].enumstr_len;
   decodedTelegram.enumstr = cmdtbl[i].enumstr;
-  uint16_t flags=cmdtbl[i].flags;
-  if (programIsreadOnly(flags)) {
+  decodedTelegram.flags=cmdtbl[i].flags;
+  if (programIsreadOnly(decodedTelegram.flags)) {
     decodedTelegram.readwrite = FL_RONLY; //read only
-  } else if ((flags & FL_WONLY) == FL_WONLY) {
+  } else if ((decodedTelegram.flags & FL_WONLY) == FL_WONLY) {
     decodedTelegram.readwrite = FL_WONLY; //write only
     decodedTelegram.prognr = nr;
   } else {
@@ -3554,14 +3558,14 @@ int set(float line      // the ProgNr of the heater parameter
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       } else { // INF message type
-        if ((cmdtbl[i].flags & FL_SPECIAL_INF)) {  // Case for outside temperature
-          param[0]=0;
-          param[1]=(t >> 8);
-          param[2]= t & 0xff;
-        } else {  // Case for room temperature
+        if ((cmdtbl[i].flags & FL_SPECIAL_INF)) {   // Case for room temperature
           param[0]=(t >> 8);
           param[1]= t & 0xff;
           param[2]=0x00;
+        } else {                // Case for outside temperature
+          param[0]=0;
+          param[1]=(t >> 8);
+          param[2]= t & 0xff;
         }
       }
       param_len=3;
@@ -6070,6 +6074,7 @@ next_parameter:
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
                   printKat(cat,1);
+                  writelnToDebug();
                   if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
@@ -6769,6 +6774,7 @@ next_parameter:
                 set_temp_destination(param.dest_addr);
               }
               printKat(param.number,1);
+              writelnToDebug();
               uint cat = param.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
