@@ -27,4 +27,6 @@ jobs:
           git config --local user.name "GitHub Action"
           git add BSB_LAN/bsb-version.h
           git commit -m "Update COMPILETIME to $TIMESTAMP" || echo "No changes to commit"
+          git fetch
+          git rebase origin/main
           git push origin HEAD:main
