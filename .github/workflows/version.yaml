@@ -18,13 +18,13 @@ jobs:
 
       - name: Update compile time in bsb-version.h
         run: |
-          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' bsb-version.h
-          cat bsb-version.h  # For debugging
+          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
+          cat BSB_LAN/bsb-version.h  # For debugging
 
       - name: Commit and push if changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add bsb-version.h
+          git add BSB_LAN/bsb-version.h
           git commit -m "Update COMPILETIME to $TIMESTAMP" || echo "No changes to commit"
           git push origin HEAD:main
