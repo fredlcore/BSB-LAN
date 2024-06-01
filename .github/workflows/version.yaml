@@ -1,30 +1,37 @@
-name: Update Compile Time
+  name: Update Compile Time
 
-on: [push, pull_request]
+  on: [push, pull_request]
 
-jobs:
-  update-compiletime:
-    runs-on: ubuntu-latest
+  jobs:
+    update-compiletime:
+      runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
 
-      - name: Get current commit timestamp
-        run: |
-          TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
-          echo "Current Commit Timestamp: $TIMESTAMP"
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+        - name: Get current commit timestamp
+          run: |
+            TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
+            echo "Current Commit Timestamp: $TIMESTAMP"
+            echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
-      - name: Update compile time in bsb-version.h
-        run: |
-          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
-          cat BSB_LAN/bsb-version.h  # For debugging
+        - name: Update compile time in bsb-version.h
+          run: |
+            sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
 
-      - name: Commit and push if changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add BSB_LAN/bsb-version.h
-          git commit -m "Update COMPILETIME to $TIMESTAMP" || echo "No changes to commit"
-          git push origin master
+        - name: Setup git config
+          run: |
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+   
+        - name: Commit changes
+          run: |
+            git add BSB_LAN/bsb-version.h
+            git commit -m "Update bsb-version.h" || echo "No changes to commit"
+   
+        - name: Rebase and push changes
+          run: |
+            git fetch origin master
+            git rebase origin/master
+            git push origin HEAD:master
