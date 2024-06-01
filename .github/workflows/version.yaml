@@ -13,11 +13,10 @@
         - name: Get current commit timestamp
           run: |
             TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
-            echo "Current Commit Timestamp: $TIMESTAMP"
-            echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+            PATCH_NUMBER=$(grep '#define PATCH' BSB_LAN/bsb-version.h | cut -d '"' -f 2)
+            NEW_PATCH_NUMBER=$((PATCH_NUMBER + 1))
 
-        - name: Update compile time in bsb-version.h
-          run: |
+            sed -i "s/#define PATCH \".*\"/#define PATCH \"$NEW_PATCH_NUMBER\"/" BSB_LAN/bsb-version.h
             sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
 
         - name: Setup git config
