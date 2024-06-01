@@ -27,10 +27,5 @@
         - name: Commit changes
           run: |
             git add BSB_LAN/bsb-version.h
-            git commit -m "Update bsb-version.h" || echo "No changes to commit"
-   
-        - name: Rebase and push changes
-          run: |
-            git fetch origin master
-            git rebase origin/master
+            git commit --amend --no-edit   
             git push origin HEAD:master
