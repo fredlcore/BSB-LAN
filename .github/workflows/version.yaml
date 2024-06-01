@@ -23,6 +23,10 @@ jobs:
 
       - name: Commit and push if changes
         run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git clone https://github.com/fredlcore/BSB-LAN . --branch main
+
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add BSB_LAN/bsb-version.h
