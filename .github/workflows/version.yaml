@@ -34,4 +34,4 @@ jobs:
         run: |
           git add BSB_LAN/bsb-version.h
           git commit -m "Update COMPILETIME to $TIMESTAMP"
-          git push origin main
+          git push origin master
