@@ -8,24 +8,23 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
-      
+        uses: actions/checkout@v4
+
       - name: Get current commit timestamp
-        id: get-timestamp
         run: |
           TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
           echo "Current Commit Timestamp: $TIMESTAMP"
-          echo "::set-output name=timestamp::$TIMESTAMP"
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
       - name: Update compile time in bsb-version.h
         run: |
-          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "${{ steps.get-timestamp.outputs.timestamp }}"/' BSB_LAN/bsb-version.h
-          cat BSB_LAN/bsb-version.h
+          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' bsb-version.h
+          cat bsb-version.h  # For debugging
 
       - name: Commit and push if changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add BSB_LAN/bsb-version.h
-          git commit -m "Update COMPILETIME to ${{ steps.get-timestamp.outputs.timestamp }}" || echo "No changes to commit"
+          git add bsb-version.h
+          git commit -m "Update COMPILETIME to $TIMESTAMP" || echo "No changes to commit"
           git push origin HEAD:main
