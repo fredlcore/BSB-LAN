@@ -23,15 +23,15 @@
           run: |
             sudo rm -rf * .[!.]* ..?*  # Dangerous: Removes all files in the current directory safely, include hidden ones.
 
+        - name: Reclone the repository
+          run: |
+            git clone https://github.com/fredlcore/BSB-LAN.git .
+
         - name: Setup git config
           run: |
             git config --local user.email "action@github.com"
             git config --local user.name "GitHub Action"
   
-        - name: Reclone the repository
-          run: |
-            git clone https://github.com/fredlcore/BSB-LAN.git .
-
         - name: Commit changes
           run: |
             git add BSB_LAN/bsb-version.h
