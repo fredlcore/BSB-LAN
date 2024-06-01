@@ -66,10 +66,10 @@
  *       3.1   - 04.06.2023
  *       3.2   - 15.11.2023
  *       3.3   - 12.03.2024
- *       3.4   - 
+ *       4.0   - 31.05.2024
  *
  * Changelog:
- *       version 3.4
+ *       version 4.0
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 must now have the additional flag FL_SPECIAL_INF, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Outside temperature simulation parameter 10017 must have FL_SPECIAL_INF flag removed, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have FL_SPECIAL_INF flag removd, otherwise setting temperature will not work! 
@@ -1475,7 +1475,7 @@ int findLine(float line)
   // binary search for the line in cmdtbl
 
   int line_dd = roundf(line * 10);
-  for (int j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
+  for (uint16_t j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
     if (roundf(cmdtbl[j].line * 10) == line_dd) {
       i = j;
       break;
