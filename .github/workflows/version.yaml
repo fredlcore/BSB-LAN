@@ -21,6 +21,10 @@ jobs:
           sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
           cat BSB_LAN/bsb-version.h  # For debugging
 
+      - name: Cleanup workspace
+        run: |
+          sudo rm -rf * .[!.]* ..?*  # Dangerous: Removes all files in the current directory safely, include hidden ones.
+
       - name: Commit and push if changes
         run: |
           git config user.email "action@github.com"
