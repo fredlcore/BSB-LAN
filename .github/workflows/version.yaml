@@ -19,6 +19,14 @@
             sed -i "s/#define PATCH \".*\"/#define PATCH \"$NEW_PATCH_NUMBER\"/" BSB_LAN/bsb-version.h
             sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
 
+        - name: Cleanup workspace
+          run: |
+            sudo rm -rf * .[!.]* ..?*  # Dangerous: Removes all files in the current directory safely, include hidden ones.
+
+        - name: Reclone the repository
+          run: |
+            git clone https://github.com/fredlcore/BSB-LAN.git .
+
         - name: Setup git config
           run: |
             git config --local user.email "action@github.com"
@@ -28,6 +36,7 @@
           run: |
             git add BSB_LAN/bsb-version.h
             git commit --amend --no-edit   
-            git fetch
-            git rebase origin/master
-            git push --force-with-lease origin HEAD:master
+#            git fetch
+#            git rebase origin/master
+#            git push --force-with-lease origin HEAD:master
+            git push origin master
