@@ -29,6 +29,5 @@
             git add BSB_LAN/bsb-version.h
             git commit --amend --no-edit   
             git fetch
-            git rebase --abort
             git rebase origin/master
             git push --force-with-lease origin HEAD:master
