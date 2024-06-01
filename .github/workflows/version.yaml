@@ -26,6 +26,7 @@
 
         - name: Commit changes
           run: |
+            git pull origin master
             git add BSB_LAN/bsb-version.h
             git commit --amend --no-edit   
             git push origin master
