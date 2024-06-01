@@ -23,8 +23,16 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
 
+      - name: Rebase changes from remote
+        run: |
+          git fetch origin master
+          git rebase origin/master
+
       - name: Commit changes
         run: |
           git add BSB_LAN/bsb-version.h
-          git commit --amend --no-edit
-          git push origin master
+          git commit --amend --no-edit   
+
+      - name: Force push changes
+        run: |
+          git push --force-with-lease origin master
