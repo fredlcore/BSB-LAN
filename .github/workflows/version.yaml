@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Ensures all history is fetched
 
       - name: Get current commit timestamp and update files
         run: |
@@ -23,16 +25,17 @@ jobs:
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
 
-      - name: Rebase changes from remote
+      - name: Commit changes
+        run: |
+          git add BSB_LAN/bsb-version.h
+          git commit -m "Prepare for rebase" || echo "No changes to commit"
+
+      - name: Fetch and rebase
         run: |
           git fetch origin master
           git rebase origin/master
 
-      - name: Commit changes
+      - name: Amend commit
         run: |
-          git add BSB_LAN/bsb-version.h
-          git commit --amend --no-edit   
-
-      - name: Force push changes
-        run: |
+          git commit --amend --no-edit
           git push --force-with-lease origin master
