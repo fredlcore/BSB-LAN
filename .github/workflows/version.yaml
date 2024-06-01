@@ -10,28 +10,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Cleanup workspace
+      - name: Get current commit timestamp
         run: |
-          sudo rm -rf * .[!.]* ..?*  # Removes all files in the current directory, including hidden ones.
-
-      - name: Reclone the repository
-        run: |
-          git clone https://github.com/fredlcore/BSB-LAN.git .
-          # Assuming the repository root is where you work directly; adjust if necessary.
-
-      - name: Setup Git Config
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
+          echo "Current Commit Timestamp: $TIMESTAMP"
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
       - name: Update compile time in bsb-version.h
         run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)  # Generates a timestamp.
-          sed -i "s/#define COMPILETIME .*/#define COMPILETIME \"$TIMESTAMP\"/" BSB_LAN/bsb-version.h
-          cat BSB_LAN/bsb-version.h  # Optional: for debugging, view the contents of the file.
+          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
+          cat BSB_LAN/bsb-version.h  # For debugging
 
-      - name: Commit and push changes
+      - name: Commit and push if changes
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add BSB_LAN/bsb-version.h
-          git commit -m "Update COMPILETIME to $TIMESTAMP"
+          git commit -m "Update COMPILETIME to $TIMESTAMP" || echo "No changes to commit"
           git push origin master
