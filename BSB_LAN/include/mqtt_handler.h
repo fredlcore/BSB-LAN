@@ -119,7 +119,11 @@ void mqtt_sendtoBroker(parameter param) {
   printFmtToDebug("Publishing to topic: %s\r\n", MQTTTopic);
   printFmtToDebug("Payload: %s\r\n", MQTTPayload);
   // Now publish the json payload only once
-  MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
+  if (MQTTPubSubClient->connected()) {
+    MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
+  } else {
+    printlnToDebug("Not connected to MQTT broker.");
+  }
   printlnToDebug("Successfully published...");
 }
 
