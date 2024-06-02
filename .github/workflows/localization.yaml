@@ -3,11 +3,11 @@ on:
   push:
 jobs:
   localizator:
-    name: Build language resourses
+    name: Build language resources
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout
+      - uses: actions/setup-node
       - name: Build UNDEFs, json and js files
         run: cd BSB_LAN/localization && ./create-undefs.pl && cd ..
       - name: Copy files to repo
