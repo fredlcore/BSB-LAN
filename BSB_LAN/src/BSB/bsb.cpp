@@ -197,7 +197,7 @@ bool BSB::GetMessage(byte* msg) {
   while (serial->available() > 0) {
     // Read serial data...
     read = readByte();
-
+/*
 #if DEBUG_LL
     Serial.println();    
     if(read<16){  
@@ -206,7 +206,7 @@ bool BSB::GetMessage(byte* msg) {
     Serial.print(read, HEX);
     Serial.print(" ");
 #endif    
-    
+*/    
     // ... until SOF detected (= 0xDC, 0xDE bei BSB bzw. 0x78 bei LPB)
     if ((bus_type == BUS_BSB && (read == 0xDC || read == 0xDE)) || (bus_type == BUS_LPB && read == 0x78) || (bus_type == BUS_PPS && ((read & 0x0F) == 0x07 || (read & 0x0F) == 0x0D || (read & 0x0F) == 0x0E || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
       // Restore otherwise dropped SOF indicator
@@ -240,6 +240,7 @@ bool BSB::GetMessage(byte* msg) {
       while (serial->available() > 0) {
         read = readByte();
         msg[i++] = read;
+/*
 #if DEBUG_LL
         if(read<16){  
           Serial.print("0");
@@ -247,6 +248,7 @@ bool BSB::GetMessage(byte* msg) {
         Serial.print(read, HEX);
         Serial.print(" ");
 #endif
+*/
         // Break if message seems to be completely received (i==msg.length)
         if (i > len_idx) {
           if (bus_type == BUS_PPS) {
@@ -287,14 +289,26 @@ bool BSB::GetMessage(byte* msg) {
         if (i == msg[len_idx]+bus_type) {		// LPB msg length is one less than BSB
           // Seems to have received all data
           if (bus_type == 1) {
-            if (CRC_LPB(msg, i-1)-msg[i-2]*256-msg[i-1] == 0) return true;
-            else return false;
+            if (CRC_LPB(msg, i-1)-msg[i-2]*256-msg[i-1] == 0) {
+              return true;
+            } else {
+              Serial.println("CRC error:");
+              print (msg);
+              return false;
+            }
 	        } else {
-            if (CRC(msg, i) == 0) return true;
-            else return false;
+            if (CRC(msg, i) == 0) {
+              return true;
+            } else {
+              Serial.println("CRC error:");
+              print (msg);
+              return false;
+            }
 	        }
         } else {
           // Length error
+          Serial.println("Length error:");
+          print (msg);
           return false;
         }
       }
@@ -431,6 +445,7 @@ inline int8_t BSB::_send(byte* msg) {
 #if DEBUG_LL
             if (c < 16) Serial.print("0");
             Serial.print(c, HEX);
+            Serial.print(" ");
 #endif
             c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
           }
@@ -579,7 +594,7 @@ die ESP32 ausgeweitet.
 
 int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
   byte i;
-  byte offset = 0;
+  byte length_offset = 0;
 
   if (bus_type == BUS_PPS) {
     return _send(tx_msg);
@@ -601,15 +616,15 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   if (type == 0x12) {   // TYPE_IQ1
     A1 = A3;
     A2 = A4;
-    offset = 2;
+    length_offset = 2;
   }
   if (type == 0x14) {   // TYPE_IQ2
     A1 = A4;
-    offset = 3;
+    length_offset = 3;
   }
   
   if (bus_type == 1) {
-    tx_msg[1] = param_len + 14 - offset;
+    tx_msg[1] = param_len + 14 - length_offset;
     tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
     tx_msg[5] = 0x02;	// yet unknown
     tx_msg[6] = 0x00;	// yet unknown
@@ -621,7 +636,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
     tx_msg[11] = A3;
     tx_msg[12] = A4;
   } else {
-    tx_msg[3] = param_len + 11 - offset;
+    tx_msg[3] = param_len + 11 - length_offset;
     tx_msg[4] = type;
     // Adress
     tx_msg[5] = A1;
@@ -639,7 +654,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
     }
   }
   int8_t return_value = _send(tx_msg);
-  if(return_value != 1) return return_value;
+  if(return_value != BUS_OK) return return_value;
   if(!wait_for_reply) return return_value;
 
   i=15;
@@ -648,30 +663,22 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   while ((i > 0) && (millis() < timeout)) {
     if (GetMessage(rx_msg)) {
 #if DEBUG_LL
-      Serial.print(F("Duration until answer received: "));
+      Serial.print(F("\r\nDuration until answer received: "));
       Serial.println(3000-(timeout-millis()));
+      print(rx_msg);
 #endif
       i--;
       byte msg_type = rx_msg[4+offset];
       if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type=0x14 && msg_type == 0x15))) {
         return BUS_OK;
       }
-      if (bus_type == 1) {
+      if (bus_type != 2) {
 /* Activate for LPB systems with truncated error messages (no commandID in return telegram) 
 	if (rx_msg[2] == myAddr && rx_msg[8]==0x08) {  // TYPE_ERR
 	  return false;
 	}
 */
-        if (rx_msg[2] == myAddr && rx_msg[9] == A2 && rx_msg[10] == A1 && rx_msg[11] == A3 && rx_msg[12] == A4) {
-          return BUS_OK;
-	      } else {
-#if DEBUG_LL
-          Serial.println(F("Message received, but not for us:"));
-          print(rx_msg);
-#endif
-        }
-      } else {
-        if ((rx_msg[2] == myAddr) && (rx_msg[5] == A2) && (rx_msg[6] == A1) && (rx_msg[7] == A3) && (rx_msg[8] == A4)) {
+        if ((rx_msg[2] == myAddr) && (rx_msg[5+offset] == A2) && (rx_msg[6+offset] == A1) && (rx_msg[7+offset] == A3) && (rx_msg[8+offset] == A4)) {
           return BUS_OK;
 	      } else {
 #if DEBUG_LL

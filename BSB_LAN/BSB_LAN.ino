@@ -3944,7 +3944,7 @@ void query_printHTML() {
 
 /*
       // dump data payload for unknown types
-      if (type == VT_UNKNOWN && msg[4+(bus_type*4)] != TYPE_ERR) {
+      if (type == VT_UNKNOWN && msg[4+(bus->offset)] != TYPE_ERR) {
         int data_len;
         if (bus_type == BUS_LPB) {
           data_len=msg[len_idx]-14;     // get packet length, then subtract
@@ -4404,9 +4404,9 @@ void GetDevId() {
   byte  msg[33] = { 0 };
   byte  tx_msg[33] = { 0 };
   bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
-  my_dev_fam = msg[10+bus->getBusType()*4];
-  my_dev_var = msg[12+bus->getBusType()*4];
-  my_dev_id = (msg[15+bus->getBusType()*4] << 24) + (msg[16+bus->getBusType()*4] << 16) + (msg[17+bus->getBusType()*4] << 8) + (msg[18+bus->getBusType()*4]);
+  my_dev_fam = msg[10+bus->offset];
+  my_dev_var = msg[12+bus->offset];
+  my_dev_id = (msg[15+bus->offset] << 24) + (msg[16+bus->offset] << 16) + (msg[17+bus->offset] << 8) + (msg[18+bus->offset]);
 
 /*
   if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
@@ -5640,19 +5640,19 @@ void loop() {
             while (bus->Send(TYPE_IQ1, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
-              printToWebClient("Didn't receive matching telegram, resending...\r\n");
+              printlnToDebug("Didn't receive matching telegram, resending...");
               delay(500);
             }
             printTelegram(tx_msg, -1);
             printTelegram(msg, -1);
-            int IA1_max = (msg[7+bus->getBusType()*4] << 8) + msg[8+bus->getBusType()*4];
-            if (msg[4+bus->getBusType()*4] == 0x13 && IA1_max > 0) {
+            int IA1_max = (msg[7+bus->offset] << 8) + msg[8+bus->offset];
+            if (msg[4+bus->offset] == 0x13 && IA1_max > 0) {
               timeout = millis() + 3000;
               while (bus->Send(TYPE_IQ2, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                 printToWebClient("Didn't receive matching telegram, resending...\r\n");
                 delay(500);
               }
-              int IA2_max = (msg[5+bus->getBusType()*4] << 8) + msg[6+bus->getBusType()*4];
+              int IA2_max = (msg[5+bus->offset] << 8) + msg[6+bus->offset];
               int outBufLen = strlen(outBuf);
 
               for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected(); IA1_counter++) {
@@ -5685,6 +5685,9 @@ void loop() {
               }
               outBuf[outBufLen] = 0;
             } else {
+              printlnToDebug("No response to dump request:");
+              bus->print(tx_msg);
+              bus->print(msg);
               printToWebClient("\r\nNot supported by this device. No problem.\r\n");
             }
           }
