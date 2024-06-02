@@ -717,7 +717,7 @@ void printTelegram(byte* msg, float query_line) {
   uint8_t msg_dest_addr = 0;
 
   if (bus_type != BUS_PPS) {
-    decodedTelegram.msg_type = msg[4+(bus_type*4)];
+    decodedTelegram.msg_type = msg[4+bus->offset];
     msg_source_addr = msg[1+(bus_type*2)];
     msg_dest_addr = msg[2];
     // source

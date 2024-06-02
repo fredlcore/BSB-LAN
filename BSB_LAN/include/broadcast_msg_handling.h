@@ -1,6 +1,6 @@
 void broadcast_msg_handling(byte *msg){
   // Is this a broadcast message?
-  if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->getBusType()*4)]==TYPE_INF) { // handle broadcast messages
+  if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2]>=0xF0 && bus->getBusType()==BUS_LPB)) && msg[4+(bus->offset)]==TYPE_INF) { // handle broadcast messages
   // Decode the rcv telegram and send it to the PC serial interface
     if (!verbose && !monitor) {        // don't log twice if in verbose mode, but log broadcast messages also in non-verbose mode
       printTelegram(msg, -1);
@@ -10,7 +10,7 @@ void broadcast_msg_handling(byte *msg){
     // Filter Brenner Status messages
 
     uint32_t cmd;
-    cmd=(uint32_t)msg[5+(bus->getBusType()*4)]<<24 | (uint32_t)msg[6+(bus->getBusType()*4)]<<16 | (uint32_t)msg[7+(bus->getBusType()*4)] << 8 | (uint32_t)msg[8+(bus->getBusType()*4)];
+    cmd=(uint32_t)msg[5+(bus->offset)]<<24 | (uint32_t)msg[6+(bus->offset)]<<16 | (uint32_t)msg[7+(bus->offset)] << 8 | (uint32_t)msg[8+(bus->offset)];
     if (cmd==0x0500006C && !ntp_server[0]) {   // set Time from BC unless NTP is used, same CommandID for BSB and LPB
       setTime(msg[bus->getPl_start()+5], msg[bus->getPl_start()+6], msg[bus->getPl_start()+7], msg[bus->getPl_start()+3], msg[bus->getPl_start()+2], msg[bus->getPl_start()+1]+1900);
     }
