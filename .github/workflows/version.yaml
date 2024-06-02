@@ -29,13 +29,3 @@ jobs:
         run: |
           git add BSB_LAN/bsb-version.h
           git commit -m "${{ github.event.head_commit.message }}"
-
-      - name: Fetch and rebase
-        run: |
-          git fetch origin master
-          git rebase origin/master
-
-      - name: Amend commit with the original message
-        run: |
-          git commit --amend -m "${{ github.event.head_commit.message }}"
-          git push --force-with-lease origin master
