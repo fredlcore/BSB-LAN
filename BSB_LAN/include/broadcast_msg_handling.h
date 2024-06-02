@@ -16,9 +16,9 @@ void broadcast_msg_handling(byte *msg){
     }
 
     if (cmd==0x31000212) {    // TWW Status
-      printFmtToDebug("INF: TWW-Status: %d\r\n", msg[11]);
+      printFmtToDebug("INF: TWW-Status: %d\r\n", msg[11+bus->offset]);
 
-      if ((msg[11] & 0x0F) == 0x08) {  // See parameter 10018
+      if ((msg[11+bus->offset] & 0x0F) == 0x08) {  // See parameter 10018
         if (TWW_start==0) {        // has not been timed
           TWW_start=millis();   // keep current timestamp
           TWW_count++;          // increment number of starts
