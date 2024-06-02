@@ -1136,7 +1136,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
     case MIME_TYPE_IMAGE_PNG: getfarstrings = "image/png"; break;
     case MIME_TYPE_IMAGE_ICON: getfarstrings = "image/x-icon"; autoDetectCachingTime = 2592000; break; // 30 days
     case MIME_TYPE_APP_GZ: getfarstrings = "application/x-gzip"; break;
-    case MIME_TYPE_FORCE_DOWNLOAD: getfarstrings = "application/force-download"; break;
+    case MIME_TYPE_FORCE_DOWNLOAD: getfarstrings = "application/force-download"; autoDetectCachingTime = HTTP_DO_NOT_CACHE; break;
     case MIME_TYPE_TEXT_TEXT:
     default: getfarstrings = "text"; autoDetectCachingTime = 60; break;
   }
