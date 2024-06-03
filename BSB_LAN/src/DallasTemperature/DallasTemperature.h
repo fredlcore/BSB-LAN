@@ -19,7 +19,7 @@
 #endif
 
 #include <inttypes.h>
-#include "../OneWireNg/OneWire.h"
+#include "../OneWireNg/src/OneWire.h"
 
 // Model IDs
 #define DS18S20MODEL 0x10  // also DS1820
