@@ -73,7 +73,7 @@
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 must now have the additional flag FL_SPECIAL_INF, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Outside temperature simulation parameter 10017 must have FL_SPECIAL_INF flag removed, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have FL_SPECIAL_INF flag removd, otherwise setting temperature will not work! 
- *        - ATTENTION: For ESP32, BSB-LAN requires framework version 2.0.17 - the newer versions 3.0.0 and above do not work (yet)!
+ *        - ATTENTION: For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
@@ -94,6 +94,7 @@
  *        - Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. 
  *        - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
  *        - Various bugfixes, among others logging of bus telegrams on storage device.
+ *        - New OneWireNg library version
  *       version 3.3
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files!
  *        - ESP32: Support for receiving date and time via NTP instead of taking it from the heater.
@@ -616,9 +617,7 @@ void printKat(uint8_t cat, int print_val, boolean debug_output=true);
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-  #error "You are using version 3.0.0 or above of the ESP32 framework. BSB-LAN currently only runs under version 2.0.17. Please switch to that version in the board manager of the Arduino IDE."
-#endif
+
 
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
@@ -653,6 +652,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
+  #include <WiFi.h>
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
   #include <WiFiUdp.h>
@@ -723,7 +723,11 @@ public:
       return success;
     }
     bool begin(uint8_t *mac) {
+  #if ESP_ARDUINO_VERSION_MAJOR < 3
       return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
+  #else
+      return ETHClass::begin();
+  #endif
     }
 };
 
@@ -847,7 +851,7 @@ SdFat SDCard;
 
 // CONFIG_DS18S20_EXT_RES can be enabled in OneWireNg_Config.h
 // Paths in some files should be changed after library updating.
-#include "src/OneWireNg/OneWire.h"
+#include "src/OneWireNg/src/OneWire.h"
 #include "src/DallasTemperature/DallasTemperature.h"
 #ifndef TEMPERATURE_PRECISION //Not used in this time
   #define TEMPERATURE_PRECISION 9 //9 bit. Time to calculation: 94 ms
@@ -7756,7 +7760,14 @@ void setup() {
   //set watchdog timeout 120 seconds
     #define WDT_TIMEOUT 120
   #endif
-  esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  #if ESP_ARDUINO_VERSION_MAJOR < 3
+    esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  #else
+    esp_task_wdt_config_t config = {
+      .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
+      .trigger_panic = true,     // Trigger panic if watchdog timer is not reset
+    };
+  #endif
   esp_task_wdt_add(NULL); //add current thread to WDT watch
 #endif
 
