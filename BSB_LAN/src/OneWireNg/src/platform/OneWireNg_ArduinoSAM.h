@@ -15,8 +15,8 @@
 
 #include <assert.h>
 #include "Arduino.h"
-#include "OneWireNg_BitBang.h"
-#include "platform/Platform_TimeCritical.h"
+#include "../OneWireNg_BitBang.h"
+#include "Platform_TimeCritical.h"
 
 /*
  * If configured - internal Arduino-SAM pin status in updated
