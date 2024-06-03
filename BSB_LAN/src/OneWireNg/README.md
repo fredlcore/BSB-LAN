@@ -1,17 +1,41 @@
-This fork is used for BSB-LAN project (https://github.com/fredlcore/BSB-LAN). Some pathes was changed.
-
 # OneWireNg
-[![Tests status](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml)
-[![Builds status](https://github.com/pstolarz/OneWireNg/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/build.yml)
-[![Join the chat at https://gitter.im/pstolarz/OneWireNg](https://badges.gitter.im/pstolarz/OneWireNg.svg)](https://gitter.im/pstolarz/OneWireNg?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+[![Arduino builds](https://github.com/pstolarz/OneWireNg/actions/workflows/arduino-builds.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/arduino-builds.yml)
+[![PlatformIO builds](https://github.com/pstolarz/OneWireNg/actions/workflows/platformio-builds.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/platformio-builds.yml)
+[![ESP-IDF builds](https://github.com/pstolarz/OneWireNg/actions/workflows/espidf-builds.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/espidf-builds.yml)
+[![Pico SDK builds](https://github.com/pstolarz/OneWireNg/actions/workflows/picosdk-builds.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/picosdk-builds.yml)
+[![Mbed OS builds](https://github.com/pstolarz/OneWireNg/actions/workflows/mbedos-builds.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/mbedos-builds.yml)
+[![Unit tests](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml/badge.svg?branch=master)](https://github.com/pstolarz/OneWireNg/actions/workflows/ut.yml)
+[![PlatformIO Registry](https://badges.registry.platformio.org/packages/pstolarz/library/OneWireNg.svg)](https://registry.platformio.org/libraries/pstolarz/OneWireNg)
 <br>
 
-This is an Arduino 1-wire service library, intended as an alternative for the
-classic [OneWire](https://github.com/PaulStoffregen/OneWire) library. The library
+This is an 1-wire service library, intended as an alternative for the classic
+[OneWire](https://github.com/PaulStoffregen/OneWire) library. The library
 provides basic 1-wire services (reset, search, touch, read, write, parasite
 powering) and may serve for further work while interfacing with various 1-wire
 devices.
 
+## Table of Contents
+
+* [Features](#features)
+* [Usage](#usage)
+  * [ESP-IDF](#usage_idf)
+  * [Pico SDK](#usage_pico)
+  * [Mbed OS](#usage_mbed)
+* [Supported platforms](#supported_plats)
+* [Overdrive mode](#od_mode)
+* [Parasite powering](#parasite)
+* [Architecture details](#arch)
+  * [`OneWireNg`](#arch_owng)
+    * [Memory allocation caveat](#arch_owng_malloc)
+  * [`OneWireNg_BitBang`](#arch_bb)
+  * [`OneWireNg_PLATFORM`](#arch_plat)
+    * [RP2040 drivers](#arch_rp2040)
+* [OneWire compatibility](#ow)
+  * [DallasTemperature library](#ow_dallas)
+* [License](#license)
+
+<a name="features"></a>
 ## Features
 
 * All bus activities are performed respecting open-drain character of the 1-wire
@@ -36,7 +60,7 @@ devices.
 * Search filtering.
 
   Search algorithm allows efficient filtering basing on a selected set of family
-  codes. Maximum size of the set is configurable by `CONFIG_MAX_SRCH_FILTERS`.
+  codes. Maximum size of the set is configurable by `CONFIG_MAX_SEARCH_FILTERS`.
 
 * Overdrive (high-speed) mode support.
 
@@ -57,8 +81,101 @@ devices.
 * Clear and flexible architecture.
 
   The code architecture allows fast and easy porting for new Arduino platforms
-  or even usage of core part of the library outside the Arduino environment.
+  or even usage core part of the library outside the Arduino environment.
+  See below for usage details on ESP-IDF, Pico SDK or Mbed OS based platforms.
 
+<a name="usage"></a>
+## Usage
+
+Refer to [`examples`](examples) directory for usage details for each of the
+supported frameworks: Arduino, ESP-IDF, Pico SDK and Mbed.
+
+For API specification refer to sources inline documentation (mainly
+[`OneWireNg`](src/OneWireNg.h) class). For convenience it's possible to generate
+HTML/LaTeX [Doxygen](https://www.doxygen.nl/index.html) documentation by issuing
+`doxygen` from the main library directory. The documentation will be placed in
+`extras/doc`.
+
+File [`src/OneWireNg_Config.h`](src/OneWireNg_Config.h) contains parameters
+configuring the library functionality. See the file for more details.
+
+<a name="usage_idf"></a>
+### ESP-IDF (incl. ESP8266 RTOS SDK v3)
+
+Preferred way to add OneWireNg as a library for Espressif [ESP-IDF](https://github.com/espressif/esp-idf)
+framework is to add it as a git submodule located at project's `components`
+subdirectory:
+
+```
+git submodule add -- https://github.com/pstolarz/OneWireNg components/OneWireNg
+```
+
+Next checkout specific library `VERSION`:
+
+```
+cd components/OneWireNg
+git checkout VERSION
+```
+
+While added the library shall be configured via ESP-IDF native configuration
+(see [`Kconfig`](Kconfig) for details), which shadows the `OneWireNg_Config.h`
+configuration file.
+
+<a name="usage_pico"></a>
+### Pico SDK
+
+Preferred way to add OneWireNg as a library for [Raspberry Pi Pico SDK](https://github.com/raspberrypi/pico-sdk)
+framework is to add it as a git submodule:
+
+```
+git submodule add -- https://github.com/pstolarz/OneWireNg OneWireNg
+```
+
+Checkout on a specific library `VERSION`:
+
+```
+cd OneWireNg
+git checkout VERSION
+```
+
+Finally add OneWireNg as a library in a Pico SDK project's `CMakeLists.txt`
+file as follows:
+
+```
+cmake_minimum_required(VERSION 3.13)
+include(pico_sdk_import.cmake)
+
+project(some_project)
+pico_sdk_init()
+
+add_executable(some_project)
+
+...
+
+add_subdirectory(OneWireNg)
+target_link_libraries(some_project PRIVATE OneWireNg)
+
+pico_add_extra_outputs(some_project)
+```
+
+<a name="usage_mbed"></a>
+### Mbed OS
+
+*NOTE: The library usage for [Mbed OS](https://os.mbed.com) is experimental.
+The only board used for tests of this framework is NUCLEO-L552ZE-Q.*
+
+To add OneWireNg as a library for Mbed framework project use (for specific
+`VERSION`):
+
+```
+mbed add https://github.com/pstolarz/OneWireNg#VERSION
+```
+
+While added the library shall be configured via Mbed native configuration (see
+[`mbed_lib.json`](mbed_lib.json) for details), which shadows the
+`OneWireNg_Config.h` configuration file.
+
+<a name="supported_plats"></a>
 ## Supported platforms
 
 * Arduino AVR.
@@ -67,61 +184,62 @@ devices.
 * Arduino megaAVR (recent Microchip AVR architecture).
     * Platform class: `OneWireNg_ArduinoMegaAVR`.
     * [Reported to be working.](https://github.com/SpenceKonde/megaTinyCore/blob/master/megaavr/extras/LibraryCompatibility.md)
-* Arduino ESP8266.
-    * Platform class: `OneWireNg_ArduinoESP8266`.
-    * Tested on WemOS D1
-* Arduino ESP32 (legacy, S and C families).
-    * Platform class: `OneWireNg_ArduinoESP32`.
-    * Tested on ESP32-WROOM-32, ESP32-S2-WROVER
+* Arduino ESP8266/ESP-IDF.
+    * Platform class: `OneWireNg_ArduinoIdfESP8266`.
+    * Tested on WemOS D1.
+* Arduino/ESP-IDF ESP32 (classic, S, C, H and P families).
+    * Platform class: `OneWireNg_ArduinoIdfESP32`.
+    * Tested on ESP32-WROOM-32, ESP32-S2-WROVER, ESP32-S3-WROOM-1, ESP32-C3-32S-Kit.
+* Arduino/Pico SDK RP2040.
+    * Platform classes: `OneWireNg_PicoRP2040`, `OneWireNg_PicoRP2040PIO`.
+    * Tested on Raspberry Pi Pico.
+* Arduino/Mbed OS based platforms (incl. Edge, Giga, Nano, Nicla, Portena, RP2040).
+    * Platform class: `OneWireNg_ArduinoMbedHAL`.
+    * Tested on Raspberry Pi Pico, Nucleo-144 (L552ZE-Q).
+* Arduino STM32.
+    * Platform class: `OneWireNg_ArduinoSTM32`.
+    * Tested on Nucleo-144 (L552ZE-Q).
 * Arduino SAM.
     * Platform class: `OneWireNg_ArduinoSAM`.
     * [Reported to be working.](https://github.com/pstolarz/OneWireNg/issues/33)
 * Arduino SAMD/SAMD-Beta.
     * Platform class: `OneWireNg_ArduinoSAMD`.
     * **Not tested**.
-* Arduino STM32.
-    * Platform class: `OneWireNg_ArduinoSTM32`.
-    * **Not tested**.
-* Arduino MbedOS based platforms (RP2040, Nano, Edge, Nicla, Portena).
-    * Platform class: `OneWireNg_ArduinoMbedHAL`.
-    * **Not tested**.
 
 NOTE: Expect more platforms support in the future. **I'm inviting all developers**
 eager to help me with porting and testing the library for new platforms.
 
-## Usage
-
-Refer to [`examples`](examples) directory for usage details.
-
-For API specification refer to sources inline documentation (mainly
-[`OneWireNg`](src/OneWireNg.h) class). For your convenience it's possible to
-generate HTML/LaTeX [Doxygen](https://www.doxygen.nl/index.html) documentation
-by issuing `doxygen` from the main library directory. The documentation will
-be placed in `extras/doc`.
-
-File [`src/OneWireNg_Config.h`](src/OneWireNg_Config.h) contains parameters
-configuring the library functionality. See the file for more details.
-
+<a name="od_mode"></a>
 ## Overdrive mode
 
 When configured with `CONFIG_OVERDRIVE_ENABLED` the library supports 1-wire
 overdrive mode. The mode requires very strict and short timings while bit-banging
 data on the 1-wire bus, therefore is vulnerable for any inaccuracies.
 
-The mode is confirmed to work on the following platforms and CPU frequencies:
+While configured with `CONFIG_BITBANG_DELAY_CCOUNT` the mode is confirmed to
+work on the following platforms and CPU frequencies:
 
-* Arduino AVR.
+* AVR
     * Arduino UNO (ATmega328P); 16MHz.
-* Arduino ESP8266.
-    * WemOS D1; 160MHz,80MHz.
-* Arduino ESP32.
-    * ESP32-WROOM-32; 240MHz-26MHz.
-    * ESP32-S2-WROVER; 240MHz-80MHz
+* ESP8266
+    * WemOS D1; 160,80MHz.
+* ESP32
+    * ESP32-WROOM-32; 240,160,80,40,20MHz
+    * ESP32-S2-WROVER; 240,160,80,40,20,10MHz
+    * ESP32-S3-WROOM-1; 240,160,80MHz (other freqs not tested)
+    * ESP32-C3-32S-Kit; 240,160MHz (other freqs not tested)
+* RP2040
+    * Raspberry Pi Pico; 50-250MHz (bit-banging and PIO drivers)
+* STM32
+    * NUCLEO-L552ZE-Q; 110MHz
 
+<a name="parasite"></a>
 ## Parasite powering
 
-The library supports two modes of providing a direct voltage source on the
-1-wire bus for parasitically powered slaves:
+**Bit-banging drivers**
+
+For bit-banging type of drivers, the library supports two modes of providing
+a direct voltage source on the 1-wire bus for parasitically powered slaves:
 
 1. If platform's GPIO set to the high-state (in the output mode) is able to
    serve as a voltage source, the library may leverage this trait. The master
@@ -134,7 +252,7 @@ The library supports two modes of providing a direct voltage source on the
    an external power source to the bus and is controlled by a dedicated
    power-control-GPIO as presented on the following figure.
 
-![Switching transistor parasite powering](extras/schema/parasite.svg)
+![Switching transistor parasite powering](extras/img/parasite.svg)
 
 To enable the second mode the library needs to be configured with
 `CONFIG_PWR_CTRL_ENABLED`.
@@ -156,8 +274,8 @@ void setup()
      * PWR_CTRL_PIN: power-control-GPIO pin number (optional).
      */
 #ifdef PWR_CTRL_PIN
-# ifndef CONFIG_PWR_CTRL_ENABLED
-#  error "CONFIG_PWR_CTRL_ENABLED needs to be enabled"
+# if CONFIG_PWR_CTRL_ENABLED
+#  error "CONFIG_PWR_CTRL_ENABLED needs to be configured"
 # endif
     // switching transistor powering
     ow = new OneWireNg_CurrentPlatform(OW_PIN, PWR_CTRL_PIN);
@@ -168,31 +286,43 @@ void setup()
 
     // ...
 
-    // power the bus until explicit unpowering or next 1-wire bus activity
-    ow->powerBus(true);
+    // write array of bytes and power the bus subsequently;
+    // the bus is powered until explicit unpowering or next 1-wire bus activity
+    ow->writeBytes(bytes, bytes_len, true);
 
     // wait for connected slaves to fulfill their task requiring extra powering
     delay(750);
 
-    // unpower the bus
+    // unpower the bus explicitly
     ow->powerBus(false);
 }
 ```
 
 configures 1-wire service to work in one of the above modes.
 
-**1-wire stability and parasite powering**
+**RP2040 PIO driver**
 
-Parasite powered slaves are less stable (more error prone) than regularly
-powered devices. If possible, try to avoid parasitically powered setups.
-However, if parasitic powering is unavoidable prefer to use the second mode
-(with switching transistor) in favor of the first one - it seems to be more
-stable for some platforms (e.g. AVR).
+RP2040 PIO driver (`OneWireNg_PicoRP2040PIO` class) doesn't support
+power-control-GPIO configuration. Since RP2040 platform is able to provide
+direct voltage source via its GPIO pads, parasitically powered devices need
+to be powered directly by GPIO controlling the 1-wire bus while using this
+driver.
 
+**Caveats**
+
+* Parasite powered slaves are less stable (more error prone) than regularly
+  powered devices. If possible, try to avoid parasitically powered setups.
+
+* For legacy AVR (non mega-AVR) and ESP8266 platforms (especially working
+  in the parasitic mode) there are observed problems unless the parameter
+  `CONFIG_BUS_BLINK_PROTECTION` is configured.
+
+<a name="arch"></a>
 ## Architecture details
 
-![OneWirNg class diagram](extras/schema/classOneWireNg__inherit__graph.png)
+![OneWirNg class diagram](extras/img/classOneWireNg__inherit__graph.png)
 
+<a name="arch_owng"></a>
 ### `OneWireNg`
 
 The class provides public interface for 1-wire service. Object of this class
@@ -248,6 +378,7 @@ object across all 1-wire activities handled by this service on a specific bus.
 Of course it is perfectly possible to created multiple `OneWireNg` services
 handling different 1-wire buses.
 
+<a name="arch_owng_malloc"></a>
 #### Memory allocation caveat
 
 If heap allocation is inadvisable use in-place `new` operator:
@@ -271,17 +402,20 @@ or use `Placeholder` utility template to store `OneWireNg` specialized object:
 #include "OneWireNg_CurrentPlatform.h"
 #include "utils/Placeholder.h"
 
-static Placeholder<OneWireNg_CurrentPlatform> _ow;
-static OneWireNg *ow = NULL;
+static Placeholder<OneWireNg_CurrentPlatform> ow;
 
 void setup()
 {
     // initialize the placeholded object by in-place new
-    ow = new (&_ow) OneWireNg_CurrentPlatform(10);
+    new (&ow) OneWireNg_CurrentPlatform(10);
     // ...
 }
 ```
 
+Refer to [examples](examples) for more information how to use the `Placeholder`
+in the context of object stored within.
+
+<a name="arch_bb"></a>
 ### `OneWireNg_BitBang`
 
 The class is derived from `OneWireNg` and implements the 1-wire interface basing
@@ -289,6 +423,7 @@ on GPIO bit-banging. Object of this class isn't constructed directly rather than
 the class is intended to be inherited by a derived class providing protected
 interface implementation for low level GPIO activities (set mode, read, write).
 
+<a name="arch_plat"></a>
 ### `OneWireNg_PLATFORM`
 
 Are family of classes providing platform specific implementation (`PLATFORM`
@@ -309,6 +444,20 @@ header which tries to detect platform the compilation is proceeded and:
  * include proper platform class header,
  * assign `OneWireNg_CurrentPlatform` macro-define to the detected platform class.
 
+<a name="arch_rp2040"></a>
+### RP2040 drivers
+
+`OneWireNg_PicoRP2040PIO` is derived from `OneWireNg` and implements the 1-wire
+interface for RP2040 MCU using Programmable I/O (PIO) peripheral. Second type
+of driver supporting RP2040 platform is `OneWireNg_PicoRP2040` bit-banging
+driver. Use `CONFIG_RP2040_PIO_DRIVER` configuration parameter to setup a
+specific driver for the platform.
+
+NOTE: There are observed problems with Pico SDK's serial output (USB,
+UART) while using the bit-banging driver in `TIMING_STRICT` mode (see
+`CONFIG_BITBANG_TIMING`).
+
+<a name="ow"></a>
 ## OneWire compatibility
 
 [`OneWire`](src/OneWire.h) class provides compatibility interface between
@@ -319,6 +468,7 @@ Finally, it's strongly recommended to switch into OneWireNg interface rather
 than stay with the OneWire due to OneWireNg's more mature and feature-rich API
 (search filtering, OD mode, touch support).
 
+<a name="ow_dallas"></a>
 ### DallasTemperature library
 
 As an example of usage of the compatibility interface there has been created
@@ -326,6 +476,7 @@ the [following fork](https://github.com/pstolarz/Arduino-Temperature-Control-Lib
 of [DallasTemperature](https://github.com/milesburton/Arduino-Temperature-Control-Library)
 library ported with OneWireNg.
 
+<a name="license"></a>
 ## License
 
 2 clause BSD license. See [`LICENSE`](LICENSE) file for details.
