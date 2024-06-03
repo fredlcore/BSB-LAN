@@ -7752,6 +7752,7 @@ void setup() {
 
   bus->enableInterface();
 #if defined(ESP32)
+  printFmtToDebug("ESP Arduino version: %d.%d.%d\r\n", ESP_ARDUINO_VERSION_MAJOR, ESP_ARDUINO_VERSION_MINOR, ESP_ARDUINO_VERSION_PATCH);
   if (esp32_save_energy == true) {
     bus->disableInterface();
     setCpuFrequencyMhz(80);
@@ -7759,8 +7760,8 @@ void setup() {
     printToDebug("Power-saving activated.\r\n");
   }
   #ifndef WDT_TIMEOUT
-  //set watchdog timeout 120 seconds
-    #define WDT_TIMEOUT 120
+  //set watchdog timeout 150 seconds
+    #define WDT_TIMEOUT 150
   #endif
   #if ESP_ARDUINO_VERSION_MAJOR < 3
     esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
