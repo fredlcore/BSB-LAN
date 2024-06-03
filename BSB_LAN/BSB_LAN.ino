@@ -83,6 +83,7 @@
  *        - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
  *        - Previously used /M1 and /M0 for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
  *        - Listing categories with /K now also works with destination device.
+ *        - Important bugfix for OTA update: Previous versions had a hard limit on file size which newer heating systems with several hundred parameters hit, so no OTA update was possible. This is now fixed, but affected users will have to make a USB-based update one more time.
  *        - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
  *        - MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)
  *        - Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.
@@ -2161,8 +2162,9 @@ void init_ota_update(){
     }, []() {
       HTTPUpload& upload = update_server.upload();
       if (upload.status == UPLOAD_FILE_START) {
+        uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+        printFmtToDebug("%d free bytes for firmware.\r\n", maxSketchSpace);
         printlnToDebug("Updating ESP32 firmware...");
-        uint32_t maxSketchSpace = 0x140000;
         if (!Update.begin(maxSketchSpace)) { //start with max available size
           Update.printError(Serial);
         }
@@ -7767,6 +7769,7 @@ void setup() {
       .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
       .trigger_panic = true,     // Trigger panic if watchdog timer is not reset
     };
+    esp_task_wdt_reconfigure(&config);
   #endif
   esp_task_wdt_add(NULL); //add current thread to WDT watch
 #endif
