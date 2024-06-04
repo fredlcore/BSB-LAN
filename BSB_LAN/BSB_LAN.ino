@@ -7376,8 +7376,8 @@ void netEvent(WiFiEvent_t event) {
       break;
     case ARDUINO_EVENT_ETH_START:
       SerialOutput->println("Ethernet Started.");
-      // Set ETH hostname here if needed
-      ETH.setHostname(mDNS_hostname);
+      // Set hostname here if needed
+      Ethernet.setHostname(mDNS_hostname);
       break;
     case ARDUINO_EVENT_ETH_CONNECTED:
       SerialOutput->println("Ethernet connected.");
@@ -7387,7 +7387,7 @@ void netEvent(WiFiEvent_t event) {
       break;
     case ARDUINO_EVENT_ETH_GOT_IP:
       SerialOutput->print("Ethernet got IP: ");
-      SerialOutput->println(ETH.localIP());
+      SerialOutput->println(Ethernet.localIP());
       break;
     case ARDUINO_EVENT_ETH_DISCONNECTED:
       SerialOutput->println("Ethernet disconnected.");
