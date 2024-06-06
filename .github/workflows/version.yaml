@@ -12,6 +12,11 @@ jobs:
         with:
           fetch-depth: 0  # Ensures all history is fetched
 
+      - name: Reset Repository to Remote State
+        run: |
+          git fetch origin
+          git reset --hard origin/master
+
       - name: Get current commit timestamp and update files
         run: |
           TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
