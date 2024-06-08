@@ -2,7 +2,9 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1011-bsb), [Local Process Bus (LPB)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1012-lpb) and [Point-to-Point-Interface (PPS)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#1013-pps). The adapter interface is designed for an *ESP32*-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE) or for an *Arduino Due* with Ethernet-Shield for web-based controlling via LAN/WLAN of heating systems such as Elco Thision, Brötje and other heating systems using Siemens controllers. Logging values on microSD-card is also possible. This project supports almost all parameters available on the respective heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
+Before starting with anything, please read through the manual [here](BSB_LAN/docs/EN/README.md).
+
+BSB-LAN is an interface for the Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-Point-Interface (PPS). The adapter interface is designed for an *ESP32*-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE) or for an *Arduino Due* with Ethernet-Shield for web-based controlling via LAN/WLAN of heating systems such as Elco Thision, Brötje and other heating systems using Siemens controllers. Logging values on microSD-card is also possible. This project supports almost all parameters available on the respective heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
 
@@ -10,38 +12,29 @@ BSB-LAN is an interface for the [Boiler-System-Bus (BSB)](https://1coderookie.gi
 
 ***Interface kits available!***  
 **Interface boards are available for the ESP32 upon request. These can simply be plugged on top of one of the listed microcontrollers.Getting the board from here helps supporting this project in the future, so if you are interested, please send Frederik an e-mail (German or English) to <br /> bsb (ät) code-it.de <br /> for further informations.**  
-   
----   
-   
-@1coderookie has compiled a huge load of information in his [BSB-LPB-LAN manual](https://1coderookie.github.io/BSB-LPB-LAN_EN) - give him
-a shout-out or support if his work is helping you getting started with BSB-LAN! 
-  
-***Quick Start Guides for the installation and commissioning of the BSB-LAN setups are available here:***  
-***[Quick Start Guide for ESP32 Boards](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_ESP32.html)***  
-***[Quick Start Guide for Arduino Due](https://1coderookie.github.io/BSB-LPB-LAN_EN/QSG_DUE.html)***  
-  
+
 ---  
   
 With the usage of the BSB-LPB-LAN adapter and the BSB-LAN software, various functions, values and parameters can now be easily monitored, logged and (if wanted) web-based controlled and changed.
-An optional integration into existing SmartHome systems such as [FHEM](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#81-fhem), [openHAB](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#82-openhab), [HomeMatic](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#83-homematic-eq3), [ioBroker](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#84-iobroker), [Loxone](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#85-loxone), [IP-Symcon](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#86-ip-symcon), [EDOMI](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#810-edomi), [Home Assistant](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#811-home-assistant), [SmartHomeNG](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#812-smarthomeng) or [Node-RED](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#813-node-red) can be done via [HTTPMOD](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap08.html#812-integration-via-httpmod-module), [JSON](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#53-json)) or [MQTT](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap05.html#52-mqtt).
-In addition, the use of the adapter as a [standalone logger](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap06.html#61-logging-data) without LAN or Internet connection when using a microSD card is also possible.
-Furthermore, optional [temperature and humidity sensors](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap07.html#71-usage-of-optional-sensors-dht22-ds18b20-bme280) can be connected and their data also logged and evaluated. With the ability to integrate your own code into the BSB-LAN software, there is also a wide range of expansion options.
+An optional integration into existing SmartHome systems such as FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG or Node-RED can be done via HTTPMOD, JSON) or MQTT.
+In addition, the use of the adapter as a standalone logger without LAN or Internet connection when using a microSD card is also possible.
+Furthermore, optional temperature and humidity sensors can be connected and their data also logged and evaluated. With the ability to integrate your own code into the BSB-LAN software, there is also a wide range of expansion options.
    
-The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. As a basic rule we can say, that the controller types of the last years which are named with an **S** at the end (RV**S** and LM**S**) are comaptible with BSB-LAN and offer (mostly) the full range of funtionality. For further and more detailed informations about the different [controllers](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#102-detailed-description-of-the-supported-controllers) and the [connection](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap03.md#31-connecting-the-adapter) see the corresponding chapters.  
+The following overview shows the most common used controllers of the different heating systems which will work with BSB-LAN. As a basic rule we can say, that the controller types of the last years which are named with an **S** at the end (RV**S** and LM**S**) are comaptible with BSB-LAN and offer (mostly) the full range of funtionality. For further and more detailed informations about the different controllers and the connection see the corresponding chapters.  
    
 **Gas-fired heating systems controllers:**  
-- [LMU74/LMU75](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10211-lmu-controllers) and [LMS14/LMS15](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10212-lms-controllers) (latest models), connection via BSB  
-- [LMU54/LMU64](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10211-lmu-controllers), connection via LPB through OCI420 plugin.
+- LMU74/LMU75 and LMS14/LMS15 (latest models), connection via BSB  
+- LMU54/LMU64, connection via LPB through OCI420 plugin.
    
 **Oil-fired heating systems controllers / solarthermic controllers / zone controllers:**  
-- [RVS43/RVS63/RVS46](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10222-rvs-controllers), connection via BSB  
-- [RVA/RVP](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10221-rva-and-rvp-controllers), connection via PPS (modelspecific sometimes LPB) 
+- RVS43/RVS63/RVS46, connection via BSB  
+- RVA/RVP, connection via PPS (modelspecific sometimes LPB) 
    
 **Heat pump controllers:**  
-- [RVS21/RVS61](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10222-rvs-controllers), connection via BSB  
+- RVS21/RVS61, connection via BSB  
    
 **Weishaupt (model WTU):**  
-- [RVS23](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap10.html#10222-rvs-controllers), connection via LPB  
+- RVS23, connection via LPB  
      
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
 - Broetje: BBK, BBS, BGB, BLW (**not BLW NEO!**), BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB 
@@ -82,9 +75,9 @@ The following overview shows the most common used controllers of the different h
 - Weishaupt: WTU
    
 ***To see a more detailed listing of the reported systems which are sucessfully used with BSB-LAN please follow the corresponding link:***  
-- **[Broetje](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#111-broetje)**  
-- **[Elco](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#112-elco)**  
-- **[Other Manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap11.html#113-other-manufacturers)**  
+- **Broetje**  
+- **Elco**  
+- **Other Manufacturers (e.g. Fujitsu, Atlantic, Weishaupt)**  
 
 
 If your heater has one of the following controllers, but your model ist not listed in our manual, feel free to get in touch with us, as these models have been confirmed working:  
