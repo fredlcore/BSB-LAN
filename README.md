@@ -2,7 +2,7 @@
 
 Die deutsche Fassung dieser Datei gibt es <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README_de.md">hier</A>.
 
-Before starting with anything, please read through the manual [here](BSB_LAN/docs/EN/README.md).
+Before starting with anything, please read through the manual [here](https://docs.bsb-lan.de/EN).
 
 BSB-LAN is an interface for the Boiler-System-Bus (BSB), Local Process Bus (LPB) and Point-to-Point-Interface (PPS). The adapter interface is designed for an *ESP32*-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE) or for an *Arduino Due* with Ethernet-Shield for web-based controlling via LAN/WLAN of heating systems such as Elco Thision, Brötje and other heating systems using Siemens controllers. Logging values on microSD-card is also possible. This project supports almost all parameters available on the respective heating systems and can serve in many ways as a cost-effective and in several ways more powerful alternative to the OZW 672, OCI 700 or Remocon Net B.
 
