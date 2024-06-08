@@ -68,7 +68,7 @@ void mqtt_sendtoBroker(parameter param) {
       }
       break;
     // =============================================
-    // send data as json message
+    // send data as json message (parameter / value only)
     // =============================================
     case 2:
       // use sub-topic json
@@ -89,7 +89,7 @@ void mqtt_sendtoBroker(parameter param) {
       appendStringBuffer(&sb_payload, "\"}}}");
       break;
     // =============================================
-    // send full json message
+    // send full json message (parameter number, parameter name, value, unit, error)
     // =============================================
     case 3:
       appendStringBuffer(&sb_topic, "%s", "json");
