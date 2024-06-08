@@ -1,1 +1,1 @@
-Please see the chapter [FAQ](https://1coderookie.github.io/BSB-LPB-LAN_EN/chap15.html) in the [manual](https://1coderookie.github.io/BSB-LPB-LAN_EN).
+Please see the chapter [FAQ](https://docs.bsb-lan.de/faq.html) in the [manual](https://docs.bsb-lan.de/EN).
