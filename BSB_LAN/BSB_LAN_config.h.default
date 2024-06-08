@@ -151,7 +151,7 @@ uint8_t logTelegram = LOGTELEGRAM_OFF;
 // Logging data from parameters
 // Interval and list of parameters can be redefined through /L command during runtime
 // Data will be written to "datalog.txt"
-unsigned long log_interval = 3600;  // Logging interval (to SD card, UDP and MQTT broker) in seconds
+unsigned long log_interval = 300;  // Logging interval (to SD card, UDP and MQTT broker) in seconds
 parameter log_parameters[40] = {
 // parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
   {8700, -1},                   // Außentemperatur
