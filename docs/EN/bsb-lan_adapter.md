@@ -1,6 +1,6 @@
 # The BSB-LAN adapter
 In order to connect to your heating system with a microcontroller, you need to have an adapter board that does the necessary logic-level conversion:
-<img src="../../schematics/Logic Level Adapter.jpg">
+<img src="../images/Logic Level Adapter.jpg">
 
 ---
 Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.
@@ -8,7 +8,7 @@ Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or Eng
 
 The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:
 
-<img src="../../schematics/Logic Level Adapter in Case.jpg">
+<img src="../images/Logic Level Adapter in Case.jpg">
 
 The two different types of ESP32 adapters (Olimex and ESP32-NoceMCU) only vary in the location of their connectors, the other parts of the board are identical.  
 The Arduino Due board contains an EEPROM chip because the Due does not come with on-board EEPROM. Therefore, you can re-use the Arduino Due board on an ESP32 microcontroller (if you connect the correct pins with wires), but you cannot use an adapter for the ESP32 on an Arduino Due.
