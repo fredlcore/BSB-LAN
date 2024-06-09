@@ -1,1 +1,0 @@
-openssl s_client -showcerts -connect 192.168.30.123:802 -cert client1_cer.pem -key client1_key.pem -verifyCAfile ca_cer.pem
