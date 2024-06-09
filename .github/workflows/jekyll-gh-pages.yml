@@ -2,9 +2,10 @@
 name: Deploy Jekyll with GitHub Pages dependencies preinstalled
 
 on:
-  # Runs on pushes targeting the default branch
-  push:
-    branches: ["master"]
+  workflow_run:
+    workflows: ["Update Compile Time"]
+    types:
+      - succeeded
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
