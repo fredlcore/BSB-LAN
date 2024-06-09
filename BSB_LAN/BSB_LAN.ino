@@ -8,10 +8,7 @@
  * Authors Gero Schumacher (up to version 0.16)
  *         Frederik Holst (bsb@code-it.de) (from version 0.17 onwards)
  *         (based on the code and work from many other developers. Many thanks!)
- *         Special thanks to Sergey Dukachev for lots of helpful code optimizations and restructurings as well as providing a profound Russian localization since version 0.43
- *         Manual by Ulf Dieckmann (adapter@quantentunnel.de):
- *         German: https://1coderookie.github.io/BSB-LPB-LAN/
- *         English: https://1coderookie.github.io/BSB-LPB-LAN_EN/
+ *         Special thanks to Ulf Diekmann for maintaining the manual up to version 3.3 and to Sergey Dukachev for lots of helpful code optimizations and restructurings as well as providing a profound Russian localization since version 0.43
  *
  * Version:
  *       0.1  - 21.01.2015 - initial version
@@ -76,6 +73,7 @@
  *        - ATTENTION: BREAKING CHANGE: URL commands /U (dislpay user-defined variables) and /X (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
  *        - ATTENTION: For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
+ *        - ATTENTION: New manual URL: https://docs.bsb-lan.de/
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
  *        - Most configuration definements removed from BSB_LAN_config.h. Almost all functionality can now be configured without reflashing.
  *        - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command /M1, to remove them call /M0. 
