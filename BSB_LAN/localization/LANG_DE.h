@@ -206,7 +206,7 @@
 #define MENU_TEXT_SDF "Achtung! Diese BSB-LAN Installation ist nur mit einem rudimentären Satz an Parametern ausgestattet. Um den vollen Parameterumfang nutzen zu können, muss über den entsprechenden Menüpunkt eine gerätespezifische Parameterliste erstellt und dann erneut geflasht werden."
 #define MENU_LINK_TOC "https://docs.bsb-lan.de/EN/"
 #define MENU_LINK_FAQ "https://docs.bsb-lan.de/EN/faq.html"
-#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN/kap05.html#51-url-befehle"
+#define MENU_LINK_URL "https://docs.bsb-lan.de/EN/using.html"
 #define MENU_TEXT_LOT "Telegramme loggen"
 #define MENU_TEXT_FSP "Freier Speicher im Dateisystem"
 #define MENU_TEXT_CNV "Kategorie nicht für dieses Zielgerät verfügbar."
