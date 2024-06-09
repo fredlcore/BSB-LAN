@@ -1,20 +1,72 @@
 site_name: BSB-LAN
 theme: mkdocs
+site_url: https://docs.bsb-lan.de
 use_directory_urls: false
 
+plugins:
+  - search
+  - i18n:
+      reconfigure_search: true
+      docs_structure: folder
+      languages:
+          - locale: en
+            name: English
+            build: true
+            default: true
+          - locale: de
+            name: Deutsch
+            build: true
+            nav_translations:
+                Overview: Überblick
+                Quickstart: Schnellstart
+                How it works: Wie funktioniert's?
+                Supported Heating Systems: Unterstützte Heizungssysteme
+                The BSB-LAN Adapter: Der BSB-LAN Adapter
+                How to set it up: Installation
+                Installation: Zusammenbauen
+                Configuration: Konfiguration
+                How to use it: Was kann es?
+                BSB-LAN's functions: BSB-LAN Funktionen
+                Connect to your Smart Home: Mit dem Smart Home verbinden
+                Help!: Hilfe!
+                Troubleshooting: Fehlersuche
+                FAQ: FAQ
+          - locale: fr
+            name: Français
+            build: true
+            nav_translations:
+                Overview: Aperçu
+                Quickstart: Démarrage rapide
+                How it works: Comment ça marche?
+                Supported Heating Systems: Systèmes de chauffage pris en charge
+                The BSB-LAN Adapter: L'adaptateur BSB-LAN
+                How to set it up: Installer
+                Installation: Assemblage
+                Configuration: Configuration
+                How to use it: Utiliser
+                BSB-LAN's functions: Fonctionnes de BSB-LAN
+                Connect to your Smart Home: Connecter à la Smart Home
+                Help!: Au secours!
+                Troubleshooting: Dépannage
+                FAQ: FAQ
+
 nav:
-  - Overview: EN/README.md
-  - Quickstart: EN/quickstart.md
+  - Overview: README.md
+  - Quickstart: quickstart.md
   - How it works:
-    - Supported Heating Systems: EN/supported_heating_systems.md
-    - The BSB-LAN Adapter: EN/bsb-lan_adapter.md
+    - Supported Heating Systems: supported_heating_systems.md
+    - The BSB-LAN Adapter: bsb-lan_adapter.md
   - How to set it up:
-    - Installation: EN/install.md
-    - Configuration: EN/configure.md
+    - Installation: install.md
+    - Configuration: configure.md
   - How to use it:
-    - Using BSB-LAN: EN/using.md
-    - Connect to Home Automation Systems: EN/homeautomation.md
+    - BSB-LAN's functions: using.md
+    - Connect to your Smart Home: homeautomation.md
   - Help!:
-    - Troubleshooting: EN/troubleshooting.md
-    - FAQ: EN/faq.md
+    - Troubleshooting: troubleshooting.md
+    - FAQ: faq.md
+  - 🌐:
+    - Deutsch: /de/
+    - English: /
+    - Français: /fr/
 
