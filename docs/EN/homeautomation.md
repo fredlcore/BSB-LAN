@@ -41,6 +41,17 @@ For simpler solutions, using the URL commands to query and set parameters can be
 
 For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:
 
+### Home Assistant
+
+While the official plugin no longer works, the MQTT approach above works well with Home Assistant.  
+For the details of the implementation, you may also refer to these tutorials:
+
+GitHub user @ryann72 wrote detailed instructions for [BSB-LAN and HomeAssistant/Mosquitto](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md). It is also available in [French](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md).
+
+YouTuber @StoneTime has created two videos (in German) where he shows the [installation of BSB-LAN](https://www.youtube.com/watch?v=n-5I-TUzXuk) as well as [setting it up in Home Assistant](https://www.youtube.com/watch?v=R2Q-_flTPvk). Dankeschön!
+
+YouTuber @ArminasTV has created two videos (in French) where he shows the [installation of BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) as well as how to set it up with [Home Assistant and MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s). Merci beacoup!
+
 ### Homebridge
 
 BSB-LAN user Michael has written a [plugin for Homebridge](https://www.npmjs.com/package/@bsblan/homebridge-bsblan-thermostat). Thank you!
