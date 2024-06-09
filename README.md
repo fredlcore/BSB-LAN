@@ -94,11 +94,11 @@ The forum thread that led to the development of this interface can be found <A H
 Please take note that while the board can also be used on the Raspberry Pi, the software provided here only runs on the ESP32 and Arduino Due respectively! For using the board with the Pi, you have to use the software bsb_gateway which is available <A HREF="https://github.com/loehnertj/bsbgateway">here</A>. Please also note that the functionality differs significantly, and that you would have to contact the author of bsb_gateway for any question related to it.
 
 Web-Interface screenshots:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docc/images/Web-Interface.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docc/images/Web-Interface2.png" size="50%">
 
 BSB-Board populated for ESP32 Olimex boards:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Logic%20Level%20Adapter.jpg" size="50%">
 
 BSB-Board on Olimex POE inside the project's 3D-printed case:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">

@@ -2,7 +2,7 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-Das Handbuch (derzeit nur in Englisch) findet sich [hier](https://docs.bsb-lan.de/EN).
+Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de/EN).
 
 BSB-LAN ist ein Adapter für den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS). Es gibt den Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE) bzw. für einen *Arduino Due* mit Ethernet-Shield zur web-basierten Kontrolle über LAN/WLAN von Heizungssystemen von Elco, Brötje und anderen Herstellern, die Siemens-Regler verwenden. Darüber hinaus ist das Logging von Werten auf Micro-SD-Karte möglich. Dieses Projekt unterstützt fast alle an den Heizungen verfügbaren Parameter und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
 
@@ -88,11 +88,11 @@ Die Forendiskussion die zum Bau dieses Adapters geführt hat, kann <A HREF="http
 Bitte beachte, dass der Adapter zwar an einem Raspberry Pi genutzt werden kann, die hier angebotene Software jedoch nur auf dem ESP32 bzw. Arduino läuft! Wenn der Adapter an einem Raspberry Pi genutzt werden soll, muss stattdessen die Software bsb_gateway genutzt werden, die <A HREF="https://github.com/loehnertj/bsbgateway">hier</A> verfügbar ist. Bitte beachte, dass die Funktionalität am Raspberry deutlich weniger umfangreich ist, und dass Du für jegliche Fragen diesbezüglich den Autor von bsb_gateway kontaktieren musst.
 
 Web-Interface screenshots:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface.png" size="50%">
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Web-Interface2.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Web-Interface.png" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Web-Interface2.png" size="50%">
 
 BSB-Adapterplatine in Bestückung für ESP32 Olimex Boards:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Logic%20Level%20Adapter.jpg" size="50%">
 
 BSB-Adapterplatine auf ESP32 Olimex POE im 3D-gedruckten Projekt-Gehäuse:
-<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/schematics/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
+<img src="https://github.com/fredlcore/bsb_lan/blob/master/BSB_LAN/docs/images/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
