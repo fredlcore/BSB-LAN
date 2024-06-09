@@ -73,6 +73,7 @@
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 must now have the additional flag FL_SPECIAL_INF, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Outside temperature simulation parameter 10017 must have FL_SPECIAL_INF flag removed, otherwise setting temperature will not work! 
  *        - ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have FL_SPECIAL_INF flag removd, otherwise setting temperature will not work! 
+ *        - ATTENTION: BREAKING CHANGE: URL commands /U (dislpay user-defined variables) and /X (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
  *        - ATTENTION: For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
  *        - ATTENTION: New configuration options in BSB_LAN_config.h - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
  *        - BUTTONS and RGT_EMULATION have been moved from main code to custom_functions library. To continue using them, make use of BSB_LAN_custom_*.h files and activate CUSTOM_COMMANDS definement.
@@ -6657,35 +6658,7 @@ next_parameter:
         char* range;
         range = strtok(p,"/");
         while (range!=0) {
-          if (range[0]=='U') { // output user-defined custom_array variable
-            for (int i=0;i<numCustomFloats;i++) {
-              printFmtToWebClient("<tr><td>\r\ncustom_float[%d]: %.2f\r\n</td></tr>\r\n", i, custom_floats[i]);
-            }
-            for (int i=0;i<numCustomLongs;i++) {
-              printFmtToWebClient("<tr><td>\r\ncustom_long[%d]: %ld\r\n</td></tr>\r\n",i, custom_longs[i]);
-            }
-          } else if (range[0]=='X') { // handle MAX command
-            if (enable_max_cul) {
-              int max_avg_count = 0;
-              float max_avg = 0;
-              for (uint16_t x=0;x<MAX_CUL_DEVICES;x++) {
-                if (max_cur_temp[x] > 0) {
-                  max_avg += (float)(max_cur_temp[x] & 0x1FF) / 10;
-                  max_avg_count++;
-                  printFmtToWebClient("<tr><td>%s (%lx): %.2f / %.2f", max_device_list[x], max_devices[x], ((float)max_cur_temp[x] / 10),((float)max_dst_temp[x] / 2));
-                  if (max_valve[x] > -1) {
-                    printFmtToWebClient(" (%hd%%)", max_valve[x]);
-                  }
-                  printToWebClient("</td></tr>");
-                }
-              }
-              if (max_avg_count > 0) {
-                printFmtToWebClient("<tr><td>AvgMax: %.2f</td></tr>\r\n", max_avg / max_avg_count);
-              } else {
-                printToWebClient("<tr><td>" MENU_TEXT_MXN "</td></tr>");
-              }
-            }
-          } else if (range[0]=='A') { // handle average command
+          if (range[0]=='A') { // handle average command
             if (range[1]=='C' && range[2]=='=') { // 24h average calculation on/off
               if (range[3]=='1') {                // Enable 24h average calculation temporarily
                 LoggingMode |= CF_LOGMODE_24AVG;
