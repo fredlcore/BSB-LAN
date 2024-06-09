@@ -70,7 +70,7 @@ GitHub user @konne wrote a [module for Node-RED](https://github.com/node-red-con
 
 ### OpenHAB
 
-Since version 2.5.4, there exists a [binding](https://www.openhab.org/addons/bindings/bsblan/) that is officially part of OpenHAB
+Since version 2.5.4, there exists a [binding](https://www.openhab.org/addons/bindings/bsblan/) that is officially part of OpenHAB.
 
 ### SmartHomeNG
 
