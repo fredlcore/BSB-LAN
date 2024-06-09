@@ -114,9 +114,9 @@
 #define ENUM_CAT_45_TEXT "Неизвестная категория"
 
 #define MENU_TEXT_TOC "Руководство (на английском языке)"
-#define MENU_LINK_TOC "https://docs.bsb-lan.de/EN/"
-#define MENU_LINK_FAQ "https://docs.bsb-lan.de/EN/faq.html"
-#define MENU_LINK_URL "https://1coderookie.github.io/BSB-LPB-LAN_EN/appendix_b.html"
+#define MENU_LINK_TOC "https://docs.bsb-lan.de/"
+#define MENU_LINK_FAQ "https://docs.bsb-lan.de/faq.html"
+#define MENU_LINK_URL "https://docs.bsb-lan.de/using.html"
 
 #define MENU_TEXT_HFK "Функции устройства"
 #define MENU_TEXT_SNS "Датчики"
