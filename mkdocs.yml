@@ -1,0 +1,15 @@
+site_name: BSB-LANs
+theme: mkdocs
+nav:
+  - Home: EN/README.md
+  - Quickstart: EN/quickstart.md
+  - Getting Started: EN/getting_started.md
+  - Supported Heating Systems: EN/supported_heating_systems.md
+  - The BSB-LAN Adapter: EN/bsb-lan_adapter.md
+  - Installation: EN/install.md
+  - Configuration: EN/configure.md
+  - Using BSB-LAN: EN/using.md
+  - Connect to Home Automation Systems: EN/homeautomation.md
+  - Troubleshooting: EN/troubleshooting.md
+  - FAQ: EN/faq.md
+
