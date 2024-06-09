@@ -6,15 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        
-        <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Using BSB-LAN - BSB-LAN</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../css/brands.min.css" rel="stylesheet">
-        <link href="../css/solid.min.css" rel="stylesheet">
-        <link href="../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
+        <link rel="canonical" href="https://docs.bsb-lan.de/using.html">
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>BSB-LAN's functions - BSB-LAN</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
         <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
         <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -24,7 +24,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="..">BSB-LAN</a>
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -71,11 +71,11 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="using.html" class="dropdown-item active" aria-current="page">Using BSB-LAN</a>
+    <a href="using.html" class="dropdown-item active" aria-current="page">BSB-LAN's functions</a>
 </li>
                                     
 <li>
-    <a href="homeautomation.html" class="dropdown-item">Connect to Home Automation Systems</a>
+    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
 </li>
                                 </ul>
                             </li>
@@ -89,6 +89,23 @@
                                     
 <li>
     <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
 </li>
                                 </ul>
                             </li>
@@ -130,49 +147,18 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#using-bsb-lan" class="nav-link">Using BSB-LAN</a>
               <ul class="nav flex-column">
-              </ul>
-            </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#controlling-the-heating-system-via-the-web-interface" class="nav-link">Controlling the heating system via the web-interface</a>
+            <li class="nav-item" data-bs-level="2"><a href="#controlling-the-heating-system-via-the-web-interface" class="nav-link">Controlling the heating system via the web-interface</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#using-bsb-lans-url-commands" class="nav-link">Using BSB-LAN's URL commands</a>
-              <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#querying-and-setting-parameters" class="nav-link">Querying and setting parameters</a>
+            <li class="nav-item" data-bs-level="2"><a href="#using-bsb-lans-url-commands" class="nav-link">Using BSB-LAN's URL commands</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#configuration" class="nav-link">Configuration</a>
+            <li class="nav-item" data-bs-level="2"><a href="#using-the-graphical-plot-functionality" class="nav-link">Using the graphical plot functionality</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#logging" class="nav-link">Logging</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#parameter-information" class="nav-link">Parameter information</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#gpio-control" class="nav-link">GPIO control</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#json-interface" class="nav-link">JSON interface</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#misceallaneous" class="nav-link">Misceallaneous</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-              </ul>
-            </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#using-the-graphical-plot-functionality" class="nav-link">Using the graphical plot functionality</a>
-              <ul class="nav flex-column">
               </ul>
             </li>
         </ul>
@@ -181,13 +167,14 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="using-bsb-lan">Using BSB-LAN</h1>
-<h1 id="controlling-the-heating-system-via-the-web-interface">Controlling the heating system via the web-interface</h1>
+<h2 id="controlling-the-heating-system-via-the-web-interface">Controlling the heating system via the web-interface</h2>
 <p>As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the <em>Settings</em> menu. This will display a list of categories from your heating controller.<br />
 You can click on each category and will get a list of corresponding parameters. If you see a <code>Set</code> button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no <code>Set</code> button, the parameter is read-only and there is no way to change the parameter.</p>
-<h1 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h1>
+<hr />
+<h2 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h2>
 <p>Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a <a href="homeautomation.html">home automation system</a>, but also provide access to functions not directly accessible via the web-interface.<br />
 URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).</p>
-<h2 id="querying-and-setting-parameters">Querying and setting parameters</h2>
+<h3 id="querying-and-setting-parameters">Querying and setting parameters</h3>
 <table>
 <thead>
 <tr>
@@ -246,7 +233,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="configuration">Configuration</h2>
+<h3 id="configuration">Configuration</h3>
 <table>
 <thead>
 <tr>
@@ -273,7 +260,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="logging">Logging</h2>
+<h3 id="logging">Logging</h3>
 <table>
 <thead>
 <tr>
@@ -360,7 +347,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="parameter-information">Parameter information</h2>
+<h3 id="parameter-information">Parameter information</h3>
 <table>
 <thead>
 <tr>
@@ -379,7 +366,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="gpio-control">GPIO control</h2>
+<h3 id="gpio-control">GPIO control</h3>
 <table>
 <thead>
 <tr>
@@ -402,7 +389,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="json-interface">JSON interface</h2>
+<h3 id="json-interface">JSON interface</h3>
 <table>
 <thead>
 <tr>
@@ -461,7 +448,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h2 id="misceallaneous">Misceallaneous</h2>
+<h3 id="misceallaneous">Misceallaneous</h3>
 <table>
 <thead>
 <tr>
@@ -492,7 +479,8 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 </tbody>
 </table>
-<h1 id="using-the-graphical-plot-functionality">Using the graphical plot functionality</h1>
+<hr />
+<h2 id="using-the-graphical-plot-functionality">Using the graphical plot functionality</h2>
 <p>If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
 To access the logged data itself (in the file <code>datalog.txt</code>), use the <code>/D</code> URL command mentioned above.<br />
 By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file<br />
@@ -508,13 +496,13 @@ Mouseover, click and mouse wheel actions within the graphical display provide va
             <hr>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
         <script>
-            var base_url = "..",
+            var base_url = ".",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../js/base.js"></script>
-        <script src="../search/main.js"></script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

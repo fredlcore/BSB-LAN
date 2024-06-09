@@ -4,11 +4,11 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="None">
         
-        <link rel="canonical" href="https://docs.bsb-lan.de/index.html">
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/homeautomation.html">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <title>BSB-LAN</title>
+        <title>Connect to your Smart Home - BSB-LAN</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/fontawesome.min.css" rel="stylesheet">
         <link href="css/brands.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
         <script>hljs.highlightAll();</script> 
     </head>
 
-    <body class="homepage">
+    <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
                 <a class="navbar-brand" href="index.html">BSB-LAN</a>
@@ -35,7 +35,7 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a href="index.html" class="nav-link active" aria-current="page">Overview</a>
+                                <a href="index.html" class="nav-link">Overview</a>
                             </li>
                             <li class="nav-item">
                                 <a href="quickstart.html" class="nav-link">Quickstart</a>
@@ -67,7 +67,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to use it</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to use it</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
@@ -75,7 +75,7 @@
 </li>
                                     
 <li>
-    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
+    <a href="homeautomation.html" class="dropdown-item active" aria-current="page">Connect to your Smart Home</a>
 </li>
                                 </ul>
                             </li>
@@ -118,12 +118,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href="using.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="quickstart.html" class="nav-link">
+                                <a rel="next" href="troubleshooting.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -145,8 +145,24 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#where-and-how-do-i-begin" class="nav-link">Where and how do I begin?</a>
+            <li class="nav-item" data-bs-level="1"><a href="#connecting-bsb-lan-to-home-automation-systems" class="nav-link">Connecting BSB-LAN to home automation systems</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-mqtt" class="nav-link">Exchanging data via MQTT</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-json" class="nav-link">Exchanging data via JSON</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-url-commands-and-screen-scraping" class="nav-link">Exchanging data via URL commands and screen scraping</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#using-supported-modules-for-specific-home-automation-systems" class="nav-link">Using supported modules for specific home automation systems</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -154,17 +170,64 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="where-and-how-do-i-begin">Where and how do I begin?</h1>
+<h1 id="connecting-bsb-lan-to-home-automation-systems">Connecting BSB-LAN to home automation systems</h1>
+<p>BSB-LAN provides three ways to connect to home automation systems:  </p>
+<ol>
+<li>Exchanging data via MQTT (recommended)</li>
+<li>Exchanging data via JSON</li>
+<li>Exchanging data via URL commands and screen scraping</li>
+<li>Using supported modules for specific home automation systems</li>
+</ol>
+<hr />
+<h2 id="exchanging-data-via-mqtt">Exchanging data via MQTT</h2>
+<p>This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.<br />
+As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a> is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
+<p>In BSB-LAN, you need to make or enable at least the following configurations:</p>
 <ul>
-<li>You are an experienced user? Head on to the <a href="quickstart.html">quickstart instructions</a>. Otherwise (or if you run into problems), please read on!</li>
-<li>Is my heating system supported by BSB-LAN? Please go to the <a href="supported_heating_systems.html">list of supported heating systems</a>.</li>
-<li>If you already know that your system is supported, <a href="bsb-lan_adapter.html">find out more about the BSB-LAN adapter</a> and where to get it.</li>
-<li>If you already have the adapter, you may want to know <a href="install.html">how to install the adapter</a>.</li>
-<li>If you have installed the adapter, you will need to <a href="configure.html">configure BSB-LAN</a>.</li>
-<li>Once you have everything up and running, find out about <a href="using.html">how to use BSB-LAN</a> or learn more about the ways to <a href="homeautomation.html">ingetrate BSB-LAN into home automation systems</a>.</li>
-<li>If you run into troubles, have a look at the <a href="troubleshooting.html">troubleshooting page</a>.</li>
-<li>And before you ask anyone else any questions, have a look at our <a href="faq.html">Frequently Asked Questions (FAQ)</a> first!</li>
-</ul></div>
+<li>Set <strong>Logging mode</strong> (additionally) to <strong>Send to MQTT Broker</strong>.</li>
+<li>Set <strong>Log Interval</strong> to the time (in seconds) you want the log parameters to be published. </li>
+<li>Select up to 20 <strong>Log Parameters</strong> you want to be sent to your home automation system.</li>
+<li>Set <strong>MQTT Usage</strong> to <strong>plain text</strong></li>
+<li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server)</li>
+</ul>
+<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0</code>.<br />
+Every time a query is made in BSB-LAN or a parameter changes its value through the room unit, the new value will be sent to the MQTT broker, so even changes made outside of BSB-LAN should be updated into the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.</p>
+<p>Examples for querying or setting parameters via MQTT would look like this (using mosquitto):<br />
+Query the outside temperature (parameter 8700):<br />
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d</code>  </p>
+<p>Set the comfort temperature setpoint (parameter 710) to 20 degrees:
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d</code>  </p>
+<hr />
+<h2 id="exchanging-data-via-json">Exchanging data via JSON</h2>
+<p>BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via <a href="using.html">URL commands</a> and the <code>openapi.yaml</code> file provided in this repository can be used with <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">Swagger</a> to explore its possibilities and functionalitites.</p>
+<hr />
+<h2 id="exchanging-data-via-url-commands-and-screen-scraping">Exchanging data via URL commands and screen scraping</h2>
+<p>For simpler solutions, using the URL commands to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.</p>
+<hr />
+<h2 id="using-supported-modules-for-specific-home-automation-systems">Using supported modules for specific home automation systems</h2>
+<p>For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:</p>
+<h3 id="home-assistant">Home Assistant</h3>
+<p>While the official plugin no longer works, the MQTT approach above works well with Home Assistant.<br />
+For the details of the implementation, you may also refer to these tutorials:</p>
+<p>GitHub user @ryann72 wrote detailed instructions for <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md">BSB-LAN and HomeAssistant/Mosquitto</a>. It is also available in <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md">French</a>.</p>
+<p>YouTuber @StoneTime has created two videos (in German) where he shows the <a href="https://www.youtube.com/watch?v=n-5I-TUzXuk">installation of BSB-LAN</a> as well as <a href="https://www.youtube.com/watch?v=R2Q-_flTPvk">setting it up in Home Assistant</a>. Dankeschön!</p>
+<p>YouTuber @ArminasTV has created two videos (in French) where he shows the <a href="https://www.youtube.com/watch?v=5lNgNYlZ7M0&amp;t=0s">installation of BSB-LAN</a> as well as how to set it up with <a href="https://www.youtube.com/watch?v=WtmKPo1xMio&amp;t=411s">Home Assistant and MQTT</a>. Merci beacoup!</p>
+<h3 id="homebridge">Homebridge</h3>
+<p>BSB-LAN user Michael has written a <a href="https://www.npmjs.com/package/@bsblan/homebridge-bsblan-thermostat">plugin for Homebridge</a>. Thank you!</p>
+<h3 id="iobroker">ioBroker</h3>
+<p>GitHub user @hacki11 has developed <a href="https://github.com/hacki11/ioBroker.bsblan">an adapter for ioBroker</a>. Thank you!</p>
+<h3 id="jeedom">Jeedom</h3>
+<p>GitHub user @bernard-dandrea has written a <a href="https://bernard-dandrea.github.io/jeedom-BSBLAN/fr_FR/">plugin for Jeedom</a> (with a French description). Thank you!</p>
+<h3 id="node-red">Node-RED</h3>
+<p>GitHub user @konne wrote a <a href="https://github.com/node-red-contrib/node-red-contrib-bsb-lan">module for Node-RED</a>. Thank you!</p>
+<h3 id="openhab">OpenHAB</h3>
+<p>Since version 2.5.4, there exists a <a href="https://www.openhab.org/addons/bindings/bsblan/">binding</a> that is officially part of OpenHAB.</p>
+<h3 id="smarthomeng">SmartHomeNG</h3>
+<p>GitHub user @thensty wrote a <a href="https://github.com/smarthomeNG/plugins/tree/develop/bsblan">plugin for SmartHomeNG</a>. Thank you!</p>
+<h3 id="volkszaehler">Volkszaehler</h3>
+<p>GitHub user @lapixo has contributed a <a href="https://github.com/lapixo/volkszaehler_bsb-lan/tree/main">script for the Volkszaehler project</a>. Thank you!</p>
+<h3 id="bash-script">Bash script</h3>
+<p>GitHub user @khfm has written <a href="https://github.com/khfm/bsb-lan-readout">Bash scripts</a> to query data and display it using gnuplot. Thank you!</p></div>
             </div>
         </div>
 
@@ -243,8 +306,3 @@
 
     </body>
 </html>
-
-<!--
-MkDocs version : 1.6.0
-Build Date UTC : 2024-06-09 18:09:18.977598+00:00
--->

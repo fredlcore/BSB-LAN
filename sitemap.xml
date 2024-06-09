@@ -1,3 +1,243 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+    <url>
+        <loc>https://docs.bsb-lan.de/index.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/index.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/index.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/index.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/bsb-lan_adapter.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/bsb-lan_adapter.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/configure.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/configure.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/faq.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/faq.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/homeautomation.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/homeautomation.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/install.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/install.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/install.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/install.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/quickstart.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/quickstart.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/supported_heating_systems.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/supported_heating_systems.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/troubleshooting.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/troubleshooting.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/using.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/using.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/using.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/using.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/index.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/index.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/index.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/bsb-lan_adapter.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/bsb-lan_adapter.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/configure.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/configure.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/faq.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/faq.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/homeautomation.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/homeautomation.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/install.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/install.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/install.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/install.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/quickstart.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/quickstart.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/supported_heating_systems.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/supported_heating_systems.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/troubleshooting.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/troubleshooting.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/de/using.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/using.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/using.html"/>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/using.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/index.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/index.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/index.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/index.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/bsb-lan_adapter.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/bsb-lan_adapter.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/bsb-lan_adapter.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/configure.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/configure.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/configure.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/faq.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/faq.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/faq.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/homeautomation.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/homeautomation.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/homeautomation.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/install.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/install.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/install.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/install.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/quickstart.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/quickstart.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/quickstart.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/supported_heating_systems.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/supported_heating_systems.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/supported_heating_systems.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/troubleshooting.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/troubleshooting.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/troubleshooting.html"/>
+    </url>
+    <url>
+        <loc>https://docs.bsb-lan.de/fr/using.html</loc>
+        <lastmod>2024-06-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="fr" href="https://docs.bsb-lan.de/fr/using.html"/>
+        <xhtml:link rel="alternate" hreflang="de" href="https://docs.bsb-lan.de/de/using.html"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://docs.bsb-lan.de/using.html"/>
+    </url>
 </urlset>

@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/fr/using.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Fonctionnes de BSB-LAN - BSB-LAN</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Aperçu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="quickstart.html" class="nav-link">Démarrage rapide</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Comment ça marche?</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="supported_heating_systems.html" class="dropdown-item">Systèmes de chauffage pris en charge</a>
+</li>
+                                    
+<li>
+    <a href="bsb-lan_adapter.html" class="dropdown-item">L'adaptateur BSB-LAN</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Installer</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="install.html" class="dropdown-item">Assemblage</a>
+</li>
+                                    
+<li>
+    <a href="configure.html" class="dropdown-item">Configuration</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Utiliser</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="using.html" class="dropdown-item active" aria-current="page">Fonctionnes de BSB-LAN</a>
+</li>
+                                    
+<li>
+    <a href="homeautomation.html" class="dropdown-item">Connecter à la Smart Home</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Au secours!</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="troubleshooting.html" class="dropdown-item">Dépannage</a>
+</li>
+                                    
+<li>
+    <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Rechercher
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="configure.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Précédent
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="homeautomation.html" class="nav-link">
+                                    Suivant <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table des matières">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#using-bsb-lan" class="nav-link">Using BSB-LAN</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#controlling-the-heating-system-via-the-web-interface" class="nav-link">Controlling the heating system via the web-interface</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#using-bsb-lans-url-commands" class="nav-link">Using BSB-LAN's URL commands</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#using-the-graphical-plot-functionality" class="nav-link">Using the graphical plot functionality</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="using-bsb-lan">Using BSB-LAN</h1>
+<h2 id="controlling-the-heating-system-via-the-web-interface">Controlling the heating system via the web-interface</h2>
+<p>As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the <em>Settings</em> menu. This will display a list of categories from your heating controller.<br />
+You can click on each category and will get a list of corresponding parameters. If you see a <code>Set</code> button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no <code>Set</code> button, the parameter is read-only and there is no way to change the parameter.</p>
+<hr />
+<h2 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h2>
+<p>Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a <a href="homeautomation.html">home automation system</a>, but also provide access to functions not directly accessible via the web-interface.<br />
+URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).</p>
+<h3 id="querying-and-setting-parameters">Querying and setting parameters</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/&lt;x&gt;</code></td>
+<td style="text-align: left;">Query setting of parameter <code>&lt;x&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/&lt;x&gt;!&lt;addr&gt;</code></td>
+<td style="text-align: left;">Query setting of parameter <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/&lt;x&gt;/&lt;y&gt;/&lt;z&gt;</code></td>
+<td style="text-align: left;">Query settings of parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code>. Parameters can include <code>!</code> to address different controllers.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/&lt;x&gt;-&lt;y&gt;</code></td>
+<td style="text-align: left;">Query settings of parameters <code>&lt;x&gt;</code> to <code>&lt;y&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/&lt;x&gt;!&lt;addr&gt;-&lt;y&gt;</code></td>
+<td style="text-align: left;">Query settings of parameters <x> to <y> from controller at destination address <code>&lt;addr&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/K</code></td>
+<td style="text-align: left;">List all parameter categories from controller at default destination address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/K!&lt;addr&gt;</code></td>
+<td style="text-align: left;">List all parameter categories from controller at destination address <code>&lt;addr&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/K&lt;x&gt;</code></td>
+<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code> from controller at default destination address</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/K&lt;x&gt;!&lt;addr&gt;</code></td>
+<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/S&lt;x&gt;=&lt;y&gt;</code></td>
+<td style="text-align: left;">Set parameter <code>&lt;x&gt;</code> from controller at default destination address to value <y>. To set a parameter to <code>---</code> (off/deactivated), just send an empty value: <code>S&lt;x&gt;=</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/S&lt;x&gt;!&lt;addy&gt;=&lt;y&gt;</code></td>
+<td style="text-align: left;">Set parameter <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code> to value <code>&lt;y&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/I&lt;x&gt;=&lt;y&gt;</code></td>
+<td style="text-align: left;">Send value <code>y</code> as INF telegram to parameter <code>&lt;x&gt;</code>. So far only required with setting room temperature (parameters 10000 ff.).</td>
+</tr>
+</tbody>
+</table>
+<h3 id="configuration">Configuration</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/C</code></td>
+<td style="text-align: left;">Configuration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/CO</code></td>
+<td style="text-align: left;">Dump BSB-LAN's configuration</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/P&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
+<td style="text-align: left;">Temporarily set bus type to <code>&lt;x&gt;</code>, own address to <code>&lt;y&gt;</code> and target address to <code>&lt;z&gt;</code>. Empty values leave the address as it is already set.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/V&lt;x&gt;</code></td>
+<td style="text-align: left;">Enable (<code>1</code>) or disable (<code>0</code>) verbose output mode. Should remain enabled unless specifically instructed.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logging">Logging</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/DG</code></td>
+<td style="text-align: left;">Graphical display (graph plot) of an active log file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/D</code> or <code>/DD</code></td>
+<td style="text-align: left;">Dumps log file <code>datalog.txt</code> from storage. Contains the logged parameters and values when logging to SD card is active.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/D&lt;n&gt;</code></td>
+<td style="text-align: left;">Dumps the most recent <code>&lt;n&gt;</code> calender days of the log file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/D&lt;a&gt;,&lt;b&gt;</code></td>
+<td style="text-align: left;">Dumps data from log file between <code>&lt;a&gt;</code> and <code>&lt;b&gt;</code>. <code>&lt;a&gt;</code> and <code>&lt;b&gt;</code> have to be set in the format yyyy-mm-dd (e.g. <code>/D2024-04-01,2024-04-30</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/D0</code></td>
+<td style="text-align: left;">Reset both log files <code>datalog.txt</code> and <code>journal.txt</code> and create new headers. Should be executed before first logging.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/DK&lt;n&gt;</code></td>
+<td style="text-align: left;">Purges data older than <code>&lt;n&gt;</code> days from the log file</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/LN</code></td>
+<td style="text-align: left;">Forces logging irrespective of current interval and restarts the configured interval at this point of time</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/L=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
+<td style="text-align: left;">Set logging interval to <code>&lt;x&gt;</code> seconds and (optionally) reset logging parameters to <code>&lt;y&gt;</code>, <code>&lt;z&gt;</code> etc. until reboot</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/L=0,0</code></td>
+<td style="text-align: left;">Deactivate logging to storage until reboot</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/LB=&lt;x&gt;</code></td>
+<td style="text-align: left;">Log only broadcast telegrams (<code>1</code>) or all telegrams (<code>0</code>). Setting active until reboot.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/LU=&lt;x&gt;</code></td>
+<td style="text-align: left;">Log only unknown bus telegrams (<code>1</code>) or all telegrams (<code>0</code>). Setting active until reboot.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/A=0</code></td>
+<td style="text-align: left;">Disable 24h average calculation until reboot</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/A=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
+<td style="text-align: left;">Change 24h average value calculation to parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> until reboot</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/B0</code></td>
+<td style="text-align: left;">Reset stats for accumulated burner-runtime and -cycles</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/DD0</code></td>
+<td style="text-align: left;">Remove log file <code>datalog.txt</code> only</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/DJ</code></td>
+<td style="text-align: left;">Dumps log file <code>journal.txt</code> from storage</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/DJ0</code></td>
+<td style="text-align: left;">Remove log file <code>journal.txt</code> only</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/LD</code></td>
+<td style="text-align: left;">Disable logging of telegrams to <code>journal.txt</code> until reboot</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/LE</code></td>
+<td style="text-align: left;">Enable logging of telegrams to <code>journal.txt</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="parameter-information">Parameter information</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/E&lt;x&gt;</code></td>
+<td style="text-align: left;">Displays parameter options of parameter <code>&lt;x&gt;</code>. Only available for option-type parameters such as data types <code>VT_ENUM</code>, <code>VT_CUSTOM_ENUM</code>, <code>VT_BITS</code> and <code>VT_CUSTOM_BITS</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/R&lt;x&gt;</code></td>
+<td style="text-align: left;">Query default setting of parameter <code>&lt;x&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="gpio-control">GPIO control</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/G&lt;x&gt;</code></td>
+<td style="text-align: left;">Displays the actual state of GPIO pin <code>&lt;x&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/G&lt;x&gt;=&lt;y&gt;</code></td>
+<td style="text-align: left;">Set GPIO pin <code>&lt;x&gt;</code> to HIGH (<code>&lt;y&gt;</code> = <code>1</code>) or LOW (<code>&lt;y&gt;</code> = <code>0</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/G&lt;x&gt;,I</code></td>
+<td style="text-align: left;">Query GPIO pin <code>&lt;x&gt;</code> while setting the pin to <code>INPUT</code>. Might be (un)necessary depending on your microcontroller.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="json-interface">JSON interface</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/JQ=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
+<td style="text-align: left;">Query parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> and return a JSON structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JQ</code></td>
+<td style="text-align: left;">Query parameters based on a received JSON structure via HTTP POST</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JK=&lt;x&gt;</code></td>
+<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JS</code></td>
+<td style="text-align: left;">Set parameters based on a received JSON structure via HTTP</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JR&lt;x&gt;</code></td>
+<td style="text-align: left;">Query default value of parameter <code>&lt;x&gt;</code> and return a JSON structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JK=ALL</code></td>
+<td style="text-align: left;">Dump ranges for all available categories as JSON structure</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JC=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
+<td style="text-align: left;">Dump possible values for parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> for option-type parameters. Same JSON structure as <code>/JK=&lt;x&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JB</code></td>
+<td style="text-align: left;">Backup of all writeable parameters in a JSON structure that can be used to write back using <code>/JS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JL</code></td>
+<td style="text-align: left;">Creates a JSON structure of BSB-LAN's configuration settings`</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JW</code></td>
+<td style="text-align: left;">Writes configuration settings based on a JSON structure created by <code>/JL</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JI</code></td>
+<td style="text-align: left;">Dump runtime information of BSB-LAN as JSON structure`</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JV</code></td>
+<td style="text-align: left;">Return the version of BSB-LAN's JSON-API as a JSON structure</td>
+</tr>
+</tbody>
+</table>
+<h3 id="misceallaneous">Misceallaneous</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">URL command</th>
+<th style="text-align: left;">Functionality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>/M&lt;x&gt;</code></td>
+<td style="text-align: left;">Send (<code>1</code>) or revoke (<code>0</code>) MQTT auto-discovery messages for all parameters from controller at default destination address.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/N</code></td>
+<td style="text-align: left;">Reset and reboot microcontroller (takes approx. 15 seconds)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/NE</code></td>
+<td style="text-align: left;">Erase EEPROM and reboot the microcontroller. All configuration settings will subsequently be read from configuration file until set and saved again in the web-interface to be written to EEPROM.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/QD</code></td>
+<td style="text-align: left;">Dump parameter structure from heating system</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/W</code></td>
+<td style="text-align: left;">With a preceding <code>/W</code> the URL commands <code>C</code>, <code>S</code> and <code>Q</code> return data without HTML header and footer (e.g.:  <code>/WC</code> or <code>/WS&lt;x&gt;=&lt;y!z&gt;</code>).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="using-the-graphical-plot-functionality">Using the graphical plot functionality</h2>
+<p>If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
+To access the logged data itself (in the file <code>datalog.txt</code>), use the <code>/D</code> URL command mentioned above.<br />
+By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file<br />
+Mouseover, click and mouse wheel actions within the graphical display provide various control options:
+- Better legibility for value numbers with plot lines close to each other (mouseover on plot)
+- Users can interactively highlight plot lines for improved overview (mouseover on legend entries)
+- Users can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
+- Zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation générée avec <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Rechercher</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ici vous pouvez chercher dans les documents. Entrez votre recherche ci-dessous.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Rechercher..." id="mkdocs-search-query" title="Tapez vos mots clés ici">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="Aucun résultat trouvé"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Raccourcis Clavier</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Touches</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Ouvrir l'aide</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Page suivante</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Page précédente</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Rechercher</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

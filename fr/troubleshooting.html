@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/fr/troubleshooting.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Dépannage - BSB-LAN</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Aperçu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="quickstart.html" class="nav-link">Démarrage rapide</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Comment ça marche?</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="supported_heating_systems.html" class="dropdown-item">Systèmes de chauffage pris en charge</a>
+</li>
+                                    
+<li>
+    <a href="bsb-lan_adapter.html" class="dropdown-item">L'adaptateur BSB-LAN</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Installer</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="install.html" class="dropdown-item">Assemblage</a>
+</li>
+                                    
+<li>
+    <a href="configure.html" class="dropdown-item">Configuration</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Utiliser</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="using.html" class="dropdown-item">Fonctionnes de BSB-LAN</a>
+</li>
+                                    
+<li>
+    <a href="homeautomation.html" class="dropdown-item">Connecter à la Smart Home</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Au secours!</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="troubleshooting.html" class="dropdown-item active" aria-current="page">Dépannage</a>
+</li>
+                                    
+<li>
+    <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Rechercher
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="homeautomation.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Précédent
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="faq.html" class="nav-link">
+                                    Suivant <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table des matières">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#compiling-fails-because-sketch-too-big" class="nav-link">Compiling fails because "sketch too big"</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#no-data-even-thought-the-red-led-is-on" class="nav-link">No data even thought the red LED is on</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cannot-query-any-parameters-device-family-is-0" class="nav-link">Cannot query any parameters / device family is 0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#no-or-unreliable-network-connection" class="nav-link">No or unreliable network connection</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#no-connection-to-hidden-wifi-network-possible" class="nav-link">No connection to hidden WiFi network possible</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#room-temperature-or-any-other-parameter-cannot-be-set" class="nav-link">Room temperature (or any other parameter) cannot be set</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#web-interface-freezes-when-makeing-new-connection" class="nav-link">Web-interface freezes when makeing new connection</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#the-serial-monitor-is-not-showing-readable-data" class="nav-link">The Serial Monitor is not showing readable data</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="troubleshooting">Troubleshooting</h1>
+<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please open up a bug report on the project's GitHub page and make sure that you provide us with the necessary log files, especially from the Serial Monitor (<strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE). Make sure you copy the messages right from the moment your microcontroller boots until the moment you encounter the problem. Please do not send screenshots, only plain text files.</p>
+<hr />
+<h2 id="compiling-fails-because-sketch-too-big">Compiling fails because "sketch too big"</h2>
+<ul>
+<li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Board</em></strong>.</li>
+</ul>
+<hr />
+<h2 id="no-data-even-thought-the-red-led-is-on">No data even thought the red LED is on</h2>
+<ul>
+<li>Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin - it will drive the LED, but it's not a data line.</li>
+<li>With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits <strong>exactly</strong> in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.</li>
+<li>Make sure the RX/TX pins are set/detected correctly.</li>
+</ul>
+<hr />
+<h2 id="cannot-query-any-parameters-device-family-is-0">Cannot query any parameters / device family is 0</h2>
+<ul>
+<li>Wrong bus type (BSB instead of LPB or vice versa).</li>
+</ul>
+<hr />
+<h2 id="no-or-unreliable-network-connection">No or unreliable network connection</h2>
+<ul>
+<li>Try powering the microcontroller via USB from a laptop. We have had many cases where power supplies were unreliable despite having sufficient ratings.</li>
+<li>Look at the Serial Monitor log to check if the microcontroller could acquire an IP address. If not, then your network settings or physical connection may be faulty.</li>
+</ul>
+<hr />
+<h2 id="no-connection-to-hidden-wifi-network-possible">No connection to hidden WiFi network possible</h2>
+<ul>
+<li>Yes, that is a known restriction. The only way to do that is to set the BSSID specifically in <code>BSB_LAN_config.h</code>.</li>
+</ul>
+<hr />
+<h2 id="room-temperature-or-any-other-parameter-cannot-be-set">Room temperature (or any other parameter) cannot be set</h2>
+<ul>
+<li>Check BSB-LAN's settings and make sure that write access is enabled and set to <em>standard</em> or <em>complete</em>.</li>
+</ul>
+<hr />
+<h2 id="web-interface-freezes-when-makeing-new-connection">Web-interface freezes when makeing new connection</h2>
+<ul>
+<li>BSB-LAN is not a multi-tasking system. This means it can attend to one task at a time. So even if a URL command is aborted (by closing the browser window), BSB-LAN might not detect this and only start serving new requests once the previous one is finished.</li>
+</ul>
+<hr />
+<h2 id="the-serial-monitor-is-not-showing-readable-data">The Serial Monitor is not showing readable data</h2>
+<ul>
+<li>Make sure the speed is set correctly to 115200 bps.</li>
+<li>Make sure the correct port is selected.</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation générée avec <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Rechercher</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ici vous pouvez chercher dans les documents. Entrez votre recherche ci-dessous.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Rechercher..." id="mkdocs-search-query" title="Tapez vos mots clés ici">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="Aucun résultat trouvé"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Raccourcis Clavier</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Touches</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Ouvrir l'aide</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Page suivante</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Page précédente</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Rechercher</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

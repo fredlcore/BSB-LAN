@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/fr/quickstart.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>Démarrage rapide - BSB-LAN</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Aperçu</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="quickstart.html" class="nav-link active" aria-current="page">Démarrage rapide</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Comment ça marche?</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="supported_heating_systems.html" class="dropdown-item">Systèmes de chauffage pris en charge</a>
+</li>
+                                    
+<li>
+    <a href="bsb-lan_adapter.html" class="dropdown-item">L'adaptateur BSB-LAN</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Installer</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="install.html" class="dropdown-item">Assemblage</a>
+</li>
+                                    
+<li>
+    <a href="configure.html" class="dropdown-item">Configuration</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Utiliser</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="using.html" class="dropdown-item">Fonctionnes de BSB-LAN</a>
+</li>
+                                    
+<li>
+    <a href="homeautomation.html" class="dropdown-item">Connecter à la Smart Home</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Au secours!</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="troubleshooting.html" class="dropdown-item">Dépannage</a>
+</li>
+                                    
+<li>
+    <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Rechercher
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="index.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Précédent
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="supported_heating_systems.html" class="nav-link">
+                                    Suivant <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table des matières">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#quickstart-instructions" class="nav-link">Quickstart instructions</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#why-do-i-only-see-so-few-parameters" class="nav-link">Why do I only see so few parameters?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="quickstart-instructions">Quickstart instructions</h1>
+<p>These quickstart instructions are for users who are familiar with installing and configuring software on their computer. If you need more detailed instructions, please head to the <a href="install.html">install instructions</a>!</p>
+<ol>
+<li><a href="https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip">Download</a> and unpack the current BSB-LAN version from the master repository or use <em>git</em> to <a href="https://github.com/fredlcore/BSB-LAN.git">clone</a> the repository.</li>
+<li>Navigate to the BSB_LAN folder and rename the following files:<ol>
+<li><code>BSB_LAN_custom_defs.h.default</code> to <code>BSB_LAN_custom_defs.h</code></li>
+<li><code>BSB_LAN_config.h.default</code> to <code>BSB_LAN_config.h</code>.</li>
+</ol>
+</li>
+<li><a href="https://www.arduino.cc/en/software">Download</a> and install the Arduino IDE for your system.</li>
+<li>Connect your microcontroller (ESP32 or Arduino Due) to your computer and start the Arduino IDE.</li>
+<li>Go to <strong><em>Tools/Board/Board Manager</em></strong> and make sure that the framework for your board is installed ("esp32 by Espressif Systems" for ESP32 microcontroller, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" for Arduino Due microcontroller)</li>
+<li>Again, go to <strong><em>Tools/Board</em></strong> and select your microcontroller:<ol>
+<li><em>ESP32 Dev Module</em> for the Joy-It ESP32 NodeMCU.</li>
+<li><em>Olimex ESP32-EVB</em> for the ESP32-based Olimex EVB .</li>
+<li><em>Olimex ESP32-POE-ISO</em> for the ESP32-based Olimex POE ISO</li>
+<li><em>Arduino Due (Programming Port)</em> for the Arduino Due. <strong>Do not use the Native USB Port here</strong>!</li>
+</ol>
+</li>
+<li>Again, go to <strong><em>Tools/Board</em></strong> and select the proper upload speed (460800 for ESP32, 115200 for Arduino Due).</li>
+<li>Go to <strong><em>File/Open</em></strong> and navigate to the BSB_LAN folder and double-click on <code>BSB_LAN.ino</code>. The project will open.</li>
+<li>Click on the tab with the filename <code>BSB_LAN_config.h</code> and configure at least the following:<ol>
+<li>Search for <code>#define LANG DE</code>: Change this to EN for English, FR for French etc.</li>
+<li>Search for <code>uint8_t network_type</code>: Set this to <code>LAN</code> if you are using Ethernet/LAN connection. Set this to <code>WLAN</code> if you are using WiFi/WLAN.</li>
+<li>If you are not using DHCP, configure the following options according to your network (make sure to use a comma, not a dot for IP addresses!):<ol>
+<li><code>byte ip_addr[4] = {192,168,178,88};</code></li>
+<li><code>byte gateway_addr[4] = {192,168,178,1};</code></li>
+<li><code>byte dns_addr[4] = {192,168,178,1};</code></li>
+<li><code>byte subnet_addr[4] = {255,255,255,0};</code></li>
+<li><code>char wifi_ssid[32] = "***Your Wifi network name***";</code></li>
+<li><code>char wifi_pass[32] = "***Your WiFi network password***";</code></li>
+</ol>
+</li>
+</ol>
+</li>
+<li>Now go to <strong><em>Sketch/Upload</em></strong> and upload the BSB-LAN software to the microcontroller.</li>
+<li>Unplug the microcontroller and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. <strong><em>Do all this at your own risk!</em></strong></li>
+<li>Now plug the BSB-LAN adapter onto the microcontroller and connect the <code>+</code> screw connector to the <code>CL+</code> (BSB), <code>DB</code> (LPB) or <code>A6</code> (PPS, different connector names are possible) connector, and the <code>-</code> screw connector to the <code>CL-</code> (BSB), <code>MB</code> (LPB) or <code>M</code> (PPS) connector.</li>
+<li>Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.</li>
+<li>Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to <code>http://bsb-lan.local</code>. You can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to <strong><em>Tools/Serial Monitor</em></strong>. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.</li>
+<li><strong>Done :-)</strong></li>
+</ol>
+<hr />
+<h2 id="why-do-i-only-see-so-few-parameters">Why do I only see so few parameters?</h2>
+<p>Once you access BSB-LAN for the first time, you will see that only very few parameters are shown on the device’s web interface. This is because each model of the Siemens controller built into your heating system supports a different set of parameters. Previously, I provided a list of parameters collected from all different kinds of heating systems, but it turned out that this list was ambiguous or even contained errors that we couldn’t fix reliably. This list is still available in release version 2.2.x of BSB-LAN and can be copied from there if needed.<br />
+However, it is not advisable to do so because the said ambiguities and errors pose too great a risk of misconfiguring the heating system. Instead, it is recommended to click on the "<strong>Device-specific parameter list</strong>" button in BSB-LAN's menu and send the generated list to Frederik (bsb(ät)code-it.de). From this file, a parameter list can be generated that fits exactly the controller of your heating system. Unfortunately, this process cannot be automated yet, but at least it has to be done just once. These raw data do not contain any settings or other kinds of personal data, just the parameter structure of the heating system.<br />
+It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.</p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation générée avec <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Rechercher</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ici vous pouvez chercher dans les documents. Entrez votre recherche ci-dessous.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Rechercher..." id="mkdocs-search-query" title="Tapez vos mots clés ici">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="Aucun résultat trouvé"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Raccourcis Clavier</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Touches</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Ouvrir l'aide</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Page suivante</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Page précédente</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Rechercher</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

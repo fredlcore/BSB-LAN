@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/configure.html">
+        <link rel="shortcut icon" href="img/favicon.ico">
+        <title>Configuration - BSB-LAN</title>
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Overview</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="quickstart.html" class="nav-link">Quickstart</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How it works</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="supported_heating_systems.html" class="dropdown-item">Supported Heating Systems</a>
+</li>
+                                    
+<li>
+    <a href="bsb-lan_adapter.html" class="dropdown-item">The BSB-LAN Adapter</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to set it up</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="install.html" class="dropdown-item">Installation</a>
+</li>
+                                    
+<li>
+    <a href="configure.html" class="dropdown-item active" aria-current="page">Configuration</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to use it</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="using.html" class="dropdown-item">BSB-LAN's functions</a>
+</li>
+                                    
+<li>
+    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Help!</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="troubleshooting.html" class="dropdown-item">Troubleshooting</a>
+</li>
+                                    
+<li>
+    <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="install.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="using.html" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#configuration" class="nav-link">Configuration</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#configuration-through-bsb_lan_configh" class="nav-link">Configuration through `BSB_LAN_config.h``</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#configuration-through-the-web-interface" class="nav-link">Configuration through the web-interface</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#overview-of-configuration-options" class="nav-link">Overview of configuration options</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#adressing-different-heating-controllers" class="nav-link">Adressing different heating controllers</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="configuration">Configuration</h1>
+<p>There are two ways to configure BSB-LAN:</p>
+<ol>
+<li>Through the configuration file `BSB_LAN_config.h``</li>
+<li>Through the web-interface by calling <a href="http://bsb-lan.local/C">`http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
+</ol>
+<p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings). Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa. </p>
+<hr />
+<h2 id="configuration-through-bsb_lan_configh">Configuration through `BSB_LAN_config.h``</h2>
+<p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to only change the <em>contents</em> of the variables (i.e. the settings) and not the <em>type</em> of the variables. So if there is for example the setting<br />
+<code>byte ip_addr[4] = {192,168,178,88};</code><br />
+you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, in this case the comma-separated IP address.</p>
+<hr />
+<h2 id="configuration-through-the-web-interface">Configuration through the web-interface</h2>
+<p>Configuring BSB-LAN through the web-interface is pretty straightforward, as you don't have to deal with variable names but clear descriptions.
+Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".</p>
+<hr />
+<h2 id="overview-of-configuration-options">Overview of configuration options</h2>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-</td>
+<td><strong><code>#define LANG</code></strong></td>
+<td>Set language</td>
+<td><code>DE</code>, <code>EN</code>, <code>FR</code> and other ISO country codes</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>#define DEFAULT_FLAG</code></td>
+<td>Set read/write access to heating system. <code>FL_RONLY</code> sets all parameters to read-only. <code>FL_SW_CTL_RONLY</code> allows setting read/write access via web-interface configuration setting.<BR><code>0</code> makes all  parameters that could be written writeable. <strong>Do not use this option unless instructed otherwise!</strong></td>
+<td><strong>FL_RONLY</strong><BR><strong>FL_SW_CTL_RONLY</strong><BR><strong>0</strong></td>
+</tr>
+<tr>
+<td>Display extended configuration</td>
+<td>-</td>
+<td>Show all configuration options</td>
+<td><strong>On</strong><br><strong>Off</strong></td>
+</tr>
+<tr>
+<td>Read config from EEPROM</td>
+<td><code>UseEEPROM</code></td>
+<td>Read configuration from EEPROM or file</td>
+<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>Write access (level)</td>
+<td>-</td>
+<td>If <code>DEFAULT_FLAG</code>is set to <code>FL_SW_CTL_RONLY</code>, you can set the level of write access here.</td>
+<td><strong>Off</strong> (read-only)<br><strong>On (Standard)</strong><br><strong>On (Complete)</strong></td>
+</tr>
+<tr>
+<td>Check for updates</td>
+<td><code>enable_version_check</code></td>
+<td>Query BSB-LAN server for new available version</td>
+<td><strong>On</strong> (<code>true</code>)</td>
+</tr>
+<tr>
+<td>OTA Update</td>
+<td><code>enable_ota_update</code></td>
+<td>Enable OTA update</td>
+<td><strong>On</strong> (<code>true</code>)</td>
+</tr>
+<tr>
+<td>Energy saving</td>
+<td><code>esp32_save_energy</code></td>
+<td>Reduces speed, saves energy. Do not enable when using WiFi.</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+<tr>
+<td>Webserver file system</td>
+<td><code>webserver</code></td>
+<td>Enables serving files from SD card</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+<tr>
+<td>Bus type</td>
+<td><code>bus_type</code></td>
+<td>Bus type (BSB/LPB/PPS)</td>
+<td><strong>BSB</strong> (<code>0</code>)<br><strong>LPB</strong> (<code>1</code>)<br><strong>PPS</strong> (<code>2</code>)</td>
+</tr>
+<tr>
+<td>PPS: mode</td>
+<td><code>pps_write</code></td>
+<td>BSB-LAN can act as a PPS room unit (only if no real room unit is connected) or just listen passively.</td>
+<td><strong>passive</strong> (<code>0</code>)<br><strong>as room unit</strong> (<code>1</code>)</td>
+</tr>
+<tr>
+<td>PPS: QAA model</td>
+<td><code>QAA_TYPE</code></td>
+<td>Room unit that should be simulated for PPS bus</td>
+<td><strong>QAA70</strong> (<code>0x53</code>), <strong>QAA50</strong> (<code>0x52</code>), <strong>QAA95</strong> (<code>0x37</code>), <strong>QAW10</strong> (<code>0x4D</code>), <strong>QAW20</strong> (<code>0x4E</code>), <strong>MCBA/REA70/DC225</strong> (<code>0x58</code>), <strong>QAA10</strong> (<code>0x5A</code>), <strong>QAA20</strong> (<code>0x5B</code>), <strong>QAA12/13</strong> (<code>0x5D</code>), <strong>BMU</strong> (<code>0x66</code>), <strong>RVD130</strong> (<code>0x43</code>)</td>
+</tr>
+<tr>
+<td>Own address</td>
+<td><code>own_address</code></td>
+<td>Own bus address (default <code>66</code> should not be changed)</td>
+<td><strong>66</strong> (<code>66</code>)</td>
+</tr>
+<tr>
+<td>Destination address</td>
+<td><code>dest_address</code></td>
+<td>Destination bus address.<br>For <strong>BSB</strong> always <code>0</code>.<br>For <strong>LPB</strong> <code>0</code> if destination device is in segment 1, device address 0.<BR>To convert from LPB segment and device address notation to destination address, multiply segment by 16, add the device address and subtract one. For example, to address a device in segment 4 with device address 3, the destination address is <code>(4 * 16) + 3 - 1 = 66</code>.<br>For <strong>PPS</strong> not relevant.</td>
+<td><strong>0</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>Device family</td>
+<td><code>fixed_device_family</code></td>
+<td>Set the device family that BSB-LAN should emulate. Leave at <code>0</code> for auto-detection.</td>
+<td><strong>0</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>Device variant</td>
+<td><code>fixed_device_variant</code></td>
+<td>Set the device variant that BSB-LAN should emulate. Leave at <code>0</code> for auto-detection</td>
+<td><strong>0</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>RX pin number<br>TX pin number</td>
+<td><code>bus_pins</code></td>
+<td>Define the RX/TX pins to communicate with the BSB-LAN adapter. Leave at <code>0</code> for auto-detection.</td>
+<td><strong>0</strong> and <strong>0</strong> (<code>0, 0</code>)</td>
+</tr>
+<tr>
+<td><strong>Network device</strong></td>
+<td><strong><code>network_type</code></strong></td>
+<td>Choose between WLAN and LAN to connect BSB-LAN to the network.</td>
+<td><strong>LAN</strong> (<code>0</code>)<br><strong>WLAN</strong> (<code>1</code>)</td>
+</tr>
+<tr>
+<td><strong>WLAN SSID</strong></td>
+<td><strong><code>wifi_ssid</code></strong></td>
+<td>Set the WLAN network name when using WLAN.</td>
+<td><strong>Your_WLAN_name</strong> (<code>Your_WLAN_name</code>)</td>
+</tr>
+<tr>
+<td><strong>WLAN password</strong></td>
+<td><strong><code>wifi_pass</code></strong></td>
+<td>Set the WLAN password when using WLAN.</td>
+<td><strong>YourWLANpassword</strong> (<code>YourWLANpassword</code>)</td>
+</tr>
+<tr>
+<td><strong>DHCP usage</strong></td>
+<td><strong><code>use_dhcp</code></strong></td>
+<td>Set whether or not to use DHCP to get an IP address from the router.</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+<tr>
+<td>IP address (fixed)</td>
+<td><code>ip_addr</code></td>
+<td>When <em>not</em> using DHCP, you can set a fixed IP address here. Otherwise leave at <code>0.0.0.0</code>. In the web-interface, you may use dot notation. In the configuration file, you have to use comma as a separator.</td>
+<td><strong>192.168.178.88</strong> (<code>192,168,178,88</code>)</td>
+</tr>
+<tr>
+<td>Subnet</td>
+<td><code>subnet_addr</code></td>
+<td>Subnet when using fixed IP address. Same notation as with IP address.</td>
+<td><strong>255.255.255.0</strong> (<code>255,255,255,0</code>)</td>
+</tr>
+<tr>
+<td>Gateway</td>
+<td><code>gateway_addr</code></td>
+<td>Gateway address when using fixed IP address. Same notation as with IP address.</td>
+<td><strong>192.168.178.1</strong> (<code>192,168,178,1</code>)</td>
+</tr>
+<tr>
+<td>DNS Server</td>
+<td><code>dns_addr</code></td>
+<td>DNS server address when using fixed IP address. Same notation as with IP address.</td>
+<td><strong>192.168.178.1</strong> (<code>192,168,178,1</code>)</td>
+</tr>
+<tr>
+<td>TCP Port</td>
+<td><code>HTTPPort</code></td>
+<td>HTTP port number to access the web-interface. Defaults to <code>80</code>.</td>
+<td><strong>80</strong> (<code>80</code>)</td>
+</tr>
+<tr>
+<td>MAC address</td>
+<td><code>mac</code></td>
+<td>Set a fixed MAC address. Only relevant on Arduino.</td>
+<td><strong>00:80:41:19:69:90</strong> (<code>0x00, 0x80, 0x41, 0x19, 0x69, 0x90</code>)</td>
+</tr>
+<tr>
+<td>mDNS Hostname</td>
+<td><code>mDNS_hostname</code></td>
+<td>Hostname for mDNS discovery</td>
+<td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
+</tr>
+<tr>
+<td>HTTP authentification</td>
+<td><code>USER_PASS</code></td>
+<td>If not empty, this setting contains the username and password for HTTP authentification, separated by a colon.</td>
+<td><strong>Username:Password</strong> (<code>Username:Password</code>)</td>
+</tr>
+<tr>
+<td>URL Passkey</td>
+<td><code>PASSKEY</code></td>
+<td>Passkey adds a user-defined sequence that needs to be added to the URL after the hostname.<BR>For example, a passkey of <code>1234</code> requires every URL to be written as <code>http://bsb-lan.local/1234/</code> instead of just <code>http://bsb-lan.local/1234/</code>. Leave empty for no passkey.</td>
+<td><strong>1234</strong> (<code>1234</code>)</td>
+</tr>
+<tr>
+<td>Trusted IP address</td>
+<td><code>trusted_ip_addr</code></td>
+<td>Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.</td>
+<td><strong>192.168.178.89</strong> (<code>192,168,178,89</code>)</td>
+</tr>
+<tr>
+<td>Trusted IP address</td>
+<td><code>trusted_ip_addr2</code></td>
+<td>Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.</td>
+<td><strong>192.168.178.90</strong> (<code>192,168,178,90</code>)</td>
+</tr>
+<tr>
+<td>Storage device</td>
+<td><code>LogDestination</code></td>
+<td>Select the destination for logging activities. SD card is highly recommended, as using the internal flash will wear out the internal flash eventually.</td>
+<td><strong>SD card</strong> (<code>SDCARD</code>)<br><strong>Internal Flash Storage</strong> (<code>FLASH</code>)</td>
+</tr>
+<tr>
+<td><strong>Logging mode</strong></td>
+<td><code>LoggingMode</code></td>
+<td>Set the logging destinations/activities. Multiple selections are possible, for the configuration file, the values have to be added, for example, to send to MQTT broker and to UDP, set the value to <code>4 + 8 = 12</code></td>
+<td><strong>Write to SD card</strong> (<code>1</code>)<br><strong>Calculate 24h averages</strong> (<code>2</code>)<br><strong>Send to MQTT broker</strong> (<code>4</code>)<br><strong>Send to UDP</strong> (<code>8</code>)</td>
+</tr>
+<tr>
+<td><strong>Logging Interval</strong></td>
+<td><code>log_interval</code></td>
+<td>Interval for logging activities (in seconds)</td>
+<td><strong>60</strong> (<code>60</code>)</td>
+</tr>
+<tr>
+<td><strong>Log Parameters</strong></td>
+<td><code>log_parameters</code></td>
+<td>List of logging parameters. See addressing instructions below.</td>
+<td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
+</tr>
+<tr>
+<td>Log bus telegrams</td>
+<td><code>logTelegram</code></td>
+<td>Log raw bus telegrams, such as broadcast messages or unknown telegrams</td>
+<td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>)<br><strong>Log all bus telegrams</strong> (<code>LOGTELEGRAM_ON</code>)<br><strong>Log unknown bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>)<br><strong>Log broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>)<br><strong>Log unknown broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
+</tr>
+<tr>
+<td>24h averages parameters</td>
+<td><code>avg_parameters</code></td>
+<td>List of parameters for generating 24 hour averages. See addressing instructions below.</td>
+<td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
+</tr>
+<tr>
+<td><strong>MQTT Broker server</strong></td>
+<td><code>mqtt_broker_addr</code></td>
+<td>Hostname/IP of the MQTT broker</td>
+<td><strong>my-mqtt-broker.local</strong> (<code>my-mqtt-broker.local</code>)</td>
+</tr>
+<tr>
+<td>MQTT Username</td>
+<td><code>MQTTUsername</code></td>
+<td>Optional username for MQTT broker</td>
+<td><strong>MyMQTTusername</strong> (<code>MyMQTTusername</code>)</td>
+</tr>
+<tr>
+<td>MQTT Password</td>
+<td><code>MQTTPassword</code></td>
+<td>Optional password for MQTT broker</td>
+<td><strong>MyMQTTpassword</strong> (<code>MyMQTTpassword</code>)</td>
+</tr>
+<tr>
+<td>MQTT Device ID</td>
+<td><code>MQTTDeviceID</code></td>
+<td>Device identifier for MQTT</td>
+<td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
+</tr>
+<tr>
+<td>MQTT Topic prefix</td>
+<td><code>MQTTTopicPrefix</code></td>
+<td>Topic prefix for MQTT</td>
+<td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
+</tr>
+<tr>
+<td>MQTT Usage</td>
+<td><code>mqtt_mode</code></td>
+<td>Set the format for MQTT messages</td>
+<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br>JSON (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
+</tr>
+<tr>
+<td>OneWire Pins</td>
+<td><code>One_Wire_Pin</code></td>
+<td>Set the OneWire pin (use <code>-1</code> in configuration file to disable)</td>
+<td><strong>10</strong> (<code>10</code>)</td>
+</tr>
+<tr>
+<td>DHT Pins</td>
+<td><code>DHT_Pins</code></td>
+<td>Set the DHT22 sensor pins (use <code>-1</code> in configuration file to disable)</td>
+<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1, -1</code>)</td>
+</tr>
+<tr>
+<td>BME280 sensors</td>
+<td><code>BME_Sensors</code></td>
+<td>Set number of BME280 sensors on the I2C bus. You need to have access to I2C pins. Fixed addresses <code>0x76</code> and <code>0x77</code> will be used. Use <code>0</code> to disable.</td>
+<td><strong>1</strong> (<code>1</code>)</td>
+</tr>
+<tr>
+<td>MAX! Usage</td>
+<td><code>enable_max_cul</code></td>
+<td>Enable or disable connection to CUNO/CUNX/modified MAX!Cube</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+<tr>
+<td>IP address cube</td>
+<td><code>max_cul_ip_addr</code></td>
+<td>IP address of the CUNO/CUNX/MAX!Cube</td>
+<td><strong>192.168.178.21</strong> (<code>192,168,178,21</code>)</td>
+</tr>
+<tr>
+<td>MAX! Devices</td>
+<td><code>max_device_list</code></td>
+<td>IDs of MAX! devices to be polled</td>
+<td><strong>KEQ0502326</strong>, KEQ0505080, KHA0002948** (<code>"KEQ0502326","KEQ0505080","KHA0002948"</code>)</td>
+</tr>
+<tr>
+<td>IPWE Usage</td>
+<td><code>enable_ipwe</code></td>
+<td>Enable IPWE extension (<code>/ipwe.cgi</code>)</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+<tr>
+<td>IPWE Parameters</td>
+<td><code>ipwe_parameters</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Debugging Usage</td>
+<td><code>debug_mode</code></td>
+<td>Select debug output</td>
+<td><strong>Off</strong> (<code>0</code>)<br><strong>Serial</strong> (<code>1</code>)<br><strong>Telnet</strong> (<code>2</code>)</td>
+</tr>
+<tr>
+<td>Verbosity mode</td>
+<td><code>verbose</code></td>
+<td>Enable or disable verbose debug messages (do not turn off unless advised)</td>
+<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>Monitor mode</td>
+<td><code>monitor</code></td>
+<td>Enable or disable monitor mode (do not turn on unless advised)</td>
+<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+</tr>
+<tr>
+<td>Display unknown parameters</td>
+<td><code>show_unknown</code></td>
+<td>Try and display also parameters not supported by destination device</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="adressing-different-heating-controllers">Adressing different heating controllers</h2>
+<p>In order to address parameters from devices other than the default destination device in the web-interface, you need to add an exclamation mark followed by the device address (see above for converting segment/device notation to device address).<br />
+For example, parameter 8700 from device address 1 would be written as <code>8700!1</code>instead of just <code>8700</code>.  </p>
+<p>For the configuration file, parameters are listed in the form <code>{parameter number, destination address}</code>. Parameter 8700 from device address 1 would thus be written as <code>{8700, 1}</code>.  To address the default destination, you can do so by using <code>-1</code>. </p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = ".",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>

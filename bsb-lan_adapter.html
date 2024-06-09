@@ -6,15 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        
-        <link rel="shortcut icon" href="../img/favicon.ico">
+        <link rel="canonical" href="https://docs.bsb-lan.de/bsb-lan_adapter.html">
+        <link rel="shortcut icon" href="img/favicon.ico">
         <title>The BSB-LAN Adapter - BSB-LAN</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../css/brands.min.css" rel="stylesheet">
-        <link href="../css/solid.min.css" rel="stylesheet">
-        <link href="../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
         <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
         <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -24,7 +24,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="..">BSB-LAN</a>
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -71,11 +71,11 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="using.html" class="dropdown-item">Using BSB-LAN</a>
+    <a href="using.html" class="dropdown-item">BSB-LAN's functions</a>
 </li>
                                     
 <li>
-    <a href="homeautomation.html" class="dropdown-item">Connect to Home Automation Systems</a>
+    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
 </li>
                                 </ul>
                             </li>
@@ -89,6 +89,23 @@
                                     
 <li>
     <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
 </li>
                                 </ul>
                             </li>
@@ -130,10 +147,6 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#the-bsb-lan-adapter" class="nav-link">The BSB-LAN adapter</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#adapter-boards-available-contact-frederik-at-bsbatcode-itde-german-or-english-for-more-details" class="nav-link">Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
               </ul>
             </li>
             
@@ -147,20 +160,23 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="the-bsb-lan-adapter">The BSB-LAN adapter</h1>
-<p>In order to connect to your heating system with a microcontroller, you need to have an adapter board that does the necessary logic-level conversion:
-<img src="../images/Logic Level Adapter.jpg"></p>
 <hr />
-<h2 id="adapter-boards-available-contact-frederik-at-bsbatcode-itde-german-or-english-for-more-details">Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.</h2>
-<p>The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:</p>
+<h3 id="adapter-boards-available-contact-frederik-at-bsbatcode-itde-german-or-english-for-more-details">Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.</h3>
+<hr />
+<p>In order to connect to your heating system with a microcontroller, you need to have an adapter board that does the necessary logic-level conversion:
+<img src="../images/Logic Level Adapter.jpg">
+The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:</p>
 <p><img src="../images/Logic Level Adapter in Case.jpg"></p>
 <p>The two different types of ESP32 adapters (Olimex and ESP32-NoceMCU) only vary in the location of their connectors, the other parts of the board are identical.<br />
 The Arduino Due board contains an EEPROM chip because the Due does not come with on-board EEPROM. Therefore, you can re-use the Arduino Due board on an ESP32 microcontroller (if you connect the correct pins with wires), but you cannot use an adapter for the ESP32 on an Arduino Due.</p>
 <hr />
 <h1 id="suitable-microcontrollers">Suitable microcontrollers</h1>
-<p>BSB-LAN can be installed on three different types of microcontrollers: 
-1. ESP32-Olimex
-1. ESP32-NodeMCU (30 pin version only!) and 
-1. Arduino Due.</p>
+<p>BSB-LAN can be installed on three different types of microcontrollers:  </p>
+<ol>
+<li>ESP32-Olimex  </li>
+<li>ESP32-NodeMCU (30 pin version only!) and  </li>
+<li>Arduino Due.  </li>
+</ol>
 <p>Olimex produces several kinds of boards:<br />
 We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware">Olimex ESP32-EVB</a> or the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware">Olimex ESP32-POE-ISO</a>. The simple POE version (without the "ISO") is not recommended because it does not allow to be connected to PoE Ethernet and USB at the same time.</p>
 <p>The <a href="https://store.arduino.cc/products/arduino-due">Arduino Due</a> requires an <a href="https://store.arduino.cc/products/arduino-ethernet-shield-2">Ethernet Shield</a> in order to access the local network.</p>
@@ -220,13 +236,13 @@ We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32
             <hr>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
         <script>
-            var base_url = "..",
+            var base_url = ".",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../js/base.js"></script>
-        <script src="../search/main.js"></script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

@@ -6,15 +6,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        
-        <link rel="shortcut icon" href="../img/favicon.ico">
+        <link rel="canonical" href="https://docs.bsb-lan.de/troubleshooting.html">
+        <link rel="shortcut icon" href="img/favicon.ico">
         <title>Troubleshooting - BSB-LAN</title>
-        <link href="../css/bootstrap.min.css" rel="stylesheet">
-        <link href="../css/fontawesome.min.css" rel="stylesheet">
-        <link href="../css/brands.min.css" rel="stylesheet">
-        <link href="../css/solid.min.css" rel="stylesheet">
-        <link href="../css/v4-font-face.min.css" rel="stylesheet">
-        <link href="../css/base.css" rel="stylesheet">
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/fontawesome.min.css" rel="stylesheet">
+        <link href="css/brands.min.css" rel="stylesheet">
+        <link href="css/solid.min.css" rel="stylesheet">
+        <link href="css/v4-font-face.min.css" rel="stylesheet">
+        <link href="css/base.css" rel="stylesheet">
         <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
         <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
@@ -24,7 +24,7 @@
     <body>
         <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
             <div class="container">
-                <a class="navbar-brand" href="..">BSB-LAN</a>
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
                 <!-- Expander button -->
                 <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -71,11 +71,11 @@
                                 <ul class="dropdown-menu">
                                     
 <li>
-    <a href="using.html" class="dropdown-item">Using BSB-LAN</a>
+    <a href="using.html" class="dropdown-item">BSB-LAN's functions</a>
 </li>
                                     
 <li>
-    <a href="homeautomation.html" class="dropdown-item">Connect to Home Automation Systems</a>
+    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
 </li>
                                 </ul>
                             </li>
@@ -89,6 +89,23 @@
                                     
 <li>
     <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
 </li>
                                 </ul>
                             </li>
@@ -171,37 +188,45 @@
 
 <h1 id="troubleshooting">Troubleshooting</h1>
 <p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please open up a bug report on the project's GitHub page and make sure that you provide us with the necessary log files, especially from the Serial Monitor (<strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE). Make sure you copy the messages right from the moment your microcontroller boots until the moment you encounter the problem. Please do not send screenshots, only plain text files.</p>
+<hr />
 <h2 id="compiling-fails-because-sketch-too-big">Compiling fails because "sketch too big"</h2>
 <ul>
 <li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Board</em></strong>.</li>
 </ul>
+<hr />
 <h2 id="no-data-even-thought-the-red-led-is-on">No data even thought the red LED is on</h2>
 <ul>
 <li>Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin - it will drive the LED, but it's not a data line.</li>
 <li>With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits <strong>exactly</strong> in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.</li>
 <li>Make sure the RX/TX pins are set/detected correctly.</li>
 </ul>
+<hr />
 <h2 id="cannot-query-any-parameters-device-family-is-0">Cannot query any parameters / device family is 0</h2>
 <ul>
 <li>Wrong bus type (BSB instead of LPB or vice versa).</li>
 </ul>
+<hr />
 <h2 id="no-or-unreliable-network-connection">No or unreliable network connection</h2>
 <ul>
 <li>Try powering the microcontroller via USB from a laptop. We have had many cases where power supplies were unreliable despite having sufficient ratings.</li>
 <li>Look at the Serial Monitor log to check if the microcontroller could acquire an IP address. If not, then your network settings or physical connection may be faulty.</li>
 </ul>
+<hr />
 <h2 id="no-connection-to-hidden-wifi-network-possible">No connection to hidden WiFi network possible</h2>
 <ul>
 <li>Yes, that is a known restriction. The only way to do that is to set the BSSID specifically in <code>BSB_LAN_config.h</code>.</li>
 </ul>
+<hr />
 <h2 id="room-temperature-or-any-other-parameter-cannot-be-set">Room temperature (or any other parameter) cannot be set</h2>
 <ul>
 <li>Check BSB-LAN's settings and make sure that write access is enabled and set to <em>standard</em> or <em>complete</em>.</li>
 </ul>
+<hr />
 <h2 id="web-interface-freezes-when-makeing-new-connection">Web-interface freezes when makeing new connection</h2>
 <ul>
 <li>BSB-LAN is not a multi-tasking system. This means it can attend to one task at a time. So even if a URL command is aborted (by closing the browser window), BSB-LAN might not detect this and only start serving new requests once the previous one is finished.</li>
 </ul>
+<hr />
 <h2 id="the-serial-monitor-is-not-showing-readable-data">The Serial Monitor is not showing readable data</h2>
 <ul>
 <li>Make sure the speed is set correctly to 115200 bps.</li>
@@ -214,13 +239,13 @@
             <hr>
             <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
-        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="js/bootstrap.bundle.min.js"></script>
         <script>
-            var base_url = "..",
+            var base_url = ".",
                 shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
         </script>
-        <script src="../js/base.js"></script>
-        <script src="../search/main.js"></script>
+        <script src="js/base.js"></script>
+        <script src="search/main.js"></script>
 
         <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
