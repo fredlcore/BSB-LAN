@@ -4,7 +4,7 @@
 
 As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the *Settings* menu. This will display a list of categories from your heating controller.  
 You can click on each category and will get a list of corresponding parameters. If you see a `Set` button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no `Set` button, the parameter is read-only and there is no way to change the parameter.
----
+
 ## Using BSB-LAN's URL commands
 
 Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a [home automation system](homeautomation.md), but also provide access to functions not directly accessible via the web-interface.  
@@ -102,7 +102,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 |`/QD`      |Dump parameter structure from heating system| 
 |`/W`       |With a preceding `/W` the URL commands `C`, `S` and `Q` return data without HTML header and footer (e.g.:  `/WC` or `/WS<x>=<y!z>`).|
   
----
+  
 ## Using the graphical plot functionality
 If logged data on storage (either SD card or internal flash) is available, the **Display log file** becomes clickable. By default, it will display the logged data in the browser.  
 To access the logged data itself (in the file `datalog.txt`), use the `/D` URL command mentioned above.  

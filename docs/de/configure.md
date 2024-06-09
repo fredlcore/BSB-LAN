@@ -1,23 +1,21 @@
 # Configuration
 There are two ways to configure BSB-LAN:
-
 1. Through the configuration file `BSB_LAN_config.h``
 1. Through the web-interface by calling [`http://bsb-lan.local/C](http://bsb-lan.local/C) (or the corresponding IP address)
 
 For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings). Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa. 
 
----
 ## Configuration through `BSB_LAN_config.h``
 
 The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to only change the *contents* of the variables (i.e. the settings) and not the *type* of the variables. So if there is for example the setting  
 `byte ip_addr[4] = {192,168,178,88};`  
 you must not alter the `byte ip_addr[4] =` part, only the contents, in this case the comma-separated IP address.
----
+
 ## Configuration through the web-interface
 
 Configuring BSB-LAN through the web-interface is pretty straightforward, as you don't have to deal with variable names but clear descriptions.
 Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".
----
+
 ## Overview of configuration options
 
 |Web-Interface|Configuration File|Functionality|Possible settings
@@ -79,7 +77,6 @@ Initially, only a selected number of configuration options are displayed in the 
 |Monitor mode|`monitor`|Enable or disable monitor mode (do not turn on unless advised)|**On**  (`1`)<br>**Off** (`0`)|
 |Display unknown parameters|`show_unknown`|Try and display also parameters not supported by destination device|**On** (`true`)<br>**Off** (`false`)|
 
----
 ## Adressing different heating controllers
 
 In order to address parameters from devices other than the default destination device in the web-interface, you need to add an exclamation mark followed by the device address (see above for converting segment/device notation to device address).  

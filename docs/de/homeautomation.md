@@ -1,12 +1,11 @@
 # Connecting BSB-LAN to home automation systems
 
-BSB-LAN provides three ways to connect to home automation systems:  
-
+BSB-LAN provides three ways to connect to home automation systems: 
 1. Exchanging data via MQTT (recommended)
 2. Exchanging data via JSON
 3. Exchanging data via URL commands and screen scraping
 4. Using supported modules for specific home automation systems
----
+
 ## Exchanging data via MQTT
 
 This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.  
@@ -30,18 +29,14 @@ Query the outside temperature (parameter 8700):
 Set the comfort temperature setpoint (parameter 710) to 20 degrees:
 `mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d`  
 
----
-
 ## Exchanging data via JSON
 
 BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via [URL commands](using.md) and the `openapi.yaml` file provided in this repository can be used with [Swagger](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml) to explore its possibilities and functionalitites.
 
----
 ## Exchanging data via URL commands and screen scraping
 
 For simpler solutions, using the URL commands to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.
 
----
 ## Using supported modules for specific home automation systems
 
 For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:

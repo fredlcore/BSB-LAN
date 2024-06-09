@@ -31,7 +31,7 @@ These quickstart instructions are for users who are familiar with installing and
 1. Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.
 1. Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to `http://bsb-lan.local`. You can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to ***Tools/Serial Monitor***. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.
 1. **Done :-)**
----
+
 ## Why do I only see so few parameters?
 
 Once you access BSB-LAN for the first time, you will see that only very few parameters are shown on the device’s web interface. This is because each model of the Siemens controller built into your heating system supports a different set of parameters. Previously, I provided a list of parameters collected from all different kinds of heating systems, but it turned out that this list was ambiguous or even contained errors that we couldn’t fix reliably. This list is still available in release version 2.2.x of BSB-LAN and can be copied from there if needed.  
