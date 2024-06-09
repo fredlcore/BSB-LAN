@@ -71,4 +71,4 @@ GitHub user @lapixo has contributed a [script for the Volkszaehler project](http
 
 ### Bash script
 
-GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-readout) to query data and display it using gnuplot.
+GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-readout) to query data and display it using gnuplot. Thank you!
