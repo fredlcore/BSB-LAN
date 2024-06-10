@@ -2,9 +2,9 @@
 
 English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/master/README.md">here</A>. 
 
-Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de/EN).
+Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de).
 
-BSB-LAN ist ein Adapter für den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS). Es gibt den Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE) bzw. für einen *Arduino Due* mit Ethernet-Shield zur web-basierten Kontrolle über LAN/WLAN von Heizungssystemen von Elco, Brötje und anderen Herstellern, die Siemens-Regler verwenden. Darüber hinaus ist das Logging von Werten auf Micro-SD-Karte möglich. Dieses Projekt unterstützt fast alle an den Heizungen verfügbaren Parameter und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
+BSB-LAN ist eine Software/Hardware-Lösung, um auf den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS) zuzugreifen. Es gibt den BSB-LAN Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) bzw. für einen *Arduino Due* mit Ethernet-Shield, um damit web-basiert über LAN/WLAN auf Heizungssysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern, die Siemens-Regler verwenden, zuzugreifen. Damit ist es möglich, die Heizung zu steuern bzw. zu regeln und beliebige Werte zu loggen. Dieses Projekt unterstützt fast alle an den Heizungen verfügbaren Parameter und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
 
@@ -15,28 +15,10 @@ BSB-LAN ist ein Adapter für den "Boiler-System-Bus" (BSB), den "Local-Process-B
 
 ---
    
-Mit Hilfe des Adapters und der BSB-LAN-Software können nun unkompliziert verschiedene Funktionen, Werte und Parameter beobachtet, geloggt und bei Bedarf web-basiert gesteuert und geändert werden.
-Eine optionale Einbindung in bestehende Smart-Home-Systeme wie bspw. FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG oder Node-RED kann mittels HTTPMOD, MQTT oder JSON erfolgen. 
+Mit Hilfe des Adapters und der BSB-LAN-Software können sehr einfach verschiedene Werte und Parameter beobachtet, geloggt und bei Bedarf web-basiert gesteuert und geändert werden.
+Eine optionale Einbindung in bestehende Smart-Home-Systeme wie bspw. FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG oder Node-RED kann mittels MQTT, JSON oder HTTP-Zugriffe erfolgen. 
 Darüber hinaus ist der Einsatz des Adapters als Standalone-Logger ohne LAN- oder Internetanbindung bei Verwendung einer microSD-Karte ebenfalls möglich.  
 Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und deren Daten ebenso geloggt und ausgewertet werden. Durch die Möglichkeit, eigenen Code in die BSB-LAN-Software zu integrieren, bietet sich darüber hinaus ein weites Spektrum an Erweiterungsmöglichkeiten. 
-   
-Prinzipiell sollte diese Kombination aus Hard- und Software mit allen Heizungssystemen lauffähig sein, deren Steuerung über einen BSB oder LPB verfügt.  
-Als einfache Regel kann man sagen, dass die Regler mit einem **S** in der Typenbezeichnung (RV**S** und LM**S**) kompatibel mit BSB-LAN sind und den (nahezu) kompletten Funktionsumfang bieten.  
-Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je nach Typ des Wärmeerzeugers (Öl, Gas, WP etc.) normalerweise verbaut sind (bzw. waren) und die mittels BSB-LAN bedient werden können. Gewisse Einzel- und Spezialfälle (wie bspw. ein RVS-Regler bei einem Gasgerät) sind hier nicht berücksichtigt. Für genauere Informationen bzgl der Reglertypen und der zu verwendenden Anschlüsse lies bitte im BSB-LPB-LAN-Handbuch nach.
-
-**Gasregler:**  
-- LMU74/LMU75 und (aktuelle Generation) LMS14/LMS15, Anschluss via BSB  
-- LMU54/LMU64, Anschluss via LPB über OCI420 Plugin  
-   
-**Öl-/Solar-/Zonenregler:**  
-- RVS43/RVS63/RVS46, Anschluss via BSB  
-- RVA/RVP, Anschluss via PPS (modellspezifisch vereinzelt auch LPB)  
-   
-**Wärmepumpenregler:**  
-- RVS21/RVS61, Anschluss via BSB  
-   
-**Weishaupt (Modell WTU):**  
-- RVS23, Anschluss via LPB      
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
 - Brötje: BBK, BBS, BGB, BLW (**nicht BLW NEO!**), BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB 
@@ -70,15 +52,10 @@ Die folgende Auflistung gibt eine grobe Übersicht über die Reglertypen, die je
 - Tifell: Biofell
 - Viessmann: Vitotwin 300-W
 - Wamak: AiWa, DB
-- Weishaupt: WTU
-   
-***Um eine detailliertere Übersicht der gemeldeten Systeme einzusehen, die bisher erfolgreich mit BSB-LAN genutzt werden, folge bitte dem entsprechenden Link:***  
-- **Brötje**
-- **Elco**
-- **weitere Hersteller (z.B. Fujitsu, Atlantic, Weishaupt)**      
+- Weishaupt: WTU   
 
 Wenn Deine Heizung einen der folgenden Regler enthält, aber Dein Modell noch nicht aufgeführt ist, setze Dich gerne mit uns in Verbindung, da diese Regler als kompatibel mit einem der unterstützten Bussysteme identifiziert wurden:   
-AVS37, AVS55, AVS71, AVS74, AVS75, AVS77, AVS79, LMS14, LMS15, LMS15, LMU6x, LMU74, LMU75, RVA61, RVA63, RVA33, RVA36, RVA43, RVA46, RVA47, RVA53, RVA60, RVA61, RVA63, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, RVP5xx, RVS13, RVS21, RVS23, RVS26, RVS41, RVS43, RVS46, RVS47, RVS51, RVS53, RVS61, RVS63, RVS65, RVS68, RWI65, WRI80
+AVS37, AVS55, AVS71, AVS74, AVS75, AVS77, AVS79, LMS14, LMS15, LMS15, LMU64, LMU74, LMU75, RVA61, RVA63, RVA33, RVA36, RVA43, RVA46, RVA47, RVA53, RVA60, RVA61, RVA63, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, RVP5xx, RVS13, RVS21, RVS23, RVS26, RVS41, RVS43, RVS46, RVS47, RVS51, RVS53, RVS61, RVS63, RVS65, RVS68, RWI65, WRI80
 
 <B>Achtung!</B><BR>
 Einige Hersteller, die vormals auf BSB/LPB gesetzt haben, sind bei "günstigeren" Geräten auf andere Bus-Systeme gewechselt. Beispiele hierfür sind die Brötje WLC/WLS/BOK Geräte. Diese sind nicht kompatibel mit BSB/LPB und erlauben nur die Einstellung von wenigen Parametern durch den Benutzer. Besitzer dieser Geräte sind bis dato nicht in der Lage ihr Heizungssystem zu konfigurieren und zu überwachen, wie dies mit teureren (aber BSB/LPB-kompatiblen) Geräten, wie z.B. den oben genannten, möglich ist.
