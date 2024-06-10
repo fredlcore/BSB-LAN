@@ -3,8 +3,13 @@ theme: mkdocs
 site_url: https://docs.bsb-lan.de
 use_directory_urls: false
 
+markdown_extensions:
+  - attr_list
+  - pymdownx.snippets
+
 plugins:
   - search
+  - autorefs
   - i18n:
       reconfigure_search: true
       docs_structure: folder
