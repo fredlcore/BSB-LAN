@@ -6,8 +6,6 @@ Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de).
 
 BSB-LAN ist eine Software/Hardware-Lösung, um auf den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS) zuzugreifen. Es gibt den BSB-LAN Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) bzw. für einen *Arduino Due* mit Ethernet-Shield, um damit web-basiert über LAN/WLAN auf Heizungssysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern, die Siemens-Regler verwenden, zuzugreifen. Damit ist es möglich, die Heizung zu steuern bzw. zu regeln und beliebige Werte zu loggen. Dieses Projekt unterstützt fast alle an den Heizungen verfügbaren Parameter und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
-
 ---
 
 ***Platinen erhältlich!***  
@@ -73,3 +71,5 @@ BSB-Adapterplatine in Bestückung für ESP32 Olimex Boards:
 
 BSB-Adapterplatine auf ESP32 Olimex POE im 3D-gedruckten Projekt-Gehäuse:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/docs/images/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons Lizenzvertrag" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />Dieses Werk ist lizenziert unter einer <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Namensnennung - Nicht-kommerziell - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz</a>.
