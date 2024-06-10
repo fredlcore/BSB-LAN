@@ -1,6 +1,7 @@
 # Quickstart instructions
 These quickstart instructions are for users who are familiar with installing and configuring software on their computer. If you need more detailed instructions, please head to the [install instructions](install.md)!
 
+1. Make sure that your heating system is [compatible](supported_heating_systems.md) with BSB-LAN!
 1. [Download](https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip) and unpack the current BSB-LAN version from the master repository or use *git* to [clone](https://github.com/fredlcore/BSB-LAN.git) the repository.
 1. Navigate to the BSB_LAN folder and rename the following files:
     1. `BSB_LAN_custom_defs.h.default` to `BSB_LAN_custom_defs.h`

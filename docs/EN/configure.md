@@ -19,8 +19,21 @@ Configuring BSB-LAN through the web-interface is pretty straightforward, as you 
 Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".
 ---
 ## Overview of configuration options
-
-|Web-Interface|Configuration File|Functionality|Possible settings
+<style>
+table th:first-of-type {
+    width: 0%;
+}
+table th:nth-of-type(2) {
+    width: 0%;
+}
+table th:nth-of-type(3) {
+    width: 80%;
+}
+table th:nth-of-type(4) {
+    width: 20%;
+}
+</style>
+|Web-Interface|Configuration File|Functionality|Possible settings|
 |-------------|------------------|-------------|---------|
 |-            |**`#define LANG`**|Set language |`DE`, `EN`, `FR` and other ISO country codes|
 |-            |`#define DEFAULT_FLAG`|Set read/write access to heating system. `FL_RONLY` sets all parameters to read-only. `FL_SW_CTL_RONLY` allows setting read/write access via web-interface configuration setting.<BR>`0` makes all  parameters that could be written writeable. **Do not use this option unless instructed otherwise!**|**FL_RONLY**<BR>**FL_SW_CTL_RONLY**<BR>**0**|
@@ -65,13 +78,13 @@ Initially, only a selected number of configuration options are displayed in the 
 |MQTT Password|`MQTTPassword`|Optional password for MQTT broker|**MyMQTTpassword** (`MyMQTTpassword`)|
 |MQTT Device ID|`MQTTDeviceID`|Device identifier for MQTT|**BSB-LAN** (`BSB-LAN`)|
 |MQTT Topic prefix|`MQTTTopicPrefix`|Topic prefix for MQTT|**BSB-LAN** (`BSB-LAN`)|
-|MQTT Usage|`mqtt_mode`|Set the format for MQTT messages|**Plain text** (`1`) - Send parameter number and value in plain text format<br>JSON (`2`) - Send messages in JSON format (parameter number and value only)<br>**Rich JSON** (`3`) - Send parameter number/name/value/unit/error in JSON format.|
+|MQTT Usage|`mqtt_mode`|Set the format for MQTT messages|**Plain text** (`1`) - Send parameter number and value in plain text format<br>**JSON** (`2`) - Send messages in JSON format (parameter number and value only)<br>**Rich JSON** (`3`) - Send parameter number/name/value/unit/error in JSON format.|
 |OneWire Pins|`One_Wire_Pin`|Set the OneWire pin (use `-1` in configuration file to disable)|**10** (`10`)|
 |DHT Pins|`DHT_Pins`|Set the DHT22 sensor pins (use `-1` in configuration file to disable)|**11, 12, 13** (`11, 12, 13, -1, -1, -1, -1, -1, -1, -1`)
 |BME280 sensors|`BME_Sensors`|Set number of BME280 sensors on the I2C bus. You need to have access to I2C pins. Fixed addresses `0x76` and `0x77` will be used. Use `0` to disable.|**1** (`1`)|
 |MAX! Usage|`enable_max_cul`|Enable or disable connection to CUNO/CUNX/modified MAX!Cube|**On** (`true`)<br>**Off** (`false`)||
 |IP address cube|`max_cul_ip_addr`|IP address of the CUNO/CUNX/MAX!Cube|**192.168.178.21** (`192,168,178,21`)|
-|MAX! Devices|`max_device_list`|IDs of MAX! devices to be polled|**KEQ0502326**, KEQ0505080, KHA0002948** (`"KEQ0502326","KEQ0505080","KHA0002948"`)|
+|MAX! Devices|`max_device_list`|IDs of MAX! devices to be polled|**KEQ0502326, KEQ0505080, KHA0002948** (`"KEQ0502326", "KEQ0505080", "KHA0002948"`)|
 |IPWE Usage|`enable_ipwe`|Enable IPWE extension (`/ipwe.cgi`)|**On** (`true`)<br>**Off** (`false`)|
 |IPWE Parameters|`ipwe_parameters`|||
 |Debugging Usage|`debug_mode`|Select debug output|**Off** (`0`)<br>**Serial** (`1`)<br>**Telnet** (`2`)|

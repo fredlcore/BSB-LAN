@@ -4,14 +4,23 @@
 
 As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the *Settings* menu. This will display a list of categories from your heating controller.  
 You can click on each category and will get a list of corresponding parameters. If you see a `Set` button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no `Set` button, the parameter is read-only and there is no way to change the parameter.
+<img src="../images/Web-Interface.png">
 ---
+[](){#using-en}
 ## Using BSB-LAN's URL commands
 
 Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a [home automation system](homeautomation.md), but also provide access to functions not directly accessible via the web-interface.  
 URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL `http://bsb-lan.local/K` (or `http://bsb-lan.local/1234/K` if the passkey `1234` is in use).
 
 ### Querying and setting parameters
-
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 80%;
+}
+</style>
 |URL command|Functionality|
 |:----------|:------------|
 |`/<x>`     |Query setting of parameter `<x>`|
@@ -33,7 +42,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 |:----------|:------------|
 |`/C`       |Configuration|
 |`/CO`      |Dump BSB-LAN's configuration|
-|`/P<x>,<y>,<z>`|Temporarily set bus type to `<x>`, own address to `<y>` and target address to `<z>`. Empty values leave the address as it is already set.|
+|`/P<x>,<y>,<z>`|Temporarily set bus type to `<x>`, own address to `<y>` and target address to `<z>`.|
 |`/V<x>`    |Enable (`1`) or disable (`0`) verbose output mode. Should remain enabled unless specifically instructed.|
 
 ### Logging
@@ -104,6 +113,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
   
 ---
 ## Using the graphical plot functionality
+<img src="../images/Web-Interface2.png">
 If logged data on storage (either SD card or internal flash) is available, the **Display log file** becomes clickable. By default, it will display the logged data in the browser.  
 To access the logged data itself (in the file `datalog.txt`), use the `/D` URL command mentioned above.  
 By default, "Display log file" displays the log data of the most recent `n` calendar days (`n=DEFAULT_DAYS_TO_PLOT`, configurable in `BSB_LAN_config.h`). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file  

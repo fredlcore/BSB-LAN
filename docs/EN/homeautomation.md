@@ -1,11 +1,12 @@
 # Connecting BSB-LAN to home automation systems
 
-BSB-LAN provides three ways to connect to home automation systems:  
+BSB-LAN provides four ways to connect to home automation systems:  
 
 1. Exchanging data via MQTT (recommended)
-2. Exchanging data via JSON
-3. Exchanging data via URL commands and screen scraping
-4. Using supported modules for specific home automation systems
+1. Exchanging data via JSON
+1. Using supported modules for specific home automation systems
+1. Exchanging data via URL commands and screen scraping
+
 ---
 ## Exchanging data via MQTT
 
@@ -35,11 +36,6 @@ Set the comfort temperature setpoint (parameter 710) to 20 degrees:
 ## Exchanging data via JSON
 
 BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via [URL commands](using.md) and the `openapi.yaml` file provided in this repository can be used with [Swagger](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml) to explore its possibilities and functionalitites.
-
----
-## Exchanging data via URL commands and screen scraping
-
-For simpler solutions, using the URL commands to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.
 
 ---
 ## Using supported modules for specific home automation systems
@@ -88,3 +84,8 @@ GitHub user @lapixo has contributed a [script for the Volkszaehler project](http
 ### Bash script
 
 GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-readout) to query data and display it using gnuplot. Thank you!
+
+---
+## Exchanging data via URL commands and screen scraping
+
+For simpler solutions, [using the URL commands][using-en] to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.
