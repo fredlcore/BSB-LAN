@@ -114,17 +114,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Suche
+                                <i class="fa fa-search"></i> Search
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="quickstart.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Zurück
+                                    <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="bsb-lan_adapter.html" class="nav-link">
-                                    Weiter <i class="fa fa-arrow-right"></i>
+                                    Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -136,7 +136,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -147,6 +147,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#supported-heating-systems" class="nav-link">Supported heating systems</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#list-of-working-controller-models" class="nav-link">List of working controller models</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -156,6 +160,7 @@
 
 <h1 id="supported-heating-systems">Supported heating systems</h1>
 <p>BSB-LAN supports heating systems that communicate using either the <strong>BSB</strong> (Boiler System Bus), the <strong>LPB</strong> (Local Process Bus) or the <strong>PPS</strong> (Punkt-zu-Punkt-Schnittstelle). These controllers are usually manufactured by Siemens, older controllers might still bear the company name "Landis &amp; Stafea" or "Landis &amp; Gyr".</p>
+<p>We have compiled a <a href="supported_models.html">list of working</a> models from various heating system manufacturers who have been confirmed working with BSB-LAN, although there is no 100% guarantee that the manufacturers keep the model name but change the controller to a different system. So always make sure to double-check that the right connectors are available.</p>
 <p>Here are a few examples from heating controllers and the connectors that are used to connect to BSB-LAN. Some connectors have three pins, some have two pins. If there are three pins, <strong>make sure you choose the correct two (CL+ and CL-)</strong> as the third von (G+) is to provide background lighting for the room unit. It won't harm BSB-LAN, but it might be misleading because BSB-LAN's LED will be on even though it's not connected to the right pin.</p>
 <table>
 <thead>
@@ -169,66 +174,79 @@
 <tr>
 <td style="text-align: center;"><strong>LMS14</strong><br><strong>LMS15</strong></td>
 <td style="text-align: center;"><img src="../images/LMS14.jpeg"></td>
-<td style="text-align: left;"><strong>+</strong> = Left<br><strong>-</strong> = Center</td>
+<td style="text-align: left;">BSB connection:<br><strong>+</strong> = Left<br><strong>-</strong> = Center</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>LMS14</strong><br><strong>LMS15</strong></td>
 <td style="text-align: center;"><img src="../images/LMS14-2.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>LMU64</strong></td>
 <td style="text-align: center;"><img src="../images/LMU64.jpeg"></td>
-<td style="text-align: left;">LPB connection via OCI420</td>
+<td style="text-align: left;">LPB connection:<br>via additional OCI420 plugin</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVA63</strong></td>
 <td style="text-align: center;"><img src="../images/RVA63.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">LPB connection: MB/DB<br>PPS connection: A6/MD</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVP54</strong></td>
 <td style="text-align: center;"><img src="../images/RVP54.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">PPS connection: A6/M</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVS61</strong></td>
 <td style="text-align: center;"><img src="../images/RVS61.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVS21</strong></td>
 <td style="text-align: center;"><img src="../images/RVS21.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">BSB connection via connector X86<br><strong>+</strong> = rightmost pin<BR><strong>-</strong> = second pin from right</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVS21 with AVS55</strong></td>
 <td style="text-align: center;"><img src="../images/RVS21-AVS55.jpeg"></td>
-<td style="text-align: left;">AVS55 extension module, sitting on top of RVS21.<br><strong>+</strong> = rightmost pin<BR><strong>-</strong> = second pin from right</td>
+<td style="text-align: left;">AVS55 extension module, sitting on top of RVS21.<br>BSB connection via connector X86:<br><strong>+</strong> = rightmost pin<BR><strong>-</strong> = second pin from right</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVS41</strong></td>
 <td style="text-align: center;"><img src="../images/RVS41.jpeg"></td>
-<td style="text-align: left;"></td>
-</tr>
-<tr>
-<td style="text-align: center;"><strong>RVS51</strong></td>
-<td style="text-align: center;"><img src="../images/RVS51.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>RVS43</strong></td>
 <td style="text-align: center;"><img src="../images/RVS43.jpeg"></td>
-<td style="text-align: left;"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RVS46</strong></td>
+<td style="text-align: center;"><img src="../images/RVS46.jpeg"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RVS51</strong></td>
+<td style="text-align: center;"><img src="../images/RVS51.jpeg"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>RVS63</strong></td>
+<td style="text-align: center;"><img src="../images/RVS63.jpeg"></td>
+<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
 </tr>
 </tbody>
-</table></div>
+</table>
+<h2 id="list-of-working-controller-models">List of working controller models</h2>
+<p>There are a many more controllers that are likely to work with BSB-LAN. Look out for these Siemens controller models in your heating system: </p>
+<p>AVS37, AVS55, AVS71, AVS74, AVS75, AVS77, AVS79, LMS14, LMS15, LMS54, LMU64, LMU74, LMU75, RVA61, RVA63, RVA33, RVA36, RVA43, RVA46, RVA47, RVA53, RVA60, RVA61, RVA63, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, RVP5xx, RVS13, RVS21, RVS23, RVS26, RVS41, RVS43, RVS46, RVS47, RVS51, RVS53, RVS61, RVS63, RVS65, RVS68, RWI65, WRI80</p></div>
             </div>
         </div>
 
         <footer class="col-md-12">
             <hr>
-            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -242,17 +260,17 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
+                <p>From here you can search these documents. Enter your search terms below.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -262,33 +280,33 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Taste</th>
-                    <th>Aktion</th>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Diese Hilfe anzeigen</td>
+                    <td>Open this help</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Nächste Seite</td>
+                    <td>Next page</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Vorherige Seite</td>
+                    <td>Previous page</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Suche</td>
+                    <td>Search</td>
                   </tr>
                 </tbody>
               </table>

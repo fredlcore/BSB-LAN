@@ -188,6 +188,20 @@ you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, i
 Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".</p>
 <hr />
 <h2 id="overview-of-configuration-options">Overview of configuration options</h2>
+<style>
+table th:first-of-type {
+    width: 0%;
+}
+table th:nth-of-type(2) {
+    width: 0%;
+}
+table th:nth-of-type(3) {
+    width: 80%;
+}
+table th:nth-of-type(4) {
+    width: 20%;
+}
+</style>
 <table>
 <thead>
 <tr>
@@ -460,7 +474,7 @@ Initially, only a selected number of configuration options are displayed in the 
 <td>MQTT Usage</td>
 <td><code>mqtt_mode</code></td>
 <td>Set the format for MQTT messages</td>
-<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br>JSON (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
+<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br><strong>JSON</strong> (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
 </tr>
 <tr>
 <td>OneWire Pins</td>
@@ -496,7 +510,7 @@ Initially, only a selected number of configuration options are displayed in the 
 <td>MAX! Devices</td>
 <td><code>max_device_list</code></td>
 <td>IDs of MAX! devices to be polled</td>
-<td><strong>KEQ0502326</strong>, KEQ0505080, KHA0002948** (<code>"KEQ0502326","KEQ0505080","KHA0002948"</code>)</td>
+<td><strong>KEQ0502326, KEQ0505080, KHA0002948</strong> (<code>"KEQ0502326", "KEQ0505080", "KHA0002948"</code>)</td>
 </tr>
 <tr>
 <td>IPWE Usage</td>

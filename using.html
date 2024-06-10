@@ -169,12 +169,22 @@
 <h1 id="using-bsb-lan">Using BSB-LAN</h1>
 <h2 id="controlling-the-heating-system-via-the-web-interface">Controlling the heating system via the web-interface</h2>
 <p>As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the <em>Settings</em> menu. This will display a list of categories from your heating controller.<br />
-You can click on each category and will get a list of corresponding parameters. If you see a <code>Set</code> button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no <code>Set</code> button, the parameter is read-only and there is no way to change the parameter.</p>
+You can click on each category and will get a list of corresponding parameters. If you see a <code>Set</code> button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no <code>Set</code> button, the parameter is read-only and there is no way to change the parameter.
+<img src="../images/Web-Interface.png"></p>
 <hr />
+<p><a href="" id="using-en"></a></p>
 <h2 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h2>
 <p>Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a <a href="homeautomation.html">home automation system</a>, but also provide access to functions not directly accessible via the web-interface.<br />
 URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).</p>
 <h3 id="querying-and-setting-parameters">Querying and setting parameters</h3>
+<style>
+table th:first-of-type {
+    width: 20%;
+}
+table th:nth-of-type(2) {
+    width: 80%;
+}
+</style>
 <table>
 <thead>
 <tr>
@@ -252,7 +262,7 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </tr>
 <tr>
 <td style="text-align: left;"><code>/P&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Temporarily set bus type to <code>&lt;x&gt;</code>, own address to <code>&lt;y&gt;</code> and target address to <code>&lt;z&gt;</code>. Empty values leave the address as it is already set.</td>
+<td style="text-align: left;">Temporarily set bus type to <code>&lt;x&gt;</code>, own address to <code>&lt;y&gt;</code> and target address to <code>&lt;z&gt;</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/V&lt;x&gt;</code></td>
@@ -481,7 +491,8 @@ URL commands are called right after BSB-LAN's hostname and an (optional) passkey
 </table>
 <hr />
 <h2 id="using-the-graphical-plot-functionality">Using the graphical plot functionality</h2>
-<p>If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
+<p><img src="../images/Web-Interface2.png">
+If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
 To access the logged data itself (in the file <code>datalog.txt</code>), use the <code>/D</code> URL command mentioned above.<br />
 By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file<br />
 Mouseover, click and mouse wheel actions within the graphical display provide various control options:

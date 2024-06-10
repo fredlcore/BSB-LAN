@@ -114,17 +114,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Rechercher
+                                <i class="fa fa-search"></i> Search
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" class="nav-link disabled">
-                                    <i class="fa fa-arrow-left"></i> Précédent
+                                    <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="quickstart.html" class="nav-link">
-                                    Suivant <i class="fa fa-arrow-right"></i>
+                                    Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -136,7 +136,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table des matières">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -144,6 +144,11 @@
     
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#what-is-bsb-lan" class="nav-link">What is BSB-LAN?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             
             <li class="nav-item" data-bs-level="1"><a href="#where-and-how-do-i-begin" class="nav-link">Where and how do I begin?</a>
               <ul class="nav flex-column">
@@ -154,6 +159,12 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
+<h1 id="what-is-bsb-lan">What is BSB-LAN?</h1>
+<p>BSB-LAN is a software/hardware solution for accessing the “Boiler-System-Bus” (BSB), the “Local-Process-Bus (LPB)” and the “Punkt-zu-Punkt-Schnittstelle” (PPS). The BSB-LAN hardware is available for various <em>ESP32</em>-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) as well as for an <em>Arduino Due</em> with Ethernet shield. It allows accessing the heating systems from Atlantic, Brötje, Elco and many other manufacturers via LAN/WLAN, provided that they use one of the Siemens controllers listed below. BSB-LAN makes it possible to control or regulate the heating and log any given values. This project supports almost all parameters available on the heating systems and can be a more comprehensive and cost-effective alternative to the OZW 672, OCI 700 or Remocon Net B.</p>
+<p>Using the adapter and the BSB-LAN software, various values and parameters can easily be monitored, logged and, if so desired, controlled and changed via a web-interface.
+Optional integration into existing smart home systems such as FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG or Node-RED is possible via MQTT, JSON or HTTP access. 
+The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card.<br />
+Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. </p>
 <h1 id="where-and-how-do-i-begin">Where and how do I begin?</h1>
 <ul>
 <li>You are an experienced user? Head on to the <a href="quickstart.html">quickstart instructions</a>. Otherwise (or if you run into problems), please read on!</li>
@@ -170,7 +181,7 @@
 
         <footer class="col-md-12">
             <hr>
-            <p>Documentation générée avec <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -184,17 +195,17 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Rechercher</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Ici vous pouvez chercher dans les documents. Entrez votre recherche ci-dessous.</p>
+                <p>From here you can search these documents. Enter your search terms below.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Rechercher..." id="mkdocs-search-query" title="Tapez vos mots clés ici">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="Aucun résultat trouvé"></div>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -204,33 +215,33 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Raccourcis Clavier</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Touches</th>
+                    <th style="width: 20%;">Keys</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Ouvrir l'aide</td>
+                    <td>Open this help</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Page suivante</td>
+                    <td>Next page</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Page précédente</td>
+                    <td>Previous page</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Rechercher</td>
+                    <td>Search</td>
                   </tr>
                 </tbody>
               </table>

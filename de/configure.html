@@ -114,17 +114,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Suche
+                                <i class="fa fa-search"></i> Search
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="install.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Zurück
+                                    <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="using.html" class="nav-link">
-                                    Weiter <i class="fa fa-arrow-right"></i>
+                                    Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -136,7 +136,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -171,18 +171,37 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="configuration">Configuration</h1>
-<p>There are two ways to configure BSB-LAN:
-1. Through the configuration file <code>BSB_LAN_config.h``
-1. Through the web-interface by calling [</code>http://bsb-lan.local/C](http://bsb-lan.local/C) (or the corresponding IP address)</p>
+<p>There are two ways to configure BSB-LAN:</p>
+<ol>
+<li>Through the configuration file `BSB_LAN_config.h``</li>
+<li>Through the web-interface by calling <a href="http://bsb-lan.local/C">`http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
+</ol>
 <p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings). Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa. </p>
+<hr />
 <h2 id="configuration-through-bsb_lan_configh">Configuration through `BSB_LAN_config.h``</h2>
 <p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to only change the <em>contents</em> of the variables (i.e. the settings) and not the <em>type</em> of the variables. So if there is for example the setting<br />
 <code>byte ip_addr[4] = {192,168,178,88};</code><br />
 you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, in this case the comma-separated IP address.</p>
+<hr />
 <h2 id="configuration-through-the-web-interface">Configuration through the web-interface</h2>
 <p>Configuring BSB-LAN through the web-interface is pretty straightforward, as you don't have to deal with variable names but clear descriptions.
 Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".</p>
+<hr />
 <h2 id="overview-of-configuration-options">Overview of configuration options</h2>
+<style>
+table th:first-of-type {
+    width: 0%;
+}
+table th:nth-of-type(2) {
+    width: 0%;
+}
+table th:nth-of-type(3) {
+    width: 80%;
+}
+table th:nth-of-type(4) {
+    width: 20%;
+}
+</style>
 <table>
 <thead>
 <tr>
@@ -455,7 +474,7 @@ Initially, only a selected number of configuration options are displayed in the 
 <td>MQTT Usage</td>
 <td><code>mqtt_mode</code></td>
 <td>Set the format for MQTT messages</td>
-<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br>JSON (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
+<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br><strong>JSON</strong> (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
 </tr>
 <tr>
 <td>OneWire Pins</td>
@@ -491,7 +510,7 @@ Initially, only a selected number of configuration options are displayed in the 
 <td>MAX! Devices</td>
 <td><code>max_device_list</code></td>
 <td>IDs of MAX! devices to be polled</td>
-<td><strong>KEQ0502326</strong>, KEQ0505080, KHA0002948** (<code>"KEQ0502326","KEQ0505080","KHA0002948"</code>)</td>
+<td><strong>KEQ0502326, KEQ0505080, KHA0002948</strong> (<code>"KEQ0502326", "KEQ0505080", "KHA0002948"</code>)</td>
 </tr>
 <tr>
 <td>IPWE Usage</td>
@@ -531,6 +550,7 @@ Initially, only a selected number of configuration options are displayed in the 
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="adressing-different-heating-controllers">Adressing different heating controllers</h2>
 <p>In order to address parameters from devices other than the default destination device in the web-interface, you need to add an exclamation mark followed by the device address (see above for converting segment/device notation to device address).<br />
 For example, parameter 8700 from device address 1 would be written as <code>8700!1</code>instead of just <code>8700</code>.  </p>
@@ -540,7 +560,7 @@ For example, parameter 8700 from device address 1 would be written as <code>8700
 
         <footer class="col-md-12">
             <hr>
-            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -554,17 +574,17 @@ For example, parameter 8700 from device address 1 would be written as <code>8700
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
+                <p>From here you can search these documents. Enter your search terms below.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -574,33 +594,33 @@ For example, parameter 8700 from device address 1 would be written as <code>8700
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Taste</th>
-                    <th>Aktion</th>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Diese Hilfe anzeigen</td>
+                    <td>Open this help</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Nächste Seite</td>
+                    <td>Next page</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Vorherige Seite</td>
+                    <td>Previous page</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Suche</td>
+                    <td>Search</td>
                   </tr>
                 </tbody>
               </table>

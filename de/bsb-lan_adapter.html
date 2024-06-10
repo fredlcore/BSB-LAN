@@ -114,17 +114,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Suche
+                                <i class="fa fa-search"></i> Search
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="supported_heating_systems.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Zurück
+                                    <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="install.html" class="nav-link">
-                                    Weiter <i class="fa fa-arrow-right"></i>
+                                    Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -136,7 +136,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -164,11 +164,12 @@
 <h3 id="adapter-boards-available-contact-frederik-at-bsbatcode-itde-german-or-english-for-more-details">Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.</h3>
 <hr />
 <p>In order to connect to your heating system with a microcontroller, you need to have an adapter board that does the necessary logic-level conversion:
-<img src="../images/Logic Level Adapter.jpg"></p>
-<p>The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:</p>
+<img src="../images/Logic Level Adapter.jpg">
+The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:</p>
 <p><img src="../images/Logic Level Adapter in Case.jpg"></p>
 <p>The two different types of ESP32 adapters (Olimex and ESP32-NoceMCU) only vary in the location of their connectors, the other parts of the board are identical.<br />
 The Arduino Due board contains an EEPROM chip because the Due does not come with on-board EEPROM. Therefore, you can re-use the Arduino Due board on an ESP32 microcontroller (if you connect the correct pins with wires), but you cannot use an adapter for the ESP32 on an Arduino Due.</p>
+<hr />
 <h1 id="suitable-microcontrollers">Suitable microcontrollers</h1>
 <p>BSB-LAN can be installed on three different types of microcontrollers:  </p>
 <ol>
@@ -233,7 +234,7 @@ We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32
 
         <footer class="col-md-12">
             <hr>
-            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -247,17 +248,17 @@ We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
+                <p>From here you can search these documents. Enter your search terms below.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -267,33 +268,33 @@ We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Taste</th>
-                    <th>Aktion</th>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Diese Hilfe anzeigen</td>
+                    <td>Open this help</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Nächste Seite</td>
+                    <td>Next page</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Vorherige Seite</td>
+                    <td>Previous page</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Suche</td>
+                    <td>Search</td>
                   </tr>
                 </tbody>
               </table>

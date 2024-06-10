@@ -114,17 +114,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Suche
+                                <i class="fa fa-search"></i> Search
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="using.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Zurück
+                                    <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="troubleshooting.html" class="nav-link">
-                                    Weiter <i class="fa fa-arrow-right"></i>
+                                    Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -136,7 +136,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -155,11 +155,11 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-url-commands-and-screen-scraping" class="nav-link">Exchanging data via URL commands and screen scraping</a>
+            <li class="nav-item" data-bs-level="2"><a href="#using-supported-modules-for-specific-home-automation-systems" class="nav-link">Using supported modules for specific home automation systems</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#using-supported-modules-for-specific-home-automation-systems" class="nav-link">Using supported modules for specific home automation systems</a>
+            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-url-commands-and-screen-scraping" class="nav-link">Exchanging data via URL commands and screen scraping</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -171,11 +171,14 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="connecting-bsb-lan-to-home-automation-systems">Connecting BSB-LAN to home automation systems</h1>
-<p>BSB-LAN provides three ways to connect to home automation systems: 
-1. Exchanging data via MQTT (recommended)
-2. Exchanging data via JSON
-3. Exchanging data via URL commands and screen scraping
-4. Using supported modules for specific home automation systems</p>
+<p>BSB-LAN provides four ways to connect to home automation systems:  </p>
+<ol>
+<li>Exchanging data via MQTT (recommended)</li>
+<li>Exchanging data via JSON</li>
+<li>Using supported modules for specific home automation systems</li>
+<li>Exchanging data via URL commands and screen scraping</li>
+</ol>
+<hr />
 <h2 id="exchanging-data-via-mqtt">Exchanging data via MQTT</h2>
 <p>This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.<br />
 As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a> is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
@@ -194,10 +197,10 @@ Query the outside temperature (parameter 8700):<br />
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d</code>  </p>
 <p>Set the comfort temperature setpoint (parameter 710) to 20 degrees:
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d</code>  </p>
+<hr />
 <h2 id="exchanging-data-via-json">Exchanging data via JSON</h2>
 <p>BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via <a href="using.html">URL commands</a> and the <code>openapi.yaml</code> file provided in this repository can be used with <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">Swagger</a> to explore its possibilities and functionalitites.</p>
-<h2 id="exchanging-data-via-url-commands-and-screen-scraping">Exchanging data via URL commands and screen scraping</h2>
-<p>For simpler solutions, using the URL commands to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.</p>
+<hr />
 <h2 id="using-supported-modules-for-specific-home-automation-systems">Using supported modules for specific home automation systems</h2>
 <p>For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:</p>
 <h3 id="home-assistant">Home Assistant</h3>
@@ -221,13 +224,16 @@ For the details of the implementation, you may also refer to these tutorials:</p
 <h3 id="volkszaehler">Volkszaehler</h3>
 <p>GitHub user @lapixo has contributed a <a href="https://github.com/lapixo/volkszaehler_bsb-lan/tree/main">script for the Volkszaehler project</a>. Thank you!</p>
 <h3 id="bash-script">Bash script</h3>
-<p>GitHub user @khfm has written <a href="https://github.com/khfm/bsb-lan-readout">Bash scripts</a> to query data and display it using gnuplot. Thank you!</p></div>
+<p>GitHub user @khfm has written <a href="https://github.com/khfm/bsb-lan-readout">Bash scripts</a> to query data and display it using gnuplot. Thank you!</p>
+<hr />
+<h2 id="exchanging-data-via-url-commands-and-screen-scraping">Exchanging data via URL commands and screen scraping</h2>
+<p>For simpler solutions, <a class="autorefs autorefs-internal" href="using.html#using-bsb-lans-url-commands">using the URL commands</a> to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.</p></div>
             </div>
         </div>
 
         <footer class="col-md-12">
             <hr>
-            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -241,17 +247,17 @@ For the details of the implementation, you may also refer to these tutorials:</p
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
+                <p>From here you can search these documents. Enter your search terms below.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -261,33 +267,33 @@ For the details of the implementation, you may also refer to these tutorials:</p
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Taste</th>
-                    <th>Aktion</th>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Diese Hilfe anzeigen</td>
+                    <td>Open this help</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Nächste Seite</td>
+                    <td>Next page</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Vorherige Seite</td>
+                    <td>Previous page</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Suche</td>
+                    <td>Search</td>
                   </tr>
                 </tbody>
               </table>
