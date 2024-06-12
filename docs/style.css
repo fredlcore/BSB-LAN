@@ -1,0 +1,6 @@
+h1, h2, h3 {
+    color: rgb(84, 162, 225);
+}
+body::before {
+    background: white;
+}
