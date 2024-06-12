@@ -63,7 +63,6 @@ public:
   int8_t Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
 
 private:
-  boolean HwSerial = false;
   uint8_t myAddr;
   uint8_t destAddr;
   uint8_t bus_type;

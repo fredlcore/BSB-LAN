@@ -23,12 +23,10 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   tx_pin=tx;
 
 #if defined(ESP32)
-  HwSerial = true;
   serial = &Serial1;
   {
 #else
   if (rx == 19) {	// 19 = RX pin of Serial1 USART module
-    HwSerial = true;
     serial = &Serial1;
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
@@ -46,32 +44,28 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 }
 
 void BSB::enableInterface() {
-  if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
 #if defined(ESP32)
-    Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
-    Serial1.setRxFIFOFull(1);
-    Serial1.setRxTimeout(2);
+  Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
+  Serial1.setRxFIFOFull(1);
+  Serial1.setRxTimeout(2);
 /*
-    uart_intr_config_t uart_intr;
-    uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
-                            | UART_RXFIFO_TOUT_INT_ENA_M
-                            | UART_FRM_ERR_INT_ENA_M;
-    uart_intr.rxfifo_full_thresh = 1; //UART_FULL_THRESH_DEFAULT,  //120 default!! aghh! need receive 120 chars before we see them
-    uart_intr.rx_timeout_thresh = 2; // ,  //10 works well for my short messages I need send/receive
-    uart_intr.txfifo_empty_intr_thresh = 10; //UART_EMPTY_THRESH_DEFAULT
-    uart_intr_config(UART_NUM_1, &uart_intr);
+  uart_intr_config_t uart_intr;
+  uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
+                          | UART_RXFIFO_TOUT_INT_ENA_M
+                          | UART_FRM_ERR_INT_ENA_M;
+  uart_intr.rxfifo_full_thresh = 1; //UART_FULL_THRESH_DEFAULT,  //120 default!! aghh! need receive 120 chars before we see them
+  uart_intr.rx_timeout_thresh = 2; // ,  //10 works well for my short messages I need send/receive
+  uart_intr.txfifo_empty_intr_thresh = 10; //UART_EMPTY_THRESH_DEFAULT
+  uart_intr_config(UART_NUM_1, &uart_intr);
 */
 #else
-    Serial1.begin(4800, SERIAL_8O1);
+  Serial1.begin(4800, SERIAL_8O1);
 #endif    
-  }
 }
 
 void BSB::disableInterface() {
-  if (HwSerial == true) {	// 19 = RX pin of Serial1 USART module
-    Serial1.flush();
-    Serial1.end();
-  }
+  Serial1.flush();
+  Serial1.end();
 }
 
 
@@ -233,7 +227,7 @@ bool BSB::GetMessage(byte* msg) {
 //	      }
 
       // Delay for more data
-      if (HwSerial == true && serial->available() == 0) {
+      if (serial->available() == 0) {
         delay(4);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed. Also, why 3ms are fine for the Mega, but at least 4ms are necessary on the Due
       }
       // read the rest of the message
@@ -261,20 +255,8 @@ bool BSB::GetMessage(byte* msg) {
         }
         // Delay until we got next byte
         if (serial->available() == 0) {
-          if (HwSerial == true) {
-            timeout = 200;  // again, see above, why does HwSerial take more time to process a character? Here, timeout easily counts down 120 times 15 microseconds for a new character to be ready to process... 
-          } else {
-            timeout = 30;
-          }
-          while ((timeout > 0) && (serial->available() == 0)){
-            delayMicroseconds(15);
-            timeout--;
-          }
+          delay(4); // see question/reason above
         }
-
-        // Break if next byte signals next message (0x23 ^ 0xFF == 0xDC)
-        // if((serial->peek() == 0x23)) break;
-        // DO NOT break because some messages contain a 0xDC 
       }
 
       // We should have read the message completely. Now check and return
@@ -433,11 +415,10 @@ inline int8_t BSB::_send(byte* msg) {
       unsigned long timeout = millis();
       // Probe the bus until the delay calculated above has passed. We want to wait this long even on the first try because we want to make sure the minimum delay between telegrams has passed.
       while (millis()-timeout < waitfree) {
-//        if ((HwSerial == true && rx_pin_read() == false) || (HwSerial == false && rx_pin_read()))   // Test RX pin
         bool rx_pin = rx_pin_read();
         if (rx_pin) {  // If there is activity on the bus / the bus has been pulled low, we have to try again and wait for 'waitfree' ms. 
 #if DEBUG_LL
-          Serial.println("Collision while waiting, retrying...");
+          Serial.println("Activity on the bus while waiting, retrying...");
 #endif
           delay(146); // Wait the duration of 11 bits at 4800 bps times 32 (maximum telegram size) in ms (*1000) times 2 (because we can just keep waiting for an answer telegram) 
           while (serial->available()) {
@@ -507,11 +488,6 @@ auf den entsprechenden Empfänger dann gleich wieder verworfen. Als Konsequenz w
 die ESP32 ausgeweitet.
 */
 
-#if defined(__AVR__)
-  if (HwSerial == false) {
-    cli();
-  }
-#endif
   byte loop_len = len;
   if (bus_type != 2) {
     loop_len = len + bus_type - 1; // same msg length difference as above
@@ -522,11 +498,9 @@ die ESP32 ausgeweitet.
       data = data ^ 0xFF;
     }
     serial->write(data);
-    if (HwSerial == true) {
 #if !defined(ESP32)
-      serial->flush();
+    serial->flush();
 #endif
-    }
     if (bus_type==2 && i==0 && data==0x17) {
       unsigned long timeout = millis();
       while ((millis()-timeout < 200) && serial->available() == 0) {
@@ -551,43 +525,37 @@ die ESP32 ausgeweitet.
     }
 */
   }
-  if (HwSerial == true) {
 //#if !defined(ESP32)
-    serial->flush();
-    unsigned long timeout = millis();
-    while ((millis()-timeout < 50) && serial->available() == 0) {
-      delay(1);
-    }
+  serial->flush();
+  unsigned long timeout = millis();
+  while ((millis()-timeout < 50) && serial->available() == 0) {
+    delay(1);
+  }
 //#endif
-//    delay(loop_len*2+10);      // Wait up to 32 characters for the maximum number of bytes in a telegram to show up again on RX after sending it via TX.
-    if (serial->available()) {      
-      for (uint8_t i=0; i<=loop_len; i++) {
-        char readdata = readByte();
-        if (msg[i] != readdata) {
+//  delay(loop_len*2+10);      // Wait up to 32 characters for the maximum number of bytes in a telegram to show up again on RX after sending it via TX.
+  if (serial->available()) {      
+    for (uint8_t i=0; i<=loop_len; i++) {
+      char readdata = readByte();
+      if (msg[i] != readdata) {
 #if DEBUG_LL
-          Serial.println(readdata, HEX);
+        Serial.println(readdata, HEX);
 #endif
-          Serial.println("Collision on the bus, retrying...");
-          delay(146);   // Wait the duration of 11 bits at 4800 bps times 32 (maximum telegram size) in ms (*1000) times 2 (because we can just keep waiting for an answer telegram) 
-          while (serial->available()) {
-            char c = readByte();
+        Serial.println("Collision on the bus, retrying...");
+        delay(146);   // Wait the duration of 11 bits at 4800 bps times 32 (maximum telegram size) in ms (*1000) times 2 (because we can just keep waiting for an answer telegram) 
+        while (serial->available()) {
+          char c = readByte();
 #if DEBUG_LL
-            if (c < 16) Serial.print("0");
-            Serial.print(c, HEX);
+          if (c < 16) Serial.print("0");
+          Serial.print(c, HEX);
 #endif
-            c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
-          }
-#if DEBUG_LL
-          Serial.println();
-#endif
-          goto retry;
+          c = c;  // prevent compiler warning about unused variable if DEBUG_LL is not active
         }
+#if DEBUG_LL
+        Serial.println();
+#endif
+        goto retry;
       }
     }
-  } else {
-#if defined(__AVR__)
-    sei();
-#endif
   }
   return BUS_OK;
 }
@@ -600,10 +568,8 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
     return _send(tx_msg);
   }
 
-  if (HwSerial == true) {
-    while(serial->available()) {
-      readByte();
-    }
+  while(serial->available()) {
+    readByte();
   }
 
   // first two bytes are swapped
@@ -699,8 +665,8 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   return BUS_NOMATCH;
 }
 
-bool BSB::rx_pin_read() {  // not tested if this will work on ESP32
-  return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ HwSerial;
+boolean BSB::rx_pin_read() {
+  return boolean(* portInputRegister(digitalPinToPort(rx_pin)) & digitalPinToBitMask(rx_pin)) ^ 1;
 }
 
 uint8_t BSB::readByte() {
