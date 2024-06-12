@@ -152,28 +152,16 @@ boolean BSB::Monitor(byte* msg) {
   byte i=0;
     
   if (serial->available() > 0) {
-    // get timestamp
-    ts=millis();
-    // output
-    Serial.print(ts);
-    Serial.print(" ");
+    Serial.printf("%lu ", millis());     // Timestamp
     while (serial->available() > 0) {
       // Read serial data...
       msg[i] = readByte();;
-
       // output
-      if(msg[i]<16){  
-        Serial.print("0");
-      }
-      Serial.print(msg[i], HEX);
-      Serial.print(" ");
+      Serial.printf("%02X ", msg[i]);
       i++;
       // if no inout available -> wait
       if (serial->available() == 0) {
-        unsigned long timeout = millis() + 3;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
-        while (millis() < timeout) {
-          delayMicroseconds(15);                                      // ...but unclear to me (FH) why the delay is done in 15us steps when nothing else is done after each iteration...
-        }
+        delay(3)    ;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
       }
       // if still no input available telegramm has finished
       if (serial->available() == 0) break;
