@@ -9,6 +9,8 @@ assignees: ''
 
 **Before submitting a bug report, please make sure that you have checked the [FAQ](https://docs.bsb-lan.de/faq.html) and [troubleshooting section](https://docs.bsb-lan.de/troubleshooting.html) of the manual**. Most problems that are reported to us can be solved by going through the solutions provided there.
 
+**Do not remove any of these questions! Bug-Reports that do not contain all required information will not be accepted. If you cannot provide any required information, explain why this is the case.**
+
 **BSB-LAN Version**
 As displayed in the web-configuration or copy from `bsb-version.h` file. Please make sure that you have installed the most recent version from the master repository and also updated your BSB_LAN_config.h accordingly. We don't fix bugs for discontinued platforms (such as Arduino Mega).
 
