@@ -7,13 +7,17 @@ BSB-LAN tries to make accessing your heating system as easy as possible, but the
 - Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under ***Tools/Partition Scheme***.
 
 ---
+## Category list suddenly so small
+- BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.
+
+---
 ## No data even thought the red LED is on
 - Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.
 - With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits **exactly** in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.
 - Make sure the RX/TX pins are set/detected correctly.
 
 ---
-## Cannot query any parameters / device family is 0
+## Cannot query any parameters / device family is `0`
 - Wrong bus type (BSB instead of LPB or vice versa).
 - If the red LED is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!
 
