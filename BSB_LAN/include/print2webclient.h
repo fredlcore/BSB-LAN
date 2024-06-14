@@ -75,7 +75,7 @@ int printFmtToWebClient(const char *format, ...) {
 
 void printToWebClient_prognrdescaddr() {
   if (decodedTelegram.prognr < 0) return;
-  if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_DHT22) {
+  if (decodedTelegram.prognr >= (float)BSP_AVERAGES && decodedTelegram.prognr < (float)BSP_DHT22) {
     printToWebClient(STR_24A_TEXT);
     printToWebClient(". ");
   }

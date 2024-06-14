@@ -1337,22 +1337,22 @@ const char ENUM15046[] = {
 {CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
 {CMD_UNKNOWN, VT_ONOFF,         BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
 {CMD_UNKNOWN, VT_FLOAT,         BSP_AVERAGES,   STR20000, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // Dummy for averages parameters
-{CMD_UNKNOWN, VT_STRING,        BSP_DHT22+0.0,  STR20100, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
-{CMD_UNKNOWN, VT_TEMP,          BSP_DHT22+0.1,  STR20101, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, BSP_DHT22+0.2,  STR20102, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, VT_GR_PER_CUBM,   BSP_DHT22+0.3,  STR20103, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
-{CMD_UNKNOWN, VT_STRING,        BSP_BME280+0.0, STR20200, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
-{CMD_UNKNOWN, VT_TEMP,          BSP_BME280+0.1, STR20201, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, BSP_BME280+0.2, STR20202, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
-{CMD_UNKNOWN, VT_PRESSURE_HPA,  BSP_BME280+0.3, STR20203, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
-{CMD_UNKNOWN, VT_ALTITUDE,      BSP_BME280+0.4, STR20204, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
-{CMD_UNKNOWN, VT_GR_PER_CUBM,   BSP_BME280+0.5, STR20205, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
-{CMD_UNKNOWN, VT_STRING,        BSP_ONEWIRE+0.0,STR20300, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
-{CMD_UNKNOWN, VT_TEMP,          BSP_ONEWIRE+0.1,STR20301, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
-{CMD_UNKNOWN, VT_STRING,        BSP_MAX+0.0,    STR20500, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
-{CMD_UNKNOWN, VT_TEMP,          BSP_MAX+0.1,    STR20501, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, VT_TEMP,          BSP_MAX+0.2,    STR20502, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, BSP_MAX+0.3,    STR20503, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+{CMD_UNKNOWN, VT_STRING,        (float)BSP_DHT22+0.0,  STR20100, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_DHT22+0.1,  STR20101, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_DHT22+0.2,  STR20102, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, VT_GR_PER_CUBM,   (float)BSP_DHT22+0.3,  STR20103, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, VT_STRING,        (float)BSP_BME280+0.0, STR20200, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_BME280+0.1, STR20201, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
+{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_BME280+0.2, STR20202, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
+{CMD_UNKNOWN, VT_PRESSURE_HPA,  (float)BSP_BME280+0.3, STR20203, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
+{CMD_UNKNOWN, VT_ALTITUDE,      (float)BSP_BME280+0.4, STR20204, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
+{CMD_UNKNOWN, VT_GR_PER_CUBM,   (float)BSP_BME280+0.5, STR20205, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
+{CMD_UNKNOWN, VT_STRING,        (float)BSP_ONEWIRE+0.0,STR20300, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_ONEWIRE+0.1,STR20301, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, VT_STRING,        (float)BSP_MAX+0.0,    STR20500, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.1,    STR20501, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.2,    STR20502, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_MAX+0.3,    STR20503, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
 {CMD_UNKNOWN, VT_FLOAT,         BSP_FLOAT,      STR20700, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
 {CMD_UNKNOWN, VT_LONG,          BSP_LONG,       STR20800, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
 

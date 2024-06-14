@@ -1380,14 +1380,14 @@ void return_to_default_destination(int destAddr){
  *   none
  * *************************************************************** */
 uint8_t recognizeVirtualFunctionGroup(float nr) {
-  if (nr >= BSP_INTERNAL && nr < BSP_INTERNAL+7) { return 1;}
-  else if (nr >= BSP_AVERAGES && nr < BSP_AVERAGES + numAverages) {return 2;} //20050 - 20099#endif
-  else if (nr >= BSP_DHT22 && nr < BSP_DHT22 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0])) {return 3;} //20100 - 20199
-  else if (nr >= BSP_BME280 && nr < BSP_BME280 + BME_Sensors) {return 8;} //20200 - 20299
-  else if (nr >= BSP_ONEWIRE && nr < BSP_ONEWIRE + (uint16_t)numSensors) {return 4;} //20300 - 20499
-  else if (nr >= BSP_MAX && nr < BSP_MAX + MAX_CUL_DEVICES) {return 5;} //20500 - 20699
-  else if (nr >= BSP_FLOAT && nr < BSP_FLOAT + numCustomFloats) {return 6;} //20700 - 20799
-  else if (nr >= BSP_LONG && nr < BSP_LONG + numCustomLongs) {return 7;} //20800 - 20899
+  if (nr >= (float)BSP_INTERNAL && nr < (float)BSP_INTERNAL+7) { return 1;}
+  else if (nr >= (float)BSP_AVERAGES && nr < (float)BSP_AVERAGES + numAverages) {return 2;} //20050 - 20099#endif
+  else if (nr >= (float)BSP_DHT22 && nr < (float)BSP_DHT22 + sizeof(DHT_Pins) / sizeof(DHT_Pins[0])) {return 3;} //20100 - 20199
+  else if (nr >= (float)BSP_BME280 && nr < (float)BSP_BME280 + BME_Sensors) {return 8;} //20200 - 20299
+  else if (nr >= (float)BSP_ONEWIRE && nr < (float)BSP_ONEWIRE + (uint16_t)numSensors) {return 4;} //20300 - 20499
+  else if (nr >= (float)BSP_MAX && nr < (float)BSP_MAX + MAX_CUL_DEVICES) {return 5;} //20500 - 20699
+  else if (nr >= (float)BSP_FLOAT && nr < (float)BSP_FLOAT + numCustomFloats) {return 6;} //20700 - 20799
+  else if (nr >= (float)BSP_LONG && nr < (float)BSP_LONG + numCustomLongs) {return 7;} //20800 - 20899
   return 0;
 }
 
@@ -1418,10 +1418,10 @@ int findLine(float line)
   if (verbose == DEVELOPER_DEBUG) printFmtToDebug("line = %.1f\r\n", line);
 
   //Virtual programs. do not forget sync changes with loadPrognrElementsFromTable()
-  if (line >= BSP_INTERNAL && line < BSP_END) {
+  if (line >= (float)BSP_INTERNAL && line < (float)BSP_END) {
     switch (recognizeVirtualFunctionGroup(line)) {
       case 1: break;
-      case 2:  line = avg_parameters[(((uint16_t)line) - BSP_AVERAGES)].number; if (line == 0) return -1; else break;
+      case 2: line = avg_parameters[(((uint16_t)line) - BSP_AVERAGES)].number; if (line == 0) return -1; else break;
       case 3: {
         if ((int8_t)DHT_Pins[(((uint16_t)line) - BSP_DHT22)] == -1) { //pin not assigned to DHT sensor
           return -1;
@@ -1431,7 +1431,7 @@ int findLine(float line)
 #else
           float intpart;
 #endif
-          line = BSP_DHT22 + modf(line, &intpart);
+          line = (float)BSP_DHT22 + modf(line, &intpart);
         }
         break;
       }
@@ -1441,7 +1441,7 @@ int findLine(float line)
 #else
         float intpart;
 #endif
-        line = BSP_ONEWIRE + modf(line, &intpart);
+        line = (float)BSP_ONEWIRE + modf(line, &intpart);
         break;
       }
       case 5:{
@@ -1453,20 +1453,20 @@ int findLine(float line)
 #else
           float intpart;
 #endif
-          line = BSP_MAX + modf(line, &intpart);
+          line = (float)BSP_MAX + modf(line, &intpart);
         }
         break;
       }
-      case 6: line = BSP_FLOAT; break;
-      case 7: line = BSP_LONG; break;
+      case 6: line = (float)BSP_FLOAT; break;
+      case 7: line = (float)BSP_LONG; break;
       case 8: {
-        if ((int)roundf(line - BSP_BME280) < BME_Sensors) { //
+        if ((int)roundf(line - (float)BSP_BME280) < BME_Sensors) { //
 #if defined(__SAM3X8E__)
           double intpart;
 #else
           float intpart;
 #endif
-          line = BSP_BME280 + modf(line, &intpart);
+          line = (float)BSP_BME280 + modf(line, &intpart);
         } else {
           return -1;
         }
@@ -1586,7 +1586,7 @@ float get_next_prognr(float currentProgNr){
     nextprognr = cmdtbl[startFromTableLine].line;
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextindex: %d\r\n", startFromTableLine);
   } while (prognr == nextprognr);
-  if(currentProgNr >= BSP_INTERNAL && currentProgNr < BSP_END) {
+  if(currentProgNr >= (float)BSP_INTERNAL && currentProgNr < (float)BSP_END) {
     float prognrDiff = currentProgNr - prognr;
 #if defined(__SAM3X8E__)
     double intpart1, intpart2;
@@ -1757,17 +1757,17 @@ void loadPrognrElementsFromTable(float nr, int i) {
   }
 
   decodedTelegram.sensorid = 0;
-  if (nr >= BSP_INTERNAL) { //Virtual programs. do not forget sync changes with findline()
+  if (nr >= (float)BSP_INTERNAL) { //Virtual programs. do not forget sync changes with findline()
     decodedTelegram.prognr = nr;
     switch (recognizeVirtualFunctionGroup(nr)) {
       case 1: break;
       case 2: decodedTelegram.cat = CAT_USERSENSORS; decodedTelegram.readwrite = FL_RONLY; break; //overwrite native program categories with CAT_USERSENSORS
-      case 3: decodedTelegram.sensorid = nr - BSP_DHT22 + 1; break;
-      case 4: decodedTelegram.sensorid = nr - BSP_ONEWIRE + 1; break;
-      case 5: decodedTelegram.sensorid = nr - BSP_MAX + 1; break;
-      case 6: decodedTelegram.sensorid = nr - BSP_FLOAT + 1; break;
-      case 7: decodedTelegram.sensorid = nr - BSP_LONG + 1; break;
-      case 8: decodedTelegram.sensorid = nr - BSP_BME280 + 1; break;
+      case 3: decodedTelegram.sensorid = nr - (float)BSP_DHT22 + 1; break;
+      case 4: decodedTelegram.sensorid = nr - (float)BSP_ONEWIRE + 1; break;
+      case 5: decodedTelegram.sensorid = nr - (float)BSP_MAX + 1; break;
+      case 6: decodedTelegram.sensorid = nr - (float)BSP_FLOAT + 1; break;
+      case 7: decodedTelegram.sensorid = nr - (float)BSP_LONG + 1; break;
+      case 8: decodedTelegram.sensorid = nr - (float)BSP_BME280 + 1; break;
     }
   }
 }
@@ -3246,16 +3246,16 @@ int set(float line      // the ProgNr of the heater parameter
 
   loadPrognrElementsFromTable(line, i);
 
-  if ((line >= BSP_INTERNAL && line < BSP_END)) //virtual functions handler
+  if ((line >= (float)BSP_INTERNAL && line < (float)BSP_END)) //virtual functions handler
     {
-      if(line == BSP_INTERNAL + 6){
+      if(line == (float)BSP_INTERNAL + 6){
         if (atoi(val)) resetDurations(); return 1; // reset furnace duration
       }
-      if ((line >= BSP_FLOAT && line < BSP_FLOAT + numCustomFloats)) {// set custom_float
+      if ((line >= (float)BSP_FLOAT && line < (float)BSP_FLOAT + numCustomFloats)) {// set custom_float
         custom_floats[(int)line - BSP_FLOAT] = atof(val);
         return 1;
       }
-      if ((line >= BSP_LONG && line < BSP_LONG + numCustomLongs)) {// set custom_longs
+      if ((line >= (float)BSP_LONG && line < (float)BSP_LONG + numCustomLongs)) {// set custom_longs
         char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
         strcpy(sscanf_buf, "%ld");
         sscanf(val, sscanf_buf, &custom_longs[(int)line - BSP_LONG]);
@@ -3874,7 +3874,7 @@ char *build_pvalstr(bool extended) {
 
     len+=strlen(strcpy(outBuf + len, decodedTelegram.catdescaddr));
     len+=strlen(strcpy(outBuf + len, " - "));
-    if (decodedTelegram.prognr >= BSP_AVERAGES && decodedTelegram.prognr < BSP_AVERAGES + numAverages) {
+    if (decodedTelegram.prognr >= (float)BSP_AVERAGES && decodedTelegram.prognr < (float)BSP_AVERAGES + numAverages) {
       len+=strlen(strcpy(outBuf + len, STR_24A_TEXT));
       len+=strlen(strcpy(outBuf + len, ". "));
     }
@@ -4059,14 +4059,14 @@ void queryVirtualPrognr(float line, int table_line) {
       return;
     }
     case 2: {
-      size_t tempLine = roundf(line - BSP_AVERAGES);
+      size_t tempLine = roundf(line - (float)BSP_AVERAGES);
       _printFIXPOINT(decodedTelegram.value, avgValues[tempLine], 1);
       return;
       break;
     }
     case 3: {
-      size_t log_sensor = roundf(line - BSP_DHT22);
-      int tempLine = (int)roundf((line - BSP_DHT22) * 10) % 10;
+      size_t log_sensor = roundf(line - (float)BSP_DHT22);
+      int tempLine = (int)roundf((line - (float)BSP_DHT22) * 10) % 10;
       if (tempLine == 0) { //print sensor ID
         sprintf_P(decodedTelegram.value, "%d", DHT_Pins[log_sensor]);
         return;
@@ -4120,9 +4120,9 @@ void queryVirtualPrognr(float line, int table_line) {
       break;
     }
     case 4: {
-      size_t log_sensor = roundf(line - BSP_ONEWIRE);
+      size_t log_sensor = roundf(line - (float)BSP_ONEWIRE);
       if (One_Wire_Pin >= 0 && numSensors) {
-        switch (((int)roundf((line - BSP_ONEWIRE) * 10)) % 10) {
+        switch (((int)roundf((line - (float)BSP_ONEWIRE) * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
             sensors->getAddress(device_address, log_sensor);
@@ -4145,10 +4145,10 @@ void queryVirtualPrognr(float line, int table_line) {
       break;
     }
     case 5: {
-      size_t log_sensor = roundf(line - BSP_MAX);
+      size_t log_sensor = roundf(line - (float)BSP_MAX);
       if (enable_max_cul) {
         if (max_devices[log_sensor]) {
-          switch (((int)roundf((line - BSP_MAX) * 10)) % 10){ //print sensor values
+          switch (((int)roundf((line - (float)BSP_MAX) * 10)) % 10){ //print sensor values
             case 0:  //print sensor ID
               strcpy(decodedTelegram.value, max_device_list[log_sensor]);
               break;
@@ -4191,8 +4191,8 @@ void queryVirtualPrognr(float line, int table_line) {
       return;
     }
     case 8: {
-      size_t log_sensor = roundf(line - BSP_BME280);
-      uint8_t selector = ((int)roundf((line - BSP_BME280) * 10)) % 10;
+      size_t log_sensor = roundf(line - (float)BSP_BME280);
+      uint8_t selector = ((int)roundf((line - (float)BSP_BME280) * 10)) % 10;
       if (selector == 0) {
         if(BME_Sensors > 2){
           sprintf_P(decodedTelegram.value, "%02X-%02X", log_sensor & 0x07, 0x76 + log_sensor / 8);
@@ -4277,7 +4277,7 @@ void query(float line) {  // line (ProgNr)
     }
 
 // virtual programs
-    if ((line >= BSP_INTERNAL && line < BSP_END)) {
+    if ((line >= (float)BSP_INTERNAL && line < (float)BSP_END)) {
       queryVirtualPrognr(line, i);
       if (LoggingMode & CF_LOGMODE_MQTT) {
         LogToMQTT(line);
@@ -4916,7 +4916,7 @@ void loop() {
   } // endelse, NOT in monitor mode
 
   // Listen for incoming clients
-  client = server->available();
+  client = server->accept();
   if ((client || SerialOutput->available()) && client_flag == false) {
     client_flag = true;
 
@@ -5928,7 +5928,7 @@ void loop() {
                 do{
                   int i_line = findLine(j);
                   cmd = cmdtbl[i_line].cmd;
-                  if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
+                  if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                     goto next_parameter;
                   }
                   loadPrognrElementsFromTable(j, i_line);
@@ -6069,7 +6069,7 @@ next_parameter:
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter);
                 cmd = cmdtbl[i_line].cmd;
-                if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL))) { //CMD_UNKNOWN except virtual programs
+                if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL))) { //CMD_UNKNOWN except virtual programs
                   json_token = strtok(NULL,",");
                   continue;
                 }
@@ -6134,7 +6134,7 @@ next_parameter:
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 int i_line=findLine(json_parameter);
                 cmd = cmdtbl[i_line].cmd;
-                if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
+                if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
 
@@ -6941,7 +6941,7 @@ next_parameter:
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.beginPacket(broadcast_ip, UDP_LOG_PORT);
           outBufLen += sprintf_P(outBuf + outBufLen, "%lu;%s;%g;", millis(), GetDateTime(outBuf + outBufLen + 80), log_parameters[i].number);
 
-          if ((log_parameters[i].number >= BSP_AVERAGES && log_parameters[i].number < BSP_AVERAGES + numAverages)) {
+          if ((log_parameters[i].number >= (float)BSP_AVERAGES && log_parameters[i].number < (float)BSP_AVERAGES + numAverages)) {
             //averages
             outBufLen += strlen(strcpy(outBuf + outBufLen, STR_24A_TEXT ". "));
           }
@@ -7199,7 +7199,7 @@ next_parameter:
 
   if (debug_mode == 2) {
     if (haveTelnetClient == false) {
-      telnetClient = telnetServer->available();
+      telnetClient = telnetServer->accept();
     }
     if (telnetClient && haveTelnetClient == false) {
       telnetClient.flush();
